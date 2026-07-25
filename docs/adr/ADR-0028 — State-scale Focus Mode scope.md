@@ -1,822 +1,1092 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0028-state-scale-focus-mode-scope  # NEEDS_VERIFICATION until registered
-title: "ADR-0028 — State-scale Focus Mode scope (-state) and 13-domain coverage rule"
+doc_id: kfm://doc/adr-0028-state-scale-focus-mode-scope
+title: ADR-0028 — State-scale Focus Mode scope and cross-scale domain-coverage rule
 type: adr
 adr_id: ADR-0028
-version: v0.1
+version: v0.2
 status: proposed
-decision_date: 2026-05-23
+effective_decision_status: proposed
 owners:
-  - <OWNER:focus-mode-steward>
-  - <OWNER:directory-rules-steward>
-  - <OWNER:schema-steward>
-  - <OWNER:sensitivity-reviewer>
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — Focus Mode and control-plane steward"
+  - "NEEDS VERIFICATION — Directory Rules steward"
+  - "NEEDS VERIFICATION — domain-registry, contracts, schemas, policy, sensitivity, evidence, release, correction, rollback, validation, UI, and docs stewards"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Focus Mode and control-plane steward
+  - Directory Rules steward
+  - Domain-registry steward
+  - Contracts and schemas stewards
+  - Policy and sensitivity steward
+  - Evidence and release steward
+  - Correction and rollback steward
+  - Governed API and Explorer Web maintainers
+  - Validation and CI steward
+  - At least one affected domain steward
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-07-24
 policy_label: public
-authority: amends directory-rules.md §6.7 (adds -state to allowed scope-suffix enumeration); establishes the 13-domain coverage rule for every Focus Mode at every scale
-supersedes: none
-superseded_by: none
-related_adrs:
-  - docs/adr/ADR-0001-schema-home.md                                      # CONFIRMED doctrine reference; PROPOSED file path
-  - docs/adr/ADR-0003-policy-singular-is-canonical.md                     # PROPOSED file path
-  - docs/adr/ADR-0027-county-focus-mode-control-plane.md                  # PROPOSED — county control plane (this ADR extends scope)
-  - docs/adr/ADR-S-05-sensitivity-tier-scheme.md                          # PROPOSED — referenced for sensitivity tiers (T0–T4)
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 8df9bd2b723c0d4cf88a32d357ea8c70895f1177
+  target_prior_blob: 09605b531116857e741e2f2cb8f8a9177c224734
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  adr_0027_blob: b1894474f8dc402f5d47abea8dd2d0cf1d0571b8
+  legacy_focus_control_readme_blob: 008cf7b3496fdfe56ff3a23b12cb470c27dcf76e
+  legacy_county_index_blob: ba888a806148866501bf1f6c730a7b411ca67277
+  legacy_state_index_blob: 8d0b631bd53e6af3747417ee813c791fc67a9c3c
+  legacy_state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
+  focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
+  focus_mode_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
+  domain_lane_register_blob: 7cd641d99e1e4e3b3823f608d63679a438590c3a
+  domain_lane_machine_register_blob: 81b23beb3178b59d5c1fdb50edbc9f98f8664930
+  drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
+  focus_mock_workflow_blob: aa97ee5ad099d1e10922d037061abde17ceb3a93
+  canonical_focus_modes_readme_at_base: absent
+  focus_mode_payload_schema_at_base: absent
+  layer_registry_entry_schema_at_base: absent
+  focus_mode_payload_validator_at_base: absent
+  kansas_state_lane_at_base: absent
+inspection_boundary: >
+  Current-session GitHub reads and bounded repository search covering the ADR inventory,
+  Directory Rules, ADR-0027, this ADR, the actual singular Focus Mode control-plane README,
+  county and state indexes, state template, FocusModePayload semantic contract, focus-mode
+  index validator, domain-lane human and machine registers, drift register, Focus mock
+  readiness workflow, and exact checks for the canonical plural README, FocusModePayload
+  schemas, payload validator, and Kansas state lane. No complete repository clone, accepted
+  ReviewRecord, Directory Rules amendment, structural migration, schema or policy execution,
+  state Focus payload, state EvidenceBundle, source admission, governed API Focus request,
+  map render, release manifest, correction, rollback, deployment, or production publication
+  was exercised.
+source_lineage:
+  - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
+  - docs/registers/DOMAIN_LANE.md
 related:
-  - docs/doctrine/directory-rules.md                                     # §6.7 placement contract; §2.4 ADR triggers
-  - docs/focus-modes/README.md                                            # v0.3 (design spec this ADR evaluates)
-  - docs/focus-modes/COUNTY_INDEX.md
-  - docs/focus-modes/STATE_INDEX.md                                       # PROPOSED — single-area state-scale index
-  - docs/focus-modes/_template/county-build-plan.md
-  - docs/focus-modes/_template/state-build-plan.md                        # PROPOSED — emit on acceptance
-  - docs/focus-modes/kansas-state/                                        # PROPOSED — emit on acceptance
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
+  - docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/adr/ADR-0027-county-focus-mode-control-plane.md
+  - docs/doctrine/directory-rules.md
+  - docs/focus-mode/README.md
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - docs/focus-mode/state/STATE_INDEX.md
+  - docs/focus-mode/state/_template/state-build-plan.md
+  - docs/focus-mode/counties/_template/county-build-plan.md
   - contracts/focus_mode/focus_mode_payload.md
-  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json        # PROPOSED amendment: add scale_class + domain_coverage
-  - schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json      # PROPOSED amendment: add domain enum + scale_class
-  - tools/validators/validate_focus_mode_index.py                         # PROPOSED amendment: recognize -state scope
-  - tools/validators/validate_focus_mode_payload.py                       # PROPOSED — accept all four scale values
-  - KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md             # CONFIRMED — 13-domain enumeration (Appendix C)
-  - kfm_unified_doctrine_synthesis.md                                     # CONFIRMED — cite-or-abstain; trust path
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md            # CONFIRMED — COUNTY-01..04; Appendix C county family
-  - ai-build-operating-contract.md                                        # CONFIRMED — §28 ADR triggers; §10 AI is interpretive
-  - docs/registers/DRIFT_REGISTER.md                                      # NEEDS_VERIFICATION — open items closed by this ADR
-tags:
-  - kfm
-  - adr
-  - focus-mode
-  - state-scale
-  - county-scale
-  - scope-suffix
-  - domain-coverage
-  - directory-rules
-  - placement-contract
-  - cite-or-abstain
-  - governed-ai
-  - trust-membrane
-trigger_clause: "directory-rules.md §6.7 scope-suffix enumeration; docs/focus-modes/README.md §20 ADR trigger ('Adding a new scope suffix beyond -county, -region, -corridor'); §20 trigger ('Changing the YAML front-matter spec in a way that invalidates existing plans')"
-closes_open_items:
-  - OPEN-FM-09   # -state scope addition to directory-rules.md §6.7.2
-  - OPEN-FM-10   # 13-domain coverage rule (every Focus Mode addresses every domain)
-  - OPEN-FM-14   # state-scale release-candidate folder naming
-opens_open_items:
-  - OPEN-FM-15   # PROPOSED — cross-scale crosswalk artifact (state ↔ county evidence linkage; optional, non-blocking)
-  - OPEN-FM-16   # PROPOSED — sensitivity-overrides at state scale (review whether any are justified at v0.3 launch)
+  - tools/validators/validate_focus_mode_index.py
+  - docs/registers/DOMAIN_LANE.md
+  - control_plane/domain_lane_register.yaml
+  - docs/registers/DRIFT_REGISTER.md
+  - .github/workflows/focus-mock-test.yml
+tags: [kfm, adr, focus-mode, state-scale, kansas-state, domain-coverage, control-plane, directory-rules, evidence, sensitivity, release, rollback, cite-or-abstain]
+notes:
+  - "v0.2 is a same-path repository-grounded modernization. It preserves source and effective status proposed; it does not accept ADR-0028 or authorize state-scale implementation."
+  - "The canonical ADR index uniquely assigns ADR-0028 to this exact filename, including the em dash and spaces."
+  - "Directory Rules currently permits only county, region, and corridor suffixes and names docs/focus-modes/ as the canonical human lane."
+  - "Current Focus materials are under legacy singular docs/focus-mode/; the canonical plural README and kansas-state lane are absent."
+  - "The state index and template exist as inert proposed scaffolds, but the current validator is county-only and does not parse the state index."
+  - "The proposed 13-domain profile now uses the canonical lane IDs from docs/registers/DOMAIN_LANE.md rather than draft aliases such as atmosphere_air or roads_rail."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# ADR-0028 — State-scale Focus Mode scope (`-state`) and 13-domain coverage rule
+# ADR-0028 — State-scale Focus Mode scope and cross-scale domain-coverage rule
 
-> **Decision summary (PROPOSED).** Amend `directory-rules.md` §6.7 to add `-state` as a fourth allowed Focus Mode scope suffix; establish `kansas-state` as the single canonical state-scale Focus Mode area; adopt the 13-domain coverage rule (every Focus Mode at every scale addresses every domain — either populated or abstain-on-record). This ADR amends doctrine, schemas, templates, and validators in coordinated v0.3 increments and does **not** authorize a state-scale composition derived from county roll-up.
+> **Proposed decision.** KFM may add `state` as a Focus Mode scope class and define exactly one Kansas state-scale composition, `kansas-state`, only through an accepted amendment to the Focus Mode placement contract and a governed migration to the canonical control-plane home. Every Focus Mode at every accepted scope must record an explicit disposition for every domain in the pinned canonical domain-set profile. A Kansas state composition must establish its own evidence, policy, release, correction, and rollback chain; it must not treat county Focus Mode outputs as authoritative source inputs.
 
-![status](https://img.shields.io/badge/status-proposed-yellow)
-![class](https://img.shields.io/badge/class-architecture%20decision-blue)
-![authority](https://img.shields.io/badge/amends-directory--rules.md%20%C2%A76.7-blue)
-![scope](https://img.shields.io/badge/scope-state%20%2B%2013--domain%20coverage-2b8a3e)
-![supersession](https://img.shields.io/badge/supersedes-none-lightgrey)
-![superseded%20by](https://img.shields.io/badge/superseded%20by-none-lightgrey)
-![review%20burden](https://img.shields.io/badge/reviewers-focus--mode%20%2B%20directory--rules%20%2B%20schema%20%2B%20sensitivity-6f42c1)
-![rollback](https://img.shields.io/badge/rollback-pre--v0.3%20directory--rules-informational)
-![truth%20posture](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-![repo%20evidence](https://img.shields.io/badge/repo%20evidence-not%20mounted-lightgrey)
-![effective](https://img.shields.io/badge/effective%20on-acceptance-orange)
-
-**Status:** `proposed` · **Decision date:** 2026-05-23 · **Effective on:** acceptance · **Owners:** `<OWNER:focus-mode-steward>`, `<OWNER:directory-rules-steward>`, `<OWNER:schema-steward>`, `<OWNER:sensitivity-reviewer>` · **Last reviewed:** 2026-05-23
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0028-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Directory scopes: 3](https://img.shields.io/badge/Directory%20Rules-county%20%7C%20region%20%7C%20corridor-f59e0b?style=flat-square)](#current-repository-evidence)
+[![Control plane: conflicted](https://img.shields.io/badge/control%20plane-singular%20legacy%20%2F%20plural%20canonical-b42318?style=flat-square)](#current-enforcement-maturity)
+[![State validator: absent](https://img.shields.io/badge/state%20validator-absent-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Schemas: absent](https://img.shields.io/badge/focus%20schemas-absent-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Implementation: hold](https://img.shields.io/badge/implementation-HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Authority and reconciliation.** This ADR proposes an amendment to `directory-rules.md` §6.7. Until status advances from `proposed` to `accepted` per the §7 acceptance criteria below, no `kansas-state/` lane may merge, the `directory-rules.md` text is unchanged, and the v0.3 design spec in `docs/focus-modes/README.md` remains explicitly **PROPOSED**. On acceptance, this ADR becomes part of the authority order (`directory-rules.md` §2.1 step 2: "Accepted ADRs that explicitly amend Directory Rules") and the §6.7 text MUST be amended in the same PR or its immediate follow-up.
+> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0028` to this exact file and records both source and effective status as `proposed`. Editing, validating, merging, or referencing this Markdown does not accept the decision.
 
 > [!CAUTION]
-> **Coupled decisions.** This ADR makes three decisions that are technically separable but operationally coupled (a state-scale composition without the coverage rule produces an umbrella that silently omits domains; the coverage rule without a state-scale composition leaves Kansas-wide questions unanswerable). Reviewers should approve or reject the ADR as a unit. See §5 for the alternative considered (split into two ADRs) and why it was rejected.
+> **The repository is internally inconsistent and remains pre-acceptance.** Directory Rules names canonical `docs/focus-modes/<area>-<scope>/` and allows only `-county`, `-region`, and `-corridor`. Actual Focus control-plane materials are stored under legacy singular `docs/focus-mode/`. The state index marks `kansas-state` as planned even though the lane is absent, and it claims validator support that the current county-only validator does not provide.
+
+> [!WARNING]
+> **Coverage does not mean “publish data for every domain.”** A Focus Mode satisfies the cross-domain rule by recording exactly one reviewed disposition for every domain in the pinned domain-set profile: `populated`, `abstain`, or `deny` at release. Candidate work may use `hold`, but `hold`, missing entries, unregistered aliases, and unresolved domain-set identity block release.
+
+> [!NOTE]
+> **No-roll-up does not ban county-granular source records.** A state composition may transform authoritative source records that are organized by county, and it may share underlying sources or EvidenceBundles with county compositions when scope and time support it. What it must not do is use released or candidate county **Focus Mode outputs** as the authoritative evidence chain for a statewide claim.
+
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Domain profile](#proposed-domain-set-and-coverage-profile) · [State/county relation](#state-and-county-evidence-relationship) · [Placement](#proposed-placement-and-migration-boundary) · [Authority](#authority-and-publication-boundary) · [Outcomes](#coverage-dispositions-and-runtime-outcomes) · [Current evidence](#current-repository-evidence) · [Maturity](#current-enforcement-maturity) · [Validation](#proposed-validation-and-negative-tests) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Migration](#migration-and-compatibility) · [Incident](#incident-correction-and-rollback) · [Rollback](#rollback-and-supersession) · [Checklist](#verification-checklist) · [References](#references) · [History](#revision-history)
 
 ---
 
-## Contents
+<a id="status"></a>
 
-- [1. Status](#1-status)
-- [2. Context](#2-context)
-- [3. Decision](#3-decision)
-- [4. Consequences](#4-consequences)
-- [5. Alternatives considered](#5-alternatives-considered)
-- [6. Migration plan](#6-migration-plan)
-- [7. Acceptance criteria](#7-acceptance-criteria)
-- [8. Rollback plan](#8-rollback-plan)
-- [9. Related ADRs and references](#9-related-adrs-and-references)
-- [10. Open items not resolved by this ADR](#10-open-items-not-resolved-by-this-adr)
-- [11. Notes and appendix](#11-notes-and-appendix)
-- [12. ADR self-check](#12-adr-self-check)
+## Status
 
----
-
-## 1. Status
-
-| Field | Value |
+| Field | Current value |
 |---|---|
-| ADR ID | ADR-0028 |
-| Title | State-scale Focus Mode scope (`-state`) and 13-domain coverage rule |
-| Status | `proposed` |
-| Date | 2026-05-23 |
-| Supersedes | none |
-| Superseded by | none |
-| Trigger clause | `directory-rules.md` §6.7 scope-suffix enumeration; `docs/focus-modes/README.md` v0.3 §20 ADR trigger ("Adding a new scope suffix beyond `-county`, `-region`, `-corridor`"); §20 trigger ("Changing the YAML front-matter spec in a way that invalidates existing plans") |
-| Effective on | Acceptance (see §7) |
+| **ADR ID** | `ADR-0028` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Directory Rules amendment, Focus Mode scope grammar, canonical control-plane placement, cross-scale domain coverage, evidence composition, release, and rollback |
+| **Current Directory Rules scope** | `county`, `region`, `corridor` |
+| **Proposed added scope** | `state` |
+| **Proposed state instance** | Exactly one Kansas lane: `kansas-state` |
+| **Current repository posture** | Legacy singular control-plane scaffolds, county-only validator, missing schemas/payload validator, no state lane, no state release |
+| **Implementation effect of this revision** | Documentation only |
+| **Release/publication effect** | None |
+| **Supersedes / superseded by** | None / none |
+| **Relationship to ADR-0027** | ADR-0027 proposes canonical control-plane naming and migration; ADR-0028 proposes the state scope and cross-scale coverage profile. Both remain proposed. |
 
-Status semantics follow `directory-rules.md` §2.4 enumeration: `proposed | accepted | superseded | rejected`.
+### Acceptance versus implementation graduation
 
-[↑ Back to top](#top)
+Three states must remain visible:
 
----
+1. **ADR acceptance** would approve the `state` scope, `kansas-state` cardinality, domain-coverage rule, evidence-independence rule, and migration responsibilities.
+2. **Directory Rules effectiveness** would require the accepted ADR, ADR index, and Directory Rules amendment to land together in one reviewed change or atomic merge group.
+3. **Implementation graduation** would require canonical path convergence, accepted domain-set identity, semantic contracts, closed schemas, non-vacuous fixtures, state-aware validators, executable Focus runtime tests, governed API integration, a complete Kansas state lane, release evidence, correction, and rollback drills.
 
-## 2. Context
+This one-file revision performs none of those transitions.
 
-### 2.1 The gap this ADR addresses
-
-**CONFIRMED corpus state.** `directory-rules.md` §6.7.1 currently defines a Focus Mode as a "**county- or region-scale** proof slice" and §6.7.2 enumerates three allowed scope suffixes: `-county`, `-region`, `-corridor`. **There is no state-scale Focus Mode in the canonical scope-suffix enumeration today.**
-
-**PROPOSED gap analysis.** With 105 counties and no statewide composition, three problems compound:
-
-1. **No umbrella view.** The map frame most users open at first (the whole state) has no `MapReleaseManifest` whose extent is Kansas. Every public claim that should be statewide must either (a) be reconstructed in 105 county lanes, (b) be hidden in a cross-cutting layer with no Focus Mode home, or (c) be uncited. None of these is consistent with cite-or-abstain.
-2. **Statewide-native sources have no canonical home.** Several KFM source-seed families are inherently statewide before they are county-bounded — `KFM_Domains_v1_1` lists USGS NHD at HUC-4, KGS statewide bedrock, KDHE statewide AQ network (AirNow + AQS + KDHE bulletins), KS DASC statewide layers, KDOT statewide network, NRCS gNATSGO, statewide NFHL. Under the county-only scope, these sources are placed in `data/catalog/sources/<domain>/` by domain but have no Focus Mode where they assemble into a citable claim at the statewide frame.
-3. **Domain coverage is non-uniform.** Reviewing the 17+ in-flight county build plans, every county is bottom-up-driven by its distinctive history (Ellsworth's post-rock sandstone, Riley's Konza Prairie, Sedgwick's aviation). This is correct authorship discipline, but it leaves cross-county domain coverage uneven by construction — atmosphere, statewide hazards, and Frontier Matrix object families are unevenly addressed and sometimes silently omitted.
-
-### 2.2 What "scale" means in KFM
-
-**CONFIRMED doctrine.** A Focus Mode is the **cross-cutting compositional unit** that demonstrates the full trust path `SourceDescriptor → SourceIntakeRecord → EvidenceRef → EvidenceBundle → Claim/AtlasCard → DecisionEnvelope → ReleaseManifest → Public UI` for a **bounded spatial frame**. Scope suffixes (`-county`, `-region`, `-corridor`) name what kind of bound applies. **The state of Kansas is a valid spatial bound** — but the current enumeration has no syntactic place for it.
-
-**PROPOSED framing.** Scale is a property of the *spatial bound*, not of the *evidence chain*. The trust path is identical at every scale; what differs is:
-
-- the **extent** of the bound (Kansas vs Ellsworth County);
-- the **resolution / generalization** of admissible evidence (HUC-4 vs HUC-12; statewide road network vs county-intersecting segments);
-- the **cadence** at which `ReleaseManifest`s are issued (statewide datasets refresh on annual/quarterly cycles; county-bounded slices can move faster);
-- the **sensitivity posture** along certain lanes (aggregation defeats some re-identification risks at state scale; archaeology / rare species / living-person / DNA / critical-infrastructure remain deny-default at both scales).
-
-State scale is not a different kind of Focus Mode; it is the same kind at a different bound.
-
-### 2.3 Why this is ADR-class
-
-**CONFIRMED triggers.** Per `directory-rules.md` §2.4 and the `docs/focus-modes/README.md` v0.3 §20:
-
-- §2.4 lists the canonical ADR triggers. **None of items §2.4(1)–(6) is named directly** by this change (no canonical root added/removed/renamed; no schema-home change; no lifecycle phase split or merge; no parallel home; no §3 invariant bent).
-- **However**, §6.7 IS part of `directory-rules.md`, and changing its scope-suffix enumeration changes the placement contract that §6.7.2 makes binding. The `docs/focus-modes/README.md` v0.3 §20 (which restates §6.7) explicitly identifies "Adding a new scope suffix beyond `-county`, `-region`, `-corridor`" as an ADR trigger, and the README's reconciliation invariant ("`directory-rules.md` wins") only holds if the README cannot unilaterally extend the enumeration without an ADR.
-- The change is therefore ADR-class **by the spirit of §2.4(5)** ("Creating a parallel home for any of: schemas, contracts, policy, sources, registries, releases, proofs, receipts") — extending the scope-suffix enumeration creates a new placement *target* under existing canonical roots, and the placement contract requires explicit governance.
-- The change is **also** ADR-class because it amends the YAML front-matter spec in `_template/county-build-plan.md` and the schema `focus_mode_payload.schema.json` in a way that invalidates existing draft plans (which lack a `scale_class` field). This breaks no released payloads (none exist), but it does break the validator's acceptance of pre-amendment drafts unless `scale_class` is back-filled.
-
-### 2.4 Doctrine cited
-
-- `directory-rules.md` §3 (root-stays-boring), §6.7 (Focus Mode placement contract), §2.1 (authority order), §2.4 (ADR triggers), §12 (Domain Placement Law), §13.5 (drift anti-patterns 8–10), §18.d (v1.2 deferred items).
-- `kfm_repository_structure_guiding_document.md` §3, §8.
-- `kfm_unified_doctrine_synthesis.md` Part III (cite-or-abstain), Part VI (promotion gates), Part VII (publication/sensitivity), Part XI (validator worked example).
-- `ai-build-operating-contract.md` §10 (AI is interpretive, EvidenceBundle outranks generation), §28 (ADR triggers).
-- `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` Appendix C (the 13-domain object-family enumeration this ADR adopts).
-- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C (county build plan index).
-- `docs/focus-modes/README.md` v0.3 (the design spec this ADR evaluates).
-
-### 2.5 What this ADR does NOT address
-
-- It does **not** change the 13-domain enumeration itself. (Future changes to the domain list require their own ADR, per `docs/focus-modes/README.md` v0.3 §20.)
-- It does **not** authorize a derivation path from county lanes to the state lane. State-scale composition is independent (see §3.6).
-- It does **not** alter the trust membrane, the cite-or-abstain posture, the promotion-gates sequence A–G, the lifecycle states, or the sensitivity-tier scheme.
-- It does **not** modify the canonical UI shell (`apps/explorer-web/` per `directory-rules.md` §7.1.a) or its drift register entry (OPEN-DR-06).
-- It does **not** resolve OPEN-DR-08 (three-casings-per-area design); that resolution remains a separate ADR.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 3. Decision
+<a id="evidence-boundary"></a>
 
-This ADR makes six coupled sub-decisions. Reviewers approve or reject the ADR as a unit.
+## Evidence boundary
 
-### 3.1 Sub-decision A — Add `-state` to the allowed scope-suffix enumeration
+This revision is grounded in repository bytes at `main@8df9bd2b723c0d4cf88a32d357ea8c70895f1177`.
 
-**Amend `directory-rules.md` §6.7.1 and §6.7.2** to expand the allowed scope-suffix enumeration from three to four values:
-
-> **Before (v1.2, current):** `-county`, `-region`, `-corridor`.
->
-> **After (v1.3, proposed):** `-state`, `-county`, `-region`, `-corridor`.
-
-A Focus Mode at state scope demonstrates the full KFM trust path for a state-wide bound. State scope is **not** a derived view; it is a parallel composition at a coarser spatial bound, with its own source seeds, its own evidence chain, its own promotion decisions, and its own `ReleaseManifest`.
-
-### 3.2 Sub-decision B — Establish `kansas-state` as the single canonical state-scale Focus Mode
-
-- **Canonical area name:** `kansas` (lower-case kebab/snake-case; matches Kansas as a place identifier).
-- **Canonical lane (in `docs/`):** `docs/focus-modes/kansas-state/`.
-- **Cardinality:** Exactly **one** state-scale Focus Mode at any time. The state-scale lane is a single-instance composition by construction; multiple Kansas-scale "modes" (e.g., a "historical-Kansas" vs "modern-Kansas") are time-scoped releases of the same Focus Mode, not parallel area lanes.
-- **Per-root placement** (extends `directory-rules.md` §6.7.2 by adding a state-scale row; full table is reproduced in §4.1 below).
-
-### 3.3 Sub-decision C — Adopt the 13-domain coverage rule at every scale
-
-Every Focus Mode (state, county, region, corridor) MUST address all 13 thematic KFM domains in its `layer-registry.md`. Each (domain, area) cell is one of:
-
-- **`populated`** — a layer-registry entry exists with a resolved `EvidenceRef`, a sensitivity class, an owner, a release state, and a style ref.
-- **`abstain`** — an explicit row documenting why the domain is not represented at this scale and area (e.g., "no admissible statewide source meets the public release threshold," or "no archaeology sites in this county survive the steward-review threshold for public release").
-
-A **missing** or **empty** domain row is a validator failure. Silent omission collapses cite-or-abstain.
-
-The 13 canonical domains (CONFIRMED per `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` Appendix C) are:
-
-| # | Domain | Short-name (machine key) |
+| Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
-| 1 | Hydrology | `hydrology` |
-| 2 | Soil | `soil` |
-| 3 | Atmosphere / Air | `atmosphere_air` |
-| 4 | Geology | `geology` |
-| 5 | Fauna | `fauna` |
-| 6 | Flora | `flora` |
-| 7 | Habitat | `habitat` |
-| 8 | Agriculture | `agriculture` |
-| 9 | Hazards | `hazards` |
-| 10 | Roads / Rail / Trade | `roads_rail` |
-| 11 | Settlements / Infrastructure | `settlements_infrastructure` |
-| 12 | Archaeology / Cultural Heritage | `archaeology` |
-| 13 | People / DNA / Land / Genealogy | `people_dna_land` |
+| ADR inventory | ADR-0028 uniquely maps to this exact filename; source/effective status `proposed` | Acceptance |
+| Directory Rules §6.7 | Canonical docs pattern is `docs/focus-modes/<area>-<scope>/`; allowed suffixes are county, region, corridor | State scope or canonical state lane |
+| ADR-0027 | Proposes plural canonical control plane and singular-to-plural migration | Acceptance or migration |
+| Actual control README | File exists at legacy `docs/focus-mode/README.md`, while its H1 and prose claim `docs/focus-modes/` | Canonicality or migration completion |
+| Canonical plural README | `docs/focus-modes/README.md` not found | Implemented canonical control plane |
+| County index | Exists under legacy `docs/focus-mode/counties/`; now functions mainly as a collision register | Validator-compatible canonical county control plane |
+| State index | Exists under legacy `docs/focus-mode/state/`; marks `kansas-state` planned | Valid state index or implemented lane |
+| Kansas state lane | `docs/focus-mode/state/kansas-state/README.md` not found | Any state-lane content or readiness |
+| State template | Exists under legacy `docs/focus-mode/state/_template/` and declares itself blocked | Accepted template or validator support |
+| Focus index validator | County-only; `VALID_SCOPES = ("county", "region", "corridor")`; expects `docs/focus-modes/COUNTY_INDEX.md` | State index parsing, state cardinality, domain coverage |
+| FocusModePayload contract | Proposed county-oriented semantic contract; scope enum names county, region, corridor | State semantics or accepted domain coverage |
+| Focus schemas | Declared `focus_mode_payload` and `layer_registry_entry` schema paths not found | Machine shape or compatibility |
+| Payload validator | `tools/validators/validate_focus_mode_payload.py` not found | Payload validation |
+| Human domain register | Lists 13 domain lanes and their current lane IDs | Accepted machine domain-set version |
+| Machine domain register | `entries: []`, status proposed | Executable domain identity/profile |
+| Focus mock workflow | Explicit readiness hold; no accepted runtime, fixtures, or command | Working Focus flow or state-scale response |
+| State release | No state lane, payload, release manifest, correction, or rollback was verified | State publication |
 
-**Three cross-cutting spine families** — Spatial Foundation, Frontier Matrix (object-family group), Planetary/3D — are NOT enumerated in the matrix because they apply to **every** Focus Mode at every scale by construction. They are spine, not domain. Future ADRs MAY change this distinction.
+### Truth labels
 
-### 3.4 Sub-decision D — Resolve OPEN-FM-14 (state-scale release-candidate folder naming)
+- **CONFIRMED** — verified from repository bytes or supplied governing doctrine.
+- **PROPOSED** — candidate decision, field, path role, migration, or implementation profile.
+- **CONFLICTED** — current repository surfaces assign incompatible names, homes, shapes, or claims.
+- **HOLD** — current evidence deliberately blocks graduation.
+- **NEEDS VERIFICATION** — a concrete check remains open.
+- **UNKNOWN** — evidence does not support a stronger conclusion.
 
-The state-scale release-candidate folder is **`release/candidates/kansas-focus-mode/`**, following the existing county convention `<area>-focus-mode/`. The alternative considered (`release/candidates/kansas-state-focus-mode/`) was rejected because:
+### Out of scope
 
-1. It would break the established pattern (`ellsworth-focus-mode/`, `smoky-hill-corridor-focus-mode/`, …) for one root only.
-2. The cited "Kansas vs KFM" ambiguity is resolved by context (`STATE_INDEX.md`, the lane README, the `ReleaseManifest` itself).
-3. Future state-scale release candidates can disambiguate via version (e.g., `kansas-focus-mode-v3.json`) rather than folder name.
+This ADR does not:
 
-### 3.5 Sub-decision E — Amend the YAML front-matter spec and machine schema
+- create or populate `kansas-state`;
+- accept ADR-0027 or choose a migration implementation on its behalf;
+- alter the canonical 13-domain membership;
+- define final JSON Schema field names or version numbers;
+- ingest statewide data or activate sources;
+- authorize public emergency, legal, title, medical, regulatory, or life-safety advice;
+- change the trust membrane, lifecycle, source-role, sensitivity, release, correction, or rollback laws;
+- merge, deploy, release, or publish anything.
 
-**Amend `_template/county-build-plan.md` and add `_template/state-build-plan.md`** to require two new YAML front-matter keys (effective for all new and existing draft plans):
+[Back to top](#top)
+
+---
+
+<a id="context"></a>
+
+## Context
+
+A Focus Mode is a cross-cutting, evidence-bounded composition for one spatial frame. It is not a domain and not a root. The current placement contract recognizes county, region, and corridor frames. Kansas-wide questions and statewide source families can be represented as ordinary layers or analytical objects, but the repository has no accepted state-scale Focus Mode grammar or governed state lane.
+
+The original proposal correctly identifies two distinct governance needs:
+
+1. **State scope.** A whole-Kansas composition can provide an inspectable statewide frame with its own evidence, policy, release, correction, and rollback lineage.
+2. **No silent domain omission.** Every Focus Mode should visibly address each canonical domain lane, even when the correct outcome is abstention or denial.
+
+The repository has already accumulated proposed state-control documents, but they do not create authority:
+
+- the state index and template live under a noncanonical singular path;
+- the state index claims one planned lane that does not exist;
+- the county-only validator does not parse the state index;
+- the required machine schemas and payload validator are absent;
+- the machine domain registry is empty;
+- the Focus runtime remains a readiness hold.
+
+The decision must therefore govern convergence before it governs state content.
+
+### Why state is a scope, not a domain
+
+`state` describes the spatial bound of the composition. It does not create a new thematic domain. Hydrology, soil, habitat, archaeology, and the other domain lanes remain segments inside responsibility roots. Cross-cutting analytical families such as spatial foundation or Frontier Matrix objects may appear inside a state composition without replacing its Focus Mode release boundary.
+
+### Why the coverage rule is cross-scale
+
+Silent omission is not uniquely a state problem. A county, region, corridor, or state Focus Mode can appear complete while omitting a domain that lacks admissible evidence or is blocked by policy. The correct cure is an explicit disposition for every domain, not a requirement to fabricate a layer.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-decision"></a>
+
+## Proposed decision
+
+Upon reviewed acceptance and the coordinated Directory Rules amendment:
+
+1. **Add `state` to the Focus Mode scope-class enumeration.** The accepted values become `state`, `county`, `region`, and `corridor`.
+2. **Define one Kansas state instance.** The only state-scale area in current KFM scope is `kansas-state`. Time periods, historical frames, themes, releases, and UI presets are versions or views of that lane—not sibling state lanes.
+3. **Use the canonical control-plane home selected by governing doctrine.** Under current Directory Rules, the proposed docs lane is `docs/focus-modes/kansas-state/`. Existing singular `docs/focus-mode/` materials are migration inputs, not parallel authority.
+4. **Require an explicit domain-set reference.** Every Focus Mode candidate and payload must identify the exact accepted domain-set profile against which coverage is evaluated.
+5. **Require complete domain coverage records.** Every domain ID in the referenced profile appears exactly once with a reviewed disposition and owner. Missing, duplicate, unregistered, aliased, or unresolved entries fail validation.
+6. **Permit release dispositions `populated`, `abstain`, or `deny`.** Candidate work may temporarily use `hold`, but `hold` blocks release.
+7. **Keep state evidence independent from county Focus Mode outputs.** A state claim cannot cite a county Focus Mode payload, layer registry, generated summary, or release as its root evidence. It must resolve source and evidence support directly.
+8. **Permit shared underlying evidence where valid.** State and county claims may share authoritative sources, records, EvidenceRefs, or EvidenceBundles when their spatial and temporal scope supports both claims. Each composition still carries its own claim, policy, review, release, correction, and rollback references.
+9. **Preserve sensitivity across scales.** Aggregation may support an approved public-safe derivative, but state scale never automatically lowers rights, sovereignty, living-person, DNA, archaeology, rare-species, infrastructure, or alert-authority restrictions.
+10. **Make acceptance atomic.** ADR status/index updates, Directory Rules amendment, control-plane migration decision, and rollback plan must be reviewed together. No state lane becomes canonical merely because a template, index row, schema, or validator exists.
+11. **Keep generation subordinate to evidence.** Focus Mode AI surfaces may interpret only governed, release-resolved context and must return bounded finite outcomes.
+12. **Keep release separate from composition.** A complete lane, payload, or coverage matrix is not publication. Public state-scale claims require the normal governed release path.
+
+### Proposed Directory Rules amendment
+
+The accepted amendment should update §6.7 without inventing a new root:
+
+- definition: “state-, county-, region-, or corridor-scale proof slice”;
+- docs suffix enumeration: `-state`, `-county`, `-region`, `-corridor`;
+- one-area rule: exactly one Kansas state lane;
+- anti-patterns: county-output roll-up as state evidence, silent domain omission, and parallel singular/plural control planes;
+- change history and drift records;
+- migration and rollback references to this ADR.
+
+Exact wording remains a Directory Rules change reviewed under its own authority.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-domain-set-and-coverage-profile"></a>
+
+## Proposed domain-set and coverage profile
+
+### Candidate core domain IDs
+
+The current human Domain Lane Register identifies these 13 canonical lane IDs:
+
+| # | Domain ID | Scope summary |
+|---|---|---|
+| 1 | `hydrology` | Watersheds, streamflow, flood and water context |
+| 2 | `soil` | Soil map units, components, and properties |
+| 3 | `habitat` | Habitat patches, ecological systems, stewardship context |
+| 4 | `fauna` | Species occurrence and range context |
+| 5 | `flora` | Vegetation, rare plants, ethnobotanical context |
+| 6 | `agriculture` | Crop, yield, and producer-adjacent aggregate context |
+| 7 | `geology` | Geologic units, lithology, resources, subsurface context |
+| 8 | `atmosphere` | Weather, climate, and air-quality context |
+| 9 | `hazards` | Hazard observations and cited warning context |
+| 10 | `roads-rail-trade` | Road, rail, route, corridor, and trade-network context |
+| 11 | `settlements-infrastructure` | Settlements, municipalities, townsites, infrastructure |
+| 12 | `archaeology` | Cultural periods, surveys, and protected site context |
+| 13 | `people-dna-land` | Person, genealogy, DNA, land, title, and sovereignty context |
+
+These are candidate IDs for the first domain-set profile. They remain subject to accepted human/machine register reconciliation. Draft aliases such as `atmosphere_air` and `roads_rail` must not become a second vocabulary.
+
+### Versioned profile requirement
+
+A future payload should reference a versioned domain set rather than assuming “13” forever.
+
+Illustrative semantic shape:
 
 ```yaml
-scale_class: state | county | region | corridor
-domain_coverage:
-  hydrology: populated | abstain
-  soil: populated | abstain
-  atmosphere_air: populated | abstain
-  geology: populated | abstain
-  fauna: populated | abstain
-  flora: populated | abstain
-  habitat: populated | abstain
-  agriculture: populated | abstain
-  hazards: populated | abstain
-  roads_rail: populated | abstain
-  settlements_infrastructure: populated | abstain
-  archaeology: populated | abstain
-  people_dna_land: populated | abstain
+domain_set_ref: kfm://domain-set/core-v1
+coverage:
+  - domain_ref: hydrology
+    disposition: populated
+    owner_ref: kfm://steward/hydrology
+    evidence_refs:
+      - kfm://evidence/example
+    policy_decision_refs:
+      - kfm://policy-decision/example
+  - domain_ref: archaeology
+    disposition: deny
+    owner_ref: kfm://steward/archaeology
+    reason_codes:
+      - sensitive_exact_location
 ```
 
-**Amend `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json`** to:
+The final contract/schema may use a map or an array, but it must enforce:
 
-- Add `scale_class` as a required field with enum `["state", "county", "region", "corridor"]`.
-- Add `domain_coverage` as a required map with the 13 keys above and value enum `["populated", "abstain"]`.
+- one resolved `domain_set_ref`;
+- exactly one entry for every domain in that set;
+- no extra or alias domain IDs;
+- stable identity for each entry;
+- explicit owner and reason for non-populated entries;
+- evidence and release support for populated entries;
+- policy support for denied entries;
+- review timing and next-review posture for abstentions;
+- no `hold` at release.
 
-**Amend `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json`** to:
+### Why `not_applicable` is not a release disposition
 
-- Add `domain` as a required field with enum matching the 13 canonical domain machine keys.
-- Add `scale_class` as a required field (must match the parent lane's `scale_class`).
+Every canonical domain is applicable to the coverage question: “What is the disposition for this domain at this area and scale?” A domain with no admissible claim uses `abstain`; a domain blocked by policy uses `deny`. `not_applicable` would recreate silent omission under a different label.
 
-**Amend `contracts/focus_mode/focus_mode_payload.md`** semantic contract to document the new fields and their relationships.
+### Domain-set changes
 
-### 3.6 Sub-decision F — Disallow state-scale derivation from counties
+Adding, removing, renaming, splitting, or merging a canonical domain lane requires its own accepted governance change. A new domain-set profile may then supersede the prior profile through explicit compatibility and migration. Existing released Focus Modes retain the domain-set reference under which they were validated.
 
-The state-scale Focus Mode (`kansas-state`) MUST be composed from statewide source seeds (USGS NHD, KGS statewide bedrock, KDHE statewide AQ network, KS DASC statewide layers, KDOT statewide network, NRCS gNATSGO, statewide NFHL, statewide hazards declarations, etc.). It **MUST NOT** be derived by joining or aggregating county-lane outputs.
-
-**Why this matters.** A derived state-scale view inherits whatever evidence the county lanes resolved — it is, at best, a meta-claim about counties, not a claim about Kansas. It is also subject to spatial-join error, version skew between county lanes, and silent quality propagation from the lowest-quality county. None of these is consistent with cite-or-abstain.
-
-**A geographically overlapping state-scale claim and county-scale claim MAY share underlying evidence** (e.g., both cite USGS gauge 06864000 in Ellsworth County). What they MUST NOT do is have one derive from the other — each resolves its own `EvidenceRef` to its own `EvidenceBundle`.
-
-**Future PROPOSED artifact (not part of this ADR).** A `contracts/focus_mode/cross_scale_crosswalk.md` MAY be authored later to document optional, non-derivative linkages between state-scale and county-scale claims (e.g., "the state-scale hydrology layer's HUC-4 polygon for Smoky Hill includes the HUC-12 sub-watershed that the ellsworth-county hydrology layer cites in detail"). The crosswalk would be a navigation aid, not an evidence chain. This is tracked as **OPEN-FM-15** (PROPOSED in §10).
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 4. Consequences
+<a id="state-and-county-evidence-relationship"></a>
 
-### 4.1 What changes in `directory-rules.md`
+## State and county evidence relationship
 
-**PROPOSED v1.3 amendment to §6.7.** The §6.7.2 placement table gains state-scale entries across all twelve host roots. The full amended table:
+### Independent composition rule
 
-| Root | County-scale pattern (CONFIRMED v1.2) | State-scale pattern (PROPOSED v1.3, this ADR) | Authority |
-|---|---|---|---|
-| `docs/` | `docs/focus-modes/<area>-<scope>/` | `docs/focus-modes/kansas-state/` | Canonical |
-| `contracts/` | `contracts/focus_mode/` (shared) | (shared lane) | Canonical |
-| `schemas/` | `schemas/contracts/v1/focus_mode/` (shared) | (shared lane) | Canonical |
-| `fixtures/` | `fixtures/focus_modes/<area>/{valid,invalid}/` | `fixtures/focus_modes/kansas/{valid,invalid}/` | Canonical |
-| `apps/` | `apps/explorer-web/src/focus-modes/<area>/` | `apps/explorer-web/src/focus-modes/kansas/` | Canonical |
-| `tools/` | `tools/validators/validate_focus_mode_*.py` (shared) | (shared) — validators MUST accept all four scale values | Canonical |
-| `data/catalog/` | `data/catalog/sources/<area>/`, `data/catalog/stac/<area>/` | `data/catalog/sources/kansas/`, `data/catalog/stac/kansas/` | Canonical |
-| `data/published/` | `data/published/layers/<area>/`, `data/published/api_payloads/focus-modes/<area>.json` | `data/published/layers/kansas/`, `data/published/api_payloads/focus-modes/kansas.json` | Canonical |
-| `data/registry/` | `data/registry/sources/<area>/` (optional) | `data/registry/sources/kansas/` (optional) | Canonical |
-| `release/` | `release/candidates/<area>-focus-mode/`, `release/manifests/<area>-focus-mode-v<n>.json` | `release/candidates/kansas-focus-mode/`, `release/manifests/kansas-focus-mode-v<n>.json` | Canonical (per §3.4) |
-| `pipeline_specs/` | `pipeline_specs/focus_modes/<area>/` (optional) | `pipeline_specs/focus_modes/kansas/` (optional) | Canonical |
-| `examples/` | `examples/focus-modes/<area>/` (optional) | `examples/focus-modes/kansas/` (optional) | Canonical |
-| `policy/` | `policy/sensitivity/<area>/` (optional) | `policy/sensitivity/kansas/` (optional; rare — see §4.7) | Canonical |
+A state Focus Mode is not a collection of county Focus Mode outputs. The following are forbidden as the sole or root support for a statewide claim:
 
-**PROPOSED v1.3 amendment to §6.7.1** (definition):
+- county `FocusModePayload` objects;
+- county layer registries or build plans;
+- county-generated summaries or AI responses;
+- county release manifests treated as source evidence;
+- a spatial union of county public layers with no new source/evidence processing;
+- “all counties agree” without a direct statewide evidence bundle and time profile.
 
-> Before: "A **Focus Mode** is a governed, evidence-bounded, county- or region-scale proof slice…"
->
-> After: "A **Focus Mode** is a governed, evidence-bounded, **state-, county-, region-, or corridor-scale** proof slice…"
+### Allowed shared support
 
-**PROPOSED v1.3 amendment to §6.7.3** (casing convention): no structural change; the per-root casing logic already covers a single-token area like `kansas`. The §6.7.3 examples gain a state-scale row.
+The following may be shared when scope, source role, rights, sensitivity, time, and geometry support it:
 
-**PROPOSED v1.3 amendment to §6.7.4** (one area = one Focus Mode): no structural change; cardinality at state scope is governed by §3.2 of this ADR (exactly one).
+- a statewide source descriptor;
+- authoritative records whose native organization is county-by-county;
+- an EvidenceBundle whose support explicitly covers both state and county claims;
+- a versioned statewide transformation from county-granular source records;
+- shared taxonomy, identity, boundary, or temporal reference objects.
 
-**PROPOSED v1.3 amendment to §6.7.5** (what a Focus Mode is NOT): add two drift signatures:
+The state composition must emit its own:
 
-> - **State-scale roll-up.** Deriving the state-scale Focus Mode by joining/aggregating county-scale outputs (→ §3.6 of ADR-0028).
-> - **Domain-coverage omission.** Failing to address all 13 domains at every scale, populated or abstained on the record (→ §3.3 of ADR-0028).
+- build/run receipt;
+- claim and EvidenceRef resolution;
+- transformation and aggregation record where applicable;
+- policy and sensitivity decision;
+- coverage dispositions;
+- promotion/release decision;
+- correction and rollback target.
 
-**PROPOSED v1.3 amendment to §13.5** (drift anti-pattern register): two new rows, mirroring the §6.7.5 additions.
+### Cross-scale crosswalk
 
-**PROPOSED v1.3 amendment to §18.d** (deferred items): close OPEN-FM-09, OPEN-FM-10, OPEN-FM-14; open OPEN-FM-15 (cross-scale crosswalk artifact) and OPEN-FM-16 (state-scale sensitivity overrides).
+An optional cross-scale crosswalk may describe relationships between state and county claims, layers, sources, boundaries, and releases. It is a navigation and comparison object. It must not become the evidence root or silently synchronize incompatible releases.
 
-### 4.2 What changes in schemas
+[Back to top](#top)
 
-| Schema file | Change | Breaking? |
+---
+
+<a id="proposed-placement-and-migration-boundary"></a>
+
+## Proposed placement and migration boundary
+
+### Directory Rules basis
+
+This ADR adds no root. The proposed state composition follows the current §6.7 responsibility-root pattern.
+
+| Responsibility | Proposed canonical state-scale home | Current evidence boundary |
 |---|---|---|
-| `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` | Add required `scale_class` enum; add required `domain_coverage` map | **Breaking for existing draft payloads** that lack these fields. **Non-breaking for released payloads** because none exist yet (no county lane has reached `released` status). |
-| `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json` | Add required `domain` enum; add required `scale_class` field | Same — breaking for drafts, non-breaking for releases. |
-| `contracts/focus_mode/focus_mode_payload.md` | Document new fields; no breaking semantic change | Non-breaking (semantic) |
+| Human control plane | `docs/focus-modes/STATE_INDEX.md`, `docs/focus-modes/_template/state-build-plan.md`, `docs/focus-modes/kansas-state/` | Canonical plural root absent; legacy singular scaffolds exist |
+| Semantic Focus contract | `contracts/focus_mode/` | County-oriented proposed contract exists |
+| Machine schemas | `schemas/contracts/v1/focus_mode/` | Declared schemas absent |
+| Fixtures | `fixtures/focus_modes/kansas/{valid,invalid}/` | State fixtures unverified |
+| Explorer UI | `apps/explorer-web/src/focus-modes/kansas/` | Explorer/Focus implementation unverified |
+| Validators | `tools/validators/` | County-only index validator; payload validator absent |
+| Catalog/source slices | `data/catalog/sources/kansas/`, `data/catalog/stac/kansas/` where justified | Inventory unknown |
+| Published carriers | `data/published/layers/kansas/`, `data/published/api_payloads/focus-modes/kansas.json` | No state payload/release verified |
+| Registry view | `data/registry/sources/kansas/` only if required | Machine domain register empty; source inventory unknown |
+| Release candidate | `release/candidates/kansas-focus-mode/` | Proposed naming; no candidate verified |
+| Release manifest | Accepted release-manifest responsibility home | Singular/plural manifest-path conflict remains outside this ADR |
+| Pipeline composition | `pipeline_specs/focus_modes/kansas/` only if a distinct declarative composition is justified | Absent/unverified |
+| Examples | `examples/focus-modes/kansas/` | Examples remain non-authoritative |
+| Policy override | Accepted policy sublane only when a state-specific override is justified | Default should inherit cross-domain policy |
 
-**Schema versioning.** Per `directory-rules.md` §6.4 and ADR-0001, the schema home is `schemas/contracts/v1/...`. This ADR does NOT bump the major version (`v1` → `v2`) because the additions can be back-filled into existing draft fixtures within the same major version. Schema steward MAY require a minor-version bump in the file's `$id` (e.g., `v1.0` → `v1.1`) if the project's schema-versioning convention requires it; this is left to schema steward judgment.
+### Singular/plural migration rule
 
-### 4.3 What changes in validators
+The current `docs/focus-mode/` tree is not silently promoted. A migration must:
 
-`tools/validators/validate_focus_mode_index.py` gains the v0.3 checks already enumerated in `docs/focus-modes/README.md` v0.3 §19 (checks 2, 6, 7, 8, 13, 15, 17). The full list of new behavior:
+1. inventory every tracked file and inbound link;
+2. classify canonical content, compatibility redirects, generated artifacts, and obsolete claims;
+3. move or rewrite state/county control-plane materials into `docs/focus-modes/`;
+4. preserve stable history and add migration notes;
+5. update all links, validator inputs, workflows, and docs;
+6. prevent dual-authority editing;
+7. retain a bounded compatibility redirect only when needed;
+8. verify no payload, release, or public state changed;
+9. provide a one-commit or otherwise reversible rollback target.
 
-1. Recognize `-state` as a valid scope suffix; verify exactly one `kansas-state/` lane exists when any state-scale work is in flight.
-2. Parse `STATE_INDEX.md` and verify it contains exactly one row (`area: kansas`, `scope: state`).
-3. Verify `scale_class` front-matter key matches the lane's scope suffix.
-4. Verify `domain_coverage` map contains all 13 canonical domain keys; each value ∈ `{populated, abstain}`.
-5. Verify `layer-registry.md` contains a §14 matrix row consistent with the front-matter map.
-6. Verify acceptance-checklist item (i) (13-domain coverage) is present.
+ADR-0027 and this ADR must be reconciled so one accepted decision owns the migration sequence and neither creates a second control plane.
 
-`tools/validators/validate_focus_mode_payload.py` is amended (or emitted, if not yet present) to accept `scale_class ∈ {state, county, region, corridor}` and to enforce 13-domain coverage closure.
-
-### 4.4 What changes in templates
-
-- `docs/focus-modes/_template/county-build-plan.md` — amended YAML front-matter (adds `scale_class: county` default; adds `domain_coverage` map skeleton).
-- `docs/focus-modes/_template/state-build-plan.md` — **NEW**. Emitted on ADR acceptance. Same shape as county template but with `scale_class: state`, `area: kansas`, and statewide-source-first source-seed-list ordering.
-
-### 4.5 What changes in the directory tree
-
-**New artifacts** (PROPOSED, emitted in the acceptance PR or its immediate follow-up):
-
-- `docs/adr/ADR-0028-state-scale-focus-mode-scope.md` — this file.
-- `docs/focus-modes/STATE_INDEX.md` — single-area state-scale index.
-- `docs/focus-modes/_template/state-build-plan.md` — state-scale template.
-- `docs/focus-modes/kansas-state/` — the single state-scale lane (PROPOSED to land as PR-1 of the four-PR sequence).
-
-**Amended artifacts:**
-
-- `docs/doctrine/directory-rules.md` — §6.7 amendments per §4.1 above; §18.d open-items register update; §21 changelog (v1.3 entry).
-- `docs/focus-modes/README.md` — version bump v0.3 → v0.4 reflecting acceptance (changes PROPOSED labels on state-scale rows to CONFIRMED).
-- `docs/focus-modes/_template/county-build-plan.md` — YAML front-matter additions.
-- `docs/focus-modes/COUNTY_INDEX.md` — add `scale_class` column (default `county`) for consistency.
-- `contracts/focus_mode/focus_mode_payload.md` — new fields documented.
-- `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` — schema additions.
-- `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json` — schema additions.
-- `tools/validators/validate_focus_mode_index.py` — new checks.
-- `tools/validators/validate_focus_mode_payload.py` — new behavior (or emitted, if absent).
-- `docs/registers/DRIFT_REGISTER.md` — close OPEN-FM-09, OPEN-FM-10, OPEN-FM-14; open OPEN-FM-15, OPEN-FM-16.
-
-### 4.6 What changes for in-flight county draft plans
-
-The 17+ draft county build plans currently lack a `scale_class` field and a `domain_coverage` map. On acceptance:
-
-- **Back-fill is required**, not optional. Each draft plan owner SHOULD add `scale_class: county` and the `domain_coverage` map to their YAML front-matter on next revision.
-- **No release is blocked** by the back-fill, because no county lane has reached `released` status (all are `draft`).
-- **The validator MUST emit a deprecation warning, not an error**, for the first 14 days after acceptance, identifying lanes that lack the new keys. After 14 days, the warning becomes an error.
-- **The new negative fixtures** (`missing_domain_coverage.invalid.json`, `wrong_scale_class.invalid.json`) MUST be present in each lane's `fixtures/focus_modes/<area>/invalid/` directory on next revision.
-
-### 4.7 What changes for sensitivity policy
-
-`policy/sensitivity/kansas/` is **permitted but not expected** at v0.3 launch. The default state-scale posture inherits cross-domain defaults; per-state overrides are rare and require the same ADR-level justification as per-county overrides (deny-fixture + documented rationale). **OPEN-FM-16** tracks whether any state-scale override is justified at launch.
-
-The key sensitivity invariant (PROPOSED v0.3 §15 of README, restated by this ADR): aggregation at state scale lowers risk for some lanes (parcels, infrastructure footprints, fauna occurrences) but does **NOT** lower risk for archaeology coordinates, rare-species exact locations, living-person data, or DNA. Those remain deny-default at both scales.
-
-### 4.8 What does NOT change
-
-- The trust path itself (`SourceDescriptor → … → ReleaseManifest → Public UI`).
-- The trust membrane (public UI never reads `data/raw/`, `data/work/`, `data/quarantine/`).
-- The cite-or-abstain posture.
-- The promotion-gates sequence A–G.
-- The lifecycle states (`not-started`, `planned`, `draft`, `validated`, `payload-ready`, `released`, `rolled-back`, `deprecated`).
-- The canonical UI shell (`apps/explorer-web/`).
-- The schema home rule (per ADR-0001).
-- The Domain Placement Law (`directory-rules.md` §12). Focus Modes remain cross-cutting; this ADR does not promote any domain to a root folder.
-- The 13-domain enumeration itself. (Future changes to the list require their own ADR.)
-- The casing convention's three-styles-per-area design (OPEN-DR-08 remains open and unresolved by this ADR).
-
-### 4.9 CI and review impact
-
-- CI MUST run `validate_focus_mode_index.py` and `validate_focus_mode_payload.py` on every PR touching `docs/focus-modes/`, `contracts/focus_mode/`, `schemas/contracts/v1/focus_mode/`, `fixtures/focus_modes/`, `apps/explorer-web/src/focus-modes/`, or `release/manifests/focus_modes/`.
-- The acceptance PR adds a new reviewer role: **state-scale steward** (PROPOSED `<OWNER:state-scale-steward>`). The reviewer is responsible for the `kansas-state/` lane's content quality, statewide source-seed admissibility, and 13-domain coverage closure.
-- The acceptance PR adds **two new fixture classes** (negative) to the required-negative-fixture list: `missing_domain_coverage.invalid.json` and `wrong_scale_class.invalid.json`.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 5. Alternatives considered
+<a id="authority-and-publication-boundary"></a>
 
-### 5.1 Alt A — Reject; keep county-only scope
+## Authority and publication boundary
 
-**Considered.** Leave `directory-rules.md` §6.7 unchanged. Address statewide questions through cross-cutting layers (per `directory-rules.md` §12's "multi-domain and cross-cutting files" guidance) without elevating to a Focus Mode.
+State scope does not turn a Focus Mode into a source of truth. The state composition remains downstream of:
 
-**Rejected because:**
+- source identity and source-role decisions;
+- rights, sovereignty, consent, and sensitivity;
+- evidence and provenance;
+- contracts and schemas;
+- deterministic transforms and receipts;
+- policy and independent review;
+- promotion and release;
+- correction, withdrawal, supersession, and rollback.
 
-- Cross-cutting layers have no `MapReleaseManifest`. The release gate is per-Focus-Mode, so a layer without a Focus Mode home cannot complete the trust path's `Release → Public UI` arc.
-- Cross-cutting layers have no `EvidenceDrawerPayload`-shaped acceptance surface. The Evidence Drawer is governed at the Focus Mode level.
-- The cross-cutting alternative produces an unauditable umbrella view by construction — exactly the failure-mode this ADR exists to prevent.
+A statewide map, count, summary, layer, domain matrix, generated explanation, or “all counties” aggregate is a carrier or projection. It does not independently prove a claim.
 
-### 5.2 Alt B — Model state-scale as a "Frontier Matrix" object family rather than a Focus Mode
+Public clients must receive state Focus results through the Governed API or an approved released-static profile. They must not read Focus control-plane Markdown, canonical data stores, proof stores, release internals, model runtimes, or candidate outputs directly.
 
-**Considered.** The `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` Appendix C lists Frontier Matrix as a cross-cutting object family (`Frontier Definition`, `GeographyVersion`, `County-Year Panel`, …). One could argue the state-scale view IS the Frontier Matrix, and no new Focus Mode scope is needed.
+State-scale content must not be presented as emergency alert authority, legal/title advice, access permission, regulatory direction, medical advice, or definitive living-person or DNA interpretation.
 
-**Rejected because:**
-
-- Frontier Matrix object families are **cross-cutting analytical objects** (county-year panels, admin-boundary changes, crosswalks), not a spatial-frame composition. They appear at every scale.
-- Confusing "Frontier Matrix object family" (an analytical lens) with "state-scale Focus Mode" (a spatial bound) would re-introduce the exact category collapse that `directory-rules.md` §12 (Domain Placement Law) warns against.
-- The Focus Mode pattern's whole point is to make the spatial bound the unit of release governance. Hijacking Frontier Matrix to do that would split governance across two object models.
-
-### 5.3 Alt C — Permit informal "state context" without elevating to a scope
-
-**Considered.** Allow each county Focus Mode to carry an informal "statewide context section" that summarizes statewide framing for that county, without creating a state-scale Focus Mode.
-
-**Rejected because:**
-
-- The statewide framing would be authored 105 times, with no canonical version. (Drift by construction.)
-- No `EvidenceRef` resolves at the state scale; the statewide claim has no `EvidenceBundle`.
-- This is the current de facto situation, and it is the gap this ADR addresses.
-
-### 5.4 Alt D — Different scope suffix names (`-statewide`, `-kansas`)
-
-**Considered.** Use `-statewide` or `-kansas` instead of `-state`.
-
-**Rejected because:**
-
-- `-statewide` is a description, not a scope category. The other suffixes (`-county`, `-region`, `-corridor`) are spatial-unit categories; mixing categories with descriptions breaks the enumeration's symmetry.
-- `-kansas` couples the scope to a place (Kansas), which is already encoded in the area name. Two places encoding the same fact is drift waiting to happen.
-- `-state` is consistent with U.S. administrative-unit naming and matches the existing pattern.
-
-### 5.5 Alt E — Different area name (`statewide`, `kansas-statewide`)
-
-**Considered.** Use `statewide` as the area name (giving `docs/focus-modes/statewide-state/`) or `kansas-statewide` (giving `docs/focus-modes/kansas-statewide-state/`).
-
-**Rejected because:**
-
-- `statewide` is not a place; it is a property. The area name must identify the place.
-- `kansas-statewide-state/` is redundant (the `-state` scope suffix already says "this is statewide"). It reads awkwardly.
-- `kansas` is the unambiguous place identifier; in KFM's context, "kansas at state scale" is exactly `kansas-state`.
-
-### 5.6 Alt F — Different release-candidate folder name (`kansas-state-focus-mode/`)
-
-**Considered.** Use `release/candidates/kansas-state-focus-mode/` instead of `release/candidates/kansas-focus-mode/`, to disambiguate from "Kansas Frontier Matrix" (the whole project).
-
-**Rejected because:**
-
-- Pattern consistency wins. The county pattern is `<area>-focus-mode/`; changing this for state alone introduces inconsistency in one root.
-- The cited ambiguity is context-resolved (the `STATE_INDEX.md`, the lane README, and the `ReleaseManifest` itself all carry the scope).
-- See §3.4 for the full rationale.
-
-**Reconsider if:** during the v0.3 implementation, the ambiguity proves to be a friction point in code review or onboarding. The decision can be revisited via a follow-up ADR.
-
-### 5.7 Alt G — Permit multiple state-scale instances (multi-tenant or time-scoped)
-
-**Considered.** Permit lanes like `kansas-historical-state/` and `kansas-modern-state/` as parallel state-scale compositions.
-
-**Rejected because:**
-
-- Time-scoping is governed by `ReleaseManifest` versioning and the `GeographyVersion` / `County-Year Panel` object families, not by lane multiplication.
-- "One area = one Focus Mode" (`directory-rules.md` §6.7.4) is the existing invariant; this ADR extends it to state scale without weakening it.
-- Multiple parallel state-scale lanes would re-introduce the umbrella-view fragmentation that motivated this ADR.
-
-### 5.8 Alt H — Permit roll-up derivation from counties
-
-**Considered.** Define the state-scale composition as a derived view that joins/aggregates county-scale outputs.
-
-**Rejected because:**
-
-- Derivation inherits the lowest-quality county evidence silently.
-- Spatial joins across 105 county lanes introduce non-trivial geometry error without any provenance record of that error.
-- Version skew between county lanes (each on its own cadence) means the derived view has no coherent temporal frame.
-- A derived view is a meta-claim about counties, not a claim about Kansas. The two are not interchangeable for trust-path purposes.
-- See §3.6 for the full rationale.
-
-### 5.9 Alt I — Split this ADR into two ADRs (scope addition + coverage rule)
-
-**Considered.** ADR-0028 covers only the `-state` scope addition; a separate ADR (e.g., ADR-0029) covers the 13-domain coverage rule.
-
-**Rejected because:**
-
-- The two changes are operationally coupled. A state-scale composition without the coverage rule produces an umbrella that silently omits domains — exactly the gap §2.1.3 identifies. The coverage rule without a state-scale composition leaves the umbrella unanswerable.
-- The §3.5 schema and YAML front-matter amendments (the `scale_class` enum and the `domain_coverage` map) are joint requirements; splitting the ADR would force two schema bumps and two validator updates instead of one.
-- The README v0.3 §20 ADR-trigger language treats them as a single v0.3 amendment.
-- Reviewers can still vote granularly: the §3 sub-decisions A–F are individually motivated, and a reviewer who objects to one sub-decision can request a sub-decision change without rejecting the ADR as a whole.
-
-**Reconsider if:** review feedback strongly suggests the two should be voted independently. In that case, this ADR can be superseded by ADR-0028A (scope) + ADR-0028B (coverage), with §3.5 amendments split across them.
-
-### 5.10 Alt J — Defer the 13-domain coverage rule to a later ADR; only do scope addition now
-
-**Considered.** Add the `-state` scope in this ADR; defer the 13-domain coverage rule.
-
-**Rejected because:**
-
-- Without the coverage rule, the `kansas-state` lane has no acceptance criterion that prevents silent omission of half the domains. The first state-scale release would then be uncited on those omissions, which contradicts cite-or-abstain.
-- The coverage rule is what makes the state-scale view auditable as an umbrella. Deferring it defeats the ADR's purpose.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 6. Migration plan
+<a id="coverage-dispositions-and-runtime-outcomes"></a>
 
-This ADR's migration is **additive and reversible**. No existing released artifact changes; no existing canonical path is renamed or removed.
+## Coverage dispositions and runtime outcomes
 
-### 6.1 Ordering
+### Composition-level coverage dispositions
 
-```mermaid
-flowchart LR
-  P1[PR-1<br/>ADR + STATE_INDEX + templates + schema/contract amendments]:::p1
-  P2[PR-2<br/>validator amendments + new negative fixtures]:::p2
-  P3[PR-3<br/>kansas-state/ lane scaffold<br/>seven required files]:::p3
-  P4[PR-4<br/>directory-rules.md §6.7 amendment + drift register update]:::p4
-  P5[PR-5+<br/>back-fill scale_class + domain_coverage<br/>into existing county draft plans]:::p5
+| Disposition | Meaning | Release effect |
+|---|---|---|
+| `populated` | One or more governed layer/claim entries exist with evidence, policy, sensitivity, owner, time, and release support | Eligible when all other gates pass |
+| `abstain` | No sufficiently supported or admissible public claim is available for this domain/area/scale; reason and review posture are recorded | Eligible as explicit cite-or-abstain closure |
+| `deny` | Policy, rights, sovereignty, sensitivity, or safety prohibits public exposure; no protected payload reaches the client | Eligible as explicit fail-closed closure |
+| `hold` | Evidence, owner, policy, schema, review, release, or migration is unresolved | Candidate only; blocks release |
 
-  P1 --> P2 --> P3 --> P4 --> P5
+Missing entries, unknown aliases, invalid states, validator errors, and contradictory records block release.
 
-  classDef p1 fill:#dbeafe,stroke:#1e3a8a,color:#000
-  classDef p2 fill:#fae8ff,stroke:#581c87,color:#000
-  classDef p3 fill:#dcfce7,stroke:#14532d,color:#000
-  classDef p4 fill:#fef3c7,stroke:#78350f,color:#000
-  classDef p5 fill:#fee2e2,stroke:#7f1d1d,color:#000
-```
+### Runtime outcomes
 
-### 6.2 Step-by-step
+A public Focus request still resolves to exactly one finite runtime outcome:
 
-1. **PR-1 (this ADR + control-plane scaffolds)** — Land this ADR file, `STATE_INDEX.md`, `_template/state-build-plan.md`, the YAML front-matter amendment to `_template/county-build-plan.md`, and the schema/contract amendments. The README v0.3 file (already merged) stays at v0.3 until §6.4 below.
-2. **PR-2 (validator amendments)** — Update `validate_focus_mode_index.py` and `validate_focus_mode_payload.py` for the new checks. Emit the two new negative-fixture classes (`missing_domain_coverage.invalid.json`, `wrong_scale_class.invalid.json`) into `fixtures/focus_modes/_template/invalid/` (or wherever the project's invalid-fixture canonical lane is — `NEEDS_VERIFICATION` on live-repo presence).
-3. **PR-3 (`kansas-state/` lane scaffold)** — Scaffold the `docs/focus-modes/kansas-state/` lane with the seven required files. Status moves `not-started → planned → draft`. No `FocusModePayload` is built yet; this PR establishes the control-plane content.
-4. **PR-4 (directory-rules.md §6.7 amendment)** — Amend `directory-rules.md` §6.7.1 (definition), §6.7.2 (placement table), §6.7.5 (what a Focus Mode is NOT), §13.5 (drift register), §18.d (deferred items), §21 (changelog v1.3 entry). Update `docs/focus-modes/README.md` from v0.3 → v0.4 (changes `-state` PROPOSED labels to CONFIRMED). Close OPEN-FM-09, OPEN-FM-10, OPEN-FM-14 in the drift register.
-5. **PR-5+ (back-fill)** — For each in-flight county draft plan, back-fill `scale_class: county` and the `domain_coverage` YAML map. This can land in a single sweep PR or per-county PRs. The 14-day deprecation-warning window in §4.6 gives owners time to back-fill.
-
-### 6.3 Cadence
-
-- **PR-1 through PR-4 SHOULD land in close succession** (within 7 days of acceptance), to minimize the window in which the README and `directory-rules.md` are out of step.
-- **PR-5+ MAY take up to the full 14-day deprecation-warning window** before the validator escalates from warning to error.
-
-### 6.4 Effective-on semantics
-
-- **On PR-1 merge:** This ADR's status MAY advance from `proposed` to `accepted` once §7 acceptance criteria are met. The README and `directory-rules.md` are not yet updated.
-- **On PR-4 merge:** The `directory-rules.md` amendment is live; the README is updated to v0.4. The `-state` scope is canonical from this point forward.
-- **On PR-5+ completion:** All in-flight county draft plans validate against the new schema. The 14-day deprecation-warning window closes.
-
-[↑ Back to top](#top)
-
----
-
-## 7. Acceptance criteria
-
-The ADR's status advances from `proposed` to `accepted` only when **all** of the following are CONFIRMED:
-
-### 7.1 Reviewer sign-off
-
-- [ ] `<OWNER:focus-mode-steward>` — approves §3.1 (scope addition), §3.2 (canonical area + cardinality), §3.6 (no roll-up derivation).
-- [ ] `<OWNER:directory-rules-steward>` — approves §4.1 (`directory-rules.md` §6.7 amendments) and §4.6 (in-flight county draft impact).
-- [ ] `<OWNER:schema-steward>` — approves §3.5 and §4.2 (schema amendments), including the schema-versioning decision.
-- [ ] `<OWNER:sensitivity-reviewer>` — approves §4.7 (state-scale sensitivity posture; deny-default lanes unchanged across scales).
-- [ ] **PROPOSED new role:** `<OWNER:state-scale-steward>` — willing to take on ownership of the `kansas-state/` lane.
-
-### 7.2 Draft artifacts present (PR-1 scope)
-
-- [ ] This ADR file (`docs/adr/ADR-0028-state-scale-focus-mode-scope.md`).
-- [ ] `docs/focus-modes/STATE_INDEX.md` draft.
-- [ ] `docs/focus-modes/_template/state-build-plan.md` draft.
-- [ ] Amended `docs/focus-modes/_template/county-build-plan.md` (YAML front-matter additions).
-- [ ] Amended `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` (draft of additions).
-- [ ] Amended `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json` (draft of additions).
-- [ ] Amended `contracts/focus_mode/focus_mode_payload.md` (semantic documentation of new fields).
-
-### 7.3 Validator readiness (PR-2 scope)
-
-- [ ] `tools/validators/validate_focus_mode_index.py` extension drafted, with all v0.3 checks (§4.3) implemented or stubbed.
-- [ ] `tools/validators/validate_focus_mode_payload.py` drafted (or amended), accepting `scale_class ∈ {state, county, region, corridor}`.
-- [ ] Two new negative-fixture classes (`missing_domain_coverage.invalid.json`, `wrong_scale_class.invalid.json`) drafted.
-
-### 7.4 Risk surface review
-
-- [ ] No `data/raw/`, `data/work/`, or `data/quarantine/` access introduced (trust membrane preserved).
-- [ ] No `apps/web/` reference introduced (canonical shell preserved per `directory-rules.md` §7.1.a).
-- [ ] No `.schema.json` files added under `contracts/focus_mode/` (schema home preserved per ADR-0001).
-- [ ] No `focus_modes/` or `focus-modes/` directory at repo root (root-stays-boring per `directory-rules.md` §3).
-- [ ] No state-scale derivation from county outputs (per §3.6).
-
-### 7.5 Drift register updates
-
-- [ ] OPEN-FM-09 (state-scale scope) closure entry drafted.
-- [ ] OPEN-FM-10 (13-domain coverage rule) closure entry drafted.
-- [ ] OPEN-FM-14 (release-candidate folder naming) closure entry drafted with §3.4 resolution.
-- [ ] OPEN-FM-15 (cross-scale crosswalk artifact) open entry drafted.
-- [ ] OPEN-FM-16 (state-scale sensitivity overrides review) open entry drafted.
-
-### 7.6 Non-blocking observations
-
-The following items are noted in this ADR but are **not** acceptance gates:
-
-- Per-county owner back-fill (`<OWNER>` placeholders in `COUNTY_INDEX.md`) — separate workstream.
-- Existence of `docs/registers/DRIFT_REGISTER.md` in the live repo (OPEN-DR-09) — NEEDS VERIFICATION; if absent, the close-entry artifacts go wherever the live drift register canonically lives.
-- Resolution of OPEN-DR-06 (`apps/web/` drift) — separate ADR scope.
-- Resolution of OPEN-DR-08 (three-casings-per-area) — separate ADR scope.
-
-[↑ Back to top](#top)
-
----
-
-## 8. Rollback plan
-
-This ADR is reversible. Rollback affects only artifacts that this ADR introduces or amends.
-
-### 8.1 Trigger for rollback
-
-Rollback should be initiated if **any** of the following becomes true within the first 90 days after PR-4 merge:
-
-- A material flaw is discovered in §3.3 (13-domain coverage rule) that makes it unenforceable (e.g., a domain that genuinely cannot be addressed at any scale even by abstain).
-- A material flaw is discovered in §3.6 (no roll-up derivation) that makes the state-scale lane impossible to compose from admissible statewide sources (i.e., the alternative considered in §5.8 turns out to be the only feasible path).
-- The schema amendments in §3.5 prove incompatible with downstream consumers in ways that cannot be back-fixed by minor version bumps.
-- Reviewer consensus determines the ADR's coupling (§5.9 alternative) was the wrong call and the two decisions must be voted independently.
-
-### 8.2 Rollback procedure
-
-1. **Set ADR status:** `accepted → superseded` (with forward link to the replacing ADR or to a "rejected" marker).
-2. **Revert `directory-rules.md` §6.7 amendments:** restore the v1.2 three-scope enumeration.
-3. **Revert `docs/focus-modes/README.md`:** v0.4 → v0.3 (state-scale rows return to PROPOSED labels) or v0.3 → v0.2 (state-scale extension removed entirely), per the rollback scope.
-4. **Revert schema amendments:**
-   - Remove `state` from the `scale_class` enum.
-   - Mark `domain_coverage` as optional (downgrade from required) for a one-release deprecation window.
-   - After the deprecation window, remove `domain_coverage` entirely.
-5. **Revert validator extensions:** restore pre-ADR check list.
-6. **Handle the `kansas-state/` lane:**
-   - If the lane has reached `draft` or earlier — `git rm` the lane with a `docs/registers/DRIFT_REGISTER.md` entry explaining the supersession.
-   - If the lane has reached `validated` or later — write a `RollbackCard` per `directory-rules.md` §9.2 lifecycle invariants. Cache invalidation: invalidate any `ReleaseManifest` published under `release/manifests/kansas-focus-mode-v<n>.json`.
-   - If the lane has reached `released` (i.e., a public claim exists at state scale) — rollback escalates to a full release-rollback governed by the existing `RollbackCard` discipline. This ADR's rollback does NOT bypass release-rollback governance.
-7. **Update drift register:** close the OPEN-FM-15 and OPEN-FM-16 entries (if open); re-open OPEN-FM-09, OPEN-FM-10, OPEN-FM-14 with the rollback context attached.
-8. **Communicate:** post a supersession notice in `docs/adr/INDEX.md` (if present, `NEEDS_VERIFICATION`) and in `docs/focus-modes/README.md` change log.
-
-### 8.3 Rollback target reference
-
-The rollback target is the **pre-v0.3 state of `docs/focus-modes/README.md`** (i.e., the v0.2 file) plus the **pre-amendment `directory-rules.md` §6.7 text** (i.e., v1.2). No published `ReleaseManifest` exists at state scale at the time of this ADR draft, so no released artifact rolls back.
-
-[↑ Back to top](#top)
-
----
-
-## 9. Related ADRs and references
-
-### 9.1 ADRs
-
-| ADR | Relationship |
+| Outcome | Client meaning |
 |---|---|
-| `ADR-0001-schema-home.md` (PROPOSED file path; CONFIRMED reference) | This ADR honors the schema-home rule: machine schemas live at `schemas/contracts/v1/focus_mode/`, not under `contracts/focus_mode/`. No exception. |
-| `ADR-0003-policy-singular-is-canonical.md` (PROPOSED file path) | This ADR honors `policy/` (singular) as canonical for any per-state sensitivity overrides. |
-| `ADR-0027-county-focus-mode-control-plane.md` (PROPOSED) | This ADR extends the county-control-plane ADR's scope to include state-scale. The two ADRs are coordinated; ADR-0027 owns the county scaffold, ADR-0028 owns the state-scale scaffold and the cross-scale coverage rule. |
-| `ADR-S-05-sensitivity-tier-scheme.md` (PROPOSED) | This ADR references the T0–T4 tier scheme without amending it; the §4.7 / §15-of-README sensitivity table consumes the tier semantics. |
-| Future ADR (PROPOSED) — "13-domain enumeration changes" | This ADR establishes the coverage rule over the 13-domain list; future changes to the list itself require a separate ADR. |
+| `ANSWER` | A bounded response is supported and allowed under the current state release |
+| `ABSTAIN` | Evidence, scope, freshness, or admissibility is insufficient |
+| `DENY` | Policy, rights, sensitivity, role, or release state blocks exposure |
+| `ERROR` | The request could not be processed safely or deterministically |
 
-### 9.2 Doctrine documents
+A domain coverage disposition does not predetermine every query outcome. A `populated` domain may still abstain or deny for a specific question. A `deny` disposition never permits client-side recovery of the blocked payload.
 
-- `directory-rules.md` — §3, §2.1, §2.4, §6.7, §12, §13.5, §18.d, §21.
-- `kfm_repository_structure_guiding_document.md` — §3, §8.
-- `kfm_unified_doctrine_synthesis.md` — Part III (cite-or-abstain), Part VI (promotion gates), Part VII (publication/sensitivity), Part XI (validator worked example).
-- `ai-build-operating-contract.md` — §10, §28, §29.
-- `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` — Appendix C (13-domain enumeration; CONFIRMED source for §3.3).
-- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` — §16.3 (COUNTY-01..04), Appendix C (county family).
-- `docs/focus-modes/README.md` v0.3 — the design spec this ADR evaluates.
-
-### 9.3 External standards (CONFIRMED references; no version pinning in this ADR)
-
-- W3C PROV-O — provenance terms used by `EvidenceBundle` and `AIReceipt`.
-- OGC STAC — catalog model under `data/catalog/stac/`.
-- ISO 19115 — metadata crosswalk profile.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 10. Open items not resolved by this ADR
+<a id="current-repository-evidence"></a>
 
-| ID | Item | Status | Disposition |
-|---|---|---|---|
-| OPEN-FM-15 | **PROPOSED v0.3** — cross-scale crosswalk artifact (optional, non-derivative documentation of state ↔ county evidence linkages) | NEW (opens with this ADR) | Future PROPOSED artifact `contracts/focus_mode/cross_scale_crosswalk.md`. Non-blocking. See §3.6 closing paragraph. |
-| OPEN-FM-16 | **PROPOSED v0.3** — review whether any per-state sensitivity override is justified at v0.3 launch | NEW (opens with this ADR) | Sensitivity reviewer assesses on PR-3 review. Default: none. |
-| OPEN-DR-06 | Several county draft plans reference `apps/web/`; canonical is `apps/explorer-web/` | CONFIRMED drift (pre-existing) | Out of scope for this ADR. See `directory-rules.md` §18.d. |
-| OPEN-DR-07 | Validator orchestrator path (`tools/validate_all.py` live vs doctrine variant) | CONFIRMED variance (pre-existing) | Out of scope for this ADR. |
-| OPEN-DR-08 | Three casings per area across roots | OPEN (pre-existing) | Out of scope for this ADR. The §3.2 / §4.1 placement table inherits the three-casing convention without resolving it. |
-| OPEN-DR-09 | Existence of `docs/registers/DRIFT_REGISTER.md` | NEEDS VERIFICATION (pre-existing) | Affects where OPEN-FM-15 and OPEN-FM-16 are recorded; does not block this ADR. |
+## Current repository evidence
 
-[↑ Back to top](#top)
+| Surface | Current verified state | Safe conclusion |
+|---|---|---|
+| ADR-0028 | Exact indexed file; source/effective `proposed` | Decision not accepted |
+| Directory Rules | Focus definition is county/region scale; suffixes county/region/corridor; plural docs home | State scope not canonical |
+| ADR-0027 | Proposed plural control-plane migration | Naming/migration not accepted |
+| `docs/focus-mode/README.md` | Exists at singular path but labels itself `docs/focus-modes/`; state extension marked proposed | Documentary/path conflict |
+| `docs/focus-modes/README.md` | Not found | Canonical control-plane README absent |
+| County index | Legacy singular path; collision-prevention semantics; validator compatibility needs verification | Not a confirmed canonical validator input |
+| State index | Legacy singular path; one `planned` row; says validator parses it | Inert proposal and overclaim |
+| `kansas-state` lane | Not found at checked legacy path; canonical plural tree also absent | Planned status unsupported |
+| State template | Legacy singular path; blocked on ADR acceptance | Design scaffold only |
+| FocusModePayload contract | County-oriented scope and paths; references absent schema | Semantic draft requires convergence |
+| FocusModePayload schema | Not found | No machine payload shape |
+| LayerRegistryEntry schema | Not found | No machine domain/scale shape |
+| Focus payload validator | Not found | No payload validation |
+| Focus index validator | 105-county parser; valid scopes county/region/corridor; expects plural root | No state or domain-coverage enforcement |
+| Human Domain Lane Register | Lists 13 lane IDs | Candidate narrative domain-set source |
+| Machine domain register | Proposed with `entries: []` | Domain-set identity not executable |
+| Drift register | Exists but does not record the Focus singular/plural/state contradictions inspected here | Drift registration incomplete |
+| Focus mock workflow | Explicit `WORKFLOW_HOLD`; no accepted runtime/fixtures/command | No executable Focus flow |
+| State release/publication | No state lane or state release evidence verified | None |
 
----
+### Confirmed absent at checked paths
 
-## 11. Notes and appendix
+- `docs/focus-modes/README.md`
+- `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json`
+- `schemas/contracts/v1/focus_mode/layer_registry_entry.schema.json`
+- `tools/validators/validate_focus_mode_payload.py`
+- `docs/focus-mode/state/kansas-state/README.md`
 
-### 11.1 What an `abstain` row looks like in `layer-registry.md`
+Absence at checked paths does not prove no conceptually related material exists elsewhere. It proves that the paths claimed by the current Focus documentation are not implementation-complete.
 
-**PROPOSED example, for illustration only.** A `kansas-state/layer-registry.md` row for Archaeology might read:
-
-```markdown
-| Domain | Archaeology |
-| scale_class | state |
-| status | abstain |
-| reason | Statewide archaeology coordinates are deny-default at every scale (kfm_unified_doctrine_synthesis.md Part VII; ADR-0028 §4.7). The state-scale view publishes the cultural-temporal-period overlay (T0; CulturalTemporalPeriod object family) but does NOT publish site coordinates, even generalized, without per-site steward review. |
-| owner | <OWNER:archaeology-steward> |
-| evidence_ref | (none — abstain row) |
-```
-
-The `abstain` row is **not** an absence of information. It is an explicit, owned, citable record of why the domain is not represented at this (scale, area) cell. It survives validator review precisely because it is on the record.
-
-### 11.2 What `populated` looks like
-
-**PROPOSED example, for illustration only.** A `kansas-state/layer-registry.md` row for Hydrology might read:
-
-```markdown
-| Domain | Hydrology |
-| scale_class | state |
-| status | populated |
-| layer_id | kfm://layer/kansas-state/hydrology/huc4-summary-v1 |
-| evidence_ref | kfm://evidence/usgs-nhd-statewide-2025-q4 |
-| evidence_bundle | resolved |
-| sensitivity_class | T0 (regulatory) |
-| time_scope | 2025-Q4 snapshot of USGS NHD high-resolution layer |
-| style_ref | apps/explorer-web/src/focus-modes/kansas/styles/hydrology.json |
-| owner | <OWNER:hydrology-steward> |
-| release_state | draft |
-```
-
-### 11.3 Why the v1.2 → v1.3 jump (not v1.2.1)
-
-This ADR amends `directory-rules.md` §6.7 (the placement contract). Per `directory-rules.md` §21 changelog conventions (PROPOSED), placement-contract amendments warrant a minor-version bump (v1.2 → v1.3), not a patch (v1.2.1). The §6.7.1 definition text changes; the §6.7.2 placement table gains rows; §6.7.5 gains drift signatures. A patch-level bump would understate the change.
-
-### 11.4 Truth labels self-check
-
-This ADR uses CONFIRMED, PROPOSED, NEEDS VERIFICATION, UNKNOWN, and EXTERNAL labels per the AI Build Operating Contract. Material truth-label distribution:
-
-- **CONFIRMED:** Doctrine citations (directory-rules.md §6.7 current text; 13-domain enumeration from KFM_Domains_v1_1 Appendix C; trust path stages from kfm_unified_doctrine_synthesis.md); the gap analysis based on observable corpus state.
-- **PROPOSED:** The scope addition (`-state`), the area name (`kansas`), the casing decisions, the §4.1 placement-table amendments, the §4.2 schema amendments, the §4.3 validator amendments, the §4.4 template amendments, the §3.4 OPEN-FM-14 resolution, the migration sequence in §6, the acceptance criteria in §7, the rollback plan in §8.
-- **NEEDS VERIFICATION:** Live-repo presence of `docs/registers/DRIFT_REGISTER.md`; live-repo presence of `docs/adr/INDEX.md`; live-repo paths for ADR-0001, ADR-0003, ADR-0027; presence of in-flight county draft plans matching the README v0.3 §21 registry.
-- **UNKNOWN:** Whether any in-flight county draft plan has begun back-fill of v0.3 YAML front-matter additions in advance of this ADR; whether `tools/validate_all.py` (canonical orchestrator path per §7.5.a) discovers `validate_focus_mode_index.py` and `validate_focus_mode_payload.py` via the registry yaml that may or may not exist at `tools/validators/registry.yaml` in the live repo.
-
-### 11.5 Anti-fabrication discipline
-
-This ADR leaves the following as **explicit placeholders** rather than inventing concrete values:
-
-- `<OWNER:focus-mode-steward>`, `<OWNER:directory-rules-steward>`, `<OWNER:schema-steward>`, `<OWNER:sensitivity-reviewer>`, `<OWNER:state-scale-steward>` (new role).
-- CI badge URLs (none invented).
-- Schema `$id` URIs (left to schema steward judgment per §4.2).
-- Spec hashes for any of the PROPOSED artifacts.
-- Live-repo paths for `docs/registers/DRIFT_REGISTER.md`, `docs/adr/INDEX.md`, and validator registry yaml.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 12. ADR self-check
+<a id="current-enforcement-maturity"></a>
 
-Per `directory-rules.md` §2.4 ADR template fields, this ADR declares:
+## Current enforcement maturity
 
-| Field | Value |
+| Capability | Current state |
 |---|---|
-| `id` | ADR-0028 |
-| `title` | State-scale Focus Mode scope (`-state`) and 13-domain coverage rule |
-| `status` | `proposed` |
-| `date` | 2026-05-23 |
-| `context` | §2 above |
-| `decision` | §3 above (six coupled sub-decisions) |
-| `consequences` | §4 above |
-| `alternatives` | §5 above (ten alternatives considered) |
-| `migration_plan` | §6 (KFM convention; not required by §2.4 minimum) |
-| `acceptance_criteria` | §7 (KFM convention; not required by §2.4 minimum) |
-| `rollback_plan` | §8 (KFM convention; not required by §2.4 minimum) |
-| `supersedes` | none |
-| `superseded_by` | none |
+| ADR identity/status | `CONFIRMED / proposed` |
+| State scope in Directory Rules | Not present |
+| Canonical Focus control-plane home | `CONFLICTED` |
+| Canonical plural control plane | Absent |
+| Legacy singular control plane | Present, proposed, internally inconsistent |
+| State index | Present but unsupported/inert |
+| State lane | Absent |
+| State template | Present as blocked scaffold |
+| Domain-set identity | Human draft register only; machine entries empty |
+| Domain-coverage contract | Proposed in prose only |
+| FocusModePayload semantic contract | County-oriented draft |
+| FocusModePayload schema | Absent |
+| LayerRegistryEntry schema | Absent |
+| State-aware index validator | Absent |
+| Focus payload validator | Absent |
+| State fixtures/negative tests | Not established |
+| Mock Focus runtime | `WORKFLOW_HOLD` |
+| Governed API state Focus route | Not established |
+| State evidence/release/correction/rollback | Not established |
+| Production state publication | None |
 
-**Self-check items** (PROPOSED v0.3, mirrors the KFM ADR self-check convention):
+**Overall maturity: `DESIGN DRIFT / HOLD`.** The repository contains useful state-scale design scaffolds, but it does not contain a canonical, machine-enforced, release-capable state Focus Mode.
 
-- [x] All claims labeled CONFIRMED / PROPOSED / NEEDS VERIFICATION / UNKNOWN per §11.4.
-- [x] Doctrine citations resolve to attached corpus documents.
-- [x] Cited `directory-rules.md` sections (§6.7, §2.4, §13.5, §18.d, §21) reflect v1.2 corpus state.
-- [x] Cited domain enumeration (13 domains) traceable to `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` Appendix C.
-- [x] No invented file paths claimed as live-repo CONFIRMED (placeholders marked NEEDS VERIFICATION or PROPOSED).
-- [x] No bypass of trust membrane proposed (the AI surface and the lifecycle invariants are unchanged).
-- [x] Rollback path defined (§8).
-- [x] Acceptance criteria gated (§7); no auto-acceptance.
-- [x] Reconciliation invariant preserved: this ADR amends `directory-rules.md`; the README is a downstream restatement.
-
----
-
-> [!IMPORTANT]
-> **Reconciliation invariant (this ADR).** On acceptance, the **canonical text** lives in `directory-rules.md` §6.7 (amended per §4.1 of this ADR). `docs/focus-modes/README.md` is updated to v0.4 to reflect the acceptance. If this ADR and `directory-rules.md` ever diverge after the §6.7 amendment lands, **`directory-rules.md` wins**; open a PR to amend this ADR or supersede it, do not amend `directory-rules.md` to match a stale ADR text.
+[Back to top](#top)
 
 ---
 
-**ADR ID:** ADR-0028 · **Status:** `proposed` · **Date:** 2026-05-23 · **Owners:** focus-mode steward, directory-rules steward, schema steward, sensitivity reviewer · **Last reviewed:** 2026-05-23 · [↑ Back to top](#top)
+<a id="proposed-validation-and-negative-tests"></a>
+
+## Proposed validation and negative tests
+
+Validation must be deterministic, non-vacuous, local/offline-capable for core checks, and fail closed.
+
+### Required validation families
+
+| Family | Required checks |
+|---|---|
+| ADR/doctrine | ADR accepted; Directory Rules and index agree; no stale proposed text claims authority |
+| Placement | One canonical control plane; no dual singular/plural authority; state lane at canonical path |
+| State cardinality | Exactly one current Kansas state lane; no historical/modern sibling lanes |
+| Domain set | Resolved accepted profile; exact registered IDs; no aliases, duplicates, or extras |
+| Coverage | One disposition per domain; populated support; abstain reason; deny policy; no release hold |
+| Evidence | State claim resolves direct support; no county Focus output as root evidence |
+| Scope/time | State geometry, valid time, source cadence, aggregation, and transform support the claim |
+| Sensitivity | Exact protected content never becomes public through aggregation or styling |
+| Schemas/contracts | Semantic and machine shapes agree; compatible version declared |
+| Fixtures | Non-empty valid and invalid state/cross-scale cases |
+| Runtime | Governed API and Focus client preserve finite outcomes and obligations |
+| Release | Promotion, release, correction, withdrawal, rollback, and cache behavior resolve |
+| Public boundary | No direct internal-store or model-runtime path |
+
+### Stable reason-code families
+
+- `state_scope_not_accepted`
+- `focus_control_plane_path_conflict`
+- `canonical_focus_control_plane_missing`
+- `state_index_unsupported`
+- `state_index_lane_mismatch`
+- `state_lane_missing`
+- `multiple_state_lanes`
+- `domain_set_unresolved`
+- `domain_set_version_mismatch`
+- `domain_id_unregistered`
+- `domain_alias_forbidden`
+- `domain_coverage_missing`
+- `domain_coverage_duplicate`
+- `coverage_disposition_invalid`
+- `coverage_hold_unresolved`
+- `coverage_abstain_reason_missing`
+- `coverage_deny_policy_missing`
+- `populated_domain_evidence_unresolved`
+- `county_focus_output_used_as_state_authority`
+- `state_evidence_scope_mismatch`
+- `state_time_profile_incoherent`
+- `sensitivity_review_missing`
+- `focus_schema_missing`
+- `focus_payload_validator_missing`
+- `state_fixture_inventory_vacuous`
+- `release_manifest_unresolved`
+- `rollback_target_unresolved`
+- `public_state_route_unverified`
+
+### Required negative fixtures
+
+At minimum:
+
+- `state` used before ADR/Directory Rules acceptance;
+- canonical plural control plane absent;
+- legacy singular path treated as new authority;
+- state index row says planned but lane does not exist;
+- more than one state lane;
+- `kansas-historical-state` created as a sibling instead of a release/time view;
+- wrong `scale_class`;
+- missing domain-set reference;
+- old aliases `atmosphere_air` or `roads_rail` used instead of registered IDs;
+- one domain missing;
+- one domain duplicated;
+- extra unregistered domain;
+- `hold` at release;
+- abstain without reason, owner, or next review;
+- deny without policy/review reference;
+- populated without evidence or release support;
+- archaeology/rare-species/living-person/DNA/infrastructure exact data made public by state aggregation;
+- state claim supported only by county Focus Mode output;
+- state claim built from county-granular authoritative records with a new direct evidence chain — **valid positive case**;
+- cross-scale crosswalk treated as evidence;
+- stale or temporally incompatible county records aggregated without an explicit statewide time profile;
+- validator reports pass with zero state fixtures or zero lane files;
+- public client reads a state candidate or internal proof/control-plane file.
+
+[Back to top](#top)
+
+---
+
+<a id="implementation-and-convergence-plan"></a>
+
+## Implementation and convergence plan
+
+Use small, dependency-ordered, reversible waves. Do not build the state lane inside the legacy path and promise to migrate later.
+
+### Wave A — Decision and doctrine convergence
+
+1. Review and revise ADR-0028.
+2. Reconcile ADR-0027 and ADR-0028 responsibility: one owns canonical control-plane migration; the other extends scope and coverage.
+3. In one reviewed acceptance change or atomic merge group:
+   - set matching accepted status in ADR/index;
+   - amend Directory Rules §6.7;
+   - record the structural migration and rollback plan;
+   - define the state scope/cardinality and coverage profile;
+   - identify accountable owners.
+4. Do not claim implementation graduation.
+
+### Wave B — Canonical control-plane migration
+
+1. Inventory `docs/focus-mode/` and all inbound links.
+2. Create the Directory-Rules-compliant `docs/focus-modes/` control plane.
+3. Migrate README, county index/template, state index/template, and any area lanes.
+4. Correct state index from `planned` to `not-started` unless the required lane scaffold exists.
+5. Keep at most a bounded redirect/compatibility README at the singular path.
+6. Update validator inputs, docs, workflows, and links.
+7. Validate no dual authority or data/release change.
+
+### Wave C — Domain-set, contracts, schemas, and fixtures
+
+1. Reconcile the human Domain Lane Register with an accepted machine domain-set profile.
+2. Version the FocusModePayload semantic contract.
+3. Create closed schemas in the canonical schema home.
+4. Define `scale_class`, `domain_set_ref`, coverage entry/disposition, and state-area identity.
+5. Add deterministic valid/invalid fixtures, including state/county evidence relationship cases.
+6. Add migration fixtures for existing county plans; do not invent a fixed warning deadline before inventory.
+
+### Wave D — Validators and CI
+
+1. Extend or replace the county-only index validator.
+2. Parse canonical county and state indexes.
+3. Require non-empty state and county inventories for applicable checks.
+4. Implement the payload validator.
+5. Register validators in the accepted orchestration path.
+6. Add policy, runtime-proof, API, UI, and release negative tests.
+7. Keep all checks read-only until release tooling is separately approved.
+
+### Wave E — Kansas state candidate
+
+1. Create `docs/focus-modes/kansas-state/` only after Waves A–D establish the accepted path and checks.
+2. Populate all required lane files.
+3. Record all domain coverage entries.
+4. Admit direct statewide or scope-valid authoritative sources.
+5. Produce evidence, policy, sensitivity, aggregation, and time-profile records.
+6. Keep status candidate/draft until every validator and review gate closes.
+
+### Wave F — Runtime, release, and rollback proof
+
+1. Produce a validated state FocusModePayload.
+2. Integrate the governed API and Explorer client with finite outcomes.
+3. Validate public-safe layers and no-direct-store access.
+4. Assemble accountable review, PromotionDecision, ReleaseManifest, correction, and rollback records.
+5. Run state/county consistency checks without treating one scale as authority for the other.
+6. Exercise withdrawal, cache invalidation, correction, and rollback.
+7. Graduate only from observed evidence.
+
+[Back to top](#top)
+
+---
+
+<a id="acceptance-gates"></a>
+
+## Acceptance gates
+
+### ADR acceptance
+
+- [ ] Architecture, Directory Rules, Focus Mode, domain-registry, schema/contract, policy/sensitivity, evidence/release, correction/rollback, validation, API/UI, and docs reviewers approve.
+- [ ] ADR-0027/ADR-0028 control-plane ownership and migration responsibilities are reconciled.
+- [ ] The `state` scope definition and exactly-one-`kansas-state` cardinality are approved.
+- [ ] The no-county-output-as-state-authority rule and allowed shared-evidence rule are approved.
+- [ ] The domain-set reference and candidate canonical lane IDs are approved or explicitly deferred behind a versioned registry gate.
+- [ ] Coverage dispositions and release closure rules are approved.
+- [ ] Directory Rules amendment text and rollback are included in the same acceptance change or atomic merge group.
+- [ ] ADR and index status match; no index edit alone implies acceptance.
+- [ ] No state lane, payload, or release is represented as implemented.
+- [ ] Legacy singular control-plane materials are classified for migration and not promoted as parallel authority.
+- [ ] Release-manifest path conflict is not silently resolved here.
+
+### Implementation graduation
+
+- [ ] Canonical plural control plane exists and singular compatibility is bounded.
+- [ ] State and county indexes validate from the canonical root.
+- [ ] Domain-set human and machine identities agree.
+- [ ] Focus semantic contract and closed schemas agree.
+- [ ] State-aware index and payload validators are real and registered.
+- [ ] Valid/invalid fixture inventories are non-empty.
+- [ ] `kansas-state` has all required lane artifacts.
+- [ ] Every domain has a valid release disposition.
+- [ ] State evidence chain is direct and time/spatially coherent.
+- [ ] Sensitive and rights-constrained lanes fail closed.
+- [ ] Governed API/client runtime produces finite outcomes.
+- [ ] Release, correction, withdrawal, cache invalidation, and rollback drills pass.
+- [ ] No public claim reads candidate or internal stores.
+- [ ] Accountable independent review is recorded.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- Gives Kansas-wide questions a governed spatial composition without creating a new root or domain.
+- Makes domain omissions visible and reviewable at every scale.
+- Preserves cite-or-abstain and deny-by-default rather than forcing empty or fabricated layers.
+- Separates statewide evidence from county Focus Mode outputs while allowing valid shared sources.
+- Pins coverage to a versioned domain set instead of hard-coded aliases.
+- Forces singular/plural control-plane drift to be resolved before state implementation.
+- Makes state/county comparison possible without collapsing provenance.
+- Creates explicit correction and rollback requirements for a high-visibility umbrella view.
+
+### Costs
+
+- Requires a structural documentation migration and broad link repair.
+- Requires domain-set governance, schemas, validators, fixtures, and runtime work.
+- Adds review burden to every Focus Mode because coverage must be explicit.
+- May block state release when one domain remains unresolved.
+- Requires direct statewide evidence and aggregation records rather than convenient county roll-up.
+- Adds cross-scale consistency, performance, cache, and temporal-coherence work.
+- Requires qualified statewide and domain reviewers.
+
+### Preserved invariants
+
+- Focus Mode remains a composition, not a root or domain.
+- EvidenceBundle outranks generated language.
+- Public clients use governed interfaces.
+- Promotion remains a governed state transition.
+- State scale does not reduce sensitivity automatically.
+- Receipts, proofs, catalogs, review, release, correction, and publication remain distinct.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+| Alternative | Disposition |
+|---|---|
+| Keep county/region/corridor only | Rejected as the target design: no governed Kansas-wide Focus composition |
+| Use informal statewide context inside each county lane | Rejected: duplicates and drifts statewide claims |
+| Treat state scope as a Frontier Matrix/domain object | Rejected: analytical object family is not a spatial release composition |
+| Use `-statewide` or `-kansas` suffix | Rejected: `state` is the scope class; `kansas` is the area |
+| Permit multiple Kansas state lanes for themes or time | Rejected: use releases, time profiles, views, or stories |
+| Derive state output by unioning county Focus outputs | Rejected: weakens evidence, time, and release integrity |
+| Ban all county-granular records from state pipelines | Rejected: authoritative statewide sources may be county-granular |
+| Split state scope and domain coverage into separate ADRs | Rejected by default: schema, validator, and acceptance behavior are coupled |
+| Require every domain to be populated | Rejected: would fabricate or overexpose; explicit abstain/deny is valid closure |
+| Add `not_applicable` as a disposition | Rejected: recreates silent omission |
+| Hard-code the old draft machine aliases | Rejected: use accepted domain-register IDs and a versioned profile |
+| Treat legacy `docs/focus-mode/` as canonical because it exists | Rejected: convention does not outrank Directory Rules |
+| Create state lane first and migrate later | Rejected: creates parallel authority and invalidates review evidence |
+| Use a cross-scale crosswalk as the state evidence chain | Rejected: crosswalk is navigation, not proof |
+| Allow state release while one domain is `hold` | Rejected: unresolved coverage blocks umbrella release |
+
+[Back to top](#top)
+
+---
+
+<a id="risk-and-open-question-ledger"></a>
+
+## Risk and open-question ledger
+
+| Item | Status | Required resolution |
+|---|---|---|
+| ADR-0027/ADR-0028 responsibility overlap | `CONFLICTED` | Accepted ownership/supersession/cross-reference model |
+| Singular vs plural docs home | `CONFIRMED DRIFT` | Governed migration and compatibility plan |
+| Control README path/H1 mismatch | `CONFIRMED DRIFT` | Correct after canonical migration |
+| State index “planned” without lane | `CONFIRMED DRIFT` | Demote or create lane only after prerequisites |
+| State index validator claim | `CONFIRMED DRIFT` | Implement state parser or correct documentation |
+| County index semantics vs validator parser | `NEEDS VERIFICATION` | Reconcile collision register and canonical validation index |
+| Domain-set machine identity | `HOLD` | Populate/version accepted machine profile |
+| Domain ID aliases | `CONFLICTED` | Use registered IDs; migration/crosswalk for old aliases |
+| FocusModePayload schema | `CONFIRMED GAP` | Create closed schema at canonical home |
+| LayerRegistryEntry schema | `CONFIRMED GAP` | Create closed schema at canonical home |
+| Payload validator | `CONFIRMED GAP` | Implement and register |
+| Focus runtime/fixtures | `WORKFLOW_HOLD` | Accepted deterministic mock/real profile |
+| State source inventory | `UNKNOWN` | Source descriptors, rights, cadence, scope |
+| State aggregation methodology | `OPEN` | Transform contract, receipt, uncertainty, time profile |
+| State/county claim disagreement | `OPEN` | Comparison and correction policy without authority collapse |
+| State sensitivity overrides | `OPEN` | Default none; require policy/review/negative fixture |
+| State lane ownership | `NEEDS VERIFICATION` | Accountable steward and backup |
+| Release manifest singular/plural home | `CONFLICTED` | Separate accepted responsibility/path decision |
+| Mutable state alias/cache | `UNKNOWN` | Atomic release source, invalidation, correction |
+| State performance budgets | `NEEDS VERIFICATION` | Correctness-first benchmark |
+| Cross-scale crosswalk | `PROPOSED` | Optional semantic contract; never evidence authority |
+| Historical proposed state scaffolds | `OPEN` | Preserve lineage, migrate, correct claims, or retire transparently |
+| Public emergency-authority ambiguity | `RISK` | Explicit advisory/non-authority policy and UI labels |
+
+Unknowns narrow implementation and block release. They do not authorize plausible defaults.
+
+[Back to top](#top)
+
+---
+
+<a id="migration-and-compatibility"></a>
+
+## Migration and compatibility
+
+### Current-state migration facts
+
+- No canonical plural Focus control-plane README was found.
+- Legacy singular state and county materials exist.
+- No `kansas-state` lane or state release was verified.
+- The declared Focus machine schemas and payload validator are absent.
+- Existing county plan material may use divergent paths and draft shapes; its complete inventory is not established.
+
+### Migration rules
+
+1. **Inventory before move.** Produce a pinned file/link/consumer inventory.
+2. **Choose one canonical home.** Current Directory Rules selects `docs/focus-modes/`; do not operate both trees as authorities.
+3. **Preserve history.** Moves retain content, attribution, prior paths, and correction notes.
+4. **No blind bulk backfill.** Existing county plans are inspected and migrated against the accepted domain-set/schema profile.
+5. **Version machine shapes.** Do not silently add required fields to an unknown or absent schema.
+6. **Use staged enforcement.** Warnings may precede denial only after a complete inventory, compatibility plan, and reviewed effective date.
+7. **No arbitrary deadline.** The prior draft’s fixed 14-day window is not adopted without owner capacity and migration evidence.
+8. **Repair claims during migration.** The state index cannot remain “planned” without a qualifying lane; validator claims must match executable behavior.
+9. **Update every consumer.** Validators, workflows, docs, links, API/UI clients, examples, release paths, and registries migrate together.
+10. **Retain rollback.** The migration has an exact pre-move tree/commit and a tested restoration plan.
+11. **No release side effects.** Moving control-plane Markdown does not promote data or publish a state lane.
+
+### Compatibility redirects
+
+A temporary singular-path README may point to the canonical plural home, but it must:
+
+- contain no competing plan or index data;
+- state its compatibility status;
+- identify the canonical destination;
+- record the migration decision and date;
+- be covered by link and duplicate-authority tests;
+- have a reviewed retirement trigger.
+
+[Back to top](#top)
+
+---
+
+<a id="incident-correction-and-rollback"></a>
+
+## Incident, correction, and rollback
+
+### State-scale claim incident
+
+If a state Focus release exposes unsupported, stale, overgeneralized, undergeneralized, rights-constrained, sensitive, or county-derived claims:
+
+1. reduce exposure through the governed route or release alias;
+2. preserve the affected payload, coverage profile, evidence, receipts, policies, reviews, release, and cache identities;
+3. identify affected domains, sources, counties, times, and public claims;
+4. determine whether county releases share the same underlying defect;
+5. issue correction, withdrawal, or rollback records;
+6. invalidate API, tile, CDN, service-worker, browser, search, vector, and story caches;
+7. verify no alternate state or county path continues serving the claim;
+8. rebuild from direct admissible evidence;
+9. obtain independent review before restoration;
+10. record post-incident verification.
+
+A county disagreement is not automatically proof the state release is wrong, and a state release is not automatically authority over a county release. Compare evidence, scope, time, policy, and transforms.
+
+### Rollout failure
+
+When state-scope enforcement breaks candidate work:
+
+- hold or narrow the candidate;
+- do not restore a legacy singular authority or bypass the validator;
+- keep state scope non-public;
+- preserve explicit abstain/deny/hold outcomes;
+- repair doctrine, migration, schema, fixtures, and validation;
+- resume only through the accepted path.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### Documentation-only rollback
+
+Restore prior ADR blob:
+
+```text
+09605b531116857e741e2f2cb8f8a9177c224734
+```
+
+A transparent revert restores prior proposed documentation only. It does not alter Directory Rules, control-plane files, schemas, validators, data, releases, or public state.
+
+### If this ADR is later accepted
+
+An accepted ADR is governance history. Material relaxation, removal of `state`, change to the coverage rule, or a new state-lane cardinality requires:
+
+- a successor ADR;
+- reciprocal supersession links;
+- matching ADR index update;
+- Directory Rules amendment;
+- compatibility and migration for control planes, contracts, schemas, fixtures, validators, data, clients, releases, and caches;
+- correction/withdrawal analysis for released state claims;
+- a rollback plan at least as strong as the rule being changed.
+
+Do not flip an accepted ADR back to `proposed`, delete the state evidence trail, remove coverage entries to make validation pass, or recreate a legacy public bypass.
+
+### Implemented state-lane rollback
+
+- **Before release:** preserve candidate history; demote/hold and migrate or retire transparently.
+- **After release:** issue governed withdrawal/rollback records, retain immutable artifacts and evidence, update aliases atomically, invalidate caches, and publish correction notices where needed.
+- **Directory Rules rollback:** only through the accepted successor decision—not by editing doctrine to match a broken implementation.
+- **Control-plane migration rollback:** restore the exact pre-migration tree and links; do not leave both singular and plural trees writable.
+
+[Back to top](#top)
+
+---
+
+<a id="verification-checklist"></a>
+
+## Verification checklist
+
+### Current revision
+
+- [x] ADR ID, exact filename, H1, and index row verified.
+- [x] Source and effective status preserved as `proposed`.
+- [x] Directory Rules §6.7 inspected.
+- [x] ADR-0027 and singular/plural naming decision inspected.
+- [x] Actual singular control-plane README, county index, state index, and state template inspected.
+- [x] Canonical plural README and Kansas state lane checked at exact paths.
+- [x] FocusModePayload semantic contract inspected.
+- [x] Declared Focus schemas and payload validator checked at exact paths.
+- [x] County-only index validator inspected.
+- [x] Human and machine domain registers inspected.
+- [x] Focus mock readiness workflow inspected.
+- [x] Old draft aliases replaced by current canonical lane IDs as candidate profile keys.
+- [x] County-output prohibition narrowed to authority/evidence roll-up rather than banning valid county-granular source records.
+- [x] Coverage dispositions expanded to explicit populated/abstain/deny, with hold blocking release.
+- [x] No implementation, release, or publication claim introduced.
+- [ ] Human review completed.
+- [ ] ADR accepted.
+- [ ] Directory Rules amended.
+- [ ] Implementation graduated.
+- [ ] State release observed.
+
+### Future implementation
+
+- [ ] ADR-0027/ADR-0028 relationship resolved.
+- [ ] Canonical plural control plane established.
+- [ ] Singular compatibility lane bounded.
+- [ ] Domain-set profile accepted and machine-readable.
+- [ ] Contracts/schemas/fixtures/validators agree.
+- [ ] State index and lane cardinality validate.
+- [ ] All domain dispositions close.
+- [ ] State evidence chain is direct.
+- [ ] Sensitive lanes fail closed.
+- [ ] Governed API/client finite outcomes pass.
+- [ ] State/county comparison does not collapse authority.
+- [ ] Release/correction/rollback/cache drills pass.
+- [ ] Public clients cannot read candidates or internal stores.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+| Reference | Relationship and current boundary |
+|---|---|
+| [`docs/adr/README.md`](./README.md) | ADR operating contract; merge does not accept a decision |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Confirms ADR-0028 exact identity and proposed status |
+| [ADR-0001](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Canonical machine-schema home |
+| [ADR-0003](<./ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | Canonical singular policy root |
+| [ADR-0004](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Dynamic public trust boundary |
+| [ADR-0005](./ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | Proposed public map-first shell |
+| [ADR-0010](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Sensitive-domain fail-closed posture |
+| [ADR-0018](./ADR-0018-promotion-gate-sequence.md) | Promotion sequence and readiness holds |
+| [ADR-0019](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Focus/AI adapter and finite envelope boundary |
+| [ADR-0020](./ADR-0020-abstain-is-a-first-class-decision.md) | Explicit abstention when support is insufficient |
+| [ADR-0024](./ADR-0024-steward-separation-of-duties-for-release.md) | Independent release and restoration review |
+| [ADR-0025](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Public-client anti-bypass boundary |
+| [ADR-0027](./ADR-0027-county-focus-mode-control-plane.md) | Proposed canonical Focus control-plane naming/migration |
+| [Directory Rules](../doctrine/directory-rules.md) | Current Focus placement contract and authority boundary |
+| [Legacy Focus control README](../focus-mode/README.md) | Proposed state/county design at noncanonical singular path |
+| [Legacy county index](../focus-mode/counties/COUNTY_INDEX.md) | Collision-prevention register; validator compatibility unresolved |
+| [Legacy state index](../focus-mode/state/STATE_INDEX.md) | Proposed inert state index with unsupported validator claim |
+| [Legacy state template](../focus-mode/state/_template/state-build-plan.md) | Proposed blocked state template |
+| [Legacy county template](../focus-mode/counties/_template/county-build-plan.md) | County planning template |
+| [FocusModePayload contract](../../contracts/focus_mode/focus_mode_payload.md) | Proposed county-oriented semantic contract |
+| [Focus index validator](../../tools/validators/validate_focus_mode_index.py) | Current county-only validator |
+| [Human Domain Lane Register](../registers/DOMAIN_LANE.md) | Current narrative 13-lane IDs |
+| [Machine domain register](../../control_plane/domain_lane_register.yaml) | Empty proposed machine register |
+| [Drift Register](../registers/DRIFT_REGISTER.md) | Existing drift ledger; Focus conflicts not yet recorded |
+| [Focus mock workflow](../../.github/workflows/focus-mock-test.yml) | Explicit runtime/fixture readiness hold |
+
+[Back to top](#top)
+
+---
+
+<a id="revision-history"></a>
+
+## Revision history
+
+| Version | Date | Summary |
+|---|---|---|
+| v0.1 | 2026-05-23 | Initial proposed ADR coupling `-state`, one `kansas-state` lane, 13-domain coverage, schema/template/validator amendments, no county roll-up, migration, acceptance, and rollback. |
+| v0.2 | 2026-07-24 | Re-grounded the decision in current repository evidence; confirmed ADR identity and Directory Rules’ three-scope state; surfaced singular/plural control-plane drift, unsupported state index, absent state lane/schemas/payload validator, county-only validator, empty machine domain register, and Focus runtime hold; replaced draft domain aliases with current lane IDs; versioned the domain-set concept; refined coverage dispositions; distinguished forbidden county Focus-output roll-up from valid county-granular source evidence; made Directory Rules acceptance atomic; added canonical migration, non-vacuous tests, implementation waves, risk, incident, cache, correction, rollback, and successor-ADR discipline. |
+
+---
+
+<sub>This ADR is governed by KFM doctrine: a Focus Mode is a cross-cutting proof composition, not a root or domain; every material claim resolves evidence or abstains; sensitive content fails closed; public clients use governed surfaces; and no state-scale umbrella may outrank its evidence, policy, review, release, correction, or rollback records.</sub>
