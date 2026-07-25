@@ -1,27 +1,28 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-domain-agriculture-readme
-title: catalog/domain/agriculture/README.md — Agriculture Catalog Compatibility Redirect
-type: readme; compatibility-redirect; drift-containment; agriculture-domain
+title: catalog/domain/agriculture/ — Agriculture Domain Catalog Compatibility Redirect
+type: readme; compatibility-redirect; domain-lane; drift-containment; non-authoritative
 version: v0.2.0
 status: repository-grounded draft; compatibility-only; deny-new-trust-writes; migration-unresolved
-owners: NEEDS VERIFICATION — Agriculture, docs, catalog/data, evidence, policy, release, correction, and rollback stewards
+owners: NEEDS VERIFICATION — Agriculture, catalog/data, registry, evidence, receipt, proof, policy, release, correction, rollback, and docs stewards
 created: 2026-07-10
 updated: 2026-07-24
-prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
-policy_label: public-review; compatibility-only; fail-closed; no-direct-public-path; agriculture-sensitive
+policy_label: public-review; compatibility-only; fail-closed; no-direct-public-path; aggregation-aware
 current_path: catalog/domain/agriculture/README.md
-review_packet_id: kfm-md-catalog-agriculture-redirect-20260724
+canonical_counterpart: data/catalog/domain/agriculture/README.md
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+review_packet_id: kfm-md-catalog-domain-agriculture-redirect-20260724
 truth_posture: >
-  CONFIRMED exact target path, current redirect parents, routed Agriculture catalog counterpart,
-  and bounded README evidence / PROPOSED normalized redirect, migration, and review contract /
-  UNKNOWN non-README payloads, producers, consumers, runtime, hosting, and public effects /
-  NEEDS VERIFICATION accepted disposition ADR, migration closure, negative validation,
-  ownership, and rollback drill
+  CONFIRMED exact path, current parent compatibility contract, canonical counterpart,
+  Agriculture domain documentation, and bounded redirect evidence / PROPOSED normalized
+  containment, validation, migration, correction, and rollback contract / UNKNOWN recursive
+  non-README payloads, producers, consumers, runtime, hosting, and public effects /
+  NEEDS VERIFICATION accepted disposition ADR, executable enforcement, ownership, and rollback drill
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_commit: fa74cbdc60e1f925d9f7e22024078386bd82e47d
   prior_blob: 5295809c7a3ebdf0dbe5f47af674a515b633a6bf
-  method: complete target read, parent/root redirect reads, canonical counterpart read, Agriculture doctrine read, and bounded branch/PR search
+  method: exact full-file reads plus bounded repository search; no recursive clone, runtime, deployment, or external-store inspection
 related:
   - ../README.md
   - ../../README.md
@@ -34,68 +35,97 @@ related:
   - ../../../data/published/README.md
   - ../../../release/README.md
   - ../../../docs/domains/agriculture/README.md
+  - ../../../docs/domains/agriculture/CANONICAL_PATHS.md
+  - ../../../docs/domains/agriculture/DATA_LIFECYCLE.md
+  - ../../../docs/domains/agriculture/SENSITIVITY.md
   - ../../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, agriculture, compatibility-root, redirect, drift-containment, non-authoritative, source-role-aware]
+tags: [kfm, catalog, domain, agriculture, compatibility-redirect, drift-containment, aggregation-aware, non-authoritative, cite-or-abstain]
 notes:
   - "The first twelve H2 sections follow the Directory Rules folder-README contract."
-  - "This Markdown-only change does not migrate, promote, release, publish, or authorize any trust-bearing object."
-  - "Legacy heading anchors are preserved with explicit anchors where the section name changed."
+  - "The legacy section anchors are retained explicitly for link stability."
+  - "This Markdown-only change does not migrate, validate, release, publish, or authorize any Agriculture object."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `catalog/domain/agriculture/` — Agriculture Catalog Compatibility Redirect
+# `catalog/domain/agriculture/` — Agriculture Domain Catalog Compatibility Redirect
 
-> **One-line purpose.** Contain the legacy Agriculture catalog path, route catalog work to `data/catalog/domain/agriculture/`, deny new trust-bearing writes here, and preserve a reversible migration fence without duplicating domain, evidence, policy, release, or publication authority.
+> **One-line purpose.** Preserve a visible redirect from the legacy root-level Agriculture catalog path to `data/catalog/domain/agriculture/` while denying new trust-bearing writes and preventing this compatibility lane from becoming Agriculture, catalog, registry, proof, release, or publication authority.
 
 [![Status: compatibility only](https://img.shields.io/badge/status-compatibility%20only-d4a72c?style=flat-square)](#status)
 [![Authority: non-authoritative](https://img.shields.io/badge/authority-non--authoritative-b42318?style=flat-square)](#authority-level)
-[![Trust writes: denied](https://img.shields.io/badge/trust%20writes-denied-b42318?style=flat-square)](#what-does-not-belong-here)
-[![Canonical lane: data/catalog/domain/agriculture](https://img.shields.io/badge/canonical%20lane-data%2Fcatalog%2Fdomain%2Fagriculture-1f6feb?style=flat-square)](#related-folders)
+[![Trust-bearing writes: denied](https://img.shields.io/badge/trust%20writes-denied-b42318?style=flat-square)](#what-does-not-belong-here)
+[![Canonical home: data/catalog/domain/agriculture](https://img.shields.io/badge/canonical-data%2Fcatalog%2Fdomain%2Fagriculture-1f6feb?style=flat-square)](#related-folders)
 
 > [!IMPORTANT]
-> This directory is a compatibility redirect inside the non-canonical top-level `catalog/` drift root. It may explain routing, migration, correction, and rollback, but it cannot own Agriculture catalog records, source truth, registries, receipts, proofs, release decisions, published artifacts, schemas, policy, code, or public truth.
+> This path is a child redirect inside the non-canonical top-level `catalog/` drift root. It may document routing, migration, correction, and rollback, but it cannot own Agriculture catalog records, source truth, registries, receipts, proofs, release decisions, published artifacts, contracts, schemas, policy, code, or public truth.
 
 > [!CAUTION]
-> Do not treat farm, field, parcel, producer, operator, private-yield, pesticide-record, or person-land joins as public-safe because they are referenced here. Agriculture exposure remains fail-closed until rights, sensitivity, evidence, aggregation or redaction, policy, review, release, correction, and rollback requirements are satisfied in their governed homes.
+> Agriculture may involve field polygons, operator or parcel relationships, proprietary yield data, pesticide records, and other restricted or identifying material. Do not place that material here. Unknown rights, sensitivity, aggregation, evidence, or release state must fail closed.
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-basis) · [Routing](#redirect-contract) · [Guardrails](#domain-guardrails) · [Shape](#directory-shape) · [Change rules](#change-rules) · [Verification](#open-verification-items) · [Done](#definition-of-done) · [No-loss](#no-loss-ledger)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Redirect contract](#redirect-contract) · [Guardrails](#domain-guardrails) · [Lifecycle](#lifecycle-and-authority-boundary) · [Migration](#migration-correction-and-rollback) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger) · [Done](#definition-of-done)
 
 ## Purpose
 
-`catalog/domain/agriculture/` preserves a visible legacy path while directing Agriculture catalog work to the governed lifecycle lane at `data/catalog/domain/agriculture/`.
+Keep the legacy `catalog/domain/agriculture/` location visible as a **compatibility redirect and drift-control fence** while Agriculture catalog work is routed to the governed lifecycle lane at `data/catalog/domain/agriculture/`.
 
-This README is a containment and navigation surface only. It prevents the compatibility path from hardening into a parallel authority and keeps the distinction between Agriculture domain doctrine, catalog metadata, evidence, receipts, proofs, release decisions, and published artifacts visible.
+This README preserves path identity and link continuity. It does not grant the path an ongoing catalog responsibility or authorize a mirror of the canonical lane.
 
 ## Authority level
 
 **CONFIRMED path presence / CONFLICTED placement inherited from top-level `catalog/` / PROPOSED temporary redirect / non-authoritative.**
 
-The path does not define Agriculture object meaning, machine shape, admissibility, evidence, release, or publication. Those responsibilities remain with their governing roots and reviewed artifacts.
+The responsibility split remains:
+
+| Responsibility | Governed owner |
+|---|---|
+| Agriculture domain meaning | `docs/domains/agriculture/` and accepted `contracts/` |
+| Agriculture catalog-stage records | `data/catalog/domain/agriculture/` |
+| Machine shape | `schemas/` |
+| Admissibility, rights, and sensitivity | `policy/` |
+| Source and dataset registry state | `data/registry/` |
+| Receipts and proof support | `data/receipts/` and `data/proofs/` |
+| Release, correction, withdrawal, and rollback decisions | `release/` |
+| Released public-safe carriers | `data/published/` after governed promotion |
+
+<a id="evidence-basis"></a>
 
 ## Status
 
-| Field | Current bounded result |
+| Field | Bounded result |
 |---|---|
 | Path | `catalog/domain/agriculture/README.md` |
 | Version | `v0.2.0` |
 | Base evidence | `main@fa74cbdc60e1f925d9f7e22024078386bd82e47d` |
-| Parent redirect | [`catalog/domain/`](../README.md) |
-| Root containment | [`catalog/`](../../README.md) |
-| Routed catalog lane | [`data/catalog/domain/agriculture/`](../../../data/catalog/domain/agriculture/README.md) |
-| Non-README payload inventory | `UNKNOWN` |
-| Active producers, consumers, runtime, or hosting | `UNKNOWN` |
+| Prior blob | `5295809c7a3ebdf0dbe5f47af674a515b633a6bf` |
+| Parent posture | Compatibility redirect and drift fence |
+| Canonical counterpart | `data/catalog/domain/agriculture/README.md` |
+| Recursive non-README inventory | `UNKNOWN` |
+| Active producers, consumers, runtime reads, hosts, or caches | `UNKNOWN` |
 | Migration or retirement | `NOT PERFORMED` |
 | Public or release readiness | `DENY BY PLACEMENT` |
+| Human review | `PENDING` |
+
+### Evidence basis
+
+| Evidence | CONFIRMED support | Does not prove |
+|---|---|---|
+| [`catalog/README.md`](../../README.md) | Top-level `catalog/` is severe parallel-authority drift and containment only. | Payload-free state, dependency closure, or retirement readiness. |
+| [`catalog/domain/README.md`](../README.md) | Domain children are compatibility redirects to `data/catalog/domain/<domain>/`. | Complete recursive inventory or enforcement. |
+| [`data/catalog/domain/agriculture/README.md`](../../../data/catalog/domain/agriculture/README.md) | The canonical Agriculture catalog-stage lane exists and documents aggregation-aware, release-gated boundaries. | Accepted status, concrete inventory, validator coverage, or release closure. |
+| [`docs/domains/agriculture/README.md`](../../../docs/domains/agriculture/README.md) | Agriculture doctrine, source-role separation, privacy, and aggregation posture live outside this redirect. | That this compatibility path may own domain doctrine or implementation. |
+| [`Directory Rules`](../../../docs/doctrine/directory-rules.md) | Responsibility roots, domain-lane placement, compatibility containment, and lifecycle separation. | That any proposed path or migration is already accepted or complete. |
 
 <a id="allowed-contents"></a>
 
 ## What belongs here
 
+Only bounded compatibility material:
+
 - this redirect README;
-- reviewed migration, drift, deprecation, correction, or rollback notes;
-- temporary marker metadata required by an accepted transition;
-- no independent Agriculture catalog, evidence, policy, release, or publication payload.
+- reviewed migration, deprecation, correction, or rollback notes;
+- temporary marker metadata required by an accepted migration;
+- no independent catalog, evidence, policy, release, runtime, or publication payload.
 
 <a id="forbidden-contents"></a>
 
@@ -103,225 +133,225 @@ The path does not define Agriculture object meaning, machine shape, admissibilit
 
 | Forbidden family | Governed home |
 |---|---|
-| Agriculture catalog records and indexes | `data/catalog/domain/agriculture/` |
-| STAC, DCAT, and PROV catalog projections | the appropriate `data/catalog/` sublanes |
-| graph or triplet projections | `data/triplets/` |
-| source, dataset, rights, sensitivity, crosswalk, domain, or layer registry rows | `data/registry/` |
-| process and transform receipts | `data/receipts/` |
-| EvidenceBundles, ProofPacks, validation, or integrity proof | `data/proofs/` |
-| release decisions, manifests, corrections, withdrawals, signatures, or rollback cards | `release/` |
-| released public-safe Agriculture carriers | `data/published/` after governed release |
-| contracts, schemas, policy, tests, fixtures, code, workflows, secrets, or restricted data | their owning responsibility roots or approved restricted systems |
-
-RAW, WORK, QUARANTINE, unreleased, canonical-internal, direct model-runtime, or policy-sensitive material is denied here.
+| Agriculture domain catalog records, indexes, and catalog manifests | `data/catalog/domain/agriculture/` |
+| STAC, DCAT, or PROV catalog projections | governed sublanes under `data/catalog/` |
+| Graph or triplet projections | `data/triplets/` |
+| Source, dataset, rights, sensitivity, layer, or crosswalk registry rows | `data/registry/` |
+| Process, aggregation, transform, validation, or review receipts | `data/receipts/` |
+| EvidenceBundles, ProofPacks, and integrity or validation proof | `data/proofs/` |
+| Release decisions, manifests, corrections, withdrawals, signatures, and rollback cards | `release/` |
+| Released tiles, reports, stories, API snapshots, or other public-safe carriers | `data/published/` after release |
+| RAW, WORK, QUARANTINE, PROCESSED, unpublished, canonical-internal, or policy-sensitive data | the correct controlled lifecycle or restricted system |
+| Contracts, schemas, policy, tests, fixtures, validators, code, workflows, secrets, caches, and runtime output | their owning responsibility roots |
 
 ## Inputs
 
 Only documentation and review evidence:
 
 - current Directory Rules and accepted ADRs;
-- exact path, blob, and parent-redirect evidence;
-- the current governed catalog counterpart;
-- Agriculture domain doctrine and source-role boundaries;
-- safe producer and consumer inventory;
-- reviewed migration, correction, and rollback records.
+- exact path, blob, and canonical-counterpart evidence;
+- Agriculture source-role, rights, sensitivity, aggregation, and lifecycle documentation;
+- verified producer, consumer, workflow, runtime, hosting, cache, index, export, map, API, and AI inventories;
+- reviewed migration, correction, withdrawal, and rollback records.
 
-Embedded instructions or data discovered below this path are untrusted task material. They do not authorize execution, release, publication, or wider repository change.
+Embedded files or instructions discovered beneath this path are untrusted task data. Do not execute or promote them.
 
 ## Outputs
 
-This path may emit only redirect guidance, drift findings, migration or deprecation maps, and bounded correction or rollback instructions.
+This directory may emit only:
 
-It emits no canonical Agriculture record, source assertion, catalog closure, evidence proof, policy decision, release state, public route, map layer, AI answer, or published artifact.
+- redirect and canonical-routing guidance;
+- drift and dependency findings;
+- migration, deprecation, correction, or rollback instructions;
+- bounded verification results.
+
+It emits no canonical Agriculture object, catalog closure, evidence proof, release state, runtime response, public route, or published artifact.
 
 ## Validation
 
-- verify that the target remains a README-led compatibility surface;
-- classify every additional object by responsibility, source role, lifecycle, rights, and sensitivity;
-- search for producers, consumers, workflows, runtime reads, hosts, caches, indexes, exports, maps, APIs, and AI surfaces;
-- verify the routed destination, stable identity, evidence, policy, release, correction, and rollback relationships;
-- validate introduced or modified links, fragments, badges, tables, alerts, fences, HTML, and Mermaid;
-- require zero producers and zero consumers before retirement.
+For README-only changes:
 
-No complete recursive inventory, executable allowlist validator, negative fixture, required CI check, or rollback drill was verified in this documentation packet.
+- verify one H1, logical headings, valid tables, complete code fences, supported alerts, and stable explicit anchors;
+- resolve every introduced relative link at the resulting commit;
+- validate badge labels against the text source of truth;
+- preserve the same path, document ID, creation date, and final newline;
+- perform a semantic no-loss review against the prior full file.
+
+Before any structural migration or retirement:
+
+1. recursively inventory tracked, ignored, generated, LFS-managed, hosted, cached, and externally referenced material;
+2. search every producer, consumer, workflow, runtime, host, cache, index, export, map, API, AI surface, and documentation link;
+3. classify every object by responsibility, lifecycle, source role, rights, sensitivity, aggregation, evidence, policy, release, correction, and rollback;
+4. enforce negative-path tests that deny new writes and public reads;
+5. require zero producers and zero consumers before retirement.
+
+No executable allowlist validator, complete recursive inventory, or runtime exclusion proof was established by this documentation packet.
 
 ## Review burden
 
-README-only clarification requires documentation, Agriculture, and catalog/data review.
+A README-only clarification requires docs plus catalog/data review.
 
-Any discovered payload, sensitive material, producer or consumer change, migration, mirror, deprecation, retirement, or public effect additionally requires the owning evidence, registry, policy/security, validation, operations, release, correction, and rollback reviewers.
+Any non-README payload discovery, producer or consumer change, migration, mirror, deprecation, retirement, sensitive-data finding, canonical-counterpart change, or public effect additionally requires the affected Agriculture, architecture, registry, evidence, policy/security, validation, operations, release, correction, and rollback reviewers.
 
-A CODEOWNERS route, green check, commit, pull request, or merge is not stewardship, release approval, publication evidence, or an accepted ADR.
+CODEOWNERS routing, a green check, a pull request, or a merge is not stewardship evidence, release approval, or KFM publication.
 
 <a id="canonical-homes"></a>
 
 ## Related folders
 
-| Responsibility | Governed home |
+| Family | Governed location |
 |---|---|
-| Agriculture catalog lane | [`data/catalog/domain/agriculture/`](../../../data/catalog/domain/agriculture/README.md) |
-| Parent domain catalog index | [`data/catalog/domain/`](../../../data/catalog/domain/README.md) |
+| Parent drift-containment root | [`catalog/`](../../README.md) |
+| Parent domain redirect | [`catalog/domain/`](../README.md) |
+| Canonical Agriculture catalog lane | [`data/catalog/domain/agriculture/`](../../../data/catalog/domain/agriculture/README.md) |
+| Canonical domain catalog parent | [`data/catalog/domain/`](../../../data/catalog/domain/README.md) |
 | Catalog lifecycle root | [`data/catalog/`](../../../data/catalog/README.md) |
-| Source, rights, sensitivity, and layer registries | [`data/registry/`](../../../data/registry/README.md) |
+| Registry | [`data/registry/`](../../../data/registry/README.md) |
 | Receipts | [`data/receipts/`](../../../data/receipts/README.md) |
-| Proof support | [`data/proofs/`](../../../data/proofs/README.md) |
-| Released public-safe artifacts | [`data/published/`](../../../data/published/README.md) |
-| Release, correction, withdrawal, and rollback decisions | [`release/`](../../../release/README.md) |
+| Proofs | [`data/proofs/`](../../../data/proofs/README.md) |
+| Released carriers | [`data/published/`](../../../data/published/README.md) |
+| Release governance | [`release/`](../../../release/README.md) |
 | Agriculture domain doctrine | [`docs/domains/agriculture/`](../../../docs/domains/agriculture/README.md) |
-| Placement doctrine | [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) |
+| Agriculture canonical paths | [`CANONICAL_PATHS.md`](../../../docs/domains/agriculture/CANONICAL_PATHS.md) |
+| Agriculture lifecycle | [`DATA_LIFECYCLE.md`](../../../docs/domains/agriculture/DATA_LIFECYCLE.md) |
+| Agriculture sensitivity and rights | [`SENSITIVITY.md`](../../../docs/domains/agriculture/SENSITIVITY.md) |
+| Placement doctrine | [`Directory Rules`](../../../docs/doctrine/directory-rules.md) |
 
 ## ADRs
 
-No accepted ADR was verified in this packet that authorizes new trust-bearing writes here, makes this path canonical, or retires it.
+The parent compatibility contracts state that the root disposition and catalog-closure decisions remain proposed unless independently verified otherwise. This README accepts no ADR and performs no structural transition.
 
-A change to root authority, catalog placement, lifecycle ownership, or redirect disposition requires an accepted ADR or other governing decision, a producer and consumer cutover, correction handling, rollback planning, and post-change verification. This README accepts no ADR and performs no structural transition.
+Changing or retiring the top-level `catalog/` authority boundary requires an accepted ADR, a complete migration map, producer and consumer cutover evidence, correction and rollback paths, and post-cutover verification.
 
 ## Last reviewed
 
 - **Date:** 2026-07-24
 - **Evidence boundary:** `main@fa74cbdc60e1f925d9f7e22024078386bd82e47d`
-- **Inspection:** complete target, parent and root redirects, routed catalog counterpart, Agriculture doctrine, and bounded branch/PR search
+- **Inspection:** complete reads of this README and its parent/canonical/domain/doctrine neighbors, plus bounded repository search
 - **Recursive payload/runtime inspection:** not performed
 - **Human review:** pending
 
-Re-review whenever a file is added, a producer or consumer references this path, an accepted disposition changes, validation lands, a correction or rollback is exercised, or six months pass.
-
-## Evidence basis
-
-| Evidence | Status | Supports | Does not prove |
-|---|---|---|---|
-| [`catalog/README.md`](../../README.md) | CONFIRMED repository evidence | Top-level `catalog/` is severe parallel-authority drift and containment only. | Complete payload, producer, consumer, hosting, migration, or retirement closure. |
-| [`catalog/domain/README.md`](../README.md) | CONFIRMED repository evidence | Domain children are compatibility redirects to `data/catalog/domain/<domain>/`. | That every child is payload-free or enforcement-complete. |
-| [`data/catalog/domain/agriculture/README.md`](../../../data/catalog/domain/agriculture/README.md) | CONFIRMED path and current text | The routed Agriculture catalog lane exists and defines catalog-stage boundaries. | Complete records, schemas, validators, policy gates, rights closure, or release approval. |
-| [`docs/domains/agriculture/README.md`](../../../docs/domains/agriculture/README.md) | CONFIRMED path and doctrine text | Agriculture source-role, aggregation, rights, privacy, and cross-lane boundaries. | Current runtime, public routes, source activation, or implementation maturity. |
-| [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) | Governing placement doctrine | Responsibility-root placement and compatibility-root containment. | Current migration completion or runtime enforcement. |
+Re-review when any file is added, a producer or consumer references this path, a canonical counterpart changes, an ADR changes the root disposition, enforcement lands, or six months pass.
 
 ## Redirect contract
 
-```mermaid
-flowchart LR
-    LEGACY["catalog/domain/agriculture/<br/>compatibility only"]
-    CANON["data/catalog/domain/agriculture/<br/>catalog-stage lane"]
-    REG["data/registry/<br/>source and rights posture"]
-    REC["data/receipts/<br/>process memory"]
-    PROOF["data/proofs/<br/>evidence support"]
-    REL["release/<br/>decisions and rollback"]
-    PUB["data/published/<br/>released carriers"]
-
-    LEGACY -. redirect .-> CANON
-    CANON --> REG
-    CANON --> REC
-    CANON --> PROOF
-    CANON --> REL
-    REL --> PUB
-```
-
-The arrows show responsibility relationships, not proof that every object, validator, workflow, or release currently exists or is complete.
-
 | Question | Required answer |
 |---|---|
-| What family is represented? | Agriculture domain catalog metadata and indexes |
-| Where is the governed catalog lane? | `data/catalog/domain/agriculture/` |
+| What family is represented? | Agriculture domain catalog compatibility routing |
+| Where is the governed home? | `data/catalog/domain/agriculture/` |
 | May new trust-bearing writes occur here? | No |
-| May public clients read here? | No |
-| What blocks migration? | Unknown payloads, rights/sensitivity, producers/consumers, unresolved decisions, missing review |
-| What closes migration? | Accepted disposition, verified move or regeneration, parity, correction, rollback, and zero dependencies |
+| May public clients or ordinary UI read here? | No |
+| May a watcher or pipeline publish from here? | No |
+| What blocks migration? | Unknown payloads, rights/sensitivity, producers/consumers, unresolved transforms, missing review, or missing rollback |
+| What closes migration? | Accepted disposition, verified move/regeneration, identity and digest parity, correction, rollback, and zero dependencies |
 
-## Domain guardrails
+<a id="directory-shape"></a>
 
-1. Agriculture catalog metadata is a carrier, not source truth or publication authority.
-2. Farm, field, parcel, producer, operator, private-yield, pesticide-record, and private person-land details remain restricted or denied by default.
-3. Public aggregate products require appropriate evidence and an aggregation or redaction basis; existence in a catalog path is not enough.
-4. Agriculture must not absorb Soil, Hydrology, Atmosphere, Hazards, Flora, or People/DNA/Land source roles through an undocumented join.
-5. CDL-like land-cover classification is not observed field truth; a stress indicator is not an alert; aggregate statistics are not field-level evidence.
-6. No content under this redirect may bypass governed APIs, released artifacts, policy checks, or release state.
-
-## Directory shape
-
-The bounded compatibility shape is:
+### Directory shape
 
 ```text
 catalog/domain/agriculture/
 └── README.md
 ```
 
-This is an expected containment shape, not a verified recursive inventory. Additional objects are `UNKNOWN` until a trusted tree and producer/consumer inspection classifies them.
+Nested canonical sublanes must not be mirrored here unless an accepted repository contract explicitly requires a temporary redirect and defines its retirement.
 
-Nested canonical sublanes must not be mirrored here unless an accepted migration or compatibility contract explicitly requires them.
+## Domain guardrails
 
-## Change rules
+1. **Source roles do not collapse.** CDL or another classified land-cover product is not observed field truth; NASS aggregates are not field-level evidence; Soil, Hydrology, Atmosphere, Hazards, People/Land, and Flora retain their own authority.
+2. **Aggregation is load-bearing.** Public Agriculture products must use the governed aggregate or permissioned representation required by policy and, where the canonical lane requires it, resolve an `AggregationReceipt`.
+3. **Private detail fails closed.** Operator identity, parcel relationships, private yield, pesticide records, private joins, and sensitive field geometry remain restricted unless rights, sensitivity, evidence, review, and release controls explicitly permit a safe representation.
+4. **Stress is not alert authority.** Drought or pest stress indicators are interpretive derivatives and must not be presented as emergency or operational alerts.
+5. **Catalog metadata is not truth.** A record under the canonical catalog lane supports discovery and closure; it does not make a claim true, policy-admitted, reviewed, released, or published.
+6. **This redirect is not a shortcut.** No link, badge, map, export, AI response, or file move may bypass the governed Agriculture lifecycle.
 
-1. Update the governed `data/catalog/domain/agriculture/` lane for Agriculture catalog work.
-2. Keep this path limited to redirect, drift, migration, correction, and rollback documentation.
-3. Link to governing artifacts instead of duplicating their authority.
-4. Preserve the `doc_id`, path, legacy anchors, source-role boundaries, and fail-closed posture.
-5. Mark unsupported implementation, source-rights, validation, release, and public-route claims as `UNKNOWN` or `NEEDS VERIFICATION`.
-6. Do not treat a documentation change, badge, diagram, commit, pull request, merge, or GitHub release as KFM publication.
+## Lifecycle and authority boundary
+
+```mermaid
+flowchart LR
+    LEGACY["catalog/domain/agriculture/<br/>compatibility redirect"]
+    CANON["data/catalog/domain/agriculture/<br/>catalog-stage lane"]
+    REG["data/registry/<br/>source, rights, sensitivity"]
+    REC["data/receipts/<br/>process and aggregation memory"]
+    PROOF["data/proofs/<br/>evidence support"]
+    REL["release/<br/>decisions, correction, rollback"]
+    PUB["data/published/<br/>released public-safe carriers"]
+
+    LEGACY -. "redirect only" .-> CANON
+    REG --> CANON
+    REC --> CANON
+    PROOF --> CANON
+    CANON --> REL
+    REL --> PUB
+```
+
+The diagram is an ownership and governance map, not proof that the full pipeline, validators, release objects, or public routes are implemented. The compatibility path participates only through the dotted redirect.
+
+<a id="change-rules"></a>
 
 ## Migration, correction, and rollback
 
-1. Freeze the current path, blob, doctrine, accepted decisions, and known references.
-2. Inventory tracked, ignored, generated, hosted, and externally referenced material.
-3. Classify every object by responsibility, source role, lifecycle, rights, sensitivity, and release state.
-4. Stop new writes and add negative-path validation.
-5. Move or regenerate trust-bearing material into governed homes through a reviewed transition.
-6. Validate identity, digest, evidence, policy, release, public-safe transformation, and consumer parity.
-7. Correct downstream indexes, caches, exports, maps, and AI surfaces while preserving lineage.
+1. Freeze the governing doctrine, accepted decisions, current tree, blobs, producers, consumers, and canonical counterpart.
+2. Inventory and classify every object by responsibility, lifecycle, source role, rights, sensitivity, aggregation, evidence, policy, and release state.
+3. Record the drift and accept a disposition decision before moving or deleting anything.
+4. Stop new writes and public reads with negative validation.
+5. Move or regenerate trust-bearing material through the governed canonical process; preserve identity, digest, provenance, and source-role lineage.
+6. Validate catalog, evidence, policy, aggregation, release, public-safe transformation, and consumer parity.
+7. Correct downstream indexes, caches, links, exports, maps, API payloads, and AI retrieval surfaces.
 8. Rehearse rollback without recreating parallel authority.
-9. Retire the redirect only after zero-producer, zero-consumer, link, host, correction, and rollback checks pass.
+9. Retire the redirect only after zero-producer, zero-consumer, link, host, cache, and rollback checks pass.
 
-## Open verification items
+Before merge, rollback of this README update means closing the draft PR and abandoning its branch. After merge, use a transparent revert commit. This documentation change performs no data or authority migration.
+
+<a id="open-verification-items"></a>
+
+## Open verification register
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Recursive tracked and non-tracked inventory | `UNKNOWN` | Trusted checkout plus generated, LFS, hosted, and external classification |
-| Producers and consumers | `UNKNOWN` | Code, config, workflow, runtime, host, cache, and export search |
-| Accepted redirect disposition | `NEEDS VERIFICATION` | Accepted ADR or governing decision |
-| Allowlist and negative-path enforcement | `NEEDS VERIFICATION` | Validator, invalid fixtures, tests, and required workflow |
-| Agriculture rights and sensitivity closure | `UNKNOWN` | SourceDescriptor, rights review, policy decisions, and transform receipts |
-| Catalog/evidence/release closure | `NEEDS VERIFICATION` | Schemas, validators, EvidenceBundles, receipts, proofs, and ReleaseManifest linkage |
-| Migration, correction, and rollback | `NOT PERFORMED` | Reviewed records and successful drill |
-| Zero dependencies and retirement | `NOT ESTABLISHED` | Post-cutover verification window |
-
-## Definition of done
-
-This compatibility redirect is complete only when:
-
-- the path remains visibly non-authoritative and routes readers to the governed Agriculture catalog lane;
-- new trust-bearing writes and public reads are denied;
-- source-role, rights, sensitivity, evidence, aggregation, policy, release, correction, and rollback boundaries remain visible;
-- introduced Markdown links, anchors, badges, alerts, tables, code fences, HTML, and Mermaid validate;
-- no unrelated repository files change.
-
-Retirement is a separate governed outcome. It additionally requires an accepted disposition, complete inventory, zero producers and consumers, link and host closure, migration parity, correction continuity, and a tested rollback path.
+| Recursive tracked and non-tracked inventory | `UNKNOWN` | Trusted checkout plus generated, LFS, hosted, cached, and external-reference classification |
+| Producers, consumers, runtime reads, hosts, caches, maps, exports, and AI use | `UNKNOWN` | Code, config, workflow, runtime, hosting, and observability search |
+| Canonical Agriculture catalog-lane acceptance and concrete inventory | `NEEDS VERIFICATION` | Accepted decisions, current records, schemas, validators, and steward review |
+| Redirect allowlist and negative-path enforcement | `NEEDS VERIFICATION` | Validator, fixtures, tests, and required workflow |
+| Agriculture rights, sensitivity, aggregation, and public effects | `UNKNOWN` | Per-object source and policy review plus release evidence |
+| Migration, correction, retirement, and rollback closure | `NOT PERFORMED` | Reviewed migration records, consumer cutover, and rollback drill |
+| GitHub-rendered Mermaid and badge behavior | `PENDING` | Host render observation on the draft PR |
 
 ## No-loss ledger
 
-| Prior v0.1 material | v0.2.0 disposition |
+| Prior material | Disposition |
 |---|---|
-| Stable path and `doc_id` | Preserved |
-| Compatibility/non-authority statement | Preserved and strengthened |
-| Parent and canonical routing | Preserved and linked |
-| Allowed and forbidden content boundaries | Preserved under the Directory Rules folder-README contract |
-| Agriculture field/operator and cross-lane guardrails | Preserved and expanded from current doctrine |
-| Directory shape and change rules | Preserved with explicit inventory limits |
-| Open verification items | Preserved as a structured register |
-| Definition of done | Preserved and separated from retirement closure |
-| Evidence limitations | Preserved and made claim-specific |
-| Payload, code, schema, policy, release, or publication change | None |
+| Stable path, `doc_id`, creation date, and compatibility identity | Preserved |
+| Evidence basis and canonical-home routing | Preserved, linked, and expanded |
+| Allowed and forbidden content rules | Preserved and normalized into the folder contract |
+| Agriculture privacy, cross-lane, and public-safety guardrails | Preserved and strengthened without claiming implementation |
+| Directory shape and no-mirror rule | Preserved |
+| Change rules and open verification items | Preserved and expanded into migration, correction, rollback, and verification registers |
+| Definition-of-done intent | Preserved below |
+| Legacy section anchors | Preserved explicitly |
+| Payload, schema, policy, code, workflow, release, or publication change | None |
+
+<a id="definition-of-done"></a>
+
+## Definition of done
+
+This redirect is complete only while all of the following remain true:
+
+- the path exists solely for compatibility, migration, correction, or rollback documentation;
+- it points readers and tools to `data/catalog/domain/agriculture/`;
+- no trust-bearing writer, public client, map, export, API, or AI surface depends on it;
+- no canonical catalog, registry, receipt, proof, release, published, schema, policy, source, test, tool, or application authority is duplicated here;
+- unknown rights, sensitivity, aggregation, evidence, and release state fail closed;
+- any future migration or retirement is accepted, validated, corrected, rollback-tested, and dependency-free.
 
 ### Change history
 
 #### v0.2.0 — 2026-07-24
 
-- aligned the child redirect with the current root and parent containment contracts;
-- added the Directory Rules folder-README section order;
-- added evidence-backed badges, alerts, navigation, routing diagram, and explicit legacy anchors;
-- preserved Agriculture rights, sensitivity, aggregation, and source-role guardrails;
-- changed Markdown only.
-
-#### v0.1 — 2026-07-10
-
-- established the Agriculture catalog compatibility redirect and canonical routing.
+- aligned the child redirect with the upgraded `catalog/` and `catalog/domain/` containment contracts;
+- preserved document identity and legacy anchors;
+- added evidence-backed badges, navigation, alerts, tables, and an ownership-flow diagram;
+- strengthened Agriculture-specific source-role, aggregation, privacy, correction, and rollback guardrails;
+- changed exactly one Markdown file and no runtime, data, schema, policy, release, or publication state.
 
 <p align="right"><a href="#top">Back to top</a></p>
