@@ -1,8 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-catalog-domain-atmosphere-pm25-2026-readme
-title: data/catalog/domain/atmosphere/pm25_2026/README.md - Atmosphere PM2.5 2026 Domain Catalog README
+title: data/catalog/domain/atmosphere/pm25_2026/README.md — Atmosphere PM2.5 2026 Domain Catalog README
 version: v0.2.0
-type: readme; nested-directory-readme; source-registry-catalog-profile; data-lifecycle-sublane; domain-catalog-dataset-guide
+type: readme; nested-directory-readme; catalog-profile; data-lifecycle-sublane; domain-catalog-dataset-guide
 status: repository-grounded draft; PROPOSED dataset lane; catalog-stage; release-blocked
 owners: NEEDS VERIFICATION - Atmosphere, air-quality, PM2.5, data, catalog, evidence, policy, release, schema, and documentation stewards
 created: NEEDS VERIFICATION - blank placeholder existed before v0.1 expansion
@@ -24,6 +24,8 @@ related:
   - ../../../../../docs/domains/atmosphere/README.md
   - ../../../../../docs/architecture/directory-rules.md
   - ../../../../../contracts/domains/atmosphere/PM25Observation.md
+  - ../../../../../contracts/domains/atmosphere/AirObservation.md
+  - ../../../../../contracts/domains/atmosphere/AirStation.md
   - ../../../../../schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json
   - ../../../../../policy/domains/atmosphere/README.md
   - ../../../../proofs/atmosphere/pm25_2026/
@@ -334,6 +336,8 @@ Documentation-only review cannot approve a dataset or release.
 - Atmosphere domain guide: [`docs/domains/atmosphere/README.md`](../../../../../docs/domains/atmosphere/README.md)
 - Placement doctrine: [`docs/architecture/directory-rules.md`](../../../../../docs/architecture/directory-rules.md)
 - Semantic contract: [`contracts/domains/atmosphere/PM25Observation.md`](../../../../../contracts/domains/atmosphere/PM25Observation.md)
+- Adjacent air contract: [`contracts/domains/atmosphere/AirObservation.md`](../../../../../contracts/domains/atmosphere/AirObservation.md)
+- Station context contract: [`contracts/domains/atmosphere/AirStation.md`](../../../../../contracts/domains/atmosphere/AirStation.md)
 - Machine-shape scaffold: [`schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json`](../../../../../schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json)
 - Proof lane: [`data/proofs/atmosphere/pm25_2026/README.md`](../../../../proofs/atmosphere/pm25_2026/README.md)
 - Receipt lane: [`data/receipts/atmosphere/pm25_2026/README.md`](../../../../receipts/atmosphere/pm25_2026/README.md)
