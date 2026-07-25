@@ -71,7 +71,7 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, adr, habitat, stewardship-zone, policy, sensitivity, public-safe, evidence, release, rollback, context-not-authority]
 notes:
-  - "Same-path modernization of an existing unassigned ADR scaffold."
+  - "Same-path modernization of an existing unassigned PROPOSED scaffold."
   - "This revision does not assign an ADR number, update the ADR index, accept the decision, implement policy, or publish data."
   - "Assigning a permanent ADR number requires a separately scoped update to docs/adr/INDEX.md and validator closure."
   - "The source metadata remains draft and the effective decision status remains proposed."
