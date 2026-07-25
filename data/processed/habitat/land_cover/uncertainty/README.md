@@ -1,15 +1,36 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-habitat-land-cover-uncertainty-readme
-title: data/processed/habitat/land_cover/uncertainty/README.md — Habitat Land Cover Uncertainty Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; habitat-domain-lane; land-cover-lane; uncertainty-surface-lane; remote-sensing-context-lane
-status: draft; PROPOSED; data-root; processed-stage; habitat; land-cover; uncertainty; uncertainty-surface; confidence; accuracy; remote-sensing; source-role-aware; sensitivity-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Habitat steward · Land-cover steward · Uncertainty steward · Remote-sensing data steward · Sensitivity reviewer · Data-quality reviewer · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/habitat/land_cover/uncertainty/ — Habitat Land-Cover Uncertainty Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-habitat-land-cover-uncertainty-lane
+status: repository-grounded draft; payload inventory, concrete schemas, validators, fixtures, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Habitat domain steward"
+  - "NEEDS VERIFICATION — land-cover and uncertainty steward"
+  - "NEEDS VERIFICATION — remote-sensing and data-quality reviewer"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, and rollback stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; habitat; land-cover; uncertainty; remote-sensing; lifecycle; governed; release-gated
-tags: [kfm, data, processed, habitat, land-cover, uncertainty, uncertainty-surface, confidence, accuracy, classification-confidence, remote-sensing, NLCD, validation, error-matrix, quality, habitat-patch, ecological-system, source-role, observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ReleaseManifest, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; habitat; land-cover; uncertainty; source-role-aware; method-aware; sensitivity-aware; release-gated; no-direct-public-path
+path: data/processed/habitat/land_cover/uncertainty/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, current Habitat parent lane,
+  current land-cover parent lane, Habitat doctrine, and neighboring change/ecoregion lanes / PROPOSED
+  uncertainty admission profile, uncertainty packet, comparability rules, and downstream promotion
+  expectations / UNKNOWN recursive payload inventory, accepted UncertaintySurface contract or schema,
+  production validators, fixtures, receipts, proof closure, release instances, hosting, and public behavior /
+  NEEDS VERIFICATION accountable owners, accepted uncertainty vocabulary, method fitness, calibration
+  rules, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 69e388be9cd2fc5af47c151b17c47219933827af
+  prior_blob: 763829bab769873dfef82e0d11105dbb9c0e84e8
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  habitat_parent_blob: bbae8468b9acf483b1a77a2cd6ecfc08a691a318
+  land_cover_parent_blob: a40191104cd9f5c1d983e725bca27b7f22afb3c7
+  habitat_domain_blob: 876d1fa41a00d94d7120c6ef065750748e6bf524
 related:
   - ../README.md
   - ../change/README.md
@@ -18,263 +39,337 @@ related:
   - ../../../README.md
   - ../../../../README.md
   - ../../../../../docs/domains/habitat/README.md
-  - ../../../../../docs/domains/fauna/README.md
-  - ../../../../../docs/domains/flora/README.md
-  - ../../../../../docs/domains/soil/README.md
-  - ../../../../../docs/domains/hydrology/README.md
-  - ../../../../../docs/domains/agriculture/README.md
-  - ../../../../../docs/domains/hazards/README.md
-  - ../../../../../policy/domains/habitat/
-  - ../../../../../policy/sensitivity/habitat/
-  - ../../../../../contracts/domains/habitat/
-  - ../../../../../schemas/contracts/v1/domains/habitat/
-  - ../../../../raw/habitat/
-  - ../../../../work/habitat/
-  - ../../../../quarantine/habitat/
-  - ../../../../catalog/domain/habitat/
-  - ../../../../catalog/stac/habitat/
-  - ../../../../catalog/dcat/habitat/
-  - ../../../../catalog/prov/habitat/
-  - ../../../../triplets/
-  - ../../../../published/
-  - ../../../../proofs/
-  - ../../../../receipts/
-  - ../../../../registry/sources/habitat/
-  - ../../../../../release/candidates/habitat/
-  - ../../../../../release/
-  - ../../../../../pipelines/domains/habitat/
-  - ../../../../../pipeline_specs/habitat/
-  - ../../../../../tools/validators/
+  - ../../../../../docs/doctrine/directory-rules.md
+  - ../../../../../contracts/domains/habitat/README.md
+  - ../../../../../schemas/contracts/v1/domains/habitat/README.md
+  - ../../../../../policy/domains/habitat/README.md
+  - ../../../../../policy/sensitivity/habitat/README.md
+  - ../../../../raw/habitat/README.md
+  - ../../../../work/habitat/README.md
+  - ../../../../quarantine/habitat/README.md
+  - ../../../../catalog/domain/habitat/README.md
+  - ../../../../triplets/README.md
+  - ../../../../proofs/README.md
+  - ../../../../receipts/README.md
+  - ../../../../registry/sources/habitat/README.md
+  - ../../../../../release/candidates/habitat/README.md
+  - ../../../../../release/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/processed/habitat/land_cover/uncertainty/README.md`."
-  - "This is a child PROCESSED-stage lane under `data/processed/habitat/land_cover/` for normalized land-cover uncertainty artifacts, classification-confidence summaries, accuracy/context products, and uncertainty surfaces. It is not a RAW source root, WORK scratch area, QUARANTINE bypass, CATALOG, TRIPLET, PUBLISHED, proof store, receipt store, source registry, policy authority, release authority, public API/UI output, or public map/tile output."
-  - "Uncertainty artifacts qualify interpretation; they do not prove land-cover truth, habitat suitability, regulatory critical habitat, species occurrence, restoration priority, crop truth, hazard status, or ecological condition by themselves."
-  - "Habitat source roles must remain explicit: observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic are not interchangeable. Uncertainty may be observed-derived, modeled, aggregate, or candidate depending on method; each artifact must declare its role and method."
-  - "Sensitive joins to Fauna, Flora, private parcels, rare species, rare plants, wetlands, stewardship zones, hazards, agriculture, or steward-controlled biodiversity context must fail closed unless policy, review, evidence, transform receipts, release state, correction path, and rollback support public use."
-  - "This README is a lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no uncertainty bytes, source state, schema, contract, policy, validator, workflow, proof, release, route, hosting, or KFM publication state changed."
+  - "Uncertainty qualifies interpretation; it does not establish land-cover truth, habitat condition, species presence, suitability, restoration priority, regulatory status, or management action."
+  - "A confidence score, error matrix, or uncertainty surface is processed context unless an accepted validator emits a ValidationReport in the correct authority root."
+  - "Rollback target for v0.2.0 is prior blob SHA `763829bab769873dfef82e0d11105dbb9c0e84e8`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/habitat/land_cover/uncertainty
+# `data/processed/habitat/land_cover/uncertainty/` — Habitat land-cover uncertainty processed data
 
-> Habitat PROCESSED-stage child lane for normalized land-cover uncertainty artifacts: classification confidence, accuracy summaries, error-context products, uncertainty surfaces, quality masks, and remote-sensing-derived uncertainty context that qualify land-cover interpretation but are not cataloged, triplet-projected, published, or released by this directory alone.
+> **One-line purpose.** Hold processed land-cover confidence, accuracy, error, quality-mask, and uncertainty artifacts while preserving method, source role, class system, spatial and temporal support, comparability, sensitivity, and correction lineage upstream of catalog, release, and publication.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/habitat/land_cover/uncertainty" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fhabitat%2Fland__cover%2Funcertainty-blue">
-  <img alt="Domain: habitat" src="https://img.shields.io/badge/domain-habitat-2e7d32">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Object: UncertaintySurface" src="https://img.shields.io/badge/object-UncertaintySurface-green">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: uncertainty context](https://img.shields.io/badge/role-uncertainty%20context-2e7d32?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![Method: explicit](https://img.shields.io/badge/method-explicit-6f42c1?style=flat-square)](#uncertainty-admission-profile)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Habitat steward · Land-cover steward · Uncertainty steward · Remote-sensing data steward · Sensitivity reviewer · Data-quality reviewer · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **Uncertainty is qualification context, not proof authority.** A confidence value, error matrix, or uncertainty surface may be useful and well-formed while still being non-comparable, method-limited, rights-unclear, weakly supported, policy-held, unreleased, or unsafe for the requested public use.
+
 **Path:** `data/processed/habitat/land_cover/uncertainty/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `habitat`  
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `habitat/`  
 **Parent lane:** `data/processed/habitat/land_cover/`  
-**Sublane:** `uncertainty` / land-cover confidence, accuracy, and uncertainty context  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, sensitivity/policy review, ValidationReport, PolicyDecision, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED Habitat names `UncertaintySurface` as a canonical object family · CONFIRMED Habitat promotion gates require EvidenceRef/EvidenceBundle, ValidationReport, PolicyDecision, ReleaseManifest, correction path, and rollback target · CONFIRMED parent land-cover lane is upstream of catalog/triplet/publication and blocks direct public use · PROPOSED uncertainty child-lane details · NEEDS VERIFICATION for actual child inventory, schemas, validators, fixtures, source descriptors, receipt families, policy enforcement, release linkage, and governed route behavior.
+**Lane role:** land-cover confidence, accuracy, quality, and uncertainty context  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Uncertainty processed requirements](#uncertainty-processed-requirements) · [Source-role and sensitivity guardrails](#source-role-and-sensitivity-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Uncertainty admission profile](#uncertainty-admission-profile) · [Source-role and sensitivity guardrails](#source-role-and-sensitivity-guardrails) · [Comparability and calibration](#comparability-and-calibration) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction and rollback](#correction-and-rollback)
 
 ---
 
 ## Purpose
 
-`data/processed/habitat/land_cover/uncertainty/` holds processed uncertainty artifacts for the Habitat land-cover lane. These artifacts qualify land-cover classification, class transitions, remote-sensing-derived products, or model inputs by making confidence, error, method limits, spatial uncertainty, temporal comparability, and data-quality caveats visible.
+This directory is the Habitat domain's **PROCESSED-stage lane for land-cover uncertainty and quality context**. It may hold normalized confidence surfaces, uncertainty masks, accuracy summaries, error matrices, class-level uncertainty products, change-uncertainty products, quality masks, and public-candidate generalized derivatives that have moved beyond RAW capture, WORK experimentation, and QUARANTINE holds.
 
-This lane may contain or point to normalized artifacts such as:
+The lane exists to preserve the answer to six questions before downstream use:
 
-- classification-confidence surfaces or summaries;
-- uncertainty masks, quality masks, or no-data/low-confidence masks;
-- accuracy-assessment summaries and error matrices when they are processed artifacts rather than proof authority;
-- uncertainty summaries by ecoregion, habitat patch, watershed, county, grid, source vintage, class, or comparison window;
-- land-cover change uncertainty products and temporal comparability sidecars;
-- model-input uncertainty products used by habitat suitability, connectivity, or restoration-opportunity workflows;
-- public-candidate generalized uncertainty overlays that still require catalog and release review.
+1. Which land-cover source, class system, and source vintage does the uncertainty qualify?
+2. Which uncertainty, confidence, accuracy, or quality method produced the artifact?
+3. What spatial support, temporal support, comparison window, and class scope apply?
+4. What calibration, validation sample, missingness, and known limitation support interpretation?
+5. Which source role, rights, sensitivity, and correction posture apply?
+6. Which downstream claims and joins are allowed, restricted, or denied?
 
-This lane does not make a land-cover claim by itself. It also does not prove species occurrence, critical habitat, habitat suitability, ecological condition, restoration priority, crop/field truth, hydrologic condition, soil truth, hazard event, land ownership, land-use legality, or land-management status without downstream evidence, policy, catalog, release, and claim-specific contracts.
+It is not a public layer store, `ValidationReport` store, proof store, receipt authority, catalog authority, release authority, habitat-quality lane, suitability lane, or species-occurrence lane.
 
-## Lifecycle boundary
+## Authority level
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+**Implementation-bearing lifecycle lane.** The target path is CONFIRMED in the repository and is correctly placed under `data/processed/habitat/land_cover/` according to Directory Rules' lifecycle and domain-placement rules.
 
-```mermaid
-flowchart LR
-  RAW[data/raw/habitat] --> WORK[data/work/habitat]
-  WORK --> QUAR[data/quarantine/habitat]
-  WORK --> LCU[data/processed/habitat/land_cover/uncertainty]
-  QUAR --> LCU
-  LCU --> LC[data/processed/habitat/land_cover]
-  LCU --> LCC[data/processed/habitat/land_cover/change]
-  LCU --> PROC[data/processed/habitat]
-  LCU --> CAT[data/catalog/domain/habitat]
-  LCU --> STAC[data/catalog/stac/habitat]
-  LCU --> DCAT[data/catalog/dcat/habitat]
-  LCU --> PROV[data/catalog/prov/habitat]
-  LCU --> TRIP[data/triplets/.../habitat]
-  LCU -. supports .-> PROOF[data/proofs]
-  LCU -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../habitat]
-  STAC --> PUBLISHED
-  DCAT --> PUBLISHED
-  PROV --> PUBLISHED
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
-```
+Its authority is deliberately narrow:
 
-`data/processed/habitat/land_cover/uncertainty/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+- it may carry processed uncertainty artifacts and lane-local explanatory metadata;
+- it does not define Habitat or `UncertaintySurface` meaning—that remains in domain doctrine and semantic contracts;
+- it does not define machine shape—that remains under `schemas/contracts/v1/domains/habitat/`;
+- it does not decide whether an uncertainty method is scientifically fit for a consequential claim;
+- it does not decide admissibility, sensitivity, rights, review, release, or public exposure;
+- it does not establish land-cover truth, habitat condition, species presence, suitability, restoration, regulatory, hazard, crop, or management truth.
 
-## Repo fit
+## Status
 
-| Responsibility | Correct home | Rule |
+| Surface | Status | Evidence-bounded interpretation |
 |---|---|---|
-| Raw accuracy files, source-native confidence rasters, source QA reports, source metadata exports, source logs, original pixels/classes/geometry, or source identifiers | `data/raw/habitat/` | Not this lane. |
-| In-process uncertainty modeling, threshold tuning, QA experiments, confusion-matrix experiments, cross-validation scratch, notebooks, or classifier-debug outputs | `data/work/habitat/` | Not this lane. |
-| Unresolved rights, unresolved source role, malformed quality products, disputed accuracy, sensitive joins, unsafe geometry, or not-yet-reviewed uncertainty material | `data/quarantine/habitat/` | Not this lane until review/admission allows. |
-| Processed land-cover observations and context artifacts | `data/processed/habitat/land_cover/` | Parent lane. |
-| Processed land-cover change artifacts | `data/processed/habitat/land_cover/change/` | Related lane for temporal comparison; uncertainty can qualify it but does not replace it. |
-| Processed land-cover uncertainty artifacts | `data/processed/habitat/land_cover/uncertainty/` | This lane. |
-| Parent processed Habitat lane | `data/processed/habitat/` | Parent lane; still not public by default. |
-| Habitat catalog records | `data/catalog/domain/habitat/` | Downstream catalog stage. |
-| Habitat STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/habitat/` | Downstream catalog projections if accepted. |
-| Habitat triplet/graph records | `data/triplets/.../habitat/` | Downstream graph stage; must not expose restricted geometry or unsafe joins. |
-| Published public-safe Habitat products | `data/published/.../habitat/` | Downstream only after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, model-run, transform, validation, policy, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| Habitat source registry records | `data/registry/sources/habitat/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/habitat/`, `release/` | Separate publication authority. |
-| Habitat contracts | `contracts/domains/habitat/` | Object meaning; not data. |
-| Habitat schemas | `schemas/contracts/v1/domains/habitat/` | Machine shape; not data. |
-| Habitat policy and sensitivity rules | `policy/domains/habitat/`, `policy/sensitivity/habitat/` if accepted | Admissibility authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent land-cover lane | **CONFIRMED** | `data/processed/habitat/land_cover/README.md` defines the parent processed land-cover context lane and denies direct public use. |
+| Parent Habitat lane | **CONFIRMED** | `data/processed/habitat/README.md` identifies `land_cover/uncertainty/` as the uncertainty/confidence context child lane. |
+| Habitat doctrine | **CONFIRMED repository document / draft** | Habitat owns landscape context, preserves source roles, and treats uncertainty as an interpretive qualifier rather than sovereign truth. |
+| Real uncertainty payload inventory | **UNKNOWN** | This documentation task did not inspect or expose uncertainty data payloads. |
+| Accepted `UncertaintySurface` contract and schema | **NEEDS VERIFICATION** | No field-complete, accepted contract/schema pair was verified in this task. |
+| Validators, fixtures, CI enforcement | **NEEDS VERIFICATION** | No accepted land-cover uncertainty production validator suite was verified. |
+| Receipts, proof, policy decisions, release instances, hosting, public behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
 
-## Accepted contents
+## What belongs here
 
-Processed land-cover uncertainty artifacts may include:
+Good fits are processed uncertainty artifacts whose method and support remain inspectable, including:
 
-- normalized uncertainty or confidence records with source vintage, class system, source role, rights posture, method, validation state, uncertainty type, and digest posture;
-- confidence rasters, uncertainty surfaces, masks, summaries, or tile-candidate derivatives that remain upstream of release;
-- accuracy summaries, error matrices, confusion matrices, validation summaries, or class-level confidence summaries when they are processed data rather than proof authority;
-- uncertainty summaries by habitat patch, ecological system, ecoregion, watershed, county, grid, class, or source vintage;
-- comparability notes for multi-vintage land-cover products and land-cover change products;
-- links from uncertainty products to `LandCoverObservation`, `HabitatPatch`, `EcologicalSystem`, `SuitabilityModel`, `Restoration Opportunity`, `ConnectivityEdge`, or `UncertaintySurface` inputs when ownership and source-role boundaries remain visible;
-- review-ready artifacts for public-safe uncertainty-map candidates when source rights, sensitivity joins, and policy posture are explicit;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs or authority records.
+- classification-confidence rasters, vectors, tables, or summaries tied to a named land-cover product and class system;
+- uncertainty surfaces, posterior or ensemble spread products, quality masks, no-data masks, cloud/shadow masks, and low-confidence masks;
+- class-level producer's accuracy, user's accuracy, omission, commission, confusion, and residual-error context when the method and validation sample are explicit;
+- error matrices and confusion matrices stored as processed data rather than as proof or review authority;
+- uncertainty summaries by class, source vintage, comparison window, ecoregion, habitat patch, watershed, county, grid, or other declared support unit;
+- land-cover change uncertainty products that preserve both contributing vintages, class crosswalks, and temporal comparability limits;
+- model-input uncertainty products used by suitability, connectivity, or restoration workflows when the downstream model remains separately identified;
+- geometry-normalized derivatives carrying source CRS, target CRS, resampling, aggregation, clipping, and digest metadata;
+- public-candidate generalized uncertainty overlays that remain upstream of catalog and release review;
+- quality, disputed-method, calibration, coverage, missingness, and correction sidecars that are not trust-bearing receipts or proofs;
+- object-ready candidates prepared for future contract/schema validation, catalog closure, EvidenceBundle support, or release review;
+- lane-local README or non-release manifest notes that explain artifact identity without becoming release authority.
 
-## Exclusions
+## What does NOT belong here
 
-Do not store these under `data/processed/habitat/land_cover/uncertainty/`:
+Do not place these in `data/processed/habitat/land_cover/uncertainty/`:
 
-- RAW source rasters, source-native QA files, source-native accuracy reports, steward originals, source media, logs, original source geometries, source identifiers, or unprocessed agency/partner exports.
-- WORK/scratch files, notebooks, classifier-debug outputs, cross-validation experiments, threshold tuning, unresolved QA joins, accuracy experiments, uncertainty-model trials, or redaction-debug outputs.
-- Quarantined or unresolved sensitive/rights/source-role material.
-- Catalog records, STAC/DCAT/PROV records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, pipeline specs, app/UI/API code, or packages.
-- Species occurrence records, plant specimen records, rare-species/rare-plant location records, soil map unit truth, hydrology measurement truth, crop/field truth, hazard event truth, archaeology site truth, or land/ownership truth.
-- Habitat suitability scores, regulatory critical-habitat determinations, restoration prescriptions, management decisions, corridor/connectivity claims, ecoregion truth, ecological condition claims, crop-change claims, flood/fire/drought hazard claims, or land-use/legal determinations unless separate object contracts, evidence, validation, policy, and release state support them.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, landowner/parcel targeting aids, ecological/legal advice, operational land-management guidance, emergency alerts, or life-safety guidance.
-- Redaction parameters, aggregation thresholds, small-cell thresholds, fuzzing radii, seeds, exact transform offsets, access credentials, secrets, private agreement terms, field access routes, or implementation details that could aid exposure or unauthorized access.
+- RAW source rasters, source-native QA files, accuracy reports, reference samples, source logs, or unprocessed source geometry;
+- WORK notebooks, classifier debugging, threshold tuning, cross-validation experiments, temporary masks, scratch joins, or uncertainty-model trials;
+- QUARANTINE material with unresolved rights, source role, method, calibration, validation sample, class system, geometry, sensitivity, dispute, or quality state;
+- land-cover observations, class rasters, or change products merely because they have uncertainty attributes—the primary artifact stays in its owning lane and references this context where appropriate;
+- Fauna or Flora occurrences, rare-species or rare-plant locations, private-parcel detail, stewardship records, wetlands restrictions, field routes, or controlled biodiversity records;
+- habitat patches, suitability surfaces, quality scores, connectivity edges, corridor candidates, restoration prescriptions, stewardship decisions, or regulatory critical-habitat records merely because uncertainty qualifies them;
+- semantic contracts, JSON Schemas, policy rules, validators, tests, fixtures, executable pipelines, source descriptors, catalog records, STAC/DCAT/PROV projections, triplets, proofs, receipts, `ValidationReport`s, releases, correction notices, rollback cards, or published artifacts;
+- public map, tile, API, download, export, Focus Mode, Evidence Drawer, search, graph, or AI-answer payloads;
+- hidden sensitive joins, transform secrets, threshold values that enable re-identification, access credentials, private agreements, field routes, or details that could aid unauthorized access;
+- crop-change, hazard-impact, species-presence, critical-habitat, habitat-condition, legal, regulatory, restoration, or management conclusions unsupported by separate evidence and authority.
 
-## Uncertainty processed requirements
+## Inputs
 
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
+Inputs may enter this lane only through governed lifecycle transitions from:
 
-| Requirement | Meaning |
+- `data/work/habitat/` after source, method, class system, validation sample, spatial support, temporal support, rights, sensitivity, and correction posture are recorded;
+- `data/quarantine/habitat/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted Habitat pipelines or tools that preserve source bytes by reference, source vintage, class crosswalk, method version, calibration state, geometry lineage, and correction state;
+- `data/processed/habitat/land_cover/` and `data/processed/habitat/land_cover/change/` when uncertainty qualifies those artifacts without replacing their primary identity;
+- approved cross-domain context inputs where ownership remains with the source domain and the relation is explicit.
+
+A connector-to-PROCESSED, watcher-to-PROCESSED, or public-upload-to-PROCESSED shortcut is not an accepted normal path. Connectors and watchers produce source or candidate state; they do not publish or silently promote.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/habitat/` and accepted STAC/DCAT/PROV catalog projections;
+- `data/triplets/` or other relationship projections that preserve source, method, class, support, and evidence references;
+- separate `data/proofs/` and `data/receipts/` objects;
+- `release/candidates/habitat/` after identity, rights, sensitivity, method fitness, validation, evidence, review, correction, and rollback obligations are met;
+- a separately governed public-safe Habitat uncertainty layer or sidecar under `data/published/` only through a release transition;
+- governed API, MapLibre, Evidence Drawer, export, or Focus Mode carriers only after public-safe release.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A processed confidence or uncertainty artifact is not a released public claim merely because it is easy to color, threshold, or overlay.
+
+## Validation
+
+No land-cover uncertainty production validator suite was verified in this task. No field-complete, accepted `UncertaintySurface` contract/schema pair was established strongly enough to claim machine enforcement.
+
+A credible validation profile should check, at minimum:
+
+1. source product, source role, source vintage, and class-system identity;
+2. uncertainty type, method, method version, and semantic direction—whether larger values mean more or less certainty;
+3. value domain, units, scale, nodata semantics, and prohibited sentinel-value ambiguity;
+4. spatial support, resolution, CRS, extent, alignment, resampling, aggregation, and geometry validity;
+5. temporal support, comparison window, contributing vintages, and class-crosswalk version;
+6. validation sample design, reference-data independence, sample size, class balance, and spatial/temporal representativeness where relevant;
+7. calibration, reliability, accuracy metrics, confidence intervals, and known limitations where claimed;
+8. coverage, missingness, exclusions, cloud/shadow masking, low-confidence handling, and residual risk;
+9. deterministic identity or content/method digest where practical;
+10. source and artifact rights, citation, redistribution, and derivative-use posture;
+11. sensitive and re-identifying join posture;
+12. evidence references, policy state, review state, release hold, correction path, and rollback target.
+
+Fail closed or quarantine when a material field is absent, contradictory, unsupported, non-comparable, miscalibrated, rights-unclear, sensitivity-unclear, stale beyond policy, or unsafe for the requested downstream use.
+
+## Review burden
+
+Changes require review proportional to consequence:
+
+| Change | Minimum review burden |
 |---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or habitat source registry context. |
-| Evidence linkage | Claims about confidence, uncertainty, accuracy, class error, source vintage, comparison window, method, residual risk, habitat context, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Uncertainty identity | Input source vintages, class systems, uncertainty type, method, spatial reference, cell/geometry footprint, class-crosswalk version where applicable, and normalized digest should remain auditable. |
-| Time semantics | Source time, observed time, valid time, retrieval time, classification version time, uncertainty-generation time, correction time, and release time should remain distinguishable where material. |
-| Rights posture | Agency, steward, license, redistribution, attribution, derivative-use, and remote-sensing source terms should be resolved or held closed for all inputs. |
-| Sensitivity posture | Joins to sensitive fauna/flora occurrences, rare-plant locations, private parcels, wetlands, stewardship zones, hazards, agriculture, or small-cell outputs should carry restriction/generalization/denial posture. |
-| Transform linkage | Reprojection, reclassification, confidence derivation, aggregation, redaction, suppression, withholding, delayed publication, or public-safe geometry transform should link to the appropriate receipt family. |
-| Review state | Habitat steward, land-cover steward, uncertainty steward, source steward, sensitivity reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Catalog readiness | Processed uncertainty artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, and rollback target. |
-| No public surface by default | Processed uncertainty artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
+| README wording or navigation only | Docs steward plus Habitat/land-cover reviewer. |
+| New uncertainty family, metric, mask, or child-lane admission | Habitat steward, land-cover/uncertainty steward, data/pipeline steward, docs steward, and Directory Rules review. |
+| Method, calibration, validation sample, class system, units, support, or comparability semantics | Remote-sensing/data-quality reviewer plus contract/schema and validation reviewers. |
+| Sensitive or cross-domain join | Owning domain steward, Habitat steward, sensitivity reviewer, rights reviewer, evidence reviewer, and policy review. |
+| Public-facing map, API, Focus Mode, export, or release linkage | Evidence, policy, release, correction, rollback, and domain review; independent approval where required. |
+| Regulatory, habitat-condition, crop, hazard, restoration, or management implication | Hold by default; require the owning authority/domain and evidence appropriate to the claim. |
+
+## Related folders
+
+| Responsibility | Repository home |
+|---|---|
+| Parent land-cover processed lane | [`../`](../) |
+| Land-cover change processed lane | [`../change/`](../change/) |
+| Ecoregion processed context | [`../../ecoregions/`](../../ecoregions/) |
+| Parent Habitat processed lane | [`../../`](../../) |
+| Habitat doctrine | [`../../../../../docs/domains/habitat/`](../../../../../docs/domains/habitat/) |
+| Contracts | [`../../../../../contracts/domains/habitat/`](../../../../../contracts/domains/habitat/) |
+| Schemas | [`../../../../../schemas/contracts/v1/domains/habitat/`](../../../../../schemas/contracts/v1/domains/habitat/) |
+| Policy and sensitivity | [`../../../../../policy/domains/habitat/`](../../../../../policy/domains/habitat/) · [`../../../../../policy/sensitivity/habitat/`](../../../../../policy/sensitivity/habitat/) |
+| RAW / WORK / QUARANTINE | [`../../../../raw/habitat/`](../../../../raw/habitat/) · [`../../../../work/habitat/`](../../../../work/habitat/) · [`../../../../quarantine/habitat/`](../../../../quarantine/habitat/) |
+| Catalog and triplets | [`../../../../catalog/domain/habitat/`](../../../../catalog/domain/habitat/) · [`../../../../triplets/`](../../../../triplets/) |
+| Proofs and receipts | [`../../../../proofs/`](../../../../proofs/) · [`../../../../receipts/`](../../../../receipts/) |
+| Habitat source registry | [`../../../../registry/sources/habitat/`](../../../../registry/sources/habitat/) |
+| Release candidates and decisions | [`../../../../../release/candidates/habitat/`](../../../../../release/candidates/habitat/) · [`../../../../../release/`](../../../../../release/) |
+
+## ADRs
+
+- `ADR-0001` governs the canonical machine-schema home under `schemas/contracts/v1/...`.
+- Directory Rules govern the existing `data/<phase>/<domain>/` placement and prohibit parallel proof, receipt, policy, schema, registry, release, or publication authority here.
+- Any future change that makes this lane a canonical metric registry, creates a new lifecycle phase, changes the meaning of `UncertaintySurface`, or establishes a parallel authority home requires the appropriate accepted ADR before implementation.
+
+No README edit, commit, pull request, or merge constitutes a promotion or release decision.
+
+## Last reviewed
+
+**2026-07-25.** Review again when a concrete uncertainty contract/schema is accepted, a validator or fixture suite is admitted, a new uncertainty metric or calibration method is introduced, a public-safe uncertainty artifact is proposed, or correction/rollback behavior changes.
+
+<a id="uncertainty-processed-requirements"></a>
+
+## Uncertainty admission profile
+
+A candidate should not be treated as admitted merely because it can be parsed or visualized. A credible processed packet should carry or resolve to:
+
+| Dimension | Minimum auditable posture |
+|---|---|
+| Identity | Stable artifact ID plus source product, source vintage, class system, uncertainty family, and method version. |
+| Source role | One declared role preserved from admission; observed-derived, modeled, aggregate, administrative, candidate, and synthetic are not interchangeable. |
+| Method | Uncertainty definition, direction, scale, units, derivation method, calibration state, validation basis, and limitations. |
+| Spatial support | CRS, extent, resolution, alignment, geometry/cell support, resampling, aggregation, and generalization history. |
+| Temporal support | Source, observed, valid, retrieval, method-generation, correction, and release times where material. |
+| Class support | Class dictionary, class crosswalk, omitted classes, mixed pixels, transition logic, and comparison compatibility where applicable. |
+| Quality | Coverage, missingness, nodata, masks, sample design, class balance, metrics, uncertainty intervals, and residual risk. |
+| Rights and sensitivity | Rights, citation, redistribution, sensitive joins, small-cell/re-identification posture, and public-field restrictions. |
+| Evidence | Safe `EvidenceRef` values or resolver keys sufficient for downstream `EvidenceBundle` resolution. |
+| Governance | Validation state, policy state, review state, release hold, correction lineage, withdrawal path, and rollback target. |
+
+These fields are **PROPOSED admission expectations**, not a claim that an accepted schema or validator currently enforces them.
 
 ## Source-role and sensitivity guardrails
 
-- Habitat owns landscape/habitat context, not species records.
-- Uncertainty is qualification context, not automatic proof of land-cover truth, habitat quality, restoration need, crop change, hazard damage, regulatory critical habitat, or ecological condition.
-- `UncertaintySurface` may qualify modeled products, but it is not a suitability model, occurrence record, regulatory determination, or release decision.
-- `LandCoverObservation` inputs may be observed; uncertainty products may be observed-derived, modeled, aggregate, administrative, or candidate depending on method. The role must be explicit and must not be upgraded during promotion.
-- A confidence score is not a ValidationReport unless the validator/review process explicitly emits a ValidationReport in the correct root.
-- A modeled uncertainty product is not regulatory critical habitat.
-- A suitability surface is not an occurrence.
-- A land-cover uncertainty surface is not a habitat-quality score, restoration priority, corridor, stewardship decision, crop truth, soil truth, hydrology truth, hazard event, or land-management instruction by itself.
-- Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic source roles must not be relabeled during promotion.
-- Sensitive habitat × fauna, habitat × flora, habitat × parcel, habitat × hydrology, habitat × soil, habitat × agriculture, and habitat × hazards joins must preserve ownership, source role, sensitivity, and EvidenceBundle support.
-- Sensitive geometry must be generalized, redacted, delayed, restricted, or denied before tile generation; style filters are not a sensitivity control.
-- Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, unresolved uncertainty method, or absent release state blocks public promotion.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
+- Habitat owns landscape and land-cover context, not species records.
+- Uncertainty qualifies interpretation; it does not automatically validate the underlying land-cover product.
+- A confidence score is not a `ValidationReport` unless an accepted validator emits a report in the correct authority root.
+- An error matrix is not a proof pack, review decision, policy decision, or release decision.
+- An `UncertaintySurface` is not a suitability model, habitat-quality score, occurrence record, regulatory determination, restoration priority, corridor, stewardship decision, crop truth, hazard truth, or land-management instruction.
+- Source roles remain explicit. An observed-derived uncertainty product does not become observed land-cover truth, and a modeled uncertainty product does not become regulatory truth.
+- Sensitive Habitat × Fauna, Habitat × Flora, Habitat × parcel, Habitat × wetlands, Habitat × stewardship, Habitat × hydrology, Habitat × soil, Habitat × agriculture, and Habitat × hazards joins must preserve ownership, source role, sensitivity, rights, and EvidenceBundle support.
+- Sensitive or re-identifying outputs must be generalized, redacted, delayed, restricted, or denied before tile generation. Hiding a field or feature with map styling is not a sensitivity control.
+- Unclear rights, unresolved source role, missing evidence, unresolved method, unsupported calibration, unsafe joins, or absent release state blocks public promotion.
+- Public clients and Focus Mode use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes—not this directory directly.
 
 > [!CAUTION]
-> Do not expose `data/processed/habitat/land_cover/uncertainty/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, species-location service, critical-habitat determination, restoration prescription, crop-change claim, hazard-impact claim, landowner/parcel targeting aid, ecological/legal advice, operational land-management guidance, emergency alert, or life-safety product. Processed land-cover uncertainty data remains inside the trust membrane until governed promotion and release.
+> Do not expose this lane directly as a public map, tile service, API, UI, download, Focus Mode answer, AI-answer source, species-location service, regulatory determination, restoration prescription, crop-change claim, hazard-impact claim, landowner/parcel targeting aid, operational land-management guidance, emergency alert, or life-safety product.
 
-## Directory map
+## Comparability and calibration
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+Uncertainty values are comparable only when the relevant semantics match or an accepted crosswalk explains the difference.
 
-```text
-data/processed/habitat/land_cover/uncertainty/
-├── README.md
-├── confidence_surfaces/      # PROPOSED — processed confidence/uncertainty surfaces, not published tiles
-├── masks/                    # PROPOSED — quality, no-data, low-confidence, or exclusion masks
-├── accuracy_summaries/       # PROPOSED — processed accuracy summaries, not proof authority
-├── error_matrices/           # PROPOSED — class-level error/confusion matrices
-├── class_uncertainty/        # PROPOSED — class-specific uncertainty products
-├── change_uncertainty/       # PROPOSED — uncertainty for land-cover change products
-├── summaries/                # PROPOSED — region/patch-level uncertainty summaries
-├── comparison_windows/       # PROPOSED — source-vintage/version/window sidecars
-├── generalized/              # PROPOSED — public-candidate generalized derivatives
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-├── joins/                    # PROPOSED — reviewed context joins only, not species/crop/soil/hydrology/hazard truth
-├── _manifests/               # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
+| Comparison dimension | Required discipline |
+|---|---|
+| Product and source vintage | Do not compare values across materially different products or vintages without documenting the change. |
+| Class system | Record class dictionaries and crosswalks; a code match does not prove semantic equivalence. |
+| Uncertainty definition | Probability, entropy, margin, standard deviation, ensemble spread, confidence class, and accuracy rate are not interchangeable. |
+| Direction and scale | Record whether larger values mean higher certainty or higher uncertainty and whether values are proportions, percentages, classes, or unit-bearing measures. |
+| Spatial support | Do not compare cell, polygon, patch, county, ecoregion, or resampled summaries as though support were identical. |
+| Temporal support | Preserve source and comparison windows; uncertainty from different seasons or acquisition conditions may not be comparable. |
+| Validation basis | Record reference data, sampling design, sample size, independence, class balance, and confidence intervals where applicable. |
+| Calibration | A numerically bounded confidence score is not necessarily calibrated. Calibration claims require evidence and a declared method. |
+| Masking and exclusions | Cloud, shadow, nodata, water, mixed pixels, and excluded classes can change the interpretation and denominator. |
+| Correction lineage | Recomputed uncertainty after a corrected source, class crosswalk, mask, or method must not silently overwrite prior values. |
+
+When comparability cannot be established, the correct posture is **ABSTAIN**, **HOLD**, or a visibly qualified comparison—not forced normalization.
+
+## Lifecycle and promotion
+
+```mermaid
+flowchart LR
+    RAW["RAW habitat inputs"] --> WORK["WORK uncertainty derivation"]
+    WORK --> GATE{"Method + rights + sensitivity + validation gate"}
+    GATE -->|fail or unclear| QUAR["QUARANTINE"]
+    GATE -->|pass| PROC["PROCESSED land-cover uncertainty"]
+    PROC --> CAT["CATALOG / evidence closure"]
+    CAT --> REL["release decision + rollback"]
+    REL --> PUB["PUBLISHED public-safe carrier"]
+    PUB --> API["governed API / MapLibre / Evidence Drawer"]
 ```
 
-## Evidence ledger
+The normal outward path is:
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define land-cover uncertainty processed boundaries. |
-| `docs/domains/habitat/README.md` | CONFIRMED doctrine / PROPOSED implementation | Habitat names `UncertaintySurface` as a canonical object family; promotion requires EvidenceBundle, ValidationReport, PolicyDecision, ReleaseManifest, correction path, and rollback; unresolved sensitivity/source role/release state blocks promotion. | Implementation maturity remains NEEDS VERIFICATION. |
-| `data/processed/habitat/land_cover/README.md` | CONFIRMED parent README | Parent lane defines processed land-cover observations/context, upstream lifecycle posture, hard exclusions, source-role preservation, and public-surface denial. | Does not prove child inventory or validators. |
-| `data/processed/habitat/land_cover/change/README.md` | CONFIRMED sibling README | Change lane separates temporal-comparison products from raw inputs, public outputs, and other domain truth. | Does not define uncertainty inventory. |
-| `data/processed/README.md` | CONFIRMED | PROCESSED data is upstream of catalog, triplets, publication, and release and is not the normal public surface. | Does not prove Habitat child inventory or enforcement. |
-| `policy/domains/habitat/` and `policy/sensitivity/habitat/` | NEEDS VERIFICATION | Expected admissibility homes. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/habitat/` and `schemas/contracts/v1/domains/habitat/` | NEEDS VERIFICATION | Expected object contract/schema homes for Habitat families. | Specific uncertainty object files and validators were not verified in this task. |
+```text
+processed uncertainty artifact
+→ catalog record and evidence references
+→ policy and review decision
+→ release manifest, correction path, and rollback target
+→ released public-safe carrier
+→ governed API and map/UI surfaces
+```
 
-## Validation checklist
+The forbidden shortcut is:
 
-- [ ] Confirm actual child directories under `data/processed/habitat/land_cover/uncertainty/`.
-- [ ] Confirm whether `uncertainty/` is the accepted processed Habitat lane name or should be reconciled with `uncertainty_surfaces/`, `confidence/`, `quality/`, or another object-family naming convention.
-- [ ] Confirm parent `data/processed/habitat/README.md` is expanded beyond stub.
-- [ ] Confirm LandCoverObservation and UncertaintySurface object contracts and schema paths.
-- [ ] Confirm source-role vocabulary and anti-collapse validators for observed/regulatory/modeled/aggregate/administrative/candidate/synthetic roles.
-- [ ] Confirm validators, fixtures, CI checks, policy checks, and access-control enforcement for processed land-cover uncertainty artifacts.
-- [ ] Confirm SourceDescriptor/source registry linkage for every input source vintage and derived uncertainty artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, ModelRunReceipt where applicable, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, correction path, and rollback target.
-- [ ] Confirm sensitive fauna/flora joins, rare-plant joins, private-parcel joins, wetlands/stewardship joins, hazard/agriculture joins, small-cell outputs, rights-unclear sources, unresolved source roles, redaction parameters, transform secrets, and release-unclear artifacts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, rights-safe, sensitivity-safe, uncertainty-method-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, critical-habitat determination, restoration prescription, crop-change claim, hazard-impact claim, land-management guidance, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public location service, public map, public tile, public API, public UI, or AI-answer source.
+```text
+processed confidence raster or error matrix
+→ direct public map, API, download, Focus Mode, or AI claim
+```
 
-## Rollback
+## Correction and rollback
 
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, sensitive-join exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, species-location source, critical-habitat determination source, restoration prescription source, crop-change claim source, hazard-impact claim source, land-management guidance source, or life-safety guidance source.
+A corrected source product, reference sample, class dictionary, crosswalk, mask, comparison window, calibration method, threshold, aggregation, or uncertainty algorithm may change the artifact materially.
 
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+A governed correction should:
+
+1. retain the prior artifact, digest, method version, and evidence lineage;
+2. identify the corrected source, method, mask, class, geometry, or comparison input;
+3. recompute affected uncertainty products deterministically where practical;
+4. rerun validation, comparability, rights, sensitivity, and review gates;
+5. emit correction and replacement receipts in their proper authority roots;
+6. invalidate or withdraw affected catalog, graph, map, API, export, and cached derivatives;
+7. update release and rollback references without erasing history.
+
+Rollback is required if this lane becomes a source-data root, WORK shortcut, QUARANTINE bypass, `ValidationReport` authority, proof store, receipt store, catalog root, triplet root, source registry, release-decision root, schema root, policy root, validator root, direct public API/UI/tile path, sensitive-join exposure path, transform-secret exposure path, habitat-condition authority, crop-change authority, hazard-impact authority, regulatory authority, restoration prescription, management guidance, or life-safety source.
+
+**Rollback target for this documentation update:** restore blob `763829bab769873dfef82e0d11105dbb9c0e84e8` or revert the resulting commit. Do not rewrite shared history.
+
+---
+
+<a id="purpose"></a>
+<a id="lifecycle-boundary"></a>
+<a id="repo-fit"></a>
+<a id="accepted-contents"></a>
+<a id="exclusions"></a>
+<a id="source-role-and-sensitivity-guardrails"></a>
+<a id="directory-map"></a>
+<a id="evidence-ledger"></a>
+<a id="validation-checklist"></a>
+<a id="rollback"></a>
 
 <p align="right"><a href="#top">Back to top</a></p>
