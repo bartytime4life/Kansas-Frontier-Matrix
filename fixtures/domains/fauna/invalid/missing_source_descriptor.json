@@ -1,8 +1,29 @@
 {
-  "status": "PROPOSED",
-  "source_doc": "docs/domains/fauna/MISSING_OR_PLANNED_FILES.md",
-  "path": "fixtures/domains/fauna/invalid/missing_source_descriptor.json",
-  "notes": [
-    "Placeholder created from docs/domains markdown inventory."
-  ]
+  "record_type": "fauna_public_safe_validation_candidate",
+  "fixture_id": "fixture:fauna:invalid:missing-source",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "source_role": "synthetic",
+  "rights_state": "fixture-only",
+  "taxon_ref": "fixture:taxon:fauna:synthetic-alpha",
+  "taxonomy_state": "synthetic-resolved",
+  "sensitivity_state": "public-safe-synthetic",
+  "spatial_support": {
+    "kind": "withheld",
+    "label": "synthetic-area-alpha"
+  },
+  "evidence_refs": [
+    "fixture:evidence:fauna:synthetic-missing-source"
+  ],
+  "governance": {
+    "evidence_state": "fixture-only",
+    "policy_state": "not-evaluated-fixture",
+    "geoprivacy_state": "not-applicable-no-location",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "promotion_state": "not-eligible",
+    "correction_state": "fixture-only",
+    "rollback_state": "fixture-only"
+  }
 }

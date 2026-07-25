@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-fauna-readme
 title: tools/validators/domains/fauna README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-fauna-steward-plus-sensitive-species-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-07-25
 policy_label: repository-facing; per-domain-validator-index; fauna; sensitive-species; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Fauna validator index for occurrence, sensitive-site, geoprivacy, taxon/status, range, migration, mortality, disease, invasive-species, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Fauna meaning, proof records, policy decisions, and release authority to their owning roots
@@ -32,9 +32,12 @@ related:
   - ../../../../../data/proofs/fauna/
   - ../../../../../data/receipts/
   - ../../../../../release/
+  - ../../../../fixtures/domains/fauna/
+  - ../../../../tests/domains/fauna/test_fauna_smoke.py
+  - ../../../../.github/workflows/domain-fauna.yml
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
-  - "No broad tools/validators/fauna/README.md was found during this task, so this path currently serves as the per-domain Fauna validator index."
+  - "One executable is accepted: validate_public_safe_fixture.py, limited to synthetic fixture safety and explicitly not production occurrence validation."
+  - "The broad tools/validators/fauna/README.md and source_role/ child README exist; this path remains the per-domain home for the bounded executable."
   - "Fauna sensitive taxa, exact occurrences, nests, dens, roosts, hibernacula, spawning sites, breeding/aggregation sites, steward-controlled records, and reverse-engineerable derivatives are deny-by-default unless geoprivacy, review, policy, evidence, release, correction, and rollback support authorize a public-safe derivative."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Fauna meaning, create EvidenceBundles, make stewardship decisions, approve release, or publish public outputs."
 [/KFM_META_BLOCK_V2] -->
@@ -74,12 +77,13 @@ The answer should be a navigable validator index and deterministic validation ou
 |---|---|---|
 | `tools/validators/domains/fauna/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Broad `tools/validators/fauna/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Fauna validator index. |
+| Broad `tools/validators/fauna/README.md` | **CONFIRMED routing README** | Broad routing only; this path remains the per-domain validator home. |
 | Fauna domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/fauna/README.md` defines scope, deny-by-default sensitive occurrence posture, geoprivacy requirements, and responsibility-root split. |
 | Deny-by-default sensitivity ADR | **CONFIRMED in repo evidence / draft** | ADR-0010 draft states rare-species exact locations default to deny and public products require public-safe transform, review, receipt, policy, and rollback support. |
 | Fauna proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/fauna/README.md` defines Fauna proof support and says sensitive proof material is deny-by-default. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Fauna validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Accepted executable | **CONFIRMED bounded slice** | `validate_public_safe_fixture.py` validates synthetic fixture safety only, uses the standard library, performs no network access, and emits deterministic findings. |
+| Accepted fixtures/tests/CI | **CONFIRMED bounded slice** | One valid and four invalid JSON fixtures feed five tests in `test_fauna_smoke.py`; only `validate-fauna` runs that module. |
+| Production schemas, source descriptors, policy runtime, receipts, proof, release, and public behavior | **NEEDS VERIFICATION / held** | The bounded executable does not promote the permissive occurrence schemas, unresolved source templates, or scaffold policy bundles. |
 
 [Back to top](#top)
 
@@ -123,8 +127,8 @@ Possible future children remain **PROPOSED** until verified:
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live below this folder when it checks declared Fauna invariants and delegates meaning, sensitivity, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
+- **CONFIRMED:** `validate_public_safe_fixture.py` checks only the accepted synthetic fixture profile and returns deterministic findings.
+- **NEEDS VERIFICATION:** production validators, schema maturity, policy bundle behavior, source admission, report destinations, receipts, runtime behavior, proof, release, and public behavior.
 - **DENY:** using this folder as taxonomic authority, stewardship authority, Fauna contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public occurrence surface, public map product surface, or domain-meaning authority.
 
 [Back to top](#top)
@@ -218,37 +222,27 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/validators/domains/fauna/
-├── README.md
-├── test_fauna_domain_validator_parent.py
-└── fixtures/
-    ├── valid_public_safe_occurrence_derivative/
-    ├── missing_evidence_ref/
-    ├── source_role_collapse/
-    ├── taxon_status_unverified/
-    ├── sensitive_occurrence_denied/
-    ├── geoprivacy_transform_missing/
-    ├── redaction_receipt_missing/
-    ├── review_or_policy_gap/
-    ├── public_surface_leak_risk/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+Accepted command:
 
 ```bash
-pytest -q tests/validators/domains/fauna
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_fauna_smoke.py' \
+  --verbose
 ```
 
-```bash
-python tools/validators/domains/fauna/run_fauna_domain_validators.py --repo-root . --format json
-```
+Accepted profile:
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_fauna_domain_validators.py` or the test path exists.
+- only synthetic `fixture:` references;
+- explicit `source_role: synthetic`;
+- explicit fixture-only rights and reality boundary;
+- withheld spatial support only;
+- no live URLs or location-bearing fields;
+- explicit not-released and not-eligible-for-promotion state;
+- stable fail-closed findings for missing source reference; unresolved taxonomy, evidence, rights, sensitivity, policy, geoprivacy, review, correction, and rollback; and precision hints.
+
+This command is not an `OccurrencePublic` validator, schema promotion, source-admission check, policy-engine evaluation, geoprivacy transform verifier, evidence/proof closure check, release gate, promotion path, or publication path.
 
 [Back to top](#top)
 
@@ -275,6 +269,6 @@ python tools/validators/domains/fauna/run_fauna_domain_validators.py --repo-root
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Fauna validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, geoprivacy behavior, release linkage, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-07-25 |
+| Review state | One bounded synthetic fixture-safety validator accepted; broader Fauna validation remains draft and held. |
+| Next smallest safe change | Independently review schema and source-registry maturity before expanding beyond fixture safety; do not infer production admissibility from this slice. |

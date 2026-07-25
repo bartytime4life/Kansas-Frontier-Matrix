@@ -2,7 +2,7 @@
 
 `fixtures/domains/fauna/`
 
-Status: draft / fixture root.
+Status: draft fixture root with one accepted bounded validation corpus.
 
 This directory is the Fauna-domain fixture root for small, public-safe, synthetic, and reviewable runtime examples. It organizes positive-path, negative-path, renderer, stale-source, synthetic, policy-denial, and expected-output fixture lanes for bounded checks around Fauna contracts, schemas, renderer behavior, governed-API seams, Evidence Drawer payloads, Focus Mode envelopes, and documentation examples.
 
@@ -10,9 +10,9 @@ These files are examples only. They are not authoritative project records, sourc
 
 ## Placement basis
 
-Directory rules make file placement part of governance: a file's location encodes ownership, responsibility, and lifecycle posture. The `fixtures/` root is therefore the correct responsibility root for small runtime fixture corpora and public-safe generalized examples, while `data/` remains the governed lifecycle root and `tests/fixtures/` remains the deterministic test-only fixture root.
+Directory Rules make file placement part of governance: a file's location encodes ownership, responsibility, and lifecycle posture. The `fixtures/` root is the canonical home for reusable valid, invalid, golden, synthetic, and public-safe examples, while `tests/fixtures/` owns test-local-only examples and `data/` remains the governed lifecycle root.
 
-The root fixture README states that `fixtures/` is for operational rendering inputs, not validator-only test data. It also prohibits RAW, WORK, or QUARANTINE data; restricted geospatial detail; and treating fixture corpora as canonical truth. This README inherits those boundaries for every Fauna fixture sublane.
+The five accepted JSON fixtures in this lane are shared by the reusable validator, its executable tests, and the domain workflow, so they remain under `fixtures/domains/fauna/` rather than becoming test-local copies. The root fixture README prohibits RAW, WORK, or QUARANTINE data; restricted geospatial detail; and treating fixture corpora as canonical truth. This README inherits those boundaries for every Fauna fixture sublane.
 
 ## Current fixture lanes
 
@@ -30,14 +30,16 @@ The root fixture README states that `fixtures/` is for operational rendering inp
 
 | Path | Status | Notes |
 |---|---|---|
-| `valid/non_sensitive_occurrence.json` | PROPOSED placeholder | Proposed valid-fixture slot from the Fauna missing/planned-files inventory. |
+| `valid/non_sensitive_occurrence.json` | ACCEPTED for bounded fixture-safety validation | Synthetic, fixture-only candidate with withheld spatial support, synthetic refs, no live URL, and explicit not-released / not-eligible governance state. It is not an accepted `OccurrencePublic` instance. |
 | `valid/range_polygon.geojson` | PROPOSED placeholder | Proposed public-safe range fixture slot, not a canonical range layer. |
 | `valid/seasonal_range.geojson` | PROPOSED placeholder | Proposed public-safe seasonal-range fixture slot, not a canonical range layer. |
 | `synthetic/no_network_drift_window.json` | PROPOSED placeholder | Proposed no-network drift-window fixture slot, not proof of implemented drift-window behavior. |
-| `invalid/unresolved_taxonomy.json` | NEEDS VERIFICATION | Search-visible negative fixture payload; content and consumer alignment not reviewed in this README update. |
-| `invalid/over_precise_sensitive.json` | NEEDS VERIFICATION | Search-visible negative fixture payload; content and consumer alignment not reviewed in this README update. |
+| `invalid/missing_source_descriptor.json` | ACCEPTED negative fixture | Proves the bounded validator fails closed when the synthetic source reference is missing. |
+| `invalid/unresolved_governance.json` | ACCEPTED negative fixture | Proves unresolved evidence, rights, policy, geoprivacy, review, correction, and rollback state fail closed while release and promotion remain held. |
+| `invalid/unresolved_taxonomy.json` | ACCEPTED negative fixture | Proves the bounded validator fails closed when synthetic taxonomy state is unresolved. |
+| `invalid/over_precise_sensitive.json` | ACCEPTED negative fixture | Uses non-numeric `SYNTHETIC-ONLY` precision hints to prove unresolved sensitivity and location-shaped fields are rejected without adding a real location. |
 
-Payload inventory is partial. Add or revise this table only after inspecting the exact files and any validator, renderer, governed-API, or Focus Mode consumers that use them.
+Payload inventory remains partial. The five accepted entries above are consumed only by `tools/validators/domains/fauna/validate_public_safe_fixture.py` and `tests/domains/fauna/test_fauna_smoke.py`; no other fixture or consumer is promoted by that acceptance.
 
 ## Related references
 
@@ -53,6 +55,9 @@ Payload inventory is partial. Add or revise this table only after inspecting the
 - `../../../policy/sensitivity/fauna/`
 - `../../../data/registry/sources/fauna/`
 - `../../../docs/doctrine/directory-rules.md`
+- `../../../tools/validators/domains/fauna/validate_public_safe_fixture.py`
+- `../../../tests/domains/fauna/test_fauna_smoke.py`
+- `../../../.github/workflows/domain-fauna.yml`
 - `../../README.md`
 
 ## Accepted material
@@ -144,6 +149,6 @@ Before adding or changing a Fauna fixture, confirm:
 
 - Target README: replaced greenfield stub content.
 - Fixture-lane inventory: PARTIALLY VERIFIED by repository search and recently populated lane READMEs.
-- Payload inventory: PARTIALLY VERIFIED; listed payloads include search-visible files and known placeholders, but not a full recursive audit.
-- Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Focus Mode tests, source-refresh tests, and schema contracts.
-- Tests and validators: NOT RUN.
+- Payload inventory: PARTIALLY VERIFIED; the five accepted JSON fixtures above were inspected, while other listed payloads remain placeholders or NEEDS VERIFICATION.
+- Consumer alignment: CONFIRMED only for the bounded synthetic fixture validator and `test_fauna_smoke.py`; renderer, governed-API, Focus Mode, source-refresh, production schema, policy runtime, and release consumers remain NEEDS VERIFICATION.
+- Tests and validator: the accepted five-test standard-library suite passed locally on 2026-07-25; CI execution remains subject to the focused pull request.
