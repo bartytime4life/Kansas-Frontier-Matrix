@@ -1,87 +1,313 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-aggregate-readme
-title: data/processed/atmosphere/aggregate/README.md — Atmosphere Aggregate Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; aggregate-parent-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; aggregate; release-gated; source-role-aware; aggregation-aware
-owners: OWNER_TBD — Atmosphere steward · Aggregate-data steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/atmosphere/aggregate/ — Atmosphere Aggregate Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-atmosphere-aggregate-parent-lane
+status: repository-grounded draft; aggregate payload, schema enforcement, validators, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Atmosphere domain steward"
+  - "NEEDS VERIFICATION — aggregate-data and method steward"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, and rollback stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; aggregate; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, aggregate, climate, air-quality, weather, smoke, AOD, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, AggregationReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; atmosphere; aggregate-parent; source-role-aware; method-disclosure-required; release-gated; no-direct-public-path
+path: data/processed/atmosphere/aggregate/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, Atmosphere parent lane,
+  aggregate climate child lane, Atmosphere canonical-path guidance, current advisory compatibility
+  lane, and adjacent aggregate-climate PR evidence / PROPOSED parent-lane admission profile,
+  aggregate packet, and downstream promotion expectations / UNKNOWN recursive payload inventory,
+  real aggregation pipelines, accepted aggregate schemas, validators, receipts, proof closure,
+  release instances, hosting, and public behavior / NEEDS VERIFICATION accountable owners,
+  accepted child-lane inventory, enforceable comparability rules, correction propagation,
+  cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 839781bfe8c75bdc78a2dda0c4385b4109ef580e
+  prior_blob: 08a51196fe1df3771b2a0890abd6e3d598944a03
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  atmosphere_parent_blob: e37ce206f396f832c414fc46a70dd9cd9b3f64e4
+  aggregate_climate_base_blob: a8dd799435eff3cdccbe2bf42bfb7ed88c38d8f9
+  canonical_paths_blob: 97296d516792ad3bc2bc1f18d03e2518e367d28a
+  adjacent_climate_pr: 1711
 related:
   - ../README.md
   - ../../README.md
   - ../../../README.md
   - ../../../../docs/domains/atmosphere/README.md
-  - ../../../../data/processed/atmosphere/aggregate/climate/README.md
-  - ../../../../data/catalog/domain/atmosphere/README.md
-  - ../../../../contracts/domains/atmosphere/
-  - ../../../../schemas/contracts/v1/domains/atmosphere/
-  - ../../../../policy/domains/atmosphere/
+  - ../../../../docs/domains/atmosphere/CANONICAL_PATHS.md
+  - ../../../../docs/domains/atmosphere/API_CONTRACTS.md
+  - ../../../../docs/domains/atmosphere/PUBLICATION_POSTURE.md
   - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../docs/doctrine/trust-membrane.md
-  - ../../../raw/atmosphere/
-  - ../../../work/atmosphere/
-  - ../../../quarantine/atmosphere/
-  - ../../../catalog/stac/atmosphere/
-  - ../../../catalog/dcat/atmosphere/
-  - ../../../catalog/prov/atmosphere/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/
-  - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
+  - ../../../../contracts/domains/atmosphere/README.md
+  - ../../../../contracts/domains/atmosphere/knowledge_character.md
+  - ../../../../schemas/contracts/v1/domains/atmosphere/README.md
+  - ../../../../policy/domains/atmosphere/README.md
+  - climate/README.md
+  - ../../../raw/atmosphere/README.md
+  - ../../../work/atmosphere/README.md
+  - ../../../quarantine/atmosphere/README.md
+  - ../../../catalog/domain/atmosphere/README.md
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/atmosphere/README.md
+  - ../../../../release/candidates/atmosphere/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/processed/atmosphere/aggregate/README.md`."
-  - "This is the parent PROCESSED-stage aggregate lane for Atmosphere artifacts. It organizes aggregate products without becoming a catalog, proof, receipt, release, schema, policy, or public surface."
-  - "Aggregate Atmosphere artifacts must preserve source role, aggregation method, spatial/temporal scope, units, uncertainty/caveats, source trace, evidence linkage, policy posture, and release state before public use."
-  - "The child `climate/` lane covers aggregate climate normals, baselines, and anomalies. Additional child lanes are PROPOSED until verified."
-  - "Rollback target for this expansion is previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no aggregate bytes, source state, schema, contract, policy, validator, workflow, proof, release, route, hosting, or KFM publication state changed."
+  - "The parent lane may hold processed aggregate inputs and object-ready derivatives; presence here does not establish a validated object instance, comparability, evidence closure, or release readiness."
+  - "Aggregation never erases source role: observation, model, forecast, proxy, advisory, normal, anomaly, report/index, and derived product remain distinct knowledge characters."
+  - "Rollback target for v0.2.0 is prior blob SHA `08a51196fe1df3771b2a0890abd6e3d598944a03`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/aggregate
+# `data/processed/atmosphere/aggregate/` — Atmosphere aggregate processed data
 
-> Parent Atmosphere PROCESSED-stage lane for aggregate artifacts: normalized summaries, rollups, derived grids, baseline-ready outputs, and aggregation products that remain upstream of catalog, proof, release, and public map/API/UI surfaces.
+> **One-line purpose.** Hold processed Atmosphere aggregate inputs and object-ready derivatives while preserving source role, method, scope, units, comparability, uncertainty, and correction lineage upstream of catalog, release, and publication.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/aggregate" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Faggregate-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Family: aggregate" src="https://img.shields.io/badge/family-aggregate-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Family: aggregate parent](https://img.shields.io/badge/family-aggregate%20parent-0969da?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![Method: disclosure required](https://img.shields.io/badge/method-disclosure%20required-6f42c1?style=flat-square)](#aggregate-admission-profile)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Aggregate-data steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> The word **aggregate** describes a transformation family, not an authority level. An aggregate can be well-formed yet still be non-comparable, stale, rights-unclear, weakly supported, policy-held, unreleased, or unsafe for public use.
+
 **Path:** `data/processed/atmosphere/aggregate/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Sublane:** `aggregate`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, aggregation disclosure, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was blank · CONFIRMED child `aggregate/climate/README.md` exists · CONFIRMED parent `data/processed/` lane is not a public surface · PROPOSED aggregate-parent processed-lane details · NEEDS VERIFICATION for actual child inventory, schemas, validators, receipts, CI enforcement, release linkage, and governed route behavior.
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `atmosphere/`  
+**Lane role:** aggregate parent lane  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Aggregate requirements](#aggregate-requirements) · [Source-role guardrails](#source-role-guardrails) · [Child lanes](#child-lanes) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Aggregate admission profile](#aggregate-admission-profile) · [Knowledge-character guardrails](#knowledge-character-guardrails) · [Child-lane posture](#child-lane-posture) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction and rollback](#correction-and-rollback)
 
 ---
 
 ## Purpose
 
-`data/processed/atmosphere/aggregate/` holds normalized aggregate Atmosphere/Air artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This directory is the Atmosphere domain's **PROCESSED-stage parent lane for aggregate products**. It may hold normalized summaries, rollups, baseline inputs, comparison inputs, derived grids, station-network aggregates, regional products, and other aggregation outputs that have moved beyond RAW capture, WORK experimentation, and QUARANTINE holds.
 
-This parent lane groups processed aggregate products across Atmosphere object families: climate normals/anomalies, air-quality summaries, weather/mesonet summaries, smoke/AOD summaries, station-network rollups, tile-safe grids, regional summaries, and other derived aggregate outputs where the aggregation method and source role remain visible.
+It exists to keep aggregate method and knowledge character visible before downstream catalog, evidence, policy, review, release, and publication gates. It is not a public map layer, API payload store, proof store, receipt authority, release authority, or source registry.
 
-It is not a catalog lane, proof store, receipt store, release authority, public map layer, or public API source. It is a governed lifecycle handoff lane that may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe derived products, Focus Mode summaries, or release packages after gates pass.
+## Authority level
 
-## Lifecycle boundary
+**Implementation-bearing lifecycle lane.** The path is CONFIRMED in the repository and is correctly placed under `data/processed/atmosphere/` according to Directory Rules' lifecycle and domain-placement rules.
+
+Its authority is deliberately narrow:
+
+- it may carry processed aggregate artifacts and lane-local explanatory metadata;
+- it does not define Atmosphere object meaning—that remains in `contracts/domains/atmosphere/`;
+- it does not define machine shape—that remains in `schemas/contracts/v1/domains/atmosphere/`;
+- it does not decide admissibility—that remains in `policy/domains/atmosphere/` and release controls;
+- it does not prove evidence closure, publication, or safe public use.
+
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent Atmosphere processed lane | **CONFIRMED** | `data/processed/atmosphere/README.md` identifies `aggregate/` as an aggregate-product parent lane. |
+| Aggregate climate child lane | **CONFIRMED** | `aggregate/climate/README.md` exists; draft PR #1711 separately modernizes that child. |
+| Other aggregate child lanes | **UNKNOWN / PROPOSED** | Recursive child inventory was not established strongly enough to treat candidates as implemented. |
+| Real aggregate payload inventory | **UNKNOWN** | This documentation pass did not inspect or expose aggregate data files. |
+| Aggregate contracts and schemas | **NEEDS VERIFICATION** | Object-specific contracts exist in the domain, but no accepted universal aggregate-object schema or parent-lane enforcement was verified. |
+| Validators, fixtures, CI enforcement | **NEEDS VERIFICATION** | No aggregate-parent deterministic validator suite was verified in this task. |
+| Receipts, proof, policy, release, hosting, public behavior | **UNKNOWN / held** | Presence in this lane creates none of these states. |
+
+## What belongs here
+
+Good fits are processed aggregate artifacts whose transformation and support remain inspectable, including:
+
+- spatial summaries over declared counties, regions, grids, station networks, climate zones, smoke zones, or other governed support units;
+- temporal summaries over declared hourly, daily, monthly, seasonal, annual, rolling-window, reference-period, or event-context intervals;
+- aggregate observation products that preserve observation identity and source lineage;
+- aggregate model or forecast products that remain explicitly labeled modeled or forecast;
+- aggregate proxy products such as AOD or smoke-context summaries that remain explicitly labeled proxy/context;
+- normal, baseline, anomaly-ready, and comparison-ready inputs that preserve reference and comparison periods;
+- quality, missingness, coverage, interpolation, correction, uncertainty, and caveat metadata stored as non-authoritative sidecars when appropriate;
+- object-ready derivatives prepared for contract/schema validation, catalog closure, EvidenceBundle support, or release review;
+- lane-local README or non-release manifest notes that explain artifact identity without becoming receipts, proofs, catalogs, or release decisions.
+
+## What does NOT belong here
+
+Do not place these in `data/processed/atmosphere/aggregate/`:
+
+- RAW station feeds, source-native grids, downloaded reports, bulletins, advisories, forecasts, model files, satellite products, screenshots, or source logs;
+- WORK notebooks, scratch rollups, temporary joins, incomplete interpolation, experiment outputs, or debugging products;
+- QUARANTINE material with unresolved source role, rights, method, baseline, units, time, support geometry, quality, sensitivity, or dispute state;
+- direct non-aggregate object records that have a narrower accepted processed lane;
+- semantic contracts, JSON Schemas, policy rules, validators, tests, fixtures, executable pipelines, packages, or application code;
+- `EvidenceBundle`, proof, receipt, catalog, STAC, DCAT, PROV, triplet, release, correction, withdrawal, rollback, or published artifacts;
+- climate attribution, trend-significance, regulatory-compliance, hazard-impact, damage, exposure, health, emergency, or life-safety conclusions unsupported by separate evidence and authority;
+- aggregates that silently collapse AQI into concentration, AOD into PM2.5, model into observation, forecast into observation, advisory into KFM-issued guidance, or normal into trend evidence.
+
+## Inputs
+
+Inputs may arrive only through governed lifecycle transitions from:
+
+- `data/work/atmosphere/` after the declared transform, aggregation, normalization, and validation posture is recorded;
+- `data/quarantine/atmosphere/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted Atmosphere pipelines or tools that preserve source, method, units, spatial support, temporal support, and correction lineage;
+- upstream object-family lanes when the aggregate is a derivative and the relationship to the contributing records remains explicit.
+
+A direct connector-to-PROCESSED or watcher-to-PROCESSED shortcut is not an accepted normal path. Connectors admit source material to RAW or QUARANTINE; promotion into this lane is a governed transition.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/atmosphere/` and accepted STAC/DCAT/PROV projections;
+- `data/triplets/` or other derived relationship projections that retain source/evidence links;
+- `data/proofs/` and `data/receipts/` through separate emitted objects;
+- `release/candidates/atmosphere/` after identity, evidence, policy, review, validation, correction, and rollback obligations are met;
+- `data/published/` only through a governed release transition and a separate released artifact path;
+- governed API, MapLibre, Evidence Drawer, export, or Focus Mode carriers only after public-safe release.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A processed aggregate is not a released claim merely because it is easy to render or summarize.
+
+## Validation
+
+No aggregate-parent production validator was verified in this task. Until accepted contracts, schemas, fixtures, validators, and CI evidence exist, validation claims must remain bounded.
+
+A credible aggregate validation profile should check, at minimum:
+
+1. source and source-role identity;
+2. variable and unit compatibility;
+3. aggregation method and version;
+4. spatial support and weighting;
+5. temporal window, reference period, and comparison period where applicable;
+6. contributing-record coverage, missingness, and exclusion rules;
+7. interpolation, correction, calibration, and quality flags;
+8. deterministic identity or content/method digest where practical;
+9. uncertainty and public caveats;
+10. evidence references, policy posture, review state, release hold, correction path, and rollback target.
+
+Fail closed or quarantine when any material field is absent, contradictory, unsupported, non-comparable, rights-unclear, stale beyond policy, or unsafe for the requested downstream use.
+
+## Review burden
+
+Changes require review proportional to consequence:
+
+| Change | Minimum review burden |
+|---|---|
+| README wording or navigation only | Docs steward plus Atmosphere/domain reviewer. |
+| New child-lane admission or renamed aggregate family | Atmosphere steward, data/pipeline steward, docs steward, and Directory Rules review. |
+| Method, units, baseline, comparability, or uncertainty semantics | Atmosphere subject-matter reviewer plus contract/schema and validation reviewers. |
+| Public-facing candidate, map, API, Focus Mode, export, or release linkage | Evidence, policy, release, correction, rollback, and domain review; independent approval where policy requires it. |
+| Attribution, hazard, regulatory, health, or life-safety implication | Hold by default; require the owning authority/domain and evidence appropriate to the consequence. |
+
+Accountable named owners and CODEOWNERS coverage remain **NEEDS VERIFICATION**.
+
+## Related folders
+
+| Responsibility | Repository home | Relationship |
+|---|---|---|
+| Atmosphere processed parent | [`../`](../) | Defines the broader PROCESSED domain lane and child-lane index. |
+| Aggregate climate child | [`climate/`](./climate/) | Climate baseline and anomaly-ready aggregate derivatives; separately modernized in draft PR #1711. |
+| Atmosphere contracts | [`../../../../contracts/domains/atmosphere/`](../../../../contracts/domains/atmosphere/) | Object meaning and knowledge-character distinctions. |
+| Atmosphere schemas | [`../../../../schemas/contracts/v1/domains/atmosphere/`](../../../../schemas/contracts/v1/domains/atmosphere/) | Machine shape; maturity varies by object and must be verified. |
+| Atmosphere policy | [`../../../../policy/domains/atmosphere/`](../../../../policy/domains/atmosphere/) | Admissibility and anti-collapse policy. |
+| Source registry | [`../../../registry/sources/atmosphere/`](../../../registry/sources/atmosphere/) | Source identity, role, rights, and activation posture. |
+| Domain catalog | [`../../../catalog/domain/atmosphere/`](../../../catalog/domain/atmosphere/) | Downstream discovery/catalog closure. |
+| Receipts | [`../../../receipts/`](../../../receipts/) | Run, transform, aggregation, validation, correction, and related process memory. |
+| Proofs | [`../../../proofs/`](../../../proofs/) | Evidence/proof support; separate from processed artifacts. |
+| Release candidates | [`../../../../release/candidates/atmosphere/`](../../../../release/candidates/atmosphere/) | Candidate dossiers; a candidate is not a release. |
+| Release decisions | [`../../../../release/`](../../../../release/) | Manifests, promotion decisions, corrections, withdrawals, and rollback. |
+
+## ADRs
+
+No accepted ADR was verified as specifically defining the internal `aggregate/` child taxonomy.
+
+Relevant governing decisions and open tensions include:
+
+- ADR-0001 schema-home posture: machine schemas belong under `schemas/contracts/v1/...`;
+- the unresolved `atmosphere/` versus `air/` segment tension documented in `docs/domains/atmosphere/CANONICAL_PATHS.md`;
+- any future child-lane creation, rename, or parallel authority proposal must be checked against Directory Rules and current ADRs before implementation.
+
+## Last reviewed
+
+**2026-07-25.** Re-review when any of these occurs:
+
+- an aggregate-parent schema or validator is accepted;
+- a new aggregate child lane is implemented;
+- aggregate data inventory is added or migrated;
+- the `atmosphere/` versus `air/` naming question is resolved;
+- downstream catalog, proof, release, API, map, export, or Focus Mode behavior changes;
+- six months elapse without review.
+
+---
+
+<a id="1-scope"></a>
+
+## Aggregate admission profile
+
+The following is a **PROPOSED parent-lane profile**, not an implemented universal schema.
+
+| Dimension | Minimum auditable posture |
+|---|---|
+| Identity | Stable artifact ID plus source/method lineage; deterministic digest where practical. |
+| Knowledge character | Observation aggregate, model aggregate, forecast aggregate, proxy/context aggregate, normal/baseline, anomaly/comparison, report/index, or other declared derivative. |
+| Variable and units | Variable identity, canonical or source unit, conversion method, and incompatible-unit rejection. |
+| Spatial support | Declared geometry/support unit, coverage, weighting, resolution, and any generalization. |
+| Temporal support | Observation/source interval, aggregation window, timezone/calendar handling, reference period, comparison period, and freshness. |
+| Method | Aggregation function, grouping keys, weighting, interpolation, correction, calibration, exclusions, software/spec version, and method digest. |
+| Coverage and quality | Contributing-record count, expected coverage, missingness, station/network composition, QA flags, uncertainty, and caveats. |
+| Evidence and governance | SourceDescriptor/EvidenceRef context, validation state, PolicyDecision or hold, review state, release state, correction lineage, and rollback target. |
+
+Averages, sums, percentiles, maxima, minima, counts, rates, indices, normals, and anomalies are not interchangeable. The method and denominator must remain visible.
+
+<a id="2-lifecycle-boundary"></a>
+
+## Knowledge-character guardrails
+
+Aggregation must preserve what kind of knowledge produced the value:
+
+- **Observation aggregate:** derived from observations; it is not a raw observation and does not become regulatory truth automatically.
+- **Model aggregate:** derived from modeled fields; it must never be labeled observed.
+- **Forecast aggregate:** retains issue time, valid time, horizon, model/version, and supersession posture.
+- **Proxy/context aggregate:** AOD, smoke masks, or related remote-sensing/context products remain proxies or context.
+- **AQI/report aggregate:** AQI or public-report indices remain reports/indices, not pollutant concentration.
+- **Normal/baseline:** a declared reference-period aggregate; not a trend or anomaly by itself.
+- **Anomaly/comparison:** a difference or departure anchored to a declared compatible baseline; not attribution or impact proof.
+- **Advisory aggregate:** an aggregation of official-source advisory context; never a KFM-issued advisory or instruction.
+
+> [!WARNING]
+> Aggregation can increase apparent authority while hiding incompatibility. Do not combine differing units, methods, source roles, station classes, baselines, calendars, spatial supports, or quality regimes without an explicit and reviewed comparability rule.
+
+<a id="3-repo-fit"></a>
+
+## Child-lane posture
+
+**CONFIRMED child:**
+
+| Lane | Current evidence | Boundary |
+|---|---|---|
+| `climate/` | README exists; draft PR #1711 documents `ClimateNormal` and `ClimateAnomaly` object-ready derivatives and permissive schema scaffolds. | Climate aggregate inputs are not automatically validated object instances or released climate claims. |
+
+**Additional children:** UNKNOWN until current directory inventory and an admitted responsibility justify them. Earlier README candidates such as `air_quality/`, `weather/`, `smoke_aod/`, or `advisory/` remain design possibilities, not repo facts.
+
+Before creating a child lane:
+
+1. identify a distinct responsibility that cannot be expressed safely in an existing lane;
+2. verify current repository inventory and canonical-path guidance;
+3. define the object/derivative relationship without creating a parallel contract or schema home;
+4. define source-role, method, units, comparability, freshness, evidence, policy, and release boundaries;
+5. add representative offline fixtures and deterministic validation where feasible;
+6. document correction and rollback;
+7. cite Directory Rules in the PR.
+
+<a id="4-accepted-contents"></a>
+
+## Lifecycle and promotion
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -89,165 +315,76 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> AGG[data/processed/atmosphere/aggregate]
-  QUAR --> AGG
-  AGG --> CLIM[data/processed/atmosphere/aggregate/climate]
-  AGG --> CAT[data/catalog/domain/atmosphere]
-  AGG --> STAC[data/catalog/stac/atmosphere]
-  AGG --> DCAT[data/catalog/dcat/atmosphere]
-  AGG --> PROV[data/catalog/prov/atmosphere]
-  AGG -. supports .-> PROOF[data/proofs]
-  AGG -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
+  RAW["data/raw/atmosphere"] --> WORK["data/work/atmosphere"]
+  WORK --> HOLD["data/quarantine/atmosphere"]
+  WORK --> AGG["data/processed/atmosphere/aggregate"]
+  HOLD -. remediated by governed decision .-> AGG
+  AGG --> CAT["data/catalog/domain/atmosphere"]
+  CAT --> PROOF["data/proofs + data/receipts"]
+  CAT --> RC["release/candidates/atmosphere"]
+  RC --> DECISION{"promotion decision"}
+  DECISION -- deny or hold --> HOLD2["hold / correct / withdraw"]
+  DECISION -- approved --> PUB["data/published/.../atmosphere"]
+  PUB --> API["governed API / released carriers"]
 ```
 
-`data/processed/atmosphere/aggregate/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+The diagram is an operating model, not proof that each producer, schema, validator, or release object currently exists. Promotion is a governed state transition, not copying an aggregate into a public directory.
 
-## Repo fit
+<a id="5-exclusions"></a>
 
-| Responsibility | Correct home | Rule |
+## Correction and rollback
+
+An aggregate must remain correctable when:
+
+- source observations are corrected or withdrawn;
+- station/network membership changes;
+- method, units, weighting, interpolation, calibration, or baseline is found wrong;
+- late-arriving records change coverage;
+- a forecast or advisory is superseded;
+- rights, policy, or review state changes;
+- a published derivative is shown to be misleading or non-comparable.
+
+A release-capable aggregate packet should identify:
+
+- contributing source/dataset versions;
+- method/spec version and digest;
+- prior aggregate or release, if any;
+- affected catalog, proof, tile, API, cache, export, and UI carriers;
+- correction or withdrawal notice;
+- recomputation and invalidation plan;
+- rollback target.
+
+Rollback this README change by reverting its commit or restoring prior blob `08a51196fe1df3771b2a0890abd6e3d598944a03`. Do not rewrite shared history.
+
+<a id="6-aggregate-requirements"></a>
+
+## Open verification register
+
+| Item | Status | Evidence needed |
 |---|---|---|
-| Raw atmosphere source payloads | `data/raw/atmosphere/` | Not this lane. |
-| In-process aggregation, scratch rollups, temporary joins, temporary grids, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, source-role-unclear, malformed, unsupported, disputed, sensitive, or unsafe aggregate material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized aggregate Atmosphere processed artifacts | `data/processed/atmosphere/aggregate/` | This parent lane. |
-| Aggregate climate processed artifacts | `data/processed/atmosphere/aggregate/climate/` | Existing child lane. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, aggregation, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| Atmosphere semantic contracts | `contracts/domains/atmosphere/` | Object meaning; not data. |
-| Atmosphere schemas | `schemas/contracts/v1/domains/atmosphere/` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
+| Recursive child and payload inventory | **UNKNOWN** | Commit-pinned tree/file inventory that avoids exposing sensitive or bulky data. |
+| Universal aggregate contract/schema | **UNKNOWN** | Accepted semantic contract, field-complete schema, compatibility plan, and fixtures. |
+| Parent aggregate validator and CI | **NEEDS VERIFICATION** | Deterministic command, representative positive/negative fixtures, stable findings, and workflow wiring. |
+| AggregationReceipt shape and producer | **NEEDS VERIFICATION** | Accepted contract/schema, emitted receipt examples, validator, and storage path. |
+| Comparability policy | **NEEDS VERIFICATION** | Explicit rules for units, methods, station classes, baselines, calendars, spatial supports, and source roles. |
+| Evidence and release closure | **UNKNOWN** | EvidenceBundle/proof, PolicyDecision, review, ReleaseManifest, correction, withdrawal, and rollback instances. |
+| Public consumers | **UNKNOWN** | Governed API, map, export, or Focus Mode contract and runtime evidence tied to a release. |
+| Accountable owners and separation of duties | **NEEDS VERIFICATION** | CODEOWNERS, reviewer assignments, and approved governance records. |
 
-## Accepted contents
+<a id="7-source-role-guardrails"></a>
 
-Processed aggregate Atmosphere data may include:
+## No-loss ledger
 
-- normalized spatial aggregate products such as county, region, grid, tile-safe, station-network, watershed-adjacent, smoke-zone, climate-zone, or other governed aggregate units when the spatial unit is documented;
-- normalized temporal aggregate products such as hourly, daily, monthly, seasonal, annual, rolling-window, reference-period, or event-context summaries when the temporal unit is documented;
-- aggregate climate, weather, air-quality, smoke, AOD, precipitation, temperature, wind, or other supported Atmosphere variables when source role, units, aggregation window, and method are preserved;
-- uncertainty, caveat, quality, missingness, station coverage, interpolation, correction, and method metadata sidecars when those sidecars are not proofs, receipts, catalog records, schemas, source registry records, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, or release review;
-- README files explaining local aggregate processed-data boundaries.
-
-## Exclusions
-
-Do not store these under `data/processed/atmosphere/aggregate/`:
-
-- RAW source files, raw station observations, source-native gridded products, screenshots, downloads, bulletins, advisories, or raw model/forecast files.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, source-role-unclear, rights-unclear, unsupported, disputed, stale, sensitive, or unsafe aggregate material.
-- Direct object-family records that belong in narrower lanes unless they are aggregate derivatives with documented source role and method.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
-- Climate attribution claims, trend-significance claims, event/hazard truth, damages, health/safety claims, emergency instructions, public alerting behavior, or policy conclusions.
-
-## Aggregate requirements
-
-PROPOSED until concrete validators and CI enforcement are verified:
-
-| Requirement | Meaning |
+| Prior material | Disposition in v0.2.0 |
 |---|---|
-| Source trace | Every processed aggregate artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Aggregation disclosure | Aggregation method, spatial unit, temporal unit, variable, units, weighting, interpolation, correction, missingness, and quality posture should resolve to receipt or validation context. |
-| Source-role preservation | Observations, reports/indexes, model fields, forecasts, satellite proxies, advisories, normals, anomalies, and derived aggregate products must remain labeled as their actual role. |
-| Deterministic identity | Aggregate artifacts should have stable IDs, content digests, or method-linked identities where practical. |
-| Evidence linkage | Claims about aggregate value, scope, baseline, method, uncertainty, correction, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, caveat, freshness where applicable, sensitivity, and policy/admissibility posture. |
-| Catalog readiness | Processed aggregate artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No overclaim by default | Aggregate context does not prove cause, impact, damages, trend significance, exposure, hazard truth, or health/safety guidance without separate evidence and review. |
-
-## Source-role guardrails
-
-- Aggregation does not turn processed data into truth or publication authority.
-- AQI is not raw concentration.
-- AOD is not PM2.5.
-- Model fields and forecasts must remain labeled as model or forecast context.
-- Advisory context must keep official-source and role boundaries visible.
-- Low-cost sensor aggregates require correction, caveats, confidence, limitations, policy posture, and source rights before public use.
-- Public aggregate products require source-role disclosure, method disclosure, evidence, policy, release state, correction path, and rollback target.
-- Unreleased processed aggregate artifacts are not public merely because they exist under this directory.
-
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed aggregate data to public claims. Aggregate products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
-
-## Child lanes
-
-| Child lane | Status | Purpose |
-|---|---|---|
-| `climate/` | draft / PROPOSED | Aggregate climate artifacts, especially `ClimateNormal`, `ClimateAnomaly`-ready derivatives, baselines, normals, anomalies, and climate-context aggregate products. |
-
-Additional child lanes are **PROPOSED** until verified. Candidate future lanes may include:
-
-| Candidate lane | Proposed purpose | Caution |
-|---|---|---|
-| `air_quality/` | Aggregated PM2.5, ozone, AQI-context, or station-network summaries. | Must preserve AQI-vs-concentration and low-cost sensor caveats. |
-| `weather/` | Aggregated temperature, precipitation, wind, or mesonet summaries. | Must preserve observation/model/forecast distinctions. |
-| `smoke_aod/` | Aggregated smoke, aerosol, AOD, or satellite-proxy summaries. | AOD is not PM2.5; smoke context is not life-safety alerting. |
-| `advisory/` | Aggregated advisory-context counts or summaries. | Advisory context is not official warning issuance or emergency instruction. |
-
-Do not create child lanes as parallel truth stores. Each child must explain what it owns, what it excludes, which object families it touches, and how it promotes downstream.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
-
-```text
-data/processed/atmosphere/aggregate/
-├── README.md
-├── climate/                 # CONFIRMED child README exists; detailed climate aggregate lane
-├── air_quality/             # PROPOSED — aggregate air-quality summaries
-├── weather/                 # PROPOSED — aggregate weather / mesonet summaries
-├── smoke_aod/               # PROPOSED — aggregate smoke / AOD / satellite-proxy summaries
-├── advisory/                # PROPOSED — aggregate advisory-context summaries
-├── methods/                 # PROPOSED — local method summaries, not canonical receipts
-├── quality/                 # PROPOSED — missingness, coverage, uncertainty, caveats
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define aggregate PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/aggregate/climate/README.md` | CONFIRMED child README | Existing aggregate climate child lane and detailed climate guardrails. | Does not define all aggregate child lanes. |
-| `data/processed/atmosphere/README.md` | CONFIRMED | Parent atmosphere processed lane exists as a greenfield stub. | Does not define parent Atmosphere processed boundaries yet. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane is downstream and preserves source-role guardrails. | Does not prove aggregate processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere scope includes air-quality, smoke/AOD, weather, climate, model/advisory context, and source-role denials. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/atmosphere/aggregate/`.
-- [ ] Confirm accepted aggregate source/domain path convention.
-- [ ] Confirm aggregate artifact schemas or profiles for each accepted child lane.
-- [ ] Confirm aggregate processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for each source-derived aggregate artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, AggregationReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm aggregation method, spatial unit, temporal unit, variable, units, uncertainty, caveats, missingness, correction, and source-role handling.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, attribution, hazard-impact, public-alerting, or health/safety artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed aggregate data to catalog/triplet/published outputs is governed, aggregation-aware, source-role-safe, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct public claim, alerting, attribution, trend-significance, hazard-impact, or health/safety source.
-
-## Rollback
-
-Rollback is required if this lane becomes an Atmosphere source-data root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, climate-attribution source, trend-significance source, hazard-impact source, public-alerting source, or health/safety guidance source.
-
-Rollback target for this expansion: previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+| Blank-placeholder lineage | Preserved in metadata and rollback history. |
+| PROCESSED-stage and no-direct-public boundary | Preserved and strengthened. |
+| Aggregate method, scope, units, uncertainty, evidence, policy, and release requirements | Preserved and expanded into the admission profile. |
+| AQI ≠ concentration, AOD ≠ PM2.5, model/forecast ≠ observation, advisory authority boundary | Preserved in knowledge-character guardrails. |
+| Climate child lane | Preserved and linked to adjacent draft PR #1711 without claiming it is merged. |
+| Candidate future child lanes | Retained only as UNKNOWN design possibilities rather than presented as implemented directories. |
+| Speculative directory tree | Removed because recursive inventory was not verified. |
+| Validation checklist | Converted into explicit current status, validation profile, and open verification register. |
+| Correction and rollback | Preserved and expanded to include downstream invalidation and recomputation. |
 
 <p align="right"><a href="#top">Back to top</a></p>
