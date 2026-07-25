@@ -1,587 +1,831 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0024-steward-separation-of-duties-for-release
 title: ADR-0024 — Steward Separation of Duties for Release
-type: standard
-version: v1
+type: adr
+adr_id: ADR-0024
+version: v1.1
 status: draft
-owners: Docs steward; Release authority (TODO confirm CODEOWNERS)
+effective_decision_status: proposed
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — release and publication steward"
+  - "NEEDS VERIFICATION — governance and review steward"
+  - "NEEDS VERIFICATION — evidence, policy, sensitivity, rights, correction, rollback, validation, and security stewards"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Release and publication steward
+  - Governance and review steward
+  - At least one affected domain or data steward
+  - Evidence steward
+  - Policy and sensitivity steward
+  - Rights or sovereignty reviewer when applicable
+  - Correction and rollback steward
+  - Contracts and schemas stewards
+  - Validation and CI steward
+  - Security reviewer for actor identity, signatures, or trust-root changes
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-07-24
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 9e9d2a6ad1d3a776f0cf699930942c5fef2ee30b
+  target_prior_blob: 517493105f8464457782dee1ada5bf1e6db43c79
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  promotion_decision_schema_blob: a2d087a46772cf60e4b9dfb394892690e8a88b31
+  release_manifest_schema_blob: 727db0a781900aa3816dcdce723fe355fec2e786
+  review_record_schema_blob: fe2f2223af46481e7fb19b0baa94f62ce9c6c855
+  review_record_fixture_readme_blob: fccac522a0c178bb87fdaf3c7d932861a40786da
+  review_record_validator_blob: e1aa5fcc4b2da4055eb61276a031512512bcb4ca
+  correction_notice_schema_blob: d3fe47b9005cd52cf26f349c892386e8ce6d4c5a
+  rollback_card_schema_blob: 779ffcf282201ba4dba9689e622f92723db55b4e
+  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
+  release_reviews_readme_blob: d927536c39a2102b1f012007fc8de4facb7abd90
+  release_promotion_decisions_readme_blob: 18c6342f93212992f98d0e354390a36a79749858
+  release_signatures_readme_blob: e25a62e73762af96d15fbb6c32c8d03fbac66e30
+  release_state_register_blob: f576239f447045b04d7b30c540234d8641ceb7dc
+  release_policy_readme_blob: 72fa13bfa2bd63ba0bd29201e282b45db0164d2c
+  promotion_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
+inspection_boundary: >
+  Current-session GitHub reads of the ADR index, Directory Rules, this ADR, CODEOWNERS,
+  PromotionDecision, ReleaseManifest, ReviewRecord, CorrectionNotice, RollbackCard, and
+  AIReceipt schemas, ReviewRecord fixtures and validator, release review, promotion-decision,
+  and signature lane documentation, release-state register, release policy root, and promotion
+  workflow source. Supplied Atlas and Encyclopedia materials were used as doctrine/design
+  lineage for the reviewer-role and two-person-rule proposal. No branch ruleset, required-review
+  configuration, StewardshipAssignment, actor-identity registry, real release ReviewRecord,
+  policy evaluation, signer, promotion, release, correction, rollback, deployment, or production
+  publication was exercised.
+source_lineage:
+  - KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf — Chapter 24 reviewer/SoD matrix and ADR-S-09 backlog
+  - kfm_encyclopedia.pdf — Master Action Matrix separating steward, reviewer, policy admin, release manager, developer, and AI duties
 related:
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - docs/doctrine/directory-rules.md
-  - docs/governance/README.md
-  - docs/architecture/governed-api.md
+  - schemas/contracts/v1/governance/review_record.schema.json
   - schemas/contracts/v1/release/promotion_decision.schema.json
   - schemas/contracts/v1/release/release_manifest.schema.json
-  - schemas/contracts/v1/governance/review_record.schema.json
-  - policy/release/
-tags: [kfm, adr, governance, separation-of-duties, release, sod]
+  - schemas/contracts/v1/release/correction_notice.schema.json
+  - schemas/contracts/v1/release/rollback_card.schema.json
+  - schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - fixtures/contracts/v1/governance/review_record/README.md
+  - tools/validators/validate_review_record.py
+  - release/reviews/README.md
+  - release/promotion_decisions/README.md
+  - release/signatures/README.md
+  - control_plane/release_state_register.yaml
+  - policy/release/README.md
+  - .github/CODEOWNERS
+  - .github/workflows/promotion-gate.yml
+tags: [kfm, adr, governance, release, separation-of-duties, two-person-rule, review, actor-identity, sensitivity, rights, correction, rollback]
 notes:
-  - "Closes Atlas v1.1 §24.12 backlog item ADR-S-09 (Reviewer separation-of-duties threshold)."
-  - "Doctrinal content tracks Atlas v1.1 §24.7 (Master Reviewer Role and SoD Matrix)."
-  - "Status is `proposed` until the release authority, docs steward, and at least one domain steward sign the ReviewRecord."
+  - "v1.1 is a same-path repository-grounded modernization. It preserves source metadata draft and effective decision status proposed; it does not accept ADR-0024 or implement separation of duties."
+  - "The canonical ADR index uniquely assigns ADR-0024 to this exact path."
+  - "The supplied Atlas and Encyclopedia support a proposed reviewer-role/SoD design and ADR backlog item; they do not prove accepted repository policy or current enforcement."
+  - "Current CODEOWNERS routes all relevant paths to one verified GitHub account and explicitly disclaims stewardship, required review, independent approval, or separation-of-duties proof."
+  - "The current promotion workflow confirms release/reviews contains guidance only, ReviewRecord and promotion-gate validators are placeholders, and no governed ReviewRecord or release authority is created."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0024 — Steward Separation of Duties for Release
 
-> _Lock the role vocabulary, freeze the separation-of-duties matrix, and stage the custom-to-tooling enforcement ladder for KFM release decisions._
+> **Proposed decision.** KFM will require independently attributable review for every release-significant transition, with stricter multi-role review for sensitive, rights-constrained, corrective, rollback, public-access, and policy-significant changes. Independence is evaluated by resolved actor identity and current authority assignment—not by role labels, usernames, comments, CODEOWNERS routing, automation, or the mere presence of multiple files.
 
-![Status: proposed](https://img.shields.io/badge/status-proposed-yellow)
-![ADR: 0024](https://img.shields.io/badge/ADR-0024-blue)
-![Authority: governance](https://img.shields.io/badge/authority-governance-purple)
-![Closes: ADR--S--09](https://img.shields.io/badge/closes-ADR--S--09-informational)
-![Doctrine: Atlas%20v1.1%20%C2%A724.7](https://img.shields.io/badge/doctrine-Atlas%20v1.1%20%C2%A724.7-success)
-![Enforcement: custom%20%E2%86%92%20tooling](https://img.shields.io/badge/enforcement-custom%20%E2%86%92%20tooling-orange)
-![License: TODO](https://img.shields.io/badge/license-TODO-lightgrey)
-
-| Field | Value |
-|---|---|
-| **ID** | `ADR-0024` |
-| **Title** | Steward Separation of Duties for Release |
-| **Status** | `proposed` |
-| **Date** | 2026-05-15 |
-| **Owners** | Docs steward · Release authority _(TODO confirm `CODEOWNERS`)_ |
-| **Closes** | Atlas v1.1 §24.12 backlog item **ADR-S-09** — "Reviewer separation-of-duties threshold" |
-| **Pairs with** | `ADR-0001-schema-home.md` (schema home for `PromotionDecision`, `ReleaseManifest`, `ReviewRecord`) |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Directory Rules §2.4 trigger** | _(none — this ADR does not change a canonical root, lifecycle phase, schema home, or invariant; it formalizes role and review discipline.)_ |
-| **Authority of role names** | CONFIRMED — tracks Atlas v1.1 §24.7.1 vocabulary verbatim |
-| **Authority of matrix rows** | CONFIRMED at doctrine layer (Atlas v1.1 §24.7.2 + Encyclopedia §10 Action Matrix); PROPOSED at enforcement layer |
-| **Authority of file paths** | PROPOSED — no live repo mounted in this session |
-
----
-
-## Quick navigation
-
-- [1. Context](#1-context)
-- [2. Forces](#2-forces)
-- [3. Decision](#3-decision)
-- [4. Role definitions (canonical)](#4-role-definitions-canonical)
-- [5. Separation-of-duties matrix (canonical)](#5-separation-of-duties-matrix-canonical)
-- [6. Maturity ladder — custom → tooling](#6-maturity-ladder--custom--tooling)
-- [7. Enforcement plan](#7-enforcement-plan)
-- [8. Consequences](#8-consequences)
-- [9. Alternatives considered](#9-alternatives-considered)
-- [10. Validation plan](#10-validation-plan)
-- [11. Rollback plan](#11-rollback-plan)
-- [12. Open questions / NEEDS VERIFICATION](#12-open-questions--needs-verification)
-- [Related docs](#related-docs)
-- [Appendix A — Required object additions](#appendix-a--required-object-additions)
-- [Appendix B — Reviewer checklist](#appendix-b--reviewer-checklist)
-
----
-
-## 1. Context
-
-KFM treats release as a **governed state transition**, not a file move. The lifecycle invariant
-`RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` is enforced by gates,
-receipts, and signed manifests rather than by author trust. The corresponding operating-law
-invariant — that **policy-significant release duties are separated when maturity justifies it**
-— is doctrine, but the project has not yet:
-
-1. Frozen the canonical **role vocabulary** (Source steward, Domain steward, Sensitivity
-   reviewer, Rights-holder representative, Release authority, Correction reviewer, AI surface
-   steward, Docs steward).
-2. Frozen the **matrix of which actions require separation** (release to `PUBLISHED`,
-   sensitive-lane release, correction / rollback, AI surface change, Atlas / supplement
-   publication, …).
-3. Specified **at what maturity** separation must shift from _custom_ (PR review by convention)
-   to _tooling_ (`CODEOWNERS`, branch protection, OPA fixtures, schema-level
-   `author_id ≠ approver_id` assertions, signed-receipt requirements).
-
-The doctrinal anchor — Atlas v1.1 §24.7 — explicitly states it is "PROPOSED for ADR discussion."
-The backlog entry **ADR-S-09** in Atlas v1.1 §24.12 names this gap. This ADR closes it.
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0024-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Review records: none](https://img.shields.io/badge/governed%20ReviewRecords-none-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Validator: placeholder](https://img.shields.io/badge/review%20validator-placeholder-b42318?style=flat-square)](#current-enforcement-maturity)
+[![CODEOWNERS: single route](https://img.shields.io/badge/CODEOWNERS-single%20route-f59e0b?style=flat-square)](#current-repository-evidence)
+[![Enforcement: hold](https://img.shields.io/badge/enforcement-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Without a frozen role vocabulary and matrix, the trust membrane is one careful actor
-> away from collapse on any sensitive-lane release.** The maturity note in Atlas v1.1
-> §24.7.2 is candid: "the supplement does not pretend the enforcement exists yet." This
-> ADR does not invent enforcement; it freezes the rules so enforcement can be built.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 2. Forces
-
-| Force | Direction |
-|---|---|
-| Operating-law invariant 9 (separate policy-significant release duties when maturity justifies it). | **Pushes toward separation.** |
-| Cite-or-abstain default truth posture; AI cannot be its own reviewer. | **Pushes toward separation.** |
-| Public exposure of sensitive lanes (archaeology coords, sensitive fauna/flora, living-person, DNA, infrastructure). | **Pushes toward strict separation.** |
-| Early-stage project with a small set of contributors; some routine work needs to ship. | **Pushes toward maturity-gated separation, not blanket separation.** |
-| Tooling burden — `CODEOWNERS`, branch protection, schema-level author-approver assertions, signed-receipt verification — must be earned, not assumed. | **Pushes toward staged enforcement.** |
-| Drift risk — a doctrinally separated duty enforced only "by convention" silently collapses under deadline pressure. | **Pushes toward tooling enforcement as soon as maturity supports it.** |
-| Directory Rules §17 — reversing a previously canonical rule requires ADR + supersession + drift entry. | **Pushes toward putting the canonical rule in an ADR so future change is auditable.** |
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 3. Decision
-
-This ADR makes four binding decisions and one staged commitment.
-
-**D1. Adopt Atlas v1.1 §24.7.1 role vocabulary as canonical (§4 below).** _CONFIRMED at
-doctrine layer; this ADR promotes from PROPOSED to canonical._ Subsequent docs, registers,
-contracts, and policy bundles **MUST** use these role names exactly.
-
-**D2. Adopt the Atlas v1.1 §24.7.2 separation-of-duties matrix as canonical (§5 below)**,
-with one clarification: the matrix is read against the **maturity ladder** in §6, not as a
-single global posture.
-
-**D3. Adopt the maturity ladder M0 → M3 (§6 below)** as the **threshold rule** for when
-separation shifts from _custom_ (PR review by convention) to _tooling_ (machine-enforced).
-The maturity level of each lane is declared and tracked explicitly; it does not float.
-
-**D4. Author and approver identity MUST be representable on the release decision path.**
-`PromotionDecision`, `ReleaseManifest`, `ReviewRecord`, `CorrectionNotice`, `RollbackCard`,
-and `AIReceipt` **MUST** carry the fields needed to assert `author_id ≠ approver_id` (and,
-where applicable, `rights_holder_rep_id`, `sensitivity_reviewer_id`) when the matrix in §5
-requires separation at the lane's current maturity. _Schema-level changes are PROPOSED in
-§7 and Appendix A; they belong under `schemas/contracts/v1/...` per ADR-0001._
-
-**D5 (staged commitment).** The release authority and docs steward will **declare a starting
-maturity per lane** within one review cycle of this ADR's acceptance, and will not advance
-any lane's maturity without an explicit `ReviewRecord` entry. The default starting maturity
-for new lanes is **M0**, except sensitive lanes (archaeology, sensitive fauna/flora,
-living-person, DNA, critical infrastructure, KFM-as-alert-authority surfaces) which start
-at **M2** by deny-by-default doctrine.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 4. Role definitions (canonical)
-
-> **Authority:** these names track Atlas v1.1 §24.7.1 verbatim. Renaming any of them is a
-> **MUST NOT** without a superseding ADR.
-
-| Role | Owns | Required for |
-|---|---|---|
-| **Source steward** | `SourceDescriptor` lifecycle; admission gate; rights confirmation; sensitivity tag for a named source family. | Source admission (`— → RAW`). |
-| **Domain steward** | Meaning, contracts, validators of a domain's object families. | Domain-internal promotions; validator authorship. |
-| **Sensitivity reviewer** | Redaction, generalization, withholding, and tier decisions for sensitive content. | Sensitive-lane promotion; `RedactionReceipt`; T1+ tier transitions. |
-| **Rights-holder representative** | Sovereignty, cultural-heritage, or consent-based release decisions. | Archaeology, sovereign data, living-person data, DNA data release. |
-| **Release authority** | Issues `ReleaseManifest`s; authorizes `PUBLISHED` transitions; authorizes rollback. | `→ PUBLISHED` transitions; rollback. |
-| **Correction reviewer** | Reviews `CorrectionNotice` / `RollbackCard` before they amend a `PUBLISHED` claim. | Post-publication corrections; supersession entries. |
-| **AI surface steward** | Focus Mode templates, `AIReceipt`s, policy bindings, cite-or-abstain audits. | AI surface change (template / policy binding). |
-| **Docs steward** | Governance docs; ADR index; drift register; Atlas / supplement integrity. | Atlas / supplement publication; ADR acceptance; drift triage. |
-
-> [!NOTE]
-> A single person **MAY** hold multiple roles at low maturity, but the **decision record
-> MUST list the role acting on each gate**, not the person. A person who is both Domain
-> steward and Release authority cannot satisfy `author_id ≠ approver_id` on a gate that
-> requires it; a second actor in one of the two roles is required.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 5. Separation-of-duties matrix (canonical)
-
-> **Authority:** tracks Atlas v1.1 §24.7.2 verbatim, modulo the maturity ladder in §6.
-> "May the author also approve?" reads as: at the **lane's current maturity level**, is
-> single-actor authorship-plus-approval permitted?
-
-| Action | May the author also approve? | Required separation when SoD applies | Citation |
-|---|---|---|---|
-| **Source admission** (`— → RAW`) | Yes for routine; **No** when source has unresolved rights / sovereignty. | Source steward **+** Rights-holder representative (where applicable). | Atlas §24.7.2; ENCY |
-| **Normalization receipts** | Yes for routine; **No** when transforms are sensitivity-relevant. | Domain steward **+** Sensitivity reviewer (if sensitivity-relevant). | Atlas §24.7.2; ENCY |
-| **Validator authorship and run** | Yes (validators are deterministic). | Domain steward authorship; **periodic audit by Docs steward**. | Atlas §24.7.2; DIRRULES |
-| **Promotion to `PROCESSED` / `CATALOG`** | Yes for non-sensitive routine; **No** for sensitive lanes. | Domain steward **+** Sensitivity reviewer (sensitive lanes). | Atlas §24.7.2 |
-| **Release to `PUBLISHED`** | **No** when materiality applies. | Author **≠** Release authority; **+** Rights-holder representative (where applicable). | Atlas §24.7.2; ENCY |
-| **Sensitive-lane release** | **No.** | Author **+** Sensitivity reviewer **+** Release authority **+** Rights-holder representative. | Atlas §24.7.2; DOM-ARCH; DOM-FAUNA; DOM-PEOPLE |
-| **Correction / rollback** | **No** when correction is steward-significant. | Author / detector **+** Correction reviewer **+** Release authority. | Atlas §24.7.2; ENCY |
-| **AI surface change** (template / policy binding) | **No.** | AI surface steward **+** Docs steward (for policy binding). | Atlas §24.7.2; GAI; UIAI |
-| **Atlas / supplement publication** | **No.** | Docs steward **+** at least one subsystem owner. | Atlas §24.7.2; DIRRULES §15 |
+> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0024` to this exact file. Its source metadata is `draft`, which the index normalizes conservatively to effective status `proposed`. Editing, merging, or validating this Markdown does not accept the decision.
 
 > [!CAUTION]
-> The "**No.**" rows are deny-by-default at **every** maturity level. At M0–M1 they are
-> enforced by review custom; at M2+ they **MUST** be enforced by tooling. There is no
-> maturity level at which a single actor may unilaterally publish a sensitive-lane release.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 6. Maturity ladder — custom → tooling
-
-This ladder operationalizes the Atlas v1.1 §24.7.2 closing note ("separation must be
-enforced through tooling, not custom" as maturity rises). Each lane carries a declared
-maturity level. Promotion up the ladder requires an explicit `ReviewRecord` entry.
-
-```mermaid
-flowchart LR
-    M0["M0 — Bootstrap<br/>single-actor allowed except<br/>sensitive lanes"]
-    M1["M1 — Custom SoD<br/>author ≠ approver enforced<br/>by PR review convention"]
-    M2["M2 — Tooling SoD (sensitive)<br/>CODEOWNERS + branch protection +<br/>schema-level author ≠ approver"]
-    M3["M3 — Tooling SoD (full)<br/>all release / correction / AI / atlas<br/>gates machine-enforced"]
-    M0 -->|"per-lane declaration<br/>+ ReviewRecord"| M1
-    M1 -->|"per-lane declaration<br/>+ ReviewRecord"| M2
-    M2 -->|"release-wide declaration<br/>+ ReviewRecord + ADR amendment"| M3
-    classDef low fill:#fef9c3,stroke:#854d0e,color:#000
-    classDef mid fill:#fed7aa,stroke:#9a3412,color:#000
-    classDef high fill:#bbf7d0,stroke:#166534,color:#000
-    class M0 low
-    class M1,M2 mid
-    class M3 high
-```
-
-| Level | Posture | Enforcement | Applies to | Permitted lanes |
-|---|---|---|---|---|
-| **M0** | Bootstrap. | Honor-system; reviewer reads matrix and applies it. | Non-sensitive routine work pre-PUBLISHED. | All non-sensitive lanes during initial buildout. |
-| **M1** | Custom SoD. | PR review with author ≠ approver enforced by convention; `ReviewRecord` filed. | Non-sensitive `→ PUBLISHED`, non-sensitive corrections. | Non-sensitive lanes after first public release. |
-| **M2** | Tooling SoD for sensitive lanes. | `CODEOWNERS` + branch protection on `release/manifests/<sensitive-lane>/`; `PromotionDecision` schema asserts `author_id ≠ approver_id`; OPA fixture denies collapsed-actor releases. | All sensitive-lane `→ PUBLISHED`, corrections, rollbacks. | Sensitive lanes — **starts here by default.** |
-| **M3** | Tooling SoD for all release-significant gates. | All matrix "No." rows machine-enforced; AI surface changes require `AIReceipt` with `surface_steward_id ≠ docs_steward_id` of the policy binding commit; Atlas / supplement publication enforced by `CODEOWNERS` + branch protection on `docs/atlases/`. | Every release-significant gate in §5. | Goal state for KFM v1+. |
-
-> [!IMPORTANT]
-> **Sensitive lanes start at M2.** They never operate at M0 or M1. This includes:
-> archaeology coordinates, sensitive fauna / flora locations (nests, dens, roosts,
-> hibernacula, spawning sites, rare-species locations), living-person data, DNA / genomic
-> data, critical infrastructure precise locations, and any surface KFM might be read as an
-> alert authority for (hazards, air, hydrology life-safety).
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 7. Enforcement plan
-
-> **Status:** every path, file, and schema field in this section is **PROPOSED** until
-> verified against mounted-repo evidence. The plan is staged so each step is independently
-> reversible.
-
-### 7.1 Schema additions (Appendix A details)
-
-`PromotionDecision`, `ReleaseManifest`, `ReviewRecord`, `CorrectionNotice`, `RollbackCard`,
-and `AIReceipt` gain identity fields sufficient to assert separation. Schema home is
-`schemas/contracts/v1/...` per ADR-0001.
-
-### 7.2 Policy bundles
-
-PROPOSED: a `policy/release/sod.rego` (or equivalent) bundle that:
-
-- Denies a `ReleaseManifest` whose lane is at M1+ and whose `author_id == approver_id`.
-- Denies a sensitive-lane `ReleaseManifest` missing `sensitivity_reviewer_id` or
-  `rights_holder_rep_id` (where applicable).
-- Denies a `CorrectionNotice` at M1+ whose `detector_id == correction_reviewer_id`.
-- Denies an AI surface change at M3 whose `surface_steward_id == policy_binding_commit_author`.
-
-Fail-closed default: if the lane's maturity level is unresolved, the policy denies.
-
-### 7.3 `CODEOWNERS` and branch protection
-
-PROPOSED: at M2, `release/manifests/<sensitive-lane>/` and `policy/sensitivity/` carry
-`CODEOWNERS` lines requiring approval from a sensitivity reviewer disjoint from the PR
-author. At M3, the same protection extends to `release/manifests/`, `release/correction_notices/`,
-`release/rollback_cards/`, `policy/runtime/focus_mode/`, and `docs/atlases/`.
-
-### 7.4 Receipt requirements
-
-PROPOSED: every release-significant decision emits a `ReviewRecord` (governance contract)
-that names the role acting on the gate, not just the person. `RunReceipt` already carries
-`actor`; this ADR proposes a `role` companion field on `ReviewRecord` to make role
-collapse auditable.
-
-### 7.5 Maturity declaration
-
-PROPOSED: a per-lane maturity declaration lives in `control_plane/release_state_register.yaml`
-(or equivalent — Directory Rules §6.2 lists this file). Each lane row carries
-`maturity_level: M0 | M1 | M2 | M3` and a `last_review_record_ref`. Advancing maturity
-requires a `ReviewRecord` signed by the Release authority and Docs steward.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Author as Author<br/>(Domain steward)
-    participant CI as CI / Gates A-F
-    participant Reviewer as Reviewer<br/>(Release authority)
-    participant Sens as Sensitivity reviewer
-    participant Rights as Rights-holder rep
-    participant Manifest as ReleaseManifest
-
-    Author->>CI: Open PR with PromotionDecision
-    CI->>CI: Validate schema, evidence, policy, signatures
-    CI-->>Author: Gate D verify ✓
-    Author->>Reviewer: Request approval
-    Note over Reviewer: At M1+: enforce author_id ≠ approver_id
-    alt Sensitive lane (M2+)
-        Reviewer->>Sens: Require sensitivity review
-        Sens-->>Reviewer: RedactionReceipt + sign-off
-        Reviewer->>Rights: Require rights-holder rep (where applicable)
-        Rights-->>Reviewer: Rights confirmation
-    end
-    Reviewer->>Manifest: Issue ReleaseManifest (Release authority only)
-    Manifest-->>CI: Gate E steward approval ✓
-    CI->>CI: Promote → PUBLISHED
-```
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 8. Consequences
-
-### 8.1 Positive
-
-- **Closes ADR-S-09** (Atlas v1.1 §24.12) and locks the canonical role vocabulary so
-  downstream docs stop drifting in naming.
-- **Makes role collapse auditable.** Every release-significant gate is forced to record
-  the acting role; collapsed-actor releases become detectable rather than invisible.
-- **Aligns with operating-law invariant 9** and the cite-or-abstain default truth posture.
-- **Stages enforcement** so the project does not pay tooling cost ahead of maturity.
-- **Preserves reversibility** — every maturity step is bounded by a `ReviewRecord`, and
-  this ADR carries an explicit rollback plan (§11).
-
-### 8.2 Negative / cost
-
-- **Schema surface grows.** Six contracts pick up new optional-then-required identity
-  fields. Migration is described in Appendix A but is non-trivial.
-- **Review burden rises** for non-sensitive lanes as they cross M0 → M1. The first
-  public release of a non-sensitive lane is the moment that burden lands.
-- **Tooling debt** — `CODEOWNERS`, branch protection, OPA fixtures, schema-level
-  assertions, and signed-receipt verification are not free. The ladder defers but
-  does not eliminate the cost.
-- **Operational dependency on Release authority availability.** A bus-factor of one on
-  Release authority blocks every M1+ release. Mitigation: appoint a backup Release
-  authority in the same review cycle that this ADR is accepted.
-
-### 8.3 Neutral / invariants preserved
-
-- **No canonical root changes.** Directory Rules §2.4 trigger does not fire.
-- **No lifecycle phase changes.** Promotion remains a governed state transition.
-- **No invariant bent.** The trust membrane, watcher-as-non-publisher rule, and
-  cite-or-abstain posture are unchanged.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 9. Alternatives considered
-
-### A. Status quo — informal SoD, no canonical ADR
-
-**Rejected.** Operating-law invariant 9 is doctrine, and the project cannot ship
-sensitive-lane releases (archaeology, DNA, living-person) at any maturity without
-separated duties. Atlas v1.1 §24.7 already calls this out as a PROPOSED ADR; leaving it
-PROPOSED is drift.
-
-### B. Single combined "Release manager" role with no further separation
-
-**Rejected.** Concentrates rights, sensitivity, AI surface, and docs governance into
-one actor and collapses the cite-or-abstain posture into role-internal review. Fails the
-master action matrix in Encyclopedia §10 which already names distinct Steward, Reviewer,
-Policy admin, and Release manager roles.
-
-### C. Tooling-only enforcement from M0 (skip the ladder)
-
-**Rejected.** Pays tooling cost before maturity warrants it; blocks routine bootstrap
-work; risks fragile enforcement (CI gates without policy fixtures, `CODEOWNERS` without
-backup approvers) that fails open in practice.
-
-### D. Custom-only enforcement forever (skip M2 / M3)
-
-**Rejected.** Atlas v1.1 §24.7.2 closing note is explicit — "as maturity rises and the
-public trust surface expands, separation must be enforced through tooling, not custom."
-Custom enforcement under deadline pressure is the canonical failure mode.
-
-### E. Per-domain SoD policies instead of a global matrix
-
-**Rejected.** Multiplies the surface area, breaks the consolidated audit story, and
-re-creates the very fragmentation Atlas v1.1 §24.7 was written to consolidate. Per-domain
-nuance is captured in the matrix's sensitive-lane rows and in the rights-holder
-representative requirement, not in parallel policies.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 10. Validation plan
-
-> All test paths are **PROPOSED**.
-
-| Test | Fixture | Expected outcome |
-|---|---|---|
-| `PromotionDecision` with `author_id == approver_id`, lane at M0. | non-sensitive lane M0 fixture | `ALLOW` (single-actor permitted at M0). |
-| Same, lane at M1. | non-sensitive lane M1 fixture | `DENY` reason `AUTHOR_APPROVER_COLLAPSE`. |
-| Sensitive-lane `ReleaseManifest` missing `sensitivity_reviewer_id`. | sensitive lane M2 fixture | `DENY` reason `SENSITIVITY_REVIEWER_MISSING`. |
-| Sensitive-lane `ReleaseManifest` missing `rights_holder_rep_id` (archaeology). | archaeology fixture | `DENY` reason `RIGHTS_HOLDER_REP_MISSING`. |
-| `CorrectionNotice` at M1+ with `detector_id == correction_reviewer_id`. | correction fixture | `DENY` reason `CORRECTION_REVIEWER_COLLAPSE`. |
-| AI surface change at M3 with `surface_steward_id == policy_binding_commit_author`. | AI surface fixture | `DENY` reason `AI_SURFACE_STEWARD_COLLAPSE`. |
-| `ReleaseManifest` with lane maturity unresolved. | unresolved-maturity fixture | `DENY` reason `LANE_MATURITY_UNRESOLVED` (fail-closed). |
-| `ReleaseManifest` at M0 non-sensitive, all roles distinct. | green-path fixture | `ALLOW`. |
-
-> [!TIP]
-> Negative tests (the `DENY` rows above) are the load-bearing ones. Per Encyclopedia §10
-> and the Unified Manual §4.6, **a proof slice is incomplete if it only demonstrates
-> happy-path publication.** This ADR follows that posture explicitly.
-
-[↑ Back to top](#quick-navigation)
-
----
-
-## 11. Rollback plan
-
-If this ADR is found to over-rotate the project — for example, if the schema additions
-prove too costly, or the ladder turns out to misclassify a lane — rollback is staged.
-
-1. **Status flip.** This ADR's `status` moves from `accepted` (when reached) back to
-   `proposed`, with a `superseded_by` link to the replacing ADR. The role vocabulary in §4
-   **MUST NOT** be silently abandoned; it survives the rollback as documentary lineage.
-2. **Schema fields kept optional.** If schema additions roll back, the fields stay in the
-   contracts as deprecated/optional, with a drift entry in `docs/registers/DRIFT_REGISTER.md`
-   per Directory Rules §13.
-3. **Policy bundle disable.** `policy/release/sod.rego` is moved to `policy/release/_disabled/`
-   (or equivalent) with a rollback note. The bundle is not deleted; deletion is a separate
-   ADR.
-4. **`CODEOWNERS` revert.** The `CODEOWNERS` and branch-protection lines added by this ADR
-   are reverted in a single PR with the rollback ADR cited.
-5. **Maturity downgrade is forbidden by default.** A lane that has reached M2 or M3 is not
-   downgraded by this rollback; downgrading any lane requires its own `ReviewRecord` and
-   ADR.
+> **The repository does not currently enforce release separation of duties.** `PromotionDecision` records a reviewer string and ticket but no proposer/approver identity split. `ReviewRecord` has no actor identity. `ReleaseManifest`, `CorrectionNotice`, and `RollbackCard` are thin proposed schemas. The release policy root is a stub, the SoD policy file is absent, and the review validator raises `NotImplementedError`.
 
 > [!WARNING]
-> Rolling back this ADR **does not** loosen the doctrinal requirement that sensitive-lane
-> releases use separated duties. That requirement is operating-law invariant 9, which sits
-> above any individual ADR. The rollback only retracts the specific role vocabulary, matrix,
-> ladder, and enforcement plan; another ADR must take their place.
+> **Different labels do not prove different people.** A person may hold multiple roles, use multiple accounts, or trigger automation. SoD cannot be proven by `author_id != approver_id` string comparison alone. The validator must resolve aliases to a governed actor identity, verify current role/authority assignments, bind each review to the exact subject and version, and reject bots or generated text as accountable approvers.
 
-[↑ Back to top](#quick-navigation)
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Terms](#proposed-role-and-identity-model) · [Matrix](#proposed-separation-matrix) · [Maturity](#proposed-control-maturity) · [Authority](#authority-and-publication-boundary) · [Evidence packet](#proposed-review-and-release-evidence-packet) · [Outcomes](#proposed-validation-and-finite-outcomes) · [Current evidence](#current-repository-evidence) · [Enforcement](#current-enforcement-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Emergency](#emergency-containment-exception) · [Rollback](#rollback-and-supersession) · [Checklist](#verification-checklist) · [References](#references) · [History](#revision-history)
 
 ---
 
-## 12. Open questions / NEEDS VERIFICATION
+<a id="status"></a>
 
-These items are explicitly **not resolved** by this ADR and SHOULD be tracked in
-`docs/registers/VERIFICATION_BACKLOG.md`:
+## Status
 
-- **NEEDS VERIFICATION.** Whether `release/manifests/`, `release/correction_notices/`, and
-  `release/rollback_cards/` exist in the mounted repo, and whether `CODEOWNERS` lives at
-  repo root or under `.github/`.
-- **NEEDS VERIFICATION.** Whether `PromotionDecision`, `ReleaseManifest`, `ReviewRecord`,
-  `CorrectionNotice`, `RollbackCard`, and `AIReceipt` JSON Schemas currently exist under
-  `schemas/contracts/v1/...` and what identity fields they already carry.
-- **NEEDS VERIFICATION.** Whether `control_plane/release_state_register.yaml` exists and
-  what its current shape is.
-- **NEEDS VERIFICATION.** Whether `policy/release/` exists as a canonical home, and
-  whether a `policy/release/sod.rego` (or equivalent name) already exists.
-- **NEEDS VERIFICATION.** The acceptable backup-Release-authority count for the project at
-  this stage (one is too few; two is the proposed minimum).
-- **OPEN.** Operational definition of "Rights-holder representative" for sovereign data —
-  does the project accept a designated representative role, an external attestation, or
-  both?
-- **OPEN.** Whether the AI surface change matrix row should require a third actor
-  (a sensitivity reviewer) for any Focus Mode template that touches sensitive lanes.
-- **OPEN.** Whether `ReviewRecord` should be promoted from `schemas/contracts/v1/governance/`
-  (per current Whole-UI report) into `schemas/contracts/v1/release/` for release-relevant
-  rows. Defer to a paired ADR.
-- **OPEN.** Whether the maturity ladder should support per-domain overrides at M2 (e.g.,
-  fauna at M2 while flora is still at M1) or whether M2 is always project-wide for the
-  matching lane class.
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0024` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0024-steward-separation-of-duties-for-release.md` |
+| **Source metadata** | `draft` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Release review, actor identity, authority assignment, sensitive release, correction, rollback, and public-access control |
+| **Current repository posture** | Guidance/scaffolds and explicit workflow holds; no governed release ReviewRecord or executable SoD validator |
+| **Implementation effect of this revision** | Documentation only |
+| **Release/publication effect** | None |
+| **Supersedes / superseded by** | None / none |
+| **Atlas backlog relationship** | Addresses ADR-S-09; does not close it until accepted and tracked accordingly |
 
-[↑ Back to top](#quick-navigation)
+### Acceptance versus implementation graduation
+
+Two independent states must remain visible:
+
+1. **ADR acceptance** would approve the role, identity, review, and control-maturity model.
+2. **Implementation graduation** would require accepted actor/role contracts, closed schemas, fixtures, real validators, policy, independent reviewer availability, repository rules, release integration, signed or otherwise integrity-bound review records, and observed failure-closed behavior.
+
+An accepted ADR without enforcement is doctrine. Multiple comments, labels, GitHub accounts, bots, or files without verified actor/authority resolution are not independent review.
+
+[Back to top](#top)
 
 ---
 
-## Related docs
+<a id="evidence-boundary"></a>
 
-- [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — schema home; this ADR's
-  `PromotionDecision` / `ReleaseManifest` / `ReviewRecord` field additions land under it.
-- [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — §2.4 ADR template,
-  §2.1 authority order, §6.2 `control_plane/` (where `release_state_register.yaml` lives),
-  §15 README contract.
-- [`../governance/README.md`](../governance/README.md) — roles, review burden, separation
-  of duties (per Directory Rules §5). _PROPOSED — verify presence._
-- [`../architecture/governed-api.md`](../architecture/governed-api.md) — trust-membrane
-  context for the release path. _PROPOSED — verify presence._
-- [`../registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — open
-  items from §12 land here.
-- [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — destination for any
-  drift surfaced during the staged enforcement work.
-- **Atlas v1.1 §24.7** (Master Reviewer Role and Separation-of-Duties Matrix) — doctrinal
-  source for §4 and §5 of this ADR. _CONFIRMED in attached project documents._
-- **Atlas v1.1 §24.12** — backlog item **ADR-S-09** closed by this ADR.
-- **KFM Encyclopedia §10** (Master Action Matrix) — companion role-by-action view.
+## Evidence boundary
 
-[↑ Back to top](#quick-navigation)
+This revision uses repository bytes at `main@9e9d2a6ad1d3a776f0cf699930942c5fef2ee30b` plus the supplied KFM Atlas and Encyclopedia as design lineage.
+
+| Evidence surface | CONFIRMED current state | What remains unproved |
+|---|---|---|
+| ADR inventory | Exact ADR ID/path; source `draft`; effective `proposed` | Acceptance |
+| Atlas/Encyclopedia | Reviewer/SoD matrix and distinct action roles are proposed design lineage | Repository policy, actor assignments, or enforcement |
+| CODEOWNERS | All affected roots route to `@bartytime4life`; file disclaims stewardship and SoD proof | Required review, branch rules, independent approver, quorum |
+| `PromotionDecision` | Closed schema with reviewer string/ticket and `APPROVE|DENY|ABSTAIN` | Proposer identity, role assignment, independent approval |
+| `ReviewRecord` | Closed proposed schema and one valid/invalid fixture pair | Semantic contract, actor identity, subject version binding, SoD policy |
+| Release/correction/rollback schemas | ReleaseManifest and RollbackCard are thin stubs; CorrectionNotice is empty/open scaffold | Operational release, correction, or rollback review |
+| AIReceipt | Closed runtime shape with no release-review actor fields | AI-surface change approval or human SoD |
+| Release review lanes | README guidance exists; promotion workflow asserts no governed review record exists | Accountable review instances or release authority |
+| Release signatures | Reviewer-signoff packet lane exists | Cryptographic artifact-signature profile or artifact binding |
+| Release-state register | Empty proposed register describing reviewers and rollback targets | Lane maturity declarations or accepted state machine |
+| Release policy | `policy/release/README.md` is a greenfield stub; `policy/release/sod.rego` absent | Executable SoD policy |
+| Promotion workflow | Read-only readiness and hold checks exist | Promotion, signing, review, release, rollback, publication |
+
+### Truth labels
+
+- **CONFIRMED** — verified from current repository bytes or supplied doctrine lineage.
+- **PROPOSED** — candidate decision, role, profile, field, policy, path role, or enforcement target.
+- **CONFLICTED** — current sources assign incompatible vocabulary, shape, state, or authority.
+- **NEEDS VERIFICATION** — a concrete check remains open.
+- **UNKNOWN** — available evidence is insufficient.
+- **HOLD** — current readiness evidence intentionally blocks graduation.
+
+[Back to top](#top)
 
 ---
 
-## Appendix A — Required object additions
+<a id="context"></a>
 
-<details>
-<summary><strong>Schema-level identity fields (PROPOSED)</strong></summary>
+## Context
 
-> All field placements assume **ADR-0001** (`schemas/contracts/v1/...` as canonical
-> machine-schema home). All paths PROPOSED until repo-verified. Names are illustrative
-> JSON Schema field names; final naming is subject to schema-steward review.
+KFM publication can expose evidence-backed claims, maps, PMTiles/COGs, APIs, exports, stories, AI-facing surfaces, and sensitive spatial relationships. The same actor who creates a candidate may be motivated, rushed, mistaken, or conflicted when evaluating its evidence, rights, sensitivity, policy, release, correction, or rollback posture.
 
-| Object | Existing identity fields (CONFIRMED at doctrine layer) | Proposed additions | Rationale |
+The supplied Atlas identifies reviewer separation as an ADR threshold question, and the Encyclopedia separates steward, domain editor, reviewer, policy admin, release manager, developer, and AI duties. Those sources support the design direction, while the live repository determines current maturity.
+
+The lifecycle remains:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+Promotion is a governed state transition, not a merge, file move, upload, schema pass, signature packet, generated summary, or administrator action.
+
+### Failures this ADR addresses
+
+- self-approval of a release candidate;
+- one person acting under two labels and being counted twice;
+- a bot or AI being treated as an accountable reviewer;
+- review attached to the wrong subject, version, digest, or release scope;
+- stale, revoked, or unverified role assignments;
+- sensitivity or rights review performed by the release author;
+- correction/rollback approved solely by the detector or original publisher;
+- public aliases, policies, or trust roots changed without independent review;
+- emergency containment becoming permanent unreviewed release state;
+- CODEOWNERS routing being mistaken for completed review.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-decision"></a>
+
+## Proposed decision
+
+Upon acceptance and implementation graduation:
+
+1. **Every release-significant action must produce independently attributable review evidence.**
+2. **Actor identity is primary.** Reviewers, authors, operators, and approvers must resolve to stable governed actor identities. Usernames, email strings, display names, role labels, certificates, or bot names alone are insufficient.
+3. **Role authority must be current and scoped.** A reviewer must have a valid authority assignment for the action, domain, sensitivity class, and time of review.
+4. **Subject binding is mandatory.** Review evidence must bind to the exact candidate, digest/spec hash, release scope, policy set, and version reviewed.
+5. **No self-approval for public release.** The actor who authored, assembled, materially transformed, or submitted a release candidate must not be the sole actor authorizing its transition to `PUBLISHED` or a public alias.
+6. **Sensitive and rights-constrained release requires additional independent roles.** Sensitivity and rights/sovereignty review must be separate from the author and release approver when applicable.
+7. **Correction and rollback remain independently reviewed.** The detector/requestor and original publisher cannot be the sole correction/rollback approver.
+8. **Automation is evidence, not authority.** CI, policy engines, validators, signers, AI, and bots may produce checks, receipts, or recommendations; they cannot substitute for an accountable human approval where this ADR requires one.
+9. **Missing independence fails closed.** When qualified independent reviewers or verifiable assignments are unavailable, the result is `HOLD`, not self-approval.
+10. **The review graph, not one object, proves SoD.** PromotionDecision, ReviewRecord, ReleaseManifest, signature packets, correction/rollback records, and receipts must cross-reference one governed subject and be evaluated together.
+11. **High-risk withdrawals may use the emergency containment exception below, but restoration or re-release always requires independent review.**
+
+### Normative language boundary
+
+`MUST`, `MUST NOT`, `SHOULD`, and `MAY` describe the proposed accepted state. They do not describe current repository enforcement.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-role-and-identity-model"></a>
+
+## Proposed role and identity model
+
+### Candidate role vocabulary
+
+The names below preserve Atlas lineage while aligning with current repository terms. Acceptance would make the meanings authoritative for this decision; it would not by itself assign a person to a role.
+
+| Role | Responsibility | Independence trigger |
+|---|---|---|
+| **Source steward** | Source admission, source role, terms, provenance, activation/retirement | Unresolved rights, authority, source-role, or sovereignty |
+| **Domain/data steward** | Candidate meaning, transformations, domain validation, release assembly input | Cannot solely approve own public release candidate |
+| **Evidence reviewer** | EvidenceRef resolution, EvidenceBundle sufficiency, citation/claim support | Material public claims or evidence conflict |
+| **Sensitivity reviewer** | Redaction, generalization, precision, access tier, harmful inference | Sensitive spatial, living-person, ecology, archaeology, infrastructure, DNA |
+| **Rights/sovereignty representative** | Consent, sovereignty, cultural authority, redistribution constraints | Sovereign, cultural, consent-based, or unclear-rights release |
+| **Policy reviewer/admin** | Policy meaning, deny/restrict rules, policy bundle review | Release-enabling policy or policy exception |
+| **Release authority** | Accountable final release decision and public-state transition | Every `PUBLISHED` or public-alias transition |
+| **Correction reviewer** | Correction, withdrawal, supersession, public notice | Steward-significant correction or disputed release |
+| **Rollback authority/reviewer** | Rollback target, execution authorization, verification | Rollback or restoration of public state |
+| **AI surface steward** | Public AI templates, evidence binding, policy integration | Public/policy-significant AI surface change |
+| **Docs/architecture steward** | ADR/doctrine integrity and control-plane documentation | Decision status, doctrine publication, cross-root governance |
+| **Automation actor** | CI, validator, policy, signer, deployment execution | Never satisfies required accountable human approval by itself |
+
+A person may hold multiple roles, but one actor still counts once for independence. The same human using multiple accounts or credentials also counts once after identity resolution.
+
+### Actor and authority evidence
+
+A conforming implementation needs accepted semantic/machine profiles for:
+
+- stable `actor_ref` and alias resolution;
+- human, service, bot, and external-representative actor classes;
+- role/authority assignment with scope, issuer, effective time, expiry/revocation, and evidence;
+- conflict-of-interest or recusal status where required;
+- reviewer independence requirements for an action class;
+- review subject identity and version/digest binding;
+- accountable signature or integrity binding over the review record;
+- correction and supersession of actor/role records.
+
+This ADR does not assign exact file paths until Directory Rules and adjacent contract decisions are reviewed. It must not create a parallel identity, governance, or release home by convenience.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-separation-matrix"></a>
+
+## Proposed separation matrix
+
+| Action | Minimum independent evidence | Required result when missing |
+|---|---|---|
+| Routine source admission with clear public rights | Source steward review; author may be steward at low control maturity | `HOLD` on unresolved authority/rights |
+| Source admission with sovereignty, consent, or unclear rights | Source steward + independent rights/sovereignty representative | `DENY` or `HOLD` |
+| Routine non-sensitive normalization/validation | Deterministic checks; periodic independent audit | `ERROR`/`HOLD` if checks unavailable |
+| Sensitivity-relevant transform | Author/domain steward + independent sensitivity reviewer | `DENY` or `HOLD` |
+| Promotion to PROCESSED/CATALOG for sensitive material | Domain/data steward + independent sensitivity/policy review | `HOLD` |
+| Public release or public alias transition | Candidate author/assembler distinct from release authority; evidence/policy reviews resolve | `DENY` or `HOLD` |
+| Sensitive-lane public release | Author + independent sensitivity reviewer + release authority + rights/sovereignty representative where applicable | `DENY` or `HOLD` |
+| Release-enabling policy/schema/validator/trust-root change | Implementer distinct from policy/security approver; release impact reviewed | `HOLD` |
+| Correction, withdrawal, or supersession | Detector/requestor + independent correction reviewer + release authority when public state changes | `HOLD` |
+| Rollback execution | Requestor/operator distinct from rollback/release authority; target independently validated | `HOLD` |
+| Restore or re-release after incident/withdrawal | New independent review and release decision; emergency operator cannot self-restore | `DENY` or `HOLD` |
+| Public AI surface or policy-binding change | AI surface steward + independent policy/docs review; sensitivity reviewer where affected | `HOLD` |
+| ADR acceptance or doctrine publication affecting release | Docs/architecture steward + affected subsystem/release reviewer | Remains `proposed`/unpublished |
+
+### Independence constraints
+
+A review set passes only when all required constraints hold:
+
+```text
+resolved(author.actor_ref) != resolved(required_approver.actor_ref)
+required_approver.authority is active and scoped to subject/action
+review.subject_ref + subject_digest match the evaluated candidate
+review occurs after or against the exact reviewed version
+review is not revoked, superseded, expired, or recused
+required human roles are not replaced by automation
+```
+
+A simple comparison of unverified strings is not sufficient.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-control-maturity"></a>
+
+## Proposed control maturity
+
+The old ADR's M0–M3 idea is retained but corrected: maturity describes **control capability**, not permission to bypass high-risk review.
+
+| Level | Control posture | Permitted scope | Public-release consequence |
 |---|---|---|---|
-| `PromotionDecision` | `decision_id`, `candidate_ref`, `reviewer`, `outcome`, `rollback_target`, `reasons` | `author_id`, `approver_id`, `approver_role`, `lane_maturity_level` | Allows `author_id ≠ approver_id` assertion at M1+; allows lane-aware policy fixtures. |
-| `ReleaseManifest` | `release_state`, `spec_hash`, `policy_label`, `rights_status`, `sensitivity`, `evidence_refs`, `artifacts`, `rollback` | `author_id`, `release_authority_id`, `sensitivity_reviewer_id` (sensitive lanes), `rights_holder_rep_id` (where applicable), `lane_maturity_level` | Required for sensitive-lane release; required for M1+ on all `→ PUBLISHED`. |
-| `ReviewRecord` | _(governance contract — exact fields NEEDS VERIFICATION)_ | `role` (canonical role from §4), `lane_id`, `maturity_level_observed` | Makes role collapse detectable; pairs each record with the lane's declared maturity. |
-| `CorrectionNotice` | _(release contract — exact fields NEEDS VERIFICATION)_ | `detector_id`, `correction_reviewer_id`, `release_authority_id` | Required for M1+ corrections; required always for steward-significant corrections. |
-| `RollbackCard` | _(release contract — exact fields NEEDS VERIFICATION)_ | `requestor_id`, `release_authority_id` | `release_authority_id ≠ requestor_id` for M1+ rollback. |
-| `AIReceipt` | _(runtime contract — carries focus-mode template, evidence refs, outcome)_ | `surface_steward_id` (for AI surface change receipts), `policy_binding_commit_author_id` | At M3, asserts `surface_steward_id ≠ policy_binding_commit_author_id`. |
+| **M0 — Candidate-only bootstrap** | Documentation, schemas, fixtures, candidates, local checks; no independent release evidence | Non-public development and review preparation | No governed public release; result `HOLD` |
+| **M1 — Recorded manual independence** | Independent human review recorded and subject-bound; identity/authority checked manually | Low-risk non-sensitive release pilots | Conditional release only with complete manual packet and accountable decision |
+| **M2 — Machine-enforced high-risk SoD** | Actor/role resolution, policy, negative fixtures, required-review rules, and release gate enforce independence | Sensitive, rights-constrained, corrective, rollback, public-alias, trust-root changes | Minimum required level for these release classes |
+| **M3 — Machine-enforced comprehensive SoD** | All release-significant matrix rows, recusal, revocation, audit, and organizational controls enforced | Repository-wide governed release | Goal state; still requires accountable humans |
 
-**Migration discipline.** Per Directory Rules §14.3, adding identity fields is a
-content-bearing change; schema version bumps and compatibility-map fixtures are required.
-The proposed sequence:
+### Graduation rules
 
-1. Land the new fields as **optional** with a default of `null` at the same schema version.
-2. Add the policy bundle in **observe-only** mode (warn, don't deny) and let it run for one
-   full release cycle.
-3. Promote the fields to **required at M1+** in a schema minor version bump.
-4. Flip the policy bundle to **deny** mode in a paired PR with `CODEOWNERS` and branch
-   protection updates.
+- Maturity is declared per release/control profile, not inferred from a README or green check.
+- Advancement requires a reviewed evidence packet and cannot be self-approved by the implementation author.
+- A profile that cannot prove its level falls back to the lower verified level.
+- Sensitive or rights-constrained public release requires M2; before M2 it remains held.
+- Maturity may not be downgraded merely to make a blocked release pass.
+- `control_plane/release_state_register.yaml` currently has no entries or maturity shape; this ADR does not claim it is the accepted maturity registry.
 
-</details>
-
-[↑ Back to top](#quick-navigation)
+[Back to top](#top)
 
 ---
 
-## Appendix B — Reviewer checklist
+<a id="authority-and-publication-boundary"></a>
 
-<details>
-<summary><strong>Pre-merge checklist for this ADR</strong></summary>
+## Authority and publication boundary
 
-- [ ] **Role vocabulary unchanged from Atlas v1.1 §24.7.1.** No silent renames into generic
-      industry language.
-- [ ] **Matrix rows unchanged from Atlas v1.1 §24.7.2.** Any nuance lives in the maturity
-      ladder, not in row edits.
-- [ ] **Sensitive-lane deny-by-default preserved.** No matrix row makes a sensitive-lane
-      release loosely available.
-- [ ] **Maturity ladder anchored to `ReviewRecord` for every promotion.** No silent
-      maturity advancement.
-- [ ] **Trust-membrane invariant preserved.** Public clients still consume governed
-      interfaces; this ADR does not bend Directory Rules §3.
-- [ ] **Lifecycle invariant preserved.** Promotion is still a governed state transition.
-- [ ] **No new canonical or compatibility root introduced.** Directory Rules §2.4 not
-      triggered.
-- [ ] **Schema home respected.** All proposed schema changes under
-      `schemas/contracts/v1/...` per ADR-0001.
-- [ ] **ADR template fields complete** (id, title, status, date, context, decision,
-      consequences, alternatives). _Status currently `proposed`._
-- [ ] **Closes ADR-S-09** in Atlas v1.1 §24.12; backlog entry will be marked closed on
-      acceptance.
-- [ ] **Rollback plan filed.** §11 covers status, schemas, policy, `CODEOWNERS`,
-      maturity.
-- [ ] **CODEOWNERS line for `docs/adr/` exists** (or this ADR's acceptance flags its
-      absence in `DRIFT_REGISTER.md`).
-- [ ] **Reviewers required for acceptance:** Release authority **+** Docs steward
-      **+** at least one Domain steward; **MUST** include a Sensitivity reviewer if any
-      sensitive lane is moved to M2 in the same review cycle.
+Separation of duties is necessary but not sufficient. Independent approval does not replace:
 
-</details>
+- EvidenceBundle closure;
+- source/rights/sensitivity decisions;
+- schema and semantic validation;
+- policy evaluation;
+- artifact integrity and signatures;
+- PromotionDecision and ReleaseManifest;
+- correction, withdrawal, supersession, and rollback targets;
+- public-client trust membrane controls.
 
-[↑ Back to top](#quick-navigation)
+Likewise, CODEOWNERS, branch protection, GitHub approval, a signature packet, or a policy result cannot independently create release authority. Each is one control surface whose evidence must join the governed release packet.
+
+A public release may proceed only from approved released artifacts and interfaces. No direct RAW, WORK, QUARANTINE, internal catalog/proof/receipt, candidate, or model-output path is authorized by this ADR.
+
+[Back to top](#top)
 
 ---
 
-_Last updated: 2026-05-15 · Status: `proposed` · Closes [ADR-S-09](../doctrine/directory-rules.md) (Atlas v1.1 §24.12) · Pairs with [ADR-0001](./ADR-0001-schema-home.md) · [↑ Back to top](#quick-navigation)_
+<a id="proposed-review-and-release-evidence-packet"></a>
+
+## Proposed review and release evidence packet
+
+A future release packet should resolve, without collapsing their meanings:
+
+1. candidate/artifact identity and immutable digest/spec hash;
+2. submitting/authoring actor and relevant producer receipts;
+3. source, evidence, rights, sensitivity, and policy records;
+4. independent ReviewRecord(s) bound to the exact subject/version;
+5. reviewer actor identity and current role/authority assignment;
+6. recusal/conflict statements where policy requires them;
+7. PromotionDecision referencing review and support records;
+8. ReleaseManifest referencing the exact artifacts and decision;
+9. reviewer signature packet or machine signature where separately required;
+10. correction, withdrawal, supersession, rollback, and public-alias targets;
+11. SoD validation result and reason codes;
+12. execution receipt proving the approved transition was the transition performed.
+
+### Schema responsibility guidance
+
+Do not duplicate every actor field into every object. Prefer explicit references and join validation:
+
+- `ReviewRecord` owns individual review action, actor, role, subject binding, decision, and time.
+- `PromotionDecision` owns the accountable promotion outcome and references required reviews.
+- `ReleaseManifest` owns release scope and references the decision/reviews/artifacts.
+- `CorrectionNotice` and `RollbackCard` reference independent review/decision records.
+- `AIReceipt` remains runtime process memory; public AI-surface governance needs a separate review/decision reference rather than turning an AI receipt into approval.
+
+Exact field names and homes remain contract/schema decisions. The current ReviewRecord semantic contract path is missing and must be resolved before schema expansion.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-validation-and-finite-outcomes"></a>
+
+## Proposed validation and finite outcomes
+
+SoD validation is a prerequisite report, not a PromotionDecision.
+
+| Outcome | Meaning |
+|---|---|
+| `PASS` | Required independent actors, authority, subject binding, and review evidence resolve |
+| `DENY` | Known actor collapse, unauthorized approver, bot substitution, revoked assignment, or prohibited self-approval |
+| `HOLD` | Required reviewer, authority assignment, rights/sensitivity decision, or complete evidence packet is unavailable |
+| `ERROR` | Identity resolver, policy engine, schema, signature, storage, or validator failed |
+
+`ERROR` and `HOLD` never become `PASS` by timeout, comment, or administrator override without a governed replacement decision.
+
+### Minimum reason-code families
+
+- `actor_identity_unresolved`
+- `actor_alias_collapse`
+- `author_approver_collapse`
+- `required_role_missing`
+- `authority_assignment_missing`
+- `authority_assignment_expired_or_revoked`
+- `review_subject_mismatch`
+- `review_version_or_digest_mismatch`
+- `review_precedes_subject_version`
+- `review_revoked_or_superseded`
+- `automation_cannot_approve`
+- `sensitivity_review_missing`
+- `rights_or_sovereignty_review_missing`
+- `correction_reviewer_collapse`
+- `rollback_authority_collapse`
+- `release_authority_missing`
+- `control_maturity_unverified`
+- `emergency_containment_review_due`
+
+### Required negative fixtures
+
+At minimum:
+
+- same actor under two role labels;
+- same human through two accounts/aliases;
+- bot/AI listed as release approver;
+- actor assignment missing, expired, revoked, or out of scope;
+- review bound to old candidate version/digest;
+- review copied across domains or releases;
+- author also sole release authority;
+- sensitive release missing sensitivity review;
+- archaeology/sovereign/consent release missing rights representative;
+- detector self-approves correction;
+- rollback requestor self-approves rollback;
+- emergency operator restores release without independent review;
+- CODEOWNERS approval present but governed review record absent;
+- required reviewer unavailable in a single-maintainer repository;
+- complete green path with distinct verified actors and subject binding.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-evidence"></a>
+
+## Current repository evidence
+
+| Surface | Current verified state | Safe conclusion |
+|---|---|---|
+| ADR-0024 | Exact file, source `draft`, effective `proposed` | Decision not accepted |
+| CODEOWNERS | One account owns all relevant roots; comments explicitly disclaim SoD proof | No independent reviewer route established |
+| PromotionDecision schema | Has reviewer string/ticket; no proposer/approver actor model | Shape cannot prove SoD |
+| ReviewRecord schema | Requires review ID, subject ref, coarse role, decision, reasons, obligations, time | No actor identity, authority assignment, version/digest binding, recusal, or signature |
+| ReviewRecord fixtures | One minimal valid and one missing-ID invalid case | No SoD fixture coverage |
+| ReviewRecord contract | Declared path not found | Semantic authority missing |
+| ReviewRecord validator | Raises `NotImplementedError` | No executable review/SoD validation |
+| ReleaseManifest schema | Requires only `id`; extra properties allowed | No release-grade review fields |
+| CorrectionNotice schema | Empty open scaffold | No correction-review enforcement |
+| RollbackCard schema | Requires only `id`; extra properties allowed | No rollback-review enforcement |
+| AIReceipt schema | Runtime receipt with no governance actor fields | Cannot prove AI-surface change SoD |
+| release/reviews | Guidance plus atmosphere README/marker only | Promotion workflow confirms no governed ReviewRecord |
+| release/promotion_decisions | Draft guidance and hydrology smoke sublane | No accountable release decision maturity |
+| release/signatures | Reviewer signoff guidance and one draft packet | Not final approval or independent actor proof |
+| release-state register | `entries: []`; no maturity field | No declared lane maturity |
+| policy/release | README stub; SoD policy absent | No executable release SoD policy |
+| promotion workflow | Read-only checks, placeholder validators, unresolved smoke refs, explicit hold | No promotion/release/publication authority |
+
+[Back to top](#top)
+
+---
+
+<a id="current-enforcement-maturity"></a>
+
+## Current enforcement maturity
+
+| Capability | Current state |
+|---|---|
+| ADR identity/status | `CONFIRMED / proposed` |
+| Role vocabulary | Doctrine/design lineage; not accepted repository contract |
+| Actor identity/alias resolution | `UNKNOWN` |
+| Stewardship/authority assignment | `UNKNOWN` |
+| ReviewRecord semantic contract | Missing at declared path |
+| ReviewRecord schema | Proposed shape only |
+| ReviewRecord fixtures | Minimal schema cases only |
+| ReviewRecord validator | Placeholder |
+| SoD policy | Absent at checked path |
+| Lane maturity registry | Empty proposed register; no accepted profile |
+| Independent CODEOWNERS route | Not established |
+| Required branch review/rulesets | `NEEDS VERIFICATION` |
+| Governed release ReviewRecords | None confirmed by workflow |
+| Promotion/release integration | `WORKFLOW_HOLD` |
+| Sensitive-release two-person enforcement | Not established |
+| Correction/rollback SoD | Not established |
+| Production release/publication proof | None |
+
+**Overall maturity: `M0 / HOLD`.** Candidate and documentation work may proceed, but no current evidence supports a claim of governed independent release approval.
+
+[Back to top](#top)
+
+---
+
+<a id="implementation-and-convergence-plan"></a>
+
+## Implementation and convergence plan
+
+Implement in small, dependency-ordered, reversible slices:
+
+1. **Review/accept or revise ADR-0024.** Do not let implementation artifacts accept it by implication.
+2. **Define actor identity and authority assignment.** Include aliases, actor class, scope, effective time, revocation, and issuer.
+3. **Create/fix the ReviewRecord semantic contract.** Align the declared contract path or migrate through an ADR-backed path decision.
+4. **Version the ReviewRecord schema and fixtures.** Add actor/role/subject/version/authority references and negative cases.
+5. **Implement the ReviewRecord/SoD validator.** Local/offline-capable core checks, stable outcomes/reason codes, no release side effects.
+6. **Define release-review policy.** Select the accepted policy home; begin observe-only only when reports are auditable, then deny mode through reviewed change.
+7. **Reconcile release objects.** PromotionDecision, ReleaseManifest, correction, rollback, AI-surface review, and signature packets reference the governed review graph without duplicating authority.
+8. **Establish independent reviewer capacity.** At least two qualified human actors for each required action class; otherwise release remains held.
+9. **Wire repository controls.** CODEOWNERS/rulesets/required reviews supplement, but do not replace, governed records.
+10. **Declare and validate control maturity.** Use an accepted registry/profile, not inferred README state.
+11. **Wire promotion and release.** Validate exact subject digests, actor independence, policy, evidence, release, correction, and rollback before mutation.
+12. **Exercise negative paths and drills.** Sensitive release, policy change, correction, rollback, emergency containment, alias restoration.
+13. **Graduate only on observed evidence.** Current workflow hold is replaced only by real governed records and deterministic tests.
+
+### Documentation obligations
+
+When behavior changes, update this ADR or an accepted successor, the ADR index if status/supersession changes, contracts, schemas, policy docs, release/review READMEs, runbooks, registers, and test/fixture documentation together.
+
+[Back to top](#top)
+
+---
+
+<a id="acceptance-gates"></a>
+
+## Acceptance gates
+
+- [ ] Architecture, release, governance/review, affected domain, evidence, policy/sensitivity, rights, correction/rollback, validation, security, and docs reviewers approve the proposed model.
+- [ ] Role names and their mapping to current repository terms are agreed without claiming current assignments.
+- [ ] Release-significant action classes and required independent roles are explicit.
+- [ ] Actor identity and alias-resolution dependency is accepted or explicitly bounded.
+- [ ] Automation/AI non-approval rule is explicit.
+- [ ] Subject/version/digest binding is mandatory.
+- [ ] M0–M3 is accepted as control maturity, not permission to bypass sensitive review.
+- [ ] Sensitive and rights-constrained public release requires at least M2.
+- [ ] Emergency containment cannot authorize restoration/re-release.
+- [ ] Current single-account CODEOWNERS posture is recorded as insufficient for independent approval.
+- [ ] The missing ReviewRecord contract and absent policy/validator are explicit implementation dependencies.
+- [ ] No statement claims current release, review, SoD, rollback, or publication capability.
+
+Implementation graduation additionally requires:
+
+- [ ] accepted actor/authority and ReviewRecord contracts/schemas;
+- [ ] non-empty SoD valid/invalid fixtures;
+- [ ] real validator and policy with stable reason codes;
+- [ ] independent qualified human actors and tested review routing;
+- [ ] subject-bound review evidence referenced from promotion/release records;
+- [ ] branch/ruleset and governance-record parity tests;
+- [ ] sensitive-release, correction, rollback, and emergency drills;
+- [ ] observed fail-closed behavior and no unauthorized public mutation.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- Makes self-approval and role collapse detectable.
+- Preserves Atlas/Encyclopedia design lineage without turning planning tables into implementation fact.
+- Separates actor identity, role authority, review action, decision, manifest, execution, and receipt.
+- Prevents bots, AI, CODEOWNERS, or string inequality from masquerading as independent review.
+- Provides a staged path from documentation-only bootstrap to machine-enforced sensitive release.
+- Makes correction, rollback, policy, public-alias, and emergency actions auditable.
+
+### Costs
+
+- Requires actor/authority governance and alias resolution.
+- Requires more than one qualified human for release-significant actions.
+- Adds schema, fixture, validator, policy, repository-rule, and operational complexity.
+- May hold releases in a single-maintainer project.
+- Requires review records to be reissued when subject versions or digests change.
+- Creates administrative work for assignment expiry, revocation, recusal, and backup coverage.
+
+### Preserved invariants
+
+- No canonical root or lifecycle phase changes.
+- Promotion remains a governed state transition.
+- Evidence, policy, review, decision, receipt, proof, release, and publication remain distinct.
+- Public clients remain behind governed/released interfaces.
+- Sensitive data remains deny-by-default.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+| Alternative | Disposition |
+|---|---|
+| Informal convention only | Rejected: deadline pressure and staff changes make it non-auditable |
+| CODEOWNERS or PR approvals only | Rejected: routing/approval does not bind evidence, subject digest, role authority, release action, or execution |
+| `author_id != approver_id` strings only | Rejected: aliases, multiple accounts, bots, stale identities, and role labels defeat the check |
+| One combined release manager role | Rejected: collapses author, policy, sensitivity, rights, correction, and release authority |
+| Automation/AI as second approver | Rejected: automation supplies evidence/checks, not accountable human judgment |
+| Tooling required for all work from day one | Rejected: blocks candidate/bootstrap work; M0 permits non-public work but not release |
+| Manual review forever | Rejected: high-risk release must graduate to machine-enforced checks |
+| Per-domain unrelated SoD policies | Rejected as default: causes vocabulary and enforcement drift; domain additions should extend one governed profile |
+| Self-approval when no second maintainer exists | Rejected: unavailable independent review yields `HOLD`, not weaker governance |
+
+[Back to top](#top)
+
+---
+
+<a id="risk-and-open-question-ledger"></a>
+
+## Risk and open-question ledger
+
+| Item | Status | Required resolution |
+|---|---|---|
+| Actor identity contract/home | `OPEN` | Directory Rules review, semantic contract, schema, alias resolution |
+| Role/authority assignment contract | `OPEN` | Scope, issuer, effective time, expiry/revocation, evidence |
+| Atlas role names vs repository terms | `NEEDS VERIFICATION` | Accepted vocabulary/crosswalk |
+| ReviewRecord semantic contract missing | `CONFIRMED GAP` | Create at declared home or governed migration |
+| ReviewRecord actor/subject fields | `PROPOSED` | Versioned schema/fixtures/migration |
+| SoD policy home | `OPEN` | `policy/release/`, `policy/governance/`, or accepted composition |
+| Release manifest singular/plural paths | `CONFLICTED` | Separate ADR/accepted path decision |
+| PromotionDecision vs prose lane outcomes | `CONFLICTED` | Contract and release-lane convergence |
+| CODEOWNERS single account | `CONFIRMED LIMIT` | Independent qualified actor/team assignments |
+| Branch protection/rulesets | `UNKNOWN` | Current GitHub ruleset evidence |
+| External rights representative identity | `OPEN` | Attestation, authority, privacy, retention profile |
+| Recusal/conflict-of-interest rules | `OPEN` | Policy and review-record fields |
+| Reviewer signature integrity | `OPEN` | Signing profile separate from human authority |
+| Emergency withdrawal SLA | `OPEN` | Timebox, scope, follow-up, incident/correction records |
+| Single-maintainer operating model | `HOLD RISK` | Add qualified reviewers or keep release non-public |
+| Maturity registry | `OPEN` | Accepted schema/register; current register empty |
+| Historical release audit | `UNKNOWN` | Inventory prior decisions/reviews and classify gaps |
+| Separation-of-duties monitoring | `OPEN` | Audit/reporting without treating dashboards as proof |
+
+[Back to top](#top)
+
+---
+
+<a id="emergency-containment-exception"></a>
+
+## Emergency containment exception
+
+A narrowly scoped exception may permit one authorized operator to **reduce exposure** immediately when delay creates credible harm—for example:
+
+- disable a public alias;
+- withdraw or quarantine a release;
+- restrict access;
+- revoke a compromised signer or credential;
+- stop a serving path;
+- apply a temporary deny rule.
+
+This exception:
+
+1. never permits new publication or broader access;
+2. never permits the operator to approve restoration or re-release;
+3. requires an immutable incident/containment record, exact subject, reason, actor, time, and action;
+4. requires independent review within a policy-defined timebox;
+5. requires correction/withdrawal/rollback records and cache invalidation where applicable;
+6. expires fail-closed if follow-up review is not completed;
+7. cannot be used to bypass routine release review.
+
+The current repository does not implement or authorize this exception; it is part of the proposed decision.
+
+[Back to top](#top)
+
+---
+
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### Documentation-only rollback
+
+Restore prior ADR blob:
+
+```text
+517493105f8464457782dee1ada5bf1e6db43c79
+```
+
+A transparent revert restores the prior proposed documentation. It does not change repository controls, actor assignments, review records, release state, or public artifacts.
+
+### If this ADR is later accepted
+
+Accepted ADRs are governance history. Do **not** flip an accepted decision back to `proposed` or silently weaken it. A material change requires:
+
+- a successor ADR;
+- reciprocal supersession links;
+- updated ADR index;
+- migration/compatibility plan for contracts, schemas, fixtures, policies, validators, review records, release objects, repository controls, and runbooks;
+- correction/rollback analysis for releases that relied on the prior rule.
+
+### Control rollback
+
+Disabling or weakening an implemented SoD control requires independent review at least as strong as the control being changed. Moving policy into an invented `_disabled` folder, deleting review evidence, removing required reviewers, or downgrading maturity to unblock a release is not an acceptable rollback strategy without an accepted migration decision.
+
+[Back to top](#top)
+
+---
+
+<a id="verification-checklist"></a>
+
+## Verification checklist
+
+### Current revision
+
+- [x] ADR ID, filename, H1, and index row verified.
+- [x] Source `draft` and effective `proposed` status preserved.
+- [x] Directory Rules and supplied Atlas/Encyclopedia lineage reviewed.
+- [x] Current schemas, fixtures, validator, release lanes, policy root, register, CODEOWNERS, and promotion workflow inspected.
+- [x] Current gaps and workflow holds made explicit.
+- [x] String inequality replaced by actor identity, authority, and subject-binding requirements.
+- [x] M0 corrected to candidate-only; no maturity level authorizes unreviewed sensitive release.
+- [x] Emergency containment separated from restoration/re-release.
+- [x] Accepted-ADR rollback corrected to successor/supersession discipline.
+- [x] No implementation, review, release, rollback, or publication claim introduced.
+- [ ] Human review completed.
+- [ ] ADR accepted.
+- [ ] Implementation graduated.
+- [ ] Governed release observed.
+
+### Future implementation
+
+- [ ] Actor/alias and authority-assignment profiles accepted.
+- [ ] ReviewRecord semantic contract exists and matches schema.
+- [ ] SoD fields/references are subject-bound and versioned.
+- [ ] Validator and policy produce stable finite outcomes/reason codes.
+- [ ] Valid/invalid fixtures cover aliases, bots, stale roles, subject mismatches, sensitive release, correction, rollback, and emergency paths.
+- [ ] Independent qualified reviewer capacity exists.
+- [ ] CODEOWNERS/rulesets complement governed review records.
+- [ ] PromotionDecision and ReleaseManifest resolve review evidence.
+- [ ] Corrections, withdrawals, rollback, and public aliases enforce separation.
+- [ ] Audit and recovery drills pass without hidden overrides.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+| Reference | Relationship and current boundary |
+|---|---|
+| [`docs/adr/README.md`](./README.md) | ADR operating contract; merge does not accept a decision |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Confirms ADR-0024 identity, source `draft`, effective `proposed` |
+| [ADR-0010](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Sensitive-domain fail-closed posture |
+| [ADR-0011](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Keeps review, receipt, proof, manifest, and publication distinct |
+| [ADR-0015](./ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md) | Public alias/rollback decision dependencies |
+| [ADR-0018](./ADR-0018-promotion-gate-sequence.md) | Promotion sequence and current readiness hold |
+| [ADR-0020](./ADR-0020-abstain-is-a-first-class-decision.md) | Missing evidence/authority may abstain/hold rather than fabricate |
+| [ADR-0023](./ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md) | Artifact cryptography is distinct from human approval |
+| [ADR-0025](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Public trust-membrane boundary |
+| [Directory Rules](../doctrine/directory-rules.md) | Responsibility roots, authority, ADR/migration discipline |
+| [PromotionDecision schema](../../schemas/contracts/v1/release/promotion_decision.schema.json) | Current reviewer string/ticket shape |
+| [ReviewRecord schema](../../schemas/contracts/v1/governance/review_record.schema.json) | Proposed closed shape without actor identity |
+| [ReviewRecord fixtures](../../fixtures/contracts/v1/governance/review_record/README.md) | Minimal shape fixtures; no SoD coverage |
+| [ReviewRecord validator](../../tools/validators/validate_review_record.py) | Confirmed placeholder |
+| [ReleaseManifest schema](../../schemas/contracts/v1/release/release_manifest.schema.json) | Confirmed thin stub |
+| [CorrectionNotice schema](../../schemas/contracts/v1/release/correction_notice.schema.json) | Confirmed empty/open scaffold |
+| [RollbackCard schema](../../schemas/contracts/v1/release/rollback_card.schema.json) | Confirmed thin stub |
+| [AIReceipt schema](../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | Runtime receipt; no release-review actor fields |
+| [Release reviews](../../release/reviews/README.md) | Review guidance; no governed records confirmed |
+| [Promotion decisions](../../release/promotion_decisions/README.md) | Decision-lane guidance; not release proof |
+| [Release signatures](../../release/signatures/README.md) | Human signoff packets; not final release authority |
+| [Release-state register](../../control_plane/release_state_register.yaml) | Empty proposed register; no maturity model |
+| [Release policy root](../../policy/release/README.md) | Greenfield stub |
+| [CODEOWNERS](../../.github/CODEOWNERS) | Review routing only; no SoD proof |
+| [Promotion workflow](../../.github/workflows/promotion-gate.yml) | Read-only readiness/hold evidence |
+| KFM Domains v1.1 + Pass 23/32 Consolidated Atlas | Design lineage for reviewer/SoD matrix and ADR-S-09 |
+| KFM Encyclopedia | Master Action Matrix separating steward/reviewer/policy/release duties |
+
+[Back to top](#top)
+
+---
+
+<a id="revision-history"></a>
+
+## Revision history
+
+| Version | Date | Summary |
+|---|---|---|
+| v1 | 2026-05-15 | Initial draft proposing role vocabulary, separation matrix, M0–M3 maturity ladder, schema/policy/CODEOWNERS enforcement, validation, rollback, and Atlas ADR-S-09 closure. |
+| v1.1 | 2026-07-24 | Re-grounded the ADR in current repository evidence; preserved effective proposed status; changed ADR-S-09 from claimed closed to addressed pending acceptance; separated design lineage from implementation; replaced string-only author/approver checks with actor identity, authority, and subject binding; corrected M0 to candidate-only; surfaced schema, policy, reviewer-capacity, and workflow holds; added emergency containment, convergence, acceptance, finite outcomes, risk, and successor-ADR rollback discipline. |
+
+---
+
+<sub>This ADR is governed by KFM doctrine: release is a governed state transition; review is evidence, not prose; automation is not accountable approval; sensitive and rights-constrained releases fail closed.</sub>
