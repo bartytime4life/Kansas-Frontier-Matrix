@@ -23,12 +23,14 @@ related:
   - ../../../published/layers/agriculture/README.md
   - ../../../../fixtures/domains/agriculture/catalog/README.md
   - ../../../../tests/domains/agriculture/catalog_closure/README.md
+  - ../../../../tests/domains/agriculture/test_catalog_closure.py
   - ../../../../release/README.md
   - ../../../../.github/CODEOWNERS
 notes:
   - "v0.2.0 modernizes the substantive v0.1 lane guide; it does not replace a blank file."
   - "The exact target path is confirmed and matches the canonical data-catalog/domain pattern in the supplied Directory Rules."
-  - "The bounded lane inventory found this README only; concrete catalog records and operational enforcement are not established."
+  - "The bounded catalog-data lane inventory found this README only; concrete catalog records and operational enforcement are not established."
+  - "A parent Agriculture test file named test_catalog_closure.py exists as a docstring-only PROPOSED placeholder; the domain workflow fails visibly until the readiness hold is graduated."
   - "The top-level catalog/domain/agriculture compatibility README contains unresolved merge-conflict markers and remains non-authoritative."
   - "This Markdown-only revision does not create catalog records, accept ADR-0022, validate closure, approve release, publish data, or change runtime behavior."
 [/KFM_META_BLOCK_V2] -->
@@ -155,7 +157,7 @@ README, inventory, digest, migration, and disposition sidecars may explain the l
 | Canonical path and lane guide | `CONFIRMED` | Exact README and parent catalog contract inspected. |
 | Concrete Agriculture catalog records | `UNKNOWN / NOT ESTABLISHED` | Bounded search found no record inventory under this lane. |
 | Agriculture catalog fixture family | `README_ONLY / STRUCTURALLY_EMPTY` | The fixture-lane README says the directory is fixture-only and implementation-blocked. |
-| Executable catalog-closure tests | `NOT ESTABLISHED` | The test-lane README reports no executable child test in its bounded search. |
+| Catalog-closure test execution | `PLACEHOLDER / NOT ESTABLISHED` | `tests/domains/agriculture/test_catalog_closure.py` exists but contains only a `PROPOSED placeholder` docstring and no test case; the domain workflow fails visibly until its readiness hold is graduated. |
 | CatalogMatrix contract/schema | `PROPOSED / PLACEHOLDER` | The test lane records a draft semantic contract, permissive id-only schema, and path conflicts. |
 | CatalogMatrix validator/resolver | `UNKNOWN / NOT FOUND` | No declared executable was verified by the inspected test-lane evidence. |
 | STAC/DCAT/PROV Agriculture projections | `NOT FOUND` | The three checked README paths returned 404 at the pinned base state. |
@@ -220,6 +222,7 @@ See [Agriculture sensitivity guidance](../../../../docs/domains/agriculture/SENS
 | [ADR-0022](../../../../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | status `proposed` | Proposed STAC/DCAT/PROV agreement model. | Not accepted authority; path conflicts remain. |
 | [Fixture boundary](../../../../fixtures/domains/agriculture/catalog/README.md) | blob `07123479a65a0d9d9a227b675dd22ad319ae53a8` | README-only, structurally empty, fixture-only posture. | No synthetic fixture payloads established. |
 | [Closure-test boundary](../../../../tests/domains/agriculture/catalog_closure/README.md) | blob `2086c10aa248c5e80de89d755a1a989aaed11257` | No executable child test found; placeholder schema and missing validator recorded. | Documentation is not execution proof. |
+| [Parent catalog-closure placeholder](../../../../tests/domains/agriculture/test_catalog_closure.py) | blob `0ba84246303e04c112a9c403e057fffb36078d12` | An executable-named file exists and contains only a `PROPOSED placeholder` docstring. | No collected test case or closure behavior is established. |
 | [Compatibility root](../../../../catalog/README.md) | blob `638686cd5473219227a17b80e976c7caf54da710` | Top-level `catalog/` is severe, non-authoritative parallel drift. | Does not repair child conflicts. |
 | [Compatibility child](../../../../catalog/domain/agriculture/README.md) | blob `bf1a333573c6d068fbb0b695356346003842aceb` | Redirect intent and unresolved merge-conflict markers. | Conflicted content is not authority. |
 | [Release root](../../../../release/README.md) | blob `0752610b1df6d11143158f6f162f65ecd650e6a6` | Candidate is not release; operational release controls have explicit holds. | No Agriculture release is established. |
@@ -243,7 +246,7 @@ See [Agriculture sensitivity guidance](../../../../docs/domains/agriculture/SENS
 - [ ] Resolve the CatalogMatrix semantic, schema, validator, resolver, and instance-path conflicts through accepted governance.
 - [ ] Define and accept an Agriculture catalog profile.
 - [ ] Add synthetic valid, invalid, restricted, held, corrected, withdrawn, superseded, and rollback fixtures.
-- [ ] Implement deterministic no-network validators and executable positive/negative closure tests.
+- [ ] Replace the docstring-only parent placeholder with accepted deterministic no-network positive/negative tests, then graduate the Agriculture workflow readiness hold.
 - [ ] Establish STAC/DCAT/PROV projection homes and accepted agreement rules where applicable.
 - [ ] Prove `EvidenceRef -> EvidenceBundle`, source-role, aggregation, policy, release, correction, and rollback resolution.
 - [ ] Prove public clients cannot read candidate or internal catalog stores directly.
