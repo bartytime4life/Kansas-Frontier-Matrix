@@ -16,6 +16,7 @@ import argparse
 import json
 import math
 import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -106,11 +107,19 @@ ALLOWED_GOVERNANCE_KEYS = frozenset(
 
 URL_TOKENS = ("http://", "https://", "www.")
 SAFE_IDENTIFIER_RE = re.compile(r"^[a-z0-9][a-z0-9:-]{0,159}$")
+COORDINATE_NUMBER_PATTERN = (
+    r"[-+]?(?:\d{1,6}(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d{1,3})?"
+)
 COORDINATE_PAIR_RE = re.compile(
-    r"(?<![\w.])[-+]?\d{1,6}(?:\.\d+)?\s*[,;]\s*"
-    r"[-+]?\d{1,6}(?:\.\d+)?(?![\w.])"
+    rf"(?<![\w.]){COORDINATE_NUMBER_PATTERN}"
+    rf"(?:\s*[,;/]\s*|\s+){COORDINATE_NUMBER_PATTERN}(?![\w.])"
 )
 MAX_CAVEAT_LENGTH = 512
+MAX_CAVEAT_ITEMS = 16
+MAX_DOCUMENT_DEPTH = 64
+MAX_DOCUMENT_NODES = 4096
+MAX_FIXTURE_BYTES = 1_000_000
+MAX_JSON_INTEGER_DIGITS = 512
 
 
 @dataclass(frozen=True, order=True)
@@ -137,20 +146,42 @@ def _is_safe_identifier(value: object) -> bool:
 
 
 def _is_finite_number(value: object) -> bool:
-    return (
-        isinstance(value, (int, float))
-        and not isinstance(value, bool)
-        and math.isfinite(float(value))
-    )
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, int):
+        return True
+    if isinstance(value, float):
+        return math.isfinite(value)
+    return False
 
 
 def _contains_finite_number(value: object) -> bool:
-    if _is_finite_number(value):
-        return True
-    if isinstance(value, list):
-        return any(_contains_finite_number(item) for item in value)
-    if isinstance(value, Mapping):
-        return any(_contains_finite_number(item) for item in value.values())
+    pending = [value]
+    seen_containers: set[int] = set()
+    visited = 0
+    while pending:
+        item = pending.pop()
+        visited += 1
+        if visited > MAX_DOCUMENT_NODES:
+            return False
+        if _is_finite_number(item):
+            return True
+        if isinstance(item, list):
+            identity = id(item)
+            if identity in seen_containers:
+                continue
+            seen_containers.add(identity)
+            if len(item) > MAX_DOCUMENT_NODES - visited:
+                return False
+            pending.extend(item)
+        elif isinstance(item, Mapping):
+            identity = id(item)
+            if identity in seen_containers:
+                continue
+            seen_containers.add(identity)
+            if len(item) > MAX_DOCUMENT_NODES - visited:
+                return False
+            pending.extend(item.values())
     return False
 
 
@@ -158,17 +189,122 @@ def _has_control_character(value: str) -> bool:
     return any(ord(character) < 32 or ord(character) == 127 for character in value)
 
 
+def _compact_url_value(value: str) -> str:
+    return "".join(
+        character
+        for character in value.casefold()
+        if not (
+            character.isspace()
+            or unicodedata.category(character) == "Cf"
+        )
+    )
+
+
+def _parse_bounded_int(value: str) -> int:
+    digits = value[1:] if value.startswith(("-", "+")) else value
+    if len(digits) > MAX_JSON_INTEGER_DIGITS:
+        raise ValueError("JSON integer exceeds the fixture digit cap")
+    return int(value)
+
+
+def _reject_json_constant(_value: str) -> None:
+    raise ValueError("non-standard JSON numeric constant")
+
+
+def _format_path(path: tuple[str, ...]) -> str:
+    return "$" if not path else "$." + ".".join(path)
+
+
+def _structure_findings(value: object) -> tuple[Finding, ...]:
+    findings: list[Finding] = []
+    pending = [("enter", (), value, 0)]
+    active_containers: set[int] = set()
+    visited = 1
+
+    while pending:
+        action, parent_path, parent, depth = pending.pop()
+        if not isinstance(parent, (Mapping, list)):
+            continue
+
+        identity = id(parent)
+        if action == "exit":
+            active_containers.discard(identity)
+            continue
+        if identity in active_containers:
+            _add(findings, "DOCUMENT_CYCLE_FORBIDDEN", _format_path(parent_path))
+            continue
+        active_containers.add(identity)
+
+        if depth > MAX_DOCUMENT_DEPTH:
+            _add(findings, "DOCUMENT_DEPTH_EXCEEDED", _format_path(parent_path))
+            active_containers.discard(identity)
+            continue
+
+        remaining = MAX_DOCUMENT_NODES - visited
+        if len(parent) > remaining:
+            _add(findings, "DOCUMENT_NODE_LIMIT_EXCEEDED", "$")
+            return tuple(sorted(findings))
+
+        if isinstance(parent, Mapping):
+            children = [(key, parent[key]) for key in sorted(parent, key=str)]
+        else:
+            children = list(enumerate(parent))
+
+        pending.append(("exit", parent_path, parent, depth))
+        for key, child in reversed(children):
+            visited += 1
+            child_path = (*parent_path, str(key))
+            if depth + 1 > MAX_DOCUMENT_DEPTH:
+                _add(
+                    findings,
+                    "DOCUMENT_DEPTH_EXCEEDED",
+                    _format_path(child_path),
+                )
+                continue
+            if isinstance(child, (Mapping, list)):
+                pending.append(("enter", child_path, child, depth + 1))
+
+    return tuple(sorted(findings))
+
+
 def _walk(value: object, path: tuple[str, ...] = ()):
-    if isinstance(value, Mapping):
-        for key in sorted(value, key=str):
-            child_path = (*path, str(key))
-            yield child_path, key, value[key]
-            yield from _walk(value[key], child_path)
-    elif isinstance(value, list):
-        for index, item in enumerate(value):
-            child_path = (*path, str(index))
-            yield child_path, index, item
-            yield from _walk(item, child_path)
+    pending = [("enter", path, value, 0)]
+    active_containers: set[int] = set()
+    visited = 1
+    while pending:
+        action, parent_path, parent, depth = pending.pop()
+        if not isinstance(parent, (Mapping, list)):
+            continue
+
+        identity = id(parent)
+        if action == "exit":
+            active_containers.discard(identity)
+            continue
+        if identity in active_containers:
+            continue
+        active_containers.add(identity)
+
+        remaining = MAX_DOCUMENT_NODES - visited
+        if depth >= MAX_DOCUMENT_DEPTH or len(parent) > remaining:
+            active_containers.discard(identity)
+            return
+
+        if isinstance(parent, Mapping):
+            children = [(key, parent[key]) for key in sorted(parent, key=str)]
+        elif isinstance(parent, list):
+            children = list(enumerate(parent))
+        else:
+            continue
+
+        for key, child in children:
+            visited += 1
+            child_path = (*parent_path, str(key))
+            yield child_path, key, child
+        pending.append(("exit", parent_path, parent, depth))
+        for key, child in reversed(children):
+            if isinstance(child, (Mapping, list)):
+                child_path = (*parent_path, str(key))
+                pending.append(("enter", child_path, child, depth + 1))
 
 
 def _add(findings: list[Finding], code: str, path: str) -> None:
@@ -204,6 +340,10 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
 
     if not isinstance(candidate, Mapping):
         return (Finding("DOCUMENT_NOT_OBJECT", "$"),)
+
+    structure_findings = _structure_findings(candidate)
+    if structure_findings:
+        return structure_findings
 
     if candidate.get("record_type") != "fauna_public_safe_validation_candidate":
         _add(findings, "RECORD_TYPE_INVALID", "$.record_type")
@@ -260,7 +400,10 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     if not isinstance(spatial_support, Mapping):
         _add(findings, "SPATIAL_SUPPORT_NOT_OBJECT", "$.spatial_support")
     else:
-        for key in sorted(set(spatial_support) - ALLOWED_SPATIAL_KEYS):
+        for key in sorted(
+            set(spatial_support) - ALLOWED_SPATIAL_KEYS,
+            key=str,
+        ):
             _add(
                 findings,
                 "UNDECLARED_SPATIAL_FIELD",
@@ -298,12 +441,18 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
             if not _is_safe_identifier(evidence_ref):
                 _add(findings, "EVIDENCE_REF_FORMAT_INVALID", path)
 
-    public_caveats = candidate.get("public_caveats")
-    if public_caveats is not None:
+    if "public_caveats" in candidate:
+        public_caveats = candidate["public_caveats"]
         if not isinstance(public_caveats, list) or not public_caveats:
             _add(findings, "PUBLIC_CAVEATS_INVALID", "$.public_caveats")
         else:
-            for index, caveat in enumerate(public_caveats):
+            if len(public_caveats) > MAX_CAVEAT_ITEMS:
+                _add(
+                    findings,
+                    "PUBLIC_CAVEATS_TOO_MANY",
+                    "$.public_caveats",
+                )
+            for index, caveat in enumerate(public_caveats[:MAX_CAVEAT_ITEMS]):
                 path = f"$.public_caveats.{index}"
                 if not _is_nonempty_string(caveat):
                     _add(findings, "PUBLIC_CAVEAT_INVALID", path)
@@ -314,7 +463,10 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     if not isinstance(governance, Mapping):
         _add(findings, "GOVERNANCE_STATE_MISSING", "$.governance")
     else:
-        for key in sorted(set(governance) - ALLOWED_GOVERNANCE_KEYS):
+        for key in sorted(
+            set(governance) - ALLOWED_GOVERNANCE_KEYS,
+            key=str,
+        ):
             _add(
                 findings,
                 "UNDECLARED_GOVERNANCE_FIELD",
@@ -349,7 +501,10 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
             if governance.get(field) != expected:
                 _add(findings, code, f"$.governance.{field}")
 
-    for key in sorted(set(candidate) - ALLOWED_TOP_LEVEL_KEYS):
+    for key in sorted(
+        set(candidate) - ALLOWED_TOP_LEVEL_KEYS,
+        key=str,
+    ):
         _add(findings, "UNDECLARED_TOP_LEVEL_FIELD", f"$.{key}")
 
     for path, key, value in _walk(candidate):
@@ -368,9 +523,10 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
         if isinstance(value, str):
             normalized_value = value.strip()
             folded_value = normalized_value.casefold()
+            compact_url_value = _compact_url_value(folded_value)
             if (
-                any(token in folded_value for token in URL_TOKENS)
-                or folded_value.startswith("//")
+                any(token in compact_url_value for token in URL_TOKENS)
+                or "//" in compact_url_value
             ):
                 _add(findings, "LIVE_URL_FORBIDDEN", dotted_path)
             if _has_control_character(value):
@@ -385,8 +541,19 @@ def validate_file(path: Path) -> tuple[Finding, ...]:
     """Load and validate one UTF-8 JSON fixture."""
 
     try:
-        candidate = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError):
+        if path.stat().st_size > MAX_FIXTURE_BYTES:
+            return (Finding("FIXTURE_TOO_LARGE", "$"),)
+        candidate = json.loads(
+            path.read_text(encoding="utf-8"),
+            parse_int=_parse_bounded_int,
+            parse_constant=_reject_json_constant,
+        )
+    except (
+        OSError,
+        UnicodeError,
+        ValueError,
+        RecursionError,
+    ):
         return (Finding("FIXTURE_JSON_INVALID", "$"),)
     return validate_candidate(candidate)
 

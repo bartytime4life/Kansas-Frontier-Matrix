@@ -108,13 +108,17 @@ It additionally fails closed on:
 - undeclared top-level, spatial, or governance fields;
 - exact or aliased location-bearing keys;
 - finite numeric values beneath location-like keys;
-- malformed or nested `public_caveats`;
-- URL-like strings after whitespace normalization, including embedded HTTP(S), leading scheme-relative, and `www.` forms;
+- malformed or nested `public_caveats`, more than 16 caveats, or caveat strings longer than 512 characters;
+- URL-like strings after whitespace and Unicode-format-marker normalization, including embedded HTTP(S), scheme-relative, and `www.` forms;
 - control characters in strings;
 - coordinate-pair-shaped free text; and
+- cyclic, deeper-than-64-level, or more-than-4,096-node in-memory structures;
+- fixture files larger than 1,000,000 bytes, integer tokens over 512 digits, or JSON values Python cannot parse safely; and
 - unsupported synthetic identifier shapes.
 
 These checks reduce accidental leakage in future fixtures. They do not determine whether a real occurrence is public-safe.
+
+Structural cycle, depth, or node-limit findings stop further field inspection so malformed in-memory candidates cannot force unbounded secondary findings.
 
 [Back to top](#top)
 
@@ -226,7 +230,9 @@ The accepted fixture-only validator may emit stable findings including:
 | `LIVE_URL_FORBIDDEN` | A URL-like string appears in the fixture. |
 | `COORDINATE_PATTERN_FORBIDDEN` | Free text resembles a coordinate pair. |
 | `CONTROL_CHARACTER_FORBIDDEN` | A string contains disallowed control characters. |
-| `PUBLIC_CAVEATS_INVALID` / `PUBLIC_CAVEAT_INVALID` | Caveat structure is not a bounded list of strings. |
+| `PUBLIC_CAVEATS_INVALID` / `PUBLIC_CAVEAT_INVALID` / `PUBLIC_CAVEATS_TOO_MANY` / `PUBLIC_CAVEAT_TOO_LONG` | Caveats are not a non-empty list of at most 16 non-empty strings, each at most 512 characters. |
+| `DOCUMENT_CYCLE_FORBIDDEN` / `DOCUMENT_DEPTH_EXCEEDED` / `DOCUMENT_NODE_LIMIT_EXCEEDED` | An in-memory candidate exceeds the bounded structure profile. |
+| `FIXTURE_TOO_LARGE` / `FIXTURE_JSON_INVALID` | A fixture file exceeds the byte cap or cannot be parsed safely as JSON. |
 | `RELEASE_STATE_NOT_HELD` / `PROMOTION_STATE_NOT_HELD` | The fixture is not explicitly unreleased and promotion-ineligible. |
 | `ERROR`-class CLI failure | The fixture could not be safely loaded or checked. |
 

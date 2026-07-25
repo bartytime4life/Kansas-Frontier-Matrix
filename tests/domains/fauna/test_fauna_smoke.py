@@ -6,6 +6,7 @@ import copy
 import io
 import json
 import socket
+import tempfile
 import unittest
 import urllib.request
 from contextlib import redirect_stdout
@@ -13,6 +14,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tools.validators.domains.fauna.validate_public_safe_fixture import (
+    MAX_FIXTURE_BYTES,
+    MAX_JSON_INTEGER_DIGITS,
     main,
     validate_candidate,
     validate_file,
@@ -165,14 +168,113 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
             ("LOCATION_NUMERIC_VALUE_FORBIDDEN", "$.spatial_support.x"),
             actual,
         )
+
+        oversized_integer = copy.deepcopy(base_payload)
+        oversized_integer["spatial_support"]["x"] = "OVERSIZED_INTEGER"
+        with tempfile.TemporaryDirectory() as temp_directory:
+            invalid_path = Path(temp_directory) / "oversized-integer.json"
+            invalid_path.write_text(
+                json.dumps(oversized_integer).replace(
+                    '"OVERSIZED_INTEGER"',
+                    "9" * (MAX_JSON_INTEGER_DIGITS + 1),
+                ),
+                encoding="utf-8",
+            )
+            invalid_findings = {
+                (finding.code, finding.path)
+                for finding in validate_file(invalid_path)
+            }
+
+            bounded_path = Path(temp_directory) / "bounded-integer.json"
+            bounded_path.write_text(
+                json.dumps(oversized_integer).replace(
+                    '"OVERSIZED_INTEGER"',
+                    "9" * MAX_JSON_INTEGER_DIGITS,
+                ),
+                encoding="utf-8",
+            )
+            bounded_findings = {
+                (finding.code, finding.path)
+                for finding in validate_file(bounded_path)
+            }
+
+            too_large_path = Path(temp_directory) / "too-large.json"
+            too_large_path.write_text(
+                " " * (MAX_FIXTURE_BYTES + 1),
+                encoding="utf-8",
+            )
+            too_large_findings = {
+                (finding.code, finding.path)
+                for finding in validate_file(too_large_path)
+            }
+
+        self.assertEqual(invalid_findings, {("FIXTURE_JSON_INVALID", "$")})
+        self.assertIn(
+            ("LOCATION_NUMERIC_VALUE_FORBIDDEN", "$.spatial_support.x"),
+            bounded_findings,
+        )
+        self.assertEqual(too_large_findings, {("FIXTURE_TOO_LARGE", "$")})
         self.assertIn(
             ("UNDECLARED_SPATIAL_FIELD", "$.spatial_support.x"),
+            actual,
+        )
+
+        payload = copy.deepcopy(base_payload)
+        payload[1] = "synthetic"
+        payload["extra_mixed"] = "synthetic"
+        payload["spatial_support"][2] = "synthetic"
+        payload["spatial_support"]["extra_mixed"] = "synthetic"
+        payload["governance"][3] = "synthetic"
+        payload["governance"]["extra_mixed"] = "synthetic"
+        mixed_key_findings = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertIn(("UNDECLARED_TOP_LEVEL_FIELD", "$.1"), mixed_key_findings)
+        self.assertIn(
+            ("UNDECLARED_TOP_LEVEL_FIELD", "$.extra_mixed"),
+            mixed_key_findings,
+        )
+        self.assertIn(
+            ("UNDECLARED_SPATIAL_FIELD", "$.spatial_support.2"),
+            mixed_key_findings,
+        )
+        self.assertIn(
+            ("UNDECLARED_SPATIAL_FIELD", "$.spatial_support.extra_mixed"),
+            mixed_key_findings,
+        )
+        self.assertIn(
+            ("UNDECLARED_GOVERNANCE_FIELD", "$.governance.3"),
+            mixed_key_findings,
+        )
+        self.assertIn(
+            ("UNDECLARED_GOVERNANCE_FIELD", "$.governance.extra_mixed"),
+            mixed_key_findings,
+        )
+
+        payload = copy.deepcopy(base_payload)
+        payload["spatial_support"]["x"] = 10**400
+        actual = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertIn(
+            ("PRECISE_LOCATION_FIELD_FORBIDDEN", "$.spatial_support.x"),
+            actual,
+        )
+        self.assertIn(
+            ("LOCATION_NUMERIC_VALUE_FORBIDDEN", "$.spatial_support.x"),
             actual,
         )
 
     def test_public_caveats_reject_malformed_and_encoded_content(self):
         base_payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
         malformed_cases = (
+            (
+                "null",
+                None,
+                ("PUBLIC_CAVEATS_INVALID", "$.public_caveats"),
+            ),
             (
                 "object",
                 {"note": "synthetic"},
@@ -203,6 +305,11 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
                 ["x" * 513],
                 ("PUBLIC_CAVEAT_TOO_LONG", "$.public_caveats.0"),
             ),
+            (
+                "too-many",
+                ["synthetic"] * 17,
+                ("PUBLIC_CAVEATS_TOO_MANY", "$.public_caveats"),
+            ),
         )
 
         for case, caveats, expected in malformed_cases:
@@ -215,13 +322,71 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
                 }
                 self.assertIn(expected, malformed)
 
+        deeply_nested = "synthetic"
+        for _ in range(1_100):
+            deeply_nested = [deeply_nested]
+        payload = copy.deepcopy(base_payload)
+        payload["public_caveats"] = [deeply_nested]
+        nested_findings = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertEqual(
+            {code for code, _path in nested_findings},
+            {"DOCUMENT_DEPTH_EXCEEDED"},
+        )
+
+        cyclic = []
+        cyclic.append(cyclic)
+        payload = copy.deepcopy(base_payload)
+        payload["public_caveats"] = cyclic
+        cyclic_findings = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertEqual(
+            cyclic_findings,
+            {("DOCUMENT_CYCLE_FORBIDDEN", "$.public_caveats.0")},
+        )
+
+        payload = copy.deepcopy(base_payload)
+        payload["public_caveats"] = ["synthetic"] * 4_097
+        bounded_findings = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertEqual(
+            bounded_findings,
+            {("DOCUMENT_NODE_LIMIT_EXCEEDED", "$")},
+        )
+
+        shared = {"note": "synthetic"}
+        payload = copy.deepcopy(base_payload)
+        payload["extra_a"] = shared
+        payload["extra_b"] = shared
+        shared_findings = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(payload)
+        }
+        self.assertNotIn(
+            "DOCUMENT_CYCLE_FORBIDDEN",
+            {code for code, _path in shared_findings},
+        )
+
         payload = copy.deepcopy(base_payload)
         payload["public_caveats"] = [
             "  HTTPS://",
             "  //",
             "  WWW.",
+            "Synthetic embedded scheme-relative marker //",
+            "Synthetic split marker https:/ /",
+            "H T T P S : / / synthetic marker",
+            "Synthetic format marker https:/\u200b/",
             "Synthetic control\x00marker",
             "Synthetic out-of-range pair 999999, -999999",
+            "Synthetic whitespace pair 999999 -999999",
+            "Synthetic exponent pair 9e9; -9e9",
+            "Synthetic slash pair 999999/-999999",
         ]
         encoded = {
             (finding.code, finding.path)
@@ -240,13 +405,30 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
             encoded,
         )
         self.assertIn(
-            ("CONTROL_CHARACTER_FORBIDDEN", "$.public_caveats.3"),
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.3"),
             encoded,
         )
         self.assertIn(
-            ("COORDINATE_PATTERN_FORBIDDEN", "$.public_caveats.4"),
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.4"),
             encoded,
         )
+        self.assertIn(
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.5"),
+            encoded,
+        )
+        self.assertIn(
+            ("LIVE_URL_FORBIDDEN", "$.public_caveats.6"),
+            encoded,
+        )
+        self.assertIn(
+            ("CONTROL_CHARACTER_FORBIDDEN", "$.public_caveats.7"),
+            encoded,
+        )
+        for index in range(8, 12):
+            self.assertIn(
+                ("COORDINATE_PATTERN_FORBIDDEN", f"$.public_caveats.{index}"),
+                encoded,
+            )
 
     def test_fixture_corpus_contains_no_live_target_or_plausible_coordinate(self):
         for fixture_path in (VALID_FIXTURE, *INVALID_FIXTURES):
@@ -282,14 +464,18 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
 
 
 def _walk_values(value):
-    if isinstance(value, dict):
-        for child in value.values():
+    pending = [value]
+    while pending:
+        parent = pending.pop()
+        if isinstance(parent, dict):
+            children = list(parent.values())
+        elif isinstance(parent, list):
+            children = list(parent)
+        else:
+            continue
+        for child in children:
             yield child
-            yield from _walk_values(child)
-    elif isinstance(value, list):
-        for child in value:
-            yield child
-            yield from _walk_values(child)
+        pending.extend(children)
 
 
 if __name__ == "__main__":
