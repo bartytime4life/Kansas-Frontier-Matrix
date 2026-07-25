@@ -1,221 +1,406 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0026-hydrology-source-spine-starts-with-wbd-huc12
-title: ADR-0026 — Hydrology source spine starts with WBD HUC12
+title: "ADR-0026 — Hydrology Source Spine Starts with WBD HUC12"
 type: adr
-version: v1.1
+adr_id: ADR-0026
+version: v1.2
 status: draft
-owners: TBD — hydrology lane steward + architecture steward
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — Hydrology lane steward"
+  - "NEEDS VERIFICATION — source and evidence steward"
+owner_status: "CODEOWNERS routes docs/adr/ and the affected trust-bearing roots to @bartytime4life; accepted stewardship, required-review rules, decision quorum, and independent approval controls were not verified"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Hydrology lane steward
+  - Source and evidence steward
+  - Contract and schema steward
+  - Policy reviewer
+  - Release and rollback steward
 created: 2026-05-09
-updated: 2026-05-15
+updated: 2026-07-24
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md
+supersedes: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 8df9bd2b723c0d4cf88a32d357ea8c70895f1177
+  target_prior_blob: 0678ac143d3a70d96b8ae5fba8ddaefdba18ca59
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  adr_readme_blob: f1b5d34a53b6c717832d587de54989ce8192bcaa
+  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  hydrology_source_registry_blob: bae48e1ff332f217df151cd5dabf8b8d44d5c83b
+  huc_unit_contract_blob: 180a87abef03c1990484c27931c7e52e6131a451
+  huc_unit_schema_blob: 321c69f4686bfb7ecbb2a8f44a228405cdbcf9ce
+  canonical_wbd_placeholder_blob: fc0ee3ffb2c426cb560f41d6091d17d8d7213e5d
+  legacy_wbd_descriptor_blob: e6164c255333be2d365cc1b292e5d88fff55df1a
+  huc12_fixture_blob: 18ce8f53f4c5a614bb78e89d4caf931b2b0112bf
+  wbd_pipeline_spec_blob: fa0a527b2de824fffccb164bc485fa596d6c41f2
+  hydrology_workflow_blob: f29f69bd5291d2f1bd20d4aefd49603abfa19807
 related:
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md
+  - docs/adr/ADR-0017-source-descriptor-admission-process.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/ARCHITECTURE.md
   - docs/domains/hydrology/SOURCE_REGISTRY.md
-  - data/registry/sources/hydrology/wbd_huc12.yaml
-  - schemas/contracts/v1/domains/hydrology/huc12.schema.json
-  - fixtures/domains/hydrology/wbd_huc12/
+  - contracts/domains/hydrology/huc_unit.md
+  - schemas/contracts/v1/domains/hydrology/huc_unit.schema.json
+  - data/registry/sources/hydrology/wbd.source.yaml
+  - data/registry/hydrology/sources/wbd_huc12.yaml
+  - fixtures/domains/hydrology/valid/huc12_kansas_sample.json
+  - pipeline_specs/hydrology/wbd_huc12_ingest.yaml
+  - .github/workflows/domain-hydrology.yml
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-tags: [kfm, adr, hydrology, source-registry, wbd, huc12, lane-sequencing]
+tags: [kfm, adr, hydrology, source-spine, source-registry, wbd, huc12, huc-unit, lane-sequencing, evidence-first]
 notes:
-  - Authored without a mounted repo; all repo-shaped paths are PROPOSED until verified against the target checkout.
-  - ADR number 0026 is PROPOSED until verified against the repo's next-available ADR index.
-  - Path placement was normalized against Directory Rules. Do not create both old and normalized schema/source/fixture homes.
-  - Supersedes any earlier hydrology-local "ADR-0001-hydrology-source-spine" lineage if it surfaces in the repo, but only after repo inspection confirms the lineage and accepted ADR numbering.
+  - "v1.2 is a same-path repository-grounded modernization. It preserves source metadata draft and effective decision status proposed; it does not accept ADR-0026 or declare WBD HUC12 implemented or published."
+  - "The canonical ADR index uniquely assigns ADR-0026 to this exact path."
+  - "Current repository evidence contains two WBD descriptor surfaces: a canonical-home placeholder and a richer legacy-home descriptor. This is a path and authority conflict to resolve, not permission to maintain parallel descriptors."
+  - "The existing HUCUnit semantic contract is substantive, while its paired machine schema remains permissive, the HUC12 fixture and ingest spec remain placeholders, and Hydrology CI deliberately holds executable validation, proof production, catalog closure, and release readiness."
+  - "This ADR now targets the existing HUCUnit contract/schema family instead of proposing a competing huc12.schema.json authority."
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0026 — Hydrology source spine starts with WBD HUC12
+<a id="top"></a>
 
-> **One-liner.** Within the Kansas Frontier Matrix hydrology lane, **USGS WBD HUC12 is the first source descriptor, the first machine schema, the first pinned fixture, and the first published layer of the source spine.** Other hydrology sources — NHDPlus HR, USGS Water Data / NWIS, FEMA NFHL, USGS 3DEP, and observed flood evidence — follow this anchor and resolve identity against it.
+# ADR-0026 — Hydrology Source Spine Starts with WBD HUC12
 
-| Field | Value |
-|---|---|
-| **ADR** | `ADR-0026` *(PROPOSED — verify next-available number against repo)* |
-| **Status** | `proposed` / draft text ready for review |
-| **Decision date** | _TBD on acceptance_ |
-| **Target path** | `docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md` *(PROPOSED; Directory Rules §6.1)* |
-| **Authors** | _TBD — hydrology lane steward + architecture steward_ |
-| **Reviewers** | _TBD — docs steward + at least one source-authority reviewer_ |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Related ADRs** | `ADR-0001` schema home; PROPOSED `ADR-00xx` hydrologic identity & ABSTAIN; PROPOSED `ADR-00xx` flood source-role separation; PROPOSED `ADR-00xx` hydrology public surface boundary |
-| **Affected roots** | `docs/adr/`, `docs/domains/hydrology/`, `data/registry/sources/hydrology/`, `schemas/contracts/v1/domains/hydrology/`, `fixtures/domains/hydrology/`, `data/raw/hydrology/`, `policy/domains/hydrology/`, `tests/domains/hydrology/`, `release/` |
+> **Proposed decision.** Within the Hydrology lane, the first source family to graduate from placeholder planning into a governed, proof-capable source spine is the **USGS Watershed Boundary Dataset at HUC12 granularity**. WBD HUC12 supplies watershed accounting and boundary context; it does not supply flow observations, flood regulation, observed inundation, terrain truth, emergency guidance, or publication authority.
+
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0026-confirmed-1f6feb?style=flat-square)](#current-repository-evidence)
+[![Registry: conflicted](https://img.shields.io/badge/source%20registry-CONFLICTED-b42318?style=flat-square)](#source-descriptor-path-conflict)
+[![Schema: scaffold](https://img.shields.io/badge/HUCUnit%20schema-scaffold-f59e0b?style=flat-square)](#contract-schema-fixture-and-pipeline-posture)
+[![Hydrology CI: hold](https://img.shields.io/badge/hydrology%20CI-WORKFLOW__HOLD-b42318?style=flat-square)](#current-gate-status)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> This ADR records a **lane-internal source-sequencing rule**, not a new schema, not a new source-rights policy, and not a live connector decision. It is consequential because every other hydrology source descriptor, schema, fixture, validator order, and promotion gate depends on which source heads the spine.
+> **The ADR identity is confirmed; the decision is not accepted.** The canonical ADR index assigns `ADR-0026` to this exact file and normalizes its `draft` source metadata to effective status `proposed`. Editing this record, opening a pull request, passing documentation checks, or merging the change does not accept the decision.
 
-> [!NOTE]
-> **Evidence boundary.** This document states KFM doctrine and proposed implementation order using the attached project corpus and Directory Rules. Current repo implementation depth remains **UNKNOWN** because no mounted repository, tests, workflows, manifests, dashboards, logs, source registries, or emitted proof objects were inspected in this authoring pass.
+> [!CAUTION]
+> **The repository currently contains source-registry drift.** `data/registry/sources/hydrology/wbd.source.yaml` is a canonical-home placeholder, while `data/registry/hydrology/sources/wbd_huc12.yaml` is a richer proposed descriptor in a legacy path. This ADR does not choose “both.” A separate, reviewed migration must converge them into one canonical descriptor without losing useful fields or history.
+
+> [!WARNING]
+> **Current Hydrology readiness is not proof-bearing maturity.** The HUCUnit semantic contract is substantive, but the paired schema accepts any object, the HUC12 fixture and ingest spec are explicit placeholders, and the native Hydrology workflow deliberately holds executable validation, proof generation, catalog closure, and release readiness.
+
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Current repository evidence](#current-repository-evidence) · [Context](#context) · [Decision](#decision) · [Trust path](#wbd-huc12-trust-path) · [Current gates](#current-gate-status) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Acceptance](#acceptance-gates) · [Migration](#migration-plan) · [Rollback](#rollback) · [Open work](#open-questions) · [References](#references)
 
 ---
 
-## Quick links
+<a id="status"></a>
 
-- [Context](#context)
-- [Scope and non-decisions](#scope-and-non-decisions)
-- [Forces](#forces)
-- [Decision](#decision)
-- [Directory Rules placement basis](#directory-rules-placement-basis)
-- [Lifecycle walk](#lifecycle-walk)
-- [Consequences](#consequences)
-- [Alternatives considered](#alternatives-considered)
-- [Compliance & enforcement](#compliance--enforcement)
-- [Verification](#verification)
-- [Rollback](#rollback)
-- [Related decisions and documents](#related-decisions-and-documents)
-- [Open questions](#open-questions)
+## Status
+
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0026` — unique and confirmed in the canonical [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md` |
+| **Source metadata** | `draft` |
+| **Effective decision status** | `proposed` — not binding until the record and index carry matching reviewed `accepted` status |
+| **Decision class** | Hydrology lane-internal source ordering and first-source graduation |
+| **Proposed spine head** | USGS WBD HUC12 |
+| **Current implementation posture** | Repository surfaces exist, but descriptor placement is conflicted and schema, fixture, pipeline, validation, proof, catalog, and release closure remain partial, placeholder, held, or unverified |
+| **Publication effect** | None. This ADR, its pull request, a merge, a workflow result, or a placeholder artifact is not KFM publication evidence |
+| **Supersedes / superseded by** | None / none |
+
+### Governance acceptance versus source graduation
+
+This ADR separates two states:
+
+1. **ADR acceptance** approves the architectural sequence: WBD HUC12 is the first Hydrology source family expected to graduate.
+2. **Source graduation** is an implementation claim requiring the complete evidence packet in [Implementation graduation gates](#implementation-graduation-gates).
+
+Accepting the ADR would not activate a connector, validate a HUCUnit, produce an EvidenceBundle, release a layer, or publish data. Conversely, a script or green workflow cannot grant architectural acceptance.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-boundary"></a>
+
+## Evidence Boundary
+
+This revision is grounded in a pinned repository snapshot. It distinguishes **tracked decision identity**, **configured surfaces**, **semantic meaning**, **machine enforcement**, **proof-bearing execution**, and **released operation**.
+
+| Level | Meaning | Current WBD/HUC12 posture |
+|---|---|---|
+| **1. Tracked** | ADR identity, path, and proposed status are indexed | **CONFIRMED** |
+| **2. Configured** | Relevant docs, contract, schema, descriptors, fixture, pipeline spec, and workflow paths exist | **CONFIRMED**, with source-registry path conflict |
+| **3. Semantically specified** | Object and source roles are meaningfully bounded in prose | **PARTIAL**; HUCUnit contract is substantive, descriptor role vocabulary is not converged |
+| **4. Shape-checked** | Machine schema rejects invalid HUCUnit records and validates a real fixture | **HELD**; current schema is permissive and fixture is a placeholder |
+| **5. Proof-capable** | Deterministic no-network execution emits validated evidence, catalog, decision, and receipt objects | **HELD** |
+| **6. Released / operated** | Governed release and public-safe serving are demonstrated with correction and rollback | **UNKNOWN / not evidenced** |
+
+### Truth labels used in this ADR
+
+- **CONFIRMED** — verified at the pinned repository snapshot.
+- **PROPOSED** — the architectural decision or implementation target under review.
+- **CONFLICTED** — repository surfaces compete or disagree and require explicit reconciliation.
+- **NEEDS VERIFICATION** — a concrete check remains before reliance.
+- **UNKNOWN** — current evidence cannot establish the claim.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-evidence"></a>
+
+## Current Repository Evidence
+
+### Decision and placement controls
+
+- [`docs/adr/INDEX.md`](./INDEX.md) records a unique, contiguous ADR sequence and assigns `ADR-0026` to this exact path with effective status `proposed`.
+- [`docs/adr/README.md`](./README.md) states that ADR presence does not grant acceptance and requires source metadata and effective status to remain separate.
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) assigns human decision records to `docs/adr/`, machine shape to `schemas/`, source registry entries to `data/registry/`, fixtures to `fixtures/`, executable pipeline logic to `pipelines/`, declarative specs to `pipeline_specs/`, and release decisions to `release/`.
+- [`.github/CODEOWNERS`](../../.github/CODEOWNERS) routes `docs/adr/` and the affected trust-bearing roots to `@bartytime4life`. That is a GitHub review route, not accepted stewardship, independent approval, or decision authority.
+
+<a id="source-descriptor-path-conflict"></a>
+
+### Source descriptor path conflict
+
+| Surface | Verified state | Consequence |
+|---|---|---|
+| `data/registry/sources/hydrology/wbd.source.yaml` | Explicit `PROPOSED` placeholder in the Directory Rules-aligned source-registry family | Confirms the intended responsibility root, but does not yet provide a usable WBD HUC12 descriptor |
+| `data/registry/hydrology/sources/wbd_huc12.yaml` | Richer proposed descriptor with authority, rights, cadence, access, citation, and receipt-template fields | Useful lineage exists, but the path conflicts with the canonical family and its `role: primary` value is not yet reconciled with Hydrology source-role doctrine |
+| `docs/domains/hydrology/SOURCE_REGISTRY.md` | Declares `data/registry/sources/hydrology/` as the registry data home and describes WBD as watershed-boundary authority/context | Supports convergence into the canonical family; does not by itself migrate files or settle the machine enum |
+
+**Required posture:** do not create a third descriptor, do not treat both existing files as co-canonical, and do not delete either surface without a reviewed migration that preserves useful content and lineage.
+
+<a id="contract-schema-fixture-and-pipeline-posture"></a>
+
+### Contract, schema, fixture, and pipeline posture
+
+| Surface | Verified state | What it proves | What it does not prove |
+|---|---|---|---|
+| `contracts/domains/hydrology/huc_unit.md` | Substantive semantic contract | HUCUnit is WBD-derived accounting/context geometry with source-vintage, evidence, release, correction, and rollback boundaries | Field-level enforcement or runtime behavior |
+| `schemas/contracts/v1/domains/hydrology/huc_unit.schema.json` | `PROPOSED` scaffold with empty `properties` and `additionalProperties: true` | The canonical schema path exists | Required HUC fields, invalid-case rejection, or source-role enforcement |
+| `fixtures/domains/hydrology/valid/huc12_kansas_sample.json` | Explicit placeholder record | The intended fixture path exists and parses as JSON | A real HUC12 fixture, geometry validity, source identity, or schema conformance |
+| `pipeline_specs/hydrology/wbd_huc12_ingest.yaml` | Explicit placeholder created from docs inventory | The intended declarative pipeline-spec path exists | Accepted input contract, stage logic, idempotency, receipts, quarantine, or replay |
+| `.github/workflows/domain-hydrology.yml` | Read-only readiness workflow on pull requests, `main` pushes, and manual dispatch | Required boundary paths and placeholder posture are checked | Hydrology truth, source admission, EvidenceBundle closure, proof production, release approval, or publication |
+
+### Authority and publication boundary
+
+WBD HUC12 is a source and accounting-geometry proposal. It is not automatically:
+
+- an observed flow, stage, water-quality, or flood record;
+- a FEMA regulatory flood determination;
+- observed inundation;
+- a terrain-derived hydrology model;
+- emergency, engineering, insurance, navigation, or life-safety guidance;
+- an accepted source descriptor, released layer, or KFM-published claim.
+
+[Back to top](#top)
 
 ---
 
 ## Context
 
-**CONFIRMED — KFM doctrine.** The corpus repeatedly treats hydrology as the **first proof-bearing lane** because it is public-relevant, spatially rich, time-aware, and source-authority-heavy without starting in the most sensitive domains. The same documents preserve "hydrology-first" as a strong lane-sequencing rule whose rollback requires an ADR citing stronger evidence.
+KFM designates Hydrology as the proposed first proof-bearing lane in [`ADR-0009`](./ADR-0009-hydrology-is-the-first-proof-bearing-lane.md). The lane still needs a first source family whose semantics, geometry, fixtures, validation, evidence, and release path are small enough to close without simultaneously solving time-series qualifiers, regulatory/observed flood separation, or network-identity ambiguity.
 
-**Open within the lane.** Multiple credible spine heads exist, and they are *not* equivalent: each carries a different cost profile and different exposure to the risks the trust membrane is designed to prevent.
-
-| Candidate spine head | Source class | Why it could lead | Why it complicates a first slice |
+| Candidate spine head | Source class | Why it could lead | Why it increases first-slice burden |
 |---|---|---|---|
-| **WBD HUC12** *(USGS Watershed Boundary Dataset, layer 6)* | Watershed boundary context | Small, public-safe, deterministic polygons; clean fixture; no time-series qualifiers; geometry-hash testable | Does not directly exercise observation handling or regulatory-context separation — but those belong in later slices |
-| **NHDPlus HR** | Network / identity | Anchors COMID and Permanent Identifier topology | Identity drift across releases; ambiguity classes (`split`, `merge`, `retired`, `no_legacy`, `ambiguous`) need ABSTAIN handling before a public publish |
-| **USGS Water Data / NWIS** | Observation | Time series; motivates the full envelope including qualifiers and provisional state | Exercises units, parameter codes, qualifiers, provisional / final, no-data, timestamps, and time zones — many moving parts in one slice |
-| **FEMA NFHL** | Regulatory flood context | Recognizable; user-visible | Easy to confuse with observed inundation; sensitivity and source-role separation must already be decided |
-| **USGS 3DEP** | Terrain derivative input | Useful for catchment derivatives | Derivative product, not an authoritative water entity; depends on a DEM derivative manifest |
+| **WBD HUC12** | Watershed boundary authority/context | Deterministic public boundary units, compact fixture potential, stable aggregation context, geometry-fingerprint testability | Does not exercise observation qualifiers; descriptor and schema still require convergence |
+| **NHDPlus HR** | Network identity and model/context | Anchors reach identity and flow topology | COMID/Permanent Identifier splits, merges, retirement, and ambiguity require explicit ABSTAIN behavior |
+| **USGS Water Data / NWIS** | Observation | Exercises time series and monitoring locations | Requires parameter codes, units, qualifiers, provisional/final status, timestamps, time zones, and no-data semantics |
+| **FEMA NFHL** | Regulatory flood context | Recognizable and user-relevant | Easy to collapse into observed inundation or predictive truth without a separate source-role decision |
+| **USGS 3DEP** | Terrain/model input | Enables catchment and terrain derivatives | Derived input, not authoritative water-entity identity |
+| **Observed flood evidence** | Historical/event evidence | Supports event reconstruction | Confidence, correction lineage, location exposure, and source-role separation materially increase risk |
 
-**Convergent guidance from the corpus.** The safe first slice is a **HUC12 boundary/context fixture with a minimal `EvidenceBundle` and `LayerManifest`**. Two associated rulings already exist in the corpus and matter here:
-
-1. **HUC12 metadata dates are not proof of change.** `LoadDate` / `lastEditDate` are *signals*, not change proof; geometry/content fingerprints + reviewer diff are required.
-2. **Hydrology-first lane sequencing** is preserved as-is; the third ruling — that the **spine head within hydrology is WBD HUC12** — is what this ADR pins.
+WBD HUC12 remains the smallest credible spine head, but the current repository proves only that its supporting surfaces are planned and partially specified—not that the source has graduated.
 
 ---
 
-## Scope and non-decisions
+## Scope and Non-Decisions
 
-This ADR decides one thing: **WBD HUC12 leads the hydrology source spine.**
+This ADR decides one architectural question:
 
-It does **not** decide:
+> **When the Hydrology lane graduates its first source family, WBD HUC12 leads the source spine.**
 
-- the final accepted ADR number;
-- the final production HUC12 fixture identifier;
-- the exact WBD refresh cadence;
-- the final canonicalization precision for HUC12 geometry hashes;
-- the policy for NHDPlus HR COMID / Permanent Identifier ambiguity;
-- the policy for FEMA NFHL versus observed flood evidence;
-- the public API route names, UI component names, or runtime DTO names;
-- live connector activation, endpoint polling, or source terms;
-- current repo implementation status.
+It does **not** decide or perform:
 
-Those remain **PROPOSED** or **NEEDS VERIFICATION** until settled by repo inspection, accepted ADRs, source descriptors, policy gates, tests, and promotion receipts.
+- acceptance of ADR-0026;
+- connector activation or live source retrieval;
+- current WBD endpoint behavior, terms, attribution, or cadence;
+- the final machine enum for WBD source role;
+- the final canonical descriptor leaf filename;
+- schema field names beyond the reviewed HUCUnit contract;
+- geometry canonicalization precision or projection rules;
+- the fixture watershed, extent, or source snapshot;
+- NHDPlus identity ambiguity policy;
+- NFHL versus observed-flood source-role policy;
+- governed API routes, UI components, or runtime DTO names;
+- proof generation, release approval, deployment, or publication;
+- migration of the two existing descriptor surfaces in this documentation-only change.
 
 ---
 
 ## Forces
 
-- **Trust membrane.** The first slice should walk `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` cleanly, without bending invariants in the same PR. HUC12 fits in a single small fixture.
-- **Cite-or-abstain default.** Identity-ambiguity handling (`split`, `merge`, `retired`, `no_legacy`, `ambiguous`) and role separation (regulatory vs observed) belong in later, ADR-gated slices — not the first one.
-- **Public sensitivity.** HUC12 polygons are public-safe as watershed boundary context; NFHL imagery and observed-flood evidence carry risks the lane has not yet decided.
-- **Reversibility.** A small pinned fixture and deterministic geometry hash are easier to roll back, supersede, or correct.
-- **Lane sequencing.** Other sources (NHDPlus HR, gages, NFHL, DEMs) join *to* HUC12 in area-correct overlays; without HUC12, they lack a spatial spine.
-- **Geometry-fingerprint discipline.** Forcing this discipline on the first slice prevents a less tractable source from becoming the place where it is first invented.
-- **Directory governance.** Paths must encode responsibility root, lifecycle phase, and domain segment; hydrology must not become a root folder.
+- **Trust membrane.** The first source must walk the governed lifecycle without public clients reading canonical or internal stores.
+- **Cite-or-abstain.** Ambiguous network identity and unresolved source-role claims must abstain rather than guess.
+- **Source-role separation.** WBD boundary context must not collapse into observation, regulation, model output, or emergency guidance.
+- **Determinism.** HUC12 identity, source snapshot, normalized geometry, content digest, and replay inputs must be inspectable.
+- **Small no-network proof.** A bounded Kansas fixture should permit deterministic CI without live-source dependence.
+- **Directory governance.** One source-registry home and one HUCUnit schema authority must be preserved.
+- **Reversibility.** Descriptor convergence, fixture updates, source refreshes, and release candidates need correction and rollback paths.
+- **Evidence before polish.** A badge, map layer, documentation claim, or green readiness check cannot substitute for source, schema, proof, policy, and release closure.
 
 ---
 
 ## Decision
 
-**The hydrology lane's source spine begins at WBD HUC12.** Concretely:
+If accepted, KFM will apply the following rules.
 
-1. **First source descriptor** authored under the source-registry home is `wbd_huc12.yaml`.
-   - PROPOSED normalized path: `data/registry/sources/hydrology/wbd_huc12.yaml`.
-   - Lane role: `watershed_boundary_context`.
-   - Legacy draft path to avoid unless the repo has already accepted it: `data/registry/hydrology/sources/wbd_huc12.yaml`.
-2. **First lane-specific machine schema** authored under the schema home is `huc12.schema.json`.
-   - PROPOSED normalized path: `schemas/contracts/v1/domains/hydrology/huc12.schema.json`.
-   - Legacy draft path to avoid unless the repo has already accepted it: `schemas/contracts/v1/hydrology/huc12.schema.json`.
-   - Required fields remain: `huc12`, `name`, `areasqkm`, `states`, `source_version`, `geometry_hash`, `bbox`, `valid_time`.
-3. **First pinned no-network fixture** is a Kansas-area HUC12 GeoJSON.
-   - PROPOSED fixture path: `fixtures/domains/hydrology/wbd_huc12/ks_huc12_<HUC12>.geojson`.
-   - The fixture simulates a source-edge capture for tests; it does not itself prove publication.
-4. **First lifecycle raw capture** created by a real or dry-run connector/pipeline uses the data lifecycle path.
-   - PROPOSED raw-capture path shape: `data/raw/hydrology/wbd_huc12/<run_id>/ks_huc12_<HUC12>.geojson`.
-   - This is distinct from the test fixture home above.
-5. **First end-to-end fixture proof** walks `wbd_huc12.yaml` → pinned fixture → RAW capture → normalized HUC12 → processed `huc12.geoparquet` → STAC + DCAT + PROV records → `EvidenceBundle` → `DecisionEnvelope` → `LayerManifest` → `ReleaseManifest` candidate.
-6. **Change detection for HUC12** uses a normalized geometry/content fingerprint. `LoadDate` / `lastEditDate` are recorded as *signals only*, not as change proof.
-7. **Source-role discipline.** WBD HUC12 is admitted under source role `watershed_boundary_context`. It **MUST NOT** be presented as an observation, regulatory ruling, flood occurrence, terrain derivative, or model output.
-8. **Spatial reference for crosswalks.** Subsequent crosswalks involving HUC12 (HUC12 ↔ admin, HUC12 ↔ COMID) are computed with an area-correct projection and deterministic geometry hashing. EPSG:5070 remains the PROPOSED default unless a stronger projection rule is accepted.
-9. **Lane-internal ordering after WBD HUC12** *(INFERRED from corpus phase plans; deviations require an ADR amending this section)*:
-   1. **WBD HUC12** — watershed boundary context *(this ADR)*.
-   2. **NHDPlus HR** — network identity, with COMID / Permanent Identifier crosswalk.
-   3. **USGS Water Data / NWIS** — observation; parameter codes `00060` / `00065` first.
-   4. **FEMA NFHL** — regulatory flood context, role-separated from observed flood.
-   5. **USGS 3DEP** — terrain-derivative input.
-   6. **Observed flood evidence** — historical / event evidence, admitted later with explicit confidence, correction lineage, and source-role separation.
+### 1. WBD HUC12 leads Hydrology source graduation
 
-### Conformance language *(RFC 2119)*
+WBD HUC12 is the first Hydrology source family permitted to move beyond placeholder/readiness state. Other Hydrology source families may retain planning scaffolds, but they must not be presented as the lane's published spatial anchor before WBD HUC12 itself satisfies the implementation graduation gates.
 
-- The hydrology lane **MUST** ship the WBD HUC12 source descriptor, schema, pinned fixture, and end-to-end fixture proof before any other hydrology source descriptor is promoted past `active_fixture_only`.
-- The hydrology lane **MUST NOT** publish a non-HUC12 hydrology source as the public anchor for spatial joins until WBD HUC12 itself is `published`.
-- The lane **MUST NOT** create parallel source-registry or schema homes for WBD HUC12. If legacy and normalized paths both appear in the repo, reviewers **MUST** open a drift entry and choose one canonical path by ADR or accepted migration note.
-- The lane **SHOULD** keep WBD HUC12 as row 1 in `docs/domains/hydrology/SOURCE_REGISTRY.md` and the first row in any human-facing hydrology source-family table.
-- A PR that bends this ordering **MUST** cite a superseding ADR.
+### 2. Use the existing HUCUnit semantic and schema authority
+
+- Human object meaning remains in [`contracts/domains/hydrology/huc_unit.md`](../../contracts/domains/hydrology/huc_unit.md).
+- Machine shape remains in [`schemas/contracts/v1/domains/hydrology/huc_unit.schema.json`](../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json).
+- This ADR **does not authorize** a competing `huc12.schema.json`.
+- HUC12 is a level/granularity of `HUCUnit`, not a parallel object family, unless a later accepted ADR demonstrates that the domain model requires a separate type.
+
+### 3. Converge WBD descriptor authority before source activation
+
+The canonical responsibility family is `data/registry/sources/hydrology/`. The two current WBD surfaces must be reconciled through a separate migration:
+
+1. preserve useful descriptor fields and commit lineage;
+2. choose one canonical descriptor under `data/registry/sources/hydrology/`;
+3. mark any temporary compatibility file explicitly and prohibit independent evolution;
+4. update references, validators, tests, and receipts atomically;
+5. record the drift resolution and rollback target.
+
+The preferred canonical leaf `wbd_huc12.yaml` is **PROPOSED**. The migration must verify repository conventions and the source-descriptor contract before adopting it.
+
+### 4. Keep the source role bounded
+
+The semantic source role is **watershed boundary authority/context used for accounting and aggregation**. The exact machine vocabulary remains **NEEDS VERIFICATION** because current repository surfaces use non-converged terms such as `primary`, `authority`, and `context`.
+
+Whatever enum is adopted, WBD HUC12 must not be promoted as:
+
+- `observed`;
+- `regulatory`;
+- observed-flood evidence;
+- a terrain/model output;
+- emergency or life-safety authority.
+
+### 5. Graduate the existing fixture and pipeline paths
+
+- Replace the placeholder at `fixtures/domains/hydrology/valid/huc12_kansas_sample.json` with a pinned, rights-reviewed, no-network HUC12 fixture only after the HUCUnit schema can validate it.
+- Graduate `pipeline_specs/hydrology/wbd_huc12_ingest.yaml` from placeholder to an accepted declarative spec that names input contract, outputs, lifecycle stages, receipts, quarantine reasons, idempotency, replay, and rollback.
+- Do not let fixture or pipeline-spec presence imply source activation or publication.
+
+### 6. Detect material change through normalized content
+
+Source metadata dates may be retained as signals, but material change requires deterministic comparison over the reviewed source snapshot and normalized content. Geometry fingerprinting must define CRS, coordinate precision, ring orientation, feature ordering, and hash input before it can gate promotion.
+
+### 7. Preserve downstream source order
+
+After WBD HUC12 graduates, the proposed lane sequence is:
+
+1. **NHDPlus HR** — reach/network identity with explicit ambiguity and ABSTAIN behavior.
+2. **USGS Water Data / NWIS** — observations with parameter, unit, qualifier, approval, time, and no-data semantics.
+3. **FEMA NFHL** — regulatory flood context, explicitly separated from observed inundation.
+4. **USGS 3DEP** — terrain/model input with derivative manifests.
+5. **Observed flood evidence** — historical/event evidence with confidence and correction lineage.
+
+A deviation requires a superseding or amending ADR with stronger evidence.
+
+### Conformance language
+
+- The Hydrology lane **MUST NOT** maintain parallel canonical WBD descriptors.
+- The Hydrology lane **MUST NOT** create a parallel HUC12 machine schema while `huc_unit.schema.json` is the tracked HUCUnit schema authority.
+- WBD HUC12 **MUST NOT** be represented as observation, regulation, observed inundation, terrain/model output, or life-safety authority.
+- A real fixture **MUST** validate against a meaningful schema and carry source snapshot, digest, and provenance.
+- A promotion candidate **MUST** close source identity, rights, source role, schema, evidence, policy, catalog, review, release, correction, and rollback gates.
+- A gate that did not run **MUST NOT** be reported as passed.
+- Watchers, readiness workflows, placeholders, documentation, commits, and pull requests **MUST NOT** publish.
+
+[Back to top](#top)
 
 ---
 
-## Directory Rules placement basis
+## Directory Rules Placement Basis
 
-Directory Rules control path placement by responsibility root, lifecycle phase, and domain segment. The table below normalizes the original draft paths without changing the ADR's substantive decision.
+| Surface | Responsibility | Verified or intended home | Current posture |
+|---|---|---|---|
+| ADR | Human decision record | `docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md` | **CONFIRMED path** |
+| Hydrology source registry guide | Human source-role and admission reference | `docs/domains/hydrology/SOURCE_REGISTRY.md` | **CONFIRMED path** |
+| WBD source descriptor | Source identity, rights, cadence, role, activation posture | `data/registry/sources/hydrology/<descriptor>.yaml` | **CONFLICTED**; canonical placeholder and legacy richer descriptor exist |
+| HUCUnit meaning | Semantic contract | `contracts/domains/hydrology/huc_unit.md` | **CONFIRMED path** |
+| HUCUnit shape | Machine schema | `schemas/contracts/v1/domains/hydrology/huc_unit.schema.json` | **CONFIRMED scaffold path** |
+| HUC12 fixture | No-network test input | `fixtures/domains/hydrology/valid/huc12_kansas_sample.json` | **CONFIRMED placeholder path** |
+| WBD ingest spec | Declarative pipeline configuration | `pipeline_specs/hydrology/wbd_huc12_ingest.yaml` | **CONFIRMED placeholder path** |
+| Connector / executable pipeline | Source retrieval and lifecycle execution | `connectors/` and `pipelines/` under verified source/domain conventions | **NEEDS VERIFICATION**; not authorized by this ADR edit |
+| Validation | Repository-wide validators and domain tests | `tools/validators/` and `tests/domains/hydrology/` | **HELD / NEEDS VERIFICATION** |
+| Lifecycle material | RAW, WORK/QUARANTINE, PROCESSED, CATALOG/TRIPLET, PUBLISHED | `data/<phase>/hydrology/` | **PROPOSED until emitted by governed runs** |
+| Release decisions | Promotion, manifest, correction, rollback | `release/` | **PROPOSED until emitted and reviewed** |
 
-| Object / file family | Responsibility | PROPOSED normalized home | Basis | Notes |
-|---|---|---|---|---|
-| ADR markdown | Human-facing decision record | `docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md` | `docs/` explains; `docs/adr/` is the ADR home | ADR number and target filename remain **NEEDS VERIFICATION** |
-| Hydrology architecture links | Human-facing domain docs | `docs/domains/hydrology/` | Domain segment under `docs/` | Existing links preserved |
-| Source descriptor | Source identity / registry | `data/registry/sources/hydrology/wbd_huc12.yaml` | `data/registry/sources/<domain>/` | Avoid also using `data/registry/hydrology/sources/` unless repo ADR says so |
-| HUC12 JSON Schema | Machine-checkable shape | `schemas/contracts/v1/domains/hydrology/huc12.schema.json` | `schemas/contracts/v1/domains/<domain>/` | Avoid also using `schemas/contracts/v1/hydrology/` |
-| Pinned no-network fixture | Golden/synthetic test input | `fixtures/domains/hydrology/wbd_huc12/` | `fixtures/domains/<domain>/` | Keeps fixtures distinct from lifecycle data |
-| Raw capture | Lifecycle data | `data/raw/hydrology/wbd_huc12/<run_id>/` | `data/<phase>/<domain>/...` | Raw captures are immutable source-edge records, not public artifacts |
-| Policy | Admissibility / release decisions | `policy/domains/hydrology/` | `policy/domains/<domain>/` | Singular `policy/` remains canonical |
-| Tests | Enforcement proof | `tests/domains/hydrology/` | `tests/domains/<domain>/` | Fixture tests must not claim live connector behavior |
-| Release decision objects | Release decision, rollback, correction | `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/` | `release/` owns release decisions | Distinct from `data/published/` artifacts |
-
-> [!WARNING]
-> Path normalization is **PROPOSED** until checked against the mounted repo and accepted ADRs. If the target repo has already adopted a different convention, do not create siblings. Open `docs/registers/DRIFT_REGISTER.md` and resolve by ADR or migration note.
+> [!NOTE]
+> The owning roots are verified repository responsibilities. A specific missing leaf is not made real by this table. Any new, moved, or renamed path requires its own scoped change, inbound-reference review, validation, and rollback.
 
 ---
 
-## Lifecycle walk
+<a id="wbd-huc12-trust-path"></a>
 
-The HUC12 first slice walks the standard KFM lifecycle exactly once. The diagram reflects the trust spine, not decoration.
+## WBD HUC12 Trust Path
 
 ```mermaid
 flowchart LR
-    DESC[wbd_huc12.yaml<br/>SourceDescriptor]
-    FIX[fixtures/domains/hydrology<br/>pinned HUC12 GeoJSON]
-    RAW[RAW<br/>data/raw/hydrology/wbd_huc12/run_id]
-    WORK[WORK<br/>normalized geometry<br/>+ content fingerprint]
-    PROC[PROCESSED<br/>huc12.geoparquet<br/>+ spec_hash]
-    CAT[CATALOG / TRIPLET<br/>STAC · DCAT · PROV<br/>+ EvidenceBundle]
-    REL[RELEASE<br/>PromotionDecision<br/>ReleaseManifest<br/>RollbackCard]
-    PUB[PUBLISHED<br/>LayerManifest<br/>via governed API]
+    A["Descriptor convergence<br/>one canonical WBD descriptor"] --> B["Meaningful HUCUnit schema"]
+    B --> C["Pinned Kansas HUC12 fixture"]
+    C --> D["RAW capture + RunReceipt"]
+    D --> E["WORK / QUARANTINE<br/>normalize · fingerprint · validate"]
+    E --> F["PROCESSED HUCUnit records"]
+    F --> G["EvidenceBundle + Catalog closure"]
+    G --> H["Policy + PromotionDecision"]
+    H --> I["ReleaseManifest + RollbackCard"]
+    I --> J["Public-safe layer via governed API"]
 
-    DESC --> FIX --> RAW --> WORK --> PROC --> CAT --> REL --> PUB
-
-    classDef gov fill:#eef,stroke:#446,stroke-width:1px;
-    classDef fixture fill:#f8f8ff,stroke:#667,stroke-width:1px;
-    classDef lifecycle fill:#efe,stroke:#464,stroke-width:1px;
-    classDef release fill:#fff4e6,stroke:#946200,stroke-width:1px;
-    classDef public fill:#fee,stroke:#644,stroke-width:1px;
-    class DESC gov
-    class FIX fixture
-    class RAW,WORK,PROC,CAT lifecycle
-    class REL release
-    class PUB public
+    X["Current state:<br/>path conflict + placeholders"] -. "must converge" .-> A
 ```
 
-> [!NOTE]
-> Promotion between phases is a **governed state transition**, not a file move. Each arrow above corresponds to a receipt-emitting validator or release gate, not a `mv` command.
+Each arrow is a governed transition with an inspectable output. None is a file move, map toggle, documentation assertion, or AI-generated conclusion.
+
+---
+
+<a id="current-gate-status"></a>
+
+## Current Gate Status
+
+| Gate | Current status | Evidence |
+|---|---|---|
+| ADR identity and numbering | **PASS** | Canonical index uniquely assigns ADR-0026 |
+| ADR acceptance | **PENDING / proposed** | No reviewed `accepted` status |
+| Directory placement | **PARTIAL** | Owning roots are clear; descriptor leaf authority is conflicted |
+| Source identity and role | **CONFLICTED** | Canonical placeholder and legacy richer descriptor use different paths and non-converged role vocabulary |
+| Rights and terms | **NEEDS VERIFICATION** | Legacy descriptor asserts public-domain posture; current source review and activation evidence were not verified |
+| HUCUnit semantic contract | **PARTIAL** | Substantive contract exists |
+| HUCUnit machine schema | **HOLD** | Empty properties and `additionalProperties: true` |
+| Pinned HUC12 fixture | **HOLD** | Current fixture is an explicit placeholder |
+| Ingest pipeline spec | **HOLD** | Current spec is an explicit placeholder |
+| Executable validators and tests | **HOLD** | Hydrology workflow deliberately detects and rejects uncoordinated executable graduation |
+| EvidenceBundle and catalog closure | **HOLD / UNKNOWN** | No deterministic HUC12 proof packet verified |
+| Release and rollback closure | **HOLD / UNKNOWN** | No governed HUC12 release packet verified |
+| Public publication | **NONE** | No KFM publication evidence |
+
+A green `domain-hydrology` readiness result proves only the bounded checks stated by that workflow. It does not upgrade any held gate.
 
 ---
 
@@ -223,144 +408,233 @@ flowchart LR
 
 ### Positive
 
-- The first proof slice is **small, deterministic, public-safe**, and exercises the core governance object family (`SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `RunReceipt`, `DecisionEnvelope`, `LayerManifest`, `CatalogMatrix`, `ReleaseManifest`, `RollbackCard`) without inheriting time-series qualifier or regulatory-vs-observed complexity.
-- HUC12 polygon geometry is small enough for a no-network fixture, which keeps the first slice CI-stable from day one.
-- Subsequent sources (NHDPlus HR, gages, NFHL, DEMs) inherit a stable spatial spine, so their first slices are also smaller.
-- The decision forces **geometry-fingerprint discipline** early, before less tractable sources demand it.
-- Stakeholders see a working watershed drilldown earlier than they would under any alternative spine head.
-- Directory placement is cleaner: source descriptors, schemas, fixtures, lifecycle data, policies, tests, and release decisions do not collapse into one folder family.
+- Establishes one conservative, public-safe spatial anchor for later Hydrology sources.
+- Reuses the existing HUCUnit domain model instead of creating a competing HUC12 schema family.
+- Surfaces the current descriptor-path conflict before more consumers depend on it.
+- Makes the first implementation slice small enough for deterministic no-network proof.
+- Forces geometry canonicalization, source-vintage, evidence, and rollback discipline early.
+- Keeps NFHL regulatory context, NWIS observations, network identity, terrain derivatives, and observed flood evidence semantically separate.
+- Gives MapLibre and downstream clients a future public-safe accounting layer without making the renderer a truth source.
 
-### Negative / trade-offs
+### Negative and trade-offs
 
-- The first slice does **not** exercise time-series concerns (qualifier / provisional / no-data state); these slip to slice 3 (USGS Water Data / NWIS).
-- The first slice does **not** exercise regulatory-context vs observed-event separation; this slips to a later slice gated by a separate ADR (PROPOSED: hydrology flood source-role separation).
-- A WBD endpoint outage or schema change blocks spine refresh until the pinned fixture, source descriptor, or refresh runbook is updated.
-- Path normalization may require a small migration if the repo already has source descriptors under a legacy path.
+- The first slice does not exercise observation qualifiers, provisional/final states, or time-series no-data behavior.
+- Descriptor convergence requires a separate multi-reference migration rather than a one-file documentation change.
+- The source-role enum cannot be finalized until the source-descriptor contract and Hydrology registry vocabulary converge.
+- A real HUC12 fixture may expose geometry canonicalization and source-snapshot questions that the current scaffold avoids.
+- WBD refresh remains blocked until endpoint, terms, attribution, cadence, and material-change rules are verified.
 
 ### Neutral
 
-- The lane's first publishable layer is a watershed boundary, not a gauge or flood layer. This is the conservative choice the corpus already endorses.
+- The first public candidate would be watershed accounting/context, not a gauge, flood, or terrain layer.
+- Accepting this ADR would approve sequencing only; proof-bearing and release states remain separately gated.
 
 ---
 
-## Alternatives considered
+## Alternatives Considered
 
-### A — Start with NHDPlus HR (network identity first)
+### A — Start with NHDPlus HR
 
-> **Rejected.** Network-identity ingestion exposes COMID / Permanent Identifier ambiguity (`split`, `merge`, `retired`, `no_legacy`, `ambiguous`) before the lane has settled an ABSTAIN-on-ambiguity policy. The slice would have to ship that policy in the same PR, increasing scope. NHDPlus HR release drift is a poor first-slice failure mode.
+**Rejected for the first slice.** It introduces reach-identity splits, merges, retirement, and ambiguous crosswalks before the lane has executable ABSTAIN policy.
 
-### B — Start with USGS Water Data / NWIS observations
+### B — Start with USGS Water Data / NWIS
 
-> **Rejected.** Observation slices need site metadata, parameter codes (for example, `00060` / `00065`), units, qualifiers, approval/provisional state, timestamps, time zone, and no-data reasons handled correctly *before* the slice can claim it exercises the trust spine. It is an excellent slice — just not the first one.
+**Rejected for the first slice.** It requires observation semantics, parameter codes, units, qualifiers, approval state, timestamps, time zones, and no-data outcomes in the same proof packet.
 
 ### C — Start with FEMA NFHL
 
-> **Rejected.** NFHL is **regulatory flood context**, not observed inundation. Leading with it risks collapsing regulatory and observed truth classes in the first public artifact and shipping public flood-context material before the lane has a role-separation ADR.
+**Rejected for the first slice.** NFHL is regulatory flood context, not observed inundation or prediction. Leading with it increases source-role collapse risk.
 
-### D — Start with USGS 3DEP / terrain-derived hydrology
+### D — Start with USGS 3DEP or terrain-derived hydrology
 
-> **Rejected.** DEM-derived hydrology is a **derivative**, not an authoritative water entity. It depends on a `dem_derivative_manifest` and a documented conditioning algorithm. Starting here inverts the authority order: the spine should be authoritative-first, derived-second.
+**Rejected.** Terrain is a derivative/model input, not the authoritative Hydrology accounting identity.
 
-### E — No designated spine head; admit any hydrology source first
+### E — Admit any Hydrology source first
 
-> **Rejected.** Without a pinned spine head, every downstream source picks its own spatial join key. That is the failure mode that produces silent identity drift.
+**Rejected.** Without a designated spatial spine, downstream sources choose incompatible join keys and silently accumulate identity drift.
 
----
+### F — Create a new HUC12-specific schema beside HUCUnit
 
-## Compliance & enforcement
-
-| Surface | Enforcement | Status |
-|---|---|---|
-| `docs/domains/hydrology/SOURCE_REGISTRY.md` | Lists WBD HUC12 as row 1 and back-references this ADR | PROPOSED |
-| `data/registry/sources/hydrology/wbd_huc12.yaml` | Carries source role, rights posture, cadence, steward, endpoints, and source_version handling | PROPOSED |
-| `schemas/contracts/v1/domains/hydrology/huc12.schema.json` | Defines the lane-specific HUC12 record shape | PROPOSED |
-| `fixtures/domains/hydrology/wbd_huc12/` | Holds the no-network pinned fixture; does not claim live source behavior | PROPOSED |
-| `tools/validators/hydrology/validate_source_descriptor.py` | DENY on missing source role, URL, rights, cadence, source_version handling, or steward for `wbd_huc12.yaml` | PROPOSED |
-| `tools/validators/hydrology/validate_huc12_fingerprint.py` | Pass only if normalized geometry/content hash is stable; metadata dates alone are insufficient | PROPOSED |
-| `tools/validators/hydrology/validate_promotion_gate.py` | Promotion of any non-HUC12 hydrology source past `active_fixture_only` requires WBD HUC12 already at `published` | PROPOSED |
-| `tests/domains/hydrology/test_e2e_fixture_proof.py` | Asserts the slice walks `wbd_huc12.yaml` → published HUC12 layer end-to-end using fixture-only inputs | PROPOSED |
-| `docs/registers/DRIFT_REGISTER.md` | Records any path or sequencing deviation | PROPOSED |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Records ADR number, fixture ID, source_version cadence, and geometry precision checks | PROPOSED |
-
-> [!WARNING]
-> All paths above are **PROPOSED**. Names and homes must be checked against current repo state before merge. If repo evidence conflicts with this ADR's path proposals, record the conflict rather than creating divergent siblings.
+**Rejected by current repository evidence.** The repository already has a HUCUnit semantic contract and tracked machine schema. A second HUC12 authority would create parallel machine meaning unless a later ADR proves a distinct bounded type is necessary.
 
 ---
 
-## Verification
+<a id="acceptance-gates"></a>
 
-Acceptance signals (proof that this ADR is in force):
+## Acceptance Gates
 
-- [ ] ADR number and target path are confirmed against the accepted ADR index.
-- [ ] Directory Rules placement check is recorded in the PR description.
-- [ ] `docs/domains/hydrology/SOURCE_REGISTRY.md` opens with WBD HUC12 and links to this ADR.
-- [ ] `data/registry/sources/hydrology/wbd_huc12.yaml` exists and validates against the source-descriptor schema.
-- [ ] No duplicate WBD HUC12 source descriptor exists under `data/registry/hydrology/sources/` unless it is a documented compatibility mirror.
-- [ ] `schemas/contracts/v1/domains/hydrology/huc12.schema.json` exists with required fields (`huc12`, `name`, `areasqkm`, `states`, `source_version`, `geometry_hash`, `bbox`, `valid_time`).
-- [ ] No duplicate HUC12 machine schema exists under `schemas/contracts/v1/hydrology/` unless it is a documented compatibility mirror.
-- [ ] A pinned Kansas-area HUC12 GeoJSON fixture exists under `fixtures/domains/hydrology/wbd_huc12/`.
-- [ ] If a lifecycle raw fixture/capture is used, it is created under `data/raw/hydrology/wbd_huc12/<run_id>/` and carries retrieval/checksum metadata.
-- [ ] `validate_huc12_fingerprint.py` passes on the pinned fixture and produces a deterministic geometry hash.
-- [ ] `test_e2e_fixture_proof.py` walks the trust spine end-to-end with HUC12 as the only hydrology source.
-- [ ] No promoted hydrology source descriptor outside WBD HUC12 reaches `published` before HUC12 itself does.
-- [ ] An `EvidenceBundle` for at least one HUC12 record resolves all `EvidenceRef`s.
-- [ ] A release candidate records `PromotionDecision`, `ReleaseManifest`, and `RollbackCard` before public publication.
+### Governance acceptance gates
+
+ADR-0026 may move from `proposed` to `accepted` only when:
+
+- [ ] The record and canonical index are updated together with matching reviewed status.
+- [ ] Named decision owners and reviewers are verified; CODEOWNERS routing is not treated as approval.
+- [ ] The WBD-first sequence and its non-decisions are explicitly reviewed.
+- [ ] The descriptor-path conflict has an approved migration disposition or a bounded blocking plan.
+- [ ] The decision confirms reuse of the HUCUnit contract/schema family or records a reviewed alternative.
+- [ ] The source-role semantic boundary is approved without pretending the machine enum is already settled.
+- [ ] Alternatives, consequences, migration impact, and rollback remain complete.
+- [ ] No non-Markdown implementation or publication claim is bundled into the acceptance transition without its own evidence.
+
+### Implementation graduation gates
+
+WBD HUC12 may graduate beyond placeholder/readiness state only when:
+
+- [ ] Exactly one canonical WBD descriptor exists in the `data/registry/sources/hydrology/` authority family; any compatibility path is explicit and non-evolving.
+- [ ] Current source rights, terms, attribution, endpoint, cadence, steward, and activation posture are verified.
+- [ ] `huc_unit.schema.json` enforces reviewed HUC identity, level, source snapshot, temporal scope, geometry/digest, evidence, and release fields.
+- [ ] Invalid HUCUnit fixtures are rejected and a pinned Kansas HUC12 fixture passes.
+- [ ] Geometry canonicalization and content fingerprinting are deterministic and tested.
+- [ ] The WBD ingest spec defines accepted inputs, lifecycle outputs, quarantine reasons, receipts, idempotency, replay, and rollback.
+- [ ] A no-network run emits validated RAW/WORK/PROCESSED artifacts and receipts.
+- [ ] EvidenceRef resolves to EvidenceBundle for representative HUC12 claims.
+- [ ] STAC, DCAT, PROV, and any CatalogMatrix surface agree.
+- [ ] Policy and PromotionDecision gates run fail closed.
+- [ ] ReleaseManifest, correction path, and RollbackCard exist before public serving.
+- [ ] Public clients use governed APIs or released artifacts, never canonical/internal stores.
+- [ ] The workflow no longer reports readiness hold for the graduated capability and its replacement checks are reviewed.
 
 ---
+
+<a id="migration-plan"></a>
+
+## Migration Plan
+
+This ADR edit changes only Markdown. The source-registry and machine surfaces require a separate scoped migration.
+
+1. **Inventory and freeze**
+   - Pin both existing WBD descriptor blobs and all inbound references.
+   - Prevent either descriptor from being independently upgraded while the conflict is open.
+2. **Reconcile meaning**
+   - Compare fields against the source-descriptor contract, Hydrology source registry, rights policy, and activation workflow.
+   - Resolve `primary` versus authority/context role vocabulary without silently promoting a source role.
+3. **Select one canonical descriptor**
+   - Place the canonical descriptor under `data/registry/sources/hydrology/`.
+   - Prefer `wbd_huc12.yaml` only after leaf naming and schema validation are reviewed.
+4. **Preserve compatibility only when required**
+   - A temporary legacy file must declare compatibility class, canonical target, deprecation condition, and non-evolution rule.
+5. **Update consumers atomically**
+   - Pipeline specs, validators, tests, docs, receipts, and source references move in one bounded migration.
+6. **Validate and record**
+   - Run source-descriptor, path, link, test, and workflow checks.
+   - Record the drift resolution, implementation commit, and rollback target.
+
+No migration is authorized by this one-file documentation pull request.
+
+---
+
+<a id="rollback"></a>
 
 ## Rollback
 
-Rollback is required if this ADR causes path drift, weakens source integrity, breaks source-role separation, publishes non-HUC12 hydrology first, or creates duplicate schema/source homes.
+### Documentation change rollback
+
+Before merge, close or abandon the draft PR and branch. After merge, revert the implementation commit through a transparent revert PR. Do not rewrite shared history.
+
+### Decision and implementation rollback
 
 | Failure condition | Rollback action | Evidence to retain |
 |---|---|---|
-| ADR number conflicts with accepted ADR index | Rename/re-number in `docs/adr/`; update backlinks; retain supersession note | ADR index diff; correction note |
-| Source descriptor lands in both normalized and legacy homes | Freeze one as compatibility or remove duplicate via migration PR | Drift entry; migration note; checksum of retained descriptor |
-| HUC12 schema lands in both normalized and legacy homes | Keep canonical `schemas/contracts/v1/...` home unless accepted ADR says otherwise; mirror only if documented | Drift entry; schema hash; compatibility README |
-| Non-HUC12 hydrology source promoted first | Revert release candidate; mark downstream artifacts stale; open correction/withdrawal if public | PromotionDecision; ReleaseManifest; RollbackCard |
-| Geometry hash is unstable | Quarantine fixture; pin prior fixture; record precision/canonicalization defect | Validation report; fixture checksum; reviewer diff |
-| WBD source role is misused as observation/regulatory truth | Withdraw affected claim or layer; issue correction notice if public | EvidenceBundle diff; correction notice |
+| ADR status changed without reviewed acceptance | Restore `proposed`; reconcile index and record | Review history; index diff; correction note |
+| Descriptor migration loses fields or breaks consumers | Restore pinned pre-migration descriptors; mark conflict open | Blob hashes; inbound-reference inventory; migration report |
+| Two descriptors continue evolving | Freeze both; designate no source active; return to quarantine/readiness | Drift entry; source activation decisions |
+| HUCUnit schema rejects valid source data incorrectly | Revert schema and fixture together; retain failing cases | Schema hash; fixture hashes; validation report |
+| Geometry fingerprint is unstable | Quarantine outputs; restore prior fixture/snapshot | Canonicalization config; hashes; reviewer diff |
+| WBD role is used as observation, regulation, or event truth | Withdraw affected claims/layers; issue correction if exposed | EvidenceBundle diff; PolicyDecision; CorrectionNotice |
+| Non-HUC12 source is promoted as the lane anchor first | Revert candidate and dependent artifacts; mark them stale | PromotionDecision; ReleaseManifest; RollbackCard |
+| Public client reads canonical/internal WBD stores | Disable route or layer; restore governed boundary | Access logs where permitted; incident/correction record |
 
-Rollback target: previous accepted hydrology source-registry state + prior release manifest, or `ROLLBACK_TARGET_TBD` until the first accepted hydrology release exists.
+Rollback target for this documentation update: the prior blob recorded in the meta block. Rollback target for a future source release: the preceding reviewed source descriptor, fixture, processed artifact, and ReleaseManifest set.
 
 ---
 
-## Related decisions and documents
+## Validation
+
+### Documentation validation
+
+- One H1 and matching `ADR-0026` filename/H1 identity.
+- Source metadata remains `draft`; effective decision status remains `proposed`.
+- Stable `doc_id`, created date, path, and ADR number are preserved.
+- Related ADR links use current tracked filenames.
+- Repository-relative links point to verified paths.
+- Badge claims are repeated in text and backed by pinned repository evidence.
+- Mermaid uses a single grounded flow with a text explanation.
+- No placeholder owner is converted into a verified steward.
+- No source, schema, fixture, proof, release, or publication maturity is overstated.
+
+### Repository-native validation
+
+Run from repository root:
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+```
+
+Observe the read-only documentation and Hydrology workflows. A green result proves only what each workflow states. It does not accept ADR-0026, activate WBD, prove Hydrology truth, or authorize publication.
+
+---
+
+## Risks
+
+| Risk | Current control | Remaining action |
+|---|---|---|
+| Parallel WBD descriptor authority | Conflict is explicit in this ADR | Governed migration and compatibility disposition |
+| HUCUnit schema appears stronger than it is | Scaffold status is visible | Add reviewed fields and invalid fixtures |
+| Placeholder fixture is treated as data | Placeholder status is explicit | Replace only after schema/source review |
+| Green readiness workflow is treated as proof | Workflow and ADR repeat the hold boundary | Graduate checks deliberately with real producers |
+| WBD context is treated as observation/regulation | Source-role anti-collapse language | Enforce with schema, policy, tests, and UI labels |
+| Geometry hash changes across tools | No accepted canonicalization yet | Pin CRS, precision, ordering, normalization, and test vectors |
+| External facts become stale | Endpoint/terms/cadence remain NEEDS VERIFICATION | Current source review before activation |
+| Acceptance is confused with implementation | Separate gate sets | Keep review and proof evidence distinct |
+| Map layer becomes truth authority | Governed API and EvidenceBundle boundary | Click-to-evidence and release-manifest tests |
+
+---
+
+<a id="open-questions"></a>
+
+## Open Questions
+
+- **NEEDS VERIFICATION:** Which exact SourceDescriptor schema and contract are accepted for the migration?
+- **NEEDS VERIFICATION:** What canonical leaf filename should replace the two current WBD surfaces?
+- **NEEDS VERIFICATION:** Which machine source-role enum represents watershed boundary authority/context without collapsing into `observed`, `regulatory`, or `modeled`?
+- **NEEDS VERIFICATION:** Which Kansas HUC12, source snapshot, and geometry extent provide the smallest meaningful positive and negative test set?
+- **NEEDS VERIFICATION:** What CRS, coordinate precision, ring orientation, feature ordering, and canonical serialization define the geometry fingerprint?
+- **NEEDS VERIFICATION:** What WBD endpoint, service layer, rights/attribution posture, and refresh cadence are current at activation time?
+- **NEEDS VERIFICATION:** Which validators and tests become the accepted executable Hydrology suite?
+- **UNKNOWN:** Which independent reviewers will satisfy decision acceptance and release separation of duties?
+- **UNKNOWN:** Whether any governed HUC12 proof packet or release exists outside the inspected repository surfaces.
+
+---
+
+<a id="references"></a>
+
+## References
 
 | Reference | Role |
 |---|---|
-| [`docs/adr/ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Schema-home convention; this ADR places HUC12 machine shape under `schemas/contracts/v1/...` |
-| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Responsibility-root placement law; this revision normalizes schema/source/fixture homes against it |
-| [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED — the spine the slice walks |
-| [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) | Cite-or-abstain default — informs why ambiguity-heavy sources are deferred |
-| [`docs/domains/hydrology/ARCHITECTURE.md`](../domains/hydrology/ARCHITECTURE.md) | Hydrology lane architecture; should reference this ADR |
-| [`docs/domains/hydrology/SOURCE_REGISTRY.md`](../domains/hydrology/SOURCE_REGISTRY.md) | Per-lane source registry; row 1 is WBD HUC12 |
-| `data/registry/sources/hydrology/wbd_huc12.yaml` | PROPOSED first source descriptor |
-| `schemas/contracts/v1/domains/hydrology/huc12.schema.json` | PROPOSED first lane-specific machine schema |
-| `fixtures/domains/hydrology/wbd_huc12/` | PROPOSED first pinned no-network fixture home |
-| `data/raw/hydrology/wbd_huc12/<run_id>/` | PROPOSED lifecycle raw-capture path for real or dry-run captures |
-| PROPOSED `ADR-00xx` *Hydrologic identity & ABSTAIN* | Governs Permanent Identifier / COMID handling needed by source #2 (NHDPlus HR) |
-| PROPOSED `ADR-00xx` *Flood source-role separation* | Governs NFHL vs observed flood; gates source #4 |
-| PROPOSED `ADR-00xx` *Hydrology public surface boundary* | Governs governed API as the only public path |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Confirms ADR-0026 identity and proposed effective status |
+| [`docs/adr/README.md`](./README.md) | ADR operating contract, lifecycle, review, and validation |
+| [`ADR-0001`](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Canonical machine-schema home |
+| [`ADR-0009`](./ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) | Proposed Hydrology-first proof sequencing and graduation burden |
+| [`ADR-0017`](./ADR-0017-source-descriptor-admission-process.md) | Proposed source-descriptor admission process |
+| [`ADR-0018`](./ADR-0018-promotion-gate-sequence.md) | Proposed promotion-gate sequence |
+| [`ADR-0020`](./ADR-0020-abstain-is-a-first-class-decision.md) | Proposed first-class ABSTAIN posture |
+| [`ADR-0025`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Proposed public-client trust membrane |
+| [`Directory Rules`](../doctrine/directory-rules.md) | Placement and responsibility-root doctrine |
+| [`Hydrology Source Registry`](../domains/hydrology/SOURCE_REGISTRY.md) | Human source-family, source-role, rights, and admission reference |
+| [`HUCUnit semantic contract`](../../contracts/domains/hydrology/huc_unit.md) | Current semantic authority for HUC units |
+| [`HUCUnit schema`](../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json) | Current machine-schema scaffold |
+| [`Canonical WBD placeholder`](../../data/registry/sources/hydrology/wbd.source.yaml) | Current placeholder in canonical source-registry family |
+| [`Legacy WBD descriptor`](../../data/registry/hydrology/sources/wbd_huc12.yaml) | Current richer descriptor in conflicting legacy path |
+| [`HUC12 fixture placeholder`](../../fixtures/domains/hydrology/valid/huc12_kansas_sample.json) | Current planned fixture path |
+| [`WBD ingest-spec placeholder`](../../pipeline_specs/hydrology/wbd_huc12_ingest.yaml) | Current planned declarative pipeline path |
+| [`Hydrology readiness workflow`](../../.github/workflows/domain-hydrology.yml) | Read-only checks and explicit readiness/proof/release holds |
+| [`Drift Register`](../registers/DRIFT_REGISTER.md) | Placement and authority conflict record |
+| [`Verification Backlog`](../registers/VERIFICATION_BACKLOG.md) | Concrete unresolved checks |
 
-External authorities supporting the source-role description remain **NEEDS VERIFICATION at landing** for current endpoint behavior, terms, and service metadata:
-
-- USGS Watershed Boundary Dataset — <https://www.usgs.gov/national-hydrography/watershed-boundary-dataset>
-- The National Map WBD MapServer, HUC12 layer — <https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6>
-
----
-
-## Open questions
-
-- **OPEN.** Default Kansas HUC12 chosen for the pinned fixture — pick a small, hydrologically simple watershed, or one that exposes useful negative-test geometry? *NEEDS VERIFICATION against the chosen Kansas thin slice.*
-- **OPEN.** Should this ADR pin a default WBD release / `source_version` cadence? Probably yes; deferred to a hydrology source-refresh runbook ADR.
-- **OPEN.** Geometry-hash precision for HUC12 polygons — defer to ADR-0001 canonicalization or set a lane-specific precision? *NEEDS VERIFICATION.*
-- **OPEN.** Should the HUC12 fixture be a single polygon, a multi-feature county clip, or a minimal Kansas statewide sample? *NEEDS VERIFICATION against CI runtime and proof burden.*
-- **NEEDS VERIFICATION.** Whether the unified repo-wide ADR numbering reaches `0026` cleanly, or whether repo evidence shows a different next-available number.
-- **NEEDS VERIFICATION.** Whether the repo currently uses `docs/adr/` as canonical or has accepted a different ADR home.
-- **NEEDS VERIFICATION.** Whether existing repo conventions already use `data/registry/hydrology/sources/` or `schemas/contracts/v1/hydrology/`; if so, open drift/migration rather than creating parallel homes.
-- **NEEDS VERIFICATION.** Current WBD endpoint behavior, source terms, attribution expectations, and HUC12 layer metadata.
+External WBD endpoints, source terms, attribution, and service metadata remain **NEEDS VERIFICATION** before source activation. This ADR intentionally does not pin volatile URLs as current operational truth.
 
 ---
 
-<sub>↥ <a href="#adr-0026--hydrology-source-spine-starts-with-wbd-huc12">Back to top</a></sub>
+<sub>↥ <a href="#top">Back to top</a></sub>
