@@ -1,475 +1,909 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/0027                                                        # NEEDS_VERIFICATION until registered
+doc_id: kfm://adr/0027
 title: ADR-0027 — County Focus Mode Control Plane
-type: standard
-adr_number: "0027"                                                            # NEEDS_VERIFICATION against live docs/adr/
-version: v0.2
-status: PROPOSED
+type: adr
+adr_id: ADR-0027
+version: v0.3
+status: proposed
+effective_decision_status: proposed
 owners:
-  - <OWNER:focus-mode-steward>
-  - <OWNER:directory-rules-steward>
-deciders:
-  - <DECIDER:repo-steward>
-  - <DECIDER:directory-rules-steward>
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — Focus Mode and control-plane steward"
+  - "NEEDS VERIFICATION — Directory Rules steward"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Focus Mode and control-plane steward
+  - Directory Rules steward
+  - Contracts and schemas stewards
+  - Validation and CI steward
+  - Governed API and Explorer Web maintainers
+  - At least one county-lane or domain steward
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-07-24
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+current_path: docs/adr/ADR-0027-county-focus-mode-control-plane.md
 supersedes: []
-superseded_by: []
+superseded_by: null
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 22adc4839709349af67f5636b77936990f8289ce
+  target_prior_blob: b1894474f8dc402f5d47abea8dd2d0cf1d0571b8
+  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  legacy_focus_control_readme_blob: 008cf7b3496fdfe56ff3a23b12cb470c27dcf76e
+  legacy_county_index_blob: ba888a806148866501bf1f6c730a7b411ca67277
+  legacy_county_template_blob: 327c6304cd5301a38c9e086610be12725f3fabf7
+  focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
+  focus_mode_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
+  validate_all_blob: 5f01ac208c46f4ee98750af4fc1032604b670e9b
+  canonical_focus_modes_readme_at_base: absent
+  canonical_county_index_at_base: absent
+  canonical_county_template_at_base: absent
+  focus_mode_payload_schema_at_base: absent
+  focus_mode_payload_validator_at_base: absent
+inspection_boundary: >
+  Current-session GitHub reads and bounded repository search covering the ADR inventory,
+  Directory Rules, ADR-0028, the actual singular Focus Mode README, county index and
+  county template, the FocusModePayload semantic contract, the county index validator,
+  the validator orchestrator placeholder, exact absence checks for the canonical plural
+  control-plane files and FocusModePayload schema/payload validator, and open pull-request
+  overlap for this target. No complete clone, validator execution, structural migration,
+  schema or policy execution, governed API Focus request, map render, release manifest,
+  correction, rollback drill, deployment, or KFM publication was exercised.
 related:
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
   - docs/doctrine/directory-rules.md
-  - docs/focus-modes/README.md
-  - docs/focus-modes/COUNTY_INDEX.md
-  - docs/focus-modes/_template/county-build-plan.md
-  - tools/validators/validate_focus_mode_index.py
+  - docs/focus-mode/README.md
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - docs/focus-mode/counties/_template/county-build-plan.md
   - contracts/focus_mode/focus_mode_payload.md
-  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json            # NEEDS_VERIFICATION (PROPOSED follow-up)
-  - docs/adr/ADR-0001-schema-home.md                                          # NEEDS_VERIFICATION
-  - docs/adr/ADR-0003-policy-singular-is-canonical.md                         # NEEDS_VERIFICATION (informal conflict)
-tags:
-  - kfm
-  - adr
-  - focus-mode
-  - control-plane
-  - directory-rules
-  - county
-  - proof-slice
+  - tools/validators/validate_focus_mode_index.py
+  - tools/validate_all.py
+  - docs/registers/DRIFT_REGISTER.md
+tags: [kfm, adr, focus-mode, county-scale, control-plane, directory-rules, migration, evidence, validation, release, rollback, cite-or-abstain]
 notes:
-  - ADR number is PROPOSED as 0027; assign next available from live docs/adr/ at acceptance.
-  - Resolves singular/plural naming question for docs/focus-modes/.
-  - No live repository was mounted in the authoring session; every emitted file path is PROPOSED.
+  - "v0.3 is a same-path, repository-grounded modernization. It preserves source and effective status proposed; it does not accept ADR-0027 or authorize migration by itself."
+  - "ADR-0027 identity is confirmed by docs/adr/INDEX.md; the original numbering uncertainty is resolved."
+  - "Directory Rules names docs/focus-modes/<area>-<scope>/ as canonical, while current Focus materials remain under legacy singular docs/focus-mode/."
+  - "The current six-artifact concept is only partially implemented and internally inconsistent: the semantic contract and index validator exist, but the canonical plural docs, machine schema, payload validator, and working orchestration do not."
+  - "No repository path outside this ADR is changed by this revision."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0027 — County Focus Mode Control Plane
 
-> Ratify the six-artifact governance subsystem for `docs/focus-modes/` and resolve the singular-vs-plural naming question before producing more per-county build plans.
+> **Proposed decision.** Converge county Focus Mode planning into one governed control plane with canonical plural placement, a single 105-county registry, one reusable county template, semantic and machine contracts, deterministic validators, and an explicit plan-to-release path. Preserve legacy materials during migration, but do not let the current singular lane, collision-prevention register, validator assumptions, or county Markdown files independently become canonical truth or publication authority.
 
-![status](https://img.shields.io/badge/status-PROPOSED-orange)
-![class](https://img.shields.io/badge/ADR%20class-structural%20move-blueviolet)
-![authority](https://img.shields.io/badge/authority-Directory%20Rules%20%C2%A76.7-blue)
-![scope](https://img.shields.io/badge/scope-control%20plane-6f42c1)
-![reversibility](https://img.shields.io/badge/reversibility-fully%20reversible-2b8a3e)
-![ci](https://img.shields.io/badge/CI-validator%20smoke%20tested-yellow)
-![repo%20evidence](https://img.shields.io/badge/repo%20evidence-not%20mounted-lightgrey)
-![number](https://img.shields.io/badge/ADR%20number-0027%20PROPOSED-yellow)
-
-**Status:** PROPOSED · **Class:** structural-move ADR (`directory-rules.md` §2.4, §14.2) · **Owners:** `<OWNER:focus-mode-steward>`, `<OWNER:directory-rules-steward>` · **Deciders:** `<DECIDER:repo-steward>`, `<DECIDER:directory-rules-steward>` · **Created:** 2026-05-22 · **Last reviewed:** 2026-05-22
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0027-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![Canonical docs lane: plural](https://img.shields.io/badge/canonical%20docs%20lane-docs%2Ffocus--modes-0969da?style=flat-square)](#placement-and-naming-contract)
+[![Current control plane: conflicted](https://img.shields.io/badge/current%20control%20plane-conflicted-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Schema: absent](https://img.shields.io/badge/FocusModePayload%20schema-absent-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Implementation: hold](https://img.shields.io/badge/implementation-HOLD-b42318?style=flat-square)](#authority-and-publication-boundary)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **ADR number is `0027` (PROPOSED).** Several corpus documents informally reserve `ADR-0003` for different topics, and a prior session emitted `docs/adr/ADR-0003-policy-singular-is-canonical.md` (NEEDS_VERIFICATION against the live tree). Assign the next available ID from `docs/adr/` at acceptance.
+> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0027` to this file and records both source and effective status as `proposed`. Editing, validating, merging, or citing this Markdown does not accept the decision.
 
----
-
-## Contents
-
-- [1. Status](#1-status)
-- [2. Context](#2-context)
-- [3. Decision](#3-decision)
-- [4. Control plane at a glance](#4-control-plane-at-a-glance)
-- [5. Evidence basis](#5-evidence-basis)
-- [6. Directory Rules basis](#6-directory-rules-basis)
-- [7. Consequences](#7-consequences)
-- [8. Migration plan](#8-migration-plan)
-- [9. Alternatives considered](#9-alternatives-considered)
-- [10. Validation](#10-validation)
-- [11. Rollback](#11-rollback)
-- [12. Open questions](#12-open-questions)
-- [13. Cross-references](#13-cross-references)
-- [14. Acceptance criteria](#14-acceptance-criteria)
-
----
-
-## 1. Status
-
-**PROPOSED — not yet accepted.** This ADR ratifies the county Focus Mode control plane as a governed subsystem of `docs/focus-modes/` and resolves the singular/plural naming question.
-
-| Field | Value |
-|---|---|
-| ADR number | `0027` (PROPOSED; **OPEN-FM-08** pending live `docs/adr/` inspection) |
-| Class | Structural-move ADR per `directory-rules.md` §2.4 + §14.2 |
-| Scope | Six in-repo artifacts + one naming decision |
-| Reversibility | Fully reversible (no released payloads, no superseded contracts) |
-| Truth posture | Doctrine CONFIRMED; every emitted path PROPOSED |
-
-[↑ Back to top](#top)
-
----
-
-## 2. Context
-
-**CONFIRMED corpus state.** Eleven county Focus Mode Build Plans are at `status: draft` per `directory-rules.md` v1.2 §0, and the actual enumeration in `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C (dated 2026-05-21) reaches **34**. Without a control plane the work is becoming a growing collection of Markdown files: there is **no master index, no standardized metadata, no validator, and no documented bridge from a county plan to a `FocusModePayload`**.
-
-Three specific problems motivate this ADR:
-
-1. **No navigability.** New collaborators cannot tell which counties are in flight, planned, or untouched. Duplicate selection is possible because no lookup gate exists. Cost grows linearly with each new county.
-2. **No standard metadata.** Each county build plan can drift in shape, making cross-county reasoning, validation, and plan-to-payload generation impossible.
-3. **No payload bridge.** The doctrine repeatedly states *"a Focus Mode is not a publication target by itself"* (`directory-rules.md` §6.7; `kfm_repository_structure_guiding_document.md` §8.3), but no document in the corpus declares the **path** by which a county plan becomes a governed UI payload. The slice can become an indefinite-residence Markdown collection by default.
+> [!CAUTION]
+> **The repository currently contains two incompatible models of the county control plane.** Directory Rules declares canonical `docs/focus-modes/<area>-<scope>/`, but the tracked materials live under legacy singular `docs/focus-mode/`, with a `counties/` grouping and snake_case county folders. The validator is written for the plural lane and a different index/template grammar. Until those surfaces converge, implementation remains **HOLD**.
 
 > [!WARNING]
-> **Compounding drift.** The user's incoming prompt referenced `docs/focus-mode/` (singular hyphen). `directory-rules.md` v1.2 §6.7.2 specifies `docs/focus-modes/` (plural hyphen) as canonical, and §13.5 lists singular variants as drift candidates. The live-repo state of these folders is **NEEDS VERIFICATION**.
+> **A county build plan is not a public payload.** A plan, index row, validator pass, map layer, model response, or merged pull request cannot by itself create `PUBLISHED` state. A public Focus Mode requires evidence closure, policy decisions, a finite runtime envelope, release and promotion records, correction lineage, and a rollback target.
 
-[↑ Back to top](#top)
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Current evidence](#current-repository-evidence) · [Maturity](#current-enforcement-maturity) · [Control plane](#control-plane-contract) · [Placement](#placement-and-naming-contract) · [Authority](#authority-and-publication-boundary) · [Migration](#migration-and-convergence-plan) · [Validation](#validation-and-negative-tests) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [References](#references) · [History](#revision-history)
 
 ---
 
-## 3. Decision
+<a id="status"></a>
 
-Establish a **six-artifact control plane** that gates further per-county work, and **resolve the naming question** in favor of the plural canonical.
+## Status
 
-### 3.1 The six artifacts
+| Field | Current value |
+|---|---|
+| **ADR ID** | `ADR-0027` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
+| **Tracked path** | `docs/adr/ADR-0027-county-focus-mode-control-plane.md` |
+| **Source metadata** | `proposed` |
+| **Effective decision status** | `proposed` |
+| **Decision class** | Cross-root control-plane architecture, canonical lane naming, index/template grammar, validation, migration, release boundary, and rollback |
+| **Current canonical docs pattern** | `docs/focus-modes/<area>-<scope>/` per Directory Rules §6.7 |
+| **Current tracked Focus materials** | Legacy singular `docs/focus-mode/` |
+| **Current repository posture** | Partial scaffolds, incompatible index/validator grammar, missing machine schema and payload validator, placeholder validator orchestration, no verified county release |
+| **Implementation effect of this revision** | Documentation only |
+| **Release or publication effect** | None |
+| **Supersedes / superseded by** | None / none |
+| **Relationship to ADR-0028** | ADR-0027 governs the control plane and county convergence. ADR-0028 proposes a new `state` scope and cross-scale coverage rule. Both remain proposed. |
 
-| # | Artifact | Role |
+### Acceptance versus implementation graduation
+
+Three states must remain distinct:
+
+1. **ADR acceptance** would approve the control-plane contract, plural canonical placement, migration obligations, index grammar, validation boundary, and release prerequisites.
+2. **Repository convergence** would migrate or mirror legacy singular materials, normalize the county registry and template, close machine contracts, and make validators runnable through a real orchestrator.
+3. **Implementation graduation** would require populated canonical county lanes, valid and invalid fixtures, governed API integration, finite runtime outcomes, release evidence, correction handling, and a rollback drill.
+
+This one-file revision performs none of those transitions.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-boundary"></a>
+
+## Evidence boundary
+
+This revision is grounded in repository bytes at `main@22adc4839709349af67f5636b77936990f8289ce`.
+
+| Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
-| 1 | `docs/focus-modes/README.md` | Lane doctrine, lifecycle (`not-started → planned → draft → validated → payload-ready → released → rolled-back/deprecated`), the add-a-county procedure, and the per-area required-file set. |
-| 2 | `docs/focus-modes/COUNTY_INDEX.md` | The master index of all 105 Kansas counties: status, lane path, owner, priority, sensitivity hot lanes, validation state. |
-| 3 | `docs/focus-modes/_template/county-build-plan.md` | The standardized build-plan template, including a YAML front-matter spec that the validator parses. Leading-underscore folder name signals "not a county lane" to the validator. |
-| 4 | `tools/validators/validate_focus_mode_index.py` | Lightweight stdlib-only Python validator running **twelve checks** (parsing, 105-county presence, no duplicates, lane folder presence, required-file presence, front-matter shape, `ui_shell` correctness, no schema-home violation, no `apps/web/` drift, lane naming, acceptance items, link resolution). |
-| 5 | `contracts/focus_mode/focus_mode_payload.md` | Semantic contract that crosswalks a county plan into a `FocusModePayload`, gates the finite outcome envelope (`ANSWER \| ABSTAIN \| DENY \| ERROR`), and lists required companion objects. |
-| 6 | This ADR — `docs/adr/ADR-0027-county-focus-mode-control-plane.md` | Formalizes the control plane. |
+| ADR inventory | ADR-0027 uniquely maps to this exact file; source and effective status are `proposed` | Acceptance or implementation |
+| Directory Rules §6.7 | Canonical docs pattern is `docs/focus-modes/<area>-<scope>/`; Focus Modes are proof slices, not roots or domains | Completed migration or accepted casing reconciliation |
+| Canonical plural README | `docs/focus-modes/README.md` is absent | Future canonical bytes and review |
+| Legacy control-plane README | [`docs/focus-mode/README.md`](../focus-mode/README.md) exists and internally describes the plural lane | Whether it should be migrated, rewritten, or retained temporarily as a mirror |
+| Legacy county index | [`docs/focus-mode/counties/COUNTY_INDEX.md`](../focus-mode/counties/COUNTY_INDEX.md) exists and enumerates 105 counties | Validator compatibility, lane completeness, payload readiness, release |
+| Legacy county template | [`docs/focus-mode/counties/_template/county-build-plan.md`](../focus-mode/counties/_template/county-build-plan.md) exists | Compatibility with current validator and canonical target layout |
+| County plan corpus | Repository search finds numerous plans under `docs/focus-mode/counties/<snake_case>/` with inconsistent filenames | Complete inventory, semantic equivalence, or migration safety |
+| Semantic contract | [`contracts/focus_mode/focus_mode_payload.md`](../../contracts/focus_mode/focus_mode_payload.md) exists | Machine-shape closure and runtime implementation |
+| County index validator | [`tools/validators/validate_focus_mode_index.py`](../../tools/validators/validate_focus_mode_index.py) exists | A successful run against current bytes |
+| Machine schema | `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` is absent | Field types, compatibility, negative fixtures |
+| Payload validator | `tools/validators/validate_focus_mode_payload.py` is absent | Executable payload admission |
+| Validator orchestration | [`tools/validate_all.py`](../../tools/validate_all.py) is a placeholder module, not an operational orchestrator | CI discovery and aggregate validation |
+| Publication evidence | No county `ReleaseManifest`, `PromotionDecision`, correction record, or rollback drill was inspected | Any county Focus Mode release or KFM publication |
 
-### 3.2 Naming resolution
+### Evidence exclusions
 
-- **Canonical name is `docs/focus-modes/`** (plural, hyphen). This matches `directory-rules.md` v1.2 §6.7.2 and the rest of the corpus's cross-host-root placement table.
-- If the live tree contains `docs/focus-mode/` (singular), it is **drift** and must be migrated to `docs/focus-modes/` under this ADR. Migration discipline follows §8 below.
+This revision does not claim:
 
-### 3.3 Out of scope (deferred to follow-ups)
+- that every county folder or plan was recursively inventoried;
+- that the validator was executed;
+- that the legacy index and template can be migrated without conflict;
+- that schemas, policies, fixtures, release objects, or governed runtime surfaces are complete;
+- that a county Focus Mode is released or public-safe;
+- that ADR-0027 or ADR-0028 is accepted.
 
-- The machine schema `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` is **PROPOSED** by this ADR but not authored in this PR. Emission belongs to a follow-up **PR-1b** with its own ADR-cited Directory-Rules basis.
-- Per-county `policy/sensitivity/<area>/` override files. Authored only when a county justifies a default override; deny-fixture required.
-- Per-area validators referenced in `contracts/focus_mode/focus_mode_payload.md` §3 (`validate_layer_manifest.py`, `validate_evidence_bundle.py`, `validate_promotion_decision.py`, `validate_run_receipt.py`) — emit in subsequent PRs.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 4. Control plane at a glance
+<a id="context"></a>
+
+## Context
+
+KFM uses a Focus Mode in two related senses:
+
+1. an evidence-bounded AI and map interaction surface returning finite `ANSWER | ABSTAIN | DENY | ERROR` outcomes; and
+2. a cross-root proof-slice composition binding docs, contracts, schemas, fixtures, validators, governed API behavior, published artifacts, release decisions, correction, and rollback for one bounded area.
+
+The county series grew faster than its control plane. The repository now contains substantial county planning material, but the current surfaces do not form one coherent system.
+
+### Current problems
+
+1. **Canonical-path conflict.** Directory Rules says `docs/focus-modes/`; tracked materials use `docs/focus-mode/`.
+2. **Layout conflict.** Directory Rules expects area lanes such as `docs/focus-modes/ellsworth-county/`; tracked materials group counties beneath `docs/focus-mode/counties/` and commonly use snake_case directories and variable filenames.
+3. **Registry grammar conflict.** The tracked county index is a collision-prevention register with `Series state` and `Repo implementation status`. The validator expects a table containing `County`, `Lane`, `Status`, `Owner`, `Priority`, `Sensitivity hot lanes`, `Source-seed family`, and `Validation`.
+4. **Template grammar conflict.** The tracked template documents a canonical `build-plan.md` layout and a fenced YAML data block, while the validator source describes front-matter requirements and searches for seven exact lane filenames.
+5. **Machine-contract gap.** The semantic `FocusModePayload` contract exists, but its machine schema and payload validator do not.
+6. **Orchestration gap.** The index validator claims discovery through `tools/validate_all.py`, but the tracked orchestrator is only a placeholder.
+7. **Truth-state risk.** Collision coverage, plan existence, validator success, payload readiness, and governed release are separate states, yet current documents can be read as if they were one maturity ladder.
+8. **Publication-boundary risk.** A large Markdown corpus can look complete while no evidence bundle, policy gate, release manifest, correction record, or rollback target exists.
+
+### Why an ADR is warranted
+
+The decision crosses `docs/`, `contracts/`, `schemas/`, `tools/`, `fixtures/`, `apps/`, `data/`, and `release/`. It defines one canonical vocabulary and migration boundary across responsibility roots. Code, schema, or a README alone cannot preserve the rationale or constrain future divergence.
+
+The ADR does **not** amend the root tree. Directory Rules already owns placement and declares the plural pattern. This ADR records the coordinated repository decision needed to converge implementation without treating current drift as canon.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-decision"></a>
+
+## Proposed decision
+
+Adopt the following county Focus Mode control-plane contract.
+
+### Decision summary
+
+1. **Canonical human lane:** `docs/focus-modes/`.
+2. **One county = one area composition:** canonical county lane key `<county>-county`.
+3. **One 105-county registry:** the county registry must separately track collision state, implementation state, validation state, and release state.
+4. **One reusable county template:** the canonical template must produce the exact structured data consumed by validators and the semantic payload crosswalk.
+5. **One semantic contract plus one machine schema:** prose meaning remains under `contracts/focus_mode/`; machine shape remains under `schemas/contracts/v1/focus_mode/`.
+6. **Deterministic validation:** validators must test the actual canonical registry and template grammar, run without network access, emit machine-readable reports, and include negative fixtures.
+7. **Governed runtime boundary:** public clients use `apps/governed-api/` and released artifacts; Explorer Web never reads RAW, WORK, or QUARANTINE.
+8. **Finite outcomes:** runtime Focus Mode interactions return `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
+9. **No publication by documentation:** plans, indexes, pull requests, commits, badges, and validator results are not release authority.
+10. **Reversible migration:** legacy singular paths remain readable during a bounded compatibility period, with explicit mapping and rollback.
+
+### County control-plane lifecycle
 
 ```mermaid
-flowchart TD
-    ADR["ADR-0027<br/>(this file)"]:::adr
+flowchart LR
+    I["County registry<br/>collision + implementation state"] --> P["County plan lane<br/>docs/focus-modes/&lt;county&gt;-county/"]
+    T["Canonical template"] --> P
+    P --> C["FocusModePayload<br/>semantic contract + schema"]
+    C --> V["No-network validators<br/>valid + invalid fixtures"]
+    V --> G["Governed API candidate<br/>finite outcome envelope"]
+    G --> R["PromotionDecision + ReleaseManifest<br/>correction + rollback"]
+    R --> U["Explorer Web + Evidence Drawer<br/>released artifacts only"]
 
-    subgraph DOCS["docs/focus-modes/"]
-        README["README.md"]:::docs
-        INDEX["COUNTY_INDEX.md"]:::docs
-        TPL["_template/county-build-plan.md"]:::docs
-        LANE["&lt;area&gt;-county/<br/>(seven required files)"]:::docslane
-    end
+    E["EvidenceRef → EvidenceBundle"] --> C
+    Q["PolicyDecision<br/>rights + sensitivity"] --> C
+    E --> G
+    Q --> G
 
-    subgraph TOOLS["tools/validators/"]
-        VAL["validate_focus_mode_index.py"]:::tools
-    end
-
-    subgraph CONTRACTS["contracts/focus_mode/"]
-        CON["focus_mode_payload.md"]:::contracts
-    end
-
-    subgraph SCHEMAS["schemas/contracts/v1/focus_mode/ &nbsp;(PROPOSED follow-up)"]
-        SCH["focus_mode_payload.schema.json"]:::schemas
-    end
-
-    ADR -.ratifies.-> README
-    ADR -.ratifies.-> INDEX
-    ADR -.ratifies.-> TPL
-    ADR -.ratifies.-> VAL
-    ADR -.ratifies.-> CON
-    ADR -.proposes follow-up.-> SCH
-
-    README -- describes lane --> INDEX
-    TPL -- scaffolds --> LANE
-    INDEX -- discovers --> LANE
-    LANE -- validated by --> VAL
-    INDEX -- validated by --> VAL
-    CON -- crosswalks plan --> LANE
-    CON -- references --> SCH
-
-    classDef adr fill:#fef3c7,stroke:#78350f,stroke-width:3px,color:#000
-    classDef docs fill:#dbeafe,stroke:#1e3a8a,color:#000
-    classDef docslane fill:#e0e7ff,stroke:#3730a3,color:#000
-    classDef tools fill:#fae8ff,stroke:#581c87,color:#000
-    classDef contracts fill:#fee2e2,stroke:#7f1d1d,color:#000
-    classDef schemas fill:#fef3c7,stroke:#78350f,color:#000,stroke-dasharray: 5 5
+    classDef docs fill:#dbeafe,stroke:#1d4ed8,color:#111827
+    classDef trust fill:#dcfce7,stroke:#15803d,color:#111827
+    classDef release fill:#fef3c7,stroke:#a16207,color:#111827
+    class I,P,T docs
+    class C,V,G,E,Q trust
+    class R,U release
 ```
 
-> [!NOTE]
-> The dashed border on `schemas/contracts/v1/focus_mode/` reflects that the machine schema is **PROPOSED** by this ADR but emitted in PR-1b, not this PR.
+### Required control-plane surfaces
 
-[↑ Back to top](#top)
-
----
-
-## 5. Evidence basis
-
-### 5.1 CONFIRMED doctrine
-
-- `directory-rules.md` v1.2 §6.7 (Focus Modes placement contract); §6.7.2 (per-host-root casing); §6.7.6 (four-PR sequence); §13.5 (drift register, anti-patterns #8–#10); §15 (per-root README contract); §2.4 (ADR triggers); §14.2 (structural-move discipline).
-- `kfm_repository_structure_guiding_document.md` §3 (root-stays-boring); §8 (Focus Mode placement contract); §8.4 (recommended first-PR sequence); §8.5 (eleven counties in flight).
-- `kfm_unified_doctrine_synthesis.md` Part III (cite-or-abstain); Part V (finite outcome envelope); Part VI (promotion gates A–G); Part VII (publication / sensitivity); Part XI (validator worked example).
-- `ai-build-operating-contract.md` §10 (AI is interpretive); §26 (governed loop); §27 (PR discipline); §28 (ADR triggers); §29 (object-family guardrails).
-- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3 (COUNTY-01..04 family); Appendix C (county Build Plan index — 34 enumerated).
-
-### 5.2 PROPOSED
-
-Every file path emitted by this ADR. No live repo was mounted in the authoring session, so every path is `PROPOSED` pending verification. The first run of `validate_focus_mode_index.py` against the live tree will produce a verification snapshot at `artifacts/focus_mode_index.json` (path also PROPOSED).
-
-### 5.3 Truth-label index
-
-| Symbol | Meaning | Where used |
+| Surface | Canonical responsibility | Required behavior |
 |---|---|---|
-| CONFIRMED | Verified in this session from attached doctrine | §5.1, the placement contract restatements |
-| INFERRED | Derivable from visible evidence but not directly stated | §3.2 (the singular path is drift if present) |
-| PROPOSED | Design/path not yet verified in implementation | Every file path emitted by this ADR; the ADR number `0027` |
-| NEEDS VERIFICATION | Checkable, not yet checked | Live-repo state of `docs/focus-mode/` vs `docs/focus-modes/`; ADR-0001 / ADR-0003 path |
-| UNKNOWN | Not resolvable without more evidence | Whether any existing county lane already populates the seven-required-file set |
+| `docs/focus-modes/README.md` | Human orientation and lane contract | Restates Directory Rules without overriding it; explains lifecycle and add-a-county workflow |
+| `docs/focus-modes/COUNTY_INDEX.md` | County registry | Exactly 105 unique counties; separate fields for collision, implementation, validation, and release |
+| `docs/focus-modes/_template/county-build-plan.md` | Reusable plan template | Structured keys exactly match validator and semantic crosswalk |
+| `docs/focus-modes/<county>-county/` | Per-county planning and acceptance lane | One canonical lane per county; no duplicate aliases |
+| `contracts/focus_mode/focus_mode_payload.md` | Object meaning | Defines plan-to-payload semantics and finite outcomes |
+| `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` | Machine shape | Validates payload structure and version |
+| `tools/validators/validate_focus_mode_index.py` | Registry and lane validation | Tests canonical paths, index grammar, lane identity, required files, and links |
+| `tools/validators/validate_focus_mode_payload.py` | Payload admission | Validates schema, evidence closure, policy references, release references, and forbidden lifecycle paths |
+| `fixtures/focus_modes/<county>/{valid,invalid}/` | Enforceability proof | Includes positive and negative examples for every finite outcome and public-safety boundary |
+| `tools/validate_all.py` or accepted successor | Aggregate orchestration | Discovers and runs Focus validators in CI |
+| Release objects under `release/` | Promotion, correction, rollback | Required before any public or semi-public county payload |
+| This ADR | Rationale and migration boundary | Records why the system converges and what cannot be inferred |
 
-[↑ Back to top](#top)
+### Explicit non-decisions
+
+This ADR does not:
+
+- accept a state-scale Focus Mode; ADR-0028 owns that proposal;
+- assign human owners or deciders;
+- define the final `FocusModePayload` field types;
+- accept any sensitivity-tier scheme not already governed elsewhere;
+- promote any county to `validated`, `payload-ready`, `released`, or `PUBLISHED`;
+- authorize a bulk migration without a reviewed path manifest and read-back;
+- create a new root or parallel schema, contract, policy, registry, release, proof, or receipt home.
+
+[Back to top](#top)
 
 ---
 
-## 6. Directory Rules basis
+<a id="current-repository-evidence"></a>
 
-| Artifact | Host root | Casing | Authority cited |
+## Current repository evidence
+
+### Verified artifact map
+
+| Intended surface | Current repository state | Assessment |
+|---|---|---|
+| ADR identity | Present and uniquely indexed as ADR-0027 | **PASS — identity only** |
+| Canonical `docs/focus-modes/README.md` | Absent | **FAIL — canonical lane not materialized** |
+| Legacy `docs/focus-mode/README.md` | Present | **CONFLICTED — useful lineage at non-canonical path** |
+| Canonical `docs/focus-modes/COUNTY_INDEX.md` | Absent | **FAIL** |
+| Legacy county index | Present at `docs/focus-mode/counties/COUNTY_INDEX.md` | **PARTIAL — 105-county collision register, not validator-compatible implementation registry** |
+| Canonical county template | Absent | **FAIL** |
+| Legacy county template | Present at `docs/focus-mode/counties/_template/county-build-plan.md` | **PARTIAL — useful content, incompatible path and unresolved parser contract** |
+| County plan lanes | Numerous artifacts under singular `counties/<snake_case>/` paths | **CONFLICTED — substantial lineage, non-canonical and inconsistent naming** |
+| Semantic payload contract | Present | **PARTIAL — meaning exists** |
+| Machine payload schema | Absent | **FAIL** |
+| County index validator | Present | **PARTIAL — code exists, current target grammar/path do not align** |
+| Payload validator | Absent | **FAIL** |
+| Aggregate validator orchestrator | Placeholder only | **FAIL — orchestration not operational** |
+| Valid/invalid county payload fixtures | Not established in this inspection | **UNKNOWN / NEEDS VERIFICATION** |
+| Governed API county runtime | Not exercised | **UNKNOWN** |
+| Release, correction, rollback | Not inspected or demonstrated | **UNKNOWN / NOT RUN** |
+
+### Repository-grounded corrections to v0.2
+
+The following v0.2 statements are no longer supportable:
+
+- ADR number `0027` is not uncertain; the canonical index confirms it.
+- The live repository is not unavailable; this revision inspected current GitHub bytes.
+- The six-artifact family is not wholly absent; several pieces exist.
+- The migration trigger is not hypothetical; the singular legacy lane is confirmed present and the plural lane is confirmed absent.
+- The county index is not merely missing; it exists with a different purpose and grammar.
+- The validator is not merely proposed; it exists, but its claimed target and parser contract do not match current repository materials.
+- `tools/validate_all.py` cannot currently be described as an operational orchestrator.
+
+[Back to top](#top)
+
+---
+
+<a id="current-enforcement-maturity"></a>
+
+## Current enforcement maturity
+
+| Gate | Current state | Evidence | Required next proof |
 |---|---|---|---|
-| `docs/focus-modes/README.md` | `docs/` | kebab-case plural | §6.1, §6.7, §15 |
-| `docs/focus-modes/COUNTY_INDEX.md` | `docs/` | kebab-case lane + SCREAMING_SNAKE filename (matches existing register conventions, e.g., `docs/registers/DRIFT_REGISTER.md`) | §6.1, §6.7.2 |
-| `docs/focus-modes/_template/county-build-plan.md` | `docs/` | `_template/` leading-underscore folder name is **PROPOSED**; alternative is `template/` without underscore. Decided here: leading underscore signals "not a county lane; skip during lane discovery." | §6.7.2 |
-| `tools/validators/validate_focus_mode_index.py` | `tools/` | flat naming under `tools/validators/`; orchestrated by `tools/validate_all.py` (live) per OPEN-DR-07 | §7.5, §7.5.a |
-| `contracts/focus_mode/focus_mode_payload.md` | `contracts/` | singular snake_case for the focus-mode family; matches `contracts/{source,evidence,data,runtime,release,…}/` | §6.3, §6.7.2 |
-| `docs/adr/ADR-0027-county-focus-mode-control-plane.md` | `docs/adr/` | ADR naming convention; four-digit ID + kebab-case title | §6.1, §2.4 |
+| ADR identity and inventory | **PASS** | Canonical ADR index | Preserve ID/path/status |
+| Canonical docs placement | **FAIL** | Plural README/index/template absent; singular lane present | Reviewed migration or bounded mirror |
+| County uniqueness | **PARTIAL** | Index enumerates 105 counties and blocks duplicate generation | Machine-checked exact county/lane identity |
+| Registry grammar | **FAIL** | Legacy columns differ from validator contract | One versioned registry schema |
+| Template grammar | **FAIL** | Template and validator describe different parsing models | One authoritative structured block and tests |
+| Semantic contract | **PARTIAL** | `focus_mode_payload.md` exists | Reconcile paths and fields with template |
+| Machine schema | **FAIL** | Schema absent | Versioned schema + fixtures |
+| Index validator | **PARTIAL** | Validator exists | Passing run against canonical bytes |
+| Payload validator | **FAIL** | Validator absent | Evidence/policy/release-aware validator |
+| Aggregate orchestration | **FAIL** | `tools/validate_all.py` is a placeholder | Working orchestrator + CI |
+| Public-client trust path | **UNKNOWN** | Not exercised | Governed API integration test |
+| Finite outcomes | **UNKNOWN** | Doctrine and semantic contract only | Runtime tests for all four outcomes |
+| Promotion and release | **NOT RUN** | No inspected release objects | PromotionDecision + ReleaseManifest |
+| Correction and rollback | **NOT RUN** | No drill inspected | Correction and rollback exercise |
 
 > [!IMPORTANT]
-> The casing-per-host-root mix is **intentional**. Each root follows its own established convention rather than imposing a Focus-Mode-wide style. See `directory-rules.md` §6.7.2 and `docs/focus-modes/README.md` §9 for the full rationale, and **OPEN-DR-08** for ADR-level reconsideration.
+> **Current decision:** `HOLD` implementation graduation. Existing county documents may be repaired and inventoried, but no county should be called validated, payload-ready, released, or published until the failed and unknown gates above are closed with repository evidence.
 
-[↑ Back to top](#top)
-
----
-
-## 7. Consequences
-
-### 7.1 Positive
-
-- The county subsystem becomes navigable in **O(1)** (the index) instead of **O(N)** (grep the corpus).
-- Duplicate county claims are caught **before merge** by validator check 9.
-- Build plans **must declare** their front-matter; non-conforming plans fail validation at check 4.
-- The plan-to-payload bridge has a **citable contract** at `contracts/focus_mode/focus_mode_payload.md`.
-- The validator becomes a single discoverable artifact (`tools/validators/validate_focus_mode_index.py`) orchestrated by canonical `tools/validate_all.py`.
-- The lane README declares authority class (semantic, not machine truth) per §15 README contract.
-- Future county plans round-trip the validator from PR-1.
-
-### 7.2 Negative / cost
-
-- Existing markdowns under `docs/focus-mode/` (if any) must be **migrated** to `docs/focus-modes/`.
-- Existing 34 corpus draft plans must be **normalized** to the front-matter spec; un-normalized plans fail validation until updated.
-- Existing 11/34 county plans referencing `apps/web/` (OPEN-DR-06) must be **revised** to `apps/explorer-web/` on next iteration; validator check 5 + 7 catches new instances.
-- Adding a new scope suffix beyond `-county`, `-region`, `-corridor` now requires its own ADR.
-
-### 7.3 Reversibility
-
-> [!NOTE]
-> **Fully reversible.** Removing the six artifacts and the validator returns the repo to pre-control-plane state. No lifecycle data is touched. No published payloads exist yet to roll back. No schemas are versioned by this ADR. See [§11. Rollback](#11-rollback).
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 8. Migration plan
+<a id="control-plane-contract"></a>
 
-Migration applies only if **OPEN-FM-01** resolves to "singular drift present." If `docs/focus-modes/` (plural) is already the live state, no migration is required.
+## Control-plane contract
 
-### 8.1 Migration manifest (PROPOSED)
+### Registry state model
 
-Per `directory-rules.md` §14.2, a structural move requires a migration manifest under `migrations/`. Proposed manifest:
+The county registry must not compress unrelated meanings into one status column.
 
-| Field | Value |
-|---|---|
-| Manifest path | `migrations/data/2026-05-22-focus-mode-singular-to-plural.yaml` (PROPOSED) |
-| Migration script | `migrations/data/2026-05-22-focus-mode-singular-to-plural.py` (PROPOSED) |
-| `git_sha_before` | `<TBD at execution>` |
-| `git_sha_after` | `<TBD at execution>` |
-| Old → new mapping | `docs/focus-mode/**` → `docs/focus-modes/**` |
-| Mirror window | 30 days |
-| Mirror form | symlink or pointer-README at `docs/focus-mode/README.md` redirecting to plural lane |
-| Deprecation entry | `control_plane/deprecation_register.yaml` with sunset = `git_sha_after + 30 days` (PROPOSED) |
-| Reference-update scan | Required across `apps/`, `tools/`, `contracts/`, `schemas/`, `docs/`, `release/`, `data/` |
-| Rollback method | `migrations/data/2026-05-22-focus-mode-singular-to-plural.py --rollback` |
+| State family | Allowed values | What it proves |
+|---|---|---|
+| **Collision state** | `available`, `claimed`, `duplicate-blocked`, `superseded` | Whether another county artifact may be created |
+| **Implementation state** | `not-started`, `planned`, `draft`, `normalized`, `validated` | Repository maturity of the county lane |
+| **Payload state** | `not-built`, `candidate`, `payload-ready`, `denied`, `error` | Machine payload maturity |
+| **Release state** | `not-released`, `candidate`, `released`, `withdrawn`, `rolled-back`, `deprecated` | Governed publication state |
+| **Validation state** | `not-run`, `pass`, `fail`, `error` | Result of a named validator at a pinned revision |
 
-### 8.2 Migration steps
+A registry row may be `duplicate-blocked` while implementation remains `not-started` or `NEEDS VERIFICATION`. Collision prevention must never be presented as implementation or release proof.
 
-1. **Inspect** the live tree for both `docs/focus-mode/` and `docs/focus-modes/`. Record result in a verification snapshot.
-2. If both exist → escalate as silent fork; pause this ADR pending reconciliation review.
-3. If only singular exists → execute `git mv docs/focus-mode docs/focus-modes` under the migration script.
-4. Update all references in code, docs, schemas, fixtures, tests, workflows, configs.
-5. Add a pointer-README at `docs/focus-mode/README.md` (mirror) redirecting to the plural lane for the 30-day window.
-6. Add entry to `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` (NEEDS_VERIFICATION of file existence) noting the move.
-7. Add a `mirror` marker per Directory Rules §8.
-8. Run the validator suite; verify no new drift entries.
-9. Close the migration by removing the mirror only after the 30-day verification window passes.
+### Canonical county identity
 
-[↑ Back to top](#top)
+- County display name uses the official Kansas county name.
+- County lane key is deterministic kebab-case `<county>-county`.
+- Exactly one canonical lane may claim a county.
+- Legacy snake_case directories and variable filenames are aliases to reconcile, not new county identities.
+- County identity is separate from source geography vintage, boundary geometry, and temporal validity.
 
----
+### Required lane files
 
-## 9. Alternatives considered
+The canonical county lane is expected to include:
 
-Each alternative is recorded with its rejection rationale. Expand for detail.
-
-<details>
-<summary><strong>Alt. 1 — Do nothing; keep producing per-county build plans.</strong></summary>
-
-**Rejected.** The user explicitly asked for the control plane before more plans, and the doctrine warns against "a Focus Mode … remaining only a document" (`kfm_repository_structure_guiding_document.md` §8.3). The cost of the no-action path scales linearly with each new county: each plan duplicates structural decisions, drifts independently, and lacks a payload bridge. The marginal cost of the control plane (six artifacts) is paid once.
-
-</details>
-
-<details>
-<summary><strong>Alt. 2 — Put everything in <code>contracts/focus_mode/</code> and let <code>docs/focus-modes/</code> be human-facing only.</strong></summary>
-
-**Rejected.** Planning and acceptance documents are **not contracts**; they are **control-plane carriers**. A contract describes a stable agreement between subsystems; a build plan describes a *trajectory* through stages and is intentionally mutable. They must remain in `docs/` per the §6.3 boundary. Conflating them would either freeze build plans (locking the trajectory) or destabilize the contracts root (admitting mutable documents).
-
-</details>
-
-<details>
-<summary><strong>Alt. 3 — Use the singular <code>docs/focus-mode/</code> to match the user's prompt phrasing.</strong></summary>
-
-**Rejected.** Contradicts `directory-rules.md` v1.2 §6.7.2 canonical pattern and the rest of the corpus's cross-host-root placement table (which uses `focus-modes/` plural under `docs/`, `focus_modes/` plural under `fixtures/`, etc.). Matching transient prompt phrasing against settled doctrine would invert the source hierarchy. The prompt phrasing is INFERRED to be shorthand; the canonical name wins.
-
-</details>
-
-<details>
-<summary><strong>Alt. 4 — Make the validator require PyYAML.</strong></summary>
-
-**Rejected.** Adding a third-party YAML parser makes CI bootstrap brittle (requires a pip install step before the validator can run) and conflicts with the spirit of `directory-rules.md` §7.5.a (validators should be discoverable and runnable without prerequisite installation). The stdlib-only validator handles ≥90% of cases via line-based front-matter extraction; deep YAML parsing is a separate, ADR-class follow-up if needed.
-
-</details>
-
-<details>
-<summary><strong>Alt. 5 — Emit per-county schema files at <code>schemas/contracts/v1/focus_mode/&lt;area&gt;/</code>.</strong></summary>
-
-**Rejected.** Violates the schema-home convention (ADR-0001 — `NEEDS_VERIFICATION`): schemas are area-agnostic; per-area variation is a payload-instance concern, not a schema concern. Per-county schemas would also defeat cross-county validation (each county would need its own validator invocation with the right schema path).
-
-</details>
-
-<details>
-<summary><strong>Alt. 6 — Co-locate validator alongside the docs at <code>docs/focus-modes/validate.py</code>.</strong></summary>
-
-**Rejected.** `docs/` is semantic / human-facing; executable validators belong under `tools/validators/` per `directory-rules.md` §6.4 and §7.5. Co-location would create a parallel validator home and defeat orchestration by `tools/validate_all.py`.
-
-</details>
-
-[↑ Back to top](#top)
-
----
-
-## 10. Validation
-
-The control plane is itself validatable.
-
-```bash
-# Run all twelve checks against the lane
-python tools/validators/validate_focus_mode_index.py docs/focus-modes/
-
-# Produce a machine-readable validation snapshot
-python tools/validators/validate_focus_mode_index.py docs/focus-modes/ \
-  --emit-json artifacts/focus_mode_index.json
-
-# Strict mode (treat warnings as failures)
-python tools/validators/validate_focus_mode_index.py docs/focus-modes/ --strict
+```text
+docs/focus-modes/<county>-county/
+├── README.md
+├── build-plan.md
+├── layer-registry.md
+├── evidence-model.md
+├── acceptance-checklist.md
+├── source-seed-list.md
+└── public-safety-notes.md
 ```
 
-| Exit code | Meaning |
+These files are planning and acceptance surfaces. They must not contain machine schemas, executable policy, released payload bytes, secrets, precise denied geometry, or unreviewed living-person data.
+
+### Trust and outcome invariants
+
+1. `EvidenceRef` must resolve to `EvidenceBundle` before a consequential county claim returns `ANSWER`.
+2. Missing, stale, conflicted, or out-of-scope evidence returns `ABSTAIN`.
+3. Rights, sensitivity, sovereignty, living-person, DNA, rare-species, archaeology, or critical-infrastructure policy may return `DENY`.
+4. Resolver, validator, policy-engine, or runtime failure returns `ERROR`; it must not silently fall back to `ANSWER`.
+5. Explorer Web uses governed API responses and released artifacts only.
+6. A county plan cannot approve its own release.
+7. Watchers and generators may propose updates; they do not publish.
+8. Public-safe transformations must carry reason and lineage.
+9. Every release needs correction and rollback references.
+10. AI-generated language is interpretive and cannot replace evidence or review.
+
+[Back to top](#top)
+
+---
+
+<a id="placement-and-naming-contract"></a>
+
+## Placement and naming contract
+
+Directory Rules remains authoritative. This ADR coordinates the county control plane without creating new authority roots.
+
+| Responsibility | Canonical home | County-specific rule |
+|---|---|---|
+| Human planning and acceptance | `docs/focus-modes/<county>-county/` | Kebab-case county plus `-county` suffix |
+| Semantic object meaning | `contracts/focus_mode/` | Area-agnostic; no per-county contract forks |
+| Machine shape | `schemas/contracts/v1/focus_mode/` | Area-agnostic; no schemas under `docs/` or `contracts/` |
+| Test fixtures | `fixtures/focus_modes/<county>/{valid,invalid}/` | Both positive and negative fixtures |
+| Public UI | `apps/explorer-web/src/focus-modes/<county>/` | Governed API consumer; not truth authority |
+| Validators | `tools/validators/` | Flat, discoverable validator names |
+| Published payloads | `data/published/api_payloads/focus-modes/<county>.json` | Released artifact only |
+| Release decisions | `release/` families | Promotion, correction, withdrawal, rollback |
+| Area source slices | `data/registry/sources/<county>/` when justified | Optional view; does not replace global source registry |
+
+### Canonical versus compatibility paths
+
+- `docs/focus-modes/` is canonical.
+- `docs/focus-mode/` is legacy drift and may exist only as a bounded compatibility surface during migration.
+- A compatibility surface must declare itself as `mirror`, `legacy`, `deprecated`, or `transitional`.
+- A pointer README may preserve discoverability, but duplicate evolving content is prohibited.
+- A compatibility path must have an owner, canonical target, migration status, and removal or retention decision.
+
+### Naming consistency
+
+The host root controls casing:
+
+- human docs: kebab-case, such as `ellsworth-county`;
+- contracts and schemas: singular snake_case family `focus_mode`;
+- fixtures: plural snake_case family `focus_modes`;
+- apps, data, and release: repository-native kebab-case area slugs where applicable.
+
+This ADR does not resolve all cross-root casing questions. It requires deterministic crosswalks and forbids unregistered aliases.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-publication-boundary"></a>
+
+## Authority and publication boundary
+
+### What this ADR would authorize if accepted
+
+- one canonical county control-plane model;
+- migration from singular legacy docs to plural canonical docs;
+- one registry grammar and county identity rule;
+- synchronization of template, semantic contract, machine schema, validators, and fixtures;
+- fail-closed runtime and release prerequisites;
+- bounded compatibility handling and rollback.
+
+### What it would not authorize
+
+- automatic acceptance of ADR-0028;
+- direct writes to the default branch;
+- source activation;
+- public access to canonical or internal stores;
+- release of county data or payloads;
+- precise exposure of denied locations or living-person information;
+- AI-generated evidence;
+- self-approval by a validator, model, watcher, author, or pull request.
+
+### Publication rule
+
+A county Focus Mode becomes release-eligible only when:
+
+```text
+canonical lane
+  + valid registry identity
+  + semantic contract
+  + machine schema
+  + positive and negative fixtures
+  + index and payload validator PASS
+  + EvidenceBundle closure
+  + rights and sensitivity PolicyDecision
+  + governed API finite-outcome tests
+  + PromotionDecision
+  + ReleaseManifest
+  + correction path
+  + rollback target
+```
+
+Missing any required element means `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` according to the applicable surface—not `PUBLISHED`.
+
+[Back to top](#top)
+
+---
+
+<a id="migration-and-convergence-plan"></a>
+
+## Migration and convergence plan
+
+Migration must be a separately reviewed, bounded change or atomic change series. This ADR revision does not perform it.
+
+### Phase 0 — freeze and inventory
+
+1. Pin the default-branch commit.
+2. Produce a complete manifest of files under `docs/focus-mode/` and any `docs/focus-modes/` paths.
+3. Record hashes, inbound links, county identities, filenames, metadata, and duplicate or near-duplicate plans.
+4. Freeze new county-plan creation except repairs and explicitly reviewed additions.
+5. Record the path conflict in the drift register.
+
+### Phase 1 — define canonical machine-readable contracts
+
+1. Version the county registry grammar.
+2. Choose one structured template data representation.
+3. Reconcile the semantic `FocusModePayload` crosswalk with the template.
+4. Add the machine schema.
+5. Add positive and negative fixtures.
+6. Update validators and tests before moving the corpus.
+
+### Phase 2 — prepare canonical plural lane
+
+1. Create `docs/focus-modes/README.md`.
+2. Create the canonical county index and template from reconciled contracts.
+3. Make the plural lane complete enough for read-only validation.
+4. Do not yet delete singular materials.
+
+### Phase 3 — county-by-county mapping
+
+For every legacy county artifact, record:
+
+| Field | Required value |
 |---|---|
-| `0` | All checks pass |
-| `1` | At least one check failed |
-| `2` | System error (file not found, IO error, etc.) |
+| Legacy path | Exact tracked path |
+| Canonical county ID | `<county>-county` |
+| Canonical target | Exact plural lane file |
+| Disposition | `move`, `merge`, `retain-as-lineage`, `quarantine`, or `conflict` |
+| Content hash | Before and prepared after |
+| Inbound references | All affected files |
+| Semantic conflicts | Preserved and surfaced |
+| Validation | Result at prepared revision |
+| Rollback | Exact old path and commit |
 
-CI MUST invoke via `tools/validate_all.py` (per `directory-rules.md` §7.5.a — note **OPEN-DR-07** on live vs doctrine path).
+Do not use last-writer-wins. A county with multiple materially different plans is `CONFLICTED` until reviewed.
 
-The plan-to-payload contract is validated **indirectly** via the schema and the per-area validators listed in `contracts/focus_mode/focus_mode_payload.md` §3; most of those are PROPOSED follow-ups.
+### Phase 4 — move with compatibility
 
-> [!TIP]
-> A pre-commit hook is OPTIONAL but recommended. Authors can copy `tools/hooks/pre-commit-focus-modes.sh` (PROPOSED) into `.git/hooks/` once it lands.
+1. Use history-preserving moves where content is unchanged.
+2. Update authorized references atomically.
+3. Replace the singular root with one explicit compatibility pointer only when safe.
+4. Mark compatibility class and canonical target.
+5. Keep the compatibility period bounded by review criteria, not an invented date.
+6. Verify remote bytes and changed paths.
 
-[↑ Back to top](#top)
+### Phase 5 — enforcement and removal decision
+
+1. Run registry, template, payload, link, schema, policy, and negative-fixture tests.
+2. Add working aggregate orchestration and read-only CI.
+3. Confirm the governed API trust path.
+4. Decide whether the singular pointer is removed or retained permanently for external-link compatibility.
+5. Record correction and rollback paths for any released outputs affected later.
+
+### Migration stop conditions
+
+Stop and return `CONFLICTED` or `BLOCKED` when:
+
+- both singular and plural paths contain independently evolving content;
+- one county maps to multiple canonical identities;
+- a move would overwrite unique material;
+- schema, contract, and template disagree materially;
+- a path exposes sensitive data;
+- open pull requests touch the same county or authority surface;
+- validator failures reveal unrelated repository defects that exceed scope.
+
+[Back to top](#top)
 
 ---
 
-## 11. Rollback
+<a id="validation-and-negative-tests"></a>
 
-1. **Delete the six artifacts:**
-   - `docs/focus-modes/README.md`
-   - `docs/focus-modes/COUNTY_INDEX.md`
-   - `docs/focus-modes/_template/` (entire folder)
-   - `tools/validators/validate_focus_mode_index.py`
-   - `contracts/focus_mode/focus_mode_payload.md`
-   - This ADR
-2. If the §8 migration from `docs/focus-mode/` to `docs/focus-modes/` was performed, reverse it via the migration script's `--rollback` flag.
-3. Remove the validator entry from `tools/validators/registry.yaml` (PROPOSED; NEEDS_VERIFICATION of file existence).
-4. No `git_sha_after` artifacts to invalidate; no released payloads to rescind; no schemas to version-revert.
-5. Add a `RollbackCard` to `release/rollback_cards/` (PROPOSED path) documenting the rollback, even though no release was made — for audit-trail continuity.
+## Validation and negative tests
 
-[↑ Back to top](#top)
+### Required pre-acceptance validation
+
+| Check | Expected result |
+|---|---|
+| ADR index coherence | ADR-0027 remains unique, exact-path matched, effective status `proposed` until reviewed transition |
+| Markdown source | One H1, complete fences, valid tables and alerts, unique explicit anchors |
+| Relative links | Every introduced repository-relative link resolves at the prepared commit |
+| Badge manifest | Every badge reflects text in the ADR and links to a supporting section |
+| Canonical path scan | Plural/singular state is reported without guessing |
+| Registry parser | Exactly 105 unique counties and deterministic lane IDs |
+| Registry semantics | Collision, implementation, validation, payload, and release states are separate |
+| Template parser | One structured grammar; required keys and county identity validated |
+| Schema tests | Valid fixture passes; malformed, missing-evidence, and forbidden-path fixtures fail |
+| Payload policy tests | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` each have representative cases |
+| Lifecycle leak test | Public payloads reject RAW, WORK, and QUARANTINE paths |
+| UI trust-path test | Explorer Web receives county payloads through governed API only |
+| Release gate test | No release without PromotionDecision, ReleaseManifest, correction, and rollback |
+| Migration dry run | Every old-to-new mapping is collision-checked and reversible |
+
+### Minimum negative fixtures
+
+A complete county Focus Mode validator suite must reject:
+
+- duplicate county identity;
+- unknown county or malformed lane slug;
+- county plan with unresolved placeholders;
+- missing or stale evidence for an `ANSWER`;
+- AI-generated text used as evidence;
+- missing `PolicyDecision`;
+- unknown rights or sensitivity posture;
+- exact archaeology, rare-species, living-person, DNA, or critical-infrastructure exposure without an allowed public-safe transform;
+- public payload containing RAW, WORK, or QUARANTINE references;
+- `apps/web/` as a new public shell path;
+- missing rollback target;
+- release state inferred from commit, pull request, merge, badge, or map visibility;
+- county payload built from a state or another county Focus Mode output as sovereign evidence;
+- validator or policy-engine failure silently converted to allow.
+
+### What a green result does not prove
+
+A green documentation or validator check proves only the checked contract at the checked revision. It does not:
+
+- accept this ADR;
+- prove source rights;
+- approve sensitive publication;
+- establish separation of duties;
+- authorize release;
+- make a county Focus Mode KFM-published.
+
+[Back to top](#top)
 
 ---
 
-## 12. Open questions
+<a id="acceptance-gates"></a>
 
-| ID | Question | Status | Action |
+## Acceptance gates
+
+ADR-0027 may move from `proposed` to `accepted` only when all required reviewers explicitly accept the decision and the record and index are updated together.
+
+### Decision acceptance
+
+- [ ] ADR ID, path, status, owners, and required reviewers are reviewed.
+- [ ] Directory Rules basis and canonical plural placement are affirmed.
+- [ ] Relationship to ADR-0028 is reviewed and non-overlapping.
+- [ ] Registry state model and county identity grammar are approved.
+- [ ] Migration, compatibility, correction, and rollback responsibilities are approved.
+- [ ] The ADR index records matching accepted status in the same reviewed change.
+
+### Repository convergence readiness
+
+- [ ] Complete singular and plural inventory exists with hashes.
+- [ ] Every county artifact has a reviewed disposition.
+- [ ] Canonical plural README, registry, and template are prepared.
+- [ ] Semantic contract, schema, and template keys agree.
+- [ ] Index and payload validators have positive and negative fixtures.
+- [ ] Aggregate orchestration is operational.
+- [ ] Migration dry run reports no destructive overwrite or unresolved duplicate.
+
+### Implementation graduation
+
+- [ ] At least one canonical county lane passes all required validators.
+- [ ] Governed API returns all four finite outcomes in tests.
+- [ ] Explorer Web reads only governed responses and released artifacts.
+- [ ] Evidence, rights, sensitivity, correction, and rollback objects are inspectable.
+- [ ] A release dry run passes without publishing.
+- [ ] A rollback drill restores the prior county release state.
+- [ ] No required gate remains `NOT RUN`, `UNKNOWN`, `PARTIAL`, or `FAIL`.
+
+[Back to top](#top)
+
+---
+
+<a id="consequences"></a>
+
+## Consequences
+
+### Positive
+
+- County selection, identity, and maturity become inspectable.
+- Duplicate-plan prevention is separated from implementation and release truth.
+- The template, contract, schema, and validators can evolve as one governed interface.
+- The public trust path becomes testable from plan to finite runtime outcome.
+- Singular/plural drift gets an explicit migration and compatibility boundary.
+- County plans remain useful without being mistaken for payloads or publication.
+- Correction and rollback become requirements rather than afterthoughts.
+
+### Costs and tradeoffs
+
+- A substantial legacy county corpus requires inventory and review.
+- County filenames and folder names cannot be normalized safely by bulk string replacement.
+- The current 105-county index must be reconciled with the validator rather than simply moved.
+- The semantic contract may need compatibility revisions when the schema is authored.
+- CI must distinguish documentation coherence from runtime, policy, and release proof.
+- A bounded mirror may temporarily preserve two paths, increasing maintenance burden.
+- Some county plans may be retained only as lineage instead of becoming canonical lanes.
+
+### Operational implication
+
+Until convergence finishes, maintainers should treat the legacy county corpus as **planning lineage with collision-prevention value**, not as a validated county control plane.
+
+[Back to top](#top)
+
+---
+
+<a id="alternatives-considered"></a>
+
+## Alternatives considered
+
+<details>
+<summary><strong>Alternative 1 — Keep the singular lane as canonical because it contains the existing work.</strong></summary>
+
+**Rejected.** Repository convention is evidence of current implementation, but Directory Rules is the placement authority. Calling drift canonical without an accepted amendment would invert the authority order and create conflict with every new plural-path reference.
+
+</details>
+
+<details>
+<summary><strong>Alternative 2 — Move the directory immediately and fix issues afterward.</strong></summary>
+
+**Rejected.** The current index, template, validator, and plan filenames disagree. A blind move would preserve path drift inside the new location, break links, and risk overwriting unique county material.
+
+</details>
+
+<details>
+<summary><strong>Alternative 3 — Treat the collision-prevention index as the validator-ready implementation registry.</strong></summary>
+
+**Rejected.** Collision state and implementation maturity are different facts. The current table does not provide the grammar expected by the validator and explicitly says repository implementation remains unverified.
+
+</details>
+
+<details>
+<summary><strong>Alternative 4 — Put schemas beside the semantic contract.</strong></summary>
+
+**Rejected.** `contracts/` owns meaning; `schemas/contracts/v1/` owns machine shape. Co-location would recreate the schema-home ambiguity that ADR-0001 is intended to prevent.
+
+</details>
+
+<details>
+<summary><strong>Alternative 5 — Use one status enum for collision, plan, payload, validation, and release.</strong></summary>
+
+**Rejected.** A single enum creates false maturity transitions—for example, treating “duplicate blocked” or “draft exists” as “validated” or “released.” Separate state families preserve truth.
+
+</details>
+
+<details>
+<summary><strong>Alternative 6 — Let each county define its own schema and validator.</strong></summary>
+
+**Rejected.** County variation belongs in data and policy instances, not in 105 competing schemas. Per-county schemas would defeat cross-county validation and create parallel authority.
+
+</details>
+
+<details>
+<summary><strong>Alternative 7 — Use documentation-only checks and defer runtime/release proof indefinitely.</strong></summary>
+
+**Rejected.** KFM’s unit of value is the inspectable claim. A county Markdown system that never closes evidence, policy, governed API, release, correction, and rollback remains planning—not a proof slice.
+
+</details>
+
+[Back to top](#top)
+
+---
+
+<a id="risk-and-open-question-ledger"></a>
+
+## Risk and open-question ledger
+
+| ID | Item | Current status | Required action |
 |---|---|---|---|
-| **OPEN-FM-01** | Live state of `docs/focus-mode/` (singular) vs `docs/focus-modes/` (plural) | NEEDS VERIFICATION | Inspect; if singular present, run §8 migration. Resolves before ADR acceptance. |
-| **OPEN-FM-02** | Reconciliation of `eleven` (Directory Rules v1.2 §0) vs `≥30` (MapLibre v2.1 Appendix C, 34 enumerated) county counts | CONFIRMED corpus state | Resolved in `COUNTY_INDEX.md` by using the larger Appendix C set as `draft` and marking the eleven as P1. |
-| **OPEN-FM-03** *(= OPEN-DR-06)* | Existing build plans referencing `apps/web/src/focus-modes/` | CONFIRMED drift | Revise on next plan iteration; validator catches new instances at checks 5 + 7. |
-| **OPEN-FM-04** *(= OPEN-DR-07)* | `tools/validate_all.py` (live) vs `tools/validators/validate_all.py` (doctrine) | CONFIRMED variance | This ADR keeps the live path; separate ADR for permanent reconciliation. |
-| **OPEN-FM-05** | Live presence of `contracts/focus_mode/focus_mode_payload.md` and `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` | NEEDS VERIFICATION | Inspect; emit absent artifacts in PR-1b. |
-| **OPEN-FM-06** | ADR-S-05 sensitivity tier scheme (T0–T4) status | NEEDS VERIFICATION | This ADR references but does not author; separate ADR pending per the master ADR backlog. |
-| **OPEN-FM-07** | `ai_permitted_templates[]` field PROPOSED in front-matter; mirror in payload contract | PROPOSED | Resolve in PR-1b alongside the AI Focus Mode template registry. |
-| **OPEN-FM-08** | ADR number assignment | NEEDS VERIFICATION | Inspect live `docs/adr/` for next available number; corpus has informal `ADR-0003` reservations for several topics (including a prior `ADR-0003-policy-singular-is-canonical.md`). |
-| **OPEN-DR-08** | Three casings per area across roots | OPEN | ADR-level resolution pending; pending ADR, the per-root convention in `docs/focus-modes/README.md` §9 stands. |
+| `FM-27-01` | Singular legacy lane versus plural canonical lane | **CONFIRMED conflict** | Inventory and reviewed migration |
+| `FM-27-02` | County index versus validator grammar | **CONFIRMED conflict** | Version one registry contract and tests |
+| `FM-27-03` | Template structured block versus validator parser assumptions | **CONFIRMED conflict** | Choose one grammar and test both valid and invalid cases |
+| `FM-27-04` | Numerous county paths and variable filenames | **CONFIRMED drift pattern** | County-by-county mapping; no blind rename |
+| `FM-27-05` | Machine payload schema | **CONFIRMED absent** | Author under canonical schema home |
+| `FM-27-06` | Payload validator | **CONFIRMED absent** | Implement evidence/policy/release-aware validation |
+| `FM-27-07` | Aggregate validator orchestration | **CONFIRMED placeholder** | Replace through separately scoped implementation |
+| `FM-27-08` | Valid and invalid Focus fixtures | **NEEDS VERIFICATION** | Inventory and close negative-path coverage |
+| `FM-27-09` | County registry authority versus collision-prevention lineage | **OPEN** | Define canonical registry source and migration lineage |
+| `FM-27-10` | Casing crosswalk across docs, fixtures, apps, data, and release | **OPEN / Directory Rules OPEN-DR-08** | Deterministic crosswalk; ADR amendment only if doctrine changes |
+| `FM-27-11` | State-scale relationship | **PROPOSED in ADR-0028** | Keep separate until ADR-0028 review |
+| `FM-27-12` | Human ownership and separation of duties | **NEEDS VERIFICATION** | Assign reviewers without inventing acceptance |
+| `FM-27-13` | External links to singular paths | **UNKNOWN** | Inbound-link analysis before mirror removal |
+| `FM-27-14` | County release evidence | **UNKNOWN / NOT RUN** | Release dry run and rollback drill |
+| `FM-27-15` | Sensitive county source material | **NEEDS VERIFICATION** | Fail-closed rights and sensitivity review before migration/publication |
 
-[↑ Back to top](#top)
+### Highest-risk failure modes
+
+1. moving files before understanding duplicates;
+2. treating the 105-county register as release proof;
+3. allowing validator assumptions to define doctrine silently;
+4. exposing canonical or sensitive data through a county UI;
+5. using AI or county summaries as evidence;
+6. removing the singular path without inbound-link analysis;
+7. merging ADR documentation and inferring acceptance;
+8. adding a state-scale lane through county migration work without ADR-0028 acceptance.
+
+[Back to top](#top)
 
 ---
 
-## 13. Cross-references
+<a id="rollback-and-supersession"></a>
+
+## Rollback and supersession
+
+### This documentation revision
+
+Before merge, rollback is to close the draft pull request and abandon the branch. After merge, rollback is a transparent revert of the implementation commit. Reverting this Markdown restores the prior ADR text; it does not change the status of any county plan, schema, validator, or release.
+
+### Future control-plane migration
+
+A migration rollback must:
+
+1. restore every old path from the pinned pre-migration commit;
+2. restore inbound references or compatibility pointers;
+3. preserve any unique content created after migration as quarantined candidate material;
+4. revert registry and validator grammar atomically;
+5. keep correction and rollback records;
+6. invalidate no release silently;
+7. re-run the same validation suite against the restored state.
+
+### Supersession rule
+
+If a later decision changes the canonical Focus Mode control-plane model, ADR-0027 remains as history and moves to `superseded` only when an accepted successor provides reciprocal links and a reviewed transition plan.
+
+[Back to top](#top)
+
+---
+
+<a id="references"></a>
+
+## References
+
+### Current repository authority and inventory
+
+- [ADR operating contract](./README.md)
+- [Canonical ADR index](./INDEX.md)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [ADR-0028 — State-scale Focus Mode scope](<./ADR-0028 — State-scale Focus Mode scope.md>)
+- [Drift Register](../registers/DRIFT_REGISTER.md)
+
+### Current Focus Mode surfaces
+
+- [Legacy Focus Mode control-plane README](../focus-mode/README.md)
+- [Legacy 105-county index](../focus-mode/counties/COUNTY_INDEX.md)
+- [Legacy county template](../focus-mode/counties/_template/county-build-plan.md)
+- [FocusModePayload semantic contract](../../contracts/focus_mode/focus_mode_payload.md)
+- [County index validator](../../tools/validators/validate_focus_mode_index.py)
+- [Validator orchestrator placeholder](../../tools/validate_all.py)
+
+### Related architectural decisions
+
+- [ADR-0001 — Schema Home](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+- [ADR-0004 — Governed API trust membrane](./ADR-0004-apps-governed-api-is-the-trust-membrane.md)
+- [ADR-0005 — Explorer Web canonical shell](./ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md)
+- [ADR-0010 — Deny-by-default sensitive domains](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md)
+- [ADR-0018 — Promotion gate sequence](./ADR-0018-promotion-gate-sequence.md)
+- [ADR-0019 — AI adapter and finite envelopes](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md)
+- [ADR-0020 — Abstain is first-class](./ADR-0020-abstain-is-a-first-class-decision.md)
+- [ADR-0024 — Steward separation of duties](./ADR-0024-steward-separation-of-duties-for-release.md)
+- [ADR-0025 — Public client never reads canonical stores](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
+
+### Intentionally unresolved paths
+
+The following are named as required future surfaces but are not linked because they are absent at the inspected commit:
 
 - `docs/focus-modes/README.md`
 - `docs/focus-modes/COUNTY_INDEX.md`
 - `docs/focus-modes/_template/county-build-plan.md`
-- `tools/validators/validate_focus_mode_index.py`
-- `contracts/focus_mode/focus_mode_payload.md`
-- `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` *(PROPOSED follow-up)*
-- `docs/doctrine/directory-rules.md` §0, §2.4, §6.7, §13.5, §14.2, §15, §18
-- `docs/adr/ADR-0001-schema-home.md` *(NEEDS_VERIFICATION)*
-- `docs/adr/ADR-0003-policy-singular-is-canonical.md` *(NEEDS_VERIFICATION; informal conflict — see OPEN-FM-08)*
-- `kfm_repository_structure_guiding_document.md` §3, §8
-- `kfm_unified_doctrine_synthesis.md` Parts III, V, VI, VII, XI
-- `ai-build-operating-contract.md` §§10, 26, 27, 28, 29
-- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3, Appendix C
-- `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas` §24.12 (Master Open-ADR Backlog)
-- `docs/registers/DRIFT_REGISTER.md` *(NEEDS_VERIFICATION of existence; OPEN-DR-09)*
+- `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json`
+- `tools/validators/validate_focus_mode_payload.py`
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 14. Acceptance criteria
+<a id="revision-history"></a>
 
-This ADR is **ACCEPTED** when all of the following are true:
+## Revision history
 
-- [ ] **OPEN-FM-01** resolved: singular vs plural state confirmed against live tree; migration executed if required.
-- [ ] **OPEN-FM-08** resolved: ADR number reassigned from `0027` to the next available live `docs/adr/` ID (if `0027` is taken).
-- [ ] All six artifacts present at their canonical paths.
-- [ ] `python tools/validators/validate_focus_mode_index.py docs/focus-modes/` exits `0`.
-- [ ] The validator is registered with `tools/validators/registry.yaml` (or live-equivalent) and discovered by `tools/validate_all.py`.
-- [ ] At least one ratified deciders' sign-off (`<DECIDER:repo-steward>`, `<DECIDER:directory-rules-steward>`) on this ADR.
-- [ ] `docs/focus-modes/README.md` §10 lifecycle table is internally consistent with `docs/focus-modes/_template/county-build-plan.md` front-matter.
-- [ ] `contracts/focus_mode/focus_mode_payload.md` §3 crosswalk references the front-matter keys actually present in the template (no orphan crosswalk rows).
+| Version | Date | Status | Material change |
+|---|---|---|---|
+| `v0.2` | 2026-05-22 | proposed | Initial six-artifact proposal based on doctrine and an unmounted-repository assumption |
+| `v0.3` | 2026-07-24 | proposed | Same-path repository-grounded modernization: confirms ADR identity, records singular/plural conflict, inventories partial artifacts, separates registry state families, defines convergence and migration gates, strengthens validation, release, correction, and rollback boundaries |
 
-[↑ Back to top](#top)
+> [!NOTE]
+> This revision deliberately preserves `proposed` status. It improves the record’s evidence and decision precision; it does not create acceptance, implementation, release, or publication authority.
 
----
-
-> **Doctrine reconciliation invariant.** When this ADR and `directory-rules.md` disagree, `directory-rules.md` is authoritative. Open a follow-up ADR to update *this* file; do not edit `directory-rules.md` to match a stale ADR.
+[Back to top](#top)
 
 ---
 
-**ADR number:** `0027` (PROPOSED) · **Version:** v0.2 · **Last reviewed:** 2026-05-22 · **Class:** structural-move · [↑ Back to top](#top)
+> **Doctrine reconciliation invariant.** If this ADR conflicts with Directory Rules, Directory Rules controls placement until an accepted ADR explicitly amends it. Record the conflict; do not silently make repository drift authoritative.
+
+**ADR:** `ADR-0027` · **Version:** `v0.3` · **Effective status:** `proposed` · **Updated:** `2026-07-24` · [Back to top](#top)
