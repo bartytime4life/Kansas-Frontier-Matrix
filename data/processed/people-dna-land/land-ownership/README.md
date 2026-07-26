@@ -1,108 +1,304 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-people-dna-land-land-ownership-readme
-title: data/processed/people-dna-land/land-ownership/README.md — People / DNA / Land Ownership Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; people-dna-land-domain-lane; land-ownership-lane; parcel-title-assertion-lane
-status: draft; PROPOSED; data-root; processed-stage; people-dna-land; land-ownership; assertion-first; privacy-sensitive; living-person-protected; parcel-join-sensitive; source-role-aware; evidence-first; release-gated
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — People/DNA/Land steward · Land-ownership steward · Privacy reviewer · Rights steward · Sensitivity reviewer · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/people-dna-land/land-ownership/ — Land-Ownership Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-people-dna-land-land-ownership-lane
+status: repository-grounded restricted draft; payload inventory, contracts, schemas, validators, consent/privacy enforcement, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — People / DNA / Land domain steward"
+  - "NEEDS VERIFICATION — land-ownership, title-instrument, parcel-version, and temporal-assertion steward"
+  - "NEEDS VERIFICATION — privacy, living-person, rights, sovereignty, and sensitivity reviewers"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, rollback, and docs stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: restricted-doc; data; processed; people-dna-land; land-ownership; privacy; title; parcel; living-person; release-gated
-tags: [kfm, data, processed, people-dna-land, land-ownership, land-ownership-assertion, deed-instrument, title-instrument, assessor-record, tax-record, parcel-version, ownership-interval, land-parcel, legal-description, land-instrument, chain-of-title, living-person, parcel-person-join, privacy, source-role, administrative, authority, observed, modeled, aggregate, candidate, synthetic, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, RedactionReceipt, ReviewRecord, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-25
+policy_label: restricted-doc; processed-stage; people-dna-land; land-ownership; assertion-first; living-person-protected; parcel-join-sensitive; title-nonadjudicative; release-gated; no-direct-public-path
+path: data/processed/people-dna-land/land-ownership/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, parent People / DNA / Land
+  processed lane, land-ownership doctrine, assessor/tax non-title rule, parcel-geometry non-proof rule,
+  living-person default-deny posture, and PROCESSED lifecycle boundary / PROPOSED lane-local admission
+  profile, ownership-assertion packet, instrument and interval requirements, and downstream promotion
+  expectations / UNKNOWN recursive payload inventory, accepted contracts and schemas, production validators,
+  fixtures, consent/privacy enforcement, receipts, proof closure, release instances, hosting, and public behavior /
+  NEEDS VERIFICATION accountable owners, resolution of the land-sublane documentation/path conflict,
+  source-role vocabulary, legal-description normalization limits, correction propagation, cache invalidation,
+  withdrawal behavior, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 462db518fbd63e3ef39aa4aefdfa95a309eef796
+  prior_blob: b23b0099420ac0c77e8d03549a3b31fab763c7ea
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  people_dna_land_parent_blob: f6d532058d11b1ebfec24dfa940ce95338147c7e
+  land_ownership_doctrine_blob: 430a2295ec40843a0355d220a74204ea05d76c7a
 related:
   - ../README.md
   - ../../README.md
   - ../../../README.md
-  - ../../../../docs/domains/people-dna-land/sublanes/land_ownership.md
-  - ../../../../docs/domains/people-dna-land/LAND_OWNERSHIP.md
-  - ../../../../docs/domains/people-dna-land/CHAIN_OF_TITLE_NOTES.md
   - ../../../../docs/domains/people-dna-land/README.md
-  - ../../../../docs/domains/frontier-matrix/README.md
-  - ../../../../docs/domains/settlements-infrastructure/README.md
-  - ../../../../docs/domains/roads-rail-trade/README.md
-  - ../../../../docs/domains/agriculture/README.md
-  - ../../../../docs/domains/archaeology/README.md
-  - ../../../../policy/domains/people-dna-land/
-  - ../../../../policy/sensitivity/people-dna-land/
-  - ../../../../contracts/domains/people-dna-land/
-  - ../../../../schemas/contracts/v1/domains/people-dna-land/
-  - ../../../raw/people-dna-land/
-  - ../../../work/people-dna-land/
-  - ../../../quarantine/people-dna-land/
-  - ../../../catalog/domain/people-dna-land/
+  - ../../../../docs/domains/people-dna-land/sublanes/land_ownership.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../contracts/domains/people-dna-land/README.md
+  - ../../../../schemas/contracts/v1/domains/people-dna-land/README.md
+  - ../../../../policy/domains/people-dna-land/README.md
+  - ../../../../policy/sensitivity/people-dna-land/README.md
+  - ../../../../policy/consent/people-dna-land/README.md
+  - ../../../raw/people-dna-land/README.md
+  - ../../../work/people-dna-land/README.md
+  - ../../../quarantine/people-dna-land/README.md
+  - ../../../catalog/domain/people-dna-land/README.md
   - ../../../catalog/domain/people-dna-land/land-ownership/README.md
-  - ../../../catalog/stac/people-dna-land/
-  - ../../../catalog/dcat/people-dna-land/
-  - ../../../catalog/prov/people-dna-land/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/sources/people-dna-land/
-  - ../../../../release/candidates/people-dna-land/
-  - ../../../../release/
-  - ../../../../pipelines/domains/people-dna-land/
-  - ../../../../pipeline_specs/people-dna-land/
-  - ../../../../tools/validators/
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/people-dna-land/README.md
+  - ../../../../release/candidates/people-dna-land/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/processed/people-dna-land/land-ownership/README.md`."
-  - "This is a child PROCESSED-stage lane under `data/processed/people-dna-land/` for land-ownership assertions, instruments, parcel versions, assessor/tax administrative context, ownership intervals, legal descriptions, and chain-of-title reasoning artifacts. It is not a RAW source root, WORK scratch area, QUARANTINE bypass, CATALOG, TRIPLET, PUBLISHED, proof store, receipt store, source registry, policy authority, release authority, public API/UI output, public map/tile output, title adjudication, legal advice, property-rights proof, or living-person lookup surface."
-  - "Assessor and tax records are not title truth. Parcel geometry is not title proof. Chain-of-title outputs are assertion-typed and evidence-bound, never adjudications."
-  - "Living-person fields, person-parcel joins, bulk assessor/person joins, DNA-derived ownership inference, and exact parcel-person exposure fail closed unless policy, rights, evidence, redaction, review, release state, correction path, and rollback support a safer representation."
-  - "Frontier Matrix owns LandOfficeRecord and PublicLandRecord aggregate/public-land context; this lane may cite those records but must not rehost them or leak living/DNA/title information through joins."
-  - "This README is a lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no land-record bytes, source state, contract, schema, policy, validator, workflow, consent decision, proof, release, route, hosting, or KFM publication state changed."
+  - "Assessor and tax records are administrative context, not title truth; parcel geometry is a versioned spatial assertion, not title proof."
+  - "Living-person fields, exact person-parcel joins, DNA-derived ownership inference, and bulk owner lookup remain deny-by-default for public use."
+  - "The existing data path is CONFIRMED; broader land-sublane documentation and responsibility-root subdivision conventions remain unresolved and are not decided here."
+  - "Rollback target for v0.2.0 is prior blob SHA `b23b0099420ac0c77e8d03549a3b31fab763c7ea`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/people-dna-land/land-ownership
+# `data/processed/people-dna-land/land-ownership/` — land-ownership processed data
 
-> People / DNA / Land PROCESSED-stage child lane for normalized, assertion-first, evidence-bound, privacy-aware land-ownership artifacts: land ownership assertions, deed/title instruments, assessor and tax administrative context, parcel versions, legal descriptions, ownership intervals, and chain-of-title reasoning that have passed beyond RAW/WORK/QUARANTINE but are not yet cataloged, triplet-projected, published, or released.
+> **One-line purpose.** Hold normalized, assertion-first, evidence-bound land instruments, parcel versions, ownership intervals, and title-related administrative context while preserving source role, time, privacy, rights, uncertainty, correction, and non-adjudicative limits.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/people-dna-land/land-ownership" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fpeople--dna--land%2Fland--ownership-blue">
-  <img alt="Domain: people-dna-land" src="https://img.shields.io/badge/domain-people--dna--land-blueviolet">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Posture: privacy sensitive" src="https://img.shields.io/badge/posture-privacy__sensitive-critical">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: restricted draft](https://img.shields.io/badge/status-restricted%20draft-b42318?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: assertion first](https://img.shields.io/badge/role-assertion%20first-0969da?style=flat-square)](#what-belongs-here)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-b42318?style=flat-square)](#outputs)
+[![Title: non-adjudicative](https://img.shields.io/badge/title-non--adjudicative-6f42c1?style=flat-square)](#privacy-title-and-source-role-guardrails)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — People/DNA/Land steward · Land-ownership steward · Privacy reviewer · Rights steward · Sensitivity reviewer · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **This lane records assertions and evidence; it does not decide title.** An assessor record, tax record, parcel polygon, deed index, OCR result, ownership interval, or chain-of-title hypothesis may be useful while still being incomplete, disputed, stale, privacy-restricted, non-adjudicative, or unsafe for public exposure.
+
 **Path:** `data/processed/people-dna-land/land-ownership/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `people-dna-land`  
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `people-dna-land/`  
 **Parent lane:** `data/processed/people-dna-land/`  
-**Sublane:** `land-ownership` / parcel, title, instrument, and ownership-assertion processed artifacts  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** restricted by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, privacy/sensitivity review, living-person checks, re-identification review, RedactionReceipt where applicable, PolicyDecision, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED land-ownership doctrine says assessor/tax records are not title truth and parcel geometry is not title proof · CONFIRMED Land Ownership owns assertion-first, evidence-bound land instruments, ownership intervals, parcel versions, and chain-of-title reasoning · CONFIRMED living-person and person-parcel joins default-deny at public surfaces · PROPOSED processed-data lane details · NEEDS VERIFICATION for actual child inventory, validators, fixtures, contracts, schemas, policy enforcement, access-control enforcement, release linkage, and governed route behavior.
+**Lane role:** land instruments, parcel versions, ownership assertions, and title-related administrative context  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Land-ownership processed requirements](#land-ownership-processed-requirements) · [Privacy, title, and source-role guardrails](#privacy-title-and-source-role-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Land-ownership admission profile](#land-ownership-admission-profile) · [Privacy, title, and source-role guardrails](#privacy-title-and-source-role-guardrails) · [Instrument, parcel, and interval discipline](#instrument-parcel-and-interval-discipline) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction, withdrawal, and rollback](#correction-withdrawal-and-rollback)
 
 ---
 
 ## Purpose
 
-`data/processed/people-dna-land/land-ownership/` holds processed land-ownership artifacts for the People / DNA / Land domain. It is the processed-data lane for normalized, evidence-bound land ownership records and derived assertions after source admission, role assignment, privacy review, geometry-version handling, instrument normalization, temporal normalization, and validation-oriented processing.
+This directory is the People / DNA / Land domain's **PROCESSED-stage lane for land-ownership assertions and supporting land-record context**. It may hold normalized instrument records, assessor and tax administrative records, parcel versions, ownership intervals, legal-description candidates, and chain-of-title hypotheses that have moved beyond RAW capture, WORK transformation, and QUARANTINE holds.
 
-This lane may contain or point to normalized artifacts such as:
+The lane exists to preserve the answer to six questions before downstream use:
 
-- `Land Ownership Assertion` records;
-- deed, title, patent, mortgage, lien, easement, lease, mineral, water, access, probate, or court-derived instruments when admitted under the proper source role;
-- assessor and tax administrative records with explicit non-title status;
-- `Parcel Version` records and geometry-version sidecars;
-- `Ownership Interval` derivations with EvidenceRef linkage;
-- legal-description parsing candidates and normalized text products;
-- chain-of-title hypothesis artifacts that remain assertion-typed and evidence-bound;
-- privacy-reviewed, redacted, generalized, or restricted public-candidate derivatives that still require catalog and release review.
+1. Which source and source role support the assertion?
+2. Which person, organization, estate, trust, government body, or other actor identity is asserted, and with what confidence and review state?
+3. Which land interest, parcel version, legal description, instrument, and valid-time interval are involved?
+4. Which rights, privacy, living-person, sovereignty, cultural-sensitivity, and re-identification restrictions apply?
+5. Which evidence, contradictions, corrections, withdrawals, and unresolved disputes qualify the assertion?
+6. Which downstream uses are allowed, restricted, generalized, delayed, or denied?
 
-This lane does not adjudicate title, prove ownership by itself, provide legal advice, establish property rights, authorize person-parcel exposure, create living-person lookup surfaces, or infer land ownership from DNA or genealogy by itself.
+It is not a title registry, title plant, legal-opinion service, public owner lookup, DNA inference surface, parcel-targeting service, proof store, receipt authority, catalog authority, release authority, or public map/API/UI source.
 
-## Lifecycle boundary
+## Authority level
+
+**Implementation-bearing lifecycle lane.** The target path is CONFIRMED in the repository and remains under `data/processed/people-dna-land/`, consistent with Directory Rules' lifecycle and domain-placement rules.
+
+Its authority is deliberately narrow:
+
+- it may carry processed land-ownership assertions and lane-local explanatory metadata;
+- it does not define object meaning—that remains in semantic contracts and domain doctrine;
+- it does not define machine shape—that remains under the accepted schema root;
+- it does not decide title, legal ownership, consent, admissibility, privacy, sensitivity, release, or public exposure;
+- it does not establish that a named person owns a parcel merely because records or geometry are present;
+- it does not authorize living-person lookup, bulk owner search, parcel targeting, genealogy-to-title inference, or DNA-derived ownership inference.
+
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent People / DNA / Land processed lane | **CONFIRMED** | `data/processed/people-dna-land/README.md` identifies this child and applies deny-by-default privacy controls. |
+| Land-ownership doctrine | **CONFIRMED repository document / draft** | The doctrine is assertion-first and establishes that assessor/tax records are not title truth and parcel geometry is not title proof. |
+| Existing land-ownership data sublane | **CONFIRMED path** | The current repository path is real; this update does not decide whether every responsibility root should use the same sublane subdivision. |
+| Land-sublane documentation convention | **NEEDS VERIFICATION / conflicted** | Doctrine records duplicate `land.md` and `land_ownership.md` forms and an unresolved `sublanes/` convention. |
+| Real processed payload inventory | **UNKNOWN** | This documentation task did not inspect or expose land-record payloads. |
+| Accepted contracts, schemas, validators, fixtures, and CI enforcement | **NEEDS VERIFICATION** | No complete, accepted land-ownership enforcement suite was verified here. |
+| Consent/privacy decisions, receipts, proof, release instances, hosting, public behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
+
+## What belongs here
+
+Good fits are processed land-record artifacts whose assertion character and provenance remain inspectable, including:
+
+- `Land Ownership Assertion` candidates tied to explicit actors, interests, land identity, valid-time intervals, source roles, and EvidenceRefs;
+- normalized deed, patent, title, mortgage, lien, easement, lease, mineral, water, access, probate, court, and related instrument records when their legal character and source role are explicit;
+- assessor and tax records explicitly labeled **administrative context, not title truth**;
+- versioned parcel geometry and identifier snapshots explicitly labeled **parcel versions, not boundary or title adjudications**;
+- ownership-interval derivations that preserve supporting instruments, competing assertions, gaps, uncertainty, and correction history;
+- legal-description transcription and normalization candidates that retain the original text, parser/method version, unresolved ambiguity, and review state;
+- chain-of-title hypotheses that remain assertion-typed, evidence-bound, contradiction-aware, and non-adjudicative;
+- de-identified, redacted, generalized, aggregated, delayed, restricted, or public-candidate derivatives that remain upstream of catalog and release;
+- object-ready candidates prepared for future contract/schema validation, EvidenceBundle closure, catalog review, or release review;
+- lane-local README or non-release manifest notes that explain artifact identity without becoming proof, policy, consent, or release authority.
+
+## What does NOT belong here
+
+Do not place these in `data/processed/people-dna-land/land-ownership/`:
+
+- RAW deed books, scans, photographs, source-native exports, assessor/tax downloads, court or probate files, plat or survey originals, OCR input images, source logs, or vendor payloads;
+- WORK OCR experiments, parsing trials, identity matching, legal-description debugging, chain-of-title exploration, temporary joins, redaction trials, notebooks, or scratch products;
+- QUARANTINE material with unresolved living-person exposure, consent, rights, source role, identity, title dispute, parcel-person join, sovereignty, cultural sensitivity, or re-identification risk;
+- final title adjudications, legal opinions, legal advice, property-rights determinations, boundary surveys, engineering certifications, court authority, or government recording authority;
+- claims that assessor or tax records establish title, or that parcel geometry establishes legal ownership boundaries;
+- raw DNA, DNA segments, vendor IDs, triangulation outputs, kinship-derived ownership inference, genealogy-derived title claims, or genetic ancestry used to infer property rights;
+- unrestricted living-person names, addresses, contact data, exact person-parcel joins, bulk owner indexes, targeting aids, or lookup-oriented exports;
+- Frontier Matrix `LandOfficeRecord` or `PublicLandRecord` authority objects rehomed from their owning lane;
+- semantic contracts, JSON Schemas, policy rules, consent decisions, validators, tests, fixtures, executable pipelines, source descriptors, catalogs, STAC/DCAT/PROV projections, triplets, proofs, receipts, releases, correction notices, rollback cards, or published artifacts;
+- public map, tile, API, download, export, Focus Mode, Evidence Drawer, search, graph, or AI-answer payloads;
+- transform secrets, generalization thresholds, linkage keys, exact matching rules, access credentials, private agreements, field routes, or details that could enable re-identification or unauthorized access.
+
+## Inputs
+
+Inputs may enter this lane only through governed lifecycle transitions from:
+
+- `data/work/people-dna-land/` after source role, rights, actor identity, instrument type, parcel version, valid time, evidence, privacy, sensitivity, consent where applicable, and correction posture are recorded;
+- `data/quarantine/people-dna-land/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted pipelines or tools that preserve source bytes by reference, original transcription, normalized values, parser or transform version, input digests, uncertainty, and correction state;
+- approved cross-domain context where ownership remains with the source domain and the relation is explicit, evidence-backed, privacy-safe, and policy-reviewed.
+
+A connector-to-PROCESSED, watcher-to-PROCESSED, public-upload-to-PROCESSED, genealogy-to-title, or DNA-to-title shortcut is not an accepted path. Connectors and watchers produce source or candidate state; they do not adjudicate or publish.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/people-dna-land/` and an accepted land-ownership catalog sublane;
+- privacy-safe STAC/DCAT/PROV projections only where those formats are appropriate and policy permits;
+- `data/triplets/` or relationship projections that preserve assertion status, evidence, source role, privacy, consent, and access restrictions;
+- separate `data/proofs/` and `data/receipts/` objects;
+- `release/candidates/people-dna-land/` only after identity, rights, privacy, consent where required, living-person protection, redaction, validation, evidence, review, correction, withdrawal, and rollback obligations are met;
+- a separately governed public-safe derivative only through a release transition and a separate published path;
+- governed API, MapLibre, Evidence Drawer, export, or Focus Mode carriers only after policy-safe release and only at an appropriately generalized or aggregated level.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A processed land record is not a released ownership claim merely because the source is governmental, the parcel is public-facing, or the name appears in an assessor or tax record.
+
+## Validation
+
+No complete land-ownership production validator suite was verified in this task. Until accepted contracts, schemas, fixtures, validators, policy/consent checks, access controls, and CI evidence exist, field-level enforcement claims must remain bounded.
+
+A credible validation profile should check, at minimum:
+
+1. source identity, source role, rights, citation, retrieval, and digest closure;
+2. actor identity, entity type, identity confidence, alias handling, and living-person posture;
+3. instrument type, recording jurisdiction, recording reference, execution/recording/effective dates, and source text preservation;
+4. interest type, fraction or scope, grantor/grantee or equivalent roles, and non-equivalence among ownership, assessment, taxation, occupancy, management, lease, lien, easement, mineral, water, and access interests;
+5. parcel identifier, parcel version, geometry source, geometry vintage, and explicit non-title status;
+6. legal-description source text, normalized form, parser/method version, unresolved ambiguity, and reviewer state;
+7. valid-time interval, transaction time, source time, retrieval time, correction time, release time, gaps, overlaps, and conflicting assertions;
+8. EvidenceRef resolution, supporting and contradicting evidence, chain-of-custody, and review burden;
+9. privacy, consent where applicable, living-person protection, sovereignty, cultural sensitivity, re-identification, and bulk-join risk;
+10. redaction/generalization outcome, policy decision, release hold, correction path, withdrawal path, and rollback target.
+
+Fail closed or quarantine when a material source, role, identity, instrument, parcel version, valid time, evidence, rights, privacy, consent, sensitivity, contradiction, or correction field is absent, ambiguous, unsupported, disputed, or unsafe for the requested use.
+
+## Review burden
+
+Changes require review proportional to consequence:
+
+| Change | Minimum review burden |
+|---|---|
+| README wording or navigation only | Docs steward plus People / DNA / Land reviewer. |
+| New field, source role, instrument class, interest class, parcel identity rule, or interval rule | Domain steward, land-record reviewer, contract/schema reviewer, and evidence reviewer. |
+| Living-person data, person-parcel joins, bulk matching, private records, or sensitive cultural/sovereignty context | Privacy, rights, sensitivity, and policy review; deny by default until approved. |
+| DNA or genealogy relation to land ownership | Hold by default; require explicit doctrine, consent/privacy, evidence, legal-risk, and policy review. DNA must never authorize title. |
+| Public-facing candidate, map, search, export, graph, API, or AI answer | Independent privacy/policy/release review, evidence closure, correction/withdrawal support, and rollback readiness. |
+| Title, legal, property-rights, boundary, or adjudicative implication | Outside normal KFM authority; abstain or redirect to the competent authority. |
+
+## Related folders
+
+| Responsibility | Path | Boundary |
+|---|---|---|
+| Parent processed lane | `data/processed/people-dna-land/` | Broader restricted People / DNA / Land processed context. |
+| RAW source capture | `data/raw/people-dna-land/` | Immutable source-edge material; not this lane. |
+| WORK transformations | `data/work/people-dna-land/` | OCR, normalization, reconciliation, privacy review, and candidate work. |
+| QUARANTINE holds | `data/quarantine/people-dna-land/` | Unresolved identity, rights, consent, privacy, sensitivity, title, or join risk. |
+| Domain doctrine | `docs/domains/people-dna-land/` | Human-facing meaning and governance; land-sublane naming remains unresolved. |
+| Contracts | `contracts/domains/people-dna-land/` | Semantic meaning if this root/segment is accepted; not data. |
+| Schemas | `schemas/contracts/v1/domains/people-dna-land/` | Machine shape if accepted; not data. |
+| Policy and consent | `policy/domains/people-dna-land/`, `policy/sensitivity/people-dna-land/`, `policy/consent/people-dna-land/` | Admissibility, privacy, sensitivity, and consent authority. |
+| Catalog | `data/catalog/domain/people-dna-land/` | Downstream discovery and evidence references. |
+| Proofs and receipts | `data/proofs/`, `data/receipts/` | Evidence closure and auditable process memory. |
+| Release | `release/candidates/people-dna-land/`, `release/` | Promotion decisions, manifests, corrections, withdrawals, and rollback. |
+| Published carriers | `data/published/` | Released public-safe artifacts only; never implied by this path. |
+
+## ADRs
+
+- Directory Rules governs responsibility roots, lifecycle placement, the required README contract, and avoidance of parallel authority homes.
+- ADR-0001 governs the default schema home where applicable.
+- The land-sublane documentation conflict—`land.md`, `land_ownership.md`, and the proposed `sublanes/` convention—remains **NEEDS VERIFICATION / ADR-class**. This README does not resolve it.
+- Any proposal to subdivide contracts, schemas, policy, registries, release, proof, or receipt roots by a new land-ownership subpath requires current repo evidence and the appropriate ADR or migration note.
+
+## Last reviewed
+
+**2026-07-25.** Review again when any land-ownership contract/schema is accepted, a validator or fixture suite is added, consent/privacy policy changes, source families activate, a public derivative is proposed, the sublane naming conflict is resolved, or a correction/withdrawal incident occurs.
+
+---
+
+<a id="land-ownership-processed-requirements"></a>
+## Land-ownership admission profile
+
+The following profile is **PROPOSED** until enforceable contracts, schemas, fixtures, validators, policy/consent checks, and CI evidence are verified:
+
+| Field group | Minimum expectation |
+|---|---|
+| Identity | Stable assertion ID; actor/entity identity with confidence and living-person posture; land-interest identity; parcel/version or legal-description identity. |
+| Source | SourceDescriptor or registry reference; source role; jurisdiction; rights; citation; retrieval event; source digest. |
+| Instrument | Instrument class; recording reference; execution, effective, and recording dates where material; original text or image reference; parser/normalizer version. |
+| Assertion | Assertion type; interest type; actor role; valid-time interval; confidence; unresolved dispute; supporting and contradicting EvidenceRefs. |
+| Parcel and geometry | Parcel identifier and version; geometry source and vintage; CRS and digest; explicit statement that geometry is not title proof. |
+| Legal description | Original text; normalized candidate; parser/method version; ambiguity flags; reviewer state; no silent replacement of the source wording. |
+| Privacy and rights | Living-person class; consent where required; sensitivity; sovereignty/cultural review; re-identification risk; access class; redaction/generalization outcome. |
+| Governance | Validation state; policy decision; review state; release hold; correction and withdrawal paths; rollback target. |
+
+> [!WARNING]
+> Do not treat an object's presence in this lane—or a schema-valid representation—as proof that the assertion is legally correct, current, complete, non-disputed, or safe to expose.
+
+## Privacy, title, and source-role guardrails
+
+- Assessor and tax records are administrative context, not title truth.
+- Parcel geometry is a versioned spatial assertion, not title proof or boundary adjudication.
+- A deed index is not the deed itself; OCR text is not the original instrument; normalized text must not replace source text.
+- Recording evidence does not guarantee present ownership, validity, priority, completeness, or absence of later instruments.
+- Ownership, assessment, taxation, occupancy, management, lease, lien, easement, mineral, water, access, and stewardship interests must not collapse into one relation.
+- A chain-of-title result is a hypothesis or reviewed assertion unless a competent authority supplies an adjudicative determination.
+- Living-person fields and exact person-parcel joins default to DENY or RESTRICT at public surfaces.
+- Bulk owner search, targeting aids, reverse lookup, and re-identifying joins are prohibited without explicit policy and release authority.
+- DNA and genealogy may never establish title or authorize an ownership claim.
+- Frontier Matrix public-land and land-office context may be cited through governed relationships but must not be rehomed here or joined in ways that leak living-person, DNA, or title-sensitive information.
+- Public clients and AI surfaces use governed APIs and released, policy-safe derivatives—not this directory.
+
+## Instrument, parcel, and interval discipline
+
+| Concern | Required treatment |
+|---|---|
+| Multiple instruments | Preserve all relevant instruments and their distinct legal/source character; do not overwrite history with the latest convenient record. |
+| Conflicting assertions | Retain conflicts, evidence, provenance, reviewer state, and abstention posture; never silently select a winner. |
+| Parcel renumbering or geometry change | Preserve parcel versions and cross-version mappings; do not imply stable legal identity from geometry similarity alone. |
+| Split, merge, or boundary adjustment | Record many-to-many relationships and uncertainty; do not infer title transfer from spatial change. |
+| Ownership interval | Distinguish asserted valid time from recording, source, retrieval, correction, and release times. |
+| Legal-description ambiguity | Preserve source wording and ambiguity; require qualified review before consequential use. |
+| Estates, trusts, organizations, governments | Preserve entity type and representation; do not force all actors into living-person fields. |
+| Redaction or generalization | Record the transform through the appropriate receipt; do not expose transformation secrets that enable reversal. |
+
+## Lifecycle and promotion
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -110,176 +306,35 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/people-dna-land] --> WORK[data/work/people-dna-land]
-  WORK --> QUAR[data/quarantine/people-dna-land]
-  WORK --> LAND[data/processed/people-dna-land/land-ownership]
-  QUAR --> LAND
-  LAND --> PROC[data/processed/people-dna-land]
-  LAND --> CAT[data/catalog/domain/people-dna-land]
-  LAND --> LO_CAT[data/catalog/domain/people-dna-land/land-ownership]
-  LAND --> STAC[data/catalog/stac/people-dna-land]
-  LAND --> DCAT[data/catalog/dcat/people-dna-land]
-  LAND --> PROV[data/catalog/prov/people-dna-land]
-  LAND --> TRIP[data/triplets/.../people-dna-land]
-  LAND -. supports .-> PROOF[data/proofs]
-  LAND -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../people-dna-land]
-  LO_CAT --> PUBLISHED
-  STAC --> PUBLISHED
-  DCAT --> PUBLISHED
-  PROV --> PUBLISHED
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
+  RAW["data/raw/people-dna-land/<br/>source instruments and administrative records"] --> WORK["data/work/people-dna-land/<br/>OCR · parsing · identity · parcel version · privacy review"]
+  WORK --> GATE{"identity + source role + rights + privacy + evidence gate"}
+  GATE -->|"fail or unresolved"| QUAR["data/quarantine/people-dna-land/<br/>living person · title dispute · rights · consent · unsafe join"]
+  GATE -->|"processed candidate"| PROC["data/processed/people-dna-land/land-ownership/<br/>assertion-first, non-adjudicative artifacts"]
+  PROC --> CAT["data/catalog/domain/people-dna-land/<br/>catalog + EvidenceRef closure"]
+  CAT --> REL["release/<br/>policy · promotion · correction · withdrawal · rollback"]
+  REL --> PUB["data/published/<br/>separately released public-safe derivative"]
+  PUB --> API["governed API<br/>policy-safe carrier"]
 ```
 
-`data/processed/people-dna-land/land-ownership/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+Promotion is a governed state transition, not a file move, schema pass, pull request, merge, or publication shortcut. Public release requires a separately reviewed artifact and must not expose exact living-person ownership data, unrestricted person-parcel joins, DNA-derived claims, transformation secrets, or unresolved title assertions.
 
-## Repo fit
+## Correction, withdrawal, and rollback
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw deed books, source-native record exports, assessor/tax downloads, court/probate source files, plat/survey originals, parcel source files, images, OCR inputs, source logs, or source identifiers | `data/raw/people-dna-land/` | Not this lane. |
-| In-process OCR, parsing, legal-description normalization, instrument extraction, chain-of-title experiments, QA, privacy review, redaction trials, joins, notebooks, or scratch products | `data/work/people-dna-land/` | Not this lane. |
-| Unresolved living-person data, unresolved rights, unresolved source role, disputed identity, malformed legal descriptions, person-parcel joins, DNA/genealogy leakage risk, sensitive cultural/sovereignty context, or unsafe public-risk material | `data/quarantine/people-dna-land/` | Not this lane until review/admission allows. |
-| Processed land-ownership artifacts | `data/processed/people-dna-land/land-ownership/` | This lane. |
-| Parent processed People/DNA/Land lane | `data/processed/people-dna-land/` | Parent lane; still not public by default. |
-| People/DNA/Land catalog records | `data/catalog/domain/people-dna-land/` | Downstream catalog stage. |
-| Land-ownership catalog records | `data/catalog/domain/people-dna-land/land-ownership/` | Downstream catalog sublane if accepted. |
-| People/DNA/Land STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/people-dna-land/` | Downstream catalog projections if accepted. |
-| People/DNA/Land triplet/graph records | `data/triplets/.../people-dna-land/` | Downstream graph stage; must not expose restricted person/parcel joins or collapsed title claims. |
-| Published public-safe products | `data/published/.../people-dna-land/` | Downstream only after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, redaction, validation, policy, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| People/DNA/Land source registry records | `data/registry/sources/people-dna-land/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/people-dna-land/`, `release/` | Separate publication authority. |
-| People/DNA/Land contracts | `contracts/domains/people-dna-land/` | Object meaning; not data. |
-| People/DNA/Land schemas | `schemas/contracts/v1/domains/people-dna-land/` | Machine shape; not data. |
-| People/DNA/Land policy and sensitivity rules | `policy/domains/people-dna-land/`, `policy/sensitivity/people-dna-land/` if accepted | Admissibility authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
+Corrections must propagate through every affected assertion, interval, parcel-version relationship, catalog record, EvidenceBundle, triplet, cache, export, and released derivative.
 
-## Accepted contents
+Correction may require:
 
-Processed land-ownership artifacts may include:
+- amending or superseding an assertion while preserving the prior version and reason;
+- adding later instruments or contradictory evidence;
+- retracting a mistaken identity or person-parcel link;
+- revising parcel-version mappings or valid-time intervals;
+- restricting, redacting, generalizing, or withdrawing a public derivative;
+- invalidating caches, search indexes, tiles, graphs, exports, or AI-answer carriers;
+- issuing a correction or withdrawal notice through the release authority;
+- rolling back to the last known-safe released artifact.
 
-- normalized `Land Ownership Assertion`, `LandInstrument`, `Deed Instrument`, `Title Instrument`, `Parcel Version`, `Ownership Interval`, `LegalDescription`, `Assessor Record`, and `TaxRecord` artifacts;
-- instrument-derived assertion candidates with source role, temporal scope, evidence refs, rights posture, and privacy posture;
-- parcel-version geometry records where geometry is versioned context and not title proof;
-- assessor and tax administrative context when explicitly labeled as non-title truth;
-- chain-of-title hypotheses that are assertion-typed, evidence-bound, and never adjudications;
-- redacted, generalized, de-identified, delayed, or restricted derivatives that still require catalog/release review before public use;
-- sidecar metadata needed to interpret processed artifacts when it is not a receipt, proof, policy decision, release manifest, source registry record, schema, validator, or catalog record;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs or authority records.
+Rollback is required if this lane becomes a title-adjudication surface, legal-advice source, unrestricted living-person or parcel-owner lookup, bulk targeting aid, DNA/genealogy ownership-inference path, proof or receipt store, catalog or release authority, public map/API shortcut, transform-secret disclosure path, or parallel authority home.
 
-## Exclusions
-
-Do not store these under `data/processed/people-dna-land/land-ownership/`:
-
-- RAW source files, deed-book images, OCR inputs, source-native assessor/tax exports, court/probate source images, parcel source files, source media, logs, original source identifiers, or unprocessed agency/partner exports.
-- WORK/scratch files, notebooks, transform experiments, legal-description parsing experiments, unresolved chain-of-title joins, OCR QA scratch, geocoding scratch, privacy-review scratch, or redaction-debug outputs.
-- Quarantined or unresolved living-person, rights, source-role, sensitivity, sovereignty, cultural-affiliation, DNA/genealogy leakage, person-parcel join, or public-risk material.
-- Catalog records, STAC/DCAT/PROV records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, pipeline specs, app/UI/API code, or packages.
-- `LandOfficeRecord` and `PublicLandRecord` authority/context objects owned by Frontier Matrix, except as cited context through governed relation edges.
-- DNA-derived ownership inference, genealogy-only title proof, living-person lookup surfaces, bulk assessor/person exports, exact person-parcel public maps, title adjudications, legal advice, property-rights proof, boundary adjudication, tax/legal compliance advice, or law-enforcement/private-investigation targeting aids.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, person search, parcel-owner lookup products, landowner/parcel targeting aids, legal/title advice, or life-safety guidance.
-- Redaction parameters, aggregation thresholds, small-cell thresholds, fuzzing radii, seeds, exact transform offsets, access credentials, secrets, private agreement terms, living-person identifiers, sensitive owner/occupant details, or implementation details that could aid exposure or unauthorized access.
-
-## Land-ownership processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
-|---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or people-dna-land source registry context. |
-| Evidence linkage | Claims about ownership assertion, instrument, parcel version, ownership interval, legal description, assessor/tax administrative context, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Administrative, authority, observed, modeled, aggregate, candidate, and synthetic roles must remain explicit; the canonical role vocabulary is NEEDS VERIFICATION where docs conflict. |
-| Object distinction | Land Ownership Assertion, Deed Instrument, Title Instrument, Assessor Record, TaxRecord, Parcel Version, Ownership Interval, LandParcel, LegalDescription, and LandInstrument must remain distinct. |
-| Title posture | Assessor/tax records are not title truth; parcel geometry is not title proof; chain-of-title remains assertion-typed unless a qualified legal authority says otherwise outside KFM. |
-| Time semantics | Source time, observed time, valid time, recording time, retrieval time, release time, and correction time should remain distinguishable where material. |
-| Privacy posture | Living-person fields, person-parcel joins, bulk assessor/person joins, exact owner/occupant exposure, and DNA/genealogy leakage risks should carry restriction/generalization/denial posture. |
-| Rights posture | Recording office, assessor, court, archive, vendor, steward, license, redistribution, attribution, derivative-use, and privacy terms should be resolved or held closed. |
-| Transform linkage | Redaction, de-identification, aggregation, generalization, suppression, withholding, delayed publication, or public-safe geometry transform should link to appropriate receipt families. |
-| Review state | People/DNA/Land steward, privacy reviewer, rights steward, sensitivity reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Catalog readiness | Processed land-ownership artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, privacy/sensitivity review state, and rollback target. |
-| No public surface by default | Processed land-ownership artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
-
-## Privacy, title, and source-role guardrails
-
-- Assessor and tax records are not title truth.
-- Parcel geometry is not title proof.
-- A `Parcel Version` is a geometry/version snapshot, not a boundary adjudication.
-- A `Land Ownership Assertion` is an evidence-bound assertion, not an adjudicated ownership determination.
-- `Ownership Interval` is derived, not primary evidence.
-- Chain-of-title output is always assertion-typed and must not be presented as legal title advice or adjudication.
-- DNA never authorizes title or parcel inference.
-- Genealogy trees are hypotheses or modeled/candidate context, not title proof.
-- Living-person fields default-deny at public surfaces.
-- Private person-parcel joins, exact owner/occupant joins, and bulk assessor/person exports default-deny unless a governed policy decision and review approve a safer representation.
-- Frontier Matrix owns `LandOfficeRecord` and `PublicLandRecord`; this lane may cite them as context but must not rehost them or leak living/DNA/title information through joins.
-- Settlements, Spatial Foundation, Roads/Rail, Agriculture, Archaeology, People, DNA, and Frontier Matrix keep their own canonical truth; this lane may join only through governed relationships preserving ownership, source role, sensitivity, and EvidenceBundle support.
-- Source-role collapse is denied: administrative assessor/tax records must not be cited as title authority; aggregate public-land statistics must not become per-place ownership truth; synthetic AI text must not become evidence.
-- Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, unresolved living-person posture, unresolved parcel-version identity, or absent release state blocks public promotion.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
-
-> [!CAUTION]
-> Do not expose `data/processed/people-dna-land/land-ownership/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, title search, parcel-owner lookup, person search, property-rights proof, legal advice source, private-investigation aid, landowner/parcel targeting aid, or living-person lookup surface. Processed land-ownership data remains inside the trust membrane until governed promotion and release, and even released outputs remain assertion-typed and evidence-bounded.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention, sublane ADR status, validators, and access-control enforcement.
-
-```text
-data/processed/people-dna-land/land-ownership/
-├── README.md
-├── assertions/               # PROPOSED — Land Ownership Assertion records
-├── instruments/              # PROPOSED — deed/title/land instrument derivatives
-├── parcels/                  # PROPOSED — Parcel Version artifacts, not title proof
-├── assessor_records/         # PROPOSED — administrative context, not title truth
-├── tax_records/              # PROPOSED — administrative/tax context, not title truth
-├── ownership_intervals/      # PROPOSED — derived assertion intervals
-├── legal_descriptions/       # PROPOSED — parsed/normalized legal-description candidates
-├── chain_of_title/           # PROPOSED — assertion-typed chain-of-title hypotheses
-├── redacted/                 # PROPOSED — public-candidate de-identified/generalized derivatives
-├── restricted/               # PROPOSED — living-person/person-parcel/rights-limited artifacts
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-├── joins/                    # PROPOSED — reviewed relation edges only, not foreign-domain truth
-├── _manifests/               # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define land-ownership processed boundaries. |
-| `docs/domains/people-dna-land/sublanes/land_ownership.md` | CONFIRMED doctrine / PROPOSED implementation | Land ownership is assertion-first and evidence-bound; assessor/tax records are not title truth; parcel geometry is not title proof; source-role, sensitivity, living-person, person-parcel, DNA, and Frontier Matrix boundaries are defined. | The doc also flags duplicate/uncertain sublane naming and says sublane paths need ADR/verification. |
-| `data/processed/README.md` | CONFIRMED | PROCESSED data is upstream of catalog, triplets, publication, and release and is not the normal public surface. | Did not inspect in this task beyond prior current-session evidence. |
-| `data/catalog/domain/people-dna-land/land-ownership/README.md` | NEEDS VERIFICATION | Expected downstream catalog sublane. | This task did not inspect its contents. |
-| `docs/domains/people-dna-land/LAND_OWNERSHIP.md` and `CHAIN_OF_TITLE_NOTES.md` | NEEDS VERIFICATION | Named companion docs for land ownership and chain-of-title. | This task did not inspect contents. |
-| `policy/domains/people-dna-land/` and `policy/sensitivity/people-dna-land/` | NEEDS VERIFICATION | Expected admissibility homes. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/people-dna-land/` and `schemas/contracts/v1/domains/people-dna-land/` | NEEDS VERIFICATION | Expected object contract/schema homes for People/DNA/Land families. | Specific object files and validators were not verified in this task. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/people-dna-land/land-ownership/`.
-- [ ] Confirm whether `land-ownership/` is accepted under `data/processed/people-dna-land/` or should be reconciled with whole-domain-only responsibility-root lanes pending sublane ADR.
-- [ ] Confirm parent `data/processed/people-dna-land/README.md` exists and defines parent-domain processed boundaries.
-- [ ] Resolve duplicate doctrine naming: `sublanes/land_ownership.md`, `sublanes/land.md`, `LAND_OWNERSHIP.md`, and any subfolder `land/README.md` convention.
-- [ ] Confirm object contracts and schema paths for Land Ownership Assertion, Deed Instrument, Title Instrument, Assessor Record, TaxRecord, Parcel Version, Ownership Interval, LandParcel, LegalDescription, and LandInstrument.
-- [ ] Confirm canonical source-role vocabulary and any conflict between `authority` and the seven-role enum in current doctrine.
-- [ ] Confirm validators, fixtures, CI checks, policy checks, privacy checks, person-parcel join checks, redaction checks, living-person checks, DNA-leakage checks, and access-control enforcement.
-- [ ] Confirm SourceDescriptor/source registry linkage for every input source and derived artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, RedactionReceipt, ReviewRecord, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, RollbackCard, correction path, and rollback target where applicable.
-- [ ] Confirm assessor/tax-as-title, parcel-geometry-as-title-proof, DNA-as-title-proof, genealogy-as-title-proof, aggregate-as-per-place, synthetic-as-evidence, living-person public exposure, person-parcel exact joins, bulk assessor/person exports, private agreement terms, credentials, secrets, redaction parameters, transform secrets, and release-unclear artifacts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, privacy-safe, rights-safe, sensitivity-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, title adjudication, legal advice, property-rights proof, parcel-owner lookup, person search, private-investigation aid, or living-person lookup artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public title proof, public person-parcel service, public map, public tile, public API, public UI, or AI-answer source.
-
-## Rollback
-
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, title-adjudication surface, legal-advice surface, assessor/tax-as-title path, parcel-geometry-as-title-proof path, DNA-as-title-proof path, living-person exposure path, person-parcel lookup path, bulk assessor/person export path, aggregate-as-per-place path, synthetic-as-evidence path, unsafe-join exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, private-investigation aid, landowner/parcel targeting aid, property-rights proof, or life-safety guidance source.
-
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+**Document rollback target:** restore prior blob `b23b0099420ac0c77e8d03549a3b31fab763c7ea` or revert the modernization commit without rewriting shared history.
 
 <p align="right"><a href="#top">Back to top</a></p>
