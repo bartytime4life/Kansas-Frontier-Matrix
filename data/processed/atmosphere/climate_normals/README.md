@@ -1,14 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-climate-normals-readme
-title: data/processed/atmosphere/climate_normals/README.md — Atmosphere ClimateNormal Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; climate-normal-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; climate-normals; ClimateNormal; release-gated; baseline-aware; aggregation-aware; source-role-aware
-owners: OWNER_TBD — Atmosphere steward · Climate steward · Baseline steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; climate-normal; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, climate-normal, climate-normals, ClimateNormal, ClimateAnomaly, baseline, reference-period, aggregation, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, AggregationReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+title: data/processed/atmosphere/climate_normals/README.md — Climate-Normal Candidate Lane
+version: v0.2.0
+type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; climate-normal-lane; baseline-context-lane
+status: repository-grounded draft; PROPOSED lane contract; schema and runtime enforcement unverified
+owners: NEEDS VERIFICATION — Atmosphere steward · Climate steward · Baseline steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; no-direct-public-path; baseline-aware; aggregation-aware; release-gated
+tags: [kfm, data, processed, atmosphere, climate-normal, ClimateNormal, baseline, reference-period, aggregation, comparability, correction, rollback]
 related:
   - ../README.md
   - ../aggregate/climate/README.md
@@ -18,254 +19,288 @@ related:
   - ../../../../docs/domains/atmosphere/README.md
   - ../../../../contracts/domains/atmosphere/ClimateNormal.md
   - ../../../../contracts/domains/atmosphere/ClimateAnomaly.md
-  - ../../../../contracts/domains/atmosphere/TemperatureObservation.md
-  - ../../../../contracts/domains/atmosphere/PrecipitationObservation.md
   - ../../../../schemas/contracts/v1/domains/atmosphere/ClimateNormal.schema.json
   - ../../../../schemas/contracts/v1/domains/atmosphere/ClimateAnomaly.schema.json
   - ../../../../policy/domains/atmosphere/
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../docs/doctrine/trust-membrane.md
   - ../../../raw/atmosphere/
   - ../../../work/atmosphere/
   - ../../../quarantine/atmosphere/
-  - ../../../catalog/domain/atmosphere/README.md
-  - ../../../catalog/stac/atmosphere/
-  - ../../../catalog/dcat/atmosphere/
-  - ../../../catalog/prov/atmosphere/
+  - ../../../catalog/domain/atmosphere/
   - ../../../triplets/
   - ../../../published/
   - ../../../proofs/
   - ../../../receipts/
   - ../../../registry/
   - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
 notes:
-  - "This file replaces a blank placeholder at `data/processed/atmosphere/climate_normals/README.md`."
-  - "This is the PROCESSED-stage sublane for normalized ClimateNormal artifacts under Atmosphere. It is not raw observation storage, anomaly storage, attribution proof, proof storage, release authority, schema authority, or public climate layer output."
-  - "ClimateNormal artifacts must preserve reference period, baseline source, aggregation method, spatial/temporal scope, variable, units, uncertainty/caveats, evidence linkage, policy posture, and release state before public use."
-  - "The ClimateNormal contract defines object meaning; this README does not create a second contract or schema authority."
-  - "The sibling `data/processed/atmosphere/aggregate/climate/` lane covers broader aggregate climate products; this object-named lane must not become a parallel truth store without a documented convention."
-  - "Rollback target for this expansion is previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "This file preserves the existing path and document identity while aligning the lane to the current data/processed authority contract."
+  - "The lane owns normalized climate-normal candidates and baseline sidecars, not automatically machine-enforced ClimateNormal instances."
+  - "The paired ClimateNormal schema is a permissive PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "The broader aggregate/climate lane overlaps this object-named lane; neither may become a parallel truth store without a documented disposition."
+  - "Prior blob and rollback target: df6e4807ff75266fa97cc29c8266a76c68b02cdf."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/climate_normals
+# `data/processed/atmosphere/climate_normals/` — Climate-Normal Candidates
 
-> Atmosphere PROCESSED-stage sublane for normalized `ClimateNormal` artifacts: governed reference-period climate baselines that remain distinct from raw observations, climate anomalies, forecasts, model fields, attribution claims, proof, release, and public climate surfaces.
+> **One-line purpose.** Own normalized, source-traced, reference-period climate-baseline candidates that have passed applicable WORK checks but have not thereby become cataloged, released, public, or machine-enforced `ClimateNormal` records.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/climate_normals" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Fclimate__normals-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Object: ClimateNormal" src="https://img.shields.io/badge/object-ClimateNormal-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Schema: scaffold](https://img.shields.io/badge/schema-scaffold-d97706?style=flat-square)](#schema-posture)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-d1242f?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Climate steward · Baseline steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/atmosphere/climate_normals/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Object-family segment:** `climate_normals` / `ClimateNormal`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, baseline/aggregation disclosure, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was blank · CONFIRMED `ClimateNormal` contract and schema paths exist · CONFIRMED `ClimateNormal` is the reference baseline for `ClimateAnomaly` comparison · PROPOSED climate-normals processed-sublane details · NEEDS VERIFICATION for actual child inventory, validators, receipts, CI enforcement, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, a successful aggregation, a baseline calculation, a map render, a pull request, or a merge does not create truth, schema enforcement, evidence closure, policy permission, catalog admission, release approval, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Naming and compatibility note](#naming-and-compatibility-note) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [ClimateNormal requirements](#climatenormal-requirements) · [Baseline guardrails](#baseline-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!WARNING]
+> A climate normal is a declared reference-period baseline. It is not a raw observation, climate anomaly, forecast, model field, attribution claim, trend proof, hazard claim, or public-health conclusion.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Lane disposition](#lane-disposition-and-anti-parallel-authority) · [Baseline contract](#baseline-and-comparability-contract) · [Schema](#schema-posture) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/atmosphere/climate_normals/` holds normalized reference-period climate-baseline artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This object-named child lane owns processed climate-normal candidates under the Atmosphere responsibility segment. Typical artifacts represent reference-period baselines, aggregation-ready normal values, baseline grids, station-network summaries, or interpretation sidecars that preserve enough context to explain the source, variable, period, spatial support, method, uncertainty, and correction state.
 
-This lane is for processed `ClimateNormal` records or derivatives that preserve source identity, source role, reference period, baseline source, aggregation method, variable, units, spatial scope, temporal scope, baseline value semantics, uncertainty/caveats, evidence references, and downstream catalog readiness.
+This lane may support downstream `ClimateAnomaly` comparisons, but it does not itself establish anomaly meaning, attribution, trend significance, event causation, damages, hazard impact, or policy conclusions.
 
-It is not a raw observation lane. It is not a climate-anomaly lane. It is not a climate-attribution proof lane. It is not a trend-significance proof lane. It is not a proof store, receipt store, source registry, catalog, release, semantic contract, schema, policy, public layer, or public API/UI surface. It may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe climate context layers, Focus Mode summaries, anomaly comparison, or release packages only after gates pass.
+## Authority level
 
-## Naming and compatibility note
+**Canonical PROCESSED responsibility if the object-family lane convention is retained; non-public by default.**
 
-The repo also contains the broader aggregate climate lane:
+This path may own normalized climate-normal candidates and lane-local explanatory sidecars. It does not own:
+
+- raw source captures or source-native normals;
+- semantic object meaning or machine shape;
+- policy, rights, or sensitivity decisions;
+- EvidenceBundle or proof authority;
+- catalog, triplet, release, correction, or publication decisions;
+- public API, UI, map, tile, AI, report, or download behavior.
+
+Those responsibilities remain under their governed roots and interfaces.
+
+## Status
+
+| Field | Bounded result |
+|---|---|
+| Path | `data/processed/atmosphere/climate_normals/` |
+| Version | `v0.2.0` |
+| Prior blob | `df6e4807ff75266fa97cc29c8266a76c68b02cdf` |
+| Parent lane | `data/processed/atmosphere/` |
+| Overlapping sibling | `data/processed/atmosphere/aggregate/climate/` |
+| Semantic contract | `contracts/domains/atmosphere/ClimateNormal.md` — CONFIRMED |
+| Machine schema | CONFIRMED file; PROPOSED permissive scaffold |
+| Recursive payload inventory | UNKNOWN |
+| Active writers and consumers | UNKNOWN |
+| Public readiness | DENY BY DEFAULT |
+
+## What belongs here
+
+Subject to steward review and the unresolved lane disposition, this lane may contain:
+
+- normalized reference-period baseline candidates for supported Atmosphere variables;
+- station, grid, county, region, basin-adjacent, or other governed spatial baseline products;
+- monthly, seasonal, annual, climatological-period, or other reviewed temporal normals;
+- baseline dictionaries and references that preserve source identity and reference period;
+- method, aggregation, coverage, uncertainty, missingness, interpolation, correction, and quality sidecars;
+- stable identity, digest, version, predecessor, successor, and supersession metadata;
+- review-ready products for downstream catalog, evidence, anomaly-comparison, and release-candidate assembly;
+- lane-local README, inventory, migration, or disposition notes that do not create parallel authority.
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
+|---|---|
+| Raw station observations, source-native grids, source downloads, or source-native normals | `data/raw/atmosphere/` |
+| Temporary calculations, joins, interpolation experiments, or QA scratch | `data/work/atmosphere/` |
+| Baseline-unclear, rights-unclear, disputed, malformed, unsupported, or unsafe material | `data/quarantine/atmosphere/` |
+| Climate-anomaly records | Accepted `climate_anomaly/` lane |
+| Observation, forecast, model, AOD, smoke, air-quality, advisory, or hazard objects | Their correct Atmosphere or cross-domain lanes |
+| Catalog, STAC, DCAT, PROV, triplet, or graph records | `data/catalog/` and `data/triplets/` |
+| Evidence bundles, receipts, source-registry records, policy decisions, release records, and rollback cards | Their governed trust and authority roots |
+| Published layers, tiles, downloads, API/UI payloads, or Focus Mode answers | Governed published and delivery interfaces after release |
+| Attribution, trend-significance, event-causation, damages, health, or policy conclusions | Separate claim-specific evidence, review, and release paths |
+
+## Inputs
+
+Admissible inputs are governed WORK products or resolved QUARANTINE exits with, as applicable:
+
+- source identity, role, rights, and lineage;
+- supported variable and units;
+- source, observed, valid, retrieval, processing, release, and correction times where material;
+- reference period and baseline-construction method;
+- spatial support, coordinate reference system, grid or station-network definition;
+- aggregation, weighting, interpolation, missingness, coverage, and quality posture;
+- stable identity, version, and digest;
+- validation and receipt references.
+
+## Outputs
+
+Outputs are processed climate-normal candidates and sidecars suitable for:
+
+- Atmosphere catalog and metadata projection;
+- `ClimateAnomaly` baseline reference;
+- EvidenceBundle assembly;
+- triplet or graph projection after policy-safe catalog closure;
+- release-candidate review.
+
+PROCESSED output remains non-public and is not direct input to normal public clients.
+
+## Lane disposition and anti-parallel authority
+
+The repository contains both:
 
 ```text
-data/processed/atmosphere/aggregate/climate/README.md
+data/processed/atmosphere/aggregate/climate/
+data/processed/atmosphere/climate_normals/
 ```
 
-That sibling lane covers aggregate climate products, including `ClimateNormal`, `ClimateAnomaly`-ready derivatives, baselines, normals, anomalies, and climate-context aggregate products. This `climate_normals/` README is intentionally object-named and should be treated as one of these until maintainers settle the convention:
+The first is a broad aggregate-climate lane; the second is object-named for `ClimateNormal`. Their final relationship is **NEEDS VERIFICATION**.
 
-| Naming option | Meaning | Required action |
+| Disposition | Meaning | Required control |
 |---|---|---|
-| `aggregate/climate/` | Broad aggregate climate sublane. | Keep as canonical for mixed climate aggregate artifacts if repo convention prefers aggregate-family lanes. |
-| `climate_normals/` | Object-family sublane mirroring `ClimateNormal`. | Keep as canonical for normal/baseline-only artifacts if repo convention prefers object-family lanes. |
-| Both paths | Transitional / compatibility state. | Add a drift or verification note before storing real data in both. |
+| Object-family lane is canonical | `climate_normals/` owns normal candidates; aggregate lane references them. | Parent indexes, writers, validators, and migration notes must agree. |
+| Aggregate lane is canonical | `aggregate/climate/` owns normal candidates; this lane becomes compatibility/index only. | Stop new canonical writes here and record predecessor/successor links. |
+| Both retained with distinct responsibilities | One owns object candidates; one owns mixed aggregates. | Explicit non-overlap contract and tests are required. |
+| Unresolved | Current state. | Do not dual-write the same truth-bearing artifact. |
 
 > [!CAUTION]
-> Do not let `aggregate/climate/` and `climate_normals/` become parallel truth stores. If both paths remain, define which one owns climate-normal artifacts and which one is an alias, index, compatibility shim, or deprecated path.
+> Do not copy the same climate-normal candidate into both lanes as independent authority. A migration, alias, or index must preserve one canonical identity, digest, predecessor/successor relation, correction state, and rollback target.
 
-## Lifecycle boundary
+## Baseline and comparability contract
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-```mermaid
-flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> NORM[data/processed/atmosphere/climate_normals]
-  QUAR --> NORM
-  NORM --> AGGCLIM[data/processed/atmosphere/aggregate/climate]
-  NORM --> ANOM[data/processed/atmosphere/climate_anomaly]
-  NORM --> CAT[data/catalog/domain/atmosphere]
-  NORM --> STAC[data/catalog/stac/atmosphere]
-  NORM --> DCAT[data/catalog/dcat/atmosphere]
-  NORM --> PROV[data/catalog/prov/atmosphere]
-  NORM -. supports .-> PROOF[data/proofs]
-  NORM -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
-```
-
-`data/processed/atmosphere/climate_normals/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
-
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw climate, weather, station, grid, normal, anomaly, or model source payloads | `data/raw/atmosphere/` | Not this lane. |
-| In-process normal calculations, temporary baselines, joins, scratch outputs, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, baseline-unclear, malformed, unsupported, disputed, stale, or unsafe climate-normal material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized ClimateNormal processed artifacts | `data/processed/atmosphere/climate_normals/` | This lane, if object-family naming is accepted. |
-| Broader aggregate climate processed artifacts | `data/processed/atmosphere/aggregate/climate/` | Sibling; must not become a parallel truth store. |
-| ClimateAnomaly artifacts | `data/processed/atmosphere/climate_anomaly/` or accepted anomaly lane | Anomaly artifacts must reference this baseline rather than redefine it. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, aggregation, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| ClimateNormal semantic contract | `contracts/domains/atmosphere/ClimateNormal.md` | Object meaning; not data. |
-| ClimateNormal schema | `schemas/contracts/v1/domains/atmosphere/ClimateNormal.schema.json` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
-
-## Accepted contents
-
-Processed `ClimateNormal` data may include:
-
-- normalized reference-period climate-normal records for supported atmosphere/climate variables;
-- processed baseline values for temperature, precipitation, drought/climate context, or other supported variables when source role, units, reference period, aggregation window, and method are preserved;
-- spatial baseline products such as county, region, grid, tile-safe, station-network, basin-adjacent, or other governed aggregate units when the spatial unit is documented;
-- temporal baseline products such as monthly normals, seasonal normals, annual normals, climatological normal periods, rolling-window normals, or other reviewed baseline periods when the temporal unit is documented;
-- uncertainty, caveat, quality, missingness, station coverage, interpolation, baseline, and method metadata sidecars when those sidecars are not proofs, receipts, source registry records, catalog records, schemas, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, anomaly comparison, or release review.
-
-## Exclusions
-
-Do not store these under `data/processed/atmosphere/climate_normals/`:
-
-- RAW source files, raw station observations, raw gridded products, source-native climate normals, source-native anomaly products, forecasts, model fields, screenshots, or downloads.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, baseline-unclear, source-role-unclear, rights-unclear, unsupported, disputed, stale, or unsafe climate-normal material.
-- ClimateAnomaly records unless only referenced as downstream anomaly consumers.
-- Direct observation records such as `TemperatureObservation`, `PrecipitationObservation`, `WeatherObservation`, station records, air-quality observations, AQI summaries, smoke/AOD rasters, advisory context, or forecast/model objects unless only referenced as lineage and stored in their correct lanes.
-- Climate attribution claims, trend-significance claims, event/hazard truth, damages, health/safety claims, or policy conclusions.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
-
-## ClimateNormal requirements
-
-PROPOSED until concrete validators and CI enforcement are verified:
+These expectations are semantic and **PROPOSED** until verified validators and CI enforce them.
 
 | Requirement | Meaning |
 |---|---|
-| Source trace | Every processed ClimateNormal artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Reference period | Every normal should identify its reference period, baseline method, source period, and applicability scope. |
-| Baseline disclosure | Baseline identity, baseline source, baseline construction method, and caveats should remain visible where material. |
-| Aggregation receipt | Aggregation method, spatial unit, temporal unit, variable, units, weighting, interpolation, missingness, and quality posture should resolve to receipt or validation context. |
-| Source-role preservation | Observations, model fields, forecasts, normals, anomalies, and derived products must remain labeled as their actual role. |
-| Anomaly support | ClimateNormal artifacts may support ClimateAnomaly comparison, but anomaly records must remain separate and explicitly reference the normal/baseline. |
-| Evidence linkage | Claims about normal value, baseline period, method, scope, uncertainty, correction, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, baseline, aggregation, caveat, and policy/admissibility posture. |
-| Catalog readiness | Processed ClimateNormal artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No attribution by default | ClimateNormal context does not prove cause, impact, damages, or trend significance without separate evidence and review. |
-| Path convention | If `aggregate/climate/` and `climate_normals/` both exist, maintainers must decide whether one is canonical and record the decision before storing real artifacts in both. |
+| Stable identity | Each candidate should have a stable identity tied to source, variable, spatial support, reference period, method, and version where practical. |
+| Reference period | Start/end or otherwise explicit baseline period is required; a label alone is insufficient for consequential comparison. |
+| Variable identity | Variable, statistic, units, scale, and value semantics must be explicit. |
+| Spatial support | Station, grid, county, region, basin-adjacent, or other unit must be declared and versioned where boundaries change. |
+| Temporal support | Monthly, seasonal, annual, rolling, or other aggregation window must be explicit. |
+| Aggregation method | Weighting, interpolation, compositing, filtering, rounding, and missing-data behavior must be disclosed. |
+| Coverage posture | Station count, grid coverage, gaps, exclusions, and network-composition changes should remain visible. |
+| Source-role preservation | Observation-derived, modeled, hybrid, aggregate, administrative, candidate, and synthetic inputs must not be collapsed. |
+| Comparability | Normals compared across versions must have compatible variable, units, spatial support, temporal support, period, and method—or disclose the mismatch. |
+| Anomaly anchor | A downstream `ClimateAnomaly` must reference a specific normal or reviewed baseline identity; it must not rely on an implicit default. |
+| Uncertainty | Sampling, interpolation, network, model, and method uncertainty must be preserved where material. |
+| Correction lineage | Reprocessed, corrected, superseded, withdrawn, or invalidated baselines must retain predecessor/successor and affected-derivative references. |
+| Evidence linkage | Consequential baseline claims should resolve downstream to EvidenceBundle support. |
 
-## Baseline guardrails
+## Schema posture
 
-- `ClimateNormal` is a reference-period climate baseline, not a raw observation.
-- `ClimateNormal` defines or carries the baseline context that `ClimateAnomaly` may compare against; it is not an anomaly by itself.
-- A climate normal does not prove climate attribution, cause, impact, damages, or trend significance by itself.
-- Model fields and forecasts must remain labeled as model or forecast context.
-- Public climate-normal products require reference-period disclosure, aggregation/method disclosure, evidence, policy, release state, correction path, and rollback target.
-- Focus Mode may summarize ClimateNormal context only as evidence-bounded, baseline-aware, aggregation-aware, and release-aware context. It must not invent attribution, trend significance, hazard impacts, damages, or health/safety guidance.
-- Unreleased processed ClimateNormal artifacts are not public merely because they exist under this directory.
-
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed normal/baseline data to attribution, trend-significance, hazard-impact, damages, or health/safety claims. ClimateNormal products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+The paired schema exists at:
 
 ```text
-data/processed/atmosphere/climate_normals/
-├── README.md
-├── normalized/              # PROPOSED — processed ClimateNormal records
-├── baselines/               # PROPOSED — reference-period baseline products
-├── reference_periods/       # PROPOSED — baseline period metadata, not release authority
-├── quality/                 # PROPOSED — missingness, coverage, uncertainty, caveats
-├── methods/                 # PROPOSED — local method summaries, not canonical receipts
-├── joins/                   # PROPOSED — links to observations, anomalies, forecasts, context objects
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
+schemas/contracts/v1/domains/atmosphere/ClimateNormal.schema.json
 ```
 
-## Evidence ledger
+Current verified posture:
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define ClimateNormal PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/aggregate/climate/README.md` | CONFIRMED sibling README | Existing aggregate climate child lane and climate guardrails. | Does not decide whether `aggregate/climate/` or `climate_normals/` is canonical. |
-| `data/processed/atmosphere/climate_anomaly/README.md` | CONFIRMED sibling README | Existing object-named ClimateAnomaly lane and baseline-anchor guardrails. | Does not define ClimateNormal inventory or release behavior. |
-| `data/processed/atmosphere/README.md` | CONFIRMED | Parent atmosphere processed lane exists as a greenfield stub. | Does not define parent Atmosphere processed boundaries yet. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane includes climate normals downstream and preserves source-role guardrails. | Does not prove ClimateNormal processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere owns climate context, normals, anomalies, and source-role denials. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/ClimateNormal.md` | CONFIRMED contract file | Defines ClimateNormal as governed reference-period baseline context, not raw observation, anomaly, attribution, proof, release, or health/safety guidance. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `contracts/domains/atmosphere/ClimateAnomaly.md` | CONFIRMED contract file | Defines ClimateAnomaly as a downstream baseline-relative comparison object that must anchor to a normal/baseline. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `schemas/contracts/v1/domains/atmosphere/ClimateNormal.schema.json` | CONFIRMED scaffold schema | Paired ClimateNormal schema exists with PROPOSED status. | Properties are currently empty; validator enforcement remains NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
+| Schema fact | Status |
+|---|---|
+| File exists | CONFIRMED |
+| Status is `PROPOSED` | CONFIRMED |
+| `properties` is empty | CONFIRMED |
+| `additionalProperties` is `true` | CONFIRMED |
+| Title is `Climatenormal` | CONFIRMED |
+| Field-level enforcement | NOT PRESENT IN THE VERIFIED SCHEMA |
+| Validator and fixture enforcement | NEEDS VERIFICATION |
 
-## Validation checklist
+Therefore, presence in this directory or successful validation against the current scaffold must not be described as proof that an artifact satisfies the full `ClimateNormal` semantic contract.
 
-- [ ] Confirm actual child directories under `data/processed/atmosphere/climate_normals/`.
-- [ ] Decide whether `aggregate/climate/` or `climate_normals/` is the canonical processed sublane for `ClimateNormal` artifacts.
-- [ ] Confirm accepted ClimateNormal source/domain path convention.
-- [ ] Confirm `ClimateNormal` schema fields and title casing are updated beyond scaffold if needed.
-- [ ] Confirm ClimateNormal processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for each source-derived ClimateNormal artifact.
-- [ ] Confirm ClimateAnomaly anchor handling without duplicating anomaly records.
-- [ ] Confirm RunReceipt, TransformReceipt, AggregationReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm reference period, baseline source, aggregation method, spatial unit, temporal unit, variable, units, uncertainty, caveats, missingness, and source-role handling.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, anomaly, attribution, trend-significance, hazard-impact, or health/safety artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed ClimateNormal data to catalog/triplet/published outputs is governed, baseline-aware, aggregation-aware, source-role-safe, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct climate-attribution, trend-significance, hazard-impact, damages, or health/safety source.
+## Validation
 
-## Rollback
+Validate, within the declared scope of available checks:
 
-Rollback is required if this lane becomes an Atmosphere source-data root, duplicate truth store beside `aggregate/climate/`, anomaly authority root, climate-attribution source, trend-significance source, hazard-impact source, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, or health/safety guidance source.
+- placement and lane disposition;
+- identity, digest, version, predecessor, and successor;
+- source role, rights, and lineage;
+- reference period and baseline identity;
+- variable, statistic, units, scale, and value semantics;
+- spatial and temporal support;
+- aggregation, weighting, interpolation, coverage, missingness, and uncertainty;
+- comparability with related normals and anomaly consumers;
+- contract/schema version and actual enforcement scope;
+- receipts, evidence references, policy/review state, correction dependencies, and rollback target;
+- links, anchors, metadata, and sensitive-content exposure.
 
-Rollback target for this expansion: previous blank blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+No complete lane-wide validator was verified. A passing check proves only its declared scope.
 
-<p align="right"><a href="#top">Back to top</a></p>
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Material changes should involve climate, baseline, source/rights, data, validation, evidence, policy, and release reviewers as applicable.
+
+Independent review is required before consequential changes to:
+
+- reference periods or baseline definitions;
+- source-network composition;
+- interpolation, weighting, or aggregation methods;
+- variable or units semantics;
+- lane disposition or migration;
+- public-serving, correction, invalidation, or rollback behavior.
+
+CODEOWNERS routing is not approval evidence.
+
+## Correction and rollback
+
+A corrected or superseded normal must not silently overwrite the meaning of an earlier baseline. Record, as applicable:
+
+1. prior and replacement identities and digests;
+2. correction, reprocessing, supersession, or withdrawal reason;
+3. changed source, period, method, units, coverage, or uncertainty;
+4. affected anomaly, map, report, cache, index, graph, and release dependencies;
+5. invalidation or rebuild status;
+6. review and release decision;
+7. rollback target.
+
+Documentation rollback for this change is the prior blob `df6e4807ff75266fa97cc29c8266a76c68b02cdf`. Data rollback requires the governed release and correction artifacts for the affected product; reverting this README does not revert data state.
+
+## Related folders
+
+- Parent: [`data/processed/atmosphere/`](../README.md)
+- Broad aggregate climate lane: [`aggregate/climate/`](../aggregate/climate/README.md)
+- Anomaly lane: [`climate_anomaly/`](../climate_anomaly/README.md)
+- Processed parent contract: [`data/processed/`](../../README.md)
+- Contract: [`ClimateNormal`](../../../../contracts/domains/atmosphere/ClimateNormal.md)
+- Schema: [`ClimateNormal.schema.json`](../../../../schemas/contracts/v1/domains/atmosphere/ClimateNormal.schema.json)
+- Lifecycle siblings: `data/raw/atmosphere/` · `data/work/atmosphere/` · `data/quarantine/atmosphere/` · `data/catalog/` · `data/triplets/` · `data/published/`
+- Trust and authority: `data/proofs/` · `data/receipts/` · `data/registry/` · `policy/` · `release/`
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Canonical relationship to `aggregate/climate/` | NEEDS VERIFICATION | Parent indexes, writer inventory, ADR or migration/disposition record |
+| Recursive subtree and payload inventory | NEEDS VERIFICATION | Pinned tree, payload families, external stores, rights, owners |
+| Writers and consumers | UNKNOWN | Pipelines, tools, workflows, catalog, API/UI, reports, deployed consumers |
+| Enforceable schema and validators | UNKNOWN | Accepted schema, fixtures, validators, CI, negative cases |
+| Receipt and evidence closure | UNKNOWN | Emitted receipts, EvidenceBundles, identity/digest agreement |
+| Anomaly dependency tracking | UNKNOWN | Explicit baseline references and correction propagation |
+| Public serving and invalidation | UNKNOWN | Governed routes, caches, stale/correction/withdrawal behavior, drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| Climate-normal baseline purpose | Preserved and clarified |
+| `ClimateNormal` versus observation/anomaly/forecast/attribution boundaries | Preserved and strengthened |
+| Sibling-lane overlap warning | Preserved and expanded into a disposition contract |
+| Rights, evidence, policy, release, correction, and rollback controls | Preserved and strengthened |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, migration, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the lane with the current processed-data authority model;
+- bounded claims to the verified semantic-contract and scaffold-schema evidence;
+- added baseline comparability, anti-parallel-authority, correction, verification, and no-loss controls;
+- changed Markdown only.
+
+[Back to top](#top)
