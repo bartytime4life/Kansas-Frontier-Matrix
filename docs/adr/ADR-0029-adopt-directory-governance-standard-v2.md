@@ -248,7 +248,7 @@ The proposal favors a small persistent redirect over broken links or premature h
 - Byte-restoration merge checkpoint: [`7b75e3bd590cd37321113f8336559060ae4c4358`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7b75e3bd590cd37321113f8336559060ae4c4358)
 - Premature deletion being corrected: [`4977bca73cb8bc6232f5a48c7768baf6f0a290c6`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/4977bca73cb8bc6232f5a48c7768baf6f0a290c6)
 - Durable authorization cursor: [issue #1531](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531)
-- Acceptance change: [PR #RATIFICATION_PR](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/RATIFICATION_PR)
+- Acceptance change: [PR #1774](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1774)
 - Supplied baseline lineage: `Directory Rules.pdf`, 22 pages, SHA-256 `759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335`
 - Supplied rendered v2 companion: `KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf`, 33 pages, SHA-256 `2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893`
 
@@ -326,6 +326,6 @@ Implement the root and alias registers, schema, fixtures, validator, tests, Make
 |---|---|---|---|
 | 2026-07-26 | proposed | Initial byte-restoration and proposal packet | [#1763](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1763) |
 | 2026-07-26 | proposed | Clarified the held ratification and deletion boundaries | [#1765](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1765) |
-| 2026-07-26 | accepted | Explicit project-owner ratification; synchronized index transition; premature legacy deletion repaired | [#RATIFICATION_PR](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/RATIFICATION_PR) |
+| 2026-07-26 | accepted | Explicit project-owner ratification; synchronized index transition; premature legacy deletion repaired | [#1774](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1774) |
 
 [Back to top](#top)
