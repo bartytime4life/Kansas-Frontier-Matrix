@@ -3,7 +3,7 @@ doc_id: kfm://data/receipts/agriculture/readme
 name: Agriculture Receipts README
 path: data/receipts/agriculture/README.md
 type: data-receipts-domain-lane-readme; boundary-compact
-version: v0.2.0
+version: v0.2.1
 status: draft; repository-grounded; README-only; lane-unregistered; enforcement-unverified
 owners:
   - NEEDS VERIFICATION — receipt steward assignment
@@ -30,13 +30,13 @@ authority_owner: receipt process memory
 domain: agriculture
 artifact_family: agriculture-receipts
 readme_profile: BOUNDARY_COMPACT
-path_posture: existing-domain-receipt-boundary; PLACE README; HOLD_UNRESOLVED new payload writes
+path_posture: existing-domain-receipt-boundary; PLACE existing README; HOLD new payload writes; reason unresolved placement authority
 sensitivity_posture: receipt-internal; no-public-path; process-memory-not-proof; source-role-preserving; private-join-denial-defaults; aggregation-does-not-launder-rights-or-sensitivity; release-blocked
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 6c7170dc8216d07fcd33af82f747fe33c03607b6
+  inspection_commit: 6c7170dc8216d07fcd33af82f747fe33c03607b6
   prior_blob: 66c0ae417166717479fe77606706e8f5538c0a8b
   target_tree: be3361d18d6a2d5c89679805f8402cab1dd0f058
   parent_receipts_blob: 041f205dd5e618185fc7c75e95c85872fc9bbf69
@@ -103,9 +103,10 @@ tags:
 notes:
   - "This revision changes only `data/receipts/agriculture/README.md`; it creates no receipt payload, directory, contract, schema, policy, fixture, validator, workflow, proof, release record, or public artifact."
   - "Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the sole writable human Directory Rules authority; the adopted source retains its frozen pre-adoption status text."
+  - "Evidence was inspected at `6c7170dc8216d07fcd33af82f747fe33c03607b6`; before delivery at base `25daa836d15bee1ff7680505b4787bc885265c53`, only `.github/workflows/domain-soil.yml` changed, and the target plus recorded evidence and authority blobs remained unchanged."
   - "Direct tracked children are exactly `.gitkeep` and `README.md`; no Agriculture receipt instance is established in this Git tree."
   - "The proposed machine domain and object-family registers both contain `entries: []`; adoption of human doctrine does not register this payload lane."
-  - "New receipt payload writes remain `HOLD_UNRESOLVED` until domain-first, object-family-first, and stage-first layout conflicts are resolved through accepted governance and machine enforcement."
+  - "New receipt payload writes remain `HOLD`; the reason is unresolved domain-first, object-family-first, and stage-first placement authority pending accepted governance and machine enforcement."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -118,14 +119,14 @@ notes:
 [![Tracked state: sparse](https://img.shields.io/badge/tracked%20state-sparse-6e7781?style=flat-square)](#directory-map)
 [![Registration: empty](https://img.shields.io/badge/registration-empty-b42318?style=flat-square)](#path-posture)
 [![Maturity: README only](https://img.shields.io/badge/maturity-README%20only-6e7781?style=flat-square)](#repo-fit)
-[![Public access: denied](https://img.shields.io/badge/public%20access-denied-b42318?style=flat-square)](#receipt-boundary)
+[![Policy: DENY direct access](https://img.shields.io/badge/policy-DENY%20direct%20access-b42318?style=flat-square)](#receipt-boundary)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-8250df?style=flat-square)](#scope)
 
 > [!IMPORTANT]
 > [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is accepted and adopts the exact [Directory Rules v2](../../../docs/doctrine/directory-rules.md) bytes. Those rules establish `data/receipts/` as durable process memory and permit sparse domain lanes inside responsibility roots. They do not register a payload grammar for this exact child.
 
 > [!CAUTION]
-> `data/receipts/agriculture/` is not a public-serving path. Its presence cannot prove Agriculture truth, cure weak provenance, clear rights, remove sensitivity, authorize a private join, satisfy evidence closure, approve a release, or publish an artifact.
+> Policy posture: **DENY** direct public or ordinary UI access to `data/receipts/agriculture/`; deployed enforcement remains **NEEDS VERIFICATION**. The path's presence cannot prove Agriculture truth, cure weak provenance, clear rights, remove sensitivity, authorize a private join, satisfy evidence closure, approve a release, or publish an artifact.
 
 **Quick navigation:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Receipt families](#receipt-families) · [Receipt boundary](#receipt-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Forbidden shortcut](#forbidden-shortcut) · [Checks](#required-checks-before-use) · [Status](#status-notes) · [Related files](#related-files)
 
@@ -145,7 +146,7 @@ A governed receipt may eventually carry or reference:
 - actor or runner identity and timestamps;
 - finite validation, review, correction, supersession, and rollback references.
 
-Those are minimum design expectations, not evidence that this lane currently emits or validates them. At the pinned repository state, the tracked subtree contains only this README and an empty `.gitkeep`.
+Those are minimum design expectations, not evidence that this lane currently emits or validates them. At the recorded inspection commit, the tracked subtree contains only this README and an empty `.gitkeep`.
 
 ### Truth and authority posture
 
@@ -171,8 +172,10 @@ Receipts can support review and later proof or release decisions. They do not be
 | Target | Outcome | Basis |
 |---|---|---|
 | Existing `data/receipts/agriculture/README.md` | **PLACE** | Same-path `BOUNDARY_COMPACT` refinement inside the receipt responsibility root. |
-| New receipt instances or child directories | **HOLD_UNRESOLVED** | Exact payload identity, ordering, machine registration, writer, contract, schema, validation, retention, and review authority are not closed. |
-| Direct public or ordinary UI consumption | **DENY** | Internal process memory is not a governed public carrier. |
+| New receipt instances or child directories | **HOLD** | Reason: exact payload identity, ordering, machine registration, writer, contract, schema, validation, retention, and review authority are unresolved. |
+| Direct public or ordinary UI consumption | **DENY** | Policy forbids treating internal process memory as a governed public carrier; deployed enforcement remains **NEEDS VERIFICATION**. |
+
+`PLACE` applies only to this existing README at its existing same path. It does not designate `data/receipts/agriculture/` as the canonical Agriculture receipt-payload lane.
 
 The [machine domain-lane register](../../../control_plane/domain_lane_register.yaml) is `PROPOSED` and currently states:
 
@@ -206,7 +209,7 @@ No accepted ADR or populated alias/deprecation register selects one ordering, an
 | Domain lane | Agriculture |
 | README profile | `BOUNDARY_COMPACT` |
 | Tracked direct children | `.gitkeep`, `README.md` |
-| Tracked Agriculture receipt instances | None at the pinned Git tree |
+| Tracked Agriculture receipt instances | None at the recorded inspection commit |
 | External or runtime receipt storage | **UNKNOWN** |
 | Parent receipt boundary | Repository-grounded `v0.4.0`; not a greenfield stub |
 | Machine lane and object-family registration | `PROPOSED`; both registers have `entries: []` |
@@ -217,7 +220,7 @@ No accepted ADR or populated alias/deprecation register selects one ordering, an
 | Tests | Smoke assertion or docstring-only placeholders; no receipt conformance suite |
 | Validators | Direct lane is README-only; adjacent domain validators raise `NotImplementedError` |
 | Agriculture workflow | Read-only readiness checks with explicit validation, proof, and release holds |
-| Public access | Direct access denied |
+| Policy posture and deployed enforcement | **DENY** direct access by policy; deployed enforcement **NEEDS VERIFICATION** |
 | Release/publication effect of this README | None |
 
 ### Responsibility map
@@ -269,7 +272,7 @@ The draft [RunReceipt standard](../../../docs/standards/RUN_RECEIPT.md) and [Agg
 | Aggregation does not launder sensitivity | Do not infer that aggregation clears rights, privacy, cultural, ecological, infrastructure, operator, parcel, field, or location risk. |
 | Private joins fail closed | Person, operator, ownership, parcel, and field-resolution joins require explicit policy and review; receipt presence is never approval. |
 | Evidence remains resolvable | EvidenceRef-dependent claims must resolve through the proof/evidence family before public use. |
-| Public clients do not read receipts directly | Normal APIs, MapLibre, search, graphs, indexes, and governed AI consume released public carriers through governed interfaces. |
+| Policy requires public clients not to read receipts directly | Normal APIs, MapLibre, search, graphs, indexes, and governed AI must consume released public carriers through governed interfaces; deployed enforcement remains **NEEDS VERIFICATION**. |
 
 ### Authority flow
 
@@ -279,7 +282,7 @@ flowchart TD
   R -. "may support" .-> E["Evidence and proof review"]
   E --> D["Release decision"]
   D --> C["Governed public carrier"]
-  R -. "never direct truth input" .-> X["Public access denied"]
+  R -. "policy boundary; enforcement unverified" .-> X["DENY direct access by policy; deployed enforcement NEEDS VERIFICATION"]
 ```
 
 The dotted edges are support and denial relationships, not lifecycle promotion. A receipt does not automatically flow into proof, release, or publication.
@@ -451,9 +454,9 @@ Also forbidden:
 
 | Claim | Result |
 |---|---|
-| Target and same-path README identity exist at the pinned base. | **CONFIRMED** |
+| Target and same-path README identity exist at the recorded inspection commit. | **CONFIRMED** |
 | Direct tracked children are exactly `.gitkeep` and `README.md`. | **CONFIRMED** |
-| A tracked Agriculture receipt instance exists in this subtree. | **CONFIRMED absent at the pinned Git tree** |
+| A tracked Agriculture receipt instance exists in this subtree. | **CONFIRMED absent at the recorded inspection commit** |
 | External/runtime receipt instances exist elsewhere. | **UNKNOWN** |
 | Parent `data/receipts/README.md` is a greenfield stub. | **STALE / corrected** — current parent is repository-grounded `v0.4.0`. |
 | ADR-0029 accepts the exact Directory Rules v2 bytes and makes the doctrine path writable authority. | **CONFIRMED** |
@@ -473,7 +476,7 @@ Also forbidden:
 
 | ID | Question | Closure evidence | Current state |
 |---|---|---|---|
-| `AG-REC-01` | Which domain/object/stage ordering owns Agriculture receipt instances? | Accepted ADR/migration, populated registers, alias rules, and one writer | `HOLD_UNRESOLVED` |
+| `AG-REC-01` | Which domain/object/stage ordering owns Agriculture receipt instances? | Accepted ADR/migration, populated registers, alias rules, and one writer | `HOLD` — unresolved placement authority |
 | `AG-REC-02` | What is the accepted receipt identity and shape? | Accepted contract/schema, canonicalization and digest profile, fixtures, validators | `NEEDS VERIFICATION` |
 | `AG-REC-03` | Who owns admission, review, correction, and release support? | Named accountable owners and review evidence | `NEEDS VERIFICATION` |
 | `AG-REC-04` | Are there active writers, consumers, or external stores? | Runtime inventory and governed storage evidence | `UNKNOWN` |
@@ -486,7 +489,7 @@ Also forbidden:
 | Disposition | Material |
 |---|---|
 | **KEEP** | Stable `doc_id`, name, path, type, created date, Agriculture and receipt identity, all baseline tags, thirteen section contracts, named receipt roles, exclusions, gates, filename concepts, related targets, and final boundary rule. |
-| **CLARIFY** | Process-memory purpose, public-access denial, evidence references, source-role preservation, private-join risk, aggregation safeguards, and proof/release relationships. |
+| **CLARIFY** | Process-memory purpose, policy denial versus unverified deployed enforcement, evidence references, source-role preservation, private-join risk, aggregation safeguards, and proof/release relationships. |
 | **REPAIR** | Literal owner placeholders, stale parent claim, legacy-only Directory Rules routing, unregistered-lane ambiguity, `ADR-S-03` implication, deep-tree map, and generic maturity claims. |
 | **ENRICH** | Commit/blob evidence snapshot, exact direct-child inventory, placement conflict, responsibility map, compact authority flow, open verification register, correction triggers, and rollback target. |
 | **REMOVE WITH EVIDENCE** | Unverified nested current-state tree and any implication that tracked receipt payloads, indexes, signatures, validators, or release integration already exist. |
