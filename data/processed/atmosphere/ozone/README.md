@@ -1,22 +1,25 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-ozone-readme
 title: data/processed/atmosphere/ozone/README.md — Atmosphere OzoneObservation Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; ozone-observation-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; ozone; OzoneObservation; release-gated; source-role-aware; AQI-boundary-aware
-owners: OWNER_TBD — Atmosphere steward · Air-quality steward · Ozone steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — one-character placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; ozone; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, ozone, OzoneObservation, AirObservation, AirStation, PM25Observation, AQI, concentration, observed-sensor, public-aqi-report, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, RunReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+version: v0.2.0
+type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; ozone-observation-lane; air-quality-role-boundary
+status: repository-grounded draft; PROPOSED lane contract; schema and runtime enforcement unverified
+owners: NEEDS VERIFICATION — Atmosphere steward · Air-quality steward · Ozone steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; no-direct-public-path; source-role-preserved; AQI-concentration-separated; release-gated
+tags: [kfm, data, processed, atmosphere, ozone, OzoneObservation, OBSERVED_SENSOR, PUBLIC_AQI_REPORT, concentration, AQI, averaging-period, evidence, policy, correction, rollback]
 related:
   - ../README.md
   - ../observed/README.md
   - ../air_observations/README.md
   - ../air_stations/README.md
+  - ../pm25/README.md
   - ../forecast_context/README.md
   - ../modeled/README.md
   - ../aod/README.md
+  - ../smoke_context/README.md
   - ../advisory_context/README.md
   - ../../README.md
   - ../../../README.md
@@ -47,227 +50,277 @@ related:
   - ../../../receipts/
   - ../../../registry/
   - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
 notes:
-  - "This file replaces a one-character placeholder at `data/processed/atmosphere/ozone/README.md`."
-  - "This is the PROCESSED-stage sublane for normalized OzoneObservation artifacts under Atmosphere. It is not RAW sensor-feed storage, generic AirObservation authority, PM2.5 authority, AQI/concentration substitution, model-field authority, advisory authority, proof storage, release authority, public API/UI output, or life-safety guidance."
-  - "Ozone artifacts must preserve pollutant identity, source role, station/network context, units, observed time, retrieval time, QA/correction posture, AQI/report posture where applicable, evidence linkage, policy posture, and release state before public use."
-  - "The OzoneObservation contract defines object meaning; this README does not create a second contract or schema authority."
-  - "Ozone AQI/report values and ozone concentrations must remain role-separated. Do not present AQI/report posture as raw concentration."
-  - "Rollback target for this expansion is previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`."
+  - "This file preserves the existing path and document identity while aligning the lane to the current data/processed authority contract."
+  - "This lane owns normalized ozone candidates and interpretation sidecars, not source captures, generic air observations, proof closure, policy decisions, release authority, or public-serving behavior."
+  - "Ozone concentration and AQI/report posture are separate knowledge characters. A report/index value must never be presented as raw concentration."
+  - "The paired OzoneObservation schema is currently a permissive PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "Prior blob and rollback target: e879df17bf3f2f2de8db093a45d4e39dd2b38f68."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/ozone
+# `data/processed/atmosphere/ozone/` — Ozone Observation Candidates
 
-> Atmosphere PROCESSED-stage sublane for normalized `OzoneObservation` artifacts: governed ozone concentration, ozone report, and ozone-related air-quality records that remain distinct from generic air observations, PM2.5, AQI/concentration substitution, model fields, AOD/smoke proxies, advisory guidance, proof, release, and public map/API/UI surfaces.
+> **One-line purpose.** Own normalized, source-traced ozone observation and ozone report candidates that have passed applicable WORK checks but have not thereby become cataloged, released, public, or authoritative health, compliance, or life-safety conclusions.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/ozone" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Fozone-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Object: OzoneObservation" src="https://img.shields.io/badge/object-OzoneObservation-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: separated](https://img.shields.io/badge/AQI%20vs%20concentration-separated-1a7f37?style=flat-square)](#ozone-semantics)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-d1242f?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Air-quality steward · Ozone steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/atmosphere/ozone/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Object-family segment:** `ozone` / `OzoneObservation`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, source-role/unit/caveat posture, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was a one-character placeholder · CONFIRMED `OzoneObservation` contract and schema paths exist · CONFIRMED ozone has role-dependent `OBSERVED_SENSOR` / `PUBLIC_AQI_REPORT` character · PROPOSED ozone processed-sublane details · NEEDS VERIFICATION for actual child inventory, validators, receipts, CI enforcement, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, unit conversion, AQI calculation, a successful check, a pull request, or a merge does not create truth, evidence closure, policy permission, catalog admission, release approval, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [OzoneObservation requirements](#ozoneobservation-requirements) · [Ozone guardrails](#ozone-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!WARNING]
+> Ozone concentration, AQI/report posture, modeled ozone, station metadata, regulatory archive context, exposure claims, and health guidance are distinct responsibilities. This lane must not collapse them.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Ozone semantics](#ozone-semantics) · [Units and averaging](#units-averaging-and-time) · [Source-role routing](#source-role-and-routing) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/atmosphere/ozone/` holds normalized ozone observation artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This lane owns processed ozone-related candidates under the Atmosphere responsibility segment. Typical artifacts include concentration observations, public AQI/report records, regulatory/archive candidates, and lane-local sidecars that preserve source, role, units, averaging period, time, QA, freshness, uncertainty, correction, and downstream readiness.
 
-This lane is for processed `OzoneObservation` records or derivatives that preserve pollutant identity, source role, station/network context, source identity, observed time, retrieval time, units, averaging period, QA/correction posture, freshness, AQI/report posture where applicable, regulatory/archive posture where separately supported, evidence references, and downstream catalog readiness.
+The lane may support downstream air-quality analysis, but it does not itself establish regulatory exceedance, exposure, health effect, medical advice, emergency guidance, or public release.
 
-It is not a generic air-observation lane. It is not a PM2.5 lane. It is not an AQI-to-concentration conversion lane. It is not a model-field lane. It is not an AOD/smoke-proxy lane. It is not an advisory authority. It is not a proof store, receipt store, source registry, catalog, release, semantic contract, schema, policy, public layer, public API/UI surface, or life-safety guidance source. It may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe ozone layers, Focus Mode summaries, or release packages only after gates pass.
+## Authority level
 
-## Lifecycle boundary
+**Canonical PROCESSED responsibility; non-public by default.**
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+This path may own normalized ozone values, report/index records, pollutant-specific metadata, QA summaries, correction mappings, and lane-local explanatory sidecars. It does not own:
 
-```mermaid
-flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> OZONE[data/processed/atmosphere/ozone]
-  QUAR --> OZONE
-  OZONE --> OBS[data/processed/atmosphere/observed]
-  OZONE --> AIR[data/processed/atmosphere/air_observations]
-  OZONE --> CAT[data/catalog/domain/atmosphere]
-  OZONE --> STAC[data/catalog/stac/atmosphere]
-  OZONE --> DCAT[data/catalog/dcat/atmosphere]
-  OZONE --> PROV[data/catalog/prov/atmosphere]
-  OZONE -. supports .-> PROOF[data/proofs]
-  OZONE -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
-```
+- source-native feeds or original station payloads;
+- semantic object meaning or machine shape;
+- station/network authority;
+- policy, health, compliance, or release decisions;
+- EvidenceBundle or proof authority;
+- catalog, triplet, tile, API, UI, alerting, or publication behavior.
 
-`data/processed/atmosphere/ozone/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+Those responsibilities remain under their governed roots and interfaces.
 
-## Repo fit
+## Status
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw ozone sensor feeds, agency AQI feeds, station payloads, source downloads, QA payloads, or logs | `data/raw/atmosphere/` | Not this lane. |
-| In-process ozone parsing, unit conversion, AQI/report role review, correction, QA, joins, scratch outputs, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, source-role-unclear, stale, malformed, unit-unclear, unsupported, disputed, sensitive, or unsafe ozone material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized OzoneObservation processed artifacts | `data/processed/atmosphere/ozone/` | This lane. |
-| General air-quality observations | `data/processed/atmosphere/air_observations/` | Ozone specialization remains separate when pollutant-specific semantics apply. |
-| Observed parent lane | `data/processed/atmosphere/observed/` | Parent/sibling role lane for observed products. |
-| Station/network context | `data/processed/atmosphere/air_stations/` | Station metadata is context, not ozone value. |
-| PM2.5-specific processed artifacts | Domain-accepted PM2.5 lane, if present | Ozone and PM2.5 are separate pollutant families. |
-| Forecast/model context | `data/processed/atmosphere/forecast_context/` or `data/processed/atmosphere/modeled/` | Modeled ozone must not impersonate observed ozone. |
-| AOD/remote-sensing proxy context | `data/processed/atmosphere/aod/` | AOD is not ozone, PM2.5, AQI, or a ground observation. |
-| Advisory/referral context | `data/processed/atmosphere/advisory_context/` | Advisory context remains official-source referral, not ozone value. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| OzoneObservation semantic contract | `contracts/domains/atmosphere/OzoneObservation.md` | Object meaning; not data. |
-| OzoneObservation schema | `schemas/contracts/v1/domains/atmosphere/OzoneObservation.schema.json` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
-
-## Accepted contents
-
-Processed `OzoneObservation` data may include:
-
-- normalized ozone concentration records tied to an `AirStation` or comparable station/network context;
-- source-role-preserving ozone records where `OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, regulatory/archive, low-cost sensor, or other admitted role remains explicit;
-- ozone value, units, averaging period, observed time, retrieval time, source time, QA state, correction lineage, freshness, caveats, and confidence metadata;
-- agency AQI/report ozone values only when labeled as report/index posture and not raw concentration;
-- regulatory/archive ozone values only when source role, vintage, issuing authority, evidence support, and release posture are documented;
-- processed joins to `AirObservation`, PM2.5, station context, weather, smoke, AOD, forecast, or advisory context when the knowledge-character boundary remains visible;
-- quality, caveat, missingness, correction, uncertainty, freshness, validation, unit-normalization, and AQI/report-posture sidecars when those sidecars are not proofs, receipts, source registry records, catalog records, schemas, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, or release review.
-
-## Exclusions
-
-Do not store these under `data/processed/atmosphere/ozone/`:
-
-- RAW ozone sensor feeds, raw agency AQI feeds, station payloads, source downloads, QA payloads, logs, screenshots, or source-native records.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, source-role-unclear, rights-unclear, stale, unit-unclear, unsupported, disputed, sensitive, or unsafe ozone material.
-- Generic `AirObservation` records unless ozone-specific semantics are preserved here by accepted convention.
-- PM2.5 observations or PM2.5 report/index records.
-- AQI/report semantics when source role does not explicitly admit `PUBLIC_AQI_REPORT`.
-- AQI-to-concentration substitution or concentration-to-AQI substitution without a separately governed method, evidence, policy, and review.
-- Model fields, AOD rasters, smoke masks, advisory/referral records, health/safety guidance, exposure claims, regulatory exceedance proof, damages, public alerting behavior, or policy conclusions.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
-
-## OzoneObservation requirements
-
-PROPOSED until concrete validators and CI enforcement are verified:
-
-| Requirement | Meaning |
+| Field | Bounded result |
 |---|---|
-| Source trace | Every processed OzoneObservation artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Pollutant identity | Ozone identity must remain explicit and must not collapse into generic AirObservation, PM2.5, AQI, smoke, or AOD semantics. |
-| Source role | `OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, regulatory/archive, low-cost sensor, model context, or other role must be explicit and non-collapsing. |
-| Station/network context | Ozone observations should identify or reference station/network context without turning station metadata into processed observation data. |
-| Units and averaging | Units, averaging period, conversion method where applicable, and report/index posture should be explicit enough to avoid AQI/concentration substitution. |
-| Time semantics | Observed time, retrieval time, valid/report time where relevant, correction time, freshness, and release time should remain distinguishable where material. |
-| QA/correction posture | Quality flags, correction state, calibration/correction lineage, caveats, limitations, missingness, confidence, and uncertainty should remain visible. |
-| Evidence linkage | Claims about ozone value, source, role, units, time, station, QA, correction, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, freshness, caveat, sensitivity, and policy/admissibility posture. |
-| Catalog readiness | Processed OzoneObservation artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No action guidance by default | Ozone values do not create medical, emergency, life-safety, exposure, regulatory, or hazard-impact claims without separate authority and review. |
+| Path | `data/processed/atmosphere/ozone/` |
+| Version | `v0.2.0` |
+| Prior blob | `e879df17bf3f2f2de8db093a45d4e39dd2b38f68` |
+| Semantic contract | `contracts/domains/atmosphere/OzoneObservation.md` exists |
+| Machine schema | Exists, but remains a permissive PROPOSED scaffold |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Ozone guardrails
+**CONFIRMED:** target path, current README, `OzoneObservation` contract, paired scaffold schema, parent Atmosphere lane, and AQI/concentration anti-collapse doctrine.
 
-- `OzoneObservation` is ozone-specific and must not be flattened into generic `AirObservation` when ozone-specific semantics matter.
-- Ozone and PM2.5 are separate pollutant-specific object families with separate units, methods, QA, report semantics, and caveats.
-- AQI is a report/index posture, not raw ozone concentration.
-- Regulatory/archive posture requires source-role, vintage, issuing-authority, and evidence support.
-- Modeled ozone or forecast context must remain labeled as model context, not observed sensor data.
-- AOD/smoke remote-sensing proxies are not ozone observations.
-- Ozone values may support context, but they do not create emergency, medical, exposure, regulatory-exceedance, or life-safety instructions by themselves.
-- Public display requires source rights, units, freshness, validation, policy, release record, correction path, and rollback target.
-- Unreleased processed ozone artifacts are not public merely because they exist under this directory.
+**PROPOSED:** lane-specific fields, routing, validation, correction, and review expectations.
 
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed ozone values to public health, exposure, regulatory, emergency, or life-safety claims. OzoneObservation products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
+**NEEDS VERIFICATION:** actual payloads, source descriptors, validators, fixtures, CI, policy enforcement, receipts, EvidenceBundles, release state, public consumers, and rollback drills.
 
-## Directory map
+## What belongs here
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+Subject to contract, source-role, rights, QA, and policy review, this lane may contain:
 
-```text
-data/processed/atmosphere/ozone/
-├── README.md
-├── normalized/              # PROPOSED — processed OzoneObservation records
-├── concentration/           # PROPOSED — ozone concentration values, source-role and units required
-├── aqi_report/              # PROPOSED — ozone AQI/report values, not raw concentration
-├── regulatory_archive/      # PROPOSED — regulatory/archive posture with evidence and vintage controls
-├── quality/                 # PROPOSED — QA, caveats, missingness, confidence, limitations
-├── corrections/             # PROPOSED — correction/calibration lineage sidecars, not receipts
-├── joins/                   # PROPOSED — links to AirStation, AirObservation, PM2.5, forecast, AOD, advisory context
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
-```
+- normalized ozone concentration candidates tied to governed station or network references;
+- ozone AQI/report candidates explicitly labeled `PUBLIC_AQI_REPORT` or equivalent reviewed report role;
+- regulatory/archive ozone candidates with issuing authority, vintage, role, and evidence support;
+- pollutant identity, units, averaging period, observation time, source time, retrieval time, processing time, freshness, QA, uncertainty, and correction sidecars;
+- deterministic identity, content digest, predecessor/successor, supersession, and withdrawal metadata;
+- review-ready downstream handoff material for catalog, proof assembly, triplet projection, or release-candidate review;
+- README, inventory, migration, reconciliation, or disposition documentation that does not become parallel authority.
 
-## Evidence ledger
+## What does NOT belong here
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a one-character placeholder. | Did not define OzoneObservation PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/observed/README.md` | CONFIRMED sibling README | Observed parent lane and observed-vs-model/proxy/advisory guardrails. | Does not define ozone-specific inventory or release behavior. |
-| `data/processed/atmosphere/air_observations/README.md` | CONFIRMED sibling README | AirObservation processed lane and generic observed-sensor guardrails. | Ozone specialization remains separate when pollutant-specific semantics apply. |
-| `data/processed/atmosphere/air_stations/README.md` | CONFIRMED sibling README | Station/network context remains separate from observation values. | Does not define ozone-value inventory. |
-| `data/processed/atmosphere/forecast_context/README.md` | CONFIRMED sibling README | Forecast/model context remains separate from observations. | Does not define ozone-value inventory. |
-| `data/processed/atmosphere/aod/README.md` | CONFIRMED sibling README | AOD/remote-sensing proxy is not ground observation or PM2.5. | Does not define ozone-value inventory. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane includes ozone observations downstream and preserves source-role guardrails. | Does not prove ozone processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere owns air-quality observations and source-role denials. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/OzoneObservation.md` | CONFIRMED contract file | Defines OzoneObservation as governed ozone concentration/report/archive object with AQI/concentration and source-role boundaries. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `schemas/contracts/v1/domains/atmosphere/OzoneObservation.schema.json` | CONFIRMED scaffold schema | Paired OzoneObservation schema exists with PROPOSED status. | Properties are currently empty; validator enforcement remains NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
+| Do not place here | Correct home or action |
+|---|---|
+| Raw sensor feeds, agency AQI feeds, station payloads, source downloads, QA files, or logs | `data/raw/atmosphere/` |
+| Parsing, conversion, AQI calculation, QA experiments, joins, notebooks, or scratch outputs | `data/work/atmosphere/` |
+| Unit-unclear, role-unclear, rights-unclear, stale-current, malformed, disputed, or unsafe material | `data/quarantine/atmosphere/` |
+| General non-ozone air observations | `data/processed/atmosphere/air_observations/` or accepted object-specific lane |
+| PM2.5 observations or PM2.5 AQI/report records | `data/processed/atmosphere/pm25/` |
+| Station/network metadata and siting authority | `data/processed/atmosphere/air_stations/` |
+| Modeled or forecast ozone fields | `data/processed/atmosphere/modeled/` or `forecast_context/` |
+| AOD, smoke masks, or remote-sensing proxies | `data/processed/atmosphere/aod/` or `smoke_context/` |
+| Advisory or warning context | `data/processed/atmosphere/advisory_context/` or governed compatibility lane |
+| Catalog, proof, receipt, registry, release, schema, policy, validator, API/UI, tile, or published artifacts | Their canonical responsibility roots |
 
-## Validation checklist
+This lane must not contain or imply:
 
-- [ ] Confirm actual child directories under `data/processed/atmosphere/ozone/`.
-- [ ] Confirm accepted OzoneObservation source/domain path convention.
-- [ ] Confirm `OzoneObservation` schema fields and title casing are updated beyond scaffold if needed.
-- [ ] Confirm OzoneObservation processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for each source-derived ozone artifact.
-- [ ] Confirm ozone-vs-AirObservation, ozone-vs-PM2.5, AQI-vs-concentration, observed-vs-model, ozone-vs-AOD/smoke, and observation-vs-advisory boundaries.
-- [ ] Confirm station context handling without duplicating station authority.
-- [ ] Confirm RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm observed time, retrieval time, report/valid time, source role, units, averaging period, QA/correction posture, caveats, limitations, missingness, confidence, station-location sensitivity, freshness, regulatory/archive posture, and public AQI/report labeling.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, station-authority, PM2.5, model, remote-sensing proxy, advisory, official warning, exposure, health/safety, or regulatory-claim artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed OzoneObservation data to catalog/triplet/published outputs is governed, source-role-safe, unit-aware, AQI-boundary-aware, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct public health, exposure, regulatory, emergency, hazard-impact, or life-safety source.
+- AQI-to-concentration or concentration-to-AQI substitution without a separately governed method;
+- regulatory exceedance proof;
+- exposure or health-effect proof;
+- medical advice, emergency instruction, or life-safety guidance;
+- public alerting or official advisory authority;
+- release or publication approval.
 
-## Rollback
+## Inputs
 
-Rollback is required if this lane becomes an Atmosphere source-data root, AirObservation replacement, PM2.5 replacement, station authority root, AQI/concentration substitution root, ForecastContext replacement, AODRaster replacement, advisory authority root, official warning/public-alerting root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, public layer root, public tile root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, public health/exposure source, regulatory-claim source, emergency instruction source, or life-safety guidance source.
+Inputs are governed WORK products or resolved QUARANTINE exits with, as applicable:
 
-Rollback target for this expansion: previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`.
+- `SourceDescriptor` or equivalent source identity;
+- pollutant identity explicitly set to ozone;
+- source role and knowledge character;
+- station/network reference separated from observed value;
+- units, scale, precision, and averaging period;
+- observed, source, retrieval, processing, correction, and release times kept distinct;
+- QA flags, method, detection or reporting conventions, and missingness;
+- rights, caveats, uncertainty, correction state, and validation support.
 
-<p align="right"><a href="#top">Back to top</a></p>
+## Outputs
+
+Outputs are non-public processed candidates for:
+
+- ozone-specific catalog records;
+- EvidenceRef/EvidenceBundle assembly;
+- governed comparison with PM2.5, weather, smoke, AOD, model, or advisory context;
+- triplet projection that preserves source role and pollutant identity;
+- release-candidate review after policy, evidence, correction, and rollback dependencies close.
+
+PROCESSED placement proves only lifecycle disposition. It does not prove that an ozone value is correct, comparable, current, regulatory, health-relevant, released, or publicly safe.
+
+## Ozone semantics
+
+| Knowledge character | Meaning | Hard boundary |
+|---|---|---|
+| `OBSERVED_SENSOR` | Ozone concentration observed by an admitted sensor or archive method. | Must carry units, averaging period, station/network context, time, QA, and evidence. |
+| `PUBLIC_AQI_REPORT` | Agency or reviewed report/index posture for ozone. | AQI/report is not raw concentration. |
+| Regulatory/archive context | Reviewed archive or compliance-adjacent record. | Does not prove exceedance or legal status by directory placement. |
+| Modeled/forecast context | Predicted ozone or model field. | Must not be stored or presented as observed ozone. |
+| Candidate/synthetic | Candidate or generated derivative. | Must remain labeled and cannot substitute for observation or report authority. |
+
+A single payload must not silently switch roles. When the same source supplies concentration and AQI/report values, those values need separate role-bearing fields or records and explicit linkage.
+
+## Units, averaging, and time
+
+Ozone candidates should preserve enough information to prevent false comparability:
+
+| Dimension | Required posture |
+|---|---|
+| Pollutant | Explicit ozone identity; do not infer from lane name alone. |
+| Units | Original and normalized units, conversion method, scale, precision, and detection/reporting limits where material. |
+| Averaging period | Instantaneous, hourly, 8-hour, daily, or other source-defined window must remain explicit. |
+| Time | Observation, source publication, retrieval, processing, correction, supersession, and release times remain distinct. |
+| Station context | Stable station/network reference, method, and siting sensitivity posture without duplicating station authority. |
+| QA | Source flags, invalidation, calibration/correction status, missingness, and provisional/final state. |
+| Comparability | Comparisons require compatible units, averaging windows, methods, roles, and temporal support. |
+
+A conversion that changes units does not change source role. An AQI calculation creates a report/index derivative; it does not rewrite the original concentration observation.
+
+## Source role and routing
+
+Route candidates according to their actual knowledge character:
+
+- observed ozone concentration → this lane;
+- ozone AQI/report → this lane only with explicit report role;
+- generic air observation without ozone-specific semantics → `air_observations/`;
+- PM2.5 → `pm25/`;
+- station metadata → `air_stations/`;
+- modeled ozone → `modeled/` or `forecast_context/`;
+- AOD/smoke proxy → `aod/` or `smoke_context/`;
+- advisory context → `advisory_context/`;
+- unresolved role or unit semantics → quarantine.
+
+Do not duplicate the same ozone truth-bearing record across object-family lanes. Use controlled references, aliases, migration records, or predecessor/successor relations instead.
+
+## Validation
+
+No complete lane-wide validator was verified. A pass proves only the declared scope of the check.
+
+Before a candidate advances, validate as applicable:
+
+- path and object-family placement;
+- deterministic identity, version, digest, predecessor/successor, and duplicate state;
+- pollutant identity and source role;
+- station/network linkage without authority duplication;
+- units, scale, precision, conversion, and averaging period;
+- observation, source, retrieval, processing, correction, and release times;
+- QA flags, provisional/final state, missingness, calibration/correction posture, and caveats;
+- AQI/report separation from concentration;
+- observed separation from model, proxy, advisory, exposure, health, proof, and release roles;
+- rights, sensitivity, evidence, policy, catalog, release, correction, and rollback references;
+- links, anchors, metadata, and accidental sensitive-content exposure.
+
+Failure should keep the artifact in WORK, return it to QUARANTINE, or hold it at PROCESSED with a structured reason. Validation must not silently promote or relabel role.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes involving any of the following require specialist review:
+
+- source activation or rights changes;
+- unit conversion or averaging-period changes;
+- AQI calculation or report-role assignment;
+- station/network identity or siting sensitivity;
+- provisional-to-final correction;
+- low-cost or non-reference sensor caveats;
+- regulatory/archive posture;
+- public-serving, health, compliance, correction, withdrawal, or rollback behavior.
+
+CODEOWNERS routing is not evidence of approval. Release authority must remain distinct from authorship when significance warrants separation of duties.
+
+## Correction and rollback
+
+Corrections must be explicit and traceable. At minimum, a correction should identify:
+
+- affected ozone candidate identities and digests;
+- source correction, QA invalidation, unit or averaging-period correction, station reassignment, or role correction;
+- predecessor and successor records;
+- affected catalog, proof, triplet, release, cache, index, export, and UI dependencies;
+- stale, superseded, withdrawn, or invalid state;
+- correction notice and rollback target where applicable.
+
+Rollback is required if this lane becomes a RAW source root, WORK scratch area, QUARANTINE bypass, station authority, generic air-observation authority, PM2.5 authority, AQI/concentration substitution path, model-as-observation path, proof store, receipt store, catalog root, release authority, public API/UI shortcut, health-guidance source, alerting surface, or publication shortcut.
+
+Documentation rollback target: prior blob `e879df17bf3f2f2de8db093a45d4e39dd2b38f68`.
+
+## Related folders
+
+- Parent Atmosphere lane: [`../README.md`](../README.md)
+- Observed parent: [`../observed/README.md`](../observed/README.md)
+- General air observations: [`../air_observations/README.md`](../air_observations/README.md)
+- Station context: [`../air_stations/README.md`](../air_stations/README.md)
+- PM2.5: [`../pm25/README.md`](../pm25/README.md)
+- AOD proxy: [`../aod/README.md`](../aod/README.md)
+- Smoke context: [`../smoke_context/README.md`](../smoke_context/README.md)
+- Forecast/model context: [`../forecast_context/README.md`](../forecast_context/README.md)
+- Advisory context: [`../advisory_context/README.md`](../advisory_context/README.md)
+- Semantic contract: [`../../../../contracts/domains/atmosphere/OzoneObservation.md`](../../../../contracts/domains/atmosphere/OzoneObservation.md)
+- Machine schema: [`../../../../schemas/contracts/v1/domains/atmosphere/OzoneObservation.schema.json`](../../../../schemas/contracts/v1/domains/atmosphere/OzoneObservation.schema.json)
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, storage location, rights, owners, sensitivity |
+| Writers and consumers | `UNKNOWN` | Pipelines, tools, jobs, API/UI, exports, deployed consumers |
+| Schema enforcement | `UNKNOWN` | Non-scaffold schema, fixtures, validator behavior, negative cases |
+| AQI method and role enforcement | `UNKNOWN` | Versioned method, unit/averaging inputs, source role, tests, review |
+| Station and sensor posture | `UNKNOWN` | Network registry, siting sensitivity, calibration, provisional/final rules |
+| Evidence and release closure | `UNKNOWN` | EvidenceBundles, receipts, catalog/triplet agreement, release and rollback links |
+| Correction propagation | `UNKNOWN` | Downstream dependency map, cache/index invalidation, drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| PROCESSED lifecycle role | Preserved and clarified |
+| Ozone-specific object-family scope | Preserved |
+| AQI/report versus concentration boundary | Preserved and strengthened |
+| Station, model, AOD, smoke, advisory, proof, and release boundaries | Preserved and strengthened |
+| Evidence, policy, correction, and rollback controls | Preserved and expanded |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, migration, release, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the lane to the current processed-data authority model;
+- documented permissive scaffold-schema posture;
+- strengthened pollutant, role, units, averaging-period, QA, time, correction, and routing controls;
+- added verification and no-loss ledgers;
+- changed Markdown only.
+
+[Back to top](#top)
