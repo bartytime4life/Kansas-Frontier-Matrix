@@ -1,19 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-roads-rail-trade-facilities-readme
 title: data/processed/roads-rail-trade/facilities/README.md — Roads / Rail / Trade Facilities Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; roads-rail-trade-domain-lane; transport-facility-lane; facility-context-lane
-status: draft; PROPOSED; data-root; processed-stage; roads-rail-trade; facilities; transport-facility; depots; stations; yards; terminals; interchanges; source-role-aware; sensitivity-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Roads/Rail/Trade steward · Transport facility steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; roads-rail-trade; facilities; transport-facility; infrastructure-adjacent; lifecycle; governed; release-gated
-tags: [kfm, data, processed, roads-rail-trade, roads-rail, transport-facility, depot, station, yard, terminal, interchange, crossing, bridge, ferry, operator-assignment, status-event, restriction-event, source-role, observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+version: v0.2.0
+type: readme; data-lifecycle-sublane; processed-stage-guide; roads-rail-trade-domain-lane; transport-facility-lane; infrastructure-adjacent-lane
+status: repository-grounded draft; PROPOSED lane contract; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — Roads/Rail/Trade steward · Transport facility steward · Settlements/Infrastructure steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; no-direct-public-path; infrastructure-adjacent; source-role-preserved; release-gated
+tags: [kfm, data, processed, roads-rail-trade, facilities, TransportFacility, depot, station, yard, terminal, interchange, source-role, sensitivity, evidence, correction, rollback]
 related:
   - ../README.md
   - ../../README.md
   - ../../../README.md
+  - ../../../../README.md
   - ../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md
   - ../../../../docs/domains/roads-rail-trade/SENSITIVITY.md
   - ../../../../docs/domains/roads-rail-trade/PIPELINE.md
@@ -24,9 +25,8 @@ related:
   - ../../../../docs/domains/archaeology/README.md
   - ../../../../contracts/domains/roads-rail-trade/README.md
   - ../../../../contracts/domains/roads-rail-trade/depot.md
-  - ../../../../contracts/domains/roads-rail-trade/corridor_route.md
-  - ../../../../policy/sensitivity/transport/
   - ../../../../policy/domains/roads-rail-trade/
+  - ../../../../policy/sensitivity/transport/
   - ../../../../schemas/contracts/v1/domains/roads-rail-trade/
   - ../../../raw/roads-rail-trade/
   - ../../../work/roads-rail-trade/
@@ -38,221 +38,252 @@ related:
   - ../../../receipts/
   - ../../../registry/sources/roads-rail-trade/
   - ../../../../release/candidates/roads-rail-trade/
-  - ../../../../release/
-  - ../../../../pipelines/domains/roads-rail-trade/
-  - ../../../../pipeline_specs/roads-rail-trade/
-  - ../../../../tools/validators/
 notes:
-  - "This file replaces a blank placeholder at `data/processed/roads-rail-trade/facilities/README.md`."
-  - "This is a child PROCESSED-stage lane under `data/processed/roads-rail-trade/` for transport facility artifacts. It is not a RAW source root, WORK scratch area, QUARANTINE bypass, CATALOG, TRIPLET, PUBLISHED, proof store, receipt store, source registry, policy authority, release authority, public API/UI output, public map/tile output, operations surface, security surface, or infrastructure condition disclosure surface."
-  - "TransportFacility objects include depots, stations, yards, terminals, rosters, interchanges, and related facility context. Facility identity and infrastructure asset truth may be owned or constrained by Settlements/Infrastructure; this lane preserves citation and transport-role context."
-  - "Critical-facility detail, condition/vulnerability fields, restricted-source-derived fields, culturally sensitive corridor joins, and exact coordinates that could enable harm require the most restrictive applicable policy row and steward review before public exposure."
-  - "Source-role anti-collapse is mandatory: administrative facility rosters, observed field records, modeled reconstructions, aggregate summaries, candidate connector outputs, and synthetic descriptions are not interchangeable."
-  - "This README is a lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "This file preserves the existing path and document identity while aligning the lane to the current data/processed authority contract."
+  - "This lane owns normalized transport-facility candidates and lineage sidecars, not source captures, catalog records, proof closure, policy decisions, release authority, operations systems, or public-serving behavior."
+  - "Transport-facility identity, route role, operator assignment, status, location precision, and temporal validity must remain distinct from infrastructure ownership, condition, vulnerability, security, and legal authority."
+  - "Critical-facility detail, restricted-source-derived fields, cultural-corridor joins, private access details, and exact harmful-precision coordinates fail closed unless policy and release evidence explicitly permit exposure."
+  - "Prior blob and rollback target: 25a13cf1829c5bb454aa3dc2aa2c9a7989221e97."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/roads-rail-trade/facilities
+# `data/processed/roads-rail-trade/facilities/` — Transport Facility Candidates
 
-> Roads / Rail / Trade PROCESSED-stage child lane for normalized, source-traced, source-role-preserved transport facility artifacts that have passed beyond RAW/WORK/QUARANTINE but are not yet cataloged, triplet-projected, published, or released.
+> **One-line purpose.** Own normalized, source-traced, role-preserved transport-facility candidates that have passed applicable WORK checks but have not thereby become cataloged, released, public, operational, or authoritative infrastructure records.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/roads-rail-trade/facilities" src="https://img.shields.io/badge/root-data%2Fprocessed%2Froads--rail--trade%2Ffacilities-blue">
-  <img alt="Domain: roads-rail-trade" src="https://img.shields.io/badge/domain-roads--rail--trade-555">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Object: TransportFacility" src="https://img.shields.io/badge/object-TransportFacility-green">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: preserved](https://img.shields.io/badge/source%20role-preserved-1a7f37?style=flat-square)](#facility-semantics)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-d1242f?style=flat-square)](#sensitivity-and-cross-domain-boundaries)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Roads/Rail/Trade steward · Transport facility steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/roads-rail-trade/facilities/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `roads-rail-trade`  
-**Parent lane:** `data/processed/roads-rail-trade/`  
-**Sublane:** `facilities` / transport facility processed artifacts  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, sensitivity review, policy decision where applicable, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED parent `data/processed/roads-rail-trade/README.md` is still a greenfield stub · CONFIRMED Roads/Rail/Trade object doctrine includes `TransportFacility` as a facility family · CONFIRMED sensitivity doctrine raises critical-facility detail and culturally sensitive corridor joins to restrictive review · PROPOSED facilities child-lane details · NEEDS VERIFICATION for actual child inventory, schemas, validators, fixtures, source descriptors, receipt families, policy enforcement, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, successful normalization, a matched facility name, a topology join, a map render, a pull request, or a merge does not create truth, policy permission, catalog admission, release approval, legal authority, operational status, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Facilities processed requirements](#facilities-processed-requirements) · [Source-role and sensitivity guardrails](#source-role-and-sensitivity-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!WARNING]
+> Exact harmful-precision locations, critical-facility details, private access information, condition or vulnerability fields, restricted-source content, culturally sensitive route joins, and infrastructure-security context must remain restricted, generalized, quarantined, or denied unless an evidence-backed policy and release path explicitly permits exposure.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Facility semantics](#facility-semantics) · [Identity and time](#identity-and-temporal-contract) · [Sensitivity](#sensitivity-and-cross-domain-boundaries) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/roads-rail-trade/facilities/` holds processed transport facility artifacts for the Roads / Rail / Trade lane. These artifacts can support route, corridor, network, historic, freight, settlement, and infrastructure context while remaining upstream of catalog, triplet, publication, and release.
+This child lane owns processed transport-facility candidates under the Roads / Rail / Trade responsibility segment. Typical candidates represent depots, stations, yards, terminals, interchanges, rostered facilities, or facility-like transport nodes while preserving source identity, source role, temporal state, route/network context, uncertainty, and sensitivity posture.
 
-This lane may contain or point to normalized artifacts such as:
+The lane may support downstream route, corridor, topology, historical, freight, settlement, or infrastructure analysis. It does not itself establish ownership, legal right-of-way, current operating authority, condition, vulnerability, security posture, access permission, freight capacity, emergency role, or public-release readiness.
 
-- `TransportFacility` records for depots, stations, yards, terminals, interchanges, rostered facilities, and facility-like transport nodes;
-- facility identity and role context linked to road, rail, corridor, crossing, bridge, ferry, and route-membership artifacts;
-- facility-to-route, facility-to-operator, and facility-to-status context when source role and time are explicit;
-- historical facility assertions and candidate reconstructions where uncertainty remains visible;
-- public-candidate generalized or redacted derivatives that still require catalog and release review.
+## Authority level
 
-This lane does not prove infrastructure ownership, current operating status, condition, vulnerability, security posture, emergency access, freight capacity, legal right-of-way, land ownership, cultural-route precision, or public release readiness by itself.
+**Canonical PROCESSED responsibility; non-public by default.**
 
-## Lifecycle boundary
+This path may own normalized facility candidates, relationship candidates, temporal-status sidecars, reconciliation inventories, and local explanatory metadata. It does not own:
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+- source-native captures or original provider payloads;
+- semantic contract or machine-schema authority;
+- policy, sensitivity, rights, or access-control decisions;
+- EvidenceBundle, proof, or receipt authority;
+- catalog, triplet, release, or publication decisions;
+- infrastructure ownership, condition, vulnerability, or security truth;
+- public map, API, UI, routing, operations, emergency, or AI behavior.
 
-```mermaid
-flowchart LR
-  RAW[data/raw/roads-rail-trade] --> WORK[data/work/roads-rail-trade]
-  WORK --> QUAR[data/quarantine/roads-rail-trade]
-  WORK --> FAC[data/processed/roads-rail-trade/facilities]
-  QUAR --> FAC
-  FAC --> PROC[data/processed/roads-rail-trade]
-  FAC --> CAT[data/catalog/domain/roads-rail-trade]
-  FAC --> TRIP[data/triplets/.../roads-rail-trade]
-  FAC -. supports .-> PROOF[data/proofs]
-  FAC -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../roads-rail-trade]
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
-```
+Those responsibilities remain under their governed roots and interfaces.
 
-`data/processed/roads-rail-trade/facilities/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+## Status
 
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw facility rosters, source-native agency files, source exports, source logs, original coordinates, source identifiers, or unprocessed partner materials | `data/raw/roads-rail-trade/` | Not this lane. |
-| In-process facility matching, geocoding, identity reconciliation, status extraction, route joins, QA, notebooks, or scratch products | `data/work/roads-rail-trade/` | Not this lane. |
-| Unresolved rights, unresolved source role, disputed identity, sensitive condition detail, restricted-source fields, cultural corridor joins, unsafe coordinates, or not-yet-reviewed transport material | `data/quarantine/roads-rail-trade/` | Not this lane until review/admission allows. |
-| Processed facility artifacts | `data/processed/roads-rail-trade/facilities/` | This lane. |
-| Parent processed Roads/Rail/Trade lane | `data/processed/roads-rail-trade/` | Parent lane; still not public by default. |
-| Roads/Rail/Trade catalog records | `data/catalog/domain/roads-rail-trade/` | Downstream catalog stage. |
-| Triplet/graph records | `data/triplets/.../roads-rail-trade/` | Downstream graph stage; must not expose restricted precision or role-collapsed claims. |
-| Published public-safe products | `data/published/.../roads-rail-trade/` | Downstream only after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, redaction, validation, policy, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| Source registry records | `data/registry/sources/roads-rail-trade/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/roads-rail-trade/`, `release/` | Separate publication authority. |
-| Contracts | `contracts/domains/roads-rail-trade/` or ADR-resolved segment | Object meaning; not data. |
-| Schemas | `schemas/contracts/v1/domains/roads-rail-trade/` or ADR-resolved segment | Machine shape; not data. |
-| Policy and sensitivity rules | `policy/domains/roads-rail-trade/`, `policy/sensitivity/transport/` or ADR-resolved segment | Admissibility authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
-
-## Accepted contents
-
-Processed facility artifacts may include:
-
-- normalized `TransportFacility` records with source role, source time, valid time, rights posture, sensitivity posture, and digest posture;
-- depot, station, yard, terminal, interchange, roster, and facility-node derivatives where source and role remain explicit;
-- facility-to-route, facility-to-corridor, facility-to-crossing, facility-to-operator, and facility-to-status relationship candidates;
-- historical facility assertions with uncertainty, source-role, and temporal scope preserved;
-- generalized or redacted public-candidate facility context that still requires catalog/release review before public use;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs or authority records.
-
-## Exclusions
-
-Do not store these under `data/processed/roads-rail-trade/facilities/`:
-
-- RAW source files, source-native rosters, agency exports, source media, logs, source identifiers, or unprocessed source payloads.
-- WORK/scratch files, notebooks, geocoding experiments, identity-reconciliation scratch, status extraction trials, route matching trials, or redaction-debug outputs.
-- Quarantined or unresolved sensitive/rights/source-role material.
-- Catalog records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, app/UI/API code, or packages.
-- Infrastructure canonical identity, building/asset ownership truth, hydrology truth, hazards/emergency truth, land ownership/right-of-way truth, archaeology/cultural-route truth, or operator legal authority owned by other lanes.
-- Condition/vulnerability detail, restricted source terms, security-sensitive details, private agreement details, credentials, secrets, redaction parameters, aggregation thresholds, exact transform offsets, or implementation details that could aid exposure or unauthorized access.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, operations dashboards, security products, emergency routing, legal advice, or life-safety guidance.
-
-## Facilities processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
+| Item | Bounded result |
 |---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or roads/rail/trade source registry context. |
-| Evidence linkage | Claims about facility identity, role, route membership, operator assignment, status, restriction, historical assertion, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Object distinction | TransportFacility, Network Node, Crossing, Bridge, Ferry, RestrictionEvent, StatusEvent, OperatorAssignment, CorridorRoute, RouteMembership, and Historic RouteClaim must remain distinct. |
-| Time semantics | Source time, observed time, valid time, event time, retrieval time, release time, and correction time should remain distinguishable where material. |
-| Rights posture | Agency, operator, archive, partner, license, redistribution, attribution, derivative-use, and restricted-source terms should be resolved or held closed. |
-| Sensitivity posture | Critical-facility detail, exact-harm coordinates, cultural-route joins, restricted-source fields, and infrastructure-adjacent status should carry restriction/generalization/denial posture where needed. |
-| Transform linkage | Generalization, aggregation, redaction, suppression, withholding, delayed publication, or public-safe transform should link to appropriate receipt families. |
-| Review state | Domain steward, sensitivity reviewer, rights reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Catalog readiness | Processed facility artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, and rollback target. |
-| No public surface by default | Processed facility artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
+| Path | `data/processed/roads-rail-trade/facilities/README.md` |
+| Version | `v0.2.0` |
+| Prior blob | `25a13cf1829c5bb454aa3dc2aa2c9a7989221e97` |
+| Parent lane | `data/processed/roads-rail-trade/` |
+| Lifecycle phase | `PROCESSED` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Contract/schema enforcement | `NEEDS VERIFICATION` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Source-role and sensitivity guardrails
+## What belongs here
 
-- `TransportFacility` is a transport-context object, not automatic infrastructure ownership truth.
-- Facility identity and infrastructure asset truth may be Settlements/Infrastructure-owned; this lane preserves transport-role citation and relationship context.
-- Administrative facility rosters must not become observed status timelines by promotion.
-- Modeled or reconstructed historical facilities remain modeled/candidate unless evidence and review support stronger claims.
-- RestrictionEvent and StatusEvent records must remain distinct from static facility identity.
-- OperatorAssignment is not legal ownership by itself.
-- Crossings, bridges, ferries, and water-related facilities cite Hydrology where water evidence is involved; Hydrology owns the water truth.
-- Hazards owns emergency/hazard state; Roads/Rail/Trade may cite, not replace, that truth.
-- Archaeology and cultural-stewardship policy governs sensitive cultural-route joins.
-- Critical-facility detail, condition/vulnerability detail, restricted source terms, and exact coordinates that could enable harm fail closed until policy, evidence, review, release state, correction path, and rollback are resolved.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
+Subject to contracts, rights, sensitivity, and validation, this lane may hold:
 
-> [!CAUTION]
-> Do not expose `data/processed/roads-rail-trade/facilities/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, operations surface, security surface, infrastructure condition surface, emergency routing surface, legal authority record, or life-safety product. Processed facility data remains inside the trust membrane until governed promotion and release.
+- normalized `TransportFacility` candidates for depots, stations, yards, terminals, interchanges, rosters, and related transport nodes;
+- facility identity candidates with source identifiers, names, aliases, type, source role, time scope, uncertainty, and digest posture;
+- facility-to-route, facility-to-corridor, facility-to-network-node, facility-to-crossing, facility-to-operator, and facility-to-status relationship candidates;
+- historical facility assertions or modeled reconstructions when source role and uncertainty remain explicit;
+- relocation, merge, split, decommissioning, renaming, supersession, and correction lineage;
+- generalized or redacted public-candidate derivatives that remain upstream of catalog and release;
+- lane-local inventories, disposition records, and README material that explain boundaries without becoming proof, policy, or release authority.
 
-## Directory map
+## What does NOT belong here
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+| Do not place here | Correct home or action |
+|---|---|
+| Source-native rosters, agency exports, logs, original coordinates, provider identifiers, or partner files | `data/raw/roads-rail-trade/` |
+| Geocoding experiments, identity-matching scratch, route joins, notebooks, temporary topology, or redaction trials | `data/work/roads-rail-trade/` |
+| Unresolved rights, disputed identity, unknown role, unsafe precision, critical-facility detail, restricted-source fields, or culturally sensitive joins | `data/quarantine/roads-rail-trade/` |
+| Catalog records or triplet/graph projections | `data/catalog/` and `data/triplets/` |
+| Proofs, EvidenceBundles, and receipts | `data/proofs/` and `data/receipts/` |
+| Source descriptors and registry truth | `data/registry/sources/roads-rail-trade/` |
+| Policy, sensitivity, or access rules | `policy/` |
+| Release decisions, manifests, rollback cards, or correction authority | `release/` |
+| Published layers, API payloads, routes, or downloads | `data/published/` and governed delivery interfaces |
+| Infrastructure ownership, building/asset identity, condition, vulnerability, or security truth | Settlements/Infrastructure or other owning responsibility roots |
+| Hydrology, hazards, archaeology, land/title, or emergency truth | Their respective governed domain roots |
+| Credentials, secrets, access instructions, exact transform offsets, suppression thresholds, or harmful operational detail | Approved restricted operational systems |
 
-```text
-data/processed/roads-rail-trade/facilities/
-├── README.md
-├── depots/                   # PROPOSED — depot/station derivatives
-├── yards/                    # PROPOSED — yard/facility-node derivatives
-├── terminals/                # PROPOSED — terminal/interchange context
-├── rosters/                  # PROPOSED — normalized administrative rosters, not observed events
-├── relationships/            # PROPOSED — facility-to-route/operator/status relationship candidates
-├── historical/               # PROPOSED — historical facility assertions and reconstructions
-├── generalized/              # PROPOSED — public-candidate generalized derivatives
-├── restricted/               # PROPOSED — sensitive/rights-limited facility context
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-├── joins/                    # PROPOSED — reviewed relation edges only, not foreign-domain truth
-├── _manifests/               # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
+## Inputs
 
-## Evidence ledger
+Admitted inputs are governed WORK products or resolved QUARANTINE exits with, as applicable:
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define facility processed boundaries. |
-| Repository search | CONFIRMED | Found Roads/Rail/Trade object-family, sensitivity, pipeline, catalog, and depot/corridor contract references. | Search is not a full tree audit. |
-| `data/processed/roads-rail-trade/README.md` | CONFIRMED | Parent processed lane currently exists as a greenfield stub. | Does not define processed parent boundaries yet. |
-| `docs/domains/roads-rail-trade/OBJECT_FAMILIES.md` | CONFIRMED doctrine / PROPOSED implementation | Roads/Rail/Trade owns road/rail evidence, corridors, topology, crossings/bridges/ferries, transport facilities, restrictions/status events, operator assignments, and trade-route claims; `TransportFacility` is a named object family. | Field realization, schemas, and exact object graph remain NEEDS VERIFICATION. |
-| `docs/domains/roads-rail-trade/SENSITIVITY.md` | CONFIRMED doctrine / PROPOSED implementation | Critical facility detail, sensitive coordinates, restricted source terms, and cultural corridor joins require restrictive review; unclear rights/source role/evidence/sensitivity/release blocks public promotion. | Final policy enforcement and tier adoption remain NEEDS VERIFICATION. |
-| `contracts/domains/roads-rail-trade/depot.md` | NEEDS VERIFICATION | Expected semantic contract for depot/facility meaning. | This task did not inspect its contents. |
-| `policy/sensitivity/transport/` and `policy/domains/roads-rail-trade/` | NEEDS VERIFICATION | Expected admissibility homes. | Current policy files and enforcement were not verified in this task. |
+- stable candidate identity and content digest;
+- source descriptor and source role;
+- rights and sensitivity posture;
+- facility type and transport role;
+- source, observed, valid, effective, retrieval, correction, and release-relevant time fields;
+- geometry and precision classification;
+- route, corridor, topology, operator, and status relationship context;
+- uncertainty, caveats, and conflict state;
+- contract/schema references and validation evidence;
+- correction predecessor/successor and rollback references.
 
-## Validation checklist
+## Outputs
 
-- [ ] Confirm actual child directories under `data/processed/roads-rail-trade/facilities/`.
-- [ ] Confirm whether `facilities/` is the accepted processed lane name or should be reconciled with `transport_facilities/`, `depots/`, `stations/`, or another object-family naming convention.
-- [ ] Expand or reconcile parent `data/processed/roads-rail-trade/README.md` beyond stub.
-- [ ] Confirm `TransportFacility`, depot, station, yard, terminal, restriction/status, and operator-assignment contracts and schema paths.
-- [ ] Resolve the `roads-rail-trade` versus `roads-rail` segment divergence for schemas/contracts/policy if still open.
-- [ ] Confirm validators, fixtures, CI checks, source-role checks, sensitivity checks, redaction checks, restricted-source checks, and access-control enforcement.
-- [ ] Confirm SourceDescriptor/source registry linkage for every input source and derived facility artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, RedactionReceipt, ReviewRecord, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, RollbackCard, correction path, and rollback target where applicable.
-- [ ] Confirm critical-facility details, condition/vulnerability fields, culturally sensitive joins, restricted-source fields, unsafe exact coordinates, secrets, private agreement terms, redaction parameters, transform secrets, and release-unclear artifacts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, rights-safe, sensitivity-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, operations surface, security surface, emergency routing, legal advice, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public facility service, public map, public tile, public API, public UI, or AI-answer source.
+Valid outputs are inputs to downstream catalog/triplet projection, EvidenceBundle assembly, sensitivity review, release-candidate review, and public-safe derivative creation.
 
-## Rollback
+PROCESSED placement does not prove catalog closure, evidence closure, public safety, release approval, current operating status, or production hosting. Public clients must not read this lane directly.
 
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, critical-facility exposure path, condition/vulnerability exposure path, cultural-route exposure path, restricted-source leakage path, unsafe coordinate exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, operations surface, security surface, emergency routing surface, legal authority record, or life-safety guidance source.
+## Facility semantics
 
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+Transport-related concepts must remain distinct:
 
-<p align="right"><a href="#top">Back to top</a></p>
+| Concept | Meaning in this lane | Must not collapse into |
+|---|---|---|
+| Facility candidate | Proposed or normalized transport facility identity | Infrastructure ownership or legal authority |
+| Route membership | Facility relationship to a route or corridor | Facility identity |
+| Operator assignment | Time-bounded operator/service relationship | Property ownership or permanent authority |
+| Status event | Time-bounded open, closed, relocated, inactive, or other status assertion | Static identity or current truth without freshness support |
+| Restriction event | Time-bounded restriction context | Facility condition or legal closure authority by default |
+| Historical assertion | Source-bounded claim about a past facility or role | Current operating status |
+| Modeled reconstruction | Derived or inferred facility context | Observed or administrative fact |
+| Synthetic description | Generated explanatory text | Evidence or source truth |
+
+Source roles such as observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic are not interchangeable. Promotion never upgrades a source role.
+
+## Identity and temporal contract
+
+Each candidate should preserve enough information to distinguish identity, location, and status through time:
+
+| Requirement | Expected posture |
+|---|---|
+| Stable identity | Deterministic or steward-reviewed candidate ID where practical |
+| Source identity | Source-specific IDs remain traceable and are not silently replaced |
+| Aliases and names | Current, historical, alternate, and source-native names remain distinguishable |
+| Facility type | Depot, station, yard, terminal, interchange, roster facility, or other reviewed class |
+| Geometry role | Exact, generalized, centroid, approximate, historical, modeled, or unknown |
+| Time semantics | Source, observed, valid/effective, retrieval, correction, supersession, and release times remain distinct |
+| Status | Active, inactive, relocated, closed, historical, proposed, candidate, unknown, or source-declared equivalent |
+| Relocation | Predecessor/successor relation and effective interval preserved |
+| Merge/split | Lineage and affected relationship candidates preserved |
+| Conflict state | Competing source assertions remain visible rather than silently overwritten |
+| Correction state | Corrected, superseded, withdrawn, or tombstoned state remains resolvable |
+
+## Sensitivity and cross-domain boundaries
+
+The most restrictive applicable policy row governs exposure.
+
+- Exact harmful-precision facility locations may require generalization, staged access, or denial.
+- Critical-facility, condition, vulnerability, capacity, access, ownership, and security details fail closed unless explicitly reviewed.
+- Private-land and parcel-person joins remain outside ordinary public surfaces.
+- Restricted-source-derived attributes remain restricted even when geometry is public.
+- Cultural corridors, tribal or sovereign context, archaeology joins, and historic routes require steward review before spatial exposure.
+- Hydrology owns water truth; Hazards owns event and impact truth; Settlements/Infrastructure may own canonical asset identity or condition; People/Land owns title and parcel-person truth.
+- Styling, zoom thresholds, client-side filtering, or omitted labels are not sufficient redaction controls.
+
+## Validation
+
+A bounded validation pass should check, at minimum:
+
+- placement and one-lane responsibility;
+- stable identity, digest, aliases, and source IDs;
+- source role and rights posture;
+- facility type and object-family distinction;
+- geometry role, precision, sensitivity, and public-safe transform references;
+- route, corridor, node, crossing, operator, and status relationship integrity;
+- source, valid, retrieval, correction, and supersession times;
+- conflict, relocation, merge/split, decommissioning, and correction lineage;
+- contract/schema references and declared validator scope;
+- evidence, receipt, policy, catalog, release, correction, and rollback dependencies;
+- absence of condition, vulnerability, security, access, or other restricted detail from public-candidate derivatives.
+
+No complete lane-wide validator was verified. A passing check proves only its declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes involving payloads, facility identity, geometry precision, source activation, rights, sensitive joins, current status, operator assignments, public derivatives, correction, or rollback require the relevant domain, infrastructure, sensitivity, rights, evidence, validation, and release reviewers.
+
+CODEOWNERS routing, a pull request approval, or a successful CI check is not policy permission or release evidence by itself.
+
+## Correction and rollback
+
+Corrections must be explicit and reversible:
+
+1. identify the affected facility candidate, relationship candidates, and derived products;
+2. record whether the issue concerns identity, location, type, status, operator, route membership, source role, time, sensitivity, or rights;
+3. preserve predecessor/successor and correction lineage;
+4. invalidate or regenerate dependent catalog, graph, layer, API, index, cache, and AI-context artifacts where applicable;
+5. issue correction, withdrawal, or rollback records through their governed roots;
+6. verify that harmful or stale detail is no longer available through public routes or caches.
+
+Documentation rollback target: prior blob `25a13cf1829c5bb454aa3dc2aa2c9a7989221e97`.
+
+## Related folders
+
+- Parent processed lane: [`../README.md`](../README.md)
+- Parent lifecycle contract: [`../../README.md`](../../README.md)
+- Domain object families: [`../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md`](../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md)
+- Domain sensitivity: [`../../../../docs/domains/roads-rail-trade/SENSITIVITY.md`](../../../../docs/domains/roads-rail-trade/SENSITIVITY.md)
+- Settlements/Infrastructure boundary: [`../../../../docs/domains/settlements-infrastructure/README.md`](../../../../docs/domains/settlements-infrastructure/README.md)
+- Contracts: [`../../../../contracts/domains/roads-rail-trade/README.md`](../../../../contracts/domains/roads-rail-trade/README.md)
+- Policy: [`../../../../policy/domains/roads-rail-trade/`](../../../../policy/domains/roads-rail-trade/) and [`../../../../policy/sensitivity/transport/`](../../../../policy/sensitivity/transport/)
+- Catalog: [`../../../catalog/domain/roads-rail-trade/`](../../../catalog/domain/roads-rail-trade/)
+- Proofs and receipts: [`../../../proofs/`](../../../proofs/) · [`../../../receipts/`](../../../receipts/)
+- Release candidates: [`../../../../release/candidates/roads-rail-trade/`](../../../../release/candidates/roads-rail-trade/)
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, rights, sensitivity, owners |
+| Active writers and consumers | `UNKNOWN` | Pipelines, tools, workflows, APIs, UI, graph, indexes, deployments |
+| Contract and schema enforcement | `UNKNOWN` | Accepted contract/schema versions, fixtures, validators, CI, negative cases |
+| Facility identity reconciliation | `NEEDS VERIFICATION` | Duplicate, alias, relocation, merge/split, and conflict handling evidence |
+| Sensitivity enforcement | `UNKNOWN` | Policy decisions, transforms, redaction receipts, access controls, negative tests |
+| Cross-domain ownership | `NEEDS VERIFICATION` | Roads/Rail/Trade vs. Settlements/Infrastructure responsibility decisions |
+| Evidence/catalog/release closure | `UNKNOWN` | EvidenceBundles, catalog records, release manifests, correction and rollback links |
+| Public invalidation | `UNKNOWN` | Governed routes, caches, indexes, stale/withdrawn handling, rollback drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| PROCESSED lifecycle boundary | Preserved and aligned to parent contract |
+| Facility examples and transport context | Preserved and clarified |
+| Source-role anti-collapse | Preserved and strengthened |
+| Infrastructure-adjacent and cross-domain boundaries | Preserved and strengthened |
+| Rights, sensitivity, evidence, policy, release, correction, and rollback controls | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, migration, path, source, runtime, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the child lane to the current processed-data authority model;
+- clarified facility identity, temporal, relationship, and cross-domain semantics;
+- strengthened harmful-precision, critical-facility, rights, sensitivity, correction, and rollback controls;
+- added validation, review, verification, and no-loss sections;
+- changed Markdown only.
+
+[Back to top](#top)
