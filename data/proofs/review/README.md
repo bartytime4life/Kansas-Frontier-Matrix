@@ -1,367 +1,464 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/proofs/review/readme
-title: data/proofs/review README
-type: directory-readme
-version: v0.1
-status: draft
+title: data/proofs/review/ — Review-Proof Support Lane
+type: directory-readme; proof-support-child-lane; review-audit-boundary
+version: v0.2.0
+status: repository-grounded draft; review-proof schema, payload, producer, validator, and release use not established
 owners:
-  - <data steward — TODO>
-  - <proof steward — TODO>
-  - <governance steward — TODO>
-  - <review steward — TODO>
-  - <release steward — TODO>
+  - "@bartytime4life — verified CODEOWNERS routing for /data/proofs/; routing is not accountable review or approval"
+  - "NEEDS VERIFICATION — proof, governance, policy, sensitivity, release, correction, and rollback steward assignments"
 created: 2026-06-25
-updated: 2026-06-25
-policy_label: public-review
+updated: 2026-07-26
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+policy_label: "restricted-review; proof-support; no-direct-public-path; release-gated; cite-or-abstain"
 path: data/proofs/review/README.md
+truth_posture: >
+  CONFIRMED exact target path and prior blob, canonical proofs-root boundary, README-only
+  target inventory, draft ReviewRecord semantic contract, proposed governance schema,
+  paired governance fixtures, generic schema-test wiring, placeholder dedicated validator,
+  promotion-gate hold, release-review guidance-only inventory, and CODEOWNERS routing /
+  PROPOSED review-proof profile and identity, closure, condition, expiry, correction,
+  invalidation, and finite-outcome requirements / CONFLICTED governance-versus-review
+  ReviewRecord schema relationship and schema-to-contract path casing / UNKNOWN active
+  review-proof writers, consumers, access controls, external stores, platform enforcement,
+  public effects, and operational correction or rollback / NEEDS VERIFICATION accepted
+  review-proof contract and schema, accountable owners, deterministic producer and validator,
+  public-safe fixtures, policy and separation-of-duties enforcement, governed review records,
+  release linkage, retention, correction propagation, withdrawal, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: ce8968cc8f86e4bbce48f5e714dfededa74bebfa
+  prior_blob: 3a7a4eaca11148ba92b26fea2344c85059e32d11
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  review_record_contract_blob: 9641345d1e5d939dc59687a900e60a563d92c4f0
+  governance_schema_blob: fe2f2223af46481e7fb19b0baa94f62ce9c6c855
+  review_schema_scaffold_blob: a053448d68e8379b92b12a16e6528275b975433c
+  dedicated_validator_blob: e1aa5fcc4b2da4055eb61276a031512512bcb4ca
+  promotion_gate_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+documentation_rollback_target: 3a7a4eaca11148ba92b26fea2344c85059e32d11
 related:
   - ../README.md
-  - ../proof_pack/README.md
   - ../evidence_bundle/README.md
+  - ../proof_pack/README.md
   - ../validation_report/README.md
   - ../citation_validation/README.md
-  - ../integrity/README.md
   - ../../receipts/README.md
   - ../../catalog/README.md
   - ../../published/README.md
-  - ../../../release/README.md
   - ../../../contracts/governance/ReviewRecord.md
   - ../../../contracts/review/README.md
+  - ../../../schemas/contracts/v1/governance/review_record.schema.json
+  - ../../../schemas/contracts/v1/review/review_record.schema.json
+  - ../../../fixtures/contracts/v1/governance/review_record/README.md
+  - ../../../tests/schemas/test_common_contracts.py
+  - ../../../tools/validators/validate_review_record.py
+  - ../../../release/reviews/README.md
+  - ../../../release/README.md
   - ../../../docs/governance/SEPARATION_OF_DUTIES.md
   - ../../../docs/governance/REVIEW_DUTIES.md
   - ../../../docs/architecture/publication/RELEASE_GATES.md
   - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../contracts/README.md
-  - ../../../schemas/README.md
-  - ../../../policy/README.md
-tags:
-  - kfm
-  - data
-  - proofs
-  - review
-  - review-record
-  - separation-of-duties
-  - evidence-bundle
-  - policy-decision
-  - promotion-decision
-  - release-gate
-  - rollback
-  - cite-or-abstain
+  - ../../../.github/workflows/promotion-gate.yml
+  - ../../../.github/CODEOWNERS
 notes:
-  - "Directory README for review proof support. It is not itself a ReviewRecord schema, ReviewRecord instance, PolicyDecision, PromotionDecision, ReleaseManifest, or Review Duties standard."
-  - "Review proof objects support auditability by connecting ReviewRecords to evidence, policy, validation, catalog closure, release candidates, correction paths, and rollback targets."
-  - "A review may support promotion, but it does not itself promote or publish anything."
+  - "Same-path Markdown modernization only; no proof payload, contract, schema, fixture, validator, policy, workflow, review record, release object, public route, access control, or publication state changed."
+  - "This lane supports audit of review posture. It is not the ReviewRecord semantic or machine authority, the release-review instance authority, a PolicyDecision, a PromotionDecision, a ReleaseManifest, or platform approval."
+  - "The current directory contains only this README at the evidence snapshot."
+  - "The documentation rollback target for v0.2.0 is prior blob 3a7a4eaca11148ba92b26fea2344c85059e32d11."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/proofs/review/`
+# `data/proofs/review/` — Review-Proof Support Lane
 
-> Proof-support lane for KFM review evidence. Files under this directory should make review posture inspectable by connecting `ReviewRecord` objects, separation-of-duties checks, evidence support, policy context, validation outputs, release candidates, correction paths, and rollback targets.
+> **One-line purpose.** Hold or index compact, claim-scoped support that makes review basis, scope, role separation, conditions, freshness, and closure inspectable without becoming the review event, policy decision, release decision, or public truth.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: review proof](https://img.shields.io/badge/lifecycle-review--proof-blue)
-![Authority: not approval](https://img.shields.io/badge/authority-not--approval-b91c1c)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
-![SoD: required when material](https://img.shields.io/badge/SoD-required--when--material-6f42c1)
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: review support](https://img.shields.io/badge/authority-review%20support-0969da?style=flat-square)](#authority-level)
+[![Enforcement: workflow hold](https://img.shields.io/badge/enforcement-workflow%20hold-b42318?style=flat-square)](#current-enforcement-posture)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<proof steward>` · `<governance steward>` · `<review steward>` · `<release steward>` — TODO  
-> **Path:** `data/proofs/review/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for emitted review proof objects, schemas, validators, CI workflows, CODEOWNERS, branch protection, and release-gate enforcement.
-
-> [!WARNING]
-> Review proof support is **not** the review decision itself. A review proof may reference a `ReviewRecord`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, `EvidenceBundle`, `RollbackCard`, or platform check, but it must not become a parallel authority for any of them.
-
----
-
-## Quick jumps
-
-| Section | Use it for |
-|---|---|
-| [1. Purpose](#1-purpose) | What this directory is for. |
-| [2. Authority boundary](#2-authority-boundary) | How review proofs differ from ReviewRecords, policy, release, and receipts. |
-| [3. What belongs here](#3-what-belongs-here) | Accepted review proof files and support bundles. |
-| [4. What must not live here](#4-what-must-not-live-here) | Wrong homes and anti-collapse rules. |
-| [5. Required review proof contents](#5-required-review-proof-contents) | Minimum fields and reference families. |
-| [6. Review proof families](#6-review-proof-families) | Common proof categories. |
-| [7. Naming and identity](#7-naming-and-identity) | Suggested file and folder naming. |
-| [8. Lifecycle relationship](#8-lifecycle-relationship) | How review proof sits beside RAW → PUBLISHED. |
-| [9. Validation checklist](#9-validation-checklist) | What maintainers should check. |
-| [10. Failure modes](#10-failure-modes) | Drift and overclaim patterns to block. |
-| [11. Definition of done](#11-definition-of-done) | What is still needed for operational maturity. |
-
----
-
-## 1. Purpose
-
-`data/proofs/review/` stores **review proof support**: structured, reviewable objects that demonstrate whether required review posture is present, complete, separated, evidence-based, policy-aware, and traceable.
-
-A review proof should help answer:
-
-- Which object, claim, file, source, schema, policy, release candidate, map layer, Focus Mode answer, Evidence Drawer payload, or public artifact was reviewed?
-- Which `ReviewRecord` objects apply, and are they scoped to the correct decision?
-- Which evidence, policy, validation, sensitivity, rights, release, catalog, correction, or rollback references formed the review basis?
-- Did the reviewer have the correct role and authority for the review scope?
-- Was separation of duties required, and if so, was author-versus-approver separation satisfied?
-- Were review conditions resolved before promotion, release, public display, correction, or withdrawal?
-- Does the review expire, require refresh, or become invalid if source evidence, policy, sensitivity posture, or release scope changes?
-
-This directory exists so review support is auditable without turning comments, chats, CI checks, or human summaries into unstructured governance memory.
-
-[Back to top](#top)
-
----
-
-## 2. Authority boundary
-
-Review proof is an audit-support family. It connects other families; it does not replace them.
-
-| Artifact family | Canonical home | Role | Boundary rule |
-|---|---|---|---|
-| `ReviewRecord` semantic meaning | `contracts/governance/ReviewRecord.md` | Defines what a review event means. | This README does not define the object contract. |
-| `ReviewRecord` instances | Approved governance/proof/release instance home — NEEDS VERIFICATION | Record who reviewed what, in what role, with what disposition. | A review instance may be referenced here; it is not replaced by a proof summary. |
-| Review proof support | `data/proofs/review/` | Assembles proof that review posture, basis, separation, conditions, and closure are inspectable. | Supports review audit; does not approve or promote by itself. |
-| Receipts | `data/receipts/` | Process memory for runs, validation, AI, platform checks, release-time actions. | Receipts may be basis refs; they are not review proof alone. |
-| EvidenceBundles | `data/proofs/evidence_bundle/` or approved proof lane | Evidence support for claims. | Review proof must dereference evidence; it cannot replace evidence. |
-| PolicyDecision | `policy/` outputs or approved policy decision home — NEEDS VERIFICATION | Records allow/deny/restrict/abstain/error policy results. | Review proof may cite policy results; it does not decide policy. |
-| PromotionDecision / ReleaseManifest | `release/` | Records promotion and release authority. | Review proof may support release; it does not release. |
-| Public artifacts | `data/published/` | Released public-safe carriers. | Public clients must not read this proof directory as runtime truth. |
-
-> [!NOTE]
-> Review proof is useful because it gathers references that otherwise scatter across comments, CI, policy output, review records, and release dossiers. The gathering is not authority transfer.
-
-[Back to top](#top)
-
----
-
-## 3. What belongs here
-
-Use this folder for review-proof files that are safe to store under repository policy and useful for audit or release review.
-
-| Accepted item | Suggested placement | Notes |
-|---|---|---|
-| Review closure proof | `data/proofs/review/<domain_or_scope>/<review_id>.review-proof.json` | Shows review basis, disposition, conditions, and closure state. |
-| Separation-of-duties proof | `data/proofs/review/sod/<scope>/<review_id>.sod-proof.json` | Shows author/reviewer separation, role coverage, and materiality trigger. |
-| Review condition closure proof | `data/proofs/review/conditions/<review_id>.condition-closure.json` | Shows requested changes or approval conditions were resolved. |
-| Escalation support proof | `data/proofs/review/escalation/<scope>/<review_id>.escalation-proof.json` | Shows why review escalated and what authority accepted it. |
-| Release review support | `data/proofs/review/release/<release_id>.review-proof.json` | Points to release candidate, ReviewRecords, policy, proof pack, catalog closure, and rollback. |
-| AI-surface review proof | `data/proofs/review/ai/<scope>/<review_id>.review-proof.json` | Shows Focus Mode / Evidence Drawer / generated output review basis. |
-| Sensitive-lane review proof | `data/proofs/review/sensitivity/<domain>/<review_id>.review-proof.json` | Shows rights, privacy, location exposure, sovereignty, ecology, archaeology, living-person, or other sensitive review support. |
-
-> [!TIP]
-> Prefer stable references and digests over copied prose. A review proof should make the audit path navigable, not duplicate every reviewed artifact.
-
-[Back to top](#top)
-
----
-
-## 4. What must not live here
-
-| Excluded material | Correct home or action | Why |
-|---|---|---|
-| Raw source data, scans, exports, logs, or sensitive exact locations | `data/raw/`, `data/work/`, or `data/quarantine/` under domain policy | Review proofs should reference source material, not store it. |
-| The semantic ReviewRecord contract | `contracts/governance/ReviewRecord.md` | Contracts own meaning. |
-| ReviewRecord JSON schema | `schemas/contracts/v1/...` | Schemas own machine shape. |
-| Policy bundles or decision logic | `policy/` | Policy owns allow/deny/restrict/abstain logic. |
-| Release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices | `release/` | Release authority stays in release roots. |
-| Process receipts as primary artifacts | `data/receipts/` | Receipts are process memory. |
-| Catalog records | `data/catalog/` | Catalog is discovery/interchange, not review proof. |
-| Public-safe artifacts | `data/published/` after release gates | Published carriers are downstream. |
-| GitHub comments, chat transcripts, or screenshots as the only review artifact | Convert to structured ReviewRecord and cite the comment/transcript only as basis | Review must be scoped, structured, and auditable. |
-| AI-generated summary as review proof | Require EvidenceBundle, ReviewRecord, policy, validation, and review refs | Generated language is interpretive, not root truth. |
-
-[Back to top](#top)
-
----
-
-## 5. Required review proof contents
-
-A review proof object should be structured enough for a validator to decide whether review support is complete. Exact schema is **PROPOSED** until verified.
-
-| Field family | Required meaning | Example values / references |
-|---|---|---|
-| `review_proof_id` | Stable deterministic ID for this proof object. | `kfm-review-proof:<scope>:<review_id>:<digest>` |
-| `review_scope` | Bounded scope of review. | `source`, `schema`, `policy`, `sensitivity`, `release`, `ai`, `ui`, `data`, `docs`, `cross_domain`. |
-| `reviewed_object_refs` | Objects, files, claims, release candidates, policy bundles, outputs, or artifacts reviewed. | File refs, artifact refs, release IDs, claim IDs, PR refs. |
-| `review_record_refs` | Structured ReviewRecord instances. | `review_record_id`, digest, status, disposition. |
-| `reviewer_role_refs` | Reviewer roles and authority. | docs steward, domain steward, policy steward, sensitivity reviewer, release authority, AI-surface steward. |
-| `author_refs` | Producer/author refs for separation checks. | GitHub actor, pipeline actor, service identity, steward ID. |
-| `basis_refs` | Evidence, policy, validation, citation, schema, contract, source, ADR, catalog, release, or rollback basis. | EvidenceBundle, PolicyDecision, ValidationReport, ProofPack, CatalogMatrix, ADR. |
-| `sod_assessment` | Whether separation of duties was required and satisfied. | `not_required`, `satisfied`, `waived_with_reason`, `failed`, `needs_verification`. |
-| `condition_refs` | Approval conditions and closure refs. | Requested change IDs, follow-up proofs, validator results. |
-| `disposition_summary` | The review outcome being supported. | approve, approve_with_conditions, request_changes, abstain, deny, escalate, informational. |
-| `expiry_or_refresh` | Time or trigger requiring review refresh. | source cadence, policy change, evidence update, release scope change. |
-| `release_refs` | Related release candidate, promotion, manifest, correction, withdrawal, or rollback refs. | `release/candidates/...`, `release/manifests/...`, `rollback_card_id`. |
-| `integrity_refs` | Digests and schema/validator versions. | Input/output hashes, proof hash, validator version. |
-| `outcome` | Finite proof-support result. | `REVIEW_READY`, `HOLD`, `DENY`, `ABSTAIN`, `ERROR`, `EXPIRED`, `SUPERSEDED`. |
-
-### Minimal JSON shape, PROPOSED
-
-```json
-{
-  "review_proof_id": "kfm-review-proof:<scope>:<review_id>:<digest>",
-  "review_scope": "release",
-  "reviewed_object_refs": [],
-  "review_record_refs": [],
-  "reviewer_role_refs": [],
-  "author_refs": [],
-  "basis_refs": [],
-  "sod_assessment": {
-    "required": true,
-    "status": "needs_verification",
-    "reason": "reviewer-role evidence missing"
-  },
-  "condition_refs": [],
-  "disposition_summary": "HOLD",
-  "expiry_or_refresh": null,
-  "release_refs": [],
-  "integrity_refs": [],
-  "outcome": "HOLD",
-  "reasons": [],
-  "created_at": "<iso8601>",
-  "created_by": "<tool-or-steward>",
-  "schema_version": "PROPOSED"
-}
-```
-
-[Back to top](#top)
-
----
-
-## 6. Review proof families
-
-| Family | Purpose | Typical blockers |
-|---|---|---|
-| `release-review` | Proves review support for release candidate promotion. | Missing rollback, missing policy decision, unresolved evidence, author as sole approver. |
-| `sensitivity-review` | Proves rights/privacy/location/cultural/ecology/infrastructure review support. | Unresolved tier, missing steward, exact sensitive geometry, living-person leakage. |
-| `source-review` | Proves source descriptor or source-role review support. | Missing rights, mixed source roles, unverified authority, stale cadence. |
-| `schema-contract-review` | Proves semantic contract and schema changes were reviewed. | Shape/meaning collapse, compatibility break without ADR, missing fixtures. |
-| `ai-surface-review` | Proves AI output or AI-facing surface was reviewed against cite-or-abstain. | Generated language used as evidence, missing EvidenceBundle, missing DENY/ABSTAIN behavior. |
-| `ui-map-review` | Proves public UI/layer/drawer review support. | Direct RAW/WORK/CATALOG access, missing Evidence Drawer refs, sensitive geometry leak. |
-| `condition-closure` | Proves approval conditions were completed. | Unresolved requested changes, stale reviewer approval, unverified CI. |
-| `escalation-review` | Proves escalation path was invoked and resolved. | No accepted authority, unrecorded override, missing reason. |
-
-[Back to top](#top)
-
----
-
-## 7. Naming and identity
-
-Suggested directory pattern:
-
-```text
-data/proofs/review/<review_scope>/<review_id>.review-proof.json
-```
-
-Suggested deterministic file name:
-
-```text
-review.<scope>.<reviewed_object_slug>.<review_id>.<short_hash>.json
-```
-
-Examples:
-
-```text
-review.release.habitat-layer-r001.rev-20260625.0123abcd.json
-review.sensitivity.flora-rare-plant-generalization.rev-20260625.89ab4567.json
-review.ai.ellsworth-focus-mode-answer.rev-20260625.4567cdef.json
-review.sod.release-candidate-r001.rev-20260625.cdef0123.json
-```
+> **Review proof supports audit; it does not perform review.** A file here may bind a `ReviewRecord` to evidence, validation, policy, conditions, release dependencies, correction, and rollback. It cannot approve, promote, release, publish, or override another object's authority.
 
 > [!CAUTION]
-> This naming pattern is guidance, not global identity law, until it is backed by a semantic contract, JSON Schema, validator, fixtures, and CI enforcement.
+> Do not place raw source material, credentials, living-person details, genomic data, exact rare-species or archaeological locations, culturally restricted information, private-land details, critical-infrastructure vulnerabilities, or control-defeating redaction parameters in this ordinary repository lane. Reference governed restricted stores through approved identifiers and fail closed when safe reference is unresolved.
 
-[Back to top](#top)
+- **Path:** `data/proofs/review/README.md`
+- **Owning responsibility:** [`data/proofs/`](../README.md)
+- **Current payload inventory:** README only
+- **Direct public access:** denied
+- **Documentation rollback target:** prior blob `3a7a4eaca11148ba92b26fea2344c85059e32d11`
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Model](#operating-model) · [Profile](#proposed-review-proof-profile) · [Separation](#separation-conditions-and-freshness) · [Sensitivity](#sensitivity-and-public-safe-support) · [Enforcement](#current-enforcement-posture) · [Correction](#correction-invalidation-withdrawal-and-rollback) · [Failures](#failure-modes) · [Graduation](#graduation-criteria) · [Evidence](#repository-evidence-ledger) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
-## 8. Lifecycle relationship
+## Purpose
 
-Review proof sits beside the lifecycle as support for gate review. It does not replace lifecycle phases or release authority.
+`data/proofs/review/` is the cross-cutting review-support child lane under the canonical proofs responsibility. Its intended role is to make a bounded review trail inspectable by binding stable references to:
 
-```mermaid
-flowchart LR
-  RAW["RAW"] --> WORK["WORK / QUARANTINE"]
-  WORK --> PROC["PROCESSED"]
-  PROC --> CAT["CATALOG / TRIPLET"]
-  CAT --> REL["release/<br/>promotion decision / manifest"]
-  REL --> PUB["PUBLISHED"]
+- the exact object, claim, source, policy, schema, candidate, public carrier, correction, or other scope reviewed;
+- the applicable `ReviewRecord` and reviewer-role context;
+- evidence, validation, citation, policy, sensitivity, catalog, integrity, release-dependency, correction, withdrawal, and rollback support;
+- approval conditions, requested changes, escalation, expiry, supersession, and closure.
 
-  RR["ReviewRecord<br/>structured review event"] -. referenced by .-> RPR["data/proofs/review<br/>review proof support"]
-  EB["EvidenceBundle"] -. basis .-> RPR
-  POL["PolicyDecision"] -. basis .-> RPR
-  VAL["ValidationReport"] -. basis .-> RPR
-  PP["ProofPack"] -. basis .-> RPR
-  SOD["Separation-of-Duties check"] -. basis .-> RPR
-  RB["Rollback target"] -. basis .-> RPR
+The current directory contains no review-proof payloads. This README therefore defines a conservative boundary and a proposed graduation profile; it does not claim an operational review-proof family.
 
-  RPR -. supports .-> REL
-  RPR -. "does not publish" .-> PUB
+## Authority level
+
+**Implementation-bearing nested lane under the canonical `data/proofs/` responsibility; review-proof object authority remains proposed.**
+
+This lane may assemble or index review support after an accepted profile exists. It does not own:
+
+| Responsibility | Current owning surface | Boundary |
+|---|---|---|
+| Review-event meaning | [`contracts/governance/ReviewRecord.md`](../../../contracts/governance/ReviewRecord.md) | Draft semantic contract; not proof that a review occurred. |
+| ReviewRecord machine shape | [`schemas/contracts/v1/governance/review_record.schema.json`](../../../schemas/contracts/v1/governance/review_record.schema.json) | Proposed schema; alternate scaffold remains conflicted. |
+| Review-family orientation | [`contracts/review/README.md`](../../../contracts/review/README.md) | Compatibility pointer; must not duplicate governance authority. |
+| Release-review records | [`release/reviews/`](../../../release/reviews/README.md) | Release-governance lane; current inventory is guidance only. |
+| Policy decisions | [`policy/`](../../../policy/README.md) | Policy owns admissibility and finite decision outcomes. |
+| Promotion, release, correction, withdrawal, rollback | [`release/`](../../../release/README.md) | Release authority stays outside proofs. |
+| Evidence and validation | [`evidence_bundle/`](../evidence_bundle/README.md), [`validation_report/`](../validation_report/README.md), and [`citation_validation/`](../citation_validation/README.md) | Review support references these families; it does not replace them. |
+| Public delivery | Governed APIs and released artifacts | Public clients must not read this lane directly. |
+
+The gathering of references is not an authority transfer.
+
+## Status
+
+| Surface | Repository-grounded result |
+|---|---|
+| Exact target | **CONFIRMED** at `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`; prior blob `3a7a4eaca11148ba92b26fea2344c85059e32d11` |
+| Directory inventory | **CONFIRMED** README only |
+| Parent proof boundary | **CONFIRMED** repository-grounded draft at [`data/proofs/README.md`](../README.md) |
+| ReviewRecord meaning | **CONFIRMED authored draft** at [`contracts/governance/ReviewRecord.md`](../../../contracts/governance/ReviewRecord.md) |
+| Governance ReviewRecord schema | **CONFIRMED proposed, fielded Draft 2020-12 schema** with required fields and closed additional properties |
+| Alternate review schema | **CONFLICTED:** [`schemas/contracts/v1/review/review_record.schema.json`](../../../schemas/contracts/v1/review/review_record.schema.json) is a separate permissive scaffold with no properties |
+| Schema-to-contract link | **CONFLICTED:** governance schema metadata names lowercase `contracts/governance/review_record.md`; the tracked semantic contract is case-sensitive `ReviewRecord.md` |
+| ReviewRecord fixtures | **CONFIRMED** one minimal valid and one required-field-invalid governance fixture |
+| Generic schema test | **CONFIRMED source wiring** for governance schemas with matching fixtures; observed execution is reported in the PR, not promoted to review authority |
+| Dedicated ReviewRecord validator | **CONFIRMED placeholder** raising `NotImplementedError("Greenfield placeholder")` |
+| Promotion workflow | **CONFIRMED read-only readiness hold** that asserts the validator remains a placeholder and that no governed release ReviewRecord is present |
+| CODEOWNERS | **CONFIRMED** `@bartytime4life` routes `/data/proofs/`; routing is not independent review or approval evidence |
+| Review-proof contract, schema, payload, producer, validator, or public consumer | **Not established** |
+
+The repository has more ReviewRecord shape evidence than the prior README reported, but it does not yet have an operational review-proof system.
+
+## What belongs here
+
+Until an accepted review-proof contract and machine profile exist, conservative contents are:
+
+- this README and bounded inventory, digest, migration, or disposition sidecars;
+- stable-reference indexes that do not claim schema validity or review closure;
+- public-safe review-support summaries that point to governed evidence and decision objects;
+- explicit limitation, conflict, expiry, supersession, correction, withdrawal, and invalidation notes.
+
+After profile acceptance and validator graduation, this lane may hold or index review-proof objects that bind review scope and `ReviewRecord` references to evidence, validation, policy, conditions, release dependencies, correction, and rollback.
+
+Prefer immutable references and digests over copied payloads or prose.
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
+|---|---|
+| Raw source bytes, scans, logs, sensitive geometry, private evidence, or restricted payloads | Owning `data/raw/`, `data/work/`, or `data/quarantine/` lane with approved access controls |
+| `ReviewRecord` semantic definition | `contracts/governance/ReviewRecord.md` |
+| ReviewRecord or review-proof JSON Schema | Accepted home under `schemas/contracts/v1/` |
+| Policy bundles or policy decisions as proof payloads | `policy/` and the approved policy-decision instance lane |
+| Process receipts as primary proof | `data/receipts/`; reference them when relevant |
+| Release reviews, PromotionDecisions, ReleaseManifests, corrections, withdrawals, or RollbackCards | `release/` |
+| Catalog or public artifacts | `data/catalog/` or governed `data/published/` lanes |
+| GitHub comments, chat transcripts, screenshots, or green checks as the only review record | Create a governed `ReviewRecord`; retain the platform item only as bounded basis evidence |
+| AI-generated summaries as review authority | Resolve evidence, policy, and review records or abstain |
+| An invented filename, ID, field set, or outcome enum presented as current contract | Hold until accepted contract, schema, fixtures, validator, and migration evidence exist |
+
+## Inputs
+
+An accepted review-proof object may reference:
+
+- reviewed object identity, version, digest, scope, audience, space, and time;
+- `ReviewRecord` identity, disposition, reviewer-role, authorship, conditions, and expiry;
+- `EvidenceBundle`, `EvidenceRef`, `ValidationReport`, `CitationValidationReport`, `ProofPack`, receipt, source, schema, contract, ADR, catalog, policy, and integrity references;
+- release candidate, promotion, manifest, correction, withdrawal, supersession, and rollback references.
+
+Inputs must remain in their owning roots. A dangling, stale, conflicting, rights-unclear, sensitivity-unsafe, or unauthorized reference cannot be upgraded by copying its label into a proof file.
+
+## Outputs
+
+The intended output is a compact, machine-checkable review-support object or index that helps an accountable reviewer or release process inspect whether the required review basis is present and current.
+
+An output from this lane is not:
+
+- a `ReviewRecord`;
+- a `PolicyDecision`;
+- a `PromotionDecision` or `ReleaseManifest`;
+- a release, publication, correction, withdrawal, or rollback action;
+- a public API, map, export, report, or AI answer.
+
+Public and ordinary UI consumers must use governed APIs and released public-safe carriers, not `data/proofs/review/`.
+
+## Validation
+
+Validation must remain layered.
+
+| Check | Current evidence | What a pass does not prove |
+|---|---|---|
+| ReviewRecord semantic review | Draft contract exists | Accepted vocabulary, accountable review, or platform enforcement |
+| Governance schema fixture test | Generic test discovers the governance schema and paired fixtures | Review-proof schema, dedicated validator, policy, release, or publication readiness |
+| Dedicated validator | Placeholder only | Nothing operational; `NotImplementedError` is an explicit hold |
+| Promotion workflow | Read-only readiness inventory and hold | Review approval, separation of duties, promotion, release, rollback readiness, or publication |
+| Markdown/link validation | Required for this README change | Runtime, policy, evidence, review, release, or public behavior |
+
+The repository-grounded schema-fixture command is:
+
+```bash
+python -m pytest -q tests/schemas/test_common_contracts.py -k review_record
 ```
 
-Promotion remains a governed state transition. Review proof may be required before promotion, but it is not the promotion event.
+This command exercises the proposed governance ReviewRecord schema against its current fixture pair. It does not inspect this README as a review-proof payload and does not graduate the dedicated validator.
 
-[Back to top](#top)
+Do not cite `python tools/validators/validate_review_record.py` as a passing command while the file intentionally raises `NotImplementedError`.
 
----
+## Review burden
 
-## 9. Validation checklist
+`@bartytime4life` is the verified GitHub CODEOWNERS route for `/data/proofs/`. CODEOWNERS routing proves neither accountable role assignment nor independent approval.
 
-Before a review proof is used in release, promotion, correction, withdrawal, or public-surface review, verify:
+Accountable proof, governance, policy, sensitivity, release, correction, and rollback assignments remain **NEEDS VERIFICATION**. Review scope should determine the required specialists. Material or sensitive changes should preserve author-versus-approver separation, and no reviewer should infer authority from a role label that has not been assigned and verified.
 
-- [ ] The reviewed object and review scope are explicit and bounded.
-- [ ] Every ReviewRecord reference resolves and has a disposition.
-- [ ] Reviewer role is present and appropriate for the scope.
-- [ ] Author/producer identity is present when separation of duties matters.
-- [ ] Separation-of-duties status is recorded as not required, satisfied, waived with reason, failed, or needs verification.
-- [ ] EvidenceBundle, PolicyDecision, ValidationReport, ProofPack, CatalogMatrix, or CitationValidationReport refs are present when required by the review type.
-- [ ] Conditions attached to approval have closure refs or the proof remains `HOLD`.
-- [ ] Sensitive domains fail closed if rights, sensitivity, sovereignty, privacy, geoprivacy, living-person, archaeology, cultural, ecological, infrastructure, or exact-location exposure is unresolved.
-- [ ] Any review expiration, source-cadence refresh, policy-change refresh, or release-scope refresh is stated.
-- [ ] Release-significant review has rollback target and correction/withdrawal path refs.
-- [ ] Review proof does not contain raw restricted material or become a surrogate release manifest.
-- [ ] Public clients consume governed APIs and released artifacts, never review proof files directly.
+This README-only change does not create a `ReviewRecord` or satisfy the review burden it describes.
 
-[Back to top](#top)
+## Related folders
 
----
+- Proof families: [`data/proofs/`](../README.md) · [`evidence_bundle/`](../evidence_bundle/README.md) · [`proof_pack/`](../proof_pack/README.md) · [`validation_report/`](../validation_report/README.md) · [`citation_validation/`](../citation_validation/README.md)
+- Process, catalog, and public carriers: [`data/receipts/`](../../receipts/README.md) · [`data/catalog/`](../../catalog/README.md) · [`data/published/`](../../published/README.md)
+- Review meaning and orientation: [`ReviewRecord`](../../../contracts/governance/ReviewRecord.md) · [`contracts/review/`](../../../contracts/review/README.md)
+- Machine shape and fixtures: [governance schema](../../../schemas/contracts/v1/governance/review_record.schema.json) · [alternate review scaffold](../../../schemas/contracts/v1/review/review_record.schema.json) · [fixture family](../../../fixtures/contracts/v1/governance/review_record/README.md) · [generic schema test](../../../tests/schemas/test_common_contracts.py)
+- Enforcement evidence: [placeholder validator](../../../tools/validators/validate_review_record.py) · [promotion-gate workflow](../../../.github/workflows/promotion-gate.yml) · [CODEOWNERS](../../../.github/CODEOWNERS)
+- Release governance: [`release/reviews/`](../../../release/reviews/README.md) · [`release/`](../../../release/README.md)
+- Doctrine and guidance: [Directory Rules](../../../docs/doctrine/directory-rules.md) · [Separation of Duties](../../../docs/governance/SEPARATION_OF_DUTIES.md) · [Review Duties](../../../docs/governance/REVIEW_DUTIES.md) · [Release Gates](../../../docs/architecture/publication/RELEASE_GATES.md)
 
-## 10. Failure modes
+## ADRs
+
+[`ADR-0011`](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) is the relevant proposed receipt/proof/catalog/release separation decision. Its identity is confirmed; its effective status is `proposed`, so this README does not treat it as accepted enforcement authority.
+
+Directory Rules §9.1 places proof support under `data/proofs/`; §13.2 prohibits mixing proofs, process receipts, build output, and release decisions. This same-path README update creates no new proof family, lifecycle phase, responsibility root, schema home, or release authority.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence boundary:** `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`
+- **Review type:** complete target, recursive target inventory, parent/sibling proof lanes, ReviewRecord contract and schemas, fixture/test wiring, dedicated validator, promotion workflow, release-review inventory, CODEOWNERS, Directory Rules, governance/release guidance, and overlap preflight
+- **Payload/runtime/public-operation inspection:** no review-proof payload or active consumer exists in the tracked target; external or untracked systems remain unknown
+- **Re-review trigger:** accepted review-proof contract/schema, schema-home reconciliation, validator implementation, new payload, owner assignment, policy or separation-of-duties enforcement, release linkage, public consumer, correction/withdrawal path, or rollback drill
+
+## Operating model
+
+Review support preserves distinct object families.
+
+| Family | What it contributes | What it cannot become here |
+|---|---|---|
+| `ReviewRecord` | Who reviewed what, in which role, against what basis, with what disposition | Review-proof payload or release decision |
+| `EvidenceBundle` / citation validation | Claim-scoped support and citation closure | Reviewer judgment or policy permission |
+| `ValidationReport` / receipts | What was checked or executed and with which result | Factual truth, review approval, or release authority |
+| `PolicyDecision` | Surface-specific admissibility outcome | Evidence or human review record |
+| Review-proof support | Inspectable binding across review basis, conditions, freshness, and dependencies | Semantic contract, policy, release review, or publication |
+| Release review | Accountable review of a candidate or release-facing object | Promotion or publication by prose alone |
+| PromotionDecision / ReleaseManifest | Governed release decision and released set | EvidenceBundle or ReviewRecord |
+| Published carrier | Released public-safe bytes or service payload | Canonical truth merely because it is visible |
+
+```mermaid
+flowchart TD
+    EB["EvidenceBundle and citations"] --> RP["Review-proof support"]
+    VR["Validation reports and receipts"] --> RP
+    PD["PolicyDecision"] --> RP
+    RR["ReviewRecord"] --> RP
+    RP --> RV["Accountable release review"]
+    RV --> DEC["Promotion or release decision"]
+    DEC --> PUB["Published public-safe carrier"]
+    PUB --> COR["Correction, withdrawal, or rollback"]
+    RP -. "does not publish" .-> PUB
+```
+
+The review-proof lane assembles inspectable support between review records and release review. Every authority-bearing decision remains in its owning family.
+
+## Proposed review-proof profile
+
+No accepted review-proof schema was found. The profile below is therefore **PROPOSED** and must not be treated as a machine contract.
+
+| Family | Minimum intent before graduation |
+|---|---|
+| Identity | Stable proof ID, profile/version, digest, creation time, and supersession state allocated by an accepted rule |
+| Scope | Exact reviewed object refs, claim/artifact class, audience, spatial and temporal bounds, and review purpose |
+| Review | Resolving `ReviewRecord` refs, reviewer-role context, authorship, disposition, conditions, and expiry |
+| Basis | Resolving evidence, citation, validation, receipt, policy, schema/contract, source, catalog, and integrity refs |
+| Separation | Whether independence is required, how it was satisfied, and any governed waiver reference |
+| Sensitivity | Rights, sovereignty, privacy, geoprivacy, cultural, ecological, infrastructure, living-person, or genomic posture without restricted payload disclosure |
+| Release dependency | Candidate, release-review, promotion, manifest, correction, withdrawal, and rollback refs where applicable |
+| Freshness | Source, policy, evidence, schema, scope, or release changes that invalidate or refresh review |
+| Outcome | One finite, contract-defined support outcome with reason codes; no universal enum is asserted here |
+
+Stable references should be sufficient to re-resolve the reviewed basis. Copied prose is a convenience view, not authority.
+
+### Identity and naming
+
+The prior README proposed specific folders, suffixes, and `review_proof_id` syntax. No accepted registry, schema, generator, or validator was found to support those patterns.
+
+Until the profile is accepted:
+
+- do not create payloads merely to populate this directory;
+- do not infer identity from filename or path alone;
+- do not mint a new universal review outcome vocabulary;
+- record naming and identity proposals in review notes or an ADR/migration plan;
+- preserve any future stable identifier across correction and supersession.
+
+## Separation, conditions, and freshness
+
+A review-support object is incomplete when it cannot answer:
+
+1. Which bounded object and decision scope were reviewed?
+2. Which `ReviewRecord` applies, and does its subject match?
+3. Was author-versus-approver separation required for the materiality and sensitivity involved?
+4. Are conditional approvals still conditional, and do closure references resolve?
+5. Did evidence, policy, schema, source role, sensitivity, candidate scope, or release state change after review?
+6. Has the review expired, been superseded, withdrawn, invalidated, or narrowed?
+
+Self-review, missing reviewer authority, stale review, unresolved conditions, or scope mismatch must remain visible and fail closed where trust-bearing action depends on review.
+
+## Sensitivity and public-safe support
+
+Review proof can become an exposure channel even when the reviewed public carrier is generalized.
+
+Required posture:
+
+- keep restricted source material and exact internal geometry in approved owning systems;
+- use stable governed refs, bounded summaries, and public-safe representations;
+- do not expose redaction offsets, jitter seeds, transform parameters, generalization thresholds, access directions, or reconstruction clues;
+- test cross-lane joins for re-identification or location reconstruction risk;
+- preserve rights, stewardship, sovereignty, consent, revocation, cultural, living-person, ecological, archaeological, land/title, and infrastructure review state;
+- narrow, hold, restrict, abstain, deny, or error when safe support cannot be established under the applicable contract.
+
+A review or schema pass cannot override sensitivity policy.
+
+## Current enforcement posture
+
+| Evidence | Confirmed behavior | Limit |
+|---|---|---|
+| [`ReviewRecord`](../../../contracts/governance/ReviewRecord.md) | Draft semantic contract defines an inspectable review event and anti-collapse rules | Field vocabulary and enforcement are not accepted end to end |
+| [Governance schema](../../../schemas/contracts/v1/governance/review_record.schema.json) | Proposed schema requires `review_id`, `subject_ref`, `reviewer_role`, `decision`, `reasons`, `obligations`, and `reviewed_at` | Schema metadata points to a case-mismatched contract path |
+| [Alternate review schema](../../../schemas/contracts/v1/review/review_record.schema.json) | Proposed scaffold allows arbitrary properties and declares no contract | Creates unresolved schema-family drift; generic common-contract test does not scan the `review` family |
+| [Governance fixtures](../../../fixtures/contracts/v1/governance/review_record/README.md) | One valid fixture and one fixture missing required `review_id` | Narrow shape examples only |
+| [Generic schema test](../../../tests/schemas/test_common_contracts.py) | Discovers governance schemas with matching fixtures and checks valid/invalid behavior | Not the dedicated ReviewRecord validator and not review-proof validation |
+| [Dedicated validator](../../../tools/validators/validate_review_record.py) | Raises `NotImplementedError("Greenfield placeholder")` | No accepted CLI, finite outcomes, diagnostics, or review-proof coverage |
+| [Promotion workflow](../../../.github/workflows/promotion-gate.yml) | Uses read-only permissions and explicitly holds review/promotion readiness while validator scaffolds remain | Workflow green means the hold assumptions remain true; it is not approval |
+| [`release/reviews/`](../../../release/reviews/README.md) | Contains parent and Atmosphere guidance plus `.gitkeep` | No governed release ReviewRecord is present at the snapshot |
+| This target | Contains only this README | No proof payload, producer, validator, active writer, consumer, or public route is established |
+
+The safe current outcome is documentation-grounded readiness with operational review proof held.
+
+## Correction, invalidation, withdrawal, and rollback
+
+Review support must not be silently overwritten.
+
+Invalidate or refresh affected review proof when:
+
+- the reviewed object, claim, digest, audience, space, time, or release scope changes;
+- an evidence, citation, validation, policy, schema, source-role, sensitivity, or integrity dependency changes;
+- a reviewer role, authority, separation requirement, condition, disposition, or expiry changes;
+- a candidate is repaired, denied, withdrawn, superseded, released, corrected, or rolled back;
+- a public-safe representation is found unsafe or reversible.
+
+A future correction flow should preserve the prior proof and reason, emit a superseding object, update release dependencies, withdraw or correct affected public carriers through release governance, invalidate caches and indexes where applicable, and retain a tested rollback target.
+
+For this documentation change, rollback is a same-path revert to blob `3a7a4eaca11148ba92b26fea2344c85059e32d11`. Reverting this README does not revert any external review, policy, release, or public state.
+
+## Failure modes
 
 | Failure mode | Why it matters | Required response |
 |---|---|---|
-| GitHub comment treated as complete review proof | Comments are useful context but not structured governance records. | Create or reference a ReviewRecord and scoped review proof. |
-| Reviewer approves their own policy-significant release | Violates separation of duties when materiality requires another actor. | Hold release; require independent review or explicit accepted waiver. |
-| Review proof contains a PromotionDecision or ReleaseManifest | Collapses review support with release authority. | Move authority to `release/`; keep a reference here. |
-| Review proof omits EvidenceBundle or PolicyDecision refs | Review becomes unsupported human assertion. | Hold, abstain, or deny until basis refs resolve. |
-| Conditional approval has no closure proof | Conditions can be skipped silently. | Keep outcome `HOLD` until closure refs exist. |
-| Sensitive exact data appears in review proof | Review artifact becomes exposure channel. | Quarantine, redact, rotate identifiers if needed, emit correction/incident record. |
-| Review expires but is still treated as current | Stale review can authorize unsafe release. | Mark expired and require refresh. |
-| AI summary replaces reviewer basis | Generated language becomes root truth. | Deny; require evidence, policy, and review refs. |
+| GitHub comment or green check treated as the review | Platform context replaces structured governance | Require a resolving `ReviewRecord`; retain platform evidence only as bounded basis |
+| Review proof invents its own disposition or release outcome | Object families and finite vocabularies collapse | Hold; use the accepted contract for the applicable surface |
+| Review proof contains a PromotionDecision or ReleaseManifest | Proof support becomes release authority | Keep decision objects under `release/` and reference them |
+| Evidence or policy refs are missing or dangling | Review becomes unsupported assertion | Hold, narrow, abstain, restrict, deny, or error under the applicable contract |
+| Conditional approval lacks closure | Conditions can be bypassed | Keep the dependent action held |
+| Self-review is treated as independent approval | Separation of duties becomes performative | Require an independently authorized reviewer or governed waiver |
+| Stale review is treated as current | Changed evidence or scope can authorize unsafe reuse | Mark expired or invalidated and require refresh |
+| Sensitive or reconstructable detail appears here | Proof becomes an exposure channel | Quarantine, restrict, redact safely, assess incident/correction duties, and rotate exposed identifiers when needed |
+| Alternate schema scaffold is treated as accepted authority | Permissive shape can silently accept arbitrary records | Reconcile schema homes through reviewed migration/ADR work before use |
+| AI summary replaces the review basis | Generated language becomes root truth | Deny or abstain until evidence, policy, and review refs resolve |
+
+## Graduation criteria
+
+This lane becomes operational only after all applicable criteria are independently verified:
+
+- [ ] accept one semantic review-proof contract and one machine-schema home;
+- [ ] reconcile the two ReviewRecord schema paths and the case-mismatched contract reference;
+- [ ] define stable identity, versioning, finite outcomes, reason codes, compatibility, retention, and supersession;
+- [ ] implement a deterministic no-network producer or assembler;
+- [ ] implement the dedicated fail-closed validator with stable diagnostics;
+- [ ] add public-safe valid, invalid, denied, held, stale, expired, superseded, and sensitive-leak fixtures;
+- [ ] test subject binding, reference resolution, role authority, separation of duties, condition closure, freshness, sensitivity, and release dependencies;
+- [ ] wire CI without converting a green check into review or release authority;
+- [ ] establish accountable ownership and independent review routing;
+- [ ] produce one synthetic no-network trace from `ReviewRecord` and evidence through review proof, release review, decision, public-safe carrier, correction, withdrawal, and rollback;
+- [ ] verify governed consumers reject absent, stale, conflicted, withdrawn, or unreleased support.
+
+## Repository evidence ledger
+
+| Evidence | Status | Supports | Limits |
+|---|---:|---|---|
+| Prior target blob `3a7a4eaca11148ba92b26fea2344c85059e32d11` | **CONFIRMED** | Stable document identity, review-support purpose, anti-collapse, sensitivity, failure, and rollback guidance | Understated current schema/fixture evidence and proposed an unaccepted standalone shape |
+| [`data/proofs/README.md`](../README.md) | **CONFIRMED repository-grounded draft** | Canonical proof responsibility and separation from receipts, release, and public serving | Recursive payload/runtime enforcement remains incomplete |
+| [`contracts/governance/ReviewRecord.md`](../../../contracts/governance/ReviewRecord.md) | **CONFIRMED authored draft** | Review-event meaning and semantic anti-collapse rules | Acceptance and enforcement remain unproved |
+| Two ReviewRecord schema paths | **CONFIRMED / CONFLICTED** | Fielded governance proposal plus separate review scaffold | Canonical relationship and casing mismatch unresolved |
+| Governance fixtures and generic schema test | **CONFIRMED source evidence** | Narrow positive/negative schema-shape path | Does not establish review-proof behavior or dedicated validation |
+| Placeholder validator and promotion workflow | **CONFIRMED hold evidence** | Explicitly prevents overclaiming operational review and promotion maturity | Does not implement review proof |
+| [`release/reviews/`](../../../release/reviews/README.md) | **CONFIRMED guidance-only inventory** | Release-review responsibility is separate | No governed release ReviewRecord at snapshot |
+| [`CODEOWNERS`](../../../.github/CODEOWNERS) | **CONFIRMED routing** | `@bartytime4life` is the executable GitHub route for this path | Routing is not independent approval or steward assignment |
+| Directory Rules §9.1 and §13.2 | **CONFIRMED placement doctrine** | Proof support belongs under `data/proofs/`; proofs, receipts, build outputs, and release decisions remain distinct | Does not define review-proof fields or accept implementation |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Canonical review-proof semantic contract and schema | `UNKNOWN` | Accepted contract, schema, ADR/migration decision, compatibility policy |
+| ReviewRecord schema reconciliation | `CONFLICTED` | Canonical-family decision, case-correct contract ref, migration and parity tests |
+| Review-proof identity and outcome vocabulary | `UNKNOWN` | Registry/generator rule, finite enum, reason codes, versioning and supersession |
+| Dedicated producer and validator | `UNKNOWN` | Executable no-network implementation, CLI, fixtures, diagnostics, deterministic tests |
+| Accountable roles and separation enforcement | `NEEDS VERIFICATION` | Approved assignments, platform/policy controls, representative ReviewRecords |
+| Rights, sensitivity, privacy, sovereignty, and geoprivacy enforcement | `UNKNOWN` | Policy bundles/decisions, restricted-ref handling, negative fixtures, review evidence |
+| Active writers, consumers, external stores, and access controls | `UNKNOWN` | Pipeline/tool/release/API/UI inventory, permissions, audit evidence |
+| Release, correction, withdrawal, invalidation, and rollback integration | `UNKNOWN` | Emitted synthetic records, resolver tests, cache/index propagation, drills |
+| Public/runtime behavior | `UNKNOWN` | Governed route tests proving unreleased, stale, invalidated, or withdrawn support is rejected |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path, `doc_id`, created date, and review-support purpose | Preserved |
+| ReviewRecord, evidence, policy, validation, release, correction, and rollback boundaries | Preserved and clarified against current repository bytes |
+| Separation-of-duties, condition closure, expiry, and fail-closed guidance | Preserved and strengthened |
+| Sensitive-data and no-direct-public-path posture | Preserved and strengthened |
+| Proposed review-proof subfolders, filename pattern, ID format, fields, and outcome enum | Repaired into a clearly proposed profile because no accepted schema/registry/validator supports them |
+| Lifecycle diagram | Preserved as a grounded authority relationship with review and release families separated |
+| Validation checklist, failure modes, and definition of done | Preserved and reconciled with actual schema, fixtures, placeholder validator, and workflow hold |
+| Broken `../integrity/README.md` link | Removed; no tracked file existed at the pinned base |
+| Placeholder owner labels | Replaced with verified CODEOWNERS routing plus explicit unassigned steward roles |
+| Proof payload, contract, schema, fixture, validator, policy, workflow, release, route, or publication change | None |
+| Documentation rollback target | Prior blob recorded |
+
+### Change history
+
+#### v0.2.0 — 2026-07-26
+
+- reconciled the README with the current proof parent, ReviewRecord contract, two schema paths, fixtures, generic schema test, placeholder validator, promotion workflow hold, release-review inventory, and CODEOWNERS;
+- normalized the first twelve sections to the repository's current folder-contract presentation while retaining nested-lane scope;
+- replaced unaccepted object-shape, naming, and outcome claims with an explicit proposed profile and graduation gates;
+- added evidence, enforcement, schema-conflict, sensitivity, correction, withdrawal, invalidation, rollback, verification, and no-loss ledgers;
+- repaired the missing `integrity/README.md` link;
+- changed Markdown only.
 
 [Back to top](#top)
-
----
-
-## 11. Definition of done
-
-This review proof lane is operationally useful when:
-
-- [ ] `contracts/governance/ReviewRecord.md` is accepted or superseded by a verified semantic contract.
-- [ ] `contracts/review/README.md` and this data lane agree on vocabulary and boundaries.
-- [ ] A machine-checkable review proof schema exists under the approved schema home.
-- [ ] Valid and invalid review proof fixtures exist for release, sensitivity, source, AI, UI/map, schema/contract, and condition-closure reviews.
-- [ ] CI or validator tooling blocks missing ReviewRecord refs, missing EvidenceBundle/PolicyDecision refs, SoD failures, stale reviews, missing rollback targets, and sensitive material leaks.
-- [ ] Release docs require review proof where materiality or sensitivity requires it.
-- [ ] CODEOWNERS or equivalent reviewer routing is assigned and documented.
-- [ ] At least one synthetic no-network release candidate demonstrates: ReviewRecord → review proof → ProofPack → ReleaseManifest → published artifact → correction/rollback traceability.
-
----
-
-## Maintainer note
-
-Review proof should make governance inspectable without making governance performative. A review without evidence, policy context, role authority, conditions, and rollback support is not release-ready. When in doubt, `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` is safer than turning an incomplete review into public trust.
