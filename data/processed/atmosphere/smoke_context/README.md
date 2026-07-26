@@ -1,14 +1,36 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-smoke-context-readme
-title: data/processed/atmosphere/smoke_context/README.md — Atmosphere SmokeContext Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; smoke-context-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; smoke-context; SmokeContext; release-gated; remote-sensing-mask-aware; model-field-aware; sensitive-join-aware; source-role-aware
-owners: OWNER_TBD — Atmosphere steward · Smoke/remote-sensing steward · Forecast/model steward · Hazards liaison · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/atmosphere/smoke_context/ — Atmosphere Smoke Context Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-atmosphere-smoke-context-lane
+status: repository-grounded draft; payload inventory, enforceable schema, validators, fixtures, receipts, proof, release, cross-lane implementation, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Atmosphere domain steward"
+  - "NEEDS VERIFICATION — smoke, aerosol, remote-sensing, and modeled-atmosphere steward"
+  - "NEEDS VERIFICATION — PM2.5, AOD, forecast/model, advisory, Hazards, sensitivity, and source-role reviewers"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, rollback, and docs stewards"
 created: NEEDS VERIFICATION — one-character placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; smoke-context; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, smoke-context, SmokeContext, smoke, HMS, HRRR-Smoke, AODRaster, PM25Observation, AirObservation, WindField, ForecastContext, AdvisoryContext, remote-sensing-mask, atmospheric-model-field, sensitive-joins, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, ModelRunReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; atmosphere; smoke-context; source-role-aware; proxy-model-separated; sensitive-join-aware; release-gated; no-direct-public-path
+path: data/processed/atmosphere/smoke_context/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, Atmosphere parent lane,
+  SmokeContext semantic contract, paired scaffold schema posture, source-dependent REMOTE_SENSING_MASK
+  and ATMOSPHERIC_MODEL_FIELD roles, PM2.5/AOD/model/advisory/Hazards boundaries, and PROCESSED
+  lifecycle boundary / PROPOSED lane-local admission profile, geometry-raster-field packet, source-role
+  routing, sensitive-join controls, and downstream promotion expectations / UNKNOWN recursive payload
+  inventory, live source activation, production validators, fixtures, receipts, proof closure, release
+  instances, hosting, public routes, and cross-lane runtime behavior / NEEDS VERIFICATION accountable
+  owners, accepted source-role vocabulary, plume/mask semantics, uncertainty and confidence conventions,
+  sensitive-join policy, correction propagation, cache invalidation, withdrawal behavior, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 1ebf46b01508345280819b944d41eb3ebc39b295
+  prior_blob: 438882bc885cfa3175e5608b923c9f42393c1d31
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  smoke_context_contract_blob: 3ce536cd9440df2d0c07da4170baf9d32a4cbb1a
 related:
   - ../README.md
   - ../aod/README.md
@@ -24,7 +46,10 @@ related:
   - ../../../README.md
   - ../../../../docs/domains/atmosphere/README.md
   - ../../../../docs/domains/atmosphere/SOURCES.md
-  - ../../../../docs/architecture/smoke-atmosphere-hazards.md
+  - ../../../../docs/domains/atmosphere/POLICY.md
+  - ../../../../docs/domains/atmosphere/PUBLICATION_POSTURE.md
+  - ../../../../docs/domains/atmosphere/SENSITIVITY.md
+  - ../../../../docs/doctrine/directory-rules.md
   - ../../../../contracts/domains/atmosphere/SmokeContext.md
   - ../../../../contracts/domains/atmosphere/AODRaster.md
   - ../../../../contracts/domains/atmosphere/ForecastContext.md
@@ -33,73 +58,297 @@ related:
   - ../../../../contracts/domains/atmosphere/WindField.md
   - ../../../../contracts/domains/atmosphere/AdvisoryContext.md
   - ../../../../schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json
-  - ../../../../policy/domains/atmosphere/
-  - ../../../../policy/sensitivity/
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../docs/doctrine/trust-membrane.md
-  - ../../../raw/atmosphere/
-  - ../../../work/atmosphere/
-  - ../../../quarantine/atmosphere/
+  - ../../../../policy/domains/atmosphere/README.md
+  - ../../../raw/atmosphere/README.md
+  - ../../../work/atmosphere/README.md
+  - ../../../quarantine/atmosphere/README.md
   - ../../../catalog/domain/atmosphere/README.md
-  - ../../../catalog/stac/atmosphere/
-  - ../../../catalog/dcat/atmosphere/
-  - ../../../catalog/prov/atmosphere/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/
-  - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/atmosphere/README.md
+  - ../../../../release/candidates/atmosphere/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a one-character placeholder at `data/processed/atmosphere/smoke_context/README.md`."
-  - "This is the PROCESSED-stage sublane for normalized SmokeContext artifacts under Atmosphere. It is not RAW smoke/satellite/model storage, PM2.5 measurement storage, AODRaster authority, forecast/model authority, advisory authority, hazards/fire event truth, proof storage, release authority, public API/UI output, or life-safety guidance."
-  - "SmokeContext artifacts must preserve source role, source family, geometry/raster/model-field scope, analysis/forecast time, retrieval time, uncertainty, sensitivity, correction posture, evidence linkage, policy posture, and release state before public use."
-  - "SmokeContext may be `REMOTE_SENSING_MASK` or `ATMOSPHERIC_MODEL_FIELD`; it must not collapse into PM2.5 observation, AODRaster, observed sensor, hazards event truth, advisory instruction, proof, or release approval."
-  - "The SmokeContext contract defines object meaning; this README does not create a second contract or schema authority."
-  - "Rollback target for this expansion is previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`."
+  - "Same-path Markdown modernization only; no smoke bytes, source activation, contract, schema, policy, validator, workflow, proof, release, route, hosting, Hazards event, or KFM publication state changed."
+  - "SmokeContext is source-dependent context: REMOTE_SENSING_MASK for analysis/mask/proxy products and ATMOSPHERIC_MODEL_FIELD for forecast/model products."
+  - "Smoke context is not PM2.5, AQI, AOD authority, observed sensor truth, advisory instruction, Hazards event/impact truth, exposure proof, or release approval."
+  - "Sensitive smoke/fire/AOD joins fail closed until rights, source role, sensitivity, evidence, policy, review, release, correction, and rollback obligations close."
+  - "Rollback target for v0.2.0 is prior blob SHA `438882bc885cfa3175e5608b923c9f42393c1d31`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/smoke_context
+# `data/processed/atmosphere/smoke_context/` — Atmosphere smoke-context processed data
 
-> Atmosphere PROCESSED-stage sublane for normalized `SmokeContext` artifacts: governed smoke mask, plume, analysis, model-field, forecast, and smoke-related atmospheric context records that remain distinct from PM2.5 observations, AOD rasters, generic air observations, model forecasts, advisory guidance, hazards/fire event truth, proof, release, and public map/API/UI surfaces.
+> **One-line purpose.** Hold normalized smoke mask, plume, analysis, modeled, forecast, and atmospheric-context candidates while preserving source role, product lineage, geometry/raster/field semantics, time, uncertainty, sensitivity, evidence, correction, and downstream-use limits.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/smoke_context" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Fsmoke__context-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Object: SmokeContext" src="https://img.shields.io/badge/object-SmokeContext-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: source dependent](https://img.shields.io/badge/role-source%20dependent-1f8fff?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![Boundary: smoke is not PM2.5](https://img.shields.io/badge/boundary-smoke%20is%20not%20PM2.5-6f42c1?style=flat-square)](#source-role-and-smoke-boundaries)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Smoke/remote-sensing steward · Forecast/model steward · Hazards liaison · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **Smoke context is not a measurement, event, impact, or instruction by itself.** A plume polygon, satellite analysis, modeled field, forecast, or mask can be useful context while remaining uncertain, source-dependent, stale, rights-limited, sensitivity-held, scientifically unfit for a requested claim, or unreleased.
+
 **Path:** `data/processed/atmosphere/smoke_context/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Object-family segment:** `smoke_context` / `SmokeContext`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, source-role/proxy/model/sensitivity disclosure, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was a one-character placeholder · CONFIRMED `SmokeContext` contract and schema paths exist · CONFIRMED `SmokeContext` is source-dependent `REMOTE_SENSING_MASK` / `ATMOSPHERIC_MODEL_FIELD` context · PROPOSED smoke-context processed-sublane details · NEEDS VERIFICATION for actual child inventory, validators, receipts, CI enforcement, sensitivity policy, release linkage, and governed route behavior.
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `atmosphere/`  
+**Parent lane:** `data/processed/atmosphere/`  
+**Lane role:** source-dependent `SmokeContext`  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [SmokeContext requirements](#smokecontext-requirements) · [Smoke guardrails](#smoke-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Admission profile](#smokecontext-admission-profile) · [Source-role boundaries](#source-role-and-smoke-boundaries) · [Geometry and field semantics](#geometry-raster-field-and-time-semantics) · [Cross-lane routing](#cross-lane-routing) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction and rollback](#correction-withdrawal-and-rollback) · [Verification register](#open-verification-register) · [No-loss ledger](#no-loss-ledger)
 
 ---
 
 ## Purpose
 
-`data/processed/atmosphere/smoke_context/` holds normalized smoke-context artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This directory is the Atmosphere domain's **PROCESSED-stage lane for `SmokeContext` candidates**. It may hold normalized smoke masks, plume or analysis context, satellite-derived smoke support, modeled smoke fields, smoke forecasts, and object-ready derivatives that have moved beyond RAW capture, WORK transformation, and QUARANTINE holds.
 
-This lane is for processed `SmokeContext` records or derivatives that preserve source identity, source role, source family, source time, analysis time, forecast/model time where applicable, retrieval time, geometry/raster/model-field scope, uncertainty, sensitivity, QA/correction posture, evidence references, and downstream catalog readiness.
+The lane exists to preserve the answer to eight questions before downstream use:
 
-It is not a raw smoke/satellite/model lane. It is not a PM2.5 observation lane. It is not an AODRaster authority lane. It is not a forecast/model authority lane. It is not hazards/fire event truth. It is not advisory issuance, proof store, receipt store, source registry, catalog, release, semantic contract, schema, policy, public layer, public API/UI surface, or life-safety guidance source. It may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe smoke-context layers, Focus Mode summaries, advisory referrals, Hazards context, or release packages only after gates pass.
+1. Which source family, product, source role, and knowledge character apply?
+2. Is the artifact a remote-sensing analysis/mask/proxy, atmospheric model field, forecast, or another reviewed context role?
+3. Which geometry, raster footprint, pixel or cell semantics, model grid, plume/mask meaning, and spatial support apply?
+4. Which source, analysis, initialization, valid, forecast-horizon, retrieval, processing, correction, supersession, and release times apply?
+5. Which method, model run, resolution, nodata, QA, uncertainty, confidence, caveat, and stale-state apply?
+6. Which PM2.5, AOD, wind, air-observation, forecast, advisory, or Hazards relation is being asserted—and which object retains ownership?
+7. Which rights, sensitivity, evidence, policy, review, release, correction, and rollback states qualify the artifact?
+8. Which claims and downstream uses are allowed, restricted, narrowed, delayed, denied, or required to abstain?
 
-## Lifecycle boundary
+It is not a RAW source lane, PM2.5 or AQI observation store, AOD authority, model or forecast authority, advisory issuer, Hazards fire-event or impact store, exposure or health service, proof store, receipt authority, catalog authority, release authority, or public map/API/UI source.
+
+## Authority level
+
+**Implementation-bearing lifecycle lane with narrow contextual authority.** The target path is CONFIRMED in the repository and remains under `data/processed/atmosphere/`, consistent with Directory Rules' lifecycle and domain-placement rules.
+
+Its authority is deliberately limited:
+
+- it may carry processed `SmokeContext` candidates and lane-local explanatory metadata;
+- it does not define `SmokeContext` meaning—that remains in the semantic contract;
+- it does not define machine shape—the paired schema remains under `schemas/contracts/v1/domains/atmosphere/`;
+- it does not define source identity, rights, role, or activation—that remains in the source registry and `SourceDescriptor`;
+- it does not decide whether an artifact is a mask, proxy, model field, observation, advisory, event, impact, exposure, or publishable claim;
+- it does not replace PM2.5, AOD, forecast/model, advisory, or Hazards object families;
+- it does not create emergency, medical, evacuation, occupational, infrastructure-impact, crop-loss, or life-safety authority.
+
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent Atmosphere processed lane | **CONFIRMED** | `data/processed/atmosphere/README.md` identifies `smoke_context/` as smoke mask, plume, model/proxy, and atmospheric context with no event or public-alert authority. |
+| `SmokeContext` semantic contract | **CONFIRMED repository document / draft** | Defines source-dependent `REMOTE_SENSING_MASK` and `ATMOSPHERIC_MODEL_FIELD` roles, PM2.5/AOD/model/advisory/Hazards boundaries, and non-release authority. |
+| Paired `SmokeContext` schema | **CONFIRMED scaffold / not enforceable as verified** | The contract reports empty properties, `additionalProperties: true`, and unresolved title casing. |
+| Adjacent processed lanes | **CONFIRMED paths** | AOD, PM2.5, observed, modeled, forecast, advisory, derived, and modeled-remote-sensing lanes remain separate responsibilities. |
+| Real processed smoke payload inventory | **UNKNOWN** | This documentation task did not inspect or expose smoke, model, satellite, or plume payloads. |
+| Validators, fixtures, policy enforcement, and CI | **NEEDS VERIFICATION** | No accepted production SmokeContext enforcement suite was verified. |
+| Receipts, proof, release instances, hosting, public routes, and cross-lane runtime behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
+
+<a id="accepted-contents"></a>
+
+## What belongs here
+
+Good fits are processed smoke-context artifacts whose source role, geometry or field semantics, uncertainty, sensitivity, and correction lineage remain inspectable, including:
+
+- normalized HMS-style smoke analysis, plume, mask, or satellite-derived context labeled `REMOTE_SENSING_MASK` or another accepted proxy role;
+- normalized HRRR-Smoke-style or other forecast/model products labeled `ATMOSPHERIC_MODEL_FIELD` with model-run identity, initialization, valid time, horizon, and uncertainty;
+- smoke polygons, rasters, grids, masks, plume envelopes, probabilities, categories, or context fields with explicit geometry/raster/cell semantics;
+- source family, product name, source vintage, method/version, source time, analysis time, retrieval time, processing time, correction, stale state, supersession, and withdrawal metadata;
+- QA, cloud or retrieval limitations, nodata, missingness, confidence, uncertainty, coverage, sensitivity, caveat, and comparability sidecars that are not proofs, receipts, policy decisions, or releases;
+- controlled references to `AODRaster`, `PM25Observation`, `AirObservation`, `WindField`, `ForecastContext`, `AdvisoryContext`, or Hazards records without duplicating or replacing their canonical truth;
+- sensitive-join review sidecars for habitat, biodiversity, archaeology, infrastructure, people, or other policy-significant contexts when those sidecars do not become policy authority;
+- public-candidate smoke-context derivatives that remain upstream of catalog, evidence closure, policy review, release, and public serving;
+- object-ready candidates prepared for future contract/schema validation, EvidenceBundle closure, catalog review, LayerManifest generation, or release review;
+- lane-local README, inventory, migration, or non-release manifest notes that explain artifact identity without becoming authority records.
+
+<a id="exclusions"></a>
+
+## What does NOT belong here
+
+Do not place these in `data/processed/atmosphere/smoke_context/`:
+
+- RAW HMS, HRRR-Smoke, satellite, model, raster, polygon, tile, feed, download, log, screenshot, or source-native records;
+- WORK parsing, reprojection, polygonization, raster/vector conversion, model tuning, interpolation, masking, temporary joins, notebooks, or QA experiments;
+- QUARANTINE material with unresolved rights, source role, freshness, method, uncertainty, sensitivity, dispute, geometry semantics, QA, or safety state;
+- PM2.5 concentration, AQI/report records, general air observations, AOD canonical records, forecast/model canonical records, advisory records, Hazards event/impact records, or released products except as controlled references;
+- smoke, AOD, visibility, hotspot, model, or plume context silently relabeled as PM2.5, AQI, observed sensor data, fire-event truth, exposure, or impact;
+- modeled smoke silently relabeled as observation;
+- proxy or mask presence silently interpreted as smoke concentration, ground-level exposure, health effect, asset impact, crop loss, visibility impairment, or evacuation need;
+- public alerts, official warnings, evacuation instructions, medical advice, occupational guidance, emergency instructions, or life-safety guidance;
+- semantic contracts, JSON Schemas, policy rules, validators, tests, fixtures, executable pipelines, source descriptors, catalogs, STAC/DCAT/PROV projections, triplets, proofs, receipts, releases, correction notices, rollback cards, or published artifacts;
+- public map, tile, API, download, export, Focus Mode, Evidence Drawer, graph, search, notification, or AI-answer payloads;
+- transform secrets, credentials, restricted source details, exact sensitive locations, or parameters whose disclosure would weaken a safety or sensitivity control.
+
+## Inputs
+
+Inputs may enter this lane only through governed lifecycle transitions from:
+
+- `data/work/atmosphere/` after source identity, role, rights, method, geometry/raster/field semantics, time, QA, uncertainty, sensitivity, evidence, and correction posture are recorded;
+- `data/quarantine/atmosphere/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted Atmosphere pipelines or tools that preserve source bytes by reference, input identities, source roles, model-run identity where applicable, method version, transforms, uncertainty, and correction state;
+- accepted cross-domain context where the source domain retains ownership and the relation is explicit, evidence-backed, policy-reviewed, and non-authoritative for that source domain.
+
+A connector-to-PROCESSED, watcher-to-PROCESSED, public-upload-to-PROCESSED, renderer-to-PROCESSED, or AI-to-PROCESSED shortcut is not an accepted normal path. Connectors, watchers, renderers, and AI systems do not silently promote or originate canonical truth.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/atmosphere/` and accepted STAC/DCAT/PROV projections;
+- `data/triplets/` or other relationship projections that preserve source role, object ownership, time, uncertainty, and evidence references;
+- separate `data/proofs/` and `data/receipts/` objects;
+- candidate LayerManifest or public-safe layer inputs in their proper authority roots;
+- `release/candidates/atmosphere/` after identity, rights, role, freshness, uncertainty, sensitivity, validation, evidence, review, correction, and rollback obligations are met;
+- `data/published/` only through a governed release transition and separate released artifact path;
+- governed API, MapLibre, Evidence Drawer, export, Focus Mode, or AI carriers only after public-safe release.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A visually convincing plume, mask, modeled field, hotspot relation, or forecast does not establish observation, exposure, impact, event truth, release state, or public safety.
+
+## Validation
+
+Validation is fail-closed and proportional to claim significance. At minimum, a candidate should demonstrate:
+
+| Check | Required posture | Failure outcome |
+|---|---|---|
+| Identity | Stable record/artifact identity, source identity, product identity, and content or method digest where practical. | `ERROR` / `HOLD` |
+| Source role | `REMOTE_SENSING_MASK`, `ATMOSPHERIC_MODEL_FIELD`, or another accepted role is explicit and fixed. | `DENY` |
+| Product lineage | Source family, product, version/vintage, method, transforms, and correction/supersession lineage remain recoverable. | `HOLD` |
+| Geometry/raster/field semantics | Geometry type, footprint, pixel/cell meaning, model grid, resolution, nodata, coverage, plume/mask/category semantics, CRS, and transforms are explicit. | `ABSTAIN` / `HOLD` |
+| Time | Source, analysis, initialization, valid, horizon, retrieval, processing, correction, supersession, and release times remain distinguishable. | `ABSTAIN` / stale hold |
+| Model-run trace | Modeled products resolve to model/run identity, inputs or receipt reference, initialization, valid time, horizon, and uncertainty. | `DENY` / `HOLD` |
+| Proxy boundary | Smoke masks, AOD, hotspots, visibility, or model outputs are not presented as PM2.5, AQI, ground observation, exposure, health, event, or impact truth. | `DENY` |
+| Sensitive joins | Habitat, biodiversity, archaeology, infrastructure, people, and other policy-significant joins are reviewed and transformed before exposure. | `DENY` / `RESTRICT` |
+| Rights and freshness | Rights, terms, attribution, access class, cadence, source freshness, and stale policy are resolved. | `DENY` / `HOLD` |
+| Evidence | Consequential claims resolve through EvidenceRef to admissible EvidenceBundle support. | `ABSTAIN` |
+| Correction | Predecessor/successor, correction, invalidation, supersession, withdrawal, and affected downstream artifacts are traceable. | `HOLD` |
+| Release | Policy decision, review state, proof, release manifest, correction path, rollback target, and public-safe carrier are present. | `DENY` |
+
+Passing structural checks does **not** prove smoke occurrence at ground level, PM2.5 concentration, exposure, health effect, event impact, fire origin, asset impact, crop loss, emergency need, release approval, or public safety.
+
+## Review burden
+
+Changes require review proportional to their meaning and exposure:
+
+- Atmosphere smoke, aerosol, remote-sensing, and model stewardship for source-role and object semantics;
+- the owning PM2.5, AOD, air-observation, wind, forecast, advisory, or Hazards steward for cross-object relations;
+- source, rights, and sensitivity review for source activation, attribution, restricted details, habitat/infrastructure proximity, people or private-property joins, and public transforms;
+- scientific-method and data-quality review for mask/plume meaning, model runs, raster/grid semantics, interpolation, uncertainty, QA, freshness, and comparability;
+- policy review for role changes, sensitive joins, public restrictions, finite-outcome behavior, or transformed geometry;
+- evidence, release, correction, rollback, and docs review before public use or authority-changing documentation.
+
+**CODEOWNERS and accountable individuals are NEEDS VERIFICATION.** This README does not assign them.
+
+<a id="directory-map"></a>
+
+## Related folders
+
+| Responsibility | Verified or bounded home | Relationship |
+|---|---|---|
+| Parent processed lane | [`../README.md`](../README.md) | Atmosphere lifecycle parent and lane index. |
+| AOD proxy context | [`../aod/README.md`](../aod/README.md) | AOD remains a separate remote-sensing proxy object. |
+| PM2.5 observations | [`../pm25/README.md`](../pm25/README.md) | Smoke context does not become PM2.5 concentration or AQI. |
+| Modeled and forecast context | [`../modeled/README.md`](../modeled/README.md), [`../forecast_context/README.md`](../forecast_context/README.md) | Model role and model-run lineage remain explicit. |
+| Modeled remote-sensing comparisons | [`../modeled/remote-sensing/README.md`](../modeled/remote-sensing/README.md) | Combined comparison lane; must preserve model/proxy distinctions. |
+| Observed and air-observation context | [`../observed/README.md`](../observed/README.md), [`../air_observations/README.md`](../air_observations/README.md) | Smoke context may compare with but not replace observed values. |
+| Advisory context | [`../advisory_context/README.md`](../advisory_context/README.md) | Official-source referral; not KFM-issued instruction. |
+| Derived products | [`../derived/README.md`](../derived/README.md) | Derived cross-object candidates remain downstream and non-authoritative. |
+| Semantic contract | [`../../../../contracts/domains/atmosphere/SmokeContext.md`](../../../../contracts/domains/atmosphere/SmokeContext.md) | Defines object meaning and source-dependent knowledge character. |
+| Machine schema | [`../../../../schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json`](../../../../schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json) | Current scaffold shape; enforcement remains unverified. |
+| Source register | [`../../../../docs/domains/atmosphere/SOURCES.md`](../../../../docs/domains/atmosphere/SOURCES.md), [`../../../registry/sources/atmosphere/README.md`](../../../registry/sources/atmosphere/README.md) | Source-family doctrine and source-admission records. |
+| Policy doctrine and bundle root | [`../../../../docs/domains/atmosphere/POLICY.md`](../../../../docs/domains/atmosphere/POLICY.md), [`../../../../policy/domains/atmosphere/README.md`](../../../../policy/domains/atmosphere/README.md) | Human-readable rules and bounded enforceable-policy home. |
+| Catalog, proof, receipts, release | [`../../../catalog/domain/atmosphere/README.md`](../../../catalog/domain/atmosphere/README.md), [`../../../proofs/README.md`](../../../proofs/README.md), [`../../../receipts/README.md`](../../../receipts/README.md), [`../../../../release/candidates/atmosphere/README.md`](../../../../release/candidates/atmosphere/README.md) | Downstream authority families; none are replaced by this lane. |
+
+## ADRs
+
+- **ADR-0001 schema-home rule:** machine schemas belong under `schemas/contracts/v1/...`; semantic meaning belongs under `contracts/`.
+- **Directory Rules §15:** folder READMEs expose purpose, authority, status, contents, inputs, outputs, validation, review burden, related folders, ADRs, and review date.
+- **No SmokeContext-lane-specific accepted ADR was verified.**
+- **NEEDS VERIFICATION:** accepted source-role vocabulary, smoke-context child inventory, model-run receipt contract, sensitive-join policy, and cross-domain Hazards relationship.
+
+## Last reviewed
+
+**2026-07-25** — documentation modernization review against the pinned repository evidence recorded in the meta block.
+
+This date records review of this README, not validation of source rights, payloads, model runs, hazard events, exposure, policy enforcement, release state, public behavior, or operational correctness.
+
+---
+
+<a id="smokecontext-requirements"></a>
+
+## SmokeContext admission profile
+
+The following profile is **PROPOSED** until accepted contracts, schemas, validators, fixtures, and CI prove it:
+
+| Dimension | Required posture |
+|---|---|
+| Record identity | Deterministic or steward-assigned identity plus source/product and content or method digest where practical. |
+| Source role | `REMOTE_SENSING_MASK`, `ATMOSPHERIC_MODEL_FIELD`, or another accepted role fixed at admission. |
+| Source and product | Source family, product name, maintainer/issuer, version/vintage, rights, cadence, and attribution. |
+| Geometry/raster/field | Geometry type, footprint, pixel/cell meaning, model grid, CRS, resolution, nodata, coverage, plume/mask/category semantics, and transforms. |
+| Time | Source, analysis, initialization, valid, horizon, retrieval, processing, correction, supersession, and release times. |
+| Method and model | Analysis method, retrieval or classification method, model/run identity, parameters or configuration reference, and uncertainty. |
+| QA and uncertainty | Source flags, confidence, probability/category meaning, missingness, cloud/retrieval limits, model uncertainty, caveats, and stale state. |
+| Object relations | Explicit links to PM2.5, AOD, wind, air observation, forecast, advisory, or Hazards records without ownership collapse. |
+| Sensitivity | Sensitive habitat, biodiversity, archaeology, infrastructure, people, private-property, and other policy-significant joins reviewed and transformed before release. |
+| Evidence and review | EvidenceRefs, supporting EvidenceBundle, policy decision, review state, disagreements, limitations, and withheld details. |
+| Correction and release | Predecessor/successor, correction/withdrawal lineage, affected carriers, release state, correction path, and rollback target. |
+
+<a id="smoke-guardrails"></a>
+
+## Source role and smoke boundaries
+
+- **Source role is mandatory and fixed.** Promotion, cataloging, publication, or repeated use cannot turn a mask/proxy into an observation or a modeled field into measured truth.
+- **Smoke context is not PM2.5 or AQI.** PM2.5 and AQI require their own objects, units, methods, averaging periods, QA, and evidence.
+- **Smoke context is not AOD authority.** AOD may support smoke interpretation, but AOD and smoke masks remain separate proxy/context objects.
+- **Modeled smoke is not observation.** Forecast/model products require model-run identity, initialization, valid time, horizon, uncertainty, and model-role disclosure.
+- **Smoke context is not event or impact truth.** Atmosphere owns atmospheric smoke context; Hazards owns fire-event, impact, emergency, and hazards-specific claims.
+- **A hotspot or plume does not prove local exposure.** Ground-level exposure, health, damage, infrastructure impact, crop loss, and evacuation needs require separate evidence, domain ownership, and review.
+- **Advisory linkage remains referral-only.** Smoke context may support an official-source referral but does not create KFM-issued health, emergency, or life-safety instructions.
+- **Sensitive joins fail closed.** Habitat, rare species, archaeology, infrastructure, people, and private-property joins require policy review and public-safe transforms before exposure.
+- **Directory placement is not proof.** A file under `smoke_context/` does not establish correctness, observation, exposure, event truth, release, or public safety.
+
+## Geometry, raster, field, and time semantics
+
+Smoke-context candidates should preserve enough detail to prevent false spatial, temporal, and scientific inference:
+
+| Dimension | Required posture |
+|---|---|
+| Geometry | Polygon, multipolygon, raster footprint, grid/cell, plume envelope, centroid, or other representation is explicit; geometry repair and simplification lineage remain visible. |
+| Raster/cell semantics | Pixel/cell value meaning, category/probability scale, nodata, masks, coverage, cloud/retrieval limits, and classification method are explicit. |
+| Model field | Model/grid identity, run, initialization, valid time, horizon, level/vertical support where material, resolution, and uncertainty are explicit. |
+| CRS and transforms | Source CRS, normalized CRS, reprojection, resampling, clipping, generalization, redaction, and simplification remain auditable. |
+| Time | Source, analysis, initialization, valid, horizon, retrieval, processing, correction, supersession, and release times remain distinct. |
+| QA | Source flags, provisional/final state, confidence, missingness, stale state, invalidation, correction, and comparability limits remain visible. |
+| Comparability | Comparisons require compatible roles, methods, support, times, units/categories, resolution, geometry semantics, and uncertainty. |
+
+Normalization can improve interoperability; it cannot upgrade a mask, proxy, model, or forecast into observation, exposure, impact, or event truth.
+
+## Cross-lane routing
+
+| Record or context | Primary owning lane | Smoke-context relationship |
+|---|---|---|
+| PM2.5 concentration or AQI/report | `../pm25/` | Link or compare; never derive concentration from smoke context without separately governed method and evidence. |
+| AOD proxy | `../aod/` | Preserve AOD identity and uncertainty; do not merge object authority. |
+| General air observation | `../air_observations/` or `../observed/` | Compare or contextualize without relabeling smoke as observation. |
+| Modeled/forecast smoke | `../modeled/`, `../forecast_context/`, or accepted model child lane | Keep model/run identity and uncertainty explicit. |
+| Modeled remote-sensing comparison | `../modeled/remote-sensing/` | Preserve both model and proxy roles. |
+| Wind context | accepted WindField lane or object reference | Use for transport context; wind does not prove smoke concentration or impact. |
+| Advisory/referral | `../advisory_context/` | Preserve official-source referral and non-instruction posture. |
+| Fire event, impact, emergency, evacuation, damage | Hazards responsibility roots | SmokeContext may relate as context; Hazards retains event/impact authority. |
+| Source identity, rights, cadence, activation | `data/registry/sources/atmosphere/` | Reference the descriptor; do not re-own source admission. |
+
+Prefer references and evidence-bound relations over duplicated payloads. Deny parallel truth stores.
+
+<a id="lifecycle-boundary"></a>
+
+## Lifecycle and promotion
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -107,170 +356,73 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> SMOKE[data/processed/atmosphere/smoke_context]
-  QUAR --> SMOKE
-  SMOKE --> AOD[data/processed/atmosphere/aod]
-  SMOKE --> MOD[data/processed/atmosphere/modeled]
-  SMOKE --> DER[data/processed/atmosphere/derived]
-  SMOKE --> CAT[data/catalog/domain/atmosphere]
-  SMOKE --> STAC[data/catalog/stac/atmosphere]
-  SMOKE --> DCAT[data/catalog/dcat/atmosphere]
-  SMOKE --> PROV[data/catalog/prov/atmosphere]
-  SMOKE -. supports .-> PROOF[data/proofs]
-  SMOKE -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
+  RAW["RAW smoke / satellite / model source"] --> WORK["WORK normalize and review"]
+  WORK --> QUAR["QUARANTINE<br/>rights · role · uncertainty · sensitivity"]
+  WORK --> SMOKE["PROCESSED SmokeContext"]
+  QUAR -->|audited resolution| SMOKE
+  SMOKE --> CAT["CATALOG / TRIPLET candidate"]
+  SMOKE -. evidence refs .-> EVID["EvidenceBundle / proof closure"]
+  SMOKE -. policy input .-> POL["PolicyDecision / review"]
+  CAT --> PROMO["PromotionDecision"]
+  EVID --> PROMO
+  POL --> PROMO
+  PROMO --> RELEASE["ReleaseManifest + rollback target"]
+  RELEASE --> PUB["PUBLISHED public-safe carrier"]
+  PUB --> API["Governed API / MapLibre / Drawer / Focus"]
+  PUB -. correction / withdrawal .-> SMOKE
 ```
 
-`data/processed/atmosphere/smoke_context/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+The arrows express governed dependencies, not automatic file copies. Promotion requires source identity, rights, source role, product/method lineage, geometry/raster/field semantics, time, uncertainty, sensitivity, validation, evidence closure, policy, review, release metadata, correction path, and rollback support appropriate to the claim.
 
-## Repo fit
+A commit, pull request, merge, catalog record, rendered plume, map layer, model run, source-authority label, or badge does not create KFM publication, observation, exposure, event truth, or public safety.
 
-| Responsibility | Correct home | Rule |
+<a id="rollback"></a>
+
+## Correction, withdrawal, and rollback
+
+A SmokeContext correction may arise from source revision, retrieval reprocessing, model rerun, classification correction, geometry repair, source-role misclassification, time or horizon error, uncertainty correction, rights change, sensitivity discovery, stale product, invalidated artifact, superseding source release, or downstream publication defect.
+
+Correction handling should:
+
+1. preserve the original source and prior normalized record by immutable reference;
+2. create a new version or correction record rather than silently overwrite history;
+3. record the source reason, corrected fields, effective time, correction time, reviewer, and evidence;
+4. identify affected PM2.5, AOD, observation, wind, model, forecast, advisory, Hazards, catalog, triplet, proof, release, API, map, export, dashboard, Focus Mode, and AI carriers;
+5. invalidate, withdraw, or supersede affected public artifacts when required;
+6. purge or re-key caches, tiles, search indexes, and graph projections where stale claims could persist;
+7. retain a correction notice, withdrawal state, and rollback target appropriate to the released artifact.
+
+**Documentation rollback:** before merge, close the draft PR and abandon the branch. After merge, revert the implementation commit. The prior README blob is `438882bc885cfa3175e5608b923c9f42393c1d31`.
+
+**Operational rollback:** restoring prior released smoke-context data requires the actual prior release ID, manifest, proof, policy state, correction lineage, sensitivity transforms, and cache-invalidation plan. Reverting this README is not an operational data rollback.
+
+## Open verification register
+
+| Item | Status | Required evidence |
 |---|---|---|
-| Raw HMS/HRRR-Smoke/satellite/model products, source downloads, source rasters, source polygons, source-native tiles, QA payloads, or logs | `data/raw/atmosphere/` | Not this lane. |
-| In-process smoke parsing, masking, polygon/raster transforms, model joins, reprojection, QA, scratch outputs, notebooks, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, source-role-unclear, stale, malformed, unsupported, disputed, uncertainty-missing, sensitivity-unclear, habitat/infrastructure-proximate, or unsafe smoke material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized SmokeContext processed artifacts | `data/processed/atmosphere/smoke_context/` | This lane. |
-| AOD/remote-sensing proxy artifacts | `data/processed/atmosphere/aod/` | AOD remains its own proxy object and is not PM2.5. |
-| Modeled smoke or model-field products | `data/processed/atmosphere/modeled/` or `forecast_context/` by accepted convention | Model role must remain explicit. |
-| Modeled remote-sensing comparisons | `data/processed/atmosphere/modeled/remote-sensing/` | Use when the product intentionally combines model-field and remote-sensing-mask roles. |
-| PM2.5 measurements | `data/processed/atmosphere/pm25/` | PM2.5 observations require PM25Observation semantics. |
-| General air observations | `data/processed/atmosphere/air_observations/` | Smoke context may compare to observations but must not replace them. |
-| Advisory/referral context | `data/processed/atmosphere/advisory_context/` | Advisory context remains official-source referral, not smoke truth or instruction. |
-| Hazards/fire event truth and impacts | Hazards responsibility roots | Atmosphere owns smoke context only. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, model-run, transform, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| SmokeContext semantic contract | `contracts/domains/atmosphere/SmokeContext.md` | Object meaning; not data. |
-| SmokeContext schema | `schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
+| Recursive payload inventory | **UNKNOWN** | Tree, hashes, producers, consumers, lifecycle state, and source descriptors. |
+| Source-role vocabulary | **NEEDS VERIFICATION** | Actual `SourceDescriptor` schema, policy enum, and object-family map alignment. |
+| Smoke mask/plume semantics | **NEEDS VERIFICATION** | Accepted fields for categories, confidence/probability, geometry/raster/cell meaning, nodata, and uncertainty. |
+| Model-run lineage | **NEEDS VERIFICATION** | ModelRunReceipt or equivalent contract, schema, fixtures, validator, and accepted field set. |
+| Sensitive-join policy | **NEEDS VERIFICATION** | Policy bundles, negative fixtures, reviewer triggers, public transforms, and Hazards/habitat/infrastructure coordination. |
+| Validators, fixtures, and CI | **NEEDS VERIFICATION** | Deterministic no-network positive/negative fixtures and observed trusted check results. |
+| Evidence, receipts, proof, and release | **UNKNOWN** | EvidenceBundles, receipts, policy decisions, review records, release manifests, and rollback cards. |
+| Correction propagation | **NEEDS VERIFICATION** | Tested correction, withdrawal, tile/cache invalidation, reindexing, and rollback drill. |
+| Public routes and clients | **UNKNOWN** | Governed API implementation, public-safe released carrier, runtime tests, and access-control evidence. |
+| Hazards cross-lane behavior | **NEEDS VERIFICATION** | Accepted relation contract, event/impact ownership rules, review workflow, and runtime behavior. |
 
-## Accepted contents
+## No-loss ledger
 
-Processed `SmokeContext` data may include:
-
-- normalized smoke mask, plume, analysis, forecast/model, or smoke-related atmospheric-context records;
-- HMS-style smoke analysis or satellite-derived smoke/plume context when labeled as `REMOTE_SENSING_MASK` or the accepted proxy role;
-- HRRR-Smoke-style or other modeled smoke products when labeled as `ATMOSPHERIC_MODEL_FIELD` with model-run lineage and uncertainty posture;
-- geometry/raster/model-field scope, source time, analysis/forecast time, retrieval time, valid time, processing time, uncertainty, QA, caveats, freshness, and sensitivity metadata;
-- processed joins to `AODRaster`, `PM25Observation`, `AirObservation`, `WindField`, `ForecastContext`, or `AdvisoryContext` when object meanings and source roles remain visible;
-- sensitive-join review sidecars for habitat, biodiversity, archaeology, infrastructure, or other policy-significant joins when those sidecars are not proofs, receipts, source registry records, catalog records, schemas, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, LayerManifest creation, or release review.
-
-## Exclusions
-
-Do not store these under `data/processed/atmosphere/smoke_context/`:
-
-- RAW smoke products, HMS/HRRR-Smoke/satellite/model downloads, source rasters, source polygons, source-native tiles, QA payloads, logs, screenshots, or source-native records.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, stale, source-role-unclear, rights-unclear, uncertainty-missing, sensitivity-unclear, habitat/infrastructure-proximate, unsupported, disputed, or unsafe smoke material.
-- PM2.5 observations, AQI/report records, air observations, AODRaster canonical records, forecast/model canonical records, advisory/referral records, hazards/fire event records, or hazard-impact records unless only referenced as context and stored in their correct lanes.
-- AOD-as-PM2.5, smoke-as-PM2.5, smoke forecast-as-observation, or smoke context-as-hazard-event substitution.
-- Exposure claims, health-effect claims, damage claims, evacuation claims, infrastructure impacts, crop-loss claims, fire event truth, public alerting behavior, emergency instructions, or life-safety guidance.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
-
-## SmokeContext requirements
-
-PROPOSED until concrete validators and CI enforcement are verified:
-
-| Requirement | Meaning |
-|---|---|
-| Source trace | Every processed SmokeContext artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Source role | `REMOTE_SENSING_MASK`, `ATMOSPHERIC_MODEL_FIELD`, advisory context, observed support, or other admitted role must be explicit and non-collapsing. |
-| Product lineage | Source family, product name, source vintage, source time, analysis/forecast time, retrieval time, processing time, correction/supersession state, and method should remain visible. |
-| Geometry/raster/field scope | Geometry, raster footprint, pixel semantics, plume/mask semantics, model grid, valid time, horizon, resolution, nodata, QA, and uncertainty should be explicit enough for downstream validation. |
-| Model-run trace | Modeled smoke products should link to model-run receipt or equivalent lineage and preserve forecast uncertainty. |
-| Proxy boundary | Smoke masks/proxies must not be presented as PM2.5, AQI, ground observation, exposure, health effect, hazard impact, or life-safety guidance by themselves. |
-| Sensitive joins | Smoke/fire/AOD joins near sensitive habitat, infrastructure, people, or other policy-significant targets should fail closed unless policy/review/release supports public exposure. |
-| Evidence linkage | Claims about source, role, time, geometry/raster/field, uncertainty, sensitivity, correction, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, freshness, uncertainty, sensitivity, caveat, policy/admissibility posture, and release state. |
-| Catalog readiness | Processed SmokeContext artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No life-safety by default | SmokeContext does not create public alerts, emergency instructions, exposure claims, health/safety guidance, or hazards event truth without separate authority and review. |
-
-## Smoke guardrails
-
-- `SmokeContext` is context, not PM2.5 measurement.
-- `SmokeContext` is not AQI.
-- Smoke context may be a remote-sensing mask/proxy or an atmospheric model field depending on source role; role tagging is mandatory.
-- AOD and smoke masks are proxies and must not be presented as PM2.5 or ground observations.
-- HRRR-Smoke-style products are model fields and must carry model-run receipt and uncertainty; they are not observations.
-- Smoke context may support advisory referral, but it does not issue life-safety instructions.
-- Atmosphere owns smoke atmospheric context; Hazards owns event/impact truth, emergency posture, and hazards-specific claims.
-- Smoke/fire/AOD joins near sensitive habitat, infrastructure, people, or other policy-significant targets fail closed unless policy/review/release support public exposure.
-- Public display requires source rights, source role, freshness, uncertainty, sensitivity, validation, policy, release record, correction path, and rollback target.
-- Unreleased processed smoke-context artifacts are not public merely because they exist under this directory.
-
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed smoke context to PM2.5 measurement claims, hazard/fire event truth, exposure claims, public health guidance, public alerts, evacuation guidance, infrastructure impacts, crop-loss claims, public layers, or public API/UI payloads. SmokeContext products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
-
-```text
-data/processed/atmosphere/smoke_context/
-├── README.md
-├── normalized/              # PROPOSED — processed SmokeContext records
-├── masks/                   # PROPOSED — smoke masks/plumes, not PM2.5 observations
-├── model_fields/            # PROPOSED — modeled smoke context with model-run lineage
-├── plume_context/           # PROPOSED — plume/analysis context with proxy labels
-├── uncertainty/             # PROPOSED — uncertainty/caveat sidecars
-├── sensitivity/             # PROPOSED — sensitive-join review sidecars, not policy authority
-├── quality/                 # PROPOSED — QA, missingness, confidence, limitations
-├── joins/                   # PROPOSED — links to AOD, PM2.5, AirObservation, WindField, ForecastContext, AdvisoryContext
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
+| Baseline element | Disposition | Result |
 |---|---|---|
-| Previous file | CONFIRMED | Target existed as a one-character placeholder. | Did not define SmokeContext PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/aod/README.md` | CONFIRMED sibling README | AOD/remote-sensing proxy is not PM2.5, AQI, or ground observation. | Does not define smoke-context inventory or release behavior. |
-| `data/processed/atmosphere/modeled/README.md` | CONFIRMED sibling README | Modeled products are not observations and require model-run/uncertainty posture. | Does not define smoke-context inventory. |
-| `data/processed/atmosphere/modeled/remote-sensing/README.md` | CONFIRMED sibling README | Model-field and remote-sensing proxy roles must remain separated. | Does not make this lane a public release authority. |
-| `data/processed/atmosphere/pm25/README.md` | CONFIRMED sibling README | PM25Observation is the PM2.5 object; AOD/smoke proxies must not become PM2.5. | Does not define smoke-context inventory. |
-| `data/processed/atmosphere/advisory_context/README.md` | CONFIRMED sibling README | Advisory context remains official-source referral and not life-safety instruction from KFM. | Does not define smoke-context inventory. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane includes smoke/AOD/model/advisory context downstream and preserves source-role guardrails. | Does not prove smoke-context processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere owns smoke/aerosol context, model/advisory context, and public-safe derived products. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/SmokeContext.md` | CONFIRMED contract file | Defines SmokeContext as governed smoke context with remote-sensing/model role discipline and Hazards boundary. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json` | CONFIRMED scaffold schema | Paired SmokeContext schema exists with PROPOSED status. | Properties are currently empty; validator enforcement remains NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/atmosphere/smoke_context/`.
-- [ ] Confirm accepted SmokeContext source/domain path convention.
-- [ ] Confirm `SmokeContext` schema fields and title casing are updated beyond scaffold if needed.
-- [ ] Confirm SmokeContext processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for every source-derived smoke artifact.
-- [ ] Confirm source family, source role, product name, geometry/raster/model-field scope, source time, analysis/forecast time, retrieval time, processing time, valid time, model run, uncertainty, QA, sensitivity, correction, stale-state, and supersession handling.
-- [ ] Confirm smoke-vs-PM2.5, smoke-vs-AOD, smoke-vs-observation, smoke-vs-model, smoke-vs-advisory, smoke-vs-hazards/event truth, and smoke-vs-sensitive-join boundaries.
-- [ ] Confirm RunReceipt, ModelRunReceipt, TransformReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, public layer, PM2.5 measurement, AOD authority, observation, advisory, hazard/fire event truth, exposure, health/safety, emergency, infrastructure impact, crop-loss, or public-alerting artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed SmokeContext data to catalog/triplet/published outputs is governed, source-role-safe, proxy/model-aware, sensitivity-aware, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct PM2.5, AQI, observation, official advisory, hazard event, exposure, emergency, infrastructure-impact, crop-loss, public health, or life-safety source.
-
-## Rollback
-
-Rollback is required if this lane becomes an Atmosphere source-data root, PM25Observation replacement, AODRaster replacement, ForecastContext replacement, advisory authority root, hazards/fire event truth root, official warning/public-alerting root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, public layer root, public tile root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, public health/exposure source, infrastructure-impact source, crop-loss source, regulatory-claim source, emergency instruction source, or life-safety guidance source.
-
-Rollback target for this expansion: previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`.
+| Stable `doc_id`, path, and one-character-placeholder lineage | **KEEP** | Preserved in the meta block and same-path update. |
+| PROCESSED lifecycle and no-direct-public-path posture | **CLARIFY** | Preserved and aligned to governed promotion. |
+| Smoke mask, plume, analysis, model, forecast, and context scope | **CLARIFY** | Kept with source-dependent roles and geometry/raster/field semantics. |
+| Smoke versus PM2.5, AOD, observation, model, advisory, and Hazards boundaries | **ENRICH** | Preserved through explicit routing and anti-collapse rules. |
+| Sensitive-join and fail-closed posture | **ENRICH** | Expanded into validation, review, and release obligations. |
+| Source trace, model-run, uncertainty, evidence, correction, and release requirements | **ENRICH** | Converted into admission and validation profiles. |
+| Speculative child-directory tree | **REMOVE WITH EVIDENCE** | Removed because recursive inventory and canonical child ownership are unverified. |
+| Legacy headings and links | **REPAIR** | Prior anchors are retained with explicit HTML anchors where headings changed. |
+| Rollback posture | **CLARIFY** | README rollback is separated from operational data/release rollback. |
 
 <p align="right"><a href="#top">Back to top</a></p>
