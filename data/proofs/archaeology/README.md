@@ -1,264 +1,464 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-proofs-archaeology-readme
-title: data/proofs/archaeology/README.md — Archaeology Proofs README
-version: v0.1
-type: readme; proof-lane-guide; evidence-bundle-lane; archaeology-domain-proof-index; sensitive-claim-support-lane
-status: draft; PROPOSED; data-root; proofs-root; archaeology; cultural-heritage; evidence-bundle; claim-support; digest-closure; cite-or-abstain; deny-by-default; sensitivity-aware; sovereignty-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Archaeology steward · Cultural review steward · Evidence steward · Proof steward · Sensitivity reviewer · Rights/stewardship reviewer · Data steward · Policy steward · Release steward · Docs steward
+title: data/proofs/archaeology/ — Archaeology Domain Proof Support
+version: v0.2.0
+type: readme; directory-readme; proof-lane-guide; archaeology-domain-proof-support; sensitive-claim-support-lane
+status: repository-grounded draft; proof production, executable proof validation, payload inventory, policy enforcement, release linkage, and runtime behavior remain bounded
+authors: ChatGPT-5.5 Thinking
+reviewed_by: NEEDS VERIFICATION
+owners:
+  - "NEEDS VERIFICATION — Archaeology domain and cultural-heritage steward"
+  - "NEEDS VERIFICATION — evidence, EvidenceBundle, proof, citation-validation, and validation stewards"
+  - "NEEDS VERIFICATION — rights, sensitivity, cultural-review, sovereignty, consent, and collection-security reviewers"
+  - "NEEDS VERIFICATION — policy, release, correction, rollback, governed-API, governed-AI, and docs stewards"
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: restricted-doc; data; proofs; archaeology; cultural-heritage; evidence; sensitivity; lifecycle; governed; release-gated
-tags: [kfm, data, proofs, archaeology, cultural-heritage, EvidenceBundle, EvidenceRef, proof, claim-support, digest-closure, CatalogMatrix, RedactionReceipt, PublicationTransformReceipt, ReviewRecord, PolicyDecision, ValidationReport, ReleaseManifest, RollbackCard, CorrectionNotice, SourceDescriptor, SurveyProject, SurveyTransect, SiteCandidate, CandidateFeature, SiteComponent, ArtifactRecord, ProvenienceContext, ExcavationUnit, StratigraphicUnit, CollectionRepository, ChronologyAssertion, GeophysicsObservation, RemoteSensingAnomaly, LiDARCandidate, ThreeDDocumentation, sovereignty-review, cultural-review, sensitivity, T4, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-26
+policy_label: restricted-review; data; proofs; archaeology; cultural-heritage; evidence; cite-or-abstain; deny-by-default; no-direct-public-path; release-gated
+path: data/proofs/archaeology/README.md
+owning_root: data/
+lifecycle_area: proofs
+domain: archaeology
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules proof placement, canonical proofs-root
+  contract, Archaeology domain documentation, semantic-contract and schema indexes, fixture and test
+  indexes, source-registry boundary, validator routing indexes, release-candidate boundary, and the
+  read-only Archaeology workflow holds / PROPOSED an accepted Archaeology proof packet or profile,
+  proof producer, deterministic validator command, EvidenceRef-to-EvidenceBundle closure, public-safe
+  proof routing, invalidation propagation, and downstream handoff requirements / UNKNOWN recursive
+  proof payload inventory, active writers and consumers, generated indexes, runtime resolver behavior,
+  public routes, caches, hosting, release instances, and public effects / NEEDS VERIFICATION accountable
+  owners, accepted proof schema or profile, meaningful proof fixtures, executable proof validation,
+  CI graduation, policy enforcement, cultural and sovereignty review, correction propagation,
+  withdrawal behavior, retention, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: ce8968cc8f86e4bbce48f5e714dfededa74bebfa
+  prior_blob: 4dc6a8af9bf885b405b11f6d92c89fd44d53f34b
+  prior_greenfield_stub_blob: 46091dc612b283dbcd840e2b9f129aa9fee1495b
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  archaeology_docs_blob: e44040a1a2b4fd4ce027e336a9c2fe81b8f29795
+  archaeology_contracts_blob: d857c0eba2f97c3cab28c5dd76721b7b79942fb1
+  archaeology_schema_index_blob: 1d2708f4cd74c458258cef457085f058a400681a
+  archaeology_fixture_index_blob: ab30b7fa620995ed121449ad90a8512f9d1bd0fc
+  archaeology_tests_index_blob: 229113afacc6acc0839e92318082ccce9e2ceab3
+  archaeology_broad_validator_blob: bae2eabb5d29bf7099ed74a66a17c0071ae98557
+  archaeology_child_validator_blob: 8bcf32cdfad56dd8703a27849682c8b9067f0c5c
+  archaeology_policy_blob: 8d03cdb11361739e7ad33214f76a0cfe4836ff9b
+  archaeology_source_registry_blob: 40f859e7b61cec8fb6e27268f2f5b38bcd57bb4f
+  archaeology_release_candidate_blob: bc5edc7a44ea77a6b8ed25b95569646d8df72754
+  archaeology_workflow_blob: 18aabc65e79e1cc70d81be71f8b7ef34c017f51b
 related:
   - ../README.md
   - ../../README.md
   - ../../processed/archaeology/README.md
   - ../../catalog/domain/archaeology/README.md
-  - ../../catalog/stac/archaeology/
-  - ../../catalog/dcat/archaeology/
-  - ../../catalog/prov/archaeology/
-  - ../../triplets/
-  - ../../published/
-  - ../../receipts/
-  - ../../registry/sources/archaeology/
-  - ../../../docs/domains/archaeology/PIPELINE.md
-  - ../../../docs/domains/archaeology/ARCHITECTURE.md
-  - ../../../docs/domains/archaeology/MAP_UI_CONTRACTS.md
-  - ../../../docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md
-  - ../../../docs/atlases/sensitivity-tier-reference.md
-  - ../../../docs/security/DATA_CLASSIFICATION.md
-  - ../../../contracts/domains/archaeology/
-  - ../../../policy/sensitivity/archaeology/
-  - ../../../policy/release/archaeology/
-  - ../../../policy/consent/archaeology/
-  - ../../../schemas/contracts/v1/archaeology/
-  - ../../../release/candidates/archaeology/
-  - ../../../release/
-  - ../../../pipelines/domains/archaeology/
-  - ../../../pipeline_specs/archaeology/
-  - ../../../tools/validators/
+  - ../../receipts/README.md
+  - ../../registry/sources/archaeology/README.md
+  - ../../published/archaeology/README.md
+  - ../../../docs/domains/archaeology/README.md
+  - ../../../contracts/domains/archaeology/README.md
+  - ../../../schemas/contracts/v1/domains/archaeology/README.md
+  - ../../../fixtures/domains/archaeology/README.md
+  - ../../../tests/domains/archaeology/README.md
+  - ../../../tools/validators/archaeology/README.md
+  - ../../../tools/validators/domains/archaeology/README.md
+  - ../../../policy/domains/archaeology/README.md
+  - ../../../release/candidates/archaeology/README.md
+  - ../../../release/README.md
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../.github/workflows/domain-archaeology.yml
 notes:
-  - "This file replaces a greenfield stub at `data/proofs/archaeology/README.md`."
-  - "This is an Archaeology proof lane guide under `data/proofs/`. It is not RAW source storage, WORK scratch, QUARANTINE holding, PROCESSED data, CATALOG, TRIPLET, PUBLISHED output, receipt storage, source registry, policy authority, release authority, schema home, validator home, public API/UI output, public map/tile output, site-discovery surface, collection-security surface, cultural-sovereignty decision, or life-safety guidance."
-  - "Proof records support EvidenceBundle / EvidenceRef closure and claim support. Receipts such as RedactionReceipt, PublicationTransformReceipt, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, CorrectionNotice, and AIReceipt remain in their own receipt/release lanes and may be referenced by proofs; they are not owned here."
-  - "Archaeology proof material is deny-by-default: exact site geometry, burial/human-remains context, sacred-site information, collection-security detail, looting-risk detail, private-landowner detail, and sovereignty-controlled knowledge must not be exposed through proof files."
-  - "CandidateFeature, RemoteSensingAnomaly, and LiDARCandidate proof support must preserve candidate status unless governed review and evidence promote the claim to another object family."
-  - "This README is a proof-lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous greenfield stub blob SHA `46091dc612b283dbcd840e2b9f129aa9fee1495b`."
+  - "Same-path Markdown modernization only; no source bytes, proof payloads, EvidenceBundle instances, contracts, schemas, policies, validators, fixtures, workflows, releases, routes, access controls, or publication state changed."
+  - "This lane supports inspectable Archaeology claims. It must reference rather than duplicate source, receipt, catalog, policy, review, release, correction, rollback, or neighboring-domain authority."
+  - "The literal compatibility phrase 'PROPOSED until concrete proof schemas' is retained because the current domain-archaeology workflow treats it as an explicit proof-maturity hold signal."
+  - "Exact or reverse-engineerable site locations, burial or human-remains context, sacred or culturally restricted knowledge, collection-security detail, looting-risk detail, private-landowner detail, consent secrets, and control-defeating transform information must not be placed in this ordinary repository lane."
+  - "The documentation rollback target for v0.2.0 is prior blob 4dc6a8af9bf885b405b11f6d92c89fd44d53f34b; the earlier greenfield-stub lineage remains 46091dc612b283dbcd840e2b9f129aa9fee1495b."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/proofs/archaeology
+# `data/proofs/archaeology/` — Archaeology Domain Proof Support
 
-> Archaeology proof lane for EvidenceBundle, EvidenceRef, digest-closure, claim-support, sensitivity-review references, and proof-index artifacts that support Archaeology claims without becoming source data, processed data, receipts, catalog records, release decisions, or public surfaces.
+> **One-line purpose.** Hold or index claim-scoped Archaeology proof support that preserves evidence, source roles, candidate status, spatial and temporal scope, rights, cultural and sovereignty review, sensitivity, integrity, correction lineage, and release dependencies without becoming Archaeology truth, policy authority, release authority, or a public data service.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/proofs/archaeology" src="https://img.shields.io/badge/root-data%2Fproofs%2Farchaeology-blue">
-  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8B4513">
-  <img alt="Posture: evidence first" src="https://img.shields.io/badge/posture-evidence--first-green">
-  <img alt="Sensitivity: deny default" src="https://img.shields.io/badge/sensitivity-deny__default-red">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: domain proof support](https://img.shields.io/badge/authority-domain%20proof%20support-0969da?style=flat-square)](#authority-level)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318?style=flat-square)](#sensitivity-cultural-review-and-public-safe-representation)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
+[![Workflow: explicit proof hold](https://img.shields.io/badge/workflow-explicit%20proof%20hold-f59e0b?style=flat-square)](../../../.github/workflows/domain-archaeology.yml)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Archaeology steward · Cultural review steward · Evidence steward · Proof steward · Sensitivity reviewer · Rights/stewardship reviewer · Data steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/proofs/archaeology/README.md`  
-**Owning root:** `data/proofs/`  
-**Domain segment:** `archaeology`  
-**Lifecycle role:** evidence/proof support referenced by catalog, triplet, release, correction, rollback, and governed answer surfaces; not a lifecycle phase substitute  
-**Exposure posture:** restricted by default; public use requires catalog closure, sensitivity transform, cultural/steward review where required, policy/review state, release state, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED parent `data/proofs/` is also still a greenfield stub · CONFIRMED processed Archaeology excludes proof records and is not public truth by itself · CONFIRMED Archaeology pipeline is deny-by-default and requires evidence closure before catalog/triplet · PROPOSED proof-lane details · NEEDS VERIFICATION for actual proof schemas, EvidenceBundle wire shape, proof indexes, validators, fixtures, access controls, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> **Proof support is necessary but not sufficient for publication.** A coherent proof packet may support policy, cultural review, and release evaluation; it does not make a candidate a confirmed site, establish cultural authority, clear rights, approve disclosure, create a release, or make material KFM-published.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle relationship](#lifecycle-relationship) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Proof requirements](#proof-requirements) · [Archaeology proof guardrails](#archaeology-proof-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Implementation depth remains UNKNOWN.**  
+**Path:** `data/proofs/archaeology/`  
+**Owning responsibility:** `data/proofs/`  
+**Domain segment:** `archaeology/`  
+**Direct public access:** denied  
+**Documentation rollback target:** prior blob `4dc6a8af9bf885b405b11f6d92c89fd44d53f34b`
+
+> [!CAUTION]
+> Archaeology is deny-by-default for exact or reverse-engineerable locations, burial or human-remains context, sacred or culturally restricted knowledge, collection-security detail, looting-risk information, private-landowner detail, consent secrets, protected review substance, access clues, withheld precision, and control-defeating transform information. Do not place this material in an ordinary repository proof packet.
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Repo fit](#repo-fit) · [Operating contract](#operating-contract) · [Proof requirements](#proof-requirements) · [Sensitivity](#sensitivity-cultural-review-and-public-safe-representation) · [Lifecycle](#lifecycle-relationship) · [Candidates](#candidate-and-source-role-preservation) · [Correction](#correction-invalidation-withdrawal-and-rollback) · [Evidence](#evidence-ledger) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ---
 
 ## Purpose
 
-`data/proofs/archaeology/` is the Archaeology domain proof lane. It should hold or index proof artifacts that make Archaeology claims inspectable, evidence-bound, sensitivity-aware, and citation-safe.
+`data/proofs/archaeology/` is the Archaeology domain proof-support lane under the canonical `data/proofs/` responsibility. It supports inspectable closure for Archaeology claims and derivatives while keeping source identity, object meaning, machine shape, policy decisions, cultural authority, release decisions, and public delivery in their owning surfaces.
 
-This lane may contain or reference proof support for:
+The lane exists to make bounded questions inspectable:
 
-- EvidenceBundle closure for Archaeology catalog/triplet candidates;
-- EvidenceRef resolution targets used by released or review-only Archaeology payloads;
-- claim-support records for survey, site, artifact, provenience, stratigraphy, chronology, geophysics, remote-sensing, LiDAR, collection, 3D documentation, and generalized public-candidate assertions;
-- digest closure, hash manifests, and proof indexes that support reproducibility;
-- sensitivity-proof manifests showing that redaction/generalization/restriction decisions were applied without exposing restricted details;
-- cultural/steward review references where sovereignty, sacred-site, burial, cultural knowledge, or rights-holder decisions affect admissibility;
-- proof metadata needed to show why a governed answer can `ANSWER`, `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`.
+1. Which claim, object, candidate, relationship, catalog record, release candidate, correction, or governed answer is being supported?
+2. Which admitted sources, `EvidenceRef` values, evidence members, and source roles support it?
+3. Which spatial, temporal, provenance, integrity, rights, sensitivity, consent, cultural-review, and sovereignty limits qualify the support?
+4. Which validations, receipts, policy decisions, review records, release dependencies, correction paths, and rollback targets remain external to the proof packet?
+5. Which uncertainty, contradiction, staleness, invalidation, or withdrawal condition prevents reliance?
 
-This lane does not create, store, or decide the underlying Archaeology data, schemas, receipts, policy decisions, cultural decisions, release decisions, or public payloads. It supports claims; it does not replace the governed lifecycle.
+This lane supports evidence and review. It does not admit sources, establish archaeological fact, convert candidates into confirmed sites, determine ownership or cultural authority, apply policy, approve release, publish maps, or authorize excavation, access, collection, or land-management action.
+
+## Authority level
+
+**Implementation-bearing specialized domain proof-support lane under the canonical `data/proofs/` responsibility.**
+
+Authority remains separated:
+
+| Concern | Owning surface | Relationship to this lane |
+| --- | --- | --- |
+| Archaeology doctrine and bounded context | [`docs/domains/archaeology/`](../../../docs/domains/archaeology/README.md) | Explains domain scope and sensitivity posture. |
+| Archaeology semantic meaning | [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/README.md) | Defines object meaning; proofs cite accepted contracts. |
+| Machine shape | [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/README.md) | Defines schema shape; a future proof packet records the accepted profile. |
+| Source identity, role, rights, and admission | [`data/registry/sources/archaeology/`](../../registry/sources/archaeology/README.md) | Proofs reference admitted sources; registry records do not live here. |
+| Evidence and domain proof support | [`data/proofs/`](../README.md) and this lane | Supports inspectable closure without becoming policy or release authority. |
+| Process memory and receipts | [`data/receipts/`](../../receipts/README.md) | Proofs cite receipts; receipts remain separate. |
+| Policy decisions | [`policy/domains/archaeology/`](../../../policy/domains/archaeology/README.md) | Proofs carry decision references; they do not decide admissibility. |
+| Validation implementation | [`tools/validators/archaeology/`](../../../tools/validators/archaeology/README.md) and [`tools/validators/domains/archaeology/`](../../../tools/validators/domains/archaeology/README.md) | Both are documented routing surfaces; accepted executable proof validation is not established. |
+| Candidate review and release | [`release/candidates/archaeology/`](../../../release/candidates/archaeology/README.md) and shared [`release/`](../../../release/README.md) records | Proofs support review; candidate or proof existence is not release. |
+| Public carriers | Governed interfaces and released public-safe artifacts | No direct client path to this lane. |
+
+This README creates no proof object, schema, policy, cultural decision, release, public route, or publication state.
+
+## Status
+
+| Surface | Repository-grounded result |
+| --- | --- |
+| Exact target | **CONFIRMED** at `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`; prior blob `4dc6a8af9bf885b405b11f6d92c89fd44d53f34b` |
+| Documentation version | `v0.2.0` |
+| Canonical proof parent | **CONFIRMED repository-grounded draft** at [`data/proofs/README.md`](../README.md) |
+| Archaeology domain documentation | **CONFIRMED draft document** with exact-location denial and cultural-review boundaries |
+| Archaeology semantic contracts | **CONFIRMED draft directory index**; object-level completeness remains bounded |
+| Archaeology schemas | **CONFIRMED draft domain index**; concrete proof schema and profile remain unestablished |
+| Archaeology fixtures | **CONFIRMED parent index** with synthetic child lanes; payload validity and proof coverage remain unverified |
+| Archaeology tests | **CONFIRMED repository-grounded index**; named modules exist, but sampled content remains placeholder-backed |
+| Archaeology validators | **CONFIRMED two README routing indexes**; accepted executable proof validator remains unestablished |
+| Archaeology policy | **CONFIRMED draft policy README**; executable enforcement remains unestablished |
+| Archaeology source registry | **CONFIRMED draft source-domain registry boundary**; admitted descriptor payload inventory remains bounded |
+| Archaeology candidate lane | **CONFIRMED parent README only** in its bounded inventory; no child dossier was established there |
+| Archaeology workflow | **CONFIRMED read-only readiness workflow** with explicit validation, proof, and release holds |
+| Proof payload inventory | `UNKNOWN` beyond this README; no governed recursive inventory was performed in this task |
+| Accepted proof producer | Not established |
+| Public release | Not established by inspected evidence |
+| Public readiness | `DENY BY DEFAULT` |
+
+**Workflow compatibility hold:** `PROPOSED until concrete proof schemas`, validators, fixtures, and route behavior are verified.
+
+The current [`domain-archaeology`](../../../.github/workflows/domain-archaeology.yml) workflow checks boundaries and records `WORKFLOW_SKIPPED_EXPLICIT` / `WORKFLOW_HOLD` states. A green held result is readiness evidence only—not an `EvidenceBundle`, cultural-review decision, policy decision, validation receipt, release approval, or publication authority.
+
+<a id="accepted-contents"></a>
+
+## What belongs here
+
+Only bounded Archaeology proof-support artifacts under an accepted profile, such as:
+
+- claim-to-evidence or object-to-evidence closure packets;
+- `EvidenceRef` resolution indexes and evidence-member manifests that avoid duplicating source payloads;
+- digest and integrity closure across admitted evidence, processed derivatives, catalog or triplet records, and review candidates;
+- source-role, candidate-status, spatial, temporal, rights, sensitivity, consent, cultural-review, policy, review, release-dependency, correction, and rollback summaries;
+- validation and integrity summaries that reference—but do not duplicate—authoritative reports and receipts;
+- public-safe representation support that records the governed derivative and decision references without exposing restricted originals or transform secrets;
+- correction, supersession, invalidation, and withdrawal support pointers;
+- local README or index material that explains the proof boundary without becoming a public product.
+
+Each admitted artifact must have an accepted contract, schema or profile, producer, validator, sensitivity posture, access posture, retention rule, correction path, and rollback relationship. None was established merely by this README.
+
+<a id="exclusions"></a>
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
+| --- | --- |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED payloads | Keep them in their governed lifecycle lanes. |
+| Run, transform, validation, redaction, publication-transform, review, policy, AI, catalog-build, or release receipts | Keep process memory under accepted receipt lanes; proofs reference it. |
+| Source descriptors or source payloads | Use the source registry and lifecycle source lanes. |
+| Contracts, schemas, policy bundles, validators, tests, fixtures, pipelines, packages, or applications | Use the owning responsibility root. |
+| Release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices, signatures, or changelogs | Use `release/`. |
+| Public maps, tiles, APIs, UI payloads, downloads, Focus Mode answers, or generated narrative | Use governed released surfaces; never serve this lane directly. |
+| Exact or reverse-engineerable site geometry, burial or human-remains context, sacred or restricted knowledge, collection-security detail, looting-risk information, private-landowner detail, consent secrets, or protected review substance | Deny, quarantine, generalize, redact, or route to approved restricted systems according to policy and review. |
+| Redaction offsets, transform seeds, generalized-to-original mappings, thresholds, or other control-defeating information | Keep outside ordinary repository paths under approved controls. |
+| Candidate evidence presented as confirmed-site proof | Preserve candidate status until accepted evidence and review support a governed transition. |
+
+## Inputs
+
+Potential inputs are immutable references to admitted source records, processed or catalog candidates, `EvidenceRef` values, evidence members, validation reports, receipts, policy decisions, cultural and sovereignty review state, rights and consent posture, release-candidate context, correction lineage, and rollback targets.
+
+An accepted proof profile must state which inputs are required, how each reference resolves, and what happens when a reference is missing, stale, contradictory, revoked, superseded, inaccessible, or restricted. Unresolved support narrows or blocks downstream reliance; it does not invite plausible completion.
+
+## Outputs
+
+Potential outputs are claim-scoped proof packets, resolution indexes, integrity summaries, limitations, and invalidation pointers for downstream review, release evaluation, correction, rollback, governed evidence display, or governed answering.
+
+Outputs from this lane:
+
+- do not define the finite outcome vocabulary of another contract;
+- do not authorize `ANSWER`, disclosure, release, or publication;
+- do not replace an authoritative receipt, policy decision, review record, release manifest, correction notice, or rollback card;
+- must not expose protected source content or enable reconstruction of withheld precision; and
+- must not be served directly to ordinary public clients.
+
+## Validation
+
+Validation is layered and fail-closed:
+
+| Layer | Current posture | Required result before reliance |
+| --- | --- | --- |
+| Documentation and placement | This README and the parent proof contract are inspectable. | Correct responsibility root, one authority surface, valid links and anchors, and no sensitive disclosure. |
+| Packet structure and references | **PROPOSED**; no accepted Archaeology proof profile was verified. | Contract/profile validation, required fields, finite findings, resolvable references, and deterministic identity. |
+| Evidence and integrity | **PROPOSED** | Evidence-member closure, source-role preservation, digest agreement, provenance, spatial and temporal support, and staleness checks. |
+| Rights, sensitivity, and review | **PROPOSED** | Rights, consent, cultural and sovereignty review, sensitivity decisions, public-safe representation, and no-leak checks. |
+| Downstream closure | **PROPOSED** | Policy, review, catalog, release, correction, withdrawal, and rollback dependencies remain explicit and valid. |
+| Current CI readiness job | Read-only source-inspected hold workflow. | `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` remain honest until an accepted deterministic no-network suite is deliberately graduated. |
+
+The current workflow is designed to fail when proof payloads, a proof target, or a potential producer surface without a governed contract and tests. Passing that structural check proves only the declared readiness boundary.
+
+## Review burden
+
+Accountable ownership and CODEOWNERS routing remain **NEEDS VERIFICATION**. Changes should include the applicable Archaeology, evidence, proof, source, contract, schema, validation, rights, sensitivity, cultural-review, sovereignty, consent, collection-security, policy, release, correction, rollback, security, and documentation stewards.
+
+Any proposal involving protected cultural material, human remains, exact or inferable location, source-right changes, consent or revocation, candidate-to-site transition, public-safe transform, release, correction, or rollback requires the corresponding qualified and independent review. Repository ownership or code-review routing is not cultural authority, rights-holder consent, policy approval, or release approval.
+
+## Related folders
+
+- Parent and lifecycle: [`data/proofs/`](../README.md) · [`data/`](../../README.md) · [`processed/archaeology/`](../../processed/archaeology/README.md) · [`catalog/domain/archaeology/`](../../catalog/domain/archaeology/README.md) · [`published/archaeology/`](../../published/archaeology/README.md)
+- Trust support: [`data/receipts/`](../../receipts/README.md) · [`data/registry/sources/archaeology/`](../../registry/sources/archaeology/README.md)
+- Domain authority: [`docs/domains/archaeology/`](../../../docs/domains/archaeology/README.md) · [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/README.md) · [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/README.md) · [`policy/domains/archaeology/`](../../../policy/domains/archaeology/README.md)
+- Verification: [`fixtures/domains/archaeology/`](../../../fixtures/domains/archaeology/README.md) · [`tests/domains/archaeology/`](../../../tests/domains/archaeology/README.md) · [`tools/validators/archaeology/`](../../../tools/validators/archaeology/README.md) · [`tools/validators/domains/archaeology/`](../../../tools/validators/domains/archaeology/README.md)
+- Release and operation: [`release/candidates/archaeology/`](../../../release/candidates/archaeology/README.md) · [`release/`](../../../release/README.md) · [`domain-archaeology.yml`](../../../.github/workflows/domain-archaeology.yml)
+- Doctrine: [Directory Rules](../../../docs/doctrine/directory-rules.md)
+
+## ADRs
+
+- [ADR-0001](../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) governs schema-home separation.
+- [ADR-0010](../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) records the deny-by-default posture cited by current Archaeology validator documentation.
+
+No accepted Archaeology proof-profile, proof-payload placement, or proof-producer ADR was verified in this task. An accepted ADR plus migration and rollback plan is required before creating parallel proof authority, changing the proof/receipt/release split, or bypassing the canonical lifecycle and trust membrane.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence boundary:** `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`
+- **Review type:** complete target read; pinned parent, doctrine, domain, contract, schema-index, fixture-index, test-index, source-registry, validator-index, policy, candidate, and workflow reads
+- **Recursive proof payload inventory:** not performed
+- **Runtime, release-instance, access-control, cache, hosting, and rollback-drill inspection:** not performed
+
+Re-review on proof payload, producer, schema/profile, validator, fixture, workflow, policy, rights, cultural-review, sensitivity, public-consumer, release, correction, withdrawal, retention, or rollback changes—or within six months.
+
+## Repo fit
+
+Directory Rules place proof content under `data/proofs/`, distinguish proofs from receipts and release decisions, and require domain names to remain lane segments inside responsibility roots.
+
+| Responsibility | Correct home | Boundary |
+| --- | --- | --- |
+| Archaeology source capture and unresolved material | `data/raw/`, `data/work/`, or `data/quarantine/` domain lanes | Not proof support. |
+| Normalized Archaeology derivatives | `data/processed/archaeology/` | Upstream data; not evidence closure or release. |
+| Catalog and graph projections | `data/catalog/` and `data/triplets/` domain lanes | Discovery and relationship projections; not proof authority. |
+| Archaeology proof support | `data/proofs/archaeology/` | This lane. |
+| Process memory | `data/receipts/` | Referenced by proofs; not stored here. |
+| Source admission records | `data/registry/sources/archaeology/` | Referenced by proofs; not duplicated here. |
+| Public-safe artifacts | `data/published/` domain lanes | Downstream only after governed release. |
+| Release decisions and rollback authority | `release/` | Proofs support; they do not decide. |
+| Meaning, shape, policy, tests, and implementation | `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `tools/`, `pipelines/`, `packages/`, and `apps/` | Separate authority roots. |
+
+## Operating contract
+
+An accepted Archaeology proof packet should make these dimensions inspectable without embedding protected material:
+
+| Dimension | Required closure |
+| --- | --- |
+| Supported subject | Stable claim, object, candidate, relationship, catalog record, release candidate, correction, or governed response reference. |
+| Evidence | Resolvable evidence references, member roles, limitations, contradictions, staleness, and revocation state. |
+| Identity and scope | Deterministic packet identity plus spatial, temporal, version, and source scope. |
+| Source roles | Authority, observation, context, modeled, administrative, candidate, and synthetic roles remain explicit and non-interchangeable. |
+| Integrity | Content digests, producer/profile identity, validation result, and replay context where accepted. |
+| Rights and stewardship | Rights, consent, cultural and sovereignty review, sensitivity, access, and public-safe representation references. |
+| Governance | Policy, independent review, release dependency, correction lineage, withdrawal state, and rollback target. |
+| Limitations | Missing, inaccessible, conflicting, generalized, redacted, or non-authoritative support remains visible. |
+
+These are documentation requirements, not an implemented wire shape. The accepted contract and schema/profile must define exact fields, enums, requiredness, and reason codes.
+
+## Proof requirements
+
+The following requirements remain **PROPOSED** until concrete proof schemas, validators, fixtures, and route behavior are verified:
+
+- every packet identifies the exact subject and the EvidenceRef or other governed references it supports;
+- evidence-member roles cannot silently collapse or substitute for one another;
+- candidate evidence remains candidate evidence until an accepted transition is supported and reviewed;
+- digest and provenance closure is deterministic and replayable under an accepted profile;
+- rights, consent, cultural and sovereignty review, sensitivity, and access posture fail closed when unresolved;
+- generalized or redacted support references the governed derivative and required decision records without exposing the restricted original or transform secrets;
+- cross-domain evidence retains its owning domain, source role, rights, sensitivity, and correction lineage;
+- policy, review, release, correction, withdrawal, and rollback remain external authority references rather than fields that self-approve the packet;
+- invalidated, revoked, superseded, or stale evidence propagates to dependent proof status; and
+- no packet becomes a direct public map, tile, API, download, Focus Mode answer, or generated-answer source.
+
+## Sensitivity, cultural review, and public-safe representation
+
+Proof support must preserve a deny-by-default boundary:
+
+1. Classify the supported subject, source roles, rights, sensitivity, consent, cultural and sovereignty review, and access posture.
+2. Keep exact or reverse-engineerable location, burial or human-remains context, sacred or culturally restricted knowledge, collection-security information, looting-risk detail, private-landowner detail, protected review substance, and control-defeating transform information out of ordinary repository proof packets.
+3. Reference approved redacted or generalized derivatives and their governing records without embedding the protected original.
+4. Require qualified review for any public-safe representation; a technical transform alone is not cultural authority or release approval.
+5. Treat missing, conflicting, revoked, or inaccessible rights and review support as a blocker, not an invitation to infer.
+
+Proof packets must not become site-discovery surfaces, collection-security surfaces, cultural-knowledge disclosure surfaces, or instructions for physical access.
 
 ## Lifecycle relationship
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-                           \-> data/proofs/archaeology supports EvidenceBundle / EvidenceRef closure
+                           \-> proof support remains a distinct evidence family
 ```
 
-```mermaid
-flowchart LR
-  RAW[data/raw/archaeology] --> WORK[data/work/archaeology]
-  WORK --> QUAR[data/quarantine/archaeology]
-  WORK --> PROC[data/processed/archaeology]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog/domain/archaeology]
-  PROC --> STAC[data/catalog/stac/archaeology]
-  PROC --> DCAT[data/catalog/dcat/archaeology]
-  PROC --> PROV[data/catalog/prov/archaeology]
-  CAT --> TRIP[data/triplets/.../archaeology]
-  CAT --> PUB[data/published/.../archaeology]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
+Proof support may be referenced during catalog, relationship, review, release, correction, rollback, and governed-answer evaluation. It does not move an artifact between lifecycle phases and does not turn a commit, pull request, merge, workflow result, or GitHub release into KFM publication.
 
-  PROC -. evidence refs .-> PROOF[data/proofs/archaeology]
-  CAT -. EvidenceBundle closure .-> PROOF
-  TRIP -. claim support .-> PROOF
-  REL -. release cites .-> PROOF
-  PROOF -. references receipts .-> RECEIPTS[data/receipts]
-  PROOF -. references sources .-> REG[data/registry/sources/archaeology]
-```
+## Candidate and source-role preservation
 
-Proofs support catalog, triplet, release, correction, rollback, and governed answers. They do not publish anything by themselves.
+- `SiteCandidate`, `CandidateFeature`, `RemoteSensingAnomaly`, and `LiDARCandidate` support remains candidate-class unless an accepted contract, evidence closure, qualified cultural and stewardship review, policy decision, and governed transition support another object family.
+- A modeled, remote-sensing, LiDAR, or geophysics signal is not observational confirmation merely because it has a digest or proof packet.
+- Administrative, contextual, synthetic, or derived sources must not substitute for authoritative or observational roles.
+- Cross-domain joins must retain each lane's ownership and sensitivity. A benign-looking join may increase disclosure risk.
+- Generated language, summaries, maps, scenes, graphs, tiles, indexes, and screenshots remain downstream interpretations; they are not proof.
 
-## Repo fit
+## Correction, invalidation, withdrawal, and rollback
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw Archaeology source payloads, source-native records, survey packets, collection files, media, or original coordinates | `data/raw/archaeology/` | Not this lane. |
-| In-process transforms, candidate detection, LiDAR/geophysics/remote-sensing analysis, joins, QA, redaction trials, notebooks, or scratch outputs | `data/work/archaeology/` | Not this lane. |
-| Unsafe, unresolved, rights-unclear, sensitivity-unclear, cultural-review-unclear, source-role-unclear, or release-unclear material | `data/quarantine/archaeology/` | Not this lane until review/admission allows. |
-| Normalized Archaeology processed data | `data/processed/archaeology/` | Not this lane. |
-| Archaeology catalog records | `data/catalog/domain/archaeology/` and related STAC/DCAT/PROV lanes | Catalog, not proof storage. |
-| Archaeology triplet/graph records | `data/triplets/.../archaeology/` | Graph projection, not proof storage. |
-| Archaeology proof support | `data/proofs/archaeology/` | This lane. |
-| Receipts and review records | `data/receipts/` or accepted review/receipt roots | Receipts are referenced by proofs but not stored here. |
-| Source registry records | `data/registry/sources/archaeology/` or accepted registry path | SourceDescriptor/source-admission authority. |
-| Published public-safe outputs | `data/published/.../archaeology/` | Downstream after release only. |
-| Release candidates and release manifests | `release/candidates/archaeology/`, `release/` | Publication authority, not proof storage. |
-| Archaeology contracts | `contracts/domains/archaeology/` | Object meaning; not proof artifacts. |
-| Archaeology schemas | `schemas/contracts/v1/archaeology/` or ADR-resolved home | Machine shape; not proof artifacts. |
-| Archaeology policy | `policy/sensitivity/archaeology/`, `policy/release/archaeology/`, `policy/consent/archaeology/` | Admissibility authority; not proof artifacts. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
+A proof-support design must preserve:
 
-## Accepted contents
+- dependency-aware invalidation when source, evidence, rights, consent, cultural review, sensitivity, policy, or release state changes;
+- correction and supersession links that do not erase prior relied-on identity;
+- withdrawal handling when continued disclosure or reliance is no longer allowed;
+- cache and downstream-consumer invalidation requirements at their owning surfaces; and
+- rollback references that distinguish proof correction from release rollback authority.
 
-Archaeology proof artifacts may include:
-
-- EvidenceBundle files, indexes, or pointers for Archaeology claims;
-- EvidenceRef resolution maps and claim-support manifests;
-- digest-closure manifests tying processed artifacts, catalog records, triplets, and release candidates to source evidence;
-- proof indexes for survey-project, survey-transect, site-candidate, site-component, artifact-record, provenience-context, excavation-unit, stratigraphic-unit, collection-repository, chronology-assertion, geophysics-observation, remote-sensing-anomaly, LiDAR-candidate, 3D-documentation, and public-safe generalized derivative claims;
-- candidate-class proof support that preserves candidate status until governed promotion to another object family;
-- sensitivity-proof manifests that reference redaction, generalization, withholding, review, and policy decisions without exposing restricted geometry or restricted context;
-- sovereignty/cultural-review proof references where rights-holder, steward, consent, or revocation posture determines admissibility;
-- release/correction/rollback proof pointers, not release or rollback authority records;
-- proof README or index notes that explain evidence boundaries without becoming public outputs or authority records.
-
-## Exclusions
-
-Do not store these under `data/proofs/archaeology/`:
-
-- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data artifacts.
-- RunReceipt, TransformReceipt, ValidationReceipt, RedactionReceipt, PublicationTransformReceipt, ReviewRecord, PolicyDecision, CatalogBuildReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, AIReceipt, or release signatures as primary receipt/release records.
-- SourceDescriptor/source registry records.
-- Contracts, schemas, policy bundles, validators, tests, fixtures, pipelines, app/UI/API code, packages, notebooks, or executable tooling.
-- Public map/tile/API/UI payloads, Focus Mode answer payloads, direct downloads, model-answer text, release manifests, signatures, changelogs, or published products.
-- Exact archaeological-site geometry, burial/human-remains context, sacred-site information, looting-risk detail, collection-security detail, private-landowner detail, sovereignty-controlled cultural knowledge, consent secrets, restricted coordinates, credentials, secrets, redaction parameters, or transform offsets.
-- Claims that promote candidate features, remote-sensing anomalies, or LiDAR candidates into confirmed sites without governed review and evidence closure.
-
-## Proof requirements
-
-PROPOSED until concrete proof schemas, validators, fixtures, and route behavior are verified:
-
-| Requirement | Meaning |
-|---|---|
-| EvidenceRef resolution | Every proof entry should identify which EvidenceRef, claim, catalog row, triplet, release candidate, correction, rollback, or governed answer it supports. |
-| EvidenceBundle closure | Proof artifacts should support closure over source descriptors, processed artifacts, catalog/triplet records, receipts, validation state, policy posture, review state, and release linkage where applicable. |
-| Digest closure | Proofs should include or point to content digests for evidence inputs, processed artifacts, catalog rows, triplets, generalized derivatives, and proof manifests. |
-| Source-role preservation | Authority, observation, context, modeled, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Candidate preservation | CandidateFeature, RemoteSensingAnomaly, and LiDARCandidate evidence remains candidate-class until governed review and evidence support a different object family. |
-| Sensitivity linkage | Proofs involving restricted or generalized material should reference RedactionReceipt, PublicationTransformReceipt, ReviewRecord, and PolicyDecision without exposing restricted details. |
-| Cultural/sovereignty review | Sacred, burial, human-remains, cultural knowledge, or sovereignty-controlled evidence should reference rights-holder/steward review posture without disclosing protected content. |
-| Cross-lane ownership | Roads/Rail, Settlements/Infrastructure, Hydrology, Geology, People/Land, and other evidence must keep owning-lane authority and sensitivity posture. |
-| Policy posture | Proof artifacts must not bypass PolicyDecision or steward review when claims touch sensitive Archaeology material. |
-| Release linkage | Proofs used by public outputs should link to release state, correction path, and rollback target without substituting for ReleaseManifest. |
-| Correction and invalidation | Proofs should support correction, supersession, withdrawal, and rollback references when upstream evidence, rights, sensitivity, or review state changes. |
-| No public surface by default | Proof files are not direct public APIs, tiles, downloads, Focus Mode answers, or model-answer sources. |
-
-## Archaeology proof guardrails
-
-- Proof records support evidence closure; they are not source data, processed data, receipts, catalog records, release manifests, or public products.
-- EvidenceBundle outranks generated summaries.
-- If an Archaeology claim lacks resolvable evidence support, the safe outcome is `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`, not an uncited answer.
-- Exact site geometry, burial/human-remains context, sacred-site information, collection-security detail, looting-risk detail, private-landowner detail, and sovereignty-controlled cultural knowledge must not leak through proof files.
-- Candidate features and remote-sensing anomalies must not become confirmed sites without evidence closure and steward review.
-- Proofs may cite redacted/generalized derivatives, but proof files must not disclose the restricted original.
-- Cultural, sovereignty, consent, and revocation posture must be respected; unresolved posture fails closed.
-- AI summaries may reference only governed, released, evidence-supported surfaces and must preserve sensitivity posture; AI text is not proof.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
-
-> [!CAUTION]
-> Do not expose `data/proofs/archaeology/` directly as a public map, API, UI, download, Focus Mode answer, AI answer source, site-discovery surface, collection-security surface, cultural-knowledge disclosure surface, archaeology-location surface, legal/compliance advice, or life-safety product. Proofs support governed evidence closure; they do not publish claims by themselves.
+Documentation rollback for this revision is the prior blob `4dc6a8af9bf885b405b11f6d92c89fd44d53f34b`. The earlier greenfield-stub lineage remains `46091dc612b283dbcd840e2b9f129aa9fee1495b`.
 
 ## Directory map
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+The bounded inspected surface is:
 
 ```text
-data/proofs/archaeology/
-├── README.md
-├── evidence_bundles/         # PROPOSED — Archaeology EvidenceBundle records or indexes
-├── evidence_refs/            # PROPOSED — EvidenceRef resolution maps
-├── claim_support/            # PROPOSED — claim-to-evidence manifests
-├── digest_closure/           # PROPOSED — source/processed/catalog/triplet digest closure
-├── sensitivity/              # PROPOSED — redaction/generalization/review proof pointers, not restricted details
-├── candidate_class/          # PROPOSED — candidate-feature/anomaly/LiDAR proof support
-├── cultural_review/          # PROPOSED — steward/rights-holder review pointers, not protected content
-├── cross_lane/               # PROPOSED — governed proof support for cross-lane joins
-├── releases/                 # PROPOSED — proof pointers used by release candidates, not ReleaseManifest authority
-├── corrections/              # PROPOSED — proof invalidation/correction pointers, not CorrectionNotice authority
-├── validation/               # PROPOSED — proof-validation notes, not ValidationReport authority
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
+data/proofs/
+├── README.md                 # confirmed canonical proof-root contract
+└── archaeology/
+    └── README.md             # confirmed domain proof-support guide
 ```
+
+This is not a recursive absence claim. Child directories, payloads, generated indexes, external stores, LFS objects, ignored material, writers, and consumers remain `UNKNOWN` until a governed tree and payload inventory is completed. The prior speculative child tree is not retained as path authority.
 
 ## Evidence ledger
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a greenfield stub. | Did not define Archaeology proof boundaries. |
-| `data/proofs/README.md` | CONFIRMED | Parent proof root currently exists as a greenfield stub. | Does not define proof-root contract yet. |
-| Repository search | CONFIRMED | Found Archaeology processed, pipeline, rollback, architecture, map UI, and sensitivity-reference documents. | Search is not a full tree audit. |
-| `data/processed/archaeology/README.md` | CONFIRMED current repo doc / PROPOSED implementation | Processed Archaeology excludes EvidenceBundle/proof records, receipts, catalog records, release decisions, and public outputs; exact-location and sensitive contexts fail closed. | Does not prove proof schemas, validators, or access controls. |
-| `docs/domains/archaeology/PIPELINE.md` | CONFIRMED doctrine / PROPOSED implementation | Archaeology is deny-by-default, follows RAW→PUBLISHED gates, requires evidence closure before catalog/triplet, and preserves candidate-class restrictions. | Concrete code, specs, schemas, manifests, and CI remain NEEDS VERIFICATION. |
-| `docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md` | CONFIRMED doctrine / PROPOSED implementation | Archaeology rollback requires EvidenceBundle closure, handles evidence gaps and source-role collapse as high defects, and treats sensitive geometry/sovereignty/AI violations as critical/high triggers. | Runbook paths and tools remain PROPOSED/NEEDS VERIFICATION. |
-| `policy/sensitivity/archaeology/`, `policy/release/archaeology/`, and `policy/consent/archaeology/` | NEEDS VERIFICATION | Expected admissibility homes. | Current policy files and enforcement were not verified in this task. |
-| `schemas/contracts/v1/archaeology/` and `contracts/domains/archaeology/` | NEEDS VERIFICATION | Expected schema/contract homes. | Specific proof/EvidenceBundle schemas were not verified in this task. |
+| Evidence | Confirmed support | Limit |
+| --- | --- | --- |
+| Current target, blob `4dc6a8…` | Existing identity, guardrails, object-family coverage, workflow hold phrase, and rollback lineage | Contained stale parent-stub language and an unverified proposed child tree |
+| [Directory Rules](../../../docs/doctrine/directory-rules.md), blob `2affb08…` | `data/proofs/` owns proof content; receipts and release decisions remain separate; domain names are lane segments | Placement doctrine does not prove payloads or runtime enforcement |
+| [`data/proofs/README.md`](../README.md), blob `0d8b6e9…` | Current canonical proof-root contract and cite-or-abstain boundary | Recursive proof payloads, writers, and consumers remain unknown |
+| [Archaeology domain README](../../../docs/domains/archaeology/README.md), blob `e44040a…` | Domain scope, exact-location denial, cultural-review posture, and draft implementation boundary | Documentation does not prove runtime behavior |
+| [Archaeology contracts](../../../contracts/domains/archaeology/README.md), blob `d857c0e…` | Semantic-contract authority and object-boundary separation | Object-level and proof-contract completeness remain bounded |
+| [Archaeology schema index](../../../schemas/contracts/v1/domains/archaeology/README.md), blob `1d2708f…` | Canonical candidate schema lane and fail-closed sensitivity posture | Concrete proof schema/profile was not established |
+| [Fixtures](../../../fixtures/domains/archaeology/README.md) and [tests](../../../tests/domains/archaeology/README.md), blobs `ab30b7f…` / `229113a…` | Synthetic fixture lanes and named test topology are documented | Payload validity, executable enforcement, and current pass results remain unverified |
+| [Validator indexes](../../../tools/validators/archaeology/README.md), [`domains/archaeology`](../../../tools/validators/domains/archaeology/README.md), blobs `bae2eab…` / `8bcf32c…` | Broad-versus-child routing and README-only maturity are documented | Accepted executable proof validator and report producer are not established |
+| [Policy README](../../../policy/domains/archaeology/README.md), blob `8d03cdb…` | Draft deny-by-default policy boundary | Policy runtime enforcement is not established |
+| [Source registry](../../registry/sources/archaeology/README.md), blob `40f859e…` | Source-domain admission and no-public-path boundary | Admitted descriptor payload inventory remains bounded |
+| [Release candidate README](../../../release/candidates/archaeology/README.md), blob `bc5edc7…` | Pre-publication candidate boundary and bounded parent-only inventory | No release or publication is established |
+| [`domain-archaeology.yml`](../../../.github/workflows/domain-archaeology.yml), blob `18aabc6…` | Read-only structural checks and explicit validation, proof, and release holds | A held workflow is not proof, policy, review, release, or publication authority |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+| --- | ---: | --- |
+| Recursive proof subtree and payload inventory | `NEEDS VERIFICATION` | Pinned tree, file families, generated/LFS/external stores, rights, sensitivity, owners, and retention |
+| Accepted proof packet/profile | `UNKNOWN` | Contract, schema/profile, versioning, finite findings, examples, and migration policy |
+| Proof producer and deterministic replay | `UNKNOWN` | Implemented producer, exact command, no-network fixtures, identity, digest, replay, and failure semantics |
+| EvidenceRef resolution | `UNKNOWN` | Resolver implementation, accepted EvidenceBundle shape, positive and fail-closed tests, access behavior |
+| Executable proof validation | `UNKNOWN` | Validator implementation, representative fixtures, safe diagnostics, reports/receipts, and CI graduation |
+| Rights, sensitivity, cultural and sovereignty enforcement | `UNKNOWN` | Accepted policy entrypoints, qualified review records, consent/revocation handling, no-leak tests |
+| Writers, consumers, and public isolation | `UNKNOWN` | Pipeline/tool/runtime/API/UI inventory, access controls, hosting, caches, and negative route tests |
+| Release, correction, withdrawal, and rollback closure | `UNKNOWN` | Instances, identity agreement, independent review, invalidation propagation, and drills |
+| Accountable ownership | `NEEDS VERIFICATION` | Accepted stewardship and review assignments; CODEOWNERS routing alone is insufficient |
+
+Unknowns narrow claims and block higher-risk transitions. They do not invite plausible defaults or weaken deny-by-default behavior.
 
 ## Validation checklist
 
-- [ ] Confirm actual child directories under `data/proofs/archaeology/`.
-- [ ] Expand or reconcile parent `data/proofs/README.md` beyond stub.
-- [ ] Confirm EvidenceBundle, EvidenceRef, proof index, claim-support, digest-closure, sensitivity-proof, cultural-review-proof, and proof-invalidation schemas and contract homes.
-- [ ] Confirm whether Archaeology proof files should be stored as concrete records here, as indexes pointing to global proof stores, or as generated artifacts linked from catalog/release.
-- [ ] Confirm validators, fixtures, CI checks, source-role checks, digest checks, EvidenceRef resolution checks, candidate-class checks, sensitivity-proof checks, cultural-review checks, correction-invalidation checks, and access-control enforcement.
-- [ ] Confirm SourceDescriptor/source registry linkage for every proof-supported source family.
-- [ ] Confirm proof references to RunReceipt, TransformReceipt, ValidationReceipt, RedactionReceipt, PublicationTransformReceipt, ReviewRecord, PolicyDecision, CatalogBuildReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, AIReceipt, sovereignty review notes, and consent/revocation records are pointers, not misplaced records.
-- [ ] Confirm exact site geometry, burial/human-remains context, sacred-site information, collection-security detail, looting-risk detail, private-landowner detail, sovereignty-controlled cultural knowledge, consent secrets, restricted coordinates, redaction parameters, transform offsets, private agreement terms, and release-unclear artifacts cannot enter public routes through proof files.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, sensitivity-safe, rights-safe, cultural-review-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, site-discovery surface, collection-security surface, cultural-knowledge disclosure surface, legal/compliance advice, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public Archaeology service, public map, public tile, public API, public UI, or AI-answer source.
+- [ ] Confirm the recursive proof subtree, payload types, generators, indexes, LFS/external stores, writers, and consumers.
+- [ ] Accept one Archaeology proof contract and schema/profile without creating parallel proof authority.
+- [ ] Establish a deterministic, no-network proof producer and validator with synthetic public-safe fixtures and safe diagnostics.
+- [ ] Verify `EvidenceRef` resolution, evidence-member closure, source-role separation, digests, replay, staleness, contradiction, revocation, and invalidation behavior.
+- [ ] Verify rights, consent, cultural and sovereignty review, sensitivity, exact-location denial, public-safe representation, and control-defeating-information rejection.
+- [ ] Verify candidate-to-site transitions cannot occur through proof packet presence alone.
+- [ ] Verify receipts, policy decisions, review records, release manifests, correction notices, withdrawal notices, and rollback cards remain references to their owning lanes.
+- [ ] Verify governed clients cannot read this lane directly or reconstruct protected content from released derivatives.
+- [ ] Deliberately graduate the workflow only after the accepted deterministic suite exists; do not erase explicit holds to make CI appear green.
+
+## No-loss ledger
+
+| Prior element | Disposition in v0.2.0 |
+| --- | --- |
+| Stable path, `doc_id`, creation uncertainty, author attribution, and greenfield-stub lineage | Preserved |
+| Archaeology proof purpose and proof/receipt/catalog/release separation | Preserved and clarified against the current parent contract |
+| EvidenceBundle, EvidenceRef, digest, claim-support, and integrity concepts | Preserved as profile requirements without inventing a wire shape |
+| Survey, site, artifact, context, chronology, geophysics, remote-sensing, LiDAR, collection, and 3D support scope | Preserved through bounded object and candidate coverage |
+| Candidate-not-confirmed, source-role, cross-lane, and AI-subordination rules | Preserved and strengthened |
+| Exact-location, burial, sacred-site, collection-security, looting-risk, private-landowner, sovereignty, consent, and transform-secret guardrails | Preserved and strengthened |
+| Lifecycle, policy, review, release, correction, withdrawal, and rollback boundaries | Preserved and aligned with current evidence |
+| Old `Purpose`, `Lifecycle relationship`, `Repo fit`, `Proof requirements`, `Archaeology proof guardrails`, `Directory map`, `Evidence ledger`, `Validation checklist`, and `Rollback` navigation | Headings or explicit compatibility anchors preserved |
+| Parent-proof README described as a greenfield stub | Repaired; current parent is a repository-grounded draft |
+| Speculative child-directory tree | Removed from normative appearance; concerns retained as packet dimensions and verification work, with no new path authority created |
+| Workflow phrase `PROPOSED until concrete proof schemas` | Preserved as an explicit compatibility hold |
+| Proof payload, source, schema, policy, validator, fixture, workflow, release, route, or publication mutation | None |
+
+## Archaeology proof guardrails
+
+- EvidenceBundle and admitted evidence outrank summaries, maps, indexes, and generated language.
+- Missing or unresolved evidence, rights, sensitivity, cultural review, consent, policy, or release support fails closed.
+- Candidate evidence cannot silently become confirmed-site evidence.
+- Proof packets may reference public-safe derivatives but must not reveal restricted originals or transform secrets.
+- Cultural and sovereignty review posture must remain visible without disclosing protected review substance.
+- Public clients and governed AI must use governed released interfaces, not this directory.
+- A commit, pull request, merge, badge, held workflow, or GitHub release is not KFM publication.
 
 ## Rollback
 
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, PROCESSED substitute, catalog root, triplet root, public output root, `data/published/` substitute, receipt store, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, direct public API shortcut, direct public UI shortcut, direct public tile shortcut, direct public exposure shortcut, source-role collapse path, candidate-as-confirmed-site path, exact-site exposure path, burial/sacred-site exposure path, cultural-sovereignty disclosure path, collection-security exposure path, private-landowner exposure path, redaction-bypass path, proof-without-evidence path, uncited-AI-answer source, legal/compliance advice surface, or life-safety guidance source.
+Rollback or correction is required if this lane becomes a source-data root, work area, quarantine bypass, processed-data substitute, catalog or triplet authority, receipt store, source registry, policy surface, cultural-authority surface, release-decision surface, public API or map shortcut, site-discovery surface, collection-security surface, candidate-to-site promotion shortcut, exact-location disclosure path, control-defeating transform store, or uncited generated-answer source.
 
-Rollback target for this expansion: previous greenfield stub blob SHA `46091dc612b283dbcd840e2b9f129aa9fee1495b`.
+Before merge, documentation rollback is to close the draft pull request and leave its branch unmerged. After merge, use a normal revert or corrective pull request against the actual merge commit; do not rewrite shared history. Operational proof or release rollback must use the accepted correction, withdrawal, and rollback authority surfaces.
 
-<p align="right"><a href="#top">Back to top</a></p>
+### Change history
+
+#### v0.2.0 — 2026-07-26
+
+- reconciled the target with the current canonical proof-root contract and pinned Archaeology evidence;
+- preserved the current workflow's explicit proof-maturity hold;
+- replaced stale parent-stub language and the speculative child tree with bounded confirmed state and a verification register;
+- strengthened proof/receipt/policy/release separation, candidate status, sensitivity, cultural-review, correction, and rollback boundaries;
+- modernized navigation, badges, alerts, tables, accessibility, evidence reporting, and no-loss traceability; and
+- changed Markdown only.
+
+#### v0.1 — 2026-06-25
+
+- expanded the prior greenfield stub into an Archaeology proof-lane guide.
+
+[Back to top](#top)
