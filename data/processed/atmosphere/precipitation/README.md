@@ -1,14 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-precipitation-readme
 title: data/processed/atmosphere/precipitation/README.md — Atmosphere PrecipitationObservation Processed Data README
-version: v0.1
+version: v0.2.0
 type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; precipitation-observation-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; precipitation; PrecipitationObservation; release-gated; canonical-units-aware; source-role-aware
-owners: OWNER_TBD — Atmosphere steward · Weather steward · Precipitation steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — one-character placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; precipitation; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, precipitation, PrecipitationObservation, WeatherObservation, WeatherStation, TemperatureObservation, WindField, ForecastContext, ClimateNormal, ClimateAnomaly, observed-sensor, meteorological-context, canonical-units, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, RunReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+status: repository-grounded draft; PROPOSED lane contract; runtime and payload enforcement unverified
+owners: NEEDS VERIFICATION — Atmosphere steward · Weather steward · Precipitation steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; no-direct-public-path; canonical-units-required; source-role-preserved; release-gated
+tags: [kfm, data, processed, atmosphere, precipitation, PrecipitationObservation, observed-sensor, meteorological-context, canonical-units, accumulation-window, gauge, radar, grid, evidence, correction, rollback]
 related:
   - ../README.md
   - ../observed/README.md
@@ -24,249 +25,281 @@ related:
   - ../../../../contracts/domains/atmosphere/PrecipitationObservation.md
   - ../../../../contracts/domains/atmosphere/WeatherObservation.md
   - ../../../../contracts/domains/atmosphere/WeatherStation.md
-  - ../../../../contracts/domains/atmosphere/TemperatureObservation.md
-  - ../../../../contracts/domains/atmosphere/WindField.md
   - ../../../../contracts/domains/atmosphere/ForecastContext.md
   - ../../../../contracts/domains/atmosphere/ClimateNormal.md
   - ../../../../contracts/domains/atmosphere/ClimateAnomaly.md
   - ../../../../schemas/contracts/v1/domains/atmosphere/PrecipitationObservation.schema.json
   - ../../../../policy/domains/atmosphere/
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../docs/doctrine/trust-membrane.md
   - ../../../raw/atmosphere/
   - ../../../work/atmosphere/
   - ../../../quarantine/atmosphere/
-  - ../../../catalog/domain/atmosphere/README.md
-  - ../../../catalog/stac/atmosphere/
-  - ../../../catalog/dcat/atmosphere/
-  - ../../../catalog/prov/atmosphere/
+  - ../../../catalog/domain/atmosphere/
   - ../../../triplets/
   - ../../../published/
   - ../../../proofs/
   - ../../../receipts/
   - ../../../registry/
   - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
 notes:
-  - "This file replaces a one-character placeholder at `data/processed/atmosphere/precipitation/README.md`."
-  - "This is the PROCESSED-stage sublane for normalized PrecipitationObservation artifacts under Atmosphere. It is not RAW station/gauge/radar storage, generic WeatherObservation authority, forecast/model authority, climate baseline/anomaly authority, hydrology or hazards truth, proof storage, release authority, public API/UI output, or life-safety guidance."
-  - "Precipitation artifacts must preserve variable identity, source role, station/grid/source-product context, canonical units, accumulation/amount/rate/intensity/type/trace semantics, observed time, retrieval time, QA/correction posture, evidence linkage, policy posture, and release state before public use."
-  - "The PrecipitationObservation contract defines object meaning; this README does not create a second contract or schema authority."
-  - "Precipitation observations may support climate, hydrology, agriculture, or hazards context only through downstream governed lanes; they do not prove flood, drought, crop loss, damage, or infrastructure impacts by themselves."
-  - "Rollback target for this expansion is previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`."
+  - "This file preserves the existing path and document identity while aligning the lane to the current data/processed authority contract."
+  - "This lane owns normalized precipitation candidates and sidecars, not source captures, schema authority, proof closure, catalog admission, release authority, or public-serving behavior."
+  - "The paired PrecipitationObservation schema remains a permissive PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "Precipitation candidates must preserve variable identity, canonical units, accumulation window, source role, spatial support, time semantics, QA, uncertainty, correction lineage, and release posture."
+  - "Precipitation does not prove flood, drought, crop loss, infrastructure damage, hazard impact, or life-safety guidance by itself."
+  - "Prior blob and rollback target: 623e90c2ad24b98d85609d7bf9f164411ab5c6a5."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/precipitation
+# `data/processed/atmosphere/precipitation/` — Precipitation Candidates
 
-> Atmosphere PROCESSED-stage sublane for normalized `PrecipitationObservation` artifacts: governed precipitation amount, rate, accumulation, intensity, type, trace-state, and precipitation-related meteorological context records that remain distinct from generic weather observations, forecast/model fields, climate baselines/anomalies, hydrology truth, hazard impacts, proof, release, and public map/API/UI surfaces.
+> **One-line purpose.** Own normalized, source-traced, unit-disciplined precipitation candidates that have passed applicable WORK checks but have not thereby become cataloged, released, public, or authoritative hydrology or hazard conclusions.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/precipitation" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Fprecipitation-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Object: PrecipitationObservation" src="https://img.shields.io/badge/object-PrecipitationObservation-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Units: canonical required](https://img.shields.io/badge/units-canonical%20required-1a7f37?style=flat-square)](#precipitation-semantics)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-d1242f?style=flat-square)](#outputs)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Weather steward · Precipitation steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/atmosphere/precipitation/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Object-family segment:** `precipitation` / `PrecipitationObservation`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, canonical units, source-role/freshness/caveat posture, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was a one-character placeholder · CONFIRMED `PrecipitationObservation` contract and schema paths exist · CONFIRMED precipitation has role-dependent `OBSERVED_SENSOR` / `METEOROLOGICAL_CONTEXT` character with canonical-unit requirements · PROPOSED precipitation processed-sublane details · NEEDS VERIFICATION for actual child inventory, validators, receipts, CI enforcement, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, a successful unit conversion, a gauge/radar comparison, a rendered map, a pull request, or a merge does not create truth, evidence closure, policy permission, catalog admission, release approval, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [PrecipitationObservation requirements](#precipitationobservation-requirements) · [Precipitation guardrails](#precipitation-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!CAUTION]
+> Precipitation is weather evidence or meteorological context. It is not, by itself, flood truth, drought truth, crop-loss proof, infrastructure-impact proof, emergency guidance, or a life-safety instruction.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Semantics](#precipitation-semantics) · [Comparability](#comparability-contract) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/atmosphere/precipitation/` holds normalized precipitation observation artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This lane holds processed precipitation candidates under the Atmosphere responsibility segment. Typical artifacts represent precipitation amount, accumulation, rate, intensity, phase, type, trace state, or related meteorological context while preserving source role, units, time, spatial support, QA, uncertainty, and correction lineage.
 
-This lane is for processed `PrecipitationObservation` records or derivatives that preserve variable identity, source role, station/network/grid/source-product context, source identity, observed time, retrieval time, valid time where applicable, canonical units, accumulation/amount/rate/intensity/type/trace-state semantics, QA/correction posture, freshness, evidence references, and downstream catalog readiness.
+The lane may support downstream weather, climate, hydrology, agriculture, or hazards analysis, but it does not itself establish streamflow, flood extent, drought status, crop damage, infrastructure impact, emergency conditions, or public action guidance.
 
-It is not a generic weather-observation lane. It is not a forecast/model lane. It is not climate baseline/anomaly authority. It is not hydrology canonical truth. It is not hazards event/impact truth. It is not a proof store, receipt store, source registry, catalog, release, semantic contract, schema, policy, public layer, public API/UI surface, or life-safety guidance source. It may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe precipitation layers, climate aggregation, hydrology context, Focus Mode summaries, or release packages only after gates pass.
+## Authority level
 
-## Lifecycle boundary
+**Canonical PROCESSED responsibility; non-public by default.**
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+This path may own normalized precipitation tables, vectors, rasters, grid products, station-linked records, comparison products, uncertainty sidecars, and lane-local documentation. It does not own:
 
-```mermaid
-flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> PRCP[data/processed/atmosphere/precipitation]
-  QUAR --> PRCP
-  PRCP --> OBS[data/processed/atmosphere/observed]
-  PRCP --> CLIM[data/processed/atmosphere/aggregate/climate]
-  PRCP --> CAT[data/catalog/domain/atmosphere]
-  PRCP --> STAC[data/catalog/stac/atmosphere]
-  PRCP --> DCAT[data/catalog/dcat/atmosphere]
-  PRCP --> PROV[data/catalog/prov/atmosphere]
-  PRCP -. supports .-> PROOF[data/proofs]
-  PRCP -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
-```
+- source-native station, gauge, radar, gridded, or forecast payloads;
+- object meaning or machine shape;
+- policy, proof, catalog, release, or publication decisions;
+- canonical Hydrology or Hazards truth;
+- public API, UI, map, tile, AI, alerting, or download behavior.
 
-`data/processed/atmosphere/precipitation/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+Those responsibilities remain under their governed roots and interfaces.
 
-## Repo fit
+## Status
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw station feeds, gauge products, radar/gridded products, source downloads, QA payloads, or logs | `data/raw/atmosphere/` | Not this lane. |
-| In-process precipitation parsing, unit conversion, gauge/radar reconciliation, accumulation transforms, QA, joins, scratch outputs, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, source-role-unclear, stale, malformed, unit-unclear, unsupported, disputed, sensitive, or unsafe precipitation material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized PrecipitationObservation processed artifacts | `data/processed/atmosphere/precipitation/` | This lane. |
-| General weather observations | WeatherObservation processed lane if accepted, or `data/processed/atmosphere/observed/` as parent | Precipitation specialization remains separate when variable-specific semantics apply. |
-| Weather station/network context | WeatherStation processed lane if accepted | Station metadata is context, not precipitation value. |
-| Forecast/model context | `data/processed/atmosphere/forecast_context/` or `data/processed/atmosphere/modeled/` | Forecast precipitation must not impersonate observed precipitation. |
-| Climate normals/anomalies | `data/processed/atmosphere/climate_normals/`, `climate_anomaly/`, or `aggregate/climate/` | Climate products may aggregate precipitation but remain separate objects. |
-| Hydrology canonical claims | Hydrology responsibility roots | Precipitation can be forcing/context, not streamflow/flood truth. |
-| Hazards/event/impact claims | Hazards responsibility roots | Precipitation can contextualize a hazard; it does not prove impact. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| PrecipitationObservation semantic contract | `contracts/domains/atmosphere/PrecipitationObservation.md` | Object meaning; not data. |
-| PrecipitationObservation schema | `schemas/contracts/v1/domains/atmosphere/PrecipitationObservation.schema.json` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
-
-## Accepted contents
-
-Processed `PrecipitationObservation` data may include:
-
-- normalized precipitation amount, accumulation, rate, intensity, type, phase, or trace-state records tied to a weather station, grid cell, radar/gauge/source product, or station/network context;
-- source-role-preserving precipitation records where `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT`, gauge, radar/grid, station, archive, or other admitted role remains explicit;
-- precipitation value, canonical units, accumulation window, observed time, retrieval time, valid time where relevant, source time, QA state, correction lineage, freshness, caveats, confidence, and limitation metadata;
-- gauge/radar/grid comparisons only when source role, method, units, spatial/temporal support, QA, and uncertainty remain explicit;
-- climate-aggregation inputs only when baseline/anomaly products remain separate and aggregation method is documented downstream;
-- processed joins to weather observations, stations, temperature, wind, forecast, climate, hydrology context, or hazards context when the knowledge-character boundary remains visible;
-- quality, caveat, missingness, correction, uncertainty, freshness, validation, unit-normalization, and accumulation-window sidecars when those sidecars are not proofs, receipts, source registry records, catalog records, schemas, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, or release review.
-
-## Exclusions
-
-Do not store these under `data/processed/atmosphere/precipitation/`:
-
-- RAW station feeds, gauge products, radar/gridded products, source downloads, QA payloads, logs, screenshots, or source-native records.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, source-role-unclear, rights-unclear, stale, unit-unclear, unsupported, disputed, sensitive, or unsafe precipitation material.
-- Generic `WeatherObservation` records unless precipitation-specific semantics are preserved here by accepted convention.
-- Temperature observations, wind fields, model/forecast fields, climate normal records, climate anomaly records, advisory/referral records, hydrology records, or hazards records unless only referenced as context and stored in their correct lanes.
-- Flood, drought, storm, hazard, damage, infrastructure, crop-loss, health/safety, exposure, emergency, regulatory, or impact claims.
-- Forecast/model-as-observation substitution or climate baseline/anomaly substitution.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
-
-## PrecipitationObservation requirements
-
-PROPOSED until concrete validators and CI enforcement are verified:
-
-| Requirement | Meaning |
+| Field | Bounded result |
 |---|---|
-| Source trace | Every processed PrecipitationObservation artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Variable identity | Precipitation identity must remain explicit and must not collapse into generic WeatherObservation, forecast, climate, hydrology, or hazards semantics. |
-| Source role | `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT`, gauge, radar/grid, model context, archive, or other admitted role must be explicit and non-collapsing. |
-| Station/grid/source context | Precipitation observations should identify or reference weather station, grid cell, source product, or network context without turning station metadata into processed observation data. |
-| Canonical units | Units, accumulation window, amount/rate/intensity/type/trace-state semantics, conversion method where applicable, and canonical-unit posture must be explicit. |
-| Time semantics | Observed time, retrieval time, valid time where relevant, accumulation window, correction time, freshness, and release time should remain distinguishable where material. |
-| QA/correction posture | Quality flags, correction state, gauge/radar method, calibration/correction lineage, caveats, limitations, missingness, confidence, and uncertainty should remain visible. |
-| Evidence linkage | Claims about precipitation value, source, role, units, time, station/grid, QA, correction, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, freshness, caveat, sensitivity, and policy/admissibility posture. |
-| Catalog readiness | Processed PrecipitationObservation artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No impact guidance by default | Precipitation values do not create flood, drought, storm, crop-loss, infrastructure, emergency, exposure, regulatory, or life-safety claims without separate authority and review. |
+| Path | `data/processed/atmosphere/precipitation/README.md` |
+| Version | `v0.2.0` |
+| Prior blob | `623e90c2ad24b98d85609d7bf9f164411ab5c6a5` |
+| Semantic contract | `CONFIRMED` at `contracts/domains/atmosphere/PrecipitationObservation.md` |
+| Paired schema | `CONFIRMED` file; permissive `PROPOSED` scaffold with empty properties and `additionalProperties: true` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Validator and CI enforcement | `NEEDS VERIFICATION` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Precipitation guardrails
+A processed artifact may be contract-informed without being machine-enforced. Until schema, fixtures, validators, and CI are verified, records in this lane are **precipitation candidates**, not automatically validated `PrecipitationObservation` instances.
 
-- `PrecipitationObservation` is precipitation-specific and must not be flattened into generic `WeatherObservation` when precipitation-specific semantics matter.
-- Precipitation and temperature are separate weather variables with separate units, methods, QA, and aggregation rules.
-- Forecast/model precipitation must remain labeled as model context, not observed precipitation.
-- Climate baselines/anomalies may use precipitation aggregates, but a precipitation observation is not a normal or anomaly by itself.
-- A precipitation reading does not prove flood, drought, damage, crop loss, infrastructure impact, or other hydrology/hazards-lane truth by itself.
-- Precipitation values may support context, but they do not create emergency, medical, exposure, regulatory-exceedance, or life-safety instructions by themselves.
-- Public display requires source rights, canonical units, freshness, validation, policy, release record, correction path, and rollback target.
-- Unreleased processed precipitation artifacts are not public merely because they exist under this directory.
+## What belongs here
 
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed precipitation values to flood, drought, crop-loss, infrastructure, hazard-impact, regulatory, emergency, or life-safety claims. PrecipitationObservation products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
+Subject to verified local conventions and applicable policy, this lane may contain:
 
-## Directory map
+- normalized precipitation amount, accumulation, rate, intensity, type, phase, and trace-state candidates;
+- station-, gauge-, grid-, radar-, or source-product-linked precipitation records;
+- source-role-preserved observed-sensor or meteorological-context candidates;
+- gauge/radar/grid comparison products with explicit method and uncertainty;
+- canonical-unit values plus preserved source-unit and conversion lineage;
+- QA, missingness, confidence, provisional/final, correction, and limitation sidecars;
+- climate-aggregation inputs that remain distinct from climate normals and anomalies;
+- lane-local inventory, digest, migration, and disposition notes that do not create parallel authority.
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+## What does NOT belong here
 
-```text
-data/processed/atmosphere/precipitation/
-├── README.md
-├── normalized/              # PROPOSED — processed PrecipitationObservation records
-├── amounts/                 # PROPOSED — amount/accumulation records with canonical units
-├── rates/                   # PROPOSED — rate/intensity records
-├── types/                   # PROPOSED — precipitation type/phase/trace-state records
-├── gauge/                   # PROPOSED — gauge/station-derived precipitation values
-├── radar_grid/              # PROPOSED — radar/grid-derived precipitation context with role/method tags
-├── quality/                 # PROPOSED — QA, caveats, missingness, confidence, limitations
-├── corrections/             # PROPOSED — correction/calibration lineage sidecars, not receipts
-├── joins/                   # PROPOSED — links to WeatherStation, WeatherObservation, forecast, climate, hydrology/hazards context
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
-```
+| Do not place here | Correct home or action |
+|---|---|
+| Raw station feeds, gauge products, radar/gridded products, source downloads, logs, or QA payloads | `data/raw/atmosphere/` |
+| Parsing, unit-conversion experiments, gauge/radar reconciliation work, notebooks, scratch, or unresolved joins | `data/work/atmosphere/` |
+| Rights-unclear, role-unclear, unit-unclear, malformed, disputed, stale-sensitive, or unsupported material | `data/quarantine/atmosphere/` |
+| Generic weather records lacking precipitation-specific semantics | Appropriate WeatherObservation lane or quarantine pending classification |
+| Forecast/model precipitation represented as observation | `forecast_context/` or `modeled/`, with model role preserved |
+| Climate normals or anomalies | `climate_normals/`, `climate_anomaly/`, or governed aggregate-climate lane |
+| Streamflow, gauge-stage, watershed, inundation, or flood canonical truth | Hydrology responsibility roots |
+| Hazard event, impact, damage, emergency, or life-safety claims | Hazards or official-authority systems with separate evidence and governance |
+| Catalog, triplet, proof, receipt, registry, release, or published artifacts | Their governed roots |
+| Schema, contract, policy, validator, fixture, pipeline, app, API, UI, or tile implementation | Their responsibility roots |
 
-## Evidence ledger
+## Inputs
 
-| Source | Status | Supports | Limits |
-|---|---|---|
-| Previous file | CONFIRMED | Target existed as a one-character placeholder. | Did not define PrecipitationObservation PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/observed/README.md` | CONFIRMED sibling README | Observed parent lane and observed-vs-model/proxy/advisory guardrails. | Does not define precipitation-specific inventory or release behavior. |
-| `data/processed/atmosphere/forecast_context/README.md` | CONFIRMED sibling README | Forecast/model context remains separate from observations. | Does not define precipitation-value inventory. |
-| `data/processed/atmosphere/modeled/README.md` | CONFIRMED sibling README | Modeled products are not observations. | Does not define precipitation-value inventory. |
-| `data/processed/atmosphere/climate_normals/README.md` | CONFIRMED sibling README | ClimateNormal baseline context remains separate from observations. | Does not define precipitation-value inventory. |
-| `data/processed/atmosphere/climate_anomaly/README.md` | CONFIRMED sibling README | ClimateAnomaly anomaly context remains separate from observations. | Does not define precipitation-value inventory. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane includes precipitation observations downstream and preserves source-role guardrails. | Does not prove precipitation processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere owns weather/mesonet observations, precipitation, climate context, and source-role denials. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/PrecipitationObservation.md` | CONFIRMED contract file | Defines PrecipitationObservation as governed precipitation reading/context with canonical-unit, source-role, model/climate/hazard boundary controls. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `schemas/contracts/v1/domains/atmosphere/PrecipitationObservation.schema.json` | CONFIRMED scaffold schema | Paired PrecipitationObservation schema exists with PROPOSED status. | Properties are currently empty; validator enforcement remains NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
+Governed WORK products or approved quarantine exits may enter this lane only with enough support to interpret the candidate. As applicable, inputs should resolve:
 
-## Validation checklist
+- stable candidate identity, version, and digest;
+- source identity and source role;
+- station, gauge, grid, radar, or source-product context;
+- variable and precipitation semantic class;
+- source units, canonical units, conversion method, and precision;
+- amount, rate, accumulation, intensity, type, phase, or trace meaning;
+- accumulation or sampling window;
+- observed, source, retrieval, valid, processing, correction, and supersession times;
+- spatial support, footprint, grid, station point, or areal support;
+- QA, missingness, uncertainty, rights, sensitivity, and limitation posture;
+- transform and validation references.
 
-- [ ] Confirm actual child directories under `data/processed/atmosphere/precipitation/`.
-- [ ] Confirm accepted PrecipitationObservation source/domain path convention.
-- [ ] Confirm `PrecipitationObservation` schema fields and title casing are updated beyond scaffold if needed.
-- [ ] Confirm PrecipitationObservation processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for each source-derived precipitation artifact.
-- [ ] Confirm precipitation-vs-WeatherObservation, precipitation-vs-temperature, precipitation-vs-forecast/model, precipitation-vs-climate normal/anomaly, and precipitation-vs-hydrology/hazards boundaries.
-- [ ] Confirm station/grid/source context handling without duplicating station authority.
-- [ ] Confirm RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm observed time, retrieval time, valid time, accumulation window, source role, canonical units, amount/rate/intensity/type/trace semantics, QA/correction posture, caveats, limitations, missingness, confidence, station-location sensitivity, freshness, radar/gauge method, and public display posture.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, station-authority, forecast/model, climate normal/anomaly, hydrology claim, hazard-impact claim, advisory, official warning, exposure, health/safety, or regulatory-claim artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed PrecipitationObservation data to catalog/triplet/published outputs is governed, source-role-safe, unit-aware, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct flood, drought, crop-loss, infrastructure, regulatory, emergency, hazard-impact, or life-safety source.
+Unresolved unit, time-window, source-role, or spatial-support ambiguity fails closed to WORK or QUARANTINE.
 
-## Rollback
+## Outputs
 
-Rollback is required if this lane becomes an Atmosphere source-data root, WeatherObservation replacement, WeatherStation authority root, ForecastContext replacement, climate-normal/anomaly source, hydrology claim root, hazards/event/impact root, advisory authority root, official warning/public-alerting root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, public layer root, public tile root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, regulatory-claim source, emergency instruction source, or life-safety guidance source.
+Permitted outputs are candidates for:
 
-Rollback target for this expansion: previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`.
+- object-family routing and normalization;
+- catalog or triplet projection;
+- EvidenceBundle and proof assembly;
+- climate aggregation or model comparison;
+- release-candidate review after policy and validation closure.
 
-<p align="right"><a href="#top">Back to top</a></p>
+PROCESSED remains non-public by default. Public clients must not read this lane directly.
+
+## Precipitation semantics
+
+A precipitation candidate must preserve what the value means.
+
+| Semantic class | Required distinction |
+|---|---|
+| Amount | Quantity over a declared observation or accumulation window |
+| Accumulation | Running or interval total with clear reset/window semantics |
+| Rate | Quantity per unit time, not interchangeable with accumulation |
+| Intensity | Method-defined severity or rate class with explicit method |
+| Type or phase | Rain, snow, sleet, mixed, unknown, or source-specific reviewed class |
+| Trace | Detected but below reporting threshold; not zero and not missing |
+| Missing | No supported value; must not be encoded as zero or trace |
+| Gauge observation | Point or instrument support; not equivalent to radar or grid estimate |
+| Radar/grid estimate | Areal or modeled/derived support; source role and method must remain explicit |
+| Forecast/model precipitation | Model context, never relabeled observed |
+
+Canonical units are required for comparison, but source values, source units, conversion method, rounding, and precision must remain recoverable through lineage or receipts.
+
+## Comparability contract
+
+Two precipitation candidates are comparable only when the comparison is explicitly supported.
+
+| Dimension | Minimum requirement |
+|---|---|
+| Variable semantics | Same or explicitly crosswalked amount/rate/accumulation/intensity/type semantics |
+| Units | Compatible canonical units with documented conversion |
+| Accumulation window | Same window or reviewed normalization method |
+| Time basis | Compatible observed/valid periods and timezone/calendar handling |
+| Spatial support | Comparable point, grid, radar, basin-adjacent, county, or other declared support |
+| Source role | Observation, meteorological context, radar estimate, grid product, and model role remain distinct |
+| Gauge/radar treatment | Bias correction, interpolation, compositing, or reconciliation method disclosed |
+| Missingness | Missing, zero, trace, below-detection, and not-reported states remain distinct |
+| QA | Comparable quality flags, provisional/final state, and correction posture |
+| Versioning | Source collection, algorithm, station/network, and processing versions disclosed |
+
+A map overlay or aligned grid does not, by itself, establish comparability.
+
+## Validation
+
+Validation should be deterministic, bounded, and fixture-backed. At minimum, verify:
+
+- path placement and object-family routing;
+- stable identity, digest, and version;
+- source and source-role trace;
+- precipitation semantic class;
+- canonical units and source-unit preservation;
+- accumulation or sampling window;
+- observed, retrieval, valid, processing, and correction time semantics;
+- spatial support and CRS where applicable;
+- missing, zero, trace, and below-threshold distinctions;
+- QA, uncertainty, provisional/final, and correction state;
+- gauge/radar/grid/model distinctions;
+- rights, sensitivity, evidence, and release dependencies;
+- no direct public-serving or cross-domain truth collapse.
+
+No complete precipitation-lane validator was verified. A passing check proves only its declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes should include precipitation/weather, data, pipeline, validation, evidence, and policy reviewers as applicable.
+
+Specialist review is required for:
+
+- canonical-unit or conversion changes;
+- accumulation-window reinterpretation;
+- gauge/radar/grid reconciliation methods;
+- source-role changes;
+- station/network or spatial-support changes;
+- climate, hydrology, agriculture, or hazards joins;
+- correction, invalidation, release, or rollback changes.
+
+CODEOWNERS routing is not approval evidence.
+
+## Correction and rollback
+
+Corrections must preserve predecessor/successor identity and identify dependent artifacts.
+
+A correction should record, as applicable:
+
+1. affected candidate IDs and versions;
+2. reason for correction;
+3. source or algorithm version change;
+4. changed units, window, time, QA, spatial support, or source role;
+5. replacement or superseding artifact;
+6. dependent catalog, proof, triplet, climate, hydrology, hazards, map, cache, or release objects requiring invalidation;
+7. correction notice, review state, and rollback target.
+
+Rollback is required if this lane becomes a RAW store, WORK area, QUARANTINE bypass, generic weather authority, forecast/model authority, climate authority, Hydrology truth store, Hazards truth store, proof store, catalog root, release root, public-serving shortcut, or life-safety guidance source.
+
+Documentation rollback target: prior blob `623e90c2ad24b98d85609d7bf9f164411ab5c6a5`.
+
+## Related folders
+
+- Parent Atmosphere lane: [`../README.md`](../README.md)
+- Observed parent lane: [`../observed/README.md`](../observed/README.md)
+- Model and forecast context: [`../modeled/README.md`](../modeled/README.md) · [`../forecast_context/README.md`](../forecast_context/README.md)
+- Climate context: [`../climate_normals/README.md`](../climate_normals/README.md) · [`../climate_anomaly/README.md`](../climate_anomaly/README.md) · [`../aggregate/climate/README.md`](../aggregate/climate/README.md)
+- Semantic contract: [`../../../../contracts/domains/atmosphere/PrecipitationObservation.md`](../../../../contracts/domains/atmosphere/PrecipitationObservation.md)
+- Paired schema: [`../../../../schemas/contracts/v1/domains/atmosphere/PrecipitationObservation.schema.json`](../../../../schemas/contracts/v1/domains/atmosphere/PrecipitationObservation.schema.json)
+- Lifecycle support: [`../../../raw/atmosphere/`](../../../raw/atmosphere/) · [`../../../work/atmosphere/`](../../../work/atmosphere/) · [`../../../quarantine/atmosphere/`](../../../quarantine/atmosphere/)
+- Trust support: [`../../../proofs/`](../../../proofs/) · [`../../../receipts/`](../../../receipts/) · [`../../../registry/`](../../../registry/)
+- Downstream authority: [`../../../catalog/domain/atmosphere/`](../../../catalog/domain/atmosphere/) · [`../../../../release/`](../../../../release/) · [`../../../published/`](../../../published/)
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree and payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, owners |
+| Writers and consumers | `UNKNOWN` | Connectors, pipelines, tools, workflows, API/UI, deployed consumers |
+| Enforceable schema | `NEEDS VERIFICATION` | Non-scaffold schema, required fields, negative cases, compatibility plan |
+| Unit and semantic validators | `UNKNOWN` | Fixture-backed canonical-unit, window, trace/missing, and source-role tests |
+| Gauge/radar/grid reconciliation | `UNKNOWN` | Methods, receipts, QA thresholds, uncertainty, versioning |
+| Evidence/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release, rollback links |
+| Correction propagation | `UNKNOWN` | Dependency graph, cache/index invalidation, supersession and rollback drills |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| PROCESSED lifecycle role | Preserved and clarified |
+| Canonical-unit discipline | Preserved and strengthened |
+| Amount/rate/accumulation/intensity/type/trace distinctions | Preserved and expanded |
+| Weather/model/climate/hydrology/hazards boundaries | Preserved and strengthened |
+| Evidence, policy, release, correction, and rollback gates | Preserved |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, migration, schema, policy, runtime, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the lane to the current processed-data authority model;
+- documented the permissive scaffold-schema posture;
+- strengthened units, windows, comparability, source-role, correction, and cross-domain boundaries;
+- changed Markdown only.
+
+[Back to top](#top)
