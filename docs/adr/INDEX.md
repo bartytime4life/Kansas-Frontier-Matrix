@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.1
+version: v1.2
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -23,21 +23,21 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
-  - "Prior inventory verified at main@43f1d97954debda98691b2685c1bb75c4b63c872; ADR-0029 is added as proposed in PR #1763."
+  - "Ratification is prepared from main@67f1d7eac9baabd69da997ba569de54c6b7c1d11; ADR-0029 transitions to accepted only through the synchronized source/index change and becomes effective on merge."
   - "Effective status never outranks source-record status or human review."
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture Decision Record Index
 
 [![numbered records](https://img.shields.io/badge/numbered_records-29-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-proposed-d4a72c)](#status-interpretation)
+[![effective status](https://img.shields.io/badge/effective_status-1_accepted_%7C_28_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
-This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it does not accept a proposed decision.
+This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> Every numbered decision below has effective status `proposed`. No tracked numbered ADR provides verified `accepted`, `superseded`, or `rejected` status at the recorded snapshot.
+> ADR-0029 has effective status `accepted` in the synchronized ratification change. The other 28 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`.
 
 ## Status interpretation
 
@@ -51,7 +51,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0029` in this proposed ratification packet. Every numbered record remains effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0029`. ADR-0029 is `accepted`; ADR-0001 through ADR-0028 remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -84,7 +84,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0029` 
 | `ADR-0026` | [Hydrology source spine starts with WBD HUC12](./ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md) | `proposed` | `draft` | — | — |
 | `ADR-0027` | [County Focus Mode Control Plane](./ADR-0027-county-focus-mode-control-plane.md) | `proposed` | `proposed` | — | — |
 | `ADR-0028` | [State-scale Focus Mode scope and 13-domain coverage rule](<./ADR-0028 — State-scale Focus Mode scope.md>) | `proposed` | `proposed` | — | — |
-| `ADR-0029` | [Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md) | `proposed` | `proposed` | — | — |
+| `ADR-0029` | [Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | `accepted` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
