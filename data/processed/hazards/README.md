@@ -1,15 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-hazards-readme
 title: data/processed/hazards/README.md — Hazards Processed Data README
-version: v0.1
+version: v0.2.0
 type: readme; data-lifecycle-domain-lane; processed-stage-guide; hazards-domain-root; not-for-life-safety-lane-index
-status: draft; PROPOSED; data-root; processed-stage; hazards; not-for-life-safety; source-role-aware; freshness-aware; regulatory-context; operational-context; evidence-first; release-gated
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Hazards steward · Source-role steward · Freshness steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; hazards; lifecycle; governed; not-for-life-safety; source-role-aware; freshness-aware; release-gated
-tags: [kfm, data, processed, hazards, hazard-event, hazard-observation, warning-context, advisory-context, disaster-declaration, flood-context, wildfire-detection, smoke-context, drought-indicator, earthquake-event, heat-cold-event, exposure-summary, resilience-summary, hazard-timeline, impact-area, source-role, observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, not-for-life-safety, stale-state, freshness, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+status: repository-grounded draft; PROPOSED lane contract; runtime and payload enforcement unverified
+owners: NEEDS VERIFICATION — Hazards steward · Source-role steward · Freshness steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; not-for-life-safety; no-direct-public-path; source-role-preserved; freshness-aware; release-gated
+tags: [kfm, data, processed, hazards, hazard-event, warning-context, advisory-context, freshness, expiry, stale-state, source-role, evidence, correction, rollback]
 related:
   - ../README.md
   - ../../README.md
@@ -17,11 +17,6 @@ related:
   - ../../../docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
   - ../../../docs/domains/hazards/PRESERVATION_MATRIX.md
   - ../../../docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
-  - ../../../docs/domains/hydrology/README.md
-  - ../../../docs/domains/atmosphere/README.md
-  - ../../../docs/domains/settlements-infrastructure/README.md
-  - ../../../docs/domains/roads-rail-trade/README.md
-  - ../../../docs/domains/agriculture/README.md
   - ../../../policy/domains/hazards/
   - ../../../policy/release/hazards/
   - ../../../policy/sensitivity/hazards/
@@ -31,249 +26,326 @@ related:
   - ../../work/hazards/
   - ../../quarantine/hazards/
   - ../../catalog/domain/hazards/
-  - ../../catalog/stac/hazards/
-  - ../../catalog/dcat/hazards/
-  - ../../catalog/prov/hazards/
   - ../../triplets/
   - ../../published/
   - ../../proofs/
   - ../../receipts/
   - ../../registry/sources/hazards/
   - ../../../release/candidates/hazards/
-  - ../../../release/
-  - ../../../pipelines/domains/hazards/
-  - ../../../pipeline_specs/hazards/
-  - ../../../tools/validators/
 notes:
-  - "This file replaces a greenfield stub at `data/processed/hazards/README.md`."
-  - "This is the parent PROCESSED-stage domain lane for Hazards artifacts. It is not RAW source storage, WORK scratch, QUARANTINE holding, CATALOG, TRIPLET, PUBLISHED, proof storage, receipt storage, source registry, policy authority, release authority, public API/UI output, public map/tile output, emergency alerting system, operational warning system, evacuation guidance, driving-safety guidance, engineering certification, or life-safety guidance."
-  - "The not-for-life-safety boundary is non-negotiable. KFM may surface warning/advisory/watch records only as contextual evidence with issue/expiry/freshness and official-source redirection; it must never act as alert authority."
-  - "Hazards processed artifacts must preserve source role, rights, sensitivity posture, freshness, issue/expiry/validity state, temporal semantics, object-family distinction, evidence linkage, validation state, catalog readiness, release state, correction path, and rollback target before public use."
-  - "Source-role anti-collapse is mandatory: observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles are not interchangeable."
-  - "Operational context past expiry must become historical/stale context or be denied as current state; expired warnings must not appear as live warning state."
-  - "This README is a parent lane guide and index. Child lane READMEs define local sublane boundaries; contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous greenfield stub blob SHA `ee1740699092ab732271925c47c6162629502143`."
+  - "This file preserves the existing path and document identity while aligning the lane to the current data/processed authority contract."
+  - "This lane owns normalized hazard candidates and context, not source captures, catalog records, proof closure, policy decisions, release authority, public serving, emergency alerting, or life-safety guidance."
+  - "Warning, watch, and advisory records are contextual only and must preserve issue, effective, expiry, retrieval, correction, supersession, freshness, and official-source referral state."
+  - "Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic source roles are not interchangeable."
+  - "Prior blob and rollback target: dbb3bd830d004f1d2df3db7d4902c3419823804c."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/hazards
+# `data/processed/hazards/` — Hazard Context Candidates
 
-> Parent Hazards PROCESSED-stage lane for normalized, source-traced, source-role-preserved, freshness-aware, not-for-life-safety hazard artifacts that have passed beyond RAW/WORK/QUARANTINE but are not yet cataloged, triplet-projected, published, or released.
+> **One-line purpose.** Own normalized, source-traced, time-aware hazard candidates that have passed applicable WORK checks but have not thereby become cataloged, released, public, current operational guidance, or life-safety authority.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/hazards" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fhazards-blue">
-  <img alt="Domain: hazards" src="https://img.shields.io/badge/domain-hazards-b71c1c">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Boundary: not for life safety" src="https://img.shields.io/badge/boundary-NOT__FOR__LIFE__SAFETY-critical">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Boundary: not for life safety](https://img.shields.io/badge/boundary-NOT%20FOR%20LIFE%20SAFETY-d1242f?style=flat-square)](#not-for-life-safety-boundary)
+[![Freshness: explicit](https://img.shields.io/badge/freshness-explicit-1a7f37?style=flat-square)](#freshness-and-time-state)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Hazards steward · Source-role steward · Freshness steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/hazards/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `hazards`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, freshness disclosure, sensitivity/policy review, not-for-life-safety disclaimer, official-source redirect, ValidationReport, PolicyDecision, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED parent `data/processed/` is upstream of catalog/triplet/publication and is not a normal public surface · CONFIRMED Hazards doctrine says KFM is not an emergency alert system and must never act as alert authority · CONFIRMED Hazards owns historical, regulatory, modeled, and operational-context hazard information while preserving source-role and time distinctions · PROPOSED parent-lane details and child-lane index · NEEDS VERIFICATION for actual child inventory, validators, fixtures, source descriptors, access-control enforcement, receipt families, policy enforcement, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, a successful transform, a validated timestamp, a rendered map, a pull request, or a merge does not create truth, evidence closure, policy permission, catalog admission, release approval, current-warning status, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Lane index](#lane-index) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Hazards processed requirements](#hazards-processed-requirements) · [Not-for-life-safety and source-role guardrails](#not-for-life-safety-and-source-role-guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!CAUTION]
+> KFM is not an emergency alert system. Warning, watch, and advisory records may be preserved only as contextual evidence with explicit time state and official-source referral. This lane must never issue emergency instructions, evacuation guidance, driving-safety direction, operational response orders, or life-safety advice.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Source roles](#source-role-contract) · [Freshness](#freshness-and-time-state) · [Life-safety boundary](#not-for-life-safety-boundary) · [Sensitivity](#sensitivity-and-cross-domain-joins) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Children](#current-bounded-child-lane-index) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/hazards/` is the parent PROCESSED-stage lane for normalized Hazards artifacts. It organizes processed outputs after source capture, extraction, geometry normalization, source-role preservation, freshness handling, issue/expiry normalization, stale-state handling, rights review, validation-oriented processing, or public-safe derivative preparation, while keeping those artifacts upstream of catalog, triplet, publication, release, proof closure, and public access.
+This is the canonical Hazards segment under the `data/processed/` responsibility root. It owns normalized hazard-event, observation, warning-context, advisory-context, declaration, flood, wildfire, smoke, drought, earthquake, heat/cold, exposure, resilience, timeline, and impact-area candidates that have passed applicable processing checks.
 
-This lane may contain or point to processed artifacts for:
+The lane exists to preserve inspectable hazard context while keeping every artifact upstream of catalog closure, proof closure, policy admission, release approval, public serving, and operational alerting.
 
-- historical hazard events and hazard observations;
-- operational warning, watch, and advisory records preserved as context only;
-- disaster declarations and administrative hazard context;
-- flood, drought, wildfire, smoke, earthquake, heat, cold, severe-weather, and other hazard context products;
-- exposure summaries and impact areas when input sensitivity and precision are controlled;
-- resilience summaries and planning-context derivatives;
-- hazard timelines with source-role and time-state discipline;
-- freshness, stale-state, issue/expiry, and uncertainty context;
-- public-candidate or restricted Hazards derivatives that remain release-gated.
+## Authority level
 
-This parent README does not create a semantic contract, schema, validator, source registry, proof, receipt, policy decision, release decision, public map layer, public tile, public API route, public UI payload, emergency alert, evacuation instruction, driving-safety instruction, hazard warning, engineering certification, legal advice, operational response instruction, or life-safety product.
+**Canonical PROCESSED responsibility; non-public and not-for-life-safety by default.**
 
-## Lifecycle boundary
+This path may own normalized tables, vectors, rasters, timelines, context records, uncertainty sidecars, freshness state, and lane-local explanatory manifests. It does not own:
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+- source-native captures or original alert payloads;
+- object meaning or machine shape;
+- source-registry authority;
+- policy, sensitivity, or release decisions;
+- EvidenceBundle or proof authority;
+- catalog, triplet, release, or publication decisions;
+- public API, UI, map, tile, AI, export, or notification behavior;
+- emergency alerting, life-safety advice, or official warning issuance.
 
-```mermaid
-flowchart LR
-  RAW[data/raw/hazards] --> WORK[data/work/hazards]
-  WORK --> QUAR[data/quarantine/hazards]
-  WORK --> PROC[data/processed/hazards]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog/domain/hazards]
-  PROC --> STAC[data/catalog/stac/hazards]
-  PROC --> DCAT[data/catalog/dcat/hazards]
-  PROC --> PROV[data/catalog/prov/hazards]
-  PROC --> TRIP[data/triplets/.../hazards]
-  PROC -. supports .-> PROOF[data/proofs]
-  PROC -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../hazards]
-  STAC --> PUBLISHED
-  DCAT --> PUBLISHED
-  PROV --> PUBLISHED
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
-  REL --> NLS[not-for-life-safety disclaimer + official-source redirect]
-```
+Those responsibilities remain under their governed roots and interfaces.
 
-`data/processed/hazards/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source, and it must never be used as a life-safety alerting surface.
+## Status
 
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw hazard feeds, source-native payloads, source API responses, source rasters/vectors, agency/steward exports, source logs, original warning/advisory/watch messages, source identifiers, or source-native timestamps | `data/raw/hazards/` | Not this lane. |
-| In-process transforms, geometry repair, temporal matching, source-role resolution, freshness tests, expiry tests, model experiments, joins, QA, notebooks, or scratch products | `data/work/hazards/` | Not this lane. |
-| Unknown source role, expired-as-current context, unresolved rights, unresolved sensitivity, ambiguous identity, stale time-sensitive records, malformed files, unsafe infrastructure detail, or not-yet-reviewed hazard material | `data/quarantine/hazards/` | Not this lane until review/admission allows. |
-| Normalized Hazards processed artifacts | `data/processed/hazards/` | This parent lane and child lanes. |
-| Hazards catalog records | `data/catalog/domain/hazards/` | Downstream catalog stage. |
-| Hazards STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/hazards/` | Downstream catalog projections if accepted. |
-| Hazards triplet/graph records | `data/triplets/.../hazards/` | Downstream graph stage; must not expose restricted precision, stale-current claims, or role-collapsed hazards. |
-| Published public-safe Hazards products | `data/published/.../hazards/` | Downstream only after release, disclaimer, official-source redirect, and correction/rollback controls. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, model-run, transform, validation, policy, freshness, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| Hazards source registry records | `data/registry/sources/hazards/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/hazards/`, `release/` | Separate publication authority. |
-| Hazards contracts | `contracts/domains/hazards/` | Object meaning; not data. |
-| Hazards schemas | `schemas/contracts/v1/domains/hazards/` | Machine shape; not data. |
-| Hazards policy and release gates | `policy/domains/hazards/`, `policy/release/hazards/`, `policy/sensitivity/hazards/` if accepted | Admissibility/release authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
-
-## Lane index
-
-Known or intended child lanes under `data/processed/hazards/` are listed below. Treat entries as **PROPOSED** unless current child READMEs, validators, fixtures, policies, receipts, access controls, and CI enforcement have been verified in the same implementation pass.
-
-| Lane | Family | Purpose | Hard boundary |
-|---|---|---|---|
-| `events/` | HazardEvent | Historical or observed hazard event records. | Event records are not emergency instructions or live warnings. |
-| `observations/` | HazardObservation | Measured observations tied to hazard context. | Observation role must not be confused with regulatory/model/administrative role. |
-| `warnings/` | WarningContext | Warning/watch records surfaced as context only. | KFM never becomes alert authority; issue/expiry/freshness are mandatory. |
-| `advisories/` | AdvisoryContext | Advisory products surfaced as context only. | Not life-safety guidance; official-source redirect required for public surfaces. |
-| `declarations/` | DisasterDeclaration | FEMA/state/local administrative declarations. | Declaration is administrative context, not observed-event proof by itself. |
-| `flood/` | FloodContext | Flood regulatory/observed/modeled context. | Hydrology owns gauges, HUC/NHD/NFHL root truth; roles stay separate. |
-| `wildfire/` | WildfireDetection | Wildfire detections and detection context. | Detection is not confirmed ignition or operational fire status by itself. |
-| `smoke/` | SmokeContext | Smoke detections, model trajectories, and air-context links. | Atmosphere/Air owns canonical air observations and advisories. |
-| `drought/` | DroughtIndicator | Aggregate drought indicators and context. | Aggregate indicator is not per-place drought truth unless allowed by contract/review. |
-| `earthquake/` | EarthquakeEvent | Earthquake catalog event derivatives. | Event catalog is context, not emergency response guidance. |
-| `heat_cold/` | HeatColdEvent | Heat/cold event and episode context. | Not personal health or emergency guidance. |
-| `exposure/` | ExposureSummary / ImpactArea | Hazard × population/lifeline/land-use summaries. | Critical infrastructure precision is deny-by-default. |
-| `resilience/` | ResilienceSummary | Resilience planning summaries and projections. | Planning context, not operational instruction. |
-| `timelines/` | HazardTimeline | Role-aware multi-event timelines. | Timelines must keep source, observed, issue, expiry, retrieval, release, and correction times distinct. |
-| `public/` | Public-candidate Hazards products | Candidate public-safe hazard products. | `public/` means public-candidate if present, not published or released. |
-| `restricted/` | Restricted Hazards products | Sensitive infrastructure, rights-limited, role-gated, or non-public artifacts. | Non-public, access-controlled, fail-closed. |
-
-## Accepted contents
-
-Processed Hazards data may include:
-
-- normalized tabular, spatial, temporal, raster, vector, graph-ready, stale-state-aware, freshness-aware, or review-ready hazard artifacts;
-- source-role-tagged hazard event, observation, warning/advisory context, disaster declaration, flood context, wildfire detection, smoke context, drought indicator, earthquake event, heat/cold event, exposure, resilience, timeline, or impact-area products;
-- public-safe generalized, aggregated, redacted, delayed, stale-badged, or contextual derivatives that still require catalog/release review before public use;
-- restricted reviewer-only, rights-controlled, infrastructure-sensitive, exact-location-sensitive, stale-time-sensitive, or denied/internal-review processed artifacts admitted by policy;
-- sidecar metadata needed to interpret processed artifacts when it is not a receipt, proof, policy decision, release manifest, source registry record, schema, validator, or catalog record;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs, warning surfaces, or authority records.
-
-## Exclusions
-
-Do not store these under `data/processed/hazards/`:
-
-- RAW source files, source-native feeds, source API responses, original warning/advisory/watch payloads, steward originals, source media, logs, original source geometries, source identifiers, or unprocessed agency/partner exports.
-- WORK/scratch files, notebooks, transform experiments, unresolved QA joins, temporal matching trials, role-resolution scratch, freshness/expiry debug outputs, or model tuning.
-- Quarantined or unresolved source-role, rights, sensitivity, freshness, expiry, stale-state, identity, or public-risk material.
-- Catalog records, STAC/DCAT/PROV records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, pipeline specs, app/UI/API code, or packages.
-- Canonical hydrology truth, atmosphere/air truth, settlement/infrastructure truth, roads/rail/trade route truth, agriculture truth, land/ownership truth, or emergency-management authority records owned by their proper lanes or official agencies.
-- Emergency alerts, evacuation instructions, driving-safety instructions, operational warnings, official emergency orders, engineering certifications, legal advice, medical advice, or life-safety guidance.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, official alert replacement products, landowner/parcel targeting aids, critical-infrastructure precise exposure outputs, emergency-response guidance, or life-safety products.
-- Redaction parameters, aggregation thresholds, small-cell thresholds, fuzzing radii, seeds, exact transform offsets, access credentials, secrets, private agreement terms, field access routes, sensitive infrastructure details, or implementation details that could aid exposure or unauthorized access.
-- AI-generated hazard narratives presented as authoritative without EvidenceBundle support, source-role preservation, freshness disclosure, not-for-life-safety boundary, policy decision, and validated citations.
-
-## Hazards processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
+| Field | Bounded result |
 |---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or hazards source registry context. |
-| Evidence linkage | Claims about event, observation, warning/advisory context, declaration, flood/smoke/drought/wildfire/earthquake/heat/cold context, exposure, resilience, timeline, freshness, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Object distinction | HazardEvent, HazardObservation, WarningContext, AdvisoryContext, DisasterDeclaration, FloodContext, WildfireDetection, SmokeContext, DroughtIndicator, EarthquakeEvent, HeatColdEvent, ExposureSummary, ResilienceSummary, HazardTimeline, and ImpactArea must remain distinct. |
-| Time semantics | Event time, issue time, expiry time, observed time, valid time, source time, retrieval time, release time, and correction time should remain distinguishable where material. |
-| Freshness posture | Operational-context records should carry issue/expiry/freshness/stale-state posture; expired context must not appear as current warning state. |
-| Rights posture | Agency, steward, license, redistribution, attribution, derivative-use, official-source, and source terms should be resolved or held closed. |
-| Sensitivity posture | Critical infrastructure detail, exact sensitive locations, rights-limited records, private joins, small-cell outputs, and operational feeds should carry restriction/generalization/denial posture. |
-| Transform linkage | Generalization, aggregation, redaction, suppression, withholding, delayed publication, stale-badging, or public-safe geometry transform should link to appropriate receipt families. |
-| Review state | Hazards steward, source-role reviewer, freshness reviewer, sensitivity reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Disclaimer and official redirect | Hazards public surfaces require not-for-life-safety disclaimer and official-source redirect; missing disclaimer or redirect fails closed. |
-| Catalog readiness | Processed Hazards artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, stale-state rule, and rollback target. |
-| No public surface by default | Processed Hazards artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
+| Path | `data/processed/hazards/README.md` |
+| Version | `v0.2.0` |
+| Prior blob | `dbb3bd830d004f1d2df3db7d4902c3419823804c` |
+| Parent authority | `data/processed/README.md` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Current alerting behavior | `DENIED BY DOCTRINE` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Not-for-life-safety and source-role guardrails
+**CONFIRMED:** the target exists; the parent processed lane is non-public; Hazards doctrine forbids KFM-as-alert-authority; source-role and freshness boundaries are required.
 
-- KFM is not an emergency alert system.
-- KFM is not alert authority, warning authority, evacuation authority, or operational response authority.
-- Warning, watch, advisory, and operational-context records may be preserved only as contextual evidence with issue/expiry/freshness and official-source redirection.
-- Expired operational context must not appear as current warning state.
-- Source role must be set at admission and preserved through promotion.
-- Promotion does not upgrade a model into an observation, an aggregate into a per-place record, an administrative declaration into event evidence, a detection into confirmed event status, or synthetic language into observed reality.
-- Regulatory zones are not observed events.
-- Wildfire detections are not confirmed wildfires by themselves.
-- Smoke models are not observed smoke by themselves.
-- Aggregate drought indicators are not per-place drought truth unless the contract and evidence support that claim.
-- Disaster declarations are administrative context, not observed hazard evidence by themselves.
-- Critical infrastructure precision, exact sensitive locations, and private/rights-limited joins fail closed until evidence, policy, review, transform receipts, release state, correction path, and rollback are resolved.
-- Hydrology, Atmosphere/Air, Settlements/Infrastructure, Roads/Rail/Trade, Agriculture, People/Land, and official emergency agencies keep their own truth and authority.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, not-for-life-safety envelopes, and policy-safe output controls, not this directory directly.
+**PROPOSED:** the lane-specific input, output, validation, child-lane, review, correction, and rollback expectations below.
 
-> [!CAUTION]
-> Do not expose `data/processed/hazards/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, live warning source, evacuation aid, driving-safety aid, official alert replacement, emergency instruction source, infrastructure targeting surface, engineering certification, legal/medical advice source, or life-safety product. Processed hazards data remains inside the trust membrane until governed promotion and release, and even released Hazards products remain not-for-life-safety context.
+**NEEDS VERIFICATION:** recursive payloads, owners, accepted schemas and contracts, validators, fixtures, workflows, source descriptors, receipts, EvidenceBundles, policy decisions, access controls, release links, governed routes, cache invalidation, and rollback drills.
 
-## Evidence ledger
+## What belongs here
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a greenfield stub. | Did not define Hazards processed boundaries or child lanes. |
-| `data/processed/README.md` | CONFIRMED | PROCESSED data is upstream of catalog, triplets, publication, and release and is not the normal public surface. | Does not prove Hazards child inventory or enforcement. |
-| `docs/domains/hazards/README.md` | CONFIRMED doctrine / PROPOSED implementation | Hazards owns historical, regulatory, modeled, and operational-context hazard information; it is not for life safety; object families, source roles, freshness, lifecycle, sensitivity, API boundaries, and publication gates are defined. | Implementation maturity remains NEEDS VERIFICATION. |
-| `docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md` | NEEDS VERIFICATION | Named companion doc for not-for-life-safety publication boundary. | This task did not inspect its contents. |
-| `docs/domains/hazards/PRESERVATION_MATRIX.md` | NEEDS VERIFICATION | Named companion doc for preservation/tier/transform/release rules. | This task did not inspect its contents. |
-| `policy/domains/hazards/`, `policy/release/hazards/`, and `policy/sensitivity/hazards/` | NEEDS VERIFICATION | Expected admissibility and release-gate homes. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/hazards/` and `schemas/contracts/v1/domains/hazards/` | NEEDS VERIFICATION | Expected object contract/schema homes for Hazards families. | Specific object files and validators were not verified in this task. |
+- normalized `HazardEvent` and `HazardObservation` candidates with stable identity and source trace;
+- warning, watch, and advisory context with issue, effective, expiry, retrieval, correction, supersession, and freshness state;
+- disaster declarations preserved as administrative or regulatory context rather than observed-event proof;
+- flood, wildfire, smoke, drought, earthquake, heat/cold, severe-weather, exposure, resilience, timeline, and impact-area candidates with explicit source role;
+- processed-local digests, uncertainty, limitations, freshness, identity, and derivation sidecars;
+- generalized or restricted public-candidate derivatives that remain catalog- and release-gated;
+- local README, inventory, migration, disposition, and correction notes that explain this lane without becoming policy, proof, or release authority.
 
-## Validation checklist
+## What does NOT belong here
 
-- [ ] Confirm actual child directories under `data/processed/hazards/` and reconcile missing, duplicate, alias, legacy, or compatibility lanes.
-- [ ] Confirm accepted processed Hazards path convention for events, observations, warnings, advisories, declarations, flood, wildfire, smoke, drought, earthquake, heat/cold, exposure, resilience, timelines, impact areas, public-candidate, and restricted lanes.
-- [ ] Confirm each child lane has README, owner, purpose, accepted contents, exclusions, guardrails, validation checklist, and rollback target.
-- [ ] Confirm Hazards object contracts and schema paths for all object families named here.
-- [ ] Confirm source-role vocabulary and anti-collapse validators for observed/regulatory/modeled/aggregate/administrative/candidate/synthetic roles.
-- [ ] Confirm issue/expiry/freshness/stale-state validators and fixtures for warning/advisory/watch context.
-- [ ] Confirm validators, fixtures, CI checks, policy checks, disclaimer checks, official-source redirect checks, and access-control enforcement for processed Hazards artifacts.
-- [ ] Confirm SourceDescriptor/source registry linkage for every input source and derived hazard artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, ModelRunReceipt where applicable, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, RollbackCard, correction path, and rollback target.
-- [ ] Confirm unresolved role, expired-as-current, rights-unclear, missing disclaimer, missing official redirect, critical-infrastructure detail, sensitive exact geometry, private joins, small-cell outputs, redaction parameters, transform secrets, release-unclear artifacts, and life-safety prompts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, rights-safe, freshness-safe, sensitivity-safe, disclaimer-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, emergency alert, evacuation guidance, driving-safety guidance, official warning replacement, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public warning source, public location service, public map, public tile, public API, public UI, or AI-answer source.
+| Do not place or do here | Correct home or action |
+|---|---|
+| Source-native feeds, CAP/XML/JSON payloads, agency messages, original rasters/vectors, logs, and raw identifiers | `data/raw/hazards/` |
+| Mutable transforms, source-role experiments, freshness tests, geometry repair, temporal joins, model tuning, notebooks, and scratch outputs | `data/work/hazards/` |
+| Expired-as-current records, unknown source role, unresolved rights, ambiguous identity, harmful precision, unsafe infrastructure detail, or disputed hazard material | `data/quarantine/hazards/` |
+| Catalog records and graph projections | `data/catalog/` and `data/triplets/` |
+| Proofs, receipts, source registry, policy, schemas, validators, and release records | Their canonical responsibility roots |
+| Released public-safe bytes | `data/published/` after governed release |
+| Emergency alerts, evacuation or shelter instructions, driving guidance, dispatch decisions, incident command, engineering certification, medical advice, or operational directives | Official authorities and governed operational systems; never this lane |
+| Direct public API, UI, tile, map, export, notification, or Focus Mode output | Governed published and delivery interfaces only |
 
-## Rollback
+## Inputs
 
-Rollback is required if this parent lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, life-safety alerting surface, official-warning replacement, expired-as-current path, role-collapse path, sensitive infrastructure exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, emergency instruction source, evacuation guidance source, driving-safety guidance source, engineering certification source, legal/medical advice source, or life-safety guidance source.
+Governed WORK products or structured quarantine exits with, as applicable:
 
-Rollback target for this expansion: previous greenfield stub blob SHA `ee1740699092ab732271925c47c6162629502143`.
+- stable artifact and source identity;
+- source role and source lineage;
+- source, observed/event, issue, effective, valid, expiry, retrieval, release, correction, and supersession times;
+- rights, sensitivity, precision, and public-safety posture;
+- contract/schema version references;
+- transform, model-run, validation, freshness, redaction/generalization, and policy receipts;
+- uncertainty, limitations, stale-state, and fitness-for-use disclosures;
+- correction and rollback references.
 
-<p align="right"><a href="#top">Back to top</a></p>
+An input that cannot establish required role, time state, rights, sensitivity, or identity fails closed to WORK or QUARANTINE.
+
+## Outputs
+
+Bounded outputs are candidates for:
+
+- domain catalog and STAC/DCAT/PROV projection;
+- EvidenceBundle assembly and triplet projection;
+- policy and release-candidate review;
+- public-safe derivative preparation after generalization or redaction;
+- correction, supersession, historical-state, or withdrawal workflows.
+
+PROCESSED output is not a current alert, public warning, release approval, or public-serving artifact. Public clients must not read this lane directly.
+
+## Source-role contract
+
+Every artifact must preserve the role assigned at admission. Promotion does not upgrade or blur source role.
+
+| Source role | What it may represent | Must not be presented as |
+|---|---|---|
+| `observed` | measured or detected event/condition evidence | regulatory designation, forecast, or administrative decision |
+| `regulatory` | official mapped or declared regulatory context | direct observation or modeled prediction |
+| `modeled` | simulation, forecast, trajectory, probability, or estimated field | observed fact or official warning issuance |
+| `aggregate` | summarized or rolled-up context | per-place or per-person truth without support |
+| `administrative` | declaration, jurisdictional, program, or response-status context | observed hazard proof by itself |
+| `candidate` | unconfirmed detection, inferred transition, or review candidate | confirmed event or authoritative state |
+| `synthetic` | test, demonstration, or generated material | real hazard evidence or public operational state |
+
+Hazard terms such as event, observation, detection, forecast, warning, advisory, declaration, exposure, impact, and resilience are not interchangeable.
+
+## Freshness and time state
+
+Time-sensitive hazard context must make temporal meaning explicit. At minimum, distinguish the times that materially apply:
+
+- source publication or source update time;
+- observed or event time;
+- issue time;
+- effective or valid-from time;
+- expiry or valid-through time;
+- retrieval time;
+- processing time;
+- release time;
+- correction, supersession, withdrawal, or cancellation time.
+
+| Time-state condition | Required posture |
+|---|---|
+| Before effective time | Mark pending or not-yet-effective; never current by implication |
+| Within a verified validity window | Context may be described as source-current only when policy and source checks allow |
+| Expired | Historical/expired context or deny as current state |
+| Superseded or corrected | Resolve successor/correction and prevent stale-current presentation |
+| Withdrawn or cancelled | Mark withdrawn/cancelled and block current-state use |
+| Missing or ambiguous validity | Fail closed; do not infer current status |
+| Source unavailable or freshness unverified | Narrow the claim, mark freshness unknown, and redirect to official sources |
+
+A warning or advisory that has passed expiry must never remain visible as a live warning state because it still exists in storage or cache.
+
+## Not-for-life-safety boundary
+
+The following invariant is permanent:
+
+> **KFM may explain hazard context; it must not become the alert authority.**
+
+Any downstream public candidate requires all applicable controls, including:
+
+- explicit not-for-life-safety language;
+- official-source referral suitable to the hazard type;
+- source role and current freshness state;
+- issue, effective, expiry, supersession, and correction state;
+- evidence and policy support;
+- public-safe geometry and sensitivity controls;
+- release state, correction path, cache/invalidation plan, and rollback target.
+
+AI-generated summaries must be evidence-bounded and must abstain or redirect when current operational status cannot be verified. They must not transform contextual records into personal action instructions.
+
+## Sensitivity and cross-domain joins
+
+Hazards may join to Hydrology, Atmosphere, Settlements/Infrastructure, Roads/Rail/Trade, Agriculture, Geology, Habitat, Fauna, Flora, People/Land, and other lanes. A join does not transfer ownership or create new truth.
+
+Fail closed, restrict, generalize, or deny when a join could expose:
+
+- sensitive infrastructure or operational vulnerabilities;
+- exact private residences, facilities, shelters, access routes, or responder locations;
+- rare-species, rare-plant, archaeological, or other protected locations;
+- person-level exposure or health information;
+- parcel, ownership, operator, or private-well detail;
+- harmful combinations of otherwise public datasets.
+
+Hydrology owns canonical gauge and water-network truth; Atmosphere owns canonical air and weather observations; Infrastructure owns canonical asset identity; Roads/Rail/Trade owns network and closure truth. Hazards may reference those facts only through governed relationships.
+
+## Validation
+
+Validate at least the following when applicable:
+
+1. path placement and lifecycle state;
+2. stable identity, digest, version, and predecessor/successor links;
+3. source identity, source role, and source lineage;
+4. object-family distinction and anti-collapse rules;
+5. spatial scope, geometry validity, precision, and sensitivity;
+6. all material time fields and freshness/expiry logic;
+7. rights, terms, and reuse posture;
+8. schema/contract references and validator scope;
+9. transform, model-run, freshness, redaction, validation, and policy receipts;
+10. evidence references and downstream EvidenceBundle resolvability;
+11. catalog/triplet identity parity;
+12. not-for-life-safety disclaimer and official-source redirect dependencies;
+13. correction, supersession, withdrawal, cache invalidation, and rollback dependencies;
+14. negative cases for expired-as-current, modeled-as-observed, declaration-as-event-proof, candidate-as-confirmed, and restricted-precision exposure.
+
+No complete lane-wide validator was verified. A successful check proves only its declared scope.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Review should include Hazards, data, evidence, validation, policy, sensitivity, freshness, and release expertise as applicable.
+
+Independent specialist review is required before changes involving:
+
+- current warning/advisory/watch presentation;
+- expiry, freshness, correction, supersession, or withdrawal behavior;
+- sensitive infrastructure or person-level exposure joins;
+- source activation or rights posture;
+- public geometry, API/UI behavior, notifications, or caching;
+- release, correction, or rollback state.
+
+CODEOWNERS routing, CI success, or documentation approval is not evidence of operational or release approval.
+
+## Correction and rollback
+
+Corrections must identify the affected artifact, claim, time window, source, downstream derivatives, catalog/triplet entries, public releases, caches, and AI/search indexes where applicable.
+
+A correction should preserve:
+
+- predecessor and successor identity;
+- reason and evidence for the correction;
+- corrected issue/expiry/freshness state;
+- invalidation targets;
+- review and release disposition;
+- rollback target.
+
+Rollback for this documentation change is the prior blob `dbb3bd830d004f1d2df3db7d4902c3419823804c`. Operational rollback behavior remains **NEEDS VERIFICATION** and must not be inferred from this README.
+
+## Related folders
+
+- Parent processed contract: [`../README.md`](../README.md)
+- Data root: [`../../README.md`](../../README.md)
+- Domain doctrine: [`../../../docs/domains/hazards/README.md`](../../../docs/domains/hazards/README.md)
+- Publication boundary: [`../../../docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md`](../../../docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md)
+- Preservation matrix: [`../../../docs/domains/hazards/PRESERVATION_MATRIX.md`](../../../docs/domains/hazards/PRESERVATION_MATRIX.md)
+- Lifecycle siblings: [`../../raw/hazards/`](../../raw/hazards/) · [`../../work/hazards/`](../../work/hazards/) · [`../../quarantine/hazards/`](../../quarantine/hazards/)
+- Downstream: [`../../catalog/domain/hazards/`](../../catalog/domain/hazards/) · [`../../triplets/`](../../triplets/) · [`../../published/`](../../published/)
+- Trust support: [`../../proofs/`](../../proofs/) · [`../../receipts/`](../../receipts/) · [`../../registry/sources/hazards/`](../../registry/sources/hazards/)
+- Authority: [`../../../contracts/domains/hazards/`](../../../contracts/domains/hazards/) · [`../../../schemas/contracts/v1/domains/hazards/`](../../../schemas/contracts/v1/domains/hazards/) · [`../../../policy/domains/hazards/`](../../../policy/domains/hazards/) · [`../../../release/candidates/hazards/`](../../../release/candidates/hazards/)
+
+## Current bounded child-lane index
+
+The prior README listed the following child lanes. Their presence, payloads, writers, validators, and release state remain **NEEDS VERIFICATION**; omission is not retirement.
+
+| Lane | Object or context family | Non-negotiable boundary |
+|---|---|---|
+| `events/` | `HazardEvent` | Historical/observed context, not emergency instruction |
+| `observations/` | `HazardObservation` | Observation is not regulatory/model/administrative state |
+| `warnings/` | `WarningContext` | Context only; issue/expiry/freshness and official-source referral required |
+| `advisories/` | `AdvisoryContext` | Not life-safety guidance or official issuance by KFM |
+| `declarations/` | `DisasterDeclaration` | Administrative context is not event proof by itself |
+| `flood/` | `FloodContext` | Hydrology retains canonical gauge and network truth |
+| `wildfire/` | `WildfireDetection` | Detection is not confirmed ignition or operational status by itself |
+| `smoke/` | `SmokeContext` | Atmosphere retains canonical air and weather truth |
+| `drought/` | `DroughtIndicator` | Aggregate indicator is not automatic per-place truth |
+| `earthquake/` | `EarthquakeEvent` | Catalog context is not emergency response guidance |
+| `heat_cold/` | `HeatColdEvent` | Not personal health or emergency guidance |
+| `exposure/` | `ExposureSummary` | Aggregated planning context; protect people and infrastructure precision |
+| `resilience/` | `ResilienceSummary` | Planning context, not certification or guarantee |
+| `timelines/` | `HazardTimeline` | Preserve role, source, time, and correction distinctions |
+| `impact_areas/` | `ImpactArea` | Candidate/derived extent is not verified damage or legal determination |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive subtree and payload inventory | `NEEDS VERIFICATION` | Pinned tree, object families, formats, LFS/external stores, rights, sensitivity, owners |
+| Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed-consumer inventory |
+| Schema/contract/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
+| Freshness and expiry enforcement | `UNKNOWN` | Deterministic clock handling, stale-state tests, supersession/correction cases, cache behavior |
+| Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, EvidenceBundles, review, release, rollback links |
+| Public serving and official-source referral | `UNKNOWN` | Governed routes, UI/API envelopes, disclaimer placement, redirects, access, caches, drills |
+| Operational rollback and correction propagation | `NEEDS VERIFICATION` | RollbackCards, CorrectionNotices, invalidation lists, rehearsed recovery evidence |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| PROCESSED lifecycle role | Preserved and aligned to current parent contract |
+| Not-for-life-safety boundary | Preserved and strengthened |
+| Source-role and freshness rules | Preserved and expanded |
+| Child-lane index | Preserved as bounded, unverified documentation |
+| Rights, sensitivity, evidence, policy, release, correction, and rollback controls | Preserved and strengthened |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, migration, source, schema, policy, runtime, release, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the Hazards lane with the normalized parent `data/processed/` contract;
+- strengthened not-for-life-safety, official-source-referral, freshness, expiry, and source-role boundaries;
+- added bounded inputs, outputs, validation, review, correction, rollback, verification, and no-loss controls;
+- preserved the child-lane index without claiming recursive implementation maturity;
+- changed Markdown only.
+
+[Back to top](#top)
