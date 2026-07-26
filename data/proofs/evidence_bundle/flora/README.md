@@ -1,269 +1,546 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-proofs-evidence-bundle-flora-readme
-title: data/proofs/evidence_bundle/flora/README.md — Flora EvidenceBundle Proofs README
-version: v0.1
-type: readme; proof-lane-guide; evidence-bundle-lane; flora-domain-proof-index; evidence-ref-resolution-lane; governed-answer-support-lane; sensitive-location-evidence-lane
-status: draft; PROPOSED; data-root; proofs-root; evidence-bundle; flora; evidence-bundle-index; evidence-ref; claim-support; digest-closure; cite-or-abstain; source-role-aware; sensitivity-aware; rare-plant-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Flora steward · Evidence steward · EvidenceBundle steward · Proof steward · Sensitivity reviewer · Policy steward · Release steward · UI/Evidence Drawer steward · Docs steward
+title: data/proofs/evidence_bundle/flora/ — Flora EvidenceBundle Proof Support
+version: v0.2.0
+type: directory-readme
+subtype: flora-evidence-bundle-proof-lane
+status: repository-grounded draft; concrete bundle inventory, resolver integrity, validator execution, fixture depth, CI enforcement, access controls, release linkage, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Flora domain steward"
+  - "NEEDS VERIFICATION — Evidence, EvidenceBundle, and proof steward"
+  - "NEEDS VERIFICATION — taxonomy, source-role, rights, sensitivity, geoprivacy, stewardship, and sovereignty reviewers"
+  - "NEEDS VERIFICATION — policy, release, correction, rollback, Evidence Drawer, governed-AI, and docs stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: restricted-doc; data; proofs; evidence-bundle; flora; evidence; sensitivity; lifecycle; governed; release-gated
-tags: [kfm, data, proofs, evidence-bundle, flora, plants, rare-plants, sensitive-location, EvidenceBundle, EvidenceRef, EvidenceDrawerPayload, DecisionEnvelope, cite-or-abstain, claim-resolution, citation-closure, proof, claim-support, digest-closure, SourceDescriptor, CatalogMatrix, ReleaseManifest, ReviewRecord, CorrectionNotice, RollbackCard, PolicyDecision, ValidationReport, RedactionReceipt, PlantTaxon, FloraTaxonCrosswalk, FloraOccurrence, SpecimenRecord, RarePlantRecord, VegetationCommunity, InvasivePlantRecord, PhenologyObservation, RangePolygon, DistributionSurface, HabitatAssociation, BotanicalSurvey, RestorationPlanting, source-role, redaction, generalization, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-26
+policy_label: restricted-review; proof-support; evidence-bundle; flora; cite-or-abstain; deny-by-default-location; no-direct-public-path; release-gated
+path: data/proofs/evidence_bundle/flora/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules proof placement, canonical proofs-root
+  contract, expanded parent EvidenceBundle lane, Flora domain proof and citation-validation lanes,
+  fielded EvidenceBundle semantic contract, schema, validator wrapper, and minimal fixtures, current
+  Flora workflow holds, scaffold-level Flora policy homes, and no established Flora release candidate
+  or public release / PROPOSED Flora-specific claim packet, source-role closure profile, sensitivity-safe
+  bundle routing, invalidation propagation, and downstream handoff requirements / UNKNOWN recursive
+  bundle inventory, active writers and consumers, generated indexes, resolver runtime, access controls,
+  public routes, caches, hosting, release instances, and public effects / NEEDS VERIFICATION accountable
+  owners, accepted instance-versus-index profile, cross-record resolver integrity, validator execution,
+  fixture depth, CI enforcement, policy and geoprivacy enforcement, stewardship and sovereignty review,
+  correction propagation, withdrawal behavior, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0b51a0afc569b5fdaee1698b4c088b9247b98f0f
+  prior_blob: d73adf50d91b617f6c056b7a14842c57db1131a4
+  blank_placeholder_lineage_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  evidence_bundle_parent_blob: bf304383b725db95e0f8902f0c7c59d0a3cd0ee3
+  flora_proof_lane_blob: a2518d4cc029b9b16afa8bb5c3fb6907a0c1475a
+  flora_citation_validation_blob: 2a2fee3953ae85f0505e4835bdded4fb5e24c129
+  evidence_bundle_contract_blob: 731c348832add23cddd14e796aa56ce2b9268259
+  evidence_bundle_schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
+  evidence_bundle_validator_blob: c1760c5e92eae6390f5adcde4593e8e9bab26535
+  evidence_bundle_fixtures_readme_blob: 89ace659414a757c14a4d3e516fd31d44c6a9969
+  flora_policy_blob: b040bff13e654cff9d2f7336d6d6783c8467eaa9
+  flora_sensitivity_policy_blob: 4c65abec24135f7e4467fd108e163cdce594d5f9
+  flora_release_candidate_blob: 15a08f9fb2cdd33041d3a3f3e3c844f26a7a0998
+  flora_workflow_blob: c792d126e5726d8895f56fd97800bee7fcba4a15
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
-  - ../../README.md
-  - ../../../README.md
   - ../README.md
-  - ../../flora/README.md
-  - ../../citation_validation/README.md
+  - ../../README.md
   - ../../citation_validation/flora/README.md
-  - ../../../catalog/domain/flora/
-  - ../../../processed/flora/
-  - ../../../receipts/
-  - ../../../registry/sources/flora/
-  - ../../../published/layers/flora/
-  - ../../../triplets/
-  - ../../../../docs/architecture/ui/EVIDENCE_DRAWER.md
-  - ../../../../docs/architecture/evidence-drawer.md
-  - ../../../../docs/domains/flora/README.md
-  - ../../../../docs/domains/flora/OBJECT_FAMILIES.md
-  - ../../../../docs/domains/flora/SOURCE_REGISTRY.md
-  - ../../../../docs/domains/flora/ARCHITECTURE.md
-  - ../../../../docs/domains/flora/RELEASE_INDEX.md
-  - ../../../../docs/domains/flora/MAP_UI_CONTRACTS.md
-  - ../../../../docs/domains/flora/CANONICAL_PATHS.md
-  - ../../../../docs/domains/flora/VERIFICATION_BACKLOG.md
-  - ../../../../docs/domains/habitat/README.md
-  - ../../../../docs/domains/fauna/README.md
-  - ../../../../docs/domains/soil/README.md
-  - ../../../../docs/domains/hydrology/README.md
-  - ../../../../docs/domains/agriculture/README.md
-  - ../../../../docs/domains/hazards/README.md
-  - ../../../../contracts/domains/flora/
-  - ../../../../schemas/contracts/v1/domains/flora/
+  - ../../../processed/flora/README.md
+  - ../../../catalog/domain/flora/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/flora/README.md
+  - ../../../published/flora/README.md
+  - ../../../published/layers/flora/README.md
+  - ../../../../contracts/evidence/evidence_bundle.md
+  - ../../../../contracts/evidence/evidence_ref.md
+  - ../../../../contracts/domains/flora/README.md
   - ../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
-  - ../../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - ../../../../policy/domains/flora/
-  - ../../../../policy/sensitivity/flora/
-  - ../../../../release/candidates/flora/
-  - ../../../../release/
-  - ../../../../tools/validators/
+  - ../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json
+  - ../../../../schemas/contracts/v1/domains/flora/README.md
+  - ../../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md
+  - ../../../../tools/validators/validate_evidence_bundle.py
+  - ../../../../policy/evidence/README.md
+  - ../../../../policy/domains/flora/README.md
+  - ../../../../policy/sensitivity/flora/README.md
+  - ../../../../release/candidates/flora/README.md
+  - ../../../../release/README.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../.github/workflows/domain-flora.yml
+  - ../../../../.github/CODEOWNERS
 notes:
-  - "This file replaces a blank placeholder at `data/proofs/evidence_bundle/flora/README.md`."
-  - "This is a Flora EvidenceBundle proof lane guide under `data/proofs/`. It supports Flora EvidenceBundle / EvidenceRef closure, claim support, digest closure, citation readiness, sensitivity-safe claim validation, and governed answer readiness. It is not RAW source storage, WORK scratch, QUARANTINE holding, PROCESSED data, CATALOG, TRIPLET, PUBLISHED output, receipt storage, source registry, policy authority, release authority, schema home, validator home, public API/UI output, public map/tile output, rare-plant discovery surface, exact-location disclosure surface, landowner/private-access surface, or stewardship decision authority."
-  - "EvidenceBundle artifacts in this lane may reference SourceDescriptor, processed artifacts, catalog rows, triplets, receipts, policy decisions, review records, release manifests, redaction receipts, correction notices, and rollback cards; this lane does not own those records."
-  - "Flora EvidenceBundle support must preserve sensitive-location posture: rare, protected, culturally sensitive, and steward-reviewed flora default to generalized, withheld, staged, or denied public geometry."
-  - "The parent `data/proofs/evidence_bundle/README.md` is currently a greenfield stub, so global EvidenceBundle family behavior remains NEEDS VERIFICATION."
-  - "This README is a proof-lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no Flora source bytes, proof payloads, EvidenceBundle instances, contracts, schemas, policies, validators, fixtures, workflows, releases, routes, hosting, or publication state changed."
+  - "EvidenceBundle is a claim-scope closure artifact. It is not an EvidenceRef, PolicyDecision, ReviewRecord, ReleaseManifest, receipt, source registry, public response body, map layer, or AI-answer authority."
+  - "The parent EvidenceBundle lane is an expanded repository document; this README no longer describes it as a greenfield stub."
+  - "The EvidenceBundle schema, validator wrapper, and minimal valid/invalid fixture family are fielded. Validator execution, cross-record resolver integrity, domain-profile coverage, policy enforcement, CI, and runtime behavior remain NEEDS VERIFICATION."
+  - "The blank-placeholder lineage blob is retained for history; the documentation rollback target for v0.2.0 is prior blob d73adf50d91b617f6c056b7a14842c57db1131a4."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/proofs/evidence_bundle/flora
+# `data/proofs/evidence_bundle/flora/` — Flora EvidenceBundle Proof Support
 
-> Flora EvidenceBundle proof lane for resolvable botanical claim-support bundles, EvidenceRef closure, digest closure, sensitive-location posture, redaction/generalization support, release linkage, correction lineage, rollback linkage, and governed answer support.
+> **One-line purpose.** Hold or index claim-scoped Flora EvidenceBundle proof artifacts that preserve evidence references, botanical source roles, citations, rights, sensitivity, safe-representation posture, transforms, checksums, correction lineage, and release dependencies without becoming public truth or release authority.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/proofs/evidence_bundle/flora" src="https://img.shields.io/badge/root-data%2Fproofs%2Fevidence__bundle%2Fflora-blue">
-  <img alt="Domain: flora" src="https://img.shields.io/badge/domain-flora-2e7d32">
-  <img alt="Family: EvidenceBundle" src="https://img.shields.io/badge/family-EvidenceBundle-purple">
-  <img alt="Sensitivity: fail closed" src="https://img.shields.io/badge/sensitivity-fail__closed-red">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: proof support](https://img.shields.io/badge/authority-proof%20support-0969da?style=flat-square)](#authority-level)
+[![Schema: fielded](https://img.shields.io/badge/schema-fielded-1a7f37?style=flat-square)](#status)
+[![Domain: Flora](https://img.shields.io/badge/domain-Flora-2e7d32?style=flat-square)](#flora-claim-and-source-role-closure)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318?style=flat-square)](#sensitivity-geoprivacy-and-safe-representation)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Flora steward · Evidence steward · EvidenceBundle steward · Proof steward · Sensitivity reviewer · Policy steward · Release steward · UI/Evidence Drawer steward · Docs steward  
+> [!IMPORTANT]
+> **Evidence closure is necessary but not sufficient for publication.** A structurally valid Flora EvidenceBundle can support policy, review, and release evaluation, but it does not make a botanical claim true, taxonomically current, rights-cleared, sensitivity-safe, steward-approved, released, public, or safe for collection or access use.
+
+> [!CAUTION]
+> Missing, stale, conflicting, role-collapsed, rights-unclear, sensitivity-unsafe, unreleased, withdrawn, invalidated, or unresolvable support must yield a finite fail-closed result such as `ABSTAIN`, `HOLD`, `RESTRICT`, `DENY`, or `ERROR`.
+
+> [!WARNING]
+> Do not place exact or reverse-engineerable rare, protected, culturally sensitive, steward-controlled, or private-land Flora locations—or collection clues, access directions, withheld precision, redaction offsets, generalization thresholds, transform parameters, or other control-defeating details—in this ordinary repository lane.
+
 **Path:** `data/proofs/evidence_bundle/flora/README.md`  
-**Owning root:** `data/proofs/`  
-**Proof family segment:** `evidence_bundle`  
-**Domain segment:** `flora`  
-**Lifecycle role:** EvidenceBundle proof support referenced by processed Flora artifacts, catalog records, triplets, release candidates, citation-validation lanes, corrections, rollbacks, and governed answer surfaces; not a lifecycle phase substitute  
-**Exposure posture:** not public by default; public use requires governed projection, sensitivity-safe representation, policy/review state, release state, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED parent `data/proofs/evidence_bundle/README.md` is still a greenfield stub · CONFIRMED Flora doctrine is evidence-first, proof-bearing, and fail-closed for exact rare-plant geometry · CONFIRMED Flora cross-lane joins must preserve ownership, source role, sensitivity, and EvidenceBundle support · CONFIRMED Flora citation-validation lane exists and is expanded · PROPOSED EvidenceBundle lane details · NEEDS VERIFICATION for actual EvidenceBundle schema, concrete bundle inventory, validators, fixtures, access controls, release linkage, and governed route behavior.
+**Owning responsibility:** `data/proofs/`  
+**Proof family:** `evidence_bundle/`  
+**Domain segment:** `flora/`  
+**Direct public access:** denied  
+**Documentation rollback target:** prior blob `d73adf50d91b617f6c056b7a14842c57db1131a4`
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle relationship](#lifecycle-relationship) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [EvidenceBundle requirements](#evidencebundle-requirements) · [Flora EvidenceBundle guardrails](#flora-evidencebundle-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#repository-evidence-ledger) · [Bundle packet](#flora-evidencebundle-packet) · [Source roles](#flora-claim-and-source-role-closure) · [Sensitivity](#sensitivity-geoprivacy-and-safe-representation) · [Lifecycle](#lifecycle-and-governed-handoff) · [Correction](#correction-withdrawal-invalidation-and-rollback) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ---
 
 ## Purpose
 
-`data/proofs/evidence_bundle/flora/` is a specialized proof lane for Flora-domain EvidenceBundle support. It should hold or index bundle-like proof artifacts that make botanical claims resolvable, inspectable, sensitivity-safe, and cite-or-abstain ready.
+`data/proofs/evidence_bundle/flora/` is the Flora-specialized child of the EvidenceBundle proof family. It supports claim-scope closure for botanical evidence while preserving taxonomy, source role, space, time, rights, sensitivity, safe representation, review, release dependency, correction lineage, and cite-or-abstain behavior.
 
-This lane may contain or reference proof support for:
+The lane exists to make these questions inspectable before a claim advances:
 
-- EvidenceBundle closure for Flora catalog/triplet candidates;
-- EvidenceRef resolution targets used by release-linked or governed Flora payloads;
-- claim-support bundles for PlantTaxon, FloraTaxonCrosswalk, FloraOccurrence, SpecimenRecord, RarePlantRecord, VegetationCommunity, InvasivePlantRecord, PhenologyObservation, RangePolygon, DistributionSurface, HabitatAssociation, BotanicalSurvey, and RestorationPlanting claims;
-- digest closure tying source captures, processed Flora artifacts, catalog rows, triplets, receipts, release candidates, correction records, rollback targets, and governed answer examples to evidence;
-- bundle indexes that preserve taxon concept, source role, observation/specimen/survey/model distinction, location/generalization posture, sensitivity tier, redaction posture, review state, release state, and limitation posture;
-- negative-state evidence support explaining why a governed Flora answer must `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` instead of answering.
+1. What exact Flora claim scope is being supported?
+2. Which governed `EvidenceRef` values and reconstructable source records are members of the bundle?
+3. Which botanical object family, taxon concept, source role, geography, time, method, uncertainty, and limitations qualify the support?
+4. Which citations, rights, sensitivity labels, transforms, checksums, and governing spec identity close the bundle?
+5. Which exact/internal geometry posture and public generalized, withheld, staged, or denied representation apply?
+6. Which policy, stewardship, sovereignty, review, release, correction, withdrawal, invalidation, and rollback dependencies remain outside the bundle?
+7. Which finite downstream outcome is justified?
 
-This lane does not create, store, or decide the underlying Flora data, catalog records, triplets, receipts, policy decisions, release decisions, public maps, rare-plant disclosure decisions, access decisions, or stewardship decisions. It supports evidence resolution; it does not publish claims.
+This lane supports evidence resolution. It does not admit sources, determine botanical truth, define taxonomic authority, execute geoprivacy, approve stewardship or sovereignty decisions, decide policy, approve release, publish maps, or authorize collection or access.
 
-## Lifecycle relationship
+## Authority level
+
+**Implementation-bearing specialized proof-support lane under the canonical `data/proofs/` responsibility.**
+
+This path owns only Flora EvidenceBundle-family support under an accepted profile:
+
+- [`data/proofs/flora/`](../../flora/README.md) is the Flora domain proof-support lane.
+- [`data/proofs/evidence_bundle/flora/`](./README.md) is the Flora EvidenceBundle-family support lane.
+- [`data/proofs/citation_validation/flora/`](../../citation_validation/flora/README.md) checks citation and `EvidenceRef` closure for Flora claims.
+- [`contracts/evidence/evidence_bundle.md`](../../../../contracts/evidence/evidence_bundle.md) defines EvidenceBundle meaning.
+- [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) defines machine shape.
+- `policy/`, review records, and `release/` retain admissibility, stewardship, release, correction, withdrawal, and rollback authority.
+
+When one artifact could fit more than one proof axis, an accepted contract and profile must select one authoritative home. Other lanes may hold immutable references, indexes, or validation summaries; they must not duplicate mutable authority, restricted source material, canonical proof records, or public-state decisions.
+
+This README does not create a new proof family, parallel evidence store, public route, or release state.
+
+## Status
+
+| Surface | Bounded result |
+|---|---|
+| Exact path and document | **CONFIRMED** at `main@0b51a0afc569b5fdaee1698b4c088b9247b98f0f`; prior blob `d73adf50d91b617f6c056b7a14842c57db1131a4` |
+| Documentation version | `v0.2.0` |
+| Canonical proofs responsibility | **CONFIRMED repository-grounded draft** at [`data/proofs/README.md`](../../README.md) |
+| Parent EvidenceBundle lane | **CONFIRMED expanded repository document** at [`../README.md`](../README.md); no longer a greenfield stub |
+| Flora domain proof lane | **CONFIRMED draft / proposed boundary document** at [`../../flora/README.md`](../../flora/README.md) |
+| Flora citation-validation lane | **CONFIRMED repository-grounded draft** at [`../../citation_validation/flora/README.md`](../../citation_validation/flora/README.md) |
+| EvidenceBundle semantic contract | **CONFIRMED fielded draft**; defines claim-scope closure and separates evidence, policy, release, receipts, public APIs, maps, and AI authority |
+| EvidenceBundle schema | **CONFIRMED fielded / status `PROPOSED`**; ten required fields and root `additionalProperties: false` |
+| Validator wrapper | **CONFIRMED fielded / NOT RUN in this task** at `tools/validators/validate_evidence_bundle.py` |
+| Shared fixtures | **CONFIRMED minimal valid/invalid family / NOT RUN in this task**; coverage is not Flora-specific |
+| Flora policy homes | **CONFIRMED scaffold-level documents**; executable domain and sensitivity enforcement is not established |
+| Flora proof workflow | **CONFIRMED read-only readiness workflow with explicit holds**; no proof producer, geoprivacy execution, release approval, or publication authority |
+| Flora release candidate and public release | **None established by inspected evidence**; no verified child candidate dossier, approved manifest, or published Flora release |
+| Recursive bundle inventory | **UNKNOWN** |
+| Writers, consumers, resolver runtime, access controls, routes, caches, and hosting | **UNKNOWN** |
+| Public readiness | **DENY BY DEFAULT** |
+
+The repository establishes meaningful contracts, shape, fixtures, and responsibility boundaries. It does not establish a populated Flora EvidenceBundle store, accepted Flora-specific bundle profile, operational resolver, executed geoprivacy policy, released public route, or safe public rare-plant location surface.
+
+<a id="accepted-contents"></a>
+
+## What belongs here
+
+Only governed Flora EvidenceBundle proof material under an accepted profile, such as:
+
+- schema-conformant Flora EvidenceBundle instances when this lane is approved as their materialized proof home;
+- immutable bundle indexes or pointers when canonical instances are owned elsewhere;
+- `EvidenceRef`-to-bundle resolution maps that preserve unresolved, denied, stale, withdrawn, and invalidated states;
+- claim-to-bundle maps for catalog records, triplets, release candidates, Evidence Drawer projections, Focus Mode review, and governed-answer fixtures;
+- digest-closure manifests linking admitted source records, processed Flora objects, catalog/triplet projections, receipts, proof packets, and release dependencies;
+- bundle member indexes for `PlantTaxon`, `FloraTaxonCrosswalk`, `FloraOccurrence`, `SpecimenRecord`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`, `PhenologyObservation`, `RangePolygon`, `DistributionSurface`, `HabitatAssociation`, `BotanicalSurvey`, and `RestorationPlanting` claims;
+- source-role, rights, sensitivity, freshness, uncertainty, safe-representation, correction, supersession, withdrawal, and limitation summaries derived from governed member records;
+- finite negative-state support explaining why claim-grade evidence closure is absent or unsafe;
+- local README, inventory, digest, migration, compatibility, retention, or disposition sidecars that do not create parallel authority.
+
+A record relied upon by review or release should be immutable or versioned, with successor, correction, supersession, withdrawal, or invalidation links rather than silent mutation.
+
+<a id="exclusions"></a>
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
+|---|---|
+| RAW source exports, specimen images, labels, source media, original coordinates, or source-native records | `data/raw/flora/` or the governed source system |
+| In-process taxonomy reconciliation, occurrence matching, QA experiments, joins, notebooks, redaction trials, or scratch outputs | `data/work/flora/` |
+| Rights-, source-role-, sensitivity-, validation-, review-, or release-unclear material | `data/quarantine/flora/` |
+| Canonical normalized Flora objects | `data/processed/flora/` |
+| Catalog, STAC, DCAT, PROV, or triplet records | Their catalog or triplet lanes |
+| General Flora proof packets or citation-validation reports | Their accepted `data/proofs/` family lanes |
+| Run, transform, validation, redaction, generalization, aggregation, review, or publication receipts as primary records | `data/receipts/` |
+| `SourceDescriptor` or source-admission authority | `data/registry/sources/flora/` |
+| Contracts, schemas, policy rules, validators, fixtures, tests, pipelines, packages, apps, API, UI, or map code | Their responsibility roots |
+| Policy, rights, sensitivity, stewardship, or sovereignty decisions | Their accepted policy or review authority |
+| Release approval, promotion decision, correction notice, withdrawal notice, signature, or rollback card | `release/` |
+| Public maps, tiles, downloads, popups, reports, Focus Mode answers, model prose, or AI output | Released governed delivery surfaces only |
+| Exact or reverse-engineerable sensitive locations, private-land details, collection/access clues, culturally sensitive knowledge, withheld precision, or transform secrets | Approved restricted systems; never this ordinary repository lane |
+| Claims that collapse taxonomy, occurrence, specimen, survey, range, model, habitat, restoration, or generated-summary roles | Split the claim scope or return a finite negative outcome |
+
+## Inputs
+
+A Flora EvidenceBundle packet may reference only governed records and must preserve unresolved states rather than fabricate closure.
+
+The fielded shared schema requires:
+
+- `bundle_id`;
+- `claim_scope`;
+- one or more `evidence_refs`;
+- one or more `source_records`;
+- one or more `citations`;
+- `rights`;
+- `sensitivity`;
+- ordered `transforms`;
+- one or more `checksums`;
+- `spec_hash`.
+
+Flora-specific support should remain reconstructable through accepted member records and contracts, including:
+
+- stable claim and object identity;
+- taxon concept, accepted name, relevant synonym or crosswalk, and taxonomy version or date;
+- source identity, version, role, authority, rights, citation, and use limits;
+- occurrence, specimen, survey, range, distribution/model, vegetation, habitat-association, invasive, phenology, restoration, or synthetic-summary role;
+- geography, coordinate uncertainty, spatial support, time scope, observation/collection/survey/model dates, retrieval time, review time, correction time, and expiry where applicable;
+- method, effort, protocol, quality, uncertainty, confidence, missingness, and limitations;
+- exact/internal geometry posture and public generalized, withheld, staged, or denied representation;
+- sensitivity classification, geoprivacy dependency, stewardship or sovereignty dependency, and disclosure posture;
+- pointers to receipts, catalog/triplet records, policy decisions, reviews, releases, corrections, withdrawals, invalidations, and rollback targets.
+
+Pointers do not transfer authority into this lane.
+
+## Outputs
+
+Outputs are claim-scoped proof artifacts or indexes used for:
+
+- EvidenceBundle resolver and release preflight;
+- citation-validation support;
+- domain, policy, sensitivity, stewardship, and release review;
+- Evidence Drawer and governed API projection eligibility;
+- Focus Mode or governed-AI eligibility checks;
+- correction, withdrawal, invalidation, supersession, and rollback analysis;
+- proof inventory, reconciliation, migration, and audit.
+
+Outputs are not public response bodies, collection guides, access directions, maps, tiles, source feeds, policy decisions, or release approvals.
+
+A downstream public carrier requires a policy-safe projection, accepted review and release state, correction support, rollback support, and access controls. When closure is insufficient, the output must preserve a finite negative posture instead of presenting an unsupported claim.
+
+## Validation
+
+The repository contains a shared EvidenceBundle schema, validator wrapper, and minimal valid/invalid fixtures. They were inspected but not executed in this Markdown-only task.
+
+| Check | Minimum expectation | Safe failure |
+|---|---|---|
+| Placement and identity | Correct proof-family/domain path, stable ID, version, digest, duplicate posture, and no parallel authority | `ERROR` / `HOLD` |
+| Schema shape | All ten required fields, nested constraints, checksum syntax, and no undeclared top-level fields | `DENY` |
+| `EvidenceRef` resolution | Every reference resolves through the governed resolver or carries an explicit unresolved/denied state | `ABSTAIN` / `DENY` |
+| Claim scope and taxonomy | Supported object, taxon concept, geography, time, method, source role, uncertainty, and limitations remain bounded | `ABSTAIN` |
+| Source records and citations | Reconstructable source handles and publication-ready citations exist | `ABSTAIN` |
+| Rights, sensitivity, and review dependencies | Effective rights, sensitivity, stewardship, sovereignty, and disclosure posture support the requested use | `RESTRICT` / `DENY` |
+| Transforms and integrity | Ordered transforms, checksums, and `spec_hash` are reviewable and consistent without exposing control-defeating parameters | `DENY` / `ERROR` |
+| Source-role preservation | Taxonomy, occurrence, specimen, survey, range, model, habitat, restoration, and generated-summary roles remain distinct | `DENY` |
+| Spatial and temporal fidelity | Coordinate uncertainty, generalization state, valid/observed/source/retrieval/review/correction time, freshness, and expiry remain visible | `HOLD` / `ABSTAIN` |
+| External dependencies | Receipts, policy, review, catalog/triplet, release, correction, withdrawal, invalidation, and rollback pointers resolve as required | `HOLD` / `DENY` |
+| Public boundary | Public clients receive governed, release-aware, sensitivity-safe projections and never direct proof-file or canonical-store access | `DENY` |
+
+A passing schema check proves machine shape only. It does not prove botanical identity, taxonomic currency, source correctness, evidence sufficiency, citation fitness, rights clearance, sensitivity safety, stewardship or sovereignty approval, geoprivacy effectiveness, policy permission, review approval, release state, public safety, or runtime behavior.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**.
+
+Changes should receive review proportionate to claim significance and exposure from:
+
+- Flora and taxonomy stewards;
+- evidence, EvidenceBundle, proof, and citation-validation stewards;
+- source-role, rights, sensitivity, geoprivacy, stewardship, and sovereignty reviewers;
+- policy, release, correction, withdrawal, rollback, and security reviewers;
+- Evidence Drawer, governed-AI, map, and docs reviewers where affected.
+
+Independent review is warranted for rare or protected taxa, culturally sensitive knowledge, private-land detail, exact or reverse-engineerable geometry, source-role changes, taxonomy migrations, public-safe transforms, public serving, proof-profile changes, corrections, withdrawals, and rollback.
+
+[`CODEOWNERS`](../../../../.github/CODEOWNERS) routes `/data/proofs/` review to `@bartytime4life`, but routing is not stewardship assignment, rights-holder or sovereign-community approval, independent review, policy approval, release approval, or publication evidence.
+
+<a id="repo-fit"></a>
+<a id="directory-map"></a>
+
+## Related folders
+
+| Responsibility | Verified or bounded home | Relationship |
+|---|---|---|
+| Parent EvidenceBundle family | [`../README.md`](../README.md) | Cross-domain EvidenceBundle proof-family guide |
+| Flora domain proof lane | [`../../flora/README.md`](../../flora/README.md) | Domain proof boundary and botanical support index |
+| Flora citation validation | [`../../citation_validation/flora/README.md`](../../citation_validation/flora/README.md) | Citation and `EvidenceRef` checks; not bundle authority |
+| Processed Flora | [`../../../processed/flora/README.md`](../../../processed/flora/README.md) | Canonical processed candidates, not proof storage |
+| Flora catalog | [`../../../catalog/domain/flora/README.md`](../../../catalog/domain/flora/README.md) | Discovery/provenance records that may cite bundle support |
+| Receipts | [`../../../receipts/README.md`](../../../receipts/README.md) | Process and review memory referenced by bundles |
+| Flora source registry | [`../../../registry/sources/flora/README.md`](../../../registry/sources/flora/README.md) | Source identity, role, rights, and activation authority |
+| Published Flora family | [`../../../published/flora/README.md`](../../../published/flora/README.md) | Released-artifact lane; current public release is not established |
+| Published Flora layers | [`../../../published/layers/flora/README.md`](../../../published/layers/flora/README.md) | Public-safe map-layer family after governed release |
+| EvidenceBundle contract | [`../../../../contracts/evidence/evidence_bundle.md`](../../../../contracts/evidence/evidence_bundle.md) | Claim-scope closure meaning |
+| EvidenceBundle schema | [`../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | Fielded machine shape |
+| EvidenceBundle fixtures | [`../../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md`](../../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md) | Minimal shared valid/invalid examples |
+| EvidenceBundle validator | [`../../../../tools/validators/validate_evidence_bundle.py`](../../../../tools/validators/validate_evidence_bundle.py) | Shared shape validator wrapper; execution not proven here |
+| Evidence policy | [`../../../../policy/evidence/README.md`](../../../../policy/evidence/README.md) | Evidence-admissibility boundary; executable policy not established |
+| Flora policy | [`../../../../policy/domains/flora/README.md`](../../../../policy/domains/flora/README.md) | Domain policy scaffold |
+| Flora sensitivity policy | [`../../../../policy/sensitivity/flora/README.md`](../../../../policy/sensitivity/flora/README.md) | Sensitivity scaffold; not executable enforcement |
+| Flora release candidates | [`../../../../release/candidates/flora/README.md`](../../../../release/candidates/flora/README.md) | Pre-publication review lane; no child candidate established |
+| Release authority | [`../../../../release/README.md`](../../../../release/README.md) | Promotion, release, correction, withdrawal, and rollback decisions |
+| Directory Rules | [`../../../../docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md) | Placement, proof/receipt/release separation, README contract |
+| Flora workflow | [`../../../../.github/workflows/domain-flora.yml`](../../../../.github/workflows/domain-flora.yml) | Read-only readiness and explicit-hold workflow; not proof or release authority |
+
+## ADRs
+
+- Directory Rules place proof artifacts under `data/proofs/` and domains as segments inside responsibility roots.
+- Changing the canonical materialized EvidenceBundle home, creating a parallel evidence/proof home, merging receipts or release decisions into this lane, or allowing direct public reads requires an accepted ADR, migration and compatibility plan, validation plan, access-control review, correction plan, and rollback target.
+- No accepted Flora-specific EvidenceBundle ADR was verified in this task.
+- **NEEDS VERIFICATION:** whether this lane stores canonical bundle instances, generated Flora indexes, or both under an accepted profile.
+- This README does not accept proposed source-registry, sensitivity-tier, review-state, release-state, or correction-state vocabularies by implication.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence basis:** exact target README, Directory Rules, canonical proofs-root README, parent EvidenceBundle README, Flora proof and citation-validation READMEs, EvidenceBundle semantic contract and schema, validator wrapper, minimal fixtures, Flora policy scaffolds, Flora release-candidate README, Flora workflow, and CODEOWNERS
+- **Recursive payload and runtime inspection:** not performed
+- **Validator and test execution:** not performed
+- **Owners, accepted Flora profile, resolver integrity, policy/geoprivacy enforcement, access controls, release instances, public consumers, correction propagation, and operational rollback:** need verification
+
+Re-review on contract/schema changes, Flora object or source-role changes, taxonomy changes, rights or sensitivity changes, new writers or consumers, resolver changes, geoprivacy implementation, release integration, public serving, correction, withdrawal, invalidation, or rollback changes—or within six months.
+
+---
+
+<a id="evidence-ledger"></a>
+
+## Repository evidence ledger
+
+| Evidence | Status | Supports | Limit |
+|---|---|---|---|
+| Prior target blob `d73adf50…` | **CONFIRMED** | Same-path baseline, stable `doc_id`, blank-placeholder lineage, Flora guardrails | June 2026 evidence claims were stale in places |
+| Directory Rules blob `2affb080…` | **CONFIRMED doctrine** | Proof placement, responsibility split, §15 README order, no parallel authority, public trust membrane | Does not prove payloads or runtime behavior |
+| `data/proofs/README.md` blob `0d8b6e92…` | **CONFIRMED repository-grounded draft** | Canonical proofs responsibility and deny-by-default public posture | Recursive payload inventory and enforcement remain unknown |
+| Parent EvidenceBundle README blob `bf304383…` | **CONFIRMED expanded parent** | Cross-domain bundle-family role and Flora child presence | Does not establish populated Flora bundles |
+| Flora proof README blob `a2518d4c…` | **CONFIRMED draft / proposed** | Domain proof boundary and fail-closed botanical posture | Contains planning-level implementation claims |
+| Flora citation-validation README blob `2a2fee39…` | **CONFIRMED repository-grounded draft** | Current Flora source-role, geoprivacy, finite-outcome, and no-direct-public-path boundaries | Recursive records, resolver, and runtime remain unknown |
+| EvidenceBundle contract blob `731c3488…` | **CONFIRMED fielded draft** | EvidenceBundle meaning, authority split, closure rules, required field interpretation | Policy/release/runtime closure remains separate |
+| EvidenceBundle schema blob `cf525683…` | **CONFIRMED fielded / `PROPOSED` status** | Ten required fields, nested constraints, root `additionalProperties: false` | Shape does not prove semantic or operational closure |
+| Validator blob `c1760c5e…` and fixture README blob `89ace659…` | **CONFIRMED fielded / NOT RUN** | Shared schema runner and minimal positive/negative fixture family | Not Flora-specific; execution and depth unverified |
+| Flora policy blobs `b040bff1…` and `4c65abec…` | **CONFIRMED scaffolds** | Correct policy responsibility and fail-closed planning posture | Executable domain/sensitivity enforcement not established |
+| Flora release-candidate blob `15a08f9f…` | **CONFIRMED repository-grounded draft** | No child candidate, approved manifest, or published Flora release established | Bounded README-level inventory is not permanent proof of absence |
+| Flora workflow blob `c792d126…` | **CONFIRMED read-only hold workflow** | Required boundary checks and explicit non-publisher posture | Does not produce proof, apply policy, execute geoprivacy, or release |
+| CODEOWNERS blob `dd2a84aa…` | **CONFIRMED review routing** | `/data/proofs/` route to verified repository owner | Routing is not substantive approval |
+
+<a id="evidencebundle-requirements"></a>
+
+## Flora EvidenceBundle packet
+
+A structurally valid packet follows the current shared EvidenceBundle schema. Flora-specific semantics remain in governed member records and accepted contracts rather than undeclared top-level fields.
+
+| Required schema field | Flora interpretation |
+|---|---|
+| `bundle_id` | Stable identity for one bounded Flora claim-scope closure |
+| `claim_scope` | Exact supported botanical claim, including object/taxon, geography, time, role, method, intended use, and limitations |
+| `evidence_refs` | Non-empty governed pointers to the evidence members used for closure |
+| `source_records` | Non-empty reconstructable source handles, preserving source role and version |
+| `citations` | Non-empty publication-ready citations that do not expose restricted details |
+| `rights` | Effective license/rights summary; schema requires `license` |
+| `sensitivity` | Exposure constraint through the shared sensitivity-label schema |
+| `transforms` | Ordered source-to-derived transformations, including public-safe transforms where applicable without leaking protected parameters |
+| `checksums` | At least one SHA-256 digest protecting critical inputs or outputs |
+| `spec_hash` | Deterministic identity for the governing contract/schema baseline |
+
+Because the schema rejects undeclared top-level fields, Flora-specific taxonomy, source role, method, uncertainty, geoprivacy, stewardship, and correction details must remain reconstructable through referenced records and accepted shared contracts. Do not improvise incompatible bundle extensions inside ordinary proof files.
+
+A structurally valid packet still requires cross-record resolution, rights and sensitivity review, policy, review, release, correction, withdrawal, and rollback closure before public use.
+
+<a id="flora-evidencebundle-guardrails"></a>
+
+## Flora claim and source-role closure
+
+| Claim or source role | Closure requirement | Forbidden collapse |
+|---|---|---|
+| `PlantTaxon` / `FloraTaxonCrosswalk` | Taxon concept, accepted name, source authority, version/date, synonym or crosswalk rationale, uncertainty, and evidence | Taxonomic identity is not occurrence, abundance, range, or public-location proof |
+| `FloraOccurrence` | Taxon concept, event/source identity, observation date, method, coordinate uncertainty, geometry posture, evidence, and review state | Occurrence is not range, habitat suitability, model output, or unrestricted public precision |
+| `SpecimenRecord` | Repository/collection identity, catalog identifier, label/transcription provenance, collection event, determinations, source role, and rights | A specimen label is not automatically a current occurrence or a public coordinate |
+| `BotanicalSurvey` | Survey area, dates, effort, protocol, observers/source, detections/non-detections, limitations, and evidence | A survey does not prove exhaustive absence without an explicit supported design |
+| `RarePlantRecord` | Taxon, source, sensitivity, stewardship/sovereignty dependency, internal geometry posture, public representation, and disclosure decision | No exact or reverse-engineerable public location, collection clue, or access guidance |
+| `RangePolygon` | Source, interpretation method, date/version, scale, uncertainty, and range role | A range is not an observed occurrence |
+| `DistributionSurface` | Model/product identity, version, inputs, method, validation, uncertainty, time, scale, and model role | A model surface is not observation, specimen, or confirmed presence |
+| `VegetationCommunity` | Classification, source, method, date, scale, geometry support, uncertainty, and community role | Community mapping is not taxon occurrence by itself |
+| `HabitatAssociation` | Owning habitat evidence, relation method, scale/time, uncertainty, and relation role | Habitat suitability or association is not occurrence truth |
+| `InvasivePlantRecord` | Taxon, source, status vocabulary, jurisdiction/scope, date, method, and evidence | KFM does not create a legal, quarantine, treatment, or regulatory conclusion without authoritative support |
+| `PhenologyObservation` | Taxon, stage, protocol, observation date, location posture, uncertainty, and evidence | A phenology observation is not a population trend or range change by itself |
+| `RestorationPlanting` | Project/source identity, planned/installed/monitored state, date, species/taxon, geometry posture, and evidence | A restoration planting is not a wild/native occurrence |
+| Synthetic or AI summary | Exact released claim scope, eligible bundle IDs, policy/release state, citations, and output receipt where required | Generated language is never evidence or stewardship authority |
+
+Cross-lane Flora claims may cite habitat, fauna, soil, hydrology, agriculture, hazards, archaeology, settlements, infrastructure, roads, or people/land support only through governed relations that preserve each lane’s ownership, source role, rights, sensitivity, time, evidence, and release posture.
+
+One bundle may support multiple related claims only when `claim_scope` and member evidence make the allowed scope unambiguous. Otherwise split the closure into separate bundles.
+
+## Sensitivity, geoprivacy, and safe representation
+
+Flora proof support must preserve the difference between canonical/internal evidence and public representation.
+
+- Exact/internal geometry, coordinate uncertainty, original source precision, and restricted notes remain governed by their owning records and access controls.
+- Public geometry may be generalized, aggregated, withheld, staged, delayed, or denied only under reviewed policy and with traceable transform evidence.
+- A generalized public representation never replaces or silently rewrites the canonical source record.
+- Public bundle support must not permit reverse engineering through stable offsets, tiny cells, unique attribute combinations, unredacted metadata, filenames, map bounds, timestamps, source URLs, collection notes, or cross-layer joins.
+- Redaction offsets, jitter seeds, aggregation thresholds, withheld precision, private endpoints, and transform secrets do not belong in ordinary public-repository proof files.
+- Rare, protected, culturally sensitive, steward-controlled, private-land, or collection-risk records default to `RESTRICT`, `DENY`, `HOLD`, or `ABSTAIN` until rights, sensitivity, stewardship, sovereignty, review, and public-safe representation close.
+- Public citations must not disclose restricted originals merely because a source is otherwise public.
+- Cross-lane relations must not reintroduce a location or identity that the Flora lane withheld.
+- No proof artifact in this lane is collection, access, treatment, land-entry, legal, regulatory, or stewardship advice.
+
+The current Flora policy and sensitivity READMEs are scaffolds, and the workflow explicitly holds geoprivacy implementation. Therefore this README documents required posture; it does not claim enforcement.
+
+<a id="lifecycle-relationship"></a>
+
+## Lifecycle and governed handoff
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-                           \-> data/proofs/evidence_bundle/flora supports EvidenceBundle closure
+SourceDescriptor + source records
+  -> RAW / WORK / QUARANTINE
+  -> PROCESSED Flora objects
+  -> EvidenceRef members
+  -> Flora EvidenceBundle claim-scope closure
+  -> citation validation + rights/sensitivity/policy + review
+  -> catalog/triplet and release preflight
+  -> ReleaseManifest + correction and rollback support
+  -> governed API / Evidence Drawer / Focus Mode projection
 ```
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/flora] --> WORK[data/work/flora]
-  WORK --> QUAR[data/quarantine/flora]
-  WORK --> PROC[data/processed/flora]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog/domain/flora]
-  CAT --> TRIP[data/triplets/.../flora]
-  CAT --> PUB[data/published/layers/flora]
-  TRIP --> PUB
-  PUB --> REL[release]
-
-  PROC -. evidence refs .-> EB[data/proofs/evidence_bundle/flora]
-  CAT -. EvidenceBundle closure .-> EB
-  TRIP -. claim support .-> EB
-  REL -. release cites .-> EB
-  EB -. citation validation .-> CIT[data/proofs/citation_validation/flora]
-  EB -. references receipts .-> RECEIPTS[data/receipts]
-  EB -. references sources .-> REG[data/registry/sources/flora]
+    SRC["SourceDescriptor + source records"] --> PROC["PROCESSED Flora objects"]
+    PROC --> REF["EvidenceRef members"]
+    REF --> EB["Flora EvidenceBundle"]
+    EB --> CITE["Citation validation"]
+    EB --> POL["Rights / sensitivity / PolicyDecision"]
+    CITE --> REVIEW["ReviewRecord"]
+    POL --> REVIEW
+    REVIEW --> REL["ReleaseManifest + rollback target"]
+    REL --> API["Governed API projection"]
+    API --> DRAWER["Evidence Drawer / Focus Mode"]
+    REL -. correction / withdrawal / invalidation .-> EB
 ```
 
-EvidenceBundle proof artifacts support catalog, triplet, release, correction, rollback, citation validation, Evidence Drawer, and governed answers. They do not publish anything by themselves.
+The arrows show dependencies, not automatic promotion. A commit, merge, schema pass, complete-looking bundle, catalog link, generalized geometry, workflow result, or UI projection does not create publication state.
 
-## Repo fit
+<a id="rollback"></a>
 
-| Responsibility | Correct home | Rule |
+## Correction, withdrawal, invalidation, and rollback
+
+A bundle may require correction, supersession, invalidation, restriction, or withdrawal after:
+
+- taxonomy revision or misidentification;
+- source correction or removal;
+- citation failure;
+- member withdrawal;
+- source-role misclassification;
+- geometry, time, method, effort, or uncertainty error;
+- rights or sensitivity change;
+- stewardship or sovereignty decision;
+- geoprivacy transform defect;
+- checksum or `spec_hash` mismatch;
+- policy change;
+- release correction; or
+- public-carrier leakage or stale state.
+
+Governed handling should:
+
+1. preserve the prior bundle, member records, validation results, and release references by immutable identity;
+2. create a successor, correction, supersession, withdrawal, or invalidation record rather than silently rewriting history;
+3. identify affected claim scopes, representations, and reason codes;
+4. re-run `EvidenceRef` resolution, citations, taxonomy, source-role, rights, sensitivity, transforms, checksums, policy, review, and release dependency checks;
+5. propagate holds, restrictions, withdrawals, or supersession to catalog records, triplets, releases, APIs, maps, exports, Evidence Drawer payloads, Focus Mode responses, caches, and indexes where implemented;
+6. verify that rollback does not reactivate withdrawn, corrected, stale, or unsafe support;
+7. retain correction lineage and a rollback target appropriate to every released carrier.
+
+**Documentation rollback:** before merge, close the draft pull request and abandon the branch. After merge, revert the implementation commit. The prior README blob is `d73adf50d91b617f6c056b7a14842c57db1131a4`.
+
+**Operational rollback:** reverting this README does not restore prior bundles, policies, releases, API payloads, maps, caches, or access decisions. Operational rollback requires actual bundle/release identities, policy and review state, correction lineage, invalidation targets, access controls, and cache/index refresh evidence.
+
+<a id="validation-checklist"></a>
+
+## Open verification register
+
+| Item | Status | Required evidence |
 |---|---|---|
-| Raw Flora source payloads, specimen/source exports, original coordinates, source media, or source-native records | `data/raw/flora/` | Not this lane. |
-| Work/scratch transforms, taxonomy reconciliation, occurrence matching, redaction trials, QA experiments, or notebooks | `data/work/flora/` | Not this lane. |
-| Quarantined rights/source-role/sensitivity/release-unclear or exact-location-sensitive Flora material | `data/quarantine/flora/` | Not this lane. |
-| Normalized Flora processed artifacts | `data/processed/flora/` | Not this lane. |
-| Flora catalog records | `data/catalog/domain/flora/` | Catalog records, not EvidenceBundle storage. |
-| Flora triplets/graph records | `data/triplets/.../flora/` | Graph projection, not EvidenceBundle storage. |
-| General Flora proof support | `data/proofs/flora/` | Domain proof lane, if present or ADR-resolved. |
-| Flora EvidenceBundle proof support | `data/proofs/evidence_bundle/flora/` | This lane. |
-| Flora citation-validation proof support | `data/proofs/citation_validation/flora/` | Validates citations; not the bundle lane. |
-| Receipts and review records | `data/receipts/` | Referenced by bundles; not stored here. |
-| Source registry records | `data/registry/sources/flora/` | SourceDescriptor/source-admission authority. |
-| Published public-safe Flora outputs | `data/published/layers/flora/` | Downstream after release only. |
-| Release candidates and release manifests | `release/candidates/flora/`, `release/` | Publication authority, not EvidenceBundle storage. |
-| Flora contracts | `contracts/domains/flora/` | Semantic meaning; not proof artifacts. |
-| Flora schemas | `schemas/contracts/v1/domains/flora/` and `schemas/contracts/v1/evidence/` | Machine shape; not proof artifacts. |
-| Flora policy | `policy/domains/flora/`, `policy/sensitivity/flora/` | Admissibility authority; not proof artifacts. |
-| Validators, tests, fixtures, pipelines, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
+| Recursive Flora bundle inventory | **UNKNOWN** | Pinned tree, hashes, profiles, payload classifications, external stores, and generated-artifact inventory |
+| Canonical instance versus index role | **NEEDS VERIFICATION** | Accepted ADR or profile clarifying whether this lane stores bundle instances, indexes, or both |
+| `EvidenceRef` resolver integrity | **NEEDS VERIFICATION** | Deterministic resolver tests covering missing, denied, stale, conflicting, superseded, and withdrawn references |
+| Shared schema validator execution | **NEEDS VERIFICATION** | Trusted run of `tools/validators/validate_evidence_bundle.py` against the current schema and fixtures |
+| Fixture depth | **NEEDS VERIFICATION** | Flora-specific valid, invalid, role-collapse, rights, sensitivity, taxonomy, checksum, stale, correction, and withdrawal cases |
+| Flora proof profile | **NEEDS VERIFICATION** | Accepted claim families, required member contracts, source-role rules, and allowed public projections |
+| Domain and sensitivity policy enforcement | **NOT ESTABLISHED** | Reviewed executable policy, fixtures, tests, stable reason codes, and emitted decisions |
+| Geoprivacy transform | **NOT ESTABLISHED** | Accepted implementation, public-safe fixtures, receipts, reversibility controls, and non-leakage tests |
+| Stewardship and sovereignty review | **NEEDS VERIFICATION** | Approved review assignments, decision records, and disclosure obligations where applicable |
+| Release integration | **NOT ESTABLISHED** | Candidate dossier, policy/review closure, manifest, correction path, rollback target, and release decision |
+| Access controls and public projections | **UNKNOWN / held** | Governed API implementation, authorization tests, projection schema, no-direct-read proof, and released carrier |
+| Correction propagation | **NEEDS VERIFICATION** | Tested invalidation, withdrawal, reindexing, cache refresh, and public-carrier rollback drill |
+| Writers, consumers, and runtime behavior | **UNKNOWN** | Producer/consumer inventory, route tests, logs, metrics, and operational ownership |
 
-## Accepted contents
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
-Flora EvidenceBundle proof artifacts may include:
+## No-loss ledger
 
-- EvidenceBundle records, indexes, or bundle pointers for Flora claims when this lane is accepted as a projection/index home;
-- EvidenceRef resolution maps that point to bundle members without duplicating raw source, source registry, or receipt authority;
-- claim-to-bundle maps for catalog records, triplets, Evidence Drawer payloads, release candidates, and governed answer examples;
-- digest-closure manifests tying source captures, processed artifacts, catalog rows, triplets, receipts, release records, redaction records, and proof manifests to evidence;
-- bundle member indexes for PlantTaxon, FloraTaxonCrosswalk, FloraOccurrence, SpecimenRecord, RarePlantRecord, VegetationCommunity, InvasivePlantRecord, PhenologyObservation, RangePolygon, DistributionSurface, HabitatAssociation, BotanicalSurvey, and RestorationPlanting claims;
-- sensitivity/redaction/generalization evidence summaries that preserve exact-coordinate restrictions, public-safe geometry posture, review state, and release posture;
-- negative-state support records explaining `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` outcomes for missing, stale, conflicting, restricted, unreleased, sensitivity-unsafe, role-collapsed, or source-rights-unclear evidence;
-- lane-local README or index notes that explain EvidenceBundle boundaries without becoming public outputs or authority records.
+| Baseline element | Disposition | Result |
+|---|---|---|
+| Stable `doc_id`, path, and blank-placeholder lineage | **KEEP** | Preserved in the meta block and same-path update |
+| Flora EvidenceBundle / `EvidenceRef` closure purpose | **ENRICH** | Retained and aligned to the fielded contract, schema, validator wrapper, and fixtures |
+| Rare-plant, cultural, private-land, and exact-location guardrails | **KEEP / STRENGTHEN** | Preserved across alerts, exclusions, validation, source-role, sensitivity, and rollback sections |
+| Flora object families and cross-lane ownership | **ENRICH** | Preserved in an explicit claim/source-role closure matrix |
+| Parent EvidenceBundle lane described as a greenfield stub | **CORRECT** | Replaced with current repository evidence that the parent is expanded |
+| EvidenceBundle schema described as unverified | **CORRECT** | Replaced with verified fielded-schema facts while runtime enforcement remains bounded |
+| Validator and fixtures treated as absent or wholly unknown | **CORRECT / NARROW** | Fielded shared wrapper and minimal fixtures are recorded; execution and Flora depth remain unverified |
+| Speculative child-directory tree | **REMOVE WITH EVIDENCE** | Removed because recursive inventory and accepted local structure remain unverified |
+| Direct-looking lifecycle arrows | **CLARIFY** | Replaced with governed dependencies and explicit non-automatic promotion language |
+| Validation checklist | **REORGANIZE** | Converted into a validation matrix and open verification register |
+| Rollback posture | **CLARIFY** | Documentation rollback is separated from operational evidence/release rollback |
+| Legacy section anchors | **KEEP** | Explicit compatibility anchors preserve inbound fragment targets |
+| Payload, contract, schema, policy, validator, fixture, workflow, release, route, or public-state change | **NONE** | Markdown only |
 
-## Exclusions
+### Change history
 
-Do not store these under `data/proofs/evidence_bundle/flora/`:
+#### v0.2.0 — 2026-07-26
 
-- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data artifacts.
-- Canonical EvidenceBundle authority if another ADR-resolved evidence store owns canonical bundles.
-- RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, AIReceipt, or release signatures as primary receipt/release records.
-- SourceDescriptor/source registry records.
-- Contracts, schemas, policy bundles, validators, tests, fixtures, pipelines, app/UI/API code, packages, notebooks, or executable tooling.
-- Public map/tile/API/UI payloads, Focus Mode answer payloads, direct downloads, model-answer text, release manifests, signatures, changelogs, or published products.
-- Exact rare-plant locations, protected/culturally sensitive occurrence coordinates, private-landowner details, collection-risk details, stewardship-sensitive notes, access directions, suppressed precision, redaction parameters, transform offsets, or aggregation/generalization thresholds that should not be exposed.
-- Claims that treat habitat suitability as occurrence truth, modeled distribution as observed occurrence, specimen labels as unrestricted public coordinates, or generated summaries as evidence.
+- aligned the first twelve H2 sections with Directory Rules §15;
+- preserved the path, stable `doc_id`, blank-placeholder lineage, proof responsibility, and Flora fail-closed boundaries;
+- corrected stale parent-lane and schema claims using current repository evidence;
+- documented the fielded validator wrapper and minimal shared fixtures without claiming execution;
+- separated EvidenceBundle shape from cross-record resolution, rights, sensitivity, geoprivacy, review, release, correction, and rollback closure;
+- removed the speculative child-directory tree;
+- strengthened botanical source-role anti-collapse, exact-location protection, and correction/withdrawal behavior;
+- changed Markdown only.
 
-## EvidenceBundle requirements
-
-PROPOSED until concrete EvidenceBundle schemas, validators, fixtures, and route behavior are verified:
-
-| Requirement | Meaning |
-|---|---|
-| EvidenceRef resolution | Each bundle or bundle index should identify every EvidenceRef it resolves and every claim it supports. |
-| Bundle closure | SourceDescriptor, processed artifact, catalog row, triplet, receipt, policy, review, release, correction, redaction, and rollback references should resolve or produce a finite negative state. |
-| Digest closure | Bundles should include or point to content digests for evidence inputs, processed artifacts, catalog rows, triplets, receipts, redaction products, and proof manifests. |
-| Claim scope | Bundles should record the exact claim being supported, including taxon/object family, time, location/generalization, source role, sensitivity posture, rights posture, review posture, redaction posture, and release posture. |
-| Source-role preservation | Occurrence, specimen, survey, modeled distribution, range, habitat association, restoration planting, invasive-plant record, and synthetic summary roles must not be interchangeable. |
-| Sensitivity preservation | Rare/protected/culturally sensitive, exact-location, private-land, steward-reviewed, access-risk, and redaction/generalization caveats should remain attached to bundle entries. |
-| Release posture | Public-facing bundle use should verify release state, policy-safe representation, correction path, rollback target, and current/non-withdrawn posture. |
-| Negative outcomes | Missing, stale, conflicting, restricted, unreleased, role-collapsed, sensitivity-unsafe, redaction-missing, or source-rights-unclear bundle support should produce `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`, not an uncited answer. |
-| UI projection boundary | Evidence Drawer and Focus Mode should consume governed projection payloads, not canonical stores or raw proof files directly. |
-| No public surface by default | EvidenceBundle proof files are not direct public APIs, tiles, downloads, Focus Mode answers, or model-answer sources. |
-
-## Flora EvidenceBundle guardrails
-
-- EvidenceBundle records support evidence closure; they are not source data, processed data, receipts, catalog records, release manifests, or public products.
-- EvidenceBundle outranks generated summaries.
-- If a Flora claim lacks resolvable EvidenceBundle support, the safe outcome is `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`, not an uncited answer.
-- Exact rare-plant geometry, protected/culturally sensitive occurrence coordinates, private-land details, collection-risk details, and stewardship-sensitive notes must not leak through bundle files.
-- Public bundles should point to generalized, redacted, staged, withheld, or denied representations when policy requires it; they must not expose restricted originals.
-- Habitat suitability, range polygons, vegetation communities, and modeled distributions are not observed occurrences unless evidence explicitly supports that claim.
-- Flora may cite habitat, fauna, soil, hydrology, agriculture, hazards, archaeology, settlements, and people/land evidence only through governed cross-lane relations that preserve ownership, source role, sensitivity, and EvidenceBundle support.
-- AI summaries may reference only governed, released, evidence-supported surfaces and must preserve sensitivity posture; AI text is not evidence.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
-
-> [!CAUTION]
-> Do not expose `data/proofs/evidence_bundle/flora/` directly as a public map, API, UI, download, Focus Mode answer, AI answer source, rare-plant discovery surface, exact-location disclosure surface, collection/access guide, private-land access surface, stewardship decision surface, or legal/compliance advice surface. EvidenceBundle proof artifacts support governed evidence closure; they do not publish Flora claims by themselves.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
-
-```text
-data/proofs/evidence_bundle/flora/
-├── README.md
-├── bundles/                  # PROPOSED — Flora EvidenceBundle records or indexes
-├── evidence_refs/            # PROPOSED — EvidenceRef resolution maps
-├── claim_support/            # PROPOSED — claim-to-bundle manifests
-├── digest_closure/           # PROPOSED — source/processed/catalog/triplet/receipt digest closure
-├── source_roles/             # PROPOSED — occurrence/specimen/survey/model/source-role support
-├── sensitivity/              # PROPOSED — rare/protected/cultural sensitivity bundle support
-├── redaction/                # PROPOSED — generalized/withheld/staged/denied geometry support
-├── catalog_links/            # PROPOSED — bundle pointers used by catalog records
-├── citation_validation/      # PROPOSED — pointers to citation-validation results, not validator authority
-├── releases/                 # PROPOSED — bundle pointers used by release candidates, not ReleaseManifest authority
-├── corrections/              # PROPOSED — bundle invalidation/correction pointers, not CorrectionNotice authority
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define Flora EvidenceBundle boundaries. |
-| `data/proofs/evidence_bundle/README.md` | CONFIRMED | Parent EvidenceBundle proof family currently exists as a greenfield stub. | Does not define global EvidenceBundle family behavior yet. |
-| Repository search | CONFIRMED | Search found Flora citation-validation lane, Flora package/docs, source registry, object-family register, file-system plan, map UI contracts, and USDA PLANTS source profile. | Search is not a full tree audit. |
-| `data/proofs/citation_validation/flora/README.md` | CONFIRMED current repo doc / PROPOSED implementation | Flora citation-validation supports EvidenceRef/EvidenceBundle checks, sensitivity-safe claim validation, and governed answer readiness while excluding rare-plant discovery/exact-location disclosure surfaces. | Does not prove concrete EvidenceBundle inventory or validator behavior. |
-| `docs/domains/flora/README.md` | CONFIRMED doctrine / PROPOSED implementation | Flora is evidence-first, proof-bearing, fail-closed for exact rare-plant geometry, and must preserve ownership/source-role/sensitivity/EvidenceBundle support in cross-lane joins. | Implementation paths, schemas, registries, validators, routes, and workflows remain PROPOSED/NEEDS VERIFICATION. |
-| `docs/domains/flora/OBJECT_FAMILIES.md` | CONFIRMED planning register / PROPOSED implementation | Lists Flora expected object families and T4 deny-by-default rare-plant location sensitivity posture. | Register says file presence and implementation remain NEEDS VERIFICATION. |
-| `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | NEEDS VERIFICATION | Expected EvidenceBundle machine-shape home. | Current schema contents and validator behavior were not verified in this task. |
-| `policy/domains/flora/`, `policy/sensitivity/flora/`, and `release/` | NEEDS VERIFICATION | Expected admissibility and release homes. | Current policy/release enforcement was not verified in this task. |
-
-## Validation checklist
-
-- [ ] Confirm actual child files and EvidenceBundle proof inventory under `data/proofs/evidence_bundle/flora/`.
-- [ ] Expand or reconcile parent `data/proofs/evidence_bundle/README.md` beyond stub.
-- [ ] Confirm whether Flora EvidenceBundle files are concrete records here, indexes pointing to global proof stores, or generated artifacts linked from catalog/release/governed API tests.
-- [ ] Confirm EvidenceBundle, EvidenceRef, EvidenceDrawerPayload, DecisionEnvelope, proof index, claim-support, digest-closure, sensitivity-proof, redaction-proof, source-role proof, and proof-invalidation schemas and contract homes.
-- [ ] Confirm validators, fixtures, CI checks, EvidenceRef resolution checks, source-role checks, sensitivity checks, redaction/generalization checks, release-link checks, negative-state checks, and access-control enforcement.
-- [ ] Confirm bundle references to RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, and AIReceipt are pointers, not misplaced records.
-- [ ] Confirm exact rare-plant geometry, protected/culturally sensitive coordinates, private-land details, collection-risk details, stewardship-sensitive notes, access directions, redaction parameters, transform offsets, withheld precision, and release-unclear artifacts cannot pass from bundle support into public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, citation-safe, source-role-safe, rights-safe, sensitivity-safe, redaction-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, rare-plant discovery surface, exact-location disclosure, collection/access guide, private-land access surface, or stewardship decision artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public Flora service, public occurrence service, public map, public tile, public API, public UI, or AI-answer source.
-
-## Rollback
-
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, PROCESSED substitute, catalog root, triplet root, public output root, `data/published/` substitute, receipt store, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, direct public API shortcut, direct public UI shortcut, direct public tile shortcut, direct public exposure shortcut, unrestricted canonical EvidenceBundle authority root without ADR, citation-bypass path, rare-plant exposure path, exact-location exposure path, redaction-bypass path, habitat-suitability-as-occurrence path, model-as-observation path, proof-without-evidence path, uncited-AI-answer source, collection/access guide, private-land access surface, stewardship decision surface, or legal/compliance advice surface.
-
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
