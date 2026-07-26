@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.1
+version: v1.2
 status: draft; repository-grounded
 owners:
   - Docs steward
@@ -45,7 +45,7 @@ This register connects the human register lane to the canonical Architecture Dec
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
 | Current numbered inventory | 29 tracked records, `ADR-0001` through `ADR-0029` |
-| Current effective decision status | All `proposed`; no verified accepted record |
+| Current effective decision status | ADR-0029 `accepted`; 28 numbered records remain `proposed` |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
 | Authority limit | Inventory and routing only; never decision acceptance, policy, release, promotion, or publication authority |
@@ -78,7 +78,7 @@ Keeping one row source ensures that:
 1. Update the source ADR and [`docs/adr/INDEX.md`](../adr/INDEX.md) together.
 2. Run the ADR index validator and its negative-path tests.
 3. Change this pointer only when its contract, canonical target, summary, consumers, or validation path changes.
-4. Keep proposed decisions proposed until their source records carry explicit reviewed status.
+4. Keep unresolved decisions proposed until their source records carry explicit reviewed status; do not infer broader authority from ADR-0029's bounded acceptance.
 5. Preserve superseded and rejected records; never delete decision history.
 
 ## Validation boundary
@@ -92,7 +92,7 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the 29 numbered ADRs.
+- Human status review for the remaining 28 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
 - Domain-local versus repository-wide ADR placement reconciliation.
 - Review of proposed ADR-0011 before any `artifacts/release/` migration.
