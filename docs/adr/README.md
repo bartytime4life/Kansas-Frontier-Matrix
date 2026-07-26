@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v1.3
+version: v1.4
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -25,8 +25,8 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
-  - "Prior inventory was verified at main@43f1d97954debda98691b2685c1bb75c4b63c872; ADR-0029 is added as proposed in PR #1763."
-  - "File presence does not accept a decision. Every numbered ADR remains proposed until explicit reviewed status evidence says otherwise."
+  - "Ratification is prepared from main@67f1d7eac9baabd69da997ba569de54c6b7c1d11; ADR-0029 transitions to accepted only through the synchronized source/index change and becomes effective on merge."
+  - "File presence does not accept a decision. ADR-0029 is accepted through explicit owner ratification and a matching source/index transition; the other 28 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
@@ -34,14 +34,14 @@ notes:
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
 [![inventory](https://img.shields.io/badge/numbered_ADRs-29-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-proposed-d4a72c)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-1_accepted_%7C_28_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
 Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically an accepted ADR. The current numbered corpus is **CONFIRMED present** and **proposed for governance purposes**. This pass does not accept, reject, supersede, renumber, rename, or substantively edit any decision record.
+> A tracked ADR is not automatically accepted. ADR-0029 is the first accepted numbered record through explicit project-owner ratification and a synchronized source/index transition; ADR-0001 through ADR-0028 remain proposed. This status summary does not independently promote any decision.
 
 **Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory contract](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open governance work](#open-governance-work)
 
@@ -49,14 +49,14 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The prior inventory was grounded at `main@43f1d97954debda98691b2685c1bb75c4b63c872`; this proposal adds `ADR-0029` with effective status `proposed` in PR #1763.
+The ratification base is `main@67f1d7eac9baabd69da997ba569de54c6b7c1d11`. PR #1763 added ADR-0029 as proposed; the current synchronized ratification change records it as the first accepted numbered ADR.
 
 | Surface | Verified state | Meaning |
 | --- | ---: | --- |
 | Direct Markdown files | 46 | Complete direct-child inventory for this snapshot |
 | Numbered records | 29 | Unique, contiguous IDs `ADR-0001` through `ADR-0029` |
-| Numbered source metadata | 15 `proposed`; 12 `draft`; 1 legacy `PROPOSED` | All normalize conservatively to effective status `proposed` |
-| Verified accepted decisions | 0 | No numbered record declares reviewed `accepted` status |
+| Numbered source metadata | 15 `proposed`; 12 `draft`; 1 legacy `PROPOSED`; 1 `accepted` | The first three classes normalize to `proposed`; ADR-0029 normalizes to `accepted` |
+| Verified accepted decisions | 1 | ADR-0029 carries matching source/index `accepted` status and explicit owner-ratification evidence |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
@@ -205,7 +205,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 
 The following remain unresolved and are not silently normalized by this README:
 
-- Human acceptance review for all 29 numbered ADRs.
+- Human acceptance review for the remaining 28 proposed numbered ADRs; ADR-0029's single-owner bootstrap exception retains a later independent-review trigger.
 - Metadata normalization for 12 `draft` records and legacy ADR-0007 without changing their conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.
@@ -213,7 +213,7 @@ The following remain unresolved and are not silently normalized by this README:
 - Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md), which remains proposed and therefore does not yet unlock `artifacts/release/` migration.
 - `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
-Until those decisions are reviewed, use the conservative posture: inventory the file, keep the decision `proposed`, preserve reversibility, and do not grant authority by implication.
+Until each remaining proposal is reviewed, inventory the file, keep that decision `proposed`, preserve reversibility, and do not grant authority by implication. Treat ADR-0029 as accepted only within its explicit digest, supersession, migration, and deletion boundaries.
 
 ## Maintenance checklist
 
