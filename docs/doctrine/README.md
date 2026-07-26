@@ -3,8 +3,8 @@ doc_id: kfm://doc/doctrine/readme
 title: docs/doctrine/ — Doctrine Landing Page
 type: readme
 subtype: directory-landing-page
-version: v0.4
-prior_version: v0.3
+version: v0.5
+prior_version: v0.4
 status: active; repository-grounded; documentation-only; non-authoritative
 owner: "NEEDS VERIFICATION — CODEOWNERS routes /docs/doctrine/ to @bartytime4life; no accepted docs-steward assignment, required-review rule, or independent approval control was verified"
 created: 2026-05-18
@@ -20,12 +20,12 @@ authority_rank: subordinate to the doctrine documents it indexes
 canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: docs/retire-legacy-directory-rules-20260726
-  base_commit: 65c09ef68024432a168e912622ee71585d967d41
-  target_prior_blob: 6b698ac03d87e2163ec4b4a102d1fb96b46c0081
+  base_ref: main
+  base_commit: 67f1d7eac9baabd69da997ba569de54c6b7c1d11
+  target_prior_blob: 1544f4b8e71326be74e7e1a15cfc9175a29b4ef3
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  adr_index_blob: d084cc855ef7d5aa085b8d4b4375395c80a3d5fd
+  adr_index_blob: 919ec44d8eb0fab2e558cbc54c90b0d37e56a201
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
@@ -42,8 +42,8 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - control_plane/document_registry.yaml
 notes:
-  - "v0.4 refreshes the Directory Rules and ADR inventory labels for the proposed v2 ratification packet while preserving this file as a non-authoritative landing page."
-  - "No accepted doctrine, contract, schema, policy, runtime, release, promotion, or publication state changes; ADR-0029 remains proposed."
+  - "v0.5 reflects accepted ADR-0029 and the exact v2 adoption boundary while preserving this file as a non-authoritative landing page."
+  - "ADR-0029 adopts the exact pinned Directory Rules v2 bytes. Tombstoning, reference migration, physical deletion, implementation, release, promotion, and publication remain separate and unauthorized by this landing-page update."
   - "truth-posture.md and trust-membrane.md were verified at the same blob SHA; this README records the identity conflict rather than treating them as independent doctrine."
   - "The repository link-check and docs-build workflows remain explicit holds; this revision claims bounded source validation, not host-render validation."
 [/KFM_META_BLOCK_V2] -->
@@ -56,9 +56,9 @@ notes:
 
 [![Status: repository-grounded active](https://img.shields.io/badge/status-repository--grounded%20active-2da44e?style=flat-square)](#status)
 [![Role: directory landing page](https://img.shields.io/badge/role-directory%20landing%20page-1f6feb?style=flat-square)](#authority-level)
-[![Directory Rules: v2 proposed](https://img.shields.io/badge/Directory%20Rules-v2%20proposed-d4a72c?style=flat-square)](./directory-rules.md)
+[![Directory Rules: v2 adopted](https://img.shields.io/badge/Directory%20Rules-v2%20adopted-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 [![CODEOWNERS: @bartytime4life](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df?style=flat-square)](../../.github/CODEOWNERS)
-[![ADRs: 29 proposed](https://img.shields.io/badge/ADRs-29%20proposed-d4a72c?style=flat-square)](../adr/INDEX.md)
+[![ADRs: 1 accepted · 28 proposed](https://img.shields.io/badge/ADRs-1%20accepted%20%C2%B7%2028%20proposed-1a7f37?style=flat-square)](../adr/INDEX.md)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 [![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-0969da?style=flat-square)](#last-reviewed)
 
@@ -106,7 +106,7 @@ This landing page is navigation and status disclosure. It does not become doctri
 | **What does not amend doctrine** | This README, a proposed ADR, a domain dossier, repository convention alone, model output, badge, commit, or pull request |
 | **Publication authority** | None. This folder cannot approve policy, promote lifecycle material, release artifacts, or publish claims |
 
-The current ADR index records all 29 numbered ADRs as effective status `proposed`; this README therefore describes none as accepted.
+The current ADR index records ADR-0029 as `accepted` and the other 28 numbered ADRs as `proposed`. ADR-0029 adopts only the exact pinned Directory Rules v2 bytes and controlled migration boundaries it enumerates.
 
 [Back to top](#top)
 
@@ -121,7 +121,7 @@ The current ADR index records all 29 numbered ADRs as effective status `proposed
 | `truth-posture.md` | **CONFIRMED path; CONFLICTED identity** | Byte-identical to `trust-membrane.md` |
 | `ai-build-operating-contract.md` | **CONFIRMED path; CONFLICTED role** | Current H1 is a Markdown authoring-agent prompt that names a proposed home under `docs/prompts/` |
 | CODEOWNERS | **CONFIRMED** route `/docs/doctrine/ @bartytime4life` | Review routing exists; stewardship and enforced approval remain separate |
-| ADR index | **CONFIRMED** 29 numbered records | Every numbered record is currently `proposed` |
+| ADR index | **CONFIRMED** 29 numbered records | ADR-0029 is `accepted`; the other 28 remain `proposed` |
 | `docs-build` | **Explicit workflow hold** | No accepted generator, preview artifact, or publication handoff |
 | `link-check` | **Explicit workflow hold** | No repository-native link or anchor validation currently runs |
 
@@ -236,7 +236,8 @@ These checks do not prove doctrine adoption, implementation, policy approval, so
 | [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | `schemas/contracts/v1/` as default schema home | `proposed` |
 | [`ADR-0003`](<../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | `policy/` singular as canonical | `proposed` |
 | [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | MapLibre GL JS as sole browser-side renderer | `proposed` |
-| [`ADR index`](../adr/INDEX.md) | 29 numbered records plus unassigned scaffolds | all numbered records `proposed` |
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Exact Directory Governance Standard v2 adoption and controlled compatibility migration | `accepted` |
+| [`ADR index`](../adr/INDEX.md) | 29 numbered records plus unassigned scaffolds | 1 `accepted`; 28 `proposed` |
 
 A README or index cannot promote an ADR. A doctrine-changing PR must cite the exact decision, amended text, supersession path, and rollback/correction consequence.
 
@@ -252,6 +253,8 @@ Older than six months: flag for review under [`directory-rules.md` §15](./direc
 
 | Edition | Date | Change |
 |---|---|---|
+| **v0.5** | 2026-07-26 | Reflected accepted ADR-0029, exact v2 adoption, restored legacy compatibility, and the continuing tombstone/deletion holds. **This landing page grants no authority.** |
+| **v0.4** | 2026-07-26 | Refreshed the proposed v2 ratification packet and ADR inventory labels. **No doctrine changed.** |
 | **v0.3** | 2026-07-23 | Reconciled path presence and status, preserved stable anchors, exposed identity conflicts, repaired links, aligned the folder-README section order, replaced placeholder claims with evidence-bearing status, and documented real workflow holds. **No doctrine changed.** |
 | **v0.2** | 2026-05-25 | Added meta block, top anchor, doctrine encyclopedia row, renderer context, badges, and expanded open questions. |
 | **v0.1** | Undated | Initial landing page. |
@@ -266,7 +269,7 @@ This is a bounded reader inventory, not a complete recursive tree claim.
 
 | File | Role | Repository-grounded status |
 |---|---|---|
-| [`directory-rules.md`](./directory-rules.md) | Proposed placement and migration doctrine successor | **CONFIRMED bytes**, v2.0.0-draft.1 `PROPOSED_FOR_ADOPTION`; not yet adopted |
+| [`directory-rules.md`](./directory-rules.md) | Adopted placement and migration doctrine | **CONFIRMED bytes**, v2.0.0-draft.1 artifact label retained; adopted by accepted ADR-0029 |
 | [`authority-ladder.md`](./authority-ladder.md) | Evidence and decision tiers | **CONFIRMED**, v1.1 `draft` |
 | [`evidence-first.md`](./evidence-first.md) | Cite-or-abstain and evidence closure | **CONFIRMED**, v1.1 `draft` |
 | [`lifecycle-law.md`](./lifecycle-law.md) | Governed lifecycle | **CONFIRMED**, v1.1 `draft` |
@@ -287,7 +290,7 @@ File presence, an H1, version label, or self-declared status does not prove adop
 ```mermaid
 flowchart TD
     README["docs/doctrine/README.md<br/>orientation + status"] --> DOCTRINE["docs/doctrine/<br/>KFM-wide rules + vocabulary"]
-    ADR["docs/adr/<br/>29 numbered records<br/>all proposed in this packet"] -. "may amend only after governed acceptance" .-> DOCTRINE
+    ADR["docs/adr/<br/>29 numbered records<br/>ADR-0029 accepted"] -. "accepted decisions may amend within scope" .-> DOCTRINE
     DOCTRINE --> ARCH["docs/architecture/<br/>realization + tradeoffs"]
     DOCTRINE --> CONTRACTS["contracts/<br/>object meaning"]
     DOCTRINE --> SCHEMAS["schemas/<br/>machine shape"]
@@ -301,7 +304,7 @@ flowchart TD
     UI -. "must not bypass" .-> RELEASE
 ```
 
-The diagram expresses responsibility boundaries, not runtime proof. A proposed ADR does not amend doctrine because it appears here.
+The diagram expresses responsibility boundaries, not runtime proof. ADR-0029 amends Directory Rules only within its accepted digest, supersession, migration, and deletion boundaries; proposed ADRs do not amend doctrine by appearing here.
 
 [Back to top](#top)
 
