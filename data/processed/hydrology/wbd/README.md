@@ -1,104 +1,282 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-hydrology-wbd-readme
-title: data/processed/hydrology/wbd/README.md — Hydrology WBD Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; hydrology-domain-lane; wbd-lane; huc-unit-lane; watershed-boundary-lane
-status: draft; PROPOSED; data-root; processed-stage; hydrology; wbd; huc; watershed; authority-source; watershed-boundary-dataset; source-role-aware; vintage-aware; evidence-first; release-gated
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Hydrology steward · Watershed/HUC steward · Source-role steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/hydrology/wbd/ — Hydrology WBD Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-hydrology-wbd-huc-lane
+status: repository-grounded draft; payload inventory, concrete contracts and schemas, validators, fixtures, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Hydrology domain steward"
+  - "NEEDS VERIFICATION — watershed, HUC, and topology steward"
+  - "NEEDS VERIFICATION — source-role, data-quality, and spatial-foundation reviewers"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, rollback, and docs stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; hydrology; WBD; HUC; watershed; lifecycle; governed; source-role-aware; vintage-aware; release-gated
-tags: [kfm, data, processed, hydrology, wbd, watershed-boundary-dataset, watershed, HUCUnit, HUC, HUC2, HUC4, HUC6, HUC8, HUC10, HUC12, drainage-area, watershed-boundary, authority, source-role, EXT-WBD, SourceDescriptor, EvidenceBundle, ValidationReport, PolicyDecision, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; hydrology; WBD; HUC; watershed-authority-context; source-role-aware; vintage-aware; topology-aware; release-gated; no-direct-public-path
+path: data/processed/hydrology/wbd/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, current Hydrology parent lane,
+  Hydrology doctrine, WBD/HUC ownership, source-role boundaries, and PROCESSED lifecycle boundary /
+  PROPOSED WBD admission profile, normalized HUC packet, topology and hierarchy checks, and downstream
+  promotion expectations / UNKNOWN recursive payload inventory, accepted HUCUnit contract or schema,
+  production validators, fixtures, receipts, proof closure, release instances, hosting, and public behavior /
+  NEEDS VERIFICATION accountable owners, accepted HUC levels and vintages, topology tolerances,
+  cross-version reconciliation, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 462db518fbd63e3ef39aa4aefdfa95a309eef796
+  prior_blob: 61d0765591b64694e37bd0c672b363a1ea15317e
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  hydrology_parent_blob: a48b907198f1eb94e99748dd9f52623d686feb81
+  hydrology_domain_blob: 57e5662e9481f8590238c21936b5d5e25f5176bb
 related:
   - ../README.md
   - ../../README.md
   - ../../../README.md
   - ../../../../docs/domains/hydrology/README.md
   - ../../../../docs/domains/hydrology/PUBLICATION_POSTURE.md
-  - ../../../../docs/domains/hazards/README.md
-  - ../../../../docs/domains/soil/README.md
-  - ../../../../docs/domains/agriculture/README.md
-  - ../../../../docs/domains/habitat/README.md
-  - ../../../../docs/domains/fauna/README.md
-  - ../../../../docs/domains/flora/README.md
-  - ../../../../policy/domains/hydrology/
-  - ../../../../contracts/domains/hydrology/
-  - ../../../../schemas/contracts/v1/domains/hydrology/
-  - ../../../raw/hydrology/
-  - ../../../work/hydrology/
-  - ../../../quarantine/hydrology/
-  - ../../../catalog/domain/hydrology/
-  - ../../../catalog/stac/hydrology/
-  - ../../../catalog/dcat/hydrology/
-  - ../../../catalog/prov/hydrology/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/sources/hydrology/
-  - ../../../../release/candidates/hydrology/
-  - ../../../../release/
-  - ../../../../pipelines/domains/hydrology/
-  - ../../../../pipeline_specs/hydrology/
-  - ../../../../tools/validators/
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../contracts/domains/hydrology/README.md
+  - ../../../../schemas/contracts/v1/domains/hydrology/README.md
+  - ../../../../policy/domains/hydrology/README.md
+  - ../../../raw/hydrology/README.md
+  - ../../../work/hydrology/README.md
+  - ../../../quarantine/hydrology/README.md
+  - ../../../catalog/domain/hydrology/README.md
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/hydrology/README.md
+  - ../../../../release/candidates/hydrology/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/processed/hydrology/wbd/README.md`."
-  - "This is a child PROCESSED-stage lane under `data/processed/hydrology/` for Watershed Boundary Dataset / HUC / watershed-boundary artifacts. It is not a RAW source root, WORK scratch area, QUARANTINE bypass, CATALOG, TRIPLET, PUBLISHED, proof store, receipt store, source registry, policy authority, release authority, public API/UI output, public map/tile output, flood-warning surface, or life-safety guidance."
-  - "WBD/HUC artifacts are authority-style watershed geography and aggregation anchors. They are not gauge observations, observed flooding, NFHL regulatory flood zones, hydrograph models, emergency warnings, or property/rights determinations."
-  - "Hydrology source roles must remain explicit. WBD/HUC is typically authority geography, while per-claim source role is set at admission and never upgraded by promotion."
-  - "WBD/HUC vintage, HUC digit level, boundary version, geometry validity, topology, source role, evidence linkage, validation state, catalog readiness, release state, correction path, and rollback target must remain visible before public use."
-  - "This README is a lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no WBD bytes, source state, contract, schema, policy, validator, workflow, proof, release, route, hosting, or KFM publication state changed."
+  - "WBD/HUC artifacts are authority-style watershed geography and aggregation anchors; they are not observations, modeled hydrographs, NFHL regulatory zones, flood events, warnings, or rights determinations."
+  - "Hierarchy, vintage, geometry, topology, source role, and cross-version lineage must remain visible; presence in this lane does not establish validation, comparability, proof, or release readiness."
+  - "Rollback target for v0.2.0 is prior blob SHA `61d0765591b64694e37bd0c672b363a1ea15317e`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/hydrology/wbd
+# `data/processed/hydrology/wbd/` — Hydrology WBD processed data
 
-> Hydrology PROCESSED-stage child lane for normalized Watershed Boundary Dataset-style watershed and HUC artifacts: WBD/HUC boundary polygons, HUC identity tables, boundary vintages, watershed hierarchy, topology/context sidecars, and authority-source watershed anchors that support hydrology analysis but are not cataloged, triplet-projected, published, or released by this directory alone.
+> **One-line purpose.** Hold normalized, source-versioned Watershed Boundary Dataset and HUC authority-geography artifacts while preserving hierarchy, geometry, topology, source role, vintage, evidence, correction, and downstream-use limits.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/hydrology/wbd" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fhydrology%2Fwbd-blue">
-  <img alt="Domain: hydrology" src="https://img.shields.io/badge/domain-hydrology-1565c0">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Object: HUCUnit" src="https://img.shields.io/badge/object-HUCUnit-green">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: watershed authority context](https://img.shields.io/badge/role-watershed%20authority%20context-1565c0?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![Topology: explicit](https://img.shields.io/badge/topology-explicit-6f42c1?style=flat-square)](#wbd-admission-profile)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Hydrology steward · Watershed/HUC steward · Source-role steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **A watershed boundary is authority geography, not a hydrologic event.** A valid HUC polygon does not prove streamflow, flood extent, drought status, water quality, model output, regulatory flood status, property rights, or emergency conditions.
+
 **Path:** `data/processed/hydrology/wbd/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `hydrology`  
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `hydrology/`  
 **Parent lane:** `data/processed/hydrology/`  
-**Sublane:** `wbd` / Watershed Boundary Dataset and HUC-unit processed artifacts  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, version/vintage disclosure, ValidationReport, PolicyDecision where applicable, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED parent `data/processed/` is upstream of catalog/triplet/publication and is not a normal public surface · CONFIRMED Hydrology owns watersheds and HUC units · CONFIRMED WBD/HUC12 is a named hydrology source family with authority geography role and snapshot-vintage handling · CONFIRMED parent `data/processed/hydrology/README.md` is still a greenfield stub · PROPOSED WBD child-lane details · NEEDS VERIFICATION for actual child inventory, schemas, validators, fixtures, source descriptors, receipt families, policy enforcement, release linkage, and governed route behavior.
+**Lane role:** WBD, HUC, and watershed-boundary authority context  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [WBD processed requirements](#wbd-processed-requirements) · [Source-role and watershed guardrails](#source-role-and-watershed-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [WBD admission profile](#wbd-admission-profile) · [Hierarchy, topology, and vintage](#hierarchy-topology-and-vintage) · [Source-role and watershed guardrails](#source-role-and-watershed-guardrails) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction and rollback](#correction-and-rollback)
 
 ---
 
 ## Purpose
 
-`data/processed/hydrology/wbd/` holds processed WBD/HUC artifacts for the Hydrology lane. These artifacts provide watershed identity, drainage-area boundaries, HUC hierarchy, and aggregation anchors used by hydrology, hazards, soil, habitat, agriculture, and Frontier Matrix analyses.
+This directory is the Hydrology domain's **PROCESSED-stage lane for WBD, HUC, and watershed-boundary authority geography**. It may hold normalized watershed polygons, HUC identity and hierarchy tables, versioned snapshots, topology and geometry sidecars, cross-version mappings, and public-candidate generalized derivatives that have moved beyond RAW capture, WORK transformation, and QUARANTINE holds.
 
-This lane may contain or point to normalized artifacts such as:
+The lane exists to preserve the answer to six questions before downstream use:
 
-- Watershed Boundary Dataset / HUC boundary polygon derivatives;
-- HUC identity tables by declared HUC digit level;
-- HUC2/HUC4/HUC6/HUC8/HUC10/HUC12 hierarchy and crosswalk products;
-- watershed boundary vintages and source-version sidecars;
-- geometry-validity, topology, adjacency, containment, and dissolve summaries;
-- WBD-derived aggregation anchors for water, drought, soil, habitat, and hazard context;
-- public-candidate generalized watershed overlays that still require catalog and release review.
+1. Which source, WBD edition, and retrieval event produced the artifact?
+2. Which HUC level and identifier semantics apply?
+3. Which geometry, CRS, clipping, repair, simplification, and digest lineage produced it?
+4. Does the hierarchy and topology remain internally consistent?
+5. What source role, rights, evidence, correction, and release posture apply?
+6. Which downstream claims and joins are allowed, restricted, or denied?
 
-This lane does not make a gauge observation, water-level observation, water-quality observation, flood warning, observed inundation, NFHL regulatory claim, hydrograph model, water-rights claim, property-rights claim, or life-safety statement by itself.
+It is not a public layer store, gauge-observation store, flood-event lane, NFHL lane, hydrograph-model lane, proof store, receipt authority, catalog authority, release authority, or emergency-warning system.
 
-## Lifecycle boundary
+## Authority level
+
+**Implementation-bearing lifecycle lane.** The target path is CONFIRMED in the repository and is correctly placed under `data/processed/hydrology/` according to Directory Rules' lifecycle and domain-placement rules.
+
+Its authority is deliberately narrow:
+
+- it may carry processed WBD/HUC artifacts and lane-local explanatory metadata;
+- it does not define `Watershed` or `HUCUnit` meaning—that remains in Hydrology semantic contracts;
+- it does not define machine shape—that remains under `schemas/contracts/v1/domains/hydrology/`;
+- it does not decide scientific, regulatory, legal, emergency, or publication meaning;
+- it does not establish evidence closure, validation state, release state, or safe public use;
+- it does not absorb observations, models, NFHL, hazards, ownership, or management authority.
+
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent Hydrology processed lane | **CONFIRMED** | `data/processed/hydrology/README.md` identifies `wbd/` as the WBD/HUC child lane and denies direct public use. |
+| Hydrology doctrine | **CONFIRMED repository document / draft** | Hydrology owns watersheds and HUC units and preserves authority, observation, regulatory, model, aggregate, candidate, and synthetic distinctions. |
+| WBD/HUC role | **CONFIRMED doctrine** | WBD/HUC is authority-style watershed geography, not observation, modeled hydrograph, NFHL, flood event, or warning. |
+| Real WBD/HUC payload inventory | **UNKNOWN** | This documentation task did not inspect or expose watershed payloads. |
+| Accepted `HUCUnit` / `Watershed` contracts and schemas | **NEEDS VERIFICATION** | No field-complete accepted contract/schema pair was verified in this task. |
+| Validators, fixtures, CI enforcement | **NEEDS VERIFICATION** | No accepted WBD production validator suite was verified. |
+| Receipts, proof, policy decisions, release instances, hosting, public behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
+
+## What belongs here
+
+Good fits are processed WBD/HUC artifacts whose identity and transformation history remain inspectable, including:
+
+- normalized watershed and HUC polygons keyed to a declared HUC level, identifier, source edition, and geometry version;
+- HUC identity tables and hierarchy relations for declared levels such as HUC2, HUC4, HUC6, HUC8, HUC10, or HUC12 when supported by the source;
+- frozen WBD snapshots with source, retrieval, valid, correction, and release times kept distinguishable where material;
+- parent-child, containment, adjacency, and cross-level relationship tables;
+- source-preserved cross-version mappings that do not imply one-to-one equivalence where boundaries changed;
+- geometry-normalized derivatives carrying source CRS, target CRS, repair, clipping, dissolve, simplification, generalization, and digest metadata;
+- topology, sliver, overlap, gap, multipart, containment, and boundary-quality sidecars that are not trust-bearing receipts or proofs;
+- HUC-indexed aggregation anchors that reference gauge, drought, water-quality, soil, habitat, agriculture, or hazards context without absorbing those domains' truth;
+- public-candidate generalized watershed derivatives that remain upstream of catalog and release review;
+- object-ready candidates prepared for future contract/schema validation, catalog closure, EvidenceBundle support, or release review;
+- lane-local README or non-release manifest notes that explain artifact identity without becoming authority records.
+
+## What does NOT belong here
+
+Do not place these in `data/processed/hydrology/wbd/`:
+
+- RAW WBD downloads, source-native geodatabases, shapefiles, rasters, API responses, agency exports, source logs, or original source geometry;
+- WORK notebooks, geometry-repair experiments, hierarchy reconciliation trials, topology debugging, temporary dissolves, scratch joins, or simplification experiments;
+- QUARANTINE material with unresolved source role, rights, HUC identity, hierarchy, geometry, topology, dispute, or quality state;
+- gauge sites, flow observations, water-level observations, water-quality observations, groundwater wells, aquifer observations, hydrographs, NFHL zones, flood observations, forecasts, or warnings;
+- legal property boundaries, parcels, water-rights determinations, engineering certifications, or operational water-management decisions;
+- semantic contracts, JSON Schemas, policy rules, validators, tests, fixtures, executable pipelines, source descriptors, catalog records, STAC/DCAT/PROV projections, triplets, proofs, receipts, releases, correction notices, rollback cards, or published artifacts;
+- public map, tile, API, download, export, Focus Mode, Evidence Drawer, graph, search, or AI-answer payloads;
+- hidden sensitive joins, exact restricted infrastructure detail, transform secrets, access credentials, private agreements, or parameters that could aid re-identification or unauthorized access;
+- claims that a watershed boundary proves observed flooding, model results, regulatory status, drought, contamination, crop impact, property impact, or emergency conditions.
+
+## Inputs
+
+Inputs may enter this lane only through governed lifecycle transitions from:
+
+- `data/work/hydrology/` after source, edition, HUC level, role, rights, geometry, topology, hierarchy, time, validation, and correction posture are recorded;
+- `data/quarantine/hydrology/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted Hydrology pipelines or tools that preserve source bytes by reference, source edition, identifier semantics, transform method, geometry lineage, topology results, and correction state;
+- approved cross-domain context where ownership remains with the source domain and the relation is explicit.
+
+A connector-to-PROCESSED, watcher-to-PROCESSED, or public-upload-to-PROCESSED shortcut is not an accepted normal path. Connectors and watchers create source or candidate state; they do not publish or silently promote.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/hydrology/` and accepted STAC/DCAT/PROV projections;
+- `data/triplets/` or other relationship projections that preserve HUC identity, source edition, hierarchy, role, and evidence references;
+- separate `data/proofs/` and `data/receipts/` objects;
+- `release/candidates/hydrology/` after identity, rights, hierarchy, topology, validation, evidence, review, correction, and rollback obligations are met;
+- a separately governed public-safe Hydrology watershed layer only through a release transition and separate published path;
+- governed API, MapLibre, Evidence Drawer, export, or Focus Mode carriers only after public-safe release.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A processed HUC polygon is not a released public claim merely because it is authoritative-looking, coarse, or easy to render.
+
+## Validation
+
+No WBD/HUC production validator suite was verified in this task. Until accepted contracts, schemas, fixtures, validators, policy checks, and CI evidence exist, field-level enforcement claims must remain bounded.
+
+A credible WBD validation profile should check, at minimum:
+
+1. source identity, edition, retrieval event, rights, and citation;
+2. HUC identifier format, declared level, and identifier-length consistency;
+3. stable identity and normalized digest where practical;
+4. geometry type, CRS, validity, extent, multipart posture, and repair lineage;
+5. parent-child hierarchy, containment, and declared level transitions;
+6. overlaps, gaps, slivers, duplicate identifiers, orphan units, and cycles;
+7. adjacency and dissolve consistency where claimed;
+8. cross-version mapping cardinality and non-equivalence when boundaries changed;
+9. source, valid, retrieval, correction, and release times where material;
+10. evidence references, policy posture, review state, release hold, correction path, and rollback target.
+
+Fail closed or quarantine when source edition, HUC identity, level, hierarchy, topology, geometry, rights, evidence, or correction state is missing, contradictory, disputed, or unsafe for the requested downstream use.
+
+## Review burden
+
+Changes require review proportional to consequence:
+
+| Change | Minimum review burden |
+|---|---|
+| README wording or navigation only | Docs steward plus Hydrology reviewer. |
+| New HUC level, source edition, or child-lane admission | Hydrology and watershed/HUC stewards plus Directory Rules review. |
+| Identifier, hierarchy, topology, CRS, geometry, or cross-version semantics | Hydrology subject-matter reviewer plus contract/schema and validation reviewers. |
+| Cross-domain aggregation or public candidate | Owning-domain, evidence, policy, release, correction, rollback, and sensitivity review where applicable. |
+| Flood, regulatory, legal, property, engineering, or life-safety implication | Hold by default; require the owning authority and claim-specific evidence. |
+
+Unverified owner names or CODEOWNERS coverage remain **NEEDS VERIFICATION**.
+
+## Related folders
+
+| Responsibility | Path |
+|---|---|
+| Parent processed Hydrology lane | [`../`](../README.md) |
+| Hydrology doctrine | [`docs/domains/hydrology/`](../../../../docs/domains/hydrology/README.md) |
+| Semantic contracts | [`contracts/domains/hydrology/`](../../../../contracts/domains/hydrology/README.md) |
+| Machine schemas | [`schemas/contracts/v1/domains/hydrology/`](../../../../schemas/contracts/v1/domains/hydrology/README.md) |
+| Hydrology policy | [`policy/domains/hydrology/`](../../../../policy/domains/hydrology/README.md) |
+| RAW / WORK / QUARANTINE | [`data/raw/hydrology/`](../../../raw/hydrology/README.md) · [`data/work/hydrology/`](../../../work/hydrology/README.md) · [`data/quarantine/hydrology/`](../../../quarantine/hydrology/README.md) |
+| Catalog / graph | [`data/catalog/domain/hydrology/`](../../../catalog/domain/hydrology/README.md) · [`data/triplets/`](../../../triplets/README.md) |
+| Proof / receipts / source registry | [`data/proofs/`](../../../proofs/README.md) · [`data/receipts/`](../../../receipts/README.md) · [`data/registry/sources/hydrology/`](../../../registry/sources/hydrology/README.md) |
+| Release | [`release/candidates/hydrology/`](../../../../release/candidates/hydrology/README.md) · [`release/`](../../../../release/README.md) |
+
+## ADRs
+
+- Directory Rules and the accepted schema-home ADR govern responsibility-root placement.
+- Any change that creates a parallel WBD schema, contract, policy, source-registry, proof, receipt, release, or publication authority requires an ADR or governed migration note.
+- The Hydrology documentation records a path-form conflict between `.../domains/hydrology/` and flatter alternatives; this README follows Directory Rules and does not create a second authority home.
+- No new ADR is created by this Markdown-only update.
+
+## Last reviewed
+
+**2026-07-25.** Review again when a WBD/HUC contract, schema, validator, fixture suite, source edition, topology policy, release instance, or public layer is added or materially changed.
+
+## WBD admission profile
+
+The following packet is **PROPOSED** until accepted contracts and validators exist:
+
+| Field group | Minimum inspectable content |
+|---|---|
+| Identity | Stable artifact ID, feature ID strategy, HUC code, declared HUC level, source edition, digest. |
+| Source | SourceDescriptor reference, source role, rights, citation, retrieval event, source URI or safe resolver reference. |
+| Time | Source edition time, valid time where meaningful, retrieval time, transform time, correction time, release time. |
+| Geometry | Source CRS, target CRS, geometry type, extent, clipping, repair, dissolve, simplification, generalization, digest. |
+| Hierarchy | Parent HUC, child relations, level transition, containment result, orphan/cycle posture. |
+| Topology | Validity, overlaps, gaps, slivers, duplicate geometry, multipart posture, adjacency or dissolve result where claimed. |
+| Versioning | Prior/next edition references, cross-version mapping, split/merge/retire posture, non-equivalence caveats. |
+| Governance | EvidenceRef, validation state, policy state, review state, release hold, correction path, rollback target. |
+
+## Hierarchy, topology, and vintage
+
+- HUC digits are hierarchical identifiers only when the declared source and level semantics support that interpretation.
+- Parent-child relationships must be validated, not inferred solely from string prefix when the source edition or identifier system does not guarantee it.
+- Cross-version mappings may be one-to-one, one-to-many, many-to-one, retired, or unresolved; do not label them equivalent without evidence.
+- Geometry validity does not prove hydrologic correctness, and hydrologic plausibility does not excuse invalid geometry.
+- Overlap, gap, sliver, multipart, containment, and adjacency tolerances must be declared by an accepted validator or policy before pass/fail claims are made.
+- Source geometry, normalized geometry, and public generalized geometry are distinct artifacts with distinct digests and lineage.
+- A newer WBD edition does not silently overwrite historical identity; corrections and supersession must remain auditable.
+
+## Source-role and watershed guardrails
+
+- WBD/HUC is authority-style watershed geography, not gauge observation or flood-event truth.
+- NFHL is regulatory flood context, not WBD, observed flooding, or a watershed-boundary correction.
+- Modeled hydrographs and forecasts remain modeled or forecast products; they are not observations.
+- HUC-indexed aggregation does not transfer ownership of gauge, drought, soil, habitat, agriculture, hazard, or property claims into Hydrology WBD.
+- A watershed boundary does not establish water rights, parcel rights, jurisdiction, engineering suitability, emergency status, or management instruction.
+- Sensitive infrastructure or restricted cross-domain joins must be generalized, redacted, restricted, delayed, or denied before public use; style filters are not a security control.
+- Unclear rights, unresolved source role, disputed hierarchy, failed topology, missing evidence, or absent release state blocks public promotion.
+- Public clients and Focus Mode use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes—not this directory directly.
+
+## Lifecycle and promotion
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -106,163 +284,32 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/hydrology] --> WORK[data/work/hydrology]
-  WORK --> QUAR[data/quarantine/hydrology]
-  WORK --> WBD[data/processed/hydrology/wbd]
-  QUAR --> WBD
-  WBD --> PROC[data/processed/hydrology]
-  WBD --> CAT[data/catalog/domain/hydrology]
-  WBD --> STAC[data/catalog/stac/hydrology]
-  WBD --> DCAT[data/catalog/dcat/hydrology]
-  WBD --> PROV[data/catalog/prov/hydrology]
-  WBD --> TRIP[data/triplets/.../hydrology]
-  WBD -. supports .-> PROOF[data/proofs]
-  WBD -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../hydrology]
-  STAC --> PUBLISHED
-  DCAT --> PUBLISHED
-  PROV --> PUBLISHED
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
+  RAW["data/raw/hydrology/<br/>source WBD capture"] --> WORK["data/work/hydrology/<br/>normalize · repair · reconcile"]
+  WORK --> GATE{"identity · hierarchy · topology<br/>rights · evidence gate"}
+  GATE -->|fail or unclear| QUAR["data/quarantine/hydrology/<br/>reason + remediation state"]
+  GATE -->|admitted| PROC["data/processed/hydrology/wbd/<br/>this lane"]
+  PROC --> CAT["data/catalog/domain/hydrology/<br/>catalog + EvidenceRef"]
+  CAT --> TRIP["data/triplets/<br/>derived relationships"]
+  CAT --> REL["release/<br/>decision · manifest · rollback"]
+  REL --> PUB["data/published/<br/>released public-safe watershed artifact"]
+  PUB --> API["governed API / layer resolver"]
 ```
 
-`data/processed/hydrology/wbd/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+Promotion is a governed state transition. A commit, merge, file copy, catalog entry, tile build, or visually correct map does not itself promote WBD data.
 
-## Repo fit
+## Correction and rollback
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw WBD downloads, source-native geodatabases, source shapefiles, source API responses, agency exports, source logs, original geometries, or source identifiers | `data/raw/hydrology/` | Not this lane. |
-| In-process geometry repair, HUC hierarchy reconciliation, dissolve/simplify experiments, topology QA, joins, notebooks, or scratch products | `data/work/hydrology/` | Not this lane. |
-| Unresolved source role, rights uncertainty, malformed geometry, disputed HUC identity, topology failure, unsafe joins, or not-yet-reviewed hydrology material | `data/quarantine/hydrology/` | Not this lane until review/admission allows. |
-| Processed WBD/HUC watershed artifacts | `data/processed/hydrology/wbd/` | This lane. |
-| Parent processed Hydrology lane | `data/processed/hydrology/` | Parent lane; still not public by default. |
-| Hydrology catalog records | `data/catalog/domain/hydrology/` | Downstream catalog stage. |
-| Hydrology STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/hydrology/` | Downstream catalog projections if accepted. |
-| Hydrology triplet/graph records | `data/triplets/.../hydrology/` | Downstream graph stage; must not expose role-collapsed claims or unsafe joins. |
-| Published public-safe Hydrology products | `data/published/.../hydrology` or `data/published/layers/hydrology/` | Downstream only after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, validation, policy, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| Hydrology source registry records | `data/registry/sources/hydrology/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/hydrology/`, `release/` | Separate publication authority. |
-| Hydrology contracts | `contracts/domains/hydrology/` | Object meaning; not data. |
-| Hydrology schemas | `schemas/contracts/v1/domains/hydrology/` | Machine shape; not data. |
-| Hydrology policy and sensitivity rules | `policy/domains/hydrology/` | Admissibility authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
+A correction may require:
 
-## Accepted contents
+1. identifying affected WBD editions, HUC units, hierarchy rows, geometry derivatives, joins, catalog records, tiles, caches, exports, and answers;
+2. preserving the superseded artifact and reason for change;
+3. rerunning hierarchy, topology, geometry, cross-version, evidence, policy, and release checks;
+4. invalidating or rebuilding downstream aggregates and public derivatives;
+5. issuing correction or withdrawal records where released claims changed;
+6. retaining deterministic rollback targets.
 
-Processed WBD/HUC artifacts may include:
+Rollback is required if this lane becomes a RAW source root, WORK scratch root, QUARANTINE bypass, catalog or proof authority, receipt store, schema or policy home, release-decision root, public map/API shortcut, flood-event source, NFHL substitute, emergency-warning source, rights-determination source, or life-safety guidance source.
 
-- normalized `Watershed` and `HUCUnit` records with source, role, rights, HUC digit level, WBD vintage, geometry version, validation state, and digest posture;
-- WBD/HUC polygon derivatives that remain upstream of catalog/release;
-- HUC hierarchy, parent/child, containment, adjacency, and crosswalk tables;
-- geometry-validity, topology, boundary-version, source-vintage, simplification, or generalization sidecars needed to interpret processed products;
-- HUC-indexed aggregation anchors for gauge observations, drought indicators, water-quality summaries, soil/habitat context, flood context, and watershed timelines when ownership and source-role boundaries remain visible;
-- review-ready public-safe watershed map candidates where source rights, vintage, and policy posture are explicit;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs or authority records.
-
-## Exclusions
-
-Do not store these under `data/processed/hydrology/wbd/`:
-
-- RAW source WBD files, source-native downloads, steward originals, source media, logs, original source geometries, source identifiers, or unprocessed agency exports.
-- WORK/scratch files, notebooks, geometry-repair trials, topology experiments, dissolve/simplification trials, unresolved QA joins, or transform-debug outputs.
-- Quarantined or unresolved sensitive/rights/source-role/topology material.
-- Catalog records, STAC/DCAT/PROV records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, pipeline specs, app/UI/API code, or packages.
-- Gauge observations, flow observations, water-level observations, water-quality observations, groundwater well records, aquifer observations, NFHL flood zones, observed flood events, hydrographs, operational warnings, emergency alerts, or life-safety guidance.
-- Hydrology products that collapse WBD authority geography into observed flooding, modeled hydrographs, regulatory NFHL, per-place drought truth, water rights, property rights, or emergency status.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, emergency-warning products, landowner/parcel targeting aids, legal advice, engineering certification, operational water-management instruction, or life-safety products.
-- Redaction parameters, aggregation thresholds, small-cell thresholds, fuzzing radii, seeds, exact transform offsets, access credentials, secrets, private agreement terms, sensitive infrastructure details, or implementation details that could aid exposure or unauthorized access.
-
-## WBD processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
-|---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or hydrology source registry context, especially `EXT-WBD` where accepted. |
-| Evidence linkage | Claims about watershed identity, HUC code, HUC digit level, boundary, vintage, topology, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Authority, observation, regulatory/context, model, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| HUC identity | HUC code, HUC digit level, name where available, parent/child relation, source vintage, geometry version, and normalized digest should remain auditable. |
-| Geometry and topology | Polygon validity, CRS, boundary normalization, simplification/generalization, containment, adjacency, area, and hierarchy checks should be recorded or receipt-linked. |
-| Time semantics | Source time, valid time, retrieval time, WBD snapshot/vintage time, correction time, and release time should remain distinguishable where material. |
-| Rights posture | Agency, steward, license, redistribution, attribution, derivative-use, and source terms should be resolved or held closed. |
-| Sensitivity posture | Joins to wells, infrastructure, rare ecology, private parcels, drought/agriculture summaries, or small-cell outputs should carry restriction/generalization/denial posture where needed. |
-| Transform linkage | Reprojection, simplification, generalization, aggregation, redaction, suppression, withholding, or public-safe geometry transform should link to appropriate receipt families. |
-| Review state | Hydrology steward, WBD steward, source-role reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Catalog readiness | Processed WBD/HUC artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, and rollback target. |
-| No public surface by default | Processed WBD/HUC artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
-
-## Source-role and watershed guardrails
-
-- WBD/HUC is authority watershed geography, not an observed water event.
-- `Watershed` and `HUCUnit` are aggregation and identity anchors, not gauge observations, observed flooding, NFHL flood zones, hydrographs, emergency warnings, or water-rights determinations.
-- HUC rollups are aggregate context; they are not per-place truth unless the contract, evidence, scale, and policy posture support that claim.
-- NFHL remains regulatory flood context and must never be relabeled as WBD/HUC or observed flooding.
-- USGS gauge readings and water-quality observations remain observation records and must not be collapsed into watershed boundary truth.
-- Modeled hydrographs and reconstructed flows remain modeled products with model-run receipts and must not be relabeled as observations.
-- Operational flood warnings or watches are not KFM life-safety authority.
-- Hydrology may join to Hazards, Soil, Agriculture, Settlements/Infrastructure, Habitat, Fauna, Flora, and Frontier Matrix only through governed relationships that preserve ownership, source role, sensitivity, and EvidenceBundle support.
-- Unclear rights, unresolved source role, missing evidence, unresolved topology, unresolved sensitivity, or absent release state blocks public promotion.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
-
-> [!CAUTION]
-> Do not expose `data/processed/hydrology/wbd/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, flood-warning surface, observed-flooding proof, NFHL regulatory substitute, water-rights claim, property-rights claim, landowner/parcel targeting aid, operational water-management instruction, emergency alert, or life-safety product. Processed WBD/HUC data remains inside the trust membrane until governed promotion and release.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
-
-```text
-data/processed/hydrology/wbd/
-├── README.md
-├── huc_units/                # PROPOSED — normalized HUCUnit records
-├── watershed_boundaries/     # PROPOSED — processed watershed/HUC boundary polygons
-├── hierarchy/                # PROPOSED — parent/child HUC hierarchy tables
-├── topology/                 # PROPOSED — containment/adjacency/topology summaries
-├── crosswalks/               # PROPOSED — source/classification/vintage crosswalks
-├── vintages/                 # PROPOSED — WBD snapshot/source-vintage sidecars
-├── generalized/              # PROPOSED — public-candidate generalized derivatives
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-├── joins/                    # PROPOSED — reviewed context joins only, not gauge/flood/soil/ag/hazard truth
-├── _manifests/               # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define WBD processed boundaries. |
-| `data/processed/hydrology/README.md` | CONFIRMED | Parent Hydrology processed lane currently exists as a greenfield stub. | Does not define hydrology processed boundaries yet. |
-| `data/processed/README.md` | CONFIRMED | PROCESSED data is upstream of catalog, triplets, publication, and release and is not the normal public surface. | Does not prove Hydrology child inventory or enforcement. |
-| `docs/domains/hydrology/README.md` | CONFIRMED doctrine / PROPOSED implementation | Hydrology owns watersheds/HUCs; WBD/HUC12 is a source family with authority geography and snapshot-vintage handling; lifecycle, object families, source-role anti-collapse, and cross-lane constraints are defined. | Implementation maturity remains NEEDS VERIFICATION. |
-| `docs/domains/hydrology/PUBLICATION_POSTURE.md` | NEEDS VERIFICATION | Named companion doc for publication posture. | This task did not inspect its contents. |
-| `policy/domains/hydrology/` | NEEDS VERIFICATION | Expected admissibility home. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/hydrology/` and `schemas/contracts/v1/domains/hydrology/` | NEEDS VERIFICATION | Expected object contract/schema homes for Watershed/HUCUnit and related families. | Specific object files and validators were not verified in this task. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/hydrology/wbd/`.
-- [ ] Confirm whether `wbd/` is the accepted processed Hydrology lane name or should be reconciled with `watersheds/`, `huc/`, `huc_units/`, or another object-family naming convention.
-- [ ] Confirm parent `data/processed/hydrology/README.md` is expanded beyond stub.
-- [ ] Confirm `Watershed` and `HUCUnit` object contracts and schema paths.
-- [ ] Confirm source-role vocabulary and anti-collapse validators for authority / observation / regulatory-context / model / aggregate / administrative / candidate / synthetic role usage.
-- [ ] Confirm validators, fixtures, CI checks, policy checks, topology checks, geometry checks, vintage checks, and access-control enforcement for processed WBD/HUC artifacts.
-- [ ] Confirm SourceDescriptor/source registry linkage for `EXT-WBD` and every derived WBD/HUC artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, RollbackCard, correction path, and rollback target.
-- [ ] Confirm unresolved role, rights-unclear source, malformed geometry, topology failure, HUC ambiguity, WBD-vintage ambiguity, unsafe joins, redaction parameters, transform secrets, release-unclear artifacts, and life-safety prompts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, rights-safe, topology-safe, vintage-safe, sensitivity-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, flood warning, observed flooding claim, NFHL substitute, water-rights claim, property-rights claim, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public watershed service, public flood source, public map, public tile, public API, public UI, or AI-answer source.
-
-## Rollback
-
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, WBD-vintage ambiguity path, source-role collapse path, topology-error publication path, unsafe-join exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, observed-flooding proof, NFHL regulatory substitute, flood-warning source, water-rights/title source, property-targeting aid, operational water-management guidance source, or life-safety guidance source.
-
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+**Rollback target:** restore prior blob `61d0765591b64694e37bd0c672b363a1ea15317e`, or after merge revert the modernization commit without rewriting shared history.
 
 <p align="right"><a href="#top">Back to top</a></p>
