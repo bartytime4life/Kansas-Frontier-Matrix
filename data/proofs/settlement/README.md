@@ -2,27 +2,23 @@
 doc_id: kfm://data/proofs/settlement/readme
 title: data/proofs/settlement README
 type: directory-readme
-version: v0.1
-status: draft
+version: v0.2.0
+status: repository-grounded draft; settlement proof production and release readiness remain unverified
 owners:
-  - <data steward — TODO>
-  - <proof steward — TODO>
-  - <settlements-infrastructure domain steward — TODO>
-  - <settlement sublane steward — TODO>
-  - <sensitivity reviewer — TODO>
-  - <release steward — TODO>
+  - "@bartytime4life — verified CODEOWNERS routing for /data/proofs/; routing is not review or approval"
+  - "NEEDS VERIFICATION — proof, settlement-sublane, Settlements / Infrastructure, sensitivity, policy, and release stewardship"
 created: 2026-06-25
-updated: 2026-06-25
+updated: 2026-07-26
 policy_label: public-review
 path: data/proofs/settlement/README.md
 related:
   - ../README.md
+  - ../settlements-infrastructure/README.md
   - ../proof_pack/README.md
   - ../evidence_bundle/README.md
   - ../validation_report/README.md
   - ../citation_validation/README.md
   - ../review/README.md
-  - ../integrity/README.md
   - ../../receipts/README.md
   - ../../catalog/README.md
   - ../../published/README.md
@@ -31,12 +27,20 @@ related:
   - ../../../docs/domains/settlements-infrastructure/sublanes/settlements.md
   - ../../../docs/domains/settlements-infrastructure/IDENTITY_MODEL.md
   - ../../../docs/domains/settlements-infrastructure/DATA_LIFECYCLE.md
+  - ../../../docs/architecture/directory-rules.md
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/doctrine/lifecycle-law.md
   - ../../../docs/doctrine/trust-membrane.md
-  - ../../../contracts/README.md
-  - ../../../schemas/README.md
-  - ../../../policy/README.md
+  - ../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../contracts/domains/settlements-infrastructure/README.md
+  - ../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md
+  - ../../../policy/domains/settlements-infrastructure/README.md
+  - ../../../tests/domains/settlements-infrastructure/README.md
+  - ../../../fixtures/domains/settlements-infrastructure/README.md
+  - ../../../tools/validators/domains/settlements-infrastructure/README.md
+  - ../../../.github/workflows/domain-settlements-infrastructure.yml
 tags:
   - kfm
   - data
@@ -58,32 +62,33 @@ tags:
   - rollback
   - cite-or-abstain
 notes:
-  - "Directory README for settlement-sublane proof support under the broader Settlements/Infrastructure domain. It is not itself a schema, semantic contract, policy bundle, ProofPack, ReleaseManifest, catalog record, or published place layer."
-  - "This path uses the existing singular settlement lane while documenting it as a settlement proof lane, not a new root authority separate from settlements-infrastructure doctrine."
-  - "Settlement proof files must preserve place identity, source role, temporal scope, sensitivity, cross-lane ownership, release state, and rollback support."
+  - "Same-path Markdown modernization only; no proof payload, source record, contract, schema, policy, validator, fixture, workflow, release object, route, or publication state changed."
+  - "The singular settlement lane and compound settlements-infrastructure lane remain CONFLICTED until an accepted ADR or migration note resolves their relationship."
+  - "Directory Rules v2 and ADR-0029 remain proposed; this README does not adopt them or retire the legacy architecture rule body."
+  - "A dynamic workflow badge is intentionally omitted because the current domain jobs record semantic-validation, proof-production, and release-dry-run holds."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/proofs/settlement/`
+# `data/proofs/settlement/` — Settlement Proof Support
 
-> Proof-support lane for **Settlement** evidence inside the broader **Settlements / Infrastructure** domain. Files under this directory should support evidence closure, source-role separation, deterministic identity, sensitivity review, catalog closure, release review, correction, and rollback for settlement-sublane claims and public-safe place/community products.
+> Bounded proof-support guidance for settlement-side place and community claims inside the broader **Settlements / Infrastructure** domain.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: proof support](https://img.shields.io/badge/lifecycle-proof--support-blue)
-![Domain: settlements-infrastructure](https://img.shields.io/badge/domain-settlements--infrastructure-1f6feb)
-![Sublane: settlement](https://img.shields.io/badge/sublane-settlement-2da44e)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d97706?style=flat-square)](#status-and-evidence-boundary)
+[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square)](../../../docs/doctrine/trust-membrane.md)
+[![Lifecycle: proof support](https://img.shields.io/badge/lifecycle-proof%20support-0969da?style=flat-square)](../README.md)
+[![Domain: settlements-infrastructure](https://img.shields.io/badge/domain-settlements--infrastructure-8250df?style=flat-square)](../../../docs/domains/settlements-infrastructure/ARCHITECTURE.md)
+[![Path status: conflicted](https://img.shields.io/badge/path-CONFLICTED-b54708?style=flat-square)](#2-placement-and-authority)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<proof steward>` · `<settlements-infrastructure domain steward>` · `<settlement sublane steward>` · `<sensitivity reviewer>` · `<release steward>` — TODO  
+> **Status:** repository-grounded draft  
+> **Review route:** `@bartytime4life` through [`.github/CODEOWNERS`](../../../.github/CODEOWNERS); routing is not accountable stewardship, independent review, or approval  
 > **Path:** `data/proofs/settlement/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for emitted proof objects, schemas, validators, CI workflows, source descriptors, release gates, and rollback drills.
+> **Evidence boundary:** [`main@7b75e3bd590cd37321113f8336559060ae4c4358`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7b75e3bd590cd37321113f8336559060ae4c4358)  
+> **Truth posture:** CONFIRMED repository evidence / PROPOSED proof-profile guidance / NEEDS VERIFICATION for emitted proof objects, target-specific schemas, executable validators, public-safe fixtures, policy enforcement, release gates, and rollback drills.
 
 > [!WARNING]
-> This folder supports review. It does **not** publish a settlement layer, certify municipal status, prove land ownership, expose archaeological/cultural locations, authorize infrastructure disclosure, or turn a place-name match into a canonical identity by file placement.
+> This directory supports review. It does **not** publish a settlement layer, certify municipal status, prove land ownership, expose archaeological or cultural locations, authorize infrastructure disclosure, resolve the `settlement` versus `settlements-infrastructure` path conflict, or turn a name match into canonical identity.
 
 ---
 
@@ -91,19 +96,37 @@ notes:
 
 | Section | Use it for |
 |---|---|
-| [1. Purpose](#1-purpose) | What this proof lane is for. |
-| [2. Placement and authority](#2-placement-and-authority) | Why this path belongs under `data/proofs/`. |
-| [3. What belongs here](#3-what-belongs-here) | Accepted proof families and examples. |
-| [4. What must not live here](#4-what-must-not-live-here) | Exclusions and wrong homes. |
-| [5. Settlement proof responsibilities](#5-settlement-proof-responsibilities) | Domain-specific support obligations. |
-| [6. Object families and proof concerns](#6-object-families-and-proof-concerns) | What each settlement object needs proved. |
-| [7. Identity and temporal gates](#7-identity-and-temporal-gates) | How to block identity collapse and time confusion. |
-| [8. Sensitivity and publication gates](#8-sensitivity-and-publication-gates) | Cultural, sovereignty, archaeology, private, and infrastructure-adjacent controls. |
-| [9. Naming and identity](#9-naming-and-identity) | Suggested file naming and identifiers. |
-| [10. Lifecycle relationship](#10-lifecycle-relationship) | How proofs relate to RAW → PUBLISHED and release. |
-| [11. Validation checklist](#11-validation-checklist) | Maintainer checklist. |
+| [Status and evidence boundary](#status-and-evidence-boundary) | What is confirmed, held, conflicted, or still unknown. |
+| [1. Purpose](#1-purpose) | What this proof-support lane is for. |
+| [2. Placement and authority](#2-placement-and-authority) | Why the existing path is retained without claiming canonical status. |
+| [3. What belongs here](#3-what-belongs-here) | Proposed proof-support families and admission limits. |
+| [4. What must not live here](#4-what-must-not-live-here) | Exclusions and owning responsibility roots. |
+| [Inputs](#inputs) · [Outputs](#outputs) | What future proof support may reference or emit. |
+| [5–8. Responsibilities and gates](#5-settlement-proof-responsibilities) | Identity, time, source-role, sensitivity, and publication controls. |
+| [9. Naming and identity](#9-naming-and-identity) | Explicitly proposed naming and metadata sketch. |
+| [10. Lifecycle relationship](#10-lifecycle-relationship) | Proof support inside the governed lifecycle. |
+| [Validation and held automation](#validation-and-held-automation) | Verified placeholders and explicit workflow holds. |
+| [11. Validation checklist](#11-validation-checklist) | Future packet review checklist. |
 | [12. Failure modes](#12-failure-modes) | Drift and overclaim patterns to block. |
-| [13. Definition of done](#13-definition-of-done) | What is still needed for operational maturity. |
+| [13. Definition of done](#13-definition-of-done) | Open verification and graduation evidence. |
+| [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) | Review and authority context. |
+| [Last reviewed](#last-reviewed) · [No-loss ledger](#no-loss-ledger) | Evidence boundary, preserved content, and lineage. |
+
+---
+
+## Status and evidence boundary
+
+| Surface | Current evidence | Boundary |
+|---|---|---|
+| README and path | This file exists at the pinned base with stable document ID `kfm://data/proofs/settlement/readme`. | File presence proves documentation only. |
+| Placement | `data/proofs/` owns proof support; both singular and compound-domain child lanes exist. | The exact `settlement` versus `settlements-infrastructure` relationship is **CONFLICTED**. |
+| Contracts and schemas | The compound-domain contract lane is a draft with object files proposed; the schema lane is a proposed greenfield scaffold. | No accepted target-specific proof profile was verified. |
+| Validation and fixtures | Two domain validators raise `NotImplementedError`; the domain fixture README is a greenfield stub. | No executable settlement-proof validation or representative fixture suite was verified. |
+| Automation | The domain workflow performs bounded readiness checks and records explicit semantic-validation, proof-production, and release-dry-run holds. | A green held job is not proof production, release readiness, or publication authority. |
+| Ownership | CODEOWNERS routes `/data/proofs/` to `@bartytime4life`. | Accountable proof, domain, sensitivity, policy, release, and independent-review assignments remain NEEDS VERIFICATION. |
+| Proof payloads and external stores | Not established by the bounded file review. | Presence, absence, access control, or operational use remains UNKNOWN. |
+
+[Back to top](#top)
 
 ---
 
@@ -129,25 +152,35 @@ This directory is not a raw source lane, not the whole Settlements / Infrastruct
 
 ## 2. Placement and authority
 
-KFM places files by responsibility root. `data/proofs/` is the proof-support area for release-grade evidence support, ProofPacks, catalog closure, citation validation, review proof, and integrity support. The singular `settlement/` path is treated here as a **settlement-sublane proof lane** inside the broader `settlements-infrastructure` domain, not as a new root-level domain authority.
+KFM places artifacts by responsibility. The still-operative [Directory Rules v1.3.1](../../../docs/architecture/directory-rules.md#9-data-and-release-roots) assigns evidence and proof support to `data/proofs/` and separates it from receipts, catalog metadata, release decisions, and published carriers. The [parent proof contract](../README.md) applies that boundary to the current repository.
+
+The child-lane name is not settled. The repository contains both this singular lane and the broader [`data/proofs/settlements-infrastructure/`](../settlements-infrastructure/README.md); the domain [canonical-path guide](../../../docs/domains/settlements-infrastructure/CANONICAL_PATHS.md) records singular-versus-compound path variance. This revision therefore keeps the existing path, marks the relationship **CONFLICTED**, and makes no move, alias, compatibility, canonicalization, or migration claim.
+
+| Authority source | Verified state at the evidence boundary | Effect on this README |
+|---|---|---|
+| [Directory Rules v1.3.1](../../../docs/architecture/directory-rules.md) | Existing `review` rule body and active compatibility dependency. | Its responsibility-root, data/proof split, domain-lane, and no-parallel-authority rules constrain this edit. |
+| [Directory Rules v2](../../../docs/doctrine/directory-rules.md) | `2.0.0-draft.1`; `PROPOSED_FOR_ADOPTION`. | Useful proposed successor guidance only; it does not supersede v1.3.1 here. |
+| [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `proposed`. | Does not adopt v2, retire the legacy body, or authorize dependent path migration. |
+| [Parent proof README](../README.md) | Repository-grounded draft. | Defines the current proof-support boundary and anti-collapse rules. |
+| [Compound-domain proof README](../settlements-infrastructure/README.md) | Repository-grounded draft at a sibling path. | Records the same path variance; neither README may resolve it by assertion. |
 
 | Surface | Role | Boundary |
 |---|---|---|
-| [`../README.md`](../README.md) | Parent proof root. | Defines proof-lane expectations. This README narrows them for settlement-sublane proof. |
-| [`../proof_pack/`](../proof_pack/) | ProofPack family. | Settlement proof files may feed or be referenced by ProofPacks, but this folder is broader than ProofPack instances. |
-| [`../evidence_bundle/`](../evidence_bundle/) | EvidenceBundle support. | Settlement proof files may cite EvidenceBundles; they do not replace them. |
-| [`../review/`](../review/) | Review proof support. | Sensitive or release-significant settlement proof may cite review proof; it does not replace review. |
-| [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran; proof files use them as basis, not as proof by themselves. |
-| [`../../catalog/`](../../catalog/) | Discovery and interchange. | Catalog records aid discovery; proof files support closure and release review. |
-| [`../../published/`](../../published/) | Released public-safe artifacts. | Public layers/API payloads belong downstream, only after release gates. |
-| [`../../../release/`](../../../release/) | Release decisions, manifests, rollback cards, correction and withdrawal notices. | Release authority stays in `release/`; this folder supports it. |
-| [`../../../docs/domains/settlements-infrastructure/`](../../../docs/domains/settlements-infrastructure/) | Parent domain doctrine. | Docs explain lane meaning and boundaries; proof files support concrete claims/candidates. |
-| [`../../../contracts/`](../../../contracts/) | Semantic meaning. | Object meaning belongs in contracts. |
-| [`../../../schemas/`](../../../schemas/) | Machine shape. | Field-level JSON Schema belongs under the accepted schema home. |
-| [`../../../policy/`](../../../policy/) | Admissibility. | Proof files record policy outcomes; policy logic lives in policy roots. |
+| [`../README.md`](../README.md) | Parent proof responsibility. | Defines proof-lane expectations; this file narrows them for settlement-side claims. |
+| [`../proof_pack/`](../proof_pack/README.md) | ProofPack support. | A future settlement proof may be referenced by a ProofPack; this lane is not the ProofPack authority. |
+| [`../evidence_bundle/`](../evidence_bundle/README.md) | EvidenceBundle support. | Settlement proof support may resolve EvidenceRefs; it does not replace evidence. |
+| [`../review/`](../review/README.md) | Review support. | Review records remain independently addressable. |
+| [`../../receipts/`](../../receipts/README.md) | Process memory. | Receipts say what ran; they do not prove a claim or release by themselves. |
+| [`../../catalog/`](../../catalog/README.md) | Discovery and interchange. | Catalog records aid closure; they are not canonical claim or release authority. |
+| [`../../published/`](../../published/README.md) | Released public-safe carriers. | Public layers and API payloads belong downstream of governed release. |
+| [`../../../release/`](../../../release/README.md) | Release decisions, correction, withdrawal, and rollback. | Release authority stays separate from proof support. |
+| [Domain architecture](../../../docs/domains/settlements-infrastructure/ARCHITECTURE.md) | Domain meaning and boundaries. | Documentation does not establish proof payload or runtime maturity. |
+| [Contracts](../../../contracts/domains/settlements-infrastructure/README.md) | Semantic meaning. | Current object-level settlement contracts remain proposed. |
+| [Schemas](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) | Machine shape. | Current domain schema lane is a proposed scaffold. |
+| [Policy](../../../policy/domains/settlements-infrastructure/README.md) | Admissibility. | Current domain policy lane is a proposed scaffold; enforcement is not established. |
 
 > [!NOTE]
-> The KFM docs carry a naming variance: broader doctrine uses `settlements-infrastructure`, while some schema/path lineage uses singular `settlement`. This README documents the existing `data/proofs/settlement/` path as a proof lane and does not resolve schema-home naming conflicts.
+> Existing-path retention is a reversible documentation choice, not proof that `settlement/` is canonical or compatible. Resolving the variance requires an accepted ADR or migration note, consumer inventory, link closure, and rollback plan.
 
 [Back to top](#top)
 
@@ -155,9 +188,9 @@ KFM places files by responsibility root. `data/proofs/` is the proof-support are
 
 ## 3. What belongs here
 
-Use this directory for settlement proof support objects that are safe to store under repository policy and useful for review, release, correction, rollback, or audit.
+No accepted settlement proof schema, contract, producer, validator, or payload profile was verified. The families below are **PROPOSED classification guidance** for future repository-safe proof support; they do not authorize adding payloads or treating filenames as proof.
 
-| Proof family | Example content | Required posture |
+| Proposed proof family | Support question | Required posture |
 |---|---|---|
 | `evidence_closure` | Proof that a Settlement, Municipality, CensusPlace, Townsite, GhostTown, Fort, Mission, or ReservationCommunity resolves to EvidenceBundle support. | Must preserve source role, temporal scope, identity basis, uncertainty, and release state. |
 | `identity_resolution` | Proof that name variants, authority IDs, census vintages, legal status, and historic aliases were reconciled or intentionally kept separate. | Must not merge distinct legal/census/historic identities silently. |
@@ -176,17 +209,47 @@ Use this directory for settlement proof support objects that are safe to store u
 
 | Excluded material | Correct home or action | Why |
 |---|---|---|
-| Raw source captures, census tables, gazetteer exports, municipal records, plat scans, historic maps, tribal/community records, or archival payloads | `data/raw/settlements-infrastructure/`, `data/raw/settlement/`, `data/work/...`, or `data/quarantine/...` according to accepted path policy | Proof files reference source material; they do not store it. |
-| Canonical processed settlement objects | `data/processed/...` after validation | Proof lanes are support, not canonical data. |
-| Infrastructure asset/network/facility/condition/dependency proof | Infrastructure sublane or broader settlements-infrastructure proof lane | This path is settlement/place identity, not critical asset proof. |
-| Catalog records, STAC/DCAT/PROV, or domain indexes | `data/catalog/...` | Catalog is discovery/interchange, not proof authority. |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, or release signature | `release/` | Release authority stays separate. |
-| Public map layers, PMTiles, GeoParquet, API payloads, reports, or stories | `data/published/...` after release gates | Published artifacts are downstream carriers. |
-| Policy logic or release rules | `policy/` | Proof files record policy outcomes, not policy definitions. |
-| JSON Schemas | `schemas/contracts/v1/...` | Machine shape belongs in schemas. |
-| Semantic contracts | `contracts/...` | Meaning belongs in contracts. |
-| Property ownership, land title, living-person residence, DNA, or person-parcel proof | People / DNA / Land lane | Settlement proof may cite context only and must not publish restricted joins. |
-| Exact archaeological, sacred, culturally sensitive, sovereignty-sensitive, or private-location details | Quarantine, restrict, generalize, or deny | Public-review proof files must not leak sensitive community/site geometry. |
+| Raw captures, census tables, gazetteer exports, municipal records, plats, historic maps, tribal or community records, or archival payloads | The accepted domain lane under [`data/raw/`](../../raw/README.md), [`data/work/`](../../work/README.md), or [`data/quarantine/`](../../quarantine/README.md) | Proof support references source material; it does not store source payloads. The exact domain slug remains conflicted. |
+| Canonical processed settlement objects | The accepted domain lane under `data/processed/` after validation | Proof support is not canonical domain truth. |
+| Infrastructure asset, network, facility, condition, or dependency proof | The infrastructure-side or compound-domain proof boundary after path authority is resolved | This lane is scoped to settlement/place identity and must not become critical-asset authority. |
+| Process, transform, validation, generalization, redaction, AI, or release receipts | [`data/receipts/`](../../receipts/README.md) | Receipts preserve process memory; they do not replace proof closure. |
+| Catalog records, STAC, DCAT, PROV, or domain indexes | [`data/catalog/`](../../catalog/README.md) | Catalog is discovery or interchange, not proof authority. |
+| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, or release signature | [`release/`](../../../release/README.md) | Release authority stays separate. |
+| Public map layers, PMTiles, GeoParquet, API payloads, reports, or stories | [`data/published/`](../../published/README.md), after governed release | Published artifacts are downstream carriers. |
+| Policy logic or release rules | [`policy/`](../../../policy/README.md) | Proof support records or references policy outcomes; policy decides admissibility. |
+| JSON Schema | [`schemas/`](../../../schemas/README.md) | Machine shape belongs under the accepted schema home. |
+| Semantic contract | [`contracts/`](../../../contracts/README.md) | Meaning belongs under the contract root. |
+| Property ownership, land title, living-person residence, DNA, or person-parcel proof | People / DNA / Land lane and applicable policy | Settlement proof may cite bounded context only and must not expose restricted joins. |
+| Exact archaeological, sacred, culturally sensitive, sovereignty-sensitive, private-location, or critical-infrastructure details | Quarantine, restrict, generalize, aggregate, delay, abstain, or deny | A public repository must not become an exposure channel. |
+
+[Back to top](#top)
+
+---
+
+## Inputs
+
+A future reviewable settlement proof-support packet may reference, but must not absorb:
+
+- a bounded claim, relation, object, derivative, or release-candidate identity;
+- SourceDescriptor identifiers, source roles, retrieval records, rights, citation, cadence, and freshness state;
+- EvidenceRefs that resolve to independently addressable EvidenceBundles;
+- validation and citation reports, receipts, policy decisions, and review records;
+- catalog, ProofPack, release, correction, withdrawal, invalidation, and rollback references; and
+- public-field or public-geometry allowlists for a bounded derivative under review.
+
+Unresolved evidence, rights, sensitivity, identity, time, ownership, precision, or release state is input to a contract-defined negative outcome; it is not permission to omit the gap.
+
+[Back to top](#top)
+
+---
+
+## Outputs
+
+Once an accepted proof profile and producer exist, permitted outputs are repository-safe proof-support records or indexes for evidence closure, identity resolution, temporal and geometry review, source-role preservation, sensitivity review, release-candidate evaluation, correction, withdrawal, invalidation, and rollback support.
+
+Outputs must retain independently addressable references and must not claim more than their evidence. Outcome vocabularies are surface-specific: governed responses, promotion gates, validators, and migration checks must use the enum defined by their applicable contract. This README does not create a universal enum.
+
+No output is public merely because it is reviewable, committed, or stored under `data/proofs/`.
 
 [Back to top](#top)
 
@@ -196,7 +259,7 @@ Use this directory for settlement proof support objects that are safe to store u
 
 A proof file in this lane should support one or more of these responsibilities:
 
-1. **Evidence closure** — every claim resolves to EvidenceBundle support or records `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`.
+1. **Evidence closure** — every consequential claim resolves to EvidenceBundle support or a negative outcome defined by the applicable governed-response, validation, promotion, or release contract.
 2. **Identity discipline** — `Settlement`, `Municipality`, `CensusPlace`, `Townsite`, `GhostTown`, `Fort`, `Mission`, and `ReservationCommunity` identities remain distinct unless an explicit reconciliation proof supports a relation.
 3. **Source-role separation** — administrative compilations, legal records, census aggregates, historic gazetteers, maps, oral histories, and archaeological/cultural contexts are not collapsed into observations.
 4. **Temporal discipline** — source, observed, valid, retrieval, release, correction, census vintage, legal status, founding, abandonment, and operation times remain distinct where material.
@@ -210,6 +273,9 @@ A proof file in this lane should support one or more of these responsibilities:
 ---
 
 ## 6. Object families and proof concerns
+
+> [!NOTE]
+> These object-family names are grounded in current domain documentation and the compound-domain contract README. Their object-level contracts, schema bindings, proof profiles, and executable validation remain PROPOSED or NEEDS VERIFICATION.
 
 | Object family | Proof concern |
 |---|---|
@@ -228,22 +294,27 @@ A proof file in this lane should support one or more of these responsibilities:
 
 ## 7. Identity and temporal gates
 
-| Gate | Required proof | Failure outcome |
+| Gate | Required proof | Contract-dependent fail-closed response |
 |---|---|---|
-| Legal vs census identity | Proof that Municipality and CensusPlace identities are not silently merged. | `DENY`, `ABSTAIN`, or require explicit relation proof. |
-| Historic townsite vs active settlement | Proof that Townsite, Settlement, and GhostTown statuses are distinct over time. | `HOLD` or relabel claim. |
-| Fort / mission sensitivity | Proof of operating interval, source role, archaeology/cultural review where applicable, and public geometry posture. | `DENY` exact exposure or hold. |
-| ReservationCommunity sovereignty | Proof of source authority, naming posture, review state, and geometry/publication limits. | `DENY` or restricted release. |
-| Administrative compilation vs observation | Proof that annexation, gazetteer, census, or legal records are not represented as observed field events unless evidence supports that role. | `DENY` source-role collapse. |
-| Boundary vintage | Boundary source/vintage and valid time are recorded for any geometry claim. | `ABSTAIN`, stale badge, or hold. |
-| Deterministic identity | Source ID, object role, temporal scope, and normalized digest are present or referenced. | `ERROR` or hold. |
-| Cross-lane context | Neighboring lane support and ownership preserved. | `ABSTAIN` or `DENY` if ownership collapses. |
+| Legal vs census identity | Proof that Municipality and CensusPlace identities are not silently merged. | Deny or abstain, or require explicit relation proof. |
+| Historic townsite vs active settlement | Proof that Townsite, Settlement, and GhostTown statuses are distinct over time. | Hold promotion or relabel the claim. |
+| Fort / mission sensitivity | Proof of operating interval, source role, archaeology/cultural review where applicable, and public geometry posture. | Deny exact exposure or hold promotion. |
+| ReservationCommunity sovereignty | Proof of source authority, naming posture, review state, and geometry/publication limits. | Deny or restrict release. |
+| Administrative compilation vs observation | Proof that annexation, gazetteer, census, or legal records are not represented as observed field events unless evidence supports that role. | Deny the source-role upcast. |
+| Boundary vintage | Boundary source/vintage and valid time are recorded for any geometry claim. | Contract-defined abstention or hold, plus a stale-state marker where the applicable contract defines one. |
+| Deterministic identity | Source ID, object role, temporal scope, and normalized digest are present or referenced. | Contract-defined error or hold. |
+| Cross-lane context | Neighboring lane support and ownership preserved. | Abstain or deny if ownership collapses. |
+
+> [!IMPORTANT]
+> Outcome labels do not transfer automatically between surfaces. Adjacent domain docs propose `ANSWER | ABSTAIN | DENY | ERROR` for governed responses, allow promotion or release gates to `HOLD`, and use `PASS | FAIL` for validators. Until accepted contracts bind those surfaces, record the applicable contract and do not normalize the labels by prose.
 
 [Back to top](#top)
 
 ---
 
 ## 8. Sensitivity and publication gates
+
+The [current domain policy lane](../../../policy/domains/settlements-infrastructure/README.md) is a proposed greenfield scaffold. The table below states the fail-closed support a future release would need; it is not evidence of active evaluator behavior.
 
 | Risk surface | Required support | Default when unresolved |
 |---|---|---|
@@ -261,13 +332,16 @@ A proof file in this lane should support one or more of these responsibilities:
 
 ## 9. Naming and identity
 
-Suggested file pattern:
+> [!NOTE]
+> **PROPOSED naming sketch.** No accepted settlement proof contract, schema, identity registry, producer, or filename validator was verified. The pattern and metadata list below are review guidance only and must not be used to infer current payload shape.
+
+Proposed file pattern:
 
 ```text
 settlement.<proof_family>.<scope>.<release_or_run_id>.<short_hash>.json
 ```
 
-Examples:
+Illustrative synthetic examples:
 
 ```text
 settlement.evidence_closure.municipality-boundary-demo.v0.1.0123abcd.json
@@ -277,7 +351,7 @@ settlement.cultural_sovereignty_review.reservation-community-public-summary-demo
 settlement.boundary_vintage.census-place-2020-demo.v0.1.abcd4567.json
 ```
 
-Minimum proof metadata should include:
+A future accepted proof profile should define at least:
 
 - `proof_id`
 - `proof_family`
@@ -309,23 +383,41 @@ Minimum proof metadata should include:
 ## 10. Lifecycle relationship
 
 ```mermaid
-flowchart LR
-  RAW["data/raw/<settlement lane><br/>source captures"] --> WORK["data/work or quarantine<br/>normalize / hold"]
-  WORK --> PROC["data/processed/<settlement lane><br/>validated candidates"]
-  PROC --> CAT["data/catalog + triplets<br/>catalog closure / EvidenceBundle"]
-  CAT --> PROOF["data/proofs/settlement<br/>settlement-sublane proof support"]
-  PROOF --> REL["release/<br/>decision / manifest / rollback authority"]
-  REL --> PUB["data/published/<br/>released public-safe carrier"]
+flowchart TD
+  RAW["RAW source captures"] --> WQ["WORK or QUARANTINE"]
+  WQ --> PROC["PROCESSED candidates"]
+  PROC --> CAT["CATALOG or TRIPLETS"]
+  CAT --> PROOF["Settlement proof support"]
+  PROOF --> REVIEW["Policy and review gates"]
+  REVIEW --> REL["Release decision"]
+  REL --> PUB["PUBLISHED carrier"]
 
-  REC["data/receipts<br/>run / transform / validation / redaction / release receipts"] -. referenced by .-> PROOF
-  POL["policy/<br/>rights / sensitivity / release"] -. gates .-> PROOF
-  SCH["schemas + contracts<br/>shape and meaning"] -. validate .-> PROOF
-  PP["data/proofs/proof_pack<br/>release support bundle"] -. may reference .-> PROOF
-
-  PROOF -. "does not publish by itself" .-> PUB
+  REC["Receipts"] -. "referenced by" .-> PROOF
+  AUTH["Contracts, schemas, and policy"] -. "constrain" .-> PROOF
 ```
 
-Proof files support review and release. They do not publish, certify municipal status, establish property ownership, or expose restricted community/site geometry by placement.
+Proof support is evidence-subordinate input to review. It cannot skip lifecycle phases, authorize release, publish, certify municipal status, establish property ownership, or expose restricted community, site, or infrastructure geometry by placement.
+
+[Back to top](#top)
+
+---
+
+## Validation and held automation
+
+No accepted end-to-end settlement proof validator or producer was verified at the pinned base:
+
+- [`validate_evidence_bundle.py`](../../../tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py) and [`validate_schema.py`](../../../tools/validators/domains/settlements-infrastructure/validate_schema.py) are greenfield placeholders whose `main()` raises `NotImplementedError`;
+- the [domain fixture lane](../../../fixtures/domains/settlements-infrastructure/README.md) is a one-line greenfield stub;
+- the [domain test README](../../../tests/domains/settlements-infrastructure/README.md) documents proposed deterministic, synthetic, no-network families but does not prove executable coverage; and
+- the [domain workflow](../../../.github/workflows/domain-settlements-infrastructure.yml) performs bounded readiness checks with `contents: read` on GitHub-hosted runners and records explicit holds.
+
+| Workflow job | Current behavior | Explicit boundary |
+|---|---|---|
+| `validate-settlements-infrastructure` | Inspects boundary files, placeholders, fixture structure, and readiness signals. | `WORKFLOW_HOLD: semantic Settlements/Infrastructure validation is not established` |
+| `build-proof-settlements-infrastructure` | Checks the compound-domain proof lane and rejects surfaced proof artifacts or producer commands until graduation. | `WORKFLOW_HOLD: no accepted Settlements/Infrastructure proof producer or deterministic proof command` |
+| `publish-dry-run-settlements-infrastructure` | Checks candidate and release boundaries without releasing or publishing. | `WORKFLOW_HOLD: no accepted Settlements/Infrastructure release dry-run command or candidate manifest contract` |
+
+The workflow names the compound-domain proof lane, not a target-specific singular-settlement producer. A successful run proves only that its bounded readiness and hold checks completed. A dynamic green workflow badge is intentionally omitted because it would obscure those holds.
 
 [Back to top](#top)
 
@@ -336,8 +428,9 @@ Proof files support review and release. They do not publish, certify municipal s
 Before a settlement proof supports release review, verify:
 
 - [ ] The proof identifies the object family, object/release scope, source family, spatial scope, temporal scope, and intended public surface.
-- [ ] Every consequential claim resolves to EvidenceBundle support or records `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`.
+- [ ] Every consequential claim resolves to EvidenceBundle support or records a negative outcome defined by the applicable contract.
 - [ ] SourceDescriptor refs include source role, rights, sensitivity, citation, cadence/vintage, retrieval time, and digest where applicable.
+- [ ] The `settlement` versus `settlements-infrastructure` path conflict remains explicit; no payload, producer, consumer, or release claim relies on an unaccepted path resolution.
 - [ ] Settlement, Municipality, CensusPlace, Townsite, GhostTown, Fort, Mission, and ReservationCommunity identities are not silently merged.
 - [ ] Source ID, object role, temporal scope, and normalized digest are present or referenced for identity-bearing claims.
 - [ ] Administrative, legal, census, aggregate, map, historic, oral-history, and observed source roles remain distinct.
@@ -368,6 +461,9 @@ Before a settlement proof supports release review, verify:
 | Infrastructure condition/dependency details leak through settlement proof | Critical-asset risk. | Move to infrastructure lane and apply stricter sensitivity review. |
 | Proof file acts as ReleaseManifest | Collapses proof support with release authority. | Move authority to `release/`; keep reference here. |
 | AI place story replaces evidence | Generated language becomes root truth. | Deny; require EvidenceBundle and citation validation. |
+| Singular path treated as canonical or compatibility by repetition | Documentation silently resolves an authority conflict. | Keep the path CONFLICTED until an accepted ADR or migration note closes it. |
+| Green held workflow presented as proof production or release readiness | Readiness checks and explicit holds are mistaken for implementation. | State the hold and the exact bounded check; omit a misleading dynamic badge. |
+| One universal outcome enum used across API, validation, promotion, and migration | Distinct contracts lose their finite semantics. | Use the enum from the applicable accepted contract and surface unresolved vocabulary. |
 
 [Back to top](#top)
 
@@ -375,19 +471,104 @@ Before a settlement proof supports release review, verify:
 
 ## 13. Definition of done
 
-This proof lane is operationally useful when:
+| Item | Current state | Graduation evidence |
+|---|---|---|
+| `settlement` versus `settlements-infrastructure` path authority | **CONFLICTED** | Accepted ADR or migration note, consumer and writer inventory, compatibility map, link closure, and rollback plan. |
+| Settlement proof contract and schema | **PROPOSED / NEEDS VERIFICATION** | Accepted versioned semantic contract and machine schema with compatibility and supersession rules. |
+| Proof payload inventory and producer | **UNKNOWN / NEEDS VERIFICATION** | Bounded repository and approved external-store inventory, deterministic no-network producer, stable identity, replay behavior, and receipts. |
+| Executable validation | **HELD** | Graduated validators, representative valid and invalid public-safe fixtures, meaningful tests, and contract-defined outcomes. |
+| SourceDescriptor closure | **NEEDS VERIFICATION** | Active source-family descriptors with authority role, rights, citation, cadence or vintage, sensitivity, retrieval time, and digest. |
+| Rights and sensitivity enforcement | **NEEDS VERIFICATION** | Accepted evaluator, policy profile, obligations, denial evidence, and review for cultural, sovereignty, archaeology, privacy, land, and infrastructure concerns. |
+| Catalog, release, correction, and rollback closure | **NEEDS VERIFICATION** | Accepted candidate and manifest flow, independently addressable review, correction propagation, withdrawal, invalidation, and a tested rollback target. |
+| Review ownership | CODEOWNERS routing **CONFIRMED**; accountable assignments **NEEDS VERIFICATION** | Verified proof, sublane, domain, sensitivity, policy, release, and independent reviewers. |
+| End-to-end demonstration | **NOT ESTABLISHED** | Synthetic no-network path from admitted source fixture through processed candidate, EvidenceBundle, settlement proof, ProofPack, release decision, public-safe carrier, correction, and rollback. |
+| Public clients and governed routes | **UNKNOWN** | Verified released artifacts, governed API contracts, access controls, negative-state behavior, cache invalidation, and public-safe responses. |
 
-- [ ] The `settlement` path choice is confirmed as accepted compatibility/path convention or resolved against `settlements-infrastructure` by ADR/migration note.
-- [ ] Settlement proof schemas and semantic contracts exist under approved homes or the schema-home naming conflict is resolved.
-- [ ] Valid and invalid fixtures cover identity collapse, administrative-as-observation, boundary vintage omission, historic overprecision, sovereignty-sensitive exposure, archaeology-adjacent geometry leak, people/land privacy joins, infrastructure detail leakage, and missing rollback support.
-- [ ] CI or validators block public release when EvidenceBundle, PolicyDecision, ReviewRecord, catalog closure, public-safe geometry, or rollback target is missing.
-- [ ] Source descriptors exist for active settlement source families and record rights, cadence, role, citation, and sensitivity.
-- [ ] Release docs cross-link proof requirements for settlement layers, historic place claims, municipality/census boundaries, ghost-town summaries, forts/missions, and reservation-community public summaries.
-- [ ] CODEOWNERS or equivalent review ownership covers data steward, settlement sublane steward, settlements-infrastructure steward, sensitivity reviewer, proof steward, and release steward.
-- [ ] At least one synthetic no-network release candidate demonstrates: source capture → processed candidate → EvidenceBundle → settlement proof → ProofPack → ReleaseManifest → public-safe artifact → rollback.
+[Back to top](#top)
+
+---
+
+## Review burden
+
+The current [CODEOWNERS file](../../../.github/CODEOWNERS) routes `data/proofs/` changes to `@bartytime4life`. That route is not an accountable ReviewRecord, a policy decision, release approval, stewardship assignment, or independent review.
+
+Review depth should follow the change:
+
+- **Documentation-only:** proof responsibility, domain boundaries, link and anchor integrity, truth labels, and no-loss review.
+- **Object or profile change:** semantic contract, schema, identity, source role, time, validation, fixture, and compatibility review.
+- **Sensitive or public-facing change:** rights, privacy, cultural and sovereignty concerns, archaeology, harmful precision, critical infrastructure, policy, public-safe transformation, release, correction, and rollback.
+- **Authority or path change:** accepted ADR or migration note, writer and consumer inventory, link closure, compatibility plan, independent review, and rollback.
+
+[Back to top](#top)
+
+---
+
+## Related folders
+
+- **Parent proof responsibility:** [`data/proofs/`](../README.md)
+- **Sibling or possible compatibility lane:** [`data/proofs/settlements-infrastructure/`](../settlements-infrastructure/README.md)
+- **Shared proof support:** [`evidence_bundle/`](../evidence_bundle/README.md) · [`proof_pack/`](../proof_pack/README.md) · [`validation_report/`](../validation_report/README.md) · [`citation_validation/`](../citation_validation/README.md) · [`review/`](../review/README.md)
+- **Process, discovery, public carrier, and release:** [`data/receipts/`](../../receipts/README.md) · [`data/catalog/`](../../catalog/README.md) · [`data/published/`](../../published/README.md) · [`release/`](../../../release/README.md)
+- **Domain doctrine:** [`ARCHITECTURE.md`](../../../docs/domains/settlements-infrastructure/ARCHITECTURE.md) · [`CANONICAL_PATHS.md`](../../../docs/domains/settlements-infrastructure/CANONICAL_PATHS.md) · [`IDENTITY_MODEL.md`](../../../docs/domains/settlements-infrastructure/IDENTITY_MODEL.md) · [`DATA_LIFECYCLE.md`](../../../docs/domains/settlements-infrastructure/DATA_LIFECYCLE.md) · [settlements sublane dossier](../../../docs/domains/settlements-infrastructure/sublanes/settlements.md)
+- **Meaning, shape, and policy:** [contracts](../../../contracts/domains/settlements-infrastructure/README.md) · [schemas](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) · [policy](../../../policy/domains/settlements-infrastructure/README.md)
+- **Validation scaffolds:** [tests](../../../tests/domains/settlements-infrastructure/README.md) · [fixtures](../../../fixtures/domains/settlements-infrastructure/README.md) · [validators](../../../tools/validators/domains/settlements-infrastructure/README.md) · [workflow](../../../.github/workflows/domain-settlements-infrastructure.yml)
+
+[Back to top](#top)
+
+---
+
+## ADRs
+
+- [ADR-0010](../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) has source status `draft` and effective decision status `proposed`. This README preserves a stricter fail-closed posture without claiming accepted or active enforcement.
+- [ADR-0011](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) is `proposed`. The existing repository and Directory Rules already distinguish these families; this README does not treat the ADR as accepted.
+- [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is `proposed`. Its merge did not adopt Directory Rules v2, retire v1.3.1, or resolve the settlement proof-lane naming conflict.
+- No accepted target-specific proof-profile ADR or accepted resolution of `settlement` versus `settlements-infrastructure` was verified.
+
+[Back to top](#top)
+
+---
+
+## Last reviewed
+
+- **Review date:** 2026-07-26
+- **Pinned evidence boundary:** [`main@7b75e3bd590cd37321113f8336559060ae4c4358`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7b75e3bd590cd37321113f8336559060ae4c4358)
+- **Target baseline:** blob `8b03c15acba6e1eee5f394009e2cdff66f95f7ad`; 27,122 UTF-8 bytes; 393 newline-terminated lines; LF endings; final newline present
+- **Review type:** complete target, parent and sibling proof contracts, directory authority, ADR-0029, domain docs, contract/schema/policy lanes, validators, fixtures, tests, workflow, CODEOWNERS, and introduced links
+- **Not performed:** recursive proof-payload inventory, approved external-store inventory, runtime execution, live policy evaluation, proof production, release dry-run, publication, correction propagation, or rollback drill
+- **Still unresolved:** accountable stewardship, independent review, accepted path authority, target-specific proof profile, executable validation, and operational closure
+
+[Back to top](#top)
+
+---
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path, document ID, created date, policy label, tags, and final newline | **KEEP** |
+| Purpose, scope, and proof-support boundary | **CLARIFY** with current evidence limits |
+| Object-family, identity, temporal, sensitivity, and cross-lane guidance | **KEEP / CLARIFY** |
+| Proof-family table, exclusion table, checklist, failure modes, and maintainer warning | **KEEP / ENRICH** |
+| Proposed filename and metadata sketch | **CLARIFY** as non-authoritative and synthetic |
+| Lifecycle diagram | **REPAIR** to make proof, review, release, and published authority sequential and distinct |
+| Universal `ABSTAIN / DENY / HOLD / ERROR` wording | **REPAIR** to preserve surface-specific contract enums |
+| Unresolved owner placeholders | **REPAIR** to verified CODEOWNERS routing plus explicit assignment gaps |
+| Unlinked static badge wall | **REPAIR** to compact evidence-linked badges; dynamic workflow badge skipped because jobs carry explicit holds |
+| Missing implementation-status evidence | **ENRICH** with verified placeholders, scaffold state, and workflow holds |
+| Broken `../integrity/README.md` metadata reference | **REMOVE_WITH_EVIDENCE** because the path did not resolve at the pinned base |
+| Numbered headings and generated anchors | **KEEP** |
+| Singular-versus-compound path conflict | **SURFACE_CONFLICT**; no path or authority change |
+
+### Change history
+
+| Version | Date | Change |
+|---|---|---|
+| v0.1 | 2026-06-25 | Established the settlement-sublane proof-support guide, object families, gates, proposed naming, lifecycle, checklist, and failure modes. |
+| v0.2.0 | 2026-07-26 | Reconciled the full baseline with pinned repository evidence; surfaced path conflict and workflow holds; repaired ownership, links, badges, outcome semantics, and lifecycle boundaries; added validation, review, ADR, and no-loss evidence. |
 
 ---
 
 ## Maintainer note
 
-Settlement proof work is high-risk because names make places look simpler and more stable than the evidence often allows. Keep legal identity, census identity, historic identity, cultural context, time, source role, and public geometry separate until evidence and policy say otherwise. When evidence, policy, time scope, sensitivity, or release state is incomplete, hold, abstain, deny, or quarantine instead of publishing a confident place on the map.
+> [!CAUTION]
+> Place names make identity look simpler and more stable than the evidence often allows. Keep legal, census, historic, military, religious, cultural, and reservation-community identity; source role; time; geometry; review; and release state distinct until evidence and policy close the claim. When evidence, rights, sensitivity, path authority, time scope, or release state is incomplete, use the applicable contract-defined negative state or quarantine path instead of publishing a confident place on the map.
