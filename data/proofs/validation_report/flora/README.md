@@ -1,41 +1,68 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/proofs/validation-report/flora/readme
 title: data/proofs/validation_report/flora README
-type: directory-readme
-version: v0.1
-status: draft
+type: README; proof-family-child; flora-domain-validation-report-support; sensitive-location-boundary
+version: v0.2.0
+status: repository-grounded draft; ValidationReport schema, producer, payload inventory, and runtime enforcement unverified
 owners:
-  - <data steward — TODO>
-  - <validation steward — TODO>
-  - <proof steward — TODO>
-  - <flora-domain steward — TODO>
-  - <sensitivity reviewer — TODO>
-  - <release steward — TODO>
+  - "NEEDS VERIFICATION — data and validation stewardship"
+  - "NEEDS VERIFICATION — proof and Flora-domain stewardship"
+  - "NEEDS VERIFICATION — sensitivity, rights, release, correction, and rollback review"
 created: 2026-06-25
-updated: 2026-06-25
-policy_label: restricted-review
+updated: 2026-07-26
+policy_label: restricted-review; deny-by-default-location; no-direct-public-path; release-gated; cite-or-abstain
 path: data/proofs/validation_report/flora/README.md
+truth_posture: >
+  CONFIRMED exact path, prior bytes, parent proof and ValidationReport-family boundaries,
+  Flora proof companions, read-only domain workflow holds, placeholder Flora smoke test,
+  validator-index posture, and CODEOWNERS routing / PROPOSED local boundary contract,
+  report families, gates, naming pattern, and future instance profile / UNKNOWN recursive
+  payload inventory, active writers and consumers, accepted ValidationReport contract and
+  schema, emitted reports, retention, physical storage, release state, and public effects /
+  NEEDS VERIFICATION accountable owners, Flora-specific fixtures, executable validator,
+  CI graduation, policy and geoprivacy enforcement, review separation, correction
+  propagation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: ba138f4de38fbaae6529d218d083e5a7e90723b3
+  prior_blob: 004d29ac8eb73276babfc2ba596eb782c635db9b
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  validation_report_parent_blob: 30cf9cdeebef4d1d4228d180d5f9345e78bad60a
+  flora_proof_lane_blob: 130effccfd6e14f2660de04c3cc30d839503ef8a
+  flora_workflow_blob: c792d126e5726d8895f56fd97800bee7fcba4a15
+  flora_placeholder_test_blob: 855bceb0cba590c64272e62489a8f9c4348cc9b7
+  flora_validator_index_blob: 80820ed0263641f7b70225b8db202ca35a0feace
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  directory_rules_v2_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_v2_status: PROPOSED_FOR_ADOPTION
+  adr_0029_blob: d34e24ff322bf2a8077379eb2803811dcf8924e5
 related:
   - ../../README.md
   - ../README.md
-  - ../../proof_pack/flora/README.md
   - ../../flora/README.md
-  - ../../evidence_bundle/README.md
-  - ../../citation_validation/README.md
+  - ../../proof_pack/flora/README.md
+  - ../../evidence_bundle/flora/README.md
+  - ../../citation_validation/flora/README.md
   - ../../review/README.md
-  - ../../integrity/README.md
   - ../../../receipts/README.md
   - ../../../catalog/README.md
   - ../../../published/README.md
   - ../../../../release/README.md
+  - ../../../../release/candidates/flora/README.md
   - ../../../../docs/domains/flora/ARCHITECTURE.md
   - ../../../../docs/domains/flora/DATA_LIFECYCLE.md
   - ../../../../docs/doctrine/directory-rules.md
   - ../../../../docs/doctrine/lifecycle-law.md
   - ../../../../docs/doctrine/trust-membrane.md
-  - ../../../../contracts/README.md
-  - ../../../../schemas/README.md
-  - ../../../../policy/README.md
+  - ../../../../contracts/domains/flora/README.md
+  - ../../../../schemas/contracts/v1/domains/flora/README.md
+  - ../../../../policy/domains/flora/README.md
+  - ../../../../policy/sensitivity/flora/README.md
+  - ../../../../fixtures/domains/flora/README.md
+  - ../../../../tests/domains/flora/README.md
+  - ../../../../tools/validators/domains/flora/README.md
+  - ../../../../.github/workflows/domain-flora.yml
 tags:
   - kfm
   - data
@@ -47,213 +74,330 @@ tags:
   - occurrence
   - specimen-record
   - sensitivity-review
+  - geoprivacy
   - redaction-receipt
   - steward-review
   - release-gate
   - rollback
   - cite-or-abstain
 notes:
-  - "Directory README for Flora validation-report support. It is not itself a ValidationReport instance, schema, ProofPack, policy bundle, ReleaseManifest, catalog record, RedactionReceipt, or published flora layer."
-  - "Flora validation reports must fail closed when rights, evidence, source role, taxonomy, sensitivity review, redaction proof, catalog closure, release state, or rollback support is missing."
-  - "Validation reports support proof and release review; they do not publish, approve, redact, or replace EvidenceBundles, policy decisions, ReviewRecords, RedactionReceipts, or release authority."
+  - "This README governs Flora ValidationReport support. It is not a ValidationReport instance, semantic contract, schema, validator, ProofPack, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, catalog record, or published Flora layer."
+  - "The current Flora domain workflow records explicit validation, proof, and release-dry-run holds; those held checks do not establish botanical truth, geoprivacy, evidence closure, policy approval, release readiness, or publication."
+  - "Exact or reverse-engineerable rare, protected, culturally sensitive, steward-controlled, or private-land Flora locations and control-defeating transform details do not belong in this ordinary repository lane."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `data/proofs/validation_report/flora/`
 
-> Domain lane for **Flora ValidationReport support**. Files under this directory should make flora validator outcomes inspectable, finite, reproducible, evidence-linked, sensitivity-aware, and usable by ProofPacks, review proof, release decisions, correction paths, and rollback targets.
+> **One-line purpose.** Govern Flora-specific ValidationReport proof support so validator outcomes can be inspected without turning validation text into botanical truth, sensitivity clearance, policy, release authority, or a public data service.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: validation report](https://img.shields.io/badge/lifecycle-validation--report-blue)
-![Domain: flora](https://img.shields.io/badge/domain-flora-2e7d32)
-![Policy: fail closed](https://img.shields.io/badge/policy-fail--closed-b91c1c)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Workflow: explicit holds](https://img.shields.io/badge/workflow-explicit%20holds-d4a72c?style=flat-square)](../../../../.github/workflows/domain-flora.yml)
+[![Sensitivity: restricted review](https://img.shields.io/badge/sensitivity-restricted%20review-b42318?style=flat-square)](#sensitivity-and-safe-representation)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<validation steward>` · `<proof steward>` · `<flora-domain steward>` · `<sensitivity reviewer>` · `<release steward>` — TODO  
-> **Path:** `data/proofs/validation_report/flora/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for emitted validation reports, schemas, validators, fixtures, CI wiring, sensitivity enforcement, and release-gate enforcement.
+> Validation support is necessary but not sufficient for publication. A structurally valid report can support proof, policy, review, release, correction, and rollback evaluation; it cannot make a botanical claim true, taxonomically current, rights-cleared, sensitivity-safe, steward-approved, released, public, or suitable for collection or access use.
 
 > [!CAUTION]
-> A validation report is **not** a release decision and not a redaction transform. It may support `ProofPack`, `ReviewRecord`, `PolicyDecision`, `RedactionReceipt`, `ReleaseManifest`, correction, and rollback workflows, but it must not become a parallel approval, catalog, redaction, or publication authority.
+> Do not place exact or reverse-engineerable rare, protected, culturally sensitive, steward-controlled, or private-land Flora locations here. Collection clues, access directions, withheld precision, redaction offsets, generalization thresholds, transform parameters, and other control-defeating details require approved restricted handling.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Exposure](#exposure-mutation-and-retention) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed)
 
-## Quick jumps
+**Operating detail:** [Report profile](#proposed-flora-validationreport-profile) · [Responsibilities](#flora-validation-responsibilities) · [Gates](#validator-gates) · [Sensitivity](#sensitivity-and-safe-representation) · [Identity](#naming-and-identity) · [Lifecycle](#lifecycle-relationship) · [Checklist](#review-checklist) · [Failures](#failure-modes) · [Verification](#open-verification-register) · [Readiness](#definition-of-readiness) · [Rollback](#rollback)
 
-| Section | Use it for |
+## Purpose
+
+`data/proofs/validation_report/flora/` is the Flora-specialized child of the ValidationReport proof family. It defines a bounded home for support relating to plant taxonomic identity, taxon crosswalks, specimens, occurrences, vegetation communities, invasive plant records, phenology observations, range or distribution surfaces, habitat associations, botanical surveys, restoration planting records, sensitivity review, redaction checks, and public-safe botanical products.
+
+For an accepted future report profile, a report should make these questions inspectable:
+
+- What candidate, source run, transform, layer, API payload, Evidence Drawer payload, or release candidate was checked?
+- Which validator, validator version, schema or contract version, fixture set, policy basis, input digest, output digest, and runtime mode bound the check?
+- Were object family, source role, space and time scope, taxonomy version, uncertainty, rights, sensitivity, safe-representation posture, and release state preserved?
+- Were unresolved sensitivity, missing redaction support, rights ambiguity, taxonomy drift, source-role collapse, unsafe joins, missing evidence, and direct public access to internal lifecycle stores blocked?
+- Which finite outcome and machine-readable reasons were produced under the applicable accepted contract?
+- Which EvidenceBundles, receipts, policy decisions, review records, ProofPacks, release candidates, correction records, and rollback targets consume or constrain the result?
+
+This README documents the boundary. It does not establish an accepted report schema, an executable validator, emitted reports, a release gate, or public readiness.
+
+## Authority level
+
+**Inherited proof-family boundary; Flora ValidationReport support only.**
+
+| Concern | Authority owner | This lane's relationship |
+|---|---|---|
+| ValidationReport-family proof support | [`data/proofs/validation_report/`](../README.md) | Parent family; this child narrows the context to Flora. |
+| Flora domain proof support | [`data/proofs/flora/`](../../flora/README.md) | Domain proof context; not a duplicate ValidationReport-family home. |
+| EvidenceBundle and ProofPack families | [`evidence_bundle/flora/`](../../evidence_bundle/flora/README.md) and [`proof_pack/flora/`](../../proof_pack/flora/README.md) | May be referenced; remain separate object families. |
+| Semantic meaning | [`contracts/domains/flora/`](../../../../contracts/domains/flora/README.md) and an accepted ValidationReport contract | Defines meaning; no dedicated accepted ValidationReport contract was verified. |
+| Machine shape | [`schemas/contracts/v1/domains/flora/`](../../../../schemas/contracts/v1/domains/flora/README.md) and an accepted ValidationReport schema | Defines shape; no dedicated ValidationReport schema was verified in the bounded inspection. |
+| Admissibility and sensitivity | [`policy/domains/flora/`](../../../../policy/domains/flora/README.md) and [`policy/sensitivity/flora/`](../../../../policy/sensitivity/flora/README.md) | Policy decides; a report records or references outcomes without defining them. |
+| Release, correction, and rollback | [`release/`](../../../../release/README.md) | Owns decisions and rollback authority; this lane only supplies bounded support. |
+
+A report may reference many authorities without owning them. If two lanes would independently edit the same report identity or policy-significant meaning, stop and resolve one authoritative home before adding payloads.
+
+## Status
+
+| Surface | Bounded result at the evidence snapshot |
 |---|---|
-| [1. Purpose](#1-purpose) | What this directory is for. |
-| [2. Placement and authority](#2-placement-and-authority) | Why this path belongs under `data/proofs/validation_report/`. |
-| [3. What belongs here](#3-what-belongs-here) | Accepted validation-report objects and support files. |
-| [4. What must not live here](#4-what-must-not-live-here) | Exclusions and wrong homes. |
-| [5. Flora validation responsibilities](#5-flora-validation-responsibilities) | Domain-specific validator obligations. |
-| [6. Required validation result families](#6-required-validation-result-families) | Minimum result categories. |
-| [7. Validator gates](#7-validator-gates) | Hard denial and hold conditions. |
-| [8. Naming and identity](#8-naming-and-identity) | Suggested file naming and metadata. |
-| [9. Lifecycle relationship](#9-lifecycle-relationship) | How ValidationReports support RAW → PUBLISHED. |
-| [10. Review checklist](#10-review-checklist) | Maintainer checklist. |
-| [11. Failure modes](#11-failure-modes) | Drift and overclaim patterns to block. |
-| [12. Definition of done](#12-definition-of-done) | What is still needed for operational maturity. |
+| README path | **CONFIRMED** at `data/proofs/validation_report/flora/README.md`; prior blob `004d29ac8eb73276babfc2ba596eb782c635db9b`. |
+| Parent proof and ValidationReport-family READMEs | **CONFIRMED repository-grounded drafts**; payload and enforcement maturity remain unverified. |
+| Flora smoke test | **CONFIRMED placeholder** at [`tests/domains/flora/test_flora_smoke.py`](../../../../tests/domains/flora/test_flora_smoke.py); its unconditional pass is not validation evidence. |
+| Flora validator surface | **CONFIRMED index-only draft** at [`tools/validators/domains/flora/`](../../../../tools/validators/domains/flora/README.md); accepted executables remain unverified. |
+| Domain workflow | **CONFIRMED read-only readiness workflow** with explicit `validate-flora`, `build-proof-flora`, and `publish-dry-run-flora` holds. |
+| Dedicated ValidationReport contract and schema | **NEEDS VERIFICATION**; none was verified at the checked conventional evidence-family locations. |
+| Flora-specific report fixtures and validator | **NEEDS VERIFICATION**; documentation exists, but executable coverage was not established. |
+| Recursive report or payload inventory | **UNKNOWN**; no complete pinned recursive tree or external-storage inventory was available in this task. |
+| Active writers, consumers, retention, and physical storage | **UNKNOWN**. |
+| Accountable stewardship and independent review | **NEEDS VERIFICATION**; CODEOWNERS routing is not a stewardship assignment or approval record. |
+| Release or publication state | **DENIED as an inference** from this README, any badge, workflow, commit, pull request, or directory placement. |
 
----
+The repository is documentation-heavy in this lane. Treat it as a governed boundary and readiness backlog, not an operational ValidationReport store.
 
-## 1. Purpose
+## What belongs here
 
-`data/proofs/validation_report/flora/` stores validation-report support for the Flora lane: plant taxonomic identity, taxon crosswalks, specimens, occurrences, vegetation communities, invasive plant records, phenology observations, range or distribution surfaces, habitat associations, botanical surveys, restoration planting records, sensitivity review, redaction checks, and public-safe botanical products.
+Current admissible content is narrow:
 
-A validation report here should answer:
+- this boundary README and other approved local documentation that does not create parallel authority;
+- future Flora ValidationReport instances only after an accepted semantic profile, machine schema, producer, fixture set, validator, policy posture, review route, retention rule, and correction/rollback behavior identify this as their authoritative logical home;
+- immutable indexes or references to reports owned here, when they do not duplicate source payloads, evidence objects, policy decisions, review records, or release records;
+- safe summaries and digests that remain useful for proof, review, correction, rollback, and audit without exposing restricted Flora information.
 
-- What candidate, source run, transform, layer, API payload, Evidence Drawer payload, or release candidate was validated?
-- Which validator version, schema version, fixture set, policy basis, input digest, output digest, and runtime mode produced the result?
-- Did validators preserve object family, source role, temporal scope, taxonomy version, uncertainty, public-safe posture, and release state?
-- Did validators block unresolved sensitivity, missing RedactionReceipt, unresolved rights, taxonomy drift, source-role collapse, unsafe joins, missing EvidenceBundle, and direct RAW/WORK/QUARANTINE access?
-- Which outcomes are `PASS`, `WARN`, `HOLD`, `ABSTAIN`, `DENY`, `RESTRICT`, or `ERROR`, and why?
-- Which EvidenceBundles, policy decisions, redaction receipts, review records, proof packs, release candidates, correction paths, and rollback targets should consume the report?
+The following future layout remains **PROPOSED**, not a claim that these children or payloads exist:
 
-This directory is for **validation-report support**, not source data, policy code, schemas, ProofPacks, RedactionReceipts, release manifests, public map layers, or unreviewed sensitive biodiversity data.
-
-[Back to top](#top)
-
----
-
-## 2. Placement and authority
-
-KFM places files by responsibility root. `data/proofs/validation_report/` holds validation-report proof artifacts and domain validation-report lanes. The `flora/` segment narrows that responsibility to the Flora domain.
-
-| Surface | Role | Boundary |
+| Candidate purpose | Illustrative path | Admission condition |
 |---|---|---|
-| [`../../README.md`](../../README.md) | Parent proof root. | Defines proof-lane expectations; this README narrows them to Flora validation reports. |
-| [`../README.md`](../README.md) | ValidationReport family root. | Greenfield/stub at time of authoring; this file documents the flora domain sublane. |
-| [`../../proof_pack/flora/README.md`](../../proof_pack/flora/README.md) | Flora ProofPack lane. | ProofPacks should reference validation reports; validation reports do not become ProofPacks. |
-| [`../../flora/README.md`](../../flora/README.md) | Broader Flora proof lane. | Domain proof may cite validation reports; this lane is specifically validation-report support. |
-| [`../../../receipts/`](../../../receipts/) | Operation memory. | Validation receipts or run receipts may be basis refs; reports here summarize finite validator outcomes. |
-| [`../../../catalog/`](../../../catalog/) | Catalog closure and EvidenceBundle discovery. | Validation reports may gate catalog closure but are not catalog records. |
-| [`../../../../release/`](../../../../release/) | Release decisions, manifests, corrections, rollback cards. | Validation reports support release decisions; they do not make them. |
-| [`../../../published/`](../../../published/) | Released public-safe artifacts. | Published artifacts are downstream and require release gates. |
-| [`../../../../policy/`](../../../../policy/) | Rights, sensitivity, release, and runtime policy. | Validation reports record policy-relevant outcomes; policy logic lives in policy roots. |
-| [`../../../../schemas/`](../../../../schemas/) | Machine shape. | ValidationReport schemas belong under the approved schema home. |
-| [`../../../../contracts/`](../../../../contracts/) | Object meaning. | ValidationReport semantics belong in contracts. |
+| Candidate validation result | `candidates/<run_id>.validation-report.json` | Accepted report profile and non-release candidate semantics. |
+| Release-review validation result | `release/<release_id>.validation-report.json` | Stable release-candidate and ProofPack references; no release authority. |
+| Failed validation result | `failures/<run_id>.validation-report.json` | Safe diagnostic content, correction linkage, and no restricted payload duplication. |
+| Sensitivity result | `sensitivity/<run_id>.validation-report.json` | Public-safe findings only; restricted details remain in approved systems. |
+| Taxonomy result | `taxonomy/<run_id>.validation-report.json` | Versioned taxonomy basis and explicit unresolved conflicts. |
+| Lookup index | `indexes/validation-report-index.json` | Rebuildable discovery aid; not canonical truth or approval. |
+| Superseded result | `retired/<run_id>.superseded-validation-report.json` | Preserved identity, forward link, reason, and correction lineage. |
 
-> [!NOTE]
-> This README documents a subdirectory that already exists in the repository. It does not create a new lifecycle phase, redaction authority, or parallel validation authority.
-
-[Back to top](#top)
-
----
-
-## 3. What belongs here
-
-Use this folder for validation-report files that are safe to store under repository policy and useful for review, release, correction, rollback, or audit.
-
-| Accepted item | Suggested placement | Notes |
-|---|---|---|
-| Candidate validation report | `data/proofs/validation_report/flora/candidates/<run_id>.validation-report.json` | PROPOSED until schema and validator are confirmed. |
-| Release validation report | `data/proofs/validation_report/flora/release/<release_id>.validation-report.json` | Should reference the release candidate and ProofPack. |
-| Failed validation report | `data/proofs/validation_report/flora/failures/<run_id>.validation-report.json` | Useful for audit, correction, quarantine, and negative fixtures. |
-| Sensitivity validation report | `data/proofs/validation_report/flora/sensitivity/<run_id>.validation-report.json` | Checks that public-safe posture matches policy and redaction support. |
-| Taxonomy validation report | `data/proofs/validation_report/flora/taxonomy/<run_id>.validation-report.json` | Checks crosswalk version, accepted-name logic, and unresolved conflicts. |
-| Validator index | `data/proofs/validation_report/flora/indexes/validation-report-index.json` | Optional lookup aid; not canonical truth by itself. |
-| Superseded report | `data/proofs/validation_report/flora/retired/<run_id>.superseded-validation-report.json` | Keep for audit; do not silently delete prior validator meaning. |
-
-Validation reports should use stable references and digests rather than duplicating raw payloads or restricted details.
-
-[Back to top](#top)
-
----
-
-## 4. What must not live here
+## What does NOT belong here
 
 | Excluded material | Correct home or action | Why |
 |---|---|---|
-| Raw GBIF, iNaturalist, USDA PLANTS, iDigBio, herbarium, NatureServe, KDWP, KBS, vegetation-index, restoration, or stewarded source payloads | `data/raw/flora/`, `data/work/flora/`, or `data/quarantine/flora/` | Validation reports reference source material; they do not store it. |
-| Restricted sensitive-flora details or steward-only fields | Restricted lifecycle stores only; public-review validation reports should use redacted or summarized refs | Validation report files may be reviewed more broadly than RAW stores. |
-| Working normalized records or candidate layers | `data/work/` or `data/processed/` after validation | Validation reports are proof artifacts, not canonical data. |
-| Policy logic or release rules | `policy/domains/flora/`, `policy/sensitivity/flora/`, or approved policy roots | Reports record outcomes, not policy definitions. |
-| JSON Schemas | `schemas/contracts/v1/...` | Machine shape belongs in schemas. |
-| Semantic contracts | `contracts/...` | Meaning belongs in contracts. |
-| ProofPack instances | `data/proofs/proof_pack/flora/` | ProofPacks assemble multiple support refs; validation reports are one input family. |
-| RedactionReceipt authority | Approved redaction/proof/receipt home — NEEDS VERIFICATION | Validation reports may check or cite RedactionReceipts but do not perform the transform. |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, or RollbackCard as authority | `release/` | Validation reports may reference these but must not become release authority. |
-| Published PMTiles, GeoParquet, API payloads, reports, stories, or map layers | `data/published/...` after release gates | Published artifacts are downstream carriers. |
+| Raw GBIF, iNaturalist, USDA PLANTS, iDigBio, herbarium, NatureServe, KDWP, KBS, vegetation-index, restoration, or stewarded source payloads | `data/raw/flora/`, `data/work/flora/`, or `data/quarantine/flora/` according to lifecycle state | Validation support references source material; it does not store source payloads. |
+| Exact or reverse-engineerable sensitive Flora locations, collection or access clues, private-land details, or geoprivacy secrets | Approved restricted store; otherwise quarantine, generalize, redact, abstain, or deny | An ordinary repository proof lane must not become an exposure channel. |
+| Working normalized records or candidate layers | `data/work/` or `data/processed/` after the applicable transition | Reports are support artifacts, not canonical domain data. |
+| Receipts saying what process ran | [`data/receipts/`](../../../receipts/README.md) | A receipt and a ValidationReport are distinct families. |
+| EvidenceBundle or ProofPack instances | Their accepted proof-family homes | Reports may reference these objects; they do not replace them. |
+| Policy logic, PolicyDecision authority, or release rules | [`policy/`](../../../../policy/README.md) and accepted policy-decision homes | Reports record or cite outcomes, not policy definitions. |
+| Semantic contracts or JSON Schemas | [`contracts/`](../../../../contracts/README.md) and [`schemas/`](../../../../schemas/README.md) | Meaning and machine shape remain separate responsibilities. |
+| ReviewRecord, stewardship, sovereignty, rights-holder, or sensitivity-review authority | Accepted review and policy homes | A validator cannot self-approve its result. |
+| Redaction transform implementation or RedactionReceipt authority | Approved implementation and receipt/proof homes | A report can check or cite the transform without performing it. |
+| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, or RollbackCard authority | [`release/`](../../../../release/README.md) | Validation cannot silently become release authority. |
+| Published PMTiles, GeoParquet, API payloads, reports, stories, maps, or layers | [`data/published/`](../../../published/README.md) after governed release | Published carriers are downstream and release-approved. |
 
-[Back to top](#top)
+## Inputs
 
----
+An accepted Flora report profile should bind only the inputs required for its declared scope:
 
-## 5. Flora validation responsibilities
+- stable candidate, run, transform, artifact, and release-candidate references;
+- validator identity and version, declared profile, schema and contract references, fixture-set reference, and deterministic runtime mode;
+- input and output digests;
+- source descriptors, source roles, taxonomy snapshot or crosswalk, methods, uncertainty, and spatial/temporal scope;
+- EvidenceRefs and expected EvidenceBundle identities;
+- rights, sensitivity, stewardship, sovereignty, geoprivacy, safe-representation, and access posture;
+- applicable receipts, PolicyDecisions, ReviewRecords, RedactionReceipts, ProofPacks, release records, correction lineage, and rollback targets.
 
-A validation report in this lane should support one or more of these responsibilities:
+Missing, stale, conflicting, role-collapsed, rights-unclear, sensitivity-unsafe, unreviewed, unreleased, withdrawn, invalidated, or unresolvable support must remain visible and produce the applicable finite negative result rather than plausible completion.
 
-1. **Object-family validation** — every PlantTaxon, occurrence, specimen, sensitive flora record, vegetation community, range surface, invasive record, phenology observation, habitat association, botanical survey, restoration planting, and redaction reference is properly typed.
-2. **Taxonomy validation** — accepted name, synonym, authority snapshot, crosswalk version, and unresolved conflicts are explicit.
-3. **Occurrence and specimen validation** — uncertainty, basis of record, observation/specimen method, date/time, rights, and source role are preserved.
+## Outputs
+
+The intended output is a compact, immutable, digest-bound ValidationReport under an accepted profile. It may supply:
+
+- finite validator findings and machine-readable reasons;
+- scope, version, fixture, digest, source-role, taxonomy, uncertainty, rights, and sensitivity summaries;
+- stable references to evidence, receipts, policy, review, redaction, proof, release, correction, withdrawal, and rollback objects;
+- a safe reviewer aid for ProofPack assembly, catalog closure, release evaluation, correction, or rollback.
+
+It must not emit botanical truth, policy permission, stewardship approval, a ReleaseManifest, a published alias, a public map, or an AI answer. Public clients and ordinary UI surfaces use governed interfaces and release-approved carriers, not this internal proof-support path.
+
+## Exposure, mutation, and retention
+
+| Concern | Current boundary |
+|---|---|
+| Exposure | Repository-facing documentation; payload exposure remains **UNKNOWN**. Restricted or harmful-precision content is denied in this ordinary lane. |
+| Writers | No accepted Flora ValidationReport producer was verified. Until one exists, treat the lane as documentation-only. |
+| Mutation | Future report instances should be immutable and versioned; corrections should supersede or invalidate with forward lineage rather than silently rewrite prior meaning. |
+| Retention | **NEEDS VERIFICATION** for report instances. Preserve audit-significant identity and correction lineage; do not invent a deletion schedule in this README. |
+| Physical storage | **UNKNOWN**. Logical authority does not authorize committing restricted bytes; external storage still requires governed identity, digest, access, retention, and rollback metadata. |
+| Public serving | Denied directly. Public exposure requires an independently governed release-approved carrier and interface. |
+
+## Validation
+
+### Current executable evidence
+
+The checked revision does **not** establish an accepted Flora ValidationReport validation command:
+
+- [`test_flora_smoke.py`](../../../../tests/domains/flora/test_flora_smoke.py) contains only a placeholder test;
+- [`tools/validators/domains/flora/README.md`](../../../../tools/validators/domains/flora/README.md) is an index and explicitly does not confirm executables;
+- [`domain-flora.yml`](../../../../.github/workflows/domain-flora.yml) performs read-only readiness checks and records explicit holds when substantive validation, proof production, or release dry-run support is absent;
+- the root `make validate` aggregate must not be treated as Flora ValidationReport coverage without an accepted profile and observed test mapping.
+
+A green readiness hold proves only that the checked hold conditions behaved as written. It does not prove botanical identity, occurrence validity, rights, sensitivity safety, geoprivacy, evidence closure, policy approval, release readiness, or public suitability.
+
+### Required validation layers
+
+Before admitting report instances, verify:
+
+1. semantic contract and schema identity;
+2. deterministic producer and no-network fixture profile;
+3. positive and stable negative cases;
+4. taxonomy, source-role, method, uncertainty, space, time, rights, and sensitivity checks;
+5. EvidenceRef resolution and expected EvidenceBundle identity;
+6. RedactionReceipt and safe-representation support where applicable;
+7. product-level sensitivity after joins;
+8. policy and human/steward review separation;
+9. ProofPack, release, correction, withdrawal, invalidation, and rollback linkage;
+10. no restricted-content leakage in reports, logs, summaries, artifacts, or badges.
+
+A `PASS` proves only the accepted profile and checks that actually ran.
+
+## Review burden
+
+[`CODEOWNERS`](../../../../.github/CODEOWNERS) routes `/data/proofs/` changes to `@bartytime4life`. That routing is **CONFIRMED**; it is not a StewardshipAssignment, independent review, ReviewRecord, PolicyDecision, sensitivity clearance, release approval, or proof that review occurred.
+
+Review should include the following responsibilities as applicable:
+
+- proof and validation-report family;
+- Flora domain and taxonomy;
+- source role, evidence, and citation closure;
+- rights, rare/protected/culturally sensitive Flora, geoprivacy, stewardship, and sovereignty;
+- policy and public-surface safety;
+- release, correction, withdrawal, invalidation, and rollback;
+- contracts, schemas, fixtures, validators, workflows, API/UI, or storage owners when those surfaces change.
+
+This README-only change needs documentation and proof-boundary review. Payload, contract, schema, policy, source activation, validator, fixture, workflow, access, public-serving, or release changes require separately scoped ownership and review.
+
+## Related folders
+
+### Proof and accountability
+
+- Parent boundaries: [`data/proofs/`](../../README.md) · [`validation_report/`](../README.md) · [`flora/`](../../flora/README.md)
+- Companion proof families: [`proof_pack/flora/`](../../proof_pack/flora/README.md) · [`evidence_bundle/flora/`](../../evidence_bundle/flora/README.md) · [`citation_validation/flora/`](../../citation_validation/flora/README.md) · [`review/`](../../review/README.md)
+- Adjacent state: [`receipts/`](../../../receipts/README.md) · [`catalog/`](../../../catalog/README.md) · [`published/`](../../../published/README.md) · [`release/`](../../../../release/README.md)
+
+### Meaning, shape, policy, and executable proof
+
+- Flora architecture: [`ARCHITECTURE.md`](../../../../docs/domains/flora/ARCHITECTURE.md) · [`DATA_LIFECYCLE.md`](../../../../docs/domains/flora/DATA_LIFECYCLE.md)
+- Meaning and shape: [`contracts/domains/flora/`](../../../../contracts/domains/flora/README.md) · [`schemas/contracts/v1/domains/flora/`](../../../../schemas/contracts/v1/domains/flora/README.md)
+- Policy: [`policy/domains/flora/`](../../../../policy/domains/flora/README.md) · [`policy/sensitivity/flora/`](../../../../policy/sensitivity/flora/README.md)
+- Proof of behavior: [`fixtures/domains/flora/`](../../../../fixtures/domains/flora/README.md) · [`tests/domains/flora/`](../../../../tests/domains/flora/README.md) · [`tools/validators/domains/flora/`](../../../../tools/validators/domains/flora/README.md) · [`domain-flora.yml`](../../../../.github/workflows/domain-flora.yml)
+
+## ADRs
+
+The following records are relevant but do not become accepted through this README:
+
+- [`ADR-0010`](../../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) is a draft sensitive-domain decision surface.
+- [`ADR-0011`](../../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) is proposed and documents the intended object-family separation.
+- [`ADR-0029`](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) remains proposed; it does not adopt Directory Rules v2 or authorize structural migration.
+
+The supplied Directory Rules lineage places validation-report support under `data/proofs/` and separates proofs from receipts, catalogs, published carriers, and release decisions. The current [`docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md) is the v2 proposed successor, not an accepted status transition. This same-path README update creates no new root, lane, object family, or authority decision.
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Review date | `2026-07-26` |
+| Repository snapshot | `main@ba138f4de38fbaae6529d218d083e5a7e90723b3` |
+| Prior target blob | `004d29ac8eb73276babfc2ba596eb782c635db9b` |
+| Review type | Complete target read plus bounded parent, companion proof, doctrine, ADR, contract, schema-index, policy, fixture, test, validator, workflow, CODEOWNERS, branch, and pull-request inspection |
+| Recursive payload or external-storage inventory | Not performed; remains `UNKNOWN` |
+| Validator, fixture, or workflow execution | Not performed before this documentation change |
+| Owners, retention, consumers, enforcement, release, and rollback drills | `NEEDS VERIFICATION` or `UNKNOWN` as listed above |
+
+Re-review when authority, writers, consumers, report profile, contract/schema, validator, fixture, workflow, exposure, sensitivity, storage, retention, release, correction, withdrawal, invalidation, or rollback behavior changes.
+
+## Proposed Flora ValidationReport profile
+
+Everything in this section is **PROPOSED** until an accepted semantic contract, machine schema, fixtures, validator, policy integration, producer, and consumer profile establish it. The outcome words below are candidate report findings, not a universal KFM runtime enum.
+
+### Candidate result families
+
+| Result family | Candidate checks | Candidate finite outcomes |
+|---|---|---|
+| `schema_shape` | Required fields, enum values, version pins, and JSON structure. | `PASS`, `WARN`, `ERROR` |
+| `object_family` | PlantTaxon, FloraOccurrence, SpecimenRecord, sensitive Flora record, VegetationCommunity, InvasivePlantRecord, PhenologyObservation, RangePolygon or DistributionSurface, HabitatAssociation, BotanicalSurvey, RestorationPlanting. | `PASS`, `DENY`, `ERROR` |
+| `taxonomy_crosswalk` | Accepted name, synonym handling, authority snapshot, crosswalk version, and unresolved conflicts. | `PASS`, `HOLD`, `DENY`, `ERROR` |
+| `source_role` | Source role for the declared use; no role inferred from source brand or convenience. | `PASS`, `WARN`, `DENY`, `ABSTAIN` |
+| `occurrence_uncertainty` | Uncertainty, basis of record, observation or specimen method, date/time, and public/restricted split. | `PASS`, `WARN`, `HOLD`, `DENY` |
+| `sensitivity_redaction` | Public-safe posture, transform reason, reviewer, residual risk, and RedactionReceipt references. | `PASS`, `RESTRICT`, `DENY`, `ERROR` |
+| `sensitive_flora_policy` | Protected, cultural, or steward-sensitive status, policy decision, review state, and public posture. | `PASS`, `RESTRICT`, `DENY`, `ABSTAIN` |
+| `join_sensitivity` | Product-level sensitivity after joins with occurrence, habitat, land, roads, agriculture, restoration, or public observation sources. | `PASS`, `HOLD`, `DENY` |
+| `lifecycle_gate` | EvidenceRef, EvidenceBundle, ValidationReport, catalog closure, PolicyDecision, ReviewRecord, ProofPack, release, correction, and rollback references. | `READY_FOR_REVIEW`, `HOLD`, `DENY`, `ERROR` |
+| `dry_run_ci` | Fixture-only execution with no live upstream fetch or nondeterministic external call. | `PASS`, `ERROR` |
+
+### Candidate field inventory
+
+An accepted profile should decide which fields are required by report family rather than copying this list blindly:
+
+- identity and execution: `validation_report_id`, `domain: flora`, `validator_family`, `validator_name`, `validator_version`, `schema_version`, `fixture_set_ref`, `run_id`;
+- scope and integrity: `candidate_ref`, `release_candidate_ref` where applicable, `input_digest`, `output_digest`;
+- governed references: `source_descriptor_refs`, `evidence_bundle_refs`, `redaction_receipt_refs`, `receipt_refs`, `policy_decision_refs`, `review_record_refs`, `proof_pack_refs`, `release_refs`, `rollback_refs`;
+- domain findings: `taxonomy_results`, `sensitivity_results`, `occurrence_uncertainty_results`, `rights_sensitivity_results`;
+- result and lineage: `finite_outcome`, `reasons`, `created_at`, `created_by`, correction or supersession references.
+
+## Flora validation responsibilities
+
+A Flora ValidationReport profile should cover one or more declared responsibilities without claiming unexecuted coverage:
+
+1. **Object-family validation** — plant taxa, occurrences, specimens, sensitive records, vegetation communities, range or distribution surfaces, invasive records, phenology observations, habitat associations, botanical surveys, restoration plantings, and redaction references remain correctly typed.
+2. **Taxonomy validation** — accepted name, synonym, authority snapshot, crosswalk version, and unresolved conflicts remain explicit.
+3. **Occurrence and specimen validation** — uncertainty, basis of record, method, space, time, rights, and source role remain visible.
 4. **Sensitivity validation** — public-safe posture is supported by policy, review, and redaction references where required.
-5. **Product-sensitivity validation** — joins between taxon lists, occurrence/specimen records, habitat, land, roads, agriculture, or restoration data are treated as review-required until cleared.
-6. **Source-role validation** — authority, observation, context, model, aggregate, candidate, and synthetic roles are not inferred from convenience or upgraded by promotion.
-7. **Lifecycle validation** — reports prove that validators, policy gates, EvidenceRefs, catalog closure, review state, release candidates, correction paths, and rollback targets are present where required.
-8. **No-live-fetch validation** — CI/dry-run validation must use fixtures and must not fetch live source systems.
+5. **Product-sensitivity validation** — joins between taxa, occurrences, specimens, habitat, land, roads, agriculture, restoration, or public observation sources are re-evaluated as products.
+6. **Source-role validation** — authority, observation, context, model, aggregate, candidate, and synthetic roles are not upgraded by convenience or promotion.
+7. **Lifecycle validation** — evidence, catalog, policy, review, proof, release, correction, withdrawal, and rollback dependencies are present for the declared transition.
+8. **No-live-fetch validation** — default CI and dry-run checks use deterministic fixtures rather than live source systems.
 
-[Back to top](#top)
+## Validator gates
 
----
-
-## 6. Required validation result families
-
-| Result family | Required checks | Finite outcomes |
+| Gate | Required support | Fail-closed response |
 |---|---|---|
-| `schema_shape` | Required fields, enum values, version pins, JSON structure. | `PASS`, `WARN`, `ERROR` |
-| `object_family` | PlantTaxon, FloraOccurrence, SpecimenRecord, sensitive flora record, VegetationCommunity, InvasivePlantRecord, PhenologyObservation, RangePolygon/DistributionSurface, HabitatAssociation, BotanicalSurvey, RestorationPlanting. | `PASS`, `DENY`, `ERROR` |
-| `taxonomy_crosswalk` | Accepted name, synonym handling, authority snapshot, crosswalk version, conflict notes. | `PASS`, `HOLD`, `DENY`, `ERROR` |
-| `source_role` | Source role for this use; no role inferred from source brand or convenience. | `PASS`, `WARN`, `DENY`, `ABSTAIN` |
-| `occurrence_uncertainty` | Uncertainty, basis of record, observation/specimen method, date/time, public/restricted split. | `PASS`, `WARN`, `HOLD`, `DENY` |
-| `sensitivity_redaction` | Public-safe posture, transform reason, reviewer, residual risk, RedactionReceipt refs. | `PASS`, `RESTRICT`, `DENY`, `ERROR` |
-| `sensitive_flora_policy` | Protected/cultural/steward-sensitive status, policy decision, review state, public posture. | `PASS`, `RESTRICT`, `DENY`, `ABSTAIN` |
-| `join_sensitivity` | Product-level sensitivity after joins with occurrence, habitat, land, roads, agriculture, restoration, or public/citizen-observation sources. | `PASS`, `HOLD`, `DENY` |
-| `lifecycle_gate` | EvidenceRef, EvidenceBundle, ValidationReport, CatalogMatrix, PolicyDecision, ReviewRecord, ReleaseManifest, rollback refs. | `READY_FOR_REVIEW`, `HOLD`, `DENY`, `ERROR` |
-| `dry_run_ci` | Fixture-only validation; no live fetches or nondeterministic upstream calls. | `PASS`, `ERROR` |
+| Sensitive-data exposure | Public-review and candidate outputs exclude restricted or reverse-engineerable detail unless explicitly cleared for that audience. | Restrict, deny, quarantine, or require review under the accepted profile. |
+| Missing redaction support | Required public-safe transform and RedactionReceipt references resolve. | Hold or deny; never infer clearance. |
+| Public/restricted occurrence split | Public outputs cannot expose restricted or steward-only fields or reconstruct withheld precision. | Deny public release. |
+| Taxonomy drift | Crosswalk version and unresolved name or hierarchy conflicts are explicit. | Hold, deny, or require correction. |
+| Source-role collapse | Observation is not authority; model is not observation; context is not a verified occurrence. | Deny or quarantine the affected result. |
+| Join-induced sensitivity | Product-level exposure is reviewed after every sensitivity-significant join. | Hold, restrict, generalize, deny, or require review. |
+| Rights ambiguity | Source descriptor, terms, redistribution posture, attribution, and citation resolve for the declared use. | Deny public promotion while unresolved. |
+| Temporal defect | Observed, valid, retrieval, source, release, correction, and withdrawal times remain distinct where material. | Error, hold, quarantine, or correct. |
+| Dry-run or CI network access | The accepted default suite is deterministic and fixture-backed. | Error or workflow failure. |
+| Release readiness | Required evidence, policy, review, proof, candidate, correction, withdrawal, and rollback references resolve. | Hold or deny; never self-approve. |
 
-[Back to top](#top)
+## Sensitivity and safe representation
 
----
+Flora sensitivity is claim-, product-, audience-, time-, and representation-dependent. Public inputs do not guarantee a public-safe joined product.
 
-## 7. Validator gates
+Validation must preserve these boundaries:
 
-| Gate | Required proof | Failure outcome |
-|---|---|---|
-| Sensitive-data exposure | Validator proves restricted details are absent from public-review/public candidate outputs unless explicitly cleared for the target audience. | `DENY`, quarantine, or restrict. |
-| Missing RedactionReceipt | Validator checks RedactionReceipt / public-safe transform refs where required. | `HOLD` or `DENY`. |
-| Public/restricted occurrence split | Validator proves public occurrence outputs cannot reveal restricted or steward-only fields. | `DENY` public release. |
-| Taxonomy drift | Validator checks taxonomic crosswalk version and unresolved name/hierarchy conflicts. | `HOLD` or `DENY`. |
-| Source-role collapse | Validator blocks observation-as-authority, model-as-observation, or context-as-verified-occurrence. | `DENY` or quarantine. |
-| Join-induced sensitivity | Validator checks product-level sensitivity after joins, not just input-level sensitivity. | `HOLD`, `DENY`, or require review. |
-| Rights ambiguity | Validator checks source descriptor, license/terms posture, redistribution decision, and citation. | `DENY` public promotion if unresolved. |
-| Temporal defect | Validator checks observed, valid, retrieval, source, release, and correction times where material. | `ERROR`, `HOLD`, or quarantine. |
-| Dry-run / CI | Validator proves no live fetches during dry-run validation. | `ERROR` or workflow failure. |
-| Release readiness | Validator checks EvidenceBundle, PolicyDecision, ReviewRecord where required, release candidate, correction path, and rollback target. | `HOLD` or `DENY`. |
+- rare, protected, culturally sensitive, steward-controlled, or private-land locations default to restricted handling until the applicable authority clears a specific representation and audience;
+- public-safe transforms preserve a reference to the internal source, transform identity and version, reason, review state, residual risk, target artifact, and RedactionReceipt without exposing the transform secret;
+- report text, reasons, logs, fixtures, badges, diagrams, examples, and indexes must not leak withheld coordinates, precision, collection clues, access directions, or control-defeating parameters;
+- joins with Habitat, Fauna, Soil, Hydrology, Agriculture, Hazards, Archaeology, Settlements, Roads/Rail, or People/Land evidence trigger a new product-level sensitivity review;
+- AI and UI consumers remain subordinate to governed evidence, policy, review, release, and safe-representation state.
 
-[Back to top](#top)
+When required support is missing, narrow, hold, restrict, deny, abstain, quarantine, or report an error according to the accepted surface contract.
 
----
+## Naming and identity
 
-## 8. Naming and identity
-
-Suggested directory pattern:
+The following patterns are **illustrative**, not an accepted schema or claim that report files exist:
 
 ```text
 data/proofs/validation_report/flora/<family>/<run_or_release_id>.validation-report.json
 ```
 
-Suggested deterministic file name:
-
 ```text
 flora.validation_report.<validator_family>.<scope>.<run_or_release_id>.<short_hash>.json
 ```
 
-Examples:
+Synthetic filename examples:
 
 ```text
 flora.validation_report.sensitivity.public-safe-occurrence.run-20260625.0123abcd.json
@@ -262,122 +406,101 @@ flora.validation_report.occurrence_uncertainty.public-occurrence-layer.run-20260
 flora.validation_report.join_sensitivity.habitat-restoration-adjacency.run-20260625.cdef0123.json
 ```
 
-Minimum validation-report metadata should include:
+An accepted profile must define stable identity, versioning, digest algorithm, filename grammar, supersession, correction, and collision behavior before any example becomes normative.
 
-- `validation_report_id`
-- `domain: flora`
-- `validator_family`
-- `validator_name`
-- `validator_version`
-- `schema_version`
-- `fixture_set_ref`
-- `run_id`
-- `candidate_ref`
-- `release_candidate_ref` where applicable
-- `input_digest`
-- `output_digest`
-- `source_descriptor_refs`
-- `evidence_bundle_refs`
-- `redaction_receipt_refs`
-- `receipt_refs`
-- `policy_decision_refs`
-- `review_record_refs`
-- `proof_pack_refs`
-- `release_refs`
-- `rollback_refs`
-- `taxonomy_results`
-- `sensitivity_results`
-- `occurrence_uncertainty_results`
-- `rights_sensitivity_results`
-- `finite_outcome`
-- `reasons`
-- `created_at`
-- `created_by`
-
-[Back to top](#top)
-
----
-
-## 9. Lifecycle relationship
+## Lifecycle relationship
 
 ```mermaid
-flowchart LR
-  RAW["data/raw/flora<br/>source captures"] --> WORK["data/work or quarantine<br/>normalize / hold"]
-  WORK --> PROC["data/processed/flora<br/>validated candidates"]
-  PROC --> CAT["data/catalog + triplets<br/>catalog closure / EvidenceBundle"]
-  CAT --> PACK["data/proofs/proof_pack/flora<br/>release support bundle"]
-  PACK --> REL["release/<br/>decision / manifest / rollback authority"]
-  REL --> PUB["data/published/<br/>released public-safe carrier"]
+flowchart TD
+    RAW["RAW Flora captures"] --> WORK["WORK or QUARANTINE"]
+    WORK --> PROC["PROCESSED candidates"]
+    PROC --> CAT["CATALOG or TRIPLETS"]
+    CAT --> PACK["ProofPack support"]
+    PACK --> REL["Release decision"]
+    REL --> PUB["PUBLISHED public-safe carrier"]
 
-  VR["data/proofs/validation_report/flora<br/>finite validator outcomes"] -. gates .-> WORK
-  VR -. gates .-> PROC
-  VR -. gates .-> CAT
-  VR -. referenced by .-> PACK
-  VR -. supports .-> REL
-  VR -. "does not publish" .-> PUB
-
-  REC["data/receipts<br/>run / transform / validation / redaction / release receipts"] -. basis .-> VR
-  POL["policy/<br/>rights / sensitivity / release"] -. basis .-> VR
-  SCH["schemas + contracts<br/>shape and meaning"] -. validate .-> VR
+    BASIS["Contracts, schemas, policy, evidence, receipts, and review"] -. "basis" .-> VR["Flora ValidationReport support"]
+    VR -. "records checks" .-> WORK
+    VR -. "records checks" .-> PROC
+    VR -. "supports closure" .-> CAT
+    VR -. "referenced by" .-> PACK
+    VR -. "supports; never approves" .-> REL
 ```
 
-Validation reports make gate results inspectable. They do not publish, redact, approve, or replace release authority by placement.
+ValidationReports make bounded gate results inspectable. They do not promote, redact, approve, release, deploy, publish, or replace the owning evidence, policy, review, release, correction, or rollback object.
 
-[Back to top](#top)
+## Review checklist
 
----
+Before a Flora ValidationReport is admitted or used in proof, review, release, correction, withdrawal, or rollback work, verify:
 
-## 10. Review checklist
+- [ ] An accepted report contract, schema, profile, producer, fixture set, and validator identify the report family.
+- [ ] Candidate scope, run ID, validator family and version, schema or contract version, fixture set, input digest, and output digest resolve.
+- [ ] Results are finite and machine-readable rather than free-text-only status.
+- [ ] Object family, source role, taxonomy version, method, uncertainty, space, time, rights, sensitivity, and public-safe representation are checked.
+- [ ] Sensitive exposure, missing redaction support, public/restricted split, taxonomy drift, source-role collapse, unsafe joins, unresolved rights, missing evidence, and missing rollback cases are exercised.
+- [ ] Product-level sensitivity is re-evaluated after joins.
+- [ ] Default CI and dry-run validation are deterministic and no-network.
+- [ ] EvidenceBundle, PolicyDecision, ReviewRecord, RedactionReceipt, ProofPack, release, correction, withdrawal, invalidation, and rollback references are present where required.
+- [ ] The report contains no restricted payload, harmful precision, collection clue, access direction, transform secret, or release authority.
+- [ ] Passing checks are described only at their observed scope.
 
-Before a Flora validation report is used in ProofPack, review, release, correction, or rollback work, verify:
-
-- [ ] The report identifies candidate scope, run ID, validator family, validator version, schema version, fixture set, input digest, and output digest.
-- [ ] Results are finite and use expected outcomes, not free-text-only status.
-- [ ] Object family, source role, temporal scope, taxonomy version, uncertainty, and public-safe posture are checked.
-- [ ] Sensitive exposure, missing RedactionReceipt, public/restricted occurrence split, taxonomy drift, source-role collapse, unsafe joins, unresolved rights, and missing EvidenceBundle cases are exercised.
-- [ ] Sensitivity checks include transform reason, reviewer, residual risk, and target artifact where applicable.
-- [ ] Product-level sensitivity is checked after joins.
-- [ ] Dry-run/CI validation proves no live upstream fetches.
-- [ ] EvidenceBundle, PolicyDecision, ReviewRecord, ProofPack, release candidate, correction path, and rollback refs are present where required.
-- [ ] The validation report does not include raw restricted payloads, restricted details, or release-manifest authority.
-
-[Back to top](#top)
-
----
-
-## 11. Failure modes
+## Failure modes
 
 | Failure mode | Why it matters | Required response |
 |---|---|---|
-| Validation report stores raw source payloads | Collapses validation support into source storage. | Move payload to lifecycle homes; keep refs/digests here. |
-| Restricted sensitive-flora detail appears in report | Validation artifact becomes an exposure channel. | Quarantine, redact, and require steward review. |
-| Missing RedactionReceipt still passes public release | Public-safe output cannot be audited. | Hold or deny release until transform proof exists. |
-| Taxonomy conflict hidden | Public claim may attach to the wrong plant concept. | Hold for review and record crosswalk conflict. |
-| Observation treated as authority | Source-role collapse misleads users. | Deny and restore permitted source role. |
-| Join product treated as safe because inputs were public | Sensitivity is product-level and can arise from the join. | Hold, review, generalize, restrict, or deny. |
-| Live fetch occurs during dry-run validation | CI becomes nondeterministic and may violate source boundaries. | Fail workflow and require fixtures. |
-| Validation report acts as ReleaseManifest | Collapses validation with release authority. | Move authority to `release/`; keep a reference here. |
-| Report has no rollback/correction refs for release-significant candidate | Release review is not reversible. | Hold release review. |
+| Report stores a source payload | Collapses validation support into source storage. | Move or quarantine the payload; retain only governed references and digests. |
+| Restricted Flora detail appears in a report, log, fixture, or index | The validation surface becomes an exposure channel. | Contain, remove public reachability, correct, and require sensitivity review. |
+| Missing RedactionReceipt still yields public readiness | Safe representation cannot be audited. | Hold or deny until the required transform proof resolves. |
+| Taxonomy conflict is hidden | A claim may attach to the wrong plant concept. | Hold, record the conflict, and require reviewed resolution. |
+| Observation is treated as authority | Source-role collapse misleads consumers. | Deny the result and restore the declared source role. |
+| A joined product inherits "safe" from its inputs | Sensitivity can arise from combination. | Re-evaluate, generalize, restrict, deny, or require review. |
+| Live fetch occurs in the default dry-run suite | CI becomes nondeterministic and may cross source or rights boundaries. | Fail the suite and replace the dependency with reviewed fixtures. |
+| ValidationReport acts as a ReleaseManifest or PolicyDecision | Object-family authority collapses. | Keep the report as support and restore authority to the owning root. |
+| Release-significant result lacks correction or rollback linkage | Review is not reversible. | Hold release evaluation. |
+| Placeholder test or green readiness hold is called enforcement | Documentation maturity is overstated. | Correct the claim and keep the lane held until substantive proof exists. |
 
-[Back to top](#top)
+## Open verification register
 
----
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive Flora ValidationReport inventory | `UNKNOWN` | Pinned recursive tree, LFS or external-storage inventory, report families, digests, rights, sensitivity, and owners |
+| Accepted report contract and schema | `NEEDS VERIFICATION` | Semantic contract, JSON Schema, identity/version rules, compatibility, and supersession |
+| Producer and permitted writers | `UNKNOWN` | Repository implementation, write policy, receipts, deterministic identity, and observed output |
+| Flora-specific fixtures and validator | `NEEDS VERIFICATION` | Public-safe positive and stable negative cases plus accepted executable entry point |
+| Outcome vocabulary | `UNKNOWN` | Surface-specific contract that separates report findings from policy, runtime, review, and release enums |
+| Policy and geoprivacy enforcement | `NEEDS VERIFICATION` | Executable policy path, RedactionReceipt checks, steward review, and denied-location cases |
+| Evidence, proof, and release consumers | `UNKNOWN` | Consumer inventory, stable references, release dependency, and no direct public reads |
+| Retention, correction, withdrawal, invalidation, and rollback | `NEEDS VERIFICATION` | Retention rule, supersession behavior, propagation tests, dry-run rollback, and audit evidence |
+| CI graduation | `UNKNOWN` | Accepted deterministic no-network command, observed run, stable findings, and accurate workflow naming |
+| Accountable owners and independent review | `NEEDS VERIFICATION` | Stewardship assignments, review requirements, and recorded approval separation |
 
-## 12. Definition of done
+## Definition of readiness
 
-This sublane is operationally useful when:
+This sublane is ready for report instances only when:
 
-- [ ] `data/proofs/validation_report/README.md` defines or links the parent ValidationReport family contract.
-- [ ] Flora ValidationReport schema and semantic contract exist under approved homes.
-- [ ] Valid and invalid fixtures exist for sensitive exposure, missing RedactionReceipt, public/restricted occurrence split, taxonomy drift, source-role collapse, unsafe join, unresolved rights, missing EvidenceBundle, missing rollback, and live-fetch-in-CI failures.
-- [ ] CI runs the Flora validation suite and blocks release-significant failures.
-- [ ] Flora ProofPacks reference validation reports by stable ID and digest.
-- [ ] Release docs require validation-report closure for public flora layers, Evidence Drawer payloads, Focus Mode surfaces, public-safe transforms, and correction/rollback candidates.
-- [ ] CODEOWNERS or equivalent review ownership covers validation steward, flora steward, sensitivity reviewer, proof steward, policy reviewer where required, and release steward.
-- [ ] At least one synthetic no-network Flora candidate demonstrates: fixture/source refs → validation report → EvidenceBundle / catalog closure → ProofPack → ReleaseManifest → public-safe artifact → rollback.
+- [ ] The parent ValidationReport family points to an accepted semantic contract and machine schema.
+- [ ] Flora-specific profile fields and outcome vocabularies are accepted without collapsing policy, runtime, review, or release states.
+- [ ] Deterministic public-safe valid, invalid, stale, conflicting, role-collapse, rights, sensitivity, geoprivacy, correction, and rollback fixtures exist.
+- [ ] An executable Flora validator replaces the placeholder smoke test and is wired to a bounded no-network suite.
+- [ ] The domain workflow graduates from explicit readiness holds without overstating what the suite proves.
+- [ ] Flora ProofPacks reference ValidationReports by stable identity and digest.
+- [ ] Release review requires report closure for applicable Flora layers, Evidence Drawer payloads, Focus Mode surfaces, public-safe transforms, and correction or rollback candidates.
+- [ ] Accountable stewardship, sensitivity review, policy review, proof review, and release separation are recorded.
+- [ ] At least one synthetic no-network candidate demonstrates source and fixture references → ValidationReport → evidence and catalog closure → ProofPack → release decision → public-safe carrier → correction and rollback.
 
----
+No checklist item authorizes use of real sensitive Flora locations in public fixtures or ordinary repository reports.
+
+## Rollback
+
+This revision changes documentation only.
+
+- Before merge, rollback is to close or replace the draft change without modifying payload, policy, workflow, release, or publication state.
+- After merge, use a transparent revert or focused follow-up commit at this same path.
+- Reverting this README does not retract a report, PolicyDecision, ReviewRecord, release, public artifact, cache, or sensitive-data exposure; those require correction and rollback in their owning systems.
+- If this document ever overstates implementation, weakens sensitivity controls, creates parallel authority, or exposes harmful precision, correct the claim immediately and record any required containment, invalidation, withdrawal, or downstream correction separately.
 
 ## Maintainer note
 
-Flora validation reports are where sensitive biodiversity exposure, taxonomy mistakes, and unsafe joins should be stopped before they become public maps. Keep validator outputs finite, citeable, deterministic, and strict about source role, taxonomy, redaction support, product-level sensitivity, public/restricted splits, and rollback. If a candidate is unclear, the correct outcome is `HOLD`, `ABSTAIN`, `DENY`, `RESTRICT`, or `ERROR`, not a polished public layer.
+Flora ValidationReports are a place to stop sensitive biodiversity exposure, taxonomy error, source-role collapse, and unsafe joins before they reach a public surface. Keep future reports finite, citeable, deterministic, digest-bound, correction-aware, and strict about taxonomy, rights, sensitivity, geoprivacy, public/restricted separation, evidence, review, release, and rollback. When support is unclear, the honest result is a bounded negative state—not a polished public layer.
+
+[Back to top](#top)
