@@ -1,216 +1,286 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/proofs/proof-pack/readme
-title: data/proofs/proof_pack README
-type: directory-readme
-version: v0.1
-status: draft
-owners:
-  - <data steward — TODO>
-  - <proof steward — TODO>
-  - <release steward — TODO>
-  - <domain stewards — TODO>
+title: data/proofs/proof_pack/ — ProofPack Release-Support Lane
+version: v0.2.0
+type: directory-readme; proof-family-guide; proof-pack-release-support
+status: repository-grounded draft; parent and child proof lanes confirmed; ProofPack contract/schema/validator surface not established
+owners: NEEDS VERIFICATION — data, proof, evidence, validation, policy, release, correction, rollback, domain, and docs stewards
 created: 2026-06-25
-updated: 2026-06-25
-policy_label: public-review
-path: data/proofs/proof_pack/README.md
-related:
-  - ../README.md
-  - ../evidence_bundle/README.md
-  - ../catalog_matrix/README.md
-  - ../validation_report/README.md
-  - ../citation_validation/README.md
-  - ../integrity/README.md
-  - ../../receipts/README.md
-  - ../../catalog/README.md
-  - ../../published/README.md
-  - ../../../release/README.md
-  - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/doctrine/lifecycle-law.md
-  - ../../../docs/doctrine/trust-membrane.md
-  - ../../../contracts/README.md
-  - ../../../schemas/README.md
-  - ../../../policy/README.md
-tags:
-  - kfm
-  - data
-  - proofs
-  - proof-pack
-  - evidence-bundle
-  - catalog-matrix
-  - citation-validation
-  - validation-report
-  - integrity
-  - release-gate
-  - rollback
-  - correction
-  - cite-or-abstain
+updated: 2026-07-26
+supersedes: v0.1 at the same path; documentation only
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+policy_label: restricted-review; proof-support; release-gated; no-direct-public-path; cite-or-abstain
+current_path: data/proofs/proof_pack/README.md
+truth_posture: >
+  CONFIRMED exact target path and prior blob, canonical parent proof contract,
+  Directory Rules v1.4, proposed ADR-0011 authority separation, modernized
+  EvidenceBundle and citation-validation sibling lanes, and Atmosphere/Flora
+  ProofPack child READMEs / PROPOSED ProofPack semantic profile, instance shape,
+  validator, fixture, review, release, correction, and rollback closure / UNKNOWN
+  recursive ProofPack inventory, active writers and consumers, production release
+  assembly, access controls, public routes, caches, and operational rollback /
+  NEEDS VERIFICATION accountable owners, accepted ProofPack contract and schema,
+  deterministic validators and fixtures, CI enforcement, retention, invalidation,
+  and separation-of-duty review
+
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 4ce20df8b12d640fa527147407a24f56d61e0b46
+  prior_blob: b03674bebb03252511cb76e03b949e885a9fd79f
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  adr_0011_blob: 40b0f47b87d584040803ed76aa6b31f5204b7fca
+  atmosphere_child_blob: 42b947efd1cb7b68b0ba99b445c520ba63d210af
+  flora_child_blob: b09212e278121a317652d1b9106d2fdbca267a96
 notes:
-  - "Parent directory README for ProofPack instances and domain proof-pack lanes. It is not itself a ProofPack schema, ProofPack instance, ReleaseManifest, catalog record, or policy bundle."
-  - "ProofPacks are release-grade proof support; they may reference receipts, catalog records, release candidates, and published artifacts, but they do not replace any of those authority families."
-  - "Promotion is a governed state transition, not a file move. A ProofPack supports review; it does not publish by placement."
+  - "Same-path Markdown modernization only; no ProofPack payloads, contracts, schemas, policies, validators, fixtures, workflows, releases, routes, or publication state changed."
+  - "ProofPack supports release review but does not become a ReleaseManifest, PromotionDecision, receipt, catalog record, published artifact, or public answer authority."
+  - "Exact paths checked for contracts/evidence/proof_pack.md, schemas/contracts/v1/evidence/proof_pack.schema.json, and tools/validators/validate_proof_pack.py were not found at the pinned base; absence is bounded to those exact paths."
+  - "Rollback target for v0.2.0 is prior blob b03674bebb03252511cb76e03b949e885a9fd79f."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="dataproofsproof_pack"></a>
 
-# `data/proofs/proof_pack/`
+# `data/proofs/proof_pack/` — ProofPack Release-Support Lane
 
-> Parent lane for KFM **ProofPack** support objects. A ProofPack is a release-grade support bundle that gathers evidence, validation, policy, catalog, integrity, review, correction, and rollback references so a release steward can inspect whether a candidate artifact is ready to move toward publication.
+> **One-line purpose.** Hold or index governed ProofPack support records that assemble evidence, validation, policy, catalog, integrity, review, correction, and rollback dependencies for a release decision without becoming that decision or a public artifact.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: proof support](https://img.shields.io/badge/lifecycle-proof--support-blue)
-![Authority: not release](https://img.shields.io/badge/authority-not--release-b91c1c)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
-![Rollback: required](https://img.shields.io/badge/rollback-required-6f42c1)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: proof support](https://img.shields.io/badge/authority-proof%20support-0969da?style=flat-square)](#authority-level)
+[![Profile: proposed](https://img.shields.io/badge/profile-PROPOSED-8250df?style=flat-square)](#status)
+[![Children: Atmosphere + Flora](https://img.shields.io/badge/children-Atmosphere%20%2B%20Flora-1a7f37?style=flat-square)](#current-bounded-child-lane-index)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-d1242f?style=flat-square)](#outputs)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<proof steward>` · `<release steward>` · `<domain stewards>` — TODO  
-> **Path:** `data/proofs/proof_pack/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for schemas, validators, CI workflows, emitted ProofPack instances, and complete domain coverage.
+> A ProofPack is release-support evidence, not release authority. It may help a reviewer decide whether a candidate is ready for release review, but it does not create a `ReleaseManifest`, `PromotionDecision`, correction, rollback, publication state, or public claim.
 
-> [!WARNING]
-> A ProofPack is **not** a receipt, catalog record, release manifest, promotion decision, rollback card, public layer, or published report. It may reference those artifacts, but it must not become their parallel authority.
+> [!CAUTION]
+> Do not place restricted source payloads, exact sensitive locations, credentials, private endpoints, hidden redaction parameters, or other control-defeating details in an ordinary repository ProofPack lane.
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating model](#operating-model) · [Packet contract](#proofpack-support-packet) · [Children](#current-bounded-child-lane-index) · [Outcomes](#finite-outcomes-and-guardrails) · [Correction](#correction-withdrawal-invalidation-and-rollback) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ---
 
-## Quick jumps
+## Purpose
 
-| Section | Use it for |
+`data/proofs/proof_pack/` is the parent proof-family lane for ProofPack release-support records and domain sublanes. Its responsibility is to make a release candidate's support inspectable by assembling stable references and closure findings across evidence, validation, policy, catalog, integrity, review, correction, withdrawal, and rollback families.
+
+A ProofPack should let a reviewer determine:
+
+1. what exact claim, layer, report, API payload, story, tile archive, graph projection, Focus Mode slice, correction, or rollback candidate is under review;
+2. which source descriptors and EvidenceBundles support that scope;
+3. which validators and policy decisions ran, and what they actually proved;
+4. which catalog, integrity, review, release, correction, and rollback dependencies remain open;
+5. whether the candidate should advance, hold, abstain, deny, withdraw, or error under the applicable profile.
+
+Directory placement does not make a ProofPack complete, accepted, reviewed, released, public-safe, or authoritative.
+
+## Authority level
+
+**Implementation-bearing proof-support lane inside the canonical `data/proofs/` responsibility.**
+
+<a id="2-authority-boundary"></a>
+
+| Responsibility | Owning surface | This lane's relationship |
+|---|---|---|
+| ProofPack meaning | Accepted semantic contract under `contracts/` | Consumes the contract; no accepted ProofPack contract was established at the checked path. |
+| ProofPack machine shape | Accepted schema under `schemas/contracts/v1/` | Consumes the schema; no ProofPack schema was established at the checked path. |
+| ProofPack instances and indexes | `data/proofs/proof_pack/` | This lane may hold accepted-profile proof-support records and domain indexes. |
+| Process memory | `data/receipts/` | Referenced, never absorbed. |
+| Evidence closure | `data/proofs/evidence_bundle/` | Required support family; ProofPack does not replace EvidenceBundle. |
+| Citation-validation support | `data/proofs/citation_validation/` | Referenced findings; not duplicated as authority. |
+| Catalog and provenance | `data/catalog/` | Discovery/interchange carrier; not release approval. |
+| Policy and sensitivity | `policy/` | Decides admissibility and obligations; ProofPack records references and findings. |
+| Release, correction, withdrawal, rollback | `release/` | Owns release-governance decisions and records. |
+| Public artifacts | `data/published/` | Downstream only after governed release. |
+| Runtime/API/UI/AI | governed delivery surfaces | May consume released proof summaries; must not read this lane as a direct public service. |
+
+## Status
+
+| Surface | Bounded current result | Safe interpretation |
+|---|---|---|
+| Target path and README | **CONFIRMED** | Existing v0.1 document upgraded in place. |
+| Parent proof root | **CONFIRMED repository document / draft** | Establishes proof-support responsibility and no-direct-public-path posture. |
+| Atmosphere child README | **CONFIRMED** | Domain-specific ProofPack guidance exists; emitted instances and enforcement remain unverified. |
+| Flora child README | **CONFIRMED** | Domain-specific sensitive ProofPack guidance exists; emitted instances and enforcement remain unverified. |
+| ADR-0011 | **CONFIRMED file / `proposed` status** | Supports receipt/proof/catalog/release separation but is not accepted or enforced by this README. |
+| ProofPack semantic contract | **NOT ESTABLISHED at checked exact path** | Do not claim canonical field meaning beyond documented proposals. |
+| ProofPack machine schema | **NOT ESTABLISHED at checked exact path** | Proposed JSON shapes remain illustrative. |
+| Dedicated ProofPack validator | **NOT ESTABLISHED at checked exact path** | No validator behavior or CI enforcement is claimed. |
+| Recursive ProofPack instances | **UNKNOWN** | No recursive payload inventory or sensitive-content inspection was performed. |
+| Active writers, consumers, release assembly, public routes | **UNKNOWN** | Presence of documentation establishes none of these states. |
+
+<a id="3-what-belongs-here"></a>
+
+## What belongs here
+
+Good fits are accepted-profile ProofPack support records and indexes that preserve scope, references, findings, limitations, and lifecycle dependencies without duplicating the underlying authorities:
+
+- candidate ProofPack instances for a bounded release, correction, withdrawal, or rollback review;
+- domain ProofPack indexes and lane READMEs;
+- claim/layer/report/API/story/tile/graph/Focus-Mode-to-proof maps;
+- digest-closure summaries covering referenced evidence, receipts, catalog records, candidate artifacts, and release dependencies;
+- stable negative-state support explaining why release review must hold, abstain, deny, withdraw, or error;
+- supersession, migration, compatibility, retention, and disposition sidecars that preserve audit lineage;
+- cross-domain ProofPacks only when a release candidate genuinely spans multiple domains and no single domain lane owns the complete proof scope.
+
+Accepted records should prefer stable identifiers, hashes, and bounded summaries over duplicated source payloads.
+
+<a id="4-what-must-not-live-here"></a>
+
+## What does NOT belong here
+
+| Do not place here | Correct home or action |
 |---|---|
-| [1. Purpose](#1-purpose) | What ProofPacks do in KFM. |
-| [2. Authority boundary](#2-authority-boundary) | How proof packs differ from receipts, catalog, release, and publication. |
-| [3. What belongs here](#3-what-belongs-here) | Accepted ProofPack files and domain sublanes. |
-| [4. What must not live here](#4-what-must-not-live-here) | Wrong homes and trust-membrane violations. |
-| [5. Required ProofPack contents](#5-required-proofpack-contents) | Minimum fields / reference families. |
-| [6. Domain sublane pattern](#6-domain-sublane-pattern) | How domains should use this parent lane. |
-| [7. Naming and identity](#7-naming-and-identity) | Suggested file and folder naming. |
-| [8. Lifecycle relationship](#8-lifecycle-relationship) | How ProofPacks sit beside RAW → PUBLISHED. |
-| [9. Review and validation checklist](#9-review-and-validation-checklist) | What maintainers should check. |
-| [10. Failure modes](#10-failure-modes) | Drift and overclaim patterns to block. |
-| [11. Definition of done](#11-definition-of-done) | What is still needed for operational maturity. |
+| RAW, WORK, QUARANTINE, or canonical PROCESSED payloads | Their governed lifecycle lanes |
+| Source descriptors and source-activation authority | `data/registry/sources/` and governed source-intake surfaces |
+| Process receipts as primary records | `data/receipts/` |
+| Canonical EvidenceBundle records | `data/proofs/evidence_bundle/` or the accepted evidence-proof home |
+| Citation-validation records as primary authority | `data/proofs/citation_validation/` |
+| STAC, DCAT, PROV, or domain catalog records as primary records | `data/catalog/` |
+| Contracts, schemas, or policy modules | `contracts/`, `schemas/`, `policy/` |
+| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, RollbackCard, or signatures as authority records | `release/` |
+| Public PMTiles, GeoParquet, COG, API payloads, reports, stories, layers, or exports | `data/published/` after release |
+| Secrets, private endpoints, exact protected geometry, living-person/private data, or unsafe logs | Approved restricted storage, quarantine, redaction, generalization, staged access, or denial |
+| Generated language, screenshots, map pixels, graph edges, or badges used as proof | Resolve admissible evidence or abstain |
 
----
+## Inputs
 
-## 1. Purpose
+A ProofPack may reference only governed records and must preserve missing, stale, conflicted, denied, withdrawn, or inaccessible states instead of inventing closure.
 
-`data/proofs/proof_pack/` stores **ProofPack instances and domain ProofPack lanes**. A ProofPack is a compact, inspectable support bundle for a release candidate, correction candidate, rollback candidate, or high-risk public-safe derived artifact.
+As applicable, inputs include:
 
-A ProofPack should let a reviewer answer:
+- stable candidate identity, artifact kind, scope, version, and content digest;
+- SourceDescriptor and source-role references;
+- EvidenceBundle and citation-validation references;
+- RunReceipt, TransformReceipt, ValidationReport, RedactionReceipt, AIReceipt, migration, and related process-memory references;
+- contract/schema profile identifiers and validator versions;
+- rights, sensitivity, policy, access, and review decisions;
+- catalog/triplet identities and integrity findings;
+- release-candidate references and intended public surfaces;
+- correction, supersession, withdrawal, invalidation, retention, and rollback dependencies.
 
-- What claim, layer, report, API payload, story, tile set, or graph projection is being considered?
-- Which source descriptors, EvidenceBundles, catalog records, receipts, validators, policy decisions, review records, and release candidates support it?
-- Which rights, sensitivity, source-role, geoprivacy, identity, temporal, geometry, and integrity gates passed or failed?
-- What public surface is proposed, and what exact artifact IDs or digests would be released?
-- What rollback target, correction path, stale-state behavior, and withdrawal path exist?
-- What should happen when evidence is missing, ambiguous, stale, contradicted, or policy-blocked?
+Inputs remain references to their governing records. This lane must not duplicate protected content merely to make review convenient.
 
-ProofPacks are especially useful where a domain artifact is not one simple object but a governed release bundle: public map layer, Evidence Drawer payload, Focus Mode answer set, source-derived report, county/regional proof slice, graph projection, PMTiles/GeoParquet layer, or public-safe API payload.
+## Outputs
 
-[Back to top](#top)
+A ProofPack output should identify:
 
----
+- the exact candidate and claim/artifact scope under review;
+- the named ProofPack profile and version;
+- every referenced evidence, receipt, validation, policy, catalog, integrity, review, release, correction, withdrawal, and rollback dependency;
+- stable findings, limitations, unresolved dependencies, and stale/conflict state;
+- a finite review-support result;
+- deterministic identity and integrity information sufficient to detect drift or substitution.
 
-## 2. Authority boundary
+Outputs support steward review and release assembly. They are not public claims, runtime envelopes, release approvals, or publication state. Public clients must not read this proof lane directly.
 
-KFM keeps artifact families separate so that process memory, proof support, discovery metadata, release decisions, and public artifacts cannot silently substitute for each other.
+## Validation
 
-| Family | Canonical home | What it does | What it must not do |
-|---|---|---|---|
-| Receipts | `data/receipts/` | Record that a governed operation ran or a decision step occurred. | Act as release-grade proof by themselves. |
-| ProofPacks | `data/proofs/proof_pack/` | Assemble release-grade support references and closure status. | Act as a ReleaseManifest, PromotionDecision, or public artifact. |
-| EvidenceBundles | `data/proofs/evidence_bundle/` or referenced from domain proof lanes | Bind claims to evidence, source role, spatial/temporal scope, and support status. | Replace source payloads, policy decisions, or release decisions. |
-| Catalog records | `data/catalog/{stac,dcat,prov,domain}/` | Provide discovery, interchange, and lineage carriers. | Approve release or serve as proof without dereferencing evidence. |
-| Release decisions | `release/{candidates,manifests,promotion_decisions,rollback_cards,correction_notices,withdrawal_notices,signatures,changelog}/` | Govern promotion, release, correction, withdrawal, and rollback. | Store canonical ProofPack instances or raw source data. |
-| Published artifacts | `data/published/<domain>/...` | Serve released public-safe carriers. | Contain RAW, WORK, QUARANTINE, proof packs, or release authority. |
+At minimum, an accepted ProofPack profile should validate:
 
-> [!NOTE]
-> A ProofPack can point to all of these families. It cannot collapse them. When the review path needs convenience, use stable IDs, digests, and indexes — not duplicate authority.
+1. placement, stable identity, version, schema/contract profile, and digest;
+2. exact candidate and claim/artifact scope;
+3. SourceDescriptor identity, source role, rights, cadence, and citation dependencies;
+4. EvidenceBundle and citation-validation closure for the stated scope;
+5. receipt and transform references without treating receipts as proof by themselves;
+6. deterministic validator findings and profile coverage;
+7. policy, rights, sensitivity, geoprivacy, access, and reviewer obligations;
+8. catalog/triplet and integrity agreement;
+9. release-candidate, correction, withdrawal, invalidation, and rollback dependencies;
+10. sensitive-content minimization and no-direct-public-path behavior;
+11. deterministic finite outcomes and stable finding identifiers;
+12. supersession, retention, and audit-lineage behavior.
 
-[Back to top](#top)
+No accepted ProofPack schema, dedicated validator, fixture suite, or CI enforcement was established at the checked exact paths. A future pass proves only its declared profile and evidence snapshot; it does not prove factual truth, policy clearance, release readiness, or publication by itself.
 
----
+## Review burden
 
-## 3. What belongs here
+Accountable ownership remains **NEEDS VERIFICATION**.
 
-Use this folder for ProofPack files or domain lanes that are safe to store under repository policy and useful for release review.
+Changes should include proof, evidence, validation, policy, release, correction, rollback, and affected domain stewards as applicable. Independent rights/sensitivity review is required when living-person data, DNA/genomics, rare species, archaeology, cultural/sovereignty concerns, land/title data, precise infrastructure, protected facilities, or harmful-precision geometry could be exposed.
 
-| Accepted item | Suggested placement | Notes |
+CODEOWNERS routing, automated checks, schema validity, a signed receipt, or a passing ProofPack validator do not substitute for approval evidence or separation of duties.
+
+## Related folders
+
+- Parent proof contract: [`../README.md`](../README.md)
+- Confirmed child lanes: [`atmosphere/`](atmosphere/README.md) · [`flora/`](flora/README.md)
+- Evidence support: [`../evidence_bundle/`](../evidence_bundle/README.md) · [`../citation_validation/`](../citation_validation/README.md) · [`../validation_report/`](../validation_report/README.md)
+- Process memory: [`../../receipts/`](../../receipts/README.md)
+- Catalog and lifecycle: [`../../catalog/`](../../catalog/README.md) · [`../../processed/`](../../processed/README.md) · [`../../published/`](../../published/README.md)
+- Authority roots: [`../../../contracts/`](../../../contracts/README.md) · [`../../../schemas/`](../../../schemas/README.md) · [`../../../policy/`](../../../policy/README.md) · [`../../../release/`](../../../release/README.md)
+- Doctrine: [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) · [`../../../docs/doctrine/lifecycle-law.md`](../../../docs/doctrine/lifecycle-law.md) · [`../../../docs/doctrine/trust-membrane.md`](../../../docs/doctrine/trust-membrane.md)
+
+## ADRs
+
+[`ADR-0011`](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) is confirmed at `proposed` status. It supports distinct responsibility boundaries among receipts, proofs, catalogs, release-governance records, and published artifacts, but this README does not accept or enforce it by implication.
+
+An accepted ADR plus contracts, schemas, migration, compatibility, validation, review, correction, and rollback plans is required before this lane becomes a second receipt home, catalog home, release-manifest home, public service, or replacement for domain proof lanes.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence boundary:** `main@4ce20df8b12d640fa527147407a24f56d61e0b46`
+- **Review type:** complete target README, parent proof contract, Directory Rules, ADR-0011, exact-path contract/schema/validator checks, and confirmed Atmosphere/Flora child READMEs
+- **Recursive ProofPack payload or sensitive-content inspection:** not performed
+- **Owners, accepted ProofPack profile, retention, deployed release assembly, invalidation propagation, and rollback drills:** need verification
+
+Re-review when a ProofPack contract/schema/profile, child lane, validator, workflow, release assembly, public consumer, correction mechanism, or rollback dependency changes—or within six months.
+
+## Operating model
+
+```mermaid
+flowchart LR
+    SRC["SourceDescriptor + source records"] --> EB["EvidenceBundle + citation validation"]
+    EB --> REC["Receipts + validation findings"]
+    REC --> PP["ProofPack release-support record"]
+    CAT["Catalog / triplet / integrity"] --> PP
+    POL["Policy + sensitivity decisions"] --> PP
+    REV["Review records"] --> PP
+    PP --> DEC{"Release review"}
+    DEC -->|advance| REL["ReleaseManifest / PromotionDecision"]
+    DEC -->|hold / abstain / deny| NEG["Finite negative result + remediation"]
+    REL --> PUB["Released public-safe artifacts"]
+    PUB --> CORR["Correction / withdrawal / rollback"]
+    CORR -. invalidates or supersedes .-> PP
+```
+
+The diagram is a responsibility and review flow, not evidence that runtime orchestration exists.
+
+<a id="5-required-proofpack-contents"></a>
+
+## ProofPack support packet
+
+The exact machine schema is **PROPOSED** until an accepted contract and schema exist. A reviewable support packet should cover these families:
+
+| Family | Minimum support | Boundary |
 |---|---|---|
-| Domain ProofPack lane README | `data/proofs/proof_pack/<domain>/README.md` | Explains domain-specific proof-pack gates. |
-| Candidate ProofPack instance | `data/proofs/proof_pack/<domain>/candidates/<release_id>.proof-pack.json` | PROPOSED until schema and validator are confirmed. |
-| Superseded ProofPack | `data/proofs/proof_pack/<domain>/retired/<release_id>.superseded-proof-pack.json` | Keep for audit; do not delete prior meaning silently. |
-| ProofPack index | `data/proofs/proof_pack/<domain>/indexes/proof-pack-index.json` | Optional lookup aid; not the canonical truth source. |
-| Valid / invalid fixtures | Prefer `fixtures/` or `tests/fixtures/` unless a local README explicitly scopes examples | Avoid competing fixture homes. Local fixtures here are PROPOSED until test strategy is verified. |
-| Cross-domain release bundle support | `data/proofs/proof_pack/cross_domain/<scope>/` | Use only when a release candidate spans multiple domains and cannot be owned by one domain lane. |
+| Identity | `proof_pack_id`, profile/version, candidate identity, scope, content/spec digests | Identity is not release status. |
+| Sources | SourceDescriptor refs, source roles, rights, cadence, citations | Do not duplicate source payloads. |
+| Evidence | EvidenceBundle and citation-validation refs | Evidence closure is necessary, not sufficient. |
+| Receipts | Run/transform/validation/redaction/AI/migration refs | Receipts are process memory. |
+| Validation | Named profiles, validator versions, stable findings, limitations | A passing check proves only its declared scope. |
+| Policy | Rights, sensitivity, geoprivacy, access, release, and obligation decisions | ProofPack does not decide policy. |
+| Catalog/integrity | STAC/DCAT/PROV/domain/triplet refs, hashes, signatures, Merkle or equivalent integrity refs where applicable | Catalog and integrity are separate authorities. |
+| Review | ReviewRecord refs, reviewer roles, separation-of-duty posture | CODEOWNERS is not approval. |
+| Release dependency | Candidate release refs and intended public artifacts | No release approval is stored here. |
+| Correction/rollback | Correction, withdrawal, invalidation, supersession, retention, and rollback refs | Silent mutation is prohibited. |
+| Outcome | One finite review-support state plus reason/finding codes | Must not invent a universal policy/runtime enum. |
 
-### Known authored sublanes
-
-| Lane | Purpose | Special gates |
-|---|---|---|
-| [`atmosphere/`](./atmosphere/) | ProofPack support for air, AQI, smoke, weather, climate, model fields, remote-sensing, advisory context, and public-safe atmosphere products. | AQI is not concentration; AOD is not PM2.5; model fields are not observations; low-cost sensors require correction/caveats/confidence/limitations. |
-| [`flora/`](./flora/) | ProofPack support for plant taxonomy, specimen/occurrence evidence, vegetation communities, rare plants, geoprivacy, phenology, restoration, and public-safe botanical surfaces. | Exact rare/protected/culturally sensitive/steward-reviewed locations fail closed; source roles and public/restricted occurrence split must be preserved. |
-
-> [!TIP]
-> New domain sublanes should be boring and responsibility-rooted: `data/proofs/proof_pack/<domain>/README.md`. Do not create new root folders for domains.
-
-[Back to top](#top)
-
----
-
-## 4. What must not live here
-
-| Excluded material | Correct home or action | Why |
-|---|---|---|
-| Raw source payloads, downloads, vendor exports, rasters, scans, logs, or source-system dumps | `data/raw/`, `data/work/`, or `data/quarantine/` | ProofPacks reference source material; they do not store it. |
-| Process-only receipts with no release-proof context | `data/receipts/` | Receipts are process memory, not proof packs. |
-| ReleaseManifest, PromotionDecision, ReleaseDecision, CorrectionNotice, WithdrawalNotice, RollbackCard, release signatures | `release/` | Release authority must remain separate from proof support. |
-| STAC/DCAT/PROV discovery records as primary artifacts | `data/catalog/` | Catalog is discovery/interchange, not ProofPack authority. |
-| Public map layers, PMTiles, GeoParquet, API payloads, reports, or stories | `data/published/` after release gates | Published artifacts are downstream carriers. |
-| Policy logic, Rego/OPA bundles, sensitivity rules, release rules | `policy/` | ProofPacks record policy outcomes; they do not define policy. |
-| Machine schemas | `schemas/contracts/v1/...` | Shape belongs in schemas. |
-| Semantic contracts | `contracts/...` | Meaning belongs in contracts. |
-| AI summaries as proof | Governed API / Focus Mode outputs may cite ProofPacks but cannot replace them | Generated language is interpretive, not root truth. |
-| Sensitive exact locations or living-person/private data in public-review files | Quarantine, restrict, redact, generalize, or deny | Proof lanes may be more broadly reviewed than restricted stores. |
-
-[Back to top](#top)
-
----
-
-## 5. Required ProofPack contents
-
-A complete ProofPack should be a structured object with stable references, finite outcomes, and digest closure. The exact schema is **PROPOSED** until verified.
-
-| Field family | Required meaning | Example values / references |
-|---|---|---|
-| `proof_pack_id` | Stable deterministic ID for the proof bundle. | `kfm-proof-pack:<domain>:<release_id>:<digest>` |
-| `domain` | Primary domain lane or `cross_domain`. | `flora`, `atmosphere`, `hydrology`, `hazards`, `cross_domain` |
-| `scope` | What candidate the ProofPack supports. | Layer, report, API payload, Focus Mode slice, graph projection, correction, rollback. |
-| `release_candidate_refs` | Candidate release IDs without claiming release. | `release/candidates/<domain>/<release_id>/...` |
-| `source_descriptor_refs` | Source identity, role, rights, sensitivity, cadence, and citation. | `data/registry/sources/...` or domain source descriptor IDs. |
-| `evidence_bundle_refs` | Evidence support for the exact claims. | EvidenceBundle IDs, digests, and resolved status. |
-| `receipt_refs` | Process memory for fetch, transform, validation, redaction, model, AI, migration, release-time actions. | RunReceipt, TransformReceipt, ValidationReceipt, AIReceipt, RedactionReceipt. |
-| `validation_report_refs` | Deterministic validator outcomes. | pass/fail/warn/skip; expected finite result codes. |
-| `policy_decision_refs` | Rights, sensitivity, release, consent, runtime, geoprivacy, access decisions. | allow/restrict/deny/abstain/error with reason. |
-| `catalog_refs` | Catalog closure references. | STAC, DCAT, PROV, domain index, CatalogMatrix. |
-| `integrity_refs` | Digests, hashes, Merkle references, signature refs, spec hash. | Input/output digests, validator version, schema version. |
-| `review_refs` | Steward review or separation-of-duty records. | ReviewRecord IDs, reviewer role, outcome, timestamp. |
-| `rollback_refs` | Rollback target and correction/withdrawal support. | RollbackCard ID, CorrectionNotice ID, invalidation list. |
-| `outcome` | Finite review-support result. | `READY_FOR_RELEASE_REVIEW`, `HOLD`, `DENY`, `ABSTAIN`, `ERROR`, `WITHDRAW`. |
-
-### Minimal JSON shape, PROPOSED
+<details>
+<summary><strong>Illustrative packet shape — PROPOSED, not a current schema</strong></summary>
 
 ```json
 {
-  "proof_pack_id": "kfm-proof-pack:<domain>:<release_id>:<digest>",
-  "domain": "<domain>",
+  "proof_pack_id": "kfm-proof-pack:<domain>:<candidate>:<digest>",
+  "profile": "kfm-proof-pack/<version>",
   "scope": {
-    "release_candidate_id": "<release_id>",
-    "artifact_kind": "layer | api_payload | report | story | focus_mode | graph_projection | correction | rollback",
-    "spatial_scope": "<id-or-description>",
-    "temporal_scope": "<time-kind-aware-scope>",
-    "public_surface": "<governed-api-or-published-artifact-ref>"
+    "candidate_id": "<candidate-id>",
+    "artifact_kind": "layer | api_payload | report | story | tile_archive | focus_mode | graph_projection | correction | rollback"
   },
   "source_descriptor_refs": [],
   "evidence_bundle_refs": [],
@@ -220,169 +290,100 @@ A complete ProofPack should be a structured object with stable references, finit
   "catalog_refs": [],
   "integrity_refs": [],
   "review_refs": [],
+  "release_candidate_refs": [],
+  "correction_refs": [],
   "rollback_refs": [],
-  "outcome": "HOLD",
-  "reasons": [],
-  "created_at": "<iso8601>",
-  "created_by": "<tool-or-steward>",
-  "schema_version": "PROPOSED"
+  "outcome": "READY_FOR_RELEASE_REVIEW | HOLD | ABSTAIN | DENY | ERROR | WITHDRAW",
+  "finding_codes": [],
+  "limitations": []
 }
 ```
 
-[Back to top](#top)
+</details>
 
----
+## Current bounded child-lane index
 
-## 6. Domain sublane pattern
+| Child lane | Current bounded posture |
+|---|---|
+| [`atmosphere/`](atmosphere/README.md) | Confirmed README with Atmosphere-specific knowledge-character, freshness, unit, caveat, and public-safety gates; emitted ProofPacks and enforcement unverified. |
+| [`flora/`](flora/README.md) | Confirmed README with taxonomy, source-role, geoprivacy, rare-plant, join-sensitivity, correction, and rollback gates; emitted ProofPacks and enforcement unverified. |
 
-Domain lanes under `data/proofs/proof_pack/` should be narrow, testable, and aligned with the owning domain docs.
+Additional domain lanes are not claimed from omission or expectation. Add them only after path presence, role, profile, review burden, and non-duplication are verified.
 
-```text
-data/proofs/proof_pack/
-├── README.md
-├── <domain>/
-│   ├── README.md
-│   ├── candidates/
-│   ├── indexes/
-│   └── retired/
-└── cross_domain/
-    └── <scope>/
-```
+## Finite outcomes and guardrails
 
-Use domain sublanes when one domain owns the release candidate. Use `cross_domain/` only when the proof candidate is explicitly compositional and no single domain owns the release decision alone.
+Keep outcome vocabularies surface-specific:
 
-### Domain README requirements
+| Surface | Appropriate posture |
+|---|---|
+| ProofPack review support | A named profile may use `READY_FOR_RELEASE_REVIEW`, `HOLD`, `ABSTAIN`, `DENY`, `ERROR`, and `WITHDRAW` after acceptance. |
+| Governed runtime | Use the applicable runtime contract, commonly `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
+| Policy evaluation | Use the accepted policy contract; do not invent a universal enum. |
+| Release decision | Use the accepted PromotionDecision/ReleaseManifest vocabulary. |
 
-Each `data/proofs/proof_pack/<domain>/README.md` should include:
+Guardrails:
 
-- domain-specific proof-pack purpose;
-- placement and authority boundary;
-- required support bundle;
-- domain-specific denial gates;
-- what must not be stored there;
-- proposed file pattern;
-- lifecycle diagram;
-- validation checklist;
-- failure modes;
-- definition of done.
+- missing or unresolved evidence cannot be completed by generated rationale;
+- receipt presence cannot replace evidence or review closure;
+- a catalog item, signature, or hash cannot become release approval;
+- a ProofPack cannot promote itself or write `PUBLISHED` state;
+- stale, superseded, corrected, withdrawn, or invalidated support must propagate into review findings;
+- failed or unavailable checks remain visible and block higher-risk claims as required;
+- domain-specific safety gates remain stricter than this parent guide where appropriate.
 
-[Back to top](#top)
+## Correction, withdrawal, invalidation, and rollback
 
----
+When a referenced source, EvidenceBundle, receipt, validation result, policy decision, catalog record, artifact digest, review, or release dependency is corrected, superseded, withdrawn, invalidated, or made inaccessible:
 
-## 7. Naming and identity
+1. preserve the original ProofPack identity and content for audit unless policy requires restricted retention;
+2. mark or supersede the ProofPack through an accepted mechanism rather than mutating relied-upon history silently;
+3. identify downstream release candidates, manifests, public artifacts, caches, exports, drawers, indexes, and AI contexts that depend on it;
+4. emit or reference the governing correction, withdrawal, invalidation, or rollback record under its owning authority root;
+5. re-run the accepted ProofPack profile before any replacement advances;
+6. retain the prior rollback target and explain why the replacement differs.
 
-Suggested directory pattern:
+This README changes no correction, withdrawal, cache, or rollback behavior.
 
-```text
-data/proofs/proof_pack/<domain>/candidates/<release_id>.proof-pack.json
-```
+## Open verification register
 
-Suggested deterministic file name:
+| Item | Status | Required evidence |
+|---|---:|---|
+| Accepted ProofPack meaning and profile | `NEEDS VERIFICATION` | Accepted contract, profile/version register, compatibility rules |
+| Machine schema | `NOT ESTABLISHED at checked path` | Canonical JSON Schema and schema-home confirmation |
+| Validator and fixture coverage | `NOT ESTABLISHED at checked path` | Dedicated validator, valid/invalid fixtures, deterministic negative tests |
+| Recursive ProofPack inventory | `UNKNOWN` | Pinned tree, payload families, hashes, rights/sensitivity review |
+| Writers and consumers | `UNKNOWN` | Pipeline/tool/release/runtime/API/UI dependency inventory |
+| Release assembly and separation of duties | `UNKNOWN` | Accepted workflow, review records, promotion decisions, release manifests |
+| Correction/invalidation propagation | `NEEDS VERIFICATION` | Dependency graph, notices, cache/export invalidation tests |
+| Retention and restricted review | `NEEDS VERIFICATION` | Retention policy, access controls, deletion/withdrawal obligations |
+| Operational rollback drills | `NEEDS VERIFICATION` | Dry-run records tied to actual release dependencies |
 
-```text
-<domain>.proof_pack.<scope>.<release_or_run_id>.<short_hash>.json
-```
+Unknowns narrow claims and hold higher-risk transitions; they do not invite plausible defaults.
 
-Examples:
+## No-loss ledger
 
-```text
-atmosphere.proof_pack.pm25-hourly-kansas.v0.1.0123abcd.json
-flora.proof_pack.rare-plant-generalized-occurrence.v0.1.89ab4567.json
-hydrology.proof_pack.huc12-public-safe-layer.v0.1.4567cdef.json
-hazards.proof_pack.floodplain-context-layer.v0.1.cdef0123.json
-```
+| Prior element | Disposition in v0.2.0 |
+|---|---|
+| Stable path and `doc_id` | Preserved |
+| ProofPack release-support purpose | Preserved and clarified |
+| Receipt/proof/catalog/release/publication separation | Preserved and strengthened |
+| Atmosphere and Flora child-lane identity | Preserved and linked |
+| Proposed ProofPack field families | Preserved as a bounded illustrative packet; not promoted to schema fact |
+| Lifecycle and promotion boundaries | Preserved |
+| Rights, sensitivity, geoprivacy, correction, withdrawal, and rollback controls | Preserved and expanded |
+| Prior anchors | Legacy top and numbered-purpose/authority/content anchors retained where practical |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, migration, release, or public-state change | None |
 
-> [!CAUTION]
-> This naming pattern is guidance, not global identity law, until it is backed by a semantic contract, JSON Schema, validator, fixtures, and CI enforcement.
+### Change history
 
-[Back to top](#top)
+#### v0.2.0 — 2026-07-26
 
----
-
-## 8. Lifecycle relationship
-
-ProofPacks sit beside the lifecycle as proof support. They do not replace lifecycle phases.
-
-```mermaid
-flowchart LR
-  RAW["data/raw/<domain><br/>source captures"] --> WORK["data/work or quarantine<br/>normalize / hold"]
-  WORK --> PROC["data/processed/<domain><br/>validated candidates"]
-  PROC --> CAT["data/catalog + triplets<br/>catalog closure / EvidenceBundle"]
-  CAT --> PACK["data/proofs/proof_pack/<domain><br/>release-grade support bundle"]
-  PACK --> REL["release/<br/>decision / manifest / rollback authority"]
-  REL --> PUB["data/published/<domain><br/>released public-safe carrier"]
-
-  REC["data/receipts<br/>process memory"] -. referenced by .-> PACK
-  EB["data/proofs/evidence_bundle<br/>claim support"] -. referenced by .-> PACK
-  CM["data/proofs/catalog_matrix<br/>closure proof"] -. referenced by .-> PACK
-  POL["policy/<br/>rights / sensitivity / release"] -. gates .-> PACK
-  SCH["schemas + contracts<br/>shape and meaning"] -. validate .-> PACK
-
-  PACK -. "does not publish by itself" .-> PUB
-```
-
-Promotion still requires release authority under `release/`, not ProofPack placement.
+- normalized the parent lane to the Directory Rules folder-README contract;
+- reconciled current parent, child, and ADR evidence;
+- made exact-path ProofPack contract/schema/validator gaps explicit;
+- separated ProofPack review outcomes from policy, runtime, and release vocabularies;
+- added correction, invalidation, verification, and no-loss controls;
+- modernized navigation and presentation without creating authority.
 
 [Back to top](#top)
-
----
-
-## 9. Review and validation checklist
-
-Before any ProofPack is used in promotion review, verify:
-
-- [ ] It identifies the domain, release candidate, artifact kind, spatial scope, temporal scope, and intended public surface.
-- [ ] Every material claim resolves to EvidenceBundle support or the ProofPack records `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`.
-- [ ] SourceDescriptor refs include role, rights, sensitivity, cadence, source time, retrieval time, citation, and digest where applicable.
-- [ ] Receipts are referenced but not treated as proof by themselves.
-- [ ] ValidationReport refs include both happy-path and negative-path validation where relevant.
-- [ ] PolicyDecision refs cover rights, sensitivity, release, access, consent, geoprivacy, or domain-specific policy gates as applicable.
-- [ ] Catalog refs prove discovery/lineage closure without treating catalog metadata as release approval.
-- [ ] Integrity refs include input/output digests and schema/validator version where available.
-- [ ] Review refs capture required stewardship and separation-of-duty decisions.
-- [ ] Release refs point to `release/` without moving release authority into `data/proofs/`.
-- [ ] Rollback/correction/withdrawal refs are traceable before publication.
-- [ ] Sensitive exact locations, living-person data, raw genomic data, private parcel joins, archaeological/cultural sensitivity, rare species coordinates, infrastructure vulnerability, or other protected materials are denied, redacted, generalized, staged, or held according to policy.
-- [ ] Public clients consume only governed APIs or released artifacts, never this ProofPack path directly.
-
-[Back to top](#top)
-
----
-
-## 10. Failure modes
-
-| Failure mode | Why it matters | Required response |
-|---|---|---|
-| ProofPack stored in `data/receipts/` | Collapses proof support with process memory. | Move to this lane; leave receipt refs in `data/receipts/`. |
-| ReleaseManifest stored in `data/proofs/proof_pack/` | Collapses release authority with proof support. | Move release authority to `release/manifests/`; keep only a reference here. |
-| ProofPack includes raw source payloads | Collapses proof support with source storage. | Move payloads to RAW/WORK/QUARANTINE; keep refs/digests. |
-| Catalog metadata is treated as evidence | Discovery carrier becomes truth source. | Require EvidenceBundle dereference and citation validation. |
-| Published layer consumes ProofPack directly | Bypasses governed API and release gates. | Deny direct path; use ReleaseManifest and published artifact lane. |
-| AI output replaces ProofPack support | Generated language becomes root truth. | Deny; require EvidenceBundle and ProofPack refs. |
-| Sensitive data leaks through proof bundle | Review files become exposure channel. | Quarantine, redact, rotate identifiers if needed, emit correction/incident record. |
-| ProofPack has no rollback target | Release is not reversible. | Hold release review until rollback support exists. |
-
-[Back to top](#top)
-
----
-
-## 11. Definition of done
-
-This parent lane is operationally useful when:
-
-- [ ] `contracts/` contains the semantic ProofPack contract.
-- [ ] `schemas/contracts/v1/...` contains the machine-checkable ProofPack schema.
-- [ ] `tools/` or approved validator home includes a ProofPack validator.
-- [ ] Fixtures include valid and invalid ProofPacks across at least one low-risk and one high-risk domain.
-- [ ] CI blocks unresolved EvidenceRefs, missing policy decisions, release-authority collapse, missing rollback support, and unsafe sensitive content.
-- [ ] Domain sublane READMEs exist for active domains before live ProofPack instances land there.
-- [ ] `release/` docs cross-link the ProofPack closure requirement.
-- [ ] `data/receipts/`, `data/catalog/`, `data/published/`, and `release/` READMEs all preserve the family separation rule.
-- [ ] At least one synthetic no-network release candidate demonstrates `receipt → proof → catalog closure → release manifest → published artifact → rollback` traceability without direct RAW/WORK/QUARANTINE exposure.
-
----
-
-## Maintainer note
-
-ProofPacks should make review easier without making governance invisible. Keep them compact, reference-rich, deterministic, and reversible. When evidence, policy, release state, or rollback support is incomplete, the correct outcome is `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` — not a polished public artifact.
