@@ -10,7 +10,7 @@ owners:
   - "CONFIRMED GitHub review routing — @bartytime4life via .github/CODEOWNERS; routing is not approval"
 created: 2026-06-25
 updated: 2026-07-26
-policy_label: restricted-review; t4-deny-by-default; living-person; dna-genomic; consent-revocation; land-title; no-direct-public-path; release-gated
+policy_label: restricted-review; deny-by-default-sensitive-content; living-person; dna-genomic; consent-revocation; land-title; no-direct-public-path; release-gated
 path: data/proofs/people-dna-land/README.md
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 truth_posture: >
@@ -26,10 +26,15 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 4ce20df8b12d640fa527147407a24f56d61e0b46
+  base_commit: ce8968cc8f86e4bbce48f5e714dfededa74bebfa
+  base_drift_compare: "4ce20df8b12d640fa527147407a24f56d61e0b46...ce8968cc8f86e4bbce48f5e714dfededa74bebfa changed only data/proofs/proof_pack/README.md and its atmosphere and flora child READMEs; this target blob was unchanged"
   prior_blob: 05359bb623e69dccbda1ee22f8ba0d8345d9d412
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  evidence_bundle_contract_blob: 731c348832add23cddd14e796aa56ce2b9268259
+  evidence_bundle_schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
+  evidence_bundle_validator_blob: c1760c5e92eae6390f5adcde4593e8e9bab26535
+  evidence_bundle_fixtures_readme_blob: 89ace659414a757c14a4d3e516fd31d44c6a9969
   validator_index_blob: 7a78d278aa03d843107d4d66a954c7a670d2ac19
   consent_policy_readme_blob: fa7ea7c95a473a7fd498053536ca0b72b17461f6
   release_candidate_readme_blob: cbbef9394fbdbe94ed742957e1b764c84c9907f3
@@ -50,6 +55,10 @@ related:
   - ../../../docs/domains/people-dna-land/VERIFICATION_BACKLOG.md
   - ../../../contracts/domains/people-dna-land/README.md
   - ../../../schemas/contracts/v1/domains/people-dna-land/README.md
+  - ../../../contracts/evidence/evidence_bundle.md
+  - ../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - ../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md
+  - ../../../tools/validators/validate_evidence_bundle.py
   - ../../../policy/domains/people-dna-land/README.md
   - ../../../policy/consent/people-dna-land/README.md
   - ../../../tools/validators/domains/people-dna-land/README.md
@@ -62,7 +71,7 @@ related:
 notes:
   - "Same-path Markdown modernization only; no person, genealogy, DNA, land, consent, revocation, proof, contract, schema, policy, validator, fixture, workflow, release, route, hosting, or publication state changed."
   - "This README preserves the exact phrase NEEDS VERIFICATION for emitted proof files because the current readiness workflow checks that sentinel before reporting a held proof lane."
-  - "People/DNA/Land is treated as T4 / deny-by-default. Consent is necessary where required but never sufficient for publication."
+  - "Living-person and raw DNA/genomic material takes the applicable T4 / deny-by-default posture; all lane material remains fail-closed when evidence, rights, consent, sensitivity, review, or release support is unresolved. Consent is necessary where required but never sufficient for publication."
   - "The documentation rollback target for v0.2.0 is prior blob 05359bb623e69dccbda1ee22f8ba0d8345d9d412."
 [/KFM_META_BLOCK_V2] -->
 
@@ -73,7 +82,7 @@ notes:
 > **One-line purpose.** Hold or index reviewable, public-repository-safe proof support for bounded People, Genealogy, DNA, consent, revocation, land-instrument, ownership-interval, parcel-representation, correction, and rollback claims without becoming identity, kinship, title, policy, release, or publication authority.
 
 [![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Sensitivity: T4 deny by default](https://img.shields.io/badge/sensitivity-T4%20deny%20by%20default-b42318?style=flat-square)](#sensitive-proof-gates)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318?style=flat-square)](#sensitive-proof-gates)
 [![Authority: proof support](https://img.shields.io/badge/authority-proof%20support-0969da?style=flat-square)](#authority-level)
 [![Consent: necessary not sufficient](https://img.shields.io/badge/consent-necessary%20not%20sufficient-6f42c1?style=flat-square)](#consent-and-revocation-boundary)
 [![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
@@ -83,7 +92,7 @@ notes:
 > **Proof support is necessary but not sufficient for release.** A valid-looking proof packet cannot make a person identity, relationship, DNA inference, consent state, ownership assertion, parcel boundary, cultural context, or public derivative true, lawful, safe, reviewed, released, or KFM-published.
 
 > [!CAUTION]
-> **This is a T4 / deny-by-default lane.** Missing, stale, conflicted, revoked, unresolvable, rights-unclear, sensitivity-unsafe, living-person-exposing, title-like, or consent-ambiguous support must yield a finite fail-closed result such as `ABSTAIN`, `HOLD`, `RESTRICT`, `DENY`, `WITHDRAW`, or `ERROR` according to the applicable contract.
+> **This is a restricted, fail-closed lane.** Living-person and raw DNA/genomic material takes the applicable T4 / deny-by-default posture; other material does not become public-safe merely by being less sensitive. Missing, stale, conflicted, revoked, unresolvable, rights-unclear, sensitivity-unsafe, living-person-exposing, title-like, or consent-ambiguous support must yield a finite fail-closed result such as `ABSTAIN`, `HOLD`, `RESTRICT`, `DENY`, `WITHDRAW`, or `ERROR` according to the applicable contract.
 
 > [!WARNING]
 > Never place raw genotype, DNA segments, kit or vendor identifiers, living-person PII, private person↔parcel joins, exact burial or sacred-place details, secrets, access tokens, unredacted relationship hypotheses, control-defeating transform parameters, or restricted source material in this ordinary repository lane.
@@ -123,7 +132,7 @@ This lane supports review. It does not establish person identity, kinship, DNA t
 
 ## Authority level
 
-**Implementation-bearing specialized proof-support lane under the canonical `data/proofs/` responsibility.** Directory Rules assign proof material to `data/proofs/`; the domain remains a nested segment rather than a new root. fileciteturn73file9
+**Implementation-bearing specialized proof-support lane under the canonical `data/proofs/` responsibility.** [Directory Rules §§9 and 12](../../../docs/doctrine/directory-rules.md) place proof material under `data/proofs/` and domain lanes as nested segments. The repository's authority-adoption conflict remains open; this README does not resolve it.
 
 | Responsibility | Owning surface |
 |---|---|
@@ -143,10 +152,11 @@ This README creates no new proof family, policy authority, source registry, rele
 
 | Surface | Bounded result |
 |---|---|
-| Exact target path and prior content | **CONFIRMED** at `main@4ce20df8b12d640fa527147407a24f56d61e0b46`; prior blob `05359bb623e69dccbda1ee22f8ba0d8345d9d412` |
+| Exact target path and prior content | **CONFIRMED** at `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`; prior blob `05359bb623e69dccbda1ee22f8ba0d8345d9d412` |
 | Documentation version | `v0.2.0` |
 | Parent proof responsibility | **CONFIRMED repository-grounded draft** at [`data/proofs/README.md`](../README.md); no longer a greenfield stub |
-| People/DNA/Land bounded-context doctrine | **CONFIRMED draft repository docs**; assertion-first identity, source-role separation, T4 sensitivity, title/parcel anti-collapse, and neighbor-control rules are documented |
+| Global EvidenceBundle shape surface | **CONFIRMED PROPOSED surface**: semantic contract, strict JSON Schema, validator wrapper, and minimal shared fixtures exist; domain closure and resolver behavior remain unproved |
+| People/DNA/Land bounded-context doctrine | **CONFIRMED draft repository docs**; assertion-first identity, source-role separation, T4 where applicable, title/parcel anti-collapse, and neighbor-control rules are documented |
 | Consent-policy documentation | **CONFIRMED README / placement conflicted / enforcement unproved**; consent is purpose-, audience-, subject-, field/relation-, precision-, export-, and time-specific |
 | Domain validator index | **CONFIRMED README-only index**; no accepted executable domain validator body is established by the inspected readiness workflow |
 | Domain workflow | **CONFIRMED read-only readiness workflow** with validation, proof, and release holds; it intentionally does not open surfaced fixture or proof payloads |
@@ -226,7 +236,8 @@ Validation is layered. A passing layer proves only its declared scope.
 | README/source validation | **Performed for this update** | One H1, anchors, links introduced in scope, fences, tables, alerts, metadata, no-loss, exact remote bytes | Host rendering, runtime enforcement, sensitive payload safety |
 | Domain readiness workflow | **CONFIRMED definition / expected hold** | Required boundary paths, absence of accepted executable tests/validators, current policy scaffolding, and fixture non-consumption posture | Person, relationship, DNA, consent, title, rights, privacy, evidence, release, or public safety |
 | Proof readiness workflow | **CONFIRMED definition / expected hold** | README sentinel, no accepted proof payload/producer/Make target surfaced within its declared checks | Proof correctness, EvidenceBundle closure, consent/revocation execution, release readiness |
-| Schemas, validators, and synthetic fixtures | **NEEDS VERIFICATION** | Machine shape and bounded negative cases after implementation | Source truth, legal sufficiency, review or release approval |
+| Global EvidenceBundle shape surface | **CONFIRMED PROPOSED / execution NOT RUN here** | Bounded JSON shape when its wrapper and fixtures are executed | People/DNA/Land profile, reference resolution, policy, review, or release closure |
+| People/DNA/Land schemas, validators, and synthetic fixtures | **NEEDS VERIFICATION** | Domain shape and bounded negative cases after implementation | Source truth, legal sufficiency, review or release approval |
 | Policy runtime and consent/revocation integration | **NEEDS VERIFICATION** | Exact finite policy results and obligations after accepted activation | Evidence truth or release approval by itself |
 | Release/correction/rollback drills | **NEEDS VERIFICATION** | Candidate-to-release, correction, withdrawal, invalidation, and restoration behavior | Truth beyond the tested scope |
 
@@ -257,6 +268,10 @@ This lane requires the highest practical review burden appropriate to the exact 
 ## Related folders
 
 - Parent proof contract: [`data/proofs/`](../README.md)
+- Global EvidenceBundle contract: [`contracts/evidence/evidence_bundle.md`](../../../contracts/evidence/evidence_bundle.md)
+- Global EvidenceBundle schema: [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
+- Shared EvidenceBundle fixtures: [`fixtures/contracts/v1/evidence/evidence_bundle/`](../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md)
+- EvidenceBundle validator wrapper: [`tools/validators/validate_evidence_bundle.py`](../../../tools/validators/validate_evidence_bundle.py)
 - Domain receipts: [`data/receipts/people-dna-land/`](../../receipts/people-dna-land/README.md)
 - Source registry: [`data/registry/sources/people-dna-land/`](../../registry/sources/people-dna-land/README.md)
 - Processed lane: [`data/processed/people-dna-land/`](../../processed/people-dna-land/README.md)
@@ -287,8 +302,8 @@ Until accepted decisions exist, preserve the current path, avoid parallel homes,
 ## Last reviewed
 
 - **Date:** 2026-07-26
-- **Evidence boundary:** `main@4ce20df8b12d640fa527147407a24f56d61e0b46`
-- **Review type:** complete target baseline; Directory Rules; parent proof README; bounded-context and sensitivity docs; consent policy README; validator index; candidate-release README; CODEOWNERS; domain workflow
+- **Evidence boundary:** `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`
+- **Review type:** complete target baseline; current-main drift compare; Directory Rules; parent proof README; global EvidenceBundle contract/schema/wrapper/fixtures; bounded-context and sensitivity docs; consent policy README; validator index; candidate-release README; CODEOWNERS; domain workflow
 - **Recursive proof payload inspection:** not performed
 - **Runtime, deployed policy, consent/revocation service, caches, release instances, and public effects:** not inspected
 
@@ -456,7 +471,8 @@ Documentation rollback does not revoke consent, withdraw a release, invalidate c
 - reconciled the lane with current Directory Rules and the modernized `data/proofs/` parent;
 - replaced stale greenfield and ownership placeholders with bounded repository evidence;
 - preserved the workflow’s proof-readiness sentinel and explicit hold posture;
-- strengthened consent, revocation, T4 sensitivity, title/parcel anti-collapse, cross-lane, correction, invalidation, and rollback guidance;
+- strengthened consent, revocation, T4-where-applicable sensitivity, title/parcel anti-collapse, cross-lane, correction, invalidation, and rollback guidance;
+- reconciled current-main drift after intervening ProofPack documentation merges left the target blob unchanged;
 - added evidence-backed badges, alerts, navigation, status and authority tables, layered validation, an open-verification register, a no-loss ledger, and explicit documentation rollback;
 - changed Markdown only.
 
