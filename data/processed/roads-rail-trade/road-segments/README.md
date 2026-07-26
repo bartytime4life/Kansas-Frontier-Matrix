@@ -1,15 +1,38 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-roads-rail-trade-road-segments-readme
-title: data/processed/roads-rail-trade/road-segments/README.md — Roads / Rail / Trade Road Segments Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; roads-rail-trade-domain-lane; road-segment-lane; linear-transport-primitive-lane
-status: draft; PROPOSED; data-root; processed-stage; roads-rail-trade; road-segments; road-segment; corridor-context; route-membership-context; topology-context; source-role-aware; sensitivity-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Roads/Rail/Trade steward · Road segment steward · Network/topology steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/roads-rail-trade/road-segments/ — Roads / Rail / Trade Road-Segment Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-roads-rail-trade-road-segment-lane
+status: repository-grounded draft; payload inventory, canonical slug ownership, contracts, schemas, validators, fixtures, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Roads/Rail/Trade domain steward"
+  - "NEEDS VERIFICATION — road-segment, network, topology, and conflation steward"
+  - "NEEDS VERIFICATION — route/corridor, crossing, facility, status/restriction, rights, and sensitivity reviewers"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, rollback, and docs stewards"
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; roads-rail-trade; road-segments; transport-network; lifecycle; governed; source-role-aware; release-gated
-tags: [kfm, data, processed, roads-rail-trade, roads-rail, road-segment, corridor-route, route-membership, network-node, crossing, bridge, ferry, restriction-event, status-event, operator-assignment, historic-route-claim, trade-route-corridor, source-role, observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ReviewRecord, RedactionReceipt, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; roads-rail-trade; road-segment; source-role-aware; topology-aware; sensitivity-aware; release-gated; no-direct-public-path
+path: data/processed/roads-rail-trade/road-segments/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, Roads/Rail/Trade object-family
+  and sensitivity doctrine, Road Segment term, source-role anti-collapse, identity-not-geometry rule,
+  modern-public-segment T0 posture only after release, and PROCESSED lifecycle boundary / PROPOSED
+  lane-local admission profile, segment identity packet, segmentation-conflation lineage, topology and
+  relationship routing, and downstream promotion expectations / UNKNOWN recursive payload inventory,
+  canonical roads-rail-trade versus roads-rail slug resolution, concrete Road Segment contract/schema,
+  production validators, fixtures, receipts, proof closure, release instances, public routes, routing
+  consumers, and runtime behavior / NEEDS VERIFICATION accountable owners, accepted lane name,
+  identity fields, topology tolerances, conflation rules, sensitivity transforms, correction propagation,
+  cache and tile invalidation, withdrawal behavior, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 466db6157ca00d54001d31c1e86b017d079cae9d
+  prior_blob: b508fa20436fc3710e4b2191b48fa33363f457e7
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  object_families_blob: 64e64d7954433830a8ad60182785c0c8e456e151
+  sensitivity_blob: 59870cd850b6491488578a296294691e8c9c50eb
 related:
   - ../README.md
   - ../facilities/README.md
@@ -19,84 +42,291 @@ related:
   - ../../../../docs/domains/roads-rail-trade/SENSITIVITY.md
   - ../../../../docs/domains/roads-rail-trade/PIPELINE.md
   - ../../../../docs/domains/roads-rail-trade/SOURCE_REGISTRY.md
+  - ../../../../docs/doctrine/directory-rules.md
   - ../../../../docs/domains/settlements-infrastructure/README.md
   - ../../../../docs/domains/hydrology/README.md
   - ../../../../docs/domains/hazards/README.md
   - ../../../../docs/domains/archaeology/README.md
   - ../../../../contracts/domains/roads-rail-trade/README.md
-  - ../../../../contracts/domains/roads-rail-trade/corridor_route.md
-  - ../../../../policy/sensitivity/transport/
-  - ../../../../policy/domains/roads-rail-trade/
-  - ../../../../schemas/contracts/v1/domains/roads-rail-trade/
-  - ../../../raw/roads-rail-trade/
-  - ../../../work/roads-rail-trade/
-  - ../../../quarantine/roads-rail-trade/
-  - ../../../catalog/domain/roads-rail-trade/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/sources/roads-rail-trade/
-  - ../../../../release/candidates/roads-rail-trade/
-  - ../../../../release/
-  - ../../../../pipelines/domains/roads-rail-trade/
-  - ../../../../pipeline_specs/roads-rail-trade/
-  - ../../../../tools/validators/
+  - ../../../../schemas/contracts/v1/domains/roads-rail-trade/README.md
+  - ../../../../policy/domains/roads-rail-trade/README.md
+  - ../../../raw/roads-rail-trade/README.md
+  - ../../../work/roads-rail-trade/README.md
+  - ../../../quarantine/roads-rail-trade/README.md
+  - ../../../catalog/domain/roads-rail-trade/README.md
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/roads-rail-trade/README.md
+  - ../../../../release/candidates/roads-rail-trade/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a blank placeholder at `data/processed/roads-rail-trade/road-segments/README.md`."
-  - "This is a child PROCESSED-stage lane under `data/processed/roads-rail-trade/` for road-segment artifacts. It is not a RAW source root, WORK scratch area, QUARANTINE bypass, CATALOG, TRIPLET, PUBLISHED, proof store, receipt store, source registry, policy authority, release authority, public API/UI output, public map/tile output, routing engine, operations surface, emergency-routing surface, or legal road-status authority."
-  - "Road Segment objects are linear transport primitives. Route membership, corridor naming, network topology, crossings, bridges, ferries, restrictions, status events, operator assignments, and historic/trade-route claims must remain distinct object families unless contracts say otherwise."
-  - "Source-role anti-collapse is mandatory: observed field/survey records, administrative rosters, regulatory designations, modeled reconstructions, aggregate summaries, candidate connector outputs, and synthetic descriptions are not interchangeable."
-  - "Modern public road segments may be public-safe after release, but unclear rights, unresolved source role, missing evidence, unresolved sensitivity, absent release state, cultural corridor joins, exact-harm coordinates, restricted-source fields, and critical-infrastructure-adjacent details block or restrict promotion."
-  - "This README is a lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "Same-path Markdown modernization only; no road bytes, source activation, contract, schema, policy, validator, workflow, proof, release, route, routing engine, or KFM publication state changed."
+  - "Road Segment is a linear transport primitive. RouteMembership, CorridorRoute, Network Node, Crossing, Bridge, Ferry, RestrictionEvent, StatusEvent, OperatorAssignment, Historic RouteClaim, and TradeRouteCorridor remain separate object families."
+  - "Identity is not geometry alone. Source id, source role, temporal scope, segmentation/conflation lineage, and normalized digest remain material."
+  - "Modern public road geometry may become T0 only after governed release; cultural, exact-harm, restricted-source, and infrastructure-adjacent cases may require generalization, restriction, or denial."
+  - "Rollback target for v0.2.0 is prior blob SHA `b508fa20436fc3710e4b2191b48fa33363f457e7`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/roads-rail-trade/road-segments
+# `data/processed/roads-rail-trade/road-segments/` — Roads / Rail / Trade road-segment processed data
 
-> Roads / Rail / Trade PROCESSED-stage child lane for normalized, source-traced, source-role-preserved road segment artifacts that have passed beyond RAW/WORK/QUARANTINE but are not yet cataloged, triplet-projected, published, or released.
+> **One-line purpose.** Hold normalized road-segment candidates while preserving source role, stable identity, geometry and topology semantics, segmentation and conflation lineage, time, rights, sensitivity, evidence, correction, and downstream-use limits.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/roads-rail-trade/road-segments" src="https://img.shields.io/badge/root-data%2Fprocessed%2Froads--rail--trade%2Froad--segments-blue">
-  <img alt="Domain: roads-rail-trade" src="https://img.shields.io/badge/domain-roads--rail--trade-555">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Object: Road Segment" src="https://img.shields.io/badge/object-Road__Segment-green">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Object: Road Segment](https://img.shields.io/badge/object-Road%20Segment-1f8fff?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![Identity: not geometry alone](https://img.shields.io/badge/identity-not%20geometry%20alone-6f42c1?style=flat-square)](#identity-topology-and-conflation)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Roads/Rail/Trade steward · Road segment steward · Network/topology steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **A road line is not self-authenticating.** Similar geometry may represent different sources, roles, vintages, segmentation decisions, reconstructed candidates, administrative records, or released derivatives. Identity, role, time, topology, and evidence determine what the segment can support.
+
 **Path:** `data/processed/roads-rail-trade/road-segments/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `roads-rail-trade`  
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `roads-rail-trade/`  
 **Parent lane:** `data/processed/roads-rail-trade/`  
-**Sublane:** `road-segments` / processed road segment artifacts  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, sensitivity review, policy decision where applicable, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED Roads/Rail/Trade object doctrine includes `Road Segment` as a named object family · CONFIRMED identity is source/role/time/digest-based and not geometry alone · CONFIRMED source role is fixed at admission and preserved through promotion · CONFIRMED sensitivity doctrine allows modern public road/rail segments as T0 only after release while restrictive rows govern cultural, exact-harm, restricted-source, and infrastructure-adjacent cases · PROPOSED road-segment child-lane details · NEEDS VERIFICATION for actual child inventory, schemas, validators, fixtures, source descriptors, receipt families, policy enforcement, release linkage, and governed route behavior.
+**Lane role:** `Road Segment` linear transport primitives and segment-local lineage  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Road-segment processed requirements](#road-segment-processed-requirements) · [Source-role and sensitivity guardrails](#source-role-and-sensitivity-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Admission profile](#road-segment-admission-profile) · [Identity and topology](#identity-topology-and-conflation) · [Object-family routing](#object-family-routing) · [Rights and sensitivity](#rights-sensitivity-and-public-safe-transforms) · [Lifecycle](#lifecycle-and-promotion) · [Correction](#correction-withdrawal-and-rollback) · [Verification register](#open-verification-register) · [No-loss ledger](#no-loss-ledger)
 
 ---
 
 ## Purpose
 
-`data/processed/roads-rail-trade/road-segments/` holds processed road-segment artifacts for the Roads / Rail / Trade lane. These artifacts provide normalized road linear primitives and road-network context used by corridor, route membership, crossings, bridges, restrictions, status events, operator assignments, historic route, trade-route, settlement, hydrology, hazards, and public-map-candidate workflows.
+This directory is the Roads / Rail / Trade domain's **PROCESSED-stage lane for `Road Segment` candidates**. It may hold normalized linear-road primitives, source-versioned geometry, segmentation and conflation lineage, topology-ready segment records, and object-ready derivatives that have moved beyond RAW capture, WORK transformation, and QUARANTINE holds.
 
-This lane may contain or point to normalized artifacts such as:
+The lane exists to preserve the answer to eight questions before downstream use:
 
-- `Road Segment` records with source role, source time, valid time, rights posture, sensitivity posture, and digest posture;
-- normalized road geometry derivatives that remain upstream of catalog and release;
-- segment identity, segmentation, conflation, split/merge, and vintage sidecars;
-- road-to-route, road-to-corridor, road-to-crossing, road-to-bridge, road-to-ferry, road-to-network-node, and road-to-status relationship candidates;
-- public-candidate generalized or redacted derivatives that still require catalog and release review.
+1. Which source, source role, source version, and acquisition or derivation method apply?
+2. Which stable segment identity applies, and how does it survive geometry edits, splits, merges, and conflation?
+3. Which CRS, geometry, segmentation, node, connectivity, directionality, level, and topology semantics apply?
+4. Which source, observed, valid, retrieval, processing, correction, supersession, and release times apply?
+5. Which route, corridor, crossing, bridge, ferry, node, restriction, status, operator, historic-route, or trade-route relationship is asserted—and which object retains ownership?
+6. Which rights, attribution, redistribution, restricted-source, cultural, exact-harm, and infrastructure-adjacent constraints apply?
+7. Which evidence, validation, policy, review, correction, release, and rollback states qualify the segment?
+8. Which downstream uses are allowed, restricted, generalized, delayed, denied, or required to abstain?
 
-This lane does not prove route membership, legal road ownership, right-of-way, operational closure, emergency routing, hazard condition, bridge condition, cultural corridor precision, public release readiness, or navigation/routing safety by itself.
+It is not a RAW source lane, routing engine, navigation authority, legal road-status registry, right-of-way authority, ownership registry, closure service, emergency-routing service, bridge-condition authority, cultural-route authority, proof store, receipt authority, catalog authority, release authority, or public map/API/UI source.
 
-## Lifecycle boundary
+## Authority level
+
+**Implementation-bearing lifecycle lane with narrow linear-primitive authority.** The target path is CONFIRMED in the repository and remains under `data/processed/roads-rail-trade/`, consistent with Directory Rules' lifecycle and domain-placement rules.
+
+Its authority is deliberately limited:
+
+- it may carry processed Road Segment candidates and segment-local explanatory metadata;
+- it does not define Road Segment meaning unless an accepted semantic contract says so;
+- it does not define machine shape unless an accepted schema says so;
+- it does not define source identity, rights, source role, or activation;
+- it does not establish route membership, corridor designation, crossing, bridge, ferry, restriction, status, operator, historic-route, or trade-route truth;
+- it does not establish legal ownership, right-of-way, public access, current closure, emergency suitability, navigability, or life-safety fitness;
+- it does not authorize public release, routing, navigation, tiles, APIs, downloads, or Focus Mode answers.
+
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
+|---|---|---|
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| `Road Segment` object-family term | **CONFIRMED doctrine** | The Roads/Rail/Trade object-family reference names Road Segment as a linear primitive. |
+| Identity and source-role doctrine | **CONFIRMED doctrine / PROPOSED fields** | Identity is not geometry alone; source role is fixed at admission and preserved through promotion. |
+| Sensitivity posture | **CONFIRMED doctrine / PROPOSED tier realization** | Modern public segments may become T0 after release; cultural, exact-harm, restricted-source, and infrastructure-adjacent cases may require stricter handling. |
+| Canonical lane and slug ownership | **NEEDS VERIFICATION** | `roads-rail-trade` and `roads-rail` path segments remain an ADR-class divergence in current doctrine. |
+| Concrete Road Segment contract/schema | **NEEDS VERIFICATION** | This task did not verify an accepted Road Segment contract and field-complete schema. |
+| Real processed road payload inventory | **UNKNOWN** | This documentation task did not inspect or expose road-segment payloads. |
+| Validators, fixtures, policy enforcement, and CI | **NEEDS VERIFICATION** | No accepted production Road Segment enforcement suite was verified. |
+| Receipts, proof, release instances, public routes, routing consumers, and runtime behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
+
+<a id="accepted-contents"></a>
+
+## What belongs here
+
+Good fits are processed road-segment artifacts whose identity, geometry, topology, role, time, rights, and correction lineage remain inspectable, including:
+
+- normalized Road Segment candidates with source identity, source role, source version, temporal scope, and digest posture;
+- source-preserving geometry derivatives with CRS, dimensionality, geometry validity, directionality, level, and support metadata;
+- segmentation, conflation, split, merge, predecessor, successor, and cross-version correspondence records;
+- topology-ready endpoint, node-reference, connectivity, adjacency, and network-participation metadata that does not re-own Network Node authority;
+- source-role-preserving observed, administrative, regulatory, modeled, aggregate, candidate, or synthetic segment records;
+- controlled relationship candidates to CorridorRoute, RouteMembership, Network Node, Crossing, Bridge, Ferry, RestrictionEvent, StatusEvent, OperatorAssignment, Historic RouteClaim, and TradeRouteCorridor without duplicating those objects;
+- generalized or redacted public-candidate derivatives that remain upstream of catalog, evidence closure, policy review, release, and public serving;
+- QA, uncertainty, ambiguity, topology, source-version, caveat, correction, and sensitivity sidecars that are not proofs, receipts, policy decisions, or releases;
+- lane-local README, inventory, migration, compatibility, or non-release manifest notes that explain artifact identity without becoming authority records.
+
+<a id="exclusions"></a>
+
+## What does NOT belong here
+
+Do not place these in `data/processed/roads-rail-trade/road-segments/`:
+
+- RAW source files, agency exports, partner deliveries, source-native geometry, logs, screenshots, media, credentials, or unprocessed payloads;
+- WORK segmentation, conflation, geometry repair, route matching, topology experiments, notebooks, temporary joins, redaction debugging, or scratch outputs;
+- QUARANTINE material with unresolved rights, role, identity, topology, source conflict, cultural sensitivity, exact-harm risk, restricted-source fields, or public-safety state;
+- CorridorRoute, RouteMembership, Network Node, Crossing, Bridge, Ferry, TransportFacility, RestrictionEvent, StatusEvent, OperatorAssignment, Historic RouteClaim, or TradeRouteCorridor canonical records except as references;
+- legal road ownership, right-of-way, public-access, jurisdiction, maintenance, closure, emergency-route, navigability, or current-condition determinations;
+- routing graphs, navigation instructions, turn restrictions for operational routing, emergency-routing products, dispatch surfaces, or life-safety guidance;
+- hydrology, hazards, archaeology, settlements/infrastructure, people/land, or cultural canonical truth except as governed references;
+- catalog, STAC/DCAT/PROV, triplet, published, proof, receipt, source-registry, release, contract, schema, policy, validator, test, fixture, pipeline, package, API, UI, tile, or download artifacts;
+- restricted agreement text, credentials, secrets, transform offsets, redaction parameters, aggregation thresholds, or details that could defeat public-safe transforms.
+
+## Inputs
+
+Inputs are governed WORK products or resolved QUARANTINE exits with, as applicable:
+
+- `SourceDescriptor` or equivalent source identity and fixed source role;
+- source-native identifier, version, vintage, attribution, rights, and redistribution posture;
+- source geometry and CRS metadata;
+- segmentation or conflation method and version;
+- predecessor/successor and source-crosswalk context;
+- topology and node-reference candidates;
+- source, observed, valid, retrieval, processing, correction, and supersession times;
+- QA findings, ambiguity, uncertainty, caveats, sensitivity, and validation support;
+- transform receipts or equivalent lineage for reprojection, simplification, generalization, redaction, or suppression.
+
+A resolved QUARANTINE exit is an audited decision, not a file move.
+
+## Outputs
+
+Outputs are non-public processed candidates for:
+
+- Road Segment contract/schema validation when accepted;
+- source-preserving network and topology review;
+- governed RouteMembership, CorridorRoute, crossing, bridge, ferry, restriction/status, and operator relationship review;
+- EvidenceRef and EvidenceBundle assembly;
+- catalog and triplet candidates that preserve role, identity, time, rights, and sensitivity;
+- generalized or redacted public candidates;
+- release-candidate review after policy, evidence, correction, withdrawal, and rollback dependencies close.
+
+PROCESSED placement proves only lifecycle disposition. It does not prove that a segment is correct, topologically usable, routable, public, current, legally open, safe, released, or suitable for navigation.
+
+## Validation
+
+Road-segment validation must be deterministic and fail closed. The accepted production validator suite remains NEEDS VERIFICATION.
+
+| Gate | Minimum question | Failure posture |
+|---|---|---|
+| Identity | Is the segment identified by source, role, time, and stable lineage rather than geometry alone? | `DENY` / `HOLD` |
+| Source role | Is observed, administrative, regulatory, modeled, aggregate, candidate, or synthetic posture explicit? | `DENY` |
+| Geometry | Are CRS, dimensionality, validity, directionality, level, and source geometry lineage explicit? | `HOLD` |
+| Segmentation/conflation | Are method/version, splits, merges, predecessors, successors, and crosswalk ambiguity recorded? | `HOLD` / `ABSTAIN` |
+| Topology | Are endpoint/node references, connectivity assumptions, and unresolved errors explicit? | `HOLD` |
+| Time | Are source, observed, valid, retrieval, processing, correction, supersession, and release times distinguishable? | `ABSTAIN` / stale hold |
+| Object boundaries | Are route, corridor, node, crossing, bridge, ferry, restriction, status, operator, historic, and trade-route objects kept separate? | `DENY` |
+| Rights | Are attribution, redistribution, derivative-use, partner, and restricted-source terms resolved? | `DENY` / `HOLD` |
+| Sensitivity | Are cultural, exact-harm, critical-infrastructure-adjacent, restricted-source, and cross-lane risks resolved? | `DENY` / `RESTRICT` |
+| Evidence | Do consequential identity, route, status, and release claims resolve to admissible evidence? | `ABSTAIN` |
+| Correction | Are predecessor/successor, invalidation, supersession, withdrawal, and downstream impacts traceable? | `HOLD` |
+| Release | Are policy, review, proof, release manifest, correction path, rollback target, and public-safe carrier present? | `DENY` |
+
+Passing geometry or schema checks does **not** prove legal status, route membership, operational closure, topology fitness, routability, navigation safety, public release, or KFM publication.
+
+## Review burden
+
+Changes require review proportional to meaning and exposure:
+
+- Roads/Rail/Trade domain and Road Segment stewardship for lane scope and identity rules;
+- network/topology review for segmentation, conflation, connectivity, directionality, level, and graph participation;
+- route/corridor and cross-object reviewers for relationship ownership;
+- source and rights review for attribution, redistribution, derivative use, restricted-source fields, and partner agreements;
+- sensitivity and security review for cultural routes, exact-harm coordinates, critical-infrastructure-adjacent details, and public transforms;
+- Hydrology, Hazards, Archaeology, Settlements/Infrastructure, or People/Land review when their canonical truth or policy is referenced;
+- evidence, policy, release, correction, rollback, and docs review before public use or authority-changing documentation.
+
+**CODEOWNERS and accountable individuals are NEEDS VERIFICATION.** This README does not assign them.
+
+## Related folders
+
+| Responsibility | Verified or bounded home | Relationship |
+|---|---|---|
+| Parent processed lane | [`../README.md`](../README.md) | Roads/Rail/Trade lifecycle parent; current maturity remains bounded. |
+| Facilities | [`../facilities/README.md`](../facilities/README.md) | Transport facilities remain separate from linear segments. |
+| Object-family doctrine | [`../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md`](../../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md) | Vocabulary, identity, source role, temporal, and cross-lane boundaries. |
+| Sensitivity doctrine | [`../../../../docs/domains/roads-rail-trade/SENSITIVITY.md`](../../../../docs/domains/roads-rail-trade/SENSITIVITY.md) | Rights, tier, cultural, exact-harm, restricted-source, and infrastructure posture. |
+| Contracts | [`../../../../contracts/domains/roads-rail-trade/README.md`](../../../../contracts/domains/roads-rail-trade/README.md) | Semantic meaning; exact Road Segment contract remains NEEDS VERIFICATION. |
+| Schemas | [`../../../../schemas/contracts/v1/domains/roads-rail-trade/README.md`](../../../../schemas/contracts/v1/domains/roads-rail-trade/README.md) | Machine shape; slug and schema maturity remain NEEDS VERIFICATION. |
+| Policy | [`../../../../policy/domains/roads-rail-trade/README.md`](../../../../policy/domains/roads-rail-trade/README.md) | Admissibility home; enforcement remains bounded. |
+| Source registry | [`../../../registry/sources/roads-rail-trade/README.md`](../../../registry/sources/roads-rail-trade/README.md) | Source identity, role, rights, cadence, and activation. |
+| Catalog, proof, receipts, release | [`../../../catalog/domain/roads-rail-trade/README.md`](../../../catalog/domain/roads-rail-trade/README.md), [`../../../proofs/README.md`](../../../proofs/README.md), [`../../../receipts/README.md`](../../../receipts/README.md), [`../../../../release/candidates/roads-rail-trade/README.md`](../../../../release/candidates/roads-rail-trade/README.md) | Downstream authority families; none are replaced by this lane. |
+| Cross-domain truth | Hydrology, Hazards, Archaeology, Settlements/Infrastructure, People/Land domain roots | Referenced only through governed evidence and ownership boundaries. |
+
+## ADRs
+
+- **ADR-0001 schema-home rule:** machine schemas belong under `schemas/contracts/v1/...`; semantic meaning belongs under `contracts/`.
+- **Directory Rules §15:** folder READMEs expose purpose, authority, status, contents, inputs, outputs, validation, review burden, related folders, ADRs, and review date.
+- **NEEDS VERIFICATION:** canonical `roads-rail-trade` versus `roads-rail` slug and contract/schema/policy homes.
+- **NEEDS VERIFICATION:** whether `road-segments/` is the accepted processed lane name or a compatibility name requiring migration.
+- **No road-segment-lane-specific accepted ADR was verified.**
+
+## Last reviewed
+
+**2026-07-25** — documentation modernization review against the pinned repository evidence recorded in the meta block.
+
+This date records review of this README, not validation of source rights, payloads, topology, legal status, routability, release state, public behavior, or operational correctness.
+
+---
+
+<a id="road-segment-processed-requirements"></a>
+
+## Road-segment admission profile
+
+The following profile is **PROPOSED** until accepted contracts, schemas, validators, fixtures, and CI prove it:
+
+| Dimension | Required posture |
+|---|---|
+| Record identity | Stable id plus source id, source role, temporal scope, source version, and normalized digest where practical. |
+| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, or another accepted role is explicit and immutable through promotion. |
+| Geometry | Source and normalized geometry, CRS, dimensionality, directionality, level, validity, and transform lineage. |
+| Segmentation | Method/version, segment boundaries, split/merge basis, predecessor/successor, and cross-version correspondence. |
+| Conflation | Candidate matches, accepted links, rejected links, ambiguity, confidence, and source-preserving identity. |
+| Topology | Endpoint/node references, connectivity, adjacency, isolation, duplicate-edge, overlap, and unresolved error posture. |
+| Time | Source, observed, valid, retrieval, processing, correction, supersession, withdrawal, and release times remain distinct where material. |
+| Object relations | Route, corridor, node, crossing, bridge, ferry, restriction, status, operator, historic, and trade-route relations remain typed and evidence-bound. |
+| Rights and sensitivity | Attribution, redistribution, restricted source, cultural review, exact-harm risk, infrastructure adjacency, and public transform obligations. |
+| Evidence and review | EvidenceRefs, supporting EvidenceBundle, validation reports, policy decisions, review state, disagreements, and limitations. |
+| Correction and release | Predecessor/successor, correction and withdrawal lineage, affected carriers, release state, rollback target, and invalidation plan. |
+
+<a id="source-role-and-sensitivity-guardrails"></a>
+
+## Identity, topology, and conflation
+
+- **Identity is not geometry.** Identical or near-identical lines from different sources, roles, vintages, or methods remain distinct until an explicit crosswalk or conflation decision says otherwise.
+- **Segmentation is versioned.** Splitting or merging a line creates lineage; it does not silently rewrite prior identity.
+- **Conflation is a reviewed relation.** Candidate matches and accepted equivalence must preserve source records, confidence, method, and reviewer state.
+- **Topology is not routability.** A connected graph does not establish legal access, turn permission, current closure, weight/height suitability, emergency fitness, or navigation safety.
+- **Route membership is separate.** A segment does not become part of a CorridorRoute merely because it overlaps or shares a name.
+- **Status and restriction are time-bound.** Static segment identity must not absorb RestrictionEvent or StatusEvent truth.
+- **Operator assignment is not ownership.** Administrative or service responsibility does not establish legal title or right-of-way.
+
+## Object-family routing
+
+| Record or relation | Primary owner | Road-segment relationship |
+|---|---|---|
+| Named route or corridor | `CorridorRoute` | Segment references typed RouteMembership; no name-overlap shortcut. |
+| Segment membership in route | `RouteMembership` | Associative object; does not rewrite segment identity. |
+| Junction or terminus | `Network Node` | Segment references endpoints; node owns topological identity. |
+| Intersection or water/rail crossing | `Crossing` | Segment references crossing; Hydrology or Rail may own related truth. |
+| Bridge or ferry | `Bridge` / `Ferry` | Separate structure/service objects; Settlements/Infrastructure or Hydrology policies may apply. |
+| Closure, limit, or restriction | `RestrictionEvent` | Time-bound event; not a static segment attribute unless source semantics explicitly require a current snapshot. |
+| Condition or status change | `StatusEvent` | Time-bound event; does not rewrite historical segment identity. |
+| Operator or maintainer relation | `OperatorAssignment` | Administrative relation; not legal ownership. |
+| Historic route assertion | `Historic RouteClaim` | Evidence-bound claim with uncertainty; not observed modern segment truth. |
+| Generalized trade corridor | `TradeRouteCorridor` | Cultural/stewardship review may require generalization, restriction, or denial. |
+
+## Rights, sensitivity, and public-safe transforms
+
+- **Modern public road geometry is not automatically public in KFM.** T0 posture requires governed release and current rights/source-role support.
+- **The most restrictive applicable row governs.** Cultural, archaeological, exact-harm, critical-infrastructure, private-agreement, and restricted-source concerns override a generic public-road baseline.
+- **Cultural and Indigenous routes require stewardship.** Generalization or denial may apply even when a modern road segment is public.
+- **Critical-infrastructure-adjacent detail is not ordinary road geometry.** Vulnerability, condition, access, and operational details may require restricted access or denial.
+- **Public transforms are audited.** Reprojection, simplification, generalization, suppression, redaction, aggregation, and delayed publication require traceable receipts and review where policy requires them.
+- **Styling is not redaction.** Hidden client-side layers, opacity changes, or omitted labels do not protect sensitive geometry.
+
+## Lifecycle and promotion
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -104,158 +334,75 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/roads-rail-trade] --> WORK[data/work/roads-rail-trade]
-  WORK --> QUAR[data/quarantine/roads-rail-trade]
-  WORK --> ROAD[data/processed/roads-rail-trade/road-segments]
-  QUAR --> ROAD
-  ROAD --> PROC[data/processed/roads-rail-trade]
-  ROAD --> CAT[data/catalog/domain/roads-rail-trade]
-  ROAD --> TRIP[data/triplets/.../roads-rail-trade]
-  ROAD -. supports .-> PROOF[data/proofs]
-  ROAD -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../roads-rail-trade]
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
+  RAW["RAW road source"] --> WORK["WORK normalize / segment / conflate"]
+  WORK --> QUAR["QUARANTINE<br/>rights · role · identity · topology · sensitivity"]
+  WORK --> SEG["PROCESSED Road Segment candidate"]
+  QUAR -->|audited resolution| SEG
+  SEG --> CAT["CATALOG / TRIPLET candidate"]
+  SEG -. evidence refs .-> EVID["EvidenceBundle / proof closure"]
+  SEG -. policy input .-> POL["PolicyDecision / review"]
+  CAT --> PROMO["PromotionDecision"]
+  EVID --> PROMO
+  POL --> PROMO
+  PROMO --> REL["ReleaseManifest + rollback target"]
+  REL --> PUB["PUBLISHED public-safe carrier"]
+  PUB --> API["Governed API / map / UI / Focus"]
+  PUB -. correction / withdrawal .-> SEG
 ```
 
-`data/processed/roads-rail-trade/road-segments/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+The arrows express governed dependencies, not automatic file copies. A commit, pull request, merge, topology pass, rendered line, catalog record, or route label does not create release, legal status, routability, navigation authority, or KFM publication.
 
-## Repo fit
+<a id="rollback"></a>
 
-| Responsibility | Correct home | Rule |
+## Correction, withdrawal, and rollback
+
+A road-segment correction may arise from source revision, geometry repair, CRS error, segmentation change, conflation error, identity collision, topology defect, role misclassification, rights change, sensitivity reclassification, relationship error, or downstream publication defect.
+
+Correction handling should:
+
+1. preserve the original source and prior processed record by immutable reference;
+2. create a new version, lineage edge, correction record, or withdrawal state instead of silently overwriting history;
+3. record changed geometry, identity, segmentation, topology, relationships, reason, effective time, reviewer, and evidence;
+4. identify affected route memberships, corridors, nodes, crossings, bridges, ferries, restrictions, statuses, facilities, catalogs, triplets, proofs, releases, maps, tiles, APIs, exports, search indexes, routing graphs, and Focus Mode or AI carriers;
+5. invalidate, withdraw, or supersede affected public artifacts when required;
+6. purge or re-key caches, tiles, graph indexes, and search indexes where stale or unsafe geometry could persist;
+7. retain a correction notice, withdrawal state, and rollback target appropriate to the released artifact.
+
+**Documentation rollback:** before merge, close the draft PR and abandon the branch. After merge, revert the implementation commit. The prior README blob is `b508fa20436fc3710e4b2191b48fa33363f457e7`.
+
+**Operational rollback:** restoring prior released road data requires the actual prior release ID, manifest, proof, policy state, correction lineage, graph/tile/cache invalidation plan, and rollback card. Reverting this README is not an operational data rollback.
+
+## Open verification register
+
+| Item | Status | Required evidence |
 |---|---|---|
-| Raw road source files, source-native agency files, source exports, source logs, original coordinates, source identifiers, source-native road geometry, or unprocessed partner materials | `data/raw/roads-rail-trade/` | Not this lane. |
-| In-process segmentation, geometry repair, conflation, split/merge experiments, identity reconciliation, topology repair, route joins, QA, notebooks, or scratch products | `data/work/roads-rail-trade/` | Not this lane. |
-| Unresolved rights, unresolved source role, disputed identity, topology failure, restricted-source fields, cultural corridor joins, unsafe coordinates, or not-yet-reviewed transport material | `data/quarantine/roads-rail-trade/` | Not this lane until review/admission allows. |
-| Processed road-segment artifacts | `data/processed/roads-rail-trade/road-segments/` | This lane. |
-| Parent processed Roads/Rail/Trade lane | `data/processed/roads-rail-trade/` | Parent lane; still not public by default. |
-| Roads/Rail/Trade catalog records | `data/catalog/domain/roads-rail-trade/` | Downstream catalog stage. |
-| Triplet/graph records | `data/triplets/.../roads-rail-trade/` | Downstream graph stage; must not expose restricted precision or role-collapsed claims. |
-| Published public-safe products | `data/published/.../roads-rail-trade/` | Downstream only after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, redaction, validation, policy, correction, access, and release receipts | `data/receipts/` | Separate receipt family. |
-| Source registry records | `data/registry/sources/roads-rail-trade/` | Separate source authority. |
-| Release candidates and release manifests | `release/candidates/roads-rail-trade/`, `release/` | Separate publication authority. |
-| Contracts | `contracts/domains/roads-rail-trade/` or ADR-resolved segment | Object meaning; not data. |
-| Schemas | `schemas/contracts/v1/domains/roads-rail-trade/` or ADR-resolved segment | Machine shape; not data. |
-| Policy and sensitivity rules | `policy/domains/roads-rail-trade/`, `policy/sensitivity/transport/` or ADR-resolved segment | Admissibility authority; not data. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
+| Canonical domain slug | **NEEDS VERIFICATION** | ADR resolving `roads-rail-trade` versus `roads-rail` across docs, contracts, schemas, policy, tests, and data. |
+| Processed lane name | **NEEDS VERIFICATION** | Decision on `road-segments/` versus `roads/`, `segments/`, `road_segments/`, or another accepted name. |
+| Road Segment contract/schema | **NEEDS VERIFICATION** | Accepted semantic contract, field-complete schema, fixtures, validators, registry, and migration posture. |
+| Payload inventory and writers | **UNKNOWN** | Recursive tree, hashes, producers, consumers, and lifecycle state. |
+| Identity and digest fields | **NEEDS VERIFICATION** | Accepted field set and deterministic identity tests. |
+| Segmentation and conflation | **NEEDS VERIFICATION** | Methods, confidence thresholds, split/merge lineage, crosswalks, and reviewer rules. |
+| Topology tolerances | **NEEDS VERIFICATION** | Accepted connectivity, snapping, duplicate, overlap, dangle, directionality, and level rules. |
+| Source activation and rights | **UNKNOWN / held** | Concrete source descriptors, rights reviews, attribution, cadence, and activation decisions. |
+| Sensitivity transforms | **NEEDS VERIFICATION** | Accepted generalization, redaction, restricted access, and reviewer obligations. |
+| Validators, fixtures, and CI | **NEEDS VERIFICATION** | Deterministic no-network positive/negative fixtures and trusted check results. |
+| Evidence, receipts, proof, and release | **UNKNOWN** | EvidenceBundles, receipts, review records, policy decisions, manifests, and rollback cards. |
+| Public routes and routing consumers | **UNKNOWN** | Governed API, released carrier, routing-graph separation, runtime tests, and access controls. |
+| Correction propagation | **NEEDS VERIFICATION** | Tested tile, graph, cache, search, API, map, export, and rollback drill. |
 
-## Accepted contents
+## No-loss ledger
 
-Processed road-segment artifacts may include:
-
-- normalized `Road Segment` records with source role, source time, valid time, rights posture, sensitivity posture, and digest posture;
-- processed road segment geometry derivatives that remain upstream of catalog/release;
-- identity, segmentation, geometry validity, CRS, split/merge, topology, vintage, and source-version sidecars needed to interpret processed products;
-- relationship candidates to `CorridorRoute`, `RouteMembership`, `Network Node`, `Crossing`, `Bridge`, `Ferry`, `RestrictionEvent`, `StatusEvent`, `OperatorAssignment`, `Historic RouteClaim`, and `TradeRouteCorridor` records;
-- generalized or redacted public-candidate road segment derivatives that still require catalog/release review before public use;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs or authority records.
-
-## Exclusions
-
-Do not store these under `data/processed/roads-rail-trade/road-segments/`:
-
-- RAW source files, source-native road files, agency exports, source media, logs, source identifiers, or unprocessed source payloads.
-- WORK/scratch files, notebooks, segmentation experiments, geometry-repair trials, conflation trials, split/merge trials, route matching trials, topology experiments, or redaction-debug outputs.
-- Quarantined or unresolved sensitive/rights/source-role/topology material.
-- Catalog records, triplet/graph records, published products, proof records, receipt records, source registry records, release decisions, schemas, policy rules, validators, tests, fixtures, pipelines, app/UI/API code, or packages.
-- Route membership truth, named corridor truth, bridge/ferry/crossing truth, closure/status truth, operator/legal ownership truth, land/right-of-way truth, hydrology truth, hazards/emergency truth, archaeology/cultural-route truth, or infrastructure condition truth unless represented in their owning object families and roots.
-- Public API/UI/tile payloads, direct downloads, Focus Mode answers, public map layers, navigation/routing services, emergency routing, operational closure systems, legal advice, or life-safety guidance.
-- Restricted source terms, private agreement details, credentials, secrets, redaction parameters, aggregation thresholds, exact transform offsets, unsafe exact coordinates, or implementation details that could aid exposure or unauthorized access.
-
-## Road-segment processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
-|---|---|
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or roads/rail/trade source registry context. |
-| Evidence linkage | Claims about road segment identity, geometry, segmentation, topology, route/corridor relationship, status/restriction relation, transform, review, or release readiness should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Object distinction | Road Segment, CorridorRoute, RouteMembership, Network Node, Crossing, Bridge, Ferry, RestrictionEvent, StatusEvent, OperatorAssignment, Historic RouteClaim, and TradeRouteCorridor must remain distinct. |
-| Identity posture | Identity must not be collapsed by geometry similarity alone; source id, object role, temporal scope, and normalized digest remain material. |
-| Geometry and topology | CRS, geometry validity, segmentation, split/merge lineage, topology, node relation, and route membership ambiguity should be recorded or receipt-linked. |
-| Time semantics | Source time, observed time, valid time, event time, retrieval time, release time, and correction time should remain distinguishable where material. |
-| Rights posture | Agency, operator, archive, partner, license, redistribution, attribution, derivative-use, and restricted-source terms should be resolved or held closed. |
-| Sensitivity posture | Cultural route joins, exact-harm coordinates, restricted-source fields, infrastructure-adjacent details, and sensitive downstream joins should carry restriction/generalization/denial posture where needed. |
-| Transform linkage | Reprojection, simplification, generalization, aggregation, redaction, suppression, withholding, delayed publication, or public-safe transform should link to appropriate receipt families. |
-| Review state | Domain steward, network/topology reviewer, sensitivity reviewer, rights reviewer, data-quality reviewer, and release authority review should be recorded where required. |
-| Policy decision | Restricted, public-candidate, and public transitions require PolicyDecision/admissibility posture where policy requires it. |
-| Catalog readiness | Processed road-segment artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires ReleaseManifest or release-linked state, published output path, correction path, and rollback target. |
-| No public surface by default | Processed road-segment artifacts must not be exposed directly as public maps, tiles, APIs, downloads, Focus Mode answers, or AI-answer sources. |
-
-## Source-role and sensitivity guardrails
-
-- `Road Segment` is a linear transport primitive, not automatic route membership, legal road status, right-of-way, operator assignment, closure status, or navigation authority.
-- Geometry similarity must not collapse identity across sources, roles, vintages, or temporal scopes.
-- Administrative road inventories must not become observed field evidence by promotion.
-- Modeled or reconstructed road segments remain modeled/candidate unless evidence and review support stronger claims.
-- RouteMembership and CorridorRoute records must remain separate from raw segment identity.
-- RestrictionEvent and StatusEvent records must remain separate from static road segment identity.
-- OperatorAssignment is not legal ownership by itself.
-- Hydrology owns water evidence for river/stream crossings; Roads/Rail/Trade may cite crossing relations.
-- Hazards owns emergency/hazard state; Roads/Rail/Trade may cite, not replace, that truth.
-- Archaeology and cultural-stewardship policy governs sensitive cultural-route joins.
-- Modern public road geometry may become public-safe only through governed release. Exact-harm coordinates, cultural corridor joins, restricted source terms, and infrastructure-adjacent details fail closed until policy, evidence, review, release state, correction path, and rollback are resolved.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
-
-> [!CAUTION]
-> Do not expose `data/processed/roads-rail-trade/road-segments/` directly as a public map, tile service, API, UI, download, Focus Mode answer, AI answer source, routing engine, navigation authority, emergency routing surface, legal road-status authority, or life-safety product. Processed road segment data remains inside the trust membrane until governed promotion and release.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
-
-```text
-data/processed/roads-rail-trade/road-segments/
-├── README.md
-├── segments/                 # PROPOSED — normalized Road Segment records
-├── geometry/                 # PROPOSED — processed geometry derivatives, not public tiles
-├── topology/                 # PROPOSED — node/connectivity/topology summaries
-├── segmentation/             # PROPOSED — split/merge/conflation lineage
-├── vintages/                 # PROPOSED — source-vintage/version sidecars
-├── relationships/            # PROPOSED — route/corridor/crossing/status relationship candidates
-├── generalized/              # PROPOSED — public-candidate generalized derivatives
-├── restricted/               # PROPOSED — rights-limited or sensitivity-limited segment context
-├── validation/               # PROPOSED — lane-local validation notes, not ValidationReport authority
-├── joins/                    # PROPOSED — reviewed relation edges only, not foreign-domain truth
-├── _manifests/               # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
-
-## Evidence ledger
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define road-segment processed boundaries. |
-| `docs/domains/roads-rail-trade/OBJECT_FAMILIES.md` | CONFIRMED doctrine / PROPOSED implementation | Roads/Rail/Trade owns road/rail evidence, corridors, topology, crossings, bridges/ferries, transport facilities, restrictions/status events, operator assignments, and trade-route claims; `Road Segment` is a named object family; identity is not geometry alone; source role is fixed at admission. | Field realization, schemas, and exact object graph remain NEEDS VERIFICATION. |
-| `docs/domains/roads-rail-trade/SENSITIVITY.md` | CONFIRMED doctrine / PROPOSED implementation | Modern public road/rail segments may be T0 after release; cultural, exact-harm, restricted-source, and infrastructure-adjacent rows can require generalization, restriction, or denial; missing rights/source role/evidence/sensitivity/release blocks promotion. | Final policy enforcement and tier adoption remain NEEDS VERIFICATION. |
-| `data/processed/roads-rail-trade/README.md` | CONFIRMED | Parent processed lane currently exists as a greenfield stub. | Does not define processed parent boundaries yet. |
-| `data/processed/roads-rail-trade/facilities/README.md` | CONFIRMED sibling README | Facility lane separates TransportFacility context from public surfaces and sensitive facility detail. | Does not prove validators. |
-| `policy/sensitivity/transport/` and `policy/domains/roads-rail-trade/` | NEEDS VERIFICATION | Expected admissibility homes. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/roads-rail-trade/` and `schemas/contracts/v1/domains/roads-rail-trade/` | NEEDS VERIFICATION | Expected object contract/schema homes if segment conflict resolves this way. | Specific object files and validators were not verified in this task. |
-
-## Validation checklist
-
-- [ ] Confirm actual child directories under `data/processed/roads-rail-trade/road-segments/`.
-- [ ] Confirm whether `road-segments/` is the accepted processed lane name or should be reconciled with `roads/`, `segments/`, `road_segments/`, or another object-family naming convention.
-- [ ] Expand or reconcile parent `data/processed/roads-rail-trade/README.md` beyond stub.
-- [ ] Confirm `Road Segment`, route membership, network node, crossing, bridge, ferry, restriction/status, and operator-assignment contracts and schema paths.
-- [ ] Resolve the `roads-rail-trade` versus `roads-rail` segment divergence for schemas/contracts/policy if still open.
-- [ ] Confirm validators, fixtures, CI checks, source-role checks, geometry checks, topology checks, segmentation checks, sensitivity checks, redaction checks, restricted-source checks, and access-control enforcement.
-- [ ] Confirm SourceDescriptor/source registry linkage for every input source and derived road segment artifact.
-- [ ] Confirm RunReceipt, TransformReceipt, RedactionReceipt, ReviewRecord, ValidationReport, PolicyDecision, CorrectionNotice, ReleaseManifest, RollbackCard, correction path, and rollback target where applicable.
-- [ ] Confirm culturally sensitive joins, restricted-source fields, unsafe exact coordinates, topology failures, identity ambiguity, secrets, private agreement terms, redaction parameters, transform secrets, and release-unclear artifacts cannot enter public routes.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, rights-safe, sensitivity-safe, topology-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, routing engine, navigation authority, emergency routing, legal advice, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public road service, public map, public tile, public API, public UI, or AI-answer source.
-
-## Rollback
-
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, public-candidate shortcut, source-role collapse path, identity-by-geometry path, topology-error publication path, cultural-route exposure path, restricted-source leakage path, unsafe coordinate exposure path, transform-secret exposure path, agreement/credential exposure path, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, public API shortcut, public UI shortcut, public tile shortcut, public exposure shortcut, routing engine, navigation authority, emergency routing surface, legal road-status authority, or life-safety guidance source.
-
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+| Baseline element | Disposition | Result |
+|---|---|---|
+| Stable `doc_id`, path, and blank-placeholder lineage | **KEEP** | Preserved in the meta block and same-path update. |
+| PROCESSED lifecycle and no-direct-public-path posture | **CLARIFY** | Preserved and aligned to governed promotion. |
+| Road Segment as linear transport primitive | **KEEP** | Preserved as the lane's narrow responsibility. |
+| Object-family separation | **ENRICH** | Route, corridor, node, crossing, structure, event, operator, historic, and trade-route responsibilities are explicitly routed. |
+| Source-role anti-collapse | **ENRICH** | Fixed role and administrative-as-observed denial are made operationally visible. |
+| Identity-not-geometry rule | **ENRICH** | Expanded into segmentation, conflation, split/merge, and cross-version lineage requirements. |
+| Rights and sensitivity posture | **ENRICH** | Public baseline is bounded by cultural, exact-harm, restricted-source, and infrastructure review. |
+| Speculative child-directory tree | **REMOVE WITH EVIDENCE** | Removed because recursive inventory and local structure are unverified. |
+| Public/routing/legal denials | **KEEP AND ENRICH** | Direct map/API/UI/routing/navigation/emergency/legal authority remains denied. |
+| Rollback posture | **CLARIFY** | README rollback is separated from operational data, graph, tile, and release rollback. |
 
 <p align="right"><a href="#top">Back to top</a></p>
