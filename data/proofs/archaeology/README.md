@@ -21,8 +21,8 @@ domain: archaeology
 truth_posture: >
   CONFIRMED exact target path, prior blob, Directory Rules proof placement, canonical proofs-root
   contract, Archaeology domain documentation, semantic-contract and schema indexes, fixture and test
-  indexes, source-registry boundary, validator routing indexes, release-candidate boundary, and the
-  read-only Archaeology workflow holds / PROPOSED an accepted Archaeology proof packet or profile,
+  indexes, source-registry boundary, validator routing indexes, release-candidate boundary, current
+  executable-test detection, and the read-only Archaeology proof and release holds / PROPOSED an accepted Archaeology proof packet or profile,
   proof producer, deterministic validator command, EvidenceRef-to-EvidenceBundle closure, public-safe
   proof routing, invalidation propagation, and downstream handoff requirements / UNKNOWN recursive
   proof payload inventory, active writers and consumers, generated indexes, runtime resolver behavior,
@@ -49,6 +49,8 @@ evidence_snapshot:
   archaeology_source_registry_blob: 40f859e7b61cec8fb6e27268f2f5b38bcd57bb4f
   archaeology_release_candidate_blob: bc5edc7a44ea77a6b8ed25b95569646d8df72754
   archaeology_workflow_blob: 18aabc65e79e1cc70d81be71f8b7ef34c017f51b
+  observed_workflow_run: 30193092737
+  observed_validate_job: 89769726632
 related:
   - ../README.md
   - ../../README.md
@@ -73,6 +75,7 @@ notes:
   - "Same-path Markdown modernization only; no source bytes, proof payloads, EvidenceBundle instances, contracts, schemas, policies, validators, fixtures, workflows, releases, routes, access controls, or publication state changed."
   - "This lane supports inspectable Archaeology claims. It must reference rather than duplicate source, receipt, catalog, policy, review, release, correction, rollback, or neighboring-domain authority."
   - "The literal compatibility phrase 'PROPOSED until concrete proof schemas' is retained because the current domain-archaeology workflow treats it as an explicit proof-maturity hold signal."
+  - "PR workflow run 30193092737 confirmed executable Archaeology test nodes now exist: validate-archaeology failed its readiness gate, while build-proof-archaeology and publish-dry-run-archaeology passed with explicit holds."
   - "Exact or reverse-engineerable site locations, burial or human-remains context, sacred or culturally restricted knowledge, collection-security detail, looting-risk detail, private-landowner detail, consent secrets, and control-defeating transform information must not be placed in this ordinary repository lane."
   - "The documentation rollback target for v0.2.0 is prior blob 4dc6a8af9bf885b405b11f6d92c89fd44d53f34b; the earlier greenfield-stub lineage remains 46091dc612b283dbcd840e2b9f129aa9fee1495b."
 [/KFM_META_BLOCK_V2] -->
@@ -153,12 +156,12 @@ This README creates no proof object, schema, policy, cultural decision, release,
 | Archaeology semantic contracts | **CONFIRMED draft directory index**; object-level completeness remains bounded |
 | Archaeology schemas | **CONFIRMED draft domain index**; concrete proof schema and profile remain unestablished |
 | Archaeology fixtures | **CONFIRMED parent index** with synthetic child lanes; payload validity and proof coverage remain unverified |
-| Archaeology tests | **CONFIRMED repository-grounded index**; named modules exist, but sampled content remains placeholder-backed |
+| Archaeology tests | **CONFIRMED repository-grounded index**; workflow run `30193092737` detected executable test nodes, superseding the older sampled placeholder-only posture |
 | Archaeology validators | **CONFIRMED two README routing indexes**; accepted executable proof validator remains unestablished |
 | Archaeology policy | **CONFIRMED draft policy README**; executable enforcement remains unestablished |
 | Archaeology source registry | **CONFIRMED draft source-domain registry boundary**; admitted descriptor payload inventory remains bounded |
 | Archaeology candidate lane | **CONFIRMED parent README only** in its bounded inventory; no child dossier was established there |
-| Archaeology workflow | **CONFIRMED read-only readiness workflow** with explicit validation, proof, and release holds |
+| Archaeology workflow | **CONFIRMED read-only readiness workflow**; validation currently fails its graduation gate, while proof and release jobs preserve explicit holds |
 | Proof payload inventory | `UNKNOWN` beyond this README; no governed recursive inventory was performed in this task |
 | Accepted proof producer | Not established |
 | Public release | Not established by inspected evidence |
@@ -166,7 +169,7 @@ This README creates no proof object, schema, policy, cultural decision, release,
 
 **Workflow compatibility hold:** `PROPOSED until concrete proof schemas`, validators, fixtures, and route behavior are verified.
 
-The current [`domain-archaeology`](../../../.github/workflows/domain-archaeology.yml) workflow checks boundaries and records `WORKFLOW_SKIPPED_EXPLICIT` / `WORKFLOW_HOLD` states. A green held result is readiness evidence only—not an `EvidenceBundle`, cultural-review decision, policy decision, validation receipt, release approval, or publication authority.
+The current [`domain-archaeology`](../../../.github/workflows/domain-archaeology.yml) workflow checks boundaries. On PR workflow run `30193092737`, `validate-archaeology` failed because executable test nodes now exist and the accepted deterministic no-network suite has not been deliberately graduated; `build-proof-archaeology` and `publish-dry-run-archaeology` passed while preserving their explicit holds. This one-file diff changes neither the tests nor the workflow. A red readiness gate or green held job is not an `EvidenceBundle`, cultural-review decision, policy decision, validation receipt, release approval, or publication authority.
 
 <a id="accepted-contents"></a>
 
@@ -230,9 +233,9 @@ Validation is layered and fail-closed:
 | Evidence and integrity | **PROPOSED** | Evidence-member closure, source-role preservation, digest agreement, provenance, spatial and temporal support, and staleness checks. |
 | Rights, sensitivity, and review | **PROPOSED** | Rights, consent, cultural and sovereignty review, sensitivity decisions, public-safe representation, and no-leak checks. |
 | Downstream closure | **PROPOSED** | Policy, review, catalog, release, correction, withdrawal, and rollback dependencies remain explicit and valid. |
-| Current CI readiness job | Read-only source-inspected hold workflow. | `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` remain honest until an accepted deterministic no-network suite is deliberately graduated. |
+| Current CI readiness jobs | Read-only source-inspected workflow; validation detects executable tests, while proof and release remain held. | Preserve the red validation graduation gate and explicit proof/release holds until each accepted deterministic no-network suite or command is deliberately wired. |
 
-The current workflow is designed to fail when proof payloads, a proof target, or a potential producer surface without a governed contract and tests. Passing that structural check proves only the declared readiness boundary.
+The current workflow is designed to fail when executable tests surface before deliberate validation graduation, or when proof payloads, a proof target, or a potential producer surface without a governed contract and tests. Passing a held structural job proves only its declared readiness boundary.
 
 ## Review burden
 
@@ -260,7 +263,7 @@ No accepted Archaeology proof-profile, proof-payload placement, or proof-produce
 
 - **Date:** 2026-07-26
 - **Evidence boundary:** `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`
-- **Review type:** complete target read; pinned parent, doctrine, domain, contract, schema-index, fixture-index, test-index, source-registry, validator-index, policy, candidate, and workflow reads
+- **Review type:** complete target read; pinned parent, doctrine, domain, contract, schema-index, fixture-index, test-index, source-registry, validator-index, policy, candidate, and workflow reads; PR workflow run `30193092737` observed
 - **Recursive proof payload inventory:** not performed
 - **Runtime, release-instance, access-control, cache, hosting, and rollback-drill inspection:** not performed
 
@@ -378,12 +381,12 @@ This is not a recursive absence claim. Child directories, payloads, generated in
 | [Archaeology domain README](../../../docs/domains/archaeology/README.md), blob `e44040a…` | Domain scope, exact-location denial, cultural-review posture, and draft implementation boundary | Documentation does not prove runtime behavior |
 | [Archaeology contracts](../../../contracts/domains/archaeology/README.md), blob `d857c0e…` | Semantic-contract authority and object-boundary separation | Object-level and proof-contract completeness remain bounded |
 | [Archaeology schema index](../../../schemas/contracts/v1/domains/archaeology/README.md), blob `1d2708f…` | Canonical candidate schema lane and fail-closed sensitivity posture | Concrete proof schema/profile was not established |
-| [Fixtures](../../../fixtures/domains/archaeology/README.md) and [tests](../../../tests/domains/archaeology/README.md), blobs `ab30b7f…` / `229113a…` | Synthetic fixture lanes and named test topology are documented | Payload validity, executable enforcement, and current pass results remain unverified |
+| [Fixtures](../../../fixtures/domains/archaeology/README.md) and [tests](../../../tests/domains/archaeology/README.md), blobs `ab30b7f…` / `229113a…` | Synthetic fixture lanes and named test topology are documented; run `30193092737` confirms executable test nodes now exist | Fixture payload validity, accepted suite scope, and current test results remain unverified |
 | [Validator indexes](../../../tools/validators/archaeology/README.md), [`domains/archaeology`](../../../tools/validators/domains/archaeology/README.md), blobs `bae2eab…` / `8bcf32c…` | Broad-versus-child routing and README-only maturity are documented | Accepted executable proof validator and report producer are not established |
 | [Policy README](../../../policy/domains/archaeology/README.md), blob `8d03cdb…` | Draft deny-by-default policy boundary | Policy runtime enforcement is not established |
 | [Source registry](../../registry/sources/archaeology/README.md), blob `40f859e…` | Source-domain admission and no-public-path boundary | Admitted descriptor payload inventory remains bounded |
 | [Release candidate README](../../../release/candidates/archaeology/README.md), blob `bc5edc7…` | Pre-publication candidate boundary and bounded parent-only inventory | No release or publication is established |
-| [`domain-archaeology.yml`](../../../.github/workflows/domain-archaeology.yml), blob `18aabc6…` | Read-only structural checks and explicit validation, proof, and release holds | A held workflow is not proof, policy, review, release, or publication authority |
+| [`domain-archaeology.yml`](../../../.github/workflows/domain-archaeology.yml), blob `18aabc6…`; run `30193092737` | Validation graduation gate failed on executable tests; proof and release jobs passed with explicit holds | These outcomes do not establish accepted validation, proof, policy, review, release, or publication authority |
 
 ## Open verification register
 
@@ -394,6 +397,7 @@ This is not a recursive absence claim. Child directories, payloads, generated in
 | Proof producer and deterministic replay | `UNKNOWN` | Implemented producer, exact command, no-network fixtures, identity, digest, replay, and failure semantics |
 | EvidenceRef resolution | `UNKNOWN` | Resolver implementation, accepted EvidenceBundle shape, positive and fail-closed tests, access behavior |
 | Executable proof validation | `UNKNOWN` | Validator implementation, representative fixtures, safe diagnostics, reports/receipts, and CI graduation |
+| Validation workflow graduation | `NEEDS VERIFICATION` | Accepted deterministic no-network suite, exact command, job semantics, stable findings, and review; executable tests now exist |
 | Rights, sensitivity, cultural and sovereignty enforcement | `UNKNOWN` | Accepted policy entrypoints, qualified review records, consent/revocation handling, no-leak tests |
 | Writers, consumers, and public isolation | `UNKNOWN` | Pipeline/tool/runtime/API/UI inventory, access controls, hosting, caches, and negative route tests |
 | Release, correction, withdrawal, and rollback closure | `UNKNOWN` | Instances, identity agreement, independent review, invalidation propagation, and drills |
@@ -452,6 +456,7 @@ Before merge, documentation rollback is to close the draft pull request and leav
 
 - reconciled the target with the current canonical proof-root contract and pinned Archaeology evidence;
 - preserved the current workflow's explicit proof-maturity hold;
+- reconciled current CI evidence that executable Archaeology tests now trigger the validation graduation gate while proof and release remain explicitly held;
 - replaced stale parent-stub language and the speculative child tree with bounded confirmed state and a verification register;
 - strengthened proof/receipt/policy/release separation, candidate status, sensitivity, cultural-review, correction, and rollback boundaries;
 - modernized navigation, badges, alerts, tables, accessibility, evidence reporting, and no-loss traceability; and
