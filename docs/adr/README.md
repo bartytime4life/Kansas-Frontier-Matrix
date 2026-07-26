@@ -2,13 +2,13 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v1.2
+version: v1.3
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-05-09
-updated: 2026-07-22
+updated: 2026-07-26
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -25,7 +25,7 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
-  - "Repository inventory is verified at main@43f1d97954debda98691b2685c1bb75c4b63c872."
+  - "Prior inventory was verified at main@43f1d97954debda98691b2685c1bb75c4b63c872; ADR-0029 is added as proposed in PR #1763."
   - "File presence does not accept a decision. Every numbered ADR remains proposed until explicit reviewed status evidence says otherwise."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
@@ -33,7 +33,7 @@ notes:
 # `docs/adr/` — Architecture Decision Records
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
-[![inventory](https://img.shields.io/badge/numbered_ADRs-28-0969da)](./INDEX.md)
+[![inventory](https://img.shields.io/badge/numbered_ADRs-29-0969da)](./INDEX.md)
 [![decision status](https://img.shields.io/badge/decisions-proposed-d4a72c)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
@@ -49,12 +49,12 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The table below is grounded in the tracked tree at `main@43f1d97954debda98691b2685c1bb75c4b63c872`.
+The prior inventory was grounded at `main@43f1d97954debda98691b2685c1bb75c4b63c872`; this proposal adds `ADR-0029` with effective status `proposed` in PR #1763.
 
 | Surface | Verified state | Meaning |
 | --- | ---: | --- |
 | Direct Markdown files | 46 | Complete direct-child inventory for this snapshot |
-| Numbered records | 28 | Unique, contiguous IDs `ADR-0001` through `ADR-0028` |
+| Numbered records | 29 | Unique, contiguous IDs `ADR-0001` through `ADR-0029` |
 | Numbered source metadata | 15 `proposed`; 12 `draft`; 1 legacy `PROPOSED` | All normalize conservatively to effective status `proposed` |
 | Verified accepted decisions | 0 | No numbered record declares reviewed `accepted` status |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
@@ -205,7 +205,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 
 The following remain unresolved and are not silently normalized by this README:
 
-- Human acceptance review for all 28 numbered ADRs.
+- Human acceptance review for all 29 numbered ADRs.
 - Metadata normalization for 12 `draft` records and legacy ADR-0007 without changing their conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.

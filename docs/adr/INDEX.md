@@ -2,18 +2,18 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.0
+version: v1.1
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-07-22
+updated: 2026-07-26
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 28
+numbered_records: 29
 unassigned_scaffolds: 12
 related:
   - docs/adr/README.md
@@ -23,13 +23,13 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
-  - "Inventory verified at main@43f1d97954debda98691b2685c1bb75c4b63c872."
+  - "Prior inventory verified at main@43f1d97954debda98691b2685c1bb75c4b63c872; ADR-0029 is added as proposed in PR #1763."
   - "Effective status never outranks source-record status or human review."
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-28-0969da)](#numbered-records)
+[![numbered records](https://img.shields.io/badge/numbered_records-29-0969da)](#numbered-records)
 [![effective status](https://img.shields.io/badge/effective_status-proposed-d4a72c)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
@@ -51,7 +51,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0028` at `main@43f1d97954debda98691b2685c1bb75c4b63c872`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0029` in this proposed ratification packet. Every numbered record remains effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -84,6 +84,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0028` 
 | `ADR-0026` | [Hydrology source spine starts with WBD HUC12](./ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md) | `proposed` | `draft` | — | — |
 | `ADR-0027` | [County Focus Mode Control Plane](./ADR-0027-county-focus-mode-control-plane.md) | `proposed` | `proposed` | — | — |
 | `ADR-0028` | [State-scale Focus Mode scope and 13-domain coverage rule](<./ADR-0028 — State-scale Focus Mode scope.md>) | `proposed` | `proposed` | — | — |
+| `ADR-0029` | [Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds

@@ -2,13 +2,13 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.0
+version: v1.1
 status: draft; repository-grounded
 owners:
   - Docs steward
   - Architecture steward
 created: 2026-07-22
-updated: 2026-07-22
+updated: 2026-07-26
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -21,7 +21,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, registers, adr, pointer, governance]
 notes:
-  - "This file is a non-duplicating human cross-register pointer."
+  - "This file is a non-duplicating human cross-register pointer; ADR-0029 is indexed only in docs/adr/INDEX.md."
   - "The canonical per-record inventory lives only in docs/adr/INDEX.md."
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,7 +44,7 @@ This register connects the human register lane to the canonical Architecture Dec
 | Register lane | `docs/registers/` |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
-| Current numbered inventory | 28 tracked records, `ADR-0001` through `ADR-0028` |
+| Current numbered inventory | 29 tracked records, `ADR-0001` through `ADR-0029` |
 | Current effective decision status | All `proposed`; no verified accepted record |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
@@ -92,7 +92,7 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the 28 numbered ADRs.
+- Human status review for the 29 numbered ADRs.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
 - Domain-local versus repository-wide ADR placement reconciliation.
 - Review of proposed ADR-0011 before any `artifacts/release/` migration.
