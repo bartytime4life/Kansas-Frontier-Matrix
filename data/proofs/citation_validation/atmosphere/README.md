@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-proofs-citation-validation-atmosphere-readme
 title: data/proofs/citation_validation/atmosphere/README.md — Atmosphere Citation Validation Proofs README
-version: v0.2
+version: v0.2.1
 status: repository-grounded draft; payload/runtime enforcement unverified
 type: README; proof-lane-contract; citation-validation-lane; atmosphere-domain-proof-support; authority-boundary
 owners: NEEDS VERIFICATION — Atmosphere, evidence, citation-validation, proof, policy, release, UI/Evidence Drawer, and docs stewards
@@ -10,12 +10,14 @@ policy_label: restricted-review; no-direct-public-path; release-gated; cite-or-a
 current_path: data/proofs/citation_validation/atmosphere/README.md
 truth_posture: >
   CONFIRMED exact path, prior substantive boundary material, canonical parent proofs contract,
-  Atmosphere proof-lane README, and PM2.5 2026 child proof README / PROPOSED normalized
-  citation-validation lane contract / UNKNOWN recursive payloads, active writers/consumers,
-  validator wiring, governed resolver behavior, runtime routes, caches, release state, and public effects /
-  NEEDS VERIFICATION accountable owners, accepted profiles, schemas, fixtures, CI, emitted records,
-  correction propagation, invalidation, retention, and rollback drills
+  citation-validation family parent, Atmosphere proof-lane README, and PM2.5 2026 child proof README /
+  PROPOSED normalized citation-validation lane contract / UNKNOWN recursive payloads, active
+  writers/consumers, validator wiring, governed resolver behavior, runtime routes, caches, release
+  state, and public effects / NEEDS VERIFICATION accountable owners, accepted profiles, schemas,
+  fixtures, CI, emitted records, family-versus-domain ownership, correction propagation,
+  invalidation, retention, and rollback drills
 related:
+  - ../README.md
   - ../../README.md
   - ../../atmosphere/README.md
   - ../../atmosphere/pm25_2026/README.md
@@ -35,6 +37,7 @@ related:
   - ../../../../docs/doctrine/trust-membrane.md
 notes:
   - "Citation validation checks whether a claim's citations and EvidenceRefs resolve under governed rules; it does not create truth, evidence, policy approval, release approval, or publication."
+  - "This is an existing specialized child of data/proofs/citation_validation/; it is not a second canonical Atmosphere proof home and must reference rather than duplicate domain proof packets."
   - "Atmosphere source roles remain non-interchangeable: observed sensor, AQI/report, low-cost sensor, regulatory/archive, AOD/smoke proxy, modeled field, forecast, and advisory context."
   - "Public clients must use governed resolvers and released projections; this lane is not a direct data service."
   - "Rollback target is prior blob d8f3f954a6628f5261a406798dfe73192cffcb77."
@@ -70,7 +73,9 @@ It may support governed answers, Evidence Drawer payloads, catalog review, tripl
 
 ## Authority level
 
-**Canonical within the existing `data/proofs/citation_validation/atmosphere/` responsibility; citation-validation proof support only.**
+**Existing specialized child of the canonical `data/proofs/` responsibility through the `citation_validation/` proof family; citation-validation proof support only.**
+
+This path is not a second canonical Atmosphere proof home. [`data/proofs/atmosphere/`](../../atmosphere/README.md) remains the domain proof-support lane for Atmosphere proof packets, while this path may hold or index Atmosphere-specific citation-validation results under an accepted citation-validation profile. When an artifact could fit both axes, the accepted contract and profile must choose one authoritative home; the other lane may reference or index it but must not duplicate authority or mutable records.
 
 This path does not own:
 
@@ -87,9 +92,11 @@ This path does not own:
 |---|---|
 | Path | `data/proofs/citation_validation/atmosphere/` |
 | Prior blob | `d8f3f954a6628f5261a406798dfe73192cffcb77` |
-| Parent proof authority | `data/proofs/README.md` — confirmed canonical parent contract |
-| Atmosphere proof parent | `data/proofs/atmosphere/README.md` — confirmed present |
+| Canonical proofs root | `data/proofs/README.md` — confirmed canonical parent contract |
+| Citation-validation family parent | `data/proofs/citation_validation/README.md` — confirmed present; draft / proposed family guide |
+| Atmosphere domain proof lane | `data/proofs/atmosphere/README.md` — confirmed present; separate domain proof-support responsibility |
 | PM2.5 2026 child proof lane | `data/proofs/atmosphere/pm25_2026/README.md` — confirmed present |
+| Family/domain topology | Specialized citation-validation child; no parallel proof authority or duplicated mutable records |
 | Recursive validation-record inventory | `UNKNOWN` |
 | Active validators and consumers | `UNKNOWN` |
 | Governed resolver/runtime behavior | `UNKNOWN` |
@@ -188,8 +195,9 @@ Independent specialist review is required when a change affects source activatio
 
 ## Related folders
 
-- Parent proof authority: [`../../README.md`](../../README.md)
-- Atmosphere proof lane: [`../../atmosphere/README.md`](../../atmosphere/README.md)
+- Citation-validation family parent: [`../README.md`](../README.md)
+- Canonical proofs root: [`../../README.md`](../../README.md)
+- Atmosphere domain proof lane: [`../../atmosphere/README.md`](../../atmosphere/README.md)
 - PM2.5 2026 proof lane: [`../../atmosphere/pm25_2026/README.md`](../../atmosphere/pm25_2026/README.md)
 - Atmosphere processed lane: [`../../../processed/atmosphere/README.md`](../../../processed/atmosphere/README.md)
 - Atmosphere catalog lane: [`../../../catalog/domain/atmosphere/README.md`](../../../catalog/domain/atmosphere/README.md)
@@ -241,6 +249,7 @@ This README does not verify that automated propagation or cache invalidation exi
 |---|---:|---|
 | Recursive validation-record inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, digests, owners, retention, rights/sensitivity |
 | Accepted citation-validation profile | `UNKNOWN` | Contract/schema/profile version and decision record |
+| Family/domain ownership and reference profile | `NEEDS VERIFICATION` | Accepted rule choosing authoritative homes, immutable references, indexes, and duplicate-detection behavior |
 | Validators, fixtures, and CI | `UNKNOWN` | Implemented validator, positive/negative fixtures, stable findings, workflow evidence |
 | Governed EvidenceRef resolver | `UNKNOWN` | Resolver contract, authorization, logs, failure behavior, tests |
 | Writers and consumers | `UNKNOWN` | Pipeline, tool, release, API/UI, Evidence Drawer, Focus Mode, cache inventory |
@@ -255,6 +264,7 @@ Unknowns block higher-risk transitions and narrow claims. They do not justify pl
 |---|---|
 | Stable path, document identity, and top anchor | Preserved |
 | Citation-validation specialization | Preserved and clarified |
+| Citation-validation family versus Atmosphere domain-proof topology | Preserved and clarified; no parallel authority or duplicated mutable records |
 | `EvidenceRef` to `EvidenceBundle` closure | Preserved and strengthened |
 | Atmosphere source-role and caveat boundaries | Preserved and strengthened |
 | Negative-state outcomes | Preserved and normalized |
@@ -264,6 +274,12 @@ Unknowns block higher-risk transitions and narrow claims. They do not justify pl
 | Payload, route, release, runtime, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.2.1 — 2026-07-25
+
+- added the confirmed citation-validation family parent to the evidence and navigation surfaces;
+- corrected the authority wording so this specialized child cannot be read as a second canonical Atmosphere proof home;
+- made family-versus-domain ownership, referencing, and duplicate-authority closure explicit.
 
 #### v0.2 — 2026-07-25
 
