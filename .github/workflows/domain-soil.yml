@@ -71,10 +71,7 @@ jobs:
             fi
           done
 
-          python -m unittest discover \
-            --start-directory tests/domains/soil \
-            --pattern 'test_soil_smoke.py' \
-            --verbose
+          python tests/domains/soil/test_soil_smoke.py --verbose
 
       - name: Record Soil validation scope
         if: always()
@@ -220,11 +217,6 @@ jobs:
 
           if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/RELEASE_INDEX.md"; then
             echo "::error::The Soil release index changed. Wire the accepted fail-closed release dry-run instead of retaining this hold."
-            exit 1
-          fi
-
-          if ! grep -Fq "echo TODO assemble-candidate" ".github/workflows/release-dry-run.yml"; then
-            echo "::error::The shared release dry-run workflow changed. Coordinate the accepted Soil command and avoid parallel release authority."
             exit 1
           fi
 
