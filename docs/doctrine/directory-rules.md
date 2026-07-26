@@ -48,7 +48,7 @@ The existing rules establish the right foundation: responsibility roots, domain-
 |---|---|
 | The supplied PDF has no explicit edition, effective date, adoption record, or rule identifiers. | Versioned document control, adoption state, stable rule IDs, and explicit supersession behavior. |
 | Rules, proposed paths, live implementation, and illustrative trees are interleaved. | Normative core, machine projection, root profiles, and repository-specific convergence appendix are separated. |
-| â€œChoose exactly one responsibilityâ€ is useful but too coarse for composite objects. | Every artifact receives one **authority owner** and may reference many related concerns; mixed authority requires `SPLIT`. |
+| “Choose exactly one responsibility” is useful but too coarse for composite objects. | Every artifact receives one **authority owner** and may reference many related concerns; mixed authority requires `SPLIT`. |
 | A new compatibility root both requires an ADR and, elsewhere, does not require one. | One rule: any tracked compatibility or conditional root requires an accepted decision before admission. |
 | Product decisions such as renderer selection enter placement doctrine. | Directory law governs **where a renderer implementation belongs**; accepted architecture decisions govern **which renderer exists**. |
 | Root status is expressed only in prose. | Canonical, platform, conditional, compatibility, deprecated, and retired root classes have machine-checkable fields. |
@@ -115,13 +115,13 @@ Those decisions remain with contracts, schemas, policy, accepted ADRs, source ad
 
 ### 1.3 Non-effects
 
-`DIR-SCOPE-001` â€” A path does not grant truth, source authority, rights, sensitivity clearance, review, release, or publication status.
+`DIR-SCOPE-001` — A path does not grant truth, source authority, rights, sensitivity clearance, review, release, or publication status.
 
-`DIR-SCOPE-002` â€” A filename such as `release_manifest.json`, a signature, a passing workflow, or placement under `data/published/` does not substitute for governed closure.
+`DIR-SCOPE-002` — A filename such as `release_manifest.json`, a signature, a passing workflow, or placement under `data/published/` does not substitute for governed closure.
 
-`DIR-SCOPE-003` â€” Documentation may describe authority but cannot create machine, policy, release, or data authority outside the decision class it legitimately owns.
+`DIR-SCOPE-003` — Documentation may describe authority but cannot create machine, policy, release, or data authority outside the decision class it legitimately owns.
 
-`DIR-SCOPE-004` â€” This draft does not move, rename, publish, promote, delete, or authorize any repository object.
+`DIR-SCOPE-004` — This draft does not move, rename, publish, promote, delete, or authorize any repository object.
 
 ---
 
@@ -139,17 +139,17 @@ When sources disagree about placement, apply this order:
 6. Architecture manuals, domain dossiers, atlases, prompts, and prior plans as design lineage.
 7. Generic convention or personal preference.
 
-`DIR-AUTH-001` â€” A proposed, draft, rejected, or superseded ADR cannot amend placement doctrine.
+`DIR-AUTH-001` — A proposed, draft, rejected, or superseded ADR cannot amend placement doctrine.
 
-`DIR-AUTH-002` â€” Current repository convention that conflicts with higher authority is drift, not precedent.
+`DIR-AUTH-002` — Current repository convention that conflicts with higher authority is drift, not precedent.
 
-`DIR-AUTH-003` â€” A per-root README may narrow or explain a root contract; it may not expand its authority.
+`DIR-AUTH-003` — A per-root README may narrow or explain a root contract; it may not expand its authority.
 
 ### 2.2 Authority freeze and two-change rule
 
 Structural work must freeze its authority inputs before editing.
 
-`DIR-AUTH-004` â€” A change may not edit Directory Rules or an ADR and then use that unaccepted edit to authorize dependent root, lifecycle, or parallel-home changes in the same authority batch.
+`DIR-AUTH-004` — A change may not edit Directory Rules or an ADR and then use that unaccepted edit to authorize dependent root, lifecycle, or parallel-home changes in the same authority batch.
 
 For a new canonical, conditional, or compatibility root:
 
@@ -199,9 +199,9 @@ Truth state and placement result are different axes. They must not be collapsed.
 | `HOLD` | Ownership, authority, identity, sensitivity, or target evidence is unresolved. | Do not create a new home; open verification or drift work. |
 | `DENY` | The path would violate an invariant, expose protected state, or create parallel authority. | Reject the placement. |
 
-`DIR-OUTCOME-001` â€” â€œProbably hereâ€ is not a conformance outcome.
+`DIR-OUTCOME-001` — “Probably here” is not a conformance outcome.
 
-`DIR-OUTCOME-002` â€” A `HOLD` is an intentional fail-closed result, not an implementation failure.
+`DIR-OUTCOME-002` — A `HOLD` is an intentional fail-closed result, not an implementation failure.
 
 ---
 
@@ -222,13 +222,13 @@ Before proposing or changing a path, describe the artifact with the following si
 | `retention` | Durable, release-bound, audit-bound, cacheable, disposable |
 | `physical_storage` | Git, database, object storage, package registry, CI artifact, external system |
 
-`DIR-SIGNATURE-001` â€” Every artifact has exactly one `authority_owner`.
+`DIR-SIGNATURE-001` — Every artifact has exactly one `authority_owner`.
 
-`DIR-SIGNATURE-002` â€” An artifact may reference many related authorities without owning them. A `ReleaseManifest`, for example, may reference proofs, catalog records, policy decisions, and published carriers while remaining a release-governance object.
+`DIR-SIGNATURE-002` — An artifact may reference many related authorities without owning them. A `ReleaseManifest`, for example, may reference proofs, catalog records, policy decisions, and published carriers while remaining a release-governance object.
 
-`DIR-SIGNATURE-003` â€” If two authority owners would need to edit the same artifact independently, return `SPLIT`.
+`DIR-SIGNATURE-003` — If two authority owners would need to edit the same artifact independently, return `SPLIT`.
 
-`DIR-SIGNATURE-004` â€” The producer does not determine the home. A pipeline may produce a receipt, proof, catalog record, or published carrier; each output goes to its owning family.
+`DIR-SIGNATURE-004` — The producer does not determine the home. A pipeline may produce a receipt, proof, catalog record, or published carrier; each output goes to its owning family.
 
 ---
 
@@ -239,7 +239,7 @@ Before proposing or changing a path, describe the artifact with the following si
 Apply these gates in order:
 
 1. **Classify authority.** Identify the artifact kind and one authority owner.
-2. **Choose the candidate responsibility root.** Use the root registry in Â§7.
+2. **Choose the candidate responsibility root.** Use the root registry in §7.
 3. **Apply hard exclusions.** Reject roots that prohibit the artifact, exposure, mutation, or lifecycle state.
 4. **Classify executable role.** For code, distinguish deployable, reusable, connector, pipeline, tool, script, adapter, and infrastructure.
 5. **Classify lifecycle.** For data instances, choose the state or accountability lane.
@@ -262,21 +262,21 @@ Let `C(x)` be the set of roots whose responsibility includes artifact `x`. Remov
 
 ### 5.3 Hard exclusion predicates
 
-`DIR-PLACE-001` â€” Domain, source, county, feature, renderer, model, or data format names do not justify repository roots.
+`DIR-PLACE-001` — Domain, source, county, feature, renderer, model, or data format names do not justify repository roots.
 
-`DIR-PLACE-002` â€” Public and ordinary UI paths may not read RAW, WORK, QUARANTINE, restricted, canonical/internal, or unreleased candidate stores.
+`DIR-PLACE-002` — Public and ordinary UI paths may not read RAW, WORK, QUARANTINE, restricted, canonical/internal, or unreleased candidate stores.
 
-`DIR-PLACE-003` â€” Connectors may emit only to RAW, QUARANTINE, and their corresponding receipts; they do not publish.
+`DIR-PLACE-003` — Connectors may emit only to RAW, QUARANTINE, and their corresponding receipts; they do not publish.
 
-`DIR-PLACE-004` â€” Watchers may emit events, candidate work, and receipts; they do not approve promotion, rewrite catalog authority, or publish.
+`DIR-PLACE-004` — Watchers may emit events, candidate work, and receipts; they do not approve promotion, rewrite catalog authority, or publish.
 
-`DIR-PLACE-005` â€” Generated output under `artifacts/`, caches, examples, or fixtures cannot satisfy canonical contract, policy, evidence, catalog, release, or publication authority.
+`DIR-PLACE-005` — Generated output under `artifacts/`, caches, examples, or fixtures cannot satisfy canonical contract, policy, evidence, catalog, release, or publication authority.
 
-`DIR-PLACE-006` â€” A compatibility root is never a writable alternative to its canonical target.
+`DIR-PLACE-006` — A compatibility root is never a writable alternative to its canonical target.
 
-`DIR-PLACE-007` â€” Exact sensitive geometry, living-person data, DNA/genomic material, archaeology, rare-species locations, or protected infrastructure information cannot be made public-safe by path placement.
+`DIR-PLACE-007` — Exact sensitive geometry, living-person data, DNA/genomic material, archaeology, rare-species locations, or protected infrastructure information cannot be made public-safe by path placement.
 
-`DIR-PLACE-008` â€” A root or lane may be justified by a durable trust boundary even when it initially contains one file; file count alone never overrides authority.
+`DIR-PLACE-008` — A root or lane may be justified by a durable trust boundary even when it initially contains one file; file count alone never overrides authority.
 
 ### 5.4 Path decision record
 
@@ -328,26 +328,26 @@ A proposed tracked root must satisfy every applicable condition:
 8. An accepted ADR authorizes canonical, conditional, or compatibility status.
 9. The machine root registry is updated only as a projection of the accepted decision.
 
-`DIR-ROOT-001` â€” Untracked build directories, language caches, virtual environments, and local editor state are not repository roots; they belong in ignore policy.
+`DIR-ROOT-001` — Untracked build directories, language caches, virtual environments, and local editor state are not repository roots; they belong in ignore policy.
 
-`DIR-ROOT-002` â€” A new compatibility root is an architectural commitment and always requires an accepted decision. This resolves the contradictory v1 treatment.
+`DIR-ROOT-002` — A new compatibility root is an architectural commitment and always requires an accepted decision. This resolves the contradictory v1 treatment.
 
-`DIR-ROOT-003` â€” A tool-mandated dot directory may be admitted as `platform` without an ADR only when it owns no KFM truth, semantics, schema, policy, lifecycle data, evidence, release, or publication authority.
+`DIR-ROOT-003` — A tool-mandated dot directory may be admitted as `platform` without an ADR only when it owns no KFM truth, semantics, schema, policy, lifecycle data, evidence, release, or publication authority.
 
-`DIR-ROOT-004` â€” Do not create a directory merely to reserve a possible future path. A new directory must contain an admitted implementation or data artifact, establish a real authority or trust boundary, or serve as a declared compatibility pointer with owner, target, and exit condition.
+`DIR-ROOT-004` — Do not create a directory merely to reserve a possible future path. A new directory must contain an admitted implementation or data artifact, establish a real authority or trust boundary, or serve as a declared compatibility pointer with owner, target, and exit condition.
 
-`DIR-ROOT-005` â€” A README and `.gitkeep` alone do not establish implementation, maturity, or a reason to retain speculative scaffolding.
+`DIR-ROOT-005` — A README and `.gitkeep` alone do not establish implementation, maturity, or a reason to retain speculative scaffolding.
 
 ### 6.3 Root state transitions
 
 ~~~text
 PROPOSED
-â””â”€â”€ ACCEPTED
-    â””â”€â”€ ACTIVE
-        â”œâ”€â”€ DEPRECATED
-        â”‚   â””â”€â”€ RETIRED
-        â””â”€â”€ SUPERSEDED
-            â””â”€â”€ RETIRED
+└── ACCEPTED
+    └── ACTIVE
+        ├── DEPRECATED
+        │   └── RETIRED
+        └── SUPERSEDED
+            └── RETIRED
 ~~~
 
 No root moves directly from `PROPOSED` to `ACTIVE` without an effective decision. No retired root may be recreated under the same name without a new ADR that addresses identity reuse.
@@ -362,28 +362,28 @@ The tree below shows repository root and direct children only.
 
 ~~~text
 Kansas-Frontier-Matrix/
-â”œâ”€â”€ .github/               # platform integration and repository automation
-â”œâ”€â”€ apps/                  # deployable applications
-â”œâ”€â”€ configs/               # non-secret configuration profiles and templates
-â”œâ”€â”€ connectors/            # source acquisition and admission edges
-â”œâ”€â”€ contracts/             # semantic and interface meaning
-â”œâ”€â”€ control_plane/         # machine projections of governance
-â”œâ”€â”€ data/                  # governed instances, lifecycle, and delivery carriers
-â”œâ”€â”€ docs/                  # human doctrine, decisions, architecture, and guidance
-â”œâ”€â”€ examples/              # runnable public-safe demonstrations
-â”œâ”€â”€ fixtures/              # reusable synthetic, valid, invalid, and golden inputs
-â”œâ”€â”€ infra/                 # deployment and exposure infrastructure
-â”œâ”€â”€ migrations/            # migration implementation and rollback definitions
-â”œâ”€â”€ packages/              # reusable non-deployable implementation
-â”œâ”€â”€ pipeline_specs/        # declarative pipeline definitions
-â”œâ”€â”€ pipelines/             # executable lifecycle transformations
-â”œâ”€â”€ policy/                # normative allow, deny, hold, restrict, and abstain rules
-â”œâ”€â”€ release/               # release, correction, withdrawal, and rollback decisions
-â”œâ”€â”€ runtime/               # bounded runtime composition and local adapters
-â”œâ”€â”€ schemas/               # machine-checkable shapes
-â”œâ”€â”€ scripts/               # thin non-authoritative operator wrappers
-â”œâ”€â”€ tests/                 # executable conformance evidence
-â””â”€â”€ tools/                 # repository-wide validators, generators, and operators
+├── .github/               # platform integration and repository automation
+├── apps/                  # deployable applications
+├── configs/               # non-secret configuration profiles and templates
+├── connectors/            # source acquisition and admission edges
+├── contracts/             # semantic and interface meaning
+├── control_plane/         # machine projections of governance
+├── data/                  # governed instances, lifecycle, and delivery carriers
+├── docs/                  # human doctrine, decisions, architecture, and guidance
+├── examples/              # runnable public-safe demonstrations
+├── fixtures/              # reusable synthetic, valid, invalid, and golden inputs
+├── infra/                 # deployment and exposure infrastructure
+├── migrations/            # migration implementation and rollback definitions
+├── packages/              # reusable non-deployable implementation
+├── pipeline_specs/        # declarative pipeline definitions
+├── pipelines/             # executable lifecycle transformations
+├── policy/                # normative allow, deny, hold, restrict, and abstain rules
+├── release/               # release, correction, withdrawal, and rollback decisions
+├── runtime/               # bounded runtime composition and local adapters
+├── schemas/               # machine-checkable shapes
+├── scripts/               # thin non-authoritative operator wrappers
+├── tests/                 # executable conformance evidence
+└── tools/                 # repository-wide validators, generators, and operators
 ~~~
 
 ### 7.2 Canonical responsibility table
@@ -437,11 +437,11 @@ Allowed classes include:
 - tool configuration such as `.editorconfig`, `.gitignore`, and reviewed pre-commit configuration;
 - one canonical root map or bootstrap manifest when it is machine-validated and does not duplicate the root registry.
 
-`DIR-ROOTFILE-001` â€” Domain documents, datasets, schemas, policy, scripts, and release objects may not live directly at root.
+`DIR-ROOTFILE-001` — Domain documents, datasets, schemas, policy, scripts, and release objects may not live directly at root.
 
-`DIR-ROOTFILE-002` â€” A root build manifest may coordinate child workspaces but may not become a second package, schema, policy, or release authority.
+`DIR-ROOTFILE-002` — A root build manifest may coordinate child workspaces but may not become a second package, schema, policy, or release authority.
 
-`DIR-ROOTFILE-003` â€” A root `src/` layout is not implied merely because `pyproject.toml` exists; the root distribution profile must be explicit.
+`DIR-ROOTFILE-003` — A root `src/` layout is not implied merely because `pyproject.toml` exists; the root distribution profile must be explicit.
 
 ### 8.2 Platform directories
 
@@ -462,26 +462,26 @@ Platform-required directories such as `.github/` may contain only the integratio
 
 ~~~text
 docs/
-â”œâ”€â”€ adr/                    # architecture decisions and decision history
-â”œâ”€â”€ architecture/           # system structure subordinate to accepted decisions
-â”œâ”€â”€ archive/                # frozen lineage, not current authority
-â”œâ”€â”€ atlases/                # curated atlas collections
-â”œâ”€â”€ doctrine/               # stable KFM operating and trust law
-â”œâ”€â”€ domains/                # human domain guidance
-â”œâ”€â”€ registers/              # human-readable drift and verification views
-â”œâ”€â”€ runbooks/               # operational procedures
-â”œâ”€â”€ security/               # threat, incident, and exposure guidance
-â”œâ”€â”€ sources/                # source guidance and human source catalog
-â””â”€â”€ standards/              # KFM and external standards guidance
+├── adr/                    # architecture decisions and decision history
+├── architecture/           # system structure subordinate to accepted decisions
+├── archive/                # frozen lineage, not current authority
+├── atlases/                # curated atlas collections
+├── doctrine/               # stable KFM operating and trust law
+├── domains/                # human domain guidance
+├── registers/              # human-readable drift and verification views
+├── runbooks/               # operational procedures
+├── security/               # threat, incident, and exposure guidance
+├── sources/                # source guidance and human source catalog
+└── standards/              # KFM and external standards guidance
 ~~~
 
-`DIR-DOCS-001` â€” Directory Rules belong in `docs/doctrine/` because they are stable governance law, not a product architecture decision.
+`DIR-DOCS-001` — Directory Rules belong in `docs/doctrine/` because they are stable governance law, not a product architecture decision.
 
-`DIR-DOCS-002` â€” `docs/architecture/directory-rules.md` becomes a time-bounded redirect after v2 adoption and must not evolve independently.
+`DIR-DOCS-002` — `docs/architecture/directory-rules.md` becomes a time-bounded redirect after v2 adoption and must not evolve independently.
 
-`DIR-DOCS-003` â€” Collections use plural lane names; therefore `docs/atlases/` is the proposed canonical collection and `docs/atlas/` is a migration candidate.
+`DIR-DOCS-003` — Collections use plural lane names; therefore `docs/atlases/` is the proposed canonical collection and `docs/atlas/` is a migration candidate.
 
-`DIR-DOCS-004` â€” Human source descriptions under `docs/sources/` do not replace machine source registry instances under `data/registry/`.
+`DIR-DOCS-004` — Human source descriptions under `docs/sources/` do not replace machine source registry instances under `data/registry/`.
 
 ### 9.2 `control_plane/`
 
@@ -491,9 +491,9 @@ docs/
 - stable crosswalks between human decisions and machine enforcement;
 - no source payloads, domain truth, release approval, or policy source code.
 
-`DIR-CONTROL-001` â€” A control-plane register is a projection of accepted authority; editing a register cannot self-authorize a new rule.
+`DIR-CONTROL-001` — A control-plane register is a projection of accepted authority; editing a register cannot self-authorize a new rule.
 
-`DIR-CONTROL-002` â€” A registry entry must cite its governing document or accepted ADR and carry status, effective scope, and evidence snapshot.
+`DIR-CONTROL-002` — A registry entry must cite its governing document or accepted ADR and carry status, effective scope, and evidence snapshot.
 
 ### 9.3 `contracts/`, `schemas/`, and `policy/`
 
@@ -505,13 +505,13 @@ The three-way split is mandatory:
 | `schemas/` | What machine shape is valid? |
 | `policy/` | Under what conditions is it allowed, denied, held, restricted, or abstained? |
 
-`DIR-AUTHROOT-001` â€” Machine schemas default to `schemas/contracts/v1/<family>/` unless an accepted ADR establishes another versioned schema profile.
+`DIR-AUTHROOT-001` — Machine schemas default to `schemas/contracts/v1/<family>/` unless an accepted ADR establishes another versioned schema profile.
 
-`DIR-AUTHROOT-002` â€” `contracts/` may contain semantic Markdown and interface specifications, but a duplicated schema embedded there must be generated from or reference the canonical schema.
+`DIR-AUTHROOT-002` — `contracts/` may contain semantic Markdown and interface specifications, but a duplicated schema embedded there must be generated from or reference the canonical schema.
 
-`DIR-AUTHROOT-003` â€” Policy rule source is singular under `policy/`. Policy decision instances belong with the process or release object they record; they do not live beside the rule merely because the type is â€œpolicy.â€
+`DIR-AUTHROOT-003` — Policy rule source is singular under `policy/`. Policy decision instances belong with the process or release object they record; they do not live beside the rule merely because the type is “policy.”
 
-`DIR-AUTHROOT-004` â€” Generated language bindings and types are derived artifacts; their README must name the schema source and regeneration command.
+`DIR-AUTHROOT-004` — Generated language bindings and types are derived artifacts; their README must name the schema source and regeneration command.
 
 ---
 
@@ -532,32 +532,32 @@ The three-way split is mandatory:
 | Does it deploy, network, expose, harden, or provision? | `infra/` |
 | Is it non-secret configuration shared by several owners? | `configs/` |
 
-`DIR-EXEC-001` â€” A deployment wrapper in `apps/` should delegate reusable logic to `packages/`, source acquisition to `connectors/`, and transformations to `pipelines/`.
+`DIR-EXEC-001` — A deployment wrapper in `apps/` should delegate reusable logic to `packages/`, source acquisition to `connectors/`, and transformations to `pipelines/`.
 
-`DIR-EXEC-002` â€” A source/provider name may appear inside `connectors/`; it does not create a root. Connectors are source-first because one source may feed several domains.
+`DIR-EXEC-002` — A source/provider name may appear inside `connectors/`; it does not create a root. Connectors are source-first because one source may feed several domains.
 
-`DIR-EXEC-003` â€” Domain-specific normalization belongs in `pipelines/<stage>/<domain>/` or a domain package, not in the source connector unless the source and domain are provably identical and declared.
+`DIR-EXEC-003` — Domain-specific normalization belongs in `pipelines/<stage>/<domain>/` or a domain package, not in the source connector unless the source and domain are provably identical and declared.
 
-`DIR-EXEC-004` â€” Executable pipeline implementation is stage-first:
+`DIR-EXEC-004` — Executable pipeline implementation is stage-first:
 
 ~~~text
 pipelines/
-â”œâ”€â”€ ingest/
-â”œâ”€â”€ normalize/
-â”œâ”€â”€ validate/
-â”œâ”€â”€ catalog/
-â”œâ”€â”€ triplets/
-â”œâ”€â”€ publish/
-â””â”€â”€ rollback/
+├── ingest/
+├── normalize/
+├── validate/
+├── catalog/
+├── triplets/
+├── publish/
+└── rollback/
 ~~~
 
 A domain is added below the applicable stage. Shared stage code uses an explicitly named shared lane. `pipelines/domains/<domain>/<stage>/` and `pipelines/<stage>/<domain>/` may not both be writable.
 
-`DIR-EXEC-005` â€” `pipeline_specs/` owns declarative whole-run or domain-run definitions. `pipelines/specs/` is a compatibility candidate and must not become a second spec authority.
+`DIR-EXEC-005` — `pipeline_specs/` owns declarative whole-run or domain-run definitions. `pipelines/specs/` is a compatibility candidate and must not become a second spec authority.
 
-`DIR-EXEC-006` â€” `tools/validate_all.py` may remain a thin repository entrypoint while validator implementation lives under `tools/validators/`. A placeholder entrypoint is not proof of orchestration.
+`DIR-EXEC-006` — `tools/validate_all.py` may remain a thin repository entrypoint while validator implementation lives under `tools/validators/`. A placeholder entrypoint is not proof of orchestration.
 
-`DIR-EXEC-007` â€” Trust-bearing or reused logic must graduate from `scripts/` to `tools/`, `pipelines/`, `packages/`, or `connectors/`. Scripts call governed implementations; production implementations do not import scripts.
+`DIR-EXEC-007` — Trust-bearing or reused logic must graduate from `scripts/` to `tools/`, `pipelines/`, `packages/`, or `connectors/`. Scripts call governed implementations; production implementations do not import scripts.
 
 ### 10.2 Conditional root `src/`
 
@@ -617,40 +617,40 @@ The tree shows `data/` and its direct children only.
 
 ~~~text
 data/
-â”œâ”€â”€ pre_raw/                # conditional event/intake envelopes; not admitted source data
-â”œâ”€â”€ raw/                    # immutable source-edge captures
-â”œâ”€â”€ work/                   # mutable/versioned candidate transformations
-â”œâ”€â”€ quarantine/             # held material plus remediation obligations
-â”œâ”€â”€ processed/              # validated canonical records; not automatically public
-â”œâ”€â”€ catalog/                # STAC, DCAT, PROV, domain and closure projections
-â”œâ”€â”€ triplets/               # optional relationship/graph projections
-â”œâ”€â”€ receipts/               # durable process memory
-â”œâ”€â”€ proofs/                 # evidence, validation, citation, review and integrity support
-â”œâ”€â”€ registry/               # source, dataset, layer, rights and sensitivity identities
-â””â”€â”€ published/              # immutable release-approved public-safe carriers
+├── pre_raw/                # conditional event/intake envelopes; not admitted source data
+├── raw/                    # immutable source-edge captures
+├── work/                   # mutable/versioned candidate transformations
+├── quarantine/             # held material plus remediation obligations
+├── processed/              # validated canonical records; not automatically public
+├── catalog/                # STAC, DCAT, PROV, domain and closure projections
+├── triplets/               # optional relationship/graph projections
+├── receipts/               # durable process memory
+├── proofs/                 # evidence, validation, citation, review and integrity support
+├── registry/               # source, dataset, layer, rights and sensitivity identities
+└── published/              # immutable release-approved public-safe carriers
 ~~~
 
-`DIR-DATA-001` â€” `pre_raw/` is a conditional intake lane, not a new source-of-truth phase. It may hold bounded event envelopes and admission candidates; persistent admission actions emit receipts. If KFM does not implement a durable pre-RAW queue, the lane remains absent.
+`DIR-DATA-001` — `pre_raw/` is a conditional intake lane, not a new source-of-truth phase. It may hold bounded event envelopes and admission candidates; persistent admission actions emit receipts. If KFM does not implement a durable pre-RAW queue, the lane remains absent.
 
-`DIR-DATA-002` â€” Valid material does not have to pass through QUARANTINE. TRIPLETS are optional when no graph projection is required.
+`DIR-DATA-002` — Valid material does not have to pass through QUARANTINE. TRIPLETS are optional when no graph projection is required.
 
-`DIR-DATA-003` â€” The lifecycle is a state machine, not a demand that every artifact visit every directory:
+`DIR-DATA-003` — The lifecycle is a state machine, not a demand that every artifact visit every directory:
 
 ~~~text
-PRE_RAW â”€â”€admitâ”€â”€> RAW
-RAW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€> WORK
-RAW â”€â”€holdâ”€â”€â”€â”€â”€â”€â”€> QUARANTINE
-WORK â”€â”€validateâ”€â”€> PROCESSED
-WORK â”€â”€holdâ”€â”€â”€â”€â”€â”€> QUARANTINE
-QUARANTINE â”€â”€remediateâ”€â”€> WORK
-PROCESSED â”€â”€â”€â”€â”€â”€â”€> CATALOG
-PROCESSED â”€â”€â”€â”€â”€â”€â”€> TRIPLETS        # when applicable
-CATALOG + PROOF + RELEASE DECISION â”€â”€> PUBLISHED
+PRE_RAW ──admit──> RAW
+RAW ─────────────> WORK
+RAW ──hold───────> QUARANTINE
+WORK ──validate──> PROCESSED
+WORK ──hold──────> QUARANTINE
+QUARANTINE ──remediate──> WORK
+PROCESSED ───────> CATALOG
+PROCESSED ───────> TRIPLETS        # when applicable
+CATALOG + PROOF + RELEASE DECISION ──> PUBLISHED
 ~~~
 
-`DIR-DATA-004` â€” Promotion emits a new governed state or version. It is never inferred from a copy, move, filename, job completion, or mutable alias.
+`DIR-DATA-004` — Promotion emits a new governed state or version. It is never inferred from a copy, move, filename, job completion, or mutable alias.
 
-`DIR-DATA-005` â€” Canonical trust-instance lanes such as `data/proofs/`, `data/catalog/`, `data/published/`, and release record collections may not contain objects that self-identify as placeholders, scaffolds, templates, or merely `PROPOSED` instances. Draft examples belong in `fixtures/`, `configs/templates/`, QUARANTINE, or `release/candidates/`.
+`DIR-DATA-005` — Canonical trust-instance lanes such as `data/proofs/`, `data/catalog/`, `data/published/`, and release record collections may not contain objects that self-identify as placeholders, scaffolds, templates, or merely `PROPOSED` instances. Draft examples belong in `fixtures/`, `configs/templates/`, QUARANTINE, or `release/candidates/`.
 
 ### 11.3 Lifecycle and accountability contracts
 
@@ -670,7 +670,7 @@ CATALOG + PROOF + RELEASE DECISION â”€â”€> PUBLISHED
 
 ### 11.4 Logical home versus physical bytes
 
-`DIR-STORAGE-001` â€” The directory names above define logical authority even when bytes live in PostgreSQL/PostGIS, object storage, a package registry, an external archive, or another governed service.
+`DIR-STORAGE-001` — The directory names above define logical authority even when bytes live in PostgreSQL/PostGIS, object storage, a package registry, an external archive, or another governed service.
 
 For non-Git payloads, the logical home contains or resolves through a versioned manifest or registry record with:
 
@@ -682,35 +682,35 @@ For non-Git payloads, the logical home contains or resolves through a versioned 
 - public exposure and release references;
 - correction, withdrawal, and rollback target.
 
-`DIR-STORAGE-002` â€” A locator is not authority. Consumers resolve it through the owning registry, policy, and release state.
+`DIR-STORAGE-002` — A locator is not authority. Consumers resolve it through the owning registry, policy, and release state.
 
-`DIR-STORAGE-003` â€” Restricted bytes must not be committed merely because their logical home is under `data/`. Encryption, access control, audit, and retention are separate mandatory controls.
+`DIR-STORAGE-003` — Restricted bytes must not be committed merely because their logical home is under `data/`. Encryption, access control, audit, and retention are separate mandatory controls.
 
 ### 11.5 Release decision plane
 
 ~~~text
 release/
-â”œâ”€â”€ candidates/             # candidate dossiers; no release authority
-â”œâ”€â”€ manifests/              # immutable ReleaseManifest collections
-â”œâ”€â”€ promotion_decisions/    # allow, deny, hold or abstain decisions
-â”œâ”€â”€ correction_notices/     # correction lineage
-â”œâ”€â”€ withdrawal_notices/     # withdrawal lineage
-â”œâ”€â”€ rollback_cards/         # rollback decisions and targets
-â”œâ”€â”€ signatures/             # signatures and attestations
-â””â”€â”€ changelog/              # release-level history
+├── candidates/             # candidate dossiers; no release authority
+├── manifests/              # immutable ReleaseManifest collections
+├── promotion_decisions/    # allow, deny, hold or abstain decisions
+├── correction_notices/     # correction lineage
+├── withdrawal_notices/     # withdrawal lineage
+├── rollback_cards/         # rollback decisions and targets
+├── signatures/             # signatures and attestations
+└── changelog/              # release-level history
 ~~~
 
-`DIR-RELEASE-001` â€” Object-family first, domain second: `release/manifests/<domain>/`, not `release/<domain>/`.
+`DIR-RELEASE-001` — Object-family first, domain second: `release/manifests/<domain>/`, not `release/<domain>/`.
 
-`DIR-RELEASE-002` â€” `release/manifests/` is the proposed canonical collection spelling. A singular `release/manifest/` is compatibility-only after an inventoried migration.
+`DIR-RELEASE-002` — `release/manifests/` is the proposed canonical collection spelling. A singular `release/manifest/` is compatibility-only after an inventoried migration.
 
-`DIR-RELEASE-003` â€” `RollbackCard` lives only under `release/rollback_cards/`. Executed rollback and cache-invalidation process records live under `data/receipts/rollback/`.
+`DIR-RELEASE-003` — `RollbackCard` lives only under `release/rollback_cards/`. Executed rollback and cache-invalidation process records live under `data/receipts/rollback/`.
 
-`DIR-RELEASE-004` â€” Generic `data/rollback/` is deprecated as an ambiguous authority lane. Its existing objects must be classified before migration; no bulk move by filename.
+`DIR-RELEASE-004` — Generic `data/rollback/` is deprecated as an ambiguous authority lane. Its existing objects must be classified before migration; no bulk move by filename.
 
-`DIR-RELEASE-005` â€” Policy source under `release/` is denied. Release policy belongs under `policy/release/`; release decisions reference the policy version and outcome.
+`DIR-RELEASE-005` — Policy source under `release/` is denied. Release policy belongs under `policy/release/`; release decisions reference the policy version and outcome.
 
-`DIR-RELEASE-006` â€” `data/published/` owns released payloads. `release/` owns the decisions that authorize and correct them. Proofs support the decision but do not replace it.
+`DIR-RELEASE-006` — `data/published/` owns released payloads. `release/` owns the decisions that authorize and correct them. Proofs support the decision but do not replace it.
 
 ---
 
@@ -720,13 +720,13 @@ release/
 
 Scope segments are added only after the owning root and family are known.
 
-`DIR-SCOPELANE-001` â€” Domains never become repository roots.
+`DIR-SCOPELANE-001` — Domains never become repository roots.
 
-`DIR-SCOPELANE-002` â€” A new domain is registered before new lanes are created. The register supplies canonical `domain_id`, path slug, code aliases, owner, sensitivity baseline, status, dependencies, and supersession data.
+`DIR-SCOPELANE-002` — A new domain is registered before new lanes are created. The register supplies canonical `domain_id`, path slug, code aliases, owner, sensitivity baseline, status, dependencies, and supersession data.
 
-`DIR-SCOPELANE-003` â€” Create only lanes with an owned artifact, consumer, validation need, or boundary contract. Empty symmetry scaffolding is prohibited.
+`DIR-SCOPELANE-003` — Create only lanes with an owned artifact, consumer, validation need, or boundary contract. Empty symmetry scaffolding is prohibited.
 
-`DIR-SCOPELANE-004` â€” Shared object families are defined once. Domain contracts and schemas extend or reference shared definitions rather than copy them.
+`DIR-SCOPELANE-004` — Shared object families are defined once. Domain contracts and schemas extend or reference shared definitions rather than copy them.
 
 ### 12.2 Domain-lane pattern
 
@@ -750,36 +750,36 @@ The pattern is sparse and evidence-driven. It does not authorize every lane mere
 
 ### 12.3 Source identity
 
-`DIR-SOURCE-001` â€” Source capture identity is source-first. One capture may support several domains without duplicated RAW bytes.
+`DIR-SOURCE-001` — Source capture identity is source-first. One capture may support several domains without duplicated RAW bytes.
 
-`DIR-SOURCE-002` â€” A canonical `source_id` is registered once. Connector implementation uses that ID or a declared provider grouping; domain assignments live in descriptors and downstream projections.
+`DIR-SOURCE-002` — A canonical `source_id` is registered once. Connector implementation uses that ID or a declared provider grouping; domain assignments live in descriptors and downstream projections.
 
-`DIR-SOURCE-003` â€” Machine source identities and descriptors live under `data/registry/sources/`. Human source guidance lives under `docs/sources/`. Connector code lives under `connectors/`.
+`DIR-SOURCE-003` — Machine source identities and descriptors live under `data/registry/sources/`. Human source guidance lives under `docs/sources/`. Connector code lives under `connectors/`.
 
-`DIR-SOURCE-004` â€” `data/registry/<domain>/sources/` may be a generated view but not an independent writer when `data/registry/sources/<source_id>/` is canonical.
+`DIR-SOURCE-004` — `data/registry/<domain>/sources/` may be a generated view but not an independent writer when `data/registry/sources/<source_id>/` is canonical.
 
 Subtype-first registry placement is canonical:
 
 ~~~text
 data/registry/
-â”œâ”€â”€ sources/
-â”œâ”€â”€ datasets/
-â”œâ”€â”€ layers/
-â”œâ”€â”€ domains/
-â”œâ”€â”€ rights/
-â”œâ”€â”€ sensitivity/
-â””â”€â”€ crosswalks/
+├── sources/
+├── datasets/
+├── layers/
+├── domains/
+├── rights/
+├── sensitivity/
+└── crosswalks/
 ~~~
 
 Catalog projections also use subtype-first placement:
 
 ~~~text
 data/catalog/
-â”œâ”€â”€ stac/
-â”œâ”€â”€ dcat/
-â”œâ”€â”€ prov/
-â”œâ”€â”€ domains/
-â””â”€â”€ matrix/
+├── stac/
+├── dcat/
+├── prov/
+├── domains/
+└── matrix/
 ~~~
 
 Direct siblings such as `data/prov/`, `data/catalog/domain/`, or `data/catalog/<domain>/` are migration candidates unless an accepted standard profile gives them distinct authority.
@@ -803,7 +803,7 @@ Cross-domain artifacts live under the root that owns their primary authority and
 - shared validator -> `tools/validators/cross_domain/<seam_id>/`;
 - shared architecture explanation -> `docs/architecture/cross-domain/<seam_id>.md`.
 
-Never select an arbitrary â€œleadâ€ domain merely to obtain a path.
+Never select an arbitrary “lead” domain merely to obtain a path.
 
 ---
 
@@ -811,11 +811,11 @@ Never select an arbitrary â€œleadâ€ domain merely to obtain a path.
 
 ### 13.1 Registered names
 
-`DIR-NAME-001` â€” Canonical root names are fixed by the root registry.
+`DIR-NAME-001` — Canonical root names are fixed by the root registry.
 
-`DIR-NAME-002` â€” Domain, source, geography, seam, and object-family path slugs are registered once. Aliases are explicit and time-bounded.
+`DIR-NAME-002` — Domain, source, geography, seam, and object-family path slugs are registered once. Aliases are explicit and time-bounded.
 
-`DIR-NAME-003` â€” Language-native identifiers may differ from path slugs:
+`DIR-NAME-003` — Language-native identifiers may differ from path slugs:
 
 | Identity | Example |
 |---|---|
@@ -844,7 +844,7 @@ Root-defined conventions choose hyphen or underscore for a segment class:
 
 ### 13.3 Singular and plural
 
-`DIR-NAME-004` â€” Collection directories are plural; record types and individual filenames are singular unless an external standard fixes the name.
+`DIR-NAME-004` — Collection directories are plural; record types and individual filenames are singular unless an external standard fixes the name.
 
 Proposed resolutions:
 
@@ -856,7 +856,7 @@ Proposed resolutions:
 | `correction/`, `corrections/`, `correction_notices/` | `correction_notices/` for public correction objects | other forms require object classification |
 | `rollback/`, `rollback_cards/` | `rollback_cards/` for decisions; `data/receipts/rollback/` for execution | generic rollback lanes |
 
-`DIR-NAME-005` â€” A path containing placeholder punctuation such as `triplet(s)` is denied for canonical use.
+`DIR-NAME-005` — A path containing placeholder punctuation such as `triplet(s)` is denied for canonical use.
 
 ### 13.4 Stable object identity
 
@@ -883,11 +883,11 @@ Path conformance includes dependency conformance.
 | `tests/` | Any declared test target and public-safe fixtures | Production code depending back on tests |
 | `docs/` | References to every root | Executable authority merely through prose |
 
-`DIR-DEP-001` â€” Normative roots (`contracts/`, `schemas/`, `policy/`) do not depend on application implementation. Generated projections may be built from them.
+`DIR-DEP-001` — Normative roots (`contracts/`, `schemas/`, `policy/`) do not depend on application implementation. Generated projections may be built from them.
 
-`DIR-DEP-002` â€” Public clients consume governed APIs or release-approved carriers. Direct filesystem, database, object-store, model-adapter, or internal-registry access is denied.
+`DIR-DEP-002` — Public clients consume governed APIs or release-approved carriers. Direct filesystem, database, object-store, model-adapter, or internal-registry access is denied.
 
-`DIR-DEP-003` â€” Renderer and AI provider technologies are implementation details behind governed adapters. Technology selection belongs to accepted architecture decisions, not root naming.
+`DIR-DEP-003` — Renderer and AI provider technologies are implementation details behind governed adapters. Technology selection belongs to accepted architecture decisions, not root naming.
 
 ### 14.2 Write-capability matrix
 
@@ -919,11 +919,11 @@ Capabilities are granted by authenticated runtime policy, not merely by director
 | Cache, virtual environment, dependency install | Ignored local/tool cache | Never tracked |
 | Durable receipt/proof/catalog/release/published object | Its canonical family | Never left in `artifacts/` |
 
-`DIR-GEN-001` â€” Generated content must declare `generated_from`, generator identity/version, content digest, and edit policy.
+`DIR-GEN-001` — Generated content must declare `generated_from`, generator identity/version, content digest, and edit policy.
 
-`DIR-GEN-002` â€” Mirrors are one-way and reproducible. Manual edits to a mirror are denied.
+`DIR-GEN-002` — Mirrors are one-way and reproducible. Manual edits to a mirror are denied.
 
-`DIR-GEN-003` â€” Symlinks, submodules, or remote references may not hide a second writable authority. Their source, pin, license, update policy, and failure behavior must be explicit.
+`DIR-GEN-003` — Symlinks, submodules, or remote references may not hide a second writable authority. Their source, pin, license, update policy, and failure behavior must be explicit.
 
 ### 15.2 `artifacts/` transition
 
@@ -931,10 +931,10 @@ The only permitted direct children are:
 
 ~~~text
 artifacts/
-â”œâ”€â”€ build/
-â”œâ”€â”€ docs/
-â”œâ”€â”€ qa/
-â””â”€â”€ temporary/
+├── build/
+├── docs/
+├── qa/
+└── temporary/
 ~~~
 
 `artifacts/release/`, `artifacts/proofs/`, and trust-shaped equivalents are nonconforming even when they contain placeholders. The long-term target is no tracked generated payload except the boundary README, ignore rules, and intentionally retained small QA fixtures.
@@ -953,9 +953,9 @@ The v1 requirement is replaced with risk-based profiles.
 | `BOUNDARY_COMPACT` | Domain lane, object-family lane, lifecycle lane, deployable, package, connector, pipeline stage, sensitive boundary | Compact local contract |
 | `LEAF_INHERITED` | Ordinary implementation or data leaf with no independent boundary | Inherit parent; README optional |
 
-`DIR-README-001` â€” A README is required where ownership, authority, exposure, mutation, generation, or lifecycle behavior changes. It is not required merely because a directory exists.
+`DIR-README-001` — A README is required where ownership, authority, exposure, mutation, generation, or lifecycle behavior changes. It is not required merely because a directory exists.
 
-`DIR-README-002` â€” A README does not upgrade an empty or placeholder lane to implemented status.
+`DIR-README-002` — A README does not upgrade an empty or placeholder lane to implemented status.
 
 ### 16.2 `ROOT_FULL` fields
 
@@ -985,11 +985,11 @@ The v1 requirement is replaced with risk-based profiles.
 
 ### 16.4 Directory-map law
 
-`DIR-README-003` â€” A directory README shows the directory it governs and direct children only. A child README owns deeper detail.
+`DIR-README-003` — A directory README shows the directory it governs and direct children only. A child README owns deeper detail.
 
-`DIR-README-004` â€” Directory maps use lined trees with `â”‚`, `â”œâ”€â”€`, and `â””â”€â”€` in a `text` fence. Comments align and describe authority, not aspiration.
+`DIR-README-004` — Directory maps use lined trees with `│`, `├──`, and `└──` in a `text` fence. Comments align and describe authority, not aspiration.
 
-`DIR-README-005` â€” An illustrative future tree must be labeled `PROPOSED`; a current tree must be generated or verified from repository evidence.
+`DIR-README-005` — An illustrative future tree must be labeled `PROPOSED`; a current tree must be generated or verified from repository evidence.
 
 ### 16.5 Review triggers
 
@@ -1027,11 +1027,11 @@ Every compatibility entry must record:
 - owner, start date, expiry, and exit criteria;
 - parity validation and rollback behavior.
 
-`DIR-COMPAT-001` â€” Compatibility uses dual-read/single-write when necessary: consumers may temporarily read old and new; all new writes go only to canonical.
+`DIR-COMPAT-001` — Compatibility uses dual-read/single-write when necessary: consumers may temporarily read old and new; all new writes go only to canonical.
 
-`DIR-COMPAT-002` â€” An alias cannot be more permissive, public, mutable, or authoritative than its target.
+`DIR-COMPAT-002` — An alias cannot be more permissive, public, mutable, or authoritative than its target.
 
-`DIR-COMPAT-003` â€” A tombstone README may preserve navigation and migration facts but may not contain a live copy of the authority object.
+`DIR-COMPAT-003` — A tombstone README may preserve navigation and migration facts but may not contain a live copy of the authority object.
 
 ### 17.2 Bounded exceptions
 
@@ -1084,13 +1084,13 @@ migration:
   result: "<PLANNED|ACTIVE|VERIFIED|ROLLED_BACK|SUPERSEDED>"
 ~~~
 
-`DIR-MIGRATE-001` â€” `git mv` expresses staging intent; history preservation must be verified through content continuity, rename detection, references, and object identity.
+`DIR-MIGRATE-001` — `git mv` expresses staging intent; history preservation must be verified through content continuity, rename detection, references, and object identity.
 
-`DIR-MIGRATE-002` â€” A move that changes semantic identity requires contract/schema versioning, fixture parity, consumer migration, and correction of released references.
+`DIR-MIGRATE-002` — A move that changes semantic identity requires contract/schema versioning, fixture parity, consumer migration, and correction of released references.
 
-`DIR-MIGRATE-003` â€” Unknown, restricted, or trust-bearing payloads are inventoried before movement. Destructive cleanup is the last step.
+`DIR-MIGRATE-003` — Unknown, restricted, or trust-bearing payloads are inventoried before movement. Destructive cleanup is the last step.
 
-`DIR-MIGRATE-004` â€” Rollback must not recreate two writable authorities. When rollback is unsafe, record a forward-fix plan and the reason.
+`DIR-MIGRATE-004` — Rollback must not recreate two writable authorities. When rollback is unsafe, record a forward-fix plan and the reason.
 
 ---
 
@@ -1102,19 +1102,19 @@ The adopted human rules remain the normative placement law. Machine files projec
 
 ~~~text
 control_plane/
-â”œâ”€â”€ root_registry.yaml
-â”œâ”€â”€ path_alias_register.yaml
-â”œâ”€â”€ domain_lane_register.yaml
-â”œâ”€â”€ object_family_register.yaml
-â”œâ”€â”€ deprecation_register.yaml
-â””â”€â”€ verification_backlog.yaml
+├── root_registry.yaml
+├── path_alias_register.yaml
+├── domain_lane_register.yaml
+├── object_family_register.yaml
+├── deprecation_register.yaml
+└── verification_backlog.yaml
 ~~~
 
 The first two files are proposed additions. Existing registers remain in place.
 
-`DIR-ENFORCE-001` â€” Every machine entry cites an adopted rule or accepted ADR and carries its source digest. A register cannot amend the doctrine it projects.
+`DIR-ENFORCE-001` — Every machine entry cites an adopted rule or accepted ADR and carries its source digest. A register cannot amend the doctrine it projects.
 
-`DIR-ENFORCE-002` â€” A rules change and its machine projection must pass parity validation before adoption.
+`DIR-ENFORCE-002` — A rules change and its machine projection must pass parity validation before adoption.
 
 ### 19.2 Root-registry entry
 
@@ -1220,7 +1220,7 @@ The inspected repository was:
 
 | Observation | Current evidence | v2 result |
 |---|---|---|
-| Two divergent Directory Rules files | `docs/doctrine/directory-rules.md` blob `2affb080â€¦`, v1.4 draft; `docs/architecture/directory-rules.md` blob `18653c00â€¦`, v1.3.1 review | `CONFLICTED`; doctrine path should become canonical on adoption |
+| Two divergent Directory Rules files | `docs/doctrine/directory-rules.md` blob `2affb080…`, v1.4 draft; `docs/architecture/directory-rules.md` blob `18653c00…`, v1.3.1 review | `CONFLICTED`; doctrine path should become canonical on adoption |
 | Reference weight favors doctrine path | 2,903 exact references to doctrine path versus 234 to architecture path | Supports doctrine-path migration, not proof of adoption |
 | Two divergent skeleton maps | Root `SKELETON_MAP.md` and `docs/architecture/SKELETON_MAP.md` have different blobs and content | Keep one orientation map; archive or redirect the duplicate |
 | Root README identity is wrong | Root `README.md` is a 2,598-line Markdown-agent prompt and is used by `pyproject.toml` as package metadata | High-priority correction; prompts belong under `docs/prompts/` |
@@ -1233,9 +1233,9 @@ The inspected repository was:
 
 ### 20.3 Root convergence
 
-1. **`catalog/`** â€” contains 27 READMEs and 16 `.gitkeep` files and no other tracked payloads. It is documented as severe parallel-authority drift. This is the safest first root retirement after reference validation.
-2. **`src/`** â€” contains only `README.md`, `src/kfm/README.md`, and a minimal `src/kfm/__init__.py`, but root `pyproject.toml` packages it. Return `HOLD` until an umbrella-facade decision verifies consumers and API intent.
-3. **`artifacts/`** â€” has 44 tracked files and a nonconforming `artifacts/release/` lane. Keep only the four generated-output lanes, remove trust-state contamination through reviewed migration, and move toward ignored or external CI output.
+1. **`catalog/`** — contains 27 READMEs and 16 `.gitkeep` files and no other tracked payloads. It is documented as severe parallel-authority drift. This is the safest first root retirement after reference validation.
+2. **`src/`** — contains only `README.md`, `src/kfm/README.md`, and a minimal `src/kfm/__init__.py`, but root `pyproject.toml` packages it. Return `HOLD` until an umbrella-facade decision verifies consumers and API intent.
+3. **`artifacts/`** — has 44 tracked files and a nonconforming `artifacts/release/` lane. Keep only the four generated-output lanes, remove trust-state contamination through reviewed migration, and move toward ignored or external CI output.
 
 ### 20.4 Naming and lane convergence
 
@@ -1286,21 +1286,21 @@ The first bounded object-family migration should be `SourceDescriptor` because i
 
 Because the repository currently has no accepted structural ADR, v2 needs an explicit bootstrap decision rather than pretending a proposed ADR is effective.
 
-### Phase 0 â€” Ratification packet
+### Phase 0 — Ratification packet
 
 1. Review this draft against core KFM invariants and current repository evidence.
 2. Record the adopting decision, approvers, effective date, content digest, and exact supersession targets.
 3. Resolve the compatibility-root ADR contradiction and the Directory Rules canonical home.
 4. Assign verified owners; CODEOWNERS routing alone does not prove stewardship or independent review.
 
-### Phase 1 â€” Single authority surface
+### Phase 1 — Single authority surface
 
 1. Install the adopted bytes at `docs/doctrine/directory-rules.md`.
 2. Replace `docs/architecture/directory-rules.md` with a short read-only redirect carrying its prior blob and supersession link.
 3. Update references without changing unrelated doctrine.
 4. Retain prior editions in Git history or an explicit doctrine lineage archive.
 
-### Phase 2 â€” Executable projection
+### Phase 2 — Executable projection
 
 1. Add root and alias registers.
 2. Populate domain, object-family, source, and deprecation registers with verified entries.
@@ -1308,15 +1308,15 @@ Because the repository currently has no accepted structural ADR, v2 needs an exp
 4. Baseline inherited drift with stable IDs, owners, and exit criteria.
 5. Fail all new invariant and drift violations.
 
-### Phase 3 â€” Low-risk convergence
+### Phase 3 — Low-risk convergence
 
 Retire empty compatibility scaffolds and duplicate spellings after reference closure. Do not mix this phase with trust-object migration.
 
-### Phase 4 â€” Authority-family convergence
+### Phase 4 — Authority-family convergence
 
 Migrate one bounded object family at a time. Use `SourceDescriptor` first, then release decision families. Preserve stable IDs, digests, producer and consumer mapping, and rollback.
 
-### Phase 5 â€” Enforcement graduation
+### Phase 5 — Enforcement graduation
 
 Move baselined warnings to failures as each drift class reaches zero. No phase claims completion without the declared proof suite.
 
@@ -1470,22 +1470,22 @@ Tests belong under the corresponding `tests/` lane; reusable fixtures under `fix
 | S6 | `Unified Implementation Architecture Build Manual.md` | Responsibility roots, inspectable claims, lifecycle, trust planes, data/release/object-family separation |
 | S7 | `KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` | Existence-versus-authority distinction, migration/versioning, open directory questions |
 | S8 | `maplibre3d.md` | Adapter-boundary implications; technology decision remains ADR-scoped |
-| S9 | Repository snapshot at commit `00d33c0eâ€¦` | Current implementation facts and drift inventory |
+| S9 | Repository snapshot at commit `00d33c0e…` | Current implementation facts and drift inventory |
 
 ### B.2 Page-grounded findings from the supplied Directory Rules PDF
 
 | Finding | Pages |
 |---|---:|
-| Self-declared canonical doctrine but no explicit version, issue date, effective date, or ratification record | 1, 20â€“21 |
-| Authority order, accepted-ADR rule, and drift procedure | 1â€“3 |
-| Responsibility-root and domain-as-lane foundation | 3â€“5, 16 |
-| Canonical/compatibility root model | 5â€“6, 11â€“12, 22 |
-| Contracts/schema/policy/test separation | 6â€“9 |
-| Data and release separation | 12â€“14 |
-| Migration discipline and README contract | 18â€“20 |
+| Self-declared canonical doctrine but no explicit version, issue date, effective date, or ratification record | 1, 20–21 |
+| Authority order, accepted-ADR rule, and drift procedure | 1–3 |
+| Responsibility-root and domain-as-lane foundation | 3–5, 16 |
+| Canonical/compatibility root model | 5–6, 11–12, 22 |
+| Contracts/schema/policy/test separation | 6–9 |
+| Data and release separation | 12–14 |
+| Migration discipline and README contract | 18–20 |
 | Open triplet, rollback, manifest, schema, policy, and API questions | 21 |
 | Direct contradiction over whether a new compatibility root requires an ADR | 4 and 20 |
-| RollbackCard placed in both data rollback and release rollback-card homes | 13â€“14 and 21 |
+| RollbackCard placed in both data rollback and release rollback-card homes | 13–14 and 21 |
 | Lifecycle phases conflated with receipts, proofs, registry, and rollback stores | 4 and 13 |
 
 ### B.3 Preserved strengths
