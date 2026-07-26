@@ -1,14 +1,36 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-atmosphere-pm25-readme
-title: data/processed/atmosphere/pm25/README.md — Atmosphere PM25Observation Processed Data README
-version: v0.1
-type: readme; data-lifecycle-sublane; processed-stage-guide; atmosphere-domain-lane; pm25-observation-lane
-status: draft; PROPOSED; data-root; processed-stage; atmosphere; pm25; PM25Observation; release-gated; source-role-aware; AQI-boundary-aware; low-cost-caveat-aware
-owners: OWNER_TBD — Atmosphere steward · Air-quality steward · PM2.5 steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
+title: data/processed/atmosphere/pm25/ — Atmosphere PM2.5 Processed Data
+version: v0.2.0
+type: directory-readme
+subtype: processed-atmosphere-pm25-observation-lane
+status: repository-grounded draft; payload inventory, enforceable schema, validators, fixtures, receipts, proof, release, and runtime behavior remain bounded
+owners:
+  - "NEEDS VERIFICATION — Atmosphere domain steward"
+  - "NEEDS VERIFICATION — PM2.5 and air-quality observation steward"
+  - "NEEDS VERIFICATION — source-role, units, QA, low-cost-sensor, and regulatory/archive reviewers"
+  - "NEEDS VERIFICATION — data, evidence, policy, release, correction, rollback, and docs stewards"
 created: NEEDS VERIFICATION — one-character placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; processed; atmosphere; pm25; PM2.5; lifecycle; governed; release-gated
-tags: [kfm, data, processed, atmosphere, pm25, PM25Observation, AirObservation, AirStation, OzoneObservation, AQI, concentration, observed-sensor, public-aqi-report, low-cost-sensor, AODRaster, lifecycle, RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, EvidenceBundle, SourceDescriptor, RunReceipt, ValidationReport, PolicyDecision, ReleaseManifest]
+updated: 2026-07-25
+policy_label: public-doc; processed-stage; atmosphere; pm25; pollutant-specific-observation; source-role-aware; AQI-boundary-aware; low-cost-caveat-aware; release-gated; no-direct-public-path
+path: data/processed/atmosphere/pm25/README.md
+truth_posture: >
+  CONFIRMED exact target path, prior blob, Directory Rules placement, current Atmosphere parent lane,
+  PM25Observation semantic contract, paired scaffold schema posture, pollutant-specific boundary,
+  AQI/concentration separation, AOD denial, modeled-versus-observed separation, low-cost caveat rule,
+  and PROCESSED lifecycle boundary / PROPOSED lane-local admission profile, normalized PM2.5 packet,
+  role-specific method and QA requirements, and downstream promotion expectations / UNKNOWN recursive
+  payload inventory, production validators, fixtures, receipts, proof closure, release instances, hosting,
+  and public behavior / NEEDS VERIFICATION accountable owners, accepted source-role vocabulary,
+  unit and averaging conventions, correction methods, freshness limits, regulatory/archive treatment,
+  correction propagation, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 9f192b09fd64912919acfda69d638006a7817185
+  prior_blob: dfd11264924f723065be6d6588a55057bdc3a1a5
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  pm25_contract_blob: dabc318f6dcf4267858cb4953c3379ac2a60879d
 related:
   - ../README.md
   - ../observed/README.md
@@ -22,259 +44,339 @@ related:
   - ../../README.md
   - ../../../README.md
   - ../../../../docs/domains/atmosphere/README.md
+  - ../../../../docs/domains/atmosphere/CANONICAL_PATHS.md
+  - ../../../../docs/domains/atmosphere/OBJECT_FAMILY_MAP.md
+  - ../../../../docs/domains/atmosphere/POLICY.md
+  - ../../../../docs/domains/atmosphere/PUBLICATION_POSTURE.md
+  - ../../../../docs/domains/atmosphere/SENSITIVITY.md
+  - ../../../../docs/doctrine/directory-rules.md
   - ../../../../contracts/domains/atmosphere/PM25Observation.md
   - ../../../../contracts/domains/atmosphere/AirObservation.md
   - ../../../../contracts/domains/atmosphere/AirStation.md
   - ../../../../contracts/domains/atmosphere/OzoneObservation.md
   - ../../../../contracts/domains/atmosphere/AODRaster.md
-  - ../../../../contracts/domains/atmosphere/SmokeContext.md
   - ../../../../contracts/domains/atmosphere/ForecastContext.md
   - ../../../../contracts/domains/atmosphere/AdvisoryContext.md
   - ../../../../schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json
-  - ../../../../policy/domains/atmosphere/
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/doctrine/lifecycle-law.md
-  - ../../../../docs/doctrine/trust-membrane.md
-  - ../../../raw/atmosphere/
-  - ../../../work/atmosphere/
-  - ../../../quarantine/atmosphere/
+  - ../../../../policy/domains/atmosphere/README.md
+  - ../../../raw/atmosphere/README.md
+  - ../../../work/atmosphere/README.md
+  - ../../../quarantine/atmosphere/README.md
   - ../../../catalog/domain/atmosphere/README.md
-  - ../../../catalog/stac/atmosphere/
-  - ../../../catalog/dcat/atmosphere/
-  - ../../../catalog/prov/atmosphere/
-  - ../../../triplets/
-  - ../../../published/
-  - ../../../proofs/
-  - ../../../receipts/
-  - ../../../registry/
-  - ../../../../release/
-  - ../../../../pipelines/
-  - ../../../../tools/validators/
+  - ../../../triplets/README.md
+  - ../../../proofs/README.md
+  - ../../../receipts/README.md
+  - ../../../registry/sources/atmosphere/README.md
+  - ../../../../release/candidates/atmosphere/README.md
+  - ../../../../release/README.md
 notes:
-  - "This file replaces a one-character placeholder at `data/processed/atmosphere/pm25/README.md`."
-  - "This is the PROCESSED-stage sublane for normalized PM25Observation artifacts under Atmosphere. It is not RAW sensor-feed storage, generic AirObservation authority, ozone authority, AQI/concentration substitution, AOD-as-PM2.5 conversion, model-field authority, advisory authority, proof storage, release authority, public API/UI output, or life-safety guidance."
-  - "PM2.5 artifacts must preserve pollutant identity, source role, station/network context, units, observed time, retrieval time, QA/correction posture, low-cost sensor caveats where applicable, AQI/report posture where applicable, evidence linkage, policy posture, and release state before public use."
-  - "The PM25Observation contract defines object meaning; this README does not create a second contract or schema authority."
-  - "PM2.5 AQI/report values and PM2.5 concentrations must remain role-separated. AOD must not be presented as PM2.5. Low-cost PM2.5 values require caveat/correction/confidence/limitation controls before public use."
-  - "Rollback target for this expansion is previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`."
+  - "Same-path Markdown modernization only; no PM2.5 bytes, source state, contract, schema, policy, validator, workflow, proof, release, route, hosting, or KFM publication state changed."
+  - "PM25Observation is pollutant-specific air-quality context whose source role determines whether a value is observed concentration, public AQI/report posture, low-cost sensor data, or separately reviewed regulatory/archive context."
+  - "AQI is not concentration, AOD is not PM2.5, modeled PM2.5 is not observed PM2.5, and low-cost values require caveat, correction, confidence, limitation, policy, and review context."
+  - "Rollback target for v0.2.0 is prior blob SHA `dfd11264924f723065be6d6588a55057bdc3a1a5`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/atmosphere/pm25
+# `data/processed/atmosphere/pm25/` — Atmosphere PM2.5 processed data
 
-> Atmosphere PROCESSED-stage sublane for normalized `PM25Observation` artifacts: governed PM2.5 particulate concentration, PM2.5 AQI/report, low-cost sensor, and regulatory/archive records that remain distinct from generic air observations, ozone, AOD/smoke proxies, model fields, advisory guidance, proof, release, and public map/API/UI surfaces.
+> **One-line purpose.** Hold normalized PM2.5 observation candidates while preserving pollutant identity, source role, station context, concentration or report semantics, units, averaging period, time, method, QA, caveats, uncertainty, evidence, correction, and downstream-use limits.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/atmosphere/pm25" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fatmosphere%2Fpm25-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere%2Fair-1f8fff">
-  <img alt="Object: PM25Observation" src="https://img.shields.io/badge/object-PM25Observation-purple">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lifecycle: PROCESSED](https://img.shields.io/badge/lifecycle-PROCESSED-8250df?style=flat-square)](#authority-level)
+[![Role: pollutant specific](https://img.shields.io/badge/role-pollutant%20specific-1f8fff?style=flat-square)](#what-belongs-here)
+[![Exposure: not public](https://img.shields.io/badge/exposure-not%20public-b42318?style=flat-square)](#outputs)
+[![AQI: not concentration](https://img.shields.io/badge/AQI-not%20concentration-6f42c1?style=flat-square)](#source-role-units-and-method)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Atmosphere steward · Air-quality steward · PM2.5 steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
+> [!IMPORTANT]
+> **A PM2.5 number is not self-explanatory.** The same apparent value can represent an observed concentration, a public AQI/report value, a low-cost sensor estimate, an archive record, a modeled field, or an unsupported transformation. Source role, units, averaging period, method, QA, time, and caveats determine what the number can support.
+
 **Path:** `data/processed/atmosphere/pm25/README.md`  
-**Owning root:** `data/processed/`  
-**Domain segment:** `atmosphere`  
-**Object-family segment:** `pm25` / `PM25Observation`  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; public use requires governed catalog, evidence, source-role/unit/caveat posture, policy, release, correction, and rollback linkage  
-**Truth posture:** CONFIRMED target was a one-character placeholder · CONFIRMED `PM25Observation` contract and schema paths exist · CONFIRMED PM2.5 has role-dependent `OBSERVED_SENSOR` / `PUBLIC_AQI_REPORT` character with low-cost caveat requirements · PROPOSED PM2.5 processed-sublane details · NEEDS VERIFICATION for actual child inventory, validators, receipts, CI enforcement, release linkage, and governed route behavior.
+**Owning root:** `data/`  
+**Lifecycle phase:** `processed/`  
+**Domain segment:** `atmosphere/`  
+**Parent lane:** `data/processed/atmosphere/`  
+**Lane role:** pollutant-specific `PM25Observation` context  
+**Direct public access:** denied  
+**Last reviewed:** 2026-07-25
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [PM25Observation requirements](#pm25observation-requirements) · [PM2.5 guardrails](#pm25-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick navigation:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does NOT belong here](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [PM25Observation admission profile](#pm25observation-admission-profile) · [Source role, units, and method](#source-role-units-and-method) · [PM2.5 guardrails](#pm25-guardrails) · [Lifecycle and promotion](#lifecycle-and-promotion) · [Correction and rollback](#correction-and-rollback)
 
 ---
 
 ## Purpose
 
-`data/processed/atmosphere/pm25/` holds normalized PM2.5 observation artifacts that have moved beyond RAW capture, WORK transforms, and QUARANTINE holds.
+This directory is the Atmosphere domain's **PROCESSED-stage lane for pollutant-specific PM2.5 records**. It may hold normalized concentration observations, source-labeled public AQI/report records, caveated low-cost sensor records, separately reviewed regulatory/archive records, and object-ready derivatives that have moved beyond RAW capture, WORK transformation, and QUARANTINE holds.
 
-This lane is for processed `PM25Observation` records or derivatives that preserve pollutant identity, source role, station/network context, source identity, observed time, retrieval time, units, averaging period, QA/correction posture, freshness, low-cost sensor caveats where applicable, AQI/report posture where applicable, regulatory/archive posture where separately supported, evidence references, and downstream catalog readiness.
+The lane exists to preserve the answer to seven questions before downstream use:
 
-It is not a generic air-observation lane. It is not an ozone lane. It is not an AQI-to-concentration conversion lane. It is not an AOD-to-PM2.5 conversion lane. It is not a model-field lane. It is not an advisory authority. It is not a proof store, receipt store, source registry, catalog, release, semantic contract, schema, policy, public layer, public API/UI surface, or life-safety guidance source. It may support downstream catalog records, EvidenceBundle-backed UI payloads, public-safe PM2.5 layers, Focus Mode summaries, or release packages only after gates pass.
+1. Which pollutant and measurement or report semantics are represented?
+2. Which source role applies: observed sensor, public AQI/report, low-cost sensor, regulatory/archive, model context, or another reviewed role?
+3. Which station/network, method, instrument, correction, or archive context supports the record?
+4. Which units, averaging period, observed time, source time, retrieval time, and freshness state apply?
+5. Which QA, uncertainty, caveat, confidence, limitation, and correction state qualify the value?
+6. Which evidence, rights, policy, sensitivity, review, release, and rollback states apply?
+7. Which downstream claims and uses are allowed, restricted, narrowed, delayed, or denied?
 
-## Lifecycle boundary
+It is not a generic air-observation store, AQI-to-concentration converter, AOD-to-PM2.5 converter, modeled-field store, advisory authority, proof store, receipt authority, catalog authority, release authority, health-advice service, or public map/API/UI source.
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+## Authority level
 
-```mermaid
-flowchart LR
-  RAW[data/raw/atmosphere] --> WORK[data/work/atmosphere]
-  WORK --> QUAR[data/quarantine/atmosphere]
-  WORK --> PM25[data/processed/atmosphere/pm25]
-  QUAR --> PM25
-  PM25 --> OBS[data/processed/atmosphere/observed]
-  PM25 --> AIR[data/processed/atmosphere/air_observations]
-  PM25 --> CAT[data/catalog/domain/atmosphere]
-  PM25 --> STAC[data/catalog/stac/atmosphere]
-  PM25 --> DCAT[data/catalog/dcat/atmosphere]
-  PM25 --> PROV[data/catalog/prov/atmosphere]
-  PM25 -. supports .-> PROOF[data/proofs]
-  PM25 -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> TRIP[data/triplets/.../atmosphere]
-  CAT --> PUB[data/published/.../atmosphere]
-  STAC --> PUB
-  DCAT --> PUB
-  PROV --> PUB
-  TRIP --> PUB
-  PUB --> REL[release]
-```
+**Implementation-bearing lifecycle lane.** The target path is CONFIRMED in the repository and remains under `data/processed/atmosphere/`, consistent with Directory Rules' lifecycle and domain-placement rules.
 
-`data/processed/atmosphere/pm25/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+Its authority is deliberately narrow:
 
-## Repo fit
+- it may carry processed PM2.5 candidates and lane-local explanatory metadata;
+- it does not define `PM25Observation` meaning—that remains in the semantic contract;
+- it does not define machine shape—the paired schema remains under `schemas/contracts/v1/domains/atmosphere/`;
+- it does not decide whether a value is concentration, AQI/report, regulatory, reference-grade, low-cost, modeled, valid, consequential, or publishable;
+- it does not prove calibration, regulatory exceedance, exposure, health effect, damage, or impact;
+- it does not authorize emergency, medical, occupational, or life-safety guidance.
 
-| Responsibility | Correct home | Rule |
+## Status
+
+| Surface | Status | Evidence-bounded interpretation |
 |---|---|---|
-| Raw PM2.5 sensor feeds, agency AQI feeds, station payloads, source downloads, QA payloads, or logs | `data/raw/atmosphere/` | Not this lane. |
-| In-process PM2.5 parsing, unit conversion, AQI/report role review, correction, QA, joins, scratch outputs, or method experiments | `data/work/atmosphere/` | Not this lane. |
-| Rights-unclear, source-role-unclear, stale, malformed, unit-unclear, low-cost-caveat-missing, unsupported, disputed, sensitive, or unsafe PM2.5 material | `data/quarantine/atmosphere/` | Not this lane until resolved. |
-| Normalized PM25Observation processed artifacts | `data/processed/atmosphere/pm25/` | This lane. |
-| General air-quality observations | `data/processed/atmosphere/air_observations/` | PM2.5 specialization remains separate when pollutant-specific semantics apply. |
-| Observed parent lane | `data/processed/atmosphere/observed/` | Parent/sibling role lane for observed products. |
-| Station/network context | `data/processed/atmosphere/air_stations/` | Station metadata is context, not PM2.5 value. |
-| Ozone-specific processed artifacts | `data/processed/atmosphere/ozone/` | PM2.5 and ozone are separate pollutant families. |
-| Forecast/model context | `data/processed/atmosphere/forecast_context/` or `data/processed/atmosphere/modeled/` | Modeled PM2.5 must not impersonate observed PM2.5. |
-| AOD/remote-sensing proxy context | `data/processed/atmosphere/aod/` | AOD is not PM2.5, AQI, or a ground observation. |
-| Advisory/referral context | `data/processed/atmosphere/advisory_context/` | Advisory context remains official-source referral, not PM2.5 value. |
-| Atmosphere domain catalog records | `data/catalog/domain/atmosphere/` | Downstream catalog stage. |
-| Atmosphere STAC/DCAT/PROV records | `data/catalog/{stac,dcat,prov}/atmosphere/` | Downstream catalog projections, if accepted. |
-| Atmosphere triplet/graph projections | `data/triplets/.../atmosphere/` | Downstream graph stage. |
-| Atmosphere public-safe products | `data/published/.../atmosphere/` | Downstream after release. |
-| EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |
-| Source, run, transform, validation, policy, correction, and release receipts | `data/receipts/` | Separate receipt family. |
-| SourceDescriptor/source registry records | `data/registry/` | Separate registry family. |
-| Release decisions, manifests, rollback cards, corrections, withdrawals | `release/` | Separate publication authority. |
-| PM25Observation semantic contract | `contracts/domains/atmosphere/PM25Observation.md` | Object meaning; not data. |
-| PM25Observation schema | `schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json` | Machine shape; not data. |
-| Policy, validators, tests, pipelines, apps, packages | `policy/`, `tools/validators/`, `tests/`, `pipelines/`, `apps/`, `packages/` | Separate roots. |
+| This README and path | **CONFIRMED** | The file exists at the pinned base and is updated in place. |
+| Parent Atmosphere processed lane | **CONFIRMED** | `data/processed/atmosphere/README.md` identifies `pm25/` as the pollutant-specific PM2.5 lane and denies direct public use. |
+| `PM25Observation` semantic contract | **CONFIRMED repository document / draft** | Defines role-dependent PM2.5 meaning, AQI/concentration separation, low-cost caveat requirements, AOD/model denial, and non-release authority. |
+| Paired `PM25Observation` schema | **CONFIRMED scaffold / not enforceable as verified** | The contract reports empty properties, `additionalProperties: true`, and unresolved title casing. |
+| Adjacent observation and context lanes | **CONFIRMED paths** | General observations, stations, ozone, AOD, modeled/forecast, advisory, and observed-parent lanes remain separate responsibilities. |
+| Real processed PM2.5 payload inventory | **UNKNOWN** | This documentation task did not inspect or expose PM2.5 data payloads. |
+| Validators, fixtures, policy enforcement, and CI | **NEEDS VERIFICATION** | No accepted production PM2.5 enforcement suite was verified. |
+| Receipts, proof, release instances, hosting, public behavior | **UNKNOWN / held** | Presence in this directory creates none of these states. |
 
-## Accepted contents
+## What belongs here
 
-Processed `PM25Observation` data may include:
+Good fits are processed PM2.5 artifacts whose pollutant, source-role, method, time, and QA lineage remain inspectable, including:
 
-- normalized PM2.5 concentration records tied to an `AirStation` or comparable station/network context;
-- source-role-preserving PM2.5 records where `OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, `LOW_COST_SENSOR`, regulatory/archive, or other admitted role remains explicit;
-- PM2.5 value, units, averaging period, observed time, retrieval time, source time, QA state, correction lineage, freshness, caveats, confidence, and limitation metadata;
-- agency AQI/report PM2.5 values only when labeled as report/index posture and not raw concentration;
-- low-cost PM2.5 sensor values only when correction, caveat, confidence, limitation, policy state, and review/release controls travel with the value;
-- regulatory/archive PM2.5 values only when source role, vintage, issuing authority, evidence support, and release posture are documented;
-- processed joins to `AirObservation`, ozone, station context, weather, smoke, AOD, forecast, or advisory context when the knowledge-character boundary remains visible;
-- quality, caveat, missingness, correction, uncertainty, freshness, validation, unit-normalization, and AQI/report-posture sidecars when those sidecars are not proofs, receipts, source registry records, catalog records, schemas, or policy rules;
-- processed artifacts prepared for downstream domain catalog, STAC/DCAT/PROV packaging, EvidenceBundle support, triplet generation, or release review.
+- normalized PM2.5 concentration candidates tied to an `AirStation` or other reviewed station/network context;
+- source-labeled `OBSERVED_SENSOR` concentration records with explicit units, averaging period, method, time, and QA;
+- `PUBLIC_AQI_REPORT` records that preserve the issuing source, index/report role, reporting time, category/breakpoint context where allowed, and explicit non-concentration semantics;
+- `LOW_COST_SENSOR` records whose correction method, method version, caveats, confidence, limitations, collocation or comparison context where available, and policy/review state travel with the value;
+- separately modeled regulatory/archive records whose issuing authority, source role, vintage, archive context, evidence, and limitations are explicit;
+- status, correction, supersession, stale-state, duplicate-resolution, QA, uncertainty, and caveat sidecars that are not proofs, receipts, policy decisions, or releases;
+- controlled references to contributing station, weather, smoke, AOD, forecast, modeled, or advisory context without relabeling those inputs as PM2.5 observations;
+- public-candidate PM2.5 derivatives that remain upstream of catalog and release review;
+- object-ready candidates prepared for future contract/schema validation, EvidenceBundle closure, catalog review, or release review;
+- lane-local README or non-release manifest notes that explain artifact identity without becoming authority records.
 
-## Exclusions
+## What does NOT belong here
 
-Do not store these under `data/processed/atmosphere/pm25/`:
+Do not place these in `data/processed/atmosphere/pm25/`:
 
-- RAW PM2.5 sensor feeds, raw agency AQI feeds, station payloads, source downloads, QA payloads, logs, screenshots, or source-native records.
-- WORK/scratch outputs that have not passed processing gates.
-- Quarantined, malformed, source-role-unclear, rights-unclear, stale, unit-unclear, low-cost-caveat-missing, unsupported, disputed, sensitive, or unsafe PM2.5 material.
-- Generic `AirObservation` records unless PM2.5-specific semantics are preserved here by accepted convention.
-- Ozone observations or ozone report/index records.
-- AQI/report semantics when source role does not explicitly admit `PUBLIC_AQI_REPORT`.
-- AQI-to-concentration substitution or concentration-to-AQI substitution without a separately governed method, evidence, policy, and review.
-- AOD-to-PM2.5 substitution or smoke-proxy-to-ground-concentration substitution.
-- Model fields, AOD rasters, smoke masks, advisory/referral records, health/safety guidance, exposure claims, regulatory exceedance proof, damages, public alerting behavior, or policy conclusions.
-- Domain catalog records, STAC records, DCAT records, PROV records, triplet/graph records, published outputs, proofs, receipts, source registry records, release records, schemas, policy rules, validators, tests, pipelines, app/UI/API code.
+- RAW sensor feeds, source-native agency reports, station payloads, source downloads, QA payloads, logs, screenshots, or unprocessed records;
+- WORK parsing, unit-conversion experiments, correction tuning, breakpoint calculations, temporary joins, notebooks, exploratory comparisons, or scratch outputs;
+- QUARANTINE material with unresolved rights, source role, units, method, averaging period, time, freshness, low-cost caveats, QA, dispute, sensitivity, or safety state;
+- generic `AirObservation` records when pollutant-specific PM2.5 semantics are absent;
+- ozone observations, station/site metadata, AOD rasters, smoke masks, model fields, forecast context, climate context, or advisory/referral records except as controlled references;
+- AQI or public report values silently relabeled as raw concentration;
+- modeled PM2.5 silently relabeled as observed PM2.5;
+- AOD, smoke, visibility, proxy, interpolation, or model output silently relabeled as PM2.5 measurement;
+- reference-grade or regulatory claims for low-cost sensor data without source, correction, caveat, confidence, limitation, policy, and review support;
+- calibration conclusions, regulatory exceedance determinations, exposure estimates, health conclusions, damage claims, warnings, emergency instructions, or life-safety guidance;
+- semantic contracts, JSON Schemas, policy rules, validators, tests, fixtures, executable pipelines, source descriptors, catalogs, STAC/DCAT/PROV projections, triplets, proofs, receipts, releases, correction notices, rollback cards, or published artifacts;
+- public map, tile, API, download, export, Focus Mode, Evidence Drawer, graph, search, notification, or AI-answer payloads;
+- credentials, private station details, exact restricted siting, operator contact data, transform secrets, private thresholds, or parameters whose disclosure would weaken a sensitivity or access control.
 
-## PM25Observation requirements
+## Inputs
 
-PROPOSED until concrete validators and CI enforcement are verified:
+Inputs may enter this lane only through governed lifecycle transitions from:
 
-| Requirement | Meaning |
+- `data/work/atmosphere/` after pollutant, source role, station context, method, units, averaging period, time, QA, freshness, rights, caveats, evidence, and correction posture are recorded;
+- `data/quarantine/atmosphere/` after the hold condition is resolved and the remediation decision is auditable;
+- accepted Atmosphere pipelines or tools that preserve source bytes by reference, source/station identifiers, method and correction versions, unit conversion lineage, input digests, QA, uncertainty, and correction state;
+- approved observation/context relationships where PM2.5 value ownership remains in this lane and adjacent object ownership remains in its own lane.
+
+A connector-to-PROCESSED, watcher-to-PROCESSED, public-upload-to-PROCESSED, model-to-observation, or renderer-to-PROCESSED shortcut is not an accepted normal path. Connectors, watchers, models, renderers, and AI systems do not silently promote or originate observed PM2.5 truth.
+
+## Outputs
+
+This lane may support downstream candidates for:
+
+- `data/catalog/domain/atmosphere/` and accepted STAC/DCAT/PROV projections;
+- `data/triplets/` or other relationship projections that preserve pollutant identity, source role, station context, time, method, units, QA, and evidence references;
+- separate `data/proofs/` and `data/receipts/` objects;
+- `release/candidates/atmosphere/` after source role, rights, units, method, QA, freshness, caveat, evidence, policy, review, correction, and rollback obligations are met;
+- `data/published/` only through a governed release transition and separate released artifact path;
+- governed API, MapLibre, Evidence Drawer, export, Focus Mode, or AI carriers only after public-safe release.
+
+> [!CAUTION]
+> Ordinary public clients must not read this directory directly. A valid-looking concentration, AQI report, or low-cost reading is not public truth merely because it is normalized, current-looking, or easy to map.
+
+## Validation
+
+No production PM2.5 validator suite was verified in this task. Until accepted contracts, schemas, fixtures, validators, policy checks, and CI evidence exist, field-level enforcement claims remain bounded.
+
+A credible validation profile should check, at minimum:
+
+1. pollutant identity is explicitly PM2.5 and cannot silently accept ozone or generic pollutant values;
+2. source role is present and admitted for the record type;
+3. concentration and AQI/report semantics cannot occupy the same field without an explicit typed representation;
+4. units are declared, recognized, and compatible with the value semantics;
+5. averaging period or reporting interval is explicit where required;
+6. observed, source, retrieval, correction, release, and stale times are distinguishable where material;
+7. station or network references resolve when the record claims station context;
+8. low-cost records carry required caveat, correction, confidence, limitation, and review context;
+9. regulatory/archive posture carries issuing authority, source role, vintage, and evidence support;
+10. model, forecast, AOD, smoke, proxy, and interpolated products cannot masquerade as observed PM2.5;
+11. QA flags, uncertainty, missingness, correction, supersession, and stale state are internally consistent;
+12. required evidence references resolve to the appropriate EvidenceBundle before consequential use;
+13. rights, sensitivity, release, correction, and rollback state are present before public-candidate promotion;
+14. direct-public-path, health/advisory overclaim, and unsupported exceedance assertions fail closed.
+
+Validation of shape is not proof of truth, calibration, representativeness, regulatory standing, exposure, health effect, or release readiness.
+
+## Review burden
+
+At least these reviews are appropriate before public or semi-public use:
+
+| Review | Required focus |
 |---|---|
-| Source trace | Every processed PM25Observation artifact should trace to SourceDescriptor or source registry context when source authority matters. |
-| Pollutant identity | PM2.5 identity must remain explicit and must not collapse into generic AirObservation, ozone, AQI, smoke, or AOD semantics. |
-| Source role | `OBSERVED_SENSOR`, `PUBLIC_AQI_REPORT`, `LOW_COST_SENSOR`, regulatory/archive, model context, or other role must be explicit and non-collapsing. |
-| Station/network context | PM2.5 observations should identify or reference station/network context without turning station metadata into processed observation data. |
-| Units and averaging | Units, averaging period, conversion method where applicable, and report/index posture should be explicit enough to avoid AQI/concentration substitution. |
-| Low-cost controls | Low-cost PM2.5 requires caveat, correction, confidence, limitation, policy posture, and source rights before public use. |
-| Time semantics | Observed time, retrieval time, valid/report time where relevant, correction time, freshness, and release time should remain distinguishable where material. |
-| QA/correction posture | Quality flags, correction state, calibration/correction lineage, caveats, limitations, missingness, confidence, and uncertainty should remain visible. |
-| Evidence linkage | Claims about PM2.5 value, source, role, units, time, station, QA, correction, caveat, or release should resolve downstream to EvidenceBundle/proof context. |
-| Policy posture | Public display requires rights, source-role, freshness, caveat, sensitivity, and policy/admissibility posture. |
-| Catalog readiness | Processed PM25Observation artifacts intended for discovery should promote through Atmosphere catalog lanes, not directly to public use. |
-| Release readiness | Public use requires release state, published output path, correction path, and rollback target. |
-| No action guidance by default | PM2.5 values do not create medical, emergency, life-safety, exposure, regulatory, or hazard-impact claims without separate authority and review. |
+| Atmosphere / PM2.5 domain | Pollutant semantics, method fitness, averaging period, units, station/network context, QA, caveats, and scientific claim scope. |
+| Source-role / data-quality | Observed, report/index, low-cost, archive, model, proxy, and derived roles remain distinct. |
+| Rights / sensitivity | Source terms, station siting, private details, operator information, and public-safe spatial precision. |
+| Evidence / validation | EvidenceBundle closure, method lineage, uncertainty, contradictions, correction, and reproducibility. |
+| Policy / release | Public scope, disclaimers, release obligations, stale handling, correction path, withdrawal path, and rollback target. |
+
+Policy-significant release duties should remain separated when maturity justifies it. A source steward, validator, policy reviewer, and release steward must not be assumed to be the same actor.
+
+## Related folders
+
+| Responsibility | Repository home | Boundary |
+|---|---|---|
+| Raw Atmosphere captures | `data/raw/atmosphere/` | Immutable or source-preserved inputs; not public. |
+| Transformation workspace | `data/work/atmosphere/` | Parsing, correction, unit conversion, QA, comparison, and candidate work. |
+| Held material | `data/quarantine/atmosphere/` | Unresolved role, rights, units, method, QA, caveat, evidence, or safety issues. |
+| Parent processed lane | `data/processed/atmosphere/` | Parent index; not public. |
+| General air observation | `data/processed/atmosphere/air_observations/` | General family; does not erase PM2.5 specialization. |
+| Observed parent | `data/processed/atmosphere/observed/` | Observed-context parent; not a duplicate truth store. |
+| Air stations | `data/processed/atmosphere/air_stations/` | Network and siting context, not value-bearing PM2.5 records. |
+| Ozone | `data/processed/atmosphere/ozone/` | Separate pollutant family. |
+| AOD | `data/processed/atmosphere/aod/` | Remote-sensing proxy/mask; not PM2.5. |
+| Modeled / forecast | `data/processed/atmosphere/modeled/`, `forecast_context/` | Model context; not observed PM2.5. |
+| Advisory context | `data/processed/atmosphere/advisory_context/` | Official-source referral; not PM2.5 value or KFM guidance. |
+| Contracts / schemas / policy | `contracts/domains/atmosphere/`, `schemas/contracts/v1/domains/atmosphere/`, `policy/domains/atmosphere/` | Meaning, shape, and admissibility remain separate. |
+| Catalog / proof / receipt / release | `data/catalog/`, `data/proofs/`, `data/receipts/`, `release/` | Downstream authority and audit families. |
+
+## ADRs
+
+No ADR was created or accepted by this documentation-only change.
+
+Potential ADR or drift topics remain:
+
+- accepted PM2.5 source-role vocabulary and relationship to `AirObservation`;
+- canonical representation of concentration versus AQI/report records;
+- accepted units, precision, averaging-period, and time semantics;
+- low-cost correction and caveat profile;
+- regulatory/archive role and release posture;
+- PM2.5 validator and fixture graduation criteria;
+- stale-state, correction propagation, cache invalidation, and withdrawal behavior.
+
+Until resolved, this README records constraints but does not invent canonical field names, thresholds, methods, owners, or enforcement maturity.
+
+## Last reviewed
+
+**Reviewed:** 2026-07-25  
+**Evidence base:** repository `main@9f192b09fd64912919acfda69d638006a7817185`, prior target blob `dfd11264924f723065be6d6588a55057bdc3a1a5`, Directory Rules, current Atmosphere parent lane, `PM25Observation` semantic contract, paired scaffold schema posture, and adjacent processed-lane evidence.  
+**Current maturity:** repository-grounded documentation; operational enforcement remains bounded.
+
+---
+
+## PM25Observation admission profile
+
+The following packet is **PROPOSED** until accepted schemas, validators, fixtures, policies, and CI prove it:
+
+| Concern | Minimum disclosure before promotion |
+|---|---|
+| Identity | Stable record ID, source ID, station/network reference where applicable, external record ID, and content/method digest where practical. |
+| Pollutant | Explicit PM2.5 parameter identity; no implicit generic pollutant field. |
+| Source role | Observed sensor, public AQI/report, low-cost sensor, regulatory/archive, modeled context, or other admitted role. |
+| Value semantics | Concentration, AQI/report/index, category, corrected estimate, archive value, or other typed meaning. |
+| Units | Declared units, conversion lineage, precision, rounding, and validity for the role. |
+| Time | Observed, source, retrieval, averaging/reporting interval, correction, stale, release, and supersession time where material. |
+| Method | Instrument, measurement method, archive method, correction method, method version, calibration or collocation context where supported. |
+| QA and uncertainty | Flags, qualifiers, detection/measurement limits where relevant, uncertainty, confidence, completeness, missingness, and representativeness caveats. |
+| Low-cost posture | Required caveats, correction/confidence/limitation fields, review status, and explicit non-reference-grade status unless separately supported. |
+| Rights and sensitivity | Source terms, station-siting posture, operator/private detail restrictions, and public-safe spatial precision. |
+| Evidence | EvidenceRefs for source, value semantics, method, QA, correction, caveat, and consequential claims. |
+| Lifecycle | Validation state, policy decision, catalog readiness, release state, correction path, withdrawal path, rollback target. |
+
+An object-ready candidate is not an enforced `PM25Observation` merely because its column names resemble this packet.
+
+## Source role, units, and method
+
+### Source-role discipline
+
+| Role | What it may support | What it must not imply |
+|---|---|---|
+| `OBSERVED_SENSOR` | A measured PM2.5 concentration under the source's method and QA context. | AQI/report posture, regulatory exceedance, exposure, or health outcome by itself. |
+| `PUBLIC_AQI_REPORT` | An agency/index/report value or category for public communication. | Raw concentration or direct sensor measurement unless separately supplied and typed. |
+| `LOW_COST_SENSOR` | A caveated PM2.5 estimate under declared correction and limitations. | Reference-grade, regulatory, calibrated, or representative truth without separate support. |
+| Regulatory/archive context | A historical or authority-issued record under a declared archive role and vintage. | Current operational state, observed truth outside its method, or legal exceedance conclusion by itself. |
+| Modeled or forecast context | A model-derived PM2.5 field in its modeled lane. | Observed concentration. |
+| Proxy or remote-sensing context | AOD, smoke, visibility, or related proxy context in its owning lane. | PM2.5 measurement. |
+
+### Units and averaging
+
+- Preserve source units and normalized units with explicit conversion method and version.
+- Do not compare or merge values across incompatible averaging periods without a reviewed method.
+- Keep instantaneous, hourly, rolling, daily, regulatory, public-report, and archive semantics distinct.
+- Preserve precision and rounding rules; avoid false precision after conversion or correction.
+- Record whether the value is final, preliminary, corrected, provisional, stale, superseded, or withdrawn.
+
+### Method and QA
+
+- A station identity does not prove instrument performance or representativeness.
+- Calibration, correction, collocation, drift adjustment, humidity adjustment, or other methods require method identity and reviewable lineage.
+- Missingness, invalidation, exceptional events, QA qualifiers, below-detection or out-of-range states, and source corrections must not be silently dropped.
+- A low-cost correction model is a derived method and does not convert the source into reference-grade authority.
+- Regulatory or health significance requires a separate, evidence-backed and policy-reviewed claim surface.
 
 ## PM2.5 guardrails
 
-- `PM25Observation` is PM2.5-specific and must not be flattened into generic `AirObservation` when PM2.5-specific semantics matter.
-- PM2.5 and ozone are separate pollutant-specific object families with separate units, methods, QA, report semantics, and caveats.
-- AQI is a report/index posture, not raw PM2.5 concentration.
-- Low-cost PM2.5 records require correction, caveat, confidence, limitation, and policy controls before public release.
-- Regulatory/archive posture requires source-role, vintage, issuing-authority, and evidence support.
-- AOD is a remote-sensing mask/proxy and must not be presented as PM2.5.
-- Modeled PM2.5 or forecast context must remain labeled as model context, not observed sensor data.
-- PM2.5 values may support context, but they do not create emergency, medical, exposure, regulatory-exceedance, or life-safety instructions by themselves.
-- Public display requires source rights, units, freshness, validation, policy, release record, correction path, and rollback target.
-- Unreleased processed PM2.5 artifacts are not public merely because they exist under this directory.
+- AQI or public-report posture is not raw concentration.
+- AOD, smoke masks, visibility, and satellite proxies are not PM2.5 measurements.
+- Modeled and forecast PM2.5 are not observations.
+- Low-cost PM2.5 requires caveats, correction/confidence/limitation context, and explicit role labeling.
+- Station metadata is context, not the value itself.
+- A normalized value does not prove calibration, representativeness, compliance, exceedance, exposure, health effect, damage, or action guidance.
+- Public products must disclose source role, units, averaging/reporting period, time, QA/caveat posture, evidence, release state, correction path, and rollback target.
+- KFM does not issue emergency, medical, occupational, or life-safety instructions from this lane.
 
-> [!CAUTION]
-> Do not use this lane as a shortcut from processed PM2.5 values to public health, exposure, regulatory, emergency, or life-safety claims. PM25Observation products must pass catalog, evidence, policy, validation, release, correction, and rollback gates before public use.
-
-## Directory map
-
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+## Lifecycle and promotion
 
 ```text
-data/processed/atmosphere/pm25/
-├── README.md
-├── normalized/              # PROPOSED — processed PM25Observation records
-├── concentration/           # PROPOSED — PM2.5 concentration values, source-role and units required
-├── aqi_report/              # PROPOSED — PM2.5 AQI/report values, not raw concentration
-├── low_cost_sensor/         # PROPOSED — caveated low-cost PM2.5 values
-├── regulatory_archive/      # PROPOSED — regulatory/archive posture with evidence and vintage controls
-├── quality/                 # PROPOSED — QA, caveats, missingness, confidence, limitations
-├── corrections/             # PROPOSED — correction/calibration lineage sidecars, not receipts
-├── joins/                   # PROPOSED — links to AirStation, AirObservation, ozone, forecast, AOD, advisory context
-├── _manifests/              # PROPOSED — lane-local non-release manifests only
-└── _README_TODO.md          # PROPOSED — remove after actual child inventory is documented
+SOURCE / CONNECTOR
+  -> RAW capture + SourceDescriptor
+  -> WORK normalization / correction / role assignment
+  -> QUARANTINE on unresolved role, rights, units, method, QA, caveat, evidence, or sensitivity
+  -> PROCESSED PM2.5 candidate
+  -> contract/schema/validator/policy/evidence review
+  -> CATALOG / optional TRIPLET projection
+  -> release candidate + proof + correction + rollback closure
+  -> separate PUBLISHED artifact
+  -> governed API / map / drawer / Focus carrier
 ```
 
-## Evidence ledger
+Promotion is a governed state transition. It is not established by copying a file, linking a README, generating a chart, creating a tile, opening a pull request, merging code, or rendering a polished layer.
 
-| Source | Status | Supports | Limits |
-|---|---|---|
-| Previous file | CONFIRMED | Target existed as a one-character placeholder. | Did not define PM25Observation PROCESSED-stage boundaries. |
-| `data/processed/atmosphere/observed/README.md` | CONFIRMED sibling README | Observed parent lane and observed-vs-model/proxy/advisory guardrails. | Does not define PM2.5-specific inventory or release behavior. |
-| `data/processed/atmosphere/air_observations/README.md` | CONFIRMED sibling README | AirObservation processed lane and generic observed-sensor guardrails. | PM2.5 specialization remains separate when pollutant-specific semantics apply. |
-| `data/processed/atmosphere/air_stations/README.md` | CONFIRMED sibling README | Station/network context remains separate from observation values. | Does not define PM2.5-value inventory. |
-| `data/processed/atmosphere/ozone/README.md` | CONFIRMED sibling README | Parallel ozone pollutant lane and AQI/concentration source-role discipline. | Does not define PM2.5 inventory or release behavior. |
-| `data/processed/atmosphere/forecast_context/README.md` | CONFIRMED sibling README | Forecast/model context remains separate from observations. | Does not define PM2.5-value inventory. |
-| `data/processed/atmosphere/aod/README.md` | CONFIRMED sibling README | AOD/remote-sensing proxy is not ground observation or PM2.5. | Does not define PM2.5-value inventory. |
-| `data/processed/README.md` | CONFIRMED | Parent processed lane is upstream of catalog, triplets, and publication and is not public by default. | Does not prove child inventory under this lane. |
-| `data/catalog/domain/atmosphere/README.md` | CONFIRMED | Atmosphere catalog lane includes PM2.5 observations downstream and preserves source-role guardrails. | Does not prove PM2.5 processed inventory or release behavior. |
-| `docs/domains/atmosphere/README.md` | CONFIRMED doctrine / PROPOSED implementation | Atmosphere owns air-quality observations and source-role denials. | Implementation maturity and runtime behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/PM25Observation.md` | CONFIRMED contract file | Defines PM25Observation as governed PM2.5 concentration/report/archive/low-cost-sensor object with AQI/concentration, low-cost, AOD, and source-role boundaries. | Contract does not prove schema enforcement, validator behavior, or release approval. |
-| `schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json` | CONFIRMED scaffold schema | Paired PM25Observation schema exists with PROPOSED status. | Properties are currently empty; validator enforcement remains NEEDS VERIFICATION. |
-| `docs/doctrine/directory-rules.md` | CONFIRMED doctrine / PROPOSED path specifics | Data paths encode lifecycle phase and domain segment; promotion is governed. | Does not prove runtime enforcement. |
+## Correction and rollback
 
-## Validation checklist
+PM2.5 correction is especially sensitive because revised source data, invalidation, unit errors, station changes, method changes, low-cost correction updates, and stale public reports can alter downstream interpretation.
 
-- [ ] Confirm actual child directories under `data/processed/atmosphere/pm25/`.
-- [ ] Confirm accepted PM25Observation source/domain path convention.
-- [ ] Confirm `PM25Observation` schema fields and title casing are updated beyond scaffold if needed.
-- [ ] Confirm PM25Observation processed validators and CI checks.
-- [ ] Confirm SourceDescriptor/source registry linkage for each source-derived PM2.5 artifact.
-- [ ] Confirm PM2.5-vs-AirObservation, PM2.5-vs-ozone, AQI-vs-concentration, low-cost-vs-reference-grade, AOD-vs-PM2.5, observed-vs-model, and observation-vs-advisory boundaries.
-- [ ] Confirm station context handling without duplicating station authority.
-- [ ] Confirm RunReceipt, TransformReceipt, ValidationReport, PolicyDecision, correction path, and rollback target where applicable.
-- [ ] Confirm observed time, retrieval time, report/valid time, source role, units, averaging period, QA/correction posture, caveats, limitations, missingness, confidence, station-location sensitivity, freshness, low-cost-sensor posture, regulatory/archive posture, and public AQI/report labeling.
-- [ ] Confirm no RAW, WORK, QUARANTINE, CATALOG, TRIPLET, PUBLISHED, proof, receipt, release, schema, policy, validator, package, pipeline, app, API, station-authority, ozone, AOD-as-PM2.5, model, remote-sensing proxy, advisory, official warning, exposure, health/safety, or regulatory-claim artifacts are misplaced here.
-- [ ] Confirm promotion flow from processed PM25Observation data to catalog/triplet/published outputs is governed, source-role-safe, unit-aware, AQI-boundary-aware, low-cost-caveat-aware, evidence-backed, and reversible.
-- [ ] Confirm public clients and Focus Mode cannot use this lane as a direct public health, exposure, regulatory, emergency, hazard-impact, or life-safety source.
+A credible correction process should:
 
-## Rollback
+1. identify the affected source, station/network, record identity, source role, time window, units, averaging period, and method;
+2. preserve prior values and evidence rather than silently overwriting them;
+3. state whether the change is source-issued, unit-related, QA-related, correction-model-related, role-related, or editorial;
+4. recompute affected aggregates, comparisons, AQI/report carriers, derived layers, catalogs, triplets, EvidenceBundles, and public artifacts where applicable;
+5. invalidate or rebuild caches and indexes derived from affected values;
+6. issue correction, supersession, withdrawal, or stale-state records appropriate to the impact;
+7. preserve prior release IDs and a tested rollback target;
+8. verify that public clients no longer expose invalid or superseded claims while retaining inspectable correction lineage.
 
-Rollback is required if this lane becomes an Atmosphere source-data root, AirObservation replacement, ozone replacement, station authority root, AQI/concentration substitution root, AOD-as-PM2.5 root, low-cost overclaim root, ForecastContext replacement, AODRaster replacement, advisory authority root, official warning/public-alerting root, quarantine bypass, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, published-output root, public layer root, public tile root, schema root, policy root, validator root, implementation root, public API shortcut, public exposure shortcut, public health/exposure source, regulatory-claim source, emergency instruction source, or life-safety guidance source.
-
-Rollback target for this expansion: previous placeholder blob SHA `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a`.
+Rollback must not restore a value known to be unsafe, role-collapsed, unsupported, or misleading. In that case, withdraw or hold the affected output and return `ABSTAIN`, `DENY`, or an explicit stale/error state.
 
 <p align="right"><a href="#top">Back to top</a></p>
