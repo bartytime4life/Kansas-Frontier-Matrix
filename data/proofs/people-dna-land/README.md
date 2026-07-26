@@ -1,368 +1,467 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/proofs/people-dna-land/readme
-title: data/proofs/people-dna-land README
+title: data/proofs/people-dna-land/ — Restricted People, DNA, and Land Proof Support
 type: directory-readme
-version: v0.1
-status: draft
+subtype: restricted-domain-proof-lane
+version: v0.2.0
+status: repository-grounded draft; proof payloads, executable domain validators, consent enforcement, release integration, and public effects remain held
 owners:
-  - <data steward — TODO>
-  - <people-dna-land domain steward — TODO>
-  - <sensitivity reviewer — TODO>
-  - <release steward — TODO>
+  - "NEEDS VERIFICATION — People/DNA/Land domain, proof, evidence, privacy, consent, sensitivity, policy, and release stewards"
+  - "CONFIRMED GitHub review routing — @bartytime4life via .github/CODEOWNERS; routing is not approval"
 created: 2026-06-25
-updated: 2026-06-25
-policy_label: restricted-review
+updated: 2026-07-26
+policy_label: restricted-review; t4-deny-by-default; living-person; dna-genomic; consent-revocation; land-title; no-direct-public-path; release-gated
 path: data/proofs/people-dna-land/README.md
+prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+truth_posture: >
+  CONFIRMED exact target path and prior blob, Directory Rules proof placement, modernized proofs-root
+  contract, People/DNA/Land bounded-context and sensitivity doctrine, consent-policy documentation,
+  candidate-release lane, CODEOWNERS routing, and read-only readiness workflow / PROPOSED accepted
+  materialization profile, proof packet shapes, public-safe derived products, revocation cascade, and
+  cross-lane closure rules / UNKNOWN recursive proof payload inventory, active writers and consumers,
+  deployed policy runtime, caches, hosting, public routes, release instances, and public effects /
+  NEEDS VERIFICATION accountable stewards, segment-placement ADR, schemas, executable validators,
+  synthetic fixtures, consent and revocation enforcement, EvidenceBundle resolution, independent review,
+  release/correction/withdrawal integration, cache invalidation, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 4ce20df8b12d640fa527147407a24f56d61e0b46
+  prior_blob: 05359bb623e69dccbda1ee22f8ba0d8345d9d412
+  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  validator_index_blob: 7a78d278aa03d843107d4d66a954c7a670d2ac19
+  consent_policy_readme_blob: fa7ea7c95a473a7fd498053536ca0b72b17461f6
+  release_candidate_readme_blob: cbbef9394fbdbe94ed742957e1b764c84c9907f3
+  domain_workflow_blob: bb5626ff3aaba558070f53807027e70b2ba89a6e
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
+  - ../README.md
+  - ../../receipts/people-dna-land/README.md
+  - ../../registry/sources/people-dna-land/README.md
+  - ../../processed/people-dna-land/README.md
+  - ../../catalog/domain/people-dna-land/land-ownership/README.md
+  - ../../published/people-dna-land/README.md
   - ../../../docs/domains/people-dna-land/README.md
-  - ../../../docs/domains/people-dna-land/ARCHITECTURE.md
+  - ../../../docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md
   - ../../../docs/domains/people-dna-land/SENSITIVITY.md
   - ../../../docs/domains/people-dna-land/DNA_HANDLING.md
-  - ../README.md
-  - ../../receipts/README.md
-  - ../../catalog/README.md
-  - ../../published/README.md
-  - ../../../release/README.md
-  - ../../../policy/README.md
-  - ../../../schemas/README.md
-  - ../../../contracts/README.md
-tags:
-  - kfm
-  - data
-  - proofs
-  - people-dna-land
-  - evidence-bundle
-  - proof-pack
-  - consent
-  - redaction
-  - revocation
-  - rollback
-  - deny-by-default
+  - ../../../docs/domains/people-dna-land/DATA_LIFECYCLE.md
+  - ../../../docs/domains/people-dna-land/VERIFICATION_BACKLOG.md
+  - ../../../contracts/domains/people-dna-land/README.md
+  - ../../../schemas/contracts/v1/domains/people-dna-land/README.md
+  - ../../../policy/domains/people-dna-land/README.md
+  - ../../../policy/consent/people-dna-land/README.md
+  - ../../../tools/validators/domains/people-dna-land/README.md
+  - ../../../tests/domains/people-dna-land/README.md
+  - ../../../tests/domains/people-dna-land/consent/revocation/README.md
+  - ../../../release/candidates/people-dna-land/README.md
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../.github/workflows/domain-people-dna-land.yml
+  - ../../../.github/CODEOWNERS
 notes:
-  - "Directory README for proof objects only. It is not a schema, policy bundle, release decision, or proof artifact."
-  - "Living-person, DNA/genomic, raw kit/vendor, exact burial/cultural, title, and private person-parcel claims fail closed unless policy, evidence, consent, and review explicitly allow release."
-  - "Path and adjacent links should be rechecked after mounted-repo validation and CODEOWNERS review."
+  - "Same-path Markdown modernization only; no person, genealogy, DNA, land, consent, revocation, proof, contract, schema, policy, validator, fixture, workflow, release, route, hosting, or publication state changed."
+  - "This README preserves the exact phrase NEEDS VERIFICATION for emitted proof files because the current readiness workflow checks that sentinel before reporting a held proof lane."
+  - "People/DNA/Land is treated as T4 / deny-by-default. Consent is necessary where required but never sufficient for publication."
+  - "The documentation rollback target for v0.2.0 is prior blob 05359bb623e69dccbda1ee22f8ba0d8345d9d412."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/proofs/people-dna-land/`
+# `data/proofs/people-dna-land/` — Restricted People, DNA, and Land Proof Support
 
-> Proof-lane index for the **People / Genealogy / DNA / Land Ownership** domain. This directory is for reviewable proof objects that support evidence closure, sensitivity decisions, consent and revocation enforcement, redaction/generalization, catalog closure, promotion decisions, correction, and rollback for people/DNA/land claims.
+> **One-line purpose.** Hold or index reviewable, public-repository-safe proof support for bounded People, Genealogy, DNA, consent, revocation, land-instrument, ownership-interval, parcel-representation, correction, and rollback claims without becoming identity, kinship, title, policy, release, or publication authority.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: proof](https://img.shields.io/badge/lifecycle-proof--lane-blue)
-![Sensitivity: restricted review](https://img.shields.io/badge/sensitivity-restricted--review-b91c1c)
-![Policy: deny-by-default](https://img.shields.io/badge/policy-deny--by--default-1f2937)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Sensitivity: T4 deny by default](https://img.shields.io/badge/sensitivity-T4%20deny%20by%20default-b42318?style=flat-square)](#sensitive-proof-gates)
+[![Authority: proof support](https://img.shields.io/badge/authority-proof%20support-0969da?style=flat-square)](#authority-level)
+[![Consent: necessary not sufficient](https://img.shields.io/badge/consent-necessary%20not%20sufficient-6f42c1?style=flat-square)](#consent-and-revocation-boundary)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<people-dna-land domain steward>` · `<sensitivity reviewer>` · `<release steward>` — TODO  
-> **Path:** `data/proofs/people-dna-land/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for emitted proof files, validator wiring, CI enforcement, and release-gate coverage.
+> **Proof support is necessary but not sufficient for release.** A valid-looking proof packet cannot make a person identity, relationship, DNA inference, consent state, ownership assertion, parcel boundary, cultural context, or public derivative true, lawful, safe, reviewed, released, or KFM-published.
 
 > [!CAUTION]
-> This is one of KFM's highest-risk proof lanes. Proof material for living persons, DNA/genomic evidence, relationship hypotheses, land ownership, title instruments, parcel joins, or cultural/community context **must not** become public merely because a file exists here. Proofs support review; they do not publish, authorize, certify title, prove kinship, or override policy.
+> **This is a T4 / deny-by-default lane.** Missing, stale, conflicted, revoked, unresolvable, rights-unclear, sensitivity-unsafe, living-person-exposing, title-like, or consent-ambiguous support must yield a finite fail-closed result such as `ABSTAIN`, `HOLD`, `RESTRICT`, `DENY`, `WITHDRAW`, or `ERROR` according to the applicable contract.
+
+> [!WARNING]
+> Never place raw genotype, DNA segments, kit or vendor identifiers, living-person PII, private person↔parcel joins, exact burial or sacred-place details, secrets, access tokens, unredacted relationship hypotheses, control-defeating transform parameters, or restricted source material in this ordinary repository lane.
+
+- **Path:** `data/proofs/people-dna-land/README.md`
+- **Owning responsibility:** `data/proofs/`
+- **Domain segment:** `people-dna-land/`
+- **Direct public access:** denied
+- **Documentation rollback target:** prior blob `05359bb623e69dccbda1ee22f8ba0d8345d9d412`
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Lifecycle](#lifecycle-relationship) · [Proof packet](#restricted-proof-packet) · [Consent](#consent-and-revocation-boundary) · [Sensitive gates](#sensitive-proof-gates) · [Cross-lane boundaries](#cross-lane-proof-boundaries) · [Failure modes](#failure-modes) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger) · [Rollback](#rollback)
 
 ---
 
-## Quick jumps
+## Purpose
 
-| Section | Use it for |
+`data/proofs/people-dna-land/` is the domain-specific proof-support lane for candidate claims involving:
+
+- assertion-first person evidence and identity candidates;
+- genealogy relationships and relationship hypotheses;
+- restricted DNA/genomic evidence and derived relationship support;
+- consent, suspension, dispute, revocation, and downstream invalidation;
+- land instruments, ownership intervals, assessor/tax records, parcel versions, and legal descriptions;
+- person↔place or person↔land assertions under strict privacy and purpose limitations;
+- validation, citation, policy, redaction, aggregation, review, correction, withdrawal, and rollback support.
+
+The lane exists to make the following review questions inspectable:
+
+1. What exact claim or release scope is being supported?
+2. Which `EvidenceRef` values and EvidenceBundle members support it?
+3. Which source roles, time intervals, spatial representations, rights, consent, sensitivity, and review limits apply?
+4. Which fields, relations, geometry, derivations, exports, or audiences are allowed, generalized, withheld, or denied?
+5. Which correction, revocation, withdrawal, cache invalidation, and rollback dependencies remain outside the proof packet?
+6. Which finite outcome is justified?
+
+This lane supports review. It does not establish person identity, kinship, DNA truth, consent validity, title, parcel-boundary truth, source rights, policy approval, release approval, legal sufficiency, or publication.
+
+## Authority level
+
+**Implementation-bearing specialized proof-support lane under the canonical `data/proofs/` responsibility.** Directory Rules assign proof material to `data/proofs/`; the domain remains a nested segment rather than a new root. fileciteturn73file9
+
+| Responsibility | Owning surface |
 |---|---|
-| [1. Purpose](#1-purpose) | What this folder is for. |
-| [2. Repository fit](#2-repository-fit) | Why this path belongs under `data/proofs/`. |
-| [3. Accepted inputs](#3-accepted-inputs) | What may be stored here. |
-| [4. Exclusions](#4-exclusions) | What must never be stored here. |
-| [5. Proposed folder shape](#5-proposed-folder-shape) | Future child lanes and naming conventions. |
-| [6. Lifecycle relationship](#6-lifecycle-relationship) | How proofs relate to RAW, WORK, CATALOG, PUBLISHED, and release. |
-| [7. Sensitive-proof gates](#7-sensitive-proof-gates) | Fail-closed proof requirements. |
-| [8. Cross-lane proof boundaries](#8-cross-lane-proof-boundaries) | How neighboring domains may be cited safely. |
-| [9. Validation checklist](#9-validation-checklist) | Review checklist before promotion. |
-| [10. Definition of done](#10-definition-of-done) | When this README and lane are usable. |
-| [11. Failure modes](#11-failure-modes) | Drift patterns to block. |
-| [12. FAQ](#12-faq) | Common maintainer questions. |
+| People/DNA/Land domain meaning and bounded context | `docs/domains/people-dna-land/` and accepted semantic contracts |
+| Machine shape | `schemas/contracts/v1/...` after the segment-placement conflict is resolved |
+| Rights, sensitivity, consent, and admissibility | `policy/` and accepted policy runtime surfaces |
+| Source identity and activation | `data/registry/sources/people-dna-land/` and source-governance records |
+| Proof support | `data/proofs/people-dna-land/` — this lane |
+| Process receipts | `data/receipts/people-dna-land/` and accepted receipt families |
+| Candidate and release decisions | `release/candidates/people-dna-land/` and `release/` |
+| Published public-safe carriers | `data/published/people-dna-land/` after governed release |
+| Governed API, map, search, export, and AI behavior | application/runtime surfaces downstream of release and policy |
 
----
+This README creates no new proof family, policy authority, source registry, release state, public route, or legal determination.
 
-## 1. Purpose
+## Status
 
-`data/proofs/people-dna-land/` is the domain-specific proof lane for materialized, reviewable proof records connected to people, genealogy, DNA, consent, revocation, land instruments, ownership intervals, assessor/tax records, parcel versions, and person↔place assertions.
+| Surface | Bounded result |
+|---|---|
+| Exact target path and prior content | **CONFIRMED** at `main@4ce20df8b12d640fa527147407a24f56d61e0b46`; prior blob `05359bb623e69dccbda1ee22f8ba0d8345d9d412` |
+| Documentation version | `v0.2.0` |
+| Parent proof responsibility | **CONFIRMED repository-grounded draft** at [`data/proofs/README.md`](../README.md); no longer a greenfield stub |
+| People/DNA/Land bounded-context doctrine | **CONFIRMED draft repository docs**; assertion-first identity, source-role separation, T4 sensitivity, title/parcel anti-collapse, and neighbor-control rules are documented |
+| Consent-policy documentation | **CONFIRMED README / placement conflicted / enforcement unproved**; consent is purpose-, audience-, subject-, field/relation-, precision-, export-, and time-specific |
+| Domain validator index | **CONFIRMED README-only index**; no accepted executable domain validator body is established by the inspected readiness workflow |
+| Domain workflow | **CONFIRMED read-only readiness workflow** with validation, proof, and release holds; it intentionally does not open surfaced fixture or proof payloads |
+| GitHub review routing | **CONFIRMED** `/data/proofs/` routes to `@bartytime4life`; routing is not review approval, policy approval, or release approval |
+| Proof payload inventory | **UNKNOWN / held**; no recursive sensitive-payload inspection was performed in this Markdown task |
+| Executable consent, revocation, validation, proof production, release integration, or public behavior | **NEEDS VERIFICATION / held** |
+| Public readiness | **DENY BY DEFAULT** |
 
-This folder may hold **proof instances** that help reviewers answer questions such as:
+The current workflow expects the posture text **“NEEDS VERIFICATION for emitted proof files”** and reports an explicit proof hold when no accepted producer or deterministic command exists. This README preserves that sentinel and does not graduate the workflow.
 
-- Does a proposed claim resolve to an `EvidenceBundle`?
-- Are citations complete and source-role labeled?
-- Are living-person, DNA, title, and private person-parcel controls enforced?
-- Was a redaction, aggregation, generalization, or denial decision recorded?
-- Did the release candidate pass validation, citation, policy, review, and rollback gates?
-- Can a correction, withdrawal, or revocation be traced back to the exact proof and release scope it affects?
+## What belongs here
 
-This folder is **not** the source of truth for object semantics, field shape, policy logic, source authority, or publication state. Those remain in `contracts/`, `schemas/`, `policy/`, `data/registry/`, `data/catalog/`, `release/`, and `data/published/` as appropriate.
+Only repository-policy-safe proof artifacts under an accepted profile belong here. Prefer synthetic, generalized, aggregate, or reference-only material until rights, consent, sensitivity, storage, and review controls are proven.
 
-[Back to top](#top)
-
----
-
-## 2. Repository fit
-
-KFM separates lifecycle data, receipts, proofs, catalogs, releases, and published outputs so that no single artifact bucket becomes accidental authority.
-
-| Neighbor | Relationship to this folder | Boundary rule |
+| Artifact class | Bounded purpose | Required posture |
 |---|---|---|
-| [`../README.md`](../README.md) | Parent proof root. | Defines proof-lane expectations; this file narrows them for people/DNA/land. |
-| [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran or what was decided; proofs assemble support for review. Receipts are not proof by themselves. |
-| [`../../catalog/`](../../catalog/) | Catalog closure and metadata. | Catalog records describe released/managed artifacts; proofs may cite catalog IDs but do not replace them. |
-| [`../../published/`](../../published/) | Public or semi-public released artifacts. | Published outputs require release decisions; proof-file placement alone does not publish. |
-| [`../../../release/`](../../../release/) | Promotion decisions, manifests, rollback cards, correction notices. | Release authority lives here; this folder stores supporting proof objects only. |
-| [`../../../policy/`](../../../policy/) | Rights, sensitivity, consent, and release logic. | Proofs record outcomes/evidence; policy logic lives in policy roots. |
-| [`../../../schemas/`](../../../schemas/) | Machine-checkable shape. | Proof JSON shapes belong under schemas, not in this README. |
-| [`../../../contracts/`](../../../contracts/) | Human semantic contracts. | Meaning and invariants belong in contracts, not emitted proof files. |
-| [`../../../docs/domains/people-dna-land/`](../../../docs/domains/people-dna-land/) | Domain doctrine and reviewer guidance. | Documentation explains the lane; proofs support specific candidate claims or releases. |
+| EvidenceBundle support or index | Link a bounded claim scope to evidence members, citations, source roles, rights, sensitivity, and limitations. | Reference governed records; do not duplicate raw sensitive material. |
+| ProofPack support | Collect immutable references to validation, citation, policy, consent, redaction, review, release dependency, correction, and rollback objects. | A proof pack is not a release manifest or legal finding. |
+| ValidationReport support | Record deterministic shape, source-role, lifecycle, crosswalk, geometry, public-safety, or policy checks. | Finite result and reason codes; passing scope stated precisely. |
+| CitationValidation support | Check claim-to-citation and `EvidenceRef → EvidenceBundle` resolution for reports, maps, drawer payloads, exports, or AI responses. | Cite-or-abstain; unsupported claims remain held. |
+| Redaction or aggregation proof | Record the safe transform, source and target precision, target audience, withheld fields, reason, policy decision, and reviewer state. | Never expose offsets, secrets, or reversal-enabling parameters. |
+| Consent or revocation proof summary | Reference consent scope, expiry, suspension, dispute, revocation, obligations, and invalidation outcomes. | No private tokens; consent is never sufficient by itself. |
+| Title/parcel boundary proof | Demonstrate that administrative records and geometry were not promoted into title or boundary truth. | Preserve instrument, assessor/tax, legal-description, and parcel-version distinctions. |
+| Correction, withdrawal, and rollback support | Link affected claims, derivatives, releases, caches, indexes, and rollback targets. | Authority remains in `release/` and correction records. |
+| Lane-local inventory, digest, migration, or disposition note | Explain proof identity and maintenance. | Must not become a parallel authority register. |
 
-> [!NOTE]
-> Proof material here is downstream of evidence and policy. It supports promotion review but cannot bypass validators, source-role checks, consent checks, redaction review, release decisions, or rollback planning.
+## What does NOT belong here
 
-[Back to top](#top)
-
----
-
-## 3. Accepted inputs
-
-Use this directory for proof artifacts that are already safe to store under repository policy and are appropriate for review. Prefer synthetic fixtures until source rights, consent, sensitivity, and storage rules are fully verified.
-
-| Proof family | Example content | Required posture |
+| Excluded material or authority | Correct home or action | Why |
 |---|---|---|
-| `evidence_bundle/` | EvidenceBundle closure records or references for a person, family, residence, migration, land, or aggregate claim. | Must not include raw living-person, raw DNA, raw kit/vendor, or unredacted sensitive details. |
-| `proof_pack/` | A bundled index of validation, citation, policy, redaction, catalog, release, and rollback proof refs for one candidate release. | Must reference, not duplicate, sensitive source material. |
-| `validation_report/` | Schema, fixture, lifecycle, crosswalk, geometry, source-role, or policy-validation reports. | Must include finite outcome and reason codes. |
-| `citation_validation/` | Citation and EvidenceRef resolution checks for claims, maps, reports, Focus Mode answers, or drawer payloads. | Must support cite-or-abstain. |
-| `redaction/` | Redaction or generalization proof for a person, parcel, ownership interval, cultural/community context, or location-bearing claim. | Must record transform, reason, reviewer, and target tier. |
-| `consent/` | Consent enforcement proof summaries for consent-gated records or aggregate outputs. | Must cite consent scope and expiration without exposing private tokens. |
-| `revocation/` | Revocation enforcement proof summaries, tombstone refs, cache-invalidation refs, or withdrawal support. | Must fail closed when revocation status is unknown. |
-| `title_boundary/` | Proof that a release avoids claiming title truth from assessor/tax/parcel geometry alone. | Must preserve the assessor/tax/title distinction. |
-| `rollback/` | Rollback-support proof refs connected to release, correction, withdrawal, or revocation state. | Must reference release/rollback authority, not replace it. |
+| Raw GEDCOM, vital-record, cemetery, assessor, deed, tax, parcel, vendor, or source captures | Governed RAW, WORK, or QUARANTINE lanes | Proof storage is not source storage. |
+| Raw genotype, DNA segment, kit/vendor ID, match table, credential, or token | Deny or quarantine under approved DNA controls | Ordinary repository proof lanes must not hold reconstructable DNA material. |
+| Living-person PII, private person↔parcel or person↔family joins, unredacted hypotheses | Deny, quarantine, redact, aggregate, or generalize before proof consideration | T4 and privacy controls fail closed. |
+| Exact burial, sacred-place, archaeology, cultural-sovereignty, or community-sensitive detail | Restricted steward-controlled systems or denied output | Neighbor context cannot weaken the most restrictive policy. |
+| Contracts, schemas, policy rules, source descriptors, validators, tests, fixtures, pipelines, or application code | Their owning responsibility roots | Proof artifacts cannot redefine governing behavior. |
+| Receipts used as proof by themselves | `data/receipts/` plus separate proof closure | A receipt records process; it does not prove a claim or release. |
+| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, or RollbackCard as authority | `release/` | This lane may reference authority records but cannot own them. |
+| Public map tiles, PMTiles, GeoParquet, reports, story exports, search indexes, graph views, or API payloads | `data/published/` after release | Derived carriers remain downstream and governed. |
+| Legal advice, title certification, kinship adjudication, consent legal sufficiency, or boundary determination | Out of KFM proof-lane scope | KFM supports evidence and uncertainty; it does not adjudicate. |
 
-[Back to top](#top)
+## Inputs
 
----
+A restricted proof packet may reference only admitted or explicitly held governed records. As applicable, inputs include:
 
-## 4. Exclusions
+- stable claim, assertion, person-candidate, relationship, instrument, parcel-version, release-candidate, and run identities;
+- `EvidenceRef` values, EvidenceBundle members, citations, source records, source roles, rights, and limitations;
+- valid, observed, source, retrieval, decision, consent, revocation, correction, and release times;
+- living/deceased/unknown classification and applicable review state;
+- consent scope, purpose, audience, fields/relations, precision, export class, expiration, suspension, dispute, and revocation status;
+- sensitivity, privacy, sovereignty, cultural, burial, archaeology, land, and reconstruction-risk posture;
+- land instruments, assessor/tax administrative records, legal descriptions, parcels, and parcel versions with anti-collapse labels;
+- transform, redaction, generalization, aggregation, checksum, `spec_hash`, validation, receipt, policy, review, release dependency, correction, invalidation, and rollback references.
 
-Do **not** place these materials in this directory.
+An unresolved member remains unresolved. Documentation must not fabricate closure.
 
-| Excluded material | Correct home or action | Reason |
-|---|---|---|
-| Raw source captures, GEDCOM exports, vendor CSVs, assessor extracts, deed scans, tax rolls, parcel dumps, or cemetery/vital-record files | `data/raw/`, `data/work/`, or `data/quarantine/` under source-specific controls | Proof lanes are not source storage. |
-| Raw genotype, raw DNA segment data, raw `DNAKitToken`, raw kit/vendor IDs, or individual match tables | Deny/quarantine under DNA policy; never store in public repo proof lanes | Raw DNA and kit identifiers must not appear in non-RAW/public review artifacts. |
-| Living-person PII, private person↔parcel joins, or unredacted relationship hypotheses | Deny/quarantine/generalize/redact before proof publication | This lane fails closed for living-person and private-join risk. |
-| Legal advice, title certification, or title-boundary conclusions | Out of scope; cite land instruments and uncertainty only | KFM does not certify title. |
-| Schema definitions | `schemas/contracts/v1/...` | Machine-checkable shape belongs in schema homes. |
-| Semantic contracts | `contracts/...` | Meaning and invariants belong in contracts. |
-| Policy logic or consent rules | `policy/consent/...`, `policy/sensitivity/...`, `policy/release/...` | Proofs record policy outcomes; they do not define policy. |
-| Release decisions, promotion decisions, release manifests, correction notices, or rollback cards as authority | `release/` | This directory may reference release authority but must not become it. |
-| Public map tiles, PMTiles, GeoParquet, reports, API payloads, or story exports | `data/published/` after release gates | Published artifacts are downstream and must remain separate. |
+## Outputs
 
-[Back to top](#top)
+Outputs are proof-support records or indexes for independent review, release preflight, correction, withdrawal, rollback, Evidence Drawer projection, governed API resolution, and bounded AI use.
 
----
+They must not:
 
-## 5. Proposed folder shape
+- become a direct public data service;
+- expose sensitive source content or reverse-engineerable derivatives;
+- convert `EvidenceRef` into EvidenceBundle closure without resolution;
+- convert consent into broad authorization;
+- convert DNA evidence into identity truth;
+- convert assessor/tax records or parcel geometry into title truth;
+- convert validation success into review, policy, or release approval;
+- convert a branch, commit, PR, merge, badge, generated report, or workflow conclusion into KFM publication.
 
-The target child lanes below are **PROPOSED** until directories, schemas, validators, and CI are verified.
+## Validation
 
-```text
-data/proofs/people-dna-land/
-├── README.md
-├── evidence_bundle/
-│   └── <release_or_claim_scope>.evidence-bundle.json
-├── proof_pack/
-│   └── <release_id>.proof-pack.json
-├── validation_report/
-│   └── <run_id>.validation-report.json
-├── citation_validation/
-│   └── <run_id>.citation-validation-report.json
-├── redaction/
-│   └── <release_id>.redaction-proof.json
-├── consent/
-│   └── <scope_id>.consent-enforcement-proof.json
-├── revocation/
-│   └── <scope_id>.revocation-enforcement-proof.json
-├── title_boundary/
-│   └── <claim_scope>.title-boundary-proof.json
-└── rollback/
-    └── <release_id>.rollback-proof.json
-```
+Validation is layered. A passing layer proves only its declared scope.
 
-### Naming guidance
+| Layer | Current posture | What it can prove | What it cannot prove |
+|---|---|---|---|
+| README/source validation | **Performed for this update** | One H1, anchors, links introduced in scope, fences, tables, alerts, metadata, no-loss, exact remote bytes | Host rendering, runtime enforcement, sensitive payload safety |
+| Domain readiness workflow | **CONFIRMED definition / expected hold** | Required boundary paths, absence of accepted executable tests/validators, current policy scaffolding, and fixture non-consumption posture | Person, relationship, DNA, consent, title, rights, privacy, evidence, release, or public safety |
+| Proof readiness workflow | **CONFIRMED definition / expected hold** | README sentinel, no accepted proof payload/producer/Make target surfaced within its declared checks | Proof correctness, EvidenceBundle closure, consent/revocation execution, release readiness |
+| Schemas, validators, and synthetic fixtures | **NEEDS VERIFICATION** | Machine shape and bounded negative cases after implementation | Source truth, legal sufficiency, review or release approval |
+| Policy runtime and consent/revocation integration | **NEEDS VERIFICATION** | Exact finite policy results and obligations after accepted activation | Evidence truth or release approval by itself |
+| Release/correction/rollback drills | **NEEDS VERIFICATION** | Candidate-to-release, correction, withdrawal, invalidation, and restoration behavior | Truth beyond the tested scope |
 
-Prefer deterministic, reviewable names over friendly labels:
+Before any proof artifact advances, verify at minimum:
 
-```text
-<domain>.<proof_family>.<scope>.<version_or_run_id>.<short_hash>.json
-```
+- [ ] no raw genotype, segments, kit/vendor IDs, living-person PII, private joins, or restricted exact context;
+- [ ] every consequential claim resolves `EvidenceRef → EvidenceBundle` or returns a finite negative result;
+- [ ] source roles distinguish observation, assertion, hypothesis, administrative record, legal instrument, model, review, policy, and release state;
+- [ ] living/deceased/unknown, rights, consent, revocation, sensitivity, purpose, audience, precision, retention, and export posture are explicit;
+- [ ] DNA-derived hints remain evidence or hypotheses, never identity or kinship authority without governed review;
+- [ ] assessor/tax records are administrative evidence, not title truth;
+- [ ] parcel geometry is a versioned representation, not title-boundary proof;
+- [ ] transforms and obligations are named, reviewable, and irreversible from the public derivative where required;
+- [ ] correction, withdrawal, invalidation, and rollback targets are traceable;
+- [ ] release authority stays in `release/`; public artifacts stay in `data/published/`;
+- [ ] validator, workflow, or review evidence is linked, otherwise the artifact remains held.
 
-Examples:
+## Review burden
 
-```text
-people-dna-land.validation_report.synthetic-living-person-deny.v0.1.0123abcd.json
-people-dna-land.citation_validation.historic-land-assertion.v0.1.89ab4567.json
-people-dna-land.redaction.public-family-story.v0.1.4567cdef.json
-```
+This lane requires the highest practical review burden appropriate to the exact operation.
 
-A future schema may replace this naming pattern. Until then, treat it as local guidance, not global identity law.
+- GitHub CODEOWNERS routes `/data/proofs/` review to `@bartytime4life`; this proves routing only.
+- Accountable People/DNA/Land, privacy, consent, sensitivity, rights, proof/evidence, policy, correction, and release roles remain **NEEDS VERIFICATION**.
+- The generator or author must not be treated as the sole approver for policy-significant, living-person, DNA, consent, title, cultural, or public-exposure decisions.
+- Any new payload, schema, validator, fixture, policy, consent or revocation mechanism, release candidate, public derivative, correction, or rollback change requires the corresponding specialist and independent review.
+- Review must distinguish documentation approval, proof validity, policy decision, release approval, and publication state.
 
-[Back to top](#top)
+## Related folders
 
----
+- Parent proof contract: [`data/proofs/`](../README.md)
+- Domain receipts: [`data/receipts/people-dna-land/`](../../receipts/people-dna-land/README.md)
+- Source registry: [`data/registry/sources/people-dna-land/`](../../registry/sources/people-dna-land/README.md)
+- Processed lane: [`data/processed/people-dna-land/`](../../processed/people-dna-land/README.md)
+- Catalog land-ownership lane: [`data/catalog/domain/people-dna-land/land-ownership/`](../../catalog/domain/people-dna-land/land-ownership/README.md)
+- Published lane: [`data/published/people-dna-land/`](../../published/people-dna-land/README.md)
+- Domain doctrine: [`docs/domains/people-dna-land/`](../../../docs/domains/people-dna-land/README.md)
+- Bounded context: [`SCOPE_AND_BOUNDARY.md`](../../../docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md)
+- Sensitivity doctrine: [`SENSITIVITY.md`](../../../docs/domains/people-dna-land/SENSITIVITY.md)
+- DNA handling: [`DNA_HANDLING.md`](../../../docs/domains/people-dna-land/DNA_HANDLING.md)
+- Domain validator index: [`tools/validators/domains/people-dna-land/`](../../../tools/validators/domains/people-dna-land/README.md)
+- Consent policy documentation: [`policy/consent/people-dna-land/`](../../../policy/consent/people-dna-land/README.md)
+- Release candidates: [`release/candidates/people-dna-land/`](../../../release/candidates/people-dna-land/README.md)
+- Workflow: [`domain-people-dna-land.yml`](../../../.github/workflows/domain-people-dna-land.yml)
+- Placement doctrine: [`Directory Rules`](../../../docs/doctrine/directory-rules.md)
 
-## 6. Lifecycle relationship
+## ADRs
 
-Proof records sit near the promotion edge. They are not RAW data, not working data, not catalog records, and not published artifacts.
+This README changes no path or authority and accepts no unresolved decision. Relevant open or proposed decisions include:
+
+- schema and contract segment naming: `people` versus `people-dna-land`;
+- top-level consent placement versus domain-nested consent policy;
+- proof instance versus index/materialization profile;
+- consent and revocation credential format, evaluator binding, obligations, retention, and cache invalidation;
+- release/correction/withdrawal separation and independent review requirements.
+
+Until accepted decisions exist, preserve the current path, avoid parallel homes, mark conflicts, and fail closed.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence boundary:** `main@4ce20df8b12d640fa527147407a24f56d61e0b46`
+- **Review type:** complete target baseline; Directory Rules; parent proof README; bounded-context and sensitivity docs; consent policy README; validator index; candidate-release README; CODEOWNERS; domain workflow
+- **Recursive proof payload inspection:** not performed
+- **Runtime, deployed policy, consent/revocation service, caches, release instances, and public effects:** not inspected
+
+Re-review on any proof payload, source, policy, consent, revocation, validator, fixture, workflow, release, correction, withdrawal, cache, public-consumer, ownership, or path-authority change—or within six months.
+
+## Lifecycle relationship
 
 ```mermaid
 flowchart LR
-  RAW["data/raw/<br/>source captures"] --> WORK["data/work / data/quarantine<br/>normalization and triage"]
-  WORK --> PROC["data/processed<br/>domain objects and candidates"]
-  PROC --> CAT["data/catalog / data/triplets<br/>metadata and graph support"]
-  CAT --> PROOF["data/proofs/people-dna-land<br/>evidence, citation, policy, redaction, consent, rollback support"]
-  PROOF --> RELEASE["release/<br/>promotion decision and rollback authority"]
-  RELEASE --> PUB["data/published<br/>released public-safe carriers"]
+  RAW["RAW<br/>source captures"] --> WORK["WORK / QUARANTINE<br/>normalize, resolve, hold"]
+  WORK --> PROC["PROCESSED<br/>assertions, instruments, parcel versions, public-safe candidates"]
+  PROC --> CAT["CATALOG / TRIPLET<br/>indexed support and governed relations"]
+  CAT --> PROOF["PROOFS<br/>evidence, validation, consent, redaction, correction support"]
+  PROOF --> REVIEW["REVIEW / POLICY<br/>independent decisions and obligations"]
+  REVIEW --> REL["RELEASE<br/>manifest, correction, withdrawal, rollback"]
+  REL --> PUB["PUBLISHED<br/>released public-safe carriers"]
 
-  POLICY["policy/<br/>rights sensitivity consent release"] -. gates .-> PROOF
-  SCHEMA["schemas/ + contracts/<br/>shape and meaning"] -. validate .-> PROOF
-  RECEIPTS["data/receipts<br/>what ran / what decided"] -. support .-> PROOF
-
-  PROOF -. "does not publish by itself" .-> PUB
+  PROOF -. "never publishes by itself" .-> PUB
+  CONSENT["Consent / revocation<br/>independent gate"] -. "allow, deny, hold, obligations" .-> REVIEW
+  CORR["Correction / invalidation"] -. "withdraw or recompile" .-> CAT
+  CORR -.-> PUB
 ```
 
-Promotion remains a governed state transition. Moving a file into `data/proofs/people-dna-land/` does not promote it, publish it, or make it safe.
+Proof support remains alongside the canonical lifecycle; it does not replace a phase. Promotion is a governed decision, not a file move.
 
-[Back to top](#top)
+## Restricted proof packet
 
----
+A future accepted proof packet should bind the minimum necessary metadata without copying sensitive source payloads.
 
-## 7. Sensitive-proof gates
+| Packet area | Minimum inspectable content |
+|---|---|
+| Scope and identity | proof ID, claim or candidate scope, domain object family, space/time scope, intended audience and operation |
+| Evidence | EvidenceRefs, EvidenceBundle status, citations, source records, source roles, limitations and conflicts |
+| Rights and consent | rights decision, consent basis and scope, expiry/suspension/revocation state, obligations, purpose and audience |
+| Sensitivity | living-person, DNA/genomic, land/title, cultural/sovereignty, archaeology/burial, exact-location, reconstruction-risk posture |
+| Representation | public-safe fields and relations, generalized geometry, withheld counts, transform version and digest, no reversal-enabling parameters |
+| Validation | schema/contract profile, deterministic checks, reason codes, negative cases, validator/run identity |
+| Review and policy | PolicyDecision, ReviewRecord or held state, independent reviewer role, unresolved obligations |
+| Release dependency | candidate/release reference, correction/withdrawal path, cache/index invalidation plan, rollback target |
+| Integrity | content hashes, spec hash, receipt references, stale/supersession state |
 
-Every proof pack in this lane should show the applicable gate result explicitly. Missing, stale, or unresolved gate state fails closed.
+The exact schema and artifact family remain **PROPOSED** until accepted contracts, schemas, policy, validators, and storage rules select them.
 
-| Risk surface | Required proof before any public or semi-public release | Default result when missing |
+## Consent and revocation boundary
+
+Consent is an independent, purpose-bound gate—not evidence, title, release, or publication authority.
+
+A consent evaluation must be bound to:
+
+- exact subject or authorized holder;
+- operation and purpose;
+- audience and access class;
+- fields, relations, derived inferences, geometry precision, export, search, graph, map, AI, and publication surfaces;
+- valid time, expiry, suspension, dispute, and revocation state;
+- obligations, retention, purge, notification, correction, and invalidation behavior.
+
+A valid consent state cannot:
+
+- prove identity, kinship, ownership, occupancy, title, or parcel boundary;
+- clear source rights or sensitivity by itself;
+- authorize a materially different derivative, inference, join, precision, export, or audience;
+- waive evidence or citation requirements;
+- make a candidate released or public;
+- authorize disclosure about another living person automatically.
+
+When consent is revoked or disputed, the system must fail closed and identify every affected derivative, cache, map, graph, search index, API payload, export, AI context, release, correction, withdrawal, and rollback dependency. Execution of that cascade remains **NEEDS VERIFICATION**.
+
+## Sensitive-proof gates
+
+| Risk surface | Required support before public or semi-public use | Default when absent or unresolved |
 |---|---|---|
-| Living-person status | Living/deceased/unknown classification, source role, reviewer decision, and policy decision. | `DENY` or `ABSTAIN`. |
-| DNA or genomic evidence | Consent scope, revocation status, no raw genotype, no raw segment, no kit/vendor ID, aggregate/k-anonymous derivation if released. | `DENY`. |
-| Relationship hypothesis | EvidenceBundle, source-role labels, uncertainty statement, reviewer state, and no living-person leakage. | `ABSTAIN` or `DENY`. |
-| Person↔parcel join | Proof that release is authorized, necessary, generalized/redacted, and not exposing private ownership/safety risk. | `DENY`. |
-| Assessor/tax record | Proof that output is labeled as administrative evidence, not title truth. | `ABSTAIN` if title-like claim is requested. |
-| Parcel geometry | Proof that geometry is a versioned representation, not title-boundary proof. | `ABSTAIN` or `DENY`. |
-| Cultural, sovereignty, archaeology, burial, or community context | Steward review, rights/sensitivity decision, generalized representation, and correction path. | `DENY`. |
-| Revoked consent | RevocationReceipt or equivalent proof, cache invalidation, and release correction/withdrawal reference. | `DENY` or `WITHDRAW`. |
-| Unresolved source rights | SourceDescriptor/rights decision and policy result. | `DENY`. |
+| Living-person status | classification, source role, purpose, policy decision, review, field/relationship minimization | `DENY` or `ABSTAIN` |
+| DNA/genomic evidence | scoped consent where required, revocation state, no raw genotype/segment/kit ID, approved aggregate or public-safe derivative | `DENY` |
+| Identity or relationship hypothesis | EvidenceBundle, source-role separation, uncertainty, independent review, no living-person leakage | `ABSTAIN`, `HOLD`, or `DENY` |
+| Person↔parcel or person↔land join | necessity, lawful purpose, most-restrictive policy, minimization, generalization/redaction, review, release dependency | `DENY` |
+| Assessor/tax record | administrative-role label and explicit non-title limitation | `ABSTAIN` for title-like requests |
+| Parcel or map geometry | versioned representation label and explicit non-boundary limitation | `ABSTAIN` or `DENY` |
+| Consent missing, stale, expired, suspended, disputed, revoked, or unverifiable | finite decision plus downstream obligation and invalidation posture | `DENY`, `HOLD`, or `WITHDRAW` |
+| Cultural, sovereignty, burial, archaeology, sacred-place, or community context | steward/rights review, sensitivity decision, generalized or withheld representation, correction path | `DENY` |
+| Unknown source rights or redistribution terms | SourceDescriptor, rights decision, permitted-use and attribution posture | `DENY` |
+| Missing release, correction, or rollback dependency | complete review and release references | `HOLD` or `DENY` |
 
-[Back to top](#top)
+## Cross-lane proof boundaries
 
----
+A neighboring domain may provide context, but never a sensitivity downgrade or ownership transfer.
 
-## 8. Cross-lane proof boundaries
-
-People/DNA/Land may cite neighboring lanes as context. A neighbor's context never weakens this lane's restrictions.
-
-| Neighbor lane | Safe proof relationship | Unsafe collapse to block |
+| Neighbor | Permitted proof relationship | Collapse to deny |
 |---|---|---|
-| Settlements / Infrastructure | Residence events may cite settlement identity, townsite context, or legal place context. | Treating residence context as proof of identity, status, or living-person publishability. |
-| Frontier Matrix | Aggregated population observations may feed matrix cells with release/rollback support. | Publishing person-level records as analytical cells. |
-| Archaeology / Cultural Heritage | Cultural/community context may be cited only under steward review and rights boundaries. | Publishing exact site, burial, sacred-place, or community-sensitive details through a people/land proof. |
-| Agriculture | LandParcel context may bound field or ownership-candidate joins. | Publishing private person↔field/operator/parcel joins. |
-| Roads / Rail / Trade | Migration or access context may cite corridors or route uncertainty. | Turning route proximity into a person or ownership claim. |
-| Spatial Foundation | Geometry validity, generalization, and coordinate reference checks may support proof. | Treating geometry as ownership, title, or identity truth. |
+| Settlements / Infrastructure | residence or place identity context under living-person controls | settlement context used as person identity or publishability proof |
+| Frontier Matrix | aggregate population or historical context with release support | person-level records exposed as matrix cells |
+| Archaeology / Cultural Heritage | cultural/community context under steward and sovereignty review | exact site, burial, sacred-place, or community-sensitive detail exposed through this lane |
+| Agriculture | parcel or historical land context for bounded analysis | private person↔field, producer, operator, or parcel joins made public |
+| Roads / Rail / Trade | migration or access context with uncertainty | proximity converted into person, residence, ownership, or safety truth |
+| Spatial Foundation | geometry validity, CRS, representation, redaction, and generalization checks | geometry treated as title, boundary, identity, or consent truth |
 
-[Back to top](#top)
+The most restrictive applicable policy follows the relationship.
 
----
+## Failure modes
 
-## 9. Validation checklist
-
-Before a proof artifact in this directory is used for promotion review, verify:
-
-- [ ] The proof artifact contains no raw genotype, raw segment, raw kit/vendor ID, raw living-person PII, or unredacted private person↔parcel join.
-- [ ] Every consequential claim resolves `EvidenceRef → EvidenceBundle` or abstains.
-- [ ] Source roles distinguish evidence, observation, model, administrative record, legal instrument, and review decision.
-- [ ] DNA evidence is treated as evidence or model output, never as identity or relationship authority.
-- [ ] Assessor/tax records are labeled as administrative records, not title truth.
-- [ ] Parcel geometry is labeled as a versioned representation, not title-boundary proof.
-- [ ] Consent, revocation, retention, and purpose scope are checked where applicable.
-- [ ] Redaction/generalization transform, reason, reviewer, tier, and target artifact are recorded.
-- [ ] Citation validation supports cite-or-abstain behavior.
-- [ ] PolicyDecision result is present for rights, sensitivity, consent, and release posture.
-- [ ] ValidationReport result is finite: `ANSWER`, `DENY`, `ABSTAIN`, or `ERROR` where applicable.
-- [ ] Catalog closure is checked before release references are accepted.
-- [ ] Release authority remains in `release/`; published output remains in `data/published/`.
-- [ ] Correction, withdrawal, revocation, and rollback targets are traceable.
-- [ ] CI or local validator evidence is linked, or the artifact remains `NEEDS VERIFICATION`.
-
-[Back to top](#top)
-
----
-
-## 10. Definition of done
-
-This README becomes operationally useful when:
-
-- [ ] CODEOWNERS or equivalent review ownership is assigned for data, domain, sensitivity, and release review.
-- [ ] The parent `data/proofs/README.md` is no longer a greenfield stub or this README is explicitly linked from it.
-- [ ] Child proof folders are created only when their schemas, validators, fixtures, and review path are known.
-- [ ] People/DNA/Land proof schemas are present under the approved schema home.
-- [ ] Semantic contracts describe the proof objects and their invariants.
-- [ ] Policy bundles cover living-person, DNA, consent, revocation, title, land/parcel, cultural/community, and release-risk decisions.
-- [ ] Valid and invalid fixtures exist for each high-risk gate.
-- [ ] CI blocks proof packs that contain excluded content or unresolved EvidenceRefs.
-- [ ] Release dry-run proves correction, withdrawal, revocation, and rollback paths.
-
-[Back to top](#top)
-
----
-
-## 11. Failure modes
-
-| Failure mode | Why it is dangerous | Required response |
+| Failure mode | Risk | Required response |
 |---|---|---|
-| Proof file includes sensitive raw content | Proof lanes may be reviewed more widely than RAW stores. | Remove/quarantine, rotate affected references if needed, record incident/correction. |
-| Proof pack treats a relationship hypothesis as confirmed kinship | Collapses model/evidence into authority. | Downgrade to hypothesis, require EvidenceBundle and review, or `ABSTAIN`. |
-| Assessor/tax record becomes title claim | Creates legal/title overclaim. | Correct language; require land instrument evidence and uncertainty labels. |
-| Parcel geometry becomes title-boundary proof | Collapses representation into legal truth. | Deny title-boundary claim; cite geometry as representation only. |
-| Consent revoked but proof remains active | Violates consent lifecycle and cache invalidation. | Withdraw/correct release, invalidate caches, attach revocation proof. |
-| Release decision stored only in `data/proofs/` | Collapses proof support with release authority. | Move decision authority to `release/` and leave only proof references here. |
-| Map or Focus Mode uses proof fields directly as truth | Bypasses governed API and EvidenceBundle resolution. | Deny direct path; require governed API envelope and citation validation. |
+| Sensitive raw material appears in proof lane | Broad review or repository exposure | Quarantine/remove, assess disclosure, rotate references where needed, record correction or incident privately |
+| Relationship or DNA hypothesis becomes confirmed kinship | Evidence/model role collapse | Downgrade to hypothesis, require evidence and independent review, or abstain |
+| Assessor/tax record becomes title claim | Legal/title overclaim | Correct language; require instruments and uncertainty; deny certification |
+| Parcel geometry becomes title-boundary truth | Representation-to-legal-truth collapse | Deny claim; label geometry as versioned representation only |
+| Consent exists but scope differs | Unauthorized secondary use | Deny; evaluate exact operation, audience, purpose, fields, precision, export, and time |
+| Consent revoked but derivatives remain active | Privacy, legal, and governance failure | Hold/withdraw, invalidate derivatives and caches, issue correction, preserve audit and rollback lineage |
+| Proof packet contains release decision as local authority | Proof/release authority collapse | Retain immutable reference only; release authority stays in `release/` |
+| Map, search, graph, export, or AI uses proof fields directly | Governed-interface bypass | Deny direct path; require released public-safe payload and evidence/policy envelope |
+| Workflow hold is presented as proof success | Readiness/result collapse | State the hold explicitly; do not claim validator, consent, proof, or release execution |
+
+## Open verification register
+
+| Item | Status | Evidence required |
+|---|---:|---|
+| Recursive proof payload inventory and storage class | `UNKNOWN` | Pinned tree, restricted-storage design, artifact families, access controls, content review |
+| Accountable owners and independent reviewers | `NEEDS VERIFICATION` | StewardshipAssignments, review policy, branch/ruleset evidence |
+| `people` versus `people-dna-land` segment and consent placement | `CONFLICTED` | Accepted ADR and migration/compatibility plan |
+| Proof packet semantic contract and schema | `NEEDS VERIFICATION` | Accepted contract, JSON Schema, versioning and migration rules |
+| Synthetic public-safe valid and invalid fixtures | `NEEDS VERIFICATION` | Fixture inventory, rights/sensitivity review, deterministic tests |
+| Executable domain validators and consent/revocation policy | `NEEDS VERIFICATION` | Source, fixtures, tests, policy bundle, evaluator wiring, negative cases |
+| EvidenceRef resolver and EvidenceBundle closure | `NEEDS VERIFICATION` | Accepted resolver, deterministic valid/denied tests, consumer behavior |
+| Proof producer and deterministic command | `NEEDS VERIFICATION for emitted proof files` | Producer code, Make/CLI target, artifact schema, receipts, independent validation |
+| Consent and revocation credential/sidecar format | `NEEDS VERIFICATION` | Accepted object family, binding, privacy, expiry, revocation and replay design |
+| Downstream revocation/correction cascade | `UNKNOWN` | Cache, graph, search, map, API, export, AI, release, correction, withdrawal and rollback drills |
+| Candidate-to-release integration | `NEEDS VERIFICATION` | ReleaseManifest, PolicyDecision, ReviewRecord, correction/rollback links and dry run |
+| Public serving, access, hosting, caches, and effects | `UNKNOWN` | Governed routes, authorization, logs, deployment, public-safe artifacts and invalidation evidence |
+
+Unknowns and conflicts narrow the lane and block higher-risk transitions. They never authorize plausible completion.
+
+## No-loss ledger
+
+| Prior v0.1 element | Disposition in v0.2.0 |
+|---|---|
+| Stable `doc_id`, path, domain, proof-support identity, top anchor | Preserved |
+| Purpose and review questions | Preserved, clarified, and expanded |
+| Parent/neighbor authority split | Preserved and reconciled with the modernized parent proof README |
+| Accepted proof families | Preserved as artifact classes without falsely asserting child directories |
+| Raw DNA, living-person, private join, title, parcel, cultural, release, and public-output exclusions | Preserved and strengthened |
+| Proposed child-folder shape and deterministic naming guidance | Preserved as packet/artifact-class guidance; no directories created |
+| Lifecycle diagram and “proof does not publish” rule | Preserved and modernized |
+| Sensitive-proof gate matrix | Preserved and expanded with current consent/revocation evidence |
+| Cross-lane boundaries | Preserved |
+| Validation checklist and definition-of-done intent | Preserved through layered validation and open-verification registers |
+| Failure modes and FAQ content | Preserved and consolidated into direct operating rules |
+| Prior owners and maturity placeholders | Replaced with explicit `NEEDS VERIFICATION` and verified CODEOWNERS routing distinction |
+| Payload, code, schema, policy, fixture, workflow, release, route, or public-state change | None |
+
+## Rollback
+
+Before merge, rollback means closing the draft pull request or abandoning its review branch. Neither action changes proof payloads, consent state, releases, caches, or public state.
+
+After merge, restore the documentation with a transparent revert of the implementation commit or by restoring prior blob:
+
+```text
+05359bb623e69dccbda1ee22f8ba0d8345d9d412
+```
+
+Documentation rollback does not revoke consent, withdraw a release, invalidate caches, restore sensitive data, or reverse proof/release state. Operational correction and rollback must use the owning consent, policy, correction, withdrawal, cache-invalidation, and release mechanisms.
+
+## Change history
+
+### v0.2.0 — 2026-07-26
+
+- reconciled the lane with current Directory Rules and the modernized `data/proofs/` parent;
+- replaced stale greenfield and ownership placeholders with bounded repository evidence;
+- preserved the workflow’s proof-readiness sentinel and explicit hold posture;
+- strengthened consent, revocation, T4 sensitivity, title/parcel anti-collapse, cross-lane, correction, invalidation, and rollback guidance;
+- added evidence-backed badges, alerts, navigation, status and authority tables, layered validation, an open-verification register, a no-loss ledger, and explicit documentation rollback;
+- changed Markdown only.
+
+### v0.1 — 2026-06-25
+
+- established the first People/DNA/Land proof-lane guide with purpose, repository fit, proof families, exclusions, lifecycle, gates, validation, failure modes, FAQ, and rollback posture.
 
 [Back to top](#top)
-
----
-
-## 12. FAQ
-
-### Does a proof pack make a people/DNA/land claim public?
-
-No. A proof pack supports review. Publication requires governed promotion, policy decisions, review state, release authority, catalog closure, and a rollback target.
-
-### Can this directory contain raw DNA evidence for review?
-
-No. Raw DNA/genotype/segment/kit/vendor identifiers must not appear in this proof lane. Use protected RAW/quarantine handling and policy-controlled summaries only.
-
-### Can a parcel proof establish title?
-
-No. KFM may cite land instruments, assessor/tax records, legal descriptions, and parcel versions, but it must not convert those into title certification or title-boundary proof.
-
-### Can public maps show people-land relationships?
-
-Only when the release is evidence-supported, policy-allowed, rights-cleared, sensitivity-reviewed, and public-safe. Private person↔parcel joins are denied by default.
-
-### What should happen when evidence is plausible but incomplete?
-
-Use `ABSTAIN`, `DENY`, or quarantine. Do not publish a fluent summary, map label, graph edge, or Focus Mode answer as if evidence were complete.
-
----
-
-## Maintainer note
-
-This README intentionally favors fail-closed handling over convenience. The people/DNA/land lane is valuable precisely because it can preserve evidence-rich history without turning sensitive identity, kinship, genetic, title, parcel, or cultural claims into unsupported public truth.
