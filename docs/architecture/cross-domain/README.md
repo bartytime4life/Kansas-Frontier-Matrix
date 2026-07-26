@@ -2,508 +2,508 @@
 doc_id: kfm://doc/architecture-cross-domain-readme
 title: Cross-Domain Architecture
 type: standard
-version: v0.1
-status: draft
-owners: <ARCHITECTURE-DOCTRINE-OWNER> · NEEDS VERIFICATION
+version: v0.2.0
+status: draft; repository-grounded architecture index; explanatory; non-authoritative
+owners:
+  - "@bartytime4life - verified CODEOWNERS review route; routing is not stewardship, independent review, or approval"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-07-26
 policy_label: public
 related:
-  - directory-rules.md#12
-  - directory-rules.md#multi-domain-and-cross-cutting-files
-  - kfm_unified_doctrine_synthesis.md#7
-  - kfm_unified_doctrine_synthesis.md#10
-  - kfm_unified_doctrine_synthesis.md#11
-  - kfm_unified_doctrine_synthesis.md#17
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#241
-  - connected-dots-architecture-brief.md
-  - DomainDriven_Design_Reference.pdf
-tags: [kfm, architecture, cross-domain, doctrine, source-role, trust-membrane]
+  - docs/architecture/README.md
+  - docs/architecture/SKELETON_MAP.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/evidence-first.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+tags: [kfm, architecture, cross-domain, evidence, source-role, trust-membrane]
 notes:
-  - PROPOSED. Folder-vs-flat-file placement diverges from directory-rules.md §12 pattern (see §2.1); open OPEN-DR-10 for ADR resolution.
-  - No mounted repo evidence in this session; all repo-shaped claims labeled PROPOSED.
+  - "Same-path Markdown modernization only; no doctrine, ADR status, contract, schema, policy, validator, runtime, release, or publication state changed."
+  - "Directory Rules v2.0.0-draft.1 and ADR-0029 remain proposed. The legacy docs/architecture/directory-rules.md path is absent at the evidence boundary even though ADR-0029 still records its deletion as held."
+  - "All seven linked sibling architecture pages exist at the evidence boundary and remain v0.1 drafts with unverified placeholder ownership."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Cross-Domain Architecture
 
-> *Landing doc for the architectural concerns that span more than one KFM domain — source-role anti-collapse, cross-lane relations, shared-kernel objects, the trust membrane, and where multi-domain files belong.*
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d97706?style=flat-square)](#status-and-evidence-boundary)
+[![Authority: explanatory](https://img.shields.io/badge/authority-explanatory-0969da?style=flat-square)](#2-repo-fit--directory-rules-basis)
+[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square)](../../doctrine/evidence-first.md)
+[![Directory authority: unresolved](https://img.shields.io/badge/directory%20authority-unresolved-b42318?style=flat-square)](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-6e7781?style=flat-square)](#authority-boundary)
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED%20(spine)-blue)
-![directory-rules](https://img.shields.io/badge/directory--rules-v1.2%20%C2%A712-informational)
-![truth-posture](https://img.shields.io/badge/posture-cite--or--abstain-success)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft · **Owners:** `<ARCHITECTURE-DOCTRINE-OWNER>` *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
+Architecture index for relations that span KFM domain lanes while preserving
+ownership, source role, sensitivity, evidence, policy, release, correction, and
+rollback boundaries.
 
 > [!IMPORTANT]
-> **What "cross-domain" means here.** A KFM **domain** is a bounded responsibility lane with owned object semantics and governed cross-lane relations *(`kfm_unified_doctrine_synthesis.md` §10, CONFIRMED)*. **Cross-domain** architecture is the set of constraints, vocabularies, and patterns that govern *how those lanes compose* without collapsing source role, ownership, sensitivity, or `EvidenceBundle` support. This doc is the navigation point for those topics; per-file doctrine lives in the siblings listed in §4.
+> This directory explains how cross-domain composition is intended to work. It does not adopt doctrine or ADRs, define semantic meaning or machine shape, decide policy, prove runtime enforcement, promote a candidate, or publish KFM content. Use the owning doctrine, decision, contract, schema, policy, test evidence, and release record for those claims.
 
-> [!CAUTION]
-> **Path placement diverges from Directory Rules v1.2 §12.** §12 shows the convention as `docs/architecture/<topic>.md` *(flat files)*; this lane introduces a `cross-domain/` **subfolder** with a README inside. Recorded as **OPEN-DR-10 (PROPOSED)** below. Until reconciled, treat sibling paths under this folder as PROPOSED. See [§2 — Repo fit](#2-repo-fit--directory-rules-basis).
+## Navigation
 
-> [!NOTE]
-> **What this README is not.** It is not the authoritative source for any single cross-domain concept. Each substantive concept (anti-collapse, cross-lane relations, shared kernel, etc.) is governed by its own primary carrier — `kfm_unified_doctrine_synthesis.md`, the Atlas Chapter 24 registers, `directory-rules.md` §12, and the source dossiers. This README links and orients; canonical statements live there.
+| Read | Use it for |
+|---|---|
+| [Status and evidence boundary](#status-and-evidence-boundary) | What is confirmed, proposed, conflicted, or still unverified. |
+| [1. Scope](#1-scope) | When this lane applies. |
+| [2. Repo fit](#2-repo-fit--directory-rules-basis) | Responsibility, authority, and placement basis. |
+| [3. Boundary](#3-what-lives-here--what-does-not-live-here) | What belongs here and what must stay elsewhere. |
+| [4. Directory map](#4-directory-map) | Verified sibling pages and their roles. |
+| [5-10. Architecture](#5-the-cross-domain-landscape) | Flow, anti-collapse, invariants, shared objects, compositions, and placement. |
+| [11-12. Risks and decisions](#11-anti-patterns) | Failure modes and unresolved authority work. |
+| [13. Related docs](#13-related-docs) | Owning and supporting surfaces. |
+| [Validation](#validation-and-maintenance) | Document checks, workflow holds, review, and rollback. |
+| [14. Appendix](#14-appendix--glossary-and-reference) | Vocabulary, truth labels, and change history. |
 
 ---
 
-## Table of contents
+## Status and evidence boundary
 
-1. [Scope](#1-scope)
-2. [Repo fit — Directory Rules basis](#2-repo-fit--directory-rules-basis)
-3. [What lives here · What does not live here](#3-what-lives-here--what-does-not-live-here)
-4. [Directory tree (PROPOSED)](#4-directory-tree-proposed)
-5. [The cross-domain landscape](#5-the-cross-domain-landscape)
-6. [Source-role anti-collapse](#6-source-role-anti-collapse)
-7. [Cross-lane relations — the four invariants](#7-cross-lane-relations--the-four-invariants)
-8. [Shared-kernel objects](#8-shared-kernel-objects)
-9. [Cross-cutting compositional units](#9-cross-cutting-compositional-units)
-10. [Multi-domain file placement](#10-multi-domain-file-placement)
-11. [Anti-patterns](#11-anti-patterns)
-12. [Open questions and ADR triggers](#12-open-questions-and-adr-triggers)
-13. [Related docs](#13-related-docs)
-14. [Appendix — glossary and reference](#14-appendix--glossary-and-reference)
+| Surface | Verified state at `main@67f1d7eac9baabd69da997ba569de54c6b7c1d11` | Meaning |
+|---|---|---|
+| This README | Present at `docs/architecture/cross-domain/README.md`; baseline blob `5ed58879a3724439cf296845241960fc1f39cdc8`; 510 lines; LF endings; final newline present. | File presence proves documentation only. |
+| Sibling architecture pages | All seven pages in the [directory map](#4-directory-map) exist; each identifies itself as version `v0.1`, status `draft`, updated 2026-05-24, with placeholder ownership. | The lane is implemented as documentation, but adoption, review, and enforcement are not established. |
+| Proposed Directory Rules successor | [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) is `2.0.0-draft.1`, `PROPOSED_FOR_ADOPTION`, blob `fd49a0b83e55cef52c1124281f093e263526898d`. | Useful proposed placement guidance; no adoption or supersession effect. |
+| Adoption decision | [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is `proposed`. | It does not adopt v2, accept this lane, or authorize dependent migration. |
+| Legacy Directory Rules path | `docs/architecture/directory-rules.md` returns `404` at the evidence boundary, while ADR-0029 still records deletion as `HOLD / not authorized`. | **CONFLICTED:** absence must not be interpreted as accepted migration, supersession, or consumer closure. |
+| Review routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes the default `*` pattern to `@bartytime4life`. | Routing is not a StewardshipAssignment, ReviewRecord, independent approval, or publication authority. |
+| Documentation automation | [`link-check.yml`](../../../.github/workflows/link-check.yml) and [`docs-build.yml`](../../../.github/workflows/docs-build.yml) run read-only readiness holds on pull requests. | They do not check links, render this page, deploy a preview, or prove its claims. |
+
+### Truth posture
+
+- **CONFIRMED:** the pinned file, sibling, authority, CODEOWNERS, and workflow facts listed above.
+- **PROPOSED:** unaccepted Directory Rules v2 placement profiles and architecture expectations not backed by accepted contracts or executable proof.
+- **UNKNOWN:** external consumers, runtime conformance, current branch-protection coupling, and accountable cross-domain stewardship.
+- **NEEDS VERIFICATION:** accepted source-role vocabulary, seam registry, owning contracts/schemas/policy, substantive cross-domain tests, and correction/rollback drills.
+- **CONFLICTED:** Directory Rules adoption and legacy-path migration state.
+
+[Back to top](#top)
 
 ---
 
 ## 1. Scope
 
-This lane gathers the architectural doctrine that **applies to more than one domain at once**. A new contributor working on a single domain *(e.g., hydrology or archaeology)* can mostly read that domain's dossier and the per-domain README; a contributor whose work *touches multiple domains* — a habitat × fauna × hydrology validator, a settlement × people/land timeline, a hazards × air × hydrology event — needs the constraints that bind those compositions together. Those are gathered here.
+Use this lane when a design, relation, validator, contract, policy question, map interaction, or release concern spans two or more domain-owned objects.
+
+Typical readers include:
+
+- maintainers designing a relation between domain lanes;
+- reviewers checking that a join preserves ownership, source role, sensitivity, time, and evidence;
+- contract, schema, policy, fixture, test, validator, API, UI, and release authors who need a shared cross-domain vocabulary;
+- stewards investigating cross-domain drift, correction propagation, or rollback impact.
+
+Do not use this lane merely because one domain depends on another system. A file with one clear domain owner remains in that domain lane and references its dependencies.
 
 > [!TIP]
-> **When to read this folder.** If a change you are making picks exactly one domain segment in `data/`, `contracts/`, `schemas/`, `policy/`, or `tests/`, you probably do not need this folder. If your change requires picking *one* domain segment but conceptually involves *two or more*, read this folder first.
+> Start with the artifact's authority owner, not its topic. If two owners must independently define the same artifact, split it into linked artifacts before choosing paths.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 2. Repo fit — Directory Rules basis
 
-### 2.1 Path divergence (must be resolved)
+### Responsibility signature
 
-| Concern | Requested path | Canonical pattern *(`directory-rules.md` §12)* | Recommended resolution |
-|---|---|---|---|
-| Folder vs flat file | `docs/architecture/cross-domain/README.md` *(folder)* | `docs/architecture/<topic>.md` *(flat file)* | Decide via ADR whether cross-domain warrants a folder *(because it fans into multiple sub-topics)* or stays as a single flat `docs/architecture/cross-domain.md`. **PROPOSED.** |
-| Sub-file placement | `docs/architecture/cross-domain/<topic>.md` | Same `<topic>.md` would live at `docs/architecture/<topic>.md` under the flat pattern | If OPEN-DR-10 keeps the folder, this README is the landing for the folder. If it reverts to flat, all sub-files migrate one level up and this README is renamed `cross-domain.md`. |
+| Axis | This README |
+|---|---|
+| Artifact kind | Human architecture index and nested directory README |
+| Authority owner | Human-readable cross-domain architecture explanation |
+| Lifecycle stage | Not applicable; this file carries no lifecycle payload |
+| Scope | Cross-domain architecture lane |
+| Exposure | Public repository documentation |
+| Mutability | Versioned replacement through review |
+| Current action | Same-path update; no move, rename, new root, or parallel authority |
 
-> [!IMPORTANT]
-> **OPEN-DR-10 (PROPOSED).** Decide whether `docs/architecture/cross-domain/` is canonical *(a folder lane)* or `docs/architecture/cross-domain.md` is canonical *(a flat file)*. The trade-off: a folder makes navigation easier when there are many sub-topics, but it diverges from the §12 example which is consistently flat. Recommendation: keep the folder if there are ≥3 substantive sibling files; otherwise flatten. Resolution lands as an ADR amendment to `directory-rules.md` §12 *(or as a clarification stating both patterns are acceptable)*.
+The existing `docs/architecture/cross-domain/` lane is repository evidence. Proposed Directory Rules v2 section 12.5 also describes cross-domain architecture pages at `docs/architecture/cross-domain/<seam_id>.md`, but v2 is not controlling until a reviewed decision accepts it. This update therefore preserves the current path without claiming that the broader authority conflict is resolved.
 
-### 2.2 Where this folder sits relative to canonical responsibility roots
+<a id="authority-boundary"></a>
 
-```mermaid
-flowchart TB
-  subgraph DOCS["docs/architecture/  ✅ canonical (directory-rules.md §12)"]
-    THIS["cross-domain/  ⚠ PROPOSED · folder vs flat-file"]
-    OTHER1["<topic>.md"]
-    OTHER2["<topic>.md"]
-  end
-  subgraph CONTRACTS["contracts/  ✅ canonical"]
-    CROSS_CONTRACTS["<topic>/ (cross-domain semantics)"]
-    DOMAIN_CONTRACTS["domains/<domain>/"]
-  end
-  subgraph SCHEMAS["schemas/contracts/v1/  ✅ canonical"]
-    CROSS_SCHEMAS["<topic>/ (cross-domain shapes)"]
-    DOMAIN_SCHEMAS["domains/<domain>/"]
-  end
-  subgraph POLICY["policy/  ✅ canonical"]
-    CROSS_POLICY["<topic>/ (cross-domain rules)"]
-    DOMAIN_POLICY["domains/<domain>/"]
-  end
-  subgraph TOOLS["tools/validators/  ✅ canonical"]
-    CROSS_TOOLS["<topic>/ (cross-domain validators)"]
-  end
-  THIS -. doctrine for .-> CROSS_CONTRACTS
-  THIS -. doctrine for .-> CROSS_SCHEMAS
-  THIS -. doctrine for .-> CROSS_POLICY
-  THIS -. doctrine for .-> CROSS_TOOLS
-  classDef warn fill:#fff4e0,stroke:#d97706,color:#7c2d12;
-  class THIS warn;
-```
+### Authority boundary
 
-> **Doctrine basis.** `directory-rules.md` §12 (Domain Placement Law) states: *"Cross-domain doctrine → `docs/architecture/<topic>.md`, not under `docs/domains/<picked-one>/`"* — **CONFIRMED**.
+| Surface | Owns | This README may do |
+|---|---|---|
+| [`docs/doctrine/`](../../doctrine/README.md) | KFM-wide intended invariants and vocabulary, subject to each document's status | Explain and link; never silently amend. |
+| [`docs/adr/`](../../adr/README.md) | Numbered decisions and their effective status | Cite exact status; never infer acceptance. |
+| [`contracts/`](../../../contracts/README.md) | Semantic meaning | Point to an owning contract; do not redefine objects here. |
+| [`schemas/`](../../../schemas/README.md) | Machine-checkable shape | Point to a schema; do not treat prose as validation. |
+| [`policy/`](../../../policy/README.md) | Surface-specific admissibility decisions | Describe the boundary; do not invent a universal outcome enum. |
+| [`tests/`](../../../tests/README.md) and [`fixtures/`](../../../fixtures/README.md) | Representative enforceability evidence | Cite observed coverage and gaps; do not infer it from filenames. |
+| [`release/`](../../../release/README.md) | Promotion, release, correction, withdrawal, and rollback decisions | Explain dependencies; never claim publication. |
+| This lane | Cross-domain explanatory architecture and navigation | Preserve boundaries, surface conflicts, and route readers to owners. |
 
-[↑ Back to top](#top)
+> [!CAUTION]
+> Architecture prose is not an enforcement shortcut. A diagram, badge, README, merge, or green readiness hold cannot replace an accepted decision, resolvable evidence, policy result, review record, release manifest, correction notice, or rollback target.
+
+[Back to top](#top)
 
 ---
 
 ## 3. What lives here · What does not live here
 
-### 3.1 What lives here
+### What lives here
 
-| Content | Why it belongs in `docs/architecture/cross-domain/` | Truth label |
-|---|---|---|
-| Doctrine that **applies to two or more domains** *(source-role classes, cross-lane invariants, shared-kernel objects, trust-membrane rules)* | These rules are not owned by any single domain dossier; placing them under one domain would create false ownership | CONFIRMED doctrine; PROPOSED placement |
-| Cross-domain **navigation** — pointers to the canonical Atlas §24 registers, synthesis sections, and Directory Rules sections that govern cross-domain concerns | A landing doc that orients without duplicating the authoritative text | CONFIRMED doctrine |
-| Diagrams of **cross-lane relations** at a level above any one domain | Per-domain "F. Cross-lane relations" tables exist in the Atlas; the meta-pattern across them lives here | CONFIRMED doctrine |
-| **Open questions** and **ADR triggers** that span domains | A reviewer of a multi-domain PR finds them in one place | CONFIRMED doctrine *(`directory-rules.md` §2.4)* |
-| Anti-pattern register **scoped to cross-domain failure modes** | E.g., regulatory-as-event, aggregate-as-per-place, modeled-as-observed | CONFIRMED doctrine *(Atlas §24.1.2)* |
+- architecture explanations that genuinely span multiple domain lanes;
+- cross-domain relation patterns and seam vocabulary;
+- source-role anti-collapse and trust-boundary explanations;
+- shared-object dependency maps that link to owning contracts and schemas;
+- placement guidance clearly distinguished as current evidence, accepted law, or proposal;
+- open verification items and ADR triggers for cross-domain authority changes.
 
-### 3.2 What does NOT live here
+### What does not live here
 
-| Excluded | Why | Canonical home |
-|---|---|---|
-| Per-domain doctrine *(hydrology specifics, archaeology specifics, fauna specifics, …)* | Domain dossiers own those | `docs/domains/<domain>/` |
-| `.schema.json` files for cross-domain shapes | Schema home rule | `schemas/contracts/v1/<topic>/` |
-| Rego policy implementing cross-domain rules | Policy home rule | `policy/<topic>/` |
-| Validators / admission-check scripts | Validator home rule | `tools/validators/<topic>/` |
-| Focus Mode area-scoped material | Focus Mode is cross-cutting but geographic, not topical; governed by its own placement contract | `docs/focus-modes/<area>-<scope>/` *(per `directory-rules.md` §6.7)* |
-| Specific cross-domain runtime envelopes *(`DecisionEnvelope`, `AIReceipt`, `MapContextEnvelope`)* | Runtime envelope schemas | `schemas/contracts/v1/runtime/` |
+| Excluded content | Owning surface |
+|---|---|
+| Domain-specific architecture | `docs/domains/<domain>/` |
+| Binding architecture decision | `docs/adr/` |
+| KFM-wide intended invariant | `docs/doctrine/` |
+| Semantic contract or machine schema | `contracts/` or `schemas/` |
+| Executable policy, validator, pipeline, or application code | `policy/`, `tools/`, `pipelines/`, `packages/`, or `apps/` |
+| RAW, WORK, QUARANTINE, processed, catalog, proof, receipt, or published payload | The applicable governed `data/` lane |
+| Promotion, release, correction, withdrawal, or rollback decision | `release/` |
+| Precise sensitive ecological, archaeological, cultural, living-person, genomic, land/title, or infrastructure data | Restricted owning systems; never made public-safe by documentation placement |
 
-> [!WARNING]
-> **Do not let this lane absorb implementation.** A doctrine lane that grows schemas, policies, validators, or UI code inside `docs/` becomes a parallel authority and violates Directory Rules §6.4 *(schema)*, §6.5 *(policy)*, §7.5 *(tools)*. Keep this folder lean and reference-only.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 4. Directory tree (PROPOSED)
+<a id="4-directory-tree-proposed"></a>
 
-**PROPOSED — assumes OPEN-DR-10 resolves to "keep the folder".** If OPEN-DR-10 resolves to *flatten*, every file below moves to `docs/architecture/<topic>.md`.
+## 4. Directory map
+
+The following direct children were read from `main` during this update. Their presence and self-declared draft state are confirmed; their architecture claims remain bounded by the evidence and authority they cite.
 
 ```text
-docs/architecture/cross-domain/        ⚠ PROPOSED · folder vs §12 flat-file pattern
-├── README.md                          ◄── this file (landing + navigation)
-├── source-role-anti-collapse.md       ◄── seven source-role classes, DENY conditions, guardrails (PROPOSED)
-├── cross-lane-relations.md            ◄── the four invariants every domain×domain relation MUST preserve (PROPOSED)
-├── shared-kernel.md                   ◄── EvidenceRef, EvidenceBundle, SourceDescriptor, DecisionEnvelope, ReceiptAuthority (PROPOSED)
-├── trust-membrane.md                  ◄── the public-vs-internal boundary and the rules that govern crossings (PROPOSED)
-├── compositional-units.md             ◄── Focus Modes, Frontier Matrix, Planetary/3D as cross-cutting compositions (PROPOSED)
-├── multi-domain-placement.md          ◄── where shared validators, schemas, and contracts go (PROPOSED)
-└── responsibility-layers.md           ◄── evidence · policy · catalog · release · API · UI · AI · operations (PROPOSED)
+docs/architecture/cross-domain/
+├── README.md                        # lane index and boundary - this file
+├── compositional-units.md           # Focus Mode, Frontier Matrix, and 3D compositions
+├── cross-lane-relations.md          # ownership, source-role, sensitivity, and evidence invariants
+├── multi-domain-placement.md        # responsibility-root placement guidance
+├── responsibility-layers.md         # evidence through operations as orthogonal layers
+├── shared-kernel.md                 # draft shared-object architecture vocabulary
+├── source-role-anti-collapse.md     # draft source-role vocabulary and collapse failures
+└── trust-membrane.md                # public-versus-internal boundary explanation
 ```
 
-> [!NOTE]
-> Each sibling is a **prose doctrine doc** that links to the canonical primary carrier *(Atlas §24, synthesis §§7–17, directory-rules §12)* and surfaces the cross-domain implications for implementers. Machine artifacts *(schemas, Rego, validators)* go under their canonical homes, not here.
+| Page | Primary question | Repository-grounded status |
+|---|---|---|
+| [Source-role anti-collapse](./source-role-anti-collapse.md) | What meaning must not collapse when sources compose? | `v0.1` draft; placeholder ownership |
+| [Cross-lane relations](./cross-lane-relations.md) | What must a relation preserve at a domain boundary? | `v0.1` draft; placeholder ownership |
+| [Shared kernel](./shared-kernel.md) | Which object families are intended to connect domains? | `v0.1` draft; placeholder ownership |
+| [Trust membrane](./trust-membrane.md) | What may cross from internal or candidate state to governed public use? | `v0.1` draft; placeholder ownership |
+| [Compositional units](./compositional-units.md) | How do Focus Modes, matrix views, and 3D compose without becoming domains? | `v0.1` draft; placeholder ownership |
+| [Multi-domain placement](./multi-domain-placement.md) | How should a shared artifact be routed by responsibility? | `v0.1` draft; placeholder ownership |
+| [Responsibility layers](./responsibility-layers.md) | How do evidence, policy, release, API, UI, AI, and operations remain distinct? | `v0.1` draft; placeholder ownership |
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 5. The cross-domain landscape
 
-> **Evidence basis:** `kfm_unified_doctrine_synthesis.md` §§7–11, §17; `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` Ch. 24; `directory-rules.md` §12; `connected-dots-architecture-brief.md`. **CONFIRMED doctrine throughout.**
-
-KFM's thirteen domains *(hydrology, soil, atmosphere, geology, fauna, flora, habitat, archaeology, settlements/infrastructure, hazards, agriculture, people/DNA/land/genealogy, roads/railroads)* are independent bounded contexts. They compose through a **shared kernel** of objects and a **set of invariants** that every cross-lane relation must preserve. The trust membrane sits across the whole picture.
+A cross-domain relation is a composition, not a transfer of authority. Each side keeps its owner and evidence lineage; the relation receives its own identity, scope, policy treatment, review state, and release consequences where the owning contracts require them.
 
 ```mermaid
-flowchart TB
-  subgraph DOMAINS["13 KFM domains (bounded contexts)"]
-    direction LR
-    H["Hydrology"]
-    S["Soil"]
-    AT["Atmosphere"]
-    G["Geology"]
-    FA["Fauna"]
-    FL["Flora"]
-    HA["Habitat"]
-    AR["Archaeology"]
-    SI["Settlements / Infrastructure"]
-    HZ["Hazards"]
-    AG["Agriculture"]
-    PE["People / DNA / Land / Genealogy"]
-    RR["Roads / Railroads"]
-  end
-  subgraph KERNEL["Shared kernel (used by every domain)"]
-    SD["SourceDescriptor"]
-    ER["EvidenceRef · EvidenceBundle"]
-    PD["PolicyDecision"]
-    DE["DecisionEnvelope"]
-    AI["AIReceipt"]
-    RM["ReleaseManifest"]
-    RC["RollbackCard"]
-  end
-  subgraph INV["Cross-lane invariants"]
-    I1["Ownership preserved"]
-    I2["Source role preserved"]
-    I3["Sensitivity preserved"]
-    I4["EvidenceBundle support"]
-  end
-  subgraph MEMBRANE["Trust membrane"]
-    PUB["PUBLISHED · governed APIs · public UI"]
-    INT["RAW · WORK · QUARANTINE · internal stores"]
-  end
-  DOMAINS -- compose via --> KERNEL
-  DOMAINS -- relate under --> INV
-  KERNEL -- crosses --> MEMBRANE
-  classDef domain fill:#e1f5fe,stroke:#01579b;
-  classDef kernel fill:#c8e6c9,stroke:#1b5e20;
-  classDef inv fill:#fff4e0,stroke:#d97706;
-  classDef mem fill:#ffebee,stroke:#b71c1c;
-  class H,S,AT,G,FA,FL,HA,AR,SI,HZ,AG,PE,RR domain;
-  class SD,ER,PD,DE,AI,RM,RC kernel;
-  class I1,I2,I3,I4 inv;
-  class PUB,INT mem;
+flowchart TD
+    A["Domain-owned inputs"] --> B["Registered cross-domain relation"]
+    B --> C["Evidence, rights, sensitivity, policy, and review gates"]
+    C --> D["Candidate or governed release/API projection"]
+    C --> E["Surface-defined fail-closed outcome"]
 ```
 
-> [!NOTE]
-> **Reading the picture.** No domain is special. The shared kernel is what lets domains compose without merging. The four invariants are what every cross-domain relation must satisfy. The trust membrane is what keeps the inside from leaking outside.
+The diagram is an architecture model, not runtime proof. Exact object names, fields, gate order, and finite outcomes come from the applicable accepted contracts, schemas, policy, tests, and release process.
 
-[↑ Back to top](#top)
+### Minimum relation questions
+
+1. Who owns each input and the relation itself?
+2. What source role, spatial scope, temporal scope, rights posture, and sensitivity follow each side?
+3. Which `EvidenceRef` values resolve, and what evidence supports the relation rather than only its inputs?
+4. Which contract and schema define the relation?
+5. Which policy surface decides its use, and which negative outcomes are valid there?
+6. What review, release, correction, withdrawal, invalidation, and rollback obligations propagate downstream?
+
+[Back to top](#top)
 
 ---
 
 ## 6. Source-role anti-collapse
 
-> **Evidence basis:** `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.1 *(Master Source-Role Anti-Collapse Register, CONFIRMED doctrine)*; KFM-P{PASS}-IDEA Source-Role Anti-Collapse Register Pattern *(seed card)*.
+Source role must remain visible through normalization, joins, projections, summaries, AI interpretation, and release review. Promotion may change lifecycle or review state; it does not retroactively change what a source can prove.
 
-KFM treats **source role as a first-class identity attribute, fixed at admission and preserved through every promotion**. An observed reading is not interchangeable with a modeled estimate; a regulatory determination is not interchangeable with an administrative compilation; an aggregate publication is not interchangeable with candidate evidence; synthetic content is never the same thing as observed reality. **The lifecycle and the governed API both fail closed when these roles are conflated.**
+The seven-role vocabulary below is preserved from this lane's v0.1 drafts and supplied architecture lineage. Its acceptance as one repository-wide canonical enum remains **NEEDS VERIFICATION**.
 
-### 6.1 The seven canonical source-role classes
+| Draft role | Bounded meaning | Collapse to prevent |
+|---|---|---|
+| Observed | Direct measurement or first-hand evidentiary record | Model, aggregate, or regulation presented as an observation |
+| Regulatory | Determination with governing or legal force | Zone or designation presented as an observed event |
+| Modeled | Derived estimate with inputs, assumptions, uncertainty, and run identity | Estimate presented as direct measurement |
+| Aggregate | Summary over a declared unit or interval | Aggregate presented as a person-, parcel-, or place-specific fact |
+| Administrative | Record compiled for administration, registration, or accounting | Compilation presented as direct observation |
+| Candidate | Unresolved or unpromoted record under validation or review | Candidate exposed as released public truth |
+| Synthetic | Simulated, reconstructed, interpolated, or generated representation | Representation presented as observed reality |
 
-| Role | Definition *(CONFIRMED doctrine)* | Typical example | Allowed downstream role |
-|---|---|---|---|
-| **Observed** | Direct reading, measurement, or first-hand evidentiary record tied to a place and time. | Stream-gauge stage; soil pedon; air-quality sample; ground archaeological observation. | May feed modeled or aggregate products; **never** relabeled "regulatory" or "administrative". |
-| **Regulatory** | Authoritative determination by a regulatory or governing body with legal/administrative force. | NFHL flood-zone designation; non-attainment ruling; designated critical habitat unit; protected-species listing. | Cite as regulatory context; **never** an "observed" event or "modeled" estimate. |
-| **Modeled** | Derived product from inputs, assumptions, or fitted parameters; uncertainty and input provenance preserved. | Hydrograph reconstruction; smoke trajectory model; suitability raster; population estimation surface; AODRaster. | Cite with model identity, run receipt, bounds; **never** an observation. |
-| **Aggregate** | Published summary, total, or average over a unit *(county, year, watershed)*; irreversible loss of individual-record fidelity. | USDA crop county totals; Census tract aggregates; decadal climate normal. | Cite with aggregation receipt; **never** a per-place record. |
-| **Administrative** | Compiled record produced by an agency for administration, registration, or accounting — not necessarily observation or regulation. | Land office tract book; deed index; county incorporation record; transport facility roster. | Cite as administrative context; **never** collapsed with observation or regulation. |
-| **Candidate** | Proposed record awaiting validation, evidence resolution, deduplication, or steward review; not yet authoritative. | Quarantined connector output; unresolved person assertion; duplicate site candidate. | May be cited as candidate evidence in `WORK`/`QUARANTINE`; **must not** appear in `PUBLISHED` without promotion. |
-| **Synthetic** | Content generated by simulation, reconstruction, AI, or interpolation with no underlying first-hand observation. | Synthetic terrain surface; reconstructed historical scene; AI-drafted summary of an `EvidenceBundle`. | Carries `Reality Boundary Note` + `Representation Receipt`; **never** presented as observed reality. |
+### Fail-closed patterns
 
-### 6.2 Anti-collapse failure modes — the DENY conditions
+| Pattern | Required architectural response |
+|---|---|
+| Role is missing or ambiguous | Hold, abstain, deny, or quarantine according to the owning contract; do not guess. |
+| Join changes a role label | Reject the relation or record an explicit, reviewable derivation that preserves input roles. |
+| Aggregate is narrowed to an individual or exact place | Deny the unsupported inference and retain the aggregate scope. |
+| Synthetic or AI-generated content is treated as evidence | Require underlying evidence and a visible representation boundary; generated language remains interpretive. |
+| Candidate or restricted state reaches an ordinary public client | Stop at the trust boundary and require governed promotion and release evidence. |
 
-| Collapse pattern | Domains most at risk | Denied outcome | Required guardrail |
-|---|---|---|---|
-| **Modeled product labeled or queried as observed** | Air; Hydrology; Habitat; Agriculture; 3D | `DENY` at publication; `ABSTAIN` at AI surface | Run receipt + uncertainty surface + role-preserving DTO field |
-| **Regulatory zone labeled as an observed flood / event** | Hydrology; Hazards; Air | `DENY` publication of regulatory layer as event evidence | Separate regulatory-layer and observed-event lanes; UI banner |
-| **Aggregate cited as a per-place truth** | Agriculture; People; Geology; Air | `DENY` join from aggregate cell to single record; `ABSTAIN` at AI | Aggregation receipt; geometry-scope guard; matrix-cell semantics |
-| **Administrative compilation cited as observation** | People/Land; Settlements; Roads | `DENY` publication of compilation as observed event timeline | Source-role tag preserved; named `LifeEvent` / `AdminEvent` types |
-| **Candidate record exposed on a public surface** | All | `DENY` at trust membrane; route to `QUARANTINE` | Promotion gate; no `PUBLISHED` edge to `WORK`/`QUARANTINE` |
-| **Synthetic content presented as observed reality** | Planetary/3D; AI; Archaeology; Habitat | `DENY` publication; `HOLD` for steward review; `ABSTAIN` at AI | `Reality Boundary Note`; `Representation Receipt`; UI badge |
-| **AI text treated as evidence** | All Focus Mode surfaces | `DENY` publication; `ABSTAIN` at Focus Mode; `AIReceipt` mandatory | Cite-or-abstain rule; `AIReceipt`; release state required |
+See [Source-Role Anti-Collapse](./source-role-anti-collapse.md) for the extended draft register.
 
-> [!CAUTION]
-> **Promotion does not upgrade source role.** Promotion from `PROCESSED` to `PUBLISHED` does not turn an observation into a regulation, a model into an aggregate, or a candidate into a verified record. Those are **separate governed transitions** with their own evidence and review requirements *(`kfm_unified_doctrine_synthesis.md` §17, CONFIRMED)*.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 7. Cross-lane relations — the four invariants
 
-> **Evidence basis:** Every per-domain "F. Cross-lane relations" section in the Atlas (Parts 1 and 2) uses the same constraint clause; the meta-pattern is consolidated here. **CONFIRMED doctrine.**
+The sibling [Cross-Lane Relations](./cross-lane-relations.md) page carries four draft invariants. This README preserves them as architecture expectations while avoiding a claim that a substantive validator currently enforces them.
 
-Every cross-domain relation in KFM — *Hydrology × Hazards*, *People/Land × Settlements*, *Fauna × Habitat × Flora*, *Archaeology × People/Land*, *Roads × Settlements*, etc. — MUST preserve **four invariants** at the relation boundary. A relation that violates any one of them is not a valid cross-domain composition.
-
-| Invariant | What it requires | What it forbids |
+| Invariant | Relation requirement | Failure signal |
 |---|---|---|
-| **(1) Ownership preserved** | The relation names which domain owns which object on each side, and ownership does not transfer across the relation. | A cross-lane join that silently rebinds an object's owning domain. |
-| **(2) Source role preserved** | Each object carries its source role *(observed / regulatory / modeled / aggregate / administrative / candidate / synthetic)* across the relation. | Cross-lane joins that collapse roles *(§6.2)*. |
-| **(3) Sensitivity preserved** | The most restrictive sensitivity on either side of the relation applies. Aggregation does **not** lower sensitivity. | Joining a `T0`-public object to a `T3`-restricted object and treating the result as `T0`. |
-| **(4) `EvidenceBundle` support** | Every claim that asserts the relation resolves to an `EvidenceBundle` on both sides; closure is required before public exposure. | Cross-lane assertions with `EvidenceRef` that does not resolve. |
+| Ownership preserved | Keep each input's owning domain and identify the owner of the relation. | A join silently rebinds or overrides an owner. |
+| Source role preserved | Carry each input's role and any explicit derivation into the relation. | A relation makes unlike roles look equivalent. |
+| Sensitivity preserved | Apply the most restrictive relevant posture until owning policy authorizes a safer projection. | Aggregation or joining silently lowers protection. |
+| Evidence support preserved | Resolve evidence for consequential input and relation claims before authoritative use. | A plausible relation outruns its evidence. |
 
-> [!IMPORTANT]
-> **Where these invariants live in code.** Validation of (1)–(4) happens at promotion gate **C — Sensitivity** *(synthesis §8)* and gate **E — Evidence closure**. The Conftest/OPA bundle SHOULD deny when any invariant is broken; the cross-lane validator SHOULD fail-closed on missing source-role tags or unresolved `EvidenceRef` on either side of a join.
+These invariants do not define one universal policy outcome vocabulary. A governed response may use `ANSWER | ABSTAIN | DENY | ERROR`; a validator, review, promotion, or placement surface may use a different contract-defined set.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 8. Shared-kernel objects
 
-> **Evidence basis:** `kfm_unified_doctrine_synthesis.md` §10 *(core object families)*; `connected-dots-architecture-brief.md` §6. **CONFIRMED doctrine.**
+The terms below are cross-domain architecture vocabulary carried by the current lane. Their authoritative fields, versions, and compatibility rules belong in verified contracts and schemas.
 
-DDD's *Shared Kernel* pattern applies in KFM with one caveat: the corpus warns that shared kernels work only between closely coordinated teams, and KFM's "team" is **the doctrine itself**. The objects below are the kernel that lets all thirteen domains compose without each domain reinventing identity, evidence, policy, or release.
-
-| Object | Cross-domain role | First-proof expectation |
+| Object family | Cross-domain purpose | Boundary |
 |---|---|---|
-| **`SourceDescriptor`** | Identity, source role, authority class, rights, sensitivity precheck. Every source from every domain admits through one schema. | A public-safe source is admitted only with role and rights known or explicitly held. |
-| **`EvidenceRef` / `EvidenceBundle`** | Stable pointer + resolved support object that every consequential claim in every domain depends on. | Every consequential claim has at least one resolvable evidence pointer **or abstains**. |
-| **`PolicyDecision`** | `ALLOW` / `DENY` / `RESTRICT` / `HOLD` / `ABSTAIN` with reasons and obligations. Same envelope for every domain. | Rights unknown, sensitive geometry, stale source, or missing evidence produces visible `DENY` / `ABSTAIN` / `HOLD`. |
-| **`DecisionEnvelope` / `RuntimeResponseEnvelope`** | Finite output `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` *(synthesis §11)*. Same envelope across every governed surface. | No raw fluent answer reaches UI without envelope validation. |
-| **`AIReceipt`** | Context + provider/model profile + hashes + policy decisions for every AI surface answer. | Every AI surface answer emits one. |
-| **`ReleaseManifest`** | Authoritative record of what is `PUBLISHED`; same schema across domains. | No `PUBLISHED` state without an applicable manifest. |
-| **`RollbackCard`** | Rollback target that preserves history while repointing current release state. | Every release has a rollback target. |
-| **`MapContextEnvelope`** | Bounded context that the Focus Mode runtime sees of the map *(across all domains)*. | Focus Mode runtime accepts the envelope only after admission. |
+| `SourceDescriptor` | Carries stable source identity, role, authority, rights, sensitivity, and freshness context. | A descriptor does not make a source admissible or public-safe. |
+| `EvidenceRef` and `EvidenceBundle` | Connect a consequential claim to resolvable support. | A pointer is not closure until it resolves and passes applicable policy. |
+| `PolicyDecision` | Records a decision, reasons, and obligations for a defined policy surface. | Do not infer one universal enum across surfaces. |
+| `DecisionEnvelope` or runtime response envelope | Makes governed response state explicit. | Exact envelope identity and fields require contract verification. |
+| `RunReceipt` and `AIReceipt` | Record process or interpretive execution context. | A receipt is not proof, review, release, or publication. |
+| `ReleaseManifest` | Binds an approved release to identified inputs, proofs, policy, and carriers. | A filename, commit, PR, or GitHub release is not a KFM release manifest. |
+| `RollbackCard` and correction records | Preserve prior-safe targets and visible correction lineage. | Rollback must not erase history or recreate parallel writers. |
+| `MapContextEnvelope` | Bounds map, time, selection, evidence, and policy context for a governed interaction. | A map selection cannot bypass evidence or policy. |
 
-> [!TIP]
-> **Renaming any kernel object is ADR-class.** A rename ripples across every domain dossier, every contract, every schema, every validator, and every UI surface. Per `ai-build-operating-contract.md` §28, ADR is required before introducing or retiring an object family.
+Before adding, renaming, merging, or retiring a shared object family, inspect the owning contract, schema, policy, fixtures, tests, consumers, and decision history. An authority-changing rename requires a governed decision and migration plan.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 9. Cross-cutting compositional units
 
-> **Evidence basis:** `directory-rules.md` §6.7 *(Focus Modes)*; Atlas §17 *(Frontier Matrix)* and §18 *(Planetary, 3D, Digital Twin)*. **CONFIRMED doctrine.**
+This lane carries three cross-cutting concepts from KFM architecture lineage. None becomes a domain or a repository root by topic alone.
 
-Three kinds of cross-cutting unit appear in KFM. Each composes across domains and the shared kernel, but none of them is a domain, and none of them becomes a root folder.
+| Unit | Composition | Current boundary |
+|---|---|---|
+| Focus Mode | A bounded geographic, temporal, evidence, UI, and release slice across selected domains. | Exact repository profile and current implementation remain **NEEDS VERIFICATION**. |
+| Frontier Matrix | A comparative panel across place, time, and multiple domain measures. | Derived matrix cells do not replace underlying domain evidence or release state. |
+| Planetary / 3D / digital-twin view | A renderer-level composition of released or candidate representations. | Rendering is not truth, policy, review, or publication authority. |
 
-| Compositional unit | What it composes | Where it lives | Authority anchor |
-|---|---|---|---|
-| **Focus Mode** *(county / region / corridor / state-scale proof slice)* | One geographic area × multiple domains × one UI × one release | `docs/focus-modes/<area>-<scope>/`, plus cross-root lanes in `contracts/`, `schemas/`, `fixtures/`, `apps/`, `tools/`, `data/`, `release/` | `directory-rules.md` §6.7 |
-| **Frontier Matrix** *(county-year panel across domains)* | County × year × multiple domains *(population, economy, ag, access, settlement, land)* | Lanes inside responsibility roots, not a root folder | Atlas §17 |
-| **Planetary / 3D / Digital Twin** *(renderer-class composition)* | Multiple domains × 3D representation × Reality Boundary discipline | `packages/maplibre/` *(or future `packages/renderer/`)*; `data/published/scenes/`; `release/manifests/scenes/` | Atlas §18; `kfm_unified_doctrine_synthesis.md` §18 |
+See [Cross-Cutting Compositional Units](./compositional-units.md) for the extended draft treatment. Verify every proposed path there before implementation.
 
-> [!WARNING]
-> **None of these become a root folder.** A `focus_modes/`, `frontier_matrix/`, or `scenes/` directory at repo root is drift per `directory-rules.md` §3 *(root-stays-boring)* and §13.5 *(anti-pattern register)*.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 10. Multi-domain file placement
 
-> **Evidence basis:** `directory-rules.md` §12 *(Domain Placement Law — "Multi-domain and cross-cutting files")*. **CONFIRMED doctrine.**
+For any new shared artifact, identify one authority owner first, then add a registered seam identifier only after selecting the owning responsibility root.
 
-When a file legitimately spans domains *(e.g., a habitat × fauna × hydrology validator)*, place it under the **lowest common responsibility root** that owns the file's responsibility, **without** a domain segment.
+Proposed Directory Rules v2 section 12.5 gives the following examples. They remain **PROPOSED** until adoption and registry support are verified:
 
-| Cross-domain file kind | Place under | Do **not** place under |
-|---|---|---|
-| Shared validator | `tools/validators/<topic>/...` | `tools/validators/domains/<picked-one>/...` |
-| Cross-domain schema | `schemas/contracts/v1/<topic>/...` | `schemas/contracts/v1/domains/<picked-one>/...` |
-| Cross-domain semantic contract | `contracts/<topic>/...` | `contracts/domains/<picked-one>/...` |
-| Cross-domain Rego policy | `policy/<topic>/...` | `policy/domains/<picked-one>/...` |
-| Cross-domain doctrine *(this folder's purpose)* | `docs/architecture/<topic>.md` or `docs/architecture/cross-domain/<topic>.md` *(pending OPEN-DR-10)* | `docs/domains/<picked-one>/<topic>.md` |
-| Cross-domain fixture *(rare; usually domain-owned)* | `fixtures/<topic>/...` | `fixtures/domains/<picked-one>/...` |
-| Cross-domain tests | `tests/<topic>/...` | `tests/domains/<picked-one>/...` |
+| Artifact | Proposed v2 lane |
+|---|---|
+| Architecture explanation | `docs/architecture/cross-domain/<seam_id>.md` |
+| Semantic contract | `contracts/cross_domain/<seam_id>/` |
+| Test | `tests/cross_domain/<seam_id>/` |
+| Repository validator | `tools/validators/cross_domain/<seam_id>/` |
 
-> [!IMPORTANT]
-> **"Picking a domain" is the failure mode.** When a file legitimately spans domains, picking one of them as the owner creates a parallel authority that other domains then have to crosswalk to. The §12 rule prevents that by routing cross-domain files to **non-domain** segments of the same responsibility roots.
+For schemas, policy, fixtures, pipelines, data, releases, or public carriers, use the owning root and an accepted local profile. Do not copy the v0.1 README's guessed `<topic>/` paths into implementation without verifying the current authority, registry, writers, consumers, and migration impact.
 
-[↑ Back to top](#top)
+### Placement decision
+
+1. classify the artifact and its single authority owner;
+2. select the responsibility root;
+3. reject roots that violate lifecycle, exposure, mutation, or dependency boundaries;
+4. use a verified domain, source, object-family, geography, or seam identifier;
+5. search for canonical, compatibility, generated, and legacy copies;
+6. preserve single-write authority and dependency direction;
+7. return a finite result: place, split, migrate, mirror, hold, or deny under the controlling rules.
+
+When authority remains unresolved, `HOLD` is the safe result. A convenient path is not evidence.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Anti-patterns
 
-| Anti-pattern | Why it breaks the trust path | Mitigation |
+| Anti-pattern | Why it fails | Required response |
 |---|---|---|
-| **Domain-as-root folder** *(`hydrology/`, `archaeology/` at repo root)* | Fragments the lifecycle; competes with responsibility roots. | `directory-rules.md` §12 Domain Placement Law; lane pattern only. |
-| **Cross-domain file under a single domain** *(e.g., habitat × fauna validator placed under `tests/domains/fauna/`)* | Creates false ownership; the other domain has to cross-walk through the picked one. | Route to `<root>/<topic>/...` per §10 above. |
-| **Source-role collapse** *(observed-as-modeled, regulatory-as-event, aggregate-as-per-place, candidate-on-public, synthetic-as-observed, admin-as-observation, AI-text-as-evidence)* | Breaks the truth posture; same evidence carries different meaning depending on where you stand. | §6.2 DENY conditions; OPA bundle; source-role-preserving DTO. |
-| **Cross-lane relation without invariant check** *(joining two domains' objects without preserving ownership, source role, sensitivity, or `EvidenceBundle` support)* | The relation looks plausible but breaks downstream audit. | §7 four-invariants check at gates C and E. |
-| **Renaming a shared-kernel object without ADR** *(e.g., changing `EvidenceBundle` to `Evidence`)* | Ripples across every domain dossier, contract, schema, validator, and UI surface. | ADR required *(`ai-build-operating-contract.md` §28)*. |
-| **Cross-cutting unit as a root folder** *(`focus_modes/`, `frontier_matrix/`, `scenes/` at root)* | Same root-stays-boring violation as domain-as-root. | `directory-rules.md` §3, §6.7, §13.5. |
-| **Doctrine doc absorbs implementation** *(schemas, policies, validators, UI code landing inside `docs/architecture/`)* | Creates parallel authority outside canonical roots. | Keep this folder reference-only; §3.2 lists exclusions. |
+| Pick a "lead" domain for a shared artifact | Creates false ownership and asymmetric dependencies. | Route by authority owner or split the artifact. |
+| Re-state a contract or schema in architecture prose | Creates a second semantic or machine authority. | Link to the owner and explain only the relationship. |
+| Collapse source roles during a join | Changes what evidence can prove. | Preserve roles and record explicit derivation. |
+| Treat a plausible relation as evidence | Fluency or spatial proximity substitutes for support. | Resolve evidence or fail closed. |
+| Lower sensitivity through aggregation or rendering | Derived surfaces become an exposure channel. | Apply owning policy, generalization, review, and public-safe projection. |
+| Let UI, map, graph, index, tile, scene, or AI become truth | A downstream carrier becomes sovereign. | Route through governed evidence, policy, and release boundaries. |
+| Treat a receipt, proof, catalog record, and release manifest as interchangeable | Trust-object responsibilities collapse. | Keep object families and writers separate. |
+| Treat proposed Directory Rules or an unaccepted ADR as active law | Dependent work outruns authority. | Keep the proposal labeled and wait for reviewed adoption. |
+| Hide correction or rollback impact | Consumers continue using stale or withdrawn state. | Preserve lineage and propagate correction, invalidation, and rollback. |
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 12. Open questions and ADR triggers
 
-| Open item | Class | Suggested ADR title *(PROPOSED)* |
+| Item | State | Evidence or decision required |
 |---|---|---|
-| **OPEN-DR-10** — Reconcile `docs/architecture/cross-domain/` *(folder)* vs `docs/architecture/cross-domain.md` *(flat file)* per `directory-rules.md` §12. | Directory Rules §2.4 *(structural)* | "Cross-domain architecture lane — folder vs flat file". |
-| Should `HOLD` appear as a separate sensitivity outcome at the cross-lane invariant check, or remain folded into `DENY`/`ABSTAIN`? | Vocabulary | "Cross-lane HOLD modeling". |
-| Should "Reality Boundary" *(Atlas §18)* become a kernel object across all domains, or stay scoped to Planetary/3D? | Object family | "Reality Boundary as cross-domain kernel object". |
-| Receipt schema layout — `schemas/contracts/v1/receipts/` vs `schemas/contracts/v1/<domain>/receipts/`? | Schema home | ADR-S-03 *(PROPOSED — Atlas §24.12)*. |
-| Source-role vocabulary stability — adopt the seven classes as canonical and freeze, or allow extension? | Vocabulary | ADR-S-04 *(PROPOSED — Atlas §24.12)*. |
+| Directory Rules authority and legacy-path deletion | **CONFLICTED** | Reconcile current tree with proposed ADR-0029, reverify consumers and fragments, and record an effective reviewed decision before claiming migration completion. |
+| Prior `OPEN-DR-10` folder-versus-file question | **LINEAGE / NARROWED** | The folder and seven siblings now exist, and proposed v2 explicitly describes the lane. Formal placement authority still depends on adopted rules; this README does not declare the old issue accepted or closed. |
+| Cross-domain seam registry and IDs | **NEEDS VERIFICATION** | Machine register, ownership, aliases, schema, fixtures, validator, tests, and migration rules. |
+| Source-role vocabulary | **NEEDS VERIFICATION** | Accepted semantic contract or decision that defines the enum, extension policy, mappings, and negative cases. |
+| Shared-object authority | **NEEDS VERIFICATION** | Object-to-contract-to-schema-to-policy-to-test crosswalk and compatible versioning. |
+| Cross-domain policy outcomes | **NEEDS VERIFICATION** | Surface-specific contracts; no universal enum should be inferred here. |
+| Sibling ownership and maturity | **NEEDS VERIFICATION** | Replace placeholder owners only with verified stewardship and review evidence; review each v0.1 draft against current repository state. |
+| Link and render enforcement | **HOLD** | Accepted repository-native link checker, deterministic fixtures, Markdown/Mermaid render validation, and explicit docs-build contract. |
+| Runtime, correction, and rollback proof | **UNKNOWN** | Substantive tests, observed governed flow, release records, correction propagation, cache invalidation, and rollback drill evidence. |
 
-> [!IMPORTANT]
-> **Until OPEN-DR-10 resolves, this README is doctrinally usable but structurally provisional.** Cite it as `kfm://doc/architecture-cross-domain-readme` *(stable `doc_id`)*, not as a path.
+An open question becomes ADR-class when it changes an authority owner, canonical or compatibility path, shared object identity, trust boundary, lifecycle or release responsibility, public exposure, or migration/rollback contract.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 13. Related docs
 
-| Reference | Role | Truth label |
-|---|---|---|
-| `directory-rules.md` §12 *(Domain Placement Law; multi-domain and cross-cutting files)* | Placement authority | CONFIRMED doctrine |
-| `directory-rules.md` §6.7 *(Focus Mode placement contract)* | Cross-cutting compositional unit placement | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §7 *(promotion as a governed state transition)* | Cross-domain promotion rule | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §8 *(promotion gates A–G)* | Cross-domain enforcement points | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §10 *(core object families)* | Shared-kernel objects | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §11 *(finite outcome envelope)* | Cross-domain runtime vocabulary | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §17 *(cross-lane relations and source-role anti-collapse)* | Direct upstream for §§6–7 of this README | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.1 *(Master Source-Role Anti-Collapse Register)* | Canonical source-role authority | CONFIRMED doctrine |
-| `connected-dots-architecture-brief.md` *(responsibility roots; shared kernel; domain lanes)* | Architecture brief that complements this README | CONFIRMED doctrine |
-| `DomainDriven_Design_Reference.pdf` *(Shared Kernel, Anticorruption Layer, Open-host Service, Context Map, Pluggable Component Framework)* | External grounding for KFM's bounded-context posture | EXTERNAL — reference only |
-| `ai-build-operating-contract.md` §28 *(ADR requirements)* | When cross-domain changes need an ADR | CONFIRMED doctrine |
-| `docs/focus-modes/README.md` *(or `docs/focus-mode/README.md` per OPEN-DR-08)* | Focus Mode landing | PROPOSED |
-| `docs/registers/DRIFT_REGISTER.md` *(if/when present)* | Drift log home | PROPOSED |
+### Directory authority and repository orientation
 
-[↑ Back to top](#top)
+| Reference | Role | Current status |
+|---|---|---|
+| [Directory Rules v2](../../doctrine/directory-rules.md) | Proposed successor placement standard | `PROPOSED_FOR_ADOPTION`; not controlling |
+| [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Proposed adoption and compatibility migration decision | `proposed`; no adoption effect |
+| [Architecture README](../README.md) | Parent explanatory boundary | Existing but contains stale repository-state placeholders |
+| [Skeleton Map](../SKELETON_MAP.md) | Repository orientation and design lineage | Documentation; not implementation proof |
+| [Domain documentation](../../domains/README.md) | Per-domain architecture and lane orientation | Existing repository-grounded draft; the domain roster belongs there |
+| [Drift Register](../../registers/DRIFT_REGISTER.md) | Recorded structural conflicts | Existing human register |
+| [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) | Open verification work | Existing human register; current coverage is incomplete |
+
+### Trust and lifecycle
+
+- [Evidence First](../../doctrine/evidence-first.md) - draft cite-or-abstain and evidence-closure doctrine.
+- [Lifecycle Law](../../doctrine/lifecycle-law.md) - draft lifecycle and promotion doctrine.
+- [Trust Membrane](../../doctrine/trust-membrane.md) - draft public-versus-internal boundary doctrine.
+- [Authority Ladder](../../doctrine/authority-ladder.md) - draft source and decision ordering.
+
+### Owning implementation surfaces
+
+- [Contracts](../../../contracts/README.md) - semantic meaning.
+- [Schemas](../../../schemas/README.md) - machine shape.
+- [Policy](../../../policy/README.md) - admissibility.
+- [Tests](../../../tests/README.md) and [fixtures](../../../fixtures/README.md) - representative enforceability evidence.
+- [Release](../../../release/README.md) - promotion, release, correction, withdrawal, and rollback.
+- [Governed API](../../../apps/governed-api/README.md) and [Explorer Web](../../../apps/explorer-web/README.md) - draft public-boundary and map-client documentation.
+
+[Back to top](#top)
+
+---
+
+## Validation and maintenance
+
+### Document validation
+
+For a change to this README:
+
+- preserve the stable `doc_id`, path, created date, and explicit `#top` anchor;
+- verify one H1, logical heading levels, balanced fences, valid tables and alerts, unique explicit anchors, and a final newline;
+- verify every introduced or changed repository-relative link at the proposed head;
+- check internal fragments against GitHub heading slugs;
+- parse Mermaid source and inspect its rendered meaning when tooling is available;
+- distinguish accepted authority, current repository fact, design lineage, proposal, and unknown;
+- scan for secrets, private URLs, personal data, sensitive locations, and rights-restricted material;
+- ensure the diff changes only this path and does not imply runtime, policy, release, or publication maturity.
+
+### Current workflow posture
+
+The repository's `link-check` and `docs-build` workflows intentionally report readiness holds. A green result means the hold assumptions remain unchanged; it does not mean links were resolved, Markdown or Mermaid rendered, accessibility passed, or documentation was published.
+
+### Review burden
+
+- CODEOWNERS routes this path to `@bartytime4life` through the default rule.
+- Architecture, affected domain, contract/schema, policy, evidence, sensitivity, API/UI, and release reviewers are required when the substance touches their authority.
+- Accountable stewardship and independent approval remain **NEEDS VERIFICATION**.
+- This README must not self-approve a new object family, path, outcome vocabulary, trust-boundary exception, or public exposure.
+
+### Correction and rollback
+
+If this README conflicts with an owning authority or current evidence:
+
+1. narrow or withdraw the unsupported claim;
+2. link the owning source and preserve the correction history;
+3. record material structural drift in the approved register;
+4. update affected inbound links and fragments;
+5. re-run document validation.
+
+Before merge, rollback is leaving or closing the draft PR or replacing its commit through a reviewed update. After merge, use a transparent revert or corrective PR; do not rewrite shared history. Reverting this README does not revert any separate runtime, policy, release, or public state.
+
+[Back to top](#top)
 
 ---
 
 ## 14. Appendix — glossary and reference
 
 <details>
-<summary><strong>14.1 Glossary of cross-domain vocabulary</strong></summary>
+<summary><strong>Cross-domain vocabulary</strong></summary>
 
-| Term | Definition *(CONFIRMED doctrine unless noted)* |
+| Term | Bounded meaning |
 |---|---|
-| **Domain** | Bounded responsibility lane with owned object semantics and governed cross-lane relations *(`kfm_unified_doctrine_synthesis.md` §10)*. |
-| **Bounded context** | Reference-model boundary where a term has defined meaning and ownership *(DDD)*. |
-| **Shared kernel** | Small subset of the model shared by two or more bounded contexts under tight coordination. In KFM, the coordination is enforced by **doctrine**, not by team co-location. |
-| **Cross-lane relation** | A relation that crosses a domain boundary; subject to the four invariants of §7. |
-| **Source role** | First-class identity attribute of a source, fixed at admission, preserved through promotion. Seven canonical classes per §6.1. |
-| **Anti-collapse** | The rule that source roles MUST NOT be silently conflated; promotion does not upgrade role. |
-| **Trust membrane** | Doctrine boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth. |
-| **Cross-cutting compositional unit** | A unit that composes across domains and the shared kernel without becoming a domain *(Focus Mode, Frontier Matrix, Planetary/3D)*. |
-| **Multi-domain file** | A file whose responsibility legitimately spans two or more domains; placed under the lowest common responsibility root **without** a domain segment *(§10)*. |
-| **Responsibility layers** | The KFM-P9-PROG-0001 (PROPOSED) layering: evidence, policy, catalog, release, API, UI, AI, operations — orthogonal to domains. |
-| **Reality Boundary Note** | Marker that distinguishes synthetic / reconstructed / simulated content from observed reality *(Atlas §18; §6.1 row "Synthetic")*. |
+| Domain | A responsibility lane with owned semantics and governed relations to other lanes. |
+| Cross-domain relation | An identified relation between domain-owned objects that preserves each side's authority and evidence. |
+| Seam ID | A proposed stable identifier for one cross-domain concern; registry support remains unverified. |
+| Source role | What a source or derivative can and cannot prove. |
+| Anti-collapse | Refusal to silently make unlike source roles, owners, sensitivities, evidence, or trust objects equivalent. |
+| Shared object | An object family referenced across domains through owning contracts and schemas. |
+| Trust membrane | The boundary that keeps internal, candidate, restricted, or unreleased state out of ordinary public use. |
+| Compositional unit | A bounded view or proof slice that combines domain outputs without becoming a domain or root. |
+| Governed projection | A policy- and release-aware derivative or response; not canonical truth by itself. |
 
 </details>
 
 <details>
-<summary><strong>14.2 The thirteen KFM domains (canonical list)</strong></summary>
+<summary><strong>Truth-label legend</strong></summary>
 
-| # | Domain | Atlas chapter *(approx.)* | Notable sensitivities |
-|---|---|---|---|
-| 1 | Hydrology | Atlas ch. *(varies)* | Regulatory floodplain vs observed event; gauge-data freshness. |
-| 2 | Soil | Atlas ch. *(varies)* | SSURGO yearly diffs; SDA cadence. |
-| 3 | Atmosphere / Air | Atlas ch. 11 | Modeled vs observed; non-attainment regulatory vs ambient observed. |
-| 4 | Geology | Atlas ch. *(varies)* | Aggregate resource estimates vs per-place observations. |
-| 5 | Fauna | Atlas ch. *(varies)* | Exact sensitive occurrences fail closed. |
-| 6 | Flora | Atlas ch. 8 | Rare/protected species; consent for steward-reviewed records. |
-| 7 | Habitat | Atlas ch. 6 | Habitat assignments are modeled, not observed. |
-| 8 | Archaeology / Cultural Heritage | Atlas ch. 15 | Exact locations DENY at any scale; tribal sovereignty. |
-| 9 | Settlements / Infrastructure | Atlas ch. 14 | Critical-infrastructure exact-location carve-outs. |
-| 10 | Hazards | Atlas ch. 12 | Regulatory zone vs observed event; emergency-alert posture is ABSTAIN. |
-| 11 | Agriculture | Atlas ch. 9 | County-level aggregates vs producer-level privacy. |
-| 12 | People / DNA / Land / Genealogy | Atlas ch. 16 | Living-person identifiers, DNA, parcel-title fail closed. |
-| 13 | Roads / Railroads | Atlas ch. *(varies)* | Administrative compilations vs observed events. |
-
-> [!NOTE]
-> **Atlas chapter numbers vary slightly across atlas editions.** Verify against the current consolidated atlas at the time of citation. Chapters above are illustrative only.
+- **CONFIRMED** - verified from pinned repository evidence or supplied source material in this review.
+- **PROPOSED** - a design or decision not yet accepted or implemented.
+- **UNKNOWN** - available evidence is insufficient.
+- **NEEDS VERIFICATION** - a concrete check can resolve the claim.
+- **CONFLICTED** - admissible evidence or writable authority surfaces disagree.
+- **LINEAGE** - preserved prior design or history; not current authority by itself.
+- **NARROWED** - scope was deliberately reduced to remain supportable or safe.
 
 </details>
 
 <details>
-<summary><strong>14.3 The four cross-lane invariants — at-a-glance card</strong></summary>
+<summary><strong>Change history</strong></summary>
 
-```text
-Every domain × domain relation MUST preserve:
-
-  (1) Ownership          — neither side rebinds the other's owning domain
-  (2) Source role        — observed/regulatory/modeled/aggregate/admin/
-                           candidate/synthetic carried across the relation
-  (3) Sensitivity        — most-restrictive applies; aggregation does NOT lower
-  (4) EvidenceBundle     — every claim resolves on BOTH sides; closure required
-                           support           before public exposure
-```
-
-If any one fails, the relation is invalid as a public KFM composition and the
-promotion gates (C — Sensitivity, E — Evidence closure) MUST deny.
+| Version | Date | Change |
+|---|---|---|
+| `v0.2.0` | 2026-07-26 | Re-grounded the complete README against the repository; replaced stale path and owner assumptions; verified all seven siblings; repaired badges and links; separated accepted authority from proposed v2 guidance; surfaced the legacy-path conflict and workflow holds; preserved core anti-collapse, invariant, shared-object, placement, risk, correction, and rollback material. Markdown only. |
+| `v0.1` | 2026-05-24 | Initial draft architecture landing page. |
 
 </details>
 
-<details>
-<summary><strong>14.4 Truth-label legend</strong></summary>
+**Last evidence review:** 2026-07-26  
+**Evidence boundary:** `main@67f1d7eac9baabd69da997ba569de54c6b7c1d11`  
+**Review trigger:** authority, sibling, contract/schema, policy, writer, consumer, exposure, sensitivity, workflow, release, correction, withdrawal, invalidation, or rollback change.
 
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests, logs, or generated artifacts.
-- **PROPOSED** — design, recommendation, file path, placement, or inference not yet verified in implementation.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **UNKNOWN** — not resolvable without more evidence.
-- **EXTERNAL** — sourced from authoritative external research *(not applied in this doc; no external research was triggered)*.
-
-</details>
-
----
-
-**Related (mini)** · [`directory-rules.md` §12](../../../directory-rules.md) · [`kfm_unified_doctrine_synthesis.md` §10](../../../kfm_unified_doctrine_synthesis.md) · [`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.1](../../../Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md) · [`connected-dots-architecture-brief.md`](../../../connected-dots-architecture-brief.md) · [`docs/focus-modes/README.md` *(or `docs/focus-mode/README.md`)*](../../focus-modes/README.md)
-
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-10)*
-
-[↑ Back to top](#top)
+[Back to top](#top)
