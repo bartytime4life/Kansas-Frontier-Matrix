@@ -22,6 +22,7 @@ superseded_by: []
 notes:
   - "This record remains proposed. It does not adopt Directory Rules v2 or authorize the dependent legacy-path migration until an explicit reviewed transition changes this ADR to accepted."
   - "CODEOWNERS routes review to @bartytime4life; that route is not independent approval, a StewardshipAssignment, or proof that review occurred."
+  - "PR #1763 restored the verified v2 bytes and merged this proposed record; that merge did not accept the decision or alter the legacy architecture path."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -35,9 +36,10 @@ If accepted after explicit governance and independent review, this decision adop
 | **ID** | `ADR-0029` |
 | **Status** | `proposed` |
 | **Date** | 2026-07-26 |
-| **Decider route** | `@bartytime4life` — verified CODEOWNERS route; stewardship authority remains `NEEDS VERIFICATION` |
-| **Required acceptance review** | Documentation governance, architecture, affected responsibility-root owner, and a verified independent reviewer |
-| **Consulted** | KFM doctrine, repository evidence, Directory Rules v2 reviewer classes |
+| **Repository review route** | `@bartytime4life` via CODEOWNERS; this is routing, not decision authority or approval evidence |
+| **Decision authority** | `NEEDS VERIFICATION` — verified stewardship assignments and acceptance approvers are not recorded |
+| **Acceptance evidence** | Explicit decision review from every verified named owner, recorded approvers, reverified bytes, and a matching ADR/index status transition |
+| **Consulted** | KFM doctrine, the two Directory Rules bodies, supplied source artifacts, and pinned repository evidence |
 | **Informed** | All repository contributors and consumers of Directory Rules paths or fragments |
 | **Supersedes** | No prior ADR |
 | **Superseded by** | — |
@@ -45,10 +47,13 @@ If accepted after explicit governance and independent review, this decision adop
 | **Primary responsibility root** | `docs/` |
 | **Migration required** | yes |
 | **Rollback required** | yes |
+| **Evidence checkpoint** | `main@b33687e072970ae12b36c9642ae1da09f900d1f2`; ratification merge checkpoint `7b75e3bd590cd37321113f8336559060ae4c4358` |
 | **Truth posture** | `CONFIRMED` evidence; `PROPOSED` decision; acceptance review `NEEDS VERIFICATION` |
 
 > [!IMPORTANT]
 > Adding or merging this record with status `proposed` does not accept it. Adoption becomes effective only when the source ADR and canonical index both carry a reviewed `accepted` state, the exact proposed content digest is reverified, and the required approvals are recorded.
+
+**Quick navigation:** [Context](#1-context) · [Decision](#2-decision) · [Consequences](#3-consequences) · [Alternatives](#4-alternatives-considered) · [Evidence](#5-evidence-and-references) · [Migration](#6-migration-plan) · [Rollback](#7-rollback-plan) · [Open questions](#8-open-questions) · [Acceptance gates](#9-acceptance-gates) · [History](#10-change-history)
 
 ## 1. Context
 
@@ -56,29 +61,39 @@ KFM currently has one proposed successor and one competing legacy Directory Rule
 
 | Surface | Verified state | Effect |
 |---|---|---|
-| `docs/doctrine/directory-rules.md` | Directory Rules `2.0.0-draft.1`; corrected branch blob `fd49a0b83e55cef52c1124281f093e263526898d`; status `PROPOSED_FOR_ADOPTION` | Proposed successor only |
+| `docs/doctrine/directory-rules.md` | Directory Rules `2.0.0-draft.1`; current `main` blob `fd49a0b83e55cef52c1124281f093e263526898d`; status `PROPOSED_FOR_ADOPTION` | Exact proposed successor bytes are present, but not adopted |
 | `docs/architecture/directory-rules.md` | v1.3.1 `review`; blob `18653c00ba193a4afaa3e07a0924452807fb98ef` | Competing rule body and active compatibility dependency |
-| Numbered ADR corpus before this proposal | `ADR-0001` through `ADR-0028`, all effectively `proposed` | No accepted bootstrap authority |
+| `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` | This record; source status `proposed`; blob `533b6f577019384ec03e4531b0f5bc68bd7cb1ee` at the checkpoint | No adoption or supersession effect |
+| Numbered ADR corpus | `ADR-0001` through `ADR-0029`, all effectively `proposed` | No accepted bootstrap authority |
 
-The successor itself requires an explicit adoption decision before dependent structural work. It also requires the architecture file to become a short read-only redirect before eventual retirement. A current repository audit found 214 resolving Markdown links to the architecture path, including 83 fragment links across 30 legacy anchors, so immediate path deletion would create broad link and semantic breakage.
+The successor itself requires an explicit adoption decision before dependent structural work. It also requires the architecture file to become a short read-only redirect before eventual retirement. The merged ratification packet recorded 214 resolving Markdown links to the architecture path, including 83 fragment links across 30 legacy anchors. Those counts are evidence from PR #1763, not proof of external-consumer closure; immediate path deletion would create broad link and semantic breakage.
 
-The first copy of v2 committed directly to `main` in `a6de05fa468bd91b7ac990b166b769a4505b7ce2` was not byte-faithful to the finished artifact. Draft PR #1763 restores the exact intended UTF-8 bytes before this decision can be reviewed.
+The first copy of v2 committed directly to `main` in `a6de05fa468bd91b7ac990b166b769a4505b7ce2` was not byte-faithful to the finished artifact. PR #1763 restored the exact intended UTF-8 bytes and merged as `7b75e3bd590cd37321113f8336559060ae4c4358`. That merge completed byte restoration only: ADR-0029 and its index row still say `proposed`, and the legacy architecture blob is unchanged.
+
+### Current ratification checkpoint
+
+| Step | State at the evidence checkpoint | Governing effect |
+|---|---|---|
+| Exact v2 byte restoration | **CONFIRMED complete** in merged PR #1763 | Makes the proposed bytes reviewable; does not adopt them |
+| ADR-0029 decision | **PROPOSED** | Creates no placement, supersession, migration, or deletion authority |
+| Legacy-path tombstone | **HELD** | Requires an effective accepted decision and a separate migration PR |
+| Physical legacy-path deletion | **HOLD / not authorized** | Requires zero-writer, zero-consumer, link-closure, and retirement-receipt evidence |
 
 ### 1.1 Decision drivers
 
 - **Single authority** — two independently editable rules bodies create contradictory placement authority.
-- **Byte integrity** — adoption must pin the verified source, not the corrupted main-branch copy.
+- **Byte integrity** — adoption must pin the restored verified source, not the historically corrupted commit.
 - **Governed supersession** — prior editions need exact identity, digest, lineage, and forward links.
 - **Compatibility** — active path and fragment consumers require a bounded redirect and reference migration.
 - **Reversibility** — the cutover must not recreate two writable authorities or erase decision history.
-- **Review integrity** — repository ownership and CODEOWNERS routing do not substitute for independent approval.
+- **Review integrity** — repository ownership and CODEOWNERS routing do not substitute for verified stewardship, explicit decision review, or recorded approval.
 
 ### 1.2 Evidence boundary
 
-- **CONFIRMED:** the two current repository paths, their versions and blobs, the corrected v2 digest, the absence of an accepted numbered ADR, and the current inbound-link count.
+- **CONFIRMED:** at `main@b33687e072970ae12b36c9642ae1da09f900d1f2`, the two current repository paths, their versions and blobs, the restored v2 digest, ADR-0029's `proposed` source/index state, the absence of an accepted numbered ADR, and PR #1763's recorded repository link inventory.
 - **PROPOSED:** adoption of v2, the canonical identity and aliases, the tombstone window, and the migration sequence below.
 - **UNKNOWN:** external consumers that are not visible through repository search.
-- **NEEDS VERIFICATION:** verified governance owners, an independent reviewer, final reference inventory at acceptance time, machine-register parity, and zero-consumer proof before physical deletion.
+- **NEEDS VERIFICATION:** stewardship assignments, acceptance approvers and any required independent-review control, final reference inventory at acceptance time, machine-register parity, and zero-consumer proof before physical deletion.
 
 ### 1.3 Out of scope
 
@@ -111,15 +126,21 @@ The proposed adopted artifact is:
 
 The digest and blob MUST be reverified immediately before an `accepted` status transition. A content change requires a new digest and renewed review; this ADR must not silently accept different bytes.
 
-### 2.2 Exact supersession targets
+The supplied rendered companion `KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf` is 33 pages with SHA-256 `2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893`. It was inspected as a presentation and lineage artifact. Its PDF digest is not the adoption digest and does not replace the exact UTF-8 Markdown identity above.
 
-Acceptance would supersede these Directory Rules editions as current authority while preserving their lineage:
+<a id="exact-supersession-targets"></a>
 
-| Prior artifact | Exact identity | Disposition after acceptance |
+### 2.2 Supersession and lineage targets
+
+Acceptance would establish the following exact doctrinal lineage without implying that every predecessor currently has repository authority:
+
+| Prior artifact | Exact identity | Proposed relation after acceptance |
 |---|---|---|
-| Supplied unversioned `Directory Rules.pdf` | SHA-256 `759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335` | Source lineage only; no current repository authority |
-| Prior doctrine v1.4 | Git blob `2affb080e6f0043867c64c7f06c1ca52030fbd55` | Retained in Git history as superseded doctrine |
-| Architecture v1.3.1 | Git blob `18653c00ba193a4afaa3e07a0924452807fb98ef` | Rule body removed only in a post-adoption migration PR; path becomes a temporary read-only redirect |
+| Supplied unversioned `Directory Rules.pdf` | 22 pages; SHA-256 `759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335` | Source-lineage predecessor only; no repository deletion target and no current repository authority |
+| Prior doctrine v1.4 | Git blob `2affb080e6f0043867c64c7f06c1ca52030fbd55` | Superseded repository doctrine edition; retained in Git history |
+| Architecture v1.3.1 | Git blob `18653c00ba193a4afaa3e07a0924452807fb98ef` | Superseded content edition; body replaced only in a post-adoption migration PR while the path remains a read-only compatibility surface |
+
+The meta-block fields `supersedes` and `superseded_by` describe ADR-to-ADR relationships, so they remain empty. The table above records document-edition lineage and must not be interpreted as an ADR identity relationship or as deletion authority.
 
 ### 2.3 Stable identity and aliases
 
@@ -132,7 +153,7 @@ become explicit superseded aliases to the canonical v2 identity. A later machine
 
 ### 2.4 Compatibility and deletion rule
 
-After acceptance:
+The current deletion state is **HOLD**. This proposed ADR neither performs nor authorizes deletion. After acceptance:
 
 1. all new Directory Rules edits go only to `docs/doctrine/directory-rules.md`;
 2. `docs/architecture/directory-rules.md` is replaced in a separate migration PR with a short read-only tombstone;
@@ -145,7 +166,9 @@ Historical receipts and commit-pinned evidence are not rewritten merely to remov
 ### 2.5 Conformance language
 
 - **MUST** keep this ADR `proposed` until explicit required review is recorded.
+- **MUST NOT** treat PR #1763, its merge commit, or byte equality as adoption evidence.
 - **MUST** pin and reverify the exact v2 digest before acceptance.
+- **MUST** record verified decision owners, approvers, and applicable review evidence.
 - **MUST** use single-write authority at the doctrine path after acceptance.
 - **MUST** preserve prior editions through Git history or explicit lineage records.
 - **MUST NOT** delete the architecture path while verified consumers remain.
@@ -156,9 +179,9 @@ Historical receipts and commit-pinned evidence are not rewritten merely to remov
 
 ### 3.1 Positive
 
-- KFM gains one explicit Directory Rules identity and one writable human authority path.
+- If accepted, KFM gains one explicit Directory Rules identity and one writable human authority path.
 - Supersession becomes inspectable and digest-pinned.
-- The cutover preserves active links while preventing independent legacy edits.
+- The proposed cutover preserves active links while preventing independent legacy edits.
 - Later topology enforcement can cite an accepted decision instead of inferring authority from repository convention.
 
 ### 3.2 Negative
@@ -174,14 +197,14 @@ The proposal favors a small persistent redirect over broken links or premature h
 
 ### 3.4 Affected surfaces
 
-| Surface | File or path | Proposed impact |
+| Surface | File or path | Current or proposed impact |
 |---|---|---|
 | Doctrine | `docs/doctrine/directory-rules.md` | Exact v2 bytes become adopted only after reviewed acceptance |
-| ADRs | `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` | New decision record |
-| ADR inventory | `docs/adr/INDEX.md` | Adds `ADR-0029` as `proposed` |
-| ADR summaries | `docs/adr/README.md`, `docs/registers/ADR_INDEX.md` | Count and range update; no acceptance claim |
-| Doctrine landing page | `docs/doctrine/README.md` | Corrects v1.4 label and surfaces v2 as proposed |
-| Legacy compatibility | `docs/architecture/directory-rules.md` | No change in the ratification PR; later tombstone |
+| ADRs | `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` | Present and still `proposed`; this modernization makes no status transition |
+| ADR inventory | `docs/adr/INDEX.md` | Already indexes `ADR-0029` as `proposed`; acceptance must update source and index together |
+| ADR summaries | `docs/adr/README.md`, `docs/registers/ADR_INDEX.md` | Already report 29 proposed numbered records; no acceptance claim |
+| Doctrine landing page | `docs/doctrine/README.md` | Already surfaces v2 and ADR-0029 as proposed |
+| Legacy compatibility | `docs/architecture/directory-rules.md` | Unchanged by PR #1763 and this ADR modernization; later tombstone only after acceptance |
 | Machine projection | `control_plane/` | Follow-up work only |
 | Data, policy, release, runtime | governed roots | Not affected |
 
@@ -204,8 +227,8 @@ The proposal favors a small persistent redirect over broken links or premature h
 
 ### 4.4 Adopt the corrupted main-branch bytes
 
-- **Summary:** Ratify the file exactly as first committed.
-- **Why rejected:** those bytes differ from the verified artifact and contain systematic mojibake.
+- **Summary:** Ratify the file exactly as first committed in `a6de05fa468bd91b7ac990b166b769a4505b7ce2`.
+- **Why rejected:** those historical bytes differ from the verified artifact and contain systematic mojibake; PR #1763 restored the proposed source before adoption review.
 
 ### 4.5 Status quo
 
@@ -219,16 +242,19 @@ The proposal favors a small persistent redirect over broken links or premature h
 - Canonical ADR inventory: [`INDEX.md`](./INDEX.md)
 - Cross-register pointer: [`../registers/ADR_INDEX.md`](../registers/ADR_INDEX.md)
 - Review routing: [`.github/CODEOWNERS`](../../.github/CODEOWNERS)
-- Byte-restoration review: [PR #1763](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1763)
+- Merged byte-restoration and ratification packet: [PR #1763](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1763)
+- Ratification merge checkpoint: [`7b75e3bd590cd37321113f8336559060ae4c4358`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7b75e3bd590cd37321113f8336559060ae4c4358)
+- Supplied baseline lineage: `Directory Rules.pdf`, 22 pages, SHA-256 `759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335`
+- Supplied rendered v2 companion: `KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf`, 33 pages, SHA-256 `2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893`
 
 ## 6. Migration Plan
 
 ### Phase 0 — Ratification
 
-1. Merge the exact-byte repair only after its digest and diff are reviewed.
-2. Review this ADR with the required reviewer classes.
-3. Reverify the v2 path, digest, blob, prior-edition targets, consumers, and concurrent ADR state.
-4. Transition this ADR and the canonical index together from `proposed` to `accepted`.
+- [x] Restore the exact proposed bytes and preserve the legacy architecture body unchanged in merged PR #1763. This completed byte restoration only.
+- [ ] Verify decision owners, approvers, and applicable independent-review requirements; then obtain the explicit decision review required by the ADR operating contract.
+- [ ] Reverify the v2 path, digest, blob, prior-edition targets, consumers, and concurrent ADR state at the intended acceptance head.
+- [ ] Transition this ADR and the canonical index together from `proposed` to `accepted`.
 
 ### Phase 1 — Single authority surface
 
@@ -252,8 +278,9 @@ Implement the root and alias registers, schema, fixtures, validator, tests, Make
 
 ### Before acceptance
 
-- Close or revert the unmerged proposal.
-- Restore no legacy path because the ratification PR does not change it.
+- Keep this record and the canonical index at `proposed`; no legacy-path migration exists to undo.
+- If governance declines the proposal, use a reviewed `proposed` → `rejected` transition in the source ADR and canonical index rather than inferring rejection from a closed PR.
+- Revert an unmerged acceptance change if necessary; PR #1763 itself is a merged lineage and byte-restoration checkpoint, not an accepted decision.
 - Keep v2 `PROPOSED_FOR_ADOPTION`.
 
 ### After acceptance but before tombstone migration
@@ -280,9 +307,9 @@ Implement the root and alias registers, schema, fixtures, validator, tests, Make
 - [ ] `docs/doctrine/directory-rules.md` matches SHA-256 `44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e`.
 - [ ] Its Git blob is `fd49a0b83e55cef52c1124281f093e263526898d`.
 - [ ] All exact supersession targets are reverified.
-- [ ] No concurrent `ADR-0029` or Directory Rules adoption proposal exists.
-- [ ] Verified owners and an independent reviewer are recorded.
-- [ ] Required reviewers explicitly approve.
+- [ ] No concurrent `ADR-0029` identity claim or competing Directory Rules adoption proposal exists, excluding the one reviewed acceptance change itself.
+- [ ] Verified stewardship assignments, decision owners, approvers, and applicable independent-review evidence are recorded.
+- [ ] Every verified named owner required by the ADR operating contract explicitly approves.
 - [ ] The ADR source and index transition together to `accepted`.
 - [ ] The architecture body remains unchanged until the acceptance decision is effective.
 - [ ] Migration and rollback tickets or manifests identify the post-adoption work.
