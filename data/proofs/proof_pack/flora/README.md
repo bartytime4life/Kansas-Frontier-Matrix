@@ -1,317 +1,461 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/proofs/proof-pack/flora/readme
-title: data/proofs/proof_pack/flora README
-type: directory-readme
-version: v0.1
-status: draft
+title: data/proofs/proof_pack/flora/ — Flora ProofPack Support
+version: v0.2.0
+type: directory-readme; proof-pack-domain-lane; flora-release-support-index
+status: repository-grounded draft; accepted Flora ProofPack schema, producer, deterministic validator, public-safe fixtures, policy enforcement, review binding, release linkage, and runtime use remain unverified
 owners:
-  - <data steward — TODO>
-  - <proof steward — TODO>
-  - <flora-domain steward — TODO>
-  - <sensitivity reviewer — TODO>
-  - <release steward — TODO>
+  - "NEEDS VERIFICATION — Flora domain steward"
+  - "NEEDS VERIFICATION — evidence, ProofPack, EvidenceBundle, and citation-validation stewards"
+  - "NEEDS VERIFICATION — taxonomy, source-role, rights, sensitivity, geoprivacy, stewardship, and sovereignty reviewers"
+  - "NEEDS VERIFICATION — validation, release, correction, withdrawal, rollback, governed-API, Evidence Drawer, governed-AI, and docs stewards"
 created: 2026-06-25
-updated: 2026-06-25
-policy_label: restricted-review
+updated: 2026-07-26
+policy_label: restricted-review; proof-pack-support; flora; cite-or-abstain; deny-by-default-location; no-direct-public-path; release-gated
 path: data/proofs/proof_pack/flora/README.md
+truth_posture: >
+  CONFIRMED exact target path and prior blob, canonical proofs-root contract, current ProofPack parent lane,
+  repository-grounded Flora domain proof lane, Flora EvidenceBundle and citation-validation lanes, fielded
+  EvidenceBundle semantic contract and machine schema, current Flora workflow holds, scaffold-level Flora
+  policy homes, and no established Flora proof payload, candidate dossier, release, or public serving /
+  PROPOSED Flora ProofPack profile, deterministic identity, source-role and sensitivity closure, safe-
+  representation evidence, review packet, correction-invalidation contract, and automation graduation /
+  UNKNOWN recursive ProofPack payload inventory, active writers and consumers, generated indexes, access
+  controls, resolver runtime, public routes, caches, hosting, and public effects / NEEDS VERIFICATION
+  accountable owners, accepted ProofPack contract and schema, executable producer and validators, Flora-
+  specific fixtures, policy and geoprivacy enforcement, stewardship and sovereignty review, release instances,
+  correction propagation, withdrawal behavior, retention, and rollback drills
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 4ce20df8b12d640fa527147407a24f56d61e0b46
+  prior_blob: b09212e278121a317652d1b9106d2fdbca267a96
+  proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  proof_pack_parent_blob: b03674bebb03252511cb76e03b949e885a9fd79f
+  flora_proof_lane_blob: 130effccfd6e14f2660de04c3cc30d839503ef8a
+  flora_workflow_blob: c792d126e5726d8895f56fd97800bee7fcba4a15
 related:
   - ../../README.md
   - ../README.md
   - ../../flora/README.md
+  - ../../evidence_bundle/flora/README.md
+  - ../../citation_validation/flora/README.md
   - ../../../receipts/README.md
-  - ../../../catalog/README.md
-  - ../../../published/README.md
-  - ../../../../docs/domains/flora/ARCHITECTURE.md
-  - ../../../../docs/domains/flora/DATA_LIFECYCLE.md
-  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../registry/sources/flora/README.md
+  - ../../../processed/flora/README.md
+  - ../../../catalog/domain/flora/README.md
+  - ../../../published/flora/README.md
+  - ../../../rollback/flora/README.md
+  - ../../../../contracts/evidence/evidence_bundle.md
+  - ../../../../contracts/domains/flora/README.md
+  - ../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - ../../../../schemas/contracts/v1/domains/flora/README.md
+  - ../../../../policy/domains/flora/README.md
+  - ../../../../policy/sensitivity/flora/README.md
+  - ../../../../release/candidates/flora/README.md
   - ../../../../release/README.md
-  - ../../../../policy/README.md
-  - ../../../../schemas/README.md
-  - ../../../../contracts/README.md
-tags:
-  - kfm
-  - data
-  - proofs
-  - proof-pack
-  - flora
-  - biodiversity
-  - rare-plants
-  - geoprivacy
-  - redaction-receipt
-  - evidence-bundle
-  - validation-report
-  - release-gate
-  - rollback
+  - ../../../../docs/domains/flora/README.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../.github/workflows/domain-flora.yml
 notes:
-  - "Directory README for Flora proof-pack support. It is not itself a ProofPack instance, schema, policy bundle, release manifest, or catalog record."
-  - "Exact rare-plant, protected-plant, culturally sensitive, steward-reviewed, and join-sensitive flora locations fail closed unless a documented geoprivacy transform and review state allow release."
-  - "Proof packs must preserve source role and distinguish raw occurrence/specimen evidence from generalized, modeled, aggregated, and released public-safe botanical surfaces."
+  - "Same-path Markdown modernization only; no Flora source bytes, ProofPack payloads, EvidenceBundle instances, contracts, schemas, policies, validators, fixtures, workflows, candidates, releases, routes, hosting, access controls, or publication state changed."
+  - "This lane narrows the parent ProofPack responsibility to Flora. It must reference rather than duplicate source, evidence, receipt, policy, catalog, release, correction, withdrawal, rollback, or public-delivery authority."
+  - "Exact or reverse-engineerable rare, protected, culturally sensitive, steward-controlled, or private-land Flora locations and control-defeating transform details remain denied from ordinary public-repository review lanes."
+  - "The current domain-flora workflow holds validation, proof production, and release dry-run; it does not directly consume this child path or establish ProofPack maturity."
+  - "The documentation rollback target for v0.2.0 is prior blob b09212e278121a317652d1b9106d2fdbca267a96."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/proofs/proof_pack/flora/`
+# `data/proofs/proof_pack/flora/` — Flora ProofPack Support
 
-> Domain lane for **Flora ProofPack support**. Files under this directory should assemble the evidence, validation, policy, geoprivacy, catalog, review, release, correction, and rollback references needed to decide whether a flora artifact can move toward public or semi-public release.
+> **One-line purpose.** Hold or index compact, claim-scoped Flora ProofPack support that assembles immutable references to botanical evidence, source roles, rights, sensitivity, safe representation, validation, policy, review, catalog, release dependency, correction, withdrawal, and rollback without becoming source truth, policy authority, release authority, or a public data service.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Truth posture: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-2ea44f)
-![Lifecycle: proof-pack](https://img.shields.io/badge/lifecycle-proof--pack-blue)
-![Domain: flora](https://img.shields.io/badge/domain-flora-2e7d32)
-![Sensitivity: rare plants fail closed](https://img.shields.io/badge/sensitivity-rare--plants--fail--closed-b91c1c)
-![Publication: not by placement](https://img.shields.io/badge/publication-not--by--placement-lightgrey)
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: ProofPack support](https://img.shields.io/badge/authority-ProofPack%20support-0969da?style=flat-square)](#authority-level)
+[![Domain: Flora](https://img.shields.io/badge/domain-Flora-2e7d32?style=flat-square)](#flora-claim-and-source-role-closure)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318?style=flat-square)](#sensitivity-geoprivacy-and-safe-representation)
+[![Exposure: no direct public path](https://img.shields.io/badge/exposure-no%20direct%20public%20path-6e7781?style=flat-square)](#outputs)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owner:** `<data steward>` · `<proof steward>` · `<flora-domain steward>` · `<sensitivity reviewer>` · `<release steward>` — TODO  
-> **Path:** `data/proofs/proof_pack/flora/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation guidance / NEEDS VERIFICATION for emitted ProofPack instances, schemas, validators, CI wiring, and release-gate enforcement.
+> **A ProofPack supports a release decision; it is not the decision.** File placement, schema validity, a green check, or a complete-looking packet does not make a Flora claim botanically true, rights-cleared, sensitivity-safe, steward-approved, released, public, or suitable for collection or access use.
 
 > [!CAUTION]
-> Flora proof packs frequently touch sensitive biodiversity data. Exact rare-plant, protected-plant, culturally sensitive, steward-reviewed, or join-sensitive locations **must not** become public because a proof file exists here. A ProofPack supports review; it does not publish, authorize, generalize, release, or override policy by itself.
+> Missing, stale, conflicting, role-collapsed, rights-unclear, sensitivity-unsafe, unreleased, withdrawn, invalidated, or unresolvable support must yield a finite fail-closed result such as `ABSTAIN`, `HOLD`, `RESTRICT`, `DENY`, or `ERROR`.
+
+> [!WARNING]
+> Do not place exact or reverse-engineerable rare, protected, culturally sensitive, steward-controlled, or private-land Flora locations—or collection clues, access directions, withheld precision, redaction offsets, generalization thresholds, transform parameters, or other control-defeating details—in this ordinary repository lane.
+
+**Path:** `data/proofs/proof_pack/flora/README.md`  
+**Owning responsibility:** `data/proofs/proof_pack/`  
+**Domain segment:** `flora/`  
+**Direct public access:** denied  
+**Documentation rollback target:** prior blob `b09212e278121a317652d1b9106d2fdbca267a96`
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Operating contract](#operating-contract) · [ProofPack profile](#flora-proofpack-profile) · [Claims](#flora-claim-and-source-role-closure) · [Sensitivity](#sensitivity-geoprivacy-and-safe-representation) · [Lifecycle](#lifecycle-and-authority-relationship) · [Automation](#workflow-and-automation-posture) · [Correction](#correction-withdrawal-invalidation-and-rollback) · [Evidence](#repository-evidence-ledger) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ---
 
-## Quick jumps
+## Purpose
 
-| Section | Use it for |
+`data/proofs/proof_pack/flora/` is the Flora domain sublane under the ProofPack support family. It is intended for compact review packets or indexes that help an independent reviewer inspect whether a specific botanical candidate has enough governed support to proceed toward release evaluation.
+
+A Flora ProofPack should make these questions answerable:
+
+1. What exact claim, object family, taxon concept, artifact, geography, time, audience, and representation is under review?
+2. Which admitted sources, `EvidenceRef` values, `EvidenceBundle` records, receipts, validation reports, policy decisions, and catalog records support it?
+3. Are authority, observation, context, model, aggregate, synthetic, candidate, and released roles distinct where material?
+4. Are rights, sovereignty, cultural sensitivity, rare-plant sensitivity, stewardship, private-land context, and join-induced disclosure risks resolved?
+5. Is exact/internal geometry separated from public generalized, withheld, staged, or denied representation?
+6. Which review, release-candidate, correction, withdrawal, invalidation, and rollback records remain outside the ProofPack but are referenced by it?
+7. Which finite review-support outcome is justified?
+
+This lane does not admit sources, define botanical truth, establish taxonomy authority, execute a geoprivacy transform, decide policy, approve release, publish a layer, or authorize collection or access.
+
+## Authority level
+
+**Implementation-bearing Flora sublane under the canonical ProofPack support responsibility.**
+
+The authority split is deliberate:
+
+| Responsibility | Home | Boundary |
+|---|---|---|
+| Parent proof responsibility | [`data/proofs/`](../../README.md) | Owns cross-cutting proof support; not release authority. |
+| ProofPack family support | [`data/proofs/proof_pack/`](../README.md) | Defines the family lane and domain-sublane pattern. |
+| Flora domain proof support | [`data/proofs/flora/`](../../flora/README.md) | Broader Flora proof packet, claim-support, and limitation lane. |
+| Flora EvidenceBundle support | [`data/proofs/evidence_bundle/flora/`](../../evidence_bundle/flora/README.md) | Claim-scope evidence closure; not a duplicate ProofPack authority. |
+| Flora citation validation | [`data/proofs/citation_validation/flora/`](../../citation_validation/flora/README.md) | Citation and evidence-reference closure support. |
+| Source identity and activation | [`data/registry/sources/flora/`](../../../registry/sources/flora/README.md) | Source role, rights, cadence, sensitivity, and admission. |
+| Process memory | [`data/receipts/`](../../../receipts/README.md) | Records what ran; does not become release-grade proof by itself. |
+| Catalog and provenance carriers | [`data/catalog/`](../../../catalog/README.md) | Discovery and lineage; not release approval. |
+| Policy and sensitivity | [`policy/domains/flora/`](../../../../policy/domains/flora/README.md) and [`policy/sensitivity/flora/`](../../../../policy/sensitivity/flora/README.md) | Admissibility, access, and safe-representation decisions. |
+| Release, correction, withdrawal, rollback | [`release/`](../../../../release/README.md) | Decision authority remains outside proof data. |
+| Public delivery | Governed APIs and released artifacts | Public clients must not read this lane directly. |
+
+This same-path update creates no new proof family, lifecycle phase, domain root, release state, or public route.
+
+## Status
+
+| Surface | Repository-grounded result |
 |---|---|
-| [1. Purpose](#1-purpose) | What this directory is for. |
-| [2. Placement and authority](#2-placement-and-authority) | Why this path belongs under `data/proofs/proof_pack/`. |
-| [3. What a Flora ProofPack should contain](#3-what-a-flora-proofpack-should-contain) | Minimum support bundle. |
-| [4. Flora-specific gates](#4-flora-specific-gates) | Rare-plant, geoprivacy, taxonomy, and join-sensitive proof requirements. |
-| [5. What must not be stored here](#5-what-must-not-be-stored-here) | Exclusions and wrong homes. |
-| [6. Proposed folder and file pattern](#6-proposed-folder-and-file-pattern) | Future naming and structure. |
-| [7. Lifecycle relationship](#7-lifecycle-relationship) | How ProofPacks relate to receipts, catalog, release, and published outputs. |
-| [8. Validation checklist](#8-validation-checklist) | Maintainer checklist. |
-| [9. Failure modes](#9-failure-modes) | Drift patterns to block. |
-| [10. Definition of done](#10-definition-of-done) | When this lane is operationally usable. |
+| Exact target | **CONFIRMED** at `main@4ce20df8b12d640fa527147407a24f56d61e0b46`; prior blob `b09212e278121a317652d1b9106d2fdbca267a96` |
+| Documentation version | `v0.2.0` |
+| ProofPack parent lane | **CONFIRMED authored draft** at [`data/proofs/proof_pack/README.md`](../README.md) |
+| Flora proof lane | **CONFIRMED repository-grounded draft** at [`data/proofs/flora/README.md`](../../flora/README.md) |
+| Flora EvidenceBundle and citation-validation lanes | **CONFIRMED repository-grounded drafts** |
+| Shared EvidenceBundle contract/schema | **CONFIRMED fielded semantic contract and Draft 2020-12 schema** |
+| Concrete Flora ProofPack payloads | **Not established by this bounded inspection** |
+| Accepted ProofPack contract/schema/profile | **Not established** |
+| Accepted Flora ProofPack producer or deterministic command | **Not established** |
+| Flora policy and sensitivity enforcement | **Not established; current policy homes are scaffold-level** |
+| Current Flora workflow | **CONFIRMED readiness workflow** with explicit validation, proof, and release-dry-run holds |
+| Active Flora candidate or published release | **Not established** |
+| Direct public access | **Denied** |
 
----
+A successful readiness or hold job proves only its declared maturity check. It is not a `ProofPack`, `EvidenceBundle`, stewardship decision, geoprivacy decision, release decision, or publication authority.
 
-## 1. Purpose
+## What belongs here
 
-`data/proofs/proof_pack/flora/` is the Flora domain's sublane for proof packs: compact, reviewable bundles that show whether a plant-taxonomy, specimen, occurrence, vegetation-community, invasive-plant, phenology, range/distribution, habitat-association, restoration, or public-safe botanical product has enough governed support to be considered for release.
+Under an accepted ProofPack profile, appropriate contents include:
 
-A valid Flora ProofPack should answer:
+- Flora ProofPack instances or indexes that contain immutable references rather than duplicated source payloads;
+- candidate-scope summaries for taxonomy, occurrences, specimens, rare plants, vegetation communities, invasive plants, phenology, range/distribution, habitat association, surveys, restoration, and governed cross-lane products;
+- source-role, evidence, citation, validation, rights, sensitivity, geoprivacy, integrity, catalog, review, release-dependency, correction, withdrawal, and rollback closure summaries;
+- safe-representation evidence showing how exact/internal and public representations remain separated;
+- README, inventory, digest, migration, and disposition sidecars that explain the lane without creating parallel authority.
 
-- Which source descriptors, raw captures, transform receipts, validation reports, policy decisions, and EvidenceBundles support the candidate?
-- Are source roles preserved for authority, observation, context, and model inputs?
-- Were rare-plant, protected-plant, culturally sensitive, steward-controlled, private-land, and join-induced sensitivity risks evaluated?
-- Was exact sensitive geometry generalized, withheld, staged, or denied through a recorded redaction/geoprivacy transform?
-- Did validators check taxonomy/crosswalk integrity, occurrence uncertainty, specimen provenance, public/restricted occurrence split, and release-state closure?
-- Does the candidate have catalog closure, release decision support, correction path, and rollback target?
+Every record must remain reconstructable to its source descriptors, evidence, receipts, policy/review state, release dependency, and correction lineage.
 
-This directory is for **proof-pack indexes and support bundles**, not source captures, policy code, schemas, release manifests, public map layers, or unredacted sensitive biodiversity data.
+## What does not belong here
 
-[Back to top](#top)
+| Do not place here | Correct home or action |
+|---|---|
+| Raw GBIF, iNaturalist, USDA PLANTS, iDigBio, herbarium, NatureServe, KDWP, KBS, KSU, vegetation-index, restoration, or other source payloads | Corresponding `data/raw/`, `data/work/`, or `data/quarantine/` lane |
+| Exact or reverse-engineerable sensitive Flora locations and withheld control parameters | Restricted storage, quarantine, aggregation, redaction, staged access, or denial |
+| Process-only receipts | `data/receipts/` |
+| STAC, DCAT, PROV, or domain catalog records | `data/catalog/` |
+| Semantic contracts or machine schemas | `contracts/` and `schemas/` |
+| Policy logic, rights decisions, sensitivity rules, geoprivacy rules, stewardship decisions, or access decisions | `policy/` and applicable steward authority |
+| Candidate dossiers, promotion decisions, release manifests, correction notices, withdrawal notices, or rollback cards | `release/` |
+| Public PMTiles, GeoParquet, GeoJSON, COG, raster, vector, API payloads, reports, stories, maps, search, graphs, exports, or dashboards | `data/published/` and governed delivery roots after release |
+| AI summaries presented as proof | Governed AI may cite a released packet; generated language cannot replace proof |
+| Collection or access guidance derived from sensitive location information | Deny or refer to authorized stewardship channels |
 
----
+## Inputs
 
-## 2. Placement and authority
+A Flora ProofPack may reference, without duplicating mutable authority:
 
-KFM places files by responsibility root. `data/` is the lifecycle root; `data/proofs/` holds EvidenceBundle, ProofPack, validation, citation, and integrity support; `release/` holds release decisions; `data/published/` holds released public-safe artifacts.
+- admitted source descriptors and source-activation state;
+- immutable RAW and processed artifact identities and digests;
+- Flora semantic objects and machine-shape validation reports;
+- `EvidenceRef` and `EvidenceBundle` records;
+- source-role, taxonomy, uncertainty, provenance, rights, sensitivity, geoprivacy, and safe-representation records;
+- receipts for retrieval, transformation, validation, redaction/generalization, catalog emission, and release dry-run;
+- policy decisions, review records, catalog closure, release-candidate references, correction lineage, withdrawal state, and rollback targets.
 
-| Surface | Role | Boundary |
-|---|---|---|
-| [`../../README.md`](../../README.md) | Parent proof root. | Defines proof-lane expectations; this README narrows them to Flora ProofPacks. |
-| [`../README.md`](../README.md) | ProofPack family root. | May be a greenfield/stub parent; this file documents the flora domain sublane. |
-| [`../../flora/README.md`](../../flora/README.md) | Domain proof lane peer. | May hold broader flora proof material; this path is specifically for ProofPack bundles. |
-| [`../../../receipts/`](../../../receipts/) | Operation memory. | Receipts say what ran or what was decided; ProofPacks reference them but do not replace them. |
-| [`../../../catalog/`](../../../catalog/) | Catalog closure and EvidenceBundle discovery. | ProofPacks require catalog closure but are not catalog records. |
-| [`../../../../release/`](../../../../release/) | Release decisions, manifests, corrections, rollback cards. | ProofPacks support release decisions; they do not make them. |
-| [`../../../published/`](../../../published/) | Released public-safe artifacts. | Published artifacts are downstream and require release gates. |
-| [`../../../../policy/`](../../../../policy/) | Sensitivity, rights, geoprivacy, release, and runtime policy. | ProofPacks record policy outcomes; policy logic lives in policy roots. |
-| [`../../../../schemas/`](../../../../schemas/) | Machine shape. | ProofPack schemas belong under the approved schema home. |
-| [`../../../../contracts/`](../../../../contracts/) | Object meaning. | ProofPack semantics belong in contracts. |
+Sensitive or restricted inputs remain in their owning controlled systems. A ProofPack should point to approved identifiers and bounded summaries, not reproduce protected content.
 
-> [!NOTE]
-> This README documents a subdirectory that already exists in the repository. It does not create a new lifecycle phase or parallel proof authority.
+## Outputs
 
-[Back to top](#top)
-
----
-
-## 3. What a Flora ProofPack should contain
-
-A proof pack should be small enough to review but complete enough to support a decision. Prefer references, digests, summaries, and finite outcomes over duplicated source payloads.
-
-| Component | Required support | Flora-specific requirement |
-|---|---|---|
-| `scope` | Candidate release ID, dataset/layer ID, spatial/temporal bounds, object family, source family, intended public surface. | Identify whether the candidate concerns `PlantTaxon`, `FloraOccurrence`, `SpecimenRecord`, `RarePlantRecord`, `VegetationCommunity`, `InvasivePlantRecord`, `PhenologyObservation`, `RangePolygon` / `DistributionSurface`, `HabitatAssociation`, `BotanicalSurvey`, or `RestorationPlanting`. |
-| `source_refs` | SourceDescriptor IDs, retrieval/run receipts, source role, rights, cadence, and citation. | Source role must be one of `authority`, `observation`, `context`, or `model`; mixed roles in one record should quarantine. |
-| `evidence_refs` | Resolved EvidenceRefs / EvidenceBundle IDs and digest closure. | Evidence must support the exact botanical claim, not merely a nearby taxon, location, or habitat theme. |
-| `validation_refs` | ValidationReport refs and finite outcomes. | Must cover taxonomy/crosswalk integrity, occurrence uncertainty, coordinate/geoprivacy posture, rights, source role, and public/restricted split. |
-| `policy_refs` | PolicyDecision refs for rights, sensitivity, geoprivacy, release, and access role. | Unknown rights, rare-plant exact geometry, steward-controlled data, or unsafe joins block release. |
-| `redaction_refs` | RedactionReceipt or geoprivacy transform refs. | Required for exact rare-plant, protected-plant, cultural/steward-sensitive, or join-sensitive geometry before public release. |
-| `transform_refs` | TransformReceipt refs for projection, generalization, aggregation, taxonomic reconciliation, range modeling, or vegetation-index derivation. | Observed occurrence, aggregated range, and modeled distribution surfaces must remain distinct. |
-| `catalog_refs` | CatalogMatrix, STAC/DCAT/PROV, EvidenceBundle, triplet/graph refs where applicable. | Catalog closure must preserve source role, sensitivity tier, release state, and correction lineage. |
-| `review_refs` | ReviewRecord refs or reviewer signoff requirements. | RarePlantRecord, steward-controlled records, cultural sensitivity, private-land restoration records, and sensitive joins require explicit review. |
-| `release_refs` | ReleaseManifest candidate refs and target public artifacts. | Release decision stays in `release/`; ProofPack only points to it. |
-| `rollback_refs` | RollbackCard, CorrectionNotice, invalidation list, stale-state/correction path. | Public flora layers must be rollback-capable, especially species ranges, rare-plant generalizations, and corrected taxonomy snapshots. |
-
-[Back to top](#top)
-
----
-
-## 4. Flora-specific gates
-
-Flora proof packs must fail closed when evidence, source role, sensitivity, geoprivacy, rights, or release state is incomplete.
-
-| Gate | Required proof | Failure outcome |
-|---|---|---|
-| Rare-plant exact geometry | Proof that exact geometry is withheld, generalized, staged, or denied unless steward review and geoprivacy policy explicitly allow the target surface. | `DENY`, `RESTRICT`, or quarantine. |
-| Protected / culturally sensitive flora | Sensitivity review, policy decision, redaction/generalization proof, and correction path. | `DENY` or restricted release. |
-| Join-induced sensitivity | Proof that joins with GBIF, iNaturalist, herbarium, NatureServe, KDWP, habitat, land, roads, or restoration records do not expose sensitive locations or private-land context. | `DENY`, aggregate, suppress, or generalize. |
-| Source rights | SourceDescriptor rights, license/terms review, redistribution decision, and citation. | `DENY` public promotion if unresolved. |
-| Source-role discipline | One declared source role per source record and no authority/observation/model/context collapse. | Quarantine or `ABSTAIN`. |
-| Taxonomic crosswalk | FloraTaxonCrosswalk version, authority snapshot, synonym handling, and conflict notes. | Hold until reviewed; do not publish ambiguous taxon identity. |
-| Occurrence uncertainty | Coordinate uncertainty, observation/specimen method, date/time, and geoprivacy posture. | Generalize, restrict, or abstain. |
-| Public vs restricted occurrence split | Proof that public occurrence objects cannot reveal restricted exact coordinates or steward-only fields. | `DENY` public release. |
-| Modeled vs observed range | Proof that `RangePolygon` / `DistributionSurface` is labeled as modeled, aggregated, or observed as appropriate. | `ABSTAIN` or require re-labeling. |
-| Watcher / connector boundary | Proof that watchers and connectors emit only candidate events/receipts/source captures, never processed/catalog/published outputs. | `ERROR` or quarantine candidate. |
-
-[Back to top](#top)
-
----
-
-## 5. What must not be stored here
-
-| Excluded material | Correct home or action | Reason |
-|---|---|---|
-| Raw GBIF, iNaturalist, USDA PLANTS, iDigBio, herbarium, NatureServe, KDWP, KBS, KSU, vegetation-index, or restoration payloads | `data/raw/flora/`, `data/work/flora/`, or `data/quarantine/flora/` | ProofPacks should reference source material, not duplicate it. |
-| Exact rare-plant, protected-plant, culturally sensitive, or steward-only coordinates | Restricted lifecycle stores only; public proof packs should use redacted/generalized refs | Proof lanes may be reviewed more widely than RAW stores. |
-| Working normalized records or candidate layers | `data/work/` or `data/processed/` after validation | ProofPacks are review bundles, not canonical data. |
-| Policy logic or release rules | `policy/domains/flora/`, `policy/sensitivity/flora/`, or approved policy roots | ProofPacks record policy outcomes, not policy definitions. |
-| JSON Schemas | `schemas/contracts/v1/...` | Machine shape belongs in schemas. |
-| Semantic contracts | `contracts/...` | Meaning belongs in contracts. |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, or RollbackCard as authority | `release/` | ProofPacks may reference these but must not become release authority. |
-| Published PMTiles, GeoParquet, API payloads, reports, stories, or map layers | `data/published/...` after release gates | Published artifacts are downstream carriers. |
-| AI summaries as proof | Governed API / Focus Mode outputs may cite proofs but cannot replace them | Generated language is interpretive, not root truth. |
-
-[Back to top](#top)
-
----
-
-## 6. Proposed folder and file pattern
-
-The target child structure below is **PROPOSED** until schemas, validators, fixtures, and CI are verified.
+The lane may provide a finite review-support result and an inspectable reference graph for an independent reviewer. Suggested outcomes are:
 
 ```text
-data/proofs/proof_pack/flora/
-├── README.md
-├── candidates/
-│   └── <release_id>.proof-pack.json
-├── fixtures/
-│   ├── valid/
-│   └── invalid/
-├── indexes/
-│   └── proof-pack-index.json
-└── retired/
-    └── <release_id>.superseded-proof-pack.json
+READY_FOR_RELEASE_REVIEW
+HOLD
+RESTRICT
+DENY
+ABSTAIN
+ERROR
+WITHDRAW
 ```
 
-Suggested file name pattern:
+`READY_FOR_RELEASE_REVIEW` means only that the accepted ProofPack profile is complete enough for release review. It does not mean approved, released, published, public-safe, or suitable for collection or access use.
 
-```text
-flora.proof_pack.<scope>.<release_or_run_id>.<short_hash>.json
-```
+Ordinary public clients, MapLibre, Evidence Drawer, search, graph, exports, and governed AI must use released, policy-filtered interfaces rather than this internal lane.
 
-Examples:
+## Validation
 
-```text
-flora.proof_pack.public-plant-taxon-checklist.v0.1.0123abcd.json
-flora.proof_pack.rare-plant-generalized-occurrence.v0.1.89ab4567.json
-flora.proof_pack.vegetation-community-layer.v0.1.4567cdef.json
-flora.proof_pack.restoration-planting-public-summary.v0.1.cdef0123.json
-```
+Validation should be deterministic, no-network by default, profile-pinned, and fail closed. At minimum, verify:
 
-Do not treat this naming pattern as global identity law until it is backed by a schema, contract, and validator.
+| Validation family | Required behavior |
+|---|---|
+| Placement and identity | Path, `proof_pack_id`, candidate scope, versions, digests, and immutable references are coherent. |
+| Contract and schema | The accepted ProofPack contract/schema/profile validates; unknown fields or missing required references fail according to that profile. |
+| Evidence closure | Every material claim resolves to the correct EvidenceBundle support or yields `ABSTAIN`, `HOLD`, or `DENY`. |
+| Source-role anti-collapse | Authority, observation, context, model, aggregate, synthetic, candidate, and released roles remain distinct. |
+| Botanical identity | Taxon concept, authority snapshot, synonym/crosswalk handling, and conflicts are explicit. |
+| Rights and sensitivity | Rights, redistribution, cultural/steward sensitivity, private-land context, and access conditions are resolved or fail closed. |
+| Safe representation | Exact/internal geometry is separated from generalized, withheld, staged, or denied public representation. |
+| Join-induced sensitivity | Cross-lane joins cannot reconstruct restricted locations or private context. |
+| Integrity and reproducibility | Inputs, outputs, transforms, validator/profile versions, and digests close deterministically where practical. |
+| Policy and review | Required policy decisions and independent review references exist; routing is not approval evidence. |
+| Release dependency | Candidate and release references are present without claiming release. |
+| Correction and rollback | Stale, correction, withdrawal, invalidation, supersession, and rollback references are complete. |
+| Public membrane | No direct RAW, WORK, QUARANTINE, proof, candidate, or restricted-store path is exposed as public truth. |
 
-[Back to top](#top)
+No accepted end-to-end Flora ProofPack validator or producer was established in this bounded review. A pass proves only the check's declared scope.
 
----
+## Review burden
 
-## 7. Lifecycle relationship
+Accountable ownership remains **NEEDS VERIFICATION**. Review burden should increase with claim significance and sensitivity.
+
+At minimum:
+
+- proof/evidence review for claim and EvidenceBundle closure;
+- Flora domain review for botanical identity and object-family scope;
+- source/rights review for authority, terms, redistribution, and citation;
+- sensitivity/geoprivacy/stewardship review for rare, protected, culturally sensitive, private-land, or join-sensitive material;
+- validation review for deterministic negative cases and profile/version closure;
+- independent release review for candidate, correction, withdrawal, and rollback handoff.
+
+CODEOWNERS routing, authorship, a green workflow, or documentation completeness is not independent approval.
+
+## Related folders
+
+- Parent proof support: [`data/proofs/`](../../README.md)
+- ProofPack family: [`data/proofs/proof_pack/`](../README.md)
+- Flora domain proof support: [`data/proofs/flora/`](../../flora/README.md)
+- Flora EvidenceBundle support: [`data/proofs/evidence_bundle/flora/`](../../evidence_bundle/flora/README.md)
+- Flora citation validation: [`data/proofs/citation_validation/flora/`](../../citation_validation/flora/README.md)
+- Source registry: [`data/registry/sources/flora/`](../../../registry/sources/flora/README.md)
+- Processed Flora lane: [`data/processed/flora/`](../../../processed/flora/README.md)
+- Flora catalog: [`data/catalog/domain/flora/`](../../../catalog/domain/flora/README.md)
+- Receipts: [`data/receipts/`](../../../receipts/README.md)
+- Published Flora: [`data/published/flora/`](../../../published/flora/README.md)
+- Flora rollback support: [`data/rollback/flora/`](../../../rollback/flora/README.md)
+- Flora contracts and schemas: [`contracts/domains/flora/`](../../../../contracts/domains/flora/README.md) · [`schemas/contracts/v1/domains/flora/`](../../../../schemas/contracts/v1/domains/flora/README.md)
+- Flora policy: [`policy/domains/flora/`](../../../../policy/domains/flora/README.md) · [`policy/sensitivity/flora/`](../../../../policy/sensitivity/flora/README.md)
+- Flora release candidates: [`release/candidates/flora/`](../../../../release/candidates/flora/README.md)
+- Doctrine and workflow: [Directory Rules](../../../../docs/doctrine/directory-rules.md) · [Flora domain](../../../../docs/domains/flora/README.md) · [domain-flora workflow](../../../../.github/workflows/domain-flora.yml)
+
+## ADRs
+
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none.
+
+An accepted ADR, contract/profile, migration note, and rollback plan are required before creating parallel proof authority, changing the lifecycle responsibility, moving restricted content into ordinary review paths, or turning this lane into a public service.
+
+## Last reviewed
+
+- **Date:** 2026-07-26
+- **Evidence boundary:** `main@4ce20df8b12d640fa527147407a24f56d61e0b46`
+- **Review type:** complete target baseline plus parent ProofPack, parent proof, Flora proof, and Flora workflow evidence
+- **Recursive payload/runtime inspection:** not performed
+- **Owners, accepted profile, enforcement, release instances, retention, correction propagation, and operational rollback:** need verification
+
+Re-review on ProofPack contract/schema, writer, validator, policy, sensitivity, source, release, public-consumer, correction, withdrawal, retention, or rollback changes—or within six months.
+
+## Operating contract
+
+A Flora ProofPack must identify the exact claim and candidate scope it supports; reference admitted sources and EvidenceBundles; preserve botanical identity and source roles; record rights, sensitivity, safe-representation, validation, policy, review, catalog, integrity, correction, withdrawal, and rollback dependencies; and emit a finite review-support outcome.
+
+Missing or unresolved support must narrow scope or produce `HOLD`, `RESTRICT`, `DENY`, `ABSTAIN`, `ERROR`, or `WITHDRAW`—never plausible completion.
+
+## Flora ProofPack profile
+
+The exact machine profile remains **PROPOSED / NEEDS VERIFICATION**. A complete packet should minimally carry these families:
+
+| Family | Minimum intent |
+|---|---|
+| Identity | Stable `proof_pack_id`, domain, profile/version, candidate ID, object/artifact kind, spec hash, created/reviewed times. |
+| Scope | Claim IDs, taxon concepts, object families, spatial/temporal support, audience, intended public carrier. |
+| Sources | Source descriptor IDs, activation state, source roles, rights, cadence, citation obligations. |
+| Evidence | EvidenceBundle IDs, EvidenceRef closure, support limitations, conflicting or missing evidence. |
+| Validation | Deterministic report IDs, finite outcomes, validator/profile/schema versions, negative-case closure. |
+| Sensitivity | Policy decision IDs, sensitivity class, exact/internal posture, public-safe representation, redaction/generalization receipts without exposing control parameters. |
+| Integrity | Input/output digests, transform references, checksums, catalog and artifact identity agreement. |
+| Review | Required reviewer roles, review records, unresolved obligations, separation-of-duty posture. |
+| Release dependency | Candidate references, target artifacts, promotion dependency, explicit not-released state. |
+| Correction | Stale state, correction lineage, invalidation targets, withdrawal state, rollback target. |
+| Outcome | One finite review-support outcome with reason codes and limitations. |
+
+A packet may use stable references and bounded summaries to avoid copying sensitive or mutable authority into this lane.
+
+## Flora claim and source-role closure
+
+| Claim or carrier | Required distinction |
+|---|---|
+| Taxonomic authority | Authority snapshot and taxon concept are not occurrence evidence. |
+| Specimen record | Preserved specimen evidence is not automatically a current occurrence. |
+| Observation | Observation evidence is not an authoritative range boundary. |
+| Rare-plant record | Restricted exact evidence is not a public feature. |
+| Vegetation community | Community classification is not individual-species occurrence proof. |
+| Range polygon | Aggregated or interpreted range is not a precise occurrence set. |
+| Distribution surface | Modeled probability or suitability is not observed presence. |
+| Phenology observation | Time-bounded observation is not a permanent species trait. |
+| Invasive-plant record | Detection and management context must remain distinct. |
+| Restoration planting | Planned or implemented planting is not naturally occurring distribution. |
+| Habitat association | Cross-lane association does not transfer habitat authority into Flora or vice versa. |
+| Public map/API/AI carrier | Downstream representation is not botanical, policy, or release authority. |
+
+A record or packet that collapses these roles must be quarantined, narrowed, relabeled, or denied.
+
+## Sensitivity, geoprivacy, and safe representation
+
+Required posture:
+
+- exact/internal sensitive geometry remains in restricted owning systems;
+- public proof support uses approved identifiers, bounded summaries, and public-safe representations;
+- no redaction offset, generalization threshold, jitter seed, transform parameter, or reconstruction clue is exposed;
+- rights, stewardship, sovereignty, cultural sensitivity, private-land context, and collection-risk concerns remain first-class;
+- joins across Flora, Fauna, Habitat, roads, parcels, restoration, archaeology, or infrastructure are evaluated for disclosure amplification;
+- missing policy or review produces a finite fail-closed outcome rather than public release.
+
+A geoprivacy transform cannot be inferred merely from reduced coordinate precision. It requires an accepted policy/profile, deterministic receipt, reviewer state, and public-safe output proof.
+
+## Lifecycle and authority relationship
 
 ```mermaid
 flowchart LR
-  RAW["data/raw/flora<br/>source captures"] --> WORK["data/work or quarantine<br/>normalize / hold"]
-  WORK --> PROC["data/processed/flora<br/>validated candidates"]
-  PROC --> CAT["data/catalog + triplets<br/>catalog closure / EvidenceBundle"]
-  CAT --> PACK["data/proofs/proof_pack/flora<br/>reviewable support bundle"]
-  PACK --> REL["release/<br/>decision / manifest / rollback authority"]
-  REL --> PUB["data/published/<br/>released public-safe carrier"]
-
-  REC["data/receipts<br/>run / transform / validation / redaction / release receipts"] -. referenced by .-> PACK
-  POL["policy/<br/>rights / sensitivity / geoprivacy / release"] -. gates .-> PACK
-  SCH["schemas + contracts<br/>shape and meaning"] -. validate .-> PACK
-
-  PACK -. "does not publish by itself" .-> PUB
+    S[Admitted Flora sources] --> R[RAW]
+    R --> W[WORK or QUARANTINE]
+    W --> P[PROCESSED]
+    P --> C[CATALOG and optional TRIPLET]
+    C --> E[EvidenceBundle and citation closure]
+    E --> PP[Flora ProofPack support]
+    PP --> RV[Independent release review]
+    RV -->|allow| PUB[PUBLISHED public-safe carrier]
+    RV -->|hold, restrict, deny, abstain, error| H[No publication]
+    PUB --> X[Correction, withdrawal, invalidation, rollback]
 ```
 
-The ProofPack should make the release-support record inspectable. It should not cause publication by its existence.
+The ProofPack lane is downstream of evidence resolution and upstream of release review. It is neither a lifecycle substitute nor a publication mechanism.
+
+## Workflow and automation posture
+
+The current `domain-flora` workflow is a read-only readiness workflow. It explicitly holds:
+
+- executable Flora validation;
+- Flora proof production;
+- Flora release dry-run.
+
+It checks the broader Flora proof lane and related boundaries, but it does not directly require or validate this ProofPack child path. It performs no live source access, geoprivacy transform, ProofPack assembly, policy decision, release, deployment, or publication.
+
+Automation must not graduate this lane until all of the following are accepted and verified:
+
+1. canonical ProofPack semantic contract and machine schema/profile;
+2. deterministic no-network producer or assembly command;
+3. public-safe positive and negative Flora fixtures;
+4. source-role, taxonomy, rights, sensitivity, geoprivacy, evidence, integrity, review, release-dependency, correction, withdrawal, and rollback validators;
+5. access controls and restricted-reference handling;
+6. finite outcome grammar and stable reason codes;
+7. independent review and release handoff;
+8. correction propagation, cache/index invalidation, withdrawal, and rollback drills.
+
+A green held workflow remains readiness evidence only.
+
+## Correction, withdrawal, invalidation, and rollback
+
+A Flora ProofPack must support correction without silent overwrite.
+
+Correction or withdrawal is required when:
+
+- botanical identity, synonymy, taxon concept, occurrence, specimen provenance, method, time, uncertainty, rights, source role, sensitivity, or evidence support changes materially;
+- a public-safe representation is found reversible or too precise;
+- joins expose restricted or private context;
+- a cited source, EvidenceBundle, validation report, policy decision, review, catalog record, artifact digest, or release record is invalidated;
+- a release candidate is denied, withdrawn, superseded, or rolled back.
+
+A correction flow should:
+
+1. record the new evidence or defect;
+2. invalidate affected ProofPack support and downstream references;
+3. create new receipts, evidence, validation, policy/review, and release records as applicable;
+4. preserve prior lineage and reason codes;
+5. withdraw or replace public carriers through release governance;
+6. invalidate caches, indexes, search, graph, exports, and generated summaries where affected;
+7. retain a rollback target and audit trail.
+
+## Repository evidence ledger
+
+| Evidence | Status | Supports | Limits |
+|---|---:|---|---|
+| Target prior blob `b09212e278121a317652d1b9106d2fdbca267a96` | **CONFIRMED** | Existing Flora ProofPack README, stable document identity, sensitivity and authority boundaries. | Baseline predates newer parent and Flora proof documentation. |
+| [`data/proofs/README.md`](../../README.md) | **CONFIRMED repository-grounded draft** | Canonical proof-support responsibility and separation from receipts, release, and public serving. | Recursive payloads and runtime remain unverified. |
+| [`data/proofs/proof_pack/README.md`](../README.md) | **CONFIRMED authored draft** | ProofPack family meaning, domain-sublane pattern, expected references, and anti-collapse rules. | Exact schema, validator, instances, and complete domain coverage remain unverified. |
+| [`data/proofs/flora/README.md`](../../flora/README.md) | **CONFIRMED repository-grounded draft** | Flora domain proof boundary, fielded shared EvidenceBundle surfaces, workflow holds, release and sensitivity posture. | Concrete Flora proof inventory and enforcement remain bounded. |
+| [`.github/workflows/domain-flora.yml`](../../../../.github/workflows/domain-flora.yml) | **CONFIRMED workflow source** | Explicit validation, proof-production, and release-dry-run holds; no source access or publication. | Does not directly consume or validate this child lane. |
+| Flora policy homes | **CONFIRMED scaffold-level** | Intended policy and sensitivity responsibility. | Executable enforcement not established. |
+| Release candidate lane | **CONFIRMED repository-grounded draft** | No active candidate or release established by bounded inspection. | Unindexed or external state remains unknown. |
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive Flora ProofPack payload inventory | `NEEDS VERIFICATION` | Pinned recursive tree, payload families, generated indexes, restricted/external stores |
+| Canonical ProofPack contract/schema/profile | `UNKNOWN` | Accepted semantic contract, machine schema, versioning and compatibility policy |
+| Producer and deterministic command | `UNKNOWN` | Executable implementation, no-network fixtures, receipts, reproducibility tests |
+| Flora-specific validation and negative cases | `UNKNOWN` | Accepted validator suite, reason codes, fixture coverage, CI execution |
+| Rights, sensitivity, geoprivacy, stewardship enforcement | `UNKNOWN` | Executable policy, decisions, redaction/generalization receipts, reviewer records |
+| Writers, consumers, access controls | `UNKNOWN` | Pipeline/tool/API/UI/AI inventory, roles, permissions, audit evidence |
+| Release, correction, withdrawal, rollback linkage | `UNKNOWN` | Emitted candidates, manifests, promotion decisions, notices, cards, drills |
+| Public invalidation and cache behavior | `UNKNOWN` | Route, tile, search, graph, export, cache, correction propagation evidence |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and `doc_id` | Preserved |
+| Flora ProofPack purpose | Preserved and clarified |
+| Proof/release/catalog/receipt separation | Preserved and strengthened |
+| Rare-plant and sensitive-location fail-closed posture | Preserved and strengthened |
+| Source-role, taxonomy, uncertainty, public/restricted, modeled/observed distinctions | Preserved |
+| Proposed folder/file pattern | Replaced with profile-dependent, non-authoritative guidance to avoid implying current payload structure |
+| Lifecycle, validation, failure modes, and definition-of-done material | Preserved and integrated into current contract sections |
+| Exact sensitive coordinates or control parameters | None added |
+| Source, payload, contract, schema, policy, fixture, workflow, release, route, or publication change | None |
+| Documentation rollback target | Prior blob recorded |
+
+### Change history
+
+#### v0.2.0 — 2026-07-26
+
+- reconciled the lane with the current parent ProofPack and Flora proof documentation;
+- normalized the first twelve folder-contract sections to the current Directory Rules pattern;
+- added pinned evidence, a bounded Flora ProofPack profile, source-role and safe-representation matrices, automation graduation criteria, correction/invalidation flow, verification register, and no-loss ledger;
+- preserved all fail-closed rights, sensitivity, geoprivacy, review, release, correction, and rollback boundaries;
+- changed Markdown only.
 
 [Back to top](#top)
-
----
-
-## 8. Validation checklist
-
-Before a Flora ProofPack is used in promotion review, verify:
-
-- [ ] The candidate scope, release ID, dataset/layer ID, spatial bounds, temporal bounds, object family, and intended public surface are stated.
-- [ ] Every source has a SourceDescriptor, source role, rights status, citation, retrieval/run receipt, and sensitivity posture.
-- [ ] Source-role labels are preserved and not collapsed across authority, observation, context, and model sources.
-- [ ] EvidenceRefs resolve to EvidenceBundles and support the exact taxon, occurrence, specimen, vegetation-community, range, phenology, invasive, restoration, or habitat-association claim.
-- [ ] RarePlantRecord, protected species, cultural sensitivity, steward-controlled data, and private-land contexts have policy decisions and reviewer state.
-- [ ] Exact sensitive geometry is withheld, generalized, staged, or denied before public release.
-- [ ] RedactionReceipt / geoprivacy transform records source geometry class, target geometry class, transform reason, reviewer, and target artifact.
-- [ ] Taxonomic crosswalk version, synonym handling, authority snapshot, and unresolved conflicts are recorded.
-- [ ] Occurrence uncertainty, date/time, observation/specimen method, and coordinate uncertainty are preserved.
-- [ ] Public and restricted occurrence products cannot be joined back into restricted exact locations through public fields.
-- [ ] Join-induced sensitivity checks cover habitat, land, roads, settlement, restoration, agriculture, and public/citizen-observation sources where applicable.
-- [ ] Modeled, aggregated, and observed range/distribution surfaces remain distinct.
-- [ ] Catalog closure, PROV/STAC/DCAT support, EvidenceBundle support, and digest closure are recorded.
-- [ ] Release decision authority is under `release/`, not inside this directory.
-- [ ] Rollback/correction/invalidation targets are traceable.
-- [ ] Invalid fixtures cover rare-plant exact-location leak, unresolved source rights, taxonomy collision, source-role collapse, missing EvidenceBundle, missing RedactionReceipt, unsafe join, and direct RAW/WORK/CATALOG public access failures.
-
-[Back to top](#top)
-
----
-
-## 9. Failure modes
-
-| Failure mode | Why it matters | Required response |
-|---|---|---|
-| ProofPack contains raw occurrence/specimen payloads | Collapses proof support into source storage. | Move source payload to lifecycle homes; keep references/digests here. |
-| Exact rare-plant geometry appears in a public-review proof | Can expose sensitive biodiversity locations. | Quarantine, remove/rotate artifact, emit correction/incident record as appropriate. |
-| ProofPack acts as release manifest | Collapses proof and release authority. | Move decision authority to `release/`; keep a reference in ProofPack. |
-| Source roles are mixed or flattened | Authority, observation, context, and model evidence become misleading. | Fail validation; split records or quarantine. |
-| Taxonomic conflict is hidden | Public claim may attach to the wrong plant concept. | Hold for review; record crosswalk conflict. |
-| Generalized public layer can be joined back to exact restricted geometry | Redaction transform is ineffective. | Deny release; redesign transform and fixtures. |
-| Watcher output becomes processed/catalog/published truth | Bypasses the trust membrane. | Block; enforce watcher-as-non-publisher invariant. |
-| AI summary replaces EvidenceBundle proof | Turns generated language into root truth. | Deny; require EvidenceBundle and citation validation. |
-
-[Back to top](#top)
-
----
-
-## 10. Definition of done
-
-This sublane is operationally useful when:
-
-- [ ] `data/proofs/proof_pack/README.md` defines the parent ProofPack contract or links to the semantic contract.
-- [ ] Flora ProofPack schema and contract exist under approved homes.
-- [ ] Valid and invalid fixtures exist for all flora-specific gates.
-- [ ] CI runs the proof-pack validator and blocks missing EvidenceBundles, unresolved rights, source-role collapse, rare-location leaks, missing redaction receipts, unsafe joins, and missing rollback support.
-- [ ] Domain docs, policy docs, release docs, and data-lifecycle docs cross-link this directory.
-- [ ] CODEOWNERS or equivalent review ownership covers data steward, flora steward, sensitivity reviewer, proof steward, and release steward.
-- [ ] At least one synthetic no-network Flora ProofPack passes end-to-end dry-run validation.
-
----
-
-## Maintainer note
-
-Flora ProofPacks are most valuable when they keep public botanical products useful without leaking exact sensitive locations or collapsing evidence types. Optimize this lane for evidence closure, source-role clarity, geoprivacy, public-safe release, correction, and rollback — not for convenience or visual completeness.
