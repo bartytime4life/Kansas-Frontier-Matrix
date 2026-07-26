@@ -1,7 +1,6 @@
-# KFM Soil domain CI readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
-# executable Soil validation, proof, and release-dry-run producers are not
-# established in current repository evidence.
+# KFM Soil domain CI workflow.
+# Status: validate-soil runs one accepted synthetic no-network validation slice;
+# proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not provide
@@ -45,8 +44,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Soil validation readiness
+      - name: Run accepted deterministic Soil fixture suite
         shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
         run: |
           set -euo pipefail
 
@@ -69,194 +71,33 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          import json
-          from pathlib import Path
+          python -m unittest discover \
+            --start-directory tests/domains/soil \
+            --pattern 'test_soil_smoke.py' \
+            --verbose
 
-          test_root = Path("tests/domains/soil")
-          collected_tests = []
-          accepted_placeholder = Path("tests/domains/soil/test_soil_smoke.py")
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              text = path.read_text(encoding="utf-8")
-              tree = ast.parse(text, filename=str(path))
-              named_tests = [
-                  node
-                  for node in ast.walk(tree)
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-                  and node.name.startswith("test_")
-              ]
-
-              if path == accepted_placeholder:
-                  placeholder_shape = (
-                      "greenfield placeholder" in text
-                      and len(named_tests) == 1
-                      and named_tests[0].name == "test_placeholder"
-                      and len(named_tests[0].body) == 1
-                      and isinstance(named_tests[0].body[0], ast.Assert)
-                      and isinstance(named_tests[0].body[0].test, ast.Constant)
-                      and named_tests[0].body[0].test.value is True
-                  )
-                  if not placeholder_shape:
-                      collected_tests.append(
-                          f"{path}: documented placeholder changed; inspect and wire deliberately"
-                      )
-                  continue
-
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected_tests.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected_tests.append(f"{path}:{node.name}")
-
-          if collected_tests:
-              raise SystemExit(
-                  "Executable Soil tests surfaced. Graduate validate-soil to the "
-                  "accepted deterministic no-network suite:\n" + "\n".join(collected_tests)
-              )
-
-          validator_roots = (
-              Path("tools/validators/domains/soil"),
-              Path("tools/validators/soil"),
-              Path("tools/validators/soil_integrity"),
-              Path("tools/validators/soil_moisture"),
-          )
-          accepted_validator_placeholders = {
-              Path("tools/validators/domains/soil/validate_catalog_matrix.py"),
-              Path("tools/validators/domains/soil/validate_evidence_bundle.py"),
-              Path("tools/validators/domains/soil/validate_schema.py"),
-              Path("tools/validators/domains/soil/validate_source_descriptor.py"),
-          }
-          seen_validator_placeholders = set()
-          executable_validators = []
-
-          for root in validator_roots:
-              if not root.exists():
-                  continue
-              for path in sorted(root.rglob("*")):
-                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
-                      continue
-                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
-                      continue
-
-                  suffix = path.suffix.lower()
-                  text = path.read_text(encoding="utf-8", errors="replace")
-                  if suffix == ".py":
-                      tree = ast.parse(text, filename=str(path))
-                      meaningful = [
-                          node
-                          for node in tree.body
-                          if not (
-                              isinstance(node, ast.Expr)
-                              and isinstance(node.value, ast.Constant)
-                              and isinstance(node.value.value, str)
-                          )
-                      ]
-                      if path in accepted_validator_placeholders:
-                          placeholder_shape = (
-                              "greenfield placeholder" in text
-                              and len(meaningful) == 1
-                              and isinstance(meaningful[0], ast.FunctionDef)
-                              and meaningful[0].name == "main"
-                              and len(meaningful[0].body) == 1
-                              and isinstance(meaningful[0].body[0], ast.Raise)
-                              and isinstance(meaningful[0].body[0].exc, ast.Name)
-                              and meaningful[0].body[0].exc.id == "NotImplementedError"
-                          )
-                          if placeholder_shape:
-                              seen_validator_placeholders.add(path)
-                          else:
-                              executable_validators.append(
-                                  f"{path} (documented placeholder changed)"
-                              )
-                          continue
-                      if meaningful:
-                          executable_validators.append(str(path))
-                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
-                      meaningful_lines = [
-                          line.strip()
-                          for line in text.splitlines()
-                          if line.strip()
-                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
-                      ]
-                      if meaningful_lines:
-                          executable_validators.append(str(path))
-
-          missing_validator_placeholders = (
-              accepted_validator_placeholders - seen_validator_placeholders
-          )
-          if missing_validator_placeholders:
-              raise SystemExit(
-                  "The documented Soil validator placeholder set changed. Inspect and "
-                  "wire the accepted command deliberately:\n"
-                  + "\n".join(str(path) for path in sorted(missing_validator_placeholders))
-              )
-
-          if executable_validators:
-              raise SystemExit(
-                  "Soil validator implementation surfaced. Resolve ownership and wire "
-                  "the accepted command deliberately:\n" + "\n".join(executable_validators)
-              )
-
-          parsed_json = []
-          for root in (
-              Path("schemas/contracts/v1/domains/soil"),
-              Path("fixtures/domains/soil"),
-          ):
-              for path in sorted(root.rglob("*.json")):
-                  json.loads(path.read_text(encoding="utf-8"))
-                  parsed_json.append(str(path))
-
-          print("The exact Soil greenfield smoke placeholder remains non-authoritative.")
-          print("No additional collected Soil test functions or classes were found.")
-          print("The four exact Soil validator greenfield placeholders remain non-executable.")
-          print("No accepted executable body was detected in the remaining Soil validator lanes.")
-          print(f"Parsed {len(parsed_json)} Soil schema/fixture JSON file(s).")
-          PY
-
-          if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/README.md"; then
-            echo "::error::The Soil domain landing page changed. Reassess workflow maturity and replace this readiness hold deliberately."
-            exit 1
-          fi
-
-          if ! grep -Fq "Greenfield stub" "fixtures/domains/soil/README.md"; then
-            echo "::error::The Soil fixture posture changed. Wire accepted fixture validation instead of retaining this readiness hold."
-            exit 1
-          fi
-
-          if grep -Eq '^(soil-validate|validate-soil):' Makefile; then
-            echo "::error::A Soil validation target now exists. Wire and verify it deliberately instead of retaining this hold."
-            exit 1
-          fi
-
-          echo "WORKFLOW_CHECK_EXECUTED: soil-readiness"
-          echo "WORKFLOW_HOLD: accepted executable Soil validation suite is not established"
-
-      - name: Record Soil validation hold
+      - name: Record Soil validation scope
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Soil validation status
 
-          `WORKFLOW_CHECK_EXECUTED: soil-readiness`
+          `VALIDATION_SCOPE: synthetic-public-safe-in-memory-fixture-only`
 
-          `WORKFLOW_HOLD: accepted executable Soil validation suite is not established`
+          This job runs only the accepted deterministic standard-library suite in
+          `tests/domains/soil/test_soil_smoke.py`. It blocks network calls in the
+          test boundary and validates synthetic candidates for explicit support
+          type, source and evidence references, generalized spatial support,
+          depth ordering, units, bounded measurement values, fixture-only rights
+          and sensitivity, non-release state, non-promotion eligibility, rollback
+          posture, and rejection of precise-location aliases or undeclared fields.
 
-          This job verifies required responsibility boundaries, parses available
-          Soil schema and fixture JSON, and detects newly executable tests,
-          validator bodies, or a repository-owned validation target.
-
-          It does not establish source admission, MUKEY/COKEY/CHKEY lineage,
-          horizon integrity, units, depth, time, freshness, source role,
-          support-type separation, rights, sensitivity, EvidenceBundle closure,
-          policy approval, agronomic fitness, or release readiness.
+          A green result does not establish Soil truth, MUKEY/COKEY/CHKEY
+          lineage, source admission, survey authority, station freshness,
+          satellite or model fitness, EvidenceBundle closure, policy approval,
+          agronomic or engineering suitability, proof closure, release readiness,
+          or safe public use. The proof and release-dry-run jobs remain held.
           EOF
 
   build-proof-soil:
