@@ -1,260 +1,289 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-proofs-agriculture-readme
-title: data/proofs/agriculture/README.md — Agriculture Proofs README
-version: v0.1
-type: readme; proof-lane-guide; evidence-bundle-lane; agriculture-domain-proof-index; claim-support-lane
-status: draft; PROPOSED; data-root; proofs-root; agriculture; evidence-bundle; claim-support; digest-closure; cite-or-abstain; aggregation-aware; source-role-aware; release-gated; evidence-first
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — Agriculture steward · Evidence steward · Proof steward · Aggregation reviewer · Privacy/sensitivity reviewer · Data steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: public-doc; data; proofs; agriculture; evidence; lifecycle; governed; release-gated
-tags: [kfm, data, proofs, agriculture, EvidenceBundle, EvidenceRef, proof, claim-support, digest-closure, CatalogMatrix, AggregationReceipt, RedactionReceipt, ModelRunReceipt, RealityBoundaryNote, MatrixCellReceipt, ValidationReport, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, SourceDescriptor, CropObservation, FieldCandidate, CropRotation, YieldObservation, IrrigationLink, ConservationPractice, SoilCropSuitability, AgriculturalEconomyObservation, SupplyChainNode, DroughtStressIndicator, PestStressIndicator, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+title: data/proofs/agriculture/README.md — Agriculture Evidence and Proof Support
+version: v0.2.0
+type: README; proof-lane-contract; agriculture-domain-proof-index; EvidenceBundle-support; claim-scope-boundary
+status: repository-grounded draft; proof payload and runtime enforcement unverified
+owners: NEEDS VERIFICATION — Agriculture steward · Evidence steward · Proof steward · Aggregation reviewer · Privacy/sensitivity reviewer · Validation steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, catalog, release, runtime, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; no-direct-public-path; evidence-first; release-gated
+current_path: data/proofs/agriculture/README.md
+truth_posture: >
+  CONFIRMED exact path, prior blob, parent data/proofs authority contract,
+  Agriculture proof-lane content, and Agriculture aggregation/privacy doctrine /
+  PROPOSED domain proof-packet contract and validation expectations /
+  UNKNOWN recursive payloads, active writers/consumers, runtime, release,
+  hosting, and public effects / NEEDS VERIFICATION owners, accepted profiles,
+  schemas, validators, fixtures, CI, emitted EvidenceBundles, correction
+  propagation, cache invalidation, and rollback drills
 related:
   - ../README.md
   - ../../README.md
   - ../../processed/agriculture/
   - ../../catalog/domain/agriculture/README.md
-  - ../../catalog/stac/agriculture/
-  - ../../catalog/dcat/agriculture/
-  - ../../catalog/prov/agriculture/
   - ../../triplets/
   - ../../published/
   - ../../receipts/
   - ../../registry/sources/agriculture/
+  - ../../../docs/domains/agriculture/README.md
   - ../../../docs/domains/agriculture/DATA_LIFECYCLE.md
   - ../../../docs/domains/agriculture/CANONICAL_PATHS.md
   - ../../../docs/domains/agriculture/CROSS_LANE.md
-  - ../../../docs/domains/agriculture/api-contracts.md
-  - ../../../docs/domains/agriculture/ARCHITECTURE.md
-  - ../../../docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - ../../../contracts/domains/agriculture/README.md
   - ../../../contracts/domains/agriculture/aggregation-receipt.md
-  - ../../../contracts/domains/agriculture/domain_observation.md
-  - ../../../contracts/domains/agriculture/domain_feature_identity.md
-  - ../../../contracts/domains/agriculture/domain_layer_descriptor.md
-  - ../../../contracts/domains/agriculture/domain_validation_report.md
   - ../../../policy/domains/agriculture/
   - ../../../schemas/contracts/v1/domains/agriculture/
   - ../../../release/candidates/agriculture/
   - ../../../release/
-  - ../../../pipelines/domains/agriculture/
-  - ../../../pipeline_specs/agriculture/
-  - ../../../tools/validators/
 notes:
-  - "This file replaces a greenfield stub at `data/proofs/agriculture/README.md`."
-  - "This is an Agriculture proof lane guide under `data/proofs/`. It is not RAW source storage, WORK scratch, QUARANTINE holding, PROCESSED data, CATALOG, TRIPLET, PUBLISHED output, receipt storage, source registry, policy authority, release authority, schema home, validator home, public API/UI output, public map/tile output, field-level truth service, operator/parcel exposure path, agronomic prescription, hazard alert, or life-safety guidance."
-  - "Proof records support EvidenceBundle / EvidenceRef closure and claim support. Receipts such as AggregationReceipt, RedactionReceipt, ModelRunReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, and GENERATED_RECEIPT.json remain in their own receipt/release lanes and may be referenced by proofs; they are not owned here."
-  - "Agriculture proof material is aggregation-aware: public Agriculture aggregates require resolvable aggregation support, and aggregate evidence must not be reinterpreted as field/operator truth."
-  - "Source-role anti-collapse is mandatory: observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic evidence remain distinct across proof, catalog, triplet, release, and AI-answer surfaces."
-  - "This README is a proof-lane guide only. Contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
-  - "Rollback target for this expansion is previous greenfield stub blob SHA `48f5423698d486dafda50788fbb916c38ac74935`."
+  - "This file preserves the canonical Agriculture proof lane under data/proofs/."
+  - "Proof support makes claim scope, source role, integrity, limitations, and dependencies inspectable; it does not create factual truth, policy admission, release approval, or publication."
+  - "EvidenceRef should resolve to EvidenceBundle where Agriculture claims depend on evidence. Missing or inconsistent closure yields HOLD, ABSTAIN, RESTRICT, DENY, or ERROR rather than plausible completion."
+  - "Agriculture proof support is aggregation-aware and privacy-aware: aggregate evidence must not be promoted into field/operator truth, and protected details must not be embedded in public proof packets."
+  - "Prior blob and documentation rollback target: cd1a847ff727969ca968b0963e1d48ad6b81454b."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/proofs/agriculture
+# `data/proofs/agriculture/` — Agriculture Evidence and Proof Support
 
-> Agriculture proof lane for EvidenceBundle, EvidenceRef, digest-closure, claim-support, and proof-index artifacts that support Agriculture claims without becoming source data, processed data, receipts, catalog records, release decisions, or public surfaces.
+> **One-line purpose.** Own Agriculture-domain proof packets, EvidenceBundle support, claim-scope manifests, citation/integrity closure, and limitations needed to evaluate whether Agriculture claims have sufficient governed support.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/proofs/agriculture" src="https://img.shields.io/badge/root-data%2Fproofs%2Fagriculture-blue">
-  <img alt="Domain: agriculture" src="https://img.shields.io/badge/domain-agriculture-2e7d32">
-  <img alt="Posture: evidence first" src="https://img.shields.io/badge/posture-evidence--first-green">
-  <img alt="Aggregation: load bearing" src="https://img.shields.io/badge/aggregation-load--bearing-blueviolet">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Authority: proof support](https://img.shields.io/badge/authority-proof%20support-0969da?style=flat-square)](#authority-level)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
+[![Exposure: deny by default](https://img.shields.io/badge/exposure-deny%20by%20default-d1242f?style=flat-square)](#sensitivity-and-aggregation-boundary)
 
-**Status:** draft / PROPOSED  
-**Owners:** OWNER_TBD — Agriculture steward · Evidence steward · Proof steward · Aggregation reviewer · Privacy/sensitivity reviewer · Data steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/proofs/agriculture/README.md`  
-**Owning root:** `data/proofs/`  
-**Domain segment:** `agriculture`  
-**Lifecycle role:** evidence/proof support referenced by catalog, triplet, release, and governed answer surfaces; not a lifecycle phase substitute  
-**Exposure posture:** not public by default; public use requires catalog closure, policy/review state, release state, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED parent `data/proofs/` is also still a greenfield stub · CONFIRMED Agriculture lifecycle doctrine makes EvidenceBundle and CatalogMatrix part of catalog/triplet closure and makes AggregationReceipt load-bearing for public Agriculture aggregates · PROPOSED proof-lane details · NEEDS VERIFICATION for actual proof schemas, EvidenceBundle wire shape, proof indexes, validators, fixtures, access controls, release linkage, and governed route behavior.
+> [!IMPORTANT]
+> A proof file, resolved digest, validation pass, pull request, or merge does not make an Agriculture claim true, rights-cleared, policy-admitted, reviewed, released, or public. Proof support is one governed dependency among source, processed, catalog, triplet, receipt, policy, review, correction, rollback, and release state.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle relationship](#lifecycle-relationship) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Proof requirements](#proof-requirements) · [Agriculture proof guardrails](#agriculture-proof-guardrails) · [Directory map](#directory-map) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!WARNING]
+> Field-level, operator-level, private parcel, proprietary yield, pesticide-use, FSA CLU, restricted coordinate, or harmful-threshold detail must not be embedded in ordinary public-repository proof packets. Use approved restricted systems, references, redacted summaries, or abstain.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Claim scope](#claim-scope-contract) · [Evidence closure](#evidenceref-to-evidencebundle-closure) · [Aggregation](#sensitivity-and-aggregation-boundary) · [Validation](#validation) · [Review](#review-burden) · [Correction](#correction-and-rollback) · [Related](#related-folders) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/proofs/agriculture/` is the Agriculture domain proof lane. It should hold or index proof artifacts that make Agriculture claims inspectable, reproducible, and citation-safe.
+This lane supports inspectable Agriculture claims by recording or indexing the evidence, citation, integrity, validation, review, and limitation context needed to evaluate those claims.
 
-This lane may contain or reference proof support for:
+It may support claims about `CropObservation`, `FieldCandidate`, `CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`, `SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`, `DroughtStressIndicator`, `PestStressIndicator`, aggregate public layers, and cross-lane Agriculture relations.
 
-- EvidenceBundle closure for Agriculture catalog/triplet candidates;
-- EvidenceRef resolution targets used by public-safe Agriculture payloads;
-- claim-support records for Agriculture object families and indicators;
-- digest closure, hash manifests, and proof indexes that support reproducibility;
-- proof summaries for aggregate Agriculture products where every contributing source role and aggregation boundary remains visible;
-- cross-lane proof support for Soil, Hydrology, Atmosphere/Air, Habitat/Fauna/Flora, Hazards, and People/DNA/Land relations when the ownership boundary remains explicit;
-- proof metadata needed to show why a governed answer can `ANSWER`, `ABSTAIN`, `DENY`, or `HOLD`.
+It does not replace the source record, processed artifact, catalog row, triplet, receipt, policy decision, review record, release manifest, correction notice, rollback card, or governed public payload.
 
-This lane does not create, store, or decide the underlying Agriculture data, schemas, receipts, policy decisions, release decisions, or public payloads. It supports claims; it does not replace the governed lifecycle.
+## Authority level
 
-## Lifecycle relationship
+**Canonical; Agriculture PROOFS responsibility.**
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-                           \-> data/proofs/agriculture supports EvidenceBundle / EvidenceRef closure
-```
+This lane may own:
 
-```mermaid
-flowchart LR
-  RAW[data/raw/agriculture] --> WORK[data/work/agriculture]
-  WORK --> QUAR[data/quarantine/agriculture]
-  WORK --> PROC[data/processed/agriculture]
-  QUAR --> PROC
-  PROC --> CAT[data/catalog/domain/agriculture]
-  PROC --> TRIP[data/triplets/.../agriculture]
-  CAT --> PUB[data/published/.../agriculture]
-  TRIP --> PUB
-  PUB --> REL[release]
+- Agriculture EvidenceBundle or proof-pack instances under accepted profiles;
+- EvidenceRef resolution indexes;
+- claim-scope and claim-to-evidence manifests;
+- citation-validation, integrity, digest-agreement, and limitation summaries;
+- proof indexes for review, release, correction, rollback, governed API, and Evidence Drawer use.
 
-  PROC -. evidence refs .-> PROOF[data/proofs/agriculture]
-  CAT -. EvidenceBundle closure .-> PROOF
-  TRIP -. claim support .-> PROOF
-  REL -. release cites .-> PROOF
-  PROOF -. references receipts .-> RECEIPTS[data/receipts]
-  PROOF -. references sources .-> REG[data/registry/sources/agriculture]
-```
+It does not own object meaning, schema shape, source admission, process receipts, policy decisions, release approval, public serving, or factual truth.
 
-Proofs support catalog, triplet, release, correction, rollback, and governed answers. They do not publish anything by themselves.
+## Status
 
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw Agriculture source payloads or source-native exports | `data/raw/agriculture/` | Not this lane. |
-| In-process transforms, joins, QA, redaction trials, notebooks, or scratch outputs | `data/work/agriculture/` | Not this lane. |
-| Unsafe, unresolved, rights-unclear, sensitivity-unclear, source-role-unclear, or release-unclear material | `data/quarantine/agriculture/` | Not this lane until review/admission allows. |
-| Normalized Agriculture processed data | `data/processed/agriculture/` | Not this lane. |
-| Agriculture catalog records | `data/catalog/domain/agriculture/` and related STAC/DCAT/PROV lanes | Catalog, not proof storage. |
-| Agriculture triplet/graph records | `data/triplets/.../agriculture/` | Graph projection, not proof storage. |
-| Agriculture proof support | `data/proofs/agriculture/` | This lane. |
-| Receipts | `data/receipts/` | Receipts are referenced by proofs but not stored here. |
-| Source registry records | `data/registry/sources/agriculture/` | SourceDescriptor/source-admission authority. |
-| Published public-safe outputs | `data/published/.../agriculture/` | Downstream after release only. |
-| Release candidates and release manifests | `release/candidates/agriculture/`, `release/` | Publication authority, not proof storage. |
-| Agriculture contracts | `contracts/domains/agriculture/` | Object meaning; not proof artifacts. |
-| Agriculture schemas | `schemas/contracts/v1/domains/agriculture/` | Machine shape; not proof artifacts. |
-| Agriculture policy | `policy/domains/agriculture/` | Admissibility authority; not proof artifacts. |
-| Validators, tests, fixtures, pipelines, pipeline specs, apps, packages | `tools/validators/`, `tests/`, `fixtures/`, `pipelines/`, `pipeline_specs/`, `apps/`, `packages/` | Separate roots. |
-
-## Accepted contents
-
-Agriculture proof artifacts may include:
-
-- EvidenceBundle files, indexes, or pointers for Agriculture claims;
-- EvidenceRef resolution maps and claim-support manifests;
-- digest-closure manifests tying processed artifacts, catalog records, triplets, and release candidates to source evidence;
-- proof indexes for `CropObservation`, `FieldCandidate`, `CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`, `SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`, `DroughtStressIndicator`, and `PestStressIndicator` claims;
-- aggregate-proof manifests that reference, but do not own, `AggregationReceipt` and suppression/geometry-scope evidence;
-- model-proof summaries that reference, but do not own, `ModelRunReceipt`, `RealityBoundaryNote`, validation reports, and input digests;
-- cross-lane proof support that preserves ownership, source role, sensitivity, and EvidenceBundle support for each side of a relation;
-- proof README or index notes that explain evidence boundaries without becoming public outputs or authority records.
-
-## Exclusions
-
-Do not store these under `data/proofs/agriculture/`:
-
-- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data artifacts.
-- RunReceipt, TransformReceipt, RedactionReceipt, AggregationReceipt, ModelRunReceipt, RepresentationReceipt, AIReceipt, ReviewRecord, PolicyDecision, ValidationReport, ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, WithdrawalNotice, RealityBoundaryNote, MatrixCellReceipt, or GENERATED_RECEIPT.json as primary receipt/release records.
-- SourceDescriptor/source registry records.
-- Contracts, schemas, policy bundles, validators, tests, fixtures, pipelines, app/UI/API code, packages, notebooks, or executable tooling.
-- Public map/tile/API/UI payloads, Focus Mode answer payloads, direct downloads, model-answer text, release manifests, signatures, changelogs, or published products.
-- Field-level/operator-level data, private parcel joins, proprietary yield, pesticide-record detail, FSA CLU detail, restricted coordinates, credentials, secrets, redaction parameters, suppression thresholds that should not be exposed, or private agreement terms.
-- Claims that promote aggregate evidence into field/operator truth, modeled evidence into observed truth, or context indicators into alerts/instructions.
-
-## Proof requirements
-
-PROPOSED until concrete proof schemas, validators, fixtures, and route behavior are verified:
-
-| Requirement | Meaning |
+| Field | Bounded result |
 |---|---|
-| EvidenceRef resolution | Every proof entry should identify which EvidenceRef, claim, catalog row, triplet, release candidate, or governed answer it supports. |
-| EvidenceBundle closure | Proof artifacts should support closure over source descriptors, processed artifacts, catalog/triplet records, receipts, validation state, policy posture, and release linkage where applicable. |
-| Digest closure | Proofs should include or point to content digests for evidence inputs, processed artifacts, catalog rows, triplets, and proof manifests. |
-| Source-role preservation | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Aggregation linkage | Public Agriculture aggregate proofs should reference AggregationReceipt or equivalent aggregate evidence; missing aggregate support should force ABSTAIN/HOLD, not answer. |
-| Redaction linkage | Proofs involving generalized or withheld operator/field material should reference RedactionReceipt or policy disposition without exposing protected details. |
-| Model linkage | Modeled CDL, SMAP, HLS, drought/pest stress, and vegetation-index proofs should reference ModelRunReceipt, uncertainty, and RealityBoundaryNote where applicable. |
-| Cross-lane ownership | Soil, Hydrology, Atmosphere/Air, Habitat/Fauna/Flora, Hazards, and People/DNA/Land evidence must keep its owning-lane authority and sensitivity posture. |
-| Policy posture | Proof artifacts must not bypass PolicyDecision or steward review when claims touch sensitive Agriculture material. |
-| Release linkage | Proofs used by public outputs should link to release state, correction path, and rollback target without substituting for ReleaseManifest. |
-| Correction and invalidation | Proofs should support correction, supersession, withdrawal, and rollback references when upstream evidence changes. |
-| No public surface by default | Proof files are not direct public APIs, tiles, downloads, Focus Mode answers, or model-answer sources. |
+| Path | `data/proofs/agriculture/` |
+| Version | `v0.2.0` |
+| Prior blob | `cd1a847ff727969ca968b0963e1d48ad6b81454b` |
+| Parent contract | `data/proofs/README.md` v0.2.0 |
+| Recursive proof inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Accepted EvidenceBundle profile | `NEEDS VERIFICATION` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Agriculture proof guardrails
+## What belongs here
 
-- Proof records support evidence closure; they are not source data, processed data, receipts, catalog records, release manifests, or public products.
-- EvidenceBundle outranks generated summaries.
-- If a governed Agriculture claim lacks resolvable evidence support, the safe outcome is `ABSTAIN`, `DENY`, `HOLD`, or `ERROR`, not an uncited answer.
-- Aggregation support is load-bearing for public Agriculture aggregates.
-- NASS aggregate evidence must not become field/operator truth.
-- CDL and other classification rasters must not be relabeled as direct observed crop occurrence.
-- Modeled moisture, vegetation, drought, or pest-stress context must carry uncertainty and reality-boundary notes where applicable.
-- Agriculture may cite Soil, Hydrology, Atmosphere/Air, Habitat/Fauna/Flora, Hazards, and People/DNA/Land evidence only through governed cross-lane relations that preserve source role and sensitivity.
-- Field-level/operator-level, private parcel, proprietary yield, pesticide-record, and FSA CLU contexts fail closed unless policy and review authorize a safer non-public or aggregated representation.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
+- Agriculture EvidenceBundle, proof-pack, and claim-support instances conforming to an accepted profile;
+- EvidenceRef-to-EvidenceBundle resolution maps;
+- claim-scope manifests identifying the precise assertion, geography, time, variable, role, and confidence being supported;
+- citation-validation and source-agreement summaries;
+- digest-closure manifests binding evidence inputs, processed artifacts, catalog rows, triplets, proof packets, and release dependencies;
+- proof limitations, caveats, conflicts, stale-state, and unresolved-evidence summaries;
+- aggregate-proof packets that reference aggregation, suppression, and redaction receipts without copying protected details;
+- model-proof summaries that reference model-run receipts, input digests, uncertainty, and reality-boundary notes;
+- lane-local README, index, inventory, migration, and disposition sidecars.
 
-> [!CAUTION]
-> Do not expose `data/proofs/agriculture/` directly as a public map, API, UI, download, Focus Mode answer, AI answer source, field-level truth service, operator lookup, private parcel surface, agronomic prescription, hazard alert, legal/compliance advice, or life-safety product. Proofs support governed evidence closure; they do not publish claims by themselves.
+## What does NOT belong here
 
-## Directory map
+| Do not place here | Correct home or action |
+|---|---|
+| RAW source captures, mutable WORK candidates, or quarantined material | Their Agriculture lifecycle lanes |
+| Canonical processed Agriculture objects | `data/processed/agriculture/` |
+| Catalog records, STAC/DCAT/PROV records, or triplets | `data/catalog/` and `data/triplets/` |
+| Process receipts such as run, transform, aggregation, redaction, model-run, validation, review, AI, or publication receipts | `data/receipts/` or the accepted receipt family |
+| Release manifests, promotion decisions, correction notices, withdrawal notices, or rollback cards | `release/` |
+| Source descriptors and source activation decisions | `data/registry/sources/agriculture/` |
+| Contracts, schemas, policies, validators, fixtures, tests, pipelines, applications, or packages | Their responsibility roots |
+| Public maps, tiles, APIs, UI payloads, downloads, or Focus Mode answers | Released governed delivery paths |
+| Field/operator/private-parcel detail, protected coordinates, proprietary records, secrets, or harmful thresholds | Restricted systems or deny/abstain |
 
-Actual child inventory remains **NEEDS VERIFICATION**. Use this as a proposed local organization pattern only after confirming current repo convention and validators.
+## Inputs
 
-```text
-data/proofs/agriculture/
-├── README.md
-├── evidence_bundles/         # PROPOSED — Agriculture EvidenceBundle records or indexes
-├── evidence_refs/            # PROPOSED — EvidenceRef resolution maps
-├── claim_support/            # PROPOSED — claim-to-evidence manifests
-├── digest_closure/           # PROPOSED — source/processed/catalog/triplet digest closure
-├── aggregates/               # PROPOSED — aggregate proof support referencing AggregationReceipt
-├── models/                   # PROPOSED — model proof support referencing ModelRunReceipt/RealityBoundaryNote
-├── cross_lane/               # PROPOSED — governed proof support for cross-lane joins
-├── releases/                 # PROPOSED — proof pointers used by release candidates, not ReleaseManifest authority
-├── corrections/              # PROPOSED — proof invalidation/correction pointers, not CorrectionNotice authority
-├── validation/               # PROPOSED — proof-validation notes, not ValidationReport authority
-└── _README_TODO.md           # PROPOSED — remove after actual child inventory is documented
-```
+A proof packet may reference admitted source records, processed artifacts, catalog/triplet records, validation and citation reports, receipts, policy decisions, reviews, correction state, and release dependencies.
 
-## Evidence ledger
+Inputs must preserve, where applicable:
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a greenfield stub. | Did not define Agriculture proof boundaries. |
-| `data/proofs/README.md` | CONFIRMED | Parent proof root currently exists as a greenfield stub. | Does not define proof-root contract yet. |
-| Repository search | CONFIRMED | Found Agriculture catalog, lifecycle, contracts, canonical paths, and AggregationReceipt references. | Search is not a full tree audit. |
-| `docs/domains/agriculture/DATA_LIFECYCLE.md` | CONFIRMED doctrine / PROPOSED implementation | Agriculture lifecycle requires EvidenceBundle/catalog closure before publication; receipts are consequential operation records; AggregationReceipt is load-bearing; sensitive Agriculture outputs require aggregation/redaction/policy/review controls. | Concrete proof schemas, validators, files, and route behavior remain NEEDS VERIFICATION. |
-| `contracts/domains/agriculture/aggregation-receipt.md` | NEEDS VERIFICATION | Expected semantic contract for Agriculture aggregation receipt. | This task did not inspect its contents; receipt belongs outside this proof lane unless repository doctrine says otherwise. |
-| `data/catalog/domain/agriculture/README.md` | NEEDS VERIFICATION | Expected downstream catalog surface that can cite proofs. | This task did not inspect contents. |
-| `policy/domains/agriculture/` | NEEDS VERIFICATION | Expected admissibility home. | Current policy files and enforcement were not verified in this task. |
-| `schemas/contracts/v1/domains/agriculture/` | NEEDS VERIFICATION | Expected schema home. | Specific proof/EvidenceBundle schemas were not verified in this task. |
+- stable identity and content digest;
+- source role and source authority;
+- spatial and temporal scope;
+- rights, sensitivity, and consent or restriction posture;
+- contract and schema versions;
+- code, spec, run, aggregation, redaction, and model lineage;
+- validation, policy, review, correction, rollback, and release references.
 
-## Validation checklist
+## Outputs
 
-- [ ] Confirm actual child directories under `data/proofs/agriculture/`.
-- [ ] Expand or reconcile parent `data/proofs/README.md` beyond stub.
-- [ ] Confirm EvidenceBundle, EvidenceRef, proof index, claim-support, digest-closure, and proof-invalidation schemas and contract homes.
-- [ ] Confirm whether Agriculture proof files should be stored as concrete records here, as indexes pointing to global proof stores, or as generated artifacts linked from catalog/release.
-- [ ] Confirm validators, fixtures, CI checks, source-role checks, digest checks, EvidenceRef resolution checks, aggregation-proof checks, redaction-proof checks, model-proof checks, correction-invalidation checks, and access-control enforcement.
-- [ ] Confirm SourceDescriptor/source registry linkage for every proof-supported source family.
-- [ ] Confirm proof references to RunReceipt, TransformReceipt, RedactionReceipt, AggregationReceipt, ModelRunReceipt, RepresentationReceipt, AIReceipt, ReviewRecord, PolicyDecision, ValidationReport, ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, WithdrawalNotice, RealityBoundaryNote, MatrixCellReceipt, and GENERATED_RECEIPT.json are pointers, not misplaced records.
-- [ ] Confirm field/operator/private parcel detail, proprietary yield, pesticide-record detail, FSA CLU detail, restricted geometry, secrets, suppression-rule internals that should not be exposed, private agreement terms, and release-unclear artifacts cannot enter public routes through proof files.
-- [ ] Confirm public-candidate transitions are governed, evidence-backed, source-role-safe, aggregation-safe, redaction-safe, rights-safe, sensitivity-safe, review-backed, release-linked, and reversible.
-- [ ] Confirm no RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, receipt, registry, release, schema, policy, validator, package, pipeline, app, API, public map, public tile, direct download, Focus Mode answer, agronomic prescription, hazard alert, legal/compliance advice, or life-safety artifact is misplaced here.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public Agriculture service, public map, public tile, public API, public UI, or AI-answer source.
+Outputs are proof support for review, catalog closure, triplet interpretation, release decisions, Evidence Drawer views, governed API responses, corrections, withdrawals, and rollbacks.
 
-## Rollback
+An output from this lane must not be interpreted as an approval to publish or as permission for public clients to read the proof store directly.
 
-Rollback is required if this lane becomes a RAW source-data root, WORK scratch root, QUARANTINE bypass, PROCESSED substitute, catalog root, triplet root, public output root, `data/published/` substitute, receipt store, source-registry root, release-decision root, schema root, policy root, validator root, implementation root, direct public API shortcut, direct public UI shortcut, direct public tile shortcut, direct public exposure shortcut, source-role collapse path, aggregate-as-field-truth path, model-as-observation path, missing-aggregation-proof answer path, redaction-bypass path, private field/operator exposure path, proprietary-yield exposure path, pesticide-record exposure path, FSA-CLU exposure path, proof-without-evidence path, uncited-AI-answer source, agronomic prescription, hazard alert, legal/compliance advice, or life-safety guidance source.
+## Claim-scope contract
 
-Rollback target for this expansion: previous greenfield stub blob SHA `48f5423698d486dafda50788fbb916c38ac74935`.
+Every proof packet should state exactly what it supports.
 
-<p align="right"><a href="#top">Back to top</a></p>
+| Scope dimension | Required posture |
+|---|---|
+| Claim identity | Stable claim or assertion identifier; no ambiguous prose-only target. |
+| Object family | Agriculture family or cross-lane relation being supported. |
+| Geography | Public-safe scope plus restricted internal reference when authorized. |
+| Time | Source, observed, valid, retrieval, release, correction, and supersession times where material. |
+| Variable and units | Declared quantity, method, units, and transformation assumptions. |
+| Source role | Observed, regulatory, modeled, aggregate, administrative, candidate, or synthetic. |
+| Confidence and limitations | Bounded support, conflicts, missing evidence, uncertainty, and fitness for use. |
+| Decision dependency | Catalog, release, public layer, governed answer, correction, or rollback use being evaluated. |
+
+A proof packet that cannot state its claim scope should fail closed.
+
+## EvidenceRef-to-EvidenceBundle closure
+
+Where an Agriculture claim depends on evidence, its `EvidenceRef` should resolve to an `EvidenceBundle` or accepted equivalent.
+
+Closure should demonstrate:
+
+1. the referenced evidence exists and is integrity-bound;
+2. the evidence supports the stated claim scope rather than an adjacent or stronger claim;
+3. source roles remain distinct;
+4. processed, catalog, triplet, and proof identities agree where required;
+5. referenced receipts and policy/review records resolve without being copied into this lane as primary authority;
+6. stale, corrected, superseded, disputed, or withdrawn evidence is visible;
+7. public use remains dependent on release and correction state.
+
+Missing, conflicting, or non-resolving closure yields `HOLD`, `ABSTAIN`, `RESTRICT`, `DENY`, or `ERROR` according to the governing interface—not invented support.
+
+## Sensitivity and aggregation boundary
+
+Agriculture proof packets must preserve the difference between aggregate public claims and field/operator truth.
+
+- Aggregate evidence does not support a field-level claim unless the claim scope, evidence, rights, policy, review, and release explicitly allow it.
+- `AggregationReceipt` or accepted equivalent remains in the receipt lane and should be referenced by aggregate proof packets.
+- Suppression, generalization, redaction, minimum-cell, and withheld-field decisions should be referenced without exposing protected parameters when those parameters could aid re-identification.
+- Operator identity, private person-parcel joins, proprietary yield, pesticide detail, FSA CLU detail, and restricted coordinates remain denied or restricted by default.
+- Modeled crop, stress, suitability, or yield context remains modeled evidence and must not be promoted into observed truth.
+- Cross-lane claims must preserve ownership: Soil, Hydrology, Atmosphere, Hazards, Habitat, Flora/Fauna, and People/Land evidence remains owned by those lanes.
+
+## Validation
+
+Validation should cover:
+
+- path and responsibility placement;
+- proof profile and version;
+- claim identity and scope;
+- EvidenceRef resolution;
+- EvidenceBundle completeness;
+- source-role consistency;
+- rights, sensitivity, and aggregation boundaries;
+- spatial/temporal support;
+- digest and identity agreement across evidence, processed, catalog, triplet, and proof artifacts;
+- receipt, policy, review, release, correction, and rollback references;
+- stale, conflict, withdrawal, and supersession handling;
+- links, anchors, metadata, and protected-content exposure.
+
+No complete Agriculture proof-lane validator or CI enforcement was verified. A pass proves only the declared scope of the executed check.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**.
+
+Changes involving proof payloads, evidence-profile shape, aggregation boundaries, protected field/operator details, model-derived claims, source rights, cross-lane ownership, corrections, withdrawals, or release dependencies require the corresponding Agriculture, evidence, validation, privacy/sensitivity, policy, and release reviewers.
+
+CODEOWNERS routing is not review evidence, and the proof author should not be treated as the sole release authority for material claims.
+
+## Correction and rollback
+
+When evidence, source records, processed artifacts, catalog rows, triplets, aggregation logic, or model outputs change:
+
+1. identify affected claims and proof packets;
+2. mark stale, disputed, corrected, superseded, or withdrawn evidence explicitly;
+3. recompute or invalidate affected digests and agreement summaries;
+4. propagate correction references to catalog, triplet, release, governed API, Evidence Drawer, indexes, caches, and published derivatives as applicable;
+5. preserve predecessor/successor and correction lineage;
+6. retain or reference the rollback target required by the release authority.
+
+Reverting this README does not revert proof payloads, release state, public artifacts, or downstream caches. Those require their own governed correction or rollback procedures.
+
+## Related folders
+
+- Parent proof contract: [`../README.md`](../README.md)
+- Processed Agriculture: [`../../processed/agriculture/`](../../processed/agriculture/)
+- Agriculture catalog: [`../../catalog/domain/agriculture/README.md`](../../catalog/domain/agriculture/README.md)
+- Triplets: [`../../triplets/`](../../triplets/)
+- Published outputs: [`../../published/`](../../published/)
+- Receipts: [`../../receipts/`](../../receipts/)
+- Source registry: [`../../registry/sources/agriculture/`](../../registry/sources/agriculture/)
+- Agriculture doctrine: [`../../../docs/domains/agriculture/README.md`](../../../docs/domains/agriculture/README.md)
+- Contracts: [`../../../contracts/domains/agriculture/README.md`](../../../contracts/domains/agriculture/README.md)
+- Policy: [`../../../policy/domains/agriculture/`](../../../policy/domains/agriculture/)
+- Release candidates: [`../../../release/candidates/agriculture/`](../../../release/candidates/agriculture/)
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Recursive proof payload inventory | `NEEDS VERIFICATION` | Pinned tree, proof families, storage/LFS references, owners, rights and sensitivity |
+| Accepted Agriculture EvidenceBundle/proof profile | `NEEDS VERIFICATION` | Contract/schema versions, examples, compatibility and migration rules |
+| Writers and consumers | `UNKNOWN` | Pipeline, validator, catalog, release, governed API, Evidence Drawer, correction tooling |
+| Validators, fixtures, and CI | `UNKNOWN` | Deterministic positive/negative cases and workflow enforcement |
+| Digest and identity agreement | `UNKNOWN` | Emitted proof, processed, catalog, triplet, and release instances |
+| Aggregation/redaction/model receipt linkage | `UNKNOWN` | Resolvable receipt instances without protected-detail leakage |
+| Correction and withdrawal propagation | `UNKNOWN` | Dependency map, invalidation, cache/index cleanup, and drills |
+| Public serving posture | `UNKNOWN` | Governed route and authorization evidence; no direct proof-store reads |
+
+Unknowns narrow claims and block consequential transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| Agriculture EvidenceBundle and EvidenceRef role | Preserved and clarified |
+| Digest closure and claim-support purpose | Preserved and strengthened |
+| Receipt/proof/release separation | Preserved |
+| Aggregation-aware and source-role-aware controls | Preserved and strengthened |
+| Cross-lane ownership boundaries | Preserved |
+| Privacy, rights, sensitivity, evidence, correction, and rollback controls | Preserved and strengthened |
+| Prior blob and documentation rollback target | Recorded |
+| Proof payload, data, catalog, release, route, runtime, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the Agriculture proof lane with the normalized parent `data/proofs/` contract;
+- strengthened claim-scope and EvidenceRef-to-EvidenceBundle closure;
+- tightened aggregation, privacy, model, source-role, correction, and rollback boundaries;
+- replaced speculative directory organization with bounded verification and no-loss controls;
+- changed Markdown only.
+
+## Documentation rollback
+
+Revert commit created by this update or restore prior blob `cd1a847ff727969ca968b0963e1d48ad6b81454b`.
+
+[Back to top](#top)
