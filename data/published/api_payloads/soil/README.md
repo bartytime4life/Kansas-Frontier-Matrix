@@ -2,7 +2,7 @@
 doc_id: kfm://data/published/api-payloads/soil/readme
 title: data/published/api_payloads/soil README
 type: directory-readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - TODO(owner): data steward
@@ -11,7 +11,7 @@ owners:
   - TODO(owner): publication steward
   - TODO(owner): release steward
 created: 2026-06-25
-updated: 2026-06-25
+updated: 2026-07-26
 policy_label: public-review
 path: data/published/api_payloads/soil/README.md
 related:
@@ -37,154 +37,197 @@ notes:
 
 # `data/published/api_payloads/soil/`
 
-> Published API-payload lane for released, public-safe Soil payload carriers. Files here should be immutable, release-linked API payload snapshots or packages consumed through governed API or approved released-artifact paths.
+[![Status: draft](https://img.shields.io/badge/status-draft-orange?style=flat-square)](#status-and-authority)
+[![Lifecycle: PUBLISHED](https://img.shields.io/badge/lifecycle-PUBLISHED-2ea44f?style=flat-square)](#lifecycle-and-repository-fit)
+[![Domain: soil](https://img.shields.io/badge/domain-soil-795548?style=flat-square)](#soil-payload-contract)
+[![Carrier: API payload](https://img.shields.io/badge/carrier-API--payload-blue?style=flat-square)](#accepted-payload-families)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-6f42c1?style=flat-square)](#publication-admission-gates)
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Lifecycle: PUBLISHED](https://img.shields.io/badge/lifecycle-PUBLISHED-2ea44f)
-![Domain: soil](https://img.shields.io/badge/domain-soil-795548)
-![Carrier: API payload](https://img.shields.io/badge/carrier-API--payload-blue)
-![Authority: not release](https://img.shields.io/badge/authority-not--release-b91c1c)
-![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-6f42c1)
+Released, public-safe Soil API payload carriers for governed APIs, Evidence Drawer views, map popups, Focus Mode, exports, and other approved public delivery surfaces.
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Owners:** `TODO(owner): data steward` · `TODO(owner): soil domain steward` · `TODO(owner): API steward` · `TODO(owner): publication steward` · `TODO(owner): release steward`  
-> **Path:** `data/published/api_payloads/soil/README.md`  
-> **Truth posture:** CONFIRMED target path and Soil docs from current repo evidence / PROPOSED child layout and naming / NEEDS VERIFICATION for emitted payloads, schemas, validators, release manifests, CI checks, and governed API routes.
+> This directory is a **published carrier lane**, not a release authority, evidence authority, schema authority, policy authority, or canonical Soil store. A file belongs here only after governed release closure exists and the payload remains traceable to evidence, validation, policy, review, correction, and rollback support.
 
 > [!WARNING]
-> This directory does not approve publication. Payload files belong here only after release authority exists under `release/`, evidence and catalog closure are complete, validation gates pass, policy state is recorded, and rollback/correction paths are available.
+> Placement under `data/published/` does not make a payload KFM-published. If release authority, evidence closure, policy state, integrity, correction, or rollback is incomplete, keep the payload upstream.
 
----
+## Navigation
 
-## Quick jumps
+- [Purpose](#purpose)
+- [Status and authority](#status-and-authority)
+- [Lifecycle and repository fit](#lifecycle-and-repository-fit)
+- [Accepted payload families](#accepted-payload-families)
+- [Soil payload contract](#soil-payload-contract)
+- [Publication admission gates](#publication-admission-gates)
+- [Directory map](#directory-map)
+- [Validation and maintenance](#validation-and-maintenance)
+- [Maturity and open verification](#maturity-and-open-verification)
 
-| Section | Use it for |
+## Purpose
+
+`data/published/api_payloads/soil/` stores immutable or release-versioned Soil payload snapshots and packages that have already passed the applicable publication gates.
+
+Payloads in this lane should be:
+
+- release-linked and integrity-bound;
+- public-safe for a declared audience and access class;
+- traceable to source, evidence, catalog, validation, policy, review, correction, and rollback records;
+- explicit about support type, source role, units, depth context, temporal scope, quality context, caveats, and correction state; and
+- consumed through governed API or approved released-artifact paths rather than direct access to canonical or internal stores.
+
+This README governs the directory boundary. It does **not** prove that any payload family, API route, schema, validator, workflow, release manifest, or runtime behavior exists.
+
+[Back to top](#top)
+
+## Status and authority
+
+| Field | Current posture |
 |---|---|
-| [1. Scope](#1-scope) | What this lane is for. |
-| [2. Repo fit](#2-repo-fit) | Neighboring authority roots. |
-| [3. Accepted payloads](#3-accepted-payloads) | What may live here after release. |
-| [4. Exclusions](#4-exclusions) | What must stay out. |
-| [5. Publication gates](#5-publication-gates) | Minimum support before a payload lands here. |
-| [6. Soil payload rules](#6-soil-payload-rules) | Domain-specific public payload guardrails. |
-| [7. Suggested layout](#7-suggested-layout) | Proposed child structure. |
-| [8. Maintenance checklist](#8-maintenance-checklist) | Checks before adding or changing payloads. |
-| [9. Definition of done](#9-definition-of-done) | What remains before maturity. |
+| Document status | `draft` |
+| Directory lifecycle | `PUBLISHED` carrier lane |
+| Authority owner | Published Soil API payload instances |
+| Does not own | Soil truth, source admission, semantic contracts, schemas, policy, proof, receipts, release decisions, or runtime interpretation |
+| Truth posture | Cite or abstain |
+| Owners | `TODO(owner)` entries remain unresolved and must not be inferred |
+| Public client rule | Governed APIs and approved released artifacts only |
 
----
-
-## 1. Scope
-
-`data/published/api_payloads/soil/` is the published carrier lane for release-approved Soil API payload snapshots and packages.
-
-Use this lane for payloads that are:
-
-- tied to a release record;
-- public-safe for the declared audience;
-- traceable to evidence, catalog, validation, policy, review, and rollback references;
-- shaped for governed API, Evidence Drawer, map popup, Focus Mode, export, or public UI consumption; and
-- explicit about source role, support type, evidence support, units, depth context, time scope, caveats, and correction status.
-
-This lane is downstream of release. It should not contain source captures, working candidates, held material, processed candidates, catalog drafts, proof objects, receipts, schemas, policy rules, release decisions, or direct model output.
+A payload may reference `EvidenceBundle`, catalog, proof, policy, release, correction, and rollback objects without owning those object families.
 
 [Back to top](#top)
 
----
+## Lifecycle and repository fit
 
-## 2. Repo fit
+```mermaid
+flowchart LR
+    A[RAW Soil source material] --> B[WORK or QUARANTINE]
+    B --> C[PROCESSED Soil records]
+    C --> D[CATALOG or TRIPLETS]
+    D --> E[Release review and proof closure]
+    E --> F[PUBLISHED Soil API payload]
+    F --> G[Governed API and approved public clients]
 
-| Neighbor | Role | Boundary |
+    H[Correction or withdrawal] --> E
+    H --> F
+```
+
+The diagram shows the governing direction only. It does not assert that every displayed stage has implemented Soil tooling.
+
+| Neighbor | Responsibility | Boundary |
 |---|---|---|
-| `data/raw/soil/` | Source capture lane. | Not public-readable. |
-| `data/work/soil/` | Working candidate lane. | Not public-readable. |
-| `data/quarantine/soil/` | Held-material lane. | Not public-readable. |
-| `data/processed/soil/` | Validated candidate lane. | Upstream of release. |
-| `data/catalog/domain/soil/` | Catalog lane. | Discovery and lineage, not release authority. |
-| `data/proofs/soil/` | Proof-support lane. | Support, not published payload. |
-| `data/proofs/validation_report/soil/` | Validation-report lane. | Gate support, not publication authority. |
-| `data/receipts/` | Process-memory lane. | Receipts do not publish. |
-| `release/` | Release authority. | Manifests, correction, withdrawal, rollback, signatures. |
-| `contracts/` | Semantic meaning. | Payloads conform; they do not define meaning. |
-| `schemas/` | Machine shape. | Payloads validate; they do not define schemas. |
-| `policy/` | Admissibility. | Payloads carry outcomes; policy lives elsewhere. |
+| `data/raw/soil/` | Immutable source captures or source references | Never a normal public path |
+| `data/work/soil/` | Working normalization and candidate payload material | Not release-approved |
+| `data/quarantine/soil/` | Held material with unresolved validation, rights, sensitivity, identity, or support | Fail closed |
+| `data/processed/soil/` | Validated Soil records and derived candidates | Upstream of release |
+| `data/catalog/domain/soil/` | Discovery, lineage, and catalog closure | Catalog metadata is not release authority |
+| `data/proofs/soil/` | Soil proof-support objects | Proof support is not a published payload |
+| `data/proofs/validation_report/soil/` | Validation reports | Gate evidence, not publication authority |
+| `data/receipts/` | Process memory and transform history | Receipts do not prove truth or release alone |
+| `release/` | Release manifests, promotion decisions, correction, withdrawal, rollback, and signatures | Governs release state |
+| `contracts/` | Semantic meaning | Payloads conform; they do not define meaning |
+| `schemas/` | Machine shape | Payloads validate; they do not define schemas |
+| `policy/` | Admissibility and exposure decisions | Payloads carry outcomes; policy remains external |
 
 [Back to top](#top)
 
----
+## Accepted payload families
 
-## 3. Accepted payloads
+The following placements are **PROPOSED conventions** until validated by current contracts, schemas, validators, fixtures, release tooling, and governed API implementation.
 
-| Payload type | Suggested placement | Required support |
+| Payload family | Proposed placement | Minimum support |
 |---|---|---|
-| Released endpoint snapshot | `endpoints/<release_id>/<endpoint_slug>.json` | Release, schema, evidence, policy, rollback refs. |
-| Released Evidence Drawer payload | `evidence_drawer/<release_id>/<payload_slug>.json` | Evidence, citation, validation, release refs. |
-| Released Focus Mode payload | `focus_mode/<release_id>/<payload_slug>.json` | Release, evidence, AI receipt where applicable. |
-| Released map-popup payload | `map_popups/<release_id>/<payload_slug>.json` | Source role, support type, caveats, release refs. |
-| Released export payload | `exports/<release_id>/<payload_slug>.json` | Audience, policy, proof, release refs. |
-| Released public summary | `public_summaries/<release_id>/<payload_slug>.json` | Public-safe posture and evidence refs. |
-| Payload index | `indexes/soil-api-payload-index.json` | Points to release-approved payloads only. |
-| Superseded payload | `retired/<release_id>/<payload_slug>.json` | Supersession, correction, withdrawal, or rollback reference. |
+| Endpoint snapshot | `endpoints/<release_id>/<endpoint_slug>.json` | Release, schema, evidence, policy, integrity, correction, and rollback references |
+| Evidence Drawer payload | `evidence_drawer/<release_id>/<payload_slug>.json` | Evidence bundle, citations, policy state, validation, and release references |
+| Focus Mode payload | `focus_mode/<release_id>/<payload_slug>.json` | Released evidence scope, finite outcome, citations, and AI receipt when AI contributed |
+| Map-popup payload | `map_popups/<release_id>/<payload_slug>.json` | Public-safe feature context, support type, caveats, and release references |
+| Export payload | `exports/<release_id>/<payload_slug>.json` | Audience, policy, proof, integrity, and release references |
+| Public summary | `public_summaries/<release_id>/<payload_slug>.json` | Bounded claim scope, citations, caveats, and public-safe posture |
+| Payload index | `indexes/soil-api-payload-index.json` | Release-approved entries only; no draft or held payloads |
+| Retired or superseded payload | `retired/<release_id>/<payload_slug>.json` | Correction, withdrawal, supersession, or rollback lineage |
 
-[Back to top](#top)
+### Material that does not belong here
 
----
-
-## 4. Exclusions
-
-| Excluded material | Correct home |
+| Excluded material | Owning home |
 |---|---|
-| Source payloads, source-system exports, survey extracts, rasters, sensor dumps, or model files | `data/raw/soil/` |
+| Source-system exports, survey extracts, rasters, station dumps, satellite products, or model files | `data/raw/soil/` |
 | Working or held candidates | `data/work/soil/` or `data/quarantine/soil/` |
-| Processed normalized data | `data/processed/soil/` |
+| Normalized processed data | `data/processed/soil/` |
 | Catalog records | `data/catalog/` |
 | Proof objects | `data/proofs/` |
 | Receipts | `data/receipts/` |
-| Release manifests or rollback cards | `release/` |
+| Release manifests, promotion decisions, or rollback cards | `release/` |
 | Policy logic | `policy/` |
-| Schemas | `schemas/` |
+| Machine schemas | `schemas/` |
 | Semantic contracts | `contracts/` |
-| Unreviewed AI output | governed AI/review paths before release |
+| Unreviewed model or AI output | Governed review and AI-runtime paths upstream of release |
 
 [Back to top](#top)
 
----
+## Soil payload contract
 
-## 5. Publication gates
+Soil payloads must preserve distinctions that materially affect meaning and fitness for use.
 
-Before a Soil API payload is placed here, verify:
-
-- [ ] release authority exists under `release/`;
-- [ ] every consequential claim resolves to evidence support;
-- [ ] schema and domain validation gates pass or hold with finite reasons;
-- [ ] catalog closure exists;
-- [ ] policy decisions allow the target audience class;
-- [ ] review records exist where required;
-- [ ] support type, source role, units, time scope, and caveats are preserved;
-- [ ] correction and rollback targets are traceable;
-- [ ] payload digests or integrity refs bind the file to the release record.
-
-If any gate is unresolved, hold the payload upstream.
-
-[Back to top](#top)
-
----
-
-## 6. Soil payload rules
-
-| Rule | Public payload posture |
+| Required distinction | Public payload rule |
 |---|---|
-| Support type is explicit | Payloads must distinguish static survey, gridded derivative, station reading, satellite-derived reading, profile evidence, and interpretation. |
-| Evidence is visible | Payloads must cite EvidenceBundle support and preserve relevant source, valid, retrieval, and release time fields. |
-| Interpretations are labeled | Suitability, erosion, and hydrologic-group payloads carry caveats and do not become crop, flood, legal, or engineering truth. |
-| Units and depth matter | Soil property and moisture payloads preserve units, depth context, method, and quality context where material. |
-| Cross-lane handoffs preserve ownership | Agriculture, hydrology, hazards, geology, habitat, flora, fauna, people/land, and settlement context remain owned by their domains. |
-| AI is not root truth | AI summaries can consume released payloads but cannot replace EvidenceBundles, validation, release, or citations. |
+| Support type | Distinguish static survey, gridded derivative, station observation, satellite-derived observation, pedon or profile evidence, laboratory result, and interpretation |
+| Source role | Identify whether a source is authoritative, observational, derivative, modeled, contextual, or corroborative within the claim scope |
+| Evidence support | Consequential claims resolve to evidence support or return a finite abstention or denial outcome |
+| Spatial context | Preserve map-unit, station, profile, raster-cell, generalized area, or other applicable support geometry without implying unsupported precision |
+| Temporal context | Preserve observation, valid, source, retrieval, release, correction, and stale-state times where material |
+| Units and depth | Include units, depth interval or horizon context, method, and quality flags for soil properties and moisture |
+| Interpretation limits | Suitability, erosion, drainage, hydrologic-group, productivity, and other interpretations retain method and caveats; they do not become crop, flood, legal, construction, or engineering truth |
+| Cross-domain ownership | Agriculture, hydrology, hazards, geology, habitat, flora, fauna, people/land, and settlements remain owned by their respective lanes |
+| AI boundary | AI may summarize released payloads but cannot replace evidence, policy, validation, citations, review, release, correction, or rollback |
+
+### Illustrative public-safe envelope
+
+The example below is illustrative and does not claim an adopted schema or current route.
+
+```json
+{
+  "payload_id": "soil-api-payload-example",
+  "release_id": "release-example",
+  "outcome": "ANSWER",
+  "support_type": "static_soil_survey",
+  "source_role": "authoritative_interpretation",
+  "spatial_scope": {
+    "kind": "map_unit",
+    "identifier": "public-safe-example"
+  },
+  "temporal_scope": {
+    "source_time": "YYYY-MM-DD",
+    "release_time": "YYYY-MM-DD"
+  },
+  "evidence_bundle_ids": ["evidence-bundle-example"],
+  "policy_decision_id": "policy-decision-example",
+  "correction_state": "current",
+  "caveats": [
+    "Illustrative structure only; verify against adopted contracts and schemas."
+  ]
+}
+```
 
 [Back to top](#top)
 
----
+## Publication admission gates
 
-## 7. Suggested layout
+Before adding or replacing a Soil payload in this lane, verify each applicable gate.
+
+| Gate | Required result |
+|---|---|
+| Identity and release binding | Stable payload identity, release identifier, content digest, and release-manifest linkage exist |
+| Source and evidence | Consequential claims resolve to admissible evidence with source role and support type preserved |
+| Schema and contract | Payload validates against the approved machine shape and semantic contract |
+| Policy and sensitivity | Audience, rights, sensitivity, precision, and public-safe transforms are allowed and recorded |
+| Catalog and provenance | Catalog and provenance closure exists where required |
+| Review | Required domain, publication, policy, or release review is recorded |
+| Correction and rollback | Correction state, supersession behavior, and rollback target are traceable |
+| Runtime boundary | Public clients consume the payload through governed interfaces or approved released-artifact paths |
+
+If a gate did not run, failed, or remains unknown, the payload stays upstream. A badge, filename, commit, pull request, merge, or directory placement does not satisfy these gates.
+
+[Back to top](#top)
+
+## Directory map
 
 ```text
 data/published/api_payloads/soil/
@@ -207,47 +250,73 @@ data/published/api_payloads/soil/
     └── <release_id>/
 ```
 
-Suggested deterministic file name:
+Proposed deterministic file-name pattern:
 
 ```text
 soil.published.api_payload.<payload_family>.<scope>.<release_id>.<short_hash>.json
 ```
 
-This layout is PROPOSED until validated by contracts, schemas, fixtures, and release tooling.
+The map describes this directory and its direct proposed children only. It does not authorize child creation or prove that these families currently exist.
 
 [Back to top](#top)
 
----
+## Validation and maintenance
 
-## 8. Maintenance checklist
+### Pre-change checklist
 
-Before adding or changing a payload under this lane, verify:
+- [ ] Confirm the payload is release-approved for the intended audience.
+- [ ] Confirm the release record points to the exact payload digest.
+- [ ] Confirm evidence, catalog, validation, policy, review, correction, and rollback references are present where required.
+- [ ] Confirm support type, source role, spatial and temporal scope, units, depth, method, caveats, and quality context are preserved.
+- [ ] Confirm public-safe transforms occurred upstream and are receipt-backed.
+- [ ] Confirm the payload does not duplicate source, processed, catalog, proof, receipt, contract, schema, policy, or release authority.
+- [ ] Confirm links and identifiers resolve at the resulting revision where checkable.
+- [ ] Confirm public clients consume the payload only through governed interfaces or approved released-artifact paths.
 
-- [ ] The payload is release-approved and public-safe for the intended audience.
-- [ ] The release record points to this payload.
-- [ ] Evidence, catalog, validation, policy, review, correction, and rollback refs are present where required.
-- [ ] Source role, support type, evidence support, units, time scope, caveats, and public-safe posture are preserved.
-- [ ] The payload does not duplicate upstream, proof, receipt, catalog, schema, contract, policy, or release authority.
-- [ ] The payload has a digest or integrity reference.
-- [ ] Public clients consume it through governed interfaces or approved released artifact paths.
+### Failure interpretation
+
+| Failure | Required response |
+|---|---|
+| Missing evidence or citation support | `ABSTAIN` or hold upstream |
+| Unknown rights, sensitivity, audience, or precision posture | `DENY` or quarantine |
+| Schema, contract, or integrity failure | `ERROR` and block release |
+| Missing release, correction, or rollback linkage | Hold upstream |
+| Source-role or support-type collapse | Reject payload and repair upstream transform |
+| Stale or superseded support | Mark stale, correct, supersede, withdraw, or rebuild according to release policy |
+
+Passing validation proves only the checks that ran. It does not independently prove source truth, policy approval, review completion, release, deployment, or public fitness beyond the tested scope.
 
 [Back to top](#top)
 
----
+## Maturity and open verification
 
-## 9. Definition of done
+This lane reaches operational maturity only when current repository evidence confirms all applicable items below:
 
-This lane is operationally mature when:
-
-- [ ] `data/published/api_payloads/README.md` defines the parent API-payload published-data contract.
-- [ ] Soil API payload contracts and schemas exist under approved homes.
-- [ ] Release tooling writes or verifies payloads only after release authority is present.
-- [ ] Validators block missing evidence, missing release refs, missing rollback, support-type collapse, source-role collapse, missing review state, and unsafe public payload fields.
-- [ ] Valid and invalid fixtures cover endpoint, Evidence Drawer, Focus Mode, map popup, public summary, correction, supersession, and rollback payloads.
+- [ ] The parent `data/published/api_payloads/README.md` defines the shared API-payload carrier contract.
+- [ ] Soil payload semantic contracts and machine schemas exist in approved authority homes.
+- [ ] Release tooling writes or verifies payloads only after release authority and integrity binding exist.
+- [ ] Validators reject missing evidence, release references, rollback targets, review state, unsafe fields, support-type collapse, and source-role collapse.
+- [ ] Valid and invalid no-network fixtures cover endpoint, Evidence Drawer, Focus Mode, map-popup, export, public-summary, correction, supersession, withdrawal, and rollback cases.
 - [ ] Governed API or released-artifact routes are documented and tested.
+- [ ] Correction and rollback drills demonstrate that public consumers can move safely to a prior or corrected release.
+
+## Related authority surfaces
+
+- [`../README.md`](../README.md) — parent Soil API-payload lane contract.
+- [`../../README.md`](../../README.md) — published API-payload responsibility boundary.
+- [`../../../proofs/soil/README.md`](../../../proofs/soil/README.md) — Soil proof-support boundary.
+- [`../../../proofs/validation_report/soil/README.md`](../../../proofs/validation_report/soil/README.md) — Soil validation-report boundary.
+- [`../../../receipts/README.md`](../../../receipts/README.md) — receipt-family boundary.
+- [`../../../../release/README.md`](../../../../release/README.md) — release authority.
+- [`../../../../docs/domains/soil/ARCHITECTURE.md`](../../../../docs/domains/soil/ARCHITECTURE.md) — Soil architecture doctrine and lane boundaries.
+- [`../../../../contracts/README.md`](../../../../contracts/README.md) — semantic contract authority.
+- [`../../../../schemas/README.md`](../../../../schemas/README.md) — machine-shape authority.
+- [`../../../../policy/README.md`](../../../../policy/README.md) — policy authority.
 
 ---
 
 ## Maintainer note
 
-Published Soil API payloads should be compact, citable, public-safe, support-type-aware, caveat-rich, and reversible. If evidence, validation, policy, release, correction, or rollback support is incomplete, keep the payload upstream instead of placing it here.
+Published Soil API payloads should be compact, citable, public-safe, support-type-aware, caveat-rich, integrity-bound, and reversible. When evidence, validation, policy, review, release, correction, or rollback support is incomplete, preserve the payload upstream rather than weakening the trust membrane.
+
+[Back to top](#top)
