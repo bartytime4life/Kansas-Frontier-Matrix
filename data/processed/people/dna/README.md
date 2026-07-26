@@ -1,15 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-people-dna-readme
-title: data/processed/people/dna/README.md — People DNA Processed Data README
-version: v0.1
+title: data/processed/people/dna/README.md — People DNA Compatibility Processed Data README
+version: v0.2.0
 type: readme; data-lifecycle-sublane; processed-stage-guide; compatibility-lane; people-dna-land-dna-sublane; restricted-dna-derivative-lane
-status: draft; PROPOSED; compatibility-path; data-root; processed-stage; people; dna; privacy; consent; evidence-first; release-gated
-authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
-owners: OWNER_TBD — People/DNA/Land steward · DNA steward · Consent steward · Privacy reviewer · Rights steward · Sensitivity reviewer · Data steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-06-25
-policy_label: restricted-doc; data; processed; people; dna; privacy; consent; lifecycle; governed; release-gated
-tags: [kfm, data, processed, people, dna, people-dna-land, compatibility-path, DNA-evidence, consent, privacy, aggregate, k-anonymized, transformed-derivative, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ConsentRecord, RedactionReceipt, ReviewRecord, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
+status: repository-grounded draft; PROPOSED compatibility path; payload/runtime enforcement unverified
+owners: NEEDS VERIFICATION — People/DNA/Land steward · DNA steward · Consent steward · Privacy reviewer · Rights steward · Sensitivity reviewer · Data steward · Evidence steward · Policy steward · Release steward · Docs steward
+updated: 2026-07-25
+supersedes: prior README at the same path; no payload, lifecycle, release, runtime, consent, or publication state
+prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+policy_label: restricted-review; compatibility-only; deny-by-default; no-direct-public-path; consent-bound; release-gated
+tags: [kfm, data, processed, people, dna, people-dna-land, compatibility-path, privacy, consent, revocation, tombstone, re-identification, aggregate, k-anonymized, transformed-derivative, evidence, policy, correction, rollback]
 related:
   - ../../people-dna-land/README.md
   - ../../../processed/README.md
@@ -23,179 +23,261 @@ related:
   - ../../../work/people-dna-land/
   - ../../../quarantine/people-dna-land/
   - ../../../catalog/domain/people-dna-land/
+  - ../../../triplets/
+  - ../../../published/
   - ../../../proofs/
   - ../../../receipts/
+  - ../../../registry/sources/people-dna-land/
   - ../../../../release/candidates/people-dna-land/
 notes:
-  - "This file replaces a blank placeholder at `data/processed/people/dna/README.md`."
-  - "This path is treated as a PROPOSED compatibility lane because current doctrine confirms `people-dna-land` as the data-domain segment while also documenting unresolved `people` versus `people-dna-land` segment conflicts for some roots."
-  - "Canonical processed-domain coordination should stay under `data/processed/people-dna-land/` unless an ADR approves this shorter compatibility path."
-  - "This lane may describe only processed, consent-aware, policy-reviewed DNA derivatives. It must not contain raw DNA source data, source vendor exports, direct segment data, identifiers, private match tables, consent secrets, or public-release payloads."
-  - "Public use requires EvidenceBundle, consent/restriction posture, policy review, redaction or aggregation where applicable, ReleaseManifest, correction path, and rollback target."
-  - "Rollback target for this expansion is previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`."
+  - "This file preserves the existing `data/processed/people/dna/` path while aligning it to the current `data/processed/` authority contract."
+  - "The canonical data-domain segment remains `people-dna-land`; this shorter path is compatibility-only unless an ADR explicitly changes the data-lifecycle segment."
+  - "This lane may hold only processed, consent-bound, privacy-reviewed DNA derivatives or compatibility metadata. It must never contain raw DNA, segment-level data, vendor identifiers, private match tables, triangulation outputs, living-person linkage, consent secrets, or public payloads."
+  - "Consent revocation, legal restriction, source withdrawal, correction, or privacy failure requires downstream tombstoning, derivative invalidation, cache cleanup, and rollback where applicable."
+  - "Prior blob and rollback target: dc527e94dc6f201a99786d3101c6dd3a05cb5e05."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# data/processed/people/dna
+# `data/processed/people/dna/` — Restricted DNA Compatibility Candidates
 
-> PROPOSED compatibility README for processed DNA-derived artifacts associated with the People / Genealogy / DNA / Land domain. This path is not treated as canonical unless the open segment-name conflict is resolved in favor of the shorter `people/` data segment.
+> **One-line purpose.** Preserve a bounded compatibility lane for processed, consent-bound, privacy-reviewed DNA derivatives without creating a second People/DNA/Land authority, a public lookup surface, or a bypass around the canonical `people-dna-land` lifecycle segment.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data/processed/people/dna" src="https://img.shields.io/badge/root-data%2Fprocessed%2Fpeople%2Fdna-blue">
-  <img alt="Canonical segment: conflicted" src="https://img.shields.io/badge/segment-conflicted-orange">
-  <img alt="Lifecycle: PROCESSED" src="https://img.shields.io/badge/lifecycle-PROCESSED-purple">
-  <img alt="Posture: restricted" src="https://img.shields.io/badge/posture-restricted-critical">
-  <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
-</p>
+[![Status: grounded draft](https://img.shields.io/badge/status-grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Lane: compatibility only](https://img.shields.io/badge/lane-compatibility%20only-d97706?style=flat-square)](#authority-level)
+[![Sensitivity: deny by default](https://img.shields.io/badge/sensitivity-deny%20by%20default-d1242f?style=flat-square)](#privacy-consent-and-re-identification)
+[![Exposure: non-public](https://img.shields.io/badge/exposure-non--public-8250df?style=flat-square)](#outputs)
 
-**Status:** draft / PROPOSED compatibility path  
-**Owners:** OWNER_TBD — People/DNA/Land steward · DNA steward · Consent steward · Privacy reviewer · Rights steward · Sensitivity reviewer · Data steward · Evidence steward · Policy steward · Release steward · Docs steward  
-**Path:** `data/processed/people/dna/README.md`  
-**Owning root:** `data/processed/`  
-**Requested segment:** `people/dna`  
-**Canonical domain segment for data roots:** `people-dna-land` unless ADR changes it  
-**Lifecycle stage:** `PROCESSED`  
-**Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, consent/restriction posture, rights posture, privacy/sensitivity review, DNA-safety review, redaction or aggregation where applicable, PolicyDecision, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a blank placeholder · CONFIRMED `data/processed/people-dna-land/` exists as the current processed parent lane · CONFIRMED People/DNA/Land doctrine flags a `people` versus `people-dna-land` segment conflict · PROPOSED this path as compatibility-only · NEEDS VERIFICATION for actual child inventory, ADR status, validators, fixtures, schemas, consent-policy enforcement, access-control enforcement, and governed route behavior.
+> [!IMPORTANT]
+> Directory placement, de-identification, aggregation, a successful check, a pull request, or a merge does not create consent, truth, evidence closure, policy permission, catalog admission, release approval, or KFM publication.
 
-**Quick jumps:** [Purpose](#purpose) · [Canonical path warning](#canonical-path-warning) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Processed requirements](#processed-requirements) · [Guardrails](#guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+> [!CAUTION]
+> Raw DNA, segment-level data, vendor account identifiers, private match tables, triangulation outputs, living-person linkage, consent secrets, and re-identification-enabling metadata do not belong in this lane. Unknown or disputed material fails closed to quarantine or approved restricted systems.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Privacy](#privacy-consent-and-re-identification) · [Revocation](#revocation-correction-and-tombstoning) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Purpose
 
-`data/processed/people/dna/` is a requested, **PROPOSED compatibility path** for processed DNA-derived artifacts. It should be used only if the repository keeps this short segment as a temporary bridge or if an ADR later makes it canonical.
+`data/processed/people/dna/` is an existing **compatibility path** under the PROCESSED lifecycle stage. It may describe or hold only bounded DNA-derived candidates that have passed applicable WORK checks and privacy/consent review but have not thereby become cataloged, released, public, or authoritative identity conclusions.
 
-The currently safer parent lane is:
+The current canonical parent coordination path is:
 
 ```text
 data/processed/people-dna-land/
 ```
 
-This README therefore defines a containment rule: this path may document or hold only processed, consent-aware, policy-reviewed, non-public DNA derivatives, and must not become an independent domain authority or public surface.
+This README therefore acts as a containment and migration boundary. It does not establish `people/dna` as a second canonical domain segment.
 
-## Canonical path warning
+## Authority level
 
-Current doctrine says the People / Genealogy / DNA / Land domain has a segment-name conflict. Directory Rules examples and the current processed parent README use `people-dna-land` for data roots. Some crosswalk material uses a shorter `people` segment for other responsibility roots. Until an ADR resolves the conflict, this file must be treated as **PROPOSED compatibility**, not canonical authority.
+**PROPOSED compatibility responsibility; non-public and deny-by-default.**
 
-## Lifecycle boundary
+This path may own only lane-local compatibility metadata and policy-admitted processed derivatives. It does not own:
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+- domain identity or canonical segment selection;
+- object meaning or machine shape;
+- consent or policy authority;
+- EvidenceBundle or proof closure;
+- catalog, triplet, release, or publication decisions;
+- public API, UI, map, download, Focus Mode, AI-answer, identity, genealogy, or medical interpretation behavior.
 
-```mermaid
-flowchart LR
-  RAW[data/raw/people-dna-land] --> WORK[data/work/people-dna-land]
-  WORK --> QUAR[data/quarantine/people-dna-land]
-  WORK --> PROC[data/processed/people-dna-land]
-  PROC -. compatibility reference .-> DNA[data/processed/people/dna]
-  DNA --> CAT[data/catalog/domain/people-dna-land]
-  DNA --> TRIP[data/triplets/.../people-dna-land]
-  DNA -. supports .-> PROOF[data/proofs]
-  DNA -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUB[data/published/.../people-dna-land]
-  TRIP --> PUB
-  PUB --> REL[release]
-```
+Those responsibilities remain under their governed roots and interfaces.
 
-`data/processed/people/dna/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
+## Status
 
-## Repo fit
-
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| Raw DNA source data, vendor exports, source identifiers, direct segment data, or source-native reports | `data/raw/people-dna-land/` | Not this lane. |
-| In-process DNA transformation, consent review, privacy review, aggregation trials, de-identification work, joins, notebooks, or scratch products | `data/work/people-dna-land/` | Not this lane. |
-| Unresolved consent, unresolved rights, raw or high-risk DNA material, unresolved source role, unsafe joins, or public-risk material | `data/quarantine/people-dna-land/` | Not this lane until review/admission allows. |
-| Canonical processed People/DNA/Land artifacts | `data/processed/people-dna-land/` | Preferred parent lane. |
-| Compatibility DNA processed artifacts | `data/processed/people/dna/` | This file; PROPOSED compatibility only. |
-| Catalog records | `data/catalog/domain/people-dna-land/` | Downstream catalog stage. |
-| Triplet/graph records | `data/triplets/.../people-dna-land/` | Downstream graph stage; must preserve restrictions. |
-| Published public-safe products | `data/published/.../people-dna-land/` | Downstream only after release. |
-| Proofs, receipts, source registry, policy, consent rules, schemas, validators, and release records | Their own roots | Not this lane. |
-
-## Accepted contents
-
-Processed DNA-related artifacts may include only policy-admitted derivatives such as:
-
-- aggregate or k-anonymized DNA-derived summaries;
-- consent-reviewed DNA evidence summaries;
-- transformed derivative records that remove raw source detail;
-- review-ready linkage metadata that preserves EvidenceBundle, consent, source role, and restriction posture;
-- sidecar metadata needed to interpret processed artifacts when it is not a receipt, proof, policy decision, release manifest, source registry record, schema, validator, or catalog record;
-- lane-local README or manifest notes that explain processed-data boundaries without becoming public outputs.
-
-## Exclusions
-
-Do not store these under `data/processed/people/dna/`:
-
-- raw DNA files, vendor exports, source identifiers, direct segment data, private match tables, triangulation outputs, source-native reports, or source media;
-- workbench outputs, notebooks, experiments, unresolved joins, consent-review scratch, privacy-review scratch, or redaction-debug outputs;
-- unresolved consent, rights, source-role, privacy, sensitivity, or release material;
-- catalog records, graph/triplet records, published products, proofs, receipts, source registry records, release decisions, schemas, policy rules, consent rules, validators, tests, fixtures, pipelines, app/UI/API code, or packages;
-- identity conclusions, medical/genetic advice, title or property claims, person search products, public DNA lookup services, or direct AI answer payloads;
-- credentials, secrets, consent secrets, transform secrets, redaction parameters, aggregation thresholds, or implementation details that could aid exposure or unauthorized access.
-
-## Processed requirements
-
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
-
-| Requirement | Meaning |
+| Field | Bounded result |
 |---|---|
-| Canonical path check | Confirm whether this compatibility path is allowed, or migrate contents to `data/processed/people-dna-land/dna/` if that becomes the accepted convention. |
-| Source trace | Each source-derived artifact should trace to SourceDescriptor or source registry context. |
-| Evidence linkage | Claims based on processed derivatives should resolve downstream to EvidenceBundle/proof context where appropriate. |
-| Consent posture | Consent, restriction, revocation, and tombstone state must be resolvable where doctrine requires it. |
-| Privacy posture | Artifacts should be transformed, aggregated, restricted, or denied before any public consideration. |
-| Source role | Observed, modeled, aggregate, administrative, candidate, and synthetic roles must remain explicit and not interchangeable. |
-| Transform linkage | De-identification, aggregation, k-anonymization, suppression, or delayed-publication transforms should link to appropriate receipts. |
-| Review state | Privacy, consent, domain, rights, and release review should be recorded where required. |
-| Catalog readiness | Processed artifacts intended for discovery should promote through catalog/triplet lanes, not directly to public use. |
-| Release readiness | Public use requires release state, correction path, and rollback target. |
-| No public surface by default | This lane must not be exposed directly as a public API, UI, download, map layer, Focus Mode answer, or AI-answer source. |
+| Path | `data/processed/people/dna/` |
+| Version | `v0.2.0` |
+| Lifecycle role | `PROCESSED` compatibility lane |
+| Canonical data-domain segment | `people-dna-land` unless an accepted ADR changes it |
+| Prior blob | `dc527e94dc6f201a99786d3101c6dd3a05cb5e05` |
+| Recursive payload inventory | `UNKNOWN` |
+| Active writers and consumers | `UNKNOWN` |
+| Consent-policy enforcement | `NEEDS VERIFICATION` |
+| Public readiness | `DENY BY DEFAULT` |
 
-## Guardrails
+**CONFIRMED:** the target path exists; `data/processed/people-dna-land/` exists as the current parent lane; People/DNA/Land doctrine treats living-person fields, raw DNA, private person-parcel joins, and DNA-derived hypotheses as deny-by-default; consent is revocable; raw DNA and vendor segment data do not cross the public boundary.
 
-- This path is PROPOSED compatibility, not canonical authority.
-- Prefer `data/processed/people-dna-land/` for parent-domain processed coordination.
-- DNA-derived material must remain consent-aware, privacy-aware, source-role-aware, and evidence-bound.
-- Raw or directly identifying DNA material does not belong in processed paths.
-- DNA-derived language must not become identity fact, genealogy proof, title proof, medical advice, or public lookup output.
-- Consent revocation requires downstream cleanup and tombstone handling where applicable.
-- Synthetic AI summaries are not evidence.
-- Public clients and Focus Mode must use governed APIs, released artifacts, catalog/triplet records, EvidenceBundle-backed payloads, and policy-safe envelopes, not this directory directly.
+**PROPOSED:** this shorter path remains compatibility-only and may hold restricted derivatives or migration/disposition metadata.
 
-> [!CAUTION]
-> Do not expose `data/processed/people/dna/` directly as a public map, API, UI, download, Focus Mode answer, AI answer source, DNA lookup, identity service, medical/genetic advice source, or title/property evidence source. Processed DNA-derived data remains inside the trust membrane until governed promotion and release.
+**UNKNOWN / NEEDS VERIFICATION:** recursive contents, accepted ADR disposition, accountable owners, contracts, schemas, validators, fixtures, CI enforcement, access controls, receipts, EvidenceBundles, policy decisions, release linkage, downstream consumers, erasure drills, and cache invalidation.
 
-## Evidence ledger
+## What belongs here
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Previous file | CONFIRMED | Target existed as a blank placeholder. | Did not define DNA processed boundaries. |
-| Repository search | CONFIRMED | No established `data/processed/people/dna/` README pattern was found in the searched results. | Search is not a full tree audit. |
-| `data/processed/people-dna-land/README.md` | CONFIRMED parent README | Current processed parent lane uses `people-dna-land`, includes DNA as a restricted/proposed child area, and denies direct public use. | Does not prove this compatibility path is canonical. |
-| `docs/domains/people-dna-land/README.md` | CONFIRMED doctrine / PROPOSED implementation | Domain doctrine flags strict defaults for living-person and DNA-related material and documents the segment-name conflict. | Segment naming remains unresolved. |
-| `policy/domains/people-dna-land/`, `policy/sensitivity/people-dna-land/`, and `policy/consent/people-dna-land/` | NEEDS VERIFICATION | Expected policy and consent homes. | Current enforcement was not verified in this task. |
-| `contracts/domains/people-dna-land/` and `schemas/contracts/v1/domains/people-dna-land/` | NEEDS VERIFICATION | Expected object contract/schema homes if segment conflict resolves this way. | Specific object files and validators were not verified in this task. |
+Subject to consent, rights, privacy, policy, and access review, bounded contents may include:
 
-## Validation checklist
+- aggregate or k-anonymized DNA-derived summaries that do not expose raw segments or living-person identity;
+- consent-reviewed DNA evidence summaries with explicit claim scope and restriction state;
+- transformed derivatives whose source detail and re-identification risk have been reviewed;
+- compatibility aliases, migration maps, or disposition inventories that point to canonical `people-dna-land` records without duplicating truth;
+- restriction, revocation, tombstone, correction, and withdrawal support metadata when it is not itself the authoritative consent or receipt record;
+- review-ready linkage metadata that preserves source role, EvidenceRef, consent posture, restriction posture, transform lineage, and correction state;
+- lane-local README, inventory, digest, and limitation sidecars that explain the boundary without becoming public outputs or authority records.
 
-- [ ] Confirm whether `data/processed/people/dna/` is an approved compatibility path, a temporary bridge, or drift.
-- [ ] Confirm whether canonical processed DNA derivatives should live under `data/processed/people-dna-land/dna/` instead.
-- [ ] Resolve the `people` versus `people-dna-land` segment conflict by ADR.
-- [ ] Confirm parent-domain processed README, contracts, schemas, policy, consent rules, validators, fixtures, and access controls.
-- [ ] Confirm every artifact has source trace, evidence linkage, consent posture, privacy posture, transform receipts where applicable, review state, release state, correction path, and rollback target.
-- [ ] Confirm raw DNA source material, direct segment data, source identifiers, unresolved consent material, secrets, threshold details, and release-unclear artifacts cannot enter this lane or public routes.
-- [ ] Confirm public clients and Focus Mode cannot read this lane directly as public truth, public identity service, public DNA service, public API, public UI, public download, or AI-answer source.
+## What does NOT belong here
 
-## Rollback
+| Do not place here | Correct home or action |
+|---|---|
+| Raw DNA files, BAM/VCF-like source data, segment-level data, vendor exports, source-native reports, account or kit identifiers | `data/raw/people-dna-land/` or approved restricted source systems; never public repository paths when prohibited |
+| Private match tables, triangulation outputs, kinship candidate matrices, living-person DNA linkage, or re-identification features | `data/quarantine/people-dna-land/` or approved restricted review systems |
+| In-process transforms, consent review scratch, redaction experiments, notebooks, unresolved joins, or privacy testing | `data/work/people-dna-land/` |
+| Unresolved consent, rights, sovereignty, source-role, privacy, sensitivity, or withdrawal state | `data/quarantine/people-dna-land/` |
+| Consent authority, revocation decisions, policy rules, proofs, receipts, source registry records, schemas, validators, tests, fixtures, release decisions | Their canonical responsibility roots |
+| Identity adjudication, genealogy proof, medical or genetic advice, title or property claims, public DNA lookup, person-search products | Deny or route to separately governed, evidence-bounded processes |
+| Credentials, consent secrets, transform secrets, suppression thresholds, exact linkage keys, private endpoints, or access-control material | Approved secret or restricted operational systems |
+| Direct public API/UI/map/download/AI payloads | Governed released interfaces only after explicit authorization |
 
-Rollback is required if this lane becomes a canonical root without ADR, RAW source-data root, WORK scratch root, QUARANTINE bypass, public output root, `data/published/` substitute, proof store, receipt store, catalog root, triplet root, source-registry root, release-decision root, schema root, policy root, consent-authority root, validator root, public API shortcut, public UI shortcut, public exposure shortcut, identity-adjudication surface, medical/genetic advice surface, title/property evidence surface, or source of public DNA lookup.
+## Inputs
 
-Rollback target for this expansion: previous blank placeholder blob SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+Inputs must originate from governed WORK products or resolved QUARANTINE exits and, where applicable, resolve:
 
-<p align="right"><a href="#top">Back to top</a></p>
+- stable artifact identity and content digest;
+- source identity, source role, rights, sovereignty, and restriction posture;
+- scoped and revocable consent state;
+- living-person status and sensitivity tier;
+- transformation method and privacy objective;
+- aggregation, suppression, k-anonymity, or other disclosure-control posture;
+- re-identification risk review;
+- temporal scope, correction state, and withdrawal state;
+- contract/schema references where accepted;
+- validation, transform, consent, redaction, policy, review, and access receipts;
+- downstream EvidenceRef/EvidenceBundle support;
+- correction, tombstone, invalidation, and rollback targets.
+
+An input with missing consent, unresolved rights, unknown living-person linkage, raw segment detail, unresolved re-identification risk, or ambiguous withdrawal state fails closed.
+
+## Outputs
+
+Permitted outputs are non-public candidates for:
+
+- canonical processed placement under `data/processed/people-dna-land/dna/` if that sublane is accepted;
+- catalog or triplet review under the canonical People/DNA/Land segment;
+- EvidenceBundle assembly;
+- restricted analytical review;
+- release-candidate review for highly aggregated, policy-safe representations only;
+- correction, tombstone, withdrawal, and rollback processing.
+
+This lane must not be read directly by public clients, map renderers, search interfaces, Focus Mode, AI answer generation, exports, or downloads.
+
+## Privacy, consent, and re-identification
+
+| Control | Required posture |
+|---|---|
+| Living-person data | Deny or restrict by default; public exposure requires explicit authority and narrowly scoped consent where allowed. |
+| Raw DNA and segment data | Prohibited from public promotion and prohibited from this processed compatibility lane. |
+| Consent | Scoped, recorded, revocable, and linked to the specific derivative and use. Absence or ambiguity means deny. |
+| Rights and sovereignty | Source rights, community or tribal interests, cultural sensitivity, and jurisdictional limits must be reviewed independently of technical validity. |
+| Re-identification | Review combination risk, small groups, rare attributes, family linkage, geographic linkage, and auxiliary-data joins. |
+| Aggregation | Aggregation alone is not safety proof. Group size, uniqueness, sparsity, and disclosure risk must be reviewed. |
+| k-anonymization or suppression | Treat as one transform among several, not a blanket authorization. Parameters and fitness must be reviewed without exposing attack-enabling details. |
+| Source role | Observed, administrative, modeled, aggregate, candidate, and synthetic material must remain distinguishable. |
+| AI-generated summaries | Synthetic language is not evidence and may not infer identity, kinship, health, ancestry, title, or consent. |
+
+> [!WARNING]
+> DNA can identify relatives and communities even when direct names are removed. De-identification claims must account for linkage and inference risk, not only obvious identifiers.
+
+## Revocation, correction, and tombstoning
+
+Consent revocation, legal restriction, source withdrawal, corrected identity evidence, privacy failure, or newly discovered re-identification risk must trigger a governed response rather than a silent edit.
+
+Minimum expected actions, subject to accepted policy and implementation evidence:
+
+1. Record the revocation, withdrawal, correction, or privacy finding in the authoritative policy/receipt system.
+2. Identify all derived artifacts, catalogs, triplets, indexes, caches, releases, exports, and AI/vector representations that depend on the affected material.
+3. Hold or deny further use immediately where risk warrants.
+4. Tombstone, supersede, redact, or delete derivatives according to policy, rights, retention, and legal requirements.
+5. Invalidate caches and derived indexes where applicable.
+6. Issue correction or withdrawal records for any released representation.
+7. Verify rollback or cleanup completion through auditable receipts.
+
+This README does not claim that these mechanisms are currently implemented; enforcement remains **NEEDS VERIFICATION**.
+
+## Validation
+
+Validate at least:
+
+- path classification and compatibility status;
+- absence of raw DNA, segment-level data, vendor identifiers, private match tables, and consent secrets;
+- identity, digest, source role, rights, sovereignty, and lineage;
+- consent scope, revocation, expiry, restriction, and tombstone state;
+- living-person and family-linkage sensitivity;
+- re-identification and auxiliary-data join risk;
+- transform lineage and limitation disclosure;
+- aggregation and suppression fitness;
+- contract/schema references and negative fixtures where accepted;
+- validation, consent, redaction, policy, review, access, correction, and release receipts;
+- EvidenceRef/EvidenceBundle resolution for consequential claims;
+- downstream cleanup and rollback dependencies;
+- links, anchors, metadata, and accidental sensitive-content exposure.
+
+No complete lane-wide validator or runtime enforcement was verified. A pass proves only the declared scope of the specific check.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**. Changes involving payloads, consent, living persons, raw or derived DNA, family linkage, community or tribal sensitivity, rights, migration, public serving, correction, deletion, or rollback require specialist review appropriate to the risk.
+
+At minimum, higher-risk changes should involve independent privacy, consent, rights, domain, evidence, and release review. CODEOWNERS routing or author approval is not evidence of consent or release authorization.
+
+## Related folders
+
+- Canonical processed parent: [`../../people-dna-land/README.md`](../../people-dna-land/README.md)
+- Parent PROCESSED contract: [`../../../processed/README.md`](../../../processed/README.md)
+- Domain doctrine: [`../../../../docs/domains/people-dna-land/README.md`](../../../../docs/domains/people-dna-land/README.md)
+- Lifecycle inputs: [`../../../raw/people-dna-land/`](../../../raw/people-dna-land/) · [`../../../work/people-dna-land/`](../../../work/people-dna-land/) · [`../../../quarantine/people-dna-land/`](../../../quarantine/people-dna-land/)
+- Downstream: [`../../../catalog/domain/people-dna-land/`](../../../catalog/domain/people-dna-land/) · [`../../../triplets/`](../../../triplets/) · [`../../../published/`](../../../published/)
+- Trust support: [`../../../proofs/`](../../../proofs/) · [`../../../receipts/`](../../../receipts/) · [`../../../registry/sources/people-dna-land/`](../../../registry/sources/people-dna-land/)
+- Authority: [`../../../../policy/domains/people-dna-land/`](../../../../policy/domains/people-dna-land/) · [`../../../../policy/sensitivity/people-dna-land/`](../../../../policy/sensitivity/people-dna-land/) · [`../../../../policy/consent/people-dna-land/`](../../../../policy/consent/people-dna-land/) · [`../../../../release/candidates/people-dna-land/`](../../../../release/candidates/people-dna-land/)
+
+## ADRs
+
+The unresolved `people` versus `people-dna-land` segment conflict is ADR-class. This README resolves nothing by repetition or path existence. Before promoting this compatibility path, moving payloads, creating redirects, or authoring parallel schema/contract/policy homes, require:
+
+- an accepted ADR identifying the canonical segment and migration posture;
+- an inventory of affected paths, writers, consumers, links, catalogs, receipts, proofs, and releases;
+- a reversible migration plan;
+- privacy, consent, and rights review;
+- validation and rollback evidence.
+
+Until then, `data/processed/people-dna-land/` remains the canonical coordination path and this lane remains compatibility-only.
+
+## Open verification register
+
+| Item | Status | Required evidence |
+|---|---:|---|
+| Compatibility-lane disposition | `NEEDS VERIFICATION` | Accepted ADR, migration record, or explicit stewardship decision |
+| Recursive subtree and payload inventory | `UNKNOWN` | Pinned tree, LFS/external stores, artifact classes, sensitivity review |
+| Writers and consumers | `UNKNOWN` | Pipelines, tools, APIs, UI, exports, vector indexes, caches, external consumers |
+| Consent and revocation enforcement | `NEEDS VERIFICATION` | Policy bundle, fixtures, negative tests, emitted decisions, cleanup drill |
+| Contract/schema enforcement | `UNKNOWN` | Accepted versions, validators, fixtures, CI and failure cases |
+| Re-identification review | `NEEDS VERIFICATION` | Review method, thresholds, auxiliary-data analysis, sign-off |
+| Evidence/catalog/release closure | `UNKNOWN` | EvidenceBundles, identity parity, review, release and rollback links |
+| Tombstone and downstream invalidation | `NEEDS VERIFICATION` | Dependency inventory, receipts, cache/index cleanup, rollback drill |
+| Public serving | `UNKNOWN` | Governed routes, access controls, release state, monitoring and withdrawal behavior |
+
+Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+
+## No-loss ledger
+
+| Prior element | Disposition |
+|---|---|
+| Stable path and document identity | Preserved |
+| Compatibility-only classification | Preserved and strengthened |
+| Canonical `people-dna-land` coordination path | Preserved |
+| Deny-by-default privacy and consent posture | Preserved and strengthened |
+| Raw-DNA and direct-identifier exclusions | Preserved and expanded |
+| Evidence, policy, review, release, correction, and rollback boundaries | Preserved |
+| Revocation and tombstone duties | Preserved and made operationally explicit |
+| Prior blob and rollback target | Recorded |
+| Payload, move, deletion, redirect, migration, consent, or public-state change | None |
+
+### Change history
+
+#### v0.2.0 — 2026-07-25
+
+- aligned the compatibility README to the current `data/processed/` authority contract;
+- strengthened raw-DNA, living-person, consent, revocation, re-identification, sovereignty, correction, and rollback controls;
+- preserved the unresolved segment conflict and avoided creating parallel authority;
+- changed Markdown only.
+
+[Back to top](#top)
