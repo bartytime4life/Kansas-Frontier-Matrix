@@ -2,203 +2,213 @@
 doc_id: kfm://doc/contracts-agriculture-readme
 title: contracts/agriculture/ — Agriculture Semantic Contracts
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Agriculture steward · Contract steward · Schema steward · Policy steward · Data steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-07-27
 policy_label: public; contracts; agriculture; semantic-contracts; compatibility-path
 related:
   - ../README.md
+  - ../domains/agriculture/README.md
   - ./FieldCandidate.md
   - ../../docs/domains/agriculture/IDENTITY_MODEL.md
   - ../../docs/domains/agriculture/OBJECTS.md
   - ../../docs/domains/agriculture/OBJECT_FAMILIES.md
   - ../../docs/domains/agriculture/API_CONTRACTS.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../schemas/contracts/v1/domains/agriculture/
-  - ../../policy/domains/agriculture/
+  - ../../docs/architecture/directory-rules.md
+  - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../schemas/contracts/v1/domains/agriculture/README.md
+  - ../../policy/domains/agriculture/README.md
   - ../../policy/sensitivity/agriculture/
-  - ../../tests/domains/agriculture/
-  - ../../fixtures/domains/agriculture/
-tags: [kfm, contracts, agriculture, semantic-contracts, object-families, field-candidate, schemas-separated, policy-separated, governance]
+  - ../../tests/domains/agriculture/README.md
+  - ../../fixtures/domains/agriculture/README.md
+  - ../../tools/validators/agriculture/README.md
+tags: [kfm, contracts, agriculture, semantic-contracts, object-families, field-candidate, compatibility, transitional, schemas-separated, policy-separated, governance]
 notes:
-  - "Draft directory README for the current contracts/agriculture compatibility folder."
-  - "Path posture is CONFLICTED / NEEDS VERIFICATION: current files exist under contracts/agriculture/, while newer agriculture domain docs propose contracts/domains/agriculture/."
-  - "This README does not settle canonical contract placement; migration requires ADR or migration note."
-  - "Contracts define semantic meaning; machine-checkable shape belongs in schemas/contracts/v1/domains/agriculture/ or another accepted schema home."
-  - "Policy belongs in policy/domains/agriculture/ and policy/sensitivity/agriculture/, not in this contracts directory."
+  - "This path is CONFIRMED present and is classified PROPOSED / transitional compatibility; the doctrine-aligned Agriculture semantic-contract lane is contracts/domains/agriculture/."
+  - "No accepted migration or sunset record was verified for contracts/agriculture/; this README does not move, redirect, delete, or canonicalize files."
+  - "New Agriculture semantic contracts belong in contracts/domains/agriculture/ unless an accepted ADR changes the Directory Rules domain-lane pattern."
+  - "Contracts define semantic meaning; machine-checkable shape, policy, validators, fixtures, data, proofs, release decisions, APIs, and UI remain separate authority surfaces."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Agriculture Semantic Contracts
 
-> Directory contract for Agriculture object-family Markdown semantics. This folder documents meaning, boundaries, and trust posture; it does not define JSON Schema, policy, source data, release decisions, or public API/UI behavior.
+[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
+[![Path class: transitional compatibility](https://img.shields.io/badge/path-transitional%20compatibility-d4a72c?style=flat-square)](#path-posture)
+[![Authority: semantic meaning](https://img.shields.io/badge/authority-semantic%20meaning-1f6feb?style=flat-square)](../README.md#authority-level)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#scope)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Root: contracts/agriculture" src="https://img.shields.io/badge/root-contracts%2Fagriculture-blue">
-  <img alt="Domain: agriculture" src="https://img.shields.io/badge/domain-agriculture-green">
-  <img alt="Path posture: conflicted" src="https://img.shields.io/badge/path-CONFLICTED%20%7C%20NEEDS%20VERIFICATION-orange">
-  <img alt="Authority: semantic contracts" src="https://img.shields.io/badge/authority-semantic__contracts-purple">
-</p>
-
-`contracts/agriculture/`
+> Compatibility boundary for the older Agriculture contract path. This directory preserves the existing `FieldCandidate` semantic contract and stable links while new domain-contract work follows [`contracts/domains/agriculture/`](../domains/agriculture/README.md).
 
 ## Quick jumps
 
-[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current directory snapshot](#current-directory-snapshot) · [Contract inventory](#contract-inventory) · [Semantic contract rules](#semantic-contract-rules) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current snapshot](#current-directory-snapshot) · [Companion coverage](#verified-companion-coverage) · [Contract inventory](#contract-inventory) · [Contract rules](#semantic-contract-rules) · [Lifecycle](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Review and maintenance](#review-burden-and-maintenance) · [Evidence](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done) · [Last reviewed](#last-reviewed)
 
 ---
 
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / directory README  
+> **Document status:** `draft`  
 > **Owner:** `OWNER_TBD`  
 > **Path:** `contracts/agriculture/`  
-> **Path posture:** `CONFLICTED` / `NEEDS VERIFICATION` against newer proposed home `contracts/domains/agriculture/`  
-> **Truth posture:** `CONFIRMED` current README path and file update; Agriculture object-family names and FieldCandidate semantics are supported by domain docs; full contract inventory, canonical path, schemas, validators, fixtures, policy bundles, and CI behavior remain `NEEDS VERIFICATION`.
+> **Authority level:** `PROPOSED` transitional compatibility lane under the canonical `contracts/` responsibility root  
+> **Path posture:** `CONFIRMED` live path; `CONFIRMED` doctrine-aligned counterpart at `contracts/domains/agriculture/`; migration and sunset state remain `NEEDS VERIFICATION`  
+> **Truth posture:** `CONFIRMED` repository presence and bounded companion inventory at `main@0b0309664313543b6816e8e5dcefc9593366aba5`. Contract, schema, policy, fixture, validator, test, runtime, release, and publication maturity must be read from their own evidence.
 
 ---
 
 ## Scope
 
-`contracts/agriculture/` is the current Agriculture contract compatibility folder.
+`contracts/agriculture/` preserves semantic meaning and compatibility for Agriculture contract material that already exists at this older path.
 
-Contracts in this folder describe **semantic meaning** for Agriculture object families: what an object means, which identity attributes are load-bearing, what source roles may apply, what sensitivity posture constrains the object, what it must not be confused with, and what downstream validation must prove.
+The current object-level contract describes what a `FieldCandidate` means, which identity and source-role distinctions matter, what sensitivity constraints apply, and which downstream gates must close. This directory does **not** make a candidate true, validated, admissible, reviewed, released, public-safe, or published.
 
-This folder does **not** define JSON Schema, executable validators, policy bundles, raw source data, processed records, catalog/triplet records, proof closure, release decisions, public API DTOs, public UI behavior, or map display behavior.
+This directory is not the destination for new Agriculture object-family contracts. Directory Rules §12 places domain-specific semantic contracts under `contracts/domains/<domain>/`; the corresponding Agriculture lane is present at [`contracts/domains/agriculture/`](../domains/agriculture/README.md).
 
 ---
 
 ## Path posture
 
-The current requested path is:
+Both Agriculture contract paths exist at the pinned repository state, but they do not carry equal placement posture.
 
-```text
-contracts/agriculture/
-```
-
-Newer Agriculture domain docs propose:
-
-```text
-contracts/domains/agriculture/
-```
-
-This README keeps the current path usable while surfacing the conflict. It does not move, delete, redirect, or canonicalize any file.
-
-| Path | Status | Meaning |
+| Path | Verified state | Authority posture |
 |---|---|---|
-| `contracts/agriculture/` | `CONFIRMED` current folder path | Compatibility folder currently being filled. |
-| `contracts/agriculture/FieldCandidate.md` | `CONFIRMED` current contract file | Expanded semantic contract for `FieldCandidate`. |
-| `contracts/domains/agriculture/` | `PROPOSED` in Agriculture docs | Likely newer domain-contract home; requires ADR or migration note before becoming canonical. |
-| `schemas/contracts/v1/domains/agriculture/` | `PROPOSED` schema home in Agriculture docs | Machine-checkable schema home; not replaced by Markdown contracts. |
+| `contracts/agriculture/` | `CONFIRMED` with this README and `FieldCandidate.md` | `PROPOSED` transitional compatibility lane. Preserve links and correct existing material; do not expand it into parallel authority. |
+| [`contracts/domains/agriculture/`](../domains/agriculture/README.md) | `CONFIRMED` with a directory README and bounded object/support contracts | Doctrine-aligned domain lane under Directory Rules §12. Its own documents remain draft and mixed-maturity. |
+| [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | `CONFIRMED` nonempty schema lane | Machine shape only. ADR-0001 remains `proposed`, so accepted decision status is not inferred from repository use. |
+| Migration or sunset record for `contracts/agriculture/` | `NEEDS VERIFICATION` | No move, redirect, removal, or canonicalization is authorized by this README. |
+
+> [!WARNING]
+> Do not maintain two evolving Agriculture semantic-contract homes. Until a reviewed migration or supersession record closes the relationship, add new contracts to the doctrine-aligned domain lane and keep this path compatibility-only.
 
 ---
 
 ## Repo fit
 
+This bounded snapshot records files verified at the pinned base; it is not a generated tree inventory.
+
 ```text
 contracts/
 ├── README.md
-└── agriculture/
-    ├── README.md
-    └── FieldCandidate.md
+├── agriculture/
+│   ├── README.md
+│   └── FieldCandidate.md
+└── domains/
+    └── agriculture/
+        ├── README.md
+        ├── aggregation-receipt.md
+        ├── domain_feature_identity.md
+        ├── domain_layer_descriptor.md
+        ├── domain_observation.md
+        └── domain_validation_report.md
 ```
 
-Adjacent responsibility roots:
-
-| Root | Relationship to this folder |
+| Responsibility surface | Relationship to this directory |
 |---|---|
-| `../README.md` | Root contracts guidance: contracts define meaning; schemas define shape. |
-| `../../docs/domains/agriculture/` | Domain doctrine, object families, identity model, API posture, and sensitivity context. |
-| `../../schemas/contracts/v1/domains/agriculture/` | Expected machine schema home. |
-| `../../policy/domains/agriculture/`, `../../policy/sensitivity/agriculture/` | Policy and sensitivity gates. |
-| `../../tests/domains/agriculture/` | Expected validators/contract tests. |
-| `../../fixtures/domains/agriculture/` | Expected examples and fixtures. |
-| `../../data/registry/sources/` | SourceDescriptor and source activation authority. |
-| `../../release/` | Release decisions and rollback state. |
+| [`contracts/README.md`](../README.md) | Canonical root for human-readable semantic meaning. |
+| [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | Doctrine-aligned Agriculture contract lane and destination for new semantic contracts. |
+| [`docs/domains/agriculture/`](../../docs/domains/agriculture/) | Domain references for object families, identity, API posture, and sensitivity context; docs do not replace contracts. |
+| [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | Confirmed machine-shape lane with mixed-maturity schemas. |
+| [`policy/domains/agriculture/`](../../policy/domains/agriculture/README.md) and [`policy/sensitivity/agriculture/`](../../policy/sensitivity/agriculture/) | Agriculture policy and sensitivity surfaces; current policy README reports scaffolds and no accepted production evaluator. |
+| [`tests/domains/agriculture/`](../../tests/domains/agriculture/README.md) and [`fixtures/domains/agriculture/`](../../fixtures/domains/agriculture/README.md) | Enforceability and test-data surfaces; their own maturity statements govern. |
+| [`tools/validators/agriculture/`](../../tools/validators/agriculture/README.md) | Agriculture validator documentation; validator topology and executable coverage require separate verification. |
+| [`data/registry/sources/`](../../data/registry/sources/) | Source identity and activation records. |
+| [`release/`](../../release/) | Release, correction, withdrawal, and rollback authority. |
 
 ---
 
 ## Accepted inputs
 
-| Belongs in this directory | Required posture |
+| Allowed here while this path remains | Required posture |
 |---|---|
-| Markdown semantic contracts | Define meaning, identity, source-role boundaries, sensitivity posture, and validation expectations. |
-| Object-family contract READMEs | Must preserve KFM lifecycle, trust membrane, cite-or-abstain, source-role anti-collapse, and policy-aware release rules. |
-| Compatibility notes | Must clearly label path conflicts and migration requirements. |
-| Evidence ledgers | Must cite Agriculture domain docs, object-family registers, root contract guidance, and current file evidence. |
-| Validation checklists | Must point to schemas/tests/policy roots without claiming they exist unless verified. |
-| Rollback notes | Must name prior content SHA or migration rollback target. |
+| This compatibility README | Must state the canonical counterpart, limits, open migration state, and rollback path. |
+| Existing [`FieldCandidate.md`](./FieldCandidate.md) corrections | May repair accuracy, safety, links, and compatibility semantics without expanding this lane's authority. |
+| Migration, supersession, or redirect notes | Must cite an accepted ADR or reviewed migration record and preserve stable inbound links. |
+| Evidence-limited inventory notes | Must distinguish verified presence from schema, validator, policy, release, or runtime behavior. |
+
+New Agriculture semantic contracts belong in [`../domains/agriculture/`](../domains/agriculture/README.md), not here, unless an accepted ADR changes the domain-lane rule.
 
 ---
 
 ## Exclusions
 
-| Does not belong here | Correct home |
+| Does not belong here | Owning surface |
 |---|---|
-| JSON Schema or machine-checkable shape | `../../schemas/contracts/v1/domains/agriculture/` or accepted schema home. |
-| Policy bundles, sensitivity rules, deny logic | `../../policy/domains/agriculture/`, `../../policy/sensitivity/agriculture/`. |
-| SourceDescriptor records | `../../data/registry/sources/`. |
-| Raw, work, quarantine, processed, catalog, triplet, or published data | `../../data/...` lifecycle roots. |
-| EvidenceBundle or proof closure | `../../data/proofs/` and proof workflows. |
-| Release decisions | `../../release/`. |
-| Public API DTOs and route behavior | Governed API/app roots after verification. |
-| Public UI/map behavior | Governed UI/app roots after release and policy gates. |
-| Canonical path migration | ADR or migration note, not this README alone. |
+| New Agriculture semantic contracts | [`../domains/agriculture/`](../domains/agriculture/README.md) |
+| JSON Schema or machine-checkable shape | [`../../schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) |
+| Policy bundles, sensitivity rules, or deny logic | [`../../policy/domains/agriculture/`](../../policy/domains/agriculture/README.md) and [`../../policy/sensitivity/agriculture/`](../../policy/sensitivity/agriculture/) |
+| Validator code, tests, or fixtures | `../../tools/validators/`, `../../tests/`, and `../../fixtures/` |
+| SourceDescriptor records | [`../../data/registry/sources/`](../../data/registry/sources/) |
+| Raw, work, quarantine, processed, catalog, triplet, or published data | `../../data/` lifecycle lanes |
+| EvidenceBundle instances, receipts, or proof closure | Accepted `../../data/proofs/` and `../../data/receipts/` lanes |
+| Release, correction, withdrawal, or rollback decisions | [`../../release/`](../../release/) |
+| Public API DTOs, routes, UI behavior, or map rendering | Governed application, API, and UI roots |
+| An unreviewed path move, redirect, or deletion | Accepted ADR or migration process; never this README alone |
 
 ---
 
 ## Current directory snapshot
 
-> [!NOTE]
-> This snapshot is based on current-session file inspection, not a complete repository inventory.
-
 | File | Status | What it proves | What it does not prove |
 |---|---|---|---|
-| `contracts/agriculture/README.md` | `CONFIRMED` | This directory README exists and states compatibility-folder boundaries. | Does not settle canonical placement. |
-| `contracts/agriculture/FieldCandidate.md` | `CONFIRMED` | A semantic contract exists for `FieldCandidate`. | Does not prove matching schema, policy, tests, or release behavior. |
+| `contracts/agriculture/README.md` | `CONFIRMED` | The compatibility boundary exists at this path. | Canonical placement, migration completion, schema coverage, or release state. |
+| [`contracts/agriculture/FieldCandidate.md`](./FieldCandidate.md) | `CONFIRMED` draft semantic contract | `FieldCandidate` meaning and safety boundaries are documented. | A canonical-lane successor, paired schema, validator, tests, policy enforcement, or public release. |
+
+The directory snapshot is intentionally small. New semantic coverage belongs in the doctrine-aligned Agriculture contract lane rather than growing this compatibility path.
+
+---
+
+## Verified companion coverage
+
+The following surfaces were read or existence-checked at the pinned base. Presence is not maturity.
+
+| Surface | Confirmed evidence | Bounded conclusion |
+|---|---|---|
+| [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | README plus five contract files shown in [Repo fit](#repo-fit) | The doctrine-aligned lane is nonempty; it does not yet provide a `FieldCandidate` successor or all named object-family contracts. |
+| [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | `aggregation_receipt` plus four `domain_*` schemas | Machine-shape scaffolds exist; `field_candidate.schema.json` was not found at the pinned base. |
+| [`policy/domains/agriculture/README.md`](../../policy/domains/agriculture/README.md) | Repository-grounded draft policy README | Policy scaffolds exist, but the README reports the evaluator and production enforcement as unimplemented. |
+| [`tests/domains/agriculture/README.md`](../../tests/domains/agriculture/README.md) | Repository-grounded draft test README | The lane is documentation-heavy; the README does not establish executable Agriculture coverage. |
+| [`fixtures/domains/agriculture/README.md`](../../fixtures/domains/agriculture/README.md) | Confirmed path | Fixture documentation exists; complete coverage and safe negative cases require separate verification. |
+| [`tools/validators/agriculture/README.md`](../../tools/validators/agriculture/README.md) | Confirmed path | Validator documentation exists; callable implementations, orchestration, and results require separate verification. |
 
 ---
 
 ## Contract inventory
 
-| Object family | Current contract | Canonical-path posture | Schema posture |
+| Contract family | Current semantic contract | Doctrine-aligned counterpart | Machine-shape posture |
 |---|---|---|---|
-| `FieldCandidate` | `./FieldCandidate.md` | `CONFLICTED` / `NEEDS VERIFICATION` | `schemas/contracts/v1/domains/agriculture/field_candidate.schema.json` is `PROPOSED`. |
-| Other Agriculture families | `UNKNOWN` in this folder | Agriculture docs propose contracts under `contracts/domains/agriculture/` | `NEEDS VERIFICATION`. |
+| `FieldCandidate` | [`./FieldCandidate.md`](./FieldCandidate.md) — `CONFIRMED` compatibility contract | `NEEDS VERIFICATION`; neither `field_candidate.md` nor `FieldCandidate.md` was found under `contracts/domains/agriculture/` at the pinned base | `field_candidate.schema.json` was not found under the Agriculture domain schema lane. |
+| Agriculture aggregation receipt | No contract in this compatibility directory | [`../domains/agriculture/aggregation-receipt.md`](../domains/agriculture/aggregation-receipt.md) — `CONFIRMED`, with filename/home conflicts documented in that file | `aggregation_receipt.schema.json` is `CONFIRMED` present and scaffold maturity. |
+| Domain support contracts | None in this compatibility directory | `domain_observation`, `domain_feature_identity`, `domain_layer_descriptor`, and `domain_validation_report` are `CONFIRMED` present | Four paired `domain_*` schemas are `CONFIRMED` present; contract files describe them as placeholders. |
+| Remaining Agriculture object families | `UNKNOWN` here | Coverage remains incomplete or `NEEDS VERIFICATION` against the domain register | Verify per object; do not infer coverage from directory presence. |
 
-Agriculture domain docs identify multiple object families, including `CropObservation`, `FieldCandidate`, `CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`, `SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`, `DroughtStressIndicator`, `PestStressIndicator`, and `AggregationReceipt`. This folder does not yet prove semantic contracts for all of them.
+Agriculture references name twelve object families. This compatibility lane must not become a second implementation plan for all twelve.
 
 ---
 
 ## Semantic contract rules
 
-Every Agriculture contract in this folder must state:
+Any correction to Agriculture semantic contracts must preserve:
 
-- object meaning;
-- owning domain and cross-lane dependencies;
-- accepted inputs and exclusions;
-- identity-bearing fields;
-- source-role constraints;
-- temporal fields that matter;
-- sensitivity default and escalation rules;
-- evidence and SourceDescriptor expectations;
-- lifecycle boundaries;
-- validation requirements;
-- rollback path;
-- definition of done.
+- object meaning and owning domain;
+- identity-bearing and temporal distinctions;
+- source role from admission through release;
+- EvidenceRef-to-EvidenceBundle requirements for consequential claims;
+- rights, sensitivity, spatial precision, and review posture;
+- lifecycle and governed promotion boundaries;
+- validation, correction, supersession, and rollback expectations;
+- the separation between semantic contracts, schemas, policy, fixtures, validators, data, proofs, release decisions, APIs, and UI.
 
-Agriculture contracts must preserve the acute anti-collapse rules surfaced in domain docs:
+Agriculture contracts must prevent these anti-collapse failures:
 
-- aggregate values must not be joined to a single field-level record as if they were per-place truth;
-- modeled outputs must not be presented as observations;
-- unmerged candidates must not be published as features;
-- operator/private-parcel-adjacent joins must fail closed unless policy and review allow otherwise.
+- aggregate values presented as single-field or single-place truth;
+- modeled outputs presented as observations;
+- unmerged candidates presented as confirmed or published features;
+- operator-, person-, parcel-, or private-farm-adjacent joins exposed without policy, evidence, review, and public-safe transformation closure.
 
 ---
 
@@ -206,33 +216,60 @@ Agriculture contracts must preserve the acute anti-collapse rules surfaced in do
 
 ```mermaid
 flowchart LR
-  CONTRACT[contracts/agriculture/] --> SCHEMA[schemas/contracts/v1/domains/agriculture/]
-  CONTRACT --> POLICY[policy/domains/agriculture + policy/sensitivity/agriculture]
-  CONTRACT --> TESTS[tests/domains/agriculture]
-  SOURCE[data/registry/sources + EvidenceRef] --> RAW[data/raw]
-  RAW --> WORK[data/work or data/quarantine]
-  WORK --> PROC[data/processed]
-  PROC --> CAT[data/catalog + data/triplets]
-  CAT --> REL[release]
-  REL --> PUB[data/published]
+  LEGACY["contracts/agriculture/<br/>transitional compatibility"] -->|points to| CONTRACT["contracts/domains/agriculture/<br/>doctrine-aligned semantic lane"]
+  CONTRACT --> SCHEMA["schemas/contracts/v1/domains/agriculture/<br/>machine shape"]
+  CONTRACT --> POLICY["policy/domains/agriculture/<br/>admissibility"]
+  CONTRACT --> TESTS["tests + fixtures + validators<br/>bounded enforceability"]
+  SOURCE["SourceDescriptor + EvidenceRef"] --> RAW["RAW"]
+  RAW --> WORK["WORK / QUARANTINE"]
+  WORK --> PROC["PROCESSED"]
+  PROC --> CAT["CATALOG / TRIPLET"]
+  CAT --> RELEASE["review + policy + release decision"]
+  RELEASE --> PUB["PUBLISHED public-safe artifacts"]
 ```
 
-Contracts describe meaning. They do not move data, validate schemas, make policy decisions, close evidence, or publish.
+The upper path separates definition responsibilities; the lower path is the governed lifecycle for instances. Neither a Markdown edit nor a file move performs validation, policy evaluation, promotion, release, or publication.
 
 ---
 
 ## Validation
 
-Before relying on this directory, verify:
+### Documentation checks for this README
 
-- canonical contract home is resolved by Directory Rules, ADR, or migration note;
-- every Agriculture object family has exactly one semantic contract home or a documented compatibility redirect;
-- matching JSON Schemas exist in the accepted schema home;
-- policy bundles exist for sensitivity, redaction, aggregation, release, and denial outcomes;
-- SourceDescriptor and EvidenceRef requirements are testable;
-- validators cover identity, source role, temporal logic, geometry, evidence closure, sensitivity, and release gates;
-- public API/UI surfaces do not read candidate, raw, work, quarantine, or unreleased contract-derived material directly;
-- release and rollback records exist for promoted public surfaces.
+- verify one H1, logical heading order, balanced fences, valid tables, supported alerts, and a final newline;
+- verify every relative file, directory, fragment, and badge destination from the resulting branch;
+- validate Mermaid syntax and confirm the diagram remains understandable in text;
+- confirm the KFM Meta Block keeps the stable `doc_id` and `created` date;
+- confirm the diff changes only `contracts/agriculture/README.md`;
+- confirm the owner placeholder is visible in text but not promoted as a status badge;
+- confirm no content implies that a contract, schema, workflow, PR, or merge is KFM publication.
+
+### System checks before relying on or retiring this path
+
+- approve a migration or supersession record for `contracts/agriculture/` and update inbound links;
+- decide the canonical `FieldCandidate` filename and migrate the semantic contract without duplicate authority;
+- add or explicitly defer a paired `FieldCandidate` schema, fixtures, validator, tests, and policy cases;
+- reconcile the complete Agriculture contract-to-schema inventory;
+- prove source-role, temporal, geometry, evidence, sensitivity, aggregation, and release-negative cases;
+- ensure public clients use governed interfaces and never read candidate, raw, work, quarantine, or unreleased stores directly;
+- link any promoted public surface to review, release, correction, and rollback records.
+
+> [!NOTE]
+> The pull request for this documentation change may trigger repository workflows. A green or held check proves only its declared scope; it is not contract completeness, policy enforcement, release approval, or publication evidence.
+
+---
+
+## Review burden and maintenance
+
+Current [`CODEOWNERS`](../../.github/CODEOWNERS) routes `/contracts/` to `@bartytime4life`. That route is review routing only; it does not prove an accepted steward assignment, independent approval, branch protection, or merge authority.
+
+Until ownership is resolved:
+
+- keep `OWNER_TBD` visible;
+- review semantic changes with the affected Agriculture and contract responsibilities represented;
+- review cross-root claims against the current contract, schema, policy, test, fixture, validator, evidence, and release owners;
+- update this README when the canonical counterpart, `FieldCandidate` migration, schema coverage, or path status changes;
+- do not mark a draft PR ready or merge it without separate, current authorization and repository-control evidence.
 
 ---
 
@@ -240,40 +277,65 @@ Before relying on this directory, verify:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| `contracts/README.md` | `CONFIRMED` | Contracts define semantic meaning and pair with schemas; executable validation, JSON Schema, policy code, and source data do not belong in contracts. | Root README is brief and does not settle Agriculture path conflict. |
-| `contracts/agriculture/FieldCandidate.md` | `CONFIRMED` | Current compatibility-path contract exists for `FieldCandidate` and surfaces path conflict. | Does not prove matching schema or tests. |
-| `docs/domains/agriculture/IDENTITY_MODEL.md` | `CONFIRMED` | Agriculture identity model, object-family identity basis, `FieldCandidate` candidate-disposition identity, and source-role anti-collapse. | Some schema/validator paths remain proposed. |
-| `docs/domains/agriculture/OBJECT_FAMILIES.md` | `CONFIRMED` | Agriculture object-family register, `OF-AG-02 · FieldCandidate`, proposed contract/schema/policy/test paths, sensitivity and promotion gates. | Proposed path conflicts with current compatibility path. |
-| `docs/domains/agriculture/OBJECTS.md` | `CONFIRMED` | Agriculture object-family meanings, sensitivity warning, and `FieldCandidate` purpose/key fields/release warning. | Key fields are illustrative pending contracts/schemas. |
-| `docs/domains/agriculture/API_CONTRACTS.md` | `CONFIRMED` | Agriculture public surfaces are aggregate/public-safe by default; field-level/operator-private material fails closed. | API route names and DTOs remain proposed/verification-bound. |
+| [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) | `CONFIRMED` live placement doctrine | `contracts/` owns meaning; domains use `contracts/domains/<domain>/`; compatibility paths must not evolve as parallel authority. | Directory Rules does not complete this path's migration. |
+| [`contracts/README.md`](../README.md) | `CONFIRMED` canonical-root README | Semantic meaning belongs in `contracts/`; schemas, policy, evidence, release, runtime, and publication remain separate. | Root guidance does not prove every child contract or companion surface. |
+| [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | `CONFIRMED` current lane README | The doctrine-aligned Agriculture contract lane exists and names this path as compatibility. | The README remains draft and does not close migration or implementation. |
+| [`contracts/agriculture/FieldCandidate.md`](./FieldCandidate.md) | `CONFIRMED` compatibility contract | `FieldCandidate` meaning, candidate posture, source-role limits, and public-exposure warning. | No canonical-lane successor, schema, validator, or release behavior is inferred. |
+| [`schemas/contracts/v1/domains/agriculture/README.md`](../../schemas/contracts/v1/domains/agriculture/README.md) and verified schema files | `CONFIRMED` nonempty schema lane | Five Agriculture schema files are present in the bounded snapshot. | Files are mixed-maturity scaffolds; no `FieldCandidate` schema was found. |
+| [`policy/domains/agriculture/README.md`](../../policy/domains/agriculture/README.md) | `CONFIRMED` repository-grounded draft | Current policy inventory, fail-closed posture, and explicit evaluator limitations. | It does not prove active production enforcement. |
+| [`tests/domains/agriculture/README.md`](../../tests/domains/agriculture/README.md) | `CONFIRMED` repository-grounded draft | Current test-lane inventory and explicit executable-coverage gaps. | It does not prove Agriculture test success. |
+| Agriculture identity, object-family, object, and API references | `CONFIRMED` repository documents / mixed implementation posture | Stable object names, identity and source-role rules, field-level sensitivity, and governed public-surface expectations. | Proposed routes, DTOs, validators, and coverage remain verification-bound. |
 
 ---
 
 ## Rollback
 
-Rollback is required if this README is used to claim that `contracts/agriculture/` is canonical despite newer proposed `contracts/domains/agriculture/` placement, or if it is used to justify schema, policy, release, API, UI, or public-claim authority.
+Before merge, rollback is to close the draft pull request and leave the branch unmerged. After merge, revert the scoped documentation commit; do not rewrite shared history.
 
-Rollback target: initial blank file content SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
+Immediate content rollback target: prior README blob `6ad0b16202119291fe9f391daabcce8f5d87b558`.
+
+A future path retirement needs a separate migration rollback plan that preserves inbound links, document lineage, and the existing `FieldCandidate` contract until its canonical successor and companion surfaces are verified.
 
 ---
 
 ## Definition of done
 
-- [ ] Canonical contract path conflict is resolved by ADR or migration note.
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] All Agriculture object-family contract files are inventoried.
-- [ ] Every contract has a matching schema or documented `NEEDS VERIFICATION` gap.
-- [ ] Policy bundles are linked and verified.
-- [ ] Tests and fixtures are linked and verified.
-- [ ] SourceDescriptor and EvidenceRef requirements are testable.
-- [ ] Sensitive field-level and operator/private-parcel-adjacent public exposure fails closed.
-- [ ] Release and rollback requirements are linked to release records.
-- [ ] No schema, policy, data, proof, release, API, UI, or publication authority is asserted from this folder.
+### This documentation upgrade
+
+- [x] Existing README remains at the same path with stable `doc_id` and `created` date.
+- [x] Live Directory Rules and the doctrine-aligned Agriculture contract lane are linked.
+- [x] Placeholder owner badge is removed; the unresolved owner remains visible in text.
+- [x] Compatibility-only admission rules prevent this lane from growing into parallel authority.
+- [x] Verified companion contracts, schemas, policy, tests, fixtures, and validator documentation are distinguished from maturity claims.
+- [x] Validation, review, correction, and rollback boundaries are explicit.
+
+### Migration and implementation closure
+
+- [ ] A reviewed migration or supersession record resolves the two Agriculture contract paths.
+- [ ] `FieldCandidate` has one canonical semantic contract and one verified machine-shape path.
+- [ ] Owners and review requirements are confirmed without placeholder roles.
+- [ ] The complete Agriculture contract-to-schema-to-policy-to-fixture-to-validator-to-test crosswalk is verified.
+- [ ] Negative cases prove candidate, modeled, aggregate, sensitive-join, evidence-gap, correction, and rollback behavior.
+- [ ] Released surfaces, if any, link to governed release, correction, and rollback records.
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Review date | 2026-07-27 |
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Base ref | `main` |
+| Pinned base commit | `0b0309664313543b6816e8e5dcefc9593366aba5` |
+| Prior README blob | `6ad0b16202119291fe9f391daabcce8f5d87b558` |
+| Directory Rules blob | `18653c00ba193a4afaa3e07a0924452807fb98ef` |
+| Path overlap at review time | No open pull request found for this target |
 
 ---
 
 ## Status summary
 
-`contracts/agriculture/` is a compatibility folder for Agriculture semantic contracts. It currently contains the expanded `FieldCandidate` contract and this directory README. It is not yet confirmed as the canonical Agriculture contract home. It is not a schema home, policy home, source registry, data lifecycle root, proof root, release authority, public API surface, public UI surface, or publication authority.
+`contracts/agriculture/` is a confirmed live, proposed transitional compatibility lane. It preserves `FieldCandidate` meaning and stable links while [`contracts/domains/agriculture/`](../domains/agriculture/README.md) serves as the doctrine-aligned domain lane for new Agriculture semantic contracts. Neither directory is a schema, policy, source-registry, lifecycle-data, evidence, proof, release, API, UI, or publication authority.
 
 <p align="right"><a href="#top">Back to top</a></p>
