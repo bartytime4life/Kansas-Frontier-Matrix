@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/ci_outcome.schema.json",
+  "title": "ci_outcome",
+  "description": "Stable machine-readable classification for a workflow or repository-control evaluation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "repository",
+    "head_sha",
+    "workflow",
+    "job",
+    "outcome_class",
+    "reason_code",
+    "summary",
+    "evidence_refs",
+    "authority_boundary",
+    "blocks_merge",
+    "evidence_kind",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "workflow": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "job": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "outcome_class": {
+      "enum": [
+        "PASS",
+        "EXPECTED_READINESS_HOLD",
+        "REGRESSION",
+        "NOT_APPLICABLE",
+        "SKIPPED_EXPLICIT",
+        "UNKNOWN"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "authority_boundary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "blocks_merge": {
+      "type": "bolean"
+    },
+    "evidence_kind": {
+      "enum": [
+        "EXECUTABLE_PROOF",
+        "READINESS_EVIDENCE",
+        "NEITHER"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/governance/repository_control_state.md",
+    "validator": "tools/validators/repository_control/validate_repository_control.py",
+    "tests": "tests/validators/test_repository_control.py",
+    "status": "PROPOSED"
+  }
+}

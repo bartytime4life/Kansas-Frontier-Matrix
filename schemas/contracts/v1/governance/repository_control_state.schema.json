@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/repository_control_state.schema.json",
+  "title": "repository_control_state",
+  "description": "Machine-checkable projection of bounded repository-control evidence. Validation does not itself grant authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state_id",
+    "repository",
+    "projection_status",
+    "base",
+    "claim",
+    "authorization",
+    "permissions",
+    "settings_snapshot",
+    "authority_boundary",
+    "digest_spec",
+    "state_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "state_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "projection_status": {
+      "enum": [
+        "PROPOSED",
+        "CONFIRMED",
+        "SUPERSEDED"
+      ]
+    },
+    "base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_branch",
+        "current_main_sha",
+        "observed_at",
+        "open_pull_requests"
+      ],
+      "properties": {
+        "default_branch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "current_main_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "open_pull_requests": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "state",
+        "active_branch",
+        "active_review_prs",
+        "allowed_paths",
+        "allowed_operations",
+        "expires_at",
+        "terminal_condition"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,191}$"
+        },
+        "state": {
+          "enum": [
+            "IDLE",
+            "ACTIVE",
+            "HELD",
+            "TERMINAL"
+          ]
+        },
+        "active_branch": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "active_review_prs": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
+        },
+        "allowed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "uniqueItems": true
+        },
+        "allowed_operations": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "create",
+              "update",
+              "delete",
+              "rename",
+              "workflow",
+              "issue_only",
+              "modify_control_logic"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "terminal_condition": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "ACTIVE"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "claim_id": {
+                "type": "string"
+              },
+              "active_branch": {
+                "type": "string"
+              },
+              "active_review_prs": {
+                "minItems": 1
+              },
+              "allowed_paths": {
+                "minItems": 1
+              },
+              "allowed_operations": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorizing_actor",
+        "evidence_refs",
+        "issued_at"
+      ],
+      "properties": {
+        "authorizing_actor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "issued_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modify_control_logic",
+        "ready_transition",
+        "rebase",
+        "force_push",
+        "merge",
+        "source_activation",
+        "proof_construction",
+        "release",
+        "deployment",
+        "publication"
+      ],
+      "properties": {
+        "modify_control_logic": {
+          "type": "boolean"
+        },
+        "ready_transition": {
+          "type": "boolean"
+        },
+        "rebase": {
+          "type": "boolean"
+        },
+        "force_push": {
+          "type": "boolean"
+        },
+        "merge": {
+          "type": "boolean"
+        },
+        "source_activation": {
+          "type": "boolean"
+        },
+        "proof_construction": {
+          "type": "boolean"
+        },
+        "release": {
+          "type": "boolean"
+        },
+        "deployment": {
+          "type": "boolean"
+        },
+        "publication": {
+          "type": "boolean"
+        }
+      }
+    },
+    "settings_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "observed_at",
+        "evidence_refs",
+        "required_pull_request",
+        "required_approvals",
+        "dismiss_stale_reviews",
+        "require_conversation_resolution",
+        "required_status_checks",
+        "bypass_actors",
+        "restrict_direct_push",
+        "block_force_push",
+        "block_deletion",
+        "draft_merge_behavior"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "CONFIRMED",
+            "NEEDS_VERIFICATION"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required_pull_request": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "required_approvals": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "dismiss_stale_reviews": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "require_conversation_resolution": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "required_status_checks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "bypass_actors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "restrict_direct_push": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "block_force_push": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "block_deletion": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "draft_merge_behavior": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        }
+      }
+    },
+    "authority_boundary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "digest_spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specification",
+        "algorithm",
+        "canonicalization",
+        "excluded_fields"
+      ],
+      "properties": {
+        "specification": {
+          "const": "KFM-REPOSITORY-CONTROL-1"
+        },
+        "algorithm": {
+          "const": "sha256"
+        },
+        "canonicalization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "excluded_fields": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "state_digest"
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "state_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/governance/repository_control_state.md",
+    "validator": "tools/validators/repository_control/validate_repository_control.py",
+    "tests": "tests/validators/test_repository_control.py",
+    "status": "PROPOSED"
+  }
+}

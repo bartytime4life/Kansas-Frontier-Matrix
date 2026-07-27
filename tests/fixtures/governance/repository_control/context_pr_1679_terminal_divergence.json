@@ -1,0 +1,28 @@
+{
+  "scenario_id": "confirmed-pr-1679-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1679",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5079291589"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "fddb074e4e64d48332d7a187587858220f042945",
+  "head_sha": "2ce4ad3481538e58ab3f4749d5dcf8e7ca0d0b7c",
+  "head_branch": "agent/repair-kansas-source-catalog-semantics-20260725",
+  "pr_number": 1679,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "a05bcc552effb0f12b4de3f7ac518ccd9dfd3b7a",
+  "changed_paths": [
+    "docs/sources/catalog/kansas/README.md",
+    "docs/sources/catalog/kansas/kdhe-harmful-algal-blooms.md",
+    "docs/sources/catalog/kansas/cross-source-condition-semantics.md",
+    "docs/sources/catalog/drought_monitor/CORRECTION-2026-07-25-usdm-cutoff.md"
+  ],
+  "requested_operations": [
+    "update"
+  ],
+  "active_review_prs": [
+    1679
+  ],
+  "now": "2026-07-25T16:28:40Z"
+}
