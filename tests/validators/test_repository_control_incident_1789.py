@@ -56,9 +56,12 @@ def test_corrective_projection_is_current_and_held() -> None:
     assert state["base"]["current_main_sha"] == (
         "93b40ebae595ac3131459f55f6e804a0f21f6a0e"
     )
-    assert state["base"]["open_pull_requests"] == []
+    assert state["base"]["open_pull_requests"] == [1790]
     assert state["claim"]["state"] == "HELD"
     assert state["permissions"]["merge"] is False
+    assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1790" in (
+        state["authorization"]["evidence_refs"]
+    )
 
 
 def test_pr_1789_is_terminal_state_divergence() -> None:
