@@ -6,8 +6,10 @@
   "base": {
     "default_branch": "main",
     "current_main_sha": "9f4a7218e9f29592cce3d15fb6a2b43185ac3d82",
-    "observed_at": "2026-07-27T00:08:32Z",
-    "open_pull_requests": []
+    "observed_at": "2026-07-27T00:57:48Z",
+    "open_pull_requests": [
+      1789
+    ]
   },
   "claim": {
     "claim_id": null,
@@ -23,7 +25,7 @@
     "authorizing_actor": null,
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1789"
     ],
     "issued_at": null
   },
@@ -41,7 +43,7 @@
   },
   "settings_snapshot": {
     "status": "NEEDS_VERIFICATION",
-    "observed_at": "2026-07-27T00:08:32Z",
+    "observed_at": "2026-07-27T00:57:48Z",
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5081829181"
     ],
@@ -65,5 +67,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "a6133215d7c3bb5d27592b2668c8f20022f160b39ceb973d61d3c90cc01c1da1"
+  "state_digest": "c4f88d568d404f1a480eb3defbb2f8073267176e72a756d69c4d58d29268b4ee"
 }

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Deterministic, no-network KFM repository-control evaluator.
 
-The tracked state is strict JSON stored with a ``.yaml`` extension (valid YAML
-1.2). This command verifies the state digest, compares a prepared pull-request
-context with one bounded claim, and emits the registered CI outcome vocabulary.
-It does not read GitHub, change settings, review, merge, release, or publish.
+The tracked state and prepared context are strict JSON (the state keeps a ``.yaml``
+extension because JSON is valid YAML 1.2). This command verifies the state digest,
+compares a prepared pull-request context with one bounded claim, and emits the
+registered CI outcome vocabulary. It does not read GitHub, change settings,
+review, merge, release, or publish.
 """
 
 from __future__ import annotations
@@ -19,18 +20,31 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from tools.validators.repository_control._context import parse_context
 from tools.validators.repository_control._evaluate import evaluate, make_outcome
 from tools.validators.repository_control._model import InputError, compute_state_digest, load_json
 from tools.validators.repository_control._state import validate_state_shape
 
-# Re-export the public API used by tests and future adapters.
 __all__ = [
-    "InputError", "compute_state_digest", "evaluate", "load_json",
-    "make_outcome", "validate_state_shape",
+    "InputError",
+    "compute_state_digest",
+    "evaluate",
+    "load_json",
+    "make_outcome",
+    "parse_context",
+    "validate_state_shape",
 ]
 
+
 def _exit(outcome: str) -> int:
-    return {"PASS": 0, "NOT_APPLICABLE": 0, "SKIPPED_EXPLICIT": 0, "REGRESSION": 1, "UNKNOWN": 2, "EXPECTED_READINESS_HOLD": 3}[outcome]
+    return {
+        "PASS": 0,
+        "NOT_APPLICABLE": 0,
+        "SKIPPED_EXPLICIT": 3,
+        "REGRESSION": 1,
+        "UNKNOWN": 2,
+        "EXPECTED_READINESS_HOLD": 3,
+    }[outcome]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -44,6 +58,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     command.add_argument("--context", type=Path, required=True)
     command.add_argument("--outcome-json", type=Path)
     args = parser.parse_args(argv)
+
     try:
         state = load_json(args.state)
     except InputError as exc:
@@ -52,6 +67,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "digest":
         print(compute_state_digest(state))
         return 0
+
     invalid = validate_state_shape(state)
     if args.command == "validate-state":
         if invalid:
@@ -60,6 +76,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 1
         print("PASS: STATE_VALID")
         return 0
+
     try:
         context = load_json(args.context)
     except InputError as exc:
@@ -74,7 +91,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(json.dumps(outcome, sort_keys=True, separators=(",", ":"), ensure_ascii=False))
     if args.outcome_json:
         args.outcome_json.parent.mkdir(parents=True, exist_ok=True)
-        args.outcome_json.write_text(json.dumps(outcome, indent=2) + "\n", encoding="utf-8")
+        args.outcome_json.write_text(
+            json.dumps(outcome, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
     return _exit(evaluation.outcome_class)
 
 
