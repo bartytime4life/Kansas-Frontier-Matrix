@@ -19,6 +19,91 @@ from tools.validators.repository_control._model import (
 from tools.validators.repository_control._state import validate_state_shape
 
 
+def _confirmed_platform_integrity(context: Mapping[str, Any]) -> Evaluation | None:
+    """Reject confirmed platform evidence that is not bound to this snapshot."""
+
+    platform = context.get("platform_merge_evidence")
+    if not isinstance(platform, dict) or platform.get("status") != "CONFIRMED":
+        return None
+
+    if platform["pr_number"] != context["pr_number"]:
+        return Evaluation(
+            "REGRESSION",
+            "PLATFORM_MERGE_EVIDENCE_PR_MISMATCH",
+            "Confirmed platform evidence is bound to a different pull request.",
+            (
+                Finding(
+                    "PLATFORM_MERGE_EVIDENCE_PR_MISMATCH",
+                    "platform evidence PR number differs from the evaluated PR",
+                ),
+            ),
+            evidence_kind="READINESS_EVIDENCE",
+        )
+    if platform["head_sha"] != context["head_sha"]:
+        return Evaluation(
+            "REGRESSION",
+            "PLATFORM_MERGE_EVIDENCE_HEAD_MISMATCH",
+            "Confirmed platform evidence is bound to a different head commit.",
+            (
+                Finding(
+                    "PLATFORM_MERGE_EVIDENCE_HEAD_MISMATCH",
+                    "platform evidence head SHA differs from the evaluated head SHA",
+                ),
+            ),
+            evidence_kind="READINESS_EVIDENCE",
+        )
+
+    platform_observed_at = _time(
+        platform["observed_at"], "platform_merge_evidence.observed_at"
+    )
+    if platform_observed_at != context["now"]:
+        relation = "older" if platform_observed_at < context["now"] else "newer"
+        return Evaluation(
+            "UNKNOWN",
+            "PLATFORM_MERGE_EVIDENCE_NOT_CURRENT",
+            "Confirmed platform evidence is not from the prepared context snapshot.",
+            (
+                Finding(
+                    "PLATFORM_MERGE_EVIDENCE_NOT_CURRENT",
+                    f"platform evidence observation is {relation} than context.now",
+                ),
+            ),
+            evidence_kind="READINESS_EVIDENCE",
+        )
+
+    return None
+
+
+def _ready_transition_evaluation(
+    state: Mapping[str, Any], context: Mapping[str, Any]
+) -> Evaluation | None:
+    """Evaluate a confirmed, current ready transition against permission."""
+
+    platform = context.get("platform_merge_evidence")
+    if (
+        not isinstance(platform, dict)
+        or platform.get("status") != "CONFIRMED"
+        or platform.get("ready_transition_observed") is not True
+    ):
+        return None
+    integrity_result = _confirmed_platform_integrity(context)
+    if integrity_result is not None:
+        return integrity_result
+    if state["permissions"]["ready_transition"]:
+        return None
+    finding = Finding(
+        "READY_TRANSITION_PERMISSION_FALSE",
+        "ready transition observed while permission was false",
+    )
+    return Evaluation(
+        "REGRESSION",
+        finding.code,
+        "GitHub ready state advanced beyond declared authority.",
+        (finding,),
+        evidence_kind="READINESS_EVIDENCE",
+    )
+
+
 def _platform_evaluation(
     state: Mapping[str, Any],
     context: Mapping[str, Any],
@@ -42,6 +127,10 @@ def _platform_evaluation(
             "Merge permission is true, but current PR review/check/mergeability evidence is missing or unverified.",
             evidence_kind="READINESS_EVIDENCE",
         )
+
+    integrity_result = _confirmed_platform_integrity(context)
+    if integrity_result is not None:
+        return integrity_result
 
     if platform["is_draft"]:
         return Evaluation(
@@ -126,6 +215,58 @@ def _platform_evaluation(
     return None
 
 
+def _tracks_pr(state: Mapping[str, Any], context: Mapping[str, Any]) -> bool:
+    """Return whether the projection explicitly tracks the evaluated PR."""
+
+    pr_number = context["pr_number"]
+    return (
+        pr_number in state["claim"]["active_review_prs"]
+        or pr_number in state["base"]["open_pull_requests"]
+    )
+
+
+def _terminal_evaluation(
+    state: Mapping[str, Any], context: Mapping[str, Any]
+) -> Evaluation:
+    """Evaluate a merged terminal state against declared authority."""
+
+    claim = state["claim"]
+    permissions = state["permissions"]
+    findings: list[Finding] = []
+    if claim["state"] != "ACTIVE":
+        findings.append(
+            Finding("CLAIM_NOT_ACTIVE", "merged PR observed without an ACTIVE claim")
+        )
+    else:
+        findings.extend(scope_findings(state, context))
+    if not permissions["merge"]:
+        findings.append(
+            Finding(
+                "MERGE_PERMISSION_FALSE",
+                "merged PR observed while merge permission was false",
+            )
+        )
+    if findings:
+        return Evaluation(
+            "REGRESSION",
+            "TERMINAL_STATE_DIVERGENCE",
+            "GitHub terminal state advanced beyond declared authority.",
+            tuple(findings),
+        )
+    ready_result = _ready_transition_evaluation(state, context)
+    if ready_result is not None:
+        return ready_result
+    platform_result = _platform_evaluation(state, context)
+    if platform_result is not None:
+        return platform_result
+    return Evaluation(
+        "PASS",
+        "TERMINAL_STATE_CONSISTENT",
+        "Merged terminal state matches the active claim and confirmed platform evidence.",
+        blocks_merge=False,
+    )
+
+
 def evaluate(state: Mapping[str, Any], raw_context: Mapping[str, Any]) -> Evaluation:
     invalid = validate_state_shape(state)
     if invalid:
@@ -159,6 +300,20 @@ def evaluate(state: Mapping[str, Any], raw_context: Mapping[str, Any]) -> Evalua
             "DEFAULT_BRANCH_MISMATCH",
             "Default branch differs from state.",
         )
+
+    claim = state["claim"]
+    permissions = state["permissions"]
+
+    # Terminal and ready-state divergence are incident signals, not optional
+    # scope metadata. Evaluate them before non-applicability, explicit skips,
+    # superseded projections, or non-active claim holds can return.
+    if context["pr_state"] == "MERGED" and _tracks_pr(state, context):
+        return _terminal_evaluation(state, context)
+
+    ready_result = _ready_transition_evaluation(state, context)
+    if ready_result is not None:
+        return ready_result
+
     if context["applicable"] is False:
         return Evaluation(
             "NOT_APPLICABLE",
@@ -184,40 +339,8 @@ def evaluate(state: Mapping[str, Any], raw_context: Mapping[str, Any]) -> Evalua
             evidence_kind="READINESS_EVIDENCE",
         )
 
-    claim = state["claim"]
-    permissions = state["permissions"]
-
     if context["pr_state"] == "MERGED":
-        findings: list[Finding] = []
-        if claim["state"] != "ACTIVE":
-            findings.append(
-                Finding("CLAIM_NOT_ACTIVE", "merged PR observed without an ACTIVE claim")
-            )
-        else:
-            findings.extend(scope_findings(state, context))
-        if not permissions["merge"]:
-            findings.append(
-                Finding(
-                    "MERGE_PERMISSION_FALSE",
-                    "merged PR observed while merge permission was false",
-                )
-            )
-        if findings:
-            return Evaluation(
-                "REGRESSION",
-                "TERMINAL_STATE_DIVERGENCE",
-                "GitHub terminal state advanced beyond declared authority.",
-                tuple(findings),
-            )
-        platform_result = _platform_evaluation(state, context)
-        if platform_result is not None:
-            return platform_result
-        return Evaluation(
-            "PASS",
-            "TERMINAL_STATE_CONSISTENT",
-            "Merged terminal state matches the active claim and confirmed platform evidence.",
-            blocks_merge=False,
-        )
+        return _terminal_evaluation(state, context)
 
     if context["pr_state"] == "CLOSED_UNMERGED":
         return Evaluation(

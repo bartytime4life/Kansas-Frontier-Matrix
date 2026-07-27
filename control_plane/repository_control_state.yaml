@@ -5,11 +5,9 @@
   "projection_status": "PROPOSED",
   "base": {
     "default_branch": "main",
-    "current_main_sha": "93b40ebae595ac3131459f55f6e804a0f21f6a0e",
-    "observed_at": "2026-07-27T02:03:48Z",
-    "open_pull_requests": [
-      1790
-    ]
+    "current_main_sha": "b85d05c37d88cf2dcd89042c9df77483fa38d2a9",
+    "observed_at": "2026-07-27T05:33:18Z",
+    "open_pull_requests": []
   },
   "claim": {
     "claim_id": null,
@@ -19,7 +17,7 @@
     "allowed_paths": [],
     "allowed_operations": [],
     "expires_at": null,
-    "terminal_condition": "pr_1789_terminal_divergence_recorded; settings_audit_and_explicit_reconciliation_required"
+    "terminal_condition": "pr_1789_and_pr_1790_terminal_divergence_recorded; bounded_draft_recovery_authorized_by_issue_1675; settings_audit_required_before_ready_or_merge"
   },
   "authorization": {
     "authorizing_actor": null,
@@ -45,11 +43,11 @@
   },
   "settings_snapshot": {
     "status": "NEEDS_VERIFICATION",
-    "observed_at": "2026-07-27T02:03:48Z",
+    "observed_at": "2026-07-27T05:33:18Z",
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5081829181",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5086534253",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/93b40ebae595ac3131459f55f6e804a0f21f6a0e/.github/CODEOWNERS"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b85d05c37d88cf2dcd89042c9df77483fa38d2a9/.github/CODEOWNERS"
     ],
     "required_pull_request": null,
     "required_approvals": null,
@@ -71,5 +69,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "7aaac3f449f01c30e621670ac5cb7b8dd7e879d6eeb88d1d5137a44fb3f46b63"
+  "state_digest": "603c1580270089891b9382b3ca2bf921499a6000a5c05e602cc2df99e4798612"
 }

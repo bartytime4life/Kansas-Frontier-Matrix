@@ -49,6 +49,7 @@ def confirmed_settings(state: dict, *, required_checks: list[str] | None = None)
 
 
 def platform_evidence(
+    context: dict,
     *,
     checks: list[dict] | None = None,
     is_draft: bool = False,
@@ -59,7 +60,9 @@ def platform_evidence(
 ) -> dict:
     return {
         "status": "CONFIRMED",
-        "observed_at": "2026-07-26T12:00:00Z",
+        "observed_at": context["now"],
+        "pr_number": context["pr_number"],
+        "head_sha": context["head_sha"],
         "evidence_refs": ["fixture://platform/confirmed"],
         "is_draft": is_draft,
         "ready_transition_observed": ready_transition_observed,
@@ -113,6 +116,19 @@ def active_state(
         "issued_at": context["now"],
     }
     state["permissions"]["merge"] = merge
+    state["settings_snapshot"]["observed_at"] = context["now"]
+    state["state_digest"] = compute_state_digest(state)
+    return state
+
+
+def non_active_state(context: dict, claim_state: str = "HELD") -> dict:
+    state = load(STATE_PATH)
+    state["base"].update(
+        current_main_sha=context["base_sha"],
+        observed_at=context["now"],
+        open_pull_requests=list(context["open_pull_requests"]),
+    )
+    state["claim"]["state"] = claim_state
     state["settings_snapshot"]["observed_at"] = context["now"]
     state["state_digest"] = compute_state_digest(state)
     return state
@@ -214,6 +230,16 @@ def test_confirmed_settings_cannot_hide_unknown_fields() -> None:
     }
 
 
+def test_held_claim_identity_fields_are_strictly_typed() -> None:
+    for field, value in (("claim_id", 123), ("active_branch", [])):
+        state = load(STATE_PATH)
+        state["claim"][field] = value
+        state["state_digest"] = compute_state_digest(state)
+        assert "STATE_CLAIM_INVALID" in {
+            item.code for item in validate_state_shape(state)
+        }
+
+
 def test_merge_with_unverified_settings_is_unknown() -> None:
     context = synthetic_context()
     result = evaluate(active_state(context, merge=True), context)
@@ -238,7 +264,7 @@ def test_merge_with_missing_platform_evidence_is_unknown() -> None:
 
 def test_confirmed_scope_settings_and_platform_can_pass() -> None:
     context = synthetic_context()
-    context["platform_merge_evidence"] = platform_evidence()
+    context["platform_merge_evidence"] = platform_evidence(context)
     state = active_state(context, merge=True)
     confirmed_settings(state)
     state["state_digest"] = compute_state_digest(state)
@@ -249,11 +275,55 @@ def test_confirmed_scope_settings_and_platform_can_pass() -> None:
         False,
     )
     assert not schema_errors(STATE_SCHEMA, state)
+    assert not schema_errors(CONTEXT_SCHEMA, context)
+
+
+def test_platform_evidence_must_bind_to_pr_and_head() -> None:
+    cases = (
+        (
+            "pr_number",
+            10000,
+            "PLATFORM_MERGE_EVIDENCE_PR_MISMATCH",
+        ),
+        (
+            "head_sha",
+            "2" * 40,
+            "PLATFORM_MERGE_EVIDENCE_HEAD_MISMATCH",
+        ),
+    )
+    for field, value, reason_code in cases:
+        context = synthetic_context()
+        context["platform_merge_evidence"] = platform_evidence(context)
+        context["platform_merge_evidence"][field] = value
+        state = active_state(context, merge=True)
+        confirmed_settings(state)
+        state["state_digest"] = compute_state_digest(state)
+        result = evaluate(state, context)
+        assert (result.outcome_class, result.reason_code) == (
+            "REGRESSION",
+            reason_code,
+        )
+
+
+def test_platform_evidence_must_match_context_snapshot_time() -> None:
+    for observed_at in ("2000-01-01T00:00:00Z", "2030-01-01T00:00:00Z"):
+        context = synthetic_context()
+        context["platform_merge_evidence"] = platform_evidence(context)
+        context["platform_merge_evidence"]["observed_at"] = observed_at
+        state = active_state(context, merge=True)
+        confirmed_settings(state)
+        state["state_digest"] = compute_state_digest(state)
+        result = evaluate(state, context)
+        assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+            "UNKNOWN",
+            "PLATFORM_MERGE_EVIDENCE_NOT_CURRENT",
+            True,
+        )
 
 
 def test_required_approval_shortfall_is_hold() -> None:
     context = synthetic_context()
-    context["platform_merge_evidence"] = platform_evidence(approvals=0)
+    context["platform_merge_evidence"] = platform_evidence(context, approvals=0)
     state = active_state(context, merge=True)
     confirmed_settings(state)
     state["state_digest"] = compute_state_digest(state)
@@ -264,6 +334,7 @@ def test_required_approval_shortfall_is_hold() -> None:
 def test_required_status_regression_remains_regression() -> None:
     context = synthetic_context()
     context["platform_merge_evidence"] = platform_evidence(
+        context,
         checks=[
             {
                 "name": "repository-control",
@@ -285,6 +356,7 @@ def test_required_status_regression_remains_regression() -> None:
 def test_ready_transition_requires_explicit_permission() -> None:
     context = synthetic_context()
     context["platform_merge_evidence"] = platform_evidence(
+        context,
         ready_transition_observed=True
     )
     state = active_state(context, merge=True)
@@ -292,6 +364,86 @@ def test_ready_transition_requires_explicit_permission() -> None:
     state["state_digest"] = compute_state_digest(state)
     result = evaluate(state, context)
     assert result.reason_code == "READY_TRANSITION_PERMISSION_FALSE"
+
+
+def test_ready_transition_is_checked_for_authorized_terminal_merge() -> None:
+    context = synthetic_context()
+    context.update(
+        pr_state="MERGED",
+        merge_commit_sha="3" * 40,
+        open_pull_requests=[],
+    )
+    context["platform_merge_evidence"] = platform_evidence(
+        context,
+        ready_transition_observed=True,
+    )
+    state = active_state(context, merge=True)
+    confirmed_settings(state)
+    state["state_digest"] = compute_state_digest(state)
+    result = evaluate(state, context)
+    assert (result.outcome_class, result.reason_code) == (
+        "REGRESSION",
+        "READY_TRANSITION_PERMISSION_FALSE",
+    )
+
+
+def test_ready_transition_is_regression_for_every_non_active_claim() -> None:
+    context = synthetic_context()
+    context["platform_merge_evidence"] = platform_evidence(
+        context,
+        ready_transition_observed=True,
+    )
+    for claim_state in ("IDLE", "HELD", "TERMINAL"):
+        result = evaluate(non_active_state(context, claim_state), context)
+        assert (result.outcome_class, result.reason_code) == (
+            "REGRESSION",
+            "READY_TRANSITION_PERMISSION_FALSE",
+        )
+
+
+def test_ready_transition_requires_current_bound_platform_evidence() -> None:
+    cases = (
+        ("head_sha", "2" * 40, "REGRESSION", "PLATFORM_MERGE_EVIDENCE_HEAD_MISMATCH"),
+        (
+            "observed_at",
+            "2000-01-01T00:00:00Z",
+            "UNKNOWN",
+            "PLATFORM_MERGE_EVIDENCE_NOT_CURRENT",
+        ),
+    )
+    for field, value, outcome_class, reason_code in cases:
+        context = synthetic_context()
+        context["platform_merge_evidence"] = platform_evidence(
+            context,
+            ready_transition_observed=True,
+        )
+        context["platform_merge_evidence"][field] = value
+        result = evaluate(non_active_state(context), context)
+        assert (result.outcome_class, result.reason_code) == (
+            outcome_class,
+            reason_code,
+        )
+
+
+def test_unverified_ready_transition_evidence_does_not_create_incident_fact() -> None:
+    context = synthetic_context()
+    context["platform_merge_evidence"] = platform_evidence(
+        context,
+        ready_transition_observed=True,
+    )
+    context["platform_merge_evidence"].update(
+        status="NEEDS_VERIFICATION",
+        is_draft=None,
+        ready_transition_observed=True,
+        approval_count=None,
+        unresolved_conversation_count=None,
+        mergeability="UNKNOWN",
+    )
+    result = evaluate(non_active_state(context), context)
+    assert (result.outcome_class, result.reason_code) == (
+        "EXPECTED_READINESS_HOLD",
+        "CLAIM_HELD",
+    )
 
 
 def test_pr_1679_is_terminal_state_divergence() -> None:
@@ -308,17 +460,60 @@ def test_pr_1738_is_terminal_state_divergence() -> None:
     assert "MERGE_PERMISSION_FALSE" in {item.code for item in result.findings}
 
 
-def test_control_logic_change_requires_explicit_permission() -> None:
-    context = synthetic_context()
-    context["changed_paths"] = [
-        "tools/validators/repository_control/validate_repository_control.py"
-    ]
-    context["requested_operations"] = ["update", "modify_control_logic"]
+def test_terminal_divergence_precedes_non_applicability() -> None:
+    context = load(FIXTURES / "context_pr_1789_terminal_divergence.json")
+    context.update(
+        applicable=False,
+        not_applicable_reason="classification cannot suppress terminal divergence",
+    )
+    result = evaluate(active_state(context), context)
+    assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+        "REGRESSION",
+        "TERMINAL_STATE_DIVERGENCE",
+        True,
+    )
+
+
+def test_terminal_divergence_precedes_explicit_skip_for_tracked_pr() -> None:
+    context = load(FIXTURES / "context_pr_1789_terminal_divergence.json")
+    context["explicit_skip_reason"] = "skip cannot suppress tracked terminal divergence"
+    result = evaluate(active_state(context), context)
+    assert (result.outcome_class, result.reason_code) == (
+        "REGRESSION",
+        "TERMINAL_STATE_DIVERGENCE",
+    )
+
+
+def test_untracked_merged_pr_can_be_classified_out_of_scope() -> None:
+    context = load(FIXTURES / "context_pr_1789_terminal_divergence.json")
     state = active_state(context)
-    state["permissions"]["modify_control_logic"] = False
-    state["state_digest"] = compute_state_digest(state)
+    context.update(
+        pr_number=1790,
+        applicable=False,
+        not_applicable_reason="untracked sibling PR",
+    )
     result = evaluate(state, context)
-    assert result.reason_code == "CONTROL_LOGIC_CHANGE_NOT_AUTHORIZED"
+    assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+        "NOT_APPLICABLE",
+        "SCOPE_NOT_APPLICABLE",
+        False,
+    )
+
+
+def test_control_logic_change_requires_explicit_permission() -> None:
+    paths = (
+        "tools/validators/repository_control/validate_repository_control.py",
+        "tests/validators/test_repository_control_incident_1790.py",
+    )
+    for path in paths:
+        context = synthetic_context()
+        context["changed_paths"] = [path]
+        context["requested_operations"] = ["update", "modify_control_logic"]
+        state = active_state(context)
+        state["permissions"]["modify_control_logic"] = False
+        state["state_digest"] = compute_state_digest(state)
+        result = evaluate(state, context)
+        assert result.reason_code == "CONTROL_LOGIC_CHANGE_NOT_AUTHORIZED"
 
 
 def test_emitted_outcome_matches_schema_and_carries_context_evidence() -> None:
