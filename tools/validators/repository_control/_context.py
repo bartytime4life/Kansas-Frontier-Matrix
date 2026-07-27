@@ -48,6 +48,8 @@ CONTEXT_OPTIONAL = {
 PLATFORM_KEYS = {
     "status",
     "observed_at",
+    "pr_number",
+    "head_sha",
     "evidence_refs",
     "is_draft",
     "ready_transition_observed",
@@ -69,6 +71,15 @@ def _platform(value: Any) -> dict[str, Any] | None:
     if status not in SETTINGS_STATUSES:
         raise InputError("platform_merge_evidence.status is unsupported")
     _time(value.get("observed_at"), "platform_merge_evidence.observed_at")
+    pr_number = value.get("pr_number")
+    if (
+        not isinstance(pr_number, int)
+        or isinstance(pr_number, bool)
+        or pr_number <= 0
+    ):
+        raise InputError("platform_merge_evidence.pr_number must be positive")
+    if not _sha(value.get("head_sha")):
+        raise InputError("platform_merge_evidence.head_sha must be lowercase 40-hex")
     _unique_strings(
         value.get("evidence_refs"),
         "platform_merge_evidence.evidence_refs",
@@ -268,18 +279,6 @@ def scope_findings(state: Mapping[str, Any], context: Mapping[str, Any]) -> list
             Finding(
                 "CONTROL_LOGIC_CHANGE_NOT_AUTHORIZED",
                 "control logic changed without explicit permission",
-            )
-        )
-    platform = context.get("platform_merge_evidence")
-    if (
-        isinstance(platform, dict)
-        and platform.get("ready_transition_observed") is True
-        and not state["permissions"]["ready_transition"]
-    ):
-        findings.append(
-            Finding(
-                "READY_TRANSITION_PERMISSION_FALSE",
-                "ready transition observed while permission was false",
             )
         )
     return findings

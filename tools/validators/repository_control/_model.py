@@ -60,7 +60,7 @@ CONTROL_PREFIXES = (
     "schemas/contracts/v1/governance/repository_control_context.",
     "schemas/contracts/v1/governance/ci_outcome.",
     "tools/validators/repository_control/",
-    "tests/validators/test_repository_control.py",
+    "tests/validators/test_repository_control",
     "tests/fixtures/governance/repository_control/",
     ".github/workflows/repository-control.",
 )

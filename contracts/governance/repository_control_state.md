@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.2.0
+version: v0.2.1
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
@@ -31,7 +31,7 @@ This contract defines semantic meaning under `contracts/governance/`. Machine sh
 | Field family | Meaning |
 |---|---|
 | Identity | `schema_version`, `state_id`, `repository`, and `projection_status` identify the projection and whether it is proposed, confirmed, or superseded. |
-| Base snapshot | Records the default branch, pinned `main` SHA, observation time, and observed open pull-request set. |
+| Base snapshot | Records the default branch, pinned `main` SHA, observation time, and open pull-request set observed at that time. It is a checkpoint, not a self-refreshing statement of live GitHub state. |
 | Claim | Records one finite state (`IDLE`, `ACTIVE`, `HELD`, or `TERMINAL`), exact branch, active PR set, allowed path patterns, allowed operations, expiry, and terminal condition. |
 | Authorization evidence | Identifies the actor and evidence references outside the state file. An active claim requires external evidence; the file cannot cite itself as authority. |
 | Permissions | Every consequential permission is explicit and defaults to `false`, including ready transition, merge, source activation, proof construction, release, deployment, and publication. |
@@ -59,6 +59,7 @@ An active exception must pin the current base SHA, branch, PR number, observed o
 
 Merge permission alone never produces `PASS`. A normal open-PR pass also requires `platform_merge_evidence.status: CONFIRMED`, including:
 
+- the evaluated PR number and exact head SHA;
 - draft state and whether a ready transition was observed;
 - current approving-review count;
 - unresolved conversation count;
@@ -66,11 +67,13 @@ Merge permission alone never produces `PASS`. A normal open-PR pass also require
 - current mergeability;
 - evidence references and observation time.
 
+Confirmed platform evidence is one atomic prepared-context snapshot: its PR number and head SHA must match the evaluated context, and its `observed_at` must equal `context.now`. A binding mismatch is a regression. A different observation time is not accepted as current evidence and produces `UNKNOWN`; adapters must prepare a new snapshot instead of reusing approvals, checks, or mergeability from another time.
+
 A required check satisfies the merge-readiness evaluation only with `PASS`. `EXPECTED_READINESS_HOLD`, `SKIPPED_EXPLICIT`, and `NOT_APPLICABLE` remain holds for a required check; `UNKNOWN` remains unknown; `REGRESSION` remains a regression. The evaluator does not infer GitHub settings or convert raw workflow failures into a classification.
 
 ## Failure behavior
 
-Malformed, unavailable, digest-mismatched, stale, expired, branch-mismatched, PR-mismatched, path-out-of-scope, operation-out-of-scope, control-self-modifying, or unauthorized terminal state fails closed. A merged terminal state observed while `merge=false` is a `REGRESSION`, not evidence that merge was authorized. Unverified settings or current platform state produce `UNKNOWN` when a decision depends on them. An explicit skip is recorded distinctly and remains merge-blocking by default.
+Malformed, unavailable, digest-mismatched, stale, expired, branch-mismatched, PR-mismatched, path-out-of-scope, operation-out-of-scope, control-self-modifying, or unauthorized terminal state fails closed. For a PR tracked by the projection's active-review or open-PR snapshot, a merged terminal state observed while `merge=false` is a `REGRESSION`, not evidence that merge was authorized, even when context metadata declares the scenario not applicable or explicitly skipped. An unrelated, untracked PR may still be classified `NOT_APPLICABLE`. An observed, confirmed, current ready transition without permission is also a regression in `IDLE`, `ACTIVE`, `HELD`, and `TERMINAL` claim states. Unverified settings or non-current platform state produce `UNKNOWN` when a decision depends on them. An explicit skip is otherwise recorded distinctly and remains merge-blocking by default.
 
 ## Registered `CIOutcome` vocabulary
 

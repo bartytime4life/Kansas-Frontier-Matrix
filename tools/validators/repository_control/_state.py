@@ -71,6 +71,7 @@ SETTINGS_KEYS = {
 DIGEST_KEYS = {"specification", "algorithm", "canonicalization", "excluded_fields"}
 REPOSITORY_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 STATE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{2,127}$")
+CLAIM_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{2,191}$")
 
 
 def _validate_base(state: Mapping[str, Any]) -> None:
@@ -103,12 +104,25 @@ def _validate_claim(state: Mapping[str, Any], projection_status: str) -> str:
     if not isinstance(claim.get("terminal_condition"), str) or not claim["terminal_condition"]:
         raise InputError("claim.terminal_condition must be non-empty")
 
+    claim_id = claim.get("claim_id")
+    if claim_id is not None and (
+        not isinstance(claim_id, str) or not CLAIM_ID_RE.fullmatch(claim_id)
+    ):
+        raise InputError("claim.claim_id must be null or match the registered grammar")
+    active_branch = claim.get("active_branch")
+    if active_branch is not None and (
+        not isinstance(active_branch, str)
+        or not active_branch
+        or len(active_branch) > 255
+    ):
+        raise InputError("claim.active_branch must be null or a non-empty string")
+
     if claim_state == "ACTIVE":
         if projection_status != "CONFIRMED":
             raise InputError("ACTIVE claim requires projection_status CONFIRMED")
-        if not isinstance(claim.get("claim_id"), str) or not claim["claim_id"]:
+        if claim_id is None:
             raise InputError("ACTIVE claim requires claim_id")
-        if not isinstance(claim.get("active_branch"), str) or not claim["active_branch"]:
+        if active_branch is None:
             raise InputError("ACTIVE claim requires active_branch")
         if not prs or not paths or not operations:
             raise InputError("ACTIVE claim requires PRs, paths, and operations")
