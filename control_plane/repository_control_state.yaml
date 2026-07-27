@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "state_id": "kfm-repository-control-main",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "projection_status": "PROPOSED",
+  "base": {
+    "default_branch": "main",
+    "current_main_sha": "9f4a7218e9f29592cce3d15fb6a2b43185ac3d82",
+    "observed_at": "2026-07-27T00:57:48Z",
+    "open_pull_requests": [
+      1789
+    ]
+  },
+  "claim": {
+    "claim_id": null,
+    "state": "HELD",
+    "active_branch": null,
+    "active_review_prs": [],
+    "allowed_paths": [],
+    "allowed_operations": [],
+    "expires_at": null,
+    "terminal_condition": "fresh_explicit_authorization_and_live_reverification_required"
+  },
+  "authorization": {
+    "authorizing_actor": null,
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1789"
+    ],
+    "issued_at": null
+  },
+  "permissions": {
+    "modify_control_logic": false,
+    "ready_transition": false,
+    "rebase": false,
+    "force_push": false,
+    "merge": false,
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "settings_snapshot": {
+    "status": "NEEDS_VERIFICATION",
+    "observed_at": "2026-07-27T00:57:48Z",
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5081829181"
+    ],
+    "required_pull_request": null,
+    "required_approvals": null,
+    "dismiss_stale_reviews": null,
+    "require_conversation_resolution": null,
+    "required_status_checks": [],
+    "bypass_actors": [],
+    "restrict_direct_push": null,
+    "block_force_push": null,
+    "block_deletion": null,
+    "draft_merge_behavior": "NEEDS_VERIFICATION"
+  },
+  "authority_boundary": "This file is a reviewed machine projection of repository-control evidence. It cannot authorize itself, prove GitHub settings, submit review, merge, activate sources, construct proof, release, deploy, or publish.",
+  "digest_spec": {
+    "specification": "KFM-REPOSITORY-CONTROL-1",
+    "algorithm": "sha256",
+    "canonicalization": "Recursively sort object keys lexicographically, preserve array order, encode as UTF-8 compact JSON with no insignificant whitespace, and omit only the top-level state_digest field.",
+    "excluded_fields": [
+      "state_digest"
+    ]
+  },
+  "state_digest": "c4f88d568d404f1a480eb3defbb2f8073267176e72a756d69c4d58d29268b4ee"
+}
