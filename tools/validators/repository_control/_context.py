@@ -17,7 +17,7 @@ def _context(raw: Mapping[str, Any]) -> dict[str, Any]:
     }
     missing = sorted(required - set(raw))
     if missing:
-        raise InputError(f"context missing: {}".format(", ".join(missing)))
+        raise InputError(f"context missing: {', '.join(missing)}")
     context = dict(raw)
     if not all(isinstance(context[k], str) and context[k] for k in ("repository", "default_branch", "head_branch")):
         raise InputError("repository, default_branch, and head_branch must be non-empty")
