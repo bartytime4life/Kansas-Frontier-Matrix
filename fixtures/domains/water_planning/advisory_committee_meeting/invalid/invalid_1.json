@@ -1,0 +1,10 @@
+{
+  "meeting_id": "kwo-rac-01-mtg-2026-08",
+  "meeting_type": "public_meeting",
+  "planning_region_ref": "kwo-rac-01",
+  "title": "Wrong meeting_type for advisory_committee_meeting",
+  "starts_at": "2026-08-15T09:00:00-05:00",
+  "virtual_access_posture": "in_person",
+  "cancellation_state": "scheduled",
+  "source_ref": "kwo:rac:01:meeting:2026-08"
+}

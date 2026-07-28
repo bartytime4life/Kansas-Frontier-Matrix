@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/public_meeting.schema.json",
+  "title": "public_meeting",
+  "type": "object",
+  "description": "A Kansas Water Office public meeting event. A meeting is not an approval or a planning-region decision.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/public_meeting.md",
+    "fixtures_root": "fixtures/domains/water_planning/public_meeting/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "meeting_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$",
+      "description": "Stable governed identity for this public meeting."
+    },
+    "meeting_type": {
+      "type": "string",
+      "const": "public_meeting",
+      "description": "Discriminant that distinguishes this record from AdvisoryCommitteeMeeting."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Meeting start time. Must include timezone offset."
+    },
+    "ends_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Meeting end time, or null if not recorded."
+    },
+    "location_description": {
+      "type": ["string", "null"],
+      "description": "Human-readable meeting location, or null for virtual-only."
+    },
+    "virtual_access_posture": {
+      "type": "string",
+      "enum": ["in_person", "virtual", "hybrid", "unknown"],
+      "description": "Indicates whether virtual participation is available."
+    },
+    "cancellation_state": {
+      "type": "string",
+      "enum": ["scheduled", "cancelled", "rescheduled"],
+      "description": "Current scheduling state. A cancellation is not a decision."
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Time the source published this meeting notice."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "meeting_id",
+    "meeting_type",
+    "title",
+    "starts_at",
+    "virtual_access_posture",
+    "cancellation_state",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

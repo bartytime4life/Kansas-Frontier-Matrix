@@ -1,0 +1,8 @@
+{
+  "region_id": "kwo-rac-01",
+  "name": "Southwestern Kansas",
+  "rac_number": 1,
+  "geometry_ref": null,
+  "geometry_confidence": "unresolved",
+  "source_ref": "kwo:rac:regional-advisory-committees"
+}

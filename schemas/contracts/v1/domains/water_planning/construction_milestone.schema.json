@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/construction_milestone.schema.json",
+  "title": "construction_milestone",
+  "type": "object",
+  "description": "A construction progress milestone for a water infrastructure Project. A milestone is not a completion event, an award, or an operational benefit claim.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/construction_milestone.md",
+    "fixtures_root": "fixtures/domains/water_planning/construction_milestone/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "milestone_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "project_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "milestone_type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Type of milestone as stated by the source, e.g. groundbreaking, substantial_completion, inspection."
+    },
+    "achieved_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Time the milestone was achieved, or null if not yet achieved."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "milestone_id",
+    "project_ref",
+    "milestone_type",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

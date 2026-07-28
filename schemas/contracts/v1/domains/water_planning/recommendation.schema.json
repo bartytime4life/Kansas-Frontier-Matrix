@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/recommendation.schema.json",
+  "title": "recommendation",
+  "type": "object",
+  "description": "A grant recommendation event produced by the advisory or administrative process. A recommendation is not an award, payment, or project approval. The recommended_amount is distinct from the requested_amount and the awarded_amount.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/recommendation.md",
+    "fixtures_root": "fixtures/domains/water_planning/recommendation/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "recommendation_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "application_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "eligibility_decision_ref": {
+      "type": ["string", "null"]
+    },
+    "recommended_amount": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount recommended as stated by the source. Null if not publicly disclosed. Distinct from requested_amount and awarded_amount."
+    },
+    "recommended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "recommendation_id",
+    "application_ref",
+    "recommended_at",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}
