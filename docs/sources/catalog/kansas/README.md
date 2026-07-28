@@ -6,7 +6,7 @@ version: v0.3.0
 status: repository-grounded draft; family index restored; no source activation
 owners: NEEDS VERIFICATION — Docs steward + Kansas source steward + affected domain stewards
 created: 2026-05-20
-updated: 2026-07-25
+updated: 2026-07-28
 policy_label: public-review; source-documentation-only; cite-or-abstain; fail-closed
 current_path: docs/sources/catalog/kansas/README.md
 truth_posture: >
@@ -33,11 +33,13 @@ related:
   - ../../../../connectors/kansas/
   - ../../../../policy/
   - ../../../../release/
-tags: [kfm, sources, catalog, kansas, source-family, index, correction, mesonet, kdhe, hab, cite-or-abstain]
+  - ./kcds.md
+tags: [kfm, sources, catalog, kansas, source-family, index, correction, mesonet, kdhe, hab, kcds, crash-data, cite-or-abstain]
 notes:
   - "Restores the Kansas source-family index after the path became byte-identical to ksgs.md."
   - "KGS product content remains preserved at docs/sources/catalog/kansas/ksgs.md."
   - "This documentation change does not admit, activate, fetch, normalize, release, or publish any source."
+  - "KCDS discovery page (kcds.md) added per issue #1648; documentation-only; no activation."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -225,6 +227,7 @@ Re-review when the sibling inventory changes, a source is activated or retired, 
 | [`kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) | Kansas Corporation Commission oil and gas regulatory data | Product page; regulatory source role varies by product |
 | [`ku-herbarium.md`](./ku-herbarium.md) | University of Kansas Herbarium | Product page; occurrence sensitivity may apply |
 | [`kdhe-harmful-algal-blooms.md`](./kdhe-harmful-algal-blooms.md) | KDHE harmful-algal-bloom advisories | New documentation-only volatile advisory profile |
+| [`kcds.md`](./kcds.md) | Kansas Crash Data System (KCDS) | Discovery-only; privacy/rights/API discovery; no activation; incident-level data denied; blocked by #1675 |
 
 Absence from this table is not proof that a source is unauthorized or nonexistent. Presence is not proof that it is admitted or releasable.
 
@@ -235,6 +238,7 @@ Absence from this table is not proof that a source is unauthorized or nonexisten
 | U.S. Drought Monitor | Weekly broad-scale expert-synthesis drought classification | Forecast, parcel observation, groundwater recovery, crop-loss amount, emergency declaration, or local legal restriction |
 | Kansas Mesonet | Timestamped in-situ point-station observations at explicit sensor depths | Statewide drought class, gridded field truth, parcel condition, or proof that aquifers and reservoirs recovered |
 | KDHE HAB advisory surfaces | Volatile agency health-advisory snapshots with possible zones and corrections | Lake-closure order, complete statewide absence finding, or whole-lake geometry when only a zone is identified |
+| KCDS road-reference FeatureServer | Road network geometry for crash-report location placement | Crash-incident dataset, fatality record, person record, vehicle record, or investigation finding — this surface contains road geometry only |
 
 See [`cross-source-condition-semantics.md`](./cross-source-condition-semantics.md) for the temporal, spatial, identity, and join rules.
 
