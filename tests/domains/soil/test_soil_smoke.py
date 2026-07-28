@@ -88,7 +88,7 @@ def validate_candidate(candidate: object) -> tuple[str, ...]:
             findings.append(f"UNDECLARED_TOP_LEVEL_FIELD:{key}")
 
     support_type = candidate.get("support_type")
-    if support_type not in ALLOWED_SUPPORT_TYPES:
+    if not isinstance(support_type, str) or support_type not in ALLOWED_SUPPORT_TYPES:
         findings.append("SUPPORT_TYPE_INVALID")
 
     source_ref = candidate.get("source_descriptor_ref")

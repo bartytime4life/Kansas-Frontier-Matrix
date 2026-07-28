@@ -54,13 +54,16 @@ def active_state(context: dict) -> dict:
 def test_tracked_projection_is_a_post_incident_held_checkpoint() -> None:
     state = load(STATE_PATH)
     assert state["base"]["current_main_sha"] == (
-        "b85d05c37d88cf2dcd89042c9df77483fa38d2a9"
+        "da3d73e08f79bc67f446ba1a98a7c77a630f9524"
     )
     assert state["base"]["open_pull_requests"] == []
     assert state["projection_status"] == "PROPOSED"
     assert state["claim"]["state"] == "HELD"
     assert state["permissions"]["merge"] is False
-    assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1790" in (
+    assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1791" in (
+        state["authorization"]["evidence_refs"]
+    )
+    assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1792" in (
         state["authorization"]["evidence_refs"]
     )
 

@@ -307,7 +307,10 @@ def evaluate(state: Mapping[str, Any], raw_context: Mapping[str, Any]) -> Evalua
     # Terminal and ready-state divergence are incident signals, not optional
     # scope metadata. Evaluate them before non-applicability, explicit skips,
     # superseded projections, or non-active claim holds can return.
-    if context["pr_state"] == "MERGED" and _tracks_pr(state, context):
+    # This applies to ALL merged PRs — tracked or untracked — so that
+    # applicable:false or explicit_skip_reason cannot suppress terminal
+    # divergence classification.
+    if context["pr_state"] == "MERGED":
         return _terminal_evaluation(state, context)
 
     ready_result = _ready_transition_evaluation(state, context)
@@ -338,9 +341,6 @@ def evaluate(state: Mapping[str, Any], raw_context: Mapping[str, Any]) -> Evalua
             "The repository-control projection is superseded and cannot authorize work.",
             evidence_kind="READINESS_EVIDENCE",
         )
-
-    if context["pr_state"] == "MERGED":
-        return _terminal_evaluation(state, context)
 
     if context["pr_state"] == "CLOSED_UNMERGED":
         return Evaluation(

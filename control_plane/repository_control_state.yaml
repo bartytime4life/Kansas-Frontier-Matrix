@@ -5,8 +5,8 @@
   "projection_status": "PROPOSED",
   "base": {
     "default_branch": "main",
-    "current_main_sha": "b85d05c37d88cf2dcd89042c9df77483fa38d2a9",
-    "observed_at": "2026-07-27T05:33:18Z",
+    "current_main_sha": "da3d73e08f79bc67f446ba1a98a7c77a630f9524",
+    "observed_at": "2026-07-28T15:46:34Z",
     "open_pull_requests": []
   },
   "claim": {
@@ -17,7 +17,7 @@
     "allowed_paths": [],
     "allowed_operations": [],
     "expires_at": null,
-    "terminal_condition": "pr_1789_and_pr_1790_terminal_divergence_recorded; bounded_draft_recovery_authorized_by_issue_1675; settings_audit_required_before_ready_or_merge"
+    "terminal_condition": "pr_1789_pr_1790_pr_1791_pr_1792_terminal_divergence_recorded; bounded_draft_recovery_authorized_by_issue_1675_exhausted; settings_audit_required_before_any_new_branch_or_pr"
   },
   "authorization": {
     "authorizing_actor": null,
@@ -25,7 +25,10 @@
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1789",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1790",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5086534253"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1791",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1792",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5086534253",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5088064638"
     ],
     "issued_at": null
   },
@@ -43,7 +46,7 @@
   },
   "settings_snapshot": {
     "status": "NEEDS_VERIFICATION",
-    "observed_at": "2026-07-27T05:33:18Z",
+    "observed_at": "2026-07-28T15:46:34Z",
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5081829181",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5086534253",
@@ -69,5 +72,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "603c1580270089891b9382b3ca2bf921499a6000a5c05e602cc2df99e4798612"
+  "state_digest": "68097ac761756486fa0297b879cd97ea1d0230fb8ea3039638039bb282191d9a"
 }
