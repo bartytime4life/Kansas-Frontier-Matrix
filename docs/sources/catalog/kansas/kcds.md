@@ -620,7 +620,7 @@ XML schemas / docs:       HOLD — existence and terms must be confirmed
 | OPEN-KCDS-07 | What coordinate reference system does the road-reference FeatureServer use? What geometry types are returned? | Medium | Roads/Rail/Trade steward (can be confirmed from FeatureServer metadata without ingestion) |
 | OPEN-KCDS-08 | Does KDOT provide an aggregate crash dashboard? If so, what URL? | Low | Kansas source steward |
 | OPEN-KCDS-09 | What was the predecessor system to KCDS? Are predecessor aggregate statistics still available and distinguishable from KCDS-era data? | Low | Kansas source steward + KDOT program history |
-| OPEN-KCDS-10 | Does the DRIVER's Privacy Protection Act (DPPA) apply to crash report data obtained from KCDS, or only to motor-vehicle-record sources? | High | Legal review |
+| OPEN-KCDS-10 | Does the Driver's Privacy Protection Act (DPPA) apply to crash report data obtained from KCDS, or only to motor-vehicle-record sources? | High | Legal review |
 | OPEN-KCDS-11 | What is the exact KCDS FeatureServer field schema (field names, types, domain values)? Can this be obtained from the public endpoint metadata without constituting data ingestion? | Medium | Roads/Rail/Trade steward (ArcGIS `/layers` endpoint) |
 | OPEN-KCDS-12 | Is the rate limit on the public FeatureServer sufficient for background monitoring, or does it require a separate agreement? | Medium | Rights reviewer + technical review |
 | OPEN-KCDS-13 | What k-anonymity threshold does KDOT apply (or would approve) for public aggregate crash-count releases? | High | Privacy reviewer + KDOT policy contact |
