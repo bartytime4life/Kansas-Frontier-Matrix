@@ -228,6 +228,7 @@ Re-review when the sibling inventory changes, a source is activated or retired, 
 | [`ku-herbarium.md`](./ku-herbarium.md) | University of Kansas Herbarium | Product page; occurrence sensitivity may apply |
 | [`kdhe-harmful-algal-blooms.md`](./kdhe-harmful-algal-blooms.md) | KDHE harmful-algal-bloom advisories | New documentation-only volatile advisory profile |
 | [`kcds.md`](./kcds.md) | Kansas Crash Data System (KCDS) | Discovery-only; privacy/rights/API discovery; no activation; incident-level data denied; blocked by #1675 |
+| [`kwo.md`](./kwo.md) | Kansas Water Office (KWO) — water planning, grant programs, RAC | Documentation-only; no activation; deferred modeling epic #1647 blocked by #1675 |
 
 Absence from this table is not proof that a source is unauthorized or nonexistent. Presence is not proof that it is admitted or releasable.
 

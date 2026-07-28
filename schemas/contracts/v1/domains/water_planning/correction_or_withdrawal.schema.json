@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/correction_or_withdrawal.schema.json",
+  "title": "correction_or_withdrawal",
+  "type": "object",
+  "description": "A correction or withdrawal record for any water-planning entity. Prior state is preserved via digest linkage. A correction does not constitute a new award, decision, or project record.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/correction_or_withdrawal.md",
+    "fixtures_root": "fixtures/domains/water_planning/correction_or_withdrawal/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the entity being corrected or withdrawn."
+    },
+    "action_type": {
+      "type": "string",
+      "enum": ["correction", "withdrawal"],
+      "description": "Whether this record represents a correction or a full withdrawal."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prior_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 digest of the prior record state, ensuring historical lineage is preserved."
+    },
+    "correction_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Time the source published this correction."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "record_id",
+    "subject_ref",
+    "action_type",
+    "reason",
+    "effective_at",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

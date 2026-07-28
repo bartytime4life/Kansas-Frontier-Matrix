@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/application_window.schema.json",
+  "title": "application_window",
+  "type": "object",
+  "description": "The open-to-close window for a grant application cycle. The FY 2027 State Water Infrastructure Grant application cycle closes at 11:59 p.m. on September 15, 2026 Central Time. Timezone must be stored explicitly; the source-native timezone is America/Chicago.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/application_window.md",
+    "fixtures_root": "fixtures/domains/water_planning/application_window/",
+    "policy": "policy/domains/water_planning/",
+    "source": "https://www.kwo.ks.gov/events-initiatives/grant-programs/state-water-infrastructure-grant-programs"
+  },
+  "properties": {
+    "window_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "program_version_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fiscal_year": {
+      "type": "string",
+      "pattern": "^FY[0-9]{4}$"
+    },
+    "opens_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Application window open time with UTC offset or Z suffix. Null if source does not state an open time."
+    },
+    "closes_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Application window close time. Must include timezone offset. For FY2027 the source-stated deadline is 2026-09-15T23:59:00 Central Time."
+    },
+    "source_timezone": {
+      "type": "string",
+      "description": "IANA timezone name as stated by or inferred from the official source, e.g. America/Chicago.",
+      "minLength": 1
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "retrieval_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "window_id",
+    "program_version_ref",
+    "fiscal_year",
+    "closes_at",
+    "source_timezone",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

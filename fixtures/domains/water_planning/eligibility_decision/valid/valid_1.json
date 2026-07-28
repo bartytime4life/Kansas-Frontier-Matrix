@@ -1,0 +1,9 @@
+{
+  "decision_id": "kwo-swigp-fy2027-elig-synthetic-001",
+  "application_ref": "kwo-swigp-fy2027-app-synthetic-001",
+  "program_version_ref": "kwo-swigp-fy2027-hb2462",
+  "outcome": "pending",
+  "basis_ref": null,
+  "decided_at": "2026-09-16T00:00:00Z",
+  "source_ref": "kwo:grant-programs:swigp:fy2027:eligibility:synthetic-001"
+}

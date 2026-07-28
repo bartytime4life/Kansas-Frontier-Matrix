@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/completion.schema.json",
+  "title": "completion",
+  "type": "object",
+  "description": "A completion record for a water infrastructure Project. A completion event is not an award, payment, or proof of operational benefit. Completion state must be explicit; no benefit claim may be inferred from a completion record alone.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/completion.md",
+    "fixtures_root": "fixtures/domains/water_planning/completion/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "completion_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "project_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completion_state": {
+      "type": "string",
+      "enum": ["complete", "partial", "unknown"],
+      "description": "Completion state as determined from source evidence. No benefit claim may be inferred from this field."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "completion_id",
+    "project_ref",
+    "completed_at",
+    "completion_state",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

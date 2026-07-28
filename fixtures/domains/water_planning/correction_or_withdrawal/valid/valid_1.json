@@ -1,0 +1,10 @@
+{
+  "record_id": "kwo-swigp-fy2027-corr-synthetic-001",
+  "subject_ref": "kwo-swigp-fy2027-app-synthetic-001",
+  "action_type": "correction",
+  "reason": "Applicant name corrected per official KWO notice.",
+  "effective_at": "2026-09-20T00:00:00Z",
+  "prior_digest": null,
+  "correction_time": "2026-09-20T00:00:00Z",
+  "source_ref": "kwo:grant-programs:swigp:fy2027:correction:synthetic-001"
+}

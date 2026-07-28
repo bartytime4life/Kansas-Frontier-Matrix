@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/application.schema.json",
+  "title": "application",
+  "type": "object",
+  "description": "A grant application submitted within a given ApplicationWindow. An application is not an award, recommendation, project, or proof of payment. Missing applicant identity or project geometry must resolve to an explicit unresolved state.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/application.md",
+    "fixtures_root": "fixtures/domains/water_planning/application/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "application_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "window_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the ApplicationWindow under which this application was submitted."
+    },
+    "applicant_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the applicant organization identity, or null if not yet resolved."
+    },
+    "applicant_resolution_status": {
+      "type": "string",
+      "enum": ["resolved", "unresolved", "pending"],
+      "description": "Resolution status of the applicant identity. Missing applicant identity must be stored as unresolved, not guessed."
+    },
+    "requested_amount": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount requested as stated by the source. Null if not publicly disclosed. Distinct from recommended_amount and awarded_amount."
+    },
+    "project_location_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the project location geometry record, or null."
+    },
+    "geometry_confidence": {
+      "type": "string",
+      "enum": ["unresolved", "approximate", "confirmed"],
+      "description": "Confidence in the project geometry resolution. Missing or unverified geometry must be stored as unresolved."
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "application_id",
+    "window_ref",
+    "applicant_ref",
+    "applicant_resolution_status",
+    "geometry_confidence",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

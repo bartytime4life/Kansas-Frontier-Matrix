@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/scoring_matrix_version.schema.json",
+  "title": "scoring_matrix_version",
+  "type": "object",
+  "description": "A versioned scoring matrix used to evaluate grant applications under a given ProgramVersion. A scoring matrix is not a project outcome, application, or award. Each matrix version must be digest-linked so historical guidance remains traceable.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/scoring_matrix_version.md",
+    "fixtures_root": "fixtures/domains/water_planning/scoring_matrix_version/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "matrix_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "program_version_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the ProgramVersion that governs this scoring matrix."
+    },
+    "document_title": {
+      "type": ["string", "null"]
+    },
+    "document_version": {
+      "type": ["string", "null"]
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 digest of the scoring matrix document. Required for digest-linked traceability."
+    },
+    "supersedes_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the prior ScoringMatrixVersion, or null."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "matrix_id",
+    "program_version_ref",
+    "effective_date",
+    "digest",
+    "supersedes_ref",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

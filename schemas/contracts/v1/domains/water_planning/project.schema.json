@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/project.schema.json",
+  "title": "project",
+  "type": "object",
+  "description": "A water infrastructure project associated with an Award. A project is not a completed project, a payment, or an operational benefit. Missing recipient identity or project geometry must be stored as an explicit unresolved state, never guessed.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/project.md",
+    "fixtures_root": "fixtures/domains/water_planning/project/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "award_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recipient_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the recipient organization identity, or null if not yet resolved."
+    },
+    "recipient_resolution_status": {
+      "type": "string",
+      "enum": ["resolved", "unresolved", "pending"],
+      "description": "Resolution status of the recipient identity. Missing recipient identity must be stored as unresolved, not guessed."
+    },
+    "location_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the project location geometry record, or null."
+    },
+    "geometry_confidence": {
+      "type": "string",
+      "enum": ["unresolved", "approximate", "confirmed"],
+      "description": "Confidence in the project geometry resolution. Missing or unverified geometry must be stored as unresolved, never guessed."
+    },
+    "planning_region_ref": {
+      "type": ["string", "null"],
+      "pattern": "^kwo-rac-[0-9]{2}$",
+      "description": "Reference to the governing PlanningRegion, if determinable."
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "project_id",
+    "award_ref",
+    "recipient_ref",
+    "recipient_resolution_status",
+    "geometry_confidence",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}
