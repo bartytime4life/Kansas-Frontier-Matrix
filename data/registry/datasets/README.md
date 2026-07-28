@@ -3,46 +3,47 @@ doc_id: kfm://data/registry/datasets/readme
 name: Dataset Registry README
 path: data/registry/datasets/README.md
 type: data-registry-datasets-parent-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
-  - <registry-steward>
-  - <dataset-steward>
-  - <source-steward>
-  - <catalog-steward>
-  - <policy-steward>
-  - <proof-steward>
-  - <release-steward>
-  - <docs-steward>
+  - "NEEDS VERIFICATION: registry steward"
+  - "NEEDS VERIFICATION: dataset steward"
+  - "NEEDS VERIFICATION: source and domain stewards"
+  - "NEEDS VERIFICATION: contract, schema, and policy stewards"
+  - "NEEDS VERIFICATION: validation, evidence, and release stewards"
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-28
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
-registry_scope: dataset-registry-records
-path_posture: existing-parent-stub-replaced; flora-child-lane-confirmed; exact-dataset-registry-layout-needs-verification
-sensitivity_posture: registry-internal; no-public-path; source-role-preserving; evidence-aware; policy-aware; release-blocked-until-gates-close
+registry_scope: dataset-identity-and-state
+path_posture: confirmed-live-canonical-subtype-first-parent; flora-child-confirmed; record-inventory-unknown; schema-and-validator-coverage-unverified
+sensitivity_posture: registry-internal; no-public-path; source-role-preserving; rights-and-sensitivity-fail-closed; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
-  - ../sources/
+  - ../sources/README.md
+  - ../layers/README.md
+  - ../rights/README.md
+  - ../sensitivity/README.md
   - ../crosswalks/README.md
   - flora/README.md
-  - ../../raw/
-  - ../../work/
-  - ../../quarantine/
-  - ../../processed/
-  - ../../catalog/
-  - ../../receipts/
-  - ../../proofs/
-  - ../../published/
-  - ../../../contracts/
-  - ../../../schemas/contracts/v1/
-  - ../../../policy/
-  - ../../../tests/
-  - ../../../fixtures/
-  - ../../../release/
-  - ../../../docs/architecture/directory-rules.md
+  - ../../raw/README.md
+  - ../../work/README.md
+  - ../../quarantine/README.md
+  - ../../processed/README.md
+  - ../../catalog/README.md
+  - ../../receipts/README.md
+  - ../../proofs/README.md
+  - ../../published/README.md
+  - ../../../contracts/data/dataset_version.md
+  - ../../../schemas/contracts/v1/registries/README.md
+  - ../../../policy/README.md
+  - ../../../fixtures/README.md
+  - ../../../tests/README.md
+  - ../../../release/README.md
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags:
   - kfm
   - data
@@ -54,266 +55,382 @@ tags:
   - evidence
   - rights
   - sensitivity
-  - catalog-readiness
+  - correction
+  - rollback
   - release-gated
   - no-public-path
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: be2f629ebd26735d3303e0f132ff678aafac4e93
+  prior_blob: 04b67852e50ba3174cc122b8166686e507070253
+  flora_child_blob: 025cade8130a07ee2e5243ee5929d86c182e8162
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
+  registry_schema_guardrail_blob: 9af6574ec32bde3d60a904fccf9b0dc4bb71703b
+  dataset_version_contract_blob: 06a0345b19f753632068978c61d5d0e50011305d
+  inspection_date: 2026-07-28
 notes:
-  - "This README replaces the greenfield stub at `data/registry/datasets/README.md`."
-  - "Dataset registry records identify and govern dataset state. They do not store source payloads, define contracts, enforce schemas, hold policy, emit receipts, prove claims, close catalogs, or publish artifacts."
-  - "Confirmed child lane during this edit: `flora/README.md`."
-  - "Exact dataset registry object names, schemas, validators, emitted examples, CI enforcement, and final lane taxonomy remain NEEDS VERIFICATION until checked against implementation evidence."
+  - "This README preserves and upgrades the existing document at the same canonical subtype-first registry path."
+  - "ADR-0029 accepted Directory Rules v2; its topology resolves `data/registry/datasets/` as the canonical dataset registry parent."
+  - "Current repository evidence confirms the Flora child README but did not establish a concrete dataset-registry record inventory."
+  - "The shared registry-schema lane is README-only and names `dataset_registry_record.schema.json` as a candidate that is not present."
+  - "The adjacent `DatasetVersion` contract is draft and its paired schema is explicitly a permissive placeholder."
+  - "Registry presence does not admit a source, validate a dataset, prove a claim, clear rights or sensitivity, authorize release, or publish KFM content."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Dataset Registry
 
-Parent lane for governed dataset identity and dataset-state records.
+[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
+[![Path posture: canonical](https://img.shields.io/badge/path-canonical-0969da?style=flat-square)](#authority-and-path-posture)
+[![Artifact family: dataset registry](https://img.shields.io/badge/family-dataset%20registry-8250df?style=flat-square)](#dataset-registry-boundary)
+[![Public access: denied](https://img.shields.io/badge/public%20access-denied-b42318?style=flat-square)](#lifecycle-and-publication-boundary)
+[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation-and-maintenance)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Family: registry" src="https://img.shields.io/badge/family-registry-blueviolet">
-  <img alt="Lane: datasets" src="https://img.shields.io/badge/lane-datasets-blue">
-  <img alt="Boundary: not source data" src="https://img.shields.io/badge/boundary-not%20source%20data-critical">
-  <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
-</p>
-
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Confirmed child lanes](#confirmed-child-lanes) · [Dataset boundary](#dataset-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested record shape](#suggested-record-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> **One-line purpose.** Govern stable dataset identity and dataset state without storing dataset payloads or taking over source, contract, schema, policy, evidence, catalog, release, or publication authority.
 
 > [!CAUTION]
-> `data/registry/datasets/` is for dataset registry records only. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, proof storage, receipt storage, policy, schema authority, release authority, public API/UI material, or generated-answer authority.
+> A dataset registry record is a governance handle, not source truth, domain truth, proof, catalog closure, release approval, or a public dataset. Unresolved identity, source role, rights, sensitivity, evidence, validation, review, correction, or rollback conditions must remain visible and fail closed.
+
+## Navigation
+
+[Status](#status) · [Scope](#scope) · [Authority](#authority-and-path-posture) · [Repository fit](#repository-fit) · [Boundary](#dataset-registry-boundary) · [Inventory](#confirmed-inventory) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs and outputs](#inputs-and-outputs) · [Lifecycle](#lifecycle-and-publication-boundary) · [Semantic concerns](#minimum-semantic-concerns) · [Validation](#validation-and-maintenance) · [Checks](#required-checks-before-use) · [Verification](#open-verification-items) · [Rollback](#correction-supersession-and-rollback)
+
+---
+
+## Status
+
+| Field | Evidence-backed state |
+|---|---|
+| Repository path | `data/registry/datasets/` — **CONFIRMED** at the pinned base |
+| README profile | Parent-lane `BOUNDARY_COMPACT` |
+| Directory placement | **CONFIRMED canonical** subtype-first registry topology under accepted Directory Rules v2 |
+| Placement outcome | `PLACE` at the existing path |
+| Document lifecycle | `draft` |
+| Confirmed child lane | [`flora/`](flora/README.md) — README evidence only |
+| Concrete dataset-registry record inventory | **UNKNOWN** in the inspected scope |
+| Accepted shared dataset-registry schema | **NEEDS VERIFICATION**; the shared registry-schema lane is README-only |
+| Adjacent `DatasetVersion` contract | **CONFIRMED draft**; its paired schema is explicitly a permissive placeholder |
+| Dataset-registry validators, fixtures, tests, and CI | **NEEDS VERIFICATION** |
+| Accountable owners and reviewers | **NEEDS VERIFICATION** |
+| Direct public access | **DENY** |
+| KFM publication effect | None |
+
+A file, stable ID, schema-valid object, passing workflow, commit, pull request, or merge does not establish dataset correctness, source authority, rights clearance, sensitivity clearance, evidence closure, release approval, or KFM publication.
 
 ---
 
 ## Scope
 
-`data/registry/datasets/` is the parent lane for governed dataset identity and dataset-state records across KFM domains and shared dataset families.
+`data/registry/datasets/` is the canonical parent for governed dataset identity and dataset-state records across KFM domains and shared dataset families.
 
-A dataset registry record may answer bounded governance questions such as:
+A record may answer bounded governance questions:
 
-- What stable dataset, dataset family, source collection, derivative collection, or release-candidate dataset is being referenced?
-- Which source descriptors, source roles, rights terms, access terms, cadence, authority limits, and stewardship obligations apply?
-- Which lifecycle payloads are associated with the dataset across RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, and PUBLISHED states?
-- Which validation receipts, proof records, catalog records, policy decisions, review records, release manifests, corrections, supersessions, withdrawals, or rollback targets are relevant?
-- Is the dataset public-safe, restricted, quarantined, candidate-only, stale, deprecated, superseded, withdrawn, or denied?
+- Which stable dataset family or dataset version is being referenced?
+- Which source identities, source roles, rights terms, access terms, cadence, stewardship obligations, and authority limits apply?
+- Which RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED objects are related?
+- Which validation receipts, EvidenceRefs, EvidenceBundles, policy decisions, reviews, catalogs, release decisions, corrections, supersessions, withdrawals, and rollback targets support governed use?
+- Which unresolved conditions require hold, restriction, denial, quarantine, abstention, correction, or withdrawal under the applicable contract?
 
-Dataset registry records are **governance handles**. They help KFM reason about admission, refresh, validation, catalog closure, release readiness, correction, and rollback. They do not contain dataset payloads and do not publish anything by themselves.
+Registry records help route admission, refresh, validation, cataloging, correction, release review, withdrawal, and rollback. They do not contain dataset payloads and do not publish anything by themselves.
+
+This README defines the parent boundary. It does not define a universal dataset-registry contract, schema, status vocabulary, file format, filename, or domain inventory.
 
 ---
 
-## Path posture
+## Authority and path posture
 
-The requested parent lane is:
+Accepted [Directory Rules v2](../../../docs/doctrine/directory-rules.md), adopted through [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), separates registry identity from lifecycle payloads and makes registry placement subtype-first:
 
 ```text
-data/registry/datasets/
+data/registry/
+├── sources/
+├── datasets/
+├── layers/
+├── domains/
+├── rights/
+├── sensitivity/
+└── crosswalks/
 ```
 
-Directory Rules place lifecycle data and emitted governance objects under `data/`, and explicitly name `registry` as a data-side phase that sits alongside raw, work, quarantine, processed, catalog, triplets, published, receipts, proofs, and rollback. Dataset registry records therefore belong under `data/registry/`, not under a new root.
-
-Domain-specific dataset lanes should remain segments inside this parent lane, for example:
+Dataset lanes therefore resolve as:
 
 ```text
-data/registry/datasets/<domain>/
+data/registry/datasets/<domain-or-accepted-scope>/
 ```
 
-This README does not claim that this subtype-first layout is final for every dataset family. Exact registry layout remains **NEEDS VERIFICATION** until accepted registry contracts, schemas, validators, fixtures, and ADR or README governance confirm it.
-
----
-
-## Repo fit
-
-| Responsibility | Home | Boundary |
-|---|---|---|
-| Dataset registry records | `data/registry/datasets/` | Dataset identity, lifecycle pointers, rights/sensitivity posture, cadence, status, eligibility, and correction state. |
-| Source registry records | `data/registry/sources/` or accepted source registry lane | Source identity, authority, role, rights, terms, and cadence. |
-| Crosswalk registry records | `data/registry/crosswalks/` | Mapping state between source values, authority IDs, vocabulary terms, fields, and KFM identities. |
-| Source payloads | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/published/` | Actual data lives in lifecycle lanes, not registry records. |
-| Semantic contracts | `contracts/` | Object-family meaning and invariants. |
-| Machine-checkable schemas | `schemas/contracts/v1/` | Enforceable shape. |
-| Policy and admissibility | `policy/` | Rights, sensitivity, geoprivacy, access, source-role, and release rules. |
-| Validation receipts | `data/receipts/validation/` | Process memory for validation runs. |
-| Evidence and proof | `data/proofs/` | EvidenceBundle closure, proof packs, citation validation, signatures, and integrity support. |
-| Catalog/discovery projections | `data/catalog/` | STAC/DCAT/PROV/domain catalog records and discovery state. |
-| Release decisions | `release/` | Promotion, release manifests, correction notices, supersession, withdrawal, and rollback cards. |
-| Public clients | governed APIs and released artifacts | Public clients do not read dataset registry internals directly. |
-
----
-
-## Confirmed child lanes
-
-The child lane below was confirmed by current GitHub reads while replacing this parent stub. This confirms path/README evidence only; it does **not** prove emitted dataset registry payloads, schemas, validators, fixtures, CI enforcement, signing, release integration, correction hooks, rollback hooks, or public-safe summaries.
-
-| Child lane | Status | Purpose | Boundary |
-|---|---:|---|---|
-| [`flora/`](flora/README.md) | CONFIRMED README | Flora dataset identity and dataset-state records for taxon backbones, specimens, occurrences, rare plants, vegetation communities, invasive plants, phenology, range polygons, restoration datasets, and public-safe derivatives. | Not source payload storage, Flora truth, catalog closure, proof, receipt storage, policy, release authority, or public output. |
-
----
-
-## Dataset boundary
-
-| Rule | Handling |
+| Responsibility-signature axis | Resolved value |
 |---|---|
-| Registry record is a handle | It identifies and governs a dataset; it does not contain the dataset payload. |
-| Registry state is not source truth | The registry can point to source payloads, but does not make a source claim true. |
-| Source role is preserved | Dataset role must not be upgraded by normalization, cataloging, release review, or public presentation. |
-| Rights and sensitivity fail closed | Unclear rights, source terms, steward obligations, sensitivity, cultural risk, living-person risk, rare-species risk, archaeology risk, infrastructure risk, or precise-location risk blocks public promotion. |
-| Registry is not validation | Validation receipts and run receipts remain separate process-memory objects. |
-| Registry is not proof | EvidenceBundle/proof support remains separate. |
-| Registry is not catalog | STAC/DCAT/PROV/domain catalog records live under `data/catalog/`. |
-| Registry is not release | Public exposure requires validation, policy, review, proof/catalog support, release manifest, correction path, and rollback path. |
-| Registry changes are auditable | Dataset identity, source version, lifecycle refs, correction state, supersession, withdrawal, stale state, and rollback dependencies should remain traceable. |
-| Public clients do not read this lane | Public UI/API surfaces consume governed APIs, released artifacts, catalog/triplet/proof-backed responses, and policy-safe envelopes. |
+| Artifact kind | Dataset registry record or registry boundary documentation |
+| Authority owner | Dataset identity, state, routing, and lineage |
+| Lifecycle stage | Registry accountability and identity store |
+| Scope | Shared parent with governed domain or accepted-scope children |
+| Exposure | Internal or restricted unless a separate released projection exists |
+| Placement outcome | `PLACE` at `data/registry/datasets/` |
+
+The path is canonical even though implementation maturity remains incomplete. Placement does not prove that registry payloads, contracts, schemas, validators, producers, consumers, correction hooks, rollback drills, or public-safe projections exist.
+
+Domain-first registry paths such as `data/registry/<domain>/datasets/` must not become parallel writers for dataset records owned here. Any compatibility view requires an accepted migration, a canonical target, no independent edits, parity checks, and explicit exit conditions.
 
 ---
 
-## Accepted material
+## Repository fit
 
-Accepted content is limited to dataset registry records and registry-local support files:
-
-- dataset identity records;
-- dataset family README files;
-- domain-specific dataset indexes;
-- registry-local manifests, checksums, signatures, and index sidecars;
-- source descriptor refs, source-role refs, rights posture, sensitivity posture, cadence, steward, version, retrieval, and lifecycle pointer metadata;
-- blocker states such as `RIGHTS_UNRESOLVED`, `SENSITIVITY_UNRESOLVED`, `SOURCE_ROLE_CONFLICT`, `VALIDATION_FAILED`, `EVIDENCE_MISSING`, `RELEASE_BLOCKED`, `STALE`, `SUPERSEDED`, or `WITHDRAWN`;
-- pointers to validation receipts, proof packs, catalog records, release candidates, release manifests, correction notices, supersession notices, withdrawal notices, and rollback cards;
-- public-safe summary fields only when sensitive details have been removed and policy permits review-surface exposure.
-
-Registry records should point outward by stable ID, path, URI, digest, or EvidenceRef rather than copying source payloads, proof material, catalog records, policy decisions, or release manifests into the registry lane.
+| Responsibility | Owning surface | Relationship to this lane |
+|---|---|---|
+| Registry governance | [`data/registry/`](../README.md) | Parent identity and routing boundary |
+| Dataset registry records | `data/registry/datasets/` | Stable dataset identity, state, routing, lineage, and correction pointers |
+| Source identity | [`data/registry/sources/`](../sources/README.md) | Source identity, role, authority, rights, terms, and cadence |
+| Layer identity | [`data/registry/layers/`](../layers/README.md) | Layer registry state; does not replace dataset identity |
+| Rights and sensitivity identity | [Rights](../rights/README.md) and [sensitivity](../sensitivity/README.md) registries | References to governed rights and sensitivity state |
+| Crosswalk mapping state | [`data/registry/crosswalks/`](../crosswalks/README.md) | Mapping claims between identities and vocabularies |
+| Dataset-version meaning | [`DatasetVersion`](../../../contracts/data/dataset_version.md) | Adjacent draft semantic contract; not a complete dataset-registry contract |
+| Registry machine shape | [`schemas/contracts/v1/registries/`](../../../schemas/contracts/v1/registries/README.md) | README-only guardrail; accepted dataset-registry schema not verified |
+| Policy and admissibility | [`policy/`](../../../policy/README.md) | Rights, sensitivity, geoprivacy, access, source-role, and release rules |
+| Lifecycle payloads | [RAW](../../raw/README.md), [WORK](../../work/README.md), [QUARANTINE](../../quarantine/README.md), and [PROCESSED](../../processed/README.md) | Actual dataset bytes and governed transforms; never stored here |
+| Process and evidence support | [Receipts](../../receipts/README.md) and [proofs](../../proofs/README.md) | Process memory and evidence support; neither is registry state |
+| Catalog projections | [`data/catalog/`](../../catalog/README.md) | Discovery and provenance projections; not registry authority |
+| Validation evidence | [Fixtures](../../../fixtures/README.md) and [tests](../../../tests/README.md) | Valid/invalid examples and executable checks when implemented |
+| Release and delivery | [`release/`](../../../release/README.md) and [published carriers](../../published/README.md) | Separate release decision and public-delivery boundaries |
 
 ---
 
-## Exclusions
+## Dataset registry boundary
+
+| Rule | Required handling |
+|---|---|
+| Registry record is a handle | Identify and route governed dataset state; never embed the full dataset payload. |
+| Dataset family and version differ | Preserve stable family identity separately from a particular representation or version. |
+| Registry state is not source truth | Resolve source identity and role; do not upgrade authority through registry presence. |
+| Source role is preserved | Observed, regulatory, modeled, aggregate, administrative, synthetic, contextual, candidate, and restricted roles remain distinct under their governing contract. |
+| Registry is not validation | Point to validation and run receipts; do not restate a run as registry truth. |
+| Registry is not proof | Resolve EvidenceRef to EvidenceBundle or accepted proof support for consequential claims. |
+| Registry is not policy | Reference policy decisions; do not decide rights, sensitivity, access, or release here. |
+| Registry is not catalog | Point to catalog projections; do not duplicate STAC, DCAT, PROV, or domain catalog records. |
+| Registry is not release | Reference release decisions; do not infer publication from status, schema validity, or merge state. |
+| Public clients do not read this lane | Public UI, API, map, graph, search, and AI surfaces consume governed interfaces or release-approved carriers. |
+| Changes remain auditable | Preserve identity, version, digest, source refs, lifecycle refs, correction state, supersession, withdrawal, and rollback lineage. |
+
+---
+
+## Confirmed inventory
+
+| Path | Current evidence | Boundary |
+|---|---|---|
+| `data/registry/datasets/README.md` | **CONFIRMED** parent README | Documentation and placement boundary only |
+| [`data/registry/datasets/flora/`](flora/README.md) | **CONFIRMED** child README | Flora dataset-registry boundary; not proof of emitted records |
+| Concrete machine-readable dataset-registry records | **UNKNOWN** in the inspected scope | Do not infer from README presence |
+| Shared `dataset_registry_record` schema | **NOT FOUND / NEEDS VERIFICATION** | Candidate name only in the shared schema guardrail |
+| Dataset-registry-specific validator, fixture, test, or CI lane | **NEEDS VERIFICATION** | No completeness claim |
+
+This inventory is intentionally bounded. Search-limited repository inspection is not proof that no records or implementation exist outside the surfaced paths.
+
+---
+
+## What belongs here
+
+Only artifacts owned by the dataset-registry responsibility may live under this lane:
+
+- accepted machine-readable dataset registry instances;
+- domain or accepted-scope dataset registry child lanes;
+- boundary README files and registry-local navigation;
+- stable dataset-family and dataset-version identities;
+- source identity and source-role references;
+- rights, sensitivity, cadence, authority, spatial-scope, temporal-scope, and lifecycle-state references;
+- EvidenceRef, receipt, policy, review, catalog, release, correction, supersession, withdrawal, and rollback references;
+- registry-local indexes, manifests, checksums, or signatures only when an accepted contract defines their authority and they do not duplicate another canonical family.
+
+Registry records should point outward through stable IDs, paths, URIs, digests, or governed references. They should not copy source payloads, proof material, policy decisions, catalog records, or release objects into this lane.
+
+---
+
+## What does not belong here
 
 | Do not place here | Correct authority home |
 |---|---|
-| Raw source payloads, source-native extracts, restricted tables, private identifiers, exact sensitive coordinates, rasters, shapefiles, GeoParquet, COG, PMTiles, or source archives | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or governed restricted storage depending on lifecycle state |
-| Source descriptors, source terms, source registry records, or source activation decisions | `data/registry/sources/` or accepted source registry/source-catalog lanes |
-| Crosswalk mapping records | `data/registry/crosswalks/` |
-| Semantic contracts | `contracts/` |
-| JSON Schema or machine contract shape | `schemas/contracts/v1/` |
-| Policy rules, rights rules, sensitivity rules, geoprivacy rules, access-control rules, or release rules | `policy/` |
-| Validator code, connector code, pipelines, transformations, package code, or app code | `tools/`, `connectors/`, `pipelines/`, `packages/`, `apps/` |
-| Fixtures, tests, or CI workflows | `fixtures/`, `tests/`, `.github/workflows/` |
-| Validation receipts, run receipts, redaction receipts, review receipts, or process-memory logs | `data/receipts/` |
-| EvidenceBundle records, proof packs, signatures, or citation-validation closure | `data/proofs/` |
-| STAC/DCAT/PROV/domain catalog records | `data/catalog/` |
-| Published artifacts, map layers, tiles, dashboards, reports, public API payloads, or generated-answer carriers | `data/published/`, governed app/API roots, and release-approved public artifact lanes |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, or supersession notice | `release/` |
+| RAW source bytes, transformed tables, restricted payloads, exact sensitive locations, rasters, vectors, archives, or published datasets | Governed [RAW](../../raw/README.md), [WORK](../../work/README.md), [QUARANTINE](../../quarantine/README.md), [PROCESSED](../../processed/README.md), or [PUBLISHED](../../published/README.md) lanes |
+| Source descriptors, source terms, source-role definitions, or source activation decisions | [`data/registry/sources/`](../sources/README.md), paired contracts, and source governance |
+| Layer registry records | [`data/registry/layers/`](../layers/README.md) |
+| Rights or sensitivity registry records | [Rights](../rights/README.md) or [sensitivity](../sensitivity/README.md) registry lanes |
+| Crosswalk mapping records | [`data/registry/crosswalks/`](../crosswalks/README.md) |
+| Semantic contracts | [`contracts/`](../../../contracts/data/dataset_version.md) or another accepted contract lane |
+| JSON Schema or machine-shape authority | [`schemas/contracts/v1/`](../../../schemas/contracts/v1/registries/README.md) |
+| Policy rules or decisions | [`policy/`](../../../policy/README.md) |
+| Validators, connectors, pipelines, packages, applications, fixtures, tests, or workflows | Their owning code, fixture, test, or platform roots |
+| Validation receipts or run receipts | [`data/receipts/`](../../receipts/README.md) |
+| EvidenceBundle records, proof packs, citation closure, or integrity evidence | [`data/proofs/`](../../proofs/README.md) |
+| STAC, DCAT, PROV, or domain catalog records | [`data/catalog/`](../../catalog/README.md) |
+| Release manifests, promotion decisions, correction notices, withdrawal notices, or rollback cards | [`release/`](../../../release/README.md) |
+| Public API payloads, map layers, tiles, dashboards, reports, or generated answers | Governed application interfaces and [release-approved published carriers](../../published/README.md) |
 
 ---
 
-## Suggested directory shape
+## Inputs and outputs
 
-The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist beyond confirmed README evidence.
+### Inputs
+
+A dataset registry record may consume references to:
+
+- accepted source identities and source roles;
+- a paired semantic contract and machine schema;
+- dataset-family and dataset-version identifiers;
+- retrieval, observation, valid-time, update, and supersession metadata;
+- lifecycle objects and digests;
+- rights, sensitivity, sovereignty, cultural, living-person, archaeology, infrastructure, rare-species, and geoprivacy decisions;
+- validation and run receipts;
+- EvidenceRefs, EvidenceBundles, proof support, reviews, and catalog projections;
+- release, correction, withdrawal, and rollback objects.
+
+### Outputs
+
+The lane may emit or maintain:
+
+- versioned dataset registry records;
+- registry-local navigation or indexes under an accepted contract;
+- stable pointers used by internal validation, catalog, review, correction, and release workflows;
+- explicit blocker, stale, superseded, withdrawn, restricted, or denied state under a governing vocabulary.
+
+Outputs remain internal governance state. They do not become public artifacts merely because they validate, merge, or appear in a registry.
+
+---
+
+## Lifecycle and publication boundary
+
+Registry is an accountability and identity store adjacent to the lifecycle; it is not a lifecycle phase and cannot perform promotion.
 
 ```text
-data/registry/datasets/
-├── README.md
-├── flora/
-│   └── README.md
-├── <domain>/
-│   ├── README.md
-│   ├── <dataset_family>/
-│   │   ├── README.md
-│   │   └── index.local.json
-│   └── index.local.json
-└── index.local.json
+source identity and role
+  -> dataset registry identity and state
+  -> RAW / WORK / QUARANTINE / PROCESSED payload
+  -> validation receipt
+  -> evidence + catalog + policy + review
+  -> release decision
+  -> release-approved public-safe carrier
 ```
 
-`index.local.json` files are registry-local lookup aids. They are not proof indexes, catalog records, release manifests, search indexes, vector indexes, graph projections, map sources, public API payloads, or generated-answer sources.
+The following shortcut is denied:
+
+```text
+registry presence or schema validity
+  -> accepted truth or public release
+```
+
+Public clients and normal UI surfaces use governed APIs or release-approved carriers. They do not read registry files, internal databases, object stores, or model adapters directly.
 
 ---
 
-## Suggested record shape
+## Minimum semantic concerns
 
-The exact schema remains **NEEDS VERIFICATION**. A dataset registry record should be structured enough for audit, refresh, validation, catalog closure, correction, rollback, and release review.
+The following concerns are required for a useful dataset-registry design, but this list is **not** an accepted schema or status enum:
 
-```json
-{
-  "id": "kfm-dataset:<domain-or-family>:<stable-id>",
-  "record_type": "dataset_registry_record",
-  "domain": "flora | fauna | hydrology | soil | habitat | geology | atmosphere | archaeology | hazards | agriculture | people-dna-land | other",
-  "dataset_family": "source-specific or domain-specific dataset family",
-  "title": "Human-readable dataset title",
-  "status": "candidate | active | restricted | quarantined | deprecated | superseded | withdrawn | denied",
-  "source_descriptor_refs": [],
-  "source_role": "observed | regulatory | modeled | aggregate | administrative | candidate | synthetic | context | restricted",
-  "rights_posture": "open | attribution-required | restricted | stewarded | unknown | denied",
-  "sensitivity_posture": "public-safe | generalized | restricted | denied | needs-review",
-  "cadence": "one-time | periodic | event-driven | unknown",
-  "retrieval_refs": [],
-  "lifecycle_refs": {
-    "raw": [],
-    "work": [],
-    "quarantine": [],
-    "processed": [],
-    "catalog": [],
-    "published": []
-  },
-  "evidence_refs": [],
-  "proof_refs": [],
-  "validation_receipt_refs": [],
-  "policy_refs": [],
-  "review_refs": [],
-  "catalog_refs": [],
-  "release_refs": [],
-  "correction_refs": [],
-  "rollback_refs": [],
-  "public_exposure": "none | eligible-after-review | released-public-safe | denied",
-  "blockers": [],
-  "created_at": "timestamp",
-  "updated_at": "timestamp"
-}
-```
+| Concern | Why it matters |
+|---|---|
+| Stable dataset-family ID | Keeps family identity deterministic across versions and projections. |
+| Stable version or representation ID | Makes a concrete dataset state citeable, comparable, correctable, and reversible. |
+| Source identity and role refs | Preserve upstream authority, terms, cadence, and source-role limits. |
+| Spatial and temporal scope | Prevents stale, out-of-scope, or time-collapsed use. |
+| Lifecycle refs and digests | Connect registry state to governed payloads without embedding them. |
+| Rights and sensitivity refs | Prevent unsafe or unauthorized downstream exposure. |
+| Evidence, receipt, policy, and review refs | Keep support and decision authority resolvable. |
+| Catalog and release refs | Separate discovery and release from identity. |
+| Correction, supersession, withdrawal, and rollback refs | Preserve reversibility and historical truth. |
+| Explicit blockers | Keep unresolved conditions visible and fail closed. |
 
-Do not treat this JSON block as a live schema. It is a maintainer-facing sketch until paired contracts, schemas, validators, fixtures, examples, CI, and review workflows are verified.
+Exact field names, requiredness, formats, enums, and validation outcomes remain **NEEDS VERIFICATION** until an accepted semantic contract, schema, fixtures, validator, and tests establish them.
+
+---
+
+## Validation and maintenance
+
+Validation should be deterministic and no-network where practical. Network freshness and source availability checks belong in separately receipted source or runtime workflows.
+
+At minimum, an accepted validator should test:
+
+- stable and unique dataset-family and version identity;
+- resolvable source identity and source-role references;
+- digest and lifecycle-reference integrity;
+- explicit spatial and temporal scope where the contract requires them;
+- fail-closed rights and sensitivity posture;
+- EvidenceRef, receipt, policy, review, catalog, release, correction, and rollback reference shape;
+- prohibited payload embedding and sensitive-value leakage;
+- stale, superseded, withdrawn, denied, or conflicting state handling;
+- domain-lane conformance without parallel domain-first writers;
+- denial of direct public-client use.
+
+Schema validity alone is insufficient. Meaning, evidence, policy, review, release state, correction readiness, and rollback readiness remain separate gates.
 
 ---
 
 ## Required checks before use
 
-- [ ] Confirm the object is a dataset registry record, not a source payload, source descriptor, crosswalk, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, or test.
-- [ ] Confirm the owning root is `data/` and the registry lane is appropriate under Directory Rules.
-- [ ] Confirm source descriptor refs, source role, rights posture, cadence, stewardship obligations, and authority limits are preserved.
-- [ ] Confirm source role is not upgraded by normalization, cataloging, release review, API shaping, map rendering, or generated explanation.
-- [ ] Confirm sensitive details are not exposed in registry files, local indexes, or public summaries.
-- [ ] Confirm rights, sensitivity, geoprivacy, cultural, living-person, rare-species, archaeology, infrastructure, precise-location, and source-term risks fail closed when unresolved.
-- [ ] Confirm validation receipts exist before catalog or release eligibility is asserted.
-- [ ] Confirm EvidenceRef/EvidenceBundle and proof refs exist for consequential use.
-- [ ] Confirm catalog refs point to STAC/DCAT/PROV/domain catalog records rather than embedding them.
-- [ ] Confirm release refs point to ReleaseManifest/PromotionDecision objects rather than implying publication from registry state.
-- [ ] Confirm correction, supersession, withdrawal, stale-state, and rollback paths exist for mutable or externally governed datasets.
-- [ ] Confirm no public client, map layer, graph edge, vector index, generated answer, report, or dashboard reads this registry lane as direct public truth.
+- [ ] Confirm the object is a dataset registry record, not a source descriptor, payload, crosswalk, proof, receipt, catalog record, policy decision, or release object.
+- [ ] Confirm the owning root is `data/` and the subtype-first dataset registry lane is correct.
+- [ ] Confirm stable dataset-family and version identities do not collide.
+- [ ] Confirm source identity, source role, rights terms, cadence, stewardship, and authority limits resolve.
+- [ ] Confirm lifecycle references point to governed objects and do not collapse RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED state.
+- [ ] Confirm sensitive details are absent from registry files, indexes, logs, fixtures, and public summaries.
+- [ ] Confirm unresolved rights, sensitivity, sovereignty, cultural, living-person, rare-species, archaeology, infrastructure, precise-location, and source-term risks fail closed.
+- [ ] Confirm validation and run receipts exist before catalog or release eligibility is asserted.
+- [ ] Confirm consequential use resolves EvidenceRef to EvidenceBundle or accepted proof support.
+- [ ] Confirm catalog and release references point to their owning objects rather than embedding them here.
+- [ ] Confirm correction, supersession, withdrawal, stale-state, and rollback paths exist for mutable datasets.
+- [ ] Confirm no public client, map layer, graph edge, search index, vector index, generated answer, report, or dashboard reads this lane as direct truth.
 
 ---
 
-## Status notes
+## Open verification items
 
-| Claim | Status |
-|---|---:|
-| This README replaces the greenfield stub at `data/registry/datasets/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository as a greenfield stub before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/datasets/flora/README.md` exists as a child dataset registry README. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/crosswalks/README.md` exists as a sibling registry README and keeps registry state separate from contracts, schemas, policy, proofs, catalog, release decisions, and public claims. | CONFIRMED by GitHub contents API during this edit |
-| Emitted dataset registry payloads exist under this parent lane. | UNKNOWN |
-| A canonical dataset registry schema is fully enforced. | NEEDS VERIFICATION |
-| CI validates dataset registry records. | UNKNOWN |
-| This README grants public access to dataset registry internals. | DENY |
+- [ ] Assign accountable registry, dataset, source, domain, contract, schema, policy, validation, evidence, and release owners.
+- [ ] Accept or identify the semantic contract for dataset registry records.
+- [ ] Accept or identify the machine schema and canonical `$id`.
+- [ ] Inventory concrete registry records, producers, consumers, and domain lanes.
+- [ ] Define stable naming, versioning, index, digest, and supersession conventions.
+- [ ] Implement valid and invalid fixtures without real sensitive payloads.
+- [ ] Implement deterministic validators and stable failure codes.
+- [ ] Add focused tests and CI enforcement without publication authority.
+- [ ] Define compatibility handling for any domain-first registry readers or writers.
+- [ ] Verify correction, withdrawal, supersession, and rollback drills.
+- [ ] Verify that public and governed-AI surfaces resolve released carriers and evidence rather than registry internals.
+
+Do not remove these holds merely because this README is merged.
 
 ---
 
-## Maintainer note
+## Correction, supersession, and rollback
 
-Dataset registry records are useful because they make dataset identity, cadence, source role, rights, sensitivity, lifecycle linkage, correction, and rollback inspectable. They become dangerous when treated as payloads, proofs, catalog closure, or release decisions. Keep the chain explicit:
+Dataset identities and versions must remain historically traceable:
 
-```text
-source descriptor + dataset registry record -> lifecycle payload -> validation receipt -> proof/catalog/policy/review -> release -> governed public surface
-```
+1. preserve the prior record and digest;
+2. issue a corrected or superseding record under the governing contract;
+3. update forward and backward lineage;
+4. identify affected lifecycle, evidence, catalog, review, release, and public carriers;
+5. withdraw or correct downstream products through their owning authority;
+6. retain an auditable rollback target and receipt.
 
-Never collapse it into:
+For this README change:
 
-```text
-dataset registry record -> public truth
-```
+- before merge, close the draft PR or leave it unmerged;
+- after merge, transparently revert the single documentation commit to prior blob `04b67852e50ba3174cc122b8166686e507070253`;
+- do not rewrite history, move registry records, change source activation, alter release state, or treat documentation rollback as data rollback.
+
+---
+
+## Change history
+
+### v0.3.0 — 2026-07-28
+
+- aligned the parent with accepted Directory Rules v2 and canonical subtype-first registry placement;
+- replaced unresolved-path language with a bounded `PLACE` decision;
+- removed the speculative child tree and unaccepted example record shape;
+- distinguished dataset-registry state from the draft `DatasetVersion` contract and README-only shared registry-schema family;
+- preserved dataset identity, source-role, lifecycle, evidence, rights, sensitivity, correction, rollback, and public-boundary controls;
+- added evidence-backed status, repository-fit, validation, and explicit verification holds.
+
+### v0.2.0 — 2026-06-28
+
+- replaced the original parent stub with a detailed dataset-registry boundary;
+- confirmed the Flora child README;
+- recorded path, schema, validator, record, and CI uncertainty then known.
+
+[Back to top](#top)
