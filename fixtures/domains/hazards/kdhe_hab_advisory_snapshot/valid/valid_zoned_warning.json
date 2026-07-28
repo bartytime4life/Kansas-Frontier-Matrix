@@ -1,0 +1,48 @@
+{
+  "source_id": "src:ks-kdhe-hab",
+  "source_product_id": "product:ks-kdhe-hab-current-advisories",
+  "source_surface_type": "current_table",
+  "source_locator": "https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms",
+  "water_body_name_native": "Milford Lake",
+  "county_names_native": [
+    "Geary",
+    "Clay"
+  ],
+  "water_body_id": "kfm-water:ks:milford-lake",
+  "identity_resolution_status": "RESOLVED",
+  "duplicate_name_collision": false,
+  "source_scope_native": "zone",
+  "scope_type": "zone",
+  "zone_id": "milford-lake-swim-beach-a",
+  "geometry_ref": "kfm://geometry/water-body-zone/ks/milford-lake/swim-beach-a",
+  "geometry_confidence": "confirmed",
+  "advisory_level_native": "Warning",
+  "normalized_state": "WARNING",
+  "source_updated_at": "2026-07-24T15:00:00Z",
+  "retrieved_at": "2026-07-24T16:00:00Z",
+  "first_observed_at": "2026-07-24T16:00:00Z",
+  "last_observed_at": "2026-07-24T16:00:00Z",
+  "recommendation_version_ref": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "issuing_agency": "Kansas Department of Health and Environment",
+  "closure_authority_ref": "local-manager:county-or-lake-authority",
+  "local_manager_ref": "local-manager:kirwin-lake-authority",
+  "supersedes_snapshot_id": null,
+  "correction_of_snapshot_id": null,
+  "snapshot_complete": true,
+  "retrieval_status": "success",
+  "parse_status": "success",
+  "freshness_status": "current",
+  "freshness_budget_hours": 24,
+  "prior_identity_linked": true,
+  "receipt_refs": [
+    "kfm://receipt/hazards/kdhe/2026-07-24/table-1"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/hazards/kdhe/2026-07-24/table-1"
+  ],
+  "publication_state": "denied",
+  "alerts_allowed": false,
+  "content_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "deterministic_identity_key": "src:ks-kdhe-hab|product:ks-kdhe-hab-current-advisories|current_table|https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms|milford lake|Clay,Geary|zone|milford-lake-swim-beach-a|Warning|2026-07-24T15:00:00Z|sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "advisory_snapshot_id": "kdhe-hab:81e2a107fb1472bbbb3bf251644b44947f95628079537841172fecd21d0065bb"
+}
