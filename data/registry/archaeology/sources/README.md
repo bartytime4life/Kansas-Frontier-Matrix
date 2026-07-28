@@ -3,315 +3,310 @@ doc_id: kfm://data/registry/archaeology/sources/readme
 name: Archaeology Source Registry README
 path: data/registry/archaeology/sources/README.md
 type: data-registry-domain-sources-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
-  - <archaeology-source-steward>
-  - <archaeology-domain-steward>
-  - <sensitivity-reviewer>
-  - <rights-holder-representative>
-  - <cultural-review-steward>
-  - <policy-steward>
-  - <validation-steward>
-  - <docs-steward>
+  - "NEEDS VERIFICATION: source-registry steward"
+  - "NEEDS VERIFICATION: archaeology domain steward"
+  - "NEEDS VERIFICATION: cultural review steward"
+  - "NEEDS VERIFICATION: rights and sensitivity reviewers"
+  - "NEEDS VERIFICATION: policy and validation stewards"
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-27
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
-registry_scope: archaeology-source-descriptors
-path_posture: existing-requested-path-replaced; registry-path-order-conflict-needs-verification; source-descriptor-instance-lane-not-source-payload-lane
-sensitivity_posture: restricted-by-default; protected-location-deny-default; cultural-review-required; steward-review-required; rights-and-current-terms-required-before-activation; public-output-blocked-until-redaction-review-release
+registry_scope: archaeology-source-descriptor-compatibility-view
+path_posture: confirmed-live-domain-first-path; conflicted-duplicate-writer-risk; independent-writes-denied; migration-needs-accepted-decision
+sensitivity_posture: restricted-by-default; protected-location-deny-default; cultural-review-required; rights-and-current-terms-required-before-activation; no-public-path; release-blocked-until-redaction-review-release
 related:
-  - ../../README.md
   - ../README.md
+  - ../../README.md
+  - ../../sources/README.md
+  - ../../sources/archaeology/README.md
+  - ../../source_descriptors/README.md
   - ../../../raw/archaeology/README.md
   - ../../../work/archaeology/README.md
   - ../../../quarantine/archaeology/README.md
   - ../../../processed/archaeology/README.md
   - ../../../receipts/README.md
-  - ../../../receipts/validation/README.md
   - ../../../proofs/README.md
   - ../../../catalog/README.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/domains/archaeology/SOURCE_REGISTRY.md
   - ../../../../docs/domains/archaeology/SOURCES.md
   - ../../../../docs/domains/archaeology/SENSITIVITY.md
   - ../../../../docs/domains/archaeology/PUBLICATION_AND_POLICY.md
-  - ../../../../docs/domains/archaeology/RELEASE_INDEX.md
-  - ../../../../docs/architecture/directory-rules.md
-  - ../../../../docs/architecture/source-roles.md
+  - ../../../../docs/domains/archaeology/VERIFICATION_BACKLOG.md
   - ../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - ../../../../docs/registers/SOURCE_AUTHORITY.md
   - ../../../../control_plane/source_authority_register.yaml
-  - ../../../../schemas/contracts/v1/source/
-  - ../../../../policy/domains/archaeology/
+  - ../../../../contracts/source/source_descriptor.md
+  - ../../../../schemas/contracts/v1/source/README.md
+  - ../../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../../policy/domains/archaeology/README.md
+  - ../../../../.github/workflows/source-descriptor-validate.yml
 tags:
   - kfm
   - data
   - registry
   - archaeology
   - sources
+  - compatibility
   - source-descriptor
   - source-role
   - cultural-review
-  - steward-review
   - sovereignty
   - rights
   - sensitivity
-  - quarantine
   - protected-location-deny
+  - migration
   - cite-or-abstain
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 319788e7282b80ee9646a28ff774eb55b405d296
+  prior_blob: 42032fdcee7670628320a2ba5a0951e27536f972
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
+  canonical_lane_blob: 40f859e7b61cec8fb6e27268f2f5b38bcd57bb4f
+  parent_blob: d5ab80475accb0fde7077774e3e884c3f99821a0
+  inspection_date: 2026-07-27
 notes:
-  - "This README replaces the short placeholder at `data/registry/archaeology/sources/README.md`."
-  - "Archaeology documentation names both `data/registry/sources/archaeology/*.yaml` and `data/registry/archaeology/sources/` as machine/source-descriptor homes. The lane-order conflict remains NEEDS VERIFICATION until an ADR or registry migration resolves it."
-  - "This directory is for source registry/source descriptor records only. It is not raw source data, not a site inventory, not a receipt lane, not proof, not release, and not public output."
+  - "This README preserves the stable identity of the existing domain-first Archaeology source-registry path."
+  - "The subtype-first lane at data/registry/sources/archaeology/ contains the current SourceDescriptor records and is the canonical lane under adopted Directory Rules v2."
+  - "No accepted migration, redirect, or retirement record was verified for this domain-first path. It must not evolve as an independent writer."
+  - "This directory is not raw source storage, a site inventory, proof, catalog, release state, policy source, public output, or protected-location authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Archaeology Source Registry
 
-Source descriptor instance lane for Archaeology-domain source admission and activation records.
+[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
+[![Path class: compatibility view](https://img.shields.io/badge/path-compatibility%20view-d4a72c?style=flat-square)](#path-posture)
+[![Canonical writer: subtype-first](https://img.shields.io/badge/canonical%20writer-subtype--first-0969da?style=flat-square)](#path-posture)
+[![Independent writer: denied](https://img.shields.io/badge/independent%20writer-denied-b42318?style=flat-square)](#source-descriptor-boundary)
+[![Protected locations: deny](https://img.shields.io/badge/protected%20locations-deny-b42318?style=flat-square)](#sensitivity-and-publication-boundary)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data registry" src="https://img.shields.io/badge/root-data%2Fregistry-blue">
-  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-7a3e3e">
-  <img alt="Protected locations: deny" src="https://img.shields.io/badge/protected%20locations-DENY-critical">
-  <img alt="Cultural review: required" src="https://img.shields.io/badge/cultural%20review-required-purple">
-  <img alt="Path posture: needs verification" src="https://img.shields.io/badge/path-NEEDS%20VERIFICATION-orange">
-</p>
-
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Source descriptor boundary](#source-descriptor-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Source families](#source-families) · [Suggested descriptor fields](#suggested-descriptor-fields) · [Activation states](#activation-states) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> Domain-first compatibility view for Archaeology source-registry guidance. It preserves document identity and makes the duplicate-writer risk visible; it does not admit, activate, validate, release, or publish a source.
 
 > [!CAUTION]
-> `data/registry/archaeology/sources/` is a registry lane for Archaeology source descriptor records and source activation posture. It is not raw source storage, not a bibliography, not a receipt lane, not proof, not release, not policy source, and not public Archaeology truth.
+> Do not add or update authoritative `SourceDescriptor` records in this directory. Adopted Directory Rules v2 establishes subtype-first placement under `data/registry/sources/<domain>/`, and the populated Archaeology source registry is [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md). This path remains a read-only compatibility boundary until an accepted migration or retirement record says otherwise.
 
 > [!WARNING]
-> Archaeology is a sensitive-domain lane. Protected locations and culturally restricted source details are denied by default unless governed review, sensitivity transformation, redaction receipt, release authority, and rights or cultural authority all resolve.
+> Archaeology is a sensitive domain. Exact site geometry, sacred or burial-associated locations, human-remains context, private-land detail, collection-security information, and culturally restricted knowledge fail closed. Public availability of a source does not authorize KFM ingestion or disclosure.
+
+## Navigation
+
+[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repository fit](#repository-fit) · [Current inventory](#current-inventory) · [Boundary](#source-descriptor-boundary) · [Sensitivity](#sensitivity-and-publication-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Validation](#validation-and-maintenance) · [Required checks](#required-checks-before-use) · [Open verification](#open-verification-items) · [Rollback](#rollback)
+
+---
+
+## Status
+
+| Field | Current result |
+|---|---|
+| Repository path | `data/registry/archaeology/sources/` — **CONFIRMED** at the pinned base |
+| Document lifecycle | `draft` |
+| README profile | Sensitive `BOUNDARY_COMPACT` compatibility boundary |
+| Path class | **Compatibility view / duplicate-writer risk** |
+| Canonical source-descriptor writer | [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md) |
+| Local descriptor payloads | None confirmed in this path |
+| Independent-write posture | **DENY** |
+| Source admission or activation | Not established by this README |
+| Direct public access | **DENY** |
+| KFM publication effect | None |
+| Accountable stewardship assignments | **NEEDS VERIFICATION** |
+
+A README, valid YAML, workflow result, commit, pull request, or source URL does not establish source authority, rights clearance, sensitivity clearance, evidence closure, release approval, or publication.
 
 ---
 
 ## Scope
 
-This directory is for Archaeology-domain source registry records: compact, reviewable source descriptors that decide whether a source is admitted, restricted, quarantined, denied, retired, or pending cultural/steward review before any connector, watcher, pipeline, validator, AI surface, map layer, or release candidate may rely on it.
+This README governs the existing domain-first path and preserves its stable document identity while the repository converges on subtype-first registry placement. Its responsibilities are limited to:
 
-A source registry record should answer:
+- identifying the canonical source-descriptor lane and preventing parallel authority;
+- routing maintainers to source contracts, schemas, policy, validation, evidence, and release owners;
+- preserving public-safe lineage and compatibility guidance;
+- recording the migration, correction, and rollback boundary;
+- making unresolved stewardship and enforcement questions visible.
 
-- What source family, publisher, steward, institution, community authority, or repository is being admitted?
-- What stable source identity, authority crosswalk, and source role applies?
-- What rights, attribution, redistribution, access, embargo, consent, revocation, and terms posture applies?
-- What sensitivity class, cultural review state, and public-release class applies?
-- What cadence, freshness, stale-state, HTTP-validator, manifest-checksum, or watcher expectation applies?
-- Which raw/work/quarantine/processed lanes may receive payloads from this source?
-- Which policies, schemas, validators, receipts, proofs, catalog records, release gates, correction notices, and rollback targets must reference this descriptor?
-
-This lane stores **registry control records**, not archaeological payloads or source-native files.
+This README does **not** choose or change source roles, approve rights, clear sensitivity, activate connectors, authorize watchers, ingest payloads, establish evidence, approve a release, or publish Archaeology information.
 
 ---
 
 ## Path posture
 
-The requested and currently existing path is:
+Two tracked Archaeology registry shapes are relevant:
 
-```text
-data/registry/archaeology/sources/
-```
+| Path | Verified repository state | Bounded posture |
+|---|---|---|
+| `data/registry/archaeology/sources/` | This README; no descriptor payloads were confirmed in the inspected path | Domain-first compatibility view; independent writes denied |
+| [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md) | README, registry YAML files, and source-family descriptor records | Canonical subtype-first source-registry lane under adopted Directory Rules v2 |
 
-Archaeology documentation also points to this alternate machine-registry pattern:
+Accepted ADR-0029 adopts the exact Directory Rules v2 bytes and makes `docs/doctrine/directory-rules.md` the placement authority. Directory Rules v2 defines the canonical source registry as subtype-first—`data/registry/sources/<source_id or domain lane>/`—and prohibits generated, compatibility, or alternate paths from becoming independent writers.
 
-```text
-data/registry/sources/archaeology/
-```
-
-That is a real lane-order conflict. This README documents the existing requested path without resolving the conflict. Until accepted registry-layout governance, ADR review, or a migration note settles the convention, treat this path as **NEEDS VERIFICATION** for canonical placement while still using it safely as a README-controlled registry lane.
+> [!IMPORTANT]
+> Path presence is not authority. Preserve this README until references and consumers are inventoried. Do not move, delete, redirect, or retire the path without an accepted migration record, link closure, rollback plan, and verified consumer handling.
 
 ---
 
-## Repo fit
+## Repository fit
 
-| Field | Value |
-|---|---|
-| Path | `data/registry/archaeology/sources/` |
-| Responsibility root | `data/` |
-| Artifact family | registry |
-| Domain lane | archaeology |
-| Record type | SourceDescriptor / SourceActivationDecision support |
-| Human-facing source registry docs | `docs/domains/archaeology/SOURCE_REGISTRY.md` and `docs/domains/archaeology/SOURCES.md` |
-| Cross-domain authority register | `docs/registers/SOURCE_AUTHORITY.md` and `control_plane/source_authority_register.yaml`, where accepted |
-| Schema authority | `schemas/contracts/v1/source/`, subject to accepted schema-home ADRs |
-| Policy authority | `policy/domains/archaeology/`, sensitivity/cultural-review policy roots, and cross-domain policy roots |
-| Payload lanes | `data/raw/archaeology/`, `data/work/archaeology/`, `data/quarantine/archaeology/`, `data/processed/archaeology/`, and `data/published/` after release |
-| Receipt authority | `data/receipts/`, not this registry lane |
-| Proof authority | `data/proofs/`, not this registry lane |
-| Catalog authority | `data/catalog/`, not this registry lane |
-| Release authority | `release/`, not this registry lane |
-| Public access posture | No direct public path. Public clients use governed APIs and released, redacted, policy-safe artifacts only. |
+| Responsibility | Owning surface | Relationship to this path |
+|---|---|---|
+| Registry governance | [`data/registry/README.md`](../../README.md) | Parent responsibility and registry boundary |
+| Archaeology domain-first parent | [`data/registry/archaeology/README.md`](../README.md) | Compatibility parent that still documents the older topology conflict |
+| Source registry | [`data/registry/sources/README.md`](../../sources/README.md) | Canonical subtype-first source-admission family |
+| Archaeology canonical lane | [`data/registry/sources/archaeology/README.md`](../../sources/archaeology/README.md) | Authoritative current writer and descriptor inventory |
+| Human source guidance | [`SOURCE_REGISTRY.md`](../../../../docs/domains/archaeology/SOURCE_REGISTRY.md) and [`SOURCES.md`](../../../../docs/domains/archaeology/SOURCES.md) | Human explanation, candidate families, rights, cadence, and review guidance |
+| Semantic meaning | [`contracts/source/source_descriptor.md`](../../../../contracts/source/source_descriptor.md) | `SourceDescriptor` meaning and invariants |
+| Machine shape | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/README.md) | Proposed schema family and compatibility surface |
+| Policy | [`policy/domains/archaeology/`](../../../../policy/domains/archaeology/README.md) | Archaeology admissibility, sensitivity, and public-surface decisions |
+| Governance register | [`control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) | Source-authority projection; current completeness needs verification |
+| Validation workflow | [`source-descriptor-validate.yml`](../../../../.github/workflows/source-descriptor-validate.yml) | Workflow evidence only; passing checks do not activate or release a source |
+| Payload lifecycle | [RAW](../../../raw/archaeology/README.md), [WORK](../../../work/archaeology/README.md), [QUARANTINE](../../../quarantine/archaeology/README.md), and [PROCESSED](../../../processed/archaeology/README.md) | Source payloads and transformations; never stored in this compatibility view |
+| Evidence and release | [receipts](../../../receipts/README.md), [proofs](../../../proofs/README.md), [catalog](../../../catalog/README.md), and `release/` | Separate process memory, evidence closure, discovery, release, correction, and rollback authority |
+
+---
+
+## Current inventory
+
+The inspected path confirms only this README. No source descriptor, activation decision, source payload, local index, receipt, proof, catalog record, or release object was established here.
+
+```text
+data/registry/archaeology/sources/
+└── README.md
+```
+
+The canonical subtype-first lane contains the current Archaeology registry files. That inventory must be maintained by its own README and validators rather than duplicated here.
 
 ---
 
 ## Source descriptor boundary
 
-| Rule | Handling |
+| Rule | Required handling |
 |---|---|
-| Registry is admission control | A descriptor controls whether a source may shape Archaeology claims or candidate objects. |
-| Descriptor is not source data | Source payloads go to lifecycle data lanes, not this directory. |
-| Source role is fixed at admission | An observed, administrative, regulatory, modeled, aggregate, candidate, or synthetic source role must not be silently upgraded downstream. |
-| Rights fail closed | Current terms, attribution, redistribution, embargo, access, consent, revocation, and review obligations must resolve before activation. |
-| Sensitivity fails closed | Protected cultural-resource information requires denial, quarantine, restriction, redaction, or steward review. |
-| Watchers are non-publishers | Source-health probes and conditional fetches can support admission; they cannot publish or activate a source by themselves. |
-| Registry is not catalog | Discovery records such as STAC/DCAT/PROV belong under `data/catalog/`. |
-| Registry is not proof | EvidenceBundle, ProofPack, citation validation, integrity proof, and review proof support belong under `data/proofs/` or the accepted proof lane. |
-| Registry is not release | ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, and signatures belong under `release/`. |
+| No independent writer | Do not create, update, activate, retire, or supersede descriptor instances in this path. |
+| Preserve deterministic identity | Any migration must map each prior identity to exactly one reviewed canonical `source_id` and disclose collisions. |
+| Preserve source role | Observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, contextual, and restricted roles must not be collapsed. |
+| Rights fail closed | Unknown license, terms, attribution, redistribution, access, consent, revocation, or sovereignty posture blocks admission and public use. |
+| Sensitivity fails closed | Protected sites and culturally restricted knowledge require denial, quarantine, restriction, redaction, generalization, or steward review. |
+| Descriptor is not source data | Payloads enter approved RAW or QUARANTINE lanes through governed intake, never this directory. |
+| Descriptor is not a decision | Schema-valid shape does not replace source review, policy evaluation, activation, evidence closure, or release. |
+| Watchers are non-publishers | Source-health and drift checks may emit candidates and receipts; they cannot activate a source or publish data. |
+| Registry is not catalog, proof, or release | Catalog records, EvidenceBundles, ProofPacks, receipts, release manifests, corrections, and rollback records retain separate authority homes. |
+| Public clients do not read this lane | Normal API, map, search, graph, export, and AI surfaces use governed interfaces and released public-safe artifacts. |
+
+---
+
+## Sensitivity and publication boundary
+
+A source may be public while the Archaeology use remains restricted. Every downstream use must preserve source role, rights, cultural authority, spatial precision, valid time, review state, and release state.
+
+| Risk | Required posture |
+|---|---|
+| Exact archaeological geometry, identifiers, or precise provenience | Do not expose in public-readable registry files, fixtures, indexes, maps, search, vector stores, exports, or generated responses. |
+| Burial sites, human remains, funerary objects, sacred places, or culturally restricted knowledge | Fail closed; require cultural/steward review, rights and sovereignty posture, access limits, transformation receipts, evidence, review, release, correction, and rollback. |
+| Looting, vandalism, collection-security, or site-condition exposure | Treat as restricted even when upstream material is partly public. Avoid joins that make protected locations discoverable. |
+| Private-landowner or access details | Minimize and restrict; public use requires explicit purpose, rights, policy, review, and transformation evidence. |
+| Candidate anomalies and predictive surfaces | Preserve `candidate` or `modeled` role; never relabel as confirmed archaeology. |
+| Historic maps and georeferenced records | Preserve source vintage and georeference uncertainty; proximity does not prove a site. |
+| Cross-domain joins | Review joins with roads, settlements, people/land, infrastructure, hydrology, geology, habitat, flora, fauna, and hazards before release. |
+
+A source descriptor, source activation decision, or policy result alone is not publication authority. Public Archaeology outputs require the applicable EvidenceBundle, sensitivity transform, redaction or generalization receipt, review record, release manifest, correction path, and rollback target.
 
 ---
 
 ## Accepted material
 
-Accepted content is limited to source-registry records and source-descriptor-local sidecars:
+Until a migration or retirement is accepted, this path may contain only:
 
-- one descriptor file per Archaeology source family, institution, steward-mediated feed, archive, controlled API, or source endpoint;
-- descriptor indexes that point to source descriptor records without becoming catalog or proof records;
-- source identity, steward authority, cultural authority, publisher, maintainer, access method, stable identifiers, authority crosswalks, endpoint references, version/cadence expectations, watcher strategy, stale-state rules, and activation posture;
-- `source_role`, source-role anti-collapse notes, and authority/candidate status;
-- rights, attribution, redistribution, embargo, access, rate-limit, consent, revocation, and steward-review posture;
-- sensitivity, cultural review, public-release class, redaction requirements, aggregation/generalization requirements, quarantine triggers, and denial reasons;
-- references to policies, schemas, validators, receipts, proof requirements, catalog expectations, release gates, correction notices, rollback targets, and review records;
-- local README files that help stewards inspect registry posture without becoming source data, proof, catalog, release, policy, public output, location authority, or generated-answer authority.
+- this boundary README;
+- pointer-only alias, redirect, or migration notes that reference the single canonical lane;
+- consumer and reference inventories needed for migration;
+- rollback information for an approved migration;
+- a generated view only after its canonical input, generator, digest, edit policy, and regeneration command are verified.
+
+Any generated view must be one-way, reproducible, and no more permissive than the canonical source. Manual edits to generated descriptor copies are denied.
 
 ---
 
 ## Exclusions
 
-| Do not place here | Correct authority home |
+| Do not place here | Owning surface |
 |---|---|
-| Raw archaeology source payloads, downloaded packages, or source-native files | `data/raw/archaeology/` or governed restricted storage; unresolved/sensitive records go to `data/quarantine/archaeology/` |
-| Protected cultural-resource details or restricted location details | Do not expose in README/index text; use governed restricted or quarantine handling only |
-| Work-in-progress transforms, scratch outputs, unresolved candidates, or derived experiments | `data/work/archaeology/` |
-| Processed Archaeology objects or public-safe derivatives | `data/processed/archaeology/` after gates; `data/published/` only after release |
-| Source catalog profiles and human source documentation | `docs/sources/catalog/` and `docs/domains/archaeology/` |
-| EvidenceBundle, ProofPack, CatalogMatrix, citation validation, review proof support, or integrity proof | `data/proofs/` |
+| New or independently maintained `SourceDescriptor` instances | [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md) |
+| Raw reports, scans, imagery, LiDAR, geophysics, tables, shapefiles, GeoJSON, GeoParquet, COG, PMTiles, or API responses | `data/raw/archaeology/` or `data/quarantine/archaeology/` through governed intake |
+| Work products or normalized Archaeology objects | `data/work/archaeology/` and `data/processed/archaeology/` |
+| Exact locations, sacred knowledge, burial or human-remains detail, collection-security information, or private-land detail | Approved restricted storage with policy-governed pointers; never public-readable Git content |
+| Source contracts, schemas, or policy | `contracts/source/`, `schemas/contracts/v1/source/`, and `policy/` |
+| Run, validation, watcher, redaction, aggregation, AI, correction, or rollback receipts | `data/receipts/` |
+| EvidenceBundles, ProofPacks, citation validation, review proof, or integrity proof | `data/proofs/` |
 | STAC, DCAT, PROV, discovery records, or public catalog exports | `data/catalog/` |
-| RunReceipt, validation receipt, redaction receipt, aggregation receipt, AI receipt, telemetry receipt, watcher receipt, or EventRunReceipt | `data/receipts/` |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, release signature, or release changelog | `release/` |
-| Policy source, Rego files, source-role policies, sensitivity policies, cultural review policies, or access-control rules | `policy/` |
-| Semantic contracts and machine schemas | `contracts/` and `schemas/` |
-| Connector code, watcher code, packages, fixtures, tests, or CI workflows | `connectors/`, `tools/`, `packages/`, `fixtures/`, `tests/`, `.github/workflows/` |
-| Public map/API/UI payloads, graph edges, vector-index content, reports, dashboards, or generated answer text | governed public outputs only after evidence, policy, validation, review, redaction, release, correction, and rollback gates close |
+| Release manifests, promotion decisions, corrections, withdrawals, rollback cards, or signatures | `release/` |
+| Connector, watcher, package, fixture, test, or workflow implementation | `connectors/`, `tools/`, `packages/`, `fixtures/`, `tests/`, and `.github/workflows/` |
+| Public API, map, search, graph, vector-index, report, dashboard, story, or AI payload | Governed released outputs only after all applicable gates close |
 
 ---
 
-## Source families
+## Validation and maintenance
 
-The human-facing Archaeology source documents identify eight source families. This registry lane should hold machine-adjacent descriptors for those families, not duplicate the full narrative catalogue.
+Validate this README and its connected documentation surface without implying source or publication maturity.
 
-Starter descriptor filenames should use stable, lowercase slugs. Examples:
+Required source-level checks:
 
-```text
-data/registry/archaeology/sources/
-├── README.md
-├── state-site-inventory.source.json
-├── public-register-listings.source.json
-├── field-survey-forms.source.json
-├── excavation-records.source.json
-├── collection-repository-records.source.json
-├── lab-reports.source.json
-├── historic-records.source.json
-└── oral-history-cultural-knowledge.source.json
-```
+- KFM meta block parses and preserves `doc_id`, path, creation date, and draft lifecycle;
+- exactly one H1 and logical heading order;
+- all local links and fragments resolve at the branch head;
+- badge destinations resolve and their text matches the documented posture;
+- tables and alert syntax remain valid GitHub Markdown;
+- no sensitive coordinates, site identifiers, access details, credentials, private endpoints, or restricted source content appear;
+- no descriptor instance or generated copy was added to this compatibility path;
+- the base-to-head diff contains only this README.
 
-> [!NOTE]
-> The filename examples are proposed registry hygiene. Do not treat them as proof that descriptor payloads already exist, that rights have been cleared, or that any archaeology source may be ingested.
+Repository workflows and validators may provide additional evidence, but a green result proves only their declared checks. It does not establish rights, sensitivity clearance, cultural approval, source activation, evidence closure, release, or publication.
 
----
-
-## Suggested descriptor fields
-
-The exact schema remains **NEEDS VERIFICATION** until accepted source descriptor schema evidence is checked. Archaeology source descriptors should be structured enough for policy, cultural review, validation, receipts, proof assembly, catalog closure, correction, rollback, and release review.
-
-| Field | Purpose |
-|---|---|
-| `id` | Stable source descriptor identity. |
-| `source_family` | Source family name. |
-| `publisher_or_authority` | Source publisher, steward, institution, agency, repository, cultural authority, or knowledge-holder authority. |
-| `source_role` | Primary source role at admission; must not be silently upgraded downstream. |
-| `secondary_roles` | Permitted secondary roles, if any. |
-| `domain` | `archaeology`. |
-| `access_method` | Restricted API, file drop, steward-mediated review, harvested public record, agreement-governed access, archive request, manual upload, or connector strategy. |
-| `endpoint_refs` | URLs, accession systems, API identifiers, archive IDs, or source refs, without secrets or restricted access tokens. |
-| `rights_posture` | Terms, attribution, redistribution, embargo, access, consent, and revocation posture. |
-| `sensitivity_posture` | Protected cultural-resource, restricted-location, restricted-knowledge, aggregate-only, or public-safe posture. |
-| `stewardship` | Required steward or cultural-review authority. |
-| `freshness` | Cadence, retrieval expectations, stale-state rules, HTTP validators, manifest checksum expectations, and source-vintage rules. |
-| `geography` | Spatial scope and precision posture without exposing restricted details. |
-| `time_support` | Observed/source/retrieval/valid/release/correction time expectations. |
-| `policy_refs` | Relevant source, rights, sensitivity, cultural review, access, or release policies. |
-| `schema_refs` | Source descriptor and domain schemas that apply. |
-| `validator_refs` | Validators or fixture packs expected before activation. |
-| `receipt_expectations` | Receipts expected from watchers, validators, redactors, transforms, review, or release dry runs. |
-| `proof_requirements` | Evidence/proof/review closure required before claims or public layers depend on the source. |
-| `activation_status` | Current finite state such as `candidate`, `active`, `restricted`, `quarantined`, `denied`, `retired`, or `superseded`. |
-| `review_refs` | Steward, cultural, rights, sensitivity, policy, and release review references. |
-| `correction_refs` | Correction, withdrawal, supersession, rollback, or revocation references when applicable. |
-
----
-
-## Activation states
-
-| State | Meaning | Allowed downstream use |
-|---|---|---|
-| `candidate` | Descriptor is being drafted or reviewed. | No ingestion beyond fixtures or controlled review. |
-| `active` | Rights, source role, sensitivity, stewardship, cultural review, cadence, and policy posture are sufficiently resolved for governed intake. | Connector/watcher may emit to approved lifecycle lanes, subject to restrictions. |
-| `restricted` | Source may be used only under named restrictions, agreement, steward approval, cultural authority, or reviewer-only access. | Restricted processing only; no public release without additional gates. |
-| `quarantined` | Source has unresolved rights, sensitivity, integrity, identity, cultural review, stewardship, or terms risk. | No promotion; quarantine-only handling. |
-| `denied` | Source must not shape KFM claims. | No intake or downstream use. |
-| `retired` | Source is no longer active but historical references may remain. | Historical audit only; no new intake. |
-| `superseded` | Source descriptor has been replaced by a newer descriptor. | Use successor for new work; preserve old descriptor for audit. |
+Re-review this README when the registry topology, Directory Rules, source contracts or schemas, canonical Archaeology lane, source-authority register, CODEOWNERS, migration state, or public-safety posture changes.
 
 ---
 
 ## Required checks before use
 
-- [ ] Confirm the descriptor belongs in the Archaeology source registry lane and not in raw/work/quarantine/processed/published data.
-- [ ] Resolve the lane-order conflict before treating this path as canonical across the repository.
-- [ ] Confirm descriptor identity, publisher/authority, source family, access method, and source role.
-- [ ] Confirm rights, attribution, redistribution, terms, embargo, access limits, consent, revocation, and review obligations from current source or steward documentation.
-- [ ] Confirm sensitivity posture and cultural/steward review requirements before activation.
-- [ ] Confirm watcher cadence, HTTP validators, freshness, stale-state rules, source-vintage rules, and correction/supersession handling.
-- [ ] Confirm source role is preserved and not silently upgraded by validation, aggregation, modeling, AI interpretation, or promotion.
-- [ ] Confirm policies, schemas, validators, receipts, proof requirements, catalog expectations, release gates, correction references, and rollback targets are referenced.
-- [ ] Confirm no credentials, secrets, restricted identifiers, protected location details, or source payloads are stored in the descriptor README or local indexes.
-- [ ] Confirm public clients and generated answer surfaces do not read this registry lane directly.
+- [ ] Confirm this path is being used only as a compatibility boundary.
+- [ ] Add and change authoritative descriptors only in the accepted canonical lane.
+- [ ] Confirm source identity, authority, source role, access method, rights, attribution, redistribution, consent, revocation, cadence, freshness, and stale-state behavior.
+- [ ] Confirm cultural, sovereignty, sensitivity, protected-location, and stewardship review requirements.
+- [ ] Confirm schemas, validators, policies, receipts, proof requirements, catalog expectations, release gates, correction references, and rollback targets.
+- [ ] Confirm no credentials, restricted identifiers, exact locations, sensitive joins, or source payloads enter public-readable registry material.
+- [ ] Confirm public clients and generated-answer surfaces cannot read this lane directly.
+- [ ] Before any migration or retirement, inventory inbound links, runtime consumers, scripts, fixtures, workflows, and external references.
 
 ---
 
-## Status notes
+## Open verification items
 
-| Claim | Status |
-|---|---:|
-| This README replaces the short placeholder at `data/registry/archaeology/sources/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/archaeology/README.md` exists but is still a greenfield stub. | CONFIRMED by GitHub contents API during this edit |
-| Archaeology source-registry documentation exists at `docs/domains/archaeology/SOURCE_REGISTRY.md`. | CONFIRMED by GitHub contents API during this edit |
-| Archaeology source-family documentation exists at `docs/domains/archaeology/SOURCES.md`. | CONFIRMED by GitHub contents API during this edit |
-| Archaeology docs identify both `data/registry/sources/archaeology/*.yaml` and `data/registry/archaeology/sources/` patterns. | CONFIRMED from repo documentation |
-| Emitted source descriptor payloads exist in this folder. | UNKNOWN |
-| The canonical machine schema for Archaeology source descriptors is fully enforced. | NEEDS VERIFICATION |
-| This README grants public access, activates any source, or authorizes protected-location exposure. | DENY |
+- **NEEDS VERIFICATION:** accountable registry, archaeology, cultural-review, rights, sensitivity, policy, validation, proof, and release stewards.
+- **NEEDS VERIFICATION:** completeness and enforcement of the source-authority register and SourceDescriptor schema.
+- **NEEDS VERIFICATION:** runtime, connector, watcher, pipeline, and UI consumers of either registry topology.
+- **NEEDS VERIFICATION:** whether this path should become a tombstone, generated mirror, or retained compatibility README.
+- **UNKNOWN:** external consumers or bookmarks not visible through repository search.
 
 ---
 
-## Maintainer note
+## Rollback
 
-A source descriptor is the admission control record for a source. In Archaeology, admission is inseparable from sensitivity, cultural review, rights, stewardship, and protected-location denial. Keep the chain explicit:
+This change modifies documentation only.
 
-```text
-source descriptor -> governed intake or quarantine -> receipt -> proof/review/catalog/release checks -> governed public-safe surface
-```
+Before merge, close the draft pull request and leave the branch unmerged. After merge, revert the implementation commit to restore the prior README, then re-run the same Markdown, link, sensitive-content, and changed-path checks.
 
-Never collapse it into:
+Rollback of this README must not delete, move, activate, deactivate, or rewrite any source descriptor, source payload, receipt, proof, catalog record, policy decision, release object, correction, or rollback record.
 
-```text
-source descriptor -> public Archaeology truth
-```
+---
+
+KFM rule: this path is a compatibility boundary, not an independent source registry, public source catalogue, evidence store, policy surface, release authority, or Archaeology truth source.
+
+[Back to top](#top)
