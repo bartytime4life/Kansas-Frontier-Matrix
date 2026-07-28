@@ -1,9 +1,21 @@
+<a id="top"></a>
+
+# Atmosphere Registry
+
+[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
+[![Path class: compatibility parent](https://img.shields.io/badge/path-compatibility%20parent-d4a72c?style=flat-square)](#authority-and-path-posture)
+[![Registry authority: subtype first](https://img.shields.io/badge/registry%20authority-subtype--first-0969da?style=flat-square)](#authority-and-path-posture)
+[![Independent writes: denied](https://img.shields.io/badge/independent%20writes-denied-b42318?style=flat-square)](#registry-boundary)
+[![Public or operational use: denied](https://img.shields.io/badge/public%20or%20operational%20use-denied-b42318?style=flat-square)](#atmosphere-safety-boundary)
+
+> **One-line purpose.** Preserve the existing domain-first Atmosphere registry path as a bounded navigation and compatibility parent while authoritative registry records remain in their accepted subtype-first families.
+
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/registry/atmosphere/readme
 name: Atmosphere Registry README
 path: data/registry/atmosphere/README.md
 type: data-registry-domain-parent-readme
-version: v0.2.0
+version: v0.2.1
 status: draft; compatibility-boundary; no-independent-registry-record-writes
 owners:
   - "NEEDS VERIFICATION: registry steward"
@@ -72,6 +84,8 @@ tags:
   - cite-or-abstain
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
+  render_repair_base_commit: f0dc5ac7298b11c6c330bd96a50f71c6e31ff25c
+  render_repair_prior_blob: fda36ead4bbce2fddcf37ce620f14a30717a6a7f
   base_commit: e9f0e0792c094c7367e0eec973ed0461a595d609
   prior_blob: eb99029511d8c2e80a7c94542050af083c12ca5b
   child_compatibility_blob: a27f712d62a9319f08794619a5bdf513eaf1da1a
@@ -91,24 +105,13 @@ evidence_snapshot:
   link_check_workflow_blob: c91477f6a6da84203e61b3151076eb46b3a65941
   inspection_date: 2026-07-28
 notes:
+  - "The visible identity header precedes the hidden metadata block so GitHub readers do not encounter an apparently blank README if metadata-comment rendering is interrupted."
   - "This README preserves the stable identity of the existing domain-first Atmosphere registry parent."
   - "Adopted Directory Rules v2 makes subtype-first registry placement canonical and prohibits this parent from becoming an independent registry hierarchy."
   - "The child data/registry/atmosphere/sources/README.md is a no-independent-write compatibility view aligned to the subtype-first source registry."
   - "Bounded repository inspection found the canonical Atmosphere source README plus two PROPOSED placeholder JSON files; this is not proof of active source admission or a complete recursive inventory."
   - "The source-authority register is PROPOSED and empty; the Atmosphere and link-check workflows are explicit readiness holds."
 [/KFM_META_BLOCK_V2] -->
-
-<a id="top"></a>
-
-# Atmosphere Registry
-
-[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
-[![Path class: compatibility parent](https://img.shields.io/badge/path-compatibility%20parent-d4a72c?style=flat-square)](#authority-and-path-posture)
-[![Registry authority: subtype first](https://img.shields.io/badge/registry%20authority-subtype--first-0969da?style=flat-square)](#authority-and-path-posture)
-[![Independent writes: denied](https://img.shields.io/badge/independent%20writes-denied-b42318?style=flat-square)](#registry-boundary)
-[![Public or operational use: denied](https://img.shields.io/badge/public%20or%20operational%20use-denied-b42318?style=flat-square)](#atmosphere-safety-boundary)
-
-> **One-line purpose.** Preserve the existing domain-first Atmosphere registry path as a bounded navigation and compatibility parent while authoritative registry records remain in their accepted subtype-first families.
 
 > [!CAUTION]
 > Do not add authoritative source descriptors, activation decisions, dataset or layer identities, rights or sensitivity decisions, payloads, proofs, policies, releases, or public-facing Atmosphere data under this parent. This path does not establish current conditions, regulatory status, health guidance, emergency direction, release approval, or KFM publication.
@@ -445,6 +448,12 @@ Before merge, rollback is closing the draft pull request and leaving the branch 
 | [Atmosphere release candidates](../../../release/candidates/atmosphere/README.md) | Candidate boundary; a candidate is not a release |
 
 ## Change history
+
+### v0.2.1 — 2026-07-28
+
+- moved the visible document identity, badge strip, and purpose ahead of the hidden KFM metadata block so the README presents immediately in GitHub views;
+- preserved the complete `v0.2.0` governance content, stable `doc_id`, anchors, links, compatibility posture, safety boundary, correction path, and rollback guidance;
+- recorded the repair base commit and prior blob without changing any registry record, source state, policy, proof, release, or publication surface.
 
 ### v0.2.0 — 2026-07-28
 
