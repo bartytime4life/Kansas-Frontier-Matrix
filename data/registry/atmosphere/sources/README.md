@@ -1,314 +1,256 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/registry/atmosphere/sources/readme
-name: Atmosphere Source Registry README
+name: Atmosphere Source Registry Compatibility README
 path: data/registry/atmosphere/sources/README.md
-type: data-registry-domain-sources-readme
-version: v0.2.0
-status: draft
-owners:
-  - <atmosphere-source-steward>
-  - <atmosphere-domain-steward>
-  - <rights-reviewer>
-  - <policy-steward>
-  - <validation-steward>
-  - <docs-steward>
+type: data-registry-domain-source-compatibility-readme
+version: v0.3.0
+status: draft; compatibility-boundary; no-independent-writes
+owners: NEEDS_VERIFICATION
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-27
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
-registry_scope: atmosphere-source-descriptors
-path_posture: existing-requested-path-replaced; registry-path-order-conflict-needs-verification; source-descriptor-instance-lane-not-source-payload-lane
-safety_posture: advisory-and-operational-use-denied; source-role-and-freshness-required; public-output-blocked-until-evidence-policy-review-release
+registry_scope: atmosphere-source-navigation-view
+path_posture: domain-first compatibility view; subtype-first registry authority; descriptor writes denied here
+safety_posture: no-direct-public-path; no-source-activation; no-advisory-or-operational-use; fail-closed
 related:
   - ../../README.md
   - ../README.md
+  - ../../sources/atmosphere/README.md
+  - ../../sources/atmosphere/aqs.source.json
+  - ../../sources/atmosphere/knowledge_character.json
   - ../../../raw/atmosphere/README.md
   - ../../../work/atmosphere/README.md
   - ../../../quarantine/atmosphere/README.md
   - ../../../processed/atmosphere/README.md
-  - ../../../receipts/README.md
-  - ../../../receipts/validation/README.md
-  - ../../../proofs/README.md
-  - ../../../catalog/README.md
-  - ../../../../data/registry/sources/atmosphere/README.md
-  - ../../../../docs/domains/atmosphere/SOURCE_REGISTRY.md
-  - ../../../../docs/domains/atmosphere/SOURCES.md
-  - ../../../../docs/domains/atmosphere/SOURCE_INDEX.md
-  - ../../../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md
-  - ../../../../docs/domains/atmosphere/PIPELINE.md
-  - ../../../../docs/domains/atmosphere/DATA_LIFECYCLE.md
-  - ../../../../docs/runbooks/atmosphere/SOURCE_REFRESH_RUNBOOK.md
-  - ../../../../docs/architecture/directory-rules.md
-  - ../../../../docs/architecture/source-roles.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - ../../../../docs/registers/SOURCE_AUTHORITY.md
+  - ../../../../docs/domains/atmosphere/SOURCE_REGISTRY.md
   - ../../../../control_plane/source_authority_register.yaml
-  - ../../../../schemas/contracts/v1/source/
-  - ../../../../policy/domains/atmosphere/
+  - ../../../../fixtures/domains/atmosphere/sources/README.md
+  - ../../../../schemas/contracts/v1/domains/atmosphere/registry/README.md
 tags:
   - kfm
   - data
   - registry
   - atmosphere
   - sources
-  - source-descriptor
+  - compatibility
+  - generated-view
   - source-role
-  - knowledge-character
-  - air
-  - weather
-  - smoke
-  - climate
   - rights
   - sensitivity
-  - stale-state
+  - freshness
   - cite-or-abstain
 notes:
-  - "This README replaces the short placeholder at `data/registry/atmosphere/sources/README.md`."
-  - "Atmosphere documentation points to `data/registry/sources/atmosphere/` as the machine-readable companion while this requested path exists as `data/registry/atmosphere/sources/`. The lane-order conflict remains NEEDS VERIFICATION until an ADR or registry migration resolves it."
-  - "This directory is for source registry/source descriptor records only. It is not raw source data, not a receipt lane, not proof, not release, and not public output."
+  - "ADR-0029 adopted Directory Rules v2 at docs/doctrine/directory-rules.md."
+  - "Directory Rules DIR-SOURCE-003 and DIR-SOURCE-004 make the subtype-first source registry authoritative and prohibit this domain-first path from acting as an independent writer."
+  - "No generator, parity check, active writer, active consumer, or accepted source-activation record was verified for this path."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Atmosphere Source Registry
+# Atmosphere Source Registry Compatibility View
 
-Source descriptor instance lane for Atmosphere/Air-domain source admission and activation records.
+[![Status: compatibility boundary](https://img.shields.io/badge/status-compatibility%20boundary-f59e0b?style=flat-square)](#status)
+[![Authority: noncanonical view](https://img.shields.io/badge/authority-noncanonical%20view-8250df?style=flat-square)](#authority-and-path-decision)
+[![Writes: denied](https://img.shields.io/badge/writes-denied-b91c1c?style=flat-square)](#write-contract)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: data registry" src="https://img.shields.io/badge/root-data%2Fregistry-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere-0aa">
-  <img alt="Boundary: not public guidance" src="https://img.shields.io/badge/boundary-not%20public%20guidance-critical">
-  <img alt="Path posture: needs verification" src="https://img.shields.io/badge/path-NEEDS%20VERIFICATION-orange">
-</p>
-
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Source descriptor boundary](#source-descriptor-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Source families](#source-families) · [Suggested descriptor fields](#suggested-descriptor-fields) · [Activation states](#activation-states) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> **One-line purpose.** Preserve a safe, human-readable Atmosphere source navigation path while all source-descriptor identity and writes remain under the subtype-first registry authority.
 
 > [!CAUTION]
-> `data/registry/atmosphere/sources/` is a registry lane for Atmosphere source descriptor records and source activation posture. It is not raw source storage, not a bibliography, not a receipt lane, not proof, not release, not policy source, and not public Atmosphere truth.
+> Do not add or edit source descriptors, activation decisions, payloads, credentials, or public-facing data here. This path does not activate a source, prove a claim, grant rights, clear sensitivity, authorize operational or health guidance, release data, or publish KFM content.
 
----
+**Navigation:** [Purpose](#purpose) · [Status](#status) · [Authority](#authority-and-path-decision) · [Write contract](#write-contract) · [View contract](#view-contract) · [Source controls](#source-control-minimums) · [Validation](#validation) · [Related authority](#related-authority) · [Open verification](#open-verification)
 
-## Scope
+## Purpose
 
-This directory is for Atmosphere-domain source registry records: compact, reviewable source descriptors that decide whether a source is admitted, restricted, quarantined, denied, retired, or pending review before any connector, watcher, pipeline, validator, AI surface, map layer, or release candidate may rely on it.
-
-A source registry record should answer:
-
-- What source family, publisher, agency, network, model provider, archive, or aggregator is being admitted?
-- What stable source identity, knowledge character, and source role applies?
-- What rights, attribution, redistribution, access, rate-limit, and terms posture applies?
-- What sensitivity, public-release, caveat, confidence, stale-state, and advisory-use posture applies?
-- What cadence, freshness, HTTP-validator, manifest-checksum, model-run, or watcher expectation applies?
-- Which raw/work/quarantine/processed lanes may receive payloads from this source?
-- Which policies, schemas, validators, receipts, proofs, catalog records, release gates, correction notices, and rollback targets must reference this descriptor?
-
-This lane stores **registry control records**, not air-quality payloads, weather observations, climate grids, smoke rasters, model outputs, satellite scenes, or source-native files.
-
----
-
-## Path posture
-
-The requested and currently existing path is:
+This README governs the existing domain-first path:
 
 ```text
 data/registry/atmosphere/sources/
 ```
 
-Atmosphere documentation and an existing scaffold also point to this alternate machine-registry pattern:
+Its bounded role is navigation and migration compatibility for readers approaching source governance from the Atmosphere domain lane. It may identify or link to Atmosphere-related source records, but it must not become a second registry writer.
 
-```text
-data/registry/sources/atmosphere/
-```
+The authoritative responsibility remains **registry identity and routing**, not Atmosphere observations, forecasts, advisories, model output, evidence, policy, catalog closure, release, or public delivery.
 
-That is a real lane-order conflict. This README documents the existing requested path without resolving the conflict. Until accepted registry-layout governance, ADR review, or a migration note settles the convention, treat this path as **NEEDS VERIFICATION** for canonical placement while still using it safely as a README-controlled registry lane.
+## Status
 
----
-
-## Repo fit
-
-| Field | Value |
+| Surface | Evidence-backed state |
 |---|---|
-| Path | `data/registry/atmosphere/sources/` |
-| Responsibility root | `data/` |
-| Artifact family | registry |
-| Domain lane | atmosphere |
-| Record type | SourceDescriptor / SourceActivationDecision support |
-| Human-facing source registry docs | `docs/domains/atmosphere/SOURCE_REGISTRY.md` and `docs/domains/atmosphere/SOURCES.md` |
-| Alternate registry scaffold | `data/registry/sources/atmosphere/` |
-| Schema authority | `schemas/contracts/v1/source/`, subject to accepted schema-home ADRs |
-| Policy authority | `policy/domains/atmosphere/`, `policy/sensitivity/atmosphere/`, and cross-domain policy roots |
-| Payload lanes | `data/raw/atmosphere/`, `data/work/atmosphere/`, `data/quarantine/atmosphere/`, `data/processed/atmosphere/`, and `data/published/` after release |
-| Receipt authority | `data/receipts/`, not this registry lane |
-| Proof authority | `data/proofs/`, not this registry lane |
-| Catalog authority | `data/catalog/`, not this registry lane |
-| Release authority | `release/`, not this registry lane |
-| Public access posture | No direct public path. Public clients use governed APIs and released, policy-safe artifacts only. |
+| This README path | **CONFIRMED** at the pinned repository base |
+| Governing Directory Rules | **CONFIRMED adopted** through [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Domain-first source path | **Compatibility/generated-view posture** under `DIR-SOURCE-004` |
+| Subtype-first registry parent | **Canonical placement rule** under `DIR-SOURCE-003` |
+| Atmosphere source-first scaffold | **CONFIRMED present** at [`data/registry/sources/atmosphere/`](../../sources/atmosphere/README.md) |
+| Records verified in that scaffold | Two **PROPOSED placeholder** JSON files; no active source admission established |
+| Generator and parity validation for this view | **NEEDS VERIFICATION** |
+| Active writers and consumers of this exact path | **UNKNOWN** |
+| Public or operational readiness | **DENY BY DEFAULT** |
 
----
+> [!IMPORTANT]
+> Repository presence is not activation. The current source-authority register is `PROPOSED` and contains no entries; this README must not infer an active source, accepted descriptor schema, current feed, or public-safe output.
 
-## Source descriptor boundary
+## Authority and path decision
 
-| Rule | Handling |
-|---|---|
-| Registry is admission control | A descriptor controls whether a source may shape Atmosphere claims or candidate objects. |
-| Descriptor is not source data | Source payloads go to lifecycle data lanes, not this directory. |
-| Source role is fixed at admission | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not be silently upgraded downstream. |
-| Knowledge character is preserved | AQI, concentration, AOD, smoke mask, model field, forecast context, advisory context, and regulatory archive are not interchangeable. |
-| Rights fail closed | Current terms, attribution, redistribution, API limits, key handling, and review obligations must resolve before activation. |
-| Stale-state fails safe | Freshness and valid-time limits must be recorded so stale or lagged products are not presented as current truth. |
-| Registry is not catalog | Discovery records such as STAC/DCAT/PROV belong under `data/catalog/`. |
-| Registry is not proof | EvidenceBundle, ProofPack, citation validation, integrity proof, and model-run proof support belong under `data/proofs/` or the accepted proof lane. |
-| Registry is not release | ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, and signatures belong under `release/`. |
+The accepted Directory Rules separate the two path shapes:
 
----
-
-## Accepted material
-
-Accepted content is limited to source-registry records and source-descriptor-local sidecars:
-
-- one descriptor file per Atmosphere source family, agency feed, sensor network, regulatory archive, model product family, satellite product, controlled API, or aggregator;
-- descriptor indexes that point to source descriptor records without becoming catalog or proof records;
-- source identity, publisher, steward, access method, stable identifiers, endpoint references, model/product identifiers, version/cadence expectations, watcher strategy, stale-state rules, and activation posture;
-- `source_role`, knowledge-character label, anti-collapse notes, and authority/candidate status;
-- rights, attribution, redistribution, API terms, key-handling rules, rate-limit, and steward-review posture;
-- sensitivity, public-release class, caveat/confidence requirements, quarantine triggers, and denial reasons;
-- references to policies, schemas, validators, receipts, proof requirements, catalog expectations, release gates, correction notices, rollback targets, and review records;
-- local README files that help stewards inspect registry posture without becoming source data, proof, catalog, release, policy, public output, or generated-answer authority.
-
----
-
-## Exclusions
-
-| Do not place here | Correct authority home |
-|---|---|
-| Raw atmosphere payloads, weather observations, climate grids, smoke rasters, model outputs, satellite scenes, downloaded packages, or source-native files | `data/raw/atmosphere/` or governed restricted storage; unresolved material goes to `data/quarantine/atmosphere/` |
-| Work-in-progress transforms, scratch outputs, unresolved candidates, or derived experiments | `data/work/atmosphere/` |
-| Processed Atmosphere objects or public-safe derivatives | `data/processed/atmosphere/` after gates; `data/published/` only after release |
-| Source catalog profiles and human source documentation | `docs/sources/catalog/` and `docs/domains/atmosphere/` |
-| EvidenceBundle, ProofPack, CatalogMatrix, citation validation, model-run proof support, or integrity proof | `data/proofs/` |
-| STAC, DCAT, PROV, discovery records, or public catalog exports | `data/catalog/` |
-| RunReceipt, validation receipt, redaction receipt, aggregation receipt, AI receipt, telemetry receipt, watcher receipt, or EventRunReceipt | `data/receipts/` |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal notice, release signature, or release changelog | `release/` |
-| Policy source, Rego files, source-role policies, sensitivity policies, or access-control rules | `policy/` |
-| Semantic contracts and machine schemas | `contracts/` and `schemas/` |
-| Connector code, watcher code, packages, fixtures, tests, or CI workflows | `connectors/`, `tools/`, `packages/`, `fixtures/`, `tests/`, `.github/workflows/` |
-| Public map/API/UI payloads, graph edges, vector-index content, reports, dashboards, or generated answer text | governed public outputs only after evidence, policy, validation, review, release, correction, and rollback gates close |
-
----
-
-## Source families
-
-The human-facing Atmosphere source documents identify several source families and emphasize that rights/current terms remain **NEEDS VERIFICATION** and sensitive joins fail closed. This registry lane should hold machine-adjacent descriptors for admitted instances, not duplicate the full narrative register.
-
-Starter descriptor filenames should use stable, lowercase slugs. Examples:
-
-```text
-data/registry/atmosphere/sources/
-├── README.md
-├── openaq-aggregators.source.json
-├── epa-aqs.source.json
-├── airnow-agency-reporting.source.json
-├── cams-ecmwf-model-fields.source.json
-├── hrrr-smoke-noaa.source.json
-├── hms-smoke.source.json
-├── goes-abi-aod.source.json
-└── viirs-fire-hotspot.source.json
-```
-
-> [!NOTE]
-> The filename examples are proposed registry hygiene. Do not treat them as proof that descriptor payloads already exist, that terms have been cleared, or that any Atmosphere source may be ingested.
-
----
-
-## Suggested descriptor fields
-
-The exact schema remains **NEEDS VERIFICATION** until accepted source descriptor schema evidence is checked. Atmosphere source descriptors should be structured enough for policy, validation, receipts, proof assembly, catalog closure, stale-state handling, correction, rollback, and release review.
-
-| Field | Purpose |
-|---|---|
-| `id` | Stable source descriptor identity. |
-| `source_family` | Source family name. |
-| `publisher_or_authority` | Source publisher, agency, network, model provider, archive, or aggregator. |
-| `source_role` | Primary source role at admission; must not be silently upgraded downstream. |
-| `knowledge_character` | Observed sensor, public report, regulatory archive, model field, remote-sensing product, forecast context, advisory context, network/site context, or fusion product. |
-| `domain` | `atmosphere`. |
-| `access_method` | API, bulk download, feed, mirror, manual upload, public file, restricted endpoint, or connector strategy. |
-| `endpoint_refs` | URLs, endpoint identifiers, product IDs, model run IDs, or archive refs, without secrets or access tokens. |
-| `rights_posture` | Terms, attribution, redistribution, API limits, key handling, and access posture. |
-| `freshness` | Cadence, retrieval expectations, stale-state rules, valid-time rules, HTTP validators, manifest checksum expectations, and source-vintage rules. |
-| `geography` | Spatial scope, station/network scope, raster/grid scope, CRS expectations, and precision posture. |
-| `time_support` | Observed/source/retrieval/valid/forecast/release/correction time expectations. |
-| `policy_refs` | Relevant source, rights, sensitivity, stale-state, access, or release policies. |
-| `schema_refs` | Source descriptor and domain schemas that apply. |
-| `validator_refs` | Validators or fixture packs expected before activation. |
-| `receipt_expectations` | Receipts expected from watchers, validators, transforms, model runs, review, or release dry runs. |
-| `proof_requirements` | Evidence/proof/model-run closure required before claims or public layers depend on the source. |
-| `activation_status` | Current finite state such as `candidate`, `active`, `restricted`, `quarantined`, `denied`, `retired`, or `superseded`. |
-| `review_refs` | Steward, rights, sensitivity, policy, and release review references. |
-| `correction_refs` | Correction, withdrawal, supersession, rollback, or revocation references when applicable. |
-
----
-
-## Activation states
-
-| State | Meaning | Allowed downstream use |
+| Concern | Governing home | This path's relation |
 |---|---|---|
-| `candidate` | Descriptor is being drafted or reviewed. | No ingestion beyond fixtures or controlled review. |
-| `active` | Rights, source role, knowledge character, freshness, cadence, and policy posture are sufficiently resolved for governed intake. | Connector/watcher may emit to approved lifecycle lanes, subject to restrictions. |
-| `restricted` | Source may be used only under named restrictions, terms, agreement, steward approval, or reviewer-only access. | Restricted processing only; no public release without additional gates. |
-| `quarantined` | Source has unresolved rights, sensitivity, integrity, identity, terms, stale-state, or access risk. | No promotion; quarantine-only handling. |
-| `denied` | Source must not shape KFM claims. | No intake or downstream use. |
-| `retired` | Source is no longer active but historical references may remain. | Historical audit only; no new intake. |
-| `superseded` | Source descriptor has been replaced by a newer descriptor. | Use successor for new work; preserve old descriptor for audit. |
+| Machine source identities and descriptors | `data/registry/sources/` | May point to them; must not duplicate or mutate them |
+| Human source guidance | `docs/sources/` and Atmosphere domain documentation | May summarize boundaries and link outward |
+| Connector implementation | `connectors/` | No executable or activation authority here |
+| Source payloads | `data/raw/`, `data/work/`, or `data/quarantine/` as governed | Payloads are prohibited here |
+| Validation evidence and process memory | `data/proofs/` and `data/receipts/` | References only |
+| Release decisions and public-safe carriers | `release/` and `data/published/` | No release or publication authority here |
 
----
+**Placement result for source-descriptor records:** `DENY` independent writes here. A one-way generated navigation view may be `MIRROR` only after its canonical inputs, generator, owner, digest/parity check, consumers, rollback, and exit criteria are verified.
 
-## Required checks before use
+This README remains at the requested path to preserve navigation and make the no-write boundary explicit. It does not resolve every deeper source-ID or domain-index migration question.
 
-- [ ] Confirm the descriptor belongs in the Atmosphere source registry lane and not in raw/work/quarantine/processed/published data.
-- [ ] Resolve the lane-order conflict before treating this path as canonical across the repository.
-- [ ] Confirm descriptor identity, publisher/authority, source family, access method, source role, and knowledge character.
-- [ ] Confirm rights, attribution, redistribution, terms, API limits, key handling, access limits, and review obligations from current source documentation.
-- [ ] Confirm freshness, stale-state, caveat/confidence, and official-source routing requirements where the source could be mistaken for current operational truth.
-- [ ] Confirm watcher cadence, HTTP validators, valid-time rules, source-vintage rules, and correction/supersession handling.
-- [ ] Confirm source role and knowledge character are preserved and not silently upgraded by validation, aggregation, modeling, AI interpretation, or promotion.
-- [ ] Confirm policies, schemas, validators, receipts, proof requirements, catalog expectations, release gates, correction references, and rollback targets are referenced.
-- [ ] Confirm no credentials, secrets, restricted identifiers, source payloads, or access tokens are stored in the descriptor README or local indexes.
-- [ ] Confirm public clients and generated answer surfaces do not read this registry lane directly.
+## Write contract
 
----
+### Allowed
 
-## Status notes
+- this compatibility README;
+- a verified, generated, read-only index whose entries resolve to canonical subtype-first records;
+- migration or tombstone metadata required by an accepted migration;
+- parity, source digest, and generation metadata that cannot be mistaken for source admission;
+- links to canonical contracts, schemas, policies, fixtures, tests, receipts, proofs, catalogs, correction records, rollback targets, and release decisions.
 
-| Claim | Status |
-|---|---:|
-| This README replaces the short placeholder at `data/registry/atmosphere/sources/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/atmosphere/README.md` exists but is still a greenfield stub. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/sources/atmosphere/README.md` exists as an alternate registry scaffold. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/sources/atmosphere/aqs.source.json` exists as a PROPOSED placeholder. | CONFIRMED by GitHub contents API during this edit |
-| Atmosphere source-registry documentation exists at `docs/domains/atmosphere/SOURCE_REGISTRY.md`. | CONFIRMED by GitHub contents API during this edit |
-| Atmosphere source-family documentation exists at `docs/domains/atmosphere/SOURCES.md`. | CONFIRMED by GitHub contents API during this edit |
-| Atmosphere docs identify `data/registry/sources/atmosphere/` as the machine-readable companion while the requested path is `data/registry/atmosphere/sources/`. | CONFIRMED from repo documentation |
-| Emitted source descriptor payloads exist in this requested folder. | UNKNOWN |
-| The canonical machine schema for Atmosphere source descriptors is fully enforced. | NEEDS VERIFICATION |
-| This README grants public access or activates any source. | DENY |
+### Prohibited
 
----
+| Do not place or maintain here | Required handling |
+|---|---|
+| `SourceDescriptor` or source-activation records | Write only through the accepted subtype-first registry topology |
+| Atmosphere observations, station series, grids, rasters, model runs, satellite scenes, advisories, or downloaded files | Route through RAW, WORK, or QUARANTINE according to admission state |
+| Manually copied source indexes | Generate from canonical records with parity validation or do not create |
+| Rights, sensitivity, stale-state, access, or release policy | Keep normative rules under `policy/` |
+| Contracts or machine schemas | Keep meaning under `contracts/` and shape under `schemas/` |
+| Receipts, proofs, catalog records, release records, or published carriers | Use each owning object-family lane |
+| Credentials, tokens, signed URLs, private endpoints, or restricted operational details | Use approved secret or restricted storage; never commit here |
+| Public API, map, dashboard, alert, health, exposure, compliance, or AI output | Use governed released interfaces; cite or abstain |
 
-## Maintainer note
+## View contract
 
-A source descriptor is the admission control record for a source. In Atmosphere, admission is inseparable from source role, knowledge character, rights, freshness, stale-state, caveat/confidence, and policy posture. Keep the chain explicit:
+If a generated Atmosphere view is later implemented, every row must be derived from a canonical source record and remain strictly less authoritative than that record.
 
-```text
-source descriptor -> governed intake or quarantine -> receipt -> proof/review/catalog/release checks -> governed public-safe surface
-```
+| Required view property | Minimum behavior |
+|---|---|
+| Stable identity | Carry the canonical `source_id`; do not mint a domain-local ID |
+| Source location | Link to the canonical record or governed resolver |
+| Role preservation | Carry the exact role from the canonical record; do not mint or upgrade a domain-local role. Keep contextual use and access restriction separate unless accepted authority defines them as roles |
+| Rights and sensitivity | Surface unresolved or restrictive posture without upgrading it |
+| Time and freshness | Preserve source, observation, issue, valid, retrieval, model-run, revision, expiration, and stale-state distinctions when applicable |
+| Scope | Preserve station, network, grid, raster, aggregation, geography, precision, and uncertainty boundaries |
+| Change lineage | Carry correction, supersession, withdrawal, deactivation, and rollback references |
+| Generation evidence | Record canonical input digest, generator version, output digest, generated time, parity result, and rollback target |
 
-Never collapse it into:
+The view must fail closed when a canonical record is missing, ambiguous, stale beyond its declared use, rights- or sensitivity-unresolved, or inconsistent with the generated projection.
 
-```text
-source descriptor -> public Atmosphere truth
-```
+## Source-control minimums
+
+Atmosphere source families are especially vulnerable to role and time collapse. The following controls apply whether a reader arrives through this compatibility path or the canonical registry.
+
+| Source family | Preserve | Never imply |
+|---|---|---|
+| Regulatory monitoring and archives | parameter, units, method, averaging interval, QA, revision, station/network, and time scope | that regulatory context is identical to an observation or release permission |
+| Public AQI, smoke, and agency reporting | issuing authority, valid/effective time, stale state, caveats, and official-source routing | health advice, emergency direction, or timeless current conditions |
+| Weather stations and mesonets | sensor/station identity, siting, units, QA, observation time, and missing/stale markers | that every station record is quality-assured or public-safe |
+| Climate normals and anomalies | baseline period, method, scale, uncertainty, and revision state | that a normal or anomaly is a real-time observation |
+| Satellite aerosol, smoke, fire, and cloud-adjacent products | algorithm/product identity, resolution, QA, limitations, footprint, and acquisition time | that AOD or smoke context is direct PM2.5 measurement |
+| Forecast, reanalysis, and smoke-model fields | model/version, run time, forecast hour, inputs, uncertainty, validation, and valid time | that modeled fields are observations |
+| Low-cost, community, research, or local networks | calibration, correction, confidence, ownership, terms, privacy, method, and review posture | regulatory equivalence or unrestricted reuse |
+| Historical records | source vintage, station/instrument changes, digitization uncertainty, calendar/time-zone treatment, and correction lineage | current conditions or unchanged comparability |
+
+Promotion must never silently upgrade source role. Aggregation must never create point truth. AI-generated language must never replace a canonical descriptor, EvidenceBundle, policy decision, review record, or release state.
+
+## Inputs and outputs
+
+| Direction | Accepted surface | Boundary |
+|---|---|---|
+| Input | Canonical source identities, role, rights, sensitivity, cadence, scope, and correction metadata | Must be resolved from an accepted source record or marked unavailable |
+| Input | Registry, contract, schema, policy, fixture, validator, receipt, proof, catalog, and release references | A reference does not prove the target is accepted or executed |
+| Output | Human navigation to canonical source governance | Read-only and non-authoritative |
+| Output | Optional generated domain view | Requires one-way generation and parity evidence |
+| Output | Structured hold or verification item | Must not activate, ingest, promote, release, or publish |
+
+Public clients and ordinary AI/UI surfaces must not read this compatibility path as a data service.
+
+## Validation
+
+Before changing this README or materializing a view:
+
+- [ ] Re-pin the repository base and re-read the accepted Directory Rules and ADR-0029.
+- [ ] Inventory direct children, writers, readers, references, aliases, and any generated-file markers.
+- [ ] Confirm all source-descriptor writes remain under the accepted subtype-first topology.
+- [ ] Verify every view entry resolves to exactly one canonical source identity and matching digest.
+- [ ] Verify role, rights, sensitivity, time/freshness, spatial scope, citation, correction, and supersession fields are not upgraded or dropped.
+- [ ] Verify no source payload, secret, restricted identifier, unsafe precision, operational detail, or public-serving path is introduced.
+- [ ] Verify links, anchors, badges, tables, alerts, code fences, HTML comments, and the final newline.
+- [ ] Record generator, parity, and rollback evidence—or retain the view as README-only.
+
+The repository's [`link-check`](../../../../.github/workflows/link-check.yml) workflow is currently an explicit readiness hold; it does not validate repository or external links. Manual or future repository-native link checks remain documentation QA only.
+
+## Correction, supersession, and rollback
+
+1. Correct the canonical source record or its governing authority first.
+2. Emit the required correction, supersession, withdrawal, deactivation, or review record through its owning process.
+3. Regenerate any admitted view from the corrected canonical inputs.
+4. Invalidate stale view bytes and confirm parity before consumers resume.
+5. If the view cannot be regenerated safely, remove the derived view while retaining this no-write README or an approved tombstone.
+
+Before merge, rollback is the prior README blob on the scoped branch. After merge, use a transparent revert or follow-up pull request; do not restore independent descriptor writes at this path.
+
+## Related authority
+
+| Reference | Role |
+|---|---|
+| [Directory Rules v2](../../../../docs/doctrine/directory-rules.md) | Adopted placement doctrine; see `DIR-SOURCE-003`, `DIR-SOURCE-004`, and README inheritance |
+| [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adoption and single-authority decision |
+| [`data/registry/`](../../README.md) | Parent registry responsibility boundary |
+| [Subtype-first Atmosphere scaffold](../../sources/atmosphere/README.md) | Current source-first Atmosphere registry surface |
+| [`aqs.source.json`](../../sources/atmosphere/aqs.source.json) | Confirmed `PROPOSED` placeholder; not active admission evidence |
+| [`knowledge_character.json`](../../sources/atmosphere/knowledge_character.json) | Confirmed `PROPOSED` placeholder; not accepted vocabulary authority |
+| [Source Descriptor Standard](../../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md) | Draft semantic and admission guidance |
+| [Atmosphere Source Registry documentation](../../../../docs/domains/atmosphere/SOURCE_REGISTRY.md) | Human domain guidance |
+| [Source authority register](../../../../control_plane/source_authority_register.yaml) | Proposed machine projection; currently empty |
+| [Atmosphere source fixtures](../../../../fixtures/domains/atmosphere/sources/README.md) | Synthetic test examples; not source authority |
+| [Atmosphere registry schema index](../../../../schemas/contracts/v1/domains/atmosphere/registry/README.md) | Draft schema-placement index; implementation remains unverified |
+
+## Open verification
+
+| Item | Status | Evidence required |
+|---|---|---|
+| Direct-child inventory at this path | `NEEDS VERIFICATION` | Pinned recursive tree and file classifications |
+| Active writers and consumers | `UNKNOWN` | Connector, pipeline, tool, workflow, API/UI, and external-consumer inventory |
+| View generator and parity check | `NOT VERIFIED` | Repository-owned generator, deterministic fixtures, tests, and output digest |
+| Canonical source-ID topology below `data/registry/sources/` | `NEEDS VERIFICATION` | Populated source register, accepted identity grammar, migration mapping, and validator |
+| SourceDescriptor contract and schema authority | `NEEDS VERIFICATION` | Accepted contract/schema pairing plus fixtures and validation |
+| Atmosphere activation state | `UNKNOWN` | Populated source-authority entry and reviewed activation decision |
+| Rights, sensitivity, stale-state, correction, and rollback enforcement | `UNKNOWN` | Policy, negative fixtures, validator outputs, receipts, and drills |
+| CODEOWNERS and accountable steward | `NEEDS VERIFICATION` | Current path-specific routing and named accountable owner |
+
+Unknowns narrow behavior and block higher-authority claims; they do not authorize plausible defaults.
+
+## Change history
+
+### v0.3.0 — 2026-07-27
+
+- aligned the existing path with adopted Directory Rules v2 and ADR-0029;
+- changed the path posture from unresolved descriptor lane to no-independent-write compatibility view;
+- removed proposed descriptor filenames and local activation vocabulary that could create parallel authority;
+- preserved source-role, rights, sensitivity, freshness, correction, rollback, and public-boundary controls;
+- added evidence-backed badges, compact navigation, validation, and explicit open verification.
+
+### v0.2.0 — 2026-06-28
+
+- replaced the original placeholder with a detailed Atmosphere source-registry boundary;
+- recorded the then-unresolved domain-first versus subtype-first path conflict.
+
+[Back to top](#top)
