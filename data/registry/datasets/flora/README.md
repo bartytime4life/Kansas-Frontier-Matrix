@@ -3,50 +3,50 @@ doc_id: kfm://data/registry/datasets/flora/readme
 name: Flora Dataset Registry README
 path: data/registry/datasets/flora/README.md
 type: data-registry-datasets-domain-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners:
-  - <registry-steward>
-  - <dataset-steward>
-  - <flora-domain-steward>
-  - <source-steward>
-  - <catalog-steward>
-  - <policy-steward>
-  - <proof-steward>
-  - <release-steward>
+  - "NEEDS VERIFICATION: registry steward"
+  - "NEEDS VERIFICATION: dataset steward"
+  - "NEEDS VERIFICATION: Flora domain steward"
+  - "NEEDS VERIFICATION: contract, schema, and policy stewards"
+  - "NEEDS VERIFICATION: validation, evidence, and release stewards"
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-28
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: flora-dataset-registry-records
-domain: flora
-path_posture: existing-empty-placeholder-replaced; parent-datasets-registry-stub-confirmed; exact-dataset-registry-layout-needs-verification
+path_posture: confirmed-live-canonical-subtype-first-lane; record-inventory-unknown; schema-and-validator-coverage-unverified
 sensitivity_posture: registry-internal; no-public-path; rare-plant-deny-default; source-role-preserving; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
   - ../../README.md
-  - ../../crosswalks/README.md
-  - ../../../raw/flora/
-  - ../../../work/flora/
-  - ../../../quarantine/flora/
-  - ../../../processed/flora/
+  - ../../sources/flora/README.md
+  - ../../layers/flora/README.md
+  - ../../rights/flora/README.md
+  - ../../sensitivity/flora/README.md
+  - ../../../raw/flora/README.md
+  - ../../../work/flora/README.md
+  - ../../../quarantine/flora/README.md
+  - ../../../processed/flora/README.md
+  - ../../../receipts/flora/README.md
+  - ../../../proofs/flora/README.md
   - ../../../catalog/stac/flora/README.md
-  - ../../../catalog/domain/flora/
-  - ../../../receipts/
-  - ../../../proofs/
+  - ../../../catalog/dcat/flora/README.md
+  - ../../../catalog/prov/flora/README.md
+  - ../../../published/flora/README.md
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../docs/domains/flora/DATA_LIFECYCLE.md
   - ../../../../docs/domains/flora/SENSITIVITY.md
-  - ../../../../docs/domains/flora/CANONICAL_PATHS.md
-  - ../../../../docs/domains/flora/SOURCE_REGISTRY.md
-  - ../../../../docs/sources/catalog/gbif/async-download.md
-  - ../../../../docs/sources/catalog/natureserve/sensitive-taxa-list.md
-  - ../../../../docs/sources/catalog/kansas/kdwp.md
-  - ../../../../contracts/domains/flora/
-  - ../../../../schemas/contracts/v1/domains/flora/
-  - ../../../../policy/domains/flora/
-  - ../../../../release/
+  - ../../../../contracts/data/dataset_version.md
+  - ../../../../schemas/contracts/v1/registries/README.md
+  - ../../../../policy/domains/flora/README.md
+  - ../../../../fixtures/domains/flora/README.md
+  - ../../../../tests/domains/flora/README.md
+  - ../../../../release/candidates/flora/README.md
 tags:
   - kfm
   - data
@@ -55,285 +55,389 @@ tags:
   - flora
   - dataset-identity
   - source-role
-  - evidence
   - provenance
+  - evidence
   - rights
   - sensitivity
   - rare-plant
   - geoprivacy
+  - correction
+  - rollback
   - release-gated
   - no-public-path
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 4f16e53285a7523121419a9fb5b33c6955bd087a
+  prior_blob: 14d294f27ab2e9260310bc5487520a15952d87eb
+  parent_datasets_blob: 04b67852e50ba3174cc122b8166686e507070253
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
+  registry_schema_guardrail_blob: 9af6574ec32bde3d60a904fccf9b0dc4bb71703b
+  dataset_version_contract_blob: 06a0345b19f753632068978c61d5d0e50011305d
+  inspection_date: 2026-07-28
 notes:
-  - "This README replaces the empty placeholder at `data/registry/datasets/flora/README.md`."
-  - "Flora dataset registry records describe dataset identity, role, scope, provenance, rights, cadence, sensitivity posture, lifecycle links, and downstream eligibility. They do not store source payloads or publish data."
-  - "Flora exact rare, protected, or culturally sensitive plant locations remain denied on public surfaces by default unless transformed, reviewed, receipted, and released through governed gates."
-  - "Concrete dataset registry schemas, validators, examples, CI enforcement, and emitted records remain NEEDS VERIFICATION until inspected."
+  - "This README preserves and upgrades the existing document at the same canonical subtype-first registry path."
+  - "ADR-0029 accepted Directory Rules v2; its registry topology resolves data/registry/datasets/flora/ as a canonical dataset-family lane rather than an unresolved path."
+  - "Search-limited repository inspection surfaced no concrete Flora dataset registry payload, accepted dataset-registry schema, registry-specific validator, or registry-specific fixture/test suite."
+  - "The shared registry-schema family is README-only and labels dataset_registry_record.schema.json as a proposed candidate; DatasetVersion is a separate draft semantic contract whose paired schema is explicitly a placeholder."
+  - "Registry presence does not admit a source, prove a Flora claim, clear rights or sensitivity, authorize release, or publish KFM content."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Flora Dataset Registry
 
-Governed registry lane for Flora dataset identity and dataset-state records.
+[![Document lifecycle: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
+[![Path posture: canonical](https://img.shields.io/badge/path-canonical-0969da?style=flat-square)](#authority-and-path-posture)
+[![Artifact family: dataset registry](https://img.shields.io/badge/family-dataset%20registry-8250df?style=flat-square)](#dataset-registry-boundary)
+[![Public access: denied](https://img.shields.io/badge/public%20access-denied-b42318?style=flat-square)](#flora-sensitivity-and-publication-boundary)
+[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation-and-maintenance)
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Family: registry" src="https://img.shields.io/badge/family-registry-blueviolet">
-  <img alt="Lane: datasets" src="https://img.shields.io/badge/lane-datasets-blue">
-  <img alt="Domain: flora" src="https://img.shields.io/badge/domain-flora-2ea44f">
-  <img alt="Boundary: not source data" src="https://img.shields.io/badge/boundary-not%20source%20data-critical">
-  <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
-</p>
-
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Dataset boundary](#dataset-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested record shape](#suggested-record-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+> **One-line purpose.** Govern Flora dataset identity and dataset-state records without storing dataset payloads or taking over source, contract, schema, policy, evidence, catalog, release, or publication authority.
 
 > [!CAUTION]
-> `data/registry/datasets/flora/` is a registry lane for Flora dataset identity and dataset-state records. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, proof, receipt storage, policy, release authority, or a public API/UI surface.
+> A registry record is a governance handle, not botanical truth or a public dataset. Exact rare, protected, culturally sensitive, stewarded, or join-sensitive plant information remains denied from public surfaces unless an authorized transform, receipt, policy decision, review, release, correction path, and rollback target close the applicable gates.
+
+## Navigation
+
+[Status](#status) · [Scope](#scope) · [Authority](#authority-and-path-posture) · [Repository fit](#repository-fit) · [Boundary](#dataset-registry-boundary) · [Dataset families](#dataset-family-coverage) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs/outputs](#inputs-and-outputs) · [Lifecycle](#lifecycle-and-governed-use) · [Sensitivity](#flora-sensitivity-and-publication-boundary) · [Validation](#validation-and-maintenance) · [Verification](#open-verification-items) · [Rollback](#correction-supersession-and-rollback)
+
+---
+
+## Status
+
+| Field | Evidence-backed state |
+|---|---|
+| Repository path | `data/registry/datasets/flora/` — **CONFIRMED** at the pinned base |
+| README profile | `BOUNDARY_COMPACT` domain lane under the dataset registry family |
+| Directory placement | **CONFIRMED canonical** subtype-first registry topology under accepted Directory Rules v2 |
+| Document lifecycle | `draft` |
+| Concrete registry-record inventory | **UNKNOWN**; no payload surfaced in the search-limited inspection |
+| Shared dataset-registry schema | **NEEDS VERIFICATION**; the shared registry schema lane is README-only and names a candidate schema that is not present |
+| Adjacent DatasetVersion contract | **CONFIRMED draft**; its paired schema is explicitly a permissive placeholder |
+| Dataset-registry validator, fixtures, tests, and CI | **NEEDS VERIFICATION** |
+| Accountable owners and reviewers | **NEEDS VERIFICATION** |
+| Direct public access | **DENY** |
+| KFM publication effect | None |
+
+A file, stable ID, schema-valid object, passing workflow, commit, pull request, or merge does not establish source admission, dataset correctness, rights clearance, public safety, evidence closure, release approval, or KFM publication.
 
 ---
 
 ## Scope
 
-This directory documents and should eventually hold Flora dataset registry records: stable descriptions of dataset identity, dataset family, source authority, source role, rights posture, retrieval/update cadence, lifecycle linkage, sensitivity posture, evidence requirements, catalog expectations, release eligibility, correction posture, and rollback dependencies.
+This lane governs compact records that identify and route Flora datasets and their governed state. A record may describe:
 
-A Flora dataset registry record may describe dataset families such as:
-
-- taxon backbone or taxon list datasets;
-- herbarium specimen datasets;
+- taxon backbones and taxon lists;
+- herbarium specimen collections;
 - occurrence datasets;
-- rare/protected/sensitive plant datasets;
+- rare, protected, culturally sensitive, or stewarded plant datasets;
 - vegetation community datasets;
 - invasive plant datasets;
 - phenology datasets;
-- range/distribution polygon datasets;
+- range or distribution datasets;
 - restoration planting datasets;
-- public-safe generalized Flora derivative datasets.
+- public-safe generalized Flora derivatives.
 
-A registry record is not the dataset itself. It is a governed handle that lets KFM reason about how a dataset may be admitted, refreshed, validated, cataloged, corrected, released, or withdrawn.
+The registry may answer bounded questions:
+
+- Which stable dataset family or dataset version is being referenced?
+- Which source identities, source roles, rights terms, sensitivity posture, cadence, spatial scope, temporal scope, and authority limits apply?
+- Which RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED objects are related?
+- Which validation receipts, EvidenceRefs, EvidenceBundles, policy decisions, reviews, catalogs, release decisions, corrections, supersessions, withdrawals, and rollback targets support governed use?
+- Which unresolved conditions require hold, restriction, denial, quarantine, abstention, correction, or withdrawal under the applicable contract?
+
+This README does not define a universal dataset-registry schema or outcome vocabulary. Those remain contract- and implementation-specific until accepted authority exists.
 
 ---
 
-## Path posture
+## Authority and path posture
 
-The requested lane is:
+Accepted [Directory Rules v2](../../../../docs/doctrine/directory-rules.md), adopted through [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), separates registry identity from lifecycle payloads and makes registry placement subtype-first:
+
+```text
+data/registry/
+├── sources/
+├── datasets/
+├── layers/
+├── domains/
+├── rights/
+├── sensitivity/
+└── crosswalks/
+```
+
+The Flora dataset lane therefore resolves as:
 
 ```text
 data/registry/datasets/flora/
 ```
 
-This follows the data-side registry pattern: `data/registry/` stores registry state adjacent to the lifecycle phases, while Flora remains a domain segment inside the responsibility root.
+| Responsibility signature axis | Resolved value |
+|---|---|
+| Artifact kind | Dataset registry record or registry boundary documentation |
+| Authority owner | Registry identity and routing |
+| Lifecycle stage | Registry accountability plane |
+| Scope | Domain lane: `flora` |
+| Exposure | Internal or restricted unless a separate released projection exists |
+| Placement outcome | `PLACE` at the current subtype-first path |
 
-The parent dataset registry path exists but is currently a stub:
+This placement is canonical for the registry family, but it does not prove that registry payloads, a complete semantic contract, a machine schema, validators, producers, consumers, or public-safe projections are implemented.
 
-```text
-data/registry/datasets/README.md
-```
-
-Because the parent is not yet expanded, this README documents the Flora dataset sublane only. It does not assert final registry taxonomy for every domain or dataset family.
+`data/registry/flora/` and other domain-first registry parents must not become parallel writers for records owned here. Any compatibility view must remain single-write, generated from canonical records, parity-checked, and governed by an accepted migration.
 
 ---
 
-## Repo fit
+## Repository fit
 
-| Responsibility | Home | Boundary |
+| Responsibility | Owning surface | Relationship to this lane |
 |---|---|---|
-| Flora dataset registry records | `data/registry/datasets/flora/` | Dataset identity, lifecycle pointers, rights/sensitivity posture, cadence, and eligibility state. |
-| Flora source payloads | `data/raw/flora/`, `data/work/flora/`, `data/quarantine/flora/`, `data/processed/flora/` | Actual data belongs in lifecycle lanes, not registry records. |
-| Flora source descriptors | `data/registry/sources/flora/` or accepted source registry lane | Source identity, role, rights, terms, cadence, and authority limits. |
-| Flora crosswalk registry records | `data/registry/crosswalks/` | Mapping state; not dataset identity. |
-| Flora semantic meaning | `contracts/domains/flora/` | Object-family meaning and invariants. |
-| Flora machine shape | `schemas/contracts/v1/domains/flora/` | Schema enforcement; paths remain NEEDS VERIFICATION until inspected. |
-| Flora policy and sensitivity | `policy/domains/flora/`, `policy/sensitivity/flora/`, `policy/geoprivacy/` | Exposure, rights, sensitivity, and admissibility rules. |
-| Flora validation receipts | `data/receipts/validation/flora/` | Process memory for validation checks. |
-| Flora proof/evidence | `data/proofs/` or accepted proof lanes | EvidenceBundle closure, proof packs, signatures, and citation validation. |
-| Flora catalog projections | `data/catalog/stac/flora/`, `data/catalog/dcat/flora/`, `data/catalog/prov/flora/`, `data/catalog/domain/flora/` | Catalog/discovery carriers after catalog closure. |
-| Flora release decisions | `release/` | Promotion, correction, rollback, supersession, withdrawal, and release manifests. |
-| Public surfaces | governed APIs and released artifacts only | Public clients do not read this registry lane directly. |
+| Registry governance | [`data/registry/`](../../README.md) | Parent identity and routing boundary |
+| Dataset registry family | [`data/registry/datasets/`](../README.md) | Parent subtype-first dataset family |
+| Flora dataset records | `data/registry/datasets/flora/` | Stable dataset identity, state, routing, and correction pointers |
+| Flora source identity | [`data/registry/sources/flora/`](../../sources/flora/README.md) | SourceDescriptor, source role, rights, cadence, and authority inputs |
+| Flora layer identity | [`data/registry/layers/flora/`](../../layers/flora/README.md) | Layer registry state; does not replace dataset identity |
+| Rights and sensitivity identity | [Rights](../../rights/flora/README.md) and [sensitivity](../../sensitivity/flora/README.md) registries | References to governed rights and sensitivity state |
+| Dataset-version meaning | [`DatasetVersion`](../../../../contracts/data/dataset_version.md) | Adjacent draft semantic contract; not a complete dataset-registry contract |
+| Registry machine shape | [`schemas/contracts/v1/registries/`](../../../../schemas/contracts/v1/registries/README.md) | README-only guardrail; accepted dataset-registry schema not verified |
+| Flora policy | [`policy/domains/flora/`](../../../../policy/domains/flora/README.md) | Admissibility, sensitivity, geoprivacy, and exposure decisions |
+| Lifecycle payloads | [RAW](../../../raw/flora/README.md), [WORK](../../../work/flora/README.md), [QUARANTINE](../../../quarantine/flora/README.md), and [PROCESSED](../../../processed/flora/README.md) | Actual Flora bytes and governed transforms; never stored here |
+| Process and evidence support | [Receipts](../../../receipts/flora/README.md) and [proofs](../../../proofs/flora/README.md) | Process memory and evidence support; neither is registry state |
+| Catalog projections | [STAC](../../../catalog/stac/flora/README.md), [DCAT](../../../catalog/dcat/flora/README.md), and [PROV](../../../catalog/prov/flora/README.md) | Discovery and provenance projections; not registry authority |
+| Release and delivery | [Flora release candidates](../../../../release/candidates/flora/README.md) and [published carriers](../../../published/flora/README.md) | Separate release decision and public-delivery boundaries |
+| Validation evidence | [Flora fixtures](../../../../fixtures/domains/flora/README.md) and [tests](../../../../tests/domains/flora/README.md) | Current domain evidence does not establish dataset-registry coverage |
 
 ---
 
-## Dataset boundary
+## Dataset registry boundary
 
-| Rule | Handling |
+| Rule | Required handling |
 |---|---|
-| Registry record is a handle | It identifies and governs a dataset; it does not contain the dataset payload. |
-| Source role is preserved | A dataset's observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, context, or restricted role must not be upgraded by processing or publication. |
-| Rights and sensitivity fail closed | Unclear license, redistribution, steward obligation, rare-plant risk, cultural sensitivity, private-land exposure, or precise-location risk blocks public promotion. |
-| Exact sensitive Flora geometry is denied by default | Exact rare, protected, or culturally sensitive plant locations require steward review, transform, receipt, and release decision before any public-safe derivative exists. |
-| Registry is not catalog | STAC/DCAT/PROV records live under `data/catalog/`. A dataset registry record may point to catalog records; it does not replace them. |
-| Registry is not proof | EvidenceBundle/proof support remains separate. |
-| Registry is not release | Public exposure requires validation, policy, review, proof/catalog support, release manifest, correction path, and rollback path. |
-| Registry changes are auditable | Dataset identity, source version, lifecycle refs, correction state, supersession, withdrawal, and rollback dependencies should remain traceable. |
+| Registry record is a handle | Identify and route a dataset; do not embed its payload. |
+| Dataset family and version remain distinct | Do not collapse a durable dataset identity into one retrieval, file, release, or mutable alias. |
+| Source identity remains separate | Resolve source records and preserve source role; do not duplicate source authority here. |
+| Source role cannot be upgraded | Normalization, aggregation, cataloging, mapping, release review, UI display, or AI language cannot promote source authority. |
+| Space and time remain explicit | Preserve dataset extent, precision, observation/valid/retrieval/revision/release time, cadence, and stale-state boundaries where material. |
+| Rights and sensitivity fail closed | Unknown license, redistribution terms, steward obligations, rare-plant risk, cultural sensitivity, private-land exposure, or harmful precision blocks public use. |
+| Registry is not contract or schema | Meaning stays under `contracts/`; machine shape stays under `schemas/`. |
+| Registry is not receipt or proof | Process memory and EvidenceBundle support retain separate authority. |
+| Registry is not catalog | STAC, DCAT, PROV, domain, and matrix projections remain under `data/catalog/`. |
+| Registry is not policy or release | Policy and release decisions cannot be inferred from registry state. |
+| Registry changes remain auditable | Preserve version, correction, supersession, withdrawal, stale-state, and rollback lineage. |
+| Public clients do not read this lane | APIs, maps, search, graphs, exports, dashboards, and AI surfaces use governed released interfaces. |
+
+Registry records should point outward by stable ID, repository path, governed URI, digest, or EvidenceRef. Copying source payloads, policies, proofs, catalogs, or release objects into the registry creates authority drift.
 
 ---
 
-## Accepted material
+## Dataset family coverage
 
-Accepted content is limited to Flora dataset registry records and registry-local support files:
+| Dataset family | Registry concern | Additional Flora control |
+|---|---|---|
+| Taxon backbone or list | Identity, authority version, source role, temporal coverage, supersession | Preserve accepted and source-native taxonomy; unresolved names remain visible |
+| Specimen collection | Collection identity, source, rights, digitization scope, retrieval/version state | Do not expose restricted collector, locality, land, or steward detail |
+| Occurrence dataset | Dataset/version identity, spatial and temporal scope, source role, precision | Exact rare or protected plant locations fail closed |
+| Rare or stewarded plant dataset | Restricted identity, access class, review and correction lineage | No ordinary public path; generalization does not authorize release by itself |
+| Vegetation community dataset | Classification/version identity, method, scale, source roles | Derived class or polygon does not become field observation truth |
+| Invasive plant dataset | Authority scope, observation/model distinction, update cadence | Registry presence is not regulatory designation or current condition |
+| Phenology dataset | Observation/model distinction, season/year, method, uncertainty | Do not generalize a local or historical series into timeless statewide truth |
+| Range or distribution dataset | Model/observation role, scale, vintage, uncertainty, source support | Polygon presence is not point occurrence or completeness proof |
+| Restoration dataset | Program/source identity, treatment period, rights, review state | Do not expose private-land, participant, or precise-sensitive details |
+| Public-safe derivative | Canonical parent, transform and receipt refs, release/correction lineage | Public-safe status requires policy, review, release, and rollback evidence |
 
-- dataset identity records;
-- dataset-family README files;
-- local dataset indexes that point to records without becoming public catalog records;
-- dataset version, cadence, source-role, source descriptor, rights, sensitivity, steward, retrieval, and lifecycle pointer metadata;
-- public-safe eligibility flags and blocker states;
-- correction, supersession, withdrawal, stale-state, embargo, and rollback references;
-- references to validation receipts, proof packs, catalog records, release candidates, release manifests, and rollback cards;
-- checksums, manifests, signatures, and index sidecars for registry integrity where applicable.
-
-Dataset registry records should point outward by stable ID, path, URI, digest, or EvidenceRef rather than copying source payloads, proof material, catalog records, policy decisions, or release manifests into the registry lane.
+These families describe possible record scope. They do not prove that corresponding child directories or records exist.
 
 ---
 
-## Exclusions
+## What belongs here
 
-| Do not place here | Correct authority home |
+- accepted Flora dataset registry records;
+- registry-local indexes that resolve to canonical records without becoming catalog, search, graph, map, release, or public API authority;
+- stable dataset-family and dataset-version identifiers;
+- pointer-only source, rights, sensitivity, lifecycle, evidence, validation, policy, review, catalog, release, correction, withdrawal, supersession, and rollback references;
+- cadence, freshness, spatial and temporal scope, public-exposure posture, and blocker state defined by an accepted contract;
+- integrity metadata required by the governing registry contract;
+- README files that explain the boundary without claiming implementation;
+- migration or tombstone metadata required by an accepted single-write migration.
+
+Do not create a child directory merely to reserve a future dataset family. Directory Rules v2 prohibits empty symmetry scaffolding.
+
+---
+
+## What does not belong here
+
+| Do not place here | Owning surface or required action |
 |---|---|
-| Raw Flora source payloads, Darwin Core archives, specimen dumps, occurrence exports, rasters, shapefiles, GeoParquet, COG, PMTiles, or source-native tables | `data/raw/flora/`, `data/work/flora/`, `data/quarantine/flora/`, or `data/processed/flora/` depending on lifecycle state |
-| Exact rare/protected/culturally sensitive plant coordinates or steward-only notes | restricted lifecycle lane or quarantine with deny-by-default policy controls |
-| Source descriptor contract or source terms documentation | source registry/source catalog lanes and `contracts/`/`docs/sources/` as appropriate |
-| Crosswalk mapping state | `data/registry/crosswalks/` |
-| Semantic object contracts | `contracts/domains/flora/` |
-| JSON Schema | `schemas/contracts/v1/domains/flora/` or accepted schema lane |
-| Policy rules, geoprivacy rules, sensitivity rules, or access-control logic | `policy/` |
-| Validation receipts, run receipts, redaction receipts, or review process memory | `data/receipts/` |
-| EvidenceBundle records, proof packs, signatures, or citation-validation closure | `data/proofs/` |
-| STAC/DCAT/PROV/domain catalog records | `data/catalog/` |
-| Public-safe released artifacts, map layers, tiles, reports, dashboards, or API payloads | `data/published/`, governed app/API roots, and `release/` after promotion |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, RollbackCard, withdrawal, or supersession notice | `release/` |
-| Validator code, connector code, pipelines, fixtures, tests, or CI workflows | `tools/`, `connectors/`, `pipelines/`, `fixtures/`, `tests/`, `.github/workflows/` |
+| Darwin Core archives, specimen dumps, occurrence exports, tables, rasters, shapefiles, GeoParquet, COG, PMTiles, or source-native payloads | Governed RAW, WORK, QUARANTINE, or PROCESSED Flora lanes |
+| Exact rare, protected, culturally sensitive, steward-only, private-land, or join-sensitive plant detail | Approved restricted storage or QUARANTINE with deny-by-default controls |
+| SourceDescriptor, source activation, source terms, or source-role authority | `data/registry/sources/`, source contracts, and governed admission |
+| Layer, rights, sensitivity, domain, or crosswalk records | Their subtype-first registry families |
+| Semantic contract or JSON Schema | `contracts/` and `schemas/` |
+| Policy, geoprivacy, access, rights, sensitivity, or release rules | `policy/` |
+| Connector, pipeline, package, validator, or application code | Its implementation responsibility root |
+| Fixtures, tests, or workflow definitions | `fixtures/`, `tests/`, and `.github/workflows/` |
+| Run, validation, redaction, aggregation, review, or correction receipts | `data/receipts/` |
+| EvidenceBundle, proof pack, signature, or citation closure | `data/proofs/` |
+| STAC, DCAT, PROV, domain, matrix, or other catalog record | `data/catalog/` |
+| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, or RollbackCard | `release/` |
+| Public layer, tile, report, dashboard, API payload, export, graph, index, or generated answer | Governed released delivery surface |
+| Credentials, tokens, signed URLs, private endpoints, or restricted operational details | Approved secret or restricted storage; never this public repository path |
 
 ---
 
-## Suggested directory shape
+## Inputs and outputs
 
-The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist.
+| Direction | Accepted surface | Boundary |
+|---|---|---|
+| Input | Stable Flora dataset and version identity | Must be contract-backed or remain explicitly unresolved |
+| Input | Canonical source identities and source-role metadata | Registry reference only; no duplicated source authority |
+| Input | Rights, sensitivity, spatial/temporal scope, cadence, freshness, evidence, policy, review, catalog, release, correction, and rollback refs | References must resolve before consequential use |
+| Output | Compact dataset identity and governed state record | Internal governance handle, not payload or truth |
+| Output | Pointer-only routing for lifecycle, catalog, review, correction, and release processes | Does not approve the referenced transition |
+| Output | Optional public-safe registry projection | Requires a separate contract, policy, release, correction, and rollback path |
+| Output | Explicit unresolved or blocked state | Must preserve the applicable contract vocabulary and fail closed |
+
+No normal public API, map, graph, export, search index, dashboard, or generated-answer contract originates from this directory.
+
+---
+
+## Lifecycle and governed use
 
 ```text
-data/registry/datasets/flora/
-├── README.md
-├── taxon_backbones/
-│   ├── README.md
-│   └── index.local.json
-├── specimens/
-│   ├── README.md
-│   └── index.local.json
-├── occurrences/
-│   ├── README.md
-│   └── index.local.json
-├── rare_plants/
-│   ├── README.md
-│   └── index.local.json
-├── vegetation_communities/
-│   ├── README.md
-│   └── index.local.json
-├── invasive_plants/
-│   ├── README.md
-│   └── index.local.json
-├── phenology/
-│   ├── README.md
-│   └── index.local.json
-├── range_polygons/
-│   ├── README.md
-│   └── index.local.json
-├── restoration/
-│   ├── README.md
-│   └── index.local.json
-└── index.local.json
+source identity + dataset identity
+  -> RAW / WORK / QUARANTINE payload
+  -> validated PROCESSED representation
+  -> evidence + receipts + policy + review
+  -> catalog / triplet projection when applicable
+  -> release decision
+  -> immutable public-safe carrier
 ```
 
-`index.local.json` files are registry-local lookup aids. They are not proof indexes, source payloads, catalog records, release manifests, search indexes, vector indexes, map sources, or public API payloads.
+The dataset registry record may reference each stage, but it does not replace any stage or authorize movement between them.
+
+| Lifecycle concern | Registry obligation |
+|---|---|
+| Admission | Preserve the dataset/source identity, role, rights, sensitivity, scope, and unresolved conditions |
+| Transformation | Link versions and transforms without overwriting source-native identity or prior state |
+| Validation | Reference run-specific evidence; do not turn schema validity into truth |
+| Cataloging | Link discovery projections; do not duplicate catalog records |
+| Release | Link the accepted decision and immutable carrier; do not self-declare publication |
+| Correction | Preserve the affected identity, prior version, downstream consumers, and correction lineage |
+| Withdrawal or supersession | Retain history and point to the successor or withdrawal authority |
+| Rollback | Identify the reviewed prior target and dependent invalidation scope |
+
+[Flora lifecycle guidance](../../../../docs/domains/flora/DATA_LIFECYCLE.md) is documentation evidence, not proof that each registry integration is implemented.
 
 ---
 
-## Suggested record shape
+## Flora sensitivity and publication boundary
 
-The exact schema remains **NEEDS VERIFICATION**. A Flora dataset registry record should be structured enough for audit, refresh, validation, catalog closure, correction, rollback, and release review.
+[Flora sensitivity guidance](../../../../docs/domains/flora/SENSITIVITY.md) treats exact rare, protected, culturally sensitive, and stewarded plant locations as deny-by-default public material.
 
-```json
-{
-  "id": "kfm-dataset:flora:<stable-id>",
-  "record_type": "dataset_registry_record",
-  "domain": "flora",
-  "dataset_family": "taxon_backbone | specimen | occurrence | rare_plant | vegetation_community | invasive_plant | phenology | range_polygon | restoration | derivative",
-  "title": "Human-readable dataset title",
-  "status": "candidate | active | restricted | quarantined | deprecated | superseded | withdrawn",
-  "source_descriptor_refs": [],
-  "source_role": "observed | regulatory | modeled | aggregate | administrative | candidate | synthetic | context | restricted",
-  "rights_posture": "open | attribution-required | restricted | stewarded | unknown | denied",
-  "sensitivity_posture": "public-safe | generalized | restricted | denied | needs-review",
-  "cadence": "one-time | periodic | event-driven | unknown",
-  "retrieval_refs": [],
-  "lifecycle_refs": {
-    "raw": [],
-    "work": [],
-    "quarantine": [],
-    "processed": [],
-    "catalog": [],
-    "published": []
-  },
-  "evidence_refs": [],
-  "proof_refs": [],
-  "validation_receipt_refs": [],
-  "redaction_receipt_refs": [],
-  "policy_refs": [],
-  "review_refs": [],
-  "release_refs": [],
-  "correction_refs": [],
-  "rollback_refs": [],
-  "public_exposure": "none | eligible-after-review | released-public-safe | denied",
-  "blockers": [],
-  "created_at": "timestamp",
-  "updated_at": "timestamp"
-}
-```
+For any dataset whose content or joins could reveal sensitive Flora information:
 
-Do not treat this JSON block as a live schema. It is a maintainer-facing sketch until paired contracts, schemas, validators, fixtures, examples, CI, and review workflows are verified.
+- classify source role, rights, access, precision, spatial support, temporal support, and re-identification risk;
+- preserve restricted identity and review obligations in the registry without copying restricted payloads;
+- require an authorized public-safe transform and its receipt before a derivative is considered;
+- require policy, steward review, evidence, catalog, release, correction, and rollback closure before public delivery;
+- invalidate dependent projections when the canonical dataset, rights, sensitivity, taxonomy, transform, or release state changes;
+- abstain or deny when the record, evidence, policy, or release state cannot be resolved.
+
+A public-safe label, generalized geometry, badge, schema-valid record, or README statement is not release evidence.
 
 ---
 
-## Required checks before use
+## Validation and maintenance
 
-- [ ] Confirm the object is a dataset registry record, not a source payload, source descriptor, crosswalk, proof, receipt, catalog record, release decision, policy, schema, or validator.
-- [ ] Confirm source descriptor refs, source role, rights posture, cadence, and authority limits are preserved.
-- [ ] Confirm source role is not upgraded by normalization, cataloging, or public presentation.
-- [ ] Confirm exact rare/protected/culturally sensitive plant locations are not exposed in registry files, local indexes, or public summaries.
-- [ ] Confirm rights, sensitivity, geoprivacy, cultural, private-land, rare-species, and precise-location risks fail closed when unresolved.
-- [ ] Confirm validation receipts exist before catalog/release eligibility is asserted.
-- [ ] Confirm EvidenceRef/EvidenceBundle and proof refs exist for consequential use.
-- [ ] Confirm catalog refs point to STAC/DCAT/PROV/domain catalog records rather than embedding them.
-- [ ] Confirm release refs point to ReleaseManifest/PromotionDecision objects rather than implying publication from registry state.
-- [ ] Confirm correction, supersession, withdrawal, stale-state, and rollback paths exist for mutable or externally governed datasets.
-- [ ] Confirm no public client, map layer, graph edge, vector index, generated answer, report, or dashboard reads this registry lane as direct public truth.
+### Confirmed evidence
 
----
+- The target README exists at the canonical subtype-first path.
+- Accepted Directory Rules v2 identifies `data/registry/datasets/` as a registry family under the `data/` responsibility root.
+- `DatasetVersion` exists as a draft semantic contract.
+- `schemas/contracts/v1/registries/` exists as a README-only schema-family guardrail.
+- The registry-schema guardrail lists `dataset_registry_record.schema.json` only as a proposed candidate.
+- Flora source, layer, rights, sensitivity, lifecycle, policy, fixture, test, catalog, proof, receipt, release-candidate, and published boundary documents exist at the linked paths.
 
-## Status notes
+### Required checks before relying on a record
 
-| Claim | Status |
-|---|---:|
-| This README replaces the empty placeholder at `data/registry/datasets/flora/README.md`. | CONFIRMED authored |
-| The target path existed in the live repository as an empty placeholder before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/datasets/README.md` exists and is currently a greenfield stub. | CONFIRMED by GitHub contents API during this edit |
-| Flora lifecycle docs define RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED and treat receipts, proofs, registry, and rollback as adjacent lanes. | CONFIRMED by GitHub contents API during this edit |
-| Flora sensitivity docs deny exact rare/protected/culturally sensitive plant locations on public surfaces by default and require review/transform/RedactionReceipt for public movement. | CONFIRMED by GitHub contents API during this edit |
-| Flora STAC catalog README exists as a catalog-stage sibling that is not source truth, policy, proof, or release authority. | CONFIRMED by GitHub contents API during this edit |
-| Concrete Flora dataset registry payloads exist under this lane. | UNKNOWN |
-| A canonical Flora dataset registry schema is enforced. | NEEDS VERIFICATION |
-| CI validates Flora dataset registry records. | UNKNOWN |
-| This README grants public access to Flora dataset registry internals. | DENY |
+- [ ] Confirm the object is a dataset registry record, not a payload, source descriptor, layer, rights record, sensitivity record, crosswalk, contract, schema, policy, receipt, proof, catalog, release object, or delivery artifact.
+- [ ] Resolve one stable dataset identity and distinguish dataset family from dataset version.
+- [ ] Resolve canonical source identity and preserve source-native role, authority, terms, and temporal scope.
+- [ ] Verify rights, sensitivity, access, cultural, private-land, rare-species, join, and harmful-precision posture.
+- [ ] Verify spatial extent, spatial precision, observation/valid/retrieval/revision/release time, cadence, and stale-state handling.
+- [ ] Validate against an accepted semantic contract and machine schema; do not rely on a placeholder schema.
+- [ ] Run deterministic valid, invalid, restricted, stale, conflict, correction, and rollback fixtures through the accepted validator.
+- [ ] Resolve consequential EvidenceRefs to EvidenceBundles.
+- [ ] Confirm validation receipts, policy decisions, review records, catalog refs, release decisions, correction lineage, and rollback targets as applicable.
+- [ ] Confirm no public client or AI/map/search/graph surface reads internal or candidate registry state directly.
+- [ ] Confirm no secret, private identifier, restricted note, or sensitive location enters ordinary repository or public output.
+
+The current broad Flora workflow is a read-only readiness workflow with explicit validation, proof, and release holds. It does not validate Flora dataset registry records or establish public readiness. The repository link-check workflow is also an explicit hold and does not currently resolve links.
 
 ---
 
-## Maintainer note
+## Open verification items
 
-A Flora dataset registry record is an indexable governance handle, not a shortcut around the trust membrane. Keep the safe chain explicit:
+| Item | Status | Evidence required |
+|---|---|---|
+| Complete direct-child and record inventory | **UNKNOWN** | Pinned recursive tree plus classification of every non-README object |
+| Canonical dataset-registry semantic contract | **NEEDS VERIFICATION** | Accepted contract defining identity, versions, states, invariants, and compatibility |
+| Canonical dataset-registry schema | **NEEDS VERIFICATION** | Accepted `$id`, fields, enums, refs, migration policy, and contract pairing |
+| Dataset-registry validator | **NEEDS VERIFICATION** | Repository-owned deterministic implementation and finite outcomes |
+| Valid, invalid, restricted, stale, conflict, correction, and rollback fixtures | **NEEDS VERIFICATION** | Public-safe synthetic fixture suite and representative observed runs |
+| Producers and consumers | **UNKNOWN** | Connector, pipeline, tool, catalog, release, API/UI, map, graph, search, export, and AI inventory |
+| Rights and sensitivity enforcement | **NEEDS VERIFICATION** | Policy rules, negative fixtures, decisions, receipts, access controls, and tests |
+| Correction and rollback propagation | **NEEDS VERIFICATION** | Corrected dataset/version case, invalidation list, regenerated projections, and rollback drill |
+| Steward and reviewer assignments | **NEEDS VERIFICATION** | Accepted authority register or path-specific ownership evidence |
+
+Unknowns narrow permissible use. They do not authorize plausible defaults or public exposure.
+
+---
+
+## Correction, supersession, and rollback
+
+For a registry-record correction:
+
+1. Identify the canonical dataset and affected versions.
+2. Preserve the prior record or immutable lineage.
+3. Correct the owning source, contract, schema, policy, evidence, or release authority first when the defect originates there.
+4. Emit the applicable correction, withdrawal, supersession, review, and release records through their owning families.
+5. Invalidate and regenerate dependent catalogs, layers, indexes, graphs, caches, exports, maps, APIs, and generated answers.
+6. Verify the reviewed prior release or version before rollback.
+
+For this README before merge, rollback is the prior blob `14d294f27ab2e9260310bc5487520a15952d87eb` on the scoped branch. After merge, use a transparent revert or follow-up pull request. Documentation rollback must not delete dataset records, rewrite history, restore an invalid authority claim, or change release state.
+
+---
+
+## Maintainer rule
 
 ```text
-source descriptor + dataset registry record -> lifecycle payload -> validation receipt -> proof/catalog/policy/review -> release -> governed public surface
+dataset registry record
+  -> identifies and routes governed dataset state
+  -> resolves evidence, policy, review, catalog, release, correction, and rollback
+  -> supports a governed public-safe carrier when separately authorized
 ```
 
-Never collapse it into:
+Never collapse the chain into:
 
 ```text
-dataset registry record -> public Flora truth
+registry presence or schema validity
+  -> accepted Flora truth or public release
 ```
+
+## Change history
+
+### v0.2.0 — 2026-07-28
+
+- aligned the existing README with accepted Directory Rules v2 and canonical subtype-first registry placement;
+- replaced unresolved-path language with a bounded `PLACE` decision;
+- removed the speculative child directory tree and unaccepted record enum;
+- distinguished Flora dataset registry state from the draft `DatasetVersion` contract and README-only registry-schema family;
+- preserved dataset-family coverage, source role, rights, sensitivity, lifecycle, correction, rollback, and public-boundary controls;
+- added evidence-backed badges, navigation, repository-fit mappings, validation, and explicit verification holds.
+
+### v0.1.0 — 2026-06-28
+
+- replaced the original empty placeholder with a detailed Flora dataset-registry boundary;
+- recorded path, schema, validator, record, and CI uncertainty then known.
+
+[Back to top](#top)
