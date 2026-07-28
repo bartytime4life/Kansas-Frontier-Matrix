@@ -484,7 +484,10 @@ def test_terminal_divergence_precedes_explicit_skip_for_tracked_pr() -> None:
     )
 
 
-def test_untracked_merged_pr_can_be_classified_out_of_scope() -> None:
+def test_untracked_merged_pr_is_terminal_state_divergence() -> None:
+    # Before the regression fix, applicable:false could suppress an untracked
+    # merged PR. After the fix, all merged events are evaluated before
+    # applicability, so TERMINAL_STATE_DIVERGENCE is always returned.
     context = load(FIXTURES / "context_pr_1789_terminal_divergence.json")
     state = active_state(context)
     context.update(
@@ -494,9 +497,9 @@ def test_untracked_merged_pr_can_be_classified_out_of_scope() -> None:
     )
     result = evaluate(state, context)
     assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
-        "NOT_APPLICABLE",
-        "SCOPE_NOT_APPLICABLE",
-        False,
+        "REGRESSION",
+        "TERMINAL_STATE_DIVERGENCE",
+        True,
     )
 
 
