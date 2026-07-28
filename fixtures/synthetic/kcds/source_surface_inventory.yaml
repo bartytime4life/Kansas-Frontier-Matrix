@@ -1,0 +1,131 @@
+# KCDS Source Surface Inventory — Machine-Readable Fixture
+# Purpose: Documentation fixture; mirrors kcds.md §1 source-surface inventory table
+# Fixture type: synthetic; no real data; no live endpoints activated
+# Created: 2026-07-28
+# Discovery doc: docs/sources/catalog/kansas/kcds.md
+
+_fixture_meta:
+  fixture_id: kfm://fixtures/synthetic/kcds/source_surface_inventory
+  fixture_type: synthetic_documentation
+  real_data: false
+  pii: false
+  purpose: Machine-readable surface inventory for documentation tooling validation
+  caution: >
+    This fixture documents surface classifications at discovery time.
+    Classifications are PROPOSED unless marked CONFIRMED from official sources.
+    No surface listed here is activated or authorized for ingestion.
+
+surfaces:
+
+  - surface_id: kcds-program-page
+    name: KCDS program page
+    url: "https://www.ksdot.gov/about/our-organization/divisions/transportation-safety/safety-data/kansas-crash-data-system-kscds"
+    classification: PUBLIC
+    classification_confidence: CONFIRMED
+    contains_crash_data: false
+    contains_pii: false
+    notes: Program overview page; no incident data
+
+  - surface_id: kcds-le-crash-reporting-info
+    name: Law-enforcement crash reporting information
+    url: "https://www.ksdot.gov/about/our-organization/divisions/transportation-safety/safety-data/law-enforcement-crash-reporting-information"
+    classification: PUBLIC
+    classification_confidence: CONFIRMED
+    contains_crash_data: false
+    contains_pii: false
+    notes: Guidance for law-enforcement agencies; not a data surface
+
+  - surface_id: kcds-khp-kler-page
+    name: KHP KLER transition page
+    url: "https://kansashighwaypatrol.gov/about-us/kler-information/"
+    classification: PUBLIC
+    classification_confidence: CONFIRMED
+    contains_crash_data: false
+    contains_pii: false
+    notes: KHP electronic reporting transition information; not a data surface
+
+  - surface_id: kcds-road-reference-featureserver
+    name: KCDS road-reference FeatureServer
+    url: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/Kansas_Crash_Data_System_Roads/FeatureServer"
+    classification: PUBLIC
+    classification_confidence: CONFIRMED_EXISTENCE_TERMS_UNVERIFIED
+    contains_crash_data: false
+    contains_pii: false
+    road_geometry_only: true
+    activation_status: INACTIVE
+    activation_blocker: ArcGIS FeatureServer terms of reuse not verified
+    notes: >
+      Road network geometry for crash-report location placement.
+      NOT crash-incident records. Terms NEEDS VERIFICATION.
+      Do not consume at scale without verified terms.
+
+  - surface_id: kcds-web-entry-portal
+    name: KCDS web-entry portal (law enforcement)
+    url: UNKNOWN — not published on public-facing pages
+    classification: AUTHENTICATED
+    classification_confidence: CONFIRMED_CLASS_URL_UNKNOWN
+    contains_crash_data: true
+    contains_pii: true
+    activation_status: DENIED
+    activation_blocker: Law-enforcement credentials required; PII; multiple fail-closed gates
+    notes: Law-enforcement-only submission portal; no public access
+
+  - surface_id: kcds-kler-portal
+    name: KLER submission portal
+    url: UNKNOWN — authenticated
+    classification: AUTHENTICATED
+    classification_confidence: CONFIRMED_CLASS
+    contains_crash_data: true
+    contains_pii: true
+    activation_status: DENIED
+    activation_blocker: Authenticated; law-enforcement only; end-dated Dec 31 2027
+    deprecation_date: "2027-12-31"
+    notes: Electronic submission mechanism; ends December 31 2027
+
+  - surface_id: kcds-rms-xml
+    name: RMS XML integration endpoint
+    url: UNKNOWN — not yet operational
+    classification: UNKNOWN
+    classification_confidence: UNKNOWN
+    contains_crash_data: true
+    contains_pii: true
+    activation_status: NOT_YET_APPLICABLE
+    notes: Planned for late 2026–2027; not yet available at discovery time
+
+  - surface_id: kcds-aggregate-statistics
+    name: KCDS aggregate statistics / dashboard
+    url: UNKNOWN
+    classification: UNKNOWN
+    classification_confidence: UNKNOWN
+    contains_crash_data: false  # aggregate only — if properly aggregated
+    contains_pii: false  # aggregate only — requires k-anonymity verification
+    activation_status: INACTIVE
+    activation_blocker: Surface existence not confirmed; rights not verified
+    notes: May exist; NEEDS VERIFICATION from official KDOT public-data surfaces
+
+  - surface_id: kcds-bulk-export
+    name: KCDS downloadable tables / bulk export
+    url: UNKNOWN
+    classification: UNKNOWN
+    classification_confidence: UNKNOWN
+    contains_crash_data: UNKNOWN
+    contains_pii: UNKNOWN
+    activation_status: INACTIVE
+    notes: No confirmed public bulk export at discovery time
+
+  - surface_id: kcds-xml-schema
+    name: XML schema / code-list specifications
+    url: UNKNOWN
+    classification: UNKNOWN
+    classification_confidence: UNKNOWN
+    contains_crash_data: false  # documentation only
+    contains_pii: false
+    activation_status: INACTIVE
+    notes: May be available to law-enforcement/RMS vendors; public availability NEEDS VERIFICATION
+
+  - surface_id: kcds-predecessor
+    name: Prior KACRASH system (predecessor)
+    url: UNKNOWN
+    classification: DEPRECATED
+    classification_confidence: PROPOSED
+    notes: Superseded by KCDS April 27 2026; exact name NEEDS VERIFICATION
