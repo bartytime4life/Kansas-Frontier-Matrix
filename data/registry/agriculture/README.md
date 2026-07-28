@@ -248,8 +248,10 @@ The exact filename `nass_quickstats.yaml` exists in both Agriculture source lane
 ## Lifecycle and publication boundary
 
 ```mermaid
-flowchart LR
-    A["Reviewed registry candidate"] --> B["Identity, role, rights,\nsensitivity, and shape checks"]
+flowchart TD
+    D["Domain-first source view"] -. "accepted migration required" .-> S["One source-registry writer"]
+    S --> A["Reviewed registry candidate"]
+    A --> B["Identity, role, rights,\nsensitivity, and shape checks"]
     B --> C["Governed intake decision"]
     C --> R["RAW"]
     C --> Q["QUARANTINE"]
@@ -258,8 +260,6 @@ flowchart LR
     W --> P["PROCESSED"]
     P --> K["CATALOG / TRIPLET"]
     K --> U["PUBLISHED"]
-    D["Domain-first source view"] -. "accepted migration required" .-> S["One source-registry writer"]
-    S --> A
 ```
 
 The diagram shows responsibility flow, not current runtime proof. Promotion remains a governed state transition. Registry metadata never skips evidence resolution, policy, validation, review, release, correction, or rollback.
