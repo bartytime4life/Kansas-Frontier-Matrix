@@ -1,0 +1,120 @@
+{
+  "_fixture_meta": {
+    "fixture_type": "no_network_fixture",
+    "fixture_id": "usdm-gis-metadata-response-v1",
+    "source_id": "src:usdm-weekly",
+    "product": "U.S. Drought Monitor (USDM) weekly GIS distribution",
+    "network_status": "no_network_required",
+    "truth_posture": "cite_or_abstain",
+    "content_posture": "synthetic_representative",
+    "sensitive_data": false,
+    "note": "Synthetic no-network fixture representing GIS metadata for one USDM weekly release. Field shapes and structure are representative of the official USDM GIS distribution; values are synthetic. This fixture is not source authority, evidence, or a validated catalog record.",
+    "created": "2026-07-28",
+    "related_docs": [
+      "docs/sources/catalog/drought_monitor/drought-monitor.md",
+      "connectors/drought-monitor/README.md",
+      "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json"
+    ]
+  },
+  "release_identity": {
+    "source_id": "src:usdm-weekly",
+    "source_product_id": "usdm_weekly_polygons",
+    "release_week": "2026-W30",
+    "release_week_iso": "2026-07-21",
+    "release_date_native": "July 24, 2026",
+    "source_released_at_native": "July 24, 2026 at 08:30 ET",
+    "source_released_at_normalized": "NEEDS VERIFICATION — normalize to UTC with verified timezone evidence",
+    "source_data_cutoff_native": "Tuesday July 21, 2026 at 08:00 EDT",
+    "source_data_cutoff_normalized": "NEEDS VERIFICATION — normalize to UTC with verified timezone evidence",
+    "source_valid_date": "2026-07-21",
+    "source_valid_interval": {
+      "start_inclusive": "2026-07-21",
+      "end_exclusive": "2026-07-28",
+      "note": "Operative until next Thursday release supersedes it. PROPOSED — NEEDS VERIFICATION."
+    }
+  },
+  "artifact_type": "polygon_spatial_product",
+  "artifact_identity": {
+    "source_locator": "NEEDS VERIFICATION — exact official GIS distribution URL not yet confirmed",
+    "native_format": "Shapefile",
+    "alternate_formats": ["GeoJSON", "TopoJSON", "KMZ"],
+    "content_digest": "NEEDS VERIFICATION — digest of actual artifact not yet computed",
+    "geometry_metadata": {
+      "crs_native": "EPSG:4326",
+      "crs_note": "NEEDS VERIFICATION — confirm CRS against actual distribution endpoint",
+      "bbox_approx": [-125.0, 24.0, -66.5, 49.5],
+      "coverage": "Conterminous United States (CONUS); AK/HI coverage NEEDS VERIFICATION for this format",
+      "scale_note": "National broad-scale; not parcel-scale"
+    }
+  },
+  "native_classifications": {
+    "classification_type": "drought_intensity",
+    "categories": [
+      {"code": null,  "label": "None (Normal or Wet Conditions)", "presence_in_fixture": true},
+      {"code": "D0", "label": "Abnormally Dry",                   "presence_in_fixture": true},
+      {"code": "D1", "label": "Moderate Drought",                 "presence_in_fixture": true},
+      {"code": "D2", "label": "Severe Drought",                   "presence_in_fixture": true},
+      {"code": "D3", "label": "Extreme Drought",                  "presence_in_fixture": false},
+      {"code": "D4", "label": "Exceptional Drought",              "presence_in_fixture": false}
+    ],
+    "impact_markers": {
+      "short_term": true,
+      "long_term": true,
+      "combined": true,
+      "note": "Impact markers are native USDM fields. KFM must not silently recode them. NEEDS VERIFICATION of exact field names in distribution."
+    },
+    "crosswalk_posture": "advisory_only",
+    "anti_collapse_note": "Do not collapse native D0-D4 classifications into KFM domain truth without explicit crosswalk documentation and review."
+  },
+  "synthetic_features": [
+    {
+      "_note": "Synthetic polygon feature for fixture purposes only. Not a real geometry or real location.",
+      "type": "Feature",
+      "properties": {
+        "DM": 1,
+        "DM_label": "D1",
+        "DM_description": "Moderate Drought",
+        "release_date": "20260724",
+        "valid_start": "20260721",
+        "valid_end": "20260728"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-99.0, 38.5], [-98.0, 38.5], [-98.0, 39.0], [-99.0, 39.0], [-99.0, 38.5]
+        ]]
+      }
+    },
+    {
+      "_note": "Synthetic polygon feature for fixture purposes only.",
+      "type": "Feature",
+      "properties": {
+        "DM": 0,
+        "DM_label": "D0",
+        "DM_description": "Abnormally Dry",
+        "release_date": "20260724",
+        "valid_start": "20260721",
+        "valid_end": "20260728"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-101.0, 37.0], [-100.0, 37.0], [-100.0, 37.5], [-101.0, 37.5], [-101.0, 37.0]
+        ]]
+      }
+    }
+  ],
+  "attribution": {
+    "producers": ["NDMC (University of Nebraska-Lincoln)", "USDA", "NOAA"],
+    "host": "NDMC (University of Nebraska-Lincoln)",
+    "canonical_url": "https://droughtmonitor.unl.edu/",
+    "attribution_text": "U.S. Drought Monitor, produced by NDMC (University of Nebraska-Lincoln), USDA, and NOAA.",
+    "citation": "Svoboda et al. (2002), Bull. Amer. Meteor. Soc. 83(8):1181-1190.",
+    "attribution_note": "Rights and exact license string are NEEDS VERIFICATION for KFM use."
+  },
+  "connector_outcome_posture": {
+    "permitted_outcomes": ["admit_raw", "quarantine", "deny", "no_change", "superseded", "rate_limited", "skipped", "error"],
+    "forbidden_targets": ["data/processed", "data/catalog", "data/triplets", "data/proofs", "data/published", "release/"],
+    "note": "No connector outcome may silently promote material to processed, catalog, triplet, proof, published, or release state."
+  }
+}

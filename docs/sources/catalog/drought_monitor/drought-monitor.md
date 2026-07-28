@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for drought_monitor>
 created: 2026-05-21
-updated: 2026-05-21
+updated: 2026-07-28
 policy_label: public
 related:
   - docs/sources/catalog/drought_monitor/README.md
@@ -74,7 +74,7 @@ notes:
 | Producers | NDMC (University of Nebraska-Lincoln) · USDA · NOAA | [EXTERNAL, droughtmonitor.unl.edu] |
 | Canonical website | `droughtmonitor.unl.edu` (hosted by NDMC) | [EXTERNAL, droughtmonitor.unl.edu] |
 | Release cadence | Weekly — every Thursday | [EXTERNAL, droughtmonitor.unl.edu] |
-| Data validity cutoff | Tuesday 7:00 a.m. Eastern, week of release | [EXTERNAL, droughtmonitor.unl.edu] |
+| Data validity cutoff | Tuesday 8:00 a.m. EDT, week of release | [EXTERNAL, droughtmonitor.unl.edu] |
 | Classifications | None / D0 (Abnormally Dry) / D1 (Moderate) / D2 (Severe) / D3 (Extreme) / D4 (Exceptional) | [EXTERNAL, droughtmonitor.unl.edu] |
 | Native distribution formats | Shapefile · GeoJSON · TopoJSON · KMZ · TIFF (5 km gridded) · ArcGIS REST · Web Map Service | [EXTERNAL, drought.gov + droughtmonitor.unl.edu] |
 | Geographic coverage | U.S. (lower 48 + AK/HI) · Puerto Rico · U.S. Virgin Islands · U.S.-Affiliated Pacific Islands | [EXTERNAL, drought.gov] |
@@ -164,7 +164,7 @@ PROPOSED SourceDescriptor stub fields for USDM (illustrative — to be ratified 
 | `source_role` | `authority` (drought-extent classification) | PROPOSED |
 | `rights_posture` | public; attribution required to NDMC, USDA, NOAA | NEEDS VERIFICATION (license string) |
 | `access_method` | HTTP fetch of shapefile/GeoJSON/TopoJSON; ArcGIS REST | NEEDS VERIFICATION (chosen ingest path) |
-| `cadence` | weekly, Thursday release; data valid through Tuesday 07:00 ET | EXTERNAL — see §17 |
+| `cadence` | weekly, Thursday release; data valid through Tuesday 08:00 EDT | EXTERNAL — see §17 |
 | `steward` | `<PLACEHOLDER>` | UNKNOWN |
 | `sensitivity` | public | NEEDS VERIFICATION |
 | `attribution_required` | NDMC (UNL) · USDA · NOAA | EXTERNAL — see §17 |
@@ -272,11 +272,14 @@ PROPOSED STAC `properties.kfm:provenance` block — grounded in Pass-10 C4-01 (E
 
 CONFIRMED doctrine — distinct **source / observed / valid / retrieval / release / correction** times where material. PROPOSED mapping for USDM:
 
+> [!NOTE]
+> The cutoff times below were corrected in place on 2026-07-28. The prior stale value (`07:00 ET` / `7:00 a.m. Eastern`) has been superseded by the official current value (`08:00 EDT`). See [`CORRECTION-2026-07-25-usdm-cutoff.md`](./CORRECTION-2026-07-25-usdm-cutoff.md) for the correction record and lineage.
+
 | KFM time field | USDM source field | Notes | Status |
 |---|---|---|---|
-| `source_time` | Map "Map Date" — Tuesday 07:00 ET | The classification valid-through cutoff. | PROPOSED — EXTERNAL anchor confirmed (§17) |
-| `observed_time` | (range) week ending Tuesday 07:00 ET | USDM authors review data over the week leading up to the cutoff. | PROPOSED — EXTERNAL anchor confirmed (§17) |
-| `valid_time` | Tuesday 07:00 ET → next Tuesday 07:00 ET | A USDM map is the operative classification until the next Thursday release supersedes it. | PROPOSED — NEEDS VERIFICATION |
+| `source_time` | Map "Map Date" — Tuesday 08:00 EDT | The classification valid-through cutoff. | PROPOSED — EXTERNAL anchor confirmed (§17) |
+| `observed_time` | (range) week ending Tuesday 08:00 EDT | USDM authors review data over the week leading up to the cutoff. | PROPOSED — EXTERNAL anchor confirmed (§17) |
+| `valid_time` | Tuesday 08:00 EDT → next Tuesday 08:00 EDT | A USDM map is the operative classification until the next Thursday release supersedes it. | PROPOSED — NEEDS VERIFICATION |
 | `retrieval_time` | KFM watcher poll timestamp | Set by connector at fetch. | PROPOSED |
 | `release_time` | Thursday 08:30 ET (NDMC release) | The public release timestamp. | PROPOSED — EXTERNAL anchor confirmed (§17) |
 | `correction_time` | Set when USDM authors retroactively correct a prior week | USDM does occasionally re-issue; KFM MUST preserve both versions per `KFM-P12-IDEA-0004` ("catalog patches are governed release events"). | NEEDS VERIFICATION |
@@ -501,7 +504,7 @@ This block is illustrative — it has not been validated against any live STAC p
 
 > **Note on producer count.** Some NIDIS-side pages (Drought.gov) include NASA as a fourth partner; the NDMC Media Kit (canonical) and the National Weather Service list three (NDMC, USDA, NOAA). This page adopts the NDMC three-producer attribution.
 
-**Release cadence** — A new map is released **every Thursday morning at 08:30 Eastern**, based on data through **07:00 Eastern the preceding Tuesday**. [EXTERNAL, drought.gov + adaptationclearinghouse.org]
+**Release cadence** — A new map is released **every Thursday morning at 08:30 Eastern**, based on data through **08:00 EDT the preceding Tuesday**. [EXTERNAL, drought.gov + adaptationclearinghouse.org]
 
 **Classifications** — Six categories:
 
@@ -534,6 +537,6 @@ This block is illustrative — it has not been validated against any live STAC p
 
 ---
 
-**Last reviewed:** 2026-05-21 *(docs-only session — product-page polished from prior scaffold; KFM-internal claims grounded in atlas cards KFM-P1-IDEA-0020, KFM-P2-IDEA-0028, KFM-P12-IDEA-0004, KFM-P22-IDEA-0003, KFM-P22-PROG-0005, KFM-P22-PROG-0037, KFM-P22-PROG-0038, KFM-P22-PROG-0039, KFM-P25-IDEA-0003, KFM-P25-PROG-0004, KFM-P26-IDEA-0017, KFM-P26-PROG-0025, KFM-P27-FEAT-0003, KFM-P27-FEAT-0004 and on directory-rules.md §7.3, §7.4; USDM product facts grounded in droughtmonitor.unl.edu, drought.gov, climatehubs.usda.gov, weather.gov).*
+**Last reviewed:** 2026-07-28 *(in-place cutoff correction: all `07:00 ET`/`7:00 a.m. Eastern` fields updated to `08:00 EDT` per `CORRECTION-2026-07-25-usdm-cutoff.md`; original scaffold reviewed 2026-05-21).*
 
 [↑ back to top](#quick-jump)
