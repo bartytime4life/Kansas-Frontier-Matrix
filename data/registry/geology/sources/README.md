@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/geology/sources/readme
 name: Geology Source Registry README
 path: data/registry/geology/sources/README.md
 type: data-registry-geology-sources-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
   - <registry-steward>
@@ -15,14 +15,14 @@ owners:
   - <proof-steward>
   - <release-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-07-28
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: geology-source-descriptor-records
 domain: geology
-path_posture: existing-thin-readme-replaced; domain-first-registry-path-confirmed; canonical-source-registry-pattern-points-to-data-registry-sources-geology; layout-needs-verification
+path_posture: compatibility-generated-view; canonical-writes-under-data-registry-sources; no-independent-writes; adr-0029-accepted
 sensitivity_posture: registry-internal; no-public-path; restricted-subsurface-details-fail-closed; source-role-preserving; evidence-aware; rights-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -80,7 +80,7 @@ tags:
 notes:
   - "This README expands the thin README at `data/registry/geology/sources/README.md`."
   - "Geology source registry records are admission and authority-control records. They do not store source payloads, prove geologic claims, define contracts, enforce schemas, hold policy, close catalogs, or publish artifacts."
-  - "The inspected Geology source-registry doctrine names `data/registry/sources/geology/` as the machine-readable registry lane. This requested domain-first path exists in the repository but remains layout-NEEDS VERIFICATION until registry topology is reconciled."
+  - "Adopted Directory Rules v2 (`DIR-SOURCE-003/004`) makes `data/registry/sources/` the canonical machine source-descriptor topology. This domain-first path is a compatibility/navigation surface and must not independently write descriptors."
   - "Restricted subsurface and resource-adjacent details fail closed until governed redaction/review/release gates close."
 [/KFM_META_BLOCK_V2] -->
 
@@ -99,7 +99,7 @@ Domain-first registry lane for Geology and Natural Resources source descriptor a
   <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
 </p>
 
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Geology source boundary](#geology-source-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested descriptor shape](#suggested-descriptor-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+**Quick links:** [Scope](#scope) · [Authority](#authority-and-path-posture) · [Repo fit](#repo-fit) · [Write contract](#write-contract) · [Geology source boundary](#geology-source-boundary) · [Exclusions](#exclusions) · [Validation](#validation) · [Status](#status-and-open-verification)
 
 > [!CAUTION]
 > `data/registry/geology/sources/` is a source-registry lane for Geology admission and authority-control records. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, proof, receipt storage, semantic contract authority, policy, release authority, public API/UI material, or generated-answer authority.
@@ -125,27 +125,15 @@ They do **not** record geologic truth. A source descriptor can authorize or deny
 
 ---
 
-## Path posture
+## Authority and path posture
 
-The requested and existing lane is:
+`data/registry/geology/sources/` is an existing domain-first compatibility and navigation surface. Adopted Directory Rules v2 and ADR-0029 resolve its authority:
 
-```text
-data/registry/geology/sources/
-```
+- `DIR-SOURCE-003` places machine source identities and descriptors under `data/registry/sources/`;
+- `DIR-SOURCE-004` permits `data/registry/<domain>/sources/` only as a generated view, never as an independent writer when the canonical source registry is authoritative;
+- this README may explain and link, but it does not admit, activate, mutate, or duplicate source descriptors.
 
-This is a domain-first registry path. Current Geology source-registry doctrine and source-family docs name the subtype-first pattern as the machine-readable source registry home:
-
-```text
-data/registry/sources/geology/
-```
-
-Because both patterns are visible in repo evidence, this README preserves the requested path while marking final topology as **NEEDS VERIFICATION**. Until registry layout is reconciled by accepted directory or ADR guidance, do not silently duplicate source descriptor instances across both lanes. Prefer one canonical descriptor record with compatibility pointers, migration notes, and rollback history.
-
-The domain-first parent exists but is currently a stub:
-
-```text
-data/registry/geology/README.md
-```
+**Placement result:** `DENY` independent descriptor writes here. A generated Geology view is `MIRROR`-eligible only after its canonical inputs, generator, owner, digests, parity check, consumers, correction path, rollback target, and exit criteria are verified. Until then, retain this README-only compatibility surface and route machine records through the accepted subtype-first registry topology.
 
 ---
 
@@ -153,7 +141,7 @@ data/registry/geology/README.md
 
 | Responsibility | Home | Boundary |
 |---|---|---|
-| Geology source descriptor/admission records | `data/registry/geology/sources/` and/or `data/registry/sources/geology/` after topology reconciliation | Source identity, role, rights, terms, cadence, sensitivity, activation, supersession, and authority limits. |
+| Canonical Geology source descriptor/admission records | `data/registry/sources/` using the accepted source-identity topology | Source identity, role, rights, terms, cadence, sensitivity, activation, supersession, and authority limits. This compatibility path is not a writer. |
 | Cross-domain source registry parent | `data/registry/sources/README.md` | General SourceDescriptor and admission-control doctrine. |
 | Human-facing Geology source orientation | `docs/domains/geology/SOURCE_REGISTRY.md`, `SOURCES.md`, `SOURCE_LEDGER.md`, `SOURCE_ROLE_MATRIX.md` | Explains source families, source-role discipline, admission posture, and anti-collapse rules; not machine descriptor storage. |
 | Geology source payloads | `data/raw/geology/`, `data/work/geology/`, `data/quarantine/geology/`, `data/processed/geology/` | Actual data belongs in lifecycle lanes, not registry records. |
@@ -188,22 +176,23 @@ data/registry/geology/README.md
 
 ---
 
-## Accepted material
+## Write contract
 
-Accepted content is limited to Geology source registry records and registry-local support files:
+### Allowed here
 
-- SourceDescriptor instances or pointers;
-- SourceActivationDecision references or activation sidecars where accepted;
-- SourceIntakeRecord references and source-head metadata summaries;
-- source-family README files and local indexes;
-- source-role review notes and role-assignment records;
-- rights, sensitivity, cadence, steward, endpoint, access, attribution, redistribution, and authority-scope metadata;
-- source vintage, map series, well-log vintage, sample or lab lineage, model lineage, and source-head metadata summaries;
-- supersession, withdrawal, correction, embargo, stale-state, quarantine, and rollback references;
-- registry-local manifests, checksums, signatures, and index sidecars;
-- pointers to validation receipts, proof packs, catalog records, release candidates, release manifests, correction notices, and rollback cards.
+- this compatibility README;
+- links to canonical source records and governing contracts, schemas, policy, receipts, proofs, catalogs, corrections, rollback targets, and release decisions;
+- a verified one-way generated index whose entries resolve to canonical records without minting local identities or weakening role, rights, sensitivity, time, provenance, or correction state;
+- migration or tombstone metadata required by an accepted migration.
 
-Keep records compact and pointer-based. Do not embed large payloads, sensitive location details, proof packs, policy decisions, catalog records, release manifests, source-native dumps, or geologic claims in this lane.
+### Not allowed here
+
+- independently authored `SourceDescriptor`, intake, activation, or source-authority records;
+- manually copied descriptor indexes;
+- source payloads, secrets, restricted details, proofs, catalogs, policy, contracts, schemas, or release objects;
+- any public-serving, activation, promotion, proof, release, or publication path.
+
+A future generated view must fail closed on missing or ambiguous canonical identity, digest mismatch, unresolved rights or sensitivity, stale input, role mismatch, parity failure, or absent rollback evidence.
 
 ---
 
@@ -229,7 +218,8 @@ Keep records compact and pointer-based. Do not embed large payloads, sensitive l
 
 ---
 
-## Suggested directory shape
+<a id="suggested-directory-shape"></a>
+## Retired directory sketch
 
 The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist.
 
@@ -263,13 +253,14 @@ data/registry/geology/sources/
 └── index.local.json
 ```
 
-If `data/registry/sources/geology/` is accepted as canonical, this domain-first path should either redirect to that lane or be migrated with a clear manifest, retained history, and rollback target. Do not maintain two divergent descriptor sets.
+This earlier sketch is retired. Do not materialize it at this compatibility path. Any generated view must be derived one-way from canonical source records with parity, correction, and rollback evidence.
 
 ---
 
-## Suggested descriptor shape
+<a id="suggested-descriptor-shape"></a>
+## Retired descriptor sketch
 
-The exact schema remains **NEEDS VERIFICATION**. A Geology source registry record should be structured enough for audit, admission, validation, correction, and rollback.
+The illustrative descriptor below is retained only as historical documentation context and is not an accepted schema or authorization to write records here. Canonical contracts and schemas govern actual descriptor shape; their current pairing remains **NEEDS VERIFICATION**.
 
 ```json
 {
@@ -309,7 +300,7 @@ Do not treat this JSON block as a live schema. It is a maintainer-facing sketch 
 
 ## Required checks before use
 
-- [ ] Confirm whether `data/registry/geology/sources/` or `data/registry/sources/geology/` is the accepted canonical descriptor lane before adding real descriptor payloads.
+- [ ] Confirm every machine descriptor write resolves to the accepted canonical topology under `data/registry/sources/`; do not add descriptors here.
 - [ ] Confirm the object is a source registry record, not source data, dataset registry record, crosswalk, domain registry record, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, or test.
 - [ ] Confirm source identity, source role, rights posture, terms, cadence, source head, access posture, steward, source vintage, and authority limits are preserved.
 - [ ] Confirm source role is not upgraded by normalization, aggregation, cataloging, release review, API shaping, map rendering, or generated explanation.
@@ -337,7 +328,7 @@ Do not treat this JSON block as a live schema. It is a maintainer-facing sketch 
 | Geology source-family docs name canonical SourceDescriptor records under `data/registry/sources/geology/` and list source-role discipline. | CONFIRMED by GitHub contents API during this edit |
 | Geology canonical-path docs include `data/registry/sources/geology/` in the data lifecycle lane and keep Geology as a segment inside responsibility roots. | CONFIRMED by GitHub contents API during this edit |
 | Concrete Geology source descriptor payloads exist under this requested lane. | UNKNOWN |
-| The final accepted topology between `data/registry/geology/sources/` and `data/registry/sources/geology/` is resolved. | NEEDS VERIFICATION |
+| The authority relationship is resolved: canonical machine descriptors use `data/registry/sources/`; this path is compatibility/generated-view only. | CONFIRMED by adopted ADR-0029 and `DIR-SOURCE-003/004` |
 | A canonical Geology source descriptor schema is enforced. | NEEDS VERIFICATION |
 | CI validates Geology source registry records. | UNKNOWN |
 | This README grants public access to Geology source registry internals. | DENY |
@@ -357,3 +348,21 @@ Never collapse it into:
 ```text
 source descriptor -> public Geology truth
 ```
+
+---
+
+## Change history
+
+### v0.3.0 — 2026-07-28
+
+- aligned this path with adopted ADR-0029 and `DIR-SOURCE-003/004`;
+- classified it as a compatibility/generated view with no independent descriptor writes;
+- retired the local directory and descriptor sketches as implementation guidance;
+- preserved Geology source-role, rights, sensitivity, evidence, correction, rollback, and public-boundary controls.
+
+### v0.2.0 — 2026-06-28
+
+- replaced the original placeholder with a detailed Geology source-registry boundary;
+- recorded the then-unresolved domain-first versus subtype-first path conflict.
+
+[Back to top](#top)
