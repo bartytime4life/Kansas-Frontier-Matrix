@@ -33,7 +33,7 @@
     "digest": {
       "type": ["string", "null"],
       "pattern": "^sha256:[a-f0-9]{64}$",
-      "description": "SHA-256 digest of the scoring matrix document. Required for digest-linked traceability."
+      "description": "SHA-256 digest of the scoring matrix document. Null only for records where no official document has been retrieved yet. When a document exists, a valid sha256 digest must be provided to ensure historical traceability."
     },
     "supersedes_ref": {
       "type": ["string", "null"],
