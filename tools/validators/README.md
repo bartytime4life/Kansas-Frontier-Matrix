@@ -2,16 +2,17 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.2
-status: draft
+version: v0.3
+status: draft; shared-ci-readiness-checker-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-07-08
+updated: 2026-07-29
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker and is not domain validation or release authority
 related:
+  - ci_readiness.py
   - _common/README.md
   - domains/README.md
   - source/README.md
@@ -51,12 +52,13 @@ related:
   - ../../release/
   - ../../fixtures/
   - ../../tests/
+  - ../../tests/validators/test_ci_readiness.py
 notes:
-  - "This README replaces the prior two-line tools/validators parent stub. It does not confirm executable validator scripts, registry wiring, package entrypoints, generated reports, receipt emission, runtime behavior, or CI behavior."
+  - "v0.3 confirms one standard-library placeholder-readiness checker and its focused unit tests; it does not establish domain validation, registry wiring, generated reports, receipt emission, runtime behavior, or release authority."
   - "Validators are fail-closed checkers. They do not define domain meaning, create canonical schemas, admit sources, create EvidenceBundles, decide policy, approve release, publish artifacts, or authorize public API/UI/map/AI surfaces."
   - "Each validator lane should have a deterministic finite outcome, cite evidence or abstain, preserve lifecycle boundaries, preserve source roles, preserve sensitivity/rights constraints, and route unresolved cases to hold/deny/restrict/abstain/review rather than silently pass."
   - "A passing validator is not sovereign truth. It means only that the configured validation checks passed for the declared scope; evidence, policy, review, release, correction, and rollback obligations still control public use."
-  - "Executable behavior, fixture coverage, registry ids, schemas, policy bundles, receipts, report destinations, runtime wiring, and CI integration remain NEEDS VERIFICATION unless separately verified in current repo evidence."
+  - "The readiness checker surfaces are integrated into eleven domain validation-readiness workflows in the same atomic batch: ten invoke the root-scanning CLI, while Hydrology imports the two source classifiers inside its exact mixed-root inventory. Broader executable behavior, fixture coverage, registry ids, schemas, policy bundles, receipts, report destinations, runtime wiring, and CI enforcement remain NEEDS VERIFICATION unless separately verified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -99,12 +101,34 @@ A validator may check that evidence exists, policy was evaluated, release refere
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/README.md` | **CONFIRMED README** | This file replaces the previous two-line parent stub. |
+| `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
 | `tools/validators/release/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Release validator routing; not release governance or publication authority. |
 | `tools/validators/source/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Source-admission and source-registry validation routing; not the source registry. |
 | `tools/validators/sensitivity/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Sensitivity posture checks; not tier, policy, redaction, or release authority. |
-| Executable validators, registry wiring, CLI/package entrypoints, CI jobs, report outputs, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | This parent README is documentation and routing only. |
+| Domain validators, registry wiring, other CLI/package entrypoints, CI integration, report outputs, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | The narrow readiness checker does not establish these broader surfaces. |
+
+[Back to top](#top)
+
+---
+
+## Placeholder-only CI readiness checker
+
+`ci_readiness.py` is a Python 3.9-compatible, standard-library-only, importable checker and CLI for readiness-hold workflows. It accepts one or more `--test-root` and `--validator-root` values, parses Python without importing or executing it, and exits zero only when every supplied root exists and is safe, at least one Python file exists across the test-root set and across the validator-root set, and every discovered Python file matches a recognized placeholder shape. README-only sibling roots are allowed when their category remains non-vacuous globally.
+
+Recognized test placeholders are comment/module-docstring-only modules and an optional module docstring followed by exactly `def test_placeholder(): assert True`. Recognized validator placeholders are comment/module-docstring-only modules and an optional module docstring followed by exactly `def main(): raise NotImplementedError`, optionally with one constant string message. Imports, decorators, arbitrary `pass`, extra definitions, substantive tests or validators, syntax errors, missing or unsafe roots, symlinks, unreadable paths, repository escapes, and a globally Python-empty test or validator category fail closed with sorted path-and-reason diagnostics. An individual README-only root is not an empty-root failure when another safe root in the same category supplies recognized Python placeholders.
+
+Both test and validator roots fail closed on unexpected regular files, including shell, JavaScript, TypeScript, policy, and data/schema sources. Their shared narrow allowlist is documentation named `README`, `LICENSE`, or `NOTICE`; `.md`, `.markdown`, `.rst`, or `.txt` documentation; `.gitkeep`; and whitespace-only extensionless sentinels. Findings use `unexpected_test_source` or `unexpected_validator_source` as appropriate. This classification does not decide whether a non-Python test or validator is correct—it prevents a Python-placeholder hold from silently masking one.
+
+Successful CLI output is deliberately bounded to `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` lines with inspected file counts. A zero exit means only “the supplied roots are non-vacuous and placeholder-only.” It is not a validator pass, test pass, admission decision, proof, policy decision, promotion decision, or release approval.
+
+```bash
+python tools/validators/ci_readiness.py \
+  --label Example \
+  --test-root tests/domains/example \
+  --validator-root tools/validators/domains/example
+```
 
 [Back to top](#top)
 
@@ -274,13 +298,14 @@ Validator lanes may define narrower outcome vocabularies, but parent-level outco
 
 ---
 
-## Minimal future layout
+## Current and future layout
 
 Future implementation should remain modular and reversible:
 
 ```text
 tools/validators/
 ├── README.md
+├── ci_readiness.py                  # confirmed placeholder-readiness checker
 ├── _common/                         # shared validator utilities, if verified
 ├── domains/                         # per-domain validator lanes
 ├── policy/                          # policy-facing validation routing
@@ -309,6 +334,7 @@ This README is complete for documentation purposes when:
 - [x] It indexes trust/governance gates, source/taxonomy lanes, domain/cross-domain lanes, and map/tile/artifact/public-surface validators.
 - [x] It marks executable behavior, registry wiring, schemas, fixtures, tests, policy bundles, report destinations, receipt emission, release integration, runtime behavior, and CI wiring as **NEEDS VERIFICATION**.
 - [x] It includes finite parent-level outcomes and denies validator overclaim.
+- [x] It records the bounded `ci_readiness.py` CLI/import API, exact placeholder shapes, fail-closed path posture, tests, and authority limits.
 
 Future implementation is not complete until:
 
@@ -328,4 +354,5 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-07-29 | Added the standard-library placeholder-readiness checker, focused tests including unexpected test/validator-source denial, bounded behavior/authority documentation, and same-batch integration into eleven domain readiness workflows: ten root-scanning CLI calls and one Hydrology classifier import for its mixed-root inventory. | **CONFIRMED bounded checker and workflow integration** |
 | 2026-07-08 | Expanded parent validators README from two-line stub into governed validator-root index. | **CONFIRMED README / implementation NEEDS VERIFICATION** |

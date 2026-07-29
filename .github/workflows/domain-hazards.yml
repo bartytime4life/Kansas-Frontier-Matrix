@@ -70,71 +70,13 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          test_root = Path("tests/domains/hazards")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
-              raise SystemExit(
-                  "Executable Hazards tests surfaced. Graduate validate-hazards "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
-              )
-
-          validator_roots = [
-              Path("tools/validators/domains/hazards"),
-              Path("tools/validators/air-hazards"),
-              Path("tools/validators/atmosphere_hazards"),
-              Path("tools/validators/hydrology-hazards"),
-          ]
-
-          implementations = []
-          for root in validator_roots:
-              if not root.exists():
-                  continue
-              for path in sorted(root.rglob("*")):
-                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
-                      continue
-                  if path.suffix == ".py":
-                      tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-                      if any(
-                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-                          for node in ast.walk(tree)
-                      ):
-                          implementations.append(str(path))
-                  elif path.suffix in {".js", ".mjs", ".cjs", ".ts", ".tsx", ".sh"}:
-                      meaningful = [
-                          line.strip()
-                          for line in path.read_text(encoding="utf-8").splitlines()
-                          if line.strip()
-                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
-                      ]
-                      if meaningful:
-                          implementations.append(str(path))
-
-          if implementations:
-              raise SystemExit(
-                  "Hazards validator implementation surfaced. Resolve ownership and wire "
-                  "the accepted command:\n" + "\n".join(implementations)
-              )
-
-          print("No collected Hazards tests or executable Hazards validator bodies were found.")
-          PY
+          python tools/validators/ci_readiness.py \
+            --label "Hazards" \
+            --test-root tests/domains/hazards \
+            --validator-root tools/validators/domains/hazards \
+            --validator-root tools/validators/air-hazards \
+            --validator-root tools/validators/atmosphere_hazards \
+            --validator-root tools/validators/hydrology-hazards
 
           if grep -Eq '^(hazards-validate|validate-hazards):' Makefile; then
             echo "::error::A Hazards validation target now exists. Wire and verify it deliberately instead of retaining this hold."
@@ -154,6 +96,9 @@ jobs:
           `WORKFLOW_SKIPPED_EXPLICIT`
 
           `WORKFLOW_HOLD: executable Hazards validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           Current repository evidence is documentation-heavy: sampled Hazards
           test modules are placeholders, and the inspected per-domain and

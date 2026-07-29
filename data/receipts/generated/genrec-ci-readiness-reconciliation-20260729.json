@@ -1,0 +1,201 @@
+{
+  "receipt_id": "genrec-ci-readiness-reconciliation-20260729",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-atmosphere.yml",
+    ".github/workflows/domain-habitat.yml",
+    ".github/workflows/domain-flora.yml",
+    ".github/workflows/domain-archaeology.yml",
+    ".github/workflows/domain-hydrology.yml",
+    ".github/workflows/domain-settlements-infrastructure.yml",
+    ".github/workflows/domain-hazards.yml",
+    ".github/workflows/domain-roads-rail-trade.yml",
+    ".github/workflows/domain-people-dna-land.yml",
+    ".github/workflows/domain-geology.yml",
+    ".github/workflows/domain-agriculture.yml",
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/focus-mock-test.yml",
+    ".github/workflows/rollback-drill.yml",
+    ".github/workflows/README.md",
+    "tools/validators/ci_readiness.py",
+    "tools/validators/README.md",
+    "tests/validators/test_ci_readiness.py",
+    "tests/validators/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-atmosphere.yml": "sha256:e97df0c21da08fd9dc66228ab4c25924dd4fe5a7763a5e0361438be6504fc182",
+    ".github/workflows/domain-habitat.yml": "sha256:574a4573537c5173521e3114e6930695a85294f0b5f19ecb6484268e18928235",
+    ".github/workflows/domain-flora.yml": "sha256:f1c959c3409b6fc87e7c0b6834d1dd4a575b7621a86e5817394e837ecbd9aa31",
+    ".github/workflows/domain-archaeology.yml": "sha256:ab679a6a190105f7f3f954510a8574b1fd7a2e912016f52ca083cb73619b5e2b",
+    ".github/workflows/domain-hydrology.yml": "sha256:ab7b9345ca9c83980d3fa180d791394d1d559498e05fcc0b4dfbb396b8e06674",
+    ".github/workflows/domain-settlements-infrastructure.yml": "sha256:f36927d9d50f0c5d7f09c0f098a502dcd3924aa2e047a72c7b8e12a08a8d2bdc",
+    ".github/workflows/domain-hazards.yml": "sha256:6df9e46d8ab80051fdb56e99a24689c96f159be256c81ce09087c8cd3a5070e5",
+    ".github/workflows/domain-roads-rail-trade.yml": "sha256:c976c8a17ae89e2482f763cd339c08e6d671ec9e7fd6efafbe084f98c7c69450",
+    ".github/workflows/domain-people-dna-land.yml": "sha256:c6831cb38492318187b42522e14d8be0e1c17fe8da9223c7d5e4fee327a899d1",
+    ".github/workflows/domain-geology.yml": "sha256:ceecc8a962f30667e5949cddabc07331fbd8bfa4a766fa889bc2dadf9dfbdfb0",
+    ".github/workflows/domain-agriculture.yml": "sha256:21dcbbc98b0b163f15b9219d297ff1101b6f923cf7f478e1f9605d2865e57392",
+    ".github/workflows/e2e-smoke.yml": "sha256:4ac0168753ff674f6417f512e679e4b16b8b175b5547d54793a8b28d8fa99163",
+    ".github/workflows/focus-mock-test.yml": "sha256:68d334095c116e352d3f57a18c0923c6e8f71e2e84b9053ed022a732886eb749",
+    ".github/workflows/rollback-drill.yml": "sha256:d332e4b0b24235734c6f91b65c82ebcbcf53eff04471686381419583d01c375a",
+    ".github/workflows/README.md": "sha256:a4ca543e5da835f2697b5c6bfdc1fd4423be3c17a5e21e175e72ec9fa132ce8d",
+    "tools/validators/ci_readiness.py": "sha256:c10e776bd592fd539e876e7f129407868d00c53581908a07f15fa8987725170d",
+    "tools/validators/README.md": "sha256:4e6bf8f3b3618acd2a5ece04f689c6d194e1ea9530d3f0291b83c8d7e9600bd6",
+    "tests/validators/test_ci_readiness.py": "sha256:523419df2eb716d89af6bc84d933ffbebd45c212a8edee0bd07c9fe1654343d2",
+    "tests/validators/README.md": "sha256:d7cad216958f23da2cb15510b866156385f24d7b2b1a61cdc252b0f626df2679"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 desktop session 2026-07-29"
+  },
+  "prompt_or_contract": "sha256:aa516187feeb341773615c2c3be53bb565aaac5fa188e84745048e8883b1b8a0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "workspace filesystem",
+      "Git",
+      "Python validation",
+      "Ruby YAML parser",
+      "GitHub connector",
+      "multi-agent review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:aa516187feeb341773615c2c3be53bb565aaac5fa188e84745048e8883b1b8a0"
+    ],
+    "attached_docs": [
+      "KFM Whole-Project Workflow Discovery and Implementation Agent Prompt"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@584edf041ee041852cdc7649dc94b7521bd0ed96",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@584edf041ee041852cdc7649dc94b7521bd0ed96",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@584edf041ee041852cdc7649dc94b7521bd0ed96",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5120395574",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5120404731"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-atmosphere.yml": "PROPOSED",
+    ".github/workflows/domain-habitat.yml": "PROPOSED",
+    ".github/workflows/domain-flora.yml": "PROPOSED",
+    ".github/workflows/domain-archaeology.yml": "PROPOSED",
+    ".github/workflows/domain-hydrology.yml": "PROPOSED",
+    ".github/workflows/domain-settlements-infrastructure.yml": "PROPOSED",
+    ".github/workflows/domain-hazards.yml": "PROPOSED",
+    ".github/workflows/domain-roads-rail-trade.yml": "PROPOSED",
+    ".github/workflows/domain-people-dna-land.yml": "PROPOSED",
+    ".github/workflows/domain-geology.yml": "PROPOSED",
+    ".github/workflows/domain-agriculture.yml": "PROPOSED",
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    ".github/workflows/focus-mock-test.yml": "PROPOSED",
+    ".github/workflows/rollback-drill.yml": "PROPOSED",
+    ".github/workflows/README.md": "PROPOSED",
+    "tools/validators/ci_readiness.py": "PROPOSED",
+    "tools/validators/README.md": "PROPOSED",
+    "tests/validators/test_ci_readiness.py": "PROPOSED",
+    "tests/validators/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authorization-and-scope",
+      "outcome": "PASS",
+      "reason": "Issue #1675 authorization and issue #1820 cursor v13 pin one 20-path CI-readiness reconciliation at immutable base 584edf041ee041852cdc7649dc94b7521bd0ed96; this receipt is the twentieth path."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "CI orchestration remains under .github/workflows, the shared checker remains under tools/validators, its focused tests remain under tests/validators, and provenance is emitted under data/receipts/generated. No parallel authority root was introduced."
+    },
+    {
+      "gate": "python-compatibility-and-focused-tests",
+      "outcome": "PASS",
+      "reason": "The helper and focused test module compiled with the repository-compatible system Python 3.9, and the focused suite completed with 42 passed tests."
+    },
+    {
+      "gate": "exact-workflow-readiness-replay",
+      "outcome": "PASS",
+      "reason": "All 39 changed Evaluate/Confirm shell bodies from the fourteen workflows ran in a deterministic no-network environment and retained explicit WORKFLOW_HOLD or bounded readiness outcomes without executing domain validators, proof producers, rollback mutation, release, or publication."
+    },
+    {
+      "gate": "workflow-yaml-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "Ruby parsed all fourteen changed workflow files, Markdown fence/final-newline checks passed for the three changed READMEs, and git diff --check completed without findings for the nineteen non-receipt artifacts."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "make validate completed successfully; schema and contract pytest reported 133 passed, with invalid fixtures rejected as designed."
+    },
+    {
+      "gate": "full-pytest-suite",
+      "outcome": "PASS",
+      "reason": "The full pytest suite completed with 324 passed tests and 64 passed subtests."
+    },
+    {
+      "gate": "governed-api-boundary",
+      "outcome": "PASS",
+      "reason": "make governed-api-verify completed with six passed tests and an intact governed API import boundary."
+    },
+    {
+      "gate": "credential-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The scoped diff contains no detected credential material, local attachment paths, private payloads, sensitive coordinates, source activation, release action, or publication action."
+    },
+    {
+      "gate": "remote-workflow-execution",
+      "outcome": "SKIPPED",
+      "reason": "Remote GitHub Actions execution is pending branch publication and draft pull request creation; the genuine Explorer Web implementation gap remains explicitly deferred and must not be hidden."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt and draft batch are not merge, source activation, release, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "immutable-base-and-repository-evidence",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@584edf041ee041852cdc7649dc94b7521bd0ed96"
+    },
+    {
+      "id": "directory-rules-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@584edf041ee041852cdc7649dc94b7521bd0ed96"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@584edf041ee041852cdc7649dc94b7521bd0ed96"
+    },
+    {
+      "id": "final-batch-authorization",
+      "validated": true,
+      "evidence_ref": "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5120395574"
+    },
+    {
+      "id": "continuation-cursor-v13",
+      "validated": true,
+      "evidence_ref": "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5120404731"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T16:50:46Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Reconciles deterministic repository-readiness drift in eleven domain workflows and the E2E, Focus mock, and rollback-drill workflows while preserving explicit held outcomes. The shared checker recognizes only exact placeholder forms and fails closed on unsafe, substantive, unexpected, or vacuous source inventories. This batch does not establish Explorer Web/UI implementation, executable domain validation, domain truth, evidence proof, rollback capability, release approval, publication authority, or remote workflow success. Focused checker tests are not yet collected by the repository make test target or a dedicated remote gate; that coverage debt remains explicit."
+}

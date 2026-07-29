@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.2
-status: draft; repository-grounded; direct-lane-readme-only; shared-validator-runtime-executable; five-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; dedicated-validator-unit-suite-not-established; coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.3
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
-updated: 2026-07-16
+updated: 2026-07-29
 supersedes: v0.1 planning-oriented validator-test README
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
-truth_posture: CONFIRMED target README and prior blob, canonical tests responsibility root, tools/validators implementation root, executable shared validator runtime under tools/validators/_common, local Draft 2020-12 schema registry, five hard-coded aggregate entrypoints, root Makefile schemas and test targets, schema-validation and validator-suite workflows, one explicit EvidenceBundle invalid-fixture canary, generic schema fixture tests, Hydrology alias tests, bounded exact-import inventory of seventeen validator scripts and two test modules, broader executable validators outside the aggregate, checked absence of representative direct tests/validators runner and test paths, and direct-lane README-only posture / PROPOSED dedicated helper unit tests, validator-entrypoint manifest, fixture polarity and nonempty assertions, deterministic structured result contract, stable exit-code and diagnostics contract, path and resource safety tests, full validator coverage map, dedicated CI artifact, required promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED parent tools/validators README uncertainty versus confirmed executable shared runtime; direct tests/validators ownership versus existing shape tests under tests/schemas; five-entry aggregate versus broader executable validator inventory; fixture-mode expected-invalid FAIL output versus successful aggregate exit; configured fail-closed intent versus empty fixture sets that can pass / UNKNOWN exhaustive validator and consumer inventory, ignored or generated tests, dynamic entrypoints, current total fixture count, current direct test count, pass rates, coverage, mutation score, flake rate, branch-protection requirements, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, stable public helper API, complete entrypoint registry, schema/contract/fixture bindings, reason-code vocabulary, artifact retention, CI ownership, resource budgets, package-extraction decision, deprecation window, and operational rollback execution
+truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite and standard-library checker, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder classification, CLI exit polarity, non-vacuity, and fail-closed missing/syntax/substantive/symlink/path/unexpected-test-or-validator-source cases / PROPOSED broader helper and entrypoint coverage, complete manifest, structured report contract, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, branch protection, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, and operational rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -42,6 +42,24 @@ evidence_snapshot:
     - .github/workflows/schema-validation.yml
     - .github/workflows/validator-suite.yml
   bounded_inventory_note: checked paths and bounded repository search establish only the inspected snapshot; historical, ignored, generated, branch-local, dynamically collected, package-local, domain-local, external, and uninspected tests or validators remain UNKNOWN
+change_evidence:
+  base_commit: 584edf041ee041852cdc7649dc94b7521bd0ed96
+  target_prior_blob: c703a64eef6f69044a54696f121f4e5ae05a3631
+  focused_test: tests/validators/test_ci_readiness.py
+  implementation: tools/validators/ci_readiness.py
+  ci_integration: same_atomic_batch_across_11_domain_workflows_10_root_cli_1_hydrology_classifier_import
+  workflow_paths:
+    - .github/workflows/domain-agriculture.yml
+    - .github/workflows/domain-archaeology.yml
+    - .github/workflows/domain-atmosphere.yml
+    - .github/workflows/domain-flora.yml
+    - .github/workflows/domain-geology.yml
+    - .github/workflows/domain-habitat.yml
+    - .github/workflows/domain-hazards.yml
+    - .github/workflows/domain-hydrology.yml
+    - .github/workflows/domain-people-dna-land.yml
+    - .github/workflows/domain-roads-rail-trade.yml
+    - .github/workflows/domain-settlements-infrastructure.yml
 related:
   - ../README.md
   - ../schemas/README.md
@@ -51,12 +69,15 @@ related:
   - ../release/README.md
   - ../schemas/test_common_contracts.py
   - ../schemas/test_hydrology_alias_contracts.py
+  - test_ci_readiness.py
   - ../../tools/validators/README.md
+  - ../../tools/validators/ci_readiness.py
   - ../../tools/validators/_common/README.md
   - ../../tools/validators/_common/jsonschema_runner.py
   - ../../tools/validators/_common/local_resolver.py
   - ../../tools/validators/_common/run_all.py
   - ../../tools/validators/validate_source_descriptor.py
+  - ../../tools/validators/validate_evidence_ref.py
   - ../../tools/validators/validate_evidence_bundle.py
   - ../../tools/validators/validate_runtime_response_envelope.py
   - ../../tools/validators/validate_decision_envelope.py
@@ -71,13 +92,13 @@ related:
   - ../../.github/workflows/validator-suite.yml
 tags: [kfm, tests, validators, json-schema, pytest, fixtures, entrypoints, cli, exit-codes, diagnostics, no-network, fail-closed, coverage, correction, rollback]
 notes:
-  - "v0.2 replaces a planning-oriented validator-test guide with a commit-pinned account of the direct lane, working shared runtime, aggregate entrypoints, CI wiring, and known test gaps."
-  - "The direct tests/validators lane is README-only in the bounded snapshot; no dedicated executable unit suite was established."
+  - "v0.3 adds focused executable proof for the shared placeholder-readiness checker; the broader validator runtime and entrypoint coverage gaps remain."
+  - "The v0.2 direct-lane README-only statement is historical; tests/validators/test_ci_readiness.py is now a confirmed focused suite."
   - "Working validator code exists under tools/validators and is exercised by make schemas and two workflows; that execution must not be relabeled as direct tests/validators coverage."
   - "The current fixture runner prints expected invalid fixtures as FAIL during its first pass, then separately verifies that invalid fixtures fail and may return success."
   - "The current fixture mode does not assert that valid or invalid fixture sets are nonempty; an empty fixture family can therefore complete successfully."
-  - "The aggregate runs five hard-coded top-level validators, while bounded search surfaced additional executable validators outside that list."
-  - "This revision changes documentation only and creates no test, validator, fixture, schema, contract, policy, workflow behavior, data, receipt, proof, release record, runtime behavior, or public surface."
+  - "The current aggregate runs six hard-coded top-level validators; the historical v0.2 snapshot ran five, and bounded current search surfaced additional executable validators outside the current list."
+  - "This revision adds one focused test module and one standard-library checker; it changes no schema, contract, policy, fixture, domain runtime, data, receipt, proof, release record, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -88,10 +109,10 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
+  <img alt="Direct inventory: focused suite" src="https://img.shields.io/badge/direct__inventory-focused__suite-success">
   <img alt="Shared runtime: executable" src="https://img.shields.io/badge/shared__runtime-executable-success">
-  <img alt="Aggregate: five entrypoints" src="https://img.shields.io/badge/aggregate-five__entrypoints-informational">
-  <img alt="Dedicated unit suite: not established" src="https://img.shields.io/badge/unit__suite-not__established-orange">
+  <img alt="Aggregate: six entrypoints" src="https://img.shields.io/badge/aggregate-six__entrypoints-informational">
+  <img alt="Unit suite: CI readiness only" src="https://img.shields.io/badge/unit__suite-CI__readiness__only-yellow">
   <img alt="Coverage: partial" src="https://img.shields.io/badge/coverage-PARTIAL-red">
   <img alt="Network: denied by default" src="https://img.shields.io/badge/network-denied__by__default-critical">
   <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-purple">
@@ -104,38 +125,40 @@ notes:
 ## Status and evidence boundary
 
 > [!IMPORTANT]
-> **Snapshot:** `main@52275a5710400a9f794a8fcf8e0945e0c21544e4`
-> **Prior target blob:** `e950df9fc3124c0f4a12b96dcb7f1e1b4c8859ce`
-> **Direct lane:** `tests/validators/README.md` only at the bounded snapshot
-> **Checked absent:** `conftest.py`, `test_validators.py`, `test_jsonschema_runner.py`, and `pytest.ini`
+> **Historical v0.2 snapshot:** `main@52275a5710400a9f794a8fcf8e0945e0c21544e4`
+> **Current change base:** `main@584edf041ee041852cdc7649dc94b7521bd0ed96`
+> **Prior target blob:** `c703a64eef6f69044a54696f121f4e5ae05a3631`
+> **Direct lane:** README plus focused `test_ci_readiness.py` (42 collected cases at this revision); broader shared-runtime and entrypoint unit coverage remains partial
 > **Current `make test`:** runs `tests/schemas` and `tests/contracts`; it does not collect `tests/validators`
-> **Current validator aggregate:** five hard-coded top-level entrypoints through `make schemas`
+> **Current validator aggregate:** six hard-coded top-level entrypoints through `make schemas`
 
 ### Safe conclusion
 
-`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. It is **not yet an established direct executable suite**.
+`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. A focused direct executable suite now proves `ci_readiness.py`; it does not establish broad unit coverage for the other shared helpers or validator entrypoints.
 
 The repository nevertheless contains working validator implementation and adjacent proof:
 
 - `tools/validators/_common/local_resolver.py` builds a repository-local schema registry.
 - `tools/validators/_common/jsonschema_runner.py` constructs Draft 2020-12 validators, validates explicit files, and supports fixture mode.
-- `tools/validators/_common/run_all.py` invokes five hard-coded top-level validator scripts with `--fixtures` and stops on the first nonzero result.
+- `tools/validators/_common/run_all.py` invokes six hard-coded top-level validator scripts with `--fixtures` and stops on the first nonzero result.
 - `make schemas` runs that aggregate.
 - `.github/workflows/schema-validation.yml` runs `make schemas` on pushes and pull requests.
 - `.github/workflows/validator-suite.yml` runs `make schemas` and separately confirms that one invalid EvidenceBundle fixture is rejected.
 - `tests/schemas/test_common_contracts.py` exercises valid and invalid fixture polarity for selected schema families.
 - `tests/schemas/test_hydrology_alias_contracts.py` exercises three domain alias validators through the shared loader.
-- Bounded exact-import evidence records seventeen validator scripts and two test modules consuming the shared runner.
-- Additional executable validators exist outside the five-entry aggregate, including release and MapLibre validator families.
+- Bounded exact-import evidence records eighteen validator scripts and four test modules consuming the shared runner or resolver.
+- Additional executable validators exist outside the six-entry aggregate, including release and MapLibre validator families.
 
 These are meaningful implementation facts. They do **not** establish direct unit coverage for the shared helper branches, every entrypoint, every validator family, every fixture family, every exit code, or every diagnostic contract.
+
+`test_ci_readiness.py` separately confirms the placeholder-readiness checker’s accepted AST shapes, rejection of substantive tests and validators, denial of unexpected non-Python sources in both root categories, syntax and missing-root failures, symlink/path escape denial, deterministic diagnostics, CLI exit polarity, and non-vacuity. It does not execute or validate the domain code it classifies.
 
 ### Confirmed limitations
 
 | Limitation | Current evidence | Consequence |
 |---|---|---|
-| No direct unit suite | Direct lane is README-only; representative runner/test paths are absent. | Helper branches and CLI behavior may change without focused tests. |
-| Aggregate is hard-coded | `run_all.py` names five top-level wrappers. | Other executable validators may not run under `make schemas`. |
+| Focused direct suite only | `test_ci_readiness.py` covers the placeholder-readiness checker. | Other helper branches, entrypoints, and fixture families still lack complete direct unit coverage. |
+| Aggregate is hard-coded | `run_all.py` names six top-level wrappers. | Other executable validators may not run under `make schemas`. |
 | Fixture mode prints expected invalids as `FAIL` | `validate_files()` evaluates valid and invalid files together before polarity checks. | Human logs can look failed while the process ultimately succeeds. |
 | Empty fixture sets are accepted | Fixture mode has no nonempty valid/invalid assertion. | A missing or emptied fixture family can produce a green result. |
 | `rc == 2` branch is unreachable from `validate_files()` | `validate_files()` returns only `0` or `1`. | The branch does not currently protect fixture mode as written. |
@@ -215,10 +238,11 @@ Directory Rules place executable checkers under implementation roots such as `to
 
 ```text
 tests/validators/
-└── README.md
+├── README.md
+└── test_ci_readiness.py
 ```
 
-Checked representative paths did not establish:
+At the historical v0.2 snapshot, checked representative paths did not establish:
 
 ```text
 tests/validators/conftest.py
@@ -228,6 +252,8 @@ tests/validators/pytest.ini
 ```
 
 This bounded map is not proof against ignored, generated, historical, branch-local, dynamically collected, package-local, domain-local, external, or uninspected tests.
+
+`test_ci_readiness.py` is now confirmed focused proof for `tools/validators/ci_readiness.py`. Its non-vacuity rule is category-wide: every supplied root must exist and be path-safe, at least one Python file must be discovered across the complete test-root set and across the complete validator-root set, and every discovered Python file must be an exact recognized placeholder. README-only sibling roots do not fail merely for containing no Python. Within both root categories, only recognized Python placeholders, `README`/`LICENSE`/`NOTICE`, `.md`/`.markdown`/`.rst`/`.txt` documentation, `.gitkeep`, and whitespace-only extensionless sentinels are allowed; other regular files fail closed as `unexpected_test_source` or `unexpected_validator_source` so a readiness hold cannot hide substantive non-Python material.
 
 ### Shared runtime and aggregate
 
@@ -243,6 +269,7 @@ tools/validators/_common/
 
 ```text
 tools/validators/validate_source_descriptor.py
+tools/validators/validate_evidence_ref.py
 tools/validators/validate_evidence_bundle.py
 tools/validators/validate_runtime_response_envelope.py
 tools/validators/validate_decision_envelope.py
@@ -253,13 +280,14 @@ tools/validators/validate_run_receipt.py
 
 | Test | Primary assertion | Why it is adjacent rather than direct lane coverage |
 |---|---|---|
+| `tests/validators/test_ci_readiness.py` | Exact placeholder AST shapes, substantive/syntax/missing/unsafe/symlink/path refusal, unexpected non-Python test/validator-source denial, allowed documentation/sentinel files in both categories, category-wide non-vacuity, README-only sibling roots, deterministic diagnostics, repeated-root behavior, and CLI exit polarity. | Direct focused coverage for `ci_readiness.py`; not broad coverage of schema runners or domain validators. |
 | `tests/schemas/test_common_contracts.py` | Selected schema families accept valid fixtures and reject invalid fixtures. | Primary authority is schema conformance and fixture polarity. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | Three Hydrology aliases accept one valid fixture each and reject added unknown properties. | Primary authority is domain schema alias behavior. |
 | `validator-suite` invalid EvidenceBundle canary | One explicit invalid fixture must produce a nonzero validator result. | Workflow-level canary, not a unit suite for all helpers or validators. |
 
 ### Broader executable inventory
 
-Bounded import search surfaced validator scripts beyond the five-entry aggregate, including:
+Bounded import search surfaced validator scripts beyond the six-entry aggregate, including:
 
 - `tools/validators/release/validate_promotion_decision.py`;
 - domain Hydrology wrappers;
@@ -300,7 +328,7 @@ The diagram describes inspected code flow. It is not a claim that a rendered dia
 | `validate_files(validator, files)` | Parses each file, sorts errors by path, prints first error, returns `0` or `1`. | Test valid, invalid, malformed JSON, unreadable file, stable ordering, and bounded diagnostics. |
 | explicit-file mode | Requires one or more files; no files returns `2`. | Pin the CLI contract and stderr text. |
 | fixture mode | Collects JSON under `valid/` and `invalid/`, runs combined validation, then checks polarity. | Separate log semantics from expected polarity; require nonempty fixture sets. |
-| aggregate mode | Runs five scripts sequentially and stops at first nonzero exit. | Test ordering, fail-fast behavior, missing scripts, subprocess errors, and coverage manifest drift. |
+| aggregate mode | Runs six scripts sequentially and stops at first nonzero exit. | Test ordering, fail-fast behavior, missing scripts, subprocess errors, and coverage manifest drift. |
 
 ### Known fixture-mode conflict
 
@@ -712,7 +740,7 @@ This is a proposed review artifact, not current repository implementation.
 
 ### Confirmed commands
 
-Run the five-entry aggregate:
+Run the six-entry aggregate:
 
 ```bash
 make schemas
@@ -746,24 +774,25 @@ Run current schema and contract pytest coverage:
 python -m pytest tests/schemas tests/contracts -q
 ```
 
-### Proposed direct-lane command
+Run the confirmed focused placeholder-readiness suite:
 
 ```bash
-python -m pytest tests/validators -q
+python -m pytest tests/validators/test_ci_readiness.py -q
 ```
 
-The direct-lane command is **PROPOSED** until executable tests exist and collection is verified. Do not publish it as a current successful command.
+The broader `python -m pytest tests/validators -q` collection is not a claim of complete validator coverage. The focused command above proves only `ci_readiness.py`.
 
 ### Command distinctions
 
 | Command | Current coverage |
 |---|---|
-| `make schemas` | Five hard-coded validator wrappers in fixture mode. |
+| `make schemas` | Six hard-coded validator wrappers in fixture mode. |
 | `make test` | Pytest under `tests/schemas` and `tests/contracts`. |
 | `make validate` | Runs `make schemas` followed by `make test`. |
 | `validator-suite` workflow | `make schemas` plus one invalid EvidenceBundle canary. |
 | `schema-validation` workflow | `make schemas`. |
-| proposed `pytest tests/validators` | No direct suite established. |
+| focused `pytest tests/validators/test_ci_readiness.py` | Confirmed exact placeholder classification, fail-closed path/input and unexpected test/validator-source behavior, explicit documentation/sentinel allowances in both root categories, deterministic output, non-vacuity, and CLI polarity for `ci_readiness.py`. |
+| eleven domain readiness workflows | Same-batch integration with `ci_readiness.py`: ten call the root-scanning CLI; Hydrology imports the source classifiers inside a bespoke exact inventory because its validator roots intentionally mix Python placeholders with separately inventoried schema and policy files. Each workflow retains its domain-specific checks and authority limits. |
 
 [Back to top](#top)
 
@@ -951,7 +980,7 @@ Cover:
 
 Build a manifest of executable validators, then add binding and fixture tests for:
 
-- the five current aggregate wrappers;
+- the six current aggregate wrappers;
 - release validators;
 - domain wrappers;
 - MapLibre validators;
@@ -1004,17 +1033,20 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | Prior `tests/validators/README.md` | CONFIRMED | Existing lane intent, scope, anti-authority posture, and planning baseline. | Did not verify current implementation. |
 | `tests/README.md` | CONFIRMED | Canonical tests root and validator-unit-test placement. | Parent still marks executable depth generally unresolved. |
 | `tools/validators/README.md` | CONFIRMED | Validator implementation root and broad routing map. | Parent metadata understates now-verified executable shared runtime. |
+| `tools/validators/ci_readiness.py` | CONFIRMED executable | Python 3.9-compatible, standard-library AST classification, safe repeated-root inspection, unexpected test/validator-source denial, bounded diagnostics, and CLI polarity. | Placeholder readiness only; it does not run tests or validators or establish domain truth. |
+| `tests/validators/test_ci_readiness.py` | CONFIRMED executable test | Allowed exact forms and documentation/sentinels in both categories, substantive and unexpected-source rejection, syntax/missing/path/symlink failures, category-wide non-vacuity, README-only siblings, determinism, and CLI outcomes. | Focused checker coverage, not complete validator-suite coverage. |
 | `tools/validators/_common/README.md` | CONFIRMED | Current implementation inventory, consumer count, workflows, and known conflicts. | Documentation is not a substitute for direct tests. |
 | `jsonschema_runner.py` | CONFIRMED executable | Explicit-file and fixture-mode behavior, output, and exit paths. | No direct unit suite established. |
 | `local_resolver.py` | CONFIRMED executable by adjacent README evidence | Local schema registry behavior. | Not directly reprinted or exhaustively tested in this revision. |
-| `run_all.py` | CONFIRMED executable | Five-entry hard-coded aggregate and fail-fast subprocess behavior. | Not complete validator inventory. |
-| five top-level wrappers | CONFIRMED through aggregate and files/search | Concrete schema/fixture bindings. | Wrapper-by-wrapper direct tests not established. |
+| `run_all.py` | CONFIRMED executable | Six-entry hard-coded aggregate and fail-fast subprocess behavior. | Not complete validator inventory. |
+| six top-level wrappers | CONFIRMED through aggregate and files/search | Concrete schema/fixture bindings. | Wrapper-by-wrapper direct tests not established. |
 | release promotion validator | CONFIRMED executable | Additional validator outside the aggregate. | One example does not exhaust broader inventory. |
 | `tests/schemas/test_common_contracts.py` | CONFIRMED executable test code | Valid/invalid schema fixture polarity for selected families. | Shape coverage, not shared runtime unit coverage or complete inventory. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | CONFIRMED executable test code | Three domain alias positive/strictness cases. | Narrow domain coverage. |
 | `Makefile` | CONFIRMED | `make schemas`, `make test`, and `make validate` routing. | Target names do not prove completeness. |
 | `schema-validation.yml` | CONFIRMED | CI runs `make schemas`. | No direct validator-unit pytest. |
 | `validator-suite.yml` | CONFIRMED | Aggregate plus one invalid EvidenceBundle canary. | One canary is not broad fail-closed coverage. |
+| eleven `.github/workflows/domain-*.yml` readiness workflows | CONFIRMED same-batch integration | Ten invoke the checker with explicit domain test and validator roots; Hydrology imports the source classifiers within a bespoke exact mixed-root inventory. | Workflow-specific checks and remote conclusions remain separate evidence; the Hydrology inventory is not a general validator-root exemption. |
 | `pipelines/validate/README.md` | CONFIRMED boundary | Separates shared pipeline validation implementation from tests and authority roots. | Implementation depth under that lane remains mixed. |
 | Directory Rules | CONFIRMED doctrine | Responsibility-root placement and no-parallel-authority rule. | Does not establish test completeness. |
 | Checked absent direct files | CONFIRMED for exact paths | Representative direct runner/test files were not present. | Does not prove permanent or exhaustive absence. |
@@ -1057,14 +1089,14 @@ If evidence in this README becomes stale:
 
 ### Rollback
 
-Before merge, close the review branch or restore prior blob:
+Before merge, close the review branch or restore the README prior blob and remove the focused checker/test with the same reviewed batch:
 
 ```text
-e950df9fc3124c0f4a12b96dcb7f1e1b4c8859ce
+c703a64eef6f69044a54696f121f4e5ae05a3631
 ```
 
 After merge, revert the documentation commit through a reviewed pull request. Do not reset shared history.
 
-Because this revision changes documentation only, rollback requires no validator, schema, contract, fixture, policy, data, evidence, receipt, proof, release, runtime, deployment, or production action.
+Rollback removes only the shared placeholder-readiness checker, its focused unit test, and the same-batch workflow invocations, then restores both README preimages. It requires no schema, contract, fixture, policy, data, evidence, receipt, proof, release, runtime, deployment, or production action.
 
 [Back to top](#top)

@@ -70,50 +70,12 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          test_root = Path("tests/domains/flora")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
-              raise SystemExit(
-                  "Executable Flora tests surfaced. Graduate validate-flora "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
-              )
-
-          print("No collected Flora test functions or classes were found.")
-          PY
-
-          validator_roots=(
-            "tools/validators/domains/flora"
-            "tools/validators/geoprivacy"
-            "tools/validators/geoprivacy_transform"
-          )
-
-          for validator_root in "${validator_roots[@]}"; do
-            if [[ -d "$validator_root" ]]; then
-              validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-              if [[ -n "$validator_file" ]]; then
-                echo "::error::Flora validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
-                exit 1
-              fi
-            fi
-          done
+          python tools/validators/ci_readiness.py \
+            --label "Flora" \
+            --test-root tests/domains/flora \
+            --validator-root tools/validators/domains/flora \
+            --validator-root tools/validators/geoprivacy \
+            --validator-root tools/validators/geoprivacy_transform
 
           transformer_file="$(find packages/domains/flora/geoprivacy_transformer -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
           if [[ -n "$transformer_file" ]]; then
@@ -139,6 +101,9 @@ jobs:
           `WORKFLOW_SKIPPED_EXPLICIT`
 
           `WORKFLOW_HOLD: executable Flora validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           Current repository evidence is documentation-heavy: sampled Flora tests
           are placeholders, the domain validator is an index without accepted

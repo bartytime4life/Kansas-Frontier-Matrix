@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.4
+version: v0.5
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-07-23
+updated: 2026-07-29
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
@@ -36,9 +36,10 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
-  - "The current README bytes were inspected at main@f93357688c0178e90db7cb976798ef998995d009."
+  - "The v0.4 prior README bytes were inspected at main@f93357688c0178e90db7cb976798ef998995d009."
   - "The detailed 41-file workflow inventory and static findings remain pinned to 1180cf7ec53d5acbbb859a39d93c1d129ec83df9 until a new complete inventory is generated."
   - "Workflow maturity groups describe inspected files and steps; they do not certify current run success, branch protection, release readiness, or KFM publication."
+  - "v0.5 narrowly reconciles shared domain holds and the E2E, Focus mock, and rollback-drill readiness checks; it does not establish UI or runtime readiness."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -275,6 +276,7 @@ Before a workflow change bends a trust or placement invariant, inspect [`docs/ad
 | Read ref | `main` |
 | Read commit | `f93357688c0178e90db7cb976798ef998995d009` |
 | Detailed workflow inventory snapshot | `1180cf7ec53d5acbbb859a39d93c1d129ec83df9` |
+| Bounded readiness reconciliation | 2026-07-29; shared domain holds plus E2E, Focus mock, and rollback-drill checks only |
 | Inventory refresh status | **NEEDS VERIFICATION** against the proposed head before relying on counts as current |
 
 ## Complete workflow inventory
@@ -305,6 +307,12 @@ These files declared proposed greenfield scaffolds and visible TODO or hold beha
 - [`domain-settlements-infrastructure.yml`](domain-settlements-infrastructure.yml)
 - [`domain-soil.yml`](domain-soil.yml)
 
+These workflows share a bounded readiness posture: they may confirm exact
+repository scaffolds or selected synthetic validation slices while keeping
+unimplemented validation, proof, and release lanes on explicit
+`WORKFLOW_HOLD`. A green readiness/hold job does not establish complete domain,
+runtime, UI, policy, proof, release, or publication readiness.
+
 ### Bounded system readiness and governed holds
 
 - [`docs-build.yml`](docs-build.yml)
@@ -315,6 +323,14 @@ These files declared proposed greenfield scaffolds and visible TODO or hold beha
 - [`link-check.yml`](link-check.yml)
 
 These jobs intentionally expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim.
+
+The current E2E inspection accepts only the root manifest's exact fail-closed
+`WORKFLOW_HOLD` scripts and still runs no composed browser/API journey. The
+Focus mock inspection relies on structured synthetic, non-authoritative,
+do-not-publish, expected-`ABSTAIN` markers and still produces no runtime
+response. The rollback drill relies on ADR-0015's structured draft/proposed and
+held/alias-absent markers and remains read-only. None of these checks establishes
+UI readiness.
 
 ### Command-bearing and partial gates
 
@@ -430,6 +446,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-07-29 | v0.5 | Reconciled shared domain hold semantics and the bounded E2E, Focus mock, and rollback-drill readiness checks with current structured repository evidence; preserved explicit holds and no UI/runtime readiness claim. |
 | 2026-07-23 | v0.4 | Aligned the README with the canonical-root contract; separated current document evidence from the pinned workflow inventory; added belongs/non-belongs, review burden, related-folder, ADR, threat-preflight, rollback, accessibility, and anti-overclaim guidance. |
 | 2026-07-22 | v0.3 | Replaced the stale 34-stub/7-command snapshot with the complete 41-file inventory; reconciled maturity groups, explicit permissions, action refs, and removal of prior OIDC drift. |
 | 2026-07-17 | v0.2 | Added the first repository-grounded inventory from indexed searches. |
