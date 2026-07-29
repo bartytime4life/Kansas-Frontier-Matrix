@@ -1,0 +1,44 @@
+{
+  "record_type": "water_planning_status_collapse_candidate",
+  "fixture_id": "fixture:water-planning:status-collapse:valid-001",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "status_collapse_claims": {
+    "meeting_is_approval": false,
+    "application_is_recommendation": false,
+    "application_is_award": false,
+    "recommendation_is_award": false,
+    "award_is_payment": false,
+    "payment_is_construction": false,
+    "construction_is_completion": false,
+    "scoring_matrix_is_project_outcome": false,
+    "program_version_is_project_outcome": false
+  },
+  "resolution_state": {
+    "applicant_identity": "unresolved",
+    "recipient_identity": "unresolved",
+    "project_geometry": "unresolved",
+    "regional_geometry": "unresolved"
+  },
+  "amount_facts": {
+    "requested_amount": null,
+    "recommended_amount": null,
+    "awarded_amount": null,
+    "paid_amount": null
+  },
+  "lineage": {
+    "correction_or_withdrawal_ref": "fixture:water-planning:correction:corr-001",
+    "supersedes_ref": "fixture:water-planning:program-version:v1",
+    "superseded_by_ref": null
+  },
+  "blocked_behaviors": {
+    "authenticated_portal": false,
+    "personal_data": false,
+    "real_applicant": false,
+    "real_project": false,
+    "connector": false,
+    "proof": false,
+    "release": false,
+    "publication": false
+  }
+}
