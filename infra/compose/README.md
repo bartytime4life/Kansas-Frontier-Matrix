@@ -86,9 +86,9 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 ## Verification status
 
 - Target README: replaced greenfield stub content.
-- Compose payload inventory: no Compose YAML files verified under `infra/compose/` during this update.
-- Exact child-lane inventory under `infra/compose/`: NOT VERIFIED during this update.
+- Compose payload inventory: **CONFIRMED** tracked [`docker-compose.yml`](docker-compose.yml), a greenfield placeholder defining `governed-api` and `explorer-web` builds with loopback-only published ports.
+- Exact child-lane inventory under `infra/compose/`: **CONFIRMED** `README.md` and `docker-compose.yml` at the inspected revision.
 - Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
 - Directory Rules alignment: PARTIALLY VERIFIED against `docs/doctrine/directory-rules.md`.
-- Runtime/service alignment: NEEDS VERIFICATION against actual Compose files, app services, runtime adapters, configs, secrets handling, validators, tests, CI, deployment targets, network bindings, and volume mounts.
-- Tests and validators: NOT RUN.
+- Runtime/service alignment: NEEDS VERIFICATION against app services, runtime adapters, configs, secrets handling, validators, CI, deployment targets, networks, volumes, health checks, and a supported Compose runtime.
+- Tests and validators: the `infra/`-bounded build contexts and Dockerfile resolution are statically checkable; Compose rendering, image builds, and runtime behavior remain **NEEDS VERIFICATION** until a supported Docker/Compose toolchain runs them.

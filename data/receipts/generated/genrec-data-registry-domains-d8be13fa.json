@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-data-registry-domains-d8be13fa",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/registry/domains/README.md"
+  ],
+  "artifact_hashes": {
+    "data/registry/domains/README.md": "sha256:d8be13fa7cce6d643886b7b2c1a5692f10642607f77be3e85cea67e2000ac025"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:eb130cf893bb93ef3e28080db9013835af7519a3bb3413bf24ac2f245081ce82",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "workspace filesystem",
+      "Git",
+      "Ruby link validation",
+      "GitHub connector",
+      "multi-agent inventory and review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:eb130cf893bb93ef3e28080db9013835af7519a3bb3413bf24ac2f245081ce82",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:940cb45e449983bf25cc80a15c5251eb59283dba35ace7c94773bb2402b5fb0d",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "goal-objective.md (session attachment; SHA-256 pinned above)"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/registry/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/registry/atmosphere/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/registry/fauna/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/registry/flora/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2"
+    ]
+  },
+  "truth_labels": {
+    "data/registry/domains/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-and-placement",
+      "outcome": "PASS",
+      "reason": "Accepted Directory Rules v2 section 12.3 explicitly lists data/registry/domains/ in the canonical subtype-first registry topology; ADR-0029 pins those exact rules as the writable authority."
+    },
+    {
+      "gate": "materialization-and-scope",
+      "outcome": "PASS",
+      "reason": "The parent registry contract and four live inbound README links establish a boundary-document need. Only README.md was created; no child lane, record, payload, writer, schema, validator, runtime, release state, or public surface was created or inferred."
+    },
+    {
+      "gate": "local-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 25 local links in the new README resolved to existing repository paths."
+    },
+    {
+      "gate": "inbound-link-resolution",
+      "outcome": "PASS",
+      "reason": "The four live links from the Atmosphere, Fauna, and Flora registry READMEs now resolve to the bounded parent README."
+    },
+    {
+      "gate": "direct-child-and-payload-check",
+      "outcome": "PASS",
+      "reason": "The new directory contains exactly README.md and no domain child, registry record, or payload."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "PATH=/private/tmp/kfm-repo-venv312/bin:$PATH make validate completed successfully; schema and contract tests reported 133 passed, and expected invalid fixtures failed validation as designed."
+    },
+    {
+      "gate": "full-pytest-suite",
+      "outcome": "PASS",
+      "reason": "PATH=/private/tmp/kfm-repo-venv312/bin:$PATH python -m pytest -q completed with 282 passed."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "Whitespace, final-newline, and changed Markdown link checks completed without findings."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt was validated with Draft 2020-12 format checking, and the listed SHA-256 artifact hash was recomputed from the final README bytes."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this boundary README and receipt do not authorize registry writes, implementation, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "accepted-directory-rules-adr",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "registry-parent-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:data/registry/README.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T04:44:49Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Creates only the missing canonical domain-registry boundary README required by accepted topology and live inbound references. The lane remains empty of records and implementation. Ownership, object meaning, machine shape, writers, consumers, validators, policy integration, retention, correction, rollback, release, and public behavior remain NEEDS VERIFICATION or denied by default."
+}
