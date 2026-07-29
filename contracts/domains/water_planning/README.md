@@ -42,7 +42,7 @@ A meeting is not an approval. An application is not an award. An award is not a 
 
 ## Related
 
-- [`docs/sources/catalog/kansas/kwo.md`](../../docs/sources/catalog/kansas/kwo.md) — KWO source catalog entry
-- [`schemas/contracts/v1/domains/water_planning/`](../../schemas/contracts/v1/domains/water_planning/) — Schemas
-- [`fixtures/domains/water_planning/`](../../fixtures/domains/water_planning/) — Synthetic fixtures
-- [`tests/schemas/test_water_planning_contracts.py`](../../tests/schemas/test_water_planning_contracts.py) — Tests
+- [`docs/sources/catalog/kansas/kwo.md`](../../../docs/sources/catalog/kansas/kwo.md) — KWO source catalog entry
+- [`schemas/contracts/v1/domains/water_planning/`](../../../schemas/contracts/v1/domains/water_planning/) — Schemas
+- [`fixtures/domains/water_planning/`](../../../fixtures/domains/water_planning/) — Synthetic fixtures
+- [`tests/schemas/test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) — Tests

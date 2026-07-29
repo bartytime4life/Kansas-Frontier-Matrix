@@ -28,7 +28,7 @@
 
 ## Related
 
-- [`contracts/domains/water_planning/`](../../../../contracts/domains/water_planning/) — Contract documents
-- [`fixtures/domains/water_planning/`](../../../../fixtures/domains/water_planning/) — Synthetic fixtures
-- [`tests/schemas/test_water_planning_contracts.py`](../../../../tests/schemas/test_water_planning_contracts.py) — Tests
-- [`docs/sources/catalog/kansas/kwo.md`](../../../../docs/sources/catalog/kansas/kwo.md) — KWO source catalog entry
+- [`contracts/domains/water_planning/`](../../../../../contracts/domains/water_planning/) — Contract documents
+- [`fixtures/domains/water_planning/`](../../../../../fixtures/domains/water_planning/) — Synthetic fixtures
+- [`tests/schemas/test_water_planning_contracts.py`](../../../../../tests/schemas/test_water_planning_contracts.py) — Tests
+- [`docs/sources/catalog/kansas/kwo.md`](../../../../../docs/sources/catalog/kansas/kwo.md) — KWO source catalog entry
