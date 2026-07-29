@@ -87,10 +87,10 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 ## Verification status
 
 - Target README: replaced greenfield stub content.
-- Docker payload inventory: no Dockerfile or `.dockerignore` files verified under `infra/docker/` during this update.
-- Exact child-lane inventory under `infra/docker/`: NOT VERIFIED during this update.
+- Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both are three-line greenfield placeholders. No `.dockerignore` was verified in this lane.
+- Exact child-lane inventory under `infra/docker/`: **CONFIRMED** `README.md`, `Dockerfile.governed-api`, and `Dockerfile.explorer-web` at the inspected revision.
 - Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
 - Compose sibling alignment: PARTIALLY VERIFIED against `infra/compose/README.md`.
 - Directory Rules alignment: PARTIALLY VERIFIED against `docs/doctrine/directory-rules.md`.
 - Runtime/service alignment: NEEDS VERIFICATION against actual Dockerfiles, app services, runtime adapters, configs, secrets handling, scanners, SBOM tooling, validators, tests, CI, deployment targets, image tags, and registry targets.
-- Tests and validators: NOT RUN.
+- Tests and validators: both Dockerfile paths resolve statically within the `infra/`-bounded Compose context; image builds, scans, SBOM generation, and runtime behavior remain **NEEDS VERIFICATION** until a supported Docker toolchain runs them.

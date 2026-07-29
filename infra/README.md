@@ -2,12 +2,12 @@
 doc_id: kfm://doc/infra-readme
 title: infra/ — Deployment, Host, Network, and Exposure Posture Root
 type: README; directory-readme; canonical-infrastructure-root; deployment-boundary-index
-version: v1.1
-status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; deployment-payloads-unestablished; infra-validation-unestablished; deny-by-default; non-release; non-publication
+version: v1.1.1
+status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; placeholder-docker-compose-payloads-confirmed; deployability-unestablished; infra-validation-unestablished; deny-by-default; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accepted infrastructure, security, and operations stewardship, required-review enforcement, and independent approval controls were not established
 created: 2026-07-03
-updated: 2026-07-23
-supersedes: v1 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
+updated: 2026-07-29
+supersedes: v1.1 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 policy_label: repository-facing; infra; deployment; host; network; exposure; deny-by-default; least-privilege; no-public-raw-path; no-public-model-path; auditability; rollback-aware
 current_path: infra/README.md
@@ -15,28 +15,31 @@ owning_root: infra/
 responsibility: own deployment mechanics, host and network posture, service exposure, private-access boundaries, infrastructure-as-code, and operational hardening without becoming policy, evidence, lifecycle, runtime, release, or publication authority
 truth_posture: >
   CONFIRMED same-path target; Directory Rules designation of infra/ as the canonical deployment, host, network,
-  and exposure root; the nine doctrine-listed infrastructure lane READMEs; infra/flora/README.md; the hardening
+  and exposure root; nine repository-present standard infrastructure lane READMEs; infra/flora/README.md; the hardening
   review checklist; CODEOWNERS routing; current Makefile targets; implemented app/static boundary tests; and
   the current policy-boundary workflow definition / PROPOSED infrastructure maturity model, deployment-change
   packet, lane-specific executable checks, topology convergence, and future infra validation orchestration /
-  CONFLICTED infra/flora/ as a domain-named direct child not listed in the Directory Rules infra topology or
-  domain-lane examples / UNKNOWN exhaustive recursive infra inventory, live environments, hosts, routes, ports,
-  service identities, secret stores, data mounts, deployment payloads, actual orchestration, and operational
+  CONFLICTED infra/flora/ as a domain-named direct child not established as canonical by accepted Directory Rules or
+  domain-lane examples / UNKNOWN live environments, hosts, routes, ports, operational or external infrastructure,
+  service identities, secret stores, data mounts, non-placeholder deployment payloads, actual orchestration, and operational
   rollback / NEEDS VERIFICATION accountable stewards, branch/ruleset enforcement, active secret-scanning
   coverage, public route inventory, deployment topology, and release-integrated infrastructure evidence
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f4f48a7edbc4080267d50943223ab56d4f1ef154
-  target_prior_blob: 7464b149f74f26c87cdd5574ab23a9628de25ed0
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  base_commit: 3c410ca496f56a892b131af62465560fa298b1d2
+  target_prior_blob: c791f22f4163603bab2aa2579bff8786e1d21c37
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   makefile_blob: 51537af34ee065c2de571134688415042b83b22a
   hardening_checklist_blob: e1dffb88106ca22f82aff6fe8c67df0e34d2709f
   boundary_workflow_blob: 6d442a6cdd0b146cd4003cbf1d7c619a455a16ae
   deployment_topology_blob: 73ece039f0da4acf68843cb2dd6d20c6152df9e5
   exposure_plan_blob: 0ade933f4b4f1a03641f70ca3b2ef792340a8101
-  inspection_method: exact GitHub file reads, exact-path probes, bounded repository search, and workflow/Makefile inspection; no recursive Git tree, deployed environment, branch ruleset, secret store, host, container, cluster, network, or runtime was inspected
+  compose_prior_blob: f8c19a11a91746398f0e6ae27f5f70093407df70
+  governed_api_dockerfile_blob: ea10e9a12737e4e9369b80b6ea3e9b84f2241abb
+  explorer_web_dockerfile_blob: 77e7a862d1cb01c8c818188e8b3101610fdcf415
+  inspection_method: full tracked README and repository-reference inventory plus exact infra file reads and static Compose path checks; no deployed environment, branch ruleset, secret store, host, container, cluster, network, image build, or runtime was inspected
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/security/README.md
@@ -72,8 +75,8 @@ related:
   - ../.github/workflows/codeql.yml
   - ../Makefile
 notes:
-  - "v1.1 is a same-path, documentation-only modernization grounded in the current repository."
-  - "The first twelve H2 sections follow the Directory Rules folder-README contract exactly."
+  - "v1.1.1 corrects the tracked payload inventory and repairs two Dockerfile references within the existing infra-bounded Compose contexts without establishing deployability."
+  - "The accepted Directory Rules v2 ROOT_FULL field set is addressed without claiming a fixed heading order."
   - "The repository has substantial infrastructure guidance, but no live deployment or complete infra-specific executable validation surface was established in the bounded inspection."
   - "Static badges summarize inspected repository state only; they are not deployment, review, security, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
@@ -89,17 +92,17 @@ notes:
 [![Posture: deny by default](https://img.shields.io/badge/posture-deny%20by%20default-b42318?style=flat-square)](#trust-membrane-and-exposure-model)
 [![Hardening checklist: confirmed](https://img.shields.io/badge/hardening%20checklist-confirmed-2da44e?style=flat-square)](./hardening/CHECKLIST.md)
 [![Infrastructure validation: not established](https://img.shields.io/badge/infra%20validation-not%20established-b42318?style=flat-square)](#validation)
-[![Deployment payloads: not established](https://img.shields.io/badge/deployment%20payloads-not%20established-d4a72c?style=flat-square)](#status)
+[![Placeholder payloads: confirmed](https://img.shields.io/badge/placeholder%20payloads-confirmed-d4a72c?style=flat-square)](#status)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `infra/` is the confirmed deployment/exposure responsibility root, nine doctrine-listed child lane READMEs are present, and a detailed hardening review checklist exists. Current evidence does **not** establish a running environment, selected production topology, concrete Docker/Compose/proxy/firewall/VPN/systemd/Kubernetes/Terraform payload set, infra-specific CI gate, or public exposure approval.
+> **Safe current conclusion:** `infra/` is the confirmed deployment/exposure responsibility root. Repository evidence confirms nine standard child-lane READMEs, two placeholder Dockerfiles, a placeholder Compose file, a one-line Caddy placeholder, a documentation-only firewall posture file, and a detailed hardening review checklist. Current evidence does **not** establish a running environment, selected production topology, non-placeholder or deployable Docker/Compose/proxy/firewall/VPN/systemd/Kubernetes/Terraform payload set, infra-specific CI gate, or public exposure approval.
 
 > [!CAUTION]
 > Infrastructure prose and checklists express required posture; they are not firewall rules, proxy configuration, service units, cluster policy, Terraform plans, secret scans, route-denial tests, release records, or observed runtime behavior. A deployment claim requires the relevant payload plus validation and environment evidence.
 
 > [!WARNING]
-> [`infra/flora/`](./flora/) is a confirmed domain-named direct child, but it is absent from the Directory Rules `infra/` topology and from the doctrine's domain-lane examples. Treat it as **CONFLICTED / NEEDS VERIFICATION**, not as a pattern for new domain-specific infrastructure folders, until placement is resolved through review, a migration note, or an ADR.
+> Accepted Directory Rules assign deployment and exposure configuration to `infra/` but do not enumerate its child topology or establish domain-named infrastructure lanes. [`infra/flora/`](./flora/) is a confirmed domain-named direct child, so treat its placement as **CONFLICTED / NEEDS VERIFICATION**, not as precedent, until review, a migration note, or an ADR resolves it.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#current-bounded-topology) · [Trust membrane](#trust-membrane-and-exposure-model) · [Lanes](#lane-contract-index) · [Maturity](#infrastructure-maturity-model) · [Change packet](#infrastructure-change-packet) · [Correction](#correction-and-rollback) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
 
@@ -187,16 +190,17 @@ Directory Rules assign deployment, host, network, and exposure posture to `infra
 
 ### Repository-grounded status matrix
 
-| Surface | Current evidence at `main@f4f48a7edbc4…` | Safe conclusion |
+| Surface | Current evidence at `main@3c410ca496f5…` | Safe conclusion |
 |---|---:|---|
-| `infra/README.md` | **CONFIRMED v1 baseline**, blob `7464b14…` | Same-path v1.1 documentation modernization. |
-| Directory Rules | **CONFIRMED** `infra/` responsibility and nine-lane topology | Placement and default posture are established doctrine. |
-| Standard child lanes | **CONFIRMED** READMEs for `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; lane payload maturity remains separate. |
+| `infra/README.md` | **CONFIRMED v1.1 prior state**, blob `c791f22…` | Same-path v1.1.1 inventory correction. |
+| Directory Rules | **CONFIRMED** `infra/` responsibility; no `infra/` child topology is enumerated | Root placement and responsibility are established; child-lane adoption remains repository evidence, not doctrine. |
+| Standard child lanes | **CONFIRMED repository evidence** for READMEs under `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; lane payload maturity and adoption remain separate. |
 | Hardening checklist | **CONFIRMED** [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | Repeatable review questions exist; the checklist is not an executable validator or completed review record. |
-| Docker lane | README states no Dockerfile or `.dockerignore` payload was verified in its update | Docker deployment payload is **NOT ESTABLISHED** by current evidence. |
-| Compose lane | README states no Compose YAML payload was verified in its update | Compose deployment payload is **NOT ESTABLISHED** by current evidence. |
-| Firewall lane | README states no firewall-rule payload was verified in its update | Firewall enforcement is **NOT ESTABLISHED** by current evidence. |
-| Proxy, VPN, systemd, Kubernetes, Terraform | Their READMEs describe proposed structures and future verification triggers | Selected products, concrete payloads, and deployed behavior remain **NEEDS VERIFICATION**. |
+| Docker lane | **CONFIRMED** two tracked three-line greenfield Dockerfile placeholders; no `infra/.dockerignore` or root `.dockerignore` verified | File presence only; `TEMPLATE_PRESENT`, image build, scan, runtime, and deployment readiness are **NOT ESTABLISHED**. |
+| Compose lane | **CONFIRMED** tracked greenfield `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | File presence only; `TEMPLATE_PRESENT`, Compose rendering, image build, runtime, and deployment readiness are **NOT ESTABLISHED**. |
+| Firewall lane | **CONFIRMED** README plus documentation-only `deny_by_default.md` | No executable firewall-rule payload or enforcement is established. |
+| Reverse-proxy lane | **CONFIRMED** README plus one-line greenfield `caddy.example.caddyfile` | Placeholder presence only; product adoption, parse/reload, route denials, and runtime are **NOT ESTABLISHED**. |
+| VPN, systemd, Kubernetes, Terraform | Their READMEs describe proposed structures and future verification triggers | Selected products, implementation-bearing payloads, and deployed behavior remain **NEEDS VERIFICATION**. |
 | `infra/flora/` | **CONFIRMED** README path | Placement is **CONFLICTED / NEEDS VERIFICATION**; do not treat as canonical precedent. |
 | `Makefile` | **CONFIRMED** no infrastructure validation target | There is no repository-native `make infra-*` validation entrypoint. |
 | `policy-boundary-guards` | **CONFIRMED** 15 structural/static/API tests; workflow paths omit `infra/**` | Useful adjacent trust-boundary evidence, not infrastructure configuration or environment validation. |
@@ -478,11 +482,11 @@ Routine, reversible templates inside an accepted lane may use normal review when
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-23 |
-| Review type | Same-path repository-grounded README modernization |
-| Repository snapshot | `main@f4f48a7edbc4080267d50943223ab56d4f1ef154` |
-| Current maturity | Documentation-heavy; hardening checklist confirmed; deployment payloads and infra-specific validation not established |
-| Next review trigger | First concrete deployment payload, infra validation workflow, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
+| Last reviewed | 2026-07-29 |
+| Review type | Same-path repository-grounded inventory correction and Compose build-path repair |
+| Repository snapshot | `main@3c410ca496f56a892b131af62465560fa298b1d2` |
+| Current maturity | Documentation-heavy; hardening checklist and placeholder Docker/Compose payloads confirmed; deployability and infra-specific tool validation not established |
+| Next review trigger | First non-placeholder deployment payload, infra validation workflow, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
 
 [Back to top](#top)
 
@@ -492,42 +496,41 @@ Routine, reversible templates inside an accepted lane may use normal review when
 
 ## Current bounded topology
 
-The following paths were directly inspected. This is a bounded index, not a complete recursive tree claim.
+The complete tracked recursive inventory at the reviewed base contained 18 files across ten direct child directories. Per `DIR-README-003`, this tree maps direct children only; each child README owns deeper detail.
 
 ```text
 infra/
 ├── README.md
-├── docker/README.md
-├── compose/README.md
-├── reverse_proxy/README.md
-├── vpn/README.md
-├── firewall/README.md
-├── systemd/README.md
-├── kubernetes/README.md
-├── terraform/README.md
-├── hardening/README.md
-├── hardening/CHECKLIST.md
-└── flora/README.md              # CONFLICTED / NEEDS VERIFICATION
+├── compose/
+├── docker/
+├── firewall/
+├── flora/                  # placement CONFLICTED / NEEDS VERIFICATION
+├── hardening/
+├── kubernetes/
+├── reverse_proxy/
+├── systemd/
+├── terraform/
+└── vpn/
 ```
 
 ### Directly inspected lane posture
 
 | Lane | Intended responsibility | Evidence-bounded maturity |
 |---|---|---|
-| [`docker/`](./docker/) | Image construction and container boundary | README confirmed; Docker payload not established |
-| [`compose/`](./compose/) | Local/small-host orchestration | README confirmed; Compose payload not established |
-| [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README confirmed; engine and config payload not established |
+| [`docker/`](./docker/) | Image construction and container boundary | README plus two greenfield Dockerfile placeholders confirmed; `TEMPLATE_PRESENT` and build/runtime readiness not established |
+| [`compose/`](./compose/) | Local/small-host orchestration | README plus greenfield Compose placeholder confirmed; `TEMPLATE_PRESENT` and render/runtime readiness not established |
+| [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README plus one-line greenfield Caddy placeholder confirmed; adoption, parse/reload, and runtime not established |
 | [`vpn/`](./vpn/) | Private-access governance | README confirmed; live config intentionally excluded; implementation unestablished |
-| [`firewall/`](./firewall/) | Host/network allow and deny posture | README confirmed; rule payload not established |
+| [`firewall/`](./firewall/) | Host/network allow and deny posture | README plus documentation-only deny-by-default posture file confirmed; executable rule payload not established |
 | [`systemd/`](./systemd/) | Host service units, timers, sockets, hardening | README confirmed; service set and units unestablished |
 | [`kubernetes/`](./kubernetes/) | Cluster manifests, NetworkPolicy, RBAC, ingress | README confirmed; convention and manifests unestablished |
 | [`terraform/`](./terraform/) | IaC, providers, state/backend safety, provisioning | README confirmed; adoption, providers, and modules unestablished |
 | [`hardening/`](./hardening/) | Cross-infra hardening baseline and review discipline | README and checklist confirmed; executable validation unestablished |
-| [`flora/`](./flora/) | Flora-specific deployment/exposure guidance | README confirmed; placement conflicted; payload not established |
+| [`flora/`](./flora/) | Flora-specific deployment/exposure guidance | README and `.gitkeep` confirmed; placement conflicted; implementation-bearing payload not established |
 
 ### `infra/flora/` conflict
 
-Directory Rules list the expected infrastructure lanes without domain children and illustrate domain placement under domain-aware responsibility roots such as `docs/domains/`, `contracts/domains/`, `schemas/.../domains/`, `policy/domains/`, `pipelines/domains/`, and lifecycle/release lanes. `infra/flora/` may reflect an earlier interpretation that domains can segment every root, but the current doctrine does not establish that pattern.
+Accepted Directory Rules assign deployment and exposure configuration to `infra/` but do not enumerate its child topology. Their domain examples use domain-aware responsibility roots such as `docs/domains/`, `contracts/domains/`, `schemas/.../domains/`, `policy/domains/`, `pipelines/domains/`, and lifecycle/release lanes; they do not establish `infra/<domain>/` as a canonical pattern. `infra/flora/` may reflect an earlier interpretation that domains can segment every root, but its current placement remains unresolved.
 
 Until resolved:
 
@@ -657,7 +660,7 @@ Current safe classification:
 
 - standard lane READMEs: `DOCUMENTED`;
 - `hardening/CHECKLIST.md`: review aid under `DOCUMENTED`, not `BOUNDARY_TESTED`;
-- concrete deployment payloads: **UNKNOWN / NOT ESTABLISHED**;
+- Docker/Compose placeholder files: **CONFIRMED**; `TEMPLATE_PRESENT` remains **NEEDS VERIFICATION** because ownership and intended-environment requirements are incomplete;
 - applied environments and release integration: **UNKNOWN**;
 - `infra/flora/`: `DOCUMENTED` plus `CONFLICTED`.
 
@@ -695,7 +698,7 @@ A packet may be carried in the PR body, a reviewed runbook, or a dedicated lane 
 
 ### Documentation rollback
 
-Before merge, close the review branch or PR. After merge, revert the documentation commit without rewriting shared history. Restore the prior v1 blob `7464b149f74f26c87cdd5574ab23a9628de25ed0` for byte-level recovery.
+Before merge, close the review branch or PR. After merge, revert the scoped correction commit without rewriting shared history. Restore the prior v1.1 blob `c791f22f4163603bab2aa2579bff8786e1d21c37` only when byte-level recovery of this README is required.
 
 ### Operational correction
 
@@ -722,7 +725,7 @@ Infrastructure rollback must not erase audit history or silently restore an unsa
 ### For this root README
 
 - [x] Same path and `doc_id` preserved.
-- [x] Directory Rules placement and first-twelve-H2 contract applied.
+- [x] Accepted Directory Rules v2 placement and ROOT_FULL field set addressed.
 - [x] Current child READMEs and hardening checklist grounded in pinned repository evidence.
 - [x] Current CODEOWNERS, Makefile, boundary tests, and workflow scopes reconciled.
 - [x] Doctrine, configuration, validation, environment, release, and publication states kept separate.
@@ -756,8 +759,8 @@ A lane is not operationally complete until:
 
 | ID | Verification question | Status |
 |---|---|---|
-| INF-OV-001 | What is the complete recursive `infra/` inventory at the reviewed revision? | **NEEDS VERIFICATION** |
-| INF-OV-002 | Which child lanes contain concrete payloads rather than README-only guidance? | **UNKNOWN** |
+| INF-OV-001 | Is operational, generated, ignored, or externally managed infrastructure omitted from the 18-file tracked inventory at the reviewed revision? | Tracked inventory **CONFIRMED**; external/operational state **UNKNOWN** |
+| INF-OV-002 | Which tracked placeholders are adopted, owned, and implementation-bearing rather than documentation or greenfield scaffolding? | Placeholder/document-only files **CONFIRMED**; adoption and operational maturity **NEEDS VERIFICATION** |
 | INF-OV-003 | What deployment classes exist: local-only, homelab, VPN-only, staging, public, production, or mixed? | **UNKNOWN** |
 | INF-OV-004 | Which orchestration paths are adopted: direct host, systemd, Compose, Kubernetes, Terraform, or another platform? | **NEEDS VERIFICATION** |
 | INF-OV-005 | What public edge/reverse-proxy stack and route inventory are active? | **UNKNOWN** |
@@ -813,10 +816,11 @@ A lane is not operationally complete until:
 |---|---|---|---|
 | v1 | 2026-07-03 | Expanded the infrastructure root posture, nine standard lanes, trust membrane, validation, review, and open questions. | Restore blob `7464b149f74f26c87cdd5574ab23a9628de25ed0`. |
 | v1.1 | 2026-07-23 | Same-path repository-grounded modernization: Directory Rules order, evidence snapshot, bounded topology, `infra/flora/` conflict, validation reality, ownership, maturity model, change packet, correction, rollback, and no-loss ledger. | Before merge, close the draft PR; after merge, revert the documentation commit. |
+| v1.1.1 | 2026-07-29 | Corrected the complete tracked payload inventory, bounded Compose builds to `infra/`, repaired Dockerfile references, and reconciled current v2 Directory Rules claims; no deployment or publication state changed. | Before merge, close the draft PR; after merge, revert the scoped infrastructure correction commit. |
 
 ## Status summary
 
-`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its current repository surface is documentation-heavy: the standard lane READMEs and hardening checklist are confirmed, while concrete deployment payloads, environment behavior, infra-specific CI, route denials, active secret-scanning coverage, and release-integrated rollback remain unestablished or unknown.
+`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its current repository surface is documentation-heavy: the standard lane READMEs, hardening checklist, two placeholder Dockerfiles, and one placeholder Compose file are confirmed, while non-placeholder deployment payloads, environment behavior, infra-specific CI, route denials, active secret-scanning coverage, and release-integrated rollback remain unestablished or unknown.
 
 Until those gaps close, the safe posture is:
 
@@ -827,7 +831,8 @@ documentation-heavy
 deny-by-default
 least-privilege
 hardening checklist confirmed
-deployment payloads not established
+placeholder Docker/Compose payloads confirmed
+deployability not established
 infra-specific validation not established
 non-release
 non-publication
