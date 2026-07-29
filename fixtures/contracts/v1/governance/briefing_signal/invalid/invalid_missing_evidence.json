@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0.0",
+  "signal_id": "kfm-briefing-2026-07-29-902",
+  "briefing_date": "2026-07-29",
+  "status": "NEEDS_VERIFICATION",
+  "headline": "Synthetic governance event signal",
+  "story_type": "governance_event",
+  "domains": [
+    "water_planning"
+  ],
+  "materiality": {
+    "priority": "P2",
+    "safety": 0,
+    "operational_impact": 1,
+    "geospatial_relevance": 2,
+    "reuse_value": 3,
+    "rationale": "Synthetic fixture for the non-authoritative briefing intake boundary."
+  },
+  "geographic_scope": {
+    "kind": "point",
+    "identifiers": [
+      "fixture:venue:synthetic-alpha"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "A synthetic event was announced for fixture validation.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": []
+    },
+    {
+      "claim_id": "claim-002",
+      "text": "Whether the synthetic event occurred remains unverified.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "other",
+      "authority_name": "Synthetic fixture authority",
+      "locator": "fixture:source:briefing:synthetic-alpha",
+      "observed_at": "2026-07-29T20:23:00Z",
+      "snapshot_status": "SNAPSHOT_CAPTURED"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [],
+    "paths": [],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "PublicMeeting"
+  ],
+  "next_action": {
+    "disposition": "NO_ACTION",
+    "scope": "Validate the fixture shape only.",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "candidate_payload": {
+    "object_family": "PublicMeeting",
+    "candidate_state": "STATUS_UNCONFIRMED",
+    "authority_boundary": "Synthetic fixture only; not a real meeting or public record.",
+    "attributes": {
+      "meeting_id": "fixture:meeting:synthetic-alpha",
+      "source_announced_state": "scheduled",
+      "observed_event_state": "status_unconfirmed",
+      "geometry_ref": null
+    }
+  },
+  "expires_at": "2026-07-30T12:00:00Z"
+}

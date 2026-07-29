@@ -1,0 +1,87 @@
+# Render and build the bounded KFM Compose placeholder without starting services.
+# This workflow proves path/context integrity only; it is not deployment or runtime proof.
+
+name: infra-compose-smoke
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/infra-compose-smoke.yml"
+      - "infra/compose/**"
+      - "infra/docker/**"
+      - "tests/infra/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/infra-compose-smoke.yml"
+      - "infra/compose/**"
+      - "infra/docker/**"
+      - "tests/infra/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infra-compose-smoke-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-compose-boundary:
+    name: static-compose-boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run static Compose boundary tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m unittest discover \
+            --start-directory tests/infra \
+            --pattern 'test_compose_static.py' \
+            --verbose
+
+  render-and-build-compose:
+    name: render-and-build-compose
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Record Docker and Compose versions
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Render Compose configuration
+        run: docker compose -f infra/compose/docker-compose.yml config --quiet
+
+      - name: Build placeholder images
+        run: docker compose -f infra/compose/docker-compose.yml build
+
+      - name: Record bounded result
+        if: always()
+        run: |
+          {
+            echo "### Compose smoke"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Services were not started."
+            echo "- A green result proves only that the checked-in Compose file renders and its placeholder Dockerfiles build on this runner."
+            echo "- It does not prove application code, commands, health checks, governed API behavior, Explorer behavior, deployment, release, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"

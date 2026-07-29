@@ -75,9 +75,35 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 | `../../tests/` | Tests and validation harnesses; Compose can support tests but is not a test result. |
 | `../../artifacts/` | Generated outputs; Compose files should not treat generated outputs as authority. |
 
+## Validation
+
+Static no-network checks:
+
+```bash
+python -m unittest discover   --start-directory tests/infra   --pattern 'test_compose_static.py'   --verbose
+```
+
+Supported Docker/Compose runtime checks:
+
+```bash
+docker compose -f infra/compose/docker-compose.yml config --quiet
+docker compose -f infra/compose/docker-compose.yml build
+```
+
+The `infra-compose-smoke` workflow performs both bounded checks on a GitHub-hosted runner and does not start services.
+
+A green result proves only that:
+
+- the build contexts and Dockerfiles resolve;
+- exposed ports remain loopback-bound;
+- the Compose file renders; and
+- the two placeholder images build.
+
+It does not prove that application code is present, containers have a command or health check, services start, API/UI behavior works, deployment is safe, or release/publication is authorized.
+
 ## Maintenance notes
 
-- Update this README when Compose files, override files, service profiles, exposed ports, volumes, networks, health checks, or runtime consumers are added.
+- Update this README when Compose files, override files, service profiles, exposed ports, volumes, networks, health checks, runtime consumers, or CI validation are added.
 - Every checked-in Compose file should document intended environment, exposed ports, internal-only services, volume posture, secret handling, data-mount posture, and validation command.
 - Keep local-only convenience settings visibly separate from production-like settings.
 - If a Compose file changes exposure, raw-data access, secret handling, model access, release behavior, or public-client routing, require maintainer review and steward review before relying on it.
@@ -85,10 +111,8 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 
 ## Verification status
 
-- Target README: replaced greenfield stub content.
+- Target README: updated from greenfield documentation and the PR #1827 context correction.
 - Compose payload inventory: **CONFIRMED** tracked [`docker-compose.yml`](docker-compose.yml), a greenfield placeholder defining `governed-api` and `explorer-web` builds with loopback-only published ports.
-- Exact child-lane inventory under `infra/compose/`: **CONFIRMED** `README.md` and `docker-compose.yml` at the inspected revision.
-- Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
-- Directory Rules alignment: PARTIALLY VERIFIED against `docs/doctrine/directory-rules.md`.
-- Runtime/service alignment: NEEDS VERIFICATION against app services, runtime adapters, configs, secrets handling, validators, CI, deployment targets, networks, volumes, health checks, and a supported Compose runtime.
-- Tests and validators: the `infra/`-bounded build contexts and Dockerfile resolution are statically checkable; Compose rendering, image builds, and runtime behavior remain **NEEDS VERIFICATION** until a supported Docker/Compose toolchain runs them.
+- Build-context and Dockerfile resolution: **STATICALLY CHECKED** by `tests/infra/test_compose_static.py`.
+- Compose rendering and image build: **CI-CHECKED WHEN `infra-compose-smoke` PASSES**.
+- Container startup, application commands, health checks, governed API behavior, Explorer behavior, runtime data access, deployment, release, and publication: **NEEDS VERIFICATION / HELD**.

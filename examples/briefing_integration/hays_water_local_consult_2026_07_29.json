@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0.0",
+  "signal_id": "kfm-briefing-2026-07-29-001",
+  "briefing_date": "2026-07-29",
+  "status": "ACCEPTED_FOR_MODELING",
+  "headline": "Hays water local consult meeting is a source-announced governance event",
+  "story_type": "governance_event",
+  "domains": [
+    "water_planning",
+    "hydrology"
+  ],
+  "materiality": {
+    "priority": "P1",
+    "safety": 0,
+    "operational_impact": 2,
+    "geospatial_relevance": 2,
+    "reuse_value": 3,
+    "rationale": "Reference case for separating an announced meeting, observed event status, public input, recommendations, decisions, and later funding."
+  },
+  "geographic_scope": {
+    "kind": "point",
+    "identifiers": [
+      "venue:Hilton Garden Inn, Hays, Kansas",
+      "municipality:Hays, Kansas"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "The Kansas Office of the Governor announced a water local consult meeting for July 29, 2026, from 9:00 a.m. to noon at the Hilton Garden Inn in Hays.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.governor.ks.gov/Home/Components/News/News/1092/56"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "text": "The Kansas Water Office, Kansas Department of Agriculture, and Kansas Department of Health and Environment were identified as the conducting agencies.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.governor.ks.gov/Home/Components/News/News/1092/56"
+      ]
+    },
+    {
+      "claim_id": "claim-003",
+      "text": "The meeting occurred as scheduled and produced specific submissions, recommendations, or decisions.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "official_web_page",
+      "authority_name": "Kansas Office of the Governor",
+      "locator": "https://www.governor.ks.gov/Home/Components/News/News/1092/56",
+      "observed_at": "2026-07-29T20:23:00Z",
+      "snapshot_status": "SNAPSHOT_PENDING"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [
+      1647
+    ],
+    "paths": [
+      "contracts/domains/water_planning/public_meeting.md",
+      "schemas/contracts/v1/domains/water_planning/public_meeting.schema.json",
+      "tools/validators/domains/water_planning/validate_status_collapse.py"
+    ],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "PublicMeeting",
+    "BriefingSignal"
+  ],
+  "next_action": {
+    "disposition": "UPDATE_EXISTING_ISSUE",
+    "scope": "Attach the source-announced candidate to issue #1647; preserve STATUS_UNCONFIRMED until authoritative post-event evidence is captured. Do not infer attendance, input, recommendation, decision, funding, or project state.",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "candidate_payload": {
+    "object_family": "PublicMeeting",
+    "candidate_state": "STATUS_UNCONFIRMED",
+    "authority_boundary": "The official announcement supports schedule and organizer facts only. It does not prove the meeting occurred, identify attendees or submissions, or establish recommendations, decisions, funding, projects, or outcomes.",
+    "attributes": {
+      "meeting_id": "kfm:water-planning:public-meeting:hays-local-consult:2026-07-29",
+      "meeting_type": "public_meeting",
+      "title": "Kansas water local consult meeting — Hays",
+      "starts_at": "2026-07-29T09:00:00-05:00",
+      "ends_at": "2026-07-29T12:00:00-05:00",
+      "location_description": "Hilton Garden Inn, Hays, Kansas",
+      "virtual_access_posture": "unknown",
+      "source_announced_state": "scheduled",
+      "observed_event_state": "status_unconfirmed",
+      "organizer_refs": [
+        "Kansas Water Office",
+        "Kansas Department of Agriculture",
+        "Kansas Department of Health and Environment"
+      ],
+      "topic_labels": [
+        "water conservation",
+        "water quality",
+        "community infrastructure funding",
+        "regional planning",
+        "water supply and community sustainability"
+      ],
+      "venue_geometry_ref": null,
+      "regional_scope_ref": null,
+      "source_ref": "https://www.governor.ks.gov/Home/Components/News/News/1092/56"
+    }
+  },
+  "expires_at": "2026-07-30T17:00:00-05:00"
+}
