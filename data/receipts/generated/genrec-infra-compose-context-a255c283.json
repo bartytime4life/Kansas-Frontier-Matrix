@@ -46,6 +46,7 @@
       "repo:bartytime4life/Kansas-Frontier-Matrix@3c410ca496f56a892b131af62465560fa298b1d2",
       "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@3c410ca496f56a892b131af62465560fa298b1d2",
       "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2",
       "repo:bartytime4life/Kansas-Frontier-Matrix:infra/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
       "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/README.md@3c410ca496f56a892b131af62465560fa298b1d2",
       "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/docker-compose.yml@3c410ca496f56a892b131af62465560fa298b1d2",
@@ -128,6 +129,11 @@
       "id": "accepted-directory-rules-adr",
       "validated": true,
       "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3c410ca496f56a892b131af62465560fa298b1d2"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@3c410ca496f56a892b131af62465560fa298b1d2"
     },
     {
       "id": "infra-root-boundary",
