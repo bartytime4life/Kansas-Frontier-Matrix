@@ -1,0 +1,126 @@
+# Validate non-authoritative briefing integration and the existing water-planning
+# anti-collapse boundary. This workflow is read-only and emits no KFM authority.
+
+name: briefing-integration
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/briefing-integration.yml"
+      - "contracts/governance/briefing_signal.md"
+      - "schemas/contracts/v1/governance/briefing_signal.schema.json"
+      - "fixtures/contracts/v1/governance/briefing_signal/**"
+      - "tools/validators/governance/**"
+      - "tests/governance/**"
+      - "examples/briefing_integration/**"
+      - "tools/validators/domains/water_planning/validate_status_collapse.py"
+      - "tests/domains/water_planning/test_status_collapse.py"
+      - "fixtures/domains/water_planning/status_collapse/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/briefing-integration.yml"
+      - "contracts/governance/briefing_signal.md"
+      - "schemas/contracts/v1/governance/briefing_signal.schema.json"
+      - "fixtures/contracts/v1/governance/briefing_signal/**"
+      - "tools/validators/governance/**"
+      - "tests/governance/**"
+      - "examples/briefing_integration/**"
+      - "tools/validators/domains/water_planning/validate_status_collapse.py"
+      - "tests/domains/water_planning/test_status_collapse.py"
+      - "fixtures/domains/water_planning/status_collapse/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: briefing-integration-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-briefing-signals:
+    name: validate-briefing-signals
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run BriefingSignal tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/governance \
+            --pattern 'test_briefing_signal.py' \
+            --verbose
+
+      - name: Validate current briefing examples
+        run: |
+          python tools/validators/governance/validate_briefing_signal.py \
+            examples/briefing_integration/*.json
+
+      - name: Record briefing boundary
+        if: always()
+        run: |
+          {
+            echo "### Briefing integration"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: non-authoritative BriefingSignal shape, examples, deterministic routing guardrails, and no-network behavior."
+            echo "- A green result is not evidence, source admission, repository authorization, policy approval, proof closure, release, deployment, publication, or public truth."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  preserve-water-planning-anti-collapse:
+    name: preserve-water-planning-anti-collapse
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Run existing water-planning semantic suite
+        run: |
+          python -m unittest discover \
+            --start-directory tests/domains/water_planning \
+            --pattern 'test_status_collapse.py' \
+            --verbose
+
+      - name: Record water-planning boundary
+        if: always()
+        run: |
+          {
+            echo "### Water-planning anti-collapse"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- The suite keeps meetings, applications, recommendations, awards, payments, construction, completion, program versions, scoring matrices, identities, geometries, and lineage distinct."
+            echo "- It does not admit a source, validate a real applicant or project, construct proof, approve release, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

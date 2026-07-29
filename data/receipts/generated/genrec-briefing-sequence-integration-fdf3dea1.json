@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-briefing-sequence-integration-fdf3dea1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/briefing-integration.yml",
+    ".github/workflows/infra-compose-smoke.yml",
+    "contracts/governance/briefing_signal.md",
+    "schemas/contracts/v1/governance/briefing_signal.schema.json",
+    "fixtures/contracts/v1/governance/briefing_signal/README.md",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/README.md",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/valid_1.json",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/README.md",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_public_use.json",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_missing_evidence.json",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_inline_geometry.json",
+    "tools/validators/governance/README.md",
+    "tools/validators/governance/validate_briefing_signal.py",
+    "tests/governance/README.md",
+    "tests/governance/test_briefing_signal.py",
+    "examples/briefing_integration/README.md",
+    "examples/briefing_integration/hays_water_local_consult_2026_07_29.json",
+    "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json",
+    "tests/infra/README.md",
+    "tests/infra/test_compose_static.py",
+    "infra/compose/README.md",
+    "docs/architecture/briefing-integration.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/briefing-integration.yml": "sha256:c2521202c18bfc3e4ff24b0ef4b24d37b98a37587b6452b9ded2ce7d8f76f248",
+    ".github/workflows/infra-compose-smoke.yml": "sha256:1502947021b431fe3d29b1dee1024b153033c9eede568b69f4b4018b5a3bd70c",
+    "contracts/governance/briefing_signal.md": "sha256:279b0216d9d81c70e56caabf73fcde3085157c76e58ea2287b341081a95669e1",
+    "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:b11751614009f73879989191e98e417b056147f2ec415aa24e47c5d9300c4db7",
+    "fixtures/contracts/v1/governance/briefing_signal/README.md": "sha256:19094fda4e767fe4bc22e23abe03d7030a06e240deb4fed72536d5a59297b81e",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/README.md": "sha256:01ec6cbcdd57ccff57e31385c1fbe21e91d3495ef7d663b5ac50475090371d7a",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/valid_1.json": "sha256:879e91fe4431af15c80a2103c2a35244494ba9474fb84058a70834ef46b6f4ad",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/README.md": "sha256:a4f5cac6b1c61d959b8817b00e7d4b78d700ce97bf2744f18919fba791c01063",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_public_use.json": "sha256:c27699c2b8c015de8f25d37dca340ee37e4544da42f008df9212e4c238acadfd",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_missing_evidence.json": "sha256:916827d3d1ed340c0cc6ee1d31c70be199b6d38e3b2a08f68dd0b44b0dc7c645",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_inline_geometry.json": "sha256:0475f9e15dcbdb94823a05fe7475e11b074360af5f543dfa27ae82c31293379a",
+    "tools/validators/governance/README.md": "sha256:6ad60bc714828a9aaf88d856ca85d88447313709ac1e258c876a34dc4cf62d84",
+    "tools/validators/governance/validate_briefing_signal.py": "sha256:3b0772800344539b177465e8ddefcf161b7d295adabf98018924ce12fd5887c1",
+    "tests/governance/README.md": "sha256:1a14c937ef2fa46781ab5167bf1463a37608584f466dc2aaf65a6e5a37d7487a",
+    "tests/governance/test_briefing_signal.py": "sha256:592557f1ffd85f5eeb269d92908d994e87f547444e10f949bc07296ed070273d",
+    "examples/briefing_integration/README.md": "sha256:d45e177d332e2b52ad6eaba8c7e3358c104143d76b9bfe969e705731c6fbbd7f",
+    "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "sha256:4db97973ebb34587df7426ebffc3380c81cf006e0f3c924de59ca318c24c79e8",
+    "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json": "sha256:0941034069e903de98d6a17d95a8c4b0674ec773e6a3d5e186cd6b32b4195583",
+    "tests/infra/README.md": "sha256:0e144b12833f9a2062bfa11dd9dc0bf5e86f59e3b701387f4cc55172daae27fc",
+    "tests/infra/test_compose_static.py": "sha256:6c87d530497a8d4fa3f2572dbe8f16f76ad1948fd2eb22b9485a725601f4c70e",
+    "infra/compose/README.md": "sha256:823237117b51d76285229482619d31d9be030e07163b6963a79b0d45e0898fea",
+    "docs/architecture/briefing-integration.md": "sha256:aef3f3fb759a048fb02bbf7141709c6c948ffa253169c69caae6b84c39fd7270"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07"
+  },
+  "prompt_or_contract": "sha256:8b331ce724b6031f3f0e211fa9d050689533652051e5fe6cbc3f821586c36ea2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "web official-source search",
+      "Python deterministic local validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Briefing-to-System Integration Architecture and Implementation Plan"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1825",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1826",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1827",
+      "https://www.governor.ks.gov/Home/Components/News/News/1092/56",
+      "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/briefing-integration.yml": "PROPOSED",
+    ".github/workflows/infra-compose-smoke.yml": "PROPOSED",
+    "contracts/governance/briefing_signal.md": "PROPOSED",
+    "schemas/contracts/v1/governance/briefing_signal.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/valid/valid_1.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_public_use.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_missing_evidence.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/briefing_signal/invalid/invalid_inline_geometry.json": "PROPOSED",
+    "tools/validators/governance/README.md": "PROPOSED",
+    "tools/validators/governance/validate_briefing_signal.py": "PROPOSED",
+    "tests/governance/README.md": "PROPOSED",
+    "tests/governance/test_briefing_signal.py": "PROPOSED",
+    "examples/briefing_integration/README.md": "PROPOSED",
+    "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "CONFIRMED",
+    "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json": "CONFIRMED",
+    "tests/infra/README.md": "PROPOSED",
+    "tests/infra/test_compose_static.py": "PROPOSED",
+    "infra/compose/README.md": "CONFIRMED",
+    "docs/architecture/briefing-integration.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, current main, no open pull requests at the authorization snapshot, issue #1675 control posture, and the exact bounded no-merge scope."
+    },
+    {
+      "gate": "zero-diff-wip-merge-investigation",
+      "outcome": "PASS",
+      "reason": "PR #1826 was confirmed as a zero-file WIP merge with no submitted review or discussion; the merge commit is attributed to the repository owner via GitHub web-flow. Actor intent and automatic linked-issue effects remain separate evidence questions."
+    },
+    {
+      "gate": "briefing-signal-schema-and-validator",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema validation, deterministic custom guardrails, one valid fixture, three invalid fixtures, and two real-source examples passed six no-network unit tests."
+    },
+    {
+      "gate": "water-planning-anti-collapse-integration",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow runs the already merged deterministic water-planning status-collapse suite without broadening its semantic or publication authority."
+    },
+    {
+      "gate": "hays-governance-event-candidate",
+      "outcome": "PASS",
+      "reason": "The candidate preserves official schedule facts while keeping occurrence, attendance, submissions, recommendations, decisions, venue geometry, and regional geometry unresolved."
+    },
+    {
+      "gate": "gmd-action-plan-index-candidate",
+      "outcome": "PASS",
+      "reason": "The inventory records official index link presence and deadlines while preserving submission, review, approval, implementation, outcome, district geometry, and priority-area geometry as unresolved."
+    },
+    {
+      "gate": "compose-static-boundary",
+      "outcome": "PASS",
+      "reason": "Three deterministic tests confirmed context-relative Dockerfile resolution, loopback-only published ports, and absence of sensitive mounts or privileged escape settings."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "Both new GitHub Actions workflows parsed successfully and declare read-only repository permissions."
+    },
+    {
+      "gate": "docker-compose-render-and-image-build",
+      "outcome": "SKIPPED",
+      "reason": "Docker and Docker Compose are unavailable in the local execution environment. The dedicated hosted workflow will run config rendering and image builds without starting services."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt is provenance only and grants no merge, source, proof, release, deployment, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "governor-hays-local-consult-announcement",
+      "validated": true,
+      "evidence_ref": "https://www.governor.ks.gov/Home/Components/News/News/1092/56"
+    },
+    {
+      "id": "kda-groundwater-management-district-index",
+      "validated": true,
+      "evidence_ref": "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+    },
+    {
+      "id": "existing-water-planning-anti-collapse-validator",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/domains/water_planning/validate_status_collapse.py@61eeacc057478042c59151547f417461d4994e53"
+    },
+    {
+      "id": "current-compose-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:infra/compose/docker-compose.yml@61eeacc057478042c59151547f417461d4994e53"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T20:40:00Z",
+  "emitter": "OpenAI ChatGPT GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "One bounded review slice implementing a non-authoritative briefing intake contract, examples, validators, tests, and read-only CI; integrating the existing water-planning anti-collapse suite; and adding Compose render/build CI. No live source adapter, issue writer, repository self-authorization, container startup, source activation, proof construction, release, deployment, or publication is introduced."
+}

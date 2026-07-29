@@ -1,0 +1,197 @@
+{
+  "schema_version": "1.0.0",
+  "signal_id": "kfm-briefing-2026-07-29-002",
+  "briefing_date": "2026-07-29",
+  "status": "ACCEPTED_FOR_MODELING",
+  "headline": "Kansas GMD priority-area and action-plan index is ready for a versioned candidate inventory",
+  "story_type": "governance_event",
+  "domains": [
+    "water_planning",
+    "hydrology"
+  ],
+  "materiality": {
+    "priority": "P1",
+    "safety": 0,
+    "operational_impact": 3,
+    "geospatial_relevance": 3,
+    "reuse_value": 3,
+    "rationale": "The official index connects statutory deadlines, district identity, priority-area documents, action-plan link presence, and later review or implementation states."
+  },
+  "geographic_scope": {
+    "kind": "district",
+    "identifiers": [
+      "ks-gmd-1",
+      "ks-gmd-2",
+      "ks-gmd-3",
+      "ks-gmd-4",
+      "ks-gmd-5"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "Kansas has five groundwater management districts and the official KDA page describes the K.S.A. 82a-1044 priority-area and action-plan process.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "text": "The official index links action plans for GMD Nos. 2, 3, and 5.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+      ]
+    },
+    {
+      "claim_id": "claim-003",
+      "text": "The official index shows a GMD No. 1 priority-area document but no action-plan link; that absence does not prove non-submission.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+      ]
+    },
+    {
+      "claim_id": "claim-004",
+      "text": "The official index states that GMD No. 4 priority areas are due January 1, 2028.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts"
+      ]
+    },
+    {
+      "claim_id": "claim-005",
+      "text": "Submission acceptance, Chief Engineer review, approval, implementation, supersession, and measured outcome status remain unresolved by the official index.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "official_web_page",
+      "authority_name": "Kansas Department of Agriculture, Division of Water Resources",
+      "locator": "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts",
+      "observed_at": "2026-07-29T20:30:00Z",
+      "snapshot_status": "SNAPSHOT_PENDING"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [
+      1647
+    ],
+    "paths": [
+      "contracts/domains/water_planning/planning_region.md",
+      "contracts/domains/water_planning/correction_or_withdrawal.md",
+      "tools/validators/domains/water_planning/validate_status_collapse.py"
+    ],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "GroundwaterActionPlanInventory",
+    "PlanningRegion",
+    "CorrectionOrWithdrawal",
+    "BriefingSignal"
+  ],
+  "next_action": {
+    "disposition": "UPDATE_EXISTING_ISSUE",
+    "scope": "Attach this versioned link-presence inventory to issue #1647. Resolve exact document locators, publication dates, review orders, and geometries through separately admitted evidence. Keep submission, approval, implementation, and outcome fields UNKNOWN until authoritative records support them.",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "candidate_payload": {
+    "object_family": "GroundwaterActionPlanInventory",
+    "candidate_state": "LINKED_BY_AUTHORITY_INDEX",
+    "authority_boundary": "This inventory records only what the official KDA index exposes at the observation time. Link presence is not submission acceptance, review, approval, implementation, or measured outcome. Missing links are not evidence of non-submission.",
+    "attributes": {
+      "inventory_id": "kfm:water-planning:gmd-action-plan-index:2026-07-29",
+      "source_observed_at": "2026-07-29T20:30:00Z",
+      "source_ref": "https://www.agriculture.ks.gov/divisions-programs/division-of-water-resources/managing-kansas-water-resources/groundwater-management-districts",
+      "records": [
+        {
+          "district_id": "ks-gmd-1",
+          "district_name": "Western Kansas GMD No. 1",
+          "priority_area_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "priority_area_due": "2024-07-01",
+          "action_plan_due": "2026-07-01",
+          "action_plan_index_state": "NOT_LISTED_ON_AUTHORITY_INDEX",
+          "submission_status": "UNKNOWN",
+          "chief_engineer_review_status": "UNKNOWN",
+          "approval_status": "UNKNOWN",
+          "implementation_status": "UNKNOWN",
+          "district_geometry_ref": null,
+          "priority_area_geometry_ref": null
+        },
+        {
+          "district_id": "ks-gmd-2",
+          "district_name": "Equus Beds GMD No. 2",
+          "priority_area_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "priority_area_due": "2024-07-01",
+          "action_plan_due": "2026-07-01",
+          "action_plan_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "submission_status": "NEEDS_VERIFICATION",
+          "chief_engineer_review_status": "UNKNOWN",
+          "approval_status": "UNKNOWN",
+          "implementation_status": "UNKNOWN",
+          "district_geometry_ref": null,
+          "priority_area_geometry_ref": null
+        },
+        {
+          "district_id": "ks-gmd-3",
+          "district_name": "Southwest Kansas GMD No. 3",
+          "priority_area_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "priority_area_due": "2024-07-01",
+          "action_plan_due": "2026-07-01",
+          "action_plan_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "submission_status": "NEEDS_VERIFICATION",
+          "chief_engineer_review_status": "UNKNOWN",
+          "approval_status": "UNKNOWN",
+          "implementation_status": "UNKNOWN",
+          "district_geometry_ref": null,
+          "priority_area_geometry_ref": null
+        },
+        {
+          "district_id": "ks-gmd-4",
+          "district_name": "Northwest Kansas GMD No. 4",
+          "priority_area_index_state": "DUE_2028",
+          "priority_area_due": "2028-01-01",
+          "action_plan_due": null,
+          "action_plan_index_state": "NOT_APPLICABLE_AT_OBSERVATION",
+          "submission_status": "NOT_APPLICABLE_AT_OBSERVATION",
+          "chief_engineer_review_status": "NOT_APPLICABLE_AT_OBSERVATION",
+          "approval_status": "UNKNOWN",
+          "implementation_status": "UNKNOWN",
+          "district_geometry_ref": null,
+          "priority_area_geometry_ref": null
+        },
+        {
+          "district_id": "ks-gmd-5",
+          "district_name": "Big Bend GMD No. 5",
+          "priority_area_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "priority_area_due": "2024-07-01",
+          "action_plan_due": "2026-07-01",
+          "action_plan_index_state": "LINKED_BY_AUTHORITY_INDEX",
+          "submission_status": "NEEDS_VERIFICATION",
+          "chief_engineer_review_status": "UNKNOWN",
+          "approval_status": "UNKNOWN",
+          "implementation_status": "UNKNOWN",
+          "district_geometry_ref": null,
+          "priority_area_geometry_ref": null
+        }
+      ],
+      "district_geometry_model": "separate_reference_required",
+      "priority_area_geometry_model": "separate_reference_required",
+      "correction_and_supersession_state": "NEEDS_VERIFICATION"
+    }
+  },
+  "expires_at": "2026-08-05T17:00:00-05:00"
+}
