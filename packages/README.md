@@ -2,11 +2,11 @@
 doc_id: kfm://doc/packages-readme
 title: packages/ — Governed Shared Implementation Package Root
 type: readme; root-readme; canonical-packages-root; shared-library-boundary; mixed-language-workspace; package-maturity-index; drift-index
-version: v0.3
-status: draft; repository-grounded; canonical-root-confirmed; placeholder-heavy; mixed-language; mixed-maturity; package-wide-test-lane-unestablished; distribution-unverified; non-authoritative
+version: v0.4
+status: draft; repository-grounded; canonical-root-confirmed; placeholder-heavy; mixed-language; mixed-maturity; pnpm-contract-confirmed; locked-node-audit-proposed; package-wide-test-lane-unestablished; distribution-unverified; non-authoritative
 owners: OWNER_TBD — Package steward · Architecture steward · Consumer owners · Contract/schema/policy stewards · Security and supply-chain reviewer · Validation/CI steward · Docs steward
 created: 2026-06-15
-updated: 2026-07-23
+updated: 2026-07-29
 supersedes: v0.2 packages root contract
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "public-doctrine; packages-root; shared-reusable-code; non-deployable; no-truth-authority; no-schema-authority; no-policy-authority; no-lifecycle-authority; no-release-authority; governed-interface-only; mixed-language; placeholder-heavy; distribution-unverified; correction-aware; rollback-aware"
@@ -16,8 +16,9 @@ truth_posture: >
   packages/shared-library placement and mandatory root-README section order; root JavaScript
   workspace declaration for apps/* and packages/*; root Hatchling Python project limited to
   src/kfm; root package lint/test/build TODO markers; Makefile package-wide test absence;
-  dependency-scan Python root audit and Node lockfile hold; ui-build Explorer Web readiness
-  hold; CODEOWNERS /packages routing; bounded current index of at least twenty-one direct
+  dependency-scan Python root audit; exact pnpm manager, workspace, and lockfile contract;
+  proposed locked high-threshold pnpm audit; ui-build Explorer Web build/test baseline;
+  CODEOWNERS /packages routing; bounded current index of at least twenty-one direct
   package README lanes; README-only api, evidence, and taxonomy boundaries at checked paths;
   private 0.0.0 MapLibre and UI npm scaffolds with placeholder exports; sampled 0.0.0 Python
   scaffolds with comment-only core modules; apps/packages dormant drift guard; and current
@@ -29,11 +30,11 @@ truth_posture: >
   anomaly; package-local versus cross-cutting test and fixture homes; and package names that
   resemble authority roots without owning their authority /
   UNKNOWN exhaustive recursive package inventory, all manifests and exports, complete
-  dependency graph, import consumers, package-specific tests, package-wide CI, lockfile and
-  package-manager decision, build reproducibility, registry distribution, deployment use,
+  dependency graph, import consumers, package-specific tests, package-wide CI, Python lock
+  strategy, end-to-end build reproducibility, registry distribution, deployment use,
   operational health, production behavior, and public effects /
   NEEDS VERIFICATION named owners, accepted package-boundary ADRs, complete consumer map,
-  language/runtime support matrices, lockfile strategy, package APIs, dependency and
+  language/runtime support matrices, Python and artifact lock strategy, package APIs, dependency and
   supply-chain admission, test-home decision, compatibility windows, distribution policy,
   deprecation records, correction propagation, and rollback drills
 evidence_snapshot:
@@ -61,6 +62,14 @@ evidence_snapshot:
   packages_taxonomy_blob: 49492b00256211fc7344a2e434d0a5705080d33c
   bounded_direct_readme_lanes: "at least 21"
   inventory_method: exact GitHub file reads and probes plus current-commit repository index queries; counts and absence findings are bounded and do not establish a full recursive, all-branch, generated-file, or runtime-consumer inventory
+pnpm_audit_change_evidence:
+  base_commit: b5f156c32efa149846ad1022b9661b766f464485
+  target_prior_blob: 154e1c9a8b841397bceb52e6b4933b241906ab9a
+  package_manager: pnpm@11.17.0
+  workspace_manifest: ../pnpm-workspace.yaml
+  lockfile: ../pnpm-lock.yaml
+  workflow: ../.github/workflows/dependency-scan.yml
+  validator: ../tools/validators/dependencies/pnpm_audit_readiness.py
 related:
   - ../README.md
   - ../package.json
@@ -115,10 +124,11 @@ related:
   - ui/README.md
 tags: [kfm, packages, shared-libraries, implementation, mixed-language, workspaces, package-boundary, trust-membrane, placeholders, dependency-direction, tests, distribution, compatibility, correction, rollback]
 notes:
+  - "v0.4 reconciles this index with the already-established pnpm workspace/lockfile and the same-batch proposed locked audit; exact-head registry findings remain NEEDS VERIFICATION."
   - "v0.3 is a same-path repository-grounded modernization; it changes the packages root README and its generated provenance receipt only."
   - "The first twelve H2 sections now follow Directory Rules section 15 exactly."
   - "The bounded package registry is an orientation index, not a recursive manifest or implementation-attestation surface."
-  - "No package code, manifest, export, dependency, lockfile, test, fixture, workflow, consumer, source activation, lifecycle record, release object, deployment, runtime, or public artifact is created or changed."
+  - "This package-root documentation update changes no package code, manifest, export, dependency, lockfile, consumer, source activation, lifecycle record, release object, deployment, runtime, or public artifact; the paired workflow, validator, and focused test remain a separately bounded supply-chain gate."
   - "The v0.2 document remains recoverable through the recorded prior blob and the v0.2-to-v0.3 no-loss ledger."
 [/KFM_META_BLOCK_V2] -->
 
@@ -252,8 +262,8 @@ A package should not import an application, pipeline runner, connector executabl
 | Sampled Node packages | `packages/maplibre` and `packages/ui` are private `0.0.0` packages whose inspected entry points export placeholder values. | Workspace package scaffolds exist; supported APIs, dependencies, builds, and consumers are not established. |
 | README-only lanes | Exact checked paths leave `packages/api`, `packages/evidence`, and `packages/taxonomy` as documentation-only boundaries. | Do not treat these lanes as executable packages. |
 | Package tests | `tests/packages/README.md` was not found at the checked path; package-specific READMEs report uneven or absent package-local tests. | No package-wide test home, collection contract, pass rate, or coverage is established. |
-| Dependency audit | [`dependency-scan`](../.github/workflows/dependency-scan.yml) audits the root Python resolution; Node audit is an explicit hold because no root lockfile is committed. | Dependency scanning is partial and not reproducible for the full mixed-language package graph. |
-| UI workflow | [`ui-build`](../.github/workflows/ui-build.yml) is an Explorer Web readiness check and currently requires a real script, exact pnpm pin, and lockfile. | It is not a package-root build or test suite. |
+| Dependency audit | [`dependency-scan`](../.github/workflows/dependency-scan.yml) audits the unlocked root Python resolution and proposes a high-threshold audit of the committed pnpm workspace lockfile after a repository-owned readiness check. | Python resolution remains unlocked; the Node result is point-in-time and exact-head execution remains **NEEDS VERIFICATION**. |
+| UI workflow | [`ui-build`](../.github/workflows/ui-build.yml) runs the Explorer Web build and test with the exact pnpm pin and frozen lockfile. | It is a bounded app baseline, not a package-root build or test suite. |
 | Review routing | [CODEOWNERS](../.github/CODEOWNERS) routes `/packages/` to `@bartytime4life`. | Review routing exists; it is not independent approval or proof that review occurred. |
 | Distribution and consumers | No complete registry publication, wheel/npm release, import-consumer graph, deployment binding, or production health evidence was established. | Distribution, adoption, and operational maturity remain **UNKNOWN**. |
 
@@ -428,8 +438,8 @@ Packages must not write authoritative records directly to `data/catalog/`, `data
 | Root `npm run lint/test/build` | Prints TODO markers. | No package lint, test, build, export, or workspace health. |
 | `make validate` | Runs aggregate schema validators and schema/contract tests. | No package API, import, consumer, build, or compatibility proof. |
 | `dependency-scan` Python job | Audits dependencies resolved from the root Python project. | Child-package dependency closure, a locked resolution, or vulnerability absence. |
-| `dependency-scan` Node job | Explicitly holds because no root lockfile is committed. | Node dependency safety or reproducible workspace installation. |
-| `ui-build` | Fails closed until Explorer Web has real scripts, an exact pnpm pin, and a lockfile. | Package-root build/test readiness or package consumer compatibility. |
+| `dependency-scan` Node job | Validates the exact pnpm/workspace/lockfile contract, then queries the registry at `high` severity and classifies structured output fail-closed. | Vulnerability absence, provenance, licensing, dependency admission, or future advisory state. |
+| `ui-build` | Installs the frozen pnpm workspace and runs Explorer Web's real build and test scripts. | Package-root build/test readiness or package consumer compatibility. |
 | Package-specific READMEs | Record bounded package findings and proposed validation. | Execution unless a current test or run is cited. |
 | CODEOWNERS | Routes `/packages/` review requests. | Test success, approval, independent review, release, or publication. |
 
@@ -518,7 +528,7 @@ The author of generated package code or documentation must not treat a generated
 | [`data/`](../data/README.md) | Lifecycle state and trust artifacts; packages do not become public or authoritative storage paths. |
 | [`release/`](../release/README.md) | Release, correction, withdrawal, and rollback authority; distinct from `packages/release/`. |
 | [`runtime/`](../runtime/README.md) | Local/provider adapters and harnesses; packages remain reusable libraries rather than runtime surfaces. |
-| [`package.json`](../package.json) | Root Node workspace selector; generic scripts remain placeholders and lockfile policy is unresolved. |
+| [`package.json`](../package.json) | Root Node workspace selector with exact `pnpm@11.17.0` pin; generic root scripts remain fail-closed holds. |
 | [`pyproject.toml`](../pyproject.toml) | Root Python distribution; currently builds `src/kfm`, not all child package projects. |
 | [`Makefile`](../Makefile) | Repository orchestration; currently has no package-wide validation target. |
 
@@ -703,12 +713,12 @@ Graduation requires the evidence named for the state and a reviewed update to th
 | Concern | Confirmed repository surface | Consequence |
 |---|---|---|
 | JavaScript workspace selection | Root `package.json` selects immediate `apps/*` and `packages/*` children. | An immediate package with `package.json` can enter workspace tooling; placement and manifest review are required. |
-| JavaScript manager/lock | No root package-manager pin or common lockfile was established by the inspected workflows. | Deterministic workspace install and Node dependency audit remain held. |
+| JavaScript manager/lock | Root `package.json` pins `pnpm@11.17.0`; `pnpm-workspace.yaml` and `pnpm-lock.yaml` cover the current workspace importers. | Frozen installation is established for the current lock; future manifest/importer drift must fail closed. |
 | JavaScript root scripts | Generic `lint`, `test`, and `build` are TODO echoes. | Do not cite them as executable package commands. |
 | Python root distribution | Hatchling builds only `src/kfm`. | Child `packages/*/pyproject.toml` projects are not automatically built or tested by the root project. |
 | Python child scaffolds | Several child packages declare separate `0.0.0` project metadata. | Each needs an explicit build backend, discovery, runtime support, dependencies, tests, and consumer contract. |
 | Repository Makefile | No aggregate package target exists. | Root validation does not imply package validation. |
-| Dependency scan | Root Python audit is point-in-time; Node audit is an explicit no-lockfile hold. | Supply-chain closure remains partial. |
+| Dependency scan | Root Python audit is point-in-time and unlocked; the Node lane proposes a locked high-threshold pnpm audit with fail-closed report classification. | Supply-chain closure remains partial; neither lane proves provenance, licensing, compatibility, or vulnerability absence. |
 
 ### Distribution is a separate control plane
 
@@ -841,7 +851,7 @@ Every implementation-bearing child package should document and prove the followi
 | `packages/schema-registry/` versus `schemas/` | **Potential authority confusion** | Package resolves caller-supplied canonical schemas; it never becomes schema source authority. |
 | `packages/source-registry/` versus `data/registry/` | **Potential authority confusion plus schema conflict** | Package parses/cross-checks explicit records; registry and source-admission authority remain external. |
 | Package-local tests versus root `tests/`/`fixtures/` | **NEEDS VERIFICATION** | Document a non-competing split before adding duplicate fixture or test homes. |
-| Root Node workspace without lockfile or manager pin | **CONFIRMED readiness hold** | Do not perform nondeterministic package installs/audits or claim reproducible builds. |
+| Root Node workspace manager or lockfile drift | **CONFIRMED guarded boundary** | Keep the exact manager pin, workspace definitions, and lockfile importers coherent; fail closed rather than falling back to an unlocked or competing manager. |
 | Placeholder packages named as capabilities | **CONFIRMED widespread risk** | Use maturity labels and reject implementation claims until non-placeholder code, exports, tests, and consumers exist. |
 
 Do not resolve these items by prose alone. Use the drift register, verification backlog, ADR, package-boundary decision, or migration record appropriate to the authority change.
@@ -985,7 +995,7 @@ Documentation rollback for this README is ordinary Git rollback. It changes no p
 |---|---:|---|
 | Exhaustive direct and recursive package inventory | `NEEDS VERIFICATION` | Generate a pinned `git ls-tree`/checkout inventory and compare with this index. |
 | Named package owners and reviewer separation | `NEEDS VERIFICATION` | Confirm stewardship assignments; do not infer them from CODEOWNERS. |
-| Node package manager and lockfile | `NOT ESTABLISHED` | Accept one manager/version, commit authoritative lockfile, update workflows, and test deterministic install. |
+| Node package manager and lockfile | `CONFIRMED AT PROPOSED HEAD` | `pnpm@11.17.0`, `pnpm-workspace.yaml`, and `pnpm-lock.yaml` are present; retain frozen-install and importer-drift checks when the workspace changes. |
 | Python child-package workspace/build model | `UNKNOWN` | Decide independent builds versus a workspace tool; verify backends, discovery, versions, dependencies, and lock strategy. |
 | Package-wide tests and CI | `NOT ESTABLISHED` | Establish collection, zero-test failure, package/consumer matrix, stable checks, and artifacts. |
 | Complete import and consumer graph | `UNKNOWN` | Analyze static imports, generated code, runtime loading, and external consumers at a pinned ref. |
@@ -996,7 +1006,7 @@ Documentation rollback for this README is ordinary Git rollback. It changes no p
 | `apps/packages/` disposition | `NEEDS VERIFICATION` | Inventory references, decide removal or time-bounded exception, and preserve rollback. |
 | Test and fixture home split | `NEEDS VERIFICATION` | Define package-local versus root cross-cutting responsibilities without duplicate authority. |
 | Software distribution policy | `UNKNOWN` | Define internal/external registry, provenance, signatures, versioning, license, vulnerability response, withdrawal, and rollback. |
-| Package-specific supply-chain coverage | `UNKNOWN` | Extend deterministic audits beyond the root Python project and Node hold. |
+| Package-specific supply-chain coverage | `PARTIAL / NEEDS VERIFICATION` | Inspect exact-head pnpm audit results, then add license, provenance, exception, and package-specific response coverage without treating a registry pass as admission. |
 | Package correction and downstream invalidation | `UNKNOWN` | Define dependency-to-artifact impact tracking and drills. |
 | Production/deployment use and health | `UNKNOWN` | Verify runtime consumers, deployed versions, telemetry, incidents, and support state. |
 
@@ -1013,8 +1023,8 @@ Documentation rollback for this README is ordinary Git rollback. It changes no p
 | [`package.json`](../package.json) | Private root workspace selects `apps/*` and `packages/*`; generic scripts are TODO echoes. | `CONFIRMED` |
 | [`pyproject.toml`](../pyproject.toml) | Root Hatchling distribution builds `src/kfm`, not the child package tree. | `CONFIRMED` |
 | [`Makefile`](../Makefile) | No package-wide build/test/validation target; implemented checks are bounded elsewhere. | `CONFIRMED` |
-| [`dependency-scan.yml`](../.github/workflows/dependency-scan.yml) | Root Python audit plus explicit Node no-lockfile hold. | `CONFIRMED workflow definition` |
-| [`ui-build.yml`](../.github/workflows/ui-build.yml) | Explorer Web readiness gate; not package-root CI. | `CONFIRMED workflow definition` |
+| [`dependency-scan.yml`](../.github/workflows/dependency-scan.yml) | Root Python audit plus proposed locked pnpm high-threshold audit and finite result classifier. | `PROPOSED workflow definition / exact-head run NEEDS VERIFICATION` |
+| [`ui-build.yml`](../.github/workflows/ui-build.yml) | Frozen pnpm install plus Explorer Web build and test; not package-root CI. | `CONFIRMED workflow definition` |
 | [CODEOWNERS](../.github/CODEOWNERS) | `/packages/` routes to `@bartytime4life`; enforcement/independence unverified. | `CONFIRMED routing` |
 | [`apps/packages/`](../apps/packages/README.md) | README-only in bounded evidence and frozen as a dormant workspace-risk drift guard. | `CONFIRMED bounded finding` |
 | Direct package README index | At least twenty-one immediate package lanes surfaced at the current commit. | `CONFIRMED bounded result` |

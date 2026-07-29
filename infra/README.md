@@ -2,8 +2,8 @@
 doc_id: kfm://doc/infra-readme
 title: infra/ — Deployment, Host, Network, and Exposure Posture Root
 type: README; directory-readme; canonical-infrastructure-root; deployment-boundary-index
-version: v1.1.1
-status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; placeholder-docker-compose-payloads-confirmed; deployability-unestablished; infra-validation-unestablished; deny-by-default; non-release; non-publication
+version: v1.1.2
+status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; placeholder-docker-compose-payloads-confirmed; locked-pnpm-audit-proposed; deployability-unestablished; infra-validation-unestablished; deny-by-default; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accepted infrastructure, security, and operations stewardship, required-review enforcement, and independent approval controls were not established
 created: 2026-07-03
 updated: 2026-07-29
@@ -40,6 +40,11 @@ evidence_snapshot:
   governed_api_dockerfile_blob: ea10e9a12737e4e9369b80b6ea3e9b84f2241abb
   explorer_web_dockerfile_blob: 77e7a862d1cb01c8c818188e8b3101610fdcf415
   inspection_method: full tracked README and repository-reference inventory plus exact infra file reads and static Compose path checks; no deployed environment, branch ruleset, secret store, host, container, cluster, network, image build, or runtime was inspected
+dependency_scan_change_evidence:
+  base_commit: b5f156c32efa149846ad1022b9661b766f464485
+  target_prior_blob: 954c6a4541724c72a2fe64114ce4ee73648dbd1b
+  workflow: ../.github/workflows/dependency-scan.yml
+  scope: repository dependency advisory signal only; no infrastructure payload or environment validation
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/security/README.md
@@ -75,6 +80,7 @@ related:
   - ../.github/workflows/codeql.yml
   - ../Makefile
 notes:
+  - "v1.1.2 reconciles the adjacent dependency-scan description with the proposed locked pnpm audit; this does not establish infrastructure or deployment validation."
   - "v1.1.1 corrects the tracked payload inventory and repairs two Dockerfile references within the existing infra-bounded Compose contexts without establishing deployability."
   - "The accepted Directory Rules v2 ROOT_FULL field set is addressed without claiming a fixed heading order."
   - "The repository has substantial infrastructure guidance, but no live deployment or complete infra-specific executable validation surface was established in the bounded inspection."
@@ -205,7 +211,7 @@ Directory Rules assign deployment, host, network, and exposure posture to `infra
 | `Makefile` | **CONFIRMED** no infrastructure validation target | There is no repository-native `make infra-*` validation entrypoint. |
 | `policy-boundary-guards` | **CONFIRMED** 15 structural/static/API tests; workflow paths omit `infra/**` | Useful adjacent trust-boundary evidence, not infrastructure configuration or environment validation. |
 | CodeQL | **CONFIRMED** Python and JavaScript/TypeScript analysis workflow | Source analysis exists; it does not inspect firewall, proxy, VPN, systemd, Kubernetes, Terraform, hosts, or running routes. |
-| Dependency scan | **CONFIRMED** Python audit plus an explicit Node-lockfile hold | Dependency findings are point-in-time and not deployment approval. |
+| Dependency scan | **CONFIRMED** Python audit plus **PROPOSED** locked high-threshold pnpm audit | Dependency findings are point-in-time and not infrastructure validation or deployment approval. |
 | Active secret-scanning workflow | Expected current workflow path was not found in bounded inspection | Current active secret-scan coverage is **NOT ESTABLISHED** here. |
 | Deployment and exposure docs | **CONFIRMED** draft `deployment-topology.md` and `EXPOSURE_PLAN.md` | Doctrine is available; actual environments and routes remain unverified. |
 | Running environments | No host, cluster, proxy, firewall, VPN, Terraform backend, route inventory, logs, or runtime was inspected | Operational deployment state is **UNKNOWN**. |
@@ -355,7 +361,7 @@ If secret, credential, state, or sensitive operational material is committed her
 | `apps/governed-api/tests/test_boundary_guards.py` | **CONFIRMED** static/API boundary tests | Proves selected route/import/path-literal boundaries for the tested revision; not network or host enforcement. |
 | `tests/policy/test_explorer_web_adapter_boundary.py` | **CONFIRMED** client static boundary tests | Proves selected adapter and internal-store literal constraints; not browser network behavior. |
 | `.github/workflows/codeql.yml` | **CONFIRMED** source analysis | Does not validate deployment payloads, secret stores, network paths, or applied state. |
-| `.github/workflows/dependency-scan.yml` | **CONFIRMED** Python audit; Node audit hold | Does not validate images, clusters, Terraform state, firewall rules, or running services. |
+| `.github/workflows/dependency-scan.yml` | **CONFIRMED** Python audit; **PROPOSED** locked pnpm audit with fail-closed result classification | Does not validate images, clusters, Terraform state, firewall rules, running services, or deployment readiness. |
 | Infra-specific Make target | **NOT ESTABLISHED** | No unified repository-native infrastructure validation command was found. |
 | Infra-specific workflow | **NOT ESTABLISHED** | No workflow was verified that parses and tests all applicable infra lanes. |
 | Active secret scanning | **NOT ESTABLISHED in bounded inspection** | A historical workflow existed, but the expected current workflow path was absent. |
