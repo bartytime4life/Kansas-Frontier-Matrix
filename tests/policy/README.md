@@ -6,16 +6,17 @@
 doc_id: kfm://doc/tests-policy-readme
 title: tests/policy/README.md — Governed Policy and Boundary-Guard Test Contract
 type: readme; directory-readme; policy-test-parent; governance-boundary-suite; enforceability-boundary
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; executable-boundary-suite-confirmed; static-and-structural-coverage; policy-engine-tests-unestablished; policy-runtime-placeholder; policy-workflow-split; non-authoritative
 owners: OWNER_TBD — QA steward · Policy steward · Governance steward · Control-plane steward · Governed API steward · Explorer Web steward · Connector steward · Pipeline steward · Contract/schema steward · Evidence steward · Rights/sensitivity steward · Release steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-06
-updated: 2026-07-16
-supersedes: v0.2
+updated: 2026-07-29
+supersedes: v0.3
 policy_label: public-doctrine; tests; policy; boundary-guards; fail-closed; no-network-default; synthetic-only; authority-separation; trust-membrane; non-publisher; evidence-subordinate; rights-aware; sensitivity-aware; release-gated; correction-aware; rollback-aware
 current_path: tests/policy/README.md
-truth_posture: CONFIRMED target README v0.2, Directory Rules, canonical tests root, singular policy root, direct boundary_constants.py plus three direct test modules, app-owned governed-api boundary companion, exact Makefile boundary-guards and boundary-guards-ci commands, path-filtered substantive policy-boundary-guards workflow, ignored local JUnit report path, TODO-only generic policy-test workflow and make policy target, root make test exclusion, policy contracts and mixed-maturity schemas, minimal PolicyDecision valid/invalid fixtures exercised by the common schema harness, PolicyDecision outcome vocabulary ANSWER|ABSTAIN|DENY|ERROR, decision-policy prose that also discusses engine-native ALLOW|RESTRICT|HOLD, README-only policy bundle lane, placeholder policy-runtime namespace, one sampled default-deny Rego scaffold, absent policy/policy/ path named by schema, and absent dedicated PolicyDecision validator at the schema-declared path / PROPOSED accepted policy case contract, explicit static-guard target manifests and nonempty-scan assertions, policy-engine and bundle-evaluation tests, rights/sensitivity/consent/revocation/redaction/release matrices, obligation-enforcement tests, reason-code registry tests, policy version/digest/replay tests, network/filesystem/secret controls, workflow trigger expansion, zero-collection failure, coverage and mutation metrics, substantive generic policy CI, promotion blocking, correction, deprecation, and rollback / CONFLICTED static boundary suite versus broader policy behavior claims; canonical PolicyDecision outcomes versus engine-native policy vocabulary; schema-declared policy/policy/ and validator paths versus checked absence; policy-boundary workflow path filters versus policy/contracts/schemas/fixtures changes; mixed policy schema maturity; policy root authority versus placeholder runtime and bundle implementation / UNKNOWN exhaustive policy source and test inventory, dynamic collection, accepted evaluator, active bundle selection, OPA/WASM binding, policy bundle format, complete reason-code and obligation registries, actual policy coverage, current mutation score, production enforcement, deployment, receipt emission, branch-protection significance, and promotion dependency / NEEDS VERIFICATION owners, direct-lane retention, root versus app/package/domain test placement, non-vacuous static scan enforcement, accepted outcome normalization, policy fixture completeness, sensitive-test review, artifact retention, trigger ownership, release-gate integration, and migration plan
+truth_posture: CONFIRMED current README v0.3 preimage and its recorded v0.2 lineage, Directory Rules, canonical tests root, singular policy root, direct boundary_constants.py plus three direct test modules, app-owned governed-api boundary companion, exact Makefile boundary-guards and boundary-guards-ci commands, path-filtered substantive policy-boundary-guards workflow, ignored local JUnit report path, TODO-only generic policy-test workflow and make policy target, root make test exclusion, policy contracts and mixed-maturity schemas, minimal PolicyDecision valid/invalid fixtures exercised by the common schema harness, PolicyDecision outcome vocabulary ANSWER|ABSTAIN|DENY|ERROR, decision-policy prose that also discusses engine-native ALLOW|RESTRICT|HOLD, README-only policy bundle lane, placeholder policy-runtime namespace, one sampled default-deny Rego scaffold, absent policy/policy/ path named by schema, and absent dedicated PolicyDecision validator at the schema-declared path / PROPOSED accepted policy case contract, explicit static-guard target manifests and nonempty-scan assertions, policy-engine and bundle-evaluation tests, rights/sensitivity/consent/revocation/redaction/release matrices, obligation-enforcement tests, reason-code registry tests, policy version/digest/replay tests, network/filesystem/secret controls, workflow trigger expansion, zero-collection failure, coverage and mutation metrics, substantive generic policy CI, promotion blocking, correction, deprecation, and rollback / CONFLICTED static boundary suite versus broader policy behavior claims; canonical PolicyDecision outcomes versus engine-native policy vocabulary; schema-declared policy/policy/ and validator paths versus checked absence; policy-boundary workflow path filters versus policy/contracts/schemas/fixtures changes; mixed policy schema maturity; policy root authority versus placeholder runtime and bundle implementation / UNKNOWN exhaustive policy source and test inventory, dynamic collection, accepted evaluator, active bundle selection, OPA/WASM binding, policy bundle format, complete reason-code and obligation registries, actual policy coverage, current mutation score, production enforcement, deployment, receipt emission, branch-protection significance, and promotion dependency / NEEDS VERIFICATION owners, direct-lane retention, root versus app/package/domain test placement, non-vacuous static scan enforcement, accepted outcome normalization, policy fixture completeness, sensitive-test review, artifact retention, trigger ownership, release-gate integration, and migration plan
 evidence_snapshot:
+  snapshot_status: historical_v0.3_evidence_baseline
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
@@ -60,6 +61,13 @@ evidence_snapshot:
     - tools/validators/policy/validate_policy_input_bundle.py
     - policy/policy/README.md
   bounded_inventory_note: the listed direct files and companion test were individually verified; this does not prove exhaustive absence of additional policy tests in history, ignored files, generated workspaces, branch-local files, package-local tests, domain-local tests, external systems, or uninspected paths
+change_evidence:
+  base_commit: 9e0808149b2a391f171021d9bdca59311e80be36
+  target_prior_blob: b0e0297949646492dcd2bdcc34fae1ca2521484b
+  pipeline_connector_test_prior_blob: c6164787bc848eb2347c347af203d76afae37a2b
+  connector_gate_workflow_prior_blob: ae3ef92ac5f717cc149a609c3b74dd105dd17e44
+  policy_boundary_workflow_prior_blob: 6d442a6cdd0b146cd4003cbf1d7c619a455a16ae
+  connector_output_validator_prior_state: absent
 related:
   - ../README.md
   - ../schemas/README.md
@@ -90,13 +98,13 @@ related:
   - ../../Makefile
   - ../../.gitignore
 notes:
-  - "v0.3 replaces stale presence-verification language with a commit-pinned executable boundary-suite inventory."
+  - "v0.4 records the bounded connector repository-path scanner and its deterministic policy-test integration."
   - "The confirmed direct suite is substantive but primarily structural and static; it is not a policy evaluator or complete policy-behavior suite."
   - "The path-filtered policy-boundary-guards workflow runs the four-file suite and uploads JUnit XML, while the generic policy-test workflow remains TODO-only."
   - "The current Makefile default test and validate targets do not include tests/policy; make policy is TODO-only."
   - "PolicyDecision schema fixtures are exercised under tests/schemas, not by the direct tests/policy boundary suite."
   - "Policy runtime, bundle selection, dedicated validators, active evaluator binding, and production enforcement remain unestablished."
-  - "This revision changes documentation only and creates no policy rule, bundle, evaluator, validator, fixture, test, workflow behavior, contract, schema, data object, receipt, proof, release record, or public artifact."
+  - "This revision changes one validator module, its policy test and connector workflow, and related documentation; it creates no policy decision, lifecycle payload, proof, release record, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -134,7 +142,7 @@ The repository has an executable governance-boundary suite. It does **not** yet 
 - **CONFIRMED:** `boundary_constants.py` supplies forbidden internal-store path literals shared by UI and API boundary tests.
 - **CONFIRMED:** control-plane tests inspect nine required register files for metadata, dates, owners, doctrine refs, status values, and entries.
 - **CONFIRMED:** Explorer Web boundary tests statically inspect JavaScript/TypeScript source for renderer-import placement and forbidden internal-store path literals.
-- **CONFIRMED:** connector/pipeline tests statically inspect selected file extensions and lexical write contexts near forbidden publication targets.
+- **CONFIRMED:** the connector/pipeline test applies a connector-specific repository-output allowlist to recognized Python, shell, and YAML sinks while preserving the legacy connector/pipeline lexical publication-target canary.
 - **CONFIRMED:** governed-api boundary tests exercise 404 and method behavior, assert the route manifest, and statically inspect forbidden imports and internal-store path literals.
 - **CONFIRMED:** `make boundary-guards` runs the four-file suite.
 - **CONFIRMED:** `make boundary-guards-ci` creates `artifacts/qa/` and emits JUnit XML to `artifacts/qa/policy-boundary-guards.xml`.
@@ -347,11 +355,16 @@ The Explorer module scans `.ts`, `.tsx`, `.js`, and `.jsx` files under `apps/exp
 
 It does not currently assert a nonempty source inventory. It does not detect dynamic imports, aliases, computed URLs, network calls, database clients, generated code, runtime behavior, indirect dependencies, source maps, or data fetched through unlisted identifiers.
 
-### Connector and pipeline non-publisher test
+### Connector output allowlist and pipeline non-publisher test
 
-The non-publisher module scans selected `.py`, `.sh`, `.yaml`, and `.yml` files under `connectors/` and `pipelines/`. It identifies selected lexical write-call patterns and rejects nearby forbidden targets.
+The module exercises a bounded two-part static canary:
 
-It does not prove complete side-effect safety. It may miss dynamic paths, wrappers, imported helpers, subprocesses, cloud SDKs, SQL, object stores, symlinks, aliases, templating, generated commands, alternate extensions, or writes outside its line window. It may also flag comments or strings. Future maturity requires explicit target manifests and runtime sandbox tests.
+- under `connectors/`, selected Python sink calls, shell destinations, and YAML command/output keys are parsed; targets recognized and statically resolved as repository-relative are compared with `data/raw/`, `data/quarantine/`, and `data/receipts/`;
+- under `connectors/` and `pipelines/`, the earlier lexical canary still rejects selected write contexts near `data/catalog`, `data/published`, or `release/`.
+
+The connector scan resolves literal and selected composed paths, refuses selected unresolved targets and commands, handles in-repository absolute/file-URI targets, ignores Python comments/docstrings and read-only `open` calls, excludes path components named `test`, `tests`, `fixture`, `fixtures`, `example`, or `examples` from its path-filtered connector source inventory, asserts that inventory is nonempty, and embeds deterministic positive/negative cases.
+
+It does not prove complete side-effect safety or complete dynamic-path, external-target, URI, or home-relative coverage. It may miss unrecognized wrappers, helpers, languages or sinks, cloud SDKs, SQL, object stores, symlinks, generated commands, or external-system persistence. Allowed receipt paths do not prove receipt content or correspondence. The legacy connector/pipeline canary remains lexical and line-window bounded. Future maturity requires restricted sink interfaces and runtime sandbox tests.
 
 ### Governed API boundary companion
 
@@ -376,7 +389,7 @@ This proves selected scaffold boundaries. It does not prove authentication, auth
 | Control-plane metadata | Direct executable tests | Required files satisfy selected header/date/path checks when suite passes. |
 | Explorer renderer boundary | Static source scan | Selected literal renderer imports stay in adapter paths when targets exist. |
 | Explorer store boundary | Static source scan | Selected forbidden path literals are absent from scanned source. |
-| Connector/pipeline non-publisher | Static lexical scan | Selected write contexts do not contain selected forbidden target literals. |
+| Connector target / pipeline non-publisher canary | Python AST plus bounded shell/YAML and lexical scans | Selected statically resolved connector repository targets stay under RAW, QUARANTINE, or receipts, and selected connector/pipeline publication targets remain absent, when the test passes. |
 | Governed API route/method boundary | In-process WSGI calls | Scaffold route manifest and selected HTTP method behavior match assertions. |
 | Governed API dependency/store boundary | Static source scan | Selected forbidden imports/path literals are absent. |
 | JUnit report generation | Makefile + workflow | CI can emit and upload a pytest JUnit report. |
@@ -829,7 +842,9 @@ The root pytest configuration sets `pythonpath = ["."]`. The boundary workflow i
 
 The substantive boundary workflow currently triggers for changes under:
 
+- its own workflow, the Makefile, and root Python configuration;
 - `tests/policy/**`;
+- `tools/validators/connector_gate/**`;
 - governed-api tests/source;
 - Explorer Web source;
 - connectors;
@@ -844,7 +859,6 @@ It does **not** list these important policy-adjacent roots in its path filter:
 - policy fixtures;
 - policy runtime package;
 - release policy/gate files;
-- the Makefile or workflow file itself unless another listed path also changes.
 
 Therefore a green boundary workflow cannot be assumed for every policy change. Trigger expansion or a dedicated substantive policy workflow is `PROPOSED` and requires review.
 
@@ -888,6 +902,8 @@ Policy tests should preserve historical decisions and prove:
 - protected correction/withdrawal reasons remain audience-safe.
 
 Every new framework, bundle format, fixture family, workflow, report, or test home requires a mechanical rollback plan and migration note when authority or compatibility changes.
+
+For this bounded batch, pre-merge rollback is closure of the draft PR and separately authorized removal of only its scoped branch. Post-merge rollback is a focused reviewed revert that removes the new scanner and generated receipt, restores this README preimage `b0e0297949646492dcd2bdcc34fae1ca2521484b`, restores the test and both workflow preimages, and reruns `make boundary-guards-ci`; shared history is not rewritten.
 
 [Back to top](#top)
 
@@ -937,7 +953,7 @@ The lane may remain as a routing README even if executable assertions move. Do n
 - [x] Documents PolicyDecision schema/contract/fixture companion coverage and vocabulary conflict.
 - [x] Records placeholder policy runtime, README-only bundle lane, absent validators, and sampled Rego scaffold.
 - [x] Defines test placement, case contract, non-vacuity, sensitive fixtures, obligations, CI graduation, correction, and rollback.
-- [x] Changes documentation only.
+- [x] Reconciles the bounded validator, policy test, and workflow trigger co-change without claiming policy evaluation or runtime confinement.
 - [ ] Record repository-native CI after PR creation.
 
 ### Future complete policy enforceability
@@ -1006,7 +1022,8 @@ The policy test capability is not complete until:
 
 | Evidence | Status | Supports | Does not prove |
 |---|---:|---|---|
-| prior target blob `e64e81df…` | `CONFIRMED` | Existing v0.2 intent and historical command names. | Current maturity by itself. |
+| current target preimage `b0e02979…` | `CONFIRMED` | Existing v0.3 boundary contract before this reconciliation. | Current post-change bytes by itself. |
+| historical target blob `e64e81df…` | `CONFIRMED LINEAGE` | Existing v0.2 intent and historical command names. | Current maturity by itself. |
 | Directory Rules `2affb080…` | `CONFIRMED DOCTRINE` | Responsibility roots and authority separation. | Policy runtime behavior. |
 | tests root `5614de99…` | `CONFIRMED ROOT CONTRACT` | Tests are enforceability proof, not authority. | Direct policy coverage. |
 | policy root `09cd966a…` | `CONFIRMED SHORT PROPOSED ROOT` | Singular policy authority path. | Active policy engine. |
@@ -1023,7 +1040,8 @@ The policy test capability is not complete until:
 | boundary constants `6c61f8e9…` | `CONFIRMED CODE` | Selected forbidden literals. | Complete denylist. |
 | control-plane test `05ebb49d…` | `CONFIRMED EXECUTABLE` | Selected register metadata/date/path checks. | Full YAML semantics or governance correctness. |
 | Explorer test `97d44069…` | `CONFIRMED EXECUTABLE STATIC GUARD` | Selected imports and path literals. | Runtime/browser/data-access safety. |
-| pipeline/connector test `c6164787…` | `CONFIRMED EXECUTABLE STATIC GUARD` | Selected lexical write contexts and targets. | Complete side-effect safety. |
+| prior pipeline/connector test `c6164787…` | `CONFIRMED HISTORICAL PREIMAGE` | The preserved lexical canary before the connector target scanner was added. | Current post-change bytes or complete side-effect safety. |
+| `tools/validators/connector_gate/output_paths.py` | `CONFIRMED WORKING-DIFF IMPLEMENTATION` | Selected Python, shell, and YAML connector target analysis used by the policy test. | Runtime confinement or complete sink/path coverage. |
 | governed-api test `d84ccd2a…` | `CONFIRMED EXECUTABLE COMPANION` | Selected route/method/import/path boundaries. | Auth, policy, evidence, sensitivity, release, production. |
 | Makefile `4dc8cf63…` | `CONFIRMED` | Exact commands, separate policy target, default exclusion. | Current pass result. |
 | root pyproject `e3bd40e8…` | `CONFIRMED` | Python >=3.11, pytest optional dependency, root pythonpath. | Workflow dependency lock or full environment parity. |

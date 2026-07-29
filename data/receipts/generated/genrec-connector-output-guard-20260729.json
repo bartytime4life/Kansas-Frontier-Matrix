@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-connector-output-guard-20260729",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/connector-gate.yml",
+    ".github/workflows/policy-boundary-guards.yml",
+    "connectors/README.md",
+    "docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md",
+    "tests/policy/README.md",
+    "tests/policy/test_pipeline_connector_non_publisher.py",
+    "tools/validators/connector_gate/README.md",
+    "tools/validators/connector_gate/output_paths.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/connector-gate.yml": "sha256:83c5ddcf2c1388f3b8e5813c53eaf1f04188cb56e55f534aa631eaeb944bd653",
+    ".github/workflows/policy-boundary-guards.yml": "sha256:6da0947228ad2bc95990a777f91f776bc0af3f848a15d41af900446404b08929",
+    "connectors/README.md": "sha256:d9850310f29f84a9df0686198622a259caf4acc405e7fcf6ea587750470da5dd",
+    "docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md": "sha256:d532b9e6e295dd2220fc4cf5e09512d0a5e9fa316e9e3ee373c922f9a71a5074",
+    "tests/policy/README.md": "sha256:5cf176834ce9c833ec7b493c82bf92d697416d8e01d0250c24607f846046c123",
+    "tests/policy/test_pipeline_connector_non_publisher.py": "sha256:d20cf93ef40968dc988e7518de63621a754213c88bf1ae07b7243584e9f045b5",
+    "tools/validators/connector_gate/README.md": "sha256:4b4ecfc19874c4d2f29a4b017e14f1cdb14aaa54e7cd1446af97eab13a344a8f",
+    "tools/validators/connector_gate/output_paths.py": "sha256:2dee793bf2bd22a97a3cd87ffee5a58bb2fa60c3e27d8b01bec796e058e77bc2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 desktop session 2026-07-29"
+  },
+  "prompt_or_contract": "sha256:aa516187feeb341773615c2c3be53bb565aaac5fa188e84745048e8883b1b8a0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "workspace filesystem",
+      "Git",
+      "Python validation",
+      "Ruby YAML parser",
+      "GitHub connector",
+      "multi-agent read-only review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:aa516187feeb341773615c2c3be53bb565aaac5fa188e84745048e8883b1b8a0"
+    ],
+    "attached_docs": [
+      "KFM Whole-Project Workflow Discovery and Implementation Agent Prompt"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9e0808149b2a391f171021d9bdca59311e80be36",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@9e0808149b2a391f171021d9bdca59311e80be36",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md@9e0808149b2a391f171021d9bdca59311e80be36",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@9e0808149b2a391f171021d9bdca59311e80be36",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5119640631",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5119647763"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/connector-gate.yml": "PROPOSED",
+    ".github/workflows/policy-boundary-guards.yml": "PROPOSED",
+    "connectors/README.md": "PROPOSED",
+    "docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md": "PROPOSED",
+    "tests/policy/README.md": "PROPOSED",
+    "tests/policy/test_pipeline_connector_non_publisher.py": "PROPOSED",
+    "tools/validators/connector_gate/README.md": "PROPOSED",
+    "tools/validators/connector_gate/output_paths.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authorization-and-scope",
+      "outcome": "PASS",
+      "reason": "The final authorization correction and continuation cursor pin one nine-path connector-only batch at immutable base 9e0808149b2a391f171021d9bdca59311e80be36; this receipt is the ninth path."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The scanner remains under tools/validators/connector_gate, its policy test and workflow integration remain in their established roots, documentation stays at existing paths, and provenance is emitted under data/receipts/generated."
+    },
+    {
+      "gate": "python-compile-and-adversarial-cases",
+      "outcome": "PASS",
+      "reason": "The scanner compiled and its policy test passed deterministic allowed, denied, unresolved, control-flow, alias, shell-wrapper, and YAML cases, including a nonempty path-filtered connector inventory."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "Both boundary-guards and boundary-guards-ci completed with 15 passed tests."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "make validate completed successfully; schema and contract tests reported 133 passed, with invalid fixtures failing validation as designed."
+    },
+    {
+      "gate": "full-pytest-suite",
+      "outcome": "PASS",
+      "reason": "The full suite completed with 282 passed tests and 64 passed subtests."
+    },
+    {
+      "gate": "governed-api-boundary",
+      "outcome": "PASS",
+      "reason": "make governed-api-verify completed with six passed tests and an intact import boundary."
+    },
+    {
+      "gate": "workflow-yaml-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "Ruby parsed both changed workflows and git diff --check completed without findings."
+    },
+    {
+      "gate": "credential-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The scoped artifacts contain no detected common credential patterns, local attachment paths, private payloads, sensitive coordinates, source activation, release action, or publication action."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt and draft batch are not approval, merge authority, source activation, release authority, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "immutable-base-and-repository-evidence",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@9e0808149b2a391f171021d9bdca59311e80be36"
+    },
+    {
+      "id": "directory-rules-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@9e0808149b2a391f171021d9bdca59311e80be36"
+    },
+    {
+      "id": "connector-output-boundary-adr",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md@9e0808149b2a391f171021d9bdca59311e80be36"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@9e0808149b2a391f171021d9bdca59311e80be36"
+    },
+    {
+      "id": "final-batch-authorization",
+      "validated": true,
+      "evidence_ref": "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5119640631"
+    },
+    {
+      "id": "continuation-cursor-v10",
+      "validated": true,
+      "evidence_ref": "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5119647763"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T15:45:10Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements a bounded static connector repository-output allowlist guard while preserving the prior connector/pipeline lexical publication-target canary. The scanner deliberately does not claim runtime confinement, exhaustive language or sink coverage, external-target policy, symlink safety, receipt correspondence, connector correctness, source admission, lifecycle promotion, release approval, or publication authority. Human review remains pending."
+}

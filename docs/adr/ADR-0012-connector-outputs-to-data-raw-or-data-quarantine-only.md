@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0012-connector-outputs-to-data-raw-or-data-quarantine-only
 title: "ADR-0012 — Connector outputs MUST land in data/raw/ or data/quarantine/ only"
 type: adr
 adr_id: ADR-0012
-version: v1.2
+version: v1.3
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Security reviewer
   - At least one affected domain steward
 created: 2026-05-11
-updated: 2026-07-23
+updated: 2026-07-29
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -32,6 +32,7 @@ current_path: docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine
 supersedes: []
 superseded_by: null
 evidence_snapshot:
+  snapshot_status: historical_v1.2_evidence_baseline
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 892255ad8179f8e7bc972776c3462ba6abe3be09
@@ -54,6 +55,15 @@ evidence_snapshot:
   ingest_receipt_schema_blob: 4e9707bec7da63049c5043562c9470564b77184f
   source_admission_adr_blob: 0e8d03786bcc99b19f179680890df9e30a27633a
   quarantine_exit_adr_blob: 95648b9967e02bfe662d4f6103de10ee5a467d21
+change_evidence:
+  base_commit: 9e0808149b2a391f171021d9bdca59311e80be36
+  target_prior_blob: c7b1027dc9d25ff6bf886a7a2e2162f8fb2516be
+  connectors_readme_prior_blob: 8db6ee9cbefdd1ce099789d827f759df9ebd9f59
+  connector_gate_workflow_prior_blob: ae3ef92ac5f717cc149a609c3b74dd105dd17e44
+  non_publisher_test_prior_blob: c6164787bc848eb2347c347af203d76afae37a2b
+  connector_gate_readme_prior_blob: c09a47bf571a4348b9cfeb3033844e5a3a765f2f
+  policy_boundary_workflow_prior_blob: 6d442a6cdd0b146cd4003cbf1d7c619a455a16ae
+  connector_output_validator_prior_state: absent
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -80,11 +90,11 @@ related:
   - .github/workflows/connector-gate.yml
 tags: [kfm, adr, governance, connectors, source-admission, pre-raw, raw, quarantine, receipts, non-publisher, trust-membrane, lifecycle, fail-closed]
 notes:
-  - "v1.2 is a same-path repository-grounded modernization. It preserves source metadata `draft` and effective decision status `proposed`; it does not accept ADR-0012, activate a source, run a connector, admit payloads, migrate files, or publish anything."
+  - "v1.3 records a bounded static connector repository-path canary. It preserves source metadata `draft` and effective decision status `proposed`; it does not accept ADR-0012, activate a source, run a connector, admit payloads, migrate files, or publish anything."
   - "The canonical ADR index uniquely assigns ADR-0012 to this exact path."
   - "Connector payload captures remain limited to RAW or QUARANTINE; receipt candidates are a separate process-memory output through a governed append-only receipt sink."
   - "SourceDescriptor is an admitted registry input, not a per-run connector-owned authority record. A connector may reference or propose a descriptor but must not silently write registry authority during a source run."
-  - "Current CI enforces only a bounded static subset of the non-publisher rule and leaves ingest-receipt validation as an explicit hold."
+  - "Current CI applies a bounded two-part static canary for selected connector repository targets and legacy connector/pipeline publication literals, and leaves ingest-receipt validation as an explicit hold."
   - "The connector-versus-shared-ingest writer handoff remains implementation-level NEEDS VERIFICATION; this ADR governs allowable effects regardless of which reviewed component performs the final write."
 [/KFM_META_BLOCK_V2] -->
 
@@ -109,7 +119,7 @@ notes:
 > **A connector success is not source admission, evidence closure, or release.** A successful request, valid `SourceDescriptor` shape, checksum, RAW path, receipt, or passing static test proves only its bounded fact. Rights, sensitivity, source role, review, evidence, later lifecycle transitions, and release remain separate gates.
 
 > [!WARNING]
-> **The current repository is only partially enforcing this boundary.** The connector workflow statically checks selected Python, shell, and YAML write contexts for `data/catalog`, `data/published`, and `release/`. It does not yet prove RAW/QUARANTINE routing, receipt presence, dynamic path safety, all forbidden phases, runtime behavior, or universal connector coverage.
+> **The current repository is only partially enforcing this boundary.** The connector workflow runs a bounded two-part static canary. Under `connectors/`, selected Python sink calls, shell destinations, and YAML command/output keys are parsed; targets recognized and statically resolved as repository-relative are compared with `data/raw/`, `data/quarantine/`, and `data/receipts/`. A separate legacy lexical check scans selected write contexts under `connectors/` and `pipelines/` for `data/catalog`, `data/published`, and `release/`. It does not prove complete dynamic-path, external-target, URI, sink, or language coverage; runtime confinement; symlink safety; receipt presence or correspondence; or connector correctness.
 
 **Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Rules](#normative-rules) · [Flow](#boundary-and-state-flow) · [Targets](#allowed-and-forbidden-effects) · [Paths](#path-and-identity-contract) · [Receipts](#receipt-and-registry-boundaries) · [Evidence snapshot](#current-repository-evidence) · [Maturity](#current-enforcement-maturity) · [Validation](#validation-and-enforcement-target) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Migration](#migration-and-graduation-plan) · [Acceptance](#acceptance-gates) · [Risks](#risk-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
 
@@ -126,8 +136,8 @@ notes:
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Source-edge lifecycle boundary and anti-publication invariant |
-| **Current implementation posture** | Root boundaries documented; partial static non-publisher test; receipt and full routing enforcement held |
-| **Implementation effect of this revision** | Documentation only |
+| **Current implementation posture** | Root boundaries documented; bounded static connector allowlist and legacy connector/pipeline lexical publication-target canary; receipt and runtime enforcement held |
+| **Implementation effect of this revision** | Static policy-test and workflow-summary strengthening plus documentation reconciliation; no connector runtime, lifecycle object, or publication effect |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 
@@ -148,7 +158,7 @@ An accepted ADR without enforcement is doctrine. A passing test without an accep
 
 ## Evidence Boundary
 
-This revision uses current repository bytes at `main@892255ad8179f8e7bc972776c3462ba6abe3be09` plus KFM doctrine. Current repository evidence determines present behavior; doctrine governs the responsibility boundary. Authoring inspection began at `936eac6d5b30471dd5d663ba61d34933dc2cbe8b`; the continuity compare to the prepared base changed only `migrations/README.md`, so the inspected target and connector-boundary evidence remained unchanged.
+The v1.2 evidence snapshot records repository bytes at `main@892255ad8179f8e7bc972776c3462ba6abe3be09`. This v1.3 reconciliation uses `main@9e0808149b2a391f171021d9bdca59311e80be36` plus the current bounded working diff and KFM doctrine. Current-session repository evidence determines present behavior; doctrine governs the responsibility boundary.
 
 | Evidence level | What is established | What is not established |
 |---|---|---|
@@ -328,7 +338,7 @@ Conformance language uses RFC 2119-style **MUST**, **MUST NOT**, **SHOULD**, and
 
 A connector or connector-owned runtime **MUST NOT**:
 
-1. write payloads to `data/work/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/proofs/`, `data/published/`, `data/rollback/`, or `release/`;
+1. write payloads to `data/pre_raw/`, `data/work/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/proofs/`, `data/registry/`, `data/published/`, `data/rollback/`, `release/`, or any other repository target outside the allowed RAW, QUARANTINE, and receipt roots;
 2. create authoritative `SourceDescriptor`, source-activation, rights, sensitivity, registry, policy, review, or release records during a capture run;
 3. normalize source fields into canonical fields;
 4. join records across source files into a KFM domain object;
@@ -592,14 +602,14 @@ It must not carry policy approval, evidence closure, release state, or public pe
 | Surface | CONFIRMED current state | Safe conclusion |
 |---|---|---|
 | [`INDEX.md`](./INDEX.md) | ADR-0012 is uniquely tracked; source metadata `draft`, effective status `proposed` | Identity resolved; decision not accepted |
-| [`connectors/README.md`](../../connectors/README.md) | Repository-grounded v0.4; direct handoff RAW, QUARANTINE, and receipt candidates; mixed maturity | Root boundary exists; universal implementation does not |
+| [`connectors/README.md`](../../connectors/README.md) | Repository-grounded v0.5 working diff; direct handoff RAW, QUARANTINE, and receipt candidates; mixed maturity | Root boundary exists; universal implementation does not |
 | [`data/raw/README.md`](../../data/raw/README.md) | RAW no-public-path root with many documented domain lanes | Path/readme evidence, not payload or source-admission proof |
 | [`data/quarantine/README.md`](../../data/quarantine/README.md) | Fail-closed hold root with documented domain lanes and exit burdens | Quarantine semantics documented; automation incomplete |
 | [`data/registry/sources/README.md`](../../data/registry/sources/README.md) | SourceDescriptor authority surface documented; specific implementation bundle remains proposed | Connector does not own registry authority |
 | [`pipelines/ingest/README.md`](../../pipelines/ingest/README.md) | Direct lane is documentation-only; connector/shared-ingest writer handoff conflicted | Do not infer shared ingest runtime |
-| [`connector-gate.yml`](../../.github/workflows/connector-gate.yml) | Runs one static non-publisher test and reports receipt readiness hold | Partial executable enforcement |
-| [`test_pipeline_connector_non_publisher.py`](../../tests/policy/test_pipeline_connector_non_publisher.py) | Scans selected Python, shell, YAML write contexts for `data/catalog`, `data/published`, `release/` | Does not cover RAW/QUARANTINE, WORK/PROCESSED, proofs, triplets, dynamic effects, or every language |
-| [`connector_gate/README.md`](../../tools/validators/connector_gate/README.md) | Documentation-rich lane; dedicated executable/tests not established | No full gate implementation |
+| [`connector-gate.yml`](../../.github/workflows/connector-gate.yml) | Configures one bounded two-part static test and reports the separate receipt readiness hold | Partial executable enforcement |
+| [`test_pipeline_connector_non_publisher.py`](../../tests/policy/test_pipeline_connector_non_publisher.py) | Exercises selected Python, shell, and YAML connector repository targets through the validator module and preserves the legacy connector/pipeline lexical publication-target canary | Does not prove complete dynamic/external/URI coverage, runtime confinement, symlinks, every language/sink, indirect effects, or receipt correspondence |
+| [`connector_gate/README.md`](../../tools/validators/connector_gate/README.md) | Documents the bounded executable scanner/test; full admission CLI, receipt validator, and dedicated admission suite remain unestablished | No full gate implementation |
 | `SourceDescriptor` schema | Fielded, closed, status proposed; singular/plural path metadata conflicted | Machine-shape candidate, not accepted activation |
 | `IngestReceipt` contract/schema | Fielded closed proposed schema; dedicated validator path absent | Shape exists; receipt persistence and CI incomplete |
 | Source authority register | File exists with no entries at inspected snapshot | No active source inventory established by that register |
@@ -610,7 +620,7 @@ It must not carry policy approval, evidence closure, release state, or public pe
 
 - ADR ID and exact target path are confirmed.
 - The connector-gate workflow and static test exist; they are no longer `UNKNOWN`.
-- The `connector_gate` validator lane exists as documentation but not a complete executable.
+- The `connector_gate` validator lane now contains a bounded executable scanner and policy-test integration, but not the proposed full admission CLI/report or receipt validator.
 - `SourceDescriptor` and `IngestReceipt` schemas exist, though both remain proposed and their surrounding authority/wiring is incomplete.
 - Receipt output is a separate allowed family; payload bytes remain RAW/QUARANTINE only.
 - Authoritative SourceDescriptor instances belong to registry governance, not each run directory.
@@ -629,7 +639,7 @@ It must not carry policy approval, evidence closure, release state, or public pe
 |---|---|---|
 | **M0 — doctrine stated** | Directory Rules and root READMEs state non-publisher boundary | **CONFIRMED** |
 | **M1 — ADR proposed** | Numbered decision under review | **CURRENT** |
-| **M2 — bounded static guard** | Selected forbidden write contexts are tested | **PARTIAL / CONFIRMED** |
+| **M2 — bounded static guard** | Selected connector repository targets and legacy connector/pipeline lexical publication-target contexts are tested with deterministic positive/negative cases | **PARTIAL / CONFIRMED** |
 | **M3 — full static path coverage** | All forbidden roots/languages/config forms checked | **HOLD** |
 | **M4 — restricted sink interface** | Connector cannot express later lifecycle/public effects | **NOT ESTABLISHED** |
 | **M5 — receipt and capture validation** | Deterministic valid/invalid fixtures, receipt binding, digest and landing checks | **WORKFLOW_HOLD** |
@@ -650,22 +660,17 @@ A green M2 test must not be described as M4–M9 maturity.
 
 ### Static guard
 
-Expand the current static test to detect write-capable contexts targeting:
+The current test denies recognized connector repository writes outside:
 
 ```text
-data/work/
-data/processed/
-data/catalog/
-data/triplets/
-data/proofs/
-data/published/
-data/rollback/
-data/registry/
-release/
-public app/output roots
+data/raw/
+data/quarantine/
+data/receipts/
 ```
 
-Coverage must include repository languages and configuration forms actually used by active connectors. Static scanning remains defense in depth, not runtime proof.
+The bounded implementation uses Python AST analysis, deterministic literal/path-composition resolution, traversal checks, selected shell destinations, and selected YAML command/output keys. Selected recognized unresolved targets and commands fail closed, and inline positive/negative canaries plus a nonempty path-filtered connector source inventory prevent a vacuous pass. That inventory excludes path components named `test`, `tests`, `fixture`, `fixtures`, `example`, or `examples`. This remains a repository-path subset, not full DIR-PLACE-003 runtime enforcement.
+
+M3 remains held. Further coverage must address every language and configuration form used by active connectors, wrapper and indirect writes, symlinks, subprocess variation, object stores, databases, network-side persistence, and repository-root resolution. Static scanning remains defense in depth, not runtime proof or receipt-correspondence validation.
 
 ### Restricted sink tests
 
@@ -936,13 +941,13 @@ No gate is satisfied merely because this ADR, a README, schema, workflow, pull r
 
 Before merge, close the draft PR and abandon the scoped branch.
 
-After merge, restore the prior blob:
+After merge, restore the immediate v1.2 preimage:
 
 ```text
-e323ce42e82bdf93252fa0bd68bd86e3b7eedebf
+c7b1027dc9d25ff6bf886a7a2e2162f8fb2516be
 ```
 
-or revert the documentation commit created for this update.
+or use a focused reviewed revert of this batch. Historical v1.1 blob `e323ce42e82bdf93252fa0bd68bd86e3b7eedebf` remains lineage evidence, not the immediate rollback target.
 
 ### Decision rollback
 
@@ -1053,7 +1058,7 @@ Do not force-push or delete prior capture, receipt, review, or correction histor
 - [Receipt root](../../data/receipts/README.md)
 - [Shared ingest boundary](../../pipelines/ingest/README.md)
 - [Connector gate workflow](../../.github/workflows/connector-gate.yml)
-- [Static connector/pipeline non-publisher test](../../tests/policy/test_pipeline_connector_non_publisher.py)
+- [Bounded connector scanner and legacy connector/pipeline lexical publication-target test](../../tests/policy/test_pipeline_connector_non_publisher.py)
 - [Connector-gate validator lane](../../tools/validators/connector_gate/README.md)
 - [IngestReceipt contract](../../contracts/source/ingest_receipt.md)
 - [IngestReceipt schema](../../schemas/contracts/v1/source/ingest_receipt.schema.json)
@@ -1073,10 +1078,11 @@ The supplied KFM corpus consistently treats connectors and watchers as non-publi
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.3` | 2026-07-29 | Recorded the bounded connector repository-path scanner, deterministic policy cases, two-part workflow canary, and explicit limits without accepting this proposed ADR or changing publication authority. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; pinned current root, schema, contract, workflow, test, and validator evidence; separated payload landing, receipt persistence, and registry authority; surfaced connector/orchestrator writer conflict; documented partial static enforcement and receipt hold; added complete maturity, acceptance, fixture, migration, risk, and rollback models; preserved `draft` / effective `proposed` status. |
 | `v1.1` | 2026-05-15 | Tightened draft-versus-authority language, receipt placement, validator expectations, migration, and acceptance checks. |
 | `v1` | 2026-05-11 | Initial connector RAW/QUARANTINE-only decision. |
 
 ---
 
-**Last updated:** 2026-07-23 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current enforcement:** partial static guard + receipt `WORKFLOW_HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md` · [Back to top](#top)
+**Last updated:** 2026-07-29 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current enforcement:** bounded static repository-path canary + receipt `WORKFLOW_HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md` · [Back to top](#top)

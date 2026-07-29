@@ -1,14 +1,15 @@
 # KFM CI workflow: connector-gate
-# Status: PARTIAL enforcement. The connector non-publisher boundary is executable;
-# ingest-receipt presence remains a visible readiness hold until a repository-owned
-# validator and deterministic fixtures are verified.
+# Status: PARTIAL enforcement. A bounded connector repository-target canary and
+# legacy connector/pipeline publication-literal canary are executable; ingest-receipt
+# presence remains a visible readiness hold until a repository-owned validator and
+# deterministic fixtures are verified.
 #
 # Authority boundary:
 # - This workflow may test repository code and report CI evidence.
 # - It does not admit sources, authorize acquisition, promote lifecycle artifacts,
 #   approve policy, release data, publish outputs, or create authoritative receipts.
-# - Connectors and pipelines remain upstream producers; they must not write directly
-#   to catalog, published, or release authority surfaces.
+# - Connectors may write only through governed RAW, QUARANTINE, or receipt handoffs.
+#   Pipeline destinations remain actor-specific; the legacy scan is not full policy.
 
 name: connector-gate
 
@@ -52,7 +53,7 @@ jobs:
       - name: Install test dependency
         run: python -m pip install -e ".[test]"
 
-      - name: Enforce connector and pipeline non-publisher boundary
+      - name: Run bounded connector-output and legacy publication-target static checks
         run: >-
           python -m pytest
           tests/policy/test_pipeline_connector_non_publisher.py
@@ -68,10 +69,11 @@ jobs:
           {
             echo "## connector-output-gate"
             echo
-            echo "- Executed: tests/policy/test_pipeline_connector_non_publisher.py"
-            echo "- Scope: static write-context checks for connectors/ and pipelines/."
-            echo "- Forbidden targets checked by the test: data/catalog, data/published, and release/."
-            echo "- A pass does not prove connector correctness, source rights, sensitivity handling, receipt completeness, promotion readiness, release approval, or publication safety."
+            echo "- Configured test: tests/policy/test_pipeline_connector_non_publisher.py"
+            echo "- Connector static scope: selected Python sink calls, shell commands and redirections, and YAML command/output keys under connectors/, excluding path components named test, tests, fixture, fixtures, example, or examples."
+            echo "- Connector target check: targets recognized and statically resolved as repository-relative are compared with the data/raw, data/quarantine, and data/receipts allowlist."
+            echo "- Legacy compatibility check: selected lexical write contexts under connectors/ and pipelines/ are checked for data/catalog, data/published, and release/."
+            echo "- Limits: a passing test is bounded static-canary evidence; it does not establish complete sink, language, dynamic-path, external-target, URI, or home-relative coverage; runtime confinement; symlink safety; receipt correspondence; connector correctness; rights or sensitivity clearance; promotion readiness; release approval; or publication safety."
           } >> "$GITHUB_STEP_SUMMARY"
 
   ingest-receipt-presence:
