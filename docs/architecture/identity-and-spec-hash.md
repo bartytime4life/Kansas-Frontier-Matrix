@@ -24,7 +24,7 @@ related:
   - docs/standards/RUN_RECEIPT.md                               # PROPOSED — receipt schema doc
   - docs/standards/PMTILES.md
   - docs/standards/ISO-19115.md
-  - docs/adr/ADR-0001-schema-home.md                            # schema-home convention
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md # schema-home decision record
   - schemas/contracts/v1/evidence/                              # PROPOSED schema family
   - schemas/contracts/v1/core/run_receipt.v1.schema.json        # PROPOSED
   - tools/spec_hash/                                            # PROPOSED helper home
@@ -528,7 +528,7 @@ The decision matrix for when (if ever) to switch to URDNA2015 belongs in `docs/s
 | `docs/standards/PROV.md` | PROV-O / PAV provenance profile referenced by EvidenceBundles. | Authored prior session; `NEEDS VERIFICATION` in repo. |
 | `docs/standards/CANONICALIZATION.md` | JCS-vs-URDNA2015 decision matrix. | `PROPOSED`. |
 | `docs/standards/RUN_RECEIPT.md` | Receipt schema documentation. | `PROPOSED`. |
-| `docs/adr/ADR-0001-schema-home.md` | Schema-home convention (`schemas/contracts/v1/<family>/`). | `CONFIRMED` referenced in `directory-rules.md` v1.3; file presence `NEEDS VERIFICATION`. |
+| `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` | Configured and proposed schema-home direction (`schemas/contracts/v1/<family>/`). | **CONFIRMED file; decision status `proposed`** |
 | `docs/adr/ADR-NNNN-canonicalization-choice.md` | `PROPOSED` ADR pinning JCS for JSON / when URDNA2015 applies. | `PROPOSED`. |
 | `docs/adr/ADR-NNNN-hash-algorithm.md` | `PROPOSED` ADR pinning SHA-256 universal baseline and BLAKE3 usage envelope. | `PROPOSED`. |
 

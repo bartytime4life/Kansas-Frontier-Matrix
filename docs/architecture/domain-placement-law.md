@@ -18,7 +18,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/trust-membrane.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
@@ -82,9 +82,9 @@ notes:
 | **Owner** | Docs steward *(placeholder; resolve in `CODEOWNERS`)* |
 | **Reviewers required for change** | Docs steward + at least one subsystem owner (typically a domain steward when a domain is added). ADR required for: adding/removing a canonical domain (§8), changing the lane pattern (§3), or amending the multi-domain rule (§5). |
 | **Supersedes** | None. This is the first edition. **It does NOT supersede Directory Rules §12** — §12 remains the authoritative one-paragraph statement of the law; this document elaborates it. |
-| **Related doctrine** | [`docs/architecture/directory-rules.md`](./directory-rules.md) §3, §5, §6, §7, §12, §13; [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md); [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md); [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md). Background reading: *Domain-Driven Design Reference* (Evans, 2015) — Bounded Context, Ubiquitous Language, Context Map. |
+| **Related doctrine** | [`docs/architecture/directory-rules.md`](./directory-rules.md) §3, §5, §6, §7, §12, §13; [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md); [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md); [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). Background reading: *Domain-Driven Design Reference* (Evans, 2015) — Bounded Context, Ubiquitous Language, Context Map. |
 | **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. Domains inherit this invariant; they do not redefine it. |
-| **Schema-home convention** | `schemas/contracts/v1/domains/<domain>/...` per [ADR-0001](../adr/ADR-0001-schema-home.md) and Directory Rules §6.4. |
+| **Schema-home convention** | `schemas/contracts/v1/domains/<domain>/...` per [ADR-0001](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) and Directory Rules §6.4. |
 | **Last reviewed** | 2026-05-25 |
 
 > **Truth-posture note (v1.0).** This document is grounded in: (a) `docs/architecture/directory-rules.md` v1.3.1 (CONFIRMED authored), specifically §3, §5, §6.1, §6.3, §6.4, §6.5, §6.6, §7.2, §7.4, §9.1, §12; (b) the *Kansas Frontier Matrix — Domains v1.1 + Pass 23/32 Consolidated Atlas* (CONFIRMED authored) — specifically the per-domain ownership/object-family tables and the Ch. 24.13 *Atlas ↔ Dossier ↔ Responsibility-Root Crosswalk*; (c) the *Domain-Driven Design Reference* (Evans, 2015) for the Bounded Context background. **No mounted repo was inspected for v1.0**; every concrete path is **PROPOSED**. The §2 domain inventory is **CONFIRMED** at the domain-name level (every name traces to Directory Rules §12 or the Atlas) but the per-domain lane segments are PROPOSED until verified.
@@ -225,7 +225,7 @@ release/candidates/<domain>/                     # release candidate dossiers
 | Authority layer | Root | Lane for hydrology | What lives here |
 |---|---|---|---|
 | **Meaning** (Markdown) | `contracts/` | `contracts/domains/hydrology/` | `gauge_site.md`, `flow_observation.md`, `huc.md`, `nfhl_zone.md` — semantic descriptions, field intent, invariants. |
-| **Shape** (JSON Schema) | `schemas/` | `schemas/contracts/v1/domains/hydrology/` | `gauge_site.schema.json`, `flow_observation.schema.json`, `huc.schema.json` — machine-checkable shape, per [ADR-0001](../adr/ADR-0001-schema-home.md). |
+| **Shape** (JSON Schema) | `schemas/` | `schemas/contracts/v1/domains/hydrology/` | `gauge_site.schema.json`, `flow_observation.schema.json`, `huc.schema.json` — machine-checkable shape, per [ADR-0001](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). |
 | **Admissibility** (policy-as-code) | `policy/` | `policy/domains/hydrology/` | `gauge_site_admission.rego`, `nfhl_release.rego`, `sensitivity_overrides.rego` — allow/deny/restrict/abstain. |
 | **Enforceability** (tests + fixtures) | `tests/`, `fixtures/` | `tests/domains/hydrology/`, `fixtures/domains/hydrology/{valid,invalid}/` | Test cases proving the rules; fixtures exercising every DENY/ABSTAIN/ERROR path. |
 
@@ -761,7 +761,7 @@ Terms used in this document. Cross-domain terms live in [Directory Rules §19](.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `TODO` *(domains inherit the lifecycle invariant referenced in §4.2)*
 - [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — `TODO`
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — `TODO`
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home authority *(referenced in §3.2 and §8.3)*
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home decision record *(status `proposed`; referenced in §3.2 and §8.3)*
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../atlases/) — `TODO` *(canonical per-domain dossiers; §2.1 citations)*
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — `TODO` *(operational home for drift items raised here)*
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — `TODO` *(operational home for §12 NEEDS VERIFICATION items)*

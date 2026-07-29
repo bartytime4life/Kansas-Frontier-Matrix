@@ -386,7 +386,7 @@ CONFIRMED doctrine sources: Directory Rules §11, §13; Master MapLibre v1.8 §X
 | Lifecycle law | `docs/doctrine/lifecycle-law.md` | CONFIRMED doctrine path |
 | Source descriptor standard | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | PROPOSED |
 | UI runbooks | `docs/runbooks/ui_LOCAL_DEV.md`, `docs/runbooks/ui_VALIDATION.md`, `docs/runbooks/ui_ROLLBACK.md` | PROPOSED |
-| ADR: schema home | `docs/adr/ADR-0001-schema-home.md` (CONFIRMED) and `docs/adr/ADR-ui-schema-home.md` (PROPOSED) | mixed |
+| ADR: schema home | `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` (CONFIRMED file; decision `proposed`) and `docs/adr/ADR-ui-schema-home.md` (PROPOSED) | mixed |
 | ADR: MapLibre adapter boundary | `docs/adr/ADR-maplibre-adapter-boundary.md` | PROPOSED |
 | ADR: Story Node 3D boundary | `docs/adr/ADR-story-node-3d-boundary.md` | PROPOSED |
 

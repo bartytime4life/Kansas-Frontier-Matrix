@@ -21,7 +21,7 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/architecture/connected-dots-architecture-brief.md
   - docs/domains/hazards/
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - contracts/domains/hazards/
   - schemas/contracts/v1/hazards/
   - policy/release/hazards/
@@ -614,7 +614,7 @@ Acceptance test #9 ("AI BOUNDED-only") asserts that `visible_limitations` contai
 | `docs/standards/PROV.md` | Provenance vocabulary for hazards events and modeled derivatives. | **CONFIRMED authored prior session**; naming variance with `PROVENANCE.md` tracked elsewhere |
 | `docs/standards/ISO-19115.md` | Geographic metadata for released hazards layers. | **CONFIRMED authored prior session** |
 | `docs/standards/OGC-API-TILES.md` | Tile delivery standard for hazards layers. | **CONFIRMED authored prior session** |
-| `docs/adr/ADR-0001-schema-home.md` | Why `schemas/contracts/v1/hazards/` is canonical. | **PROPOSED at path** — CONFIRMED referenced |
+| `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` | Records the configured and proposed schema-home direction relevant to Hazards. | **CONFIRMED file; decision status `proposed`** |
 | `contracts/domains/hazards/` | Semantic Markdown for Hazards objects. | **PROPOSED — not yet authored** |
 | `schemas/contracts/v1/hazards/` | Hazards object schemas (Hazard Event, Wildfire Detection, SmokeContext, …). | **PROPOSED** — Atlas §24.13 |
 | `policy/release/hazards/` | Hazards release policy (not-an-alert-authority enforcement). | **PROPOSED** — Atlas §24.13 |

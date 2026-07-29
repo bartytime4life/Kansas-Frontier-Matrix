@@ -14,7 +14,7 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/architecture/README.md
   - docs/architecture/governed-api.md
   - contracts/README.md
@@ -33,7 +33,7 @@ notes:
 
 [![Status: Draft](https://img.shields.io/badge/status-draft-orange)](#status)
 [![Authority: Doctrine](https://img.shields.io/badge/authority-doctrine-blue)](../doctrine/directory-rules.md)
-[![Schema Home: ADR-0001](https://img.shields.io/badge/schema--home-ADR--0001-green)](../adr/ADR-0001-schema-home.md)
+[![Schema Home: ADR-0001](https://img.shields.io/badge/schema--home-ADR--0001-green)](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
 [![Lifecycle: RAW → PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20→%20WORK%2FQUARANTINE%20→%20PROCESSED%20→%20CATALOG%2FTRIPLET%20→%20PUBLISHED-lightgrey)](../doctrine/lifecycle-law.md)
 [![Last Updated](https://img.shields.io/badge/updated-2026--05--14-informational)](#last-updated)
 
@@ -497,7 +497,7 @@ These items are explicitly **not resolved** by this document and should be track
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — TODO link target; PROPOSED
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — TODO link target; PROPOSED
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — TODO link target; PROPOSED
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home rule
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule
 - [`docs/architecture/README.md`](./README.md) — architecture index
 - [`docs/architecture/governed-api.md`](./governed-api.md) — the public trust path
 - [`contracts/README.md`](../../contracts/README.md) — meaning layer index

@@ -11,7 +11,7 @@ first verification PR. Doctrine basis: Directory Rules §0, §6.1, §15.
 [![Authority](https://img.shields.io/badge/authority-canonical-1f6feb)](#authority-level)
 [![Layer](https://img.shields.io/badge/layer-docs%20%C2%B7%20explains-555)](#how-this-folder-fits)
 [![Invariant](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%E2%80%89%2F%E2%80%89QUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%E2%80%89%2F%E2%80%89TRIPLET%E2%86%92PUBLISHED-1f6feb)](../doctrine/lifecycle-law.md)
-[![Schema home](https://img.shields.io/badge/schema%20home-ADR--0001-555)](../adr/ADR-0001-schema-home.md)
+[![Schema home](https://img.shields.io/badge/schema%20home-ADR--0001-555)](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
 [![Trust membrane](https://img.shields.io/badge/membrane-apps%2Fgoverned--api%2F-2da44e)](./governed-api.md)
 [![Outcomes](https://img.shields.io/badge/finite%20outcomes-ANSWER%20%C2%B7%20ABSTAIN%20%C2%B7%20DENY%20%C2%B7%20ERROR-1f6feb)](./governed-api.md)
 [![Status](https://img.shields.io/badge/status-active-2da44e)](#status)
@@ -68,7 +68,7 @@ It **does not decide anything**. Decisions live in `docs/adr/`. Object meaning l
 | Folder presence on current disk | **PROPOSED / NEEDS VERIFICATION** | No mounted repo in this session. Verify with a `git ls-tree`-equivalent inspection. |
 | Specific child files listed below | **PROPOSED** | Names and roles are doctrinal; on-disk existence unverified. |
 | Owners | **NEEDS VERIFICATION** | Confirm against `CODEOWNERS` (or `.github/CODEOWNERS`) and `docs/governance/`. |
-| ADR-0001 (schema home) linkage | **CONFIRMED in doctrine** · **NEEDS VERIFICATION for ADR file on disk** | Directory Rules §0 cites ADR-0001 as accepted convention. |
+| ADR-0001 (schema home) linkage | **CONFIRMED file; decision status `proposed`** | Records the configured schema-home direction without supplying accepted decision authority. |
 | Other ADRs cited | **PROPOSED** | Placeholders until the ADR index is enumerated. |
 | Conformance to Directory Rules §15 | **CONFIRMED for this file** | This README's sections, in order, satisfy the contract. |
 
@@ -370,7 +370,7 @@ All paths above are **PROPOSED / NEEDS VERIFICATION** for current repo presence.
 
 | ADR | Status | Why it matters here |
 |---|---|---|
-| **ADR-0001 — Schema home** | **Cited as accepted** in Directory Rules §0 (CONFIRMED in doctrine; **NEEDS VERIFICATION** for the ADR file on disk). | Sets `schemas/contracts/v1/...` as default schema home; central to `contract-schema-policy-split.md`. |
+| **ADR-0001 — Schema home** | **CONFIRMED file; decision status `proposed`.** | Records `schemas/contracts/v1/...` as the configured and proposed schema home; central to `contract-schema-policy-split.md`. |
 | *(future) ADR — `apps/api/` vs `apps/governed-api/` boundary* | **PROPOSED** | Directory Rules §7.1 and §18 list this boundary as **open**; resolution belongs in an ADR, summarized here. |
 | *(future) ADR — `policies/` ↔ `policy/` resolution* | **PROPOSED** | Directory Rules §6.5, §8, §18 name this as open; default canonical is `policy/`. |
 | *(future) ADR — `triplets/` vs `triplet/` form in `data/`* | **PROPOSED** | Directory Rules §18 open question; current doctrine uses **`triplets/`** (plural). |
@@ -456,7 +456,7 @@ They are PROPOSED in the *KFM Whole-UI + Governed AI Expansion* plan as architec
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — `apps/governed-api/` invariant
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema home convention
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema home convention
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — open this when prose drifts from repo
 
 *Last updated:* `YYYY-MM-DD` *(placeholder)* · [↑ Back to top](#docsarchitecture)
