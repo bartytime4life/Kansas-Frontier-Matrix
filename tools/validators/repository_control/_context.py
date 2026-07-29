@@ -225,9 +225,17 @@ def parse_context(raw: Mapping[str, Any]) -> dict[str, Any]:
 def scope_findings(state: Mapping[str, Any], context: Mapping[str, Any]) -> list[Finding]:
     claim = state["claim"]
     findings: list[Finding] = []
-    if context["base_sha"] != state["base"]["current_main_sha"]:
+    # ``current_main_sha`` is the compatibility spelling for the main SHA
+    # observed with this bounded snapshot. It binds an ACTIVE claim to its PR
+    # base; it is not expected to equal GitHub's live head forever after the
+    # containing projection is merged.
+    observed_base_sha = state["base"]["current_main_sha"]
+    if context["base_sha"] != observed_base_sha:
         findings.append(
-            Finding("STATE_STALE_BASE_SHA", "base SHA differs from the pinned main SHA")
+            Finding(
+                "OBSERVED_BASE_SHA_MISMATCH",
+                "evaluated PR base SHA differs from the main SHA recorded by the bounded snapshot",
+            )
         )
     expected_open_prs = set(state["base"]["open_pull_requests"])
     if context["pr_state"] in {"MERGED", "CLOSED_UNMERGED"}:

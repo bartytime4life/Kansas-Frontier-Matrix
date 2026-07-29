@@ -51,13 +51,15 @@ def active_state(context: dict) -> dict:
     return state
 
 
-def test_tracked_projection_is_a_post_incident_held_checkpoint() -> None:
+def test_tracked_projection_is_a_v2_observed_base_held_checkpoint() -> None:
     state = load(STATE_PATH)
+    assert state["schema_version"] == "2.0.0"
     assert state["base"]["current_main_sha"] == (
-        "da3d73e08f79bc67f446ba1a98a7c77a630f9524"
+        "0b7257653abd355a041a80e6f4e5f83da3f80720"
     )
+    assert state["base"]["observed_at"] == "2026-07-29T18:10:20Z"
     assert state["base"]["open_pull_requests"] == []
-    assert state["projection_status"] == "PROPOSED"
+    assert state["projection_status"] == "CONFIRMED"
     assert state["claim"]["state"] == "HELD"
     assert state["permissions"]["merge"] is False
     assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1791" in (

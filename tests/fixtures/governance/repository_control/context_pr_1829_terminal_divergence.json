@@ -1,0 +1,46 @@
+{
+  "scenario_id": "confirmed-pr-1829-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1829",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5120395574",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121269136"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "584edf041ee041852cdc7649dc94b7521bd0ed96",
+  "head_sha": "364a21578502e8f4ff62f22362cf2600d6bbb383",
+  "head_branch": "agent/ci-readiness-reconciliation-20260729",
+  "pr_number": 1829,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "0b7257653abd355a041a80e6f4e5f83da3f80720",
+  "changed_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/domain-agriculture.yml",
+    ".github/workflows/domain-archaeology.yml",
+    ".github/workflows/domain-atmosphere.yml",
+    ".github/workflows/domain-flora.yml",
+    ".github/workflows/domain-geology.yml",
+    ".github/workflows/domain-habitat.yml",
+    ".github/workflows/domain-hazards.yml",
+    ".github/workflows/domain-hydrology.yml",
+    ".github/workflows/domain-people-dna-land.yml",
+    ".github/workflows/domain-roads-rail-trade.yml",
+    ".github/workflows/domain-settlements-infrastructure.yml",
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/focus-mock-test.yml",
+    ".github/workflows/rollback-drill.yml",
+    "data/receipts/generated/genrec-ci-readiness-reconciliation-20260729.json",
+    "tests/validators/README.md",
+    "tests/validators/test_ci_readiness.py",
+    "tools/validators/README.md",
+    "tools/validators/ci_readiness.py"
+  ],
+  "requested_operations": [
+    "create",
+    "update",
+    "workflow"
+  ],
+  "open_pull_requests": [],
+  "active_review_prs": [],
+  "now": "2026-07-29T17:05:24Z"
+}
