@@ -317,7 +317,26 @@
           "maxLength": 2048
         },
         "attributes": {
-          "type": "object"
+          "type": "object",
+          "propertyNames": {
+            "not": {
+              "enum": [
+                "geometry",
+                "coordinates",
+                "latitude",
+                "longitude",
+                "lat",
+                "lon",
+                "lng",
+                "bbox",
+                "centroid",
+                "easting",
+                "northing",
+                "x",
+                "y"
+              ]
+            }
+          }
         }
       }
     },
@@ -332,7 +351,7 @@
   "$defs": {
     "claim": {
       "type": "object",
-      "additionalProperties": false,
+      "aditionalProperties": false,
       "required": [
         "claim_id",
         "text",

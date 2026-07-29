@@ -34,6 +34,7 @@ INVALID_FIXTURES = {
         ("CONFIRMED_CLAIM_WITHOUT_EVIDENCE", "$.claims.0.evidence_refs"),
     },
     FIXTURE_ROOT / "invalid" / "invalid_inline_geometry.json": {
+        ("BRIEFING_SIGNAL_SCHEMA_INVALID", "$.candidate_payload.attributes"),
         (
             "INLINE_GEOMETRY_FORBIDDEN",
             "$.candidate_payload.attributes.coordinates",

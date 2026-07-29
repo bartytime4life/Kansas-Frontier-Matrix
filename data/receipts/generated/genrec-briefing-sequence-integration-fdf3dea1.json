@@ -29,7 +29,7 @@
     ".github/workflows/briefing-integration.yml": "sha256:c2521202c18bfc3e4ff24b0ef4b24d37b98a37587b6452b9ded2ce7d8f76f248",
     ".github/workflows/infra-compose-smoke.yml": "sha256:1502947021b431fe3d29b1dee1024b153033c9eede568b69f4b4018b5a3bd70c",
     "contracts/governance/briefing_signal.md": "sha256:279b0216d9d81c70e56caabf73fcde3085157c76e58ea2287b341081a95669e1",
-    "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:b11751614009f73879989191e98e417b056147f2ec415aa24e47c5d9300c4db7",
+    "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:687173afc3cc3a85129b65b1422d189a4db0a023b6eb5581b441804a1fedfe66",
     "fixtures/contracts/v1/governance/briefing_signal/README.md": "sha256:19094fda4e767fe4bc22e23abe03d7030a06e240deb4fed72536d5a59297b81e",
     "fixtures/contracts/v1/governance/briefing_signal/valid/README.md": "sha256:01ec6cbcdd57ccff57e31385c1fbe21e91d3495ef7d663b5ac50475090371d7a",
     "fixtures/contracts/v1/governance/briefing_signal/valid/valid_1.json": "sha256:879e91fe4431af15c80a2103c2a35244494ba9474fb84058a70834ef46b6f4ad",
@@ -40,7 +40,7 @@
     "tools/validators/governance/README.md": "sha256:6ad60bc714828a9aaf88d856ca85d88447313709ac1e258c876a34dc4cf62d84",
     "tools/validators/governance/validate_briefing_signal.py": "sha256:3b0772800344539b177465e8ddefcf161b7d295adabf98018924ce12fd5887c1",
     "tests/governance/README.md": "sha256:1a14c937ef2fa46781ab5167bf1463a37608584f466dc2aaf65a6e5a37d7487a",
-    "tests/governance/test_briefing_signal.py": "sha256:592557f1ffd85f5eeb269d92908d994e87f547444e10f949bc07296ed070273d",
+    "tests/governance/test_briefing_signal.py": "sha256:bd07701e64218ba8600d1331e782124f9e52b625b4789b62e6518c51dd091de1",
     "examples/briefing_integration/README.md": "sha256:d45e177d332e2b52ad6eaba8c7e3358c104143d76b9bfe969e705731c6fbbd7f",
     "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "sha256:4db97973ebb34587df7426ebffc3380c81cf006e0f3c924de59ca318c24c79e8",
     "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json": "sha256:0941034069e903de98d6a17d95a8c4b0674ec773e6a3d5e186cd6b32b4195583",
@@ -193,5 +193,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "One bounded review slice implementing a non-authoritative briefing intake contract, examples, validators, tests, and read-only CI; integrating the existing water-planning anti-collapse suite; and adding Compose render/build CI. No live source adapter, issue writer, repository self-authorization, container startup, source activation, proof construction, release, deployment, or publication is introduced."
+  "notes": "One bounded review slice implementing a non-authoritative briefing intake contract, examples, validators, tests, and read-only CI; integrating the existing water-planning anti-collapse suite; and adding Compose render/build CI. No live source adapter, issue writer, repository self-authorization, container startup, source activation, proof construction, release, deployment, or publication is introduced. The initial hosted generic schema harness exposed that the inline-geometry invalid fixture was rejected only by the custom validator; the schema now rejects common inline geometry property names as well."
 }
