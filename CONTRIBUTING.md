@@ -10,6 +10,7 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
 | Evidence snapshot for this revision | `main@99337e68ba4299b667f27d5dd35c3dc92295933e` |
+| Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
 | Document role | Root contribution guide |
 | Truth posture | Cite-or-abstain; use the core four truth labels |
 | Review route | Focused branch and draft pull request by default |
@@ -19,13 +20,16 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Implementation limit | A documented rule, planned path, stub workflow, or passing check is not automatically proof of runtime behavior or release authority |
 
 > [!IMPORTANT]
-> **Directory Rules conflict is visible and unresolved.** The newer repository artifact is
-> [`docs/architecture/directory-rules.md`](docs/architecture/directory-rules.md), while
-> [`docs/architecture/DIRECTORY_RULES.md`](docs/architecture/DIRECTORY_RULES.md) is an older
-> file with the same `kfm://doc/directory-rules` identity. The newer document still records
-> its own placement as an open ADR-class question. Use the newer live artifact for this
-> contribution preflight, do not create a third copy, and record material placement conflict
-> in [`docs/registers/DRIFT_REGISTER.md`](docs/registers/DRIFT_REGISTER.md).
+> **Directory Rules authority is resolved by accepted
+> [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md).**
+> [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) is the sole writable
+> human Directory Rules authority. The lowercase
+> [`docs/architecture/directory-rules.md`](docs/architecture/directory-rules.md) path remains
+> a read-only compatibility surface during the ADR-governed migration; do not edit it or
+> cite it as current authority. The case-variant
+> `docs/architecture/DIRECTORY_RULES.md` path is not tracked. Record newly confirmed,
+> material placement drift in
+> [`docs/registers/DRIFT_REGISTER.md`](docs/registers/DRIFT_REGISTER.md).
 
 ## Quick navigation
 
@@ -108,7 +112,9 @@ At minimum:
 1. Read the target file in full.
 2. Read the nearest parent README and relevant adjacent documentation.
 3. Inspect path-scoped instructions such as `AGENTS.md` when present. A root `AGENTS.md` was not verified at the evidence snapshot; do not assume one will remain absent.
-4. Read the current [Directory Rules](docs/architecture/directory-rules.md).
+4. Read the current [Directory Rules](docs/doctrine/directory-rules.md) and accepted
+   [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). Treat the
+   architecture-path copy as read-only compatibility, not current authority.
 5. Read relevant ADRs, especially the actual schema-home file:
    [`ADR-0001`](docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md).
 6. Check the [drift register](docs/registers/DRIFT_REGISTER.md) for known conflicts.

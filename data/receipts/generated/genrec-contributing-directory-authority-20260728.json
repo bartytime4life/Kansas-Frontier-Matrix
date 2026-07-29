@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-contributing-directory-authority-20260728",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "CONTRIBUTING.md"
+  ],
+  "artifact_hashes": {
+    "CONTRIBUTING.md": "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:25c682be31f657e1101a9657069590559a655e268b14a3ea479b021dbe0eb4e0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local repository inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Completion Agent v2"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2262d5b374eebeb216494c05a8edb4cc189dfd84",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/doctrine/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "CONTRIBUTING.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, clean base SHA, default branch, merge base, remotes, applicable instructions, accepted ADR index, Directory Rules bytes, manifests, workflows, test surfaces, and open-pull-request overlap were inspected before mutation."
+    },
+    {
+      "gate": "candidate-admission-and-isolation",
+      "outcome": "PASS",
+      "reason": "The missing case-variant link and legacy-authority instruction are current-HEAD breakage; accepted ADR-0029 resolves authority; the two-file packet is atomic, deterministic, low-risk, budget-compliant, and non-overlapping."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "CONTRIBUTING.md remains an admitted repository-root governance entrypoint under Directory Rules section 8.1. The companion receipt uses the established data/receipts/generated process-memory family and does not claim proof, review, release, or publication authority."
+    },
+    {
+      "gate": "contributor-guide-authority-and-local-links",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, final newline, 38 Markdown links, every local target, canonical Directory Rules and ADR-0029 references, the legacy compatibility warning, and the negative case-variant assertion passed deterministically."
+    },
+    {
+      "gate": "repository-native-baseline",
+      "outcome": "PASS",
+      "reason": "The documented temporary virtual environment ran make validate successfully: every expected valid fixture passed, every expected invalid fixture failed for its named reason, and 133 schema/contract tests passed."
+    },
+    {
+      "gate": "full-repository-pytest",
+      "outcome": "PASS",
+      "reason": "The documented temporary virtual environment ran the full suite successfully: 279 tests and 51 subtests passed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation with format checking passed; artifact_paths exactly matched artifact_hashes; the CONTRIBUTING.md SHA-256 and frozen change-packet SHA-256 were recomputed successfully."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Pull-request workflows use GitHub-hosted runners without pull_request_target, workflow_run, repository secrets, deployment, or publication behavior. Permissions are read-only or empty except the CodeQL workflow's documented security-events write for GitHub-managed analysis results."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The packet changes contributor guidance and process provenance only; it contains no credential, restricted source payload, personal data, exact sensitive location, rights decision, policy rule, release record, deployment, publication action, or production access."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "contributing-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/CONTRIBUTING.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2262d5b374eebeb216494c05a8edb4cc189dfd84/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T01:18:06Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-assisted documentation-only repair of the active contribution preflight after ADR-0029 acceptance. The legacy architecture path remains a read-only compatibility surface; this packet does not migrate or tombstone it. The receipt records process provenance only and is not human approval, factual proof, policy permission, release authority, or publication authority."
+}
