@@ -1,7 +1,7 @@
 # KFM Hydrology domain CI readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
-# executable Hydrology validation, proof, and release-dry-run producers are not
-# established in current repository evidence.
+# Status: executable bounded shape/polarity checks for the PROPOSED Hydrology
+# EvidenceBundle alias plus explicit broader holds; proof and release-dry-run
+# producers are not established in current repository evidence.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not act as flood
@@ -45,6 +45,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Hydrology validation dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
       - name: Evaluate Hydrology validation readiness
         shell: bash
         run: |
@@ -87,6 +90,7 @@ jobs:
           )
 
           test_root = Path("tests/domains/hydrology")
+          accepted_test_path = test_root / "test_hydrology_smoke.py"
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
           if test_symlinks:
@@ -109,9 +113,18 @@ jobs:
           test_paths = [path for path in test_inventory if path.suffix == ".py"]
           if not test_paths:
               raise SystemExit("Hydrology test inventory contains no Python modules.")
+          if accepted_test_path not in test_paths:
+              raise SystemExit(
+                  f"Accepted bounded Hydrology test is missing: {accepted_test_path}."
+              )
           for path in test_paths:
               classification = classify_test_source(path.read_text(encoding="utf-8"))
-              if not classification.placeholder:
+              if path == accepted_test_path:
+                  if classification.placeholder:
+                      raise SystemExit(
+                          f"Accepted bounded Hydrology test regressed to a placeholder: {path}."
+                      )
+              elif not classification.placeholder:
                   raise SystemExit(
                       f"Hydrology test placeholder changed at {path}; "
                       "review and wire it deliberately."
@@ -327,8 +340,8 @@ jobs:
           print("Inspected valid Hydrology JSON fixtures parse successfully.")
           print("Inspected Hydrology source/spec YAML remains explicitly PROPOSED placeholder material.")
           print(
-              f"Classified {len(test_paths)} Hydrology test modules with the shared "
-              "readiness classifier without executing them."
+              f"Reserved {accepted_test_path} for bounded execution and classified "
+              f"the remaining {len(test_paths) - 1} Hydrology test modules as placeholders."
           )
           print(
               "Inventoried three Hydrology schema wrappers without importing or executing them; "
@@ -345,39 +358,65 @@ jobs:
             exit 1
           fi
 
-          echo "WORKFLOW_CHECK_EXECUTED: hydrology-readiness"
-          echo "WORKFLOW_HOLD: accepted executable Hydrology validation suite is not established"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-broader-readiness"
+          echo "WORKFLOW_HOLD: broader executable Hydrology validation is not established"
 
-      - name: Record Hydrology validation hold
+      - name: Run bounded Hydrology EvidenceBundle validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/hydrology/test_hydrology_smoke.py
+
+          python tools/validators/domains/hydrology/validate_evidence_bundle.py \
+            fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json
+
+          if python tools/validators/domains/hydrology/validate_evidence_bundle.py \
+            fixtures/domains/hydrology/evidence_bundle/invalid/invalid_1.json; then
+            echo "::error::The known-invalid Hydrology EvidenceBundle fixture was accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Hydrology EvidenceBundle fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
+          echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
+
+      - name: Record Hydrology validation result and broader hold
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Hydrology validation status
 
-          `WORKFLOW_CHECK_EXECUTED: hydrology-readiness`
+          `WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape`
 
-          `WORKFLOW_HOLD: accepted executable Hydrology validation suite is not established`
+          `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          When this job is green, it has executed the bounded domain test and the
+          existing EvidenceBundle wrapper against one accepted-shape fixture and
+          one expected-invalid fixture. The domain test installs fail-closed
+          socket, DNS, and URL guards before invoking the local schema validator.
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
           placeholders, three bounded schema wrappers, and PROPOSED schema/policy
           scaffolds. Every such file is checked against an explicit inventory.
 
-          This job verifies required responsibility boundaries, confirms sampled
-          valid fixtures parse as JSON, confirms inspected source/spec files remain
-          explicitly PROPOSED placeholders, and inventories three existing domain
-          JSON Schema wrappers plus the mixed shorthand validator scaffold without
-          importing or executing them. None of these inventories is accepted as
-          an executable Hydrology suite.
+          This is acceptance only of local JSON Schema shape and valid/invalid
+          fixture polarity for the PROPOSED Hydrology EvidenceBundle alias. The
+          remaining test modules, semantic validators, shorthand validators,
+          sources, pipeline specifications, and policy scaffolds remain held.
 
-          It does not establish source admission, HUC/reach/gauge identity,
-          observation accuracy, units, freshness, NFHL interpretation, regulatory
-          status, public-safe geometry, EvidenceBundle closure, flood-warning
-          authority, engineering suitability, policy approval, or release readiness.
+          It does not resolve EvidenceRefs, establish EvidenceBundle closure or
+          actual evidence, admit sources, validate HUC/reach/gauge identity,
+          observations, units, freshness, NFHL interpretation, regulatory status,
+          public-safe geometry, policy, review, correction, rollback, proof,
+          release, deployment, or publication. It grants no flood-warning,
+          emergency, navigation, insurance, engineering, or regulatory authority.
           EOF
 
   build-proof-hydrology:

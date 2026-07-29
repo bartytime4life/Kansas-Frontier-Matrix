@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — verified GitHub CODEOWNER for /fixtures/ review routing"
   - "OWNER_TBD — Hydrology fixture stewardship and compatibility-lane disposition"
 created: NEEDS VERIFICATION — file predates this revision
-updated: 2026-07-21
+updated: 2026-07-29
 supersedes: pre-contract top-level Hydrology runtime fixture README
 policy_label: public-doc; fixtures; hydrology; compatibility; transitional; synthetic-only; deterministic; no-network-default; public-safe; source-role-preserving; evidence-aware; sensitivity-aware; release-subordinate; correction-aware; rollback-aware; no-emergency-authority; no-publication
 current_path: fixtures/hydrology/README.md
@@ -20,8 +20,8 @@ truth_posture:
     - fixtures/domains/hydrology/ exists with decision-envelope, evidence-bundle, run-receipt, source, valid, invalid, negative, and golden README lanes
     - tests/fixtures/hydrology/ documents a separate compatibility and test-local scope
     - sampled canonical-domain HUC12 and NFHL JSON fixtures are explicitly PROPOSED placeholders
-    - the Hydrology smoke test is an executable placeholder
-    - the domain-hydrology workflow checks fixtures/domains/hydrology/ and explicit readiness holds, not this top-level path
+    - the Hydrology domain test executes a bounded EvidenceBundle alias-shape and fixture-polarity check with fail-closed process-level network guards
+    - the domain-hydrology workflow checks fixtures/domains/hydrology/ and preserves broader readiness holds; it does not use this top-level path
     - .github/CODEOWNERS routes /fixtures/ review to @bartytime4life
     - the Makefile fixtures target is TODO-only and the default test target does not execute this lane
   PROPOSED:
@@ -165,8 +165,8 @@ Fixtures do not enter, shortcut, or substitute for this lifecycle. A commit, pul
 | Direct top-level payload inventory | **NARROWED / NEEDS VERIFICATION** — the connector confirmed a directory but did not expose a recursive listing. |
 | Indexed top-level consumers | **NOT ESTABLISHED** — bounded indexed search returned no executable reference to `fixtures/hydrology/`. |
 | Sampled domain payloads | **CONFIRMED placeholders** — `huc12_kansas_sample.json` and `nfhl_context_sample.json` declare `status: PROPOSED` and placeholder notes. |
-| Hydrology smoke test | **CONFIRMED placeholder** — `test_hydrology_smoke.py::test_placeholder` only asserts true. |
-| Domain workflow | **CONFIRMED readiness workflow** — read-only PR execution checks domain boundaries and explicit holds; it does not consume this top-level lane. |
+| Hydrology domain test | **CONFIRMED bounded executable slice** — `test_hydrology_smoke.py` checks the proposed EvidenceBundle alias schema against one valid and one deliberately invalid canonical-domain fixture with fail-closed process-level network guards. |
+| Domain workflow | **CONFIRMED bounded validation plus broader holds** — read-only PR execution runs that canonical-domain shape/polarity slice and preserves broader holds; it does not consume this top-level lane. |
 | Review route | **CONFIRMED** — `.github/CODEOWNERS` maps `/fixtures/` to `@bartytime4life`; enforcement remains **UNKNOWN**. |
 | Fixture regeneration | **CONFIRMED TODO-only** — the root `Makefile` fixture target prints a readiness marker. |
 | Dedicated top-level validation | **NOT ESTABLISHED**. |
@@ -326,9 +326,9 @@ Generated comparison reports or migration diagnostics belong in accepted tempora
 
 - The root `make fixtures` target is a TODO readiness marker and does not regenerate or validate this lane.
 - The root `make test` target runs configured schema and contract tests, not this top-level directory.
-- [`domain-hydrology.yml`](../../.github/workflows/domain-hydrology.yml) uses a read-only token and performs static readiness checks plus explicit holds.
-- That workflow requires the canonical domain fixture README and parses two sampled placeholder JSON files under `fixtures/domains/hydrology/valid/`; it does not reference this top-level path.
-- The Hydrology smoke test contains `test_placeholder`, so the workflow treats executable Hydrology validation as not established.
+- [`domain-hydrology.yml`](../../.github/workflows/domain-hydrology.yml) uses a read-only token, executes the bounded canonical-domain EvidenceBundle alias shape/polarity check, and preserves explicit broader holds.
+- That workflow uses the canonical fixture pair under `fixtures/domains/hydrology/evidence_bundle/`; it does not reference this top-level path.
+- The bounded Hydrology domain test proves only local schema shape, expected valid/invalid polarity, and process-level network denial. It does not prove fixture authority, EvidenceRef resolution, EvidenceBundle closure, Hydrology truth, policy, proof, release, or publication.
 - The documentation build and link-check workflows are explicit readiness holds. A green held job does not prove this README rendered or its links were checked.
 - No dedicated compatibility-pointer validator, recursive inventory check, orphan detector, migration check, or consumer-backlink gate was confirmed.
 

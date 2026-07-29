@@ -3,10 +3,10 @@ doc_id: kfm://doc/tools-validators-domains-hydrology-readme
 title: tools/validators/domains/hydrology README
 type: README
 version: v0.1
-status: draft
+status: draft; bounded EvidenceBundle alias-shape validation executable; broader validator families held
 owner: TODO-tooling-qa-owner-plus-hydrology-steward-plus-flood-boundary-reviewer-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-07-29
 policy_label: repository-facing; per-domain-validator-index; hydrology; huc; reach; gauge; nfhl; source-role-aware; not-flood-warning; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Hydrology validator index for Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, GroundwaterWell, FlowObservation, WaterLevelObservation, WaterQualityObservation, AquiferObservation, Hydrograph, NFHLZone, UpstreamTrace, WaterUseLink, DroughtLink, IrrigationLink, source-role separation, HUC/COMID/reach identity, freshness/time posture, not-flood-warning boundaries, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Hydrology meaning, policy decisions, proof records, and release authority to their owning roots
@@ -36,7 +36,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "This README replaces a greenfield stub. Three local JSON Schema wrappers are present; only the EvidenceBundle alias wrapper has bounded workflow acceptance in this lane."
   - "No broad tools/validators/hydrology/README.md was found during this task, so this path currently serves as the inspected per-domain Hydrology validator index."
   - "Hydrology owns watersheds, HUC units, reaches, gauges, observations, hydrographs, regulatory flood context, and upstream traces. It does not own emergency alerts, life-safety warnings, soil truth, agriculture truth, geology truth, infrastructure truth, or hazards alert authority."
   - "NFHL and similar flood layers are regulatory context only; validators must deny treating them as observed inundation, forecast flood extent, or emergency instruction."
@@ -49,12 +49,12 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-hydrology--validators-informational)
+![scope](https://img.shields.io/badge/scope-bounded--EvidenceBundle--shape-blue)
 ![boundary](https://img.shields.io/badge/not--flood--warning-critical)
 ![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/domains/hydrology/` is the proposed per-domain Hydrology validator index for watersheds, HUC units, reaches, gauges, water observations, aquifer observations, hydrographs, NFHL/regulatory flood context, upstream traces, water-use/drought/irrigation links, source-role separation, HUC/COMID/reach identity, freshness/time posture, not-flood-warning boundaries, evidence, policy, release, correction, rollback, and public-surface denial checks.
+> **One-line purpose.** `tools/validators/domains/hydrology/` is the per-domain Hydrology validator index with one bounded executable EvidenceBundle alias-shape check; broader watershed, HUC, reach, gauge, observation, NFHL, identity, time, policy, proof, release, correction, rollback, and public-surface validation remains proposed or held.
 
 ---
 
@@ -83,7 +83,9 @@ The answer should be a navigable validator index and deterministic validation ou
 | Hydrology proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/hydrology/README.md` defines proof support for hydrology evidence closure and requires source-role separation for observed water conditions, watershed units, regulatory flood context, terrain-derived context, models, and public map artifacts. |
 | Existing related validator lanes | **CONFIRMED README siblings / executable proposed** | `atmosphere_hydrology/` and cross-domain lanes exist where scope overlaps; executable behavior remains unverified. |
 | Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Hydrology validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Local JSON Schema wrappers | **CONFIRMED** | `validate_decision_envelope.py`, `validate_evidence_bundle.py`, and `validate_run_receipt.py` delegate to the shared local JSON Schema runner. Presence alone is not acceptance. |
+| Bounded EvidenceBundle alias validation | **CONFIRMED executable** | The workflow runs `validate_evidence_bundle.py` and `tests/domains/hydrology/test_hydrology_smoke.py` against one valid and one deliberately invalid local fixture under fail-closed process-level network guards. This proves shape and polarity only. |
+| Broader executables, semantic schemas, policy bundles, receipts, and CI wiring | **HELD / NEEDS VERIFICATION** | Placeholder validators and proposed schema/policy surfaces remain; no broad Hydrology semantics, evidence closure, policy, proof, or release behavior is accepted here. |
 
 [Back to top](#top)
 
@@ -128,9 +130,9 @@ Possible future children remain **PROPOSED** until verified:
 
 Safe interpretation:
 
-- **CONFIRMED:** this README exists.
+- **CONFIRMED:** this README and three local JSON Schema wrappers exist; the EvidenceBundle alias wrapper has bounded shape/polarity workflow coverage.
 - **PROPOSED:** validator code may live below this folder when it checks declared Hydrology invariants and delegates meaning, source roles, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
+- **NEEDS VERIFICATION:** every broader executable contract, semantic schema, policy bundle digest, source descriptor, fixture family, report destination, receipt, runtime behavior, and CI lane beyond the bounded EvidenceBundle alias check.
 - **DENY:** using this folder as Hydrology doctrine, emergency-warning authority, flood-warning authority, regulatory-determination authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, or domain-meaning authority.
 
 [Back to top](#top)
@@ -231,6 +233,14 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ---
 
 ## Validation
+
+Accepted bounded command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 python -m pytest -q -p no:cacheprovider tests/domains/hydrology/test_hydrology_smoke.py
+```
+
+The test invokes the existing EvidenceBundle alias wrapper's shared local runner, requires the valid fixture to pass and the invalid fixture to fail with its expected error category, and installs socket, DNS, and URL denial guards. It establishes neither EvidenceRef resolution nor EvidenceBundle closure, actual evidence, source admission, Hydrology semantics, policy, proof, review, release, or publication.
 
 Suggested future test surface:
 
