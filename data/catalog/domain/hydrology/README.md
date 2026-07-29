@@ -3,10 +3,10 @@ doc_id: kfm://doc/data-catalog-domain-hydrology-readme
 title: data/catalog/domain/hydrology/README.md — Governed Hydrology Domain Catalog Lane
 version: v0.2.0
 type: readme; data-lifecycle-sublane; domain-catalog-guide
-status: repository-grounded draft; PROPOSED; catalog-stage; hydrology; release-gated; evidence-bound; source-role-aware; validation-held; proof-held; release-held
+status: repository-grounded draft; PROPOSED; catalog-stage; hydrology; release-gated; evidence-bound; source-role-aware; bounded-evidencebundle-shape-validation; broader-validation-held; proof-held; release-held
 owners: OWNER_TBD — Hydrology steward · Data steward · Catalog steward · Evidence steward · Source steward · Policy steward · Release steward · Schema steward · Docs steward
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-25
+updated: 2026-07-29
 policy_label: public-doc; data; catalog; hydrology; lifecycle; release-gated; evidence-bound; source-role-aware
 tags: [kfm, data, catalog, hydrology, domain-catalog, CATALOG, TRIPLET, Watershed, HUCUnit, GaugeSite, FlowObservation, WaterLevelObservation, NFHLZone, EvidenceBundle, SourceDescriptor, CatalogMatrix, ReleaseManifest]
 baseline:
@@ -30,7 +30,7 @@ related:
   - ../../../../release/candidates/hydrology/
 notes:
   - "This file preserves the stable identity and safeguards introduced when v0.1 replaced a blank placeholder."
-  - "The evidence snapshot confirms lane placement and extensive Hydrology design documentation, but not accepted catalog payloads, deterministic validation, proof closure, release closure, or publication."
+  - "The evidence snapshot confirms lane placement, extensive Hydrology design documentation, and one bounded EvidenceBundle alias shape/polarity validation slice, but not accepted catalog payloads, broader semantic validation, proof closure, release closure, or publication."
   - "Hydrology contracts describe object meaning; machine shape, policy, lifecycle data, evidence, and release decisions remain in separate responsibility roots."
   - "Source role is fixed at admission and never upgraded by promotion; observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles remain distinct."
   - "NFHL is regulatory context only and must not be presented as observed flooding, forecast inundation, hydraulic-model output, or real-time flood status."
@@ -104,8 +104,8 @@ The lane exists and its responsibility boundary is documented. The inspected rep
 | HUCUnit semantic contract | **SUBSTANTIVE DRAFT** | Meaning is described, but the paired machine schema remains permissive scaffolding. |
 | Source descriptors | **PROPOSED / CONFLICTED** | Canonical-home and legacy-home WBD descriptors coexist; one accepted authority is not established. |
 | Fixtures and pipeline specifications | **PLACEHOLDERS** | Files exist but explicitly identify themselves as proposed placeholders. |
-| Domain tests | **PLACEHOLDER-ONLY** | The domain smoke test and proof-slice end-to-end test assert only placeholder success. |
-| Domain validators | **HELD** | Validator lanes are documentation or stubs; no accepted executable body was verified. |
+| Domain tests | **BOUNDED EXECUTABLE SLICE / BROADER HELD** | The domain test checks only the proposed EvidenceBundle alias schema, valid/invalid fixture polarity, and process-level network denial; the proof-slice end-to-end test remains a placeholder. |
+| Domain validators | **BOUNDED SHAPE VALIDATOR / BROADER HELD** | The EvidenceBundle alias wrapper is exercised for local shape polarity. Semantic, source, identity, policy, evidence-closure, proof, and release validators remain unaccepted or held. |
 | CatalogMatrix closure | **HELD** | The contract exists, but its schema is permissive and its validator raises `NotImplementedError`. |
 | Proof production | **HELD** | No accepted proof producer or non-README Hydrology proof payload was verified. |
 | Release dry run | **HELD** | The workflow deliberately refuses promotion while a candidate and release path are unproven. |
@@ -283,15 +283,15 @@ No WBD HUC12 catalog record should be admitted as accepted until one authoritati
 
 ## Validation and current readiness
 
-The [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrology.yml) is deliberately a denial gate. Static inspection confirms that it checks for required surfaces and refuses to treat placeholder scaffolds as implementation.
+The [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrology.yml) executes one bounded EvidenceBundle alias shape/polarity check while retaining fail-closed denial gates for all broader readiness claims.
 
 | Gate | Repository behavior | Current result encoded by workflow |
 | --- | --- | --- |
-| `validate-hydrology` | Confirms boundary files and placeholder markers; rejects surfaced executable validator bodies until the suite graduates | `WORKFLOW_HOLD` — accepted executable Hydrology validation suite is not established |
+| `validate-hydrology` | Executes the proposed EvidenceBundle alias schema against one valid and one deliberately invalid fixture with process-level network denial; inventories remaining placeholders | Bounded shape/polarity slice executable; broader semantics, EvidenceBundle closure, policy, proof, and release remain held |
 | `build-proof-hydrology` | Confirms proof guidance and rejects premature proof payloads; no proof implementation target is accepted | Explicit skip/hold — no accepted proof producer |
 | `publish-dry-run-hydrology` | Confirms candidate/release guides and rejects premature candidate records; no release dry-run target is accepted | Explicit skip/hold — release dry run is not established |
 
-The [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) applies the same fail-closed posture to the proposed end-to-end slice. The inspected [domain smoke test](../../../../tests/domains/hydrology/test_hydrology_smoke.py) and [proof-slice test](../../../../tests/e2e/test_hydrology_proof_slice.py) are placeholder assertions, not deterministic domain assurance.
+The [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) applies the same fail-closed posture to the proposed end-to-end slice. The [domain test](../../../../tests/domains/hydrology/test_hydrology_smoke.py) is now a deterministic but deliberately narrow alias-shape check; the [proof-slice test](../../../../tests/e2e/test_hydrology_proof_slice.py) remains a placeholder. Neither establishes semantic Hydrology assurance or evidence closure.
 
 The following are denied shortcuts:
 
@@ -317,7 +317,7 @@ This ledger records what the inspected repository surfaces support and what they
 | [Hydrology source registry guide](../../../../docs/domains/hydrology/SOURCE_REGISTRY.md) | **CONFIRMED doctrine / proposed implementation** | Fail-closed admission and source-role families | Accepted descriptor instances or endpoints |
 | [ADR-0009](../../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) | **DRAFT / PROPOSED** | Hydrology proof-lane target and explicit current holds | Accepted proof-bearing status |
 | [ADR-0026](../../../../docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md) | **DRAFT / PROPOSED** | WBD HUC12 graduation target and descriptor-topology conflict | Accepted WBD graduation |
-| [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrology.yml) | **CONFIRMED executable denial gate** | Placeholder detection and explicit validation/proof/release holds | Successful Hydrology implementation |
+| [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrology.yml) | **CONFIRMED bounded executable check plus denial gates** | EvidenceBundle alias shape/polarity, process-level network denial, placeholder detection, and explicit broader validation/proof/release holds | EvidenceRef resolution, EvidenceBundle closure, semantic Hydrology assurance, proof, catalog closure, or release |
 | [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) | **CONFIRMED executable denial gate** | Proof-slice scope and fail-closed hold behavior | Produced proof or catalog closure |
 | [`HUCUnit` schema](../../../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json) | **PROPOSED scaffold** | Schema path and stated status | Constrained HUCUnit shape |
 | [`CatalogMatrix` contract](../../../../contracts/data/catalog_matrix.md) | **SUBSTANTIVE CONTRACT** | Intended catalog closure semantics | Executable validation |
@@ -336,15 +336,15 @@ No source in this ledger is used beyond the claim scope it directly supports.
 
 ## Validation checklist
 
-### Confirmed in the 2026-07-25 evidence snapshot
+### Confirmed in the 2026-07-29 evidence snapshot
 
 - [x] Confirm the canonical directory placement and compatibility redirect.
 - [x] Confirm the full lifecycle boundary from RAW through PUBLISHED.
 - [x] Confirm source-role separation for observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic records.
 - [x] Confirm NFHL regulatory-context-only posture and observed-flood evidence separation.
 - [x] Confirm that the inspected HUCUnit and CatalogMatrix schemas are proposed/permissive.
-- [x] Confirm that domain and proof-slice tests are placeholders.
-- [x] Confirm that the current workflows encode validation, proof, and release holds.
+- [x] Confirm that the bounded domain EvidenceBundle alias-shape test executes while the proof-slice test remains a placeholder.
+- [x] Confirm that the current workflow executes the bounded shape/polarity slice and retains broader validation, proof, and release holds.
 - [x] Confirm that proof, receipt, release-candidate, published, and rollback READMEs are guides rather than closure evidence.
 - [x] Confirm that no release or public Hydrology artifact is established by the inspected evidence.
 
@@ -426,8 +426,8 @@ Neither ADR is treated here as an accepted production decision.
 | HYD-CAT-001 | Complete child-payload inventory is not established | Cannot claim lane contents are fully classified | Recursive inventory with authority and status |
 | HYD-CAT-002 | WBD HUC12 descriptor authority is split across canonical and legacy homes | Source identity and admission authority remain ambiguous | One accepted descriptor and migration/drift record |
 | HYD-CAT-003 | Hydrology and CatalogMatrix schemas remain permissive | Machine shape and closure cannot be enforced | Accepted constraining schemas and negative fixtures |
-| HYD-CAT-004 | Domain and end-to-end tests remain placeholders | No deterministic semantic assurance | Executable representative test suite |
-| HYD-CAT-005 | Validator implementations are absent or held | Invalid or unsafe records cannot be reliably rejected | Accepted fail-closed validators |
+| HYD-CAT-004 | Only one domain alias-shape slice is executable; end-to-end and semantic test lanes remain placeholders or unverified | No deterministic semantic assurance | Executable representative semantic and end-to-end test suite |
+| HYD-CAT-005 | Only the EvidenceBundle alias shape wrapper has bounded acceptance; broader validators are absent, placeholder, or held | Invalid or unsafe semantic records cannot be reliably rejected | Accepted fail-closed semantic, source, identity, policy, and closure validators |
 | HYD-CAT-006 | Proof producer and payload are absent | Claims cannot reach evidence closure | Accepted producer plus immutable bounded proof |
 | HYD-CAT-007 | Rights, sensitivity, freshness, precision, and route policy are not closed | Public exposure remains denied | Accepted policy decisions and access controls |
 | HYD-CAT-008 | Catalog/STAC/DCAT/PROV/triplet agreement is unverified | Projection closure remains unknown | Deterministic cross-projection validation |
