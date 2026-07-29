@@ -74,7 +74,7 @@ notes:
 | **Document type** | Architecture doctrine (single UI component; cross-cutting across all 13 KFM domains) |
 | **Edition** | v1.0 — initial component-architecture authoring |
 | **Authority of these rules** | **CONFIRMED — derives from:** Atlas card `KFM-P1-FEAT-0065` ("Evidence Drawer required on layers, popovers, and AI answers"; CONFIRMED doctrine per Pass-20 Part II); *Master MapLibre Components-Functions-Features v2.1* §N (Evidence Drawer Payloads), §S (Accessibility, UX, and Trust-Visible States); Atlas v1.1 per-domain J. tables (every domain has an "Evidence Drawer payload" endpoint); [Domain Placement Law §5](./domain-placement-law.md#5-multi-domain-and-cross-cutting-files) (cross-cutting placement). |
-| **Authority of any specific path/route quoted here** | **PROPOSED** unless explicitly noted. v1.0 was authored without mounted-repo inspection. Schema and contract homes follow [ADR-0001 schema home](../adr/ADR-0001-schema-home.md). |
+| **Authority of any specific path/route quoted here** | **PROPOSED** unless explicitly noted. v1.0 was authored without mounted-repo inspection. Schema and contract homes follow [ADR-0001 schema home](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). |
 | **Conformance language** | RFC 2119-style: **MUST / MUST NOT** non-negotiable; **SHOULD / SHOULD NOT** strong default; **MAY** permitted. Same as [Directory Rules §2.2](./directory-rules.md#22-conformance-language-rfc-2119-style). |
 | **Owners** | AI surface steward (Focus Mode and trust-state binding) + UI lead (rendering and accessibility). |
 | **Reviewers required for change** | AI surface steward + UI lead + Docs steward. ADR required for: changing the `EvidenceDrawerPayload` schema in a breaking way; introducing a new finite-outcome state beyond ANSWER/ABSTAIN/DENY/ERROR; permitting the drawer to read from `data/raw|work|quarantine`. |
@@ -152,7 +152,7 @@ The drawer is a **cross-cutting UI component** per [Domain Placement Law §5.2](
 | **Shared UI primitives** | `packages/ui/src/evidence-drawer/` | Reusable building blocks if other apps (e.g., `apps/review-console/`) reuse them. **PROPOSED.** |
 | **Renderer-adapter integration** | `packages/maplibre-runtime/src/feature-click-resolver.ts` | The `click → MapContextEnvelope → governed-API` bridge; lives inside the renderer adapter per [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) §7.2.a. **PROPOSED.** |
 | **Semantic contract (Markdown)** | `contracts/ui/evidence_drawer_payload.md` | Field meaning, invariants. Per [Directory Rules §6.3](./directory-rules.md#63-contracts--object-meaning). **PROPOSED.** |
-| **Machine schema (JSON Schema)** | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Per [ADR-0001 schema home](../adr/ADR-0001-schema-home.md). **PROPOSED.** |
+| **Machine schema (JSON Schema)** | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Per [ADR-0001 schema home](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). **PROPOSED.** |
 | **Drawer projection policy** | `policy/runtime/drawer_projection.rego` | What fields the drawer is allowed to show given a `PolicyDecision`. **PROPOSED.** |
 | **Tests** | `tests/ui/evidence-drawer/`, `tests/contracts/evidence_drawer_payload/`, `tests/policy/drawer_projection/`, `tests/integration/maplibre/feature_click_to_drawer/` | Four parallel test homes (UI, contract, policy, integration). **PROPOSED.** |
 | **Fixtures** | `fixtures/ui/evidence_drawer/{valid,invalid}/`, `fixtures/maplibre/click_to_drawer/` | Per-state valid + invalid fixtures (one per §5 state). **PROPOSED.** |
@@ -199,7 +199,7 @@ apps/explorer-web/
 
 ## 3. The EvidenceDrawerPayload Contract
 
-The `EvidenceDrawerPayload` is the wire contract between `apps/governed-api/` and the drawer component. *Master MapLibre v2.1 §M* records its required field intent; the schema home is `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` per [ADR-0001](../adr/ADR-0001-schema-home.md).
+The `EvidenceDrawerPayload` is the wire contract between `apps/governed-api/` and the drawer component. *Master MapLibre v2.1 §M* records its required field intent; the schema home is `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` per [ADR-0001](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md).
 
 ### 3.1 Required fields (per Master MapLibre v2.1 §M)
 

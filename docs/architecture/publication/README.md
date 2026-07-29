@@ -15,7 +15,7 @@ related: [
   docs/doctrine/directory-rules.md,
   docs/architecture/governed-api.md,
   docs/architecture/contract-schema-policy-split.md,
-  docs/adr/ADR-0001-schema-home.md,
+  docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md,
   contracts/release/README.md,
   contracts/evidence/README.md,
   release/README.md
@@ -94,7 +94,7 @@ Out of scope:
 
 - **Operational procedures** — runbooks live under `docs/runbooks/`.
 - **Object meaning** — definitions live under `contracts/release/`, `contracts/evidence/`, `contracts/correction/`.
-- **Field-level shape** — schemas live under `schemas/contracts/v1/release/`, `schemas/contracts/v1/evidence/`, etc., per [ADR-0001](../../adr/ADR-0001-schema-home.md).
+- **Field-level shape** — schemas live under `schemas/contracts/v1/release/`, `schemas/contracts/v1/evidence/`, etc., per [ADR-0001](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md).
 - **Domain-specific publication tables** — those live under `docs/domains/<domain>/PROMOTION_AND_ROLLBACK.md`.
 
 ---
@@ -433,7 +433,7 @@ The folder is currently a doctrinal stub. To reach maturity, it should accumulat
 | Authority order, conformance, drift | [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) |
 | Governed API (executable trust membrane) | [`docs/architecture/governed-api.md`](../governed-api.md) |
 | `contracts/` vs `schemas/` vs `policy/` split | [`docs/architecture/contract-schema-policy-split.md`](../contract-schema-policy-split.md) |
-| Schema home authority | [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) |
+| Schema home decision record | [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — status `proposed` |
 | Object meaning for releases | [`contracts/release/`](../../../contracts/release/) |
 | Object meaning for evidence | [`contracts/evidence/`](../../../contracts/evidence/) |
 | Object meaning for corrections | [`contracts/correction/`](../../../contracts/correction/) |

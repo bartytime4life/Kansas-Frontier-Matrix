@@ -19,7 +19,7 @@ related:
   - docs/architecture/map-shell.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/architecture/connected-dots-architecture-brief.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/standards/PROV.md
   - contracts/runtime/runtime_response_envelope.md
   - contracts/runtime/ai_receipt.md
@@ -645,7 +645,7 @@ PromptEnvelope {
 | `docs/architecture/contract-schema-policy-split.md` | Why meaning / shape / admissibility / proof are separate. | **NEEDS VERIFICATION** — referenced from directory-rules.md |
 | `docs/architecture/connected-dots-architecture-brief.md` §9 | How governed AI fits the larger trust spine. | **PROPOSED at path** — CONFIRMED authored prior session |
 | `docs/standards/PROV.md` | Provenance vocabulary used in lineage chains and AIReceipt context refs. | **CONFIRMED authored prior session**; naming variance tracked elsewhere (Directory Rules OPEN-DR-01) |
-| `docs/adr/ADR-0001-schema-home.md` | Why `schemas/contracts/v1/...` is canonical. | **PROPOSED at path** — CONFIRMED referenced |
+| `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` | Records the configured and proposed `schemas/contracts/v1/...` schema-home direction. | **CONFIRMED file; decision status `proposed`** |
 | `contracts/runtime/ai_receipt.md` | Semantic Markdown for `AIReceipt`. | **PROPOSED — not yet authored** |
 | `contracts/runtime/runtime_response_envelope.md` | Semantic Markdown for `RuntimeResponseEnvelope`. | **PROPOSED — not yet authored** |
 | `contracts/focus_mode/focus_mode_payload.md` | Semantic Markdown for Focus Mode request/response. | **PROPOSED** — Directory Rules §6.7.2 new top-level family |

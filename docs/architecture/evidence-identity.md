@@ -17,7 +17,7 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/architecture/governed-api.md
   - docs/architecture/connected-dots-architecture-brief.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/standards/PROV.md
   - contracts/evidence/evidence_ref.md
   - contracts/evidence/evidence_bundle.md
@@ -524,7 +524,7 @@ A pinned JCS implementation per language (e.g., `rfc8785` for Python; equivalent
 | `docs/standards/PROV.md` | Provenance vocabulary used in lineage chains. | **CONFIRMED authored prior session**; naming variance with `PROVENANCE.md` tracked as EID-Q4 / Directory Rules OPEN-DR-01 |
 | `docs/standards/CANONICALIZATION.md` | JCS-vs-URDNA2015 decision matrix. | **PROPOSED** — Pass-10 C1-02 expansion; not yet authored |
 | `docs/standards/RUN_RECEIPT.md` | Canonical run-receipt schema reference. | **PROPOSED** — Pass-10 C1-01 expansion; not yet authored |
-| `docs/adr/ADR-0001-schema-home.md` | Why `schemas/contracts/v1/...` is canonical. | **PROPOSED at this path** — CONFIRMED referenced |
+| `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` | Records the configured and proposed `schemas/contracts/v1/...` schema-home direction. | **CONFIRMED file; decision status `proposed`** |
 | `contracts/evidence/evidence_bundle.md` | Semantic Markdown for the bundle. | **PROPOSED — not yet authored** |
 | `contracts/evidence/evidence_ref.md` | Semantic Markdown for the reference. | **PROPOSED — not yet authored** |
 | `schemas/contracts/v1/evidence/` | Machine schema home. | **PROPOSED** |

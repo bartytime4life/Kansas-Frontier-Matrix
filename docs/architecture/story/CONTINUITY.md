@@ -395,7 +395,7 @@ These links are **PROPOSED** relative paths consistent with the Whole-UI + Gover
 - [`../governed-ai/CONTINUITY_NOTES.md`](../governed-ai/CONTINUITY_NOTES.md) — Governed AI continuity *(PROPOSED).*
 - [`../review/README.md`](../review/README.md) — Review/steward surface *(PROPOSED).*
 - [`../../adr/ADR-story-node-3d-boundary.md`](../../adr/ADR-story-node-3d-boundary.md) — 3D handoff boundary ADR *(PROPOSED).*
-- [`../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home convention.
+- [`../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home decision record (status `proposed`).
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (placement law).
 - [`../../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) — Canon vs lineage vs exploratory register *(PROPOSED).*
 - [`../../registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift register *(PROPOSED).*
@@ -441,7 +441,7 @@ docs/
       README.md                # PROPOSED
   adr/
     ADR-story-node-3d-boundary.md   # PROPOSED
-    ADR-0001-schema-home.md         # referenced
+    ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md # referenced
   registers/
     CANONICAL_LINEAGE_EXPLORATORY.md  # PROPOSED
     DRIFT_REGISTER.md                 # PROPOSED
