@@ -2,20 +2,21 @@
 doc_id: kfm://doc/connectors-readme
 title: connectors/ — Source Admission Connectors
 type: readme; directory-readme; canonical-implementation-root; source-admission-index
-version: v0.4
+version: v0.5
 status: draft; repository-grounded; mixed-maturity; partial-static-enforcement; ingest-receipt-hold; no-release; no-publication
 owners: NEEDS VERIFICATION — CODEOWNERS routes /connectors/ to @bartytime4life; accepted connector/source stewardship and independent approval controls were not established
 created: 2026-06-20
-updated: 2026-07-23
-supersedes: v0.3 at the same path
+updated: 2026-07-29
+supersedes: v0.4 at the same path
 policy_label: public; implementation-root; source-admission; pre-RAW; raw-quarantine-receipts-only; fail-closed; no-publication
 current_path: connectors/README.md
 owning_root: connectors/
-base_commit: 5c88eed8086182c600e276060a31d33a6ad2e977
-prior_blob: bdd50032bed62ac36964c79f16cf5541b21759a6
+base_commit: 9e0808149b2a391f171021d9bdca59311e80be36
+prior_blob: 8db6ee9cbefdd1ce099789d827f759df9ebd9f59
 truth_posture: >
   CONFIRMED same-path target; canonical connectors responsibility root; current connector-gate workflow;
-  static connector/pipeline non-publisher test; fielded singular SourceDescriptor schema and executable wrapper;
+  bounded connector repository-path scanner and legacy connector/pipeline lexical publication-target canary;
+  fielded singular SourceDescriptor schema and executable wrapper;
   empty source-authority register; placeholder connectors-core package; CODEOWNERS routing; and representative
   family, product, package, and compatibility-lane documentation /
   PROPOSED repository-root connector contract, shared invocation profile, child-lane requirements, receipt
@@ -27,6 +28,7 @@ truth_posture: >
   endpoint health, complete rights and sensitivity review, emitted ingest receipts, runtime consumers,
   branch-rule significance, release integration, and public-delivery state.
 evidence_snapshot:
+  snapshot_status: historical_v0.4_baseline
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 5c88eed8086182c600e276060a31d33a6ad2e977
@@ -39,6 +41,12 @@ evidence_snapshot:
   source_authority_register_blob: 82c23722520922f5ca0dad7f37ed794d1c2edf81
   connectors_core_blob: 0db121b6f378b64bacaf74af57dbfcd40c969d1f
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+change_evidence:
+  base_commit: 9e0808149b2a391f171021d9bdca59311e80be36
+  target_prior_blob: 8db6ee9cbefdd1ce099789d827f759df9ebd9f59
+  connector_gate_workflow_prior_blob: ae3ef92ac5f717cc149a609c3b74dd105dd17e44
+  non_publisher_test_prior_blob: c6164787bc848eb2347c347af203d76afae37a2b
+  connector_output_validator_prior_state: absent
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/sources/ADMISSION_PROCESS.md
@@ -60,7 +68,7 @@ related:
   - ../release/README.md
 tags: [kfm, connectors, source-admission, pre-raw, source-descriptor, source-head, rights, sensitivity, raw, quarantine, receipts, non-publisher, trust-membrane, rollback]
 notes:
-  - "Same-path modernization of v0.3; no connector code, source activation, network behavior, lifecycle artifact, receipt instance, policy decision, release record, public route, or publication state changes."
+  - "v0.5 documents the bounded connector output-path scanner and its workflow/test integration; it does not change connector runtime code, activate a source, emit lifecycle payloads, approve release, or publish."
   - "Directory Rules §7.3 assigns source-specific fetch and admission to connectors/ and limits direct handoff to RAW, QUARANTINE, and receipts."
   - "The current connector-gate workflow provides partial static non-publisher enforcement; ingest-receipt presence remains an explicit readiness hold."
   - "Static badges summarize inspected repository state only; they are not source activation, test completion, policy approval, release, or publication proof."
@@ -78,7 +86,7 @@ notes:
 [![Connector gate: partial](https://img.shields.io/badge/connector%20gate-partial-d4a72c?style=flat-square)](../.github/workflows/connector-gate.yml)
 [![Ingest receipts: hold](https://img.shields.io/badge/ingest%20receipts-WORKFLOW__HOLD-b42318?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-0969da?style=flat-square)](#last-reviewed)
+[![Reviewed: 2026-07-29](https://img.shields.io/badge/reviewed-2026--07--29-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
 > **Safe current conclusion:** the connector root, a partial static non-publisher workflow, a fielded `SourceDescriptor` schema candidate, an executable descriptor validator wrapper, and many source-lane READMEs exist. Current evidence does **not** establish an exhaustive connector inventory, accepted source activation system, complete receipt enforcement, live endpoint fitness, universal child-lane tests, production consumers, release integration, or public-safe publication.
@@ -159,18 +167,18 @@ Directory Rules §7.3 assigns source-specific fetch and admission to `connectors
 
 ### Repository-grounded snapshot
 
-| Surface | Current evidence at `main@5c88eed8…` | Safe conclusion |
+| Surface | Evidence at `main@9e080814…` plus this working diff | Safe conclusion |
 |---|---|---|
-| Parent README | **CONFIRMED** v0.3 baseline, blob `bdd5003…` | Same-path v0.4 modernization. |
+| Parent README | **CONFIRMED** v0.4 preimage, blob `8db6ee9…` | Same-path v0.5 reconciliation. |
 | `connectors/` responsibility root | **CONFIRMED** in Directory Rules and repository | Canonical source-specific implementation root; child topology remains mixed. |
-| Connector output workflow | **CONFIRMED command-bearing / PARTIAL** | Runs one static non-publisher test; does not validate complete connector behavior. |
-| Static non-publisher test | **CONFIRMED executable source** | Scans Python, shell, and YAML write contexts for `data/catalog`, `data/published`, and `release/`; it is not runtime proof and does not cover every forbidden phase. |
+| Connector output workflow | **CONFIRMED command-bearing / PARTIAL** | Runs a bounded two-part static canary: selected connector output targets plus the prior pipeline publication-target denylist. |
+| Static connector output guard | **CONFIRMED executable source** | Compares selected, statically resolvable connector repository-output targets with `data/raw/`, `data/quarantine/`, and `data/receipts/`; it is not runtime confinement or receipt-correspondence proof. |
 | Ingest-receipt presence workflow | **CONFIRMED explicit `WORKFLOW_HOLD`** | No repository-owned receipt-presence validator or deterministic connector fixture set is established there. |
 | `SourceDescriptor` singular schema | **CONFIRMED fielded, closed, status `PROPOSED`** | Strong machine-shape candidate; not accepted authority by presence alone. |
 | `SourceDescriptor` schema metadata | **CONFIRMED points to plural path as canonical** | Singular/plural schema authority is `CONFLICTED`. |
 | Descriptor validator wrapper | **CONFIRMED executable wrapper at `tools/validators/validate_source_descriptor.py`** | Invokes the singular schema and root fixture family; declared and observed paths disagree. |
 | Machine source-authority register | **CONFIRMED present with `entries: []`** | No active source inventory is established by the register. |
-| Connector gate validator lane | **CONFIRMED documentation-rich; direct executable and dedicated tests unestablished** | Root admission-gate architecture is not fully executable. |
+| Connector gate validator lane | **CONFIRMED bounded output-path scanner; full admission gate unestablished** | `output_paths.py` is a static source canary, not the proposed connector admission CLI/report system. |
 | Shared connectors-core package | **CONFIRMED `0.0.0` placeholder** | Empty initializer and comment-only core do not establish reusable runtime behavior. |
 | Representative child lanes | **CONFIRMED family, product, package, and compatibility READMEs** | Documentation is extensive but implementation maturity varies by lane. |
 | Alias and naming topology | **CONFIRMED conflicts in inspected examples** | `osm`/`openstreetmap`, `people`/`people-dna-land`, and Kansas Mesonet variants require governed disposition. |
@@ -290,17 +298,22 @@ Directory Rules limit connector output to governed RAW or QUARANTINE handoff plu
 Direct connector writes or hidden effects to these surfaces are prohibited:
 
 ```text
+data/pre_raw/
 data/work/
 data/processed/
 data/catalog/
 data/triplets/
 data/proofs/
+data/registry/
 data/published/
+data/rollback/
 release/
 public API / UI / map / export / AI surfaces
 ```
 
-The current static workflow test enforces only a subset of this boundary (`data/catalog`, `data/published`, and `release/`). The wider doctrine requirement remains stronger than the implemented static check.
+Current CI runs a bounded two-part static canary. Under `connectors/`, it inspects selected Python sink calls, shell destinations, and YAML command/output keys. For targets those parsers recognize and statically resolve as repository-relative, the connector check compares them with the `data/raw/`, `data/quarantine/`, and `data/receipts/` allowlist. A separate legacy lexical check scans selected write contexts under `connectors/` and `pipelines/` for `data/catalog`, `data/published`, and `release/`.
+
+This test does not establish complete coverage of dynamic paths, unrecognized sinks or languages, external or URI targets, symlinks, runtime effects, or receipt correspondence.
 
 [Back to top](#top)
 
@@ -312,11 +325,11 @@ The current static workflow test enforces only a subset of this boundary (`data/
 
 | Surface | Current behavior | What it proves | What it does not prove |
 |---|---|---|---|
-| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) — `connector-output-gate` | Installs test dependencies and runs the static non-publisher pytest | The named test executes in that workflow when the job runs | Source correctness, network safety, rights, sensitivity, descriptor activation, receipt completeness, or runtime write safety |
-| [`test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Scans selected Python, shell, and YAML write contexts for `data/catalog`, `data/published`, and `release/` | A bounded static trust-boundary guard | Dynamic paths, other languages, all forbidden lifecycle phases, actual runtime behavior, or release safety |
+| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) — `connector-output-gate` | Installs test dependencies and configures the bounded two-part static pytest | The connector target check and legacy connector/pipeline lexical publication-target canary execute when the test step runs | Source correctness, network safety, rights, sensitivity, descriptor activation, receipt completeness, or runtime write safety |
+| [`test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Exercises the validator module against selected Python, shell, and YAML cases and preserves the legacy connector/pipeline lexical publication-target canary | Deterministic positive/negative cases, traversal handling, selected unresolved-target refusal, exclusions for path components named `test`, `tests`, `fixture`, `fixtures`, `example`, or `examples`, a non-vacuous path-filtered connector source inventory, and bounded static evidence | Complete dynamic/external/URI coverage, runtime confinement, symlinks, every language or sink, indirect/cloud/database writes, receipt correspondence, connector correctness, or release safety |
 | `connector-gate.yml` — `ingest-receipt-presence` | Emits `WORKFLOW_SKIPPED_EXPLICIT` / `WORKFLOW_HOLD` | The receipt gap is visible rather than falsely green | Presence, shape, identity binding, polarity, persistence, replay, or authority of any ingest receipt |
 | [`validate_source_descriptor.py`](../tools/validators/validate_source_descriptor.py) | Runs JSON Schema validation over supplied files or the existing fixture family | The wrapper, singular schema, and fixture path are executable source | Accepted schema authority, activation, source-role correctness beyond schema, or all registry instances |
-| [`tools/validators/connector_gate/`](../tools/validators/connector_gate/README.md) | Detailed README; direct gate executable and dedicated tests not established | Future gate boundary and current conflict inventory | Connector admission enforcement |
+| [`tools/validators/connector_gate/output_paths.py`](../tools/validators/connector_gate/output_paths.py) | Standard-library static output-path scanner exercised by the policy test | Selected repository-path findings for Python, shell, and YAML source | Connector admission, runtime confinement, or complete side-effect coverage |
 | Child-lane tests and fixtures | Mixed and lane-specific | Only what each inspected lane's current tests actually execute | Root-wide connector correctness or source activation |
 
 Observed commands:
@@ -396,7 +409,7 @@ Accepted owners, required reviews, branch rules, and independent approval contro
 | [`data/raw/`](../data/raw/), [`data/quarantine/`](../data/quarantine/), [`data/receipts/`](../data/receipts/) | Permitted direct handoff surfaces. |
 | [`pipelines/`](../pipelines/README.md) | Normalization, validation, promotion candidates, and later lifecycle work outside connector ownership. |
 | [`packages/connectors-core/`](../packages/connectors-core/README.md) | Proposed shared primitive package; currently a `0.0.0` placeholder. |
-| [`tools/validators/connector_gate/`](../tools/validators/connector_gate/README.md) | Admission-readiness validator boundary; direct executable/tests remain unestablished. |
+| [`tools/validators/connector_gate/`](../tools/validators/connector_gate/README.md) | Owns a bounded output-path scanner; the full admission-readiness executable/report remains unestablished. |
 | [`connector-gate.yml`](../.github/workflows/connector-gate.yml) | Partial static non-publisher enforcement and explicit receipt hold. |
 | [`release/`](../release/README.md) | Release, correction, withdrawal, and rollback decisions outside connector authority. |
 
@@ -422,13 +435,13 @@ This README records current repository evidence and open decisions. It does not 
 
 ## Last reviewed
 
-**2026-07-23** against `main@5c88eed8086182c600e276060a31d33a6ad2e977`.
+**2026-07-29** against `main@9e0808149b2a391f171021d9bdca59311e80be36` plus the current bounded working diff.
 
 Reviewed:
 
-- the complete v0.3 target;
+- the complete v0.4 preimage;
 - current Directory Rules connector, lifecycle, validation, anti-pattern, README, and migration boundaries;
-- `connector-gate.yml` and its static non-publisher test;
+- `connector-gate.yml`, the bounded connector scanner/test, and the preserved legacy connector/pipeline lexical publication-target canary;
 - the fielded singular `SourceDescriptor` schema and observed validator wrapper;
 - the source-authority machine register;
 - connectors-core package documentation and placeholder maturity;
@@ -541,13 +554,13 @@ A connector must preserve, not blur:
 | CONN-001 | Singular versus plural `SourceDescriptor` schema authority | Fielded singular schema declares plural path canonical; plural lane is separately referenced | Accept/migrate one authority; preserve compatibility and fixture parity. |
 | CONN-002 | Declared versus observed descriptor validator and fixtures | Schema metadata names nested validator/test fixtures; wrapper invokes root validator and root fixture family | Reconcile metadata, wrapper, fixtures, tests, and consumers in one governed packet. |
 | CONN-003 | Empty source-authority machine register | `control_plane/source_authority_register.yaml` contains `entries: []` | Populate only through reviewed source-governance work; do not infer activation from child docs. |
-| CONN-004 | Partial connector-gate enforcement | Current workflow runs one static non-publisher test | Expand only with repository-owned validators and deterministic negative fixtures. |
+| CONN-004 | Partial connector-gate enforcement | Current workflow runs one bounded two-part static canary with deterministic positive/negative cases | Add restricted sink/runtime and receipt-binding proof without treating this static pass as admission or release authority. |
 | CONN-005 | Ingest-receipt enforcement absent | Workflow records an explicit hold | Accept receipt contract/schema/identity binding, validator, fixtures, persistence, replay, and CI. |
-| CONN-006 | Direct connector-gate validator unestablished | Validator lane is README-rich but lacks direct executable/dedicated tests | Implement smallest deterministic no-network gate before enforcement claims. |
+| CONN-006 | Full connector-admission validator unestablished | The bounded output-path module exists, but the proposed admission packet/report CLI and dedicated validator suite do not | Implement the smallest deterministic no-network admission gate before broader enforcement claims. |
 | CONN-007 | Shared connector runtime placeholder | connectors-core is version `0.0.0`, empty/comment-only at inspected surfaces | Implement and test source-agnostic primitives or keep the package explicitly placeholder. |
 | CONN-008 | Child path and alias drift | Inspected OSM/OpenStreetMap, People/People-DNA-Land, and Mesonet variants coexist | Record accepted identity/path/migration decision; block parallel implementation. |
 | CONN-009 | Source documentation can outrun activation | Many detailed READMEs exist while active register/runtime evidence is missing | Keep docs valuable but label activation, tests, endpoints, and consumers separately. |
-| CONN-010 | Static guard is narrower than doctrine | Test forbids catalog/published/release targets but Directory Rules also prohibit processed/canonical mutation | Extend guards without treating a static scan as runtime proof. |
+| CONN-010 | Static guard remains bounded | Selected statically resolved connector repository targets use the DIR-PLACE-003 allowlist, while dynamic/external targets, unrecognized sinks, runtime escape, and receipt correspondence remain unproved | Add restricted sink and runtime tests; do not treat static coverage as complete enforcement. |
 | CONN-011 | External service terms and fitness are lane-specific and volatile | Root docs cannot establish current endpoint, license, consent, rate-limit, or service-use posture | Reverify in each activation/review cycle; pin evidence and expiry. |
 | CONN-012 | Root-wide outcome vocabulary is not accepted | Child docs use several descriptive states and receipt families | Normalize through contracts/ADRs; do not invent an enum here. |
 
@@ -646,10 +659,11 @@ Before relying on a connector or source-derived claim:
 
 ### This README update
 
-This documentation change modifies no connector behavior. Before merge, close or leave the draft pull request and abandon the branch. After merge, revert the documentation commit; do not rewrite shared history.
+This batch changes a static validator, its policy test, workflow wiring, and direct documentation; it does not change connector runtime behavior. Before merge, close the draft pull request and abandon only the scoped branch when separately authorized. After merge, use a focused reviewed revert of the batch; do not rewrite shared history.
 
 Byte-level recovery targets:
 
+- v0.4 target/preimage blob: `8db6ee9cbefdd1ce099789d827f759df9ebd9f59`
 - v0.3 target blob: `bdd50032bed62ac36964c79f16cf5541b21759a6`
 - v0.2 content SHA recorded by v0.3: `01953f857db053dccd83b8de1c81177e5fd609d0`
 - prior stub SHA recorded by v0.3: `465b004a56b1119e5cf7e00a34e3f9a7cb132dbb`
@@ -748,11 +762,11 @@ Aliases and path migrations require parity, one-way delegation, consumer/referen
 | Required child README contract | **KEEP / ENRICH** with provider, security, correction, compatibility, and evidence requirements |
 | Validation checklist | **REPAIR / ENRICH** with current partial workflow, exact command, test limits, descriptor wrapper, and receipt hold |
 | Evidence basis | **KEEP / ENRICH** as this ledger and metadata snapshot |
-| Rollback targets | **KEEP** and add current v0.3 blob plus governed connector correction sequence |
+| Rollback targets | **KEEP** and add current v0.4 preimage plus governed connector correction sequence |
 | Definition of done | **KEEP / SPLIT** into completed documentation work and unproved active-system closure |
 | Related surfaces and status summary | **KEEP / ENRICH** with direct links, conflicts, and current maturity |
 
-Evidence used: target blob `bdd5003…`; Directory Rules `2affb08…`; connector workflow `ae3ef92…`; non-publisher test `c616478…`; SourceDescriptor schema `582e70b…`; descriptor validator `9d0538e…`; source register `82c2372…`; connectors-core README `0db121b…`; CODEOWNERS `dd2a84a…`; representative USGS, OpenStreetMap/OSM, Kansas Mesonet, and People child READMEs.
+Evidence used: current target preimage `8db6ee9…`; historical target blob `bdd5003…`; Directory Rules `2affb08…`; connector workflow preimage `ae3ef92…`; non-publisher test preimage `c616478…`; SourceDescriptor schema `582e70b…`; descriptor validator `9d0538e…`; source register `82c2372…`; connectors-core README `0db121b…`; CODEOWNERS `dd2a84a…`; representative USGS, OpenStreetMap/OSM, Kansas Mesonet, and People child READMEs.
 
 </details>
 
@@ -764,6 +778,7 @@ Evidence used: target blob `bdd5003…`; Directory Rules `2affb08…`; connector
 | v0.2 | 2026-06-20 | Expanded connector source-admission, lifecycle, validation, rollback, and completion posture. | Restore recorded content SHA `01953f8…`. |
 | v0.3 | 2026-06-20 | Applied prior README authoring guidance, partial tree, lane patterns, child contract, and evidence basis. | Restore blob `bdd50032bed62ac36964c79f16cf5541b21759a6`. |
 | v0.4 | 2026-07-23 | Same-path repository-grounded modernization with Directory Rules section order, current partial CI evidence, schema/register/package conflicts, topology classes, input/output/receipt boundaries, stronger review/validation/rollback, legacy anchors, no-loss ledger, and verification register. | Before merge, close or leave the draft PR and abandon the branch. After merge, revert the documentation commit without rewriting shared history. |
+| v0.5 | 2026-07-29 | Recorded the bounded connector output-path scanner, deterministic policy tests, two-part workflow canary, and explicit static/runtime limits. | Before merge, close the draft PR and abandon only its scoped branch when separately authorized. After merge, use a focused reviewed revert. |
 
 ## Status summary
 
