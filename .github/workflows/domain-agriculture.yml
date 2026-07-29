@@ -37,6 +37,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
       - name: Evaluate Agriculture validation readiness
         shell: bash
         run: |
@@ -50,6 +55,7 @@ jobs:
             "policy/domains/agriculture/README.md"
             "tests/domains/agriculture/README.md"
             "tools/validators/agriculture/README.md"
+            "tools/validators/domains/agriculture/README.md"
             "release/agriculture/README.md"
           )
 
@@ -60,28 +66,11 @@ jobs:
             fi
           done
 
-          placeholder="tests/domains/agriculture/test_nass_aggregate_only.py"
-          if [[ ! -f "$placeholder" ]]; then
-            echo "::error::Expected documented Agriculture placeholder is missing: $placeholder"
-            exit 1
-          fi
-
-          if ! grep -Fq "PROPOSED placeholder" "$placeholder"; then
-            echo "::error::The Agriculture placeholder changed. Replace this readiness hold with the accepted executable test lane."
-            exit 1
-          fi
-
-          implemented_test="$(find tests/domains/agriculture -type f -name 'test_*.py' ! -path "$placeholder" -print -quit)"
-          if [[ -n "$implemented_test" ]]; then
-            echo "::error::Executable Agriculture test surfaced at $implemented_test. Graduate validate-agriculture to the accepted deterministic suite."
-            exit 1
-          fi
-
-          validator_file="$(find tools/validators/agriculture -type f ! -name 'README.md' -print -quit)"
-          if [[ -n "$validator_file" ]]; then
-            echo "::error::Agriculture validator implementation surfaced at $validator_file. Resolve validator topology and wire the accepted command."
-            exit 1
-          fi
+          python tools/validators/ci_readiness.py \
+            --label "Agriculture" \
+            --test-root tests/domains/agriculture \
+            --validator-root tools/validators/agriculture \
+            --validator-root tools/validators/domains/agriculture
 
           echo "WORKFLOW_SKIPPED_EXPLICIT: validate-agriculture"
           echo "WORKFLOW_HOLD: Agriculture executable validation is not established"
@@ -97,9 +86,13 @@ jobs:
 
           `WORKFLOW_HOLD: Agriculture executable validation is not established`
 
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
+
           Current repository evidence is documentation-heavy: the inspected
-          Agriculture test lane contains a placeholder rather than a collected
-          pytest test, and the direct Agriculture validator lane is README-only.
+          Agriculture test lane contains placeholders rather than an accepted
+          pytest suite. The direct validator lane is README-only, while the
+          canonical domain lane contains recognized greenfield validator stubs.
 
           This result confirms only that the known boundaries still match that
           maturity posture. It does not validate Agriculture contracts, schemas,

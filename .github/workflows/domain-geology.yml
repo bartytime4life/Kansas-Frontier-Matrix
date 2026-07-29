@@ -70,47 +70,11 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          test_root = Path("tests/domains/geology")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
-              raise SystemExit(
-                  "Executable Geology tests surfaced. Graduate validate-geology "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
-              )
-
-          print("No collected Geology test functions or classes were found.")
-          PY
-
-          validator_roots=(
-            "tools/validators/domains/geology"
-            "tools/validators/geology"
-          )
-
-          for validator_root in "${validator_roots[@]}"; do
-            validator_file="$(find "$validator_root" -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-            if [[ -n "$validator_file" ]]; then
-              echo "::error::Geology validator implementation surfaced at $validator_file. Resolve validator ownership and wire the accepted command."
-              exit 1
-            fi
-          done
+          python tools/validators/ci_readiness.py \
+            --label "Geology" \
+            --test-root tests/domains/geology \
+            --validator-root tools/validators/domains/geology \
+            --validator-root tools/validators/geology
 
           if grep -Eq '^(geology-validate|validate-geology):' Makefile; then
             echo "::error::A Geology validation target now exists. Wire and verify it deliberately instead of retaining this hold."
@@ -130,6 +94,9 @@ jobs:
           `WORKFLOW_SKIPPED_EXPLICIT`
 
           `WORKFLOW_HOLD: executable Geology validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           Current repository evidence is documentation-heavy: sampled Geology
           test modules are placeholders, and the inspected per-domain and broad
@@ -172,10 +139,38 @@ jobs:
             fi
           done
 
-          if ! grep -Fq "**Status:** draft / PROPOSED" "data/proofs/geology/README.md"; then
-            echo "::error::The Geology proof posture changed. Review proof schemas, claim-class controls, producers, access controls, receipts, and release linkage before accepting this workflow."
-            exit 1
-          fi
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("data/proofs/geology/README.md")
+          lines = path.read_text(encoding="utf-8").splitlines()
+          start_marker = "<!-- [KFM_META_BLOCK_V2]"
+          end_marker = "[/KFM_META_BLOCK_V2] -->"
+
+          try:
+              start = lines.index(start_marker)
+              end = lines.index(end_marker, start + 1)
+          except ValueError as exc:
+              raise SystemExit(f"{path} is missing its deterministic KFM metadata block.") from exc
+
+          status_lines = [line for line in lines[start + 1 : end] if line.startswith("status:")]
+          if len(status_lines) != 1:
+              raise SystemExit(f"{path} metadata block must contain exactly one status field.")
+
+          status = status_lines[0].partition(":")[2].strip()
+          status_tokens = set(re.findall(r"[a-z0-9_-]+", status.casefold()))
+          conflicting_statuses = {
+              "accepted", "adopted", "approved", "final", "rejected", "superseded"
+          }
+          if "draft" not in status_tokens or status_tokens & conflicting_statuses:
+              raise SystemExit(
+                  f"{path} metadata status is not an unconflicted draft; "
+                  "review proof posture before accepting this workflow."
+              )
+
+          print(f"Confirmed draft proof metadata status for {path}.")
+          PY
 
           proof_artifact="$(find data/proofs/geology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
           if [[ -n "$proof_artifact" ]]; then

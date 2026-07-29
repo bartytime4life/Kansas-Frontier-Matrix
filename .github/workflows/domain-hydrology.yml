@@ -79,27 +79,43 @@ jobs:
           import json
           from pathlib import Path
 
+          from tools.validators.ci_readiness import (
+              PLACEHOLDER_DOCUMENT_NAMES,
+              PLACEHOLDER_DOCUMENT_SUFFIXES,
+              classify_test_source,
+              classify_validator_source,
+          )
+
           test_root = Path("tests/domains/hydrology")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
+          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
+          test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
+          if test_symlinks:
               raise SystemExit(
-                  "Executable Hydrology tests surfaced. Graduate validate-hydrology "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
+                  "Hydrology test inventory contains symlinks: "
+                  f"{[path.as_posix() for path in test_symlinks]}."
               )
+          unexpected_test_sources = sorted(
+              path.as_posix()
+              for path in test_inventory
+              if path.suffix != ".py"
+              and path.name not in PLACEHOLDER_DOCUMENT_NAMES
+              and path.suffix.lower() not in PLACEHOLDER_DOCUMENT_SUFFIXES
+          )
+          if unexpected_test_sources:
+              raise SystemExit(
+                  "Hydrology test inventory contains unexpected non-document sources: "
+                  f"{unexpected_test_sources}."
+              )
+          test_paths = [path for path in test_inventory if path.suffix == ".py"]
+          if not test_paths:
+              raise SystemExit("Hydrology test inventory contains no Python modules.")
+          for path in test_paths:
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if not classification.placeholder:
+                  raise SystemExit(
+                      f"Hydrology test placeholder changed at {path}; "
+                      "review and wire it deliberately."
+                  )
 
           valid_fixture_paths = (
               Path("fixtures/domains/hydrology/valid/huc12_kansas_sample.json"),
@@ -128,68 +144,200 @@ jobs:
               if declared_path not in text and quoted_declared_path not in text:
                   raise SystemExit(f"Hydrology placeholder path declaration does not match file location: {path}")
 
-          print("Hydrology placeholder tests remain non-executable.")
-          print("Inspected valid Hydrology JSON fixtures parse successfully.")
-          print("Inspected Hydrology source/spec YAML remains explicitly PROPOSED placeholder material.")
-          PY
+          domain_validator_root = Path("tools/validators/domains/hydrology")
+          expected_placeholder_validators = {
+              "validate_catalog_matrix.py",
+              "validate_schema.py",
+              "validate_source_descriptor.py",
+          }
+          expected_schema_wrappers = {
+              "validate_decision_envelope.py": (
+                  "schemas/contracts/v1/domains/hydrology/decision_envelope.schema.json",
+                  "fixtures/domains/hydrology/decision_envelope",
+              ),
+              "validate_evidence_bundle.py": (
+                  "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
+                  "fixtures/domains/hydrology/evidence_bundle",
+              ),
+              "validate_run_receipt.py": (
+                  "schemas/contracts/v1/domains/hydrology/run_receipt.schema.json",
+                  "fixtures/domains/hydrology/run_receipt",
+              ),
+          }
+          expected_domain_inventory = {
+              "README.md",
+              *expected_placeholder_validators,
+              *expected_schema_wrappers,
+          }
+          domain_validator_symlinks = sorted(
+              path for path in domain_validator_root.rglob("*") if path.is_symlink()
+          )
+          if domain_validator_symlinks:
+              raise SystemExit(
+                  "Hydrology domain validator inventory contains symlinks: "
+                  f"{[path.as_posix() for path in domain_validator_symlinks]}."
+              )
+          observed_domain_inventory = {
+              path.relative_to(domain_validator_root).as_posix(): path
+              for path in domain_validator_root.rglob("*")
+              if path.is_file()
+          }
+          if set(observed_domain_inventory) != expected_domain_inventory:
+              raise SystemExit(
+                  "Hydrology domain validator inventory changed; "
+                  f"expected={sorted(expected_domain_inventory)}; "
+                  f"observed={sorted(observed_domain_inventory)}."
+              )
+          observed_validators = {
+              name: observed_domain_inventory[name]
+              for name in expected_placeholder_validators | set(expected_schema_wrappers)
+          }
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
+          for name in sorted(expected_placeholder_validators):
+              classification = classify_validator_source(
+                  observed_validators[name].read_text(encoding="utf-8")
+              )
+              if not classification.placeholder or classification.detail != "exact validator placeholder":
+                  raise SystemExit(
+                      f"Hydrology validator scaffold changed at {observed_validators[name]}; "
+                      "review and wire it deliberately."
+                  )
 
-          validator_roots = (
-              Path("tools/validators/domains/hydrology"),
+          for name, required_paths in sorted(expected_schema_wrappers.items()):
+              path = observed_validators[name]
+              source = path.read_text(encoding="utf-8")
+              schema_path, fixture_path = required_paths
+              expected_source = f"""from pathlib import Path
+          import sys
+          sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
+          from tools.validators._common.jsonschema_runner import run
+
+          if __name__ == '__main__':
+              raise SystemExit(run(Path('{schema_path}'), Path('{fixture_path}'), sys.argv[1:]))
+          """
+              actual_ast = ast.dump(
+                  ast.parse(source, filename=path.as_posix()),
+                  include_attributes=False,
+              )
+              expected_ast = ast.dump(
+                  ast.parse(expected_source, filename=f"expected:{path.as_posix()}"),
+                  include_attributes=False,
+              )
+              if actual_ast != expected_ast:
+                  raise SystemExit(
+                      f"Hydrology schema-wrapper semantics changed at {path}; review it deliberately."
+                  )
+
+          hydro_routing_root = Path("tools/validators/hydro")
+          expected_routing_placeholders = {
+              "check_crosswalk.py",
+              "check_huc12.py",
+              "emit_manifest.py",
+              "test_check_crosswalk.py",
+          }
+          expected_routing_support = {
+              "policy/hydro_publication.rego",
+              "schemas/comid_huc12_crosswalk.schema.json",
+          }
+          observed_routing_files = {
+              path.relative_to(hydro_routing_root).as_posix(): path
+              for path in hydro_routing_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          }
+          expected_routing_files = expected_routing_placeholders | expected_routing_support
+          if set(observed_routing_files) != expected_routing_files:
+              raise SystemExit(
+                  "Hydrology shorthand validator inventory changed; "
+                  f"expected={sorted(expected_routing_files)}; "
+                  f"observed={sorted(observed_routing_files)}."
+              )
+
+          for name in sorted(expected_routing_placeholders):
+              classification = classify_validator_source(
+                  observed_routing_files[name].read_text(encoding="utf-8")
+              )
+              if not classification.placeholder:
+                  raise SystemExit(
+                      f"Hydrology shorthand validator placeholder changed at "
+                      f"{observed_routing_files[name]}; review and wire it deliberately."
+                  )
+
+          schema_path = observed_routing_files[
+              "schemas/comid_huc12_crosswalk.schema.json"
+          ]
+          schema_payload = json.loads(schema_path.read_text(encoding="utf-8"))
+          expected_schema_payload = {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "$id": "https://schemas.kfm.local/tools/validators/hydro/schemas/comid_huc12_crosswalk.schema.json",
+              "title": "Comid Huc12 Crosswalk",
+              "type": "object",
+              "description": (
+                  "PROPOSED scaffold for tools/validators/hydro/schemas/"
+                  "comid_huc12_crosswalk.schema.json. Fields are to be defined by "
+                  "the owning domain steward."
+              ),
+              "x-kfm": {
+                  "status": "PROPOSED",
+                  "source_doc": "docs/domains/hydrology/MISSING_OR_PLANNED_FILES.md",
+                  "contract_doc": None,
+              },
+              "properties": {},
+              "additionalProperties": True,
+          }
+          if schema_payload != expected_schema_payload:
+              raise SystemExit(
+                  f"Hydrology shorthand schema scaffold changed at {schema_path}; "
+                  "review it deliberately."
+              )
+
+          policy_path = observed_routing_files["policy/hydro_publication.rego"]
+          policy_lines = [
+              line.strip()
+              for line in policy_path.read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          if policy_lines != [
+              "package kfm.generated.tools.validators.hydro.policy.hydro_publication",
+              "# Status: PROPOSED scaffold. Source: docs/domains/hydrology/MISSING_OR_PLANNED_FILES.md",
+              "default allow := false",
+          ]:
+              raise SystemExit(
+                  f"Hydrology shorthand policy scaffold changed at {policy_path}; "
+                  "review it deliberately."
+              )
+
+          documentation_only_roots = (
               Path("tools/validators/hydrology"),
-              Path("tools/validators/hydro"),
               Path("tools/validators/hydrology-hazards"),
               Path("tools/validators/flood-context"),
               Path("tools/validators/atmosphere_hydrology"),
           )
-          executable = []
-
-          for root in validator_roots:
-              if not root.exists():
-                  continue
-              for path in sorted(root.rglob("*")):
-                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
-                      continue
-                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
-                      continue
-
-                  suffix = path.suffix.lower()
-                  text = path.read_text(encoding="utf-8", errors="replace")
-                  if suffix == ".py":
-                      tree = ast.parse(text, filename=str(path))
-                      meaningful = [
-                          node for node in tree.body
-                          if not (
-                              isinstance(node, ast.Expr)
-                              and isinstance(node.value, ast.Constant)
-                              and isinstance(node.value.value, str)
-                          )
-                      ]
-                      if any(
-                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-                          for node in ast.walk(tree)
-                      ) or meaningful:
-                          executable.append(str(path))
-                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
-                      meaningful_lines = [
-                          line.strip()
-                          for line in text.splitlines()
-                          if line.strip()
-                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
-                      ]
-                      if meaningful_lines:
-                          executable.append(str(path))
-
-          if executable:
-              raise SystemExit(
-                  "Hydrology validator implementation surfaced. Resolve ownership and wire "
-                  "the accepted command deliberately:\n" + "\n".join(executable)
+          for root in documentation_only_roots:
+              unexpected = sorted(
+                  path.as_posix()
+                  for path in root.rglob("*")
+                  if path.is_file() and path.name not in {"README.md", ".gitkeep"}
               )
+              if unexpected:
+                  raise SystemExit(
+                      f"Hydrology documentation-only validator root changed at {root}; "
+                      f"unexpected={unexpected}."
+                  )
 
-          print("No accepted executable body was detected in inspected Hydrology validator lanes.")
+          print("Inspected valid Hydrology JSON fixtures parse successfully.")
+          print("Inspected Hydrology source/spec YAML remains explicitly PROPOSED placeholder material.")
+          print(
+              f"Classified {len(test_paths)} Hydrology test modules with the shared "
+              "readiness classifier without executing them."
+          )
+          print(
+              "Inventoried three Hydrology schema wrappers without importing or executing them; "
+              "inventory is not acceptance of an executable validation suite."
+          )
+          print(
+              "Inventoried the exact Hydrology shorthand placeholder, PROPOSED schema, "
+              "and deny-by-default policy scaffolds without executing them."
+          )
           PY
 
           if grep -Eq '^(hydrology-validate|validate-hydrology):' Makefile; then
@@ -211,10 +359,20 @@ jobs:
 
           `WORKFLOW_HOLD: accepted executable Hydrology validation suite is not established`
 
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
+
+          Hydrology uses the shared readiness source classifiers directly instead
+          of the root-level CLI because its validator roots intentionally mix exact
+          placeholders, three bounded schema wrappers, and PROPOSED schema/policy
+          scaffolds. Every such file is checked against an explicit inventory.
+
           This job verifies required responsibility boundaries, confirms sampled
           valid fixtures parse as JSON, confirms inspected source/spec files remain
-          explicitly PROPOSED placeholders, and detects newly executable tests or
-          validator bodies.
+          explicitly PROPOSED placeholders, and inventories three existing domain
+          JSON Schema wrappers plus the mixed shorthand validator scaffold without
+          importing or executing them. None of these inventories is accepted as
+          an executable Hydrology suite.
 
           It does not establish source admission, HUC/reach/gauge identity,
           observation accuracy, units, freshness, NFHL interpretation, regulatory

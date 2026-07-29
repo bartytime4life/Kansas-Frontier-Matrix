@@ -69,39 +69,11 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          root = Path("tests/domains/archaeology")
-          modules = sorted(root.glob("test_*.py"))
-          if not modules:
-              raise SystemExit("No direct Archaeology test modules were found.")
-
-          executable_nodes = 0
-          for module in modules:
-              tree = ast.parse(module.read_text(encoding="utf-8"), filename=str(module))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      executable_nodes += 1
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      executable_nodes += 1
-
-          if executable_nodes:
-              raise SystemExit(
-                  "Executable Archaeology tests now exist. Graduate validate-archaeology "
-                  "to the accepted deterministic, no-network suite before accepting this change."
-              )
-
-          print(f"Confirmed placeholder-only direct test topology across {len(modules)} module(s).")
-          PY
-
-          broad_validator="$(find tools/validators/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-          child_validator="$(find tools/validators/domains/archaeology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-          if [[ -n "$broad_validator" || -n "$child_validator" ]]; then
-            echo "::error::An Archaeology validator implementation surfaced. Resolve validator ownership and wire the accepted command."
-            exit 1
-          fi
+          python tools/validators/ci_readiness.py \
+            --label "Archaeology" \
+            --test-root tests/domains/archaeology \
+            --validator-root tools/validators/archaeology \
+            --validator-root tools/validators/domains/archaeology
 
           echo "WORKFLOW_SKIPPED_EXPLICIT: validate-archaeology"
           echo "WORKFLOW_HOLD: executable Archaeology validation is not established"
@@ -116,6 +88,9 @@ jobs:
           `WORKFLOW_SKIPPED_EXPLICIT`
 
           `WORKFLOW_HOLD: executable Archaeology validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           Current repository evidence contains named test modules, but sampled and
           collected topology remains placeholder-backed, and both Archaeology

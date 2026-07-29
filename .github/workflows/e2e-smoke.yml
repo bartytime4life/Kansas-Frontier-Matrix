@@ -199,28 +199,47 @@ jobs:
           root_scripts = root_manifest.get("scripts", {})
           explorer_scripts = explorer_manifest.get("scripts", {})
 
-          expected_root_placeholders = {"lint", "test", "build"}
-          changed_root_placeholders = sorted(
+          expected_root_holds = {
+              "lint": (
+                  "node -e \"console.error('WORKFLOW_HOLD: root workspace lint "
+                  "is not implemented.'); process.exit(1)\""
+              ),
+              "test": (
+                  "node -e \"console.error('WORKFLOW_HOLD: root workspace tests "
+                  "are not implemented.'); process.exit(1)\""
+              ),
+              "build": (
+                  "node -e \"console.error('WORKFLOW_HOLD: root workspace build "
+                  "is not implemented.'); process.exit(1)\""
+              ),
+          }
+          changed_root_holds = sorted(
               name
-              for name in expected_root_placeholders
-              if "TODO" not in str(root_scripts.get(name, ""))
+              for name, expected in expected_root_holds.items()
+              if root_scripts.get(name) != expected
           )
-          if changed_root_placeholders:
+          if changed_root_holds:
               raise SystemExit(
-                  "Root package scripts changed. Inspect and wire the accepted E2E "
-                  "command deliberately: " + ", ".join(changed_root_placeholders)
+                  "Root package hold scripts changed. Inspect whether implementation "
+                  "or a different failure posture surfaced before wiring E2E: "
+                  + ", ".join(changed_root_holds)
               )
 
-          expected_explorer_placeholders = {"dev", "build", "test"}
-          changed_explorer_placeholders = sorted(
-              name
-              for name in expected_explorer_placeholders
-              if "TODO" not in str(explorer_scripts.get(name, ""))
-          )
-          if changed_explorer_placeholders:
+          expected_explorer_placeholders = {
+              "dev": "echo TODO",
+              "build": "echo TODO",
+              "test": "echo TODO",
+          }
+          if explorer_scripts != expected_explorer_placeholders:
+              changed_explorer_placeholders = sorted(
+                  name
+                  for name in set(explorer_scripts) | set(expected_explorer_placeholders)
+                  if explorer_scripts.get(name) != expected_explorer_placeholders.get(name)
+              )
               raise SystemExit(
-                  "Explorer Web scripts changed. Inspect runtime startup, build, tests, "
-                  "and governed-API boundaries before wiring E2E: "
+                  "Explorer Web scripts changed from the exact TODO-only mapping. "
+                  "Inspect runtime startup, build, tests, and governed-API boundaries "
+                  "before wiring E2E: "
                   + ", ".join(changed_explorer_placeholders)
               )
 
@@ -272,25 +291,19 @@ jobs:
           placeholder_path = Path("tests/e2e/test_hydrology_proof_slice.py")
           placeholder_text = placeholder_path.read_text(encoding="utf-8")
           placeholder_tree = ast.parse(placeholder_text, filename=str(placeholder_path))
-          placeholder_tests = [
-              node
-              for node in ast.walk(placeholder_tree)
-              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-              and node.name.startswith("test_")
-          ]
-          placeholder_shape = (
-              "greenfield placeholder" in placeholder_text
-              and len(placeholder_tests) == 1
-              and placeholder_tests[0].name == "test_proof_slice_placeholder"
-              and len(placeholder_tests[0].body) == 1
-              and isinstance(placeholder_tests[0].body[0], ast.Assert)
-              and isinstance(placeholder_tests[0].body[0].test, ast.Constant)
-              and placeholder_tests[0].body[0].test.value is True
+          expected_placeholder_tree = ast.parse(
+              "def test_proof_slice_placeholder():\n"
+              "    assert True\n",
+              filename=f"expected:{placeholder_path}",
           )
-          if not placeholder_shape:
+          if ast.dump(placeholder_tree, include_attributes=False) != ast.dump(
+              expected_placeholder_tree,
+              include_attributes=False,
+          ):
               raise SystemExit(
-                  "The Hydrology E2E placeholder changed. Inspect and wire the accepted "
-                  "deterministic suite deliberately."
+                  "The Hydrology E2E module changed from the exact assert-true "
+                  "placeholder semantics. Inspect imports, helpers, classes, calls, "
+                  "and tests before wiring the accepted deterministic suite."
               )
 
           candidate_roots = (Path("apps/explorer-web"), Path("packages"))
@@ -318,7 +331,8 @@ jobs:
               )
 
           print("Root and Explorer Web package manifests parse as JSON.")
-          print("The inspected root and Explorer Web scripts remain explicit TODO placeholders.")
+          print("Root lint/test/build remain exact WORKFLOW_HOLD commands that exit 1.")
+          print("Explorer Web dev/build/test remain explicit TODO placeholders.")
           print("The exact bounded tests/e2e documentation and placeholder inventory remains non-executable.")
           print("No accepted E2E package script, composed test lane, or Playwright config was detected.")
           PY
@@ -347,10 +361,11 @@ jobs:
 
           `WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite`
 
-          The Governed API has a separate repository-owned smoke workflow, but
-          Explorer Web build/test scripts and the composed E2E surface remain
-          TODO scaffolds. This job verifies that boundary and detects newly
-          surfaced E2E commands or files.
+          The Governed API has a separate repository-owned smoke workflow. Root
+          lint/test/build are exact fail-closed `WORKFLOW_HOLD` commands, while
+          Explorer Web build/test and the composed E2E surface remain TODO
+          scaffolds. This job verifies that boundary and detects newly surfaced
+          E2E commands or files.
 
           No E2E browser journey ran. Graduate this hold only with deterministic
           valid and negative fixtures covering `ANSWER`, `ABSTAIN`, `DENY`, and

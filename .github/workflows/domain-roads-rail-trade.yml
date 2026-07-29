@@ -75,50 +75,9 @@ jobs:
           done
 
           python - <<'PY'
-          import ast
           import json
           from collections import Counter
           from pathlib import Path
-
-          test_root = Path("tests/domains/roads-rail-trade")
-          expected_placeholder = test_root / "test_roads_rail_trade_smoke.py"
-          placeholder_confirmed = False
-          substantive_tests = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      trivial = (
-                          path == expected_placeholder
-                          and node.name == "test_placeholder"
-                          and len(node.body) == 1
-                          and isinstance(node.body[0], ast.Assert)
-                          and isinstance(node.body[0].test, ast.Constant)
-                          and node.body[0].test.value is True
-                      )
-                      if trivial:
-                          placeholder_confirmed = True
-                      else:
-                          substantive_tests.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          substantive_tests.append(f"{path}:{node.name}")
-
-          if not placeholder_confirmed:
-              raise SystemExit(
-                  "The known Roads/Rail/Trade assert-True smoke scaffold changed. "
-                  "Review and wire the intended test behavior deliberately."
-              )
-          if substantive_tests:
-              raise SystemExit(
-                  "Substantive Roads/Rail/Trade tests surfaced. Graduate this job "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(substantive_tests)
-              )
 
           schema_root = Path("schemas/contracts/v1/domains/roads-rail-trade")
           schemas = sorted(schema_root.glob("*.schema.json"))
@@ -153,62 +112,18 @@ jobs:
                   raise SystemExit(f"Fixture path declaration does not match location: {path}")
               fixture_statuses[str(payload.get("status", "UNSPECIFIED"))] += 1
 
-          validator_roots = (
-              Path("tools/validators/domains/roads-rail-trade"),
-              Path("tools/validators/crossings"),
-              Path("tools/validators/bridge_river_crossing"),
-              Path("tools/validators/transport-facility-topology"),
-              Path("tools/validators/facilities"),
-          )
-          executable = []
-
-          for root in validator_roots:
-              if not root.exists():
-                  continue
-              for path in sorted(root.rglob("*")):
-                  if not path.is_file() or path.name in {"README.md", ".gitkeep"}:
-                      continue
-                  if any(part in {"fixtures", "schemas", "policy"} for part in path.parts):
-                      continue
-                  suffix = path.suffix.lower()
-                  text = path.read_text(encoding="utf-8", errors="replace")
-                  if suffix == ".py":
-                      tree = ast.parse(text, filename=str(path))
-                      meaningful = [
-                          node for node in tree.body
-                          if not (
-                              isinstance(node, ast.Expr)
-                              and isinstance(node.value, ast.Constant)
-                              and isinstance(node.value.value, str)
-                          )
-                      ]
-                      if any(
-                          isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-                          for node in ast.walk(tree)
-                      ) or meaningful:
-                          executable.append(str(path))
-                  elif suffix in {".sh", ".bash", ".js", ".mjs", ".cjs", ".ts"}:
-                      meaningful_lines = [
-                          line.strip()
-                          for line in text.splitlines()
-                          if line.strip()
-                          and not line.lstrip().startswith(("#", "//", "/*", "*", "*/"))
-                      ]
-                      if meaningful_lines:
-                          executable.append(str(path))
-
-          if executable:
-              raise SystemExit(
-                  "Roads/Rail/Trade validator implementation surfaced. Resolve "
-                  "ownership, slug topology, fixtures, policy binding, and report "
-                  "semantics before wiring CI:\n" + "\n".join(executable)
-              )
-
-          print("Confirmed the known assert-True smoke scaffold and no substantive domain tests.")
           print(f"Parsed {len(schemas)} Roads/Rail/Trade schemas; statuses={dict(schema_statuses)}")
           print(f"Parsed {len(fixtures)} Roads/Rail/Trade fixtures; statuses={dict(fixture_statuses)}")
-          print("No accepted executable body was detected in inspected transport validator lanes.")
           PY
+
+          python tools/validators/ci_readiness.py \
+            --label "Roads/Rail/Trade" \
+            --test-root tests/domains/roads-rail-trade \
+            --validator-root tools/validators/domains/roads-rail-trade \
+            --validator-root tools/validators/crossings \
+            --validator-root tools/validators/bridge_river_crossing \
+            --validator-root tools/validators/transport-facility-topology \
+            --validator-root tools/validators/facilities
 
           if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/roads-rail-trade/README.md"; then
             echo "::error::The Roads/Rail/Trade policy posture changed. Verify executable rules, fixtures, tests, ownership, and activation before accepting this workflow."
@@ -233,6 +148,9 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: roads-rail-trade-readiness`
 
           `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           This job verifies required responsibility boundaries, recognizes the
           known assert-True smoke scaffold, parses current JSON Schemas and

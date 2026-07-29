@@ -72,80 +72,15 @@ jobs:
             fi
           done
 
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          test_root = Path("tests/domains/habitat")
-          collected = []
-
-          for path in sorted(test_root.rglob("test_*.py")):
-              tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-              for node in ast.walk(tree):
-                  if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
-                      collected.append(f"{path}:{node.name}")
-                  elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
-                      if any(
-                          isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                          and child.name.startswith("test_")
-                          for child in node.body
-                      ):
-                          collected.append(f"{path}:{node.name}")
-
-          if collected:
-              raise SystemExit(
-                  "Executable Habitat tests surfaced. Graduate validate-habitat "
-                  "to the accepted deterministic no-network suite:\n" + "\n".join(collected)
-              )
-
-          print("No collected Habitat test functions or classes were found.")
-          PY
-
-          python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          validator_roots = (
-              Path("tools/validators/domains/habitat"),
-              Path("tools/validators/habitat"),
-              Path("tools/validators/habitat_fauna"),
-              Path("tools/validators/habitat-fauna"),
-              Path("tools/validators/geoprivacy/habitat-fauna"),
-              Path("tools/validators/habitat/fauna-geoprivacy"),
-          )
-          implementations = []
-
-          for root in validator_roots:
-              if not root.exists():
-                  continue
-
-              for path in sorted(root.rglob("*.py")):
-                  tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-                  for node in tree.body:
-                      if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                          implementations.append(f"{path}:{getattr(node, 'name', type(node).__name__)}")
-                          break
-
-              for suffix in ("*.js", "*.mjs", "*.ts", "*.sh"):
-                  for path in sorted(root.rglob(suffix)):
-                      text = path.read_text(encoding="utf-8").strip()
-                      meaningful = [
-                          line.strip()
-                          for line in text.splitlines()
-                          if line.strip() and not line.lstrip().startswith(("#", "//"))
-                      ]
-                      if meaningful:
-                          implementations.append(str(path))
-
-          if implementations:
-              raise SystemExit(
-                  "Executable Habitat validator implementation surfaced. Resolve "
-                  "validator ownership and wire the accepted command:\n"
-                  + "\n".join(implementations)
-              )
-
-          print("No executable Habitat validator implementation was detected.")
-          PY
+          python tools/validators/ci_readiness.py \
+            --label "Habitat" \
+            --test-root tests/domains/habitat \
+            --validator-root tools/validators/domains/habitat \
+            --validator-root tools/validators/habitat \
+            --validator-root tools/validators/habitat_fauna \
+            --validator-root tools/validators/habitat-fauna \
+            --validator-root tools/validators/geoprivacy/habitat-fauna \
+            --validator-root tools/validators/habitat/fauna-geoprivacy
 
           if grep -Eq '^(habitat-validate|validate-habitat):' Makefile; then
             echo "::error::A Habitat validation target now exists. Wire and verify it deliberately instead of retaining this hold."
@@ -165,6 +100,9 @@ jobs:
           `WORKFLOW_SKIPPED_EXPLICIT`
 
           `WORKFLOW_HOLD: executable Habitat validation is not established`
+
+          Recognized placeholder inventory is not validation. This readiness
+          check does not execute domain tests or validator implementations.
 
           Current repository evidence is documentation-heavy: sampled Habitat
           test modules are placeholders, and inspected per-domain, broad, and

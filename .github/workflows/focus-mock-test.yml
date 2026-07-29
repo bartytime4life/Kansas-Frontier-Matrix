@@ -186,19 +186,203 @@ jobs:
                   + "\n".join(detail)
               )
 
-          hydrology_example = (
+          hydrology_example_path = (
               focus_example_root / "hydrology_huc12_question.md"
-          ).read_text(encoding="utf-8")
-          for marker in (
-              "synthetic / illustrative / non-authoritative",
-              "Expected finite outcome:** `ABSTAIN`",
-              "This is an **example**, not a runtime fixture or API response.",
+          )
+          hydrology_example_lines = hydrology_example_path.read_text(
+              encoding="utf-8"
+          ).splitlines()
+
+          metadata_start = "<!-- [KFM_META_BLOCK_V2]"
+          metadata_end = "[/KFM_META_BLOCK_V2] -->"
+          if (
+              hydrology_example_lines.count(metadata_start) != 1
+              or hydrology_example_lines.count(metadata_end) != 1
           ):
-              if marker not in hydrology_example:
-                  raise SystemExit(
-                      "The bounded Hydrology Focus example changed authority or outcome "
-                      f"posture; missing marker: {marker}"
+              raise SystemExit(
+                  "The bounded Hydrology Focus example must contain exactly one "
+                  "KFM metadata block."
+              )
+          metadata_start_index = hydrology_example_lines.index(metadata_start)
+          metadata_end_index = hydrology_example_lines.index(metadata_end)
+          if metadata_end_index <= metadata_start_index:
+              raise SystemExit(
+                  "The bounded Hydrology Focus example metadata block is malformed."
+              )
+
+          expected_metadata = {
+              "type": "example; static-walkthrough; non-authoritative",
+              "status": (
+                  "STATIC_WALKTHROUGH; synthetic; expected-ABSTAIN; "
+                  "do-not-publish"
+              ),
+          }
+          observed_metadata = {}
+          for line in hydrology_example_lines[
+              metadata_start_index + 1 : metadata_end_index
+          ]:
+              key, separator, value = line.partition(":")
+              if separator and key in expected_metadata:
+                  if key in observed_metadata:
+                      raise SystemExit(
+                          "The bounded Hydrology Focus example metadata repeats "
+                          f"the {key!r} field."
+                      )
+                  observed_metadata[key] = value.strip()
+          if observed_metadata != expected_metadata:
+              raise SystemExit(
+                  "The bounded Hydrology Focus example changed its structured "
+                  "synthetic, authority, or publication posture; "
+                  f"observed={observed_metadata}."
+              )
+
+          fenced_blocks = []
+          active_fence = None
+          active_lines = []
+          for line_number, line in enumerate(hydrology_example_lines, start=1):
+              if active_fence is None:
+                  opening = re.fullmatch(
+                      r"[ \t]{0,3}(`{3,}|~{3,})(.*)",
+                      line,
                   )
+                  if opening:
+                      fence = opening.group(1)
+                      info = opening.group(2).strip()
+                      language = info.split(maxsplit=1)[0].casefold() if info else ""
+                      active_fence = (
+                          fence[0],
+                          len(fence),
+                          language,
+                          line_number,
+                      )
+                      active_lines = []
+              else:
+                  closing = re.fullmatch(
+                      r"[ \t]{0,3}(`{3,}|~{3,})[ \t]*",
+                      line,
+                  )
+                  if closing:
+                      fence = closing.group(1)
+                      if (
+                          fence[0] != active_fence[0]
+                          or len(fence) < active_fence[1]
+                      ):
+                          raise SystemExit(
+                              "The bounded Hydrology Focus example contains a "
+                              f"mismatched fence at line {line_number}; opener was "
+                              f"line {active_fence[3]}."
+                          )
+                      fenced_blocks.append(
+                          (
+                              (active_fence[2], active_fence[3]),
+                              "\n".join(active_lines),
+                          )
+                      )
+                      active_fence = None
+                      active_lines = []
+                  else:
+                      active_lines.append(line)
+          if active_fence is not None:
+              raise SystemExit(
+                  "The bounded Hydrology Focus example contains an unclosed "
+                  f"{active_fence[2] or 'plain'} fence at line {active_fence[3]}."
+              )
+
+          json_blocks = [
+              (fence, body)
+              for fence, body in fenced_blocks
+              if fence[0] == "json"
+          ]
+          if len(json_blocks) != 2:
+              raise SystemExit(
+                  "The bounded Hydrology Focus example must contain exactly two "
+                  f"fenced JSON objects; observed={len(json_blocks)}."
+              )
+
+          class DuplicateJsonKey(ValueError):
+              pass
+
+          def unique_object(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise DuplicateJsonKey(f"duplicate JSON key: {key}")
+                  result[key] = value
+              return result
+
+          parsed_payloads = []
+          for (language, line_number), body in json_blocks:
+              try:
+                  payload = json.loads(body, object_pairs_hook=unique_object)
+              except (json.JSONDecodeError, DuplicateJsonKey) as exc:
+                  raise SystemExit(
+                      "The bounded Hydrology Focus example contains invalid or "
+                      f"ambiguous JSON at line {line_number}: {exc}"
+                  ) from exc
+              if not isinstance(payload, dict):
+                  raise SystemExit(
+                      "The bounded Hydrology Focus example JSON block at line "
+                      f"{line_number} must be an object."
+                  )
+              parsed_payloads.append(payload)
+
+          expected_request = {
+              "example": True,
+              "authority": "non_authoritative_example",
+              "do_not_publish": True,
+              "maturity": "STATIC_WALKTHROUGH",
+              "scenario_id": (
+                  "kfm://example/focus-flow/hydrology-huc12-question"
+              ),
+              "question": (
+                  "What hydrology context can KFM safely summarize for this HUC12?"
+              ),
+              "user_role": "public",
+              "selected_feature": {
+                  "feature_ref": (
+                      "kfm://example/feature/hydrology/huc12/SYNTHETIC"
+                  ),
+                  "feature_type": "HUCUnit",
+                  "release_state": "synthetic_example_only",
+              },
+              "evidence_refs": [
+                  {
+                      "evidence_ref": (
+                          "kfm://example/evidence-ref/hydrology/"
+                          "huc12-context/SYNTHETIC"
+                      ),
+                      "resolution_state": "synthetic_unresolved",
+                  }
+              ],
+              "forbidden_intents": [
+                  "current flood warning",
+                  "emergency or evacuation guidance",
+                  "official regulatory determination",
+                  "water-rights conclusion",
+                  "engineering advice",
+              ],
+          }
+          expected_result = {
+              "example": True,
+              "authority": "non_authoritative_example",
+              "do_not_publish": True,
+              "outcome": "ABSTAIN",
+              "reason_code": "EVIDENCE_BUNDLE_UNRESOLVED_EXAMPLE",
+              "message": (
+                  "This static example cannot support a Hydrology answer because "
+                  "its evidence reference is synthetic and unresolved."
+              ),
+              "evidence_drawer": {
+                  "enabled": False,
+                  "reason": "no operational EvidenceBundle",
+              },
+          }
+          if parsed_payloads != [expected_request, expected_result]:
+              raise SystemExit(
+                  "The bounded Hydrology Focus request/result payloads changed. "
+                  "Review synthetic identity, authority, publication, evidence, "
+                  "and expected-ABSTAIN posture deliberately."
+              )
 
           for name in ("focus_request", "focus_response"):
               schema_path = Path(
@@ -236,22 +420,52 @@ jobs:
                   "coverage before wiring them:\n" + "\n".join(detail)
               )
 
-          expected_policy_markers = {
-              Path("policy/focus/citation_validation_required.rego"):
-                  "Status: PROPOSED greenfield stub. No real rules yet.",
-              Path("policy/focus/finite_envelope_required.rego"):
-                  "Status: PROPOSED greenfield stub. No real rules yet.",
-              Path("policy/focus/focus_request.rego"):
-                  "Status: PROPOSED scaffold.",
-              Path("policy/focus/focus_response.rego"):
-                  "Status: PROPOSED scaffold.",
+          expected_policy_lines = {
+              Path("policy/focus/citation_validation_required.rego"): (
+                  "# KFM policy: citation_validation_required",
+                  "# Status: PROPOSED greenfield stub. No real rules yet.",
+                  "package kfm.citation_validation_required",
+                  "default deny := false",
+                  "# Example structure — stewards will fill in.",
+                  "# deny[reason] {",
+                  '#     input.kind == "citation_validation_required"',
+                  "#     not input.evidence_bundle_resolved",
+                  '#     reason := "evidence_bundle_unresolved"',
+                  "# }",
+              ),
+              Path("policy/focus/finite_envelope_required.rego"): (
+                  "# KFM policy: finite_envelope_required",
+                  "# Status: PROPOSED greenfield stub. No real rules yet.",
+                  "package kfm.finite_envelope_required",
+                  "default deny := false",
+                  "# Example structure — stewards will fill in.",
+                  "# deny[reason] {",
+                  '#     input.kind == "finite_envelope_required"',
+                  "#     not input.evidence_bundle_resolved",
+                  '#     reason := "evidence_bundle_unresolved"',
+                  "# }",
+              ),
+              Path("policy/focus/focus_request.rego"): (
+                  "package kfm.generated.policy.focus.focus_request",
+                  "# Status: PROPOSED scaffold. Source docs: docs/domains/habitat/MAP_UI_CONTRACTS.md",
+                  "default allow := false",
+              ),
+              Path("policy/focus/focus_response.rego"): (
+                  "package kfm.generated.policy.focus.focus_response",
+                  "# Status: PROPOSED scaffold. Source docs: docs/domains/habitat/MAP_UI_CONTRACTS.md",
+                  "default allow := false",
+              ),
           }
-          for path, marker in expected_policy_markers.items():
-              text = path.read_text(encoding="utf-8")
-              if marker not in text:
+          for path, expected_lines in expected_policy_lines.items():
+              observed_lines = tuple(
+                  line.strip()
+                  for line in path.read_text(encoding="utf-8").splitlines()
+                  if line.strip()
+              )
+              if observed_lines != expected_lines:
                   raise SystemExit(
-                      f"{path} changed from its documented scaffold. Review policy "
-                      "ownership and wire accepted policy tests deliberately."
+                      f"{path} changed from its exact normalized Rego scaffold. "
+                      "Review policy ownership and wire accepted policy tests deliberately."
                   )
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
@@ -269,7 +483,7 @@ jobs:
           print("runtime/mock and runtime/model_adapters/mock remain README-only lanes.")
           print("MockAdapter.py remains the exact one-line greenfield placeholder.")
           print("Focus request/response schemas remain open PROPOSED scaffolds.")
-          print("The only Focus flow payload is a non-runtime ABSTAIN example.")
+          print("The only Focus flow payload is synthetic, non-authoritative, do-not-publish, and expected-ABSTAIN.")
           print("No Focus fixture payload or repository-native mock Focus target surfaced.")
           PY
 
@@ -437,25 +651,19 @@ jobs:
           test_path = Path("tests/runtime_proof/test_envelope_finite_outcomes.py")
           test_text = test_path.read_text(encoding="utf-8")
           tree = ast.parse(test_text, filename=str(test_path))
-          tests = [
-              node
-              for node in ast.walk(tree)
-              if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-              and node.name.startswith("test_")
-          ]
-          placeholder_shape = (
-              "greenfield placeholder" in test_text
-              and len(tests) == 1
-              and tests[0].name == "test_envelope_outcomes_placeholder"
-              and len(tests[0].body) == 1
-              and isinstance(tests[0].body[0], ast.Assert)
-              and isinstance(tests[0].body[0].test, ast.Constant)
-              and tests[0].body[0].test.value is True
+          expected_tree = ast.parse(
+              "def test_envelope_outcomes_placeholder():\n"
+              "    assert True\n",
+              filename=f"expected:{test_path}",
           )
-          if not placeholder_shape:
+          if ast.dump(tree, include_attributes=False) != ast.dump(
+              expected_tree,
+              include_attributes=False,
+          ):
               raise SystemExit(
-                  "The finite-envelope runtime-proof placeholder changed. Inspect and "
-                  "wire the accepted deterministic mock envelope suite deliberately."
+                  "The finite-envelope runtime-proof module changed from the exact "
+                  "assert-true placeholder semantics. Inspect imports, helpers, classes, "
+                  "calls, and tests before wiring the deterministic mock envelope suite."
               )
 
           validator_path = Path(

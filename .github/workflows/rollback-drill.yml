@@ -78,6 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
+          import ast
           from pathlib import Path
           import json
 
@@ -113,8 +114,23 @@ jobs:
           generic_validator = Path(
               "tools/validators/validate_rollback_card.py"
           ).read_text(encoding="utf-8")
-          assert 'raise NotImplementedError("Greenfield placeholder")' in generic_validator, (
+          expected_validator = """def main():
+              raise NotImplementedError("Greenfield placeholder")
+
+          if __name__ == '__main__':
+              main()
+          """
+          generic_validator_ast = ast.dump(
+              ast.parse(generic_validator, filename="tools/validators/validate_rollback_card.py"),
+              include_attributes=False,
+          )
+          expected_validator_ast = ast.dump(
+              ast.parse(expected_validator, filename="expected:validate_rollback_card.py"),
+              include_attributes=False,
+          )
+          assert generic_validator_ast == expected_validator_ast, (
               "the generic RollbackCard validator is no longer the known placeholder; "
+              "inspect imports, helpers, classes, calls, and entrypoint semantics; then "
               "reconcile it with the schema-declared validator paths and wire tests"
           )
 
@@ -237,6 +253,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import re
 
           required = [
               Path("scripts/maintenance/audit_published_aliases.py"),
@@ -283,17 +300,89 @@ jobs:
           )
 
           adr = required[1].read_text(encoding="utf-8")
-          adr_lower = adr.lower()
-          assert "status: draft" in adr_lower
-          assert "**adr status:** `proposed`" in adr_lower
-          assert "build — todo" in adr_lower, (
-              "alias ADR build marker changed; reconcile accepted implementation and tests"
+          adr_lines = adr.splitlines()
+          metadata_start = "<!-- [KFM_META_BLOCK_V2]"
+          metadata_end = "[/KFM_META_BLOCK_V2] -->"
+          assert adr_lines.count(metadata_start) == 1, (
+              "alias ADR must contain exactly one KFM metadata-block start marker"
+          )
+          assert adr_lines.count(metadata_end) == 1, (
+              "alias ADR must contain exactly one KFM metadata-block end marker"
+          )
+          metadata_start_index = adr_lines.index(metadata_start)
+          metadata_end_index = adr_lines.index(metadata_end)
+          assert metadata_end_index > metadata_start_index, (
+              "alias ADR KFM metadata block is malformed"
+          )
+          metadata_status_lines = [
+              line
+              for line in adr_lines[metadata_start_index + 1 : metadata_end_index]
+              if line.startswith("status:")
+          ]
+          assert len(metadata_status_lines) == 1, (
+              "alias ADR KFM metadata block must contain exactly one status field"
+          )
+          metadata_status = metadata_status_lines[0].partition(":")[2].strip()
+          metadata_status_tokens = set(
+              re.findall(r"[a-z0-9_-]+", metadata_status.casefold())
+          )
+          conflicting_status_tokens = {
+              "accepted",
+              "adopted",
+              "approved",
+              "final",
+              "rejected",
+              "superseded",
+          }
+          assert "draft" in metadata_status_tokens, (
+              f"alias ADR source metadata is not draft: {metadata_status!r}"
+          )
+          assert not metadata_status_tokens & conflicting_status_tokens, (
+              "alias ADR source metadata contains a conflicting status token: "
+              f"{metadata_status!r}"
+          )
+
+          expected_adr_markers = {
+              "source metadata draft": "| **Source metadata** | `draft` |",
+              "effective decision status proposed": (
+                  "| **Effective decision status** | `proposed` |"
+              ),
+              "current implementation held with alias absent": (
+                  "**Current implementation:** alias absent; "
+                  "RollbackCard/alias execution held"
+              ),
+          }
+          invalid_adr_markers = sorted(
+              label
+              for label, marker in expected_adr_markers.items()
+              if adr.count(marker) != 1
+          )
+          assert not invalid_adr_markers, (
+              "alias ADR structured status anchors changed or are no longer unique; "
+              f"reconcile accepted implementation and tests: {invalid_adr_markers}"
+          )
+
+          source_status_rows = [
+              line for line in adr_lines
+              if line.startswith("| **Source metadata** |")
+          ]
+          effective_status_rows = [
+              line for line in adr_lines
+              if line.startswith("| **Effective decision status** |")
+          ]
+          assert source_status_rows == [expected_adr_markers["source metadata draft"]], (
+              f"alias ADR source-status rows conflict: {source_status_rows}"
+          )
+          assert effective_status_rows == [
+              expected_adr_markers["effective decision status proposed"]
+          ], (
+              f"alias ADR effective-status rows conflict: {effective_status_rows}"
           )
 
           print("CONFIRMED: published-alias auditor remains a comment-only placeholder.")
           print("CONFIRMED: no current/current.json/*.current.json alias exists under data/published.")
           print(f"CONFIRMED: {len(rollback_files)} rollback-lane guidance/placeholder files exist and no rollback payload or receipt is present.")
-          print("CONFIRMED: the current-alias ADR remains draft/PROPOSED with a TODO build marker.")
+          print("CONFIRMED: the current-alias ADR remains source-draft/effective-proposed with alias execution held and the alias absent.")
           print("WORKFLOW_SKIPPED_EXPLICIT: no published alias was resolved, mutated, or behaviorally verified.")
           print("WORKFLOW_HOLD: no accepted alias mechanism, auditor interface, rollback receipt, or invalidation evidence exists.")
           print("File absence is readiness evidence only; it is not proof of rollback capability or authority.")
@@ -307,6 +396,6 @@ jobs:
             echo "### Published alias verification"
             echo
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the alias auditor remains comment-only, no current alias is present under data/published, and rollback data lanes contain guidance/placeholders rather than receipts."
-            echo "- ADR-0015 remains draft/PROPOSED with a TODO build marker; file absence is not behavioral proof of rollback capability."
+            echo "- ADR-0015 remains source-draft/effective-proposed, with the alias absent and RollbackCard/alias execution held; file absence is not behavioral proof of rollback capability."
             echo "- Result: ${{ job.status }}. No alias was resolved or mutated, and no rollback receipt, invalidation, release transition, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
