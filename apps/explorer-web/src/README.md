@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/readme
 title: Explorer Web Source Tree README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-29
 policy_label: public
 related:
   - ../README.md
@@ -26,7 +26,7 @@ related:
 tags: [kfm, apps, explorer-web, src, map-first, public-ui, governed-api, evidence-drawer, focus-mode, renderer-boundary]
 notes:
   - "Initial README for the Explorer Web src tree."
-  - "Repository evidence confirms this README path and a minimal package.json with TODO scripts; implementation files, route inventory, tests, fixtures, API client, renderer adapters, and deployment posture remain NEEDS VERIFICATION."
+  - "Repository evidence confirms a bounded static shell entrypoint, fixed fail-closed states, app-local tests, and locked build tooling; route inventory, fixtures, API client, renderer adapters, accessibility, and deployment posture remain NEEDS VERIFICATION."
   - "src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root."
 [/KFM_META_BLOCK_V2] -->
 
@@ -57,7 +57,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED source-tree README path / CONFIRMED parent app README / CONFIRMED minimal `package.json` TODO scripts / UNKNOWN implementation files, routes, tests, client validators, renderer adapters, and deployment state
+> **Truth posture:** CONFIRMED bounded static shell entrypoint and fixed baseline-state resolver / CONFIRMED app-local positive and negative tests / UNKNOWN routes, client validators, renderer adapters, accessibility, and deployment state
 
 > [!CAUTION]
 > Code under `apps/explorer-web/src/` must not directly read lifecycle data roots, canonical/internal stores, direct model runtime outputs, or local source files as user-facing truth. Claim-bearing UI should render only governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states.
@@ -90,7 +90,7 @@ notes:
 
 It may eventually hold browser-shell code, route modules, governed API client adapters, response validators, map adapters, layer-catalog views, Evidence Drawer components, Focus Mode surfaces, Story Player surfaces, compare/export flows, settings, diagnostics, and accessibility support.
 
-This README defines the source-tree boundary. It does not prove those modules, routes, tests, fixtures, API clients, renderer adapters, or deployment wiring are implemented.
+This README defines the source-tree boundary. The current implementation proves only a static entrypoint and a fixed fail-closed state resolver. It does not prove routes, fixtures, API clients, renderer adapters, accessibility, or deployment wiring.
 
 [Back to top](#top)
 
@@ -274,7 +274,8 @@ For source changes under `apps/explorer-web/src/`:
 ## 14. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] `src/` layout and package scripts are confirmed.
+- [x] The bounded `src/` entrypoint and package build/test scripts are confirmed.
+- [x] The no-input `ABSTAIN` and supplied-input `ERROR` paths are tested without reflecting supplied input.
 - [ ] Route inventory is documented.
 - [ ] Governed API client and response validators are implemented and tested.
 - [ ] Renderer import boundaries are verified.
@@ -287,27 +288,27 @@ For source changes under `apps/explorer-web/src/`:
 
 | Item | Why it matters |
 |---|---|
-| Confirm implementation files beyond README | Prevents overclaiming source-tree maturity |
+| Confirm implementation beyond `main.ts` and the bounded shell resolver | Prevents overclaiming source-tree maturity |
 | Confirm route inventory and app framework | Required for public/semi-public UI review |
 | Confirm governed API client and validators | Required for trust membrane enforcement |
 | Confirm renderer adapter modules | Required to keep renderers behind boundaries |
 | Confirm tests and fixtures | Required before implementation claims |
 | Confirm export implementation | Required before public download claims |
-| Confirm package scripts beyond TODO | Required before build/test claims |
+| Confirm broader build/test needs beyond the locked baseline | Required before adding framework, browser, or integration tooling |
 | Confirm legacy shell roots | Required to prevent parallel shell drift |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The target file was an empty placeholder. This README adds a bounded `src/` source-tree contract for Explorer Web without claiming routes, components, API clients, validators, renderer adapters, tests, fixtures, build scripts, deployment, or export behavior are implemented.
+The target file was an empty placeholder. This README adds a bounded `src/` source-tree contract for Explorer Web. The current baseline implements only `main.ts`, the fixed shell-state resolver, and app-local unit tests; it does not claim routes, API clients, validators, renderer adapters, fixtures, deployment, or export behavior.
 
-The observed `apps/explorer-web/package.json` has TODO scripts, so implementation maturity remains `NEEDS VERIFICATION`.
+The observed `apps/explorer-web/package.json` now has real locked build and test scripts. Broader Explorer behavior remains `NEEDS VERIFICATION`.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/` should hold implementation source for the map-first public/semi-public shell only after route inventory, governed API client behavior, renderer boundaries, tests, fixtures, package scripts, and deployment posture are verified.
+`apps/explorer-web/src/` now holds a buildable fail-closed static baseline. It should be treated as a functional map-first public/semi-public shell only after route inventory, governed API client behavior, renderer boundaries, accessibility, fixtures, and deployment posture are verified.
 
 It must stay downstream of governed APIs, policy decisions, EvidenceBundle closure, release state, correction/rollback controls, and renderer adapter boundaries without becoming source truth, release authority, policy authority, lifecycle store, schema/contract home, model-output surface, or parallel shell authority.
 

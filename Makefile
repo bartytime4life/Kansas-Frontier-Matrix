@@ -21,6 +21,7 @@ help:
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
 	@echo "  boundary-guards       Run policy/API boundary tests"
 	@echo "  boundary-guards-ci    Run boundary tests with JUnit output"
+	@echo "  ui-build              Build the Explorer Web baseline"
 	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
@@ -37,7 +38,6 @@ help:
 	@echo "  release-dry-run       Candidate release assembly"
 	@echo "  publish-check         Promotion gate"
 	@echo "  deny-test             Public-boundary deny suite"
-	@echo "  ui-build              Explorer Web build"
 	@echo
 	@echo "Cleanup targets:"
 	@echo "  maplibre-clean        Remove artifacts/perf"
@@ -75,7 +75,7 @@ deny-test:
 	@echo "TODO: tests/api deny suite"
 
 ui-build:
-	@echo "TODO: pnpm --filter explorer-web build"
+	pnpm --filter explorer-web build
 
 api-run: governed-api-dev
 

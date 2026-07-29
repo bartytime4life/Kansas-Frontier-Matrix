@@ -2,5 +2,18 @@
   "name": "explorer-web",
   "private": true,
   "version": "0.0.0",
-  "scripts": { "dev": "echo TODO", "build": "echo TODO", "test": "echo TODO" }
+  "type": "module",
+  "engines": {
+    "node": ">=22.13 <23"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vite": "8.1.5",
+    "vitest": "4.1.10"
+  }
 }
