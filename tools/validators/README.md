@@ -2,17 +2,19 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.3
-status: draft; shared-ci-readiness-checker-confirmed
+version: v0.4
+status: draft; shared-ci-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
 updated: 2026-07-29
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker and is not domain validation or release authority
+truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; neither is domain truth, dependency admission, or release authority
 related:
   - ci_readiness.py
+  - dependencies/README.md
+  - dependencies/pnpm_audit_readiness.py
   - _common/README.md
   - domains/README.md
   - source/README.md
@@ -53,7 +55,10 @@ related:
   - ../../fixtures/
   - ../../tests/
   - ../../tests/validators/test_ci_readiness.py
+  - ../../tests/validators/test_pnpm_audit_readiness.py
+  - ../../.github/workflows/dependency-scan.yml
 notes:
+  - "v0.4 records the focused locked-pnpm audit preflight and finite PASS/REGRESSION/ERROR classifier; the registry audit remains point-in-time and non-authoritative."
   - "v0.3 confirms one standard-library placeholder-readiness checker and its focused unit tests; it does not establish domain validation, registry wiring, generated reports, receipt emission, runtime behavior, or release authority."
   - "Validators are fail-closed checkers. They do not define domain meaning, create canonical schemas, admit sources, create EvidenceBundles, decide policy, approve release, publish artifacts, or authorize public API/UI/map/AI surfaces."
   - "Each validator lane should have a deterministic finite outcome, cite evidence or abstain, preserve lifecycle boundaries, preserve source roles, preserve sensitivity/rights constraints, and route unresolved cases to hold/deny/restrict/abstain/review rather than silently pass."
@@ -72,7 +77,7 @@ notes:
 ![authority](https://img.shields.io/badge/authority-checkers--not--truth-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/` is the parent routing surface for KFM fail-closed validators: checker lanes that test source, schema, contract, evidence, policy, lifecycle, sensitivity, rights, release, domain, cross-domain, map/tile, and public-surface readiness without becoming the authority for any of those things.
+> **One-line purpose.** `tools/validators/` is the parent routing surface for KFM fail-closed validators: checker lanes that test source, schema, contract, evidence, policy, lifecycle, sensitivity, rights, supply-chain, release, domain, cross-domain, map/tile, and public-surface readiness without becoming the authority for any of those things.
 
 ---
 
@@ -102,6 +107,7 @@ A validator may check that evidence exists, policy was evaluated, release refere
 |---|---|---|
 | `tools/validators/README.md` | **CONFIRMED README** | This file replaces the previous two-line parent stub. |
 | `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
+| `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
 | `tools/validators/release/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Release validator routing; not release governance or publication authority. |
@@ -169,6 +175,7 @@ The folders below are routing lanes, indexes, or validator-local documentation. 
 | [`lifecycle/`](lifecycle/README.md) | Lifecycle boundary, transition, quarantine, promotion, correction, and rollback checks. | Does not move files or decide promotion. |
 | [`promotion_gate/`](promotion_gate/README.md) | Promotion gate checks at governed publication transitions. | Promotion decisions remain governed records, not validator output alone. |
 | [`release/`](release/README.md) | ReleaseManifest, PromotionDecision, rollback/correction/withdrawal, artifact-integrity, and public-surface readiness checks. | Release records and publication authority remain in `release/`. |
+| [`dependencies/`](dependencies/README.md) | Package-manager, workspace, lockfile-importer, competing-lockfile, and structured audit-result checks. | Manifests and lockfiles remain root coordination records; advisory data, dependency admission, exceptions, and release decisions remain outside validators. |
 | [`smoke/`](smoke/README.md) | Fast import/CLI/registry/fixture/side-effect health checks. | Smoke pass is not correctness, policy, evidence, or release proof. |
 
 ### Source, taxonomy, and identity helpers

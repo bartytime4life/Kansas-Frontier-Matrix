@@ -356,6 +356,18 @@ UI readiness.
 
 Read the exact steps and job summaries before relying on any workflow as a merge gate. “Command-bearing” does not mean complete, current, or production-ready.
 
+`dependency-scan.yml` preserves the stable `npm-audit` job id for check-name
+compatibility but now proposes the repository's accepted pnpm contract. Its
+repository-owned, no-network validator checks the exact manager pin, Node
+engine, workspace definitions, lockfile version and importers, competing root
+lockfiles, and safe manifest inputs before any registry access. The workflow
+then runs `pnpm audit --audit-level high --json` and classifies the combined
+report and command exit as `PASS`, `REGRESSION`, or `ERROR`. Threshold findings,
+registry or command failures without confirmed findings, malformed reports, and
+command/report polarity mismatches fail closed. The result is point-in-time
+supply-chain evidence only; exact-head remote execution remains
+**NEEDS VERIFICATION**, and this change does not satisfy the separate E2E hold.
+
 ## Trigger, permission, and workflow-threat preflight
 
 Before changing or relying on a workflow, record:

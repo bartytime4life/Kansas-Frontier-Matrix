@@ -1,5 +1,5 @@
 # KFM dependency vulnerability scanning workflow.
-# Status: PROPOSED executable Python audit plus explicit Node lockfile hold.
+# Status: PROPOSED executable Python audit plus locked pnpm audit.
 #
 # Authority boundary:
 # - This workflow queries public vulnerability advisory services and reports
@@ -27,6 +27,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  COREPACK_ENABLE_STRICT: "1"
+  NODE_VERSION: "22"
+  PNPM_AUDIT_LEVEL: high
   TZ: UTC
   PYTHONUNBUFFERED: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
@@ -83,59 +86,76 @@ jobs:
 
   npm-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      - name: Check out dependency manifests
+      - name: Check out scanned revision
         uses: actions/checkout@v7
         with:
+          fetch-depth: 1
           persist-credentials: false
 
-      - name: Evaluate deterministic Node audit readiness
-        shell: bash
+      - name: Set up readiness validator runtime
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Validate locked pnpm audit readiness
+        run: >-
+          python tools/validators/dependencies/pnpm_audit_readiness.py
+          validate-repository
+          --repository-root .
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Activate the exact package manager
         run: |
           set -euo pipefail
+          corepack enable
+          pnpm --version
 
-          if [[ ! -f package.json ]]; then
-            echo "::error::Root package.json is missing."
-            exit 1
-          fi
-
-          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
-            echo "::error::A root npm lockfile now exists. Graduate this lane to a real locked npm audit before accepting the change."
-            exit 1
-          fi
-
-          if [[ -f pnpm-lock.yaml || -f yarn.lock ]]; then
-            echo "::error::A non-npm root lockfile now exists. Confirm the package-manager contract and replace this npm-specific lane."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: npm-audit"
-          echo "WORKFLOW_HOLD: no committed root JavaScript lockfile"
-          echo "A nondeterministic --no-package-lock audit is intentionally not used."
-
-      - name: Record Node audit hold
-        if: always()
-        shell: bash
+      - name: Audit the locked pnpm workspace
         run: |
-          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
-          ### Node dependency audit status
+          set -euo pipefail
+          report_path="${RUNNER_TEMP}/pnpm-audit.json"
+          classification_path="${RUNNER_TEMP}/pnpm-audit-classification.json"
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          set +e
+          pnpm audit \
+            --audit-level "${PNPM_AUDIT_LEVEL}" \
+            --json > "${report_path}"
+          audit_status=$?
+          set -e
 
-          `WORKFLOW_HOLD: no committed root JavaScript lockfile`
+          python tools/validators/dependencies/pnpm_audit_readiness.py \
+            classify-audit \
+            --report "${report_path}" \
+            --command-exit-code "${audit_status}" \
+            --audit-level "${PNPM_AUDIT_LEVEL}" \
+            | tee "${classification_path}"
 
-          The root `package.json` declares workspaces and dependencies, but no
-          root `package-lock.json`, `npm-shrinkwrap.json`, `pnpm-lock.yaml`, or
-          `yarn.lock` is currently committed. This workflow intentionally does
-          not use npm's nondeterministic `--no-package-lock` mode.
-
-          Graduate this lane only after the repository records its package
-          manager and commits the authoritative lockfile. Then run the matching
-          locked audit with fail-closed severity policy and deterministic
-          fixtures or evidence where practical.
-
-          This hold does not establish dependency safety, compatibility,
-          release readiness, deployment approval, or publication authority.
-          EOF
+      - name: Record pnpm audit boundary
+        if: always()
+        run: |
+          set -euo pipefail
+          classification_path="${RUNNER_TEMP}/pnpm-audit-classification.json"
+          if [[ -s "${classification_path}" ]]; then
+            classification="$(tr -d '\n' < "${classification_path}")"
+          else
+            classification='{"outcome":"ERROR","reason_codes":["CLASSIFICATION_NOT_PRODUCED"]}'
+          fi
+          {
+            echo "### Node dependency audit boundary"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Manager contract: \`pnpm@11.17.0\` via Corepack"
+            echo "- Command: \`pnpm audit --audit-level ${PNPM_AUDIT_LEVEL} --json\`"
+            echo "- Classifier: \`${classification}\`"
+            echo "- Network: point-in-time query to the configured pnpm registry advisory service"
+            echo "- Failure posture: threshold findings, registry errors, malformed reports, and command/report polarity mismatches fail closed"
+            echo "- Authority: dependency CI signal only; not vulnerability absence, provenance, compatibility, rights, release, deployment, or publication approval"
+          } >> "${GITHUB_STEP_SUMMARY}"
