@@ -1,9 +1,9 @@
-# KFM CI workflow stub: ui-build
-# Status: PROPOSED greenfield scaffold.
+# KFM CI workflow: ui-build
+# Status: bounded Explorer Web build-and-test baseline.
 #
 # Responsibility:
-# - Build and test the canonical apps/explorer-web workspace once its package
-#   scripts and dependency lock are implementation-bearing.
+# - Build and test the canonical apps/explorer-web workspace with locked
+#   implementation-bearing package scripts.
 # Authority:
 # - CI signal only. This workflow cannot authorize evidence, policy, release,
 #   publication, deployment, or access to canonical/internal stores.
@@ -18,10 +18,9 @@
 # - Dependency installation may reach the package registry. Build and test
 #   commands must not call source systems, model providers, private endpoints,
 #   production services, or publication targets.
-# Current blocker:
-# - apps/explorer-web/package.json still contains TODO build/test commands;
-#   package.json does not pin pnpm; and pnpm-lock.yaml is absent. Readiness
-#   checks fail closed instead of returning a misleading green echo result.
+# Readiness:
+# - The checked package scripts, exact pnpm pin, and pnpm-lock.yaml remain
+#   mandatory. Readiness checks fail closed if any of them regress.
 # Compatibility:
 # - Workflow name ui-build and job ids build-explorer-web and
 #   test-explorer-web are preserved as potential required-check surfaces.

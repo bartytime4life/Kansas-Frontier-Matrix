@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-29
 policy_label: public
 related:
   - ../README.md
@@ -28,6 +28,7 @@ notes:
   - "Replaces the short apps/explorer-web stub with a governed app README."
   - "ADR-0005 marks apps/explorer-web as the proposed canonical map-first shell; implementation maturity remains NEEDS VERIFICATION unless verified by current repo evidence."
   - "Explorer Web must read through governed-api only and must not directly read lifecycle data or canonical/internal stores."
+  - "v0.2 records a bounded no-input shell baseline with locked build tooling and app-local positive and negative tests; it does not claim routes, API integration, map rendering, claim display, or deployment."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -57,10 +58,24 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED file path / CONFIRMED app role from `apps/README.md` / PROPOSED canonical map-first shell per ADR-0005 / UNKNOWN implementation files, routes, tests, and deployment state
+> **Truth posture:** CONFIRMED bounded static shell, exact build tooling, and app-local baseline tests / PROPOSED canonical map-first shell per ADR-0005 / UNKNOWN routes, governed API integration, renderer behavior, accessibility, and deployment state
 
 > [!CAUTION]
 > `apps/explorer-web/` must not directly read `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/`, canonical stores, model runtime outputs, or local source files. Normal public and semi-public UI behavior must use governed API envelopes, released artifacts, layer manifests, tiles, evidence payloads, and safe finite outcomes.
+
+---
+
+## Current bounded baseline
+
+The implemented baseline is intentionally smaller than the proposed Explorer:
+
+- Vite builds a static browser entrypoint from `src/main.ts`;
+- the shell returns fixed `ABSTAIN / NO_GOVERNED_RESPONSE` with no evidence references when called without input;
+- any supplied input returns fixed `ERROR / UNSUPPORTED_BASELINE_INPUT`, does not echo the input, and has no evidence references;
+- Vitest covers the no-input and supplied-input branches;
+- no API, network, storage, model, renderer, claim, release, promotion, or publication behavior is present.
+
+This is executable fail-closed scaffolding, not a functional map, governed answer surface, or deployable production claim.
 
 ---
 
@@ -270,7 +285,7 @@ Every long-lived route or panel should document or encode:
 
 ## 12. Inspection path
 
-Implementation files, route inventory, renderer imports, tests, fixtures, package metadata, and deployment state remain `NEEDS VERIFICATION`.
+The bounded shell entrypoint, finite baseline states, app-local unit tests, and package metadata are implementation-bearing. Route inventory, governed API integration, renderer behavior, fixtures, accessibility, and deployment remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web -maxdepth 6 -type f | sort
@@ -294,6 +309,8 @@ Useful validation for this app should cover:
 ## 14. Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
+- [x] Exact package-manager, TypeScript, Vite, and Vitest versions are pinned and lockable.
+- [x] The no-input `ABSTAIN` and supplied-input `ERROR` baseline states are tested.
 - [ ] Route inventory is documented.
 - [ ] Governed API client and response validators are confirmed.
 - [ ] Renderer import boundaries are verified.
@@ -307,7 +324,7 @@ Useful validation for this app should cover:
 
 | Item | Why it matters |
 |---|---|
-| Confirm implementation files beyond README | Prevents overclaiming shell maturity |
+| Confirm implementation beyond the bounded static shell | Prevents overclaiming shell maturity |
 | Confirm route inventory | Required for public/semi-public UI boundary review |
 | Confirm governed API client and validators | Required for trust membrane enforcement |
 | Confirm renderer import boundaries | Required to keep renderer as adapter, not authority |
@@ -321,13 +338,13 @@ Useful validation for this app should cover:
 
 The previous README was a short stub: `Map-first public/semi-public interface. Persistent governed shell, evidence drawer, focus mode, story player, compare, export, settings, diagnostics.` This replacement preserves that intent while adding governance boundaries, route expectations, finite-outcome posture, renderer discipline, validation expectations, and open verification items.
 
-It does not claim that routes, components, API clients, tests, fixtures, renderer adapters, deployment, or export behavior are implemented.
+It claims only the bounded static shell and its app-local tests. Routes, governed API clients, fixtures, renderer adapters, deployment, and export behavior remain unimplemented or unverified.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/` should be the map-first public/semi-public shell only when implementation, route inventory, tests, governed API client behavior, renderer boundaries, and deployment posture are verified.
+`apps/explorer-web/` now has a buildable, tested, fail-closed static baseline. It should be treated as the map-first public/semi-public shell only when route inventory, governed API client behavior, renderer boundaries, accessibility, and deployment posture are verified.
 
 It must remain downstream of governed APIs, policy decisions, EvidenceBundle closure, release state, correction/rollback controls, and renderer adapter boundaries without becoming source truth, release authority, policy authority, lifecycle store, model-output surface, or parallel shell authority.
 

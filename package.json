@@ -2,6 +2,10 @@
   "name": "kfm-monorepo",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=22.13 <23"
+  },
   "description": "Private JavaScript workspace coordinator for Kansas Frontier Matrix.",
   "license": "UNLICENSED",
   "repository": {

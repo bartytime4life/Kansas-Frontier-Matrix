@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.4
-prior_version: v0.3
+version: v0.5
+prior_version: v0.4
 status: draft; repository-grounded; mixed-maturity
 owner: "NEEDS VERIFICATION — CODEOWNERS routes all repository paths to @bartytime4life and explicitly routes apps/governed-api/ and apps/explorer-web/; no accepted application-steward assignment, required-review rule, or independent approval control was verified"
 created: 2026-05-10
-updated: 2026-07-23
+updated: 2026-07-29
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -21,12 +21,12 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 41ef68b1f8d006419f65bc3092d9d62316b67f2c
+  base_commit: 0b7257653abd355a041a80e6f4e5f83da3f80720
   target_prior_blob: 1a84325b87e12d6480eec96bf594867123488948
   prior_convergence_commit: 1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c
-  continuity_compare: 1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c...41ef68b1f8d006419f65bc3092d9d62316b67f2c
-  apps_path_changes_after_prior_convergence: 0
-  tracked_app_files: 164
+  continuity_compare: 1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c...0b7257653abd355a041a80e6f4e5f83da3f80720
+  apps_path_changes_after_prior_convergence: 1
+  tracked_app_files_after_bounded_baseline: 166
   directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   directory_rules_architecture_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -34,9 +34,9 @@ evidence_snapshot:
   governed_api_main_blob: bcc8d3a0ddba4b225e962b594d548819df0cbb71
   governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
   governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
-  explorer_package_blob: ce981192e725483c747affb45ca3de36a22ce9ce
+  explorer_package_preimage_blob: ce981192e725483c747affb45ca3de36a22ce9ce
   api_workflow_blob: 5ec0ff53cc874935ed8ef5de791b70a52635ef33
-  ui_workflow_blob: a4fec64dc445b060d334c2ae56886cc814cb0e61
+  ui_workflow_preimage_blob: a4fec64dc445b060d334c2ae56886cc814cb0e61
   workflow_model: issue-1531@sha256:289c214b9bbf801db13bfad85dac4e862ae1224bd38ba4fc14361451c839c661
 related:
   - ../README.md
@@ -67,9 +67,10 @@ related:
 tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, finite-outcomes, mixed-maturity]
 notes:
   - "v0.4 is a same-path evidence refresh of v0.3. It preserves the seven app lanes, exact maturity distinctions, trust-membrane rules, validation surface, gaps, and safe-change guidance."
-  - "The 164-file inventory is carried forward from the v0.3 recursive scan and revalidated by a zero-app-path compare from the prior convergence commit through the current base commit."
+  - "v0.5 records the bounded Explorer Web shell, app-local tests, locked JavaScript workspace, real Makefile target, and implementation-bearing UI workflow without claiming broader Explorer behavior."
+  - "The bounded baseline adds two Explorer files to the 164-file base inventory; the resulting 166-file count does not establish deployment or production readiness."
   - "Two distinct Directory Rules files remain in the repository at different blob SHAs. This README records that documentation conflict and does not treat either duplicate path as an accepted placement decision."
-  - "No application code, route, dependency, lockfile, workflow, data, policy, release, deployment, promotion, or publication behavior changes in this documentation revision."
+  - "No route, API, renderer, data, policy, release, deployment, promotion, or publication behavior is added by the bounded Explorer baseline."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -88,9 +89,9 @@ notes:
 [![Public trust path: governed-api](https://img.shields.io/badge/public%20trust%20path-governed--api-bf8700?style=flat-square)](./governed-api/README.md)
 [![Outcomes: ANSWER | ABSTAIN | DENY | ERROR](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0f766e?style=flat-square)](#outputs)
 [![CODEOWNERS: @bartytime4life](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df?style=flat-square)](../.github/CODEOWNERS)
-[![Snapshot: 41ef68b](https://img.shields.io/badge/snapshot-41ef68b-6e7781?style=flat-square)](#evidence-ledger)
+[![Batch base: 0b72576](https://img.shields.io/badge/batch%20base-0b72576-6e7781?style=flat-square)](#evidence-ledger)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-07-23](https://img.shields.io/badge/reviewed-2026--07--23-0969da?style=flat-square)](#last-reviewed)
+[![Reviewed: 2026-07-29](https://img.shields.io/badge/reviewed-2026--07--29-0969da?style=flat-square)](#last-reviewed)
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-ledger) · [App map](#current-app-map) · [Gaps](#verified-gaps-and-next-work)
 
@@ -147,18 +148,18 @@ The root owns deployable composition. It does not own:
 
 **Draft / repository-grounded / mixed maturity.**
 
-The current-state claims below are pinned to `main@41ef68b1f8d006419f65bc3092d9d62316b67f2c`. The prior v0.3 convergence commit was `1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c`; the compare from that commit through the current base contains no changed path under `apps/`. Current claims therefore combine the prior recursive app inventory with direct current-file verification. They do not describe a deployed system or current production health.
+The batch base is `main@0b7257653abd355a041a80e6f4e5f83da3f80720`. Current claims combine that base with direct inspection of the bounded Explorer changes. They do not describe a deployed system or current production health.
 
 ### Evidence boundary
 
 | Claim | Truth | Evidence | Limitation |
 |---|---|---|---|
-| `apps/` contains 164 tracked files: this README plus 163 files across seven child lanes. | CONFIRMED | v0.3 recursive inventory plus zero-app-path compare through the current base | Does not inspect ignored files or deployments. |
+| `apps/` contains 166 intended tracked files after the bounded baseline: this README plus 165 files across seven child lanes. | CONFIRMED | Base tree inventory plus the two added Explorer source/test files | Does not inspect ignored files or deployments. |
 | Governed API exposes `/bootstrap`, `/layers`, and `/evidence` through a small WSGI application. | CONFIRMED | Current `governed-api/src/governed_api/main.py` and route registry | All three routes are fail-closed scaffolds, not domain data APIs. |
 | Those three routes return schema-checked `ABSTAIN` envelopes with `NOT_IMPLEMENTED`. | CONFIRMED | Current `governed-api/src/governed_api/stub.py` and prior verified route tests | Does not prove `ANSWER`, authorization, evidence resolution, deployment, or load behavior. |
 | API boundary tests reject unknown routes, non-GET methods, forbidden runtime imports, and internal-store path literals. | CONFIRMED | Prior verified test inventory, unchanged app tree, and current API workflow wiring | Static/bounded tests do not prove network, auth, observability, or production isolation. |
-| Explorer Web has 48 TypeScript/TSX files across the app, but its implementation modules are placeholders and its package scripts echo `TODO`. | CONFIRMED | v0.3 recursive inventory, zero-app-path compare, and current `explorer-web/package.json` | A documented route or feature name is not implemented behavior. |
-| Explorer Web build/test CI fails closed until real scripts, an exact pnpm pin, and `pnpm-lock.yaml` exist. | CONFIRMED | Current `.github/workflows/ui-build.yml` and package manifest | This is a readiness gate, not proof that the future UI design is accepted. |
+| Explorer Web has a static Vite entrypoint and fixed shell resolver; most broader feature modules remain placeholders. | CONFIRMED | Current `explorer-web/src/main.ts` and `src/features/shell/index.tsx` plus bounded inventory | This is not a route, map, governed API, claim, or deployment implementation. |
+| Explorer Web has real build/test scripts, an exact pnpm pin, a frozen lockfile, and fail-closed CI readiness checks. | CONFIRMED | Current manifests, `pnpm-lock.yaml`, and `.github/workflows/ui-build.yml` | Wiring is not proof of a hosted CI result or accepted product design. |
 | Review Console, CLI, Workers, and Admin are scaffolded or documentation-led. | CONFIRMED | Prior child-manifest/source inventory plus zero-app-path compare | No production readiness is claimed. |
 | `@bartytime4life` is the current GitHub review route. | CONFIRMED | Current `.github/CODEOWNERS` default plus explicit Governed API and Explorer routes | CODEOWNERS routing is not proof of stewardship, required review, or completed review. |
 | All 28 numbered ADRs, including app-related ADRs, remain effectively `proposed`. | CONFIRMED | Current `docs/adr/INDEX.md` | Proposed design language does not upgrade scaffolds to implemented behavior. |
@@ -170,7 +171,7 @@ The current-state claims below are pinned to `main@41ef68b1f8d006419f65bc3092d9d
 | Lane | Tracked files | Current implementation truth | Verified entrypoint or hold | Failure-safe posture |
 |---|---:|---|---|---|
 | `governed-api/` | 27 | Bounded executable WSGI + three fail-closed routes + two test modules | `make governed-api-dev`; `make governed-api-smoke`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store imports |
-| `explorer-web/` | 87 | Source and feature tree present; implementation remains placeholder-only | `ui-build` reports readiness failure until scripts/pin/lock exist | Do not render or claim a functional client |
+| `explorer-web/` | 89 | Buildable static fail-closed shell plus app-local unit tests; broader features remain placeholders | `make ui-build`; `pnpm --filter explorer-web test`; `ui-build` | Fixed `ABSTAIN` or `ERROR`; no input reflection, evidence, API, renderer, or publication path |
 | `review-console/` | 11 | README-led feature scaffolds plus a minimal package manifest | No accepted build/test command | No review, promotion, correction, or rollback mutation is proven |
 | `cli/` | 16 | Python package skeleton; entrypoint and command modules are placeholders | Running the module prints a greenfield placeholder | No operator shortcut is release authority |
 | `workers/` | 18 | Eight named worker entrypoints are comment-only placeholders | No accepted worker command, queue, schedule, or test | Watcher-as-non-publisher remains mandatory |
@@ -188,7 +189,7 @@ flowchart TD
     explorer -. "denied" .-> stores["RAW / WORK / QUARANTINE<br/>canonical or model stores"]
 ```
 
-Only the Governed API's bounded fail-closed slice is currently executable within this diagram. Release assembly, client behavior, internal app mutation, worker execution, and deployment remain held, placeholder, or unverified.
+The Governed API and Explorer now have separate bounded fail-closed executable slices. The Explorer slice does not call the API or render claims. Release assembly, broader client behavior, internal app mutation, worker execution, and deployment remain held, placeholder, or unverified.
 
 ## What belongs here
 
@@ -251,9 +252,10 @@ Apps do not directly emit approved release decisions, authoritative catalog stat
 | `make governed-api-smoke` | Governed API route/envelope tests | Three registered routes fail closed and validate against the bounded schema subset | Production auth, evidence resolution, network policy, load, or deployment |
 | `make governed-api-verify` | API tests plus import boundary | Governed API avoids renderer and direct model clients | Browser, network, or runtime process isolation |
 | `make boundary-guards` | Cross-root public-boundary tests | No internal-store literals in Explorer/API and connectors/pipelines remain non-publishers | Complete data-flow or information-flow proof |
+| `make ui-build` | Explorer Web type-check and production build | The bounded source compiles and Vite emits a static bundle | Browser behavior, accessibility, governed API integration, deployment, or release approval |
 | `make validate` | Aggregate schema/contract baseline | Configured schema fixtures and schema/contract tests pass when executed | App build, E2E, policy engine, release, or deployment readiness |
 | `.github/workflows/api-test.yml` | CI wrapper around API tests | Repeats bounded API checks in GitHub Actions | Acceptance, deployment, or release approval |
-| `.github/workflows/ui-build.yml` | Fail-closed UI readiness gate | Refuses placeholder scripts, missing exact pnpm pin, or missing lockfile | A usable or accepted Explorer implementation |
+| `.github/workflows/ui-build.yml` | Locked Explorer build/test CI | Fails closed on readiness regression, frozen-install failure, build failure, test failure, or zero collected tests | A usable map, governed answer surface, deployment, or release approval |
 
 This documentation update verifies current source and workflow definitions. It does not claim a new local or hosted execution of the commands above until the pull-request checks report their own conclusions.
 
@@ -328,7 +330,7 @@ Directory Rules and current repository evidence control this README's placement 
 
 ## Last reviewed
 
-**2026-07-23**, against `main@41ef68b1f8d006419f65bc3092d9d62316b67f2c`.
+**2026-07-29**, against batch base `main@0b7257653abd355a041a80e6f4e5f83da3f80720` plus the bounded Explorer working tree described here.
 
 Re-review after any app-lane creation/removal, public-route change, package-manager/lockfile change, runtime/provider integration, worker write-target change, deployment exposure change, default-branch change, or Directory Rules identity resolution that invalidates this evidence snapshot.
 
@@ -337,8 +339,8 @@ Re-review after any app-lane creation/removal, public-route change, package-mana
 | Evidence | Current identifier | Supports | Does not support |
 |---|---|---|---|
 | Target baseline | `apps/README.md` blob `1a84325…` | Same-path baseline and no-loss review | Runtime behavior |
-| Current base | `main@41ef68b…` | Repository state used for this revision | Untracked files or deployment |
-| Continuity compare | `1433a00…41ef68b` | No app path changed after the prior convergence commit | Hidden or external state |
+| Current base | `main@0b72576…` | Repository state used for the bounded Explorer batch | Untracked files or deployment |
+| Continuity compare | `1433a00…0b72576` | One app path changed after the prior convergence commit | Hidden or external state |
 | Doctrine-side Directory Rules | blob `2affb080…` | Root placement and README-contract language | Resolution of duplicate placement |
 | Architecture-side Directory Rules | blob `18653c00…` | Corroborating root and README-contract language | Independent canonical authority |
 | CODEOWNERS | blob `dd2a84aa…` | GitHub review routing | Stewardship, approval, or separation of duties |
@@ -346,16 +348,16 @@ Re-review after any app-lane creation/removal, public-route change, package-mana
 | Governed API WSGI | blob `bcc8d3a0…` | Route/method dispatch and 404/405 behavior | Network or production isolation |
 | Governed API route registry | blob `3418168d…` | `/bootstrap`, `/layers`, `/evidence` registration | Domain implementation |
 | Governed API stub | blob `5d7c137d…` | `ABSTAIN` + `NOT_IMPLEMENTED` envelope source | Complete schema/policy/evidence coverage |
-| Explorer package manifest | blob `ce981192…` | Placeholder `TODO` scripts | Future UI architecture |
+| Explorer package manifest | current bounded batch path | Exact TypeScript, Vite, and Vitest versions plus real scripts | Future UI architecture or hosted run result |
 | API workflow | blob `5ec0ff53…` | Bounded CI commands and non-publication posture | Current run result |
-| UI workflow | blob `a4fec64d…` | Fail-closed readiness checks | Functional Explorer build |
+| UI workflow | current bounded batch path | Frozen install plus real Explorer build/test commands and fail-closed readiness checks | Functional map, API integration, or deployment |
 | Generated receipt | [`genrec-apps-readme-modernization-20260723-001.json`](../data/receipts/generated/genrec-apps-readme-modernization-20260723-001.json) | Authorship and validation provenance for this update | Human approval, release, or publication |
 
 ## Verified gaps and next work
 
 | Gap | Truth | Work status | Disposition | Dependency-safe next step |
 |---|---|---|---|---|
-| Explorer Web has no real build/test/runtime slice | CONFIRMED | TRIAGED | DEFERRED | Implement one bounded shell slice with exact dependency pin, lockfile, unit/negative tests, and governed client boundary; do not green an empty build |
+| Explorer Web lacks routes, governed API integration, renderer behavior, accessibility coverage, and deployment proof beyond its bounded shell | CONFIRMED | TRIAGED | DEFERRED | Add only the next contract-backed, policy-safe slice after review of this fail-closed baseline |
 | Review Console has no executable review flow | CONFIRMED | TRIAGED | DEFERRED | Establish accepted review record/authorization/audit contract before mutating UI |
 | CLI commands and Workers are placeholders | CONFIRMED | TRIAGED | DEFERRED | Select one no-network dry-run command or non-publishing worker with fixtures and receipts |
 | Admin has no executable surface | CONFIRMED | TRIAGED | INTENTIONAL_ABSENCE for now | Keep restricted and absent until a verified need, auth model, audit path, and break-glass policy exist |
@@ -392,13 +394,14 @@ The root is not "complete" while child lanes are placeholders. For a declared ap
 |---|---|---|---|
 | v0.3 | 2026-07-22 | Reconciled the root contract with the seven-lane, 164-file app inventory and mixed implementation maturity. | None; documentation and receipt only. |
 | v0.4 | 2026-07-23 | Repinned the evidence snapshot, clarified review routing versus stewardship, recorded the Directory Rules duplicate, refreshed ADR status, and added an evidence ledger. | None; documentation and receipt only. |
+| v0.5 | 2026-07-29 | Recorded the locked, buildable, tested, fail-closed Explorer Web baseline and preserved its explicit non-goals. | Static shell only; no API, renderer, claim, release, or deployment behavior. |
 
 ## Correction and rollback
 
-This update is reversible by restoring prior blob `1a84325b87e12d6480eec96bf594867123488948` and withdrawing the companion generated receipt from the candidate branch. A documentation rollback does not roll back app code, runtime state, deployment, policy, release, or publication because this change alters none of them. Preserve the superseded README and receipt in Git history; do not erase correction lineage.
+The bounded Explorer batch is reversible by reverting its focused commit, which removes the added entrypoint, test, workspace lock/configuration, and related documentation while restoring the prior placeholder scripts and readiness hold. No deployment, policy, release, or publication state is changed.
 
 ---
 
-> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. The Governed API provides a small, testable fail-closed boundary. Explorer Web, Review Console, CLI, Workers, and Admin require separate dependency-ready implementation batches; `apps/packages/` remains a drift guard. Preserve those distinctions instead of flattening the root into a false green state.
+> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API and Explorer Web each provide a small, testable fail-closed slice; Explorer Web is still not a functional map or governed answer client. Review Console, CLI, Workers, and Admin require separate dependency-ready implementation batches, and `apps/packages/` remains a drift guard.
 
 <p align="right"><a href="#top">Back to top</a></p>

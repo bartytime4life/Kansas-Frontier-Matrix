@@ -6,20 +6,21 @@
 doc_id: kfm://doc/tests-ui-readme
 title: tests/ui/README.md — Governed UI Trust-State Test Boundary
 type: readme; directory-readme; ui-test-parent; trust-surface-enforceability-boundary
-version: v0.2
-status: draft; repository-grounded; readme-only-direct-lane; no-dedicated-ui-suite-established; static-boundary-guard-confirmed; explorer-and-shared-ui-placeholder-heavy; ui-and-accessibility-ci-stubs
+version: v0.3
+status: draft; repository-grounded; readme-only-direct-lane; bounded-explorer-app-tests-established; static-boundary-guard-confirmed; broader-ui-placeholder-heavy; ui-build-active; accessibility-ci-stub
 owners: OWNER_TBD — QA steward · UI steward · Explorer Web steward · Shared UI package steward · Accessibility steward · Evidence steward · Policy steward · Sensitivity and rights stewards · Release steward · Map steward · Runtime steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-07
-updated: 2026-07-16
+updated: 2026-07-29
 supersedes: v0.1
 policy_label: public-doctrine; tests; ui; trust-visible; map-first; governed-payloads-only; no-network-default; synthetic-only; accessibility-required; no-sensitive-leakage; correction-aware; rollback-aware; no-publication
 current_path: tests/ui/README.md
-truth_posture: CONFIRMED target README, Directory Rules, canonical tests root, UI semantic-contract README, packages/ui README and source README, Explorer Web README and source README, Explorer Web package metadata with TODO dev/build/test scripts, packages/ui package metadata without scripts, placeholder Evidence Drawer/Focus Panel/Trust Header feature entrypoints, placeholder packages/ui source entrypoint, tests/fixtures/ui README, checked absence of representative UI fixture payloads, executable Explorer Web adapter/internal-store policy guard, Makefile test collection limited to tests/schemas plus tests/contracts and TODO ui-build target, TODO-only ui-build and accessibility workflows, and checked absence of tests/ui/conftest.py, tests/ui/test_ui.py, and tests/ui/pytest.ini / PROPOSED shared UI trust-state case contract, component and app test routing, finite-outcome rendering matrix, evidence/citation display tests, release and temporal state tests, keyboard/focus/screen-reader/reduced-motion tests, sensitive-value leakage canaries, deterministic browser harness, network interception, snapshot governance, zero-collection failure, substantive CI, and promotion blocking / CONFLICTED centralized tests/ui ownership versus package-local and app-local component tests; tests/fixtures/ui proposed payload inventory versus checked absent representative files; UI architecture and README depth versus placeholder implementation and TODO scripts / UNKNOWN exhaustive UI source and test inventory, dynamic collection, accepted framework and runner, implemented component families, route inventory, browser harness, fixture consumers, accessibility baseline, visual-regression system, current pass rates, coverage, runtime, flake rate, deployment use, and promotion dependency / NEEDS VERIFICATION owners, lane-retention rule, package-local versus root test placement, accepted UI payload contracts and schemas, accessible-state vocabulary, screenshot/artifact retention, no-network mechanism, sensitive-fixture review, CI ownership, route and component graduation, correction propagation, and rollback automation
+truth_posture: CONFIRMED README-only tests/ui lane, app-local Explorer baseline tests, exact Explorer build tooling, real ui-build workflow, executable Explorer boundary guard, placeholder-heavy broader UI, and TODO-only accessibility workflow / PROPOSED shared trust-state cases, component rendering, governed payload fixtures, browser harness, accessibility coverage, visual regression, and promotion blocking / UNKNOWN coverage, flake rate, deployment use, and release-gate dependency / NEEDS VERIFICATION owners, lane retention, fixture admission, no-network enforcement beyond the no-network baseline, correction propagation, and rollback automation
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
   base_commit: b902a5c34165ac55d2bb46b470f21e4002cf505f
+  current_batch_base: 0b7257653abd355a041a80e6f4e5f83da3f80720
   target_prior_blob: 4dbbea201819d91d95fc27dcdada0e2ff756d293
   related_repository_blobs:
     directory_rules: 2affb080e6f0043867c64c7f06c1ca52030fbd55
@@ -31,7 +32,7 @@ evidence_snapshot:
     packages_ui_source_placeholder: 2c9ea341d61bf4d1733b9982fda8a9b869a3a720
     explorer_web_readme: 755dae3e175b103702caba573a5171d62ed710da
     explorer_web_source_readme: 770cace029d0b9016ec7bd1c2d879b1bb49c896a
-    explorer_web_package_json: ce981192e725483c747affb45ca3de36a22ce9ce
+    explorer_web_package_json_preimage: ce981192e725483c747affb45ca3de36a22ce9ce
     evidence_drawer_placeholder: 6438397db43b465a90fc9a33ac7c3d2f11406603
     focus_panel_placeholder: 73e8763e372009f8a537e596abc6755a90967c8f
     trust_header_placeholder: 2938d6ba019c0bebddd8c224d5a0decd2b7558eb
@@ -49,7 +50,6 @@ evidence_snapshot:
     - tests/fixtures/ui/evidence_drawer.valid.json
     - tests/fixtures/ui/focus_answer.valid.json
     - tests/fixtures/ui/policy_denied_banner.deny.json
-    - apps/explorer-web/src/main.tsx
   bounded_inventory_note: repository search and representative path checks did not establish a dedicated executable suite under tests/ui or the proposed representative fixture payloads; this does not prove absence from history, ignored files, generated files, branch-local files, dynamically collected suites, package-local tests, app-local tests, external browser services, or uninspected paths
 related:
   - ../README.md
@@ -78,10 +78,11 @@ related:
 notes:
   - "v0.2 replaces a planning-heavy proposed test tree with a commit-pinned current-state and routing boundary."
   - "The direct tests/ui lane is README-only at the bounded snapshot."
-  - "Explorer Web and packages/ui metadata are scaffolded; representative UI feature and package entrypoints are placeholders."
+  - "v0.3 records the app-local Explorer shell tests and locked ui-build workflow while preserving the README-only tests/ui lane and broader UI limitations."
+  - "Explorer Web now has a bounded shell resolver and app-local tests; packages/ui and broader Explorer features remain placeholder-heavy."
   - "A static Explorer Web adapter/internal-store policy guard is confirmed, but it is not component, rendering, browser, accessibility, or non-vacuous source coverage."
-  - "The current Makefile excludes tests/ui, and the UI-build and accessibility workflows execute TODO echo commands."
-  - "This revision changes documentation only and creates no executable test, fixture, component, route, package export, schema, contract, policy, workflow behavior, data, receipt, proof, release object, screenshot, or public artifact."
+  - "The current Makefile excludes tests/ui but has a real Explorer build target; ui-build runs locked build and app-local tests, while accessibility remains a TODO workflow."
+  - "The bounded Explorer batch adds no fixture, route, package export, schema, contract, policy, data, receipt, proof, release object, screenshot, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -103,15 +104,16 @@ notes:
 ## Status and evidence boundary
 
 > [!IMPORTANT]
-> **Evidence snapshot:** `main@b902a5c34165ac55d2bb46b470f21e4002cf505f`
+> **Current batch base:** `main@0b7257653abd355a041a80e6f4e5f83da3f80720`
 > **Prior target blob:** `4dbbea201819d91d95fc27dcdada0e2ff756d293`
-> **Direct lane:** `tests/ui/README.md` only at the bounded snapshot
-> **Checked absent:** direct harness/test/config, representative fixture payloads, and `apps/explorer-web/src/main.tsx`
+> **Direct lane:** `tests/ui/README.md` remains documentation-only
+> **App-local suite:** `apps/explorer-web/tests/shell-baseline.test.ts`
+> **Checked absent:** direct `tests/ui` harness/test/config and representative fixture payloads
 > **Makefile:** `make test` runs `tests/schemas` and `tests/contracts`, not this lane
-> **Explorer scripts:** `dev`, `build`, and `test` all echo `TODO`
-> **UI/accessibility workflows:** checkout plus TODO echo steps
+> **Explorer scripts:** real Vite build and Vitest test commands with exact direct dependency versions
+> **Workflows:** `ui-build` performs frozen install, build, and test; `accessibility` remains TODO-only
 
-`tests/ui/` is currently a documented UI-test boundary, not an established executable component, browser, accessibility, or visual-regression suite.
+`tests/ui/` remains a documented cross-cutting boundary, not an executable component, browser, accessibility, or visual-regression suite. The bounded Explorer app now owns its shell unit tests locally.
 
 ### Safe conclusions
 
@@ -119,15 +121,15 @@ notes:
 - **CONFIRMED:** the canonical tests root assigns UI trust-state component testing to this lane.
 - **CONFIRMED:** UI semantic contracts exist as draft/proposed documentation and define a downstream trust surface.
 - **CONFIRMED:** `packages/ui/` and `apps/explorer-web/` are the intended shared-component and deployable-shell homes.
-- **CONFIRMED:** Explorer Web package scripts are TODO-only.
+- **CONFIRMED:** Explorer Web has real build/test scripts, exact direct tool versions, and app-local baseline tests.
 - **CONFIRMED:** the shared UI package manifest has no test, build, story, type-check, or accessibility scripts.
-- **CONFIRMED:** sampled Evidence Drawer, Focus Panel, Trust Header, and shared UI entrypoints are explicit greenfield placeholders.
+- **CONFIRMED:** the Explorer shell resolver is implementation-bearing; sampled Evidence Drawer, Focus Panel, Trust Header, and shared UI entrypoints remain placeholders.
 - **CONFIRMED:** representative UI fixture payloads named by the fixture README were not found at checked paths.
 - **CONFIRMED:** a static policy test checks renderer-import placement and forbidden internal-store literals under Explorer Web source.
 - **CONFIRMED:** that static test does not render components, launch a browser, exercise keyboard navigation, validate ARIA behavior, inspect screenshots, or prove non-vacuous source coverage.
 - **CONFIRMED:** the Makefile default test target excludes `tests/ui`.
-- **CONFIRMED:** `ui-build` and `accessibility` workflows are TODO-only scaffolds.
-- **UNKNOWN:** complete source inventory, route implementation, dynamic tests, actual browser tooling, current pass rate, coverage, runtime, flake rate, visual baselines, accessibility baseline, deployment, and release-gate dependency.
+- **CONFIRMED:** `ui-build` performs locked build and app-local tests; `accessibility` remains TODO-only.
+- **UNKNOWN:** route implementation, browser tooling, coverage, flake rate, visual baselines, accessibility baseline, deployment, and release-gate dependency.
 - **NEEDS VERIFICATION:** the accepted split among this root lane, package-local tests, app-local tests, E2E tests, policy guards, and map-renderer tests.
 
 ### Maturity matrix
@@ -135,19 +137,19 @@ notes:
 | Capability | Status | Evidence-bounded conclusion |
 |---|---:|---|
 | Parent README | `CONFIRMED` | A UI-test boundary exists. |
-| Direct executable test | `NOT ESTABLISHED` | No representative direct module was found. |
+| App-local executable test | `CONFIRMED` | Explorer owns three fixed-state baseline cases beside the app. |
 | Lane harness/config | `NOT FOUND AT CHECKED PATHS` | No independent collection contract is established. |
 | UI fixtures | `README CONFIRMED; REPRESENTATIVE PAYLOADS ABSENT` | Fixture intent exists; payload coverage does not. |
 | Shared UI implementation | `PLACEHOLDER-HEAVY` | Package/source READMEs exist; sampled entrypoint is a placeholder. |
-| Explorer Web implementation | `PLACEHOLDER-HEAVY` | App/source READMEs exist; sampled features are placeholders. |
+| Explorer Web implementation | `BOUNDED BASELINE` | Static entrypoint and shell resolver are real; broader features remain placeholders. |
 | Static UI boundary guard | `CONFIRMED EXECUTABLE` | Selected import and literal boundaries are checked. |
 | Component rendering tests | `NOT ESTABLISHED` | No component harness or renderer was verified. |
 | Browser/E2E UI tests | `NOT ESTABLISHED` | No browser runner was verified for this lane. |
-| Accessibility tests | `NOT ESTABLISHED` | Workflow jobs echo TODO. |
+| Accessibility tests | `NOT ESTABLISHED` | The accessibility workflow still echoes TODO. |
 | Visual regression | `NOT ESTABLISHED` | No accepted baseline tool or artifact policy was verified. |
 | Default Makefile collection | `NOT ESTABLISHED` | Current target excludes this lane. |
-| Dedicated substantive CI | `NOT ESTABLISHED` | UI workflows do not build or test. |
-| Current metrics | `UNKNOWN` | No dedicated report was verified. |
+| Dedicated bounded CI | `CONFIRMED WIRED` | ui-build installs frozen dependencies and runs the real app build/test commands. |
+| Current metrics | `BOUNDED` | Three shell unit cases are defined; browser, coverage, and accessibility metrics are unknown. |
 | Promotion blocking | `UNKNOWN` | No verified promotion dependency targets this lane. |
 
 ### Truth labels
@@ -301,25 +303,27 @@ A fixture README is not fixture coverage.
 
 ### Explorer Web
 
-The Explorer Web package manifest confirms a private `0.0.0` scaffold whose scripts are:
+The Explorer Web package manifest confirms a private `0.0.0` bounded app whose scripts are:
 
 ```json
 {
-  "dev": "echo TODO",
-  "build": "echo TODO",
-  "test": "echo TODO"
+  "dev": "vite",
+  "build": "tsc --noEmit -p tsconfig.json && vite build",
+  "test": "vitest run"
 }
 ```
 
-Sampled feature entrypoints are explicit placeholders:
+The static entrypoint and shell resolver are implementation-bearing. Sampled broader feature entrypoints remain placeholders:
 
 ```text
+apps/explorer-web/src/main.ts
+apps/explorer-web/src/features/shell/index.tsx
 apps/explorer-web/src/features/evidence_drawer/index.tsx
 apps/explorer-web/src/features/focus_panel/index.tsx
 apps/explorer-web/src/features/trust_header/index.tsx
 ```
 
-`apps/explorer-web/src/main.tsx` was not found at the checked path.
+`apps/explorer-web/tests/shell-baseline.test.ts` owns fixed positive and negative baseline-state tests. It is not a component-rendering, browser, accessibility, governed API, map, or claim test.
 
 ### Shared UI package
 
@@ -355,11 +359,11 @@ A future guard should explicitly assert a nonempty expected source inventory or 
 ### Workflow and runner state
 
 - `make test` runs only schema and contract tests.
-- `make ui-build` echoes a TODO command.
-- `ui-build` workflow jobs echo TODO build/test commands.
+- `make ui-build` runs the real Explorer production build.
+- `ui-build` workflow jobs perform a frozen install and run the real app build/test commands.
 - `accessibility` workflow jobs echo TODO axe/keyboard commands.
 
-A green result from those jobs is workflow execution evidence, not UI or accessibility proof.
+A green ui-build result is bounded build/unit evidence, not browser, governed-data, map, accessibility, deployment, or release proof.
 
 [Back to top](#top)
 
@@ -712,13 +716,13 @@ axe PASS           != complete inclusive usability
 
 ## Runner, CI, and promotion boundary
 
-No direct UI runner is established by the checked lane. Explorer scripts are TODO-only, the shared package has no scripts, the Makefile excludes `tests/ui`, and UI/accessibility workflows echo TODO commands.
+No direct runner is established under `tests/ui/`. Explorer has an app-local Vitest runner and real build/test workflow, while the shared package has no scripts, the Makefile default tests exclude `tests/ui`, and the accessibility workflow still echoes TODO commands.
 
-A smallest sound activation sequence is: accept placement/owners; select one real component; ratify payload contract/schema; add synthetic positive and negative fixtures; select the owner-appropriate runner; add deterministic rendering and accessibility assertions; enforce no-network and cleanup; fail on zero collection; wire the exact suite into CI; retain only sanitized artifacts; document correction and rollback; repeat one component at a time.
+A smallest sound next activation sequence is: accept placement/owners; select one real component or governed payload; ratify its contract/schema; add synthetic positive and negative fixtures; add deterministic rendering and accessibility assertions; enforce no-network and cleanup; wire the exact suite into CI; retain only sanitized artifacts; document correction and rollback; repeat one component at a time.
 
 Accepted commands must use locked dependencies, return nonzero on failure, fail on zero tests, avoid swallowed failures, deny live network, freeze time/locale, clean browser state, report counts/skips, and emit only declared sanitized artifacts.
 
-Future substantive CI should prove installation, type/build success, real collection, component/app tests, policy guards, accessibility, no-network/no-leak controls, artifact sanitization, correction/rollback, thresholds, and branch-protection significance.
+Future broader CI should add component behavior, accessibility, browser no-network/no-leak controls, artifact sanitization, correction/rollback, thresholds, and branch-protection significance to the bounded install/build/unit baseline.
 
 UI tests may block promotion when a public trust invariant is material. They cannot approve promotion or release. A green TODO job, empty source scan, empty browser suite, or zero-component accessibility scan is not enforcement.
 
@@ -750,14 +754,14 @@ Revert or correct this README if it claims nonexistent coverage, treats TODO wor
 - [x] Records checked-absent direct harness, test, and config paths.
 - [x] Records representative fixture payload absence.
 - [x] Separates app, package, contracts, schemas, policy, fixtures, tests, artifacts, and release authority.
-- [x] Records TODO package scripts and workflows.
-- [x] Records sampled placeholder component and package entrypoints.
+- [x] Records the real Explorer scripts, app-local baseline tests, ui-build workflow, and remaining accessibility TODO.
+- [x] Distinguishes the implementation-bearing shell from sampled placeholder component and package entrypoints.
 - [x] Identifies the static Explorer boundary guard without inflating it into rendering/accessibility coverage.
 - [x] Records Makefile exclusion.
 - [x] Replaces schematic proposed test files with routing and admission rules.
 - [x] Defines governed payload, finite outcome, Evidence Drawer, Focus Mode, map/time, accessibility, no-leak, browser side-effect, artifact, correction, and rollback requirements.
 - [x] Separates test, UI, runtime, policy, and release vocabularies.
-- [x] Changes documentation only.
+- [x] Records the bounded Explorer implementation without claiming broader UI capability.
 - [ ] Record repository-native CI after PR creation.
 
 ### Future active UI test capability
@@ -816,16 +820,16 @@ The capability is not operationally complete until owners/placement are accepted
 | packages/ui package JSON `9e165aa0…` | `CONFIRMED SCAFFOLD` | Package identity and version. | Build/test scripts. |
 | packages/ui source entry `2c9ea341…` | `CONFIRMED PLACEHOLDER` | Entry file exists. | Shared UI implementation. |
 | Explorer README `755dae3e…` | `CONFIRMED DOCUMENTATION` | Map-first shell and governed-API boundary. | Routes or deployment. |
-| Explorer source README `770cace0…` | `CONFIRMED DOCUMENTATION` | Proposed source layout and TODO status. | Feature implementation. |
-| Explorer package JSON `ce981192…` | `CONFIRMED TODO SCAFFOLD` | Scripts exist and echo TODO. | Build, test, or dev behavior. |
+| Explorer source README | `CONFIRMED DOCUMENTATION` | Bounded shell source and broader source-layout obligations. | Routes or deployment. |
+| Explorer package JSON | `CONFIRMED BOUNDED TOOLING` | Exact direct tool versions and real dev/build/test scripts. | Hosted run, browser behavior, or deployment. |
 | Evidence Drawer entry `6438397d…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Drawer behavior. |
 | Focus Panel entry `73e8763e…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Focus Mode behavior. |
 | Trust Header entry `2938d6ba…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Trust-header behavior. |
 | UI fixture README `8d87d87b…` | `CONFIRMED PLANNING DOC` | Fixture intent and safety posture. | Payload inventory or consumers. |
 | checked fixture paths | `NOT FOUND AT CHECKED PATHS` | Representative proposed payloads are not established. | Exhaustive fixture absence. |
 | Explorer boundary test `97d44069…` | `CONFIRMED EXECUTABLE STATIC GUARD` | Adapter import and path-literal assertions. | Rendering, browser, accessibility, or non-vacuous source coverage. |
-| Makefile `4dc8cf63…` | `CONFIRMED` | Default tests exclude UI; ui-build is TODO. | Dynamic/external UI collection. |
-| ui-build workflow `d73a43d7…` | `CONFIRMED TODO SCAFFOLD` | Workflow exists. | UI build or test execution. |
+| Makefile | `CONFIRMED` | Default tests exclude tests/ui; ui-build invokes the real Explorer build. | Dynamic/external UI collection. |
+| ui-build workflow | `CONFIRMED BOUNDED CI` | Frozen install plus real Explorer build/test commands. | Browser, accessibility, map, deployment, or release behavior. |
 | accessibility workflow `62ede945…` | `CONFIRMED TODO SCAFFOLD` | Workflow exists. | Axe or keyboard execution. |
 | bounded search/path checks | `CONFIRMED BOUNDED RESULT` | README-only direct-lane conclusion and sampled scaffold state. | Exhaustive absence across history, branches, generators, ignored files, or external CI. |
 
@@ -839,7 +843,7 @@ For implementation claims, prefer real UI source and registration, direct test r
 
 Keep UI assertions close to the implementation owner. Use this parent lane only for genuinely shared trust-state proof.
 
-A rendered answer is not truth. A visible citation is not citation validation. A release badge is not release approval. A static grep is not complete UI safety. An axe scan is not complete accessibility. A screenshot is not semantic proof. A hidden value is still a leak if it remains in the DOM or client state. A placeholder export is not a component. A green workflow that echoes TODO or scans zero targets is not coverage.
+A rendered answer is not truth. A visible citation is not citation validation. A release badge is not release approval. A static grep is not complete UI safety. An axe scan is not complete accessibility. A screenshot is not semantic proof. A hidden value is still a leak if it remains in the DOM or client state. A placeholder export is not a component. A green bounded unit workflow is not browser or product coverage.
 
 Add one complete, reviewable UI case at a time with a real system under test, accepted payload contract, synthetic fixture, positive and negative controls, accessible semantics, deterministic browser state, no-network enforcement, no-leak canaries, correction/rollback handling, and substantive CI.
 
