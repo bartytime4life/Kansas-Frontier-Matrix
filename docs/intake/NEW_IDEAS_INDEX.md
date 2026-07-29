@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.1
-status: draft
+version: v1.2
+status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-07-29
 policy_label: public
-related: [docs/doctrine/directory-rules.md NEEDS VERIFICATION, docs/intake/README.md PROPOSED, docs/intake/new-ideas-register.md PROPOSED, docs/registers/DRIFT_REGISTER.md NEEDS VERIFICATION, docs/registers/VERIFICATION_BACKLOG.md NEEDS VERIFICATION]
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Substantial clarity pass; repo implementation depth UNKNOWN; path supplied by user; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified at main c5e37844bc18aa129466415c5bb99389c1eb1424; New Ideas 5 source identity and bounded triage added; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -18,10 +18,10 @@ notes: [Substantial clarity pass; repo implementation depth UNKNOWN; path suppli
 A governed intake index for dated KFM “New Ideas” packets, preserving useful design pressure without turning exploratory notes into canon or implementation proof.
 
 > [!IMPORTANT]
-> **Status:** PROPOSED / NEEDS VERIFICATION  
+> **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED doctrine / EXPLORATORY packet content / UNKNOWN repo implementation depth
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at `main@c5e37844bc18aa129466415c5bb99389c1eb1424` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -55,12 +55,12 @@ This file does **not** make any packet authoritative. It does **not** prove that
 | Field | Value |
 | --- | --- |
 | Intended home | `docs/intake/NEW_IDEAS_INDEX.md` |
-| Placement status | PROPOSED because mounted repo topology was not verified in this session. |
+| Placement status | CONFIRMED present at `main@c5e37844bc18aa129466415c5bb99389c1eb1424`; content remains draft and non-authoritative. |
 | Responsibility root | `docs/` — documentation control, human-readable intake navigation, and governance orientation. |
 | Directory Rules basis | A human-readable intake index belongs under `docs/`; downstream implementation artifacts stay under their owning roots. Domain names appear as segments inside responsibility roots, not as new repo roots. |
 | Intake lane role | Capture and classify exploratory packets before promotion. |
 | Upstream doctrine | Directory Rules, documentation architecture passes, KFM truth posture, trust membrane, lifecycle law. |
-| Known placement conflict | Prior documentation architecture sources propose `docs/intake/new-ideas-register.md`; the user supplied `docs/intake/NEW_IDEAS_INDEX.md`. Treat this file as an index/landing page until repo convention and sibling register names are verified. |
+| Index/register relationship | Both this file and `docs/intake/new-ideas-register.md` are CONFIRMED present. This file is the packet landing index; the sibling register carries detailed triage records. Neither may evolve into packet authority. |
 
 ### Candidate downstream homes
 
@@ -166,6 +166,7 @@ This table records only the packet sources visible or directly retrieved in this
 | --- | --- | --- | --- | --- | --- | --- |
 | `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher `DecisionEnvelope`; `RunReceipt`; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
 | `NIP-2026-05-10` | `New Ideas 5-10-26.pdf` | Filename date | CAPTURED / EXPLORATORY | PMTiles operational hardening; versioned artifacts; sidecar + Bao/BLAKE3 proofs; DSSE/cosign/Rekor; OCI/ORAS publication; fail-closed CI gate; MapLibre performance testing; automation starter pack; promotion/rollback rehearsal. | `tools/attest/`, `tools/validators/`, `schemas/contracts/v1/artifacts/`, `.github/workflows/`, `release/`, `docs/architecture/map/`, `docs/runbooks/` after repo verification. | Verify current tool versions and licenses, package availability, OCI/referrer support, schema-home authority, workflow conventions, public-safe artifact exposure, and rollback evidence. |
+| `NIP-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | Capture date only; source date `NEEDS VERIFICATION` | TRIAGED / EXPLORATORY | Dual-renderer Story Node; STAC/catalog QA; signing and provenance; NWIS watcher; pipeline resilience; atmosphere fusion; soil/geology conversion; reproducible models; graph/AI retrieval; license automation. | Detailed routing in [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream candidates remain under existing ADR, contract, schema, policy, tool, pipeline, source, domain, data, and release roots. | Do not copy packet paths or code. Resolve renderer ADR, catalog profile/placeholder, external source facts, rights, dependency approval, contract/policy/test consequences, and exact bounded authorization per candidate. |
 
 ### Known lineage backlog to inventory
 
@@ -352,6 +353,44 @@ This packet is strong implementation pressure for an artifact-verification lane,
 ### Candidate next extraction
 
 Create a future issue or triage record for: “PMTiles publication attestation verifier and negative-path CI tests.”
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-07-29-new-ideas-5 — multi-cluster implementation pressure</strong></summary>
+
+### Source
+
+`New Ideas 5.pdf`
+
+- SHA-256: `094200ad69f3843d856fce782806f4090c31263567d533d0b425468730d1c91d`
+- Pages: `944`
+- Bytes: `10,558,510`
+- Source authoring date: `NEEDS VERIFICATION`
+- Capture and triage date: `2026-07-29`
+- Detailed review: [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md)
+
+### Captured themes
+
+- 3D Story Node and dual-renderer proposal.
+- Projection extension mapping and catalog QA.
+- Sigstore/cosign, SLSA, SBOM, attestations, and release lineage.
+- Hydrology/NWIS watchers and resilient pipeline patterns.
+- Atmosphere fusion and sensor/source-role modeling.
+- Soil/geology GeoParquet, COG, PMTiles, and deterministic identity.
+- Reproducible experiments, graph summaries, and AI retrieval.
+- License and dependency checks.
+
+### Triage notes
+
+The packet is broad, internally heterogeneous, and contains implementation-looking paths and code. Current repository evidence shows that several themes are corroborative, several require external verification, and two early proposals are immediately blocked as written:
+
+- the Cesium + MapLibre peer-renderer path requires an ADR-scoped decision and dependency/release burden; and
+- the networked catalog quick gate must not bypass unresolved STAC profile, placeholder-record, no-network, and record-versus-closure boundaries.
+
+### Candidate next extraction
+
+Create a separately authorized decision packet for deterministic, record-local STAC readiness after resolving profile ownership and the placeholder `collection.json` disposition. Do not copy the PDF's networked workflow directly.
 
 </details>
 

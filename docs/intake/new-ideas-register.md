@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.1-proposed
-status: draft
+version: v0.2
+status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-07-29
 policy_label: public
-related: [docs/intake/README.md, docs/intake/canonicalization-policy.md, docs/intake/promotion-checklist.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [PROPOSED first version; verify against mounted repo before treating path, owners, related links, or register rows as current implementation.]
+notes: [Repository path and sibling intake surfaces verified at main c5e37844bc18aa129466415c5bb99389c1eb1424; New Ideas 5 added as a triaged exploratory packet; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -18,10 +18,10 @@ notes: [PROPOSED first version; verify against mounted repo before treating path
 A governed intake ledger for exploratory KFM idea packets so useful proposals stay visible without becoming accidental canon.
 
 > [!IMPORTANT]
-> **Status:** PROPOSED / NEEDS VERIFICATION  
+> **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED register structure / UNKNOWN repo implementation depth  
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at `main@c5e37844bc18aa129466415c5bb99389c1eb1424` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -198,6 +198,7 @@ Each row should carry enough information for a maintainer to decide whether to p
 |---|---|---:|---|---|---|---|---|
 | `NI-2026-05-08-ecology-watchers` | `New Ideas 5-8-26` | 2026-05-08 | `EXPLORATORY` | `captured` | `policy-gate-proposal` | `policy/ecology/tiles/v1.rego`; `tools/ci/probes/`; `docs/domains/ecology/gating-spec.md` — all `PROPOSED` | Verify source rights, cadence, thresholds, and fail-closed policy shape before drafting fixtures. |
 | `NI-2026-05-10-pmtiles-attestation` | `New Ideas 5-10-26` | 2026-05-10 | `EXPLORATORY` | `captured` | `schema-contract-proposal` | `schemas/contracts/v1/...`; `tools/attest/`; `tools/validators/`; `.github/workflows/pmtiles-attestation.yml` — all `PROPOSED` | Convert sidecar concept into schema + valid/invalid fixture + validator plan after repo path inspection. |
+| `NI-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | `NEEDS VERIFICATION` (captured 2026-07-29) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream homes remain candidate-only | Review the dependency-ordered source map and authorize at most one path-bounded candidate after its ADR, profile, source, rights, contract, policy, test, and rollback gates close. |
 
 ### Register detail cards
 
@@ -220,6 +221,20 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Evidence threshold | Directory Rules placement check, schema-home check, tool license review, fixture pair, validator exit behavior, signature/proof verification plan. |
 | Promotion blocker | Tooling, path homes, PMTiles sidecar schema home, and CI workflow names remain `NEEDS VERIFICATION`. |
 | Decision note | Captured as a strong artifact-integrity proposal; do not promote until it is reduced from packet prose into a reviewed schema/validator/fixture bundle. |
+
+#### `NI-2026-07-29-new-ideas-5`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 5.pdf`; SHA-256 `094200ad69f3843d856fce782806f4090c31263567d533d0b425468730d1c91d`; 944 pages; 10,558,510 bytes |
+| Source date | `NEEDS VERIFICATION`; `2026-07-29` is capture and triage date only |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `StoryNode`, `Cesium`, `MapLibre`, `STAC`, `DCAT`, `PROV`, `catalog`, `NWIS`, `pipeline`, `attestation`, `atmosphere`, `soil`, `geology`, `knowledge-graph`, `AI`, `license` |
+| Detailed source map | [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md) |
+| Evidence threshold | Current repository evidence for path and gap claims; primary-source verification for external facts; accepted or explicitly reviewed ADR/profile/contract/policy authority; synthetic fixtures; finite validator outcomes; correction and rollback. |
+| Promotion blockers | Proposed peer-renderer conflict; unresolved catalog profile and placeholder record; stale or unverified endpoints, versions, licenses, and service claims; overlapping existing KFM lanes; dependency, rights, sensitivity, and public-release burden. |
+| Smallest next action | Review a decision-only packet for record-local STAC readiness and placeholder disposition, or choose another single dependency-closed candidate under a fresh exact authorization. |
+| Decision note | Triaged as useful multi-cluster implementation pressure. No packet code or suggested directory tree is promoted or implemented by this register update. |
 
 ## Promotion criteria
 
