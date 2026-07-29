@@ -48,6 +48,26 @@ def confirmed_settings(state: dict, *, required_checks: list[str] | None = None)
     }
 
 
+def unverified_settings(state: dict, *, observed_at: str) -> None:
+    """Give synthetic active-claim tests an explicit unverified platform state."""
+
+    state["settings_snapshot"] = {
+        "status": "NEEDS_VERIFICATION",
+        "observed_at": observed_at,
+        "evidence_refs": ["fixture://settings/unverified"],
+        "required_pull_request": None,
+        "required_approvals": None,
+        "dismiss_stale_reviews": None,
+        "require_conversation_resolution": None,
+        "required_status_checks": [],
+        "bypass_actors": [],
+        "restrict_direct_push": None,
+        "block_force_push": None,
+        "block_deletion": None,
+        "draft_merge_behavior": "NEEDS_VERIFICATION",
+    }
+
+
 def platform_evidence(
     context: dict,
     *,
@@ -87,6 +107,7 @@ def active_state(
     allowed_paths: list[str] | None = None,
 ) -> dict:
     state = load(STATE_PATH)
+    unverified_settings(state, observed_at=context["now"])
     state["projection_status"] = "CONFIRMED"
     state_open_prs = list(context["open_pull_requests"])
     if context["pr_state"] in {"MERGED", "CLOSED_UNMERGED"}:
@@ -145,6 +166,8 @@ def schema_errors(schema_path: Path, instance: dict) -> list:
 
 def test_tracked_state_is_schema_and_digest_valid() -> None:
     state = load(STATE_PATH)
+    assert state["schema_version"] == "2.0.0"
+    assert state["digest_spec"]["specification"] == "KFM-REPOSITORY-CONTROL-2"
     assert not validate_state_shape(state)
     assert compute_state_digest(state) == state["state_digest"]
     assert not schema_errors(STATE_SCHEMA, state)
@@ -170,6 +193,34 @@ def test_held_projection_is_expected_readiness_hold() -> None:
     assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
         "EXPECTED_READINESS_HOLD",
         "CLAIM_HELD",
+        True,
+    )
+
+
+def test_non_active_observed_snapshot_does_not_self_stale_after_head_moves() -> None:
+    state = load(STATE_PATH)
+    context = synthetic_context()
+    context["base_sha"] = "f" * 40
+
+    result = evaluate(state, context)
+
+    assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+        "EXPECTED_READINESS_HOLD",
+        "CLAIM_HELD",
+        True,
+    )
+
+
+def test_active_claim_remains_bound_to_its_observed_base_snapshot() -> None:
+    context = synthetic_context()
+    state = active_state(context)
+    context["base_sha"] = "f" * 40
+
+    result = evaluate(state, context)
+
+    assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+        "REGRESSION",
+        "OBSERVED_BASE_SHA_MISMATCH",
         True,
     )
 

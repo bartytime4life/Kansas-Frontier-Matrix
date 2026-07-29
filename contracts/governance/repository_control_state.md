@@ -1,11 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.2.1
+version: v0.3.0
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
-updated: 2026-07-27
+updated: 2026-07-29
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 related:
   - ../../docs/doctrine/directory-rules.md
@@ -20,7 +20,7 @@ related:
 
 # `RepositoryControlState`
 
-> **One-line meaning.** `RepositoryControlState` is a reviewed machine projection of bounded repository-control evidence; it can describe authorization and detect divergence, but it cannot authorize itself or replace GitHub repository settings.
+> **One-line meaning.** `RepositoryControlState` is a reviewed, observation-time machine projection of bounded repository-control evidence; it can describe authorization and detect divergence, but it cannot authorize itself, self-refresh to the containing commit, or replace GitHub repository settings.
 
 ## Authority boundary
 
@@ -31,13 +31,13 @@ This contract defines semantic meaning under `contracts/governance/`. Machine sh
 | Field family | Meaning |
 |---|---|
 | Identity | `schema_version`, `state_id`, `repository`, and `projection_status` identify the projection and whether it is proposed, confirmed, or superseded. |
-| Base snapshot | Records the default branch, pinned `main` SHA, observation time, and open pull-request set observed at that time. It is a checkpoint, not a self-refreshing statement of live GitHub state. |
+| Base snapshot | Records the default branch, the `main` SHA observed for the bounded snapshot, observation time, and open pull-request set observed at that time. It is a historical checkpoint and active-claim base pin, not a self-refreshing statement of live GitHub state. |
 | Claim | Records one finite state (`IDLE`, `ACTIVE`, `HELD`, or `TERMINAL`), exact branch, active PR set, allowed path patterns, allowed operations, expiry, and terminal condition. |
 | Authorization evidence | Identifies the actor and evidence references outside the state file. An active claim requires external evidence; the file cannot cite itself as authority. |
 | Permissions | Every consequential permission is explicit and defaults to `false`, including ready transition, merge, source activation, proof construction, release, deployment, and publication. |
 | Settings snapshot | Records only settings that were actually verified. A `CONFIRMED` snapshot must contain determinate review, status-check, bypass, direct-push, force-push, deletion, and draft-merge fields. |
 | Prepared context | Carries the current base/head/branch/PR/path/operation/open-PR evidence and, when merge permission is true, a separately evidenced platform block for draft state, ready transition, approvals, conversations, normalized required checks, and mergeability. |
-| Digest | `state_digest` covers every top-level state field except itself under `KFM-REPOSITORY-CONTROL-1`. |
+| Digest | `state_digest` covers every top-level state field except itself under `KFM-REPOSITORY-CONTROL-2`. |
 | Boundary | States what the projection and evaluator cannot do. |
 
 ## Finite claim states
@@ -49,9 +49,17 @@ This contract defines semantic meaning under `contracts/governance/`. Machine sh
 | `HELD` | Work is intentionally blocked pending a named condition. | Denied. |
 | `TERMINAL` | The claim reached a terminal observation and requires reconciliation before reuse. | Denied. |
 
+## Version 2 observed-base semantics
+
+Schema version `2.0.0` corrects the live-versus-observed ambiguity in the base snapshot. The registered JSON key `base.current_main_sha` is retained so existing incident fixtures and consumers do not gain a second alias or require an unsafe flag-day migration. In version 2 it has one exact meaning: **the default-branch SHA observed at `base.observed_at` for this snapshot**.
+
+The field does not claim that its value is the commit containing the projection, and advancing `main` after the observation does not by itself make a non-active historical snapshot invalid. Git commit identity depends on the committed tree, so a tracked file must not be treated as a self-updating pointer to its own containing commit. Current live head evidence belongs in a freshly prepared context or an externally recorded control cursor.
+
+For an `ACTIVE` claim, the evaluator still compares `context.base_sha` with this observed snapshot. A mismatch is `OBSERVED_BASE_SHA_MISMATCH` and fails closed because the authorized branch was prepared from a different base. For `IDLE`, `HELD`, or `TERMINAL` projections, later default-branch movement does not silently reactivate work or transform the historical observation into a regression; those states remain non-authorizing on their own terms.
+
 ## Bounded exception rules
 
-An active exception must pin the current base SHA, branch, PR number, observed open-PR set, allowed paths, allowed operations, expiry or terminal condition, actor, evidence references, and default-false permissions. Path scope supports only exact file paths or an explicit trailing `/**` recursive prefix. Other glob syntax, absolute paths, backslashes, control characters, dot segments, parent segments, and duplicate entries are invalid. `modify_control_logic` is separately gated because a guard must not silently weaken itself.
+An active exception must pin the observed base SHA, branch, PR number, observed open-PR set, allowed paths, allowed operations, expiry or terminal condition, actor, evidence references, and default-false permissions. Path scope supports only exact file paths or an explicit trailing `/**` recursive prefix. Other glob syntax, absolute paths, backslashes, control characters, dot segments, parent segments, and duplicate entries are invalid. `modify_control_logic` is separately gated because a guard must not silently weaken itself.
 
 ## Platform evidence rules
 
@@ -73,7 +81,7 @@ A required check satisfies the merge-readiness evaluation only with `PASS`. `EXP
 
 ## Failure behavior
 
-Malformed, unavailable, digest-mismatched, stale, expired, branch-mismatched, PR-mismatched, path-out-of-scope, operation-out-of-scope, control-self-modifying, or unauthorized terminal state fails closed. For a PR tracked by the projection's active-review or open-PR snapshot, a merged terminal state observed while `merge=false` is a `REGRESSION`, not evidence that merge was authorized, even when context metadata declares the scenario not applicable or explicitly skipped. An unrelated, untracked PR may still be classified `NOT_APPLICABLE`. An observed, confirmed, current ready transition without permission is also a regression in `IDLE`, `ACTIVE`, `HELD`, and `TERMINAL` claim states. Unverified settings or non-current platform state produce `UNKNOWN` when a decision depends on them. An explicit skip is otherwise recorded distinctly and remains merge-blocking by default.
+Malformed, unavailable, digest-mismatched, observed-base-mismatched, expired, branch-mismatched, PR-mismatched, path-out-of-scope, operation-out-of-scope, control-self-modifying, or unauthorized terminal state fails closed. Later live-head movement alone is not an observed-base mismatch for a non-active historical snapshot. For a merged PR, terminal divergence is evaluated before applicability or explicit-skip handling: a merged state observed while the claim is not active or `merge=false` is a `REGRESSION`, not evidence that merge was authorized. An observed, confirmed, current ready transition without permission is also a regression in `IDLE`, `ACTIVE`, `HELD`, and `TERMINAL` claim states. Unverified settings or non-current platform state produce `UNKNOWN` when a decision depends on them. An explicit skip is otherwise recorded distinctly and remains merge-blocking by default.
 
 ## Registered `CIOutcome` vocabulary
 

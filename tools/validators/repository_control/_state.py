@@ -79,8 +79,14 @@ def _validate_base(state: Mapping[str, Any]) -> None:
     _exact_keys(base, BASE_KEYS, "base")
     if not isinstance(base.get("default_branch"), str) or not base["default_branch"]:
         raise InputError("base.default_branch must be non-empty")
-    if not _sha(base.get("current_main_sha")):
-        raise InputError("base.current_main_sha must be lowercase 40-hex")
+    # Schema v2 retains the registered JSON key for compatibility, but its
+    # value is an observation-time snapshot. It is not a self-referential
+    # assertion that the containing commit will remain GitHub's live head.
+    observed_main_sha = base.get("current_main_sha")
+    if not _sha(observed_main_sha):
+        raise InputError(
+            "base.current_main_sha observed snapshot must be lowercase 40-hex"
+        )
     _time(base.get("observed_at"), "base.observed_at")
     _unique_positive_ints(base.get("open_pull_requests"), "base.open_pull_requests")
 
@@ -223,7 +229,7 @@ def _validate_digest(state: Mapping[str, Any]) -> list[Finding]:
         findings.append(Finding("STATE_DIGEST_SPEC_INVALID", str(exc)))
         return findings
     if (
-        digest_spec.get("specification") != "KFM-REPOSITORY-CONTROL-1"
+        digest_spec.get("specification") != "KFM-REPOSITORY-CONTROL-2"
         or digest_spec.get("algorithm") != "sha256"
         or digest_spec.get("canonicalization") != CANONICALIZATION_TEXT
         or digest_spec.get("excluded_fields") != ["state_digest"]
@@ -251,9 +257,9 @@ def validate_state_shape(state: Mapping[str, Any]) -> list[Finding]:
     except InputError as exc:
         return [Finding("STATE_TOP_LEVEL_INVALID", str(exc))]
 
-    if state.get("schema_version") != "1.0.0":
+    if state.get("schema_version") != "2.0.0":
         findings.append(
-            Finding("STATE_SCHEMA_VERSION_UNSUPPORTED", "schema_version must be 1.0.0")
+            Finding("STATE_SCHEMA_VERSION_UNSUPPORTED", "schema_version must be 2.0.0")
         )
     if not isinstance(state.get("state_id"), str) or not STATE_ID_RE.fullmatch(state["state_id"]):
         findings.append(Finding("STATE_ID_INVALID", "state_id does not match the registered grammar"))
