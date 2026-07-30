@@ -2,7 +2,7 @@
 doc_id: kfm://doc/kfm-atlas-seed-cards-optimized
 title: KFM Atlas Seed Cards — Optimized Carry-Forward Register
 type: atlas_card_register
-version: v0.4
+version: v0.6
 status: draft
 owners: <PLACEHOLDER — Atlas steward · Docs steward · Evidence steward · Domain stewards>
 created: 2026-06-12
@@ -11,9 +11,9 @@ policy_label: public
 authority_class: synthesis / candidate-card register; NOT canonical doctrine
 requested_path: docs/kfm_full_atlas_seed_cards.md
 current_repository_home: docs/kfm_full_atlas_seed_cards.md
-current_repository_home_status: CONFIRMED at main 3a9ebaf842e4dfe65deda95be0d15d6af62723eb; retained in place to preserve identity and avoid a parallel atlas carrier.
+current_repository_home_status: CONFIRMED at main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; retained in place to preserve identity and avoid a parallel atlas carrier.
 truth_posture: cite-or-abstain with explicit truth labels
-implementation_boundary: remote main was inspected at snapshot 3a9ebaf842e4dfe65deda95be0d15d6af62723eb; hosted CI for this proposed change, release state, dashboards, deployments, and runtime behavior remain NEEDS VERIFICATION unless separately verified.
+implementation_boundary: remote main was inspected at snapshot 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; hosted CI for this proposed change, release state, dashboards, deployments, and runtime behavior remain NEEDS VERIFICATION unless separately verified.
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/truth-posture.md
@@ -22,7 +22,11 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/atlases/
   - docs/domains/
+  - docs/intake/exploratory/new-ideas-4-14-source-map.md
+  - docs/intake/exploratory/new-ideas-4-15-source-map.md
   - docs/intake/exploratory/new-ideas-4-16-source-map.md
+  - docs/intake/exploratory/new-ideas-4-23-source-map.md
+  - docs/intake/exploratory/new-ideas-4-25-source-map.md
   - docs/intake/exploratory/new-ideas-4-30-source-map.md
 tags:
   - kfm
@@ -40,6 +44,8 @@ notes:
   - "v0.2 — optimized from pasted seed-card draft into a compact maintainable register."
   - "v0.3 — adds 30 packet-local cards in 10 triads from New Ideas 4-16-26, reconciles them against the pinned remote-main snapshot, and fills cross-cutting gaps without promoting packet code or paths."
   - "v0.4 — adds 33 packet-local cards in 11 triads from New Ideas 4-30-26, focused on retrieval intent, rights drift, sampling support, distribution meaning, coverage bias, measurement reconciliation, delivery latency, asynchronous transfers, offline trust, verified rendering, and confounder-aware fitness."
+  - "v0.5 — adds 30 packet-local cards in 10 triads from New Ideas 4-23-26 and New Ideas 4-25-26, focused on custody, composed-claim closure, trust-root history, replay-safe effects, obligations, reversible reconciliation, taxonomic concepts, place-name authority, survey-control provenance, and adversarial validator assurance."
+  - "v0.6 — reconciles the Pass 23 source packets New Ideas 4-14-26 and New Ideas 4-15-26 against current repository evidence and adds 21 cards in 7 triads focused on bitemporal verification replay, source-conflict influence, cross-layer outcome parity, verifier portability, quality translation, runtime-proof artifact lifecycle, and interface evolution."
   - "The original draft repeated shared dependencies, tensions, open questions, and self-check text in every card. This edition deduplicates those into shared sections while preserving every card topic, class, category, source-ID set, and normalized statement."
   - "Stable IDs intentionally remain templates until PASS and ordinal allocation are supplied."
 ] -->
@@ -48,7 +54,7 @@ notes:
 
 > **Status:** Draft candidate-card register  
 > **Authority:** Synthesis / candidate backlog, not canonical doctrine  
-> **Input shape:** 159 card entries arranged as 53 idea/feature/programming triads
+> **Input shape:** 210 card entries arranged as 70 idea/feature/programming triads
 > **Core posture:** evidence-first · map-first · time-aware · cite-or-abstain · fail-closed · auditable · reversible
 
 ---
@@ -59,7 +65,7 @@ This document optimizes the supplied KFM seed-card draft into a maintainable rep
 
 The source draft already used KFM truth labels and included required card fields. The main problem was maintainability: every card repeated the same dependency, tension, open-question, carry-forward, and self-check language. This edition preserves the card content but moves repeated control language into shared sections and appends only repository-reconciled packet gaps.
 
-This is a **candidate register**, not an implementation claim. The gap passes were reconciled against remote `main@3a9ebaf842e4dfe65deda95be0d15d6af62723eb`, but no card here proves later repository state, hosted enforcement, release state, deployment, or runtime behavior.
+This is a **candidate register**, not an implementation claim. The gap passes were reconciled against remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7`, but no card here proves later repository state, hosted enforcement, release state, deployment, or runtime behavior.
 
 ---
 
@@ -70,14 +76,17 @@ This is a **candidate register**, not an implementation claim. The gap passes we
 | Original v0.2 card count | 96 |
 | New 4-16 gap-fill cards | 30 |
 | New 4-30 gap-fill cards | 33 |
-| Current card count | 159 |
-| Triad count | 53 |
-| Idea cards | 53 |
-| Feature cards | 53 |
-| Programming cards | 53 |
+| New 4-23 gap-fill cards | 15 |
+| New 4-25 gap-fill cards | 15 |
+| New 4-14/4-15 reconciled gap-fill cards | 21 |
+| Current card count | 210 |
+| Triad count | 70 |
+| Idea cards | 70 |
+| Feature cards | 70 |
+| Programming cards | 70 |
 | Stable ID posture | Template retained: `KFM-P{PASS}-{CLASS}-{NNNN}` |
 | Spec hash posture | `PROPOSED` until canonical JCS + SHA-256 computation |
-| Repository implementation maturity | `PARTIAL` at remote `main@3a9ebaf…`; hosted CI significance for this proposed change, releases, deployments, and runtime remain `NEEDS VERIFICATION` |
+| Repository implementation maturity | `PARTIAL` at remote `main@5266ba5…`; hosted CI significance for this proposed change, releases, deployments, and runtime remain `NEEDS VERIFICATION` |
 | Primary optimization | Deduplicated repeated control text; preserved normalized statements and source IDs |
 | Current repo home | `docs/kfm_full_atlas_seed_cards.md` — **CONFIRMED** at the pinned snapshot |
 
@@ -87,7 +96,7 @@ This is a **candidate register**, not an implementation claim. The gap passes we
 
 **Current path:** `docs/kfm_full_atlas_seed_cards.md`
 
-**Status:** **CONFIRMED** at remote `main@3a9ebaf842e4dfe65deda95be0d15d6af62723eb`.
+**Status:** **CONFIRMED** at remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7`.
 
 **Directory Rules basis:** this is a human-facing synthesis and candidate register, so `docs/` owns it. The existing file is updated in place to preserve document identity and stable links. It must not be copied into a second writable atlas home or placed under `schemas/`, `contracts/`, `policy/`, `release/`, `data/`, `fixtures/`, or `tests/` because it is not a machine schema, semantic contract, policy bundle, release artifact, data artifact, fixture, or test.
 
@@ -123,7 +132,7 @@ This edition preserves those placeholders because no pass number or ordinal assi
 For local review only, each card also receives a noncanonical candidate key:
 
 ```text
-KFM-CAND-0001 ... KFM-CAND-0096
+KFM-CAND-0001 ... KFM-CAND-0210
 ```
 
 When a pass is assigned, replace placeholders with deterministic pass-local IDs and compute `spec_hash` from canonicalized card JSON.
@@ -174,25 +183,29 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 |---|---|
 | `SRC-3DGIS` | Archaeological 3D GIS; role: 3D archaeology and field capture reference. Used by 6 cards. |
 | `SRC-AGRI` | KFM Agriculture Domain Implementation Dossier Revised; role: agriculture domain lane blueprint. Used by 3 cards. |
-| `SRC-AIREF` | AI Concepts Using Python; role: AI/data/ML workflow reference. Used by 6 cards. |
+| `SRC-AIREF` | AI Concepts Using Python; role: AI/data/ML workflow reference. Used by 12 cards. |
 | `SRC-APIREF` | Designing Great Web APIs; role: API contract and resource lifecycle reference. Used by 3 cards. |
 | `SRC-ARCH` | KFM Archaeology Architecture Plan; role: archaeology lane and exact-location deny posture. Used by 6 cards. |
-| `SRC-ATM` | KFM Atmosphere / Air Architecture Report; role: air/climate/smoke/EO lane blueprint. Used by 12 cards. |
-| `SRC-DIR` | Directory Rules; role: placement doctrine; basis: responsibility roots, schema-home convention, lifecycle invariant, ADR/drift rules. Used by 9 cards. |
-| `SRC-ENCYC` | KFM Domain and Capability Encyclopedia; role: all-domain and cross-domain capability atlas; basis: operating law and domain inventory. Used by 87 cards. |
-| `SRC-FAUNA` | KFM Fauna Architecture PDF-Only Report; role: fauna domain lane and geoprivacy blueprint. Used by 9 cards. |
-| `SRC-FLORA` | KFM Flora Architecture PDF-Only Implementation Blueprint; role: flora domain lane and rare-location controls. Used by 3 cards. |
-| `SRC-GAI` | KFM Governed AI Extended Pro Source Ledger Report; role: provider-neutral governed AI design and finite outcomes. Used by 9 cards. |
+| `SRC-ATM` | KFM Atmosphere / Air Architecture Report; role: air/climate/smoke/EO lane blueprint. Used by 24 cards. |
+| `SRC-DIR` | Directory Rules; role: placement doctrine; basis: responsibility roots, schema-home convention, lifecycle invariant, ADR/drift rules. Used by 12 cards. |
+| `SRC-ENCYC` | KFM Domain and Capability Encyclopedia; role: all-domain and cross-domain capability atlas; basis: operating law and domain inventory. Used by 135 cards. |
+| `SRC-FAUNA` | KFM Fauna Architecture PDF-Only Report; role: fauna domain lane and geoprivacy blueprint. Used by 21 cards. |
+| `SRC-FLORA` | KFM Flora Architecture PDF-Only Implementation Blueprint; role: flora domain lane and rare-location controls. Used by 12 cards. |
+| `SRC-GAI` | KFM Governed AI Extended Pro Source Ledger Report; role: provider-neutral governed AI design and finite outcomes. Used by 30 cards. |
 | `SRC-GEO` | KFM Geology and Natural Resources Architecture Report; role: geology/natural resources domain lane blueprint. Used by 3 cards. |
-| `SRC-GIS` | A Primer of GIS; role: geographic/cartographic representation reference. Used by 6 cards. |
-| `SRC-GREEN` | Kansas Frontier Matrix Definitive Greenfield Building Plan v1.1; role: trust spine and build principles; basis: lifecycle, object families, receipts, promotion, and anti-patterns. Used by 21 cards. |
+| `SRC-GIS` | A Primer of GIS; role: geographic/cartographic representation reference. Used by 12 cards. |
+| `SRC-GREEN` | Kansas Frontier Matrix Definitive Greenfield Building Plan v1.1; role: trust spine and build principles; basis: lifecycle, object families, receipts, promotion, and anti-patterns. Used by 54 cards. |
 | `SRC-HAB` | KFM Habitat Architecture Implementation Blueprint; role: habitat domain lane blueprint. Used by 3 cards. |
 | `SRC-HABFAUNA` | KFM Habitat + Fauna Thin-Slice Extended Pro Blueprint; role: habitat/fauna fixture-first proof slice. Used by 6 cards. |
 | `SRC-HAZ` | KFM Hazards Architecture Extended Pro Blueprint; role: hazards lane and non-emergency-alerting boundary. Used by 3 cards. |
-| `SRC-HYD` | KFM Hydrology Extended Pro Reference Report; role: hydrology domain lane blueprint. Used by 6 cards. |
-| `SRC-MAP` | KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual; role: map renderer boundary and trust-visible UI doctrine. Used by 18 cards. |
-| `SRC-MAPMASTER` | Master MapLibre Components-Functions-Features; role: cumulative MapLibre/tile/artifact atlas; basis: tile, style, manifest, PMTiles/COG, and validation ideas. Used by 21 cards. |
+| `SRC-HYD` | KFM Hydrology Extended Pro Reference Report; role: hydrology domain lane blueprint. Used by 9 cards. |
+| `SRC-MAP` | KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual; role: map renderer boundary and trust-visible UI doctrine. Used by 30 cards. |
+| `SRC-MAPMASTER` | Master MapLibre Components-Functions-Features; role: cumulative MapLibre/tile/artifact atlas; basis: tile, style, manifest, PMTiles/COG, and validation ideas. Used by 33 cards. |
+| `SRC-NEW414` | New Ideas 4-14-26; role: exploratory watcher, policy, hydrology-identity, promotion, verification-history, conflict, and runtime-trust packet; identity: SHA-256 `432c5930b66fac814b21680c60015cff2eb286520ec01211bef69c0c78117f3e`, 410 pages; prior Pass 23 source `SRC-P23-003`. Used by 15 new gap-fill cards. |
+| `SRC-NEW415` | New Ideas 4-15-26; role: exploratory soil, HLS/STAC, people/consent, time-aware map, runtime-proof, watcher, and contract packet; identity: SHA-256 `fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111`, 435 pages; prior Pass 23 source `SRC-P23-004`. Used by 15 new gap-fill cards. |
 | `SRC-NEW416` | New Ideas 4-16-26; role: exploratory governed-ingest, baseline, anomaly, consent, temporal-map, artifact-integrity, catalog-profile, and historical-network packet; identity: SHA-256 `73e10e3c75c1f3cbbd49641b33bddfde93895b85c7562af3dbe161cf2d4c6c16`, 110 pages. Used by 30 new gap-fill cards. |
+| `SRC-NEW423` | New Ideas 4-23-26; role: exploratory evidence-custody, composed-claim, signing, trust-root, event-replay, review-obligation, hydrology, ecology, and consent packet; identity: SHA-256 `76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d`, 652 pages. Used by 15 new gap-fill cards. |
+| `SRC-NEW425` | New Ideas 4-25-26; role: exploratory biodiversity, evidence, PLSS/GLO, taxonomy, place-name, validation, AI, watcher, and consent packet; identity: SHA-256 `47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061`, 337 pages. Used by 15 new gap-fill cards. |
 | `SRC-NEW430` | New Ideas 4-30-26; role: exploratory flora/fauna intake, environmental fusion, retrieval, policy, catalog, map-artifact, offline-delivery, and validator packet; identity: SHA-256 `3d7585dd43009c14fa7ae9cec864bb0ecc84340d6fa920b67bc53cd1e7adda0b`, 289 pages. Used by 33 new gap-fill cards. |
 | `SRC-NEW510` | New Ideas 5-10-26; role: PMTiles sidecar/attestation operational packet. Used by 6 cards. |
 | `SRC-NEW515` | New Ideas 5-15-26; role: CDL/PLANTS material-change watcher packet. Used by 6 cards. |
@@ -201,13 +214,13 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 | `SRC-P18` | KFM Components Pass 18; role: prior cumulative card atlas; basis: 500 cards across 14 categories and source-supported idea entries. Used by 12 cards. |
 | `SRC-P20` | KFM Components Pass 20 Unified Idea Index; role: cumulative idea/category atlas; basis: 9-category and 14-category normalization, implementation boundary, expansion agenda. Used by 48 cards. |
 | `SRC-PEOPLE` | KFM People, Genealogy-DNA, and Land Ownership Architecture Blueprint; role: people/DNA/land sensitivity blueprint. Used by 9 cards. |
-| `SRC-PIPE` | Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3; role: lifecycle and query-save-recompile loop doctrine; basis: pipeline loop, source authority ladder, public-client rule. Used by 24 cards. |
-| `SRC-ROADS` | KFM Roads, Rail, and Trade Routes Architecture Plan; role: transport lane blueprint. Used by 6 cards. |
-| `SRC-SETTLE` | KFM Settlements, Cities, and Infrastructure Plan; role: settlements/infrastructure lane blueprint. Used by 3 cards. |
-| `SRC-SOIL` | KFM Soil Architecture Extended Pro Planning Report; role: soil domain lane blueprint. Used by 6 cards. |
-| `SRC-TEMPORAL` | Developing Time-Oriented Database Applications in SQL; role: temporal database semantics reference. Used by 9 cards. |
+| `SRC-PIPE` | Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3; role: lifecycle and query-save-recompile loop doctrine; basis: pipeline loop, source authority ladder, public-client rule. Used by 51 cards. |
+| `SRC-ROADS` | KFM Roads, Rail, and Trade Routes Architecture Plan; role: transport lane blueprint. Used by 9 cards. |
+| `SRC-SETTLE` | KFM Settlements, Cities, and Infrastructure Plan; role: settlements/infrastructure lane blueprint. Used by 6 cards. |
+| `SRC-SOIL` | KFM Soil Architecture Extended Pro Planning Report; role: soil domain lane blueprint. Used by 12 cards. |
+| `SRC-TEMPORAL` | Developing Time-Oriented Database Applications in SQL; role: temporal database semantics reference. Used by 21 cards. |
 | `SRC-UIAI` | KFM Whole-UI + Governed AI Expansion Report; role: whole-UI and governed-AI expansion plan. Used by 3 cards. |
-| `SRC-URBAN` | GIS in Sustainable Urban Planning and Management; role: planning, indicators, resilience, participation reference. Used by 6 cards. |
+| `SRC-URBAN` | GIS in Sustainable Urban Planning and Management; role: planning, indicators, resilience, participation reference. Used by 9 cards. |
 
 ---
 
@@ -268,6 +281,23 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 | `KFM-TRIAD-051` | Offline Release Capsule and Trust Freshness | `SRC-NEW430`, `SRC-MAP`, `SRC-MAPMASTER`, `SRC-GREEN` | `KFM-CAND-0151` | `KFM-CAND-0152` | `KFM-CAND-0153` |
 | `KFM-TRIAD-052` | Verified Rendering Resource Envelope | `SRC-NEW430`, `SRC-MAP`, `SRC-MAPMASTER`, `SRC-GAI` | `KFM-CAND-0154` | `KFM-CAND-0155` | `KFM-CAND-0156` |
 | `KFM-TRIAD-053` | Confounder Exclusion and Observation Fitness | `SRC-NEW430`, `SRC-ATM`, `SRC-AIREF`, `SRC-ENCYC` | `KFM-CAND-0157` | `KFM-CAND-0158` | `KFM-CAND-0159` |
+| `KFM-TRIAD-054` | Cross-Boundary Evidence Custody and Reconciliation | `SRC-NEW423`, `SRC-PIPE`, `SRC-GREEN`, `SRC-ENCYC` | `KFM-CAND-0160` | `KFM-CAND-0161` | `KFM-CAND-0162` |
+| `KFM-TRIAD-055` | Composed Claim Dependency Closure | `SRC-NEW423`, `SRC-ENCYC`, `SRC-GAI`, `SRC-MAP` | `KFM-CAND-0163` | `KFM-CAND-0164` | `KFM-CAND-0165` |
+| `KFM-TRIAD-056` | Trust-Root Lifecycle and Historical Signature Verification | `SRC-NEW423`, `SRC-GREEN`, `SRC-MAPMASTER`, `SRC-GAI` | `KFM-CAND-0166` | `KFM-CAND-0167` | `KFM-CAND-0168` |
+| `KFM-TRIAD-057` | Replay-Safe Event Identity and Side-Effect Ledger | `SRC-NEW423`, `SRC-PIPE`, `SRC-GREEN`, `SRC-ENCYC` | `KFM-CAND-0169` | `KFM-CAND-0170` | `KFM-CAND-0171` |
+| `KFM-TRIAD-058` | Conditional Decision Obligations and Closure | `SRC-NEW423`, `SRC-GREEN`, `SRC-ENCYC`, `SRC-GAI` | `KFM-CAND-0172` | `KFM-CAND-0173` | `KFM-CAND-0174` |
+| `KFM-TRIAD-059` | Reversible Entity Reconciliation and Conflict-Preserving Dedupe | `SRC-NEW425`, `SRC-FAUNA`, `SRC-FLORA`, `SRC-ENCYC` | `KFM-CAND-0175` | `KFM-CAND-0176` | `KFM-CAND-0177` |
+| `KFM-TRIAD-060` | Taxonomic Concept and Name-Usage Lineage | `SRC-NEW425`, `SRC-FLORA`, `SRC-FAUNA`, `SRC-ENCYC` | `KFM-CAND-0178` | `KFM-CAND-0179` | `KFM-CAND-0180` |
+| `KFM-TRIAD-061` | Place-Name Authority and Temporal Alias Graph | `SRC-NEW425`, `SRC-SETTLE`, `SRC-ROADS`, `SRC-TEMPORAL` | `KFM-CAND-0181` | `KFM-CAND-0182` | `KFM-CAND-0183` |
+| `KFM-TRIAD-062` | Survey-Control and Boundary Derivation Provenance | `SRC-NEW425`, `SRC-GIS`, `SRC-TEMPORAL`, `SRC-ENCYC` | `KFM-CAND-0184` | `KFM-CAND-0185` | `KFM-CAND-0186` |
+| `KFM-TRIAD-063` | Adversarial Validator Assurance and Mutation Adequacy | `SRC-NEW425`, `SRC-GREEN`, `SRC-PIPE`, `SRC-GAI` | `KFM-CAND-0187` | `KFM-CAND-0188` | `KFM-CAND-0189` |
+| `KFM-TRIAD-064` | Bitemporal Verification-State Replay | `SRC-NEW414`, `SRC-TEMPORAL`, `SRC-GREEN`, `SRC-ENCYC` | `KFM-CAND-0190` | `KFM-CAND-0191` | `KFM-CAND-0192` |
+| `KFM-TRIAD-065` | Source-Conflict Topology and Influence Accounting | `SRC-NEW414`, `SRC-GAI`, `SRC-GREEN`, `SRC-ENCYC` | `KFM-CAND-0193` | `KFM-CAND-0194` | `KFM-CAND-0195` |
+| `KFM-TRIAD-066` | Cross-Layer Outcome Projection and Parity | `SRC-NEW414`, `SRC-NEW415`, `SRC-GAI`, `SRC-MAP` | `KFM-CAND-0196` | `KFM-CAND-0197` | `KFM-CAND-0198` |
+| `KFM-TRIAD-067` | Verifier Profile and Capability Portability | `SRC-NEW414`, `SRC-NEW415`, `SRC-GREEN`, `SRC-MAPMASTER` | `KFM-CAND-0199` | `KFM-CAND-0200` | `KFM-CAND-0201` |
+| `KFM-TRIAD-068` | Source-Native Quality Translation and Health Separation | `SRC-NEW415`, `SRC-SOIL`, `SRC-ATM`, `SRC-ENCYC` | `KFM-CAND-0202` | `KFM-CAND-0203` | `KFM-CAND-0204` |
+| `KFM-TRIAD-069` | Generated Runtime-Proof Artifact Lifecycle | `SRC-NEW415`, `SRC-GREEN`, `SRC-PIPE`, `SRC-ENCYC` | `KFM-CAND-0205` | `KFM-CAND-0206` | `KFM-CAND-0207` |
+| `KFM-TRIAD-070` | Observed Interface Evolution and Compatibility Window | `SRC-NEW414`, `SRC-NEW415`, `SRC-PIPE`, `SRC-DIR` | `KFM-CAND-0208` | `KFM-CAND-0209` | `KFM-CAND-0210` |
 
 ---
 
@@ -799,7 +829,7 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 
 **Implementation-surface note:** PROPOSED — Build the existing stable local diff helper first; feed its report into a separate materiality contract so the comparator never becomes the policy or promotion authority.
 
-**Carry-forward state:** NEW_GAP_FILL. Remote `main@3a9ebaf…` confirms watcher, diff, receipt, and materiality language, but a common enforced change-assessment chain remains **NEEDS VERIFICATION**.
+**Carry-forward state:** NEW_GAP_FILL. Remote `main@5266ba5…` confirms watcher, diff, receipt, and materiality language, but a common enforced change-assessment chain remains **NEEDS VERIFICATION**.
 
 ### KFM-TRIAD-034 — Identifier and Precision Lineage
 
@@ -1121,24 +1151,296 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 
 **Carry-forward state:** NEW_GAP_FILL. Domain validators already preserve quality, support, source role, and mismatch reasons; one reusable, correctable fitness-for-use decision family remains **PARTIAL**.
 
+### KFM-TRIAD-054 — Cross-Boundary Evidence Custody and Reconciliation
+
+**Why it matters:** PROPOSED — A sender receipt alone cannot prove what a receiving lane accepted, rejected, duplicated, quarantined, or left unresolved.
+
+**Source IDs:** `SRC-NEW423`, `SRC-PIPE`, `SRC-GREEN`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0160` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | DAT - Data Lifecycle, Provenance, Receipts | PROPOSED — KFM should treat every transfer across lifecycle, environment, organization, or responsibility boundaries as a custody handoff that preserves the exact offered artifact, receiving decision, accepted subset, rejected subset, duplicates, and unresolved balance. |
+| `KFM-CAND-0161` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers compare sender and receiver receipts, inspect item and byte accounting, follow retries and replacements, and distinguish complete, partially accepted, quarantined, disputed, and unreconciled handoffs. |
+| `KFM-CAND-0162` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define CustodyHandoff, AcceptanceRecord, and ReconciliationReport objects with digest and count conservation, idempotent retry, duplicate detection, reject reasons, timeout, correction, and closure fixtures. |
+
+**Implementation-surface note:** PROPOSED — A custody receipt proves what was offered or observed at a boundary, not that the receiving lane validated truth, accepted rights, or authorized release.
+
+**Carry-forward state:** NEW_GAP_FILL. Lane receipts and promotion records exist, but a common sender-to-receiver reconciliation seam remains **PARTIAL**.
+
+### KFM-TRIAD-055 — Composed Claim Dependency Closure
+
+**Why it matters:** PROPOSED — A public claim assembled from several evidence bundles can appear supported even when a mandatory dependency is missing, denied, contradictory, or stale.
+
+**Source IDs:** `SRC-NEW423`, `SRC-ENCYC`, `SRC-GAI`, `SRC-MAP`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0163` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | PROPOSED — KFM should model composed claims as dependency graphs whose required, optional, one-of, excluded, contradictory, and context-only evidence roles determine whether the whole claim is supported, qualified, abstained, denied, or erroneous. |
+| `KFM-CAND-0164` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should show which claim components closed, which dependencies are missing or withheld, why the conclusion was narrowed, and whether an alternative evidence path satisfied the declared claim profile. |
+| `KFM-CAND-0165` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | PROPOSED — KFM should define ComposedClaimProfile, ClaimDependency, and ClaimClosureReport contracts with cycle detection, role cardinality, freshness, policy outcome, contradiction, alternative-path, and fail-closed fixtures. |
+
+**Implementation-surface note:** PROPOSED — Closure is evaluated against a declared claim profile; it must not invent support by silently dropping required dependencies or averaging contradictory evidence.
+
+**Carry-forward state:** NEW_GAP_FILL. Claim envelopes and evidence closure exist, but reusable dependency-graph semantics for composed claims remain **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-056 — Trust-Root Lifecycle and Historical Signature Verification
+
+**Why it matters:** PROPOSED — Key rotation, revocation, expiry, and trust-policy change can make a currently valid key different from the key that was valid when an artifact was signed or reviewed.
+
+**Source IDs:** `SRC-NEW423`, `SRC-GREEN`, `SRC-MAPMASTER`, `SRC-GAI`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0166` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | PROPOSED — KFM should version trust roots, signer roles, activation, expiry, revocation, compromise, supersession, and verification policy so current trust and historical validity are evaluated without rewriting prior evidence. |
+| `KFM-CAND-0167` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers inspect signer identity, trust-profile version, signing and verification times, key status then and now, revocation or compromise reason, offline-verification posture, and any required re-sign, correction, withdrawal, or abstention. |
+| `KFM-CAND-0168` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | PROPOSED — KFM should define TrustRootRecord, SignerAuthorization, KeyStatusEvent, and HistoricalVerificationReceipt with synthetic active, rotated, expired, revoked, compromised, unknown, offline, and policy-version mismatch fixtures. |
+
+**Implementation-surface note:** PROPOSED — Historical signature validity proves origin and integrity under the recorded trust profile; it does not prove claim truth, rights, review sufficiency, or release fitness.
+
+**Carry-forward state:** NEW_GAP_FILL. Signing and key-rotation guidance is substantial, while accepted machine authority and historical-verification enforcement remain **PARTIAL**.
+
+### KFM-TRIAD-057 — Replay-Safe Event Identity and Side-Effect Ledger
+
+**Why it matters:** PROPOSED — At-least-once delivery, retries, reordered events, and worker restarts can duplicate consequential effects even when the underlying transform is deterministic.
+
+**Source IDs:** `SRC-NEW423`, `SRC-PIPE`, `SRC-GREEN`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0169` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | DAT - Data Lifecycle, Provenance, Receipts | PROPOSED — KFM should separate deterministic event identity, delivery attempt, processing result, side-effect intent, effect reservation, effect completion, and replay outcome so duplicate delivery cannot silently repeat a consequential action. |
+| `KFM-CAND-0170` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let operators trace an event through deliveries, retries, locks or reservations, completed effects, stale attempts, poison handling, compensations, and final finite state without interpreting retry count as work completed. |
+| `KFM-CAND-0171` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define GovernedEventEnvelope, DeliveryAttempt, SideEffectIntent, and EffectLedgerEntry contracts with deterministic identity, compare-and-set reservation, idempotency scope, ordering, replay, crash recovery, compensation, and duplicate-delivery fixtures. |
+
+**Implementation-surface note:** PROPOSED — Exactly-once claims should be avoided unless the complete transport, reservation, effect, and recovery boundary is proven; otherwise report at-least-once delivery with idempotent effects.
+
+**Carry-forward state:** NEW_GAP_FILL. Idempotence and replay safety are widely required, but a common event-to-effect ledger remains **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-058 — Conditional Decision Obligations and Closure
+
+**Why it matters:** PROPOSED — “Approved with obligations” is unsafe when required conditions can be lost between review, policy evaluation, transformation, and release.
+
+**Source IDs:** `SRC-NEW423`, `SRC-GREEN`, `SRC-ENCYC`, `SRC-GAI`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0172` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | PROPOSED — KFM should treat conditional approval as a set of versioned obligations whose application, evidence, satisfaction, waiver, expiry, violation, reopening, supersession, and correction remain explicit and fail closed for consequential transitions. |
+| `KFM-CAND-0173` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should show every active obligation, responsible steward, due or expiry condition, satisfaction evidence, waiver authority, affected artifacts and releases, unmet consequences, and downstream reopening or withdrawal state. |
+| `KFM-CAND-0174` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | PROPOSED — KFM should define ConditionalDecision, ObligationRecord, and ObligationClosureDecision contracts with applicability, dependency, satisfaction evidence, waiver, expiry, re-evaluation, correction, and release-blocking negative fixtures. |
+
+**Implementation-surface note:** PROPOSED — An obligation is not closed by a text field or reviewer assertion alone; the accepted closure profile must bind evidence and authority appropriate to its significance.
+
+**Carry-forward state:** NEW_GAP_FILL. Review records contain obligation concepts, while end-to-end application and closure enforcement remain **PARTIAL**.
+
+### KFM-TRIAD-059 — Reversible Entity Reconciliation and Conflict-Preserving Dedupe
+
+**Why it matters:** PROPOSED — Automatic winner-takes-all deduplication can merge distinct entities, erase source disagreement, and make later correction impossible.
+
+**Source IDs:** `SRC-NEW425`, `SRC-FAUNA`, `SRC-FLORA`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0175` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should preserve source-native entity assertions and treat match, non-match, merge, split, cluster, and unresolved conflict as reversible decisions supported by versioned evidence rather than destructive normalization. |
+| `KFM-CAND-0176` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should let stewards compare candidate entities, inspect contributing and conflicting attributes, approve or reject matches, split prior clusters, restore source views, and see every downstream artifact affected by reconciliation changes. |
+| `KFM-CAND-0177` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define MatchProposal, ReconciliationDecision, EntityCluster, and SplitDecision objects with blocking keys, feature evidence, confidence limits, authority roles, transitivity guards, reversal, correction, and false-merge fixtures. |
+
+**Implementation-surface note:** PROPOSED — Similar names, rounded geometry, dates, or identifiers can generate candidates but must not silently decide identity or delete losing assertions.
+
+**Carry-forward state:** NEW_GAP_FILL. Domain identity and dedupe rules exist, but a reusable reversible reconciliation family remains **PARTIAL**.
+
+### KFM-TRIAD-060 — Taxonomic Concept and Name-Usage Lineage
+
+**Why it matters:** PROPOSED — A scientific-name string can refer to different circumscriptions over time, while one taxon concept can accumulate synonyms, misapplications, splits, lumps, and competing treatments.
+
+**Source IDs:** `SRC-NEW425`, `SRC-FLORA`, `SRC-FAUNA`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0178` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should separate source-native NameUsage from TaxonConcept and preserve authorship, rank, treatment, valid time, concept relation, source role, and unresolved disagreement instead of treating an accepted-name string as timeless identity. |
+| `KFM-CAND-0179` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should show accepted-for-use context, synonyms, homonyms, misapplied names, split and lump history, source treatments, unresolved mappings, affected occurrence or distribution claims, and the version used for a query or release. |
+| `KFM-CAND-0180` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should define NameUsage, TaxonConcept, ConceptRelation, and TaxonomyReconciliationDecision contracts with source-native identifiers and synthetic synonym, homonym, split, lump, misapplication, unresolved, supersession, and reversal fixtures. |
+
+**Implementation-surface note:** PROPOSED — A versioned reconciliation profile may select a working concept for a declared use, but it must retain the source treatments and must not imply universal taxonomic authority.
+
+**Carry-forward state:** NEW_GAP_FILL. Flora and fauna crosswalks exist, while a common cross-domain concept and name-usage lineage remains **PARTIAL**.
+
+### KFM-TRIAD-061 — Place-Name Authority and Temporal Alias Graph
+
+**Why it matters:** PROPOSED — Official, variant, historical, translated, community, and disputed names can change independently of a feature's existence, geometry, legal status, or ownership.
+
+**Source IDs:** `SRC-NEW425`, `SRC-SETTLE`, `SRC-ROADS`, `SRC-TEMPORAL`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0181` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should model place names as time-bounded, source-role-bound assertions linked to but distinct from feature identity, geometry, jurisdiction, legal status, and ownership. |
+| `KFM-CAND-0182` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should support search across official, variant, historical, translated, superseded, and disputed names while disclosing source, valid time, language or community context, feature binding, ambiguity, and withheld-sensitive-name posture. |
+| `KFM-CAND-0183` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should define PlaceNameAssertion, TemporalAliasEdge, FeatureNameBinding, and NameAuthorityDecision contracts with collision, homonym, rename, translation, dispute, unbound name, feature split or merge, and supersession fixtures. |
+
+**Implementation-surface note:** PROPOSED — A GNIS or other authority record can support a name assertion; separate evidence is required for existence, geometry, boundary, ownership, legal status, or historical interpretation.
+
+**Carry-forward state:** NEW_GAP_FILL. GNIS, historical gazetteer, and place-identity surfaces exist, but a common temporal name-authority graph remains **PARTIAL**.
+
+### KFM-TRIAD-062 — Survey-Control and Boundary Derivation Provenance
+
+**Why it matters:** PROPOSED — Survey records, monuments, measurements, adjustments, plats, field notes, and georeferenced images can support a boundary derivation without making that derivation exact or legally authoritative.
+
+**Source IDs:** `SRC-NEW425`, `SRC-GIS`, `SRC-TEMPORAL`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0184` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should preserve survey observation, monument or control status, survey generation, adjustment, georeference, residual, transformation, derived geometry, valid time, source role, and legal-use limitation as distinct provenance. |
+| `KFM-CAND-0185` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | MAP - Map Surface, MapLibre, Tiles, Styling | PROPOSED — KFM should show whether geometry is source-recorded, reconstructed, adjusted, georeferenced, interpolated, generalized, conflicting, or unresolved together with residuals, control status, source vintage, derivation lineage, and non-survey or non-legal-use warnings. |
+| `KFM-CAND-0186` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | DAT - Data Lifecycle, Provenance, Receipts | PROPOSED — KFM should define SurveyObservation, ControlStatusEvent, GeoreferenceReport, BoundaryDerivation, and SurveyFitnessDecision objects with conflicting-control, lost-monument, adjustment, high-residual, datum, temporal, incomplete-record, and legal-authority abstention fixtures. |
+
+**Implementation-surface note:** PROPOSED — PLSS, CadNSDI, GLO plats, and field notes are valuable survey-control evidence; they must not be described as a universal ground-truth lattice, spatial checksum, title record, or public-safety clearance.
+
+**Carry-forward state:** NEW_GAP_FILL. Source-product documentation exists, while a common survey-to-derived-boundary provenance contract remains **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-063 — Adversarial Validator Assurance and Mutation Adequacy
+
+**Why it matters:** PROPOSED — Positive fixtures, line coverage, and a green validator run do not prove that dangerous semantic changes or fail-open behavior would be detected.
+
+**Source IDs:** `SRC-NEW425`, `SRC-GREEN`, `SRC-PIPE`, `SRC-GAI`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0187` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should assess release-critical validators and policies with adversarial semantic mutations, property checks, negative fixtures, and gap-class coverage rather than treating execution or line coverage as sufficient assurance. |
+| `KFM-CAND-0188` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers inspect tested invariants, mutant classes, killed and surviving mutants, equivalent or waived rationale, untested finite outcomes, dependency and network posture, and the consequence of each assurance gap. |
+| `KFM-CAND-0189` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define ValidatorAssurancePlan and MutationAssessmentReport with deterministic no-network mutants for removed required fields, inverted allow or deny, bypassed abstention, stale profile, altered authority, skipped signature check, truncated evidence, and swallowed failure. |
+
+**Implementation-surface note:** PROPOSED — Mutation score is evidence about the tested mutant set, not a universal quality grade. Any threshold requires owner-approved significance and equivalent-mutant handling.
+
+**Carry-forward state:** NEW_GAP_FILL. Policy and validator tests exist, while cross-cutting mutation adequacy and semantic gap reporting remain **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-064 — Bitemporal Verification-State Replay
+
+**Why it matters:** PROPOSED — Corrections, revocations, late-arriving evidence, policy changes, and release transitions can change current verification state without changing what was known, recorded, or considered valid at an earlier time.
+
+**Source IDs:** `SRC-NEW414`, `SRC-TEMPORAL`, `SRC-GREEN`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0190` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should represent every verification-state change with subject identity, state, reason, effective time, recorded time, predecessor, authority, evidence, policy profile, and trust profile so current and `as_of` answers remain reproducible without rewriting prior history. |
+| `KFM-CAND-0191` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should let reviewers replay verification state at a declared time, distinguish late-recorded from backdated-effective events, inspect active evidence and release context, and follow supersession, correction, rollback, and revocation edges. |
+| `KFM-CAND-0192` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | DAT - Data Lifecycle, Provenance, Receipts | PROPOSED — KFM should define VerificationStateEvent, VerificationStateGraph, AsOfVerificationQuery, and VerificationReplayReport contracts with synthetic active, late-recorded, corrected, superseded, revoked, missing-predecessor, cyclic, ambiguous, and unknown-history fixtures. |
+
+**Implementation-surface note:** PROPOSED — Event effective time, KFM recorded time, decision time, release time, and query `as_of` time must remain distinct. Replay reports recorded knowledge under a declared profile; it does not retroactively make an earlier claim true.
+
+**Carry-forward state:** NEW_GAP_FILL. Temporal and correction doctrine exists, while one reusable bitemporal verification-state replay contract remains **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-065 — Source-Conflict Topology and Influence Accounting
+
+**Why it matters:** PROPOSED — Individually admissible sources can still disagree because of role, time, scale, support, precision, method, uncertainty, or revocation, and a source count or average can hide the conflict.
+
+**Source IDs:** `SRC-NEW414`, `SRC-GAI`, `SRC-GREEN`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0193` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | PROPOSED — KFM should assess jointly used sources under a versioned comparison profile that preserves source roles and classifies their relationship as consistent, divergent, conflicting, insufficient, inapplicable, or containing revoked evidence before producing a finite result. |
+| `KFM-CAND-0194` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | PROPOSED — KFM should show compared inputs, eligibility and exclusions, comparison axes, tolerance-profile identity, conflict class, uncertainty, and which sources were dominant, contributing, context-only, excluded, or non-influential in the result. |
+| `KFM-CAND-0195` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | PROPOSED — KFM should define SourceConflictProfile, SourceComparison, InfluenceLedger, and FederationDecision contracts with unit, scale, time, precision, support, source-role, missingness, revocation, threshold-boundary, order-invariance, and irreconcilable-conflict fixtures. |
+
+**Implementation-surface note:** PROPOSED — Comparison eligibility and tolerance are declared policy/contract inputs, not hidden scientific constants. Conflict does not authorize averaging, majority voting, authority-role collapse, or publication.
+
+**Carry-forward state:** NEW_GAP_FILL. Corroboration roles and composed-claim closure exist, while common conflict topology and source-influence accounting remain **PARTIAL**.
+
+### KFM-TRIAD-066 — Cross-Layer Outcome Projection and Parity
+
+**Why it matters:** PROPOSED — A valid finite outcome can be corrupted when policy, release, runtime, API, UI, export, or cache layers rename, omit, upgrade, or collapse its state and reasons.
+
+**Source IDs:** `SRC-NEW414`, `SRC-NEW415`, `SRC-GAI`, `SRC-MAP`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0196` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | PROPOSED — KFM should preserve finite-outcome meaning and reason lineage across policy, release, runtime, API, UI, export, and cache projections through a versioned matrix of allowed transformations, permitted degradations, and prohibited upgrades. |
+| `KFM-CAND-0197` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers inspect each projection step, input and output outcome, reason-code mapping, omitted fields, authorized degradation, policy/profile identity, and any parity failure before a consequential surface is trusted. |
+| `KFM-CAND-0198` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define OutcomeProjectionProfile, OutcomeProjectionStep, and OutcomeParityReport contracts with synthetic ANSWER, ABSTAIN, DENY, ERROR, redacted, stale, unavailable, reason-loss, empty-success, cache, and unauthorized-upgrade fixtures. |
+
+**Implementation-surface note:** PROPOSED — Parity does not require every layer to expose the same shape or current outcome. A later runtime may safely degrade because of freshness or revocation, but any difference must be allowed by the pinned profile and preserve its reason.
+
+**Carry-forward state:** NEW_GAP_FILL. Finite outcomes and some lane-specific parity checks exist, while a common cross-layer projection contract remains **PARTIAL**.
+
+### KFM-TRIAD-067 — Verifier Profile and Capability Portability
+
+**Why it matters:** PROPOSED — CI, server, desktop, browser, and offline verifiers may support different algorithms, canonicalization profiles, trust material, revocation inputs, dependencies, network posture, and resource limits.
+
+**Source IDs:** `SRC-NEW414`, `SRC-NEW415`, `SRC-GREEN`, `SRC-MAPMASTER`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0199` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | PROPOSED — KFM should interpret verification only relative to an explicit verifier profile that binds supported algorithms, canonicalization, trust and revocation inputs, dependency versions, network posture, time source, and resource limits; unsupported capability must produce an explicit fail-safe result. |
+| `KFM-CAND-0200` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should show verifier identity, environment class, profile and dependency versions, available and missing capabilities, trust freshness, network assumptions, resource limits, attempted checks, and whether results are portable, qualified, unsupported, or incomparable. |
+| `KFM-CAND-0201` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | PROPOSED — KFM should define VerifierProfile, VerificationCapabilityClaim, VerificationAttempt, and PortabilityAssessment contracts with synthetic CI, browser, offline, unsupported-algorithm, canonicalization-mismatch, stale-trust, missing-revocation, dependency-drift, clock, network, and resource-exhaustion fixtures. |
+
+**Implementation-surface note:** PROPOSED — Equivalent verification requires equivalent accepted inputs and semantics, not merely the same green label. Library availability or network success must not silently change truth, policy, review, or release authority.
+
+**Carry-forward state:** NEW_GAP_FILL. Offline trust, signing, and integrity-before-render exist, while explicit verifier capability and portability assessment remain **PARTIAL**.
+
+### KFM-TRIAD-068 — Source-Native Quality Translation and Health Separation
+
+**Why it matters:** PROPOSED — A source-native quality code, normalized quality interpretation, station or sensor health state, and the validity or fitness of one observation answer different questions and can change independently.
+
+**Source IDs:** `SRC-NEW415`, `SRC-SOIL`, `SRC-ATM`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0202` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | PROPOSED — KFM should preserve source-native quality vocabulary and code, vocabulary version, mapping rule and version, normalized interpretation, semantic loss, unmapped state, station or sensor health, observation validity, analytic fitness, and decision reason as separate lineage. |
+| `KFM-CAND-0203` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers compare native and normalized quality, inspect mapping evidence and loss, distinguish offline or maintenance state from invalid reading and missing support, and see which declared uses admit, exclude, quarantine, deny, or abstain from the observation. |
+| `KFM-CAND-0204` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define NativeQualityAssertion, QualityMappingDecision, SourceHealthEvent, ObservationValidityDecision, and ObservationFitnessDecision contracts with known, unknown, contradictory, deprecated, lossy, offline, maintenance, calibration, invalid-value, stale, missing-depth, missing-support, and valid fixtures. |
+
+**Implementation-surface note:** PROPOSED — Normalization may make quality comparable for a declared use, but it must not erase the native assertion or upgrade source role. Operational outage must not become an environmental condition or a valid absence claim.
+
+**Carry-forward state:** NEW_GAP_FILL. Soil and atmosphere lanes preserve many fields, while a reusable cross-domain translation and health-separation contract remains **PARTIAL**.
+
+### KFM-TRIAD-069 — Generated Runtime-Proof Artifact Lifecycle
+
+**Why it matters:** PROPOSED — A generated runtime response is useful comparison evidence, but committing every actual, treating a passing output as truth, or silently replacing a golden fixture creates noise and weakens review.
+
+**Source IDs:** `SRC-NEW415`, `SRC-GREEN`, `SRC-PIPE`, `SRC-ENCYC`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0205` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | DAT - Data Lifecycle, Provenance, Receipts | PROPOSED — KFM should govern generated runtime-proof artifacts through explicit ephemeral, retained-for-review, promoted-golden, stale, invalidated, corrected, and deleted states while preserving runner, contract, fixture, configuration, dependency, environment, and digest identity. |
+| `KFM-CAND-0206` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should let reviewers inspect actual-versus-expected differences, generation provenance, determinism and redaction posture, retention and expiry, review decision, golden-promotion rationale, affected tests, and later invalidation or correction. |
+| `KFM-CAND-0207` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define RuntimeProofArtifactRecord, GoldenPromotionDecision, and ProofArtifactInvalidationNotice contracts with synthetic ephemeral, retained, promoted, rejected, nondeterministic, sensitive, stale-contract, dependency-drift, expired, invalidated, corrected, and deleted fixtures. |
+
+**Implementation-surface note:** PROPOSED — Generated actuals should be ephemeral by default. Deliberate golden promotion makes an expected test artifact under a declared profile; it does not make the response official evidence, canonical data, or publication authority.
+
+**Carry-forward state:** NEW_GAP_FILL. Runtime proof and golden fixtures exist, while their shared generated-artifact lifecycle remains **NEEDS VERIFICATION**.
+
+### KFM-TRIAD-070 — Observed Interface Evolution and Compatibility Window
+
+**Why it matters:** PROPOSED — Source interfaces evolve through undocumented drift, version change, redirects, deprecation, dual operation, and retirement, while transport metadata and sample responses provide only partial observations.
+
+**Source IDs:** `SRC-NEW414`, `SRC-NEW415`, `SRC-PIPE`, `SRC-DIR`
+
+| Candidate key | Class | Stable ID template | Category | Normalized statement |
+|---|---|---|---|---|
+| `KFM-CAND-0208` | `idea` | `KFM-P{PASS}-IDEA-{NNNN}` | SRC - Source Registry, Connectors, Ingestion  (PROPOSED extension) | PROPOSED — KFM should preserve declared interface identity separately from observed behavior and govern discovery, compatibility, deprecation, dual-read, migration, rollback, consumer debt, retirement, and correction without treating URL, ETag, timestamp, redirect, or one sample as canonical identity. |
+| `KFM-CAND-0209` | `feature` | `KFM-P{PASS}-FEAT-{NNNN}` | DOC - Documentation, Doctrine, Reader Surfaces | PROPOSED — KFM should show declared and observed contract/profile versions, observation evidence, changed capabilities, compatibility class, affected consumers, dual-read comparison, deprecation and sunset signals, migration decision, rollback readiness, and retirement blockers. |
+| `KFM-CAND-0210` | `programming` | `KFM-P{PASS}-PROG-{NNNN}` | PIP - Pipelines, Pipeline Specs, Validators | PROPOSED — KFM should define InterfaceObservation, CompatibilityAssessment, InterfaceMigrationDecision, and InterfaceRetirementRecord contracts with synthetic unchanged, additive, breaking, redirect, undocumented, partial-sample, dual-read mismatch, rollback, consumer-blocked, retired, and reactivated fixtures. |
+
+**Implementation-surface note:** PROPOSED — A watcher records interface evidence and may open review work; it must not silently rewrite a connector, change canonical identity, activate a replacement, retire a consumer, or publish data.
+
+**Carry-forward state:** NEW_GAP_FILL. Source-specific deprecation and interface-drift guidance exists, while a common compatibility-window and retirement contract remains **PARTIAL**.
+
 ---
 
 ## 11. Category distribution
 
 | Category | Count |
 |---|---:|
-| PIP - Pipelines, Pipeline Specs, Validators | 37 |
-| UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | 22 |
-| MAP - Map Surface, MapLibre, Tiles, Styling | 19 |
-| MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | 15 |
+| PIP - Pipelines, Pipeline Specs, Validators | 46 |
+| UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer | 28 |
+| MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL | 23 |
+| MAP - Map Surface, MapLibre, Tiles, Styling | 20 |
+| DOC - Documentation, Doctrine, Reader Surfaces | 19 |
+| DAT - Data Lifecycle, Provenance, Receipts | 17 |
+| POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | 15 |
 | ANA - Analysis, Indicators, Statistics, Machine Learning, Model Interpretation | 12 |
-| DAT - Data Lifecycle, Provenance, Receipts | 12 |
-| POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension) | 11 |
-| DOC - Documentation, Doctrine, Reader Surfaces | 9 |
+| SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | 9 |
+| EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | 8 |
 | REL - Catalog Closure, Publication, Release, Rollback, Recompile | 7 |
-| SRC - Source Registry, Connectors, Ingestion  (PROPOSED extension) | 5 |
-| EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain | 5 |
-| SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension) | 5 |
+| SRC - Source Registry, Connectors, Ingestion  (PROPOSED extension) | 6 |
 
 ---
 
@@ -1146,42 +1448,46 @@ Unless a card explicitly narrows the requirement, every candidate card inherits 
 
 | Source ID | Card count |
 |---|---:|
-| `SRC-ENCYC` | 102 |
+| `SRC-ENCYC` | 135 |
+| `SRC-GREEN` | 54 |
+| `SRC-PIPE` | 51 |
 | `SRC-P20` | 48 |
-| `SRC-PIPE` | 36 |
+| `SRC-MAPMASTER` | 33 |
 | `SRC-NEW430` | 33 |
+| `SRC-GAI` | 30 |
+| `SRC-MAP` | 30 |
 | `SRC-NEW416` | 30 |
-| `SRC-GREEN` | 27 |
-| `SRC-MAPMASTER` | 27 |
-| `SRC-MAP` | 24 |
-| `SRC-ATM` | 21 |
-| `SRC-FAUNA` | 15 |
-| `SRC-P18` | 12 |
-| `SRC-GAI` | 12 |
-| `SRC-TEMPORAL` | 12 |
+| `SRC-ATM` | 24 |
+| `SRC-FAUNA` | 21 |
+| `SRC-TEMPORAL` | 21 |
+| `SRC-NEW414` | 15 |
+| `SRC-NEW415` | 15 |
+| `SRC-NEW423` | 15 |
+| `SRC-NEW425` | 15 |
 | `SRC-AIREF` | 12 |
-| `SRC-DIR` | 9 |
-| `SRC-PEOPLE` | 9 |
-| `SRC-URBAN` | 9 |
-| `SRC-GIS` | 9 |
+| `SRC-DIR` | 12 |
+| `SRC-FLORA` | 12 |
+| `SRC-GIS` | 12 |
+| `SRC-P18` | 12 |
+| `SRC-SOIL` | 12 |
 | `SRC-HYD` | 9 |
-| `SRC-SOIL` | 9 |
+| `SRC-PEOPLE` | 9 |
+| `SRC-ROADS` | 9 |
+| `SRC-URBAN` | 9 |
+| `SRC-3DGIS` | 6 |
 | `SRC-ARCH` | 6 |
-| `SRC-NEW510` | 6 |
 | `SRC-HABFAUNA` | 6 |
+| `SRC-NEW510` | 6 |
 | `SRC-NEW515` | 6 |
 | `SRC-NEW58` | 6 |
-| `SRC-3DGIS` | 6 |
-| `SRC-ROADS` | 6 |
-| `SRC-FLORA` | 6 |
-| `SRC-UIAI` | 3 |
-| `SRC-OLL` | 3 |
-| `SRC-HAB` | 3 |
+| `SRC-SETTLE` | 6 |
 | `SRC-AGRI` | 3 |
-| `SRC-GEO` | 3 |
-| `SRC-HAZ` | 3 |
-| `SRC-SETTLE` | 3 |
 | `SRC-APIREF` | 3 |
+| `SRC-GEO` | 3 |
+| `SRC-HAB` | 3 |
+| `SRC-HAZ` | 3 |
+| `SRC-OLL` | 3 |
+| `SRC-UIAI` | 3 |
 
 ---
 
@@ -1360,6 +1666,86 @@ Use cards:
 
 Goal: prove that a synthetic environmental observation can be retained as evidence yet excluded from a declared analytic use because of a pinned confounder or quality profile, with visible reasons and correction lineage.
 
+### Slice N — Custody and replay invariants
+
+Use cards:
+
+- `KFM-CAND-0160` through `KFM-CAND-0162`
+- `KFM-CAND-0169` through `KFM-CAND-0171`
+
+Goal: use synthetic sender, receiver, event, delivery, and side-effect records to prove conservation, partial acceptance, duplicate delivery, crash recovery, reconciliation, and exactly one idempotent effect without activating a live pipeline or broker.
+
+### Slice O — Composed claim and conditional obligation closure
+
+Use cards:
+
+- `KFM-CAND-0163` through `KFM-CAND-0165`
+- `KFM-CAND-0172` through `KFM-CAND-0174`
+
+Goal: prove that missing or denied required evidence narrows or blocks a composed claim and that a conditional review decision cannot authorize release until every applicable obligation reaches an evidence-backed finite closure.
+
+### Slice P — Historical trust verification
+
+Use cards:
+
+- `KFM-CAND-0166`
+- `KFM-CAND-0167`
+- `KFM-CAND-0168`
+
+Goal: use synthetic keys and trust-profile versions to distinguish currently trusted, historically valid, expired, revoked, compromised, unknown, offline, and policy-mismatched signatures without treating signature success as truth or release.
+
+### Slice Q — Reversible identity, taxonomy, and place names
+
+Use cards:
+
+- `KFM-CAND-0175` through `KFM-CAND-0183`
+
+Goal: use synthetic entities, taxonomic treatments, and place-name histories to prove match proposals, merge/split reversal, source-native assertion retention, synonym/homonym/split/lump lineage, temporal aliases, disputes, and role separation without fetching or publishing live records.
+
+### Slice R — Survey-control provenance
+
+Use cards:
+
+- `KFM-CAND-0184`
+- `KFM-CAND-0185`
+- `KFM-CAND-0186`
+
+Goal: bind synthetic survey observations, monument status, adjustment, georeferencing, residuals, derived geometry, and fitness limitations while proving that survey-control evidence does not become legal-boundary or ownership authority.
+
+### Slice S — Adversarial validator assurance
+
+Use cards:
+
+- `KFM-CAND-0187`
+- `KFM-CAND-0188`
+- `KFM-CAND-0189`
+
+Goal: run a no-network mutation proof against one accepted release-critical validator or policy and report killed, surviving, equivalent, and waived mutants by semantic gap class without inventing a universal score threshold.
+
+### Slice T — Verification history and source conflict replay
+
+Use cards:
+
+- `KFM-CAND-0190` through `KFM-CAND-0195`
+
+Goal: use synthetic verification events and source observations to replay state before and after correction/revocation, classify consistent, divergent, conflicting, insufficient, and revoked-source combinations, and prove source influence without averaging, voting, or rewriting history.
+
+### Slice U — Outcome parity and verifier portability
+
+Use cards:
+
+- `KFM-CAND-0196` through `KFM-CAND-0201`
+
+Goal: define one allowed outcome-projection matrix and one verifier-profile matrix, then catch reason loss, prohibited outcome upgrade, unsupported capability, stale trust, canonicalization mismatch, dependency drift, and resource failure without adding browser or live-signing dependencies.
+
+### Slice V — Quality, generated proof, and interface evolution
+
+Use cards:
+
+- `KFM-CAND-0202` through `KFM-CAND-0210`
+
+Goal: use synthetic quality codes, station-health events, observations, runtime actuals, golden decisions, and old/new interface descriptions to preserve native meaning, separate health from validity, govern generated proof artifacts, and prove a reversible compatibility window without activating a source.
+
 ---
 
 ## 15. Validation checklist
@@ -1375,11 +1761,22 @@ Before merging this register:
 - [x] Verify no exact sensitive locations are included.
 - [x] Verify no raw source data is embedded.
 - [x] Verify `SRC-NEW416` identity, digest, byte count, page count, and source-map link.
+- [x] Verify `SRC-NEW414` identity, digest, byte count, page count, Pass 23 lineage, and source-map link.
+- [x] Verify `SRC-NEW415` identity, digest, byte count, page count, Pass 23 lineage, and source-map link.
+- [x] Verify `SRC-NEW423` identity, digest, byte count, page count, and source-map link.
+- [x] Verify `SRC-NEW425` identity, digest, byte count, page count, and source-map link.
 - [x] Verify `SRC-NEW430` identity, digest, byte count, page count, and source-map link.
 - [x] Verify the April 16 packet's paste-ready code and generic paths are not promoted as repository authority.
+- [x] Verify the April 14 packet's watcher, policy, hydrology, package, browser-verifier, signature, release, and peer-renderer code is not promoted as repository authority.
+- [x] Verify the April 15 packet's soil, HLS/STAC, people/consent, route, workflow, threshold, runtime-output, and peer-renderer code is not promoted as repository authority.
+- [x] Verify the April 23 packet's parallel evidence stack, key-service recipes, event actions, obligation shortcuts, and publication paths are not promoted as repository authority.
+- [x] Verify the April 25 packet's loaders, authority rankings, PLSS overclaims, GNIS role collapse, policy thresholds, network installs, AI promotion, and sensitive examples are not promoted as repository authority.
 - [x] Verify the April 30 packet's loaders, paths, thresholds, external-service facts, cloud examples, signatures, and UI code are not promoted as repository authority.
 - [x] Verify Cesium/CZML remains excluded from implementation candidates pending accepted renderer authority.
 - [x] Verify query, terms, sampling, distribution, measurement, latency, transfer, offline, rendering, and observation-fitness cards preserve evidence, policy, review, release, correction, and rollback boundaries.
+- [x] Verify custody, composed claims, trust-root history, replay, obligations, reconciliation, taxonomy, place names, survey control, and validator assurance preserve independent authority and finite outcomes.
+- [x] Verify sender receipt does not become receiver acceptance, signature does not become truth, duplicate delivery does not become duplicate effect, obligation text does not become closure, scientific-name string does not become concept identity, GNIS name does not become geometry or legal status, and survey control does not become title authority.
+- [x] Verify current verification state does not rewrite historical `as_of` state, source count does not become consensus, permitted degradation does not become outcome upgrade, verifier availability does not become verification truth, native quality does not disappear into normalized quality, station outage does not become environmental absence, generated actual does not become golden or official truth, and transport metadata does not become interface or content identity.
 - [x] Verify no missing distribution row becomes absence, no record-density score becomes ecological richness, and no successful signature becomes truth or release authority.
 - [x] Verify materiality, corroboration, consent, hashing, and proximity cards preserve independent evidence, policy, review, release, correction, and rollback gates.
 - [x] Verify all implementation claims remain PROPOSED or UNKNOWN unless repository evidence supports them.
@@ -1553,6 +1950,57 @@ This manifest is generated from the optimized card register. It is **not canonic
 {"candidate_key":"KFM-CAND-0157","triad_id":"KFM-TRIAD-053","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Confounder Exclusion and Observation Fitness Pattern","category":"ANA - Analysis, Indicators, Statistics, Machine Learning, Model Interpretation","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW430","SRC-ATM","SRC-AIREF","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should evaluate observation fitness for a declared use through versioned quality, mask, confounder, persistence, source-role, freshness, and support profiles while retaining excluded evidence and reasons for correction or reinterpretation.","implementation_status":"NEEDS_VERIFICATION"}
 {"candidate_key":"KFM-CAND-0158","triad_id":"KFM-TRIAD-053","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Confounder Exclusion and Observation Fitness Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW430","SRC-ATM","SRC-AIREF","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show the declared use, fitness state, excluded observations, quality masks, confounders, persistence support, alternative explanations, method version, affected area or interval, and whether a conclusion was narrowed, delayed, quarantined, corrected, or withdrawn.","implementation_status":"NEEDS_VERIFICATION"}
 {"candidate_key":"KFM-CAND-0159","triad_id":"KFM-TRIAD-053","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Confounder Exclusion and Observation Fitness Implementation Surface","category":"POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW430","SRC-ATM","SRC-AIREF","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define ObservationFitnessDecision, ContextSnapshot, and ExclusionReceipt objects with deterministic source-specific profiles and fixtures for cloud, smoke, shadow, snow, missing QA, single-observation, contradictory-context, stale-mask, and corrected-mask cases.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0160","triad_id":"KFM-TRIAD-054","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Cross-Boundary Evidence Custody and Reconciliation Pattern","category":"DAT - Data Lifecycle, Provenance, Receipts","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should treat every transfer across lifecycle, environment, organization, or responsibility boundaries as a custody handoff that preserves the exact offered artifact, receiving decision, accepted subset, rejected subset, duplicates, and unresolved balance.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0161","triad_id":"KFM-TRIAD-054","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Cross-Boundary Evidence Custody and Reconciliation Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers compare sender and receiver receipts, inspect item and byte accounting, follow retries and replacements, and distinguish complete, partially accepted, quarantined, disputed, and unreconciled handoffs.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0162","triad_id":"KFM-TRIAD-054","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Cross-Boundary Evidence Custody and Reconciliation Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define CustodyHandoff, AcceptanceRecord, and ReconciliationReport objects with digest and count conservation, idempotent retry, duplicate detection, reject reasons, timeout, correction, and closure fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0163","triad_id":"KFM-TRIAD-055","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Composed Claim Dependency Closure Pattern","category":"EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-ENCYC","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should model composed claims as dependency graphs whose required, optional, one-of, excluded, contradictory, and context-only evidence roles determine whether the whole claim is supported, qualified, abstained, denied, or erroneous.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0164","triad_id":"KFM-TRIAD-055","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Composed Claim Dependency Closure Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-ENCYC","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show which claim components closed, which dependencies are missing or withheld, why the conclusion was narrowed, and whether an alternative evidence path satisfied the declared claim profile.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0165","triad_id":"KFM-TRIAD-055","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Composed Claim Dependency Closure Implementation Surface","category":"EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-ENCYC","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define ComposedClaimProfile, ClaimDependency, and ClaimClosureReport contracts with cycle detection, role cardinality, freshness, policy outcome, contradiction, alternative-path, and fail-closed fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0166","triad_id":"KFM-TRIAD-056","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Trust-Root Lifecycle and Historical Signature Verification Pattern","category":"SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-MAPMASTER","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should version trust roots, signer roles, activation, expiry, revocation, compromise, supersession, and verification policy so current trust and historical validity are evaluated without rewriting prior evidence.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0167","triad_id":"KFM-TRIAD-056","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Trust-Root Lifecycle and Historical Signature Verification Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-MAPMASTER","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers inspect signer identity, trust-profile version, signing and verification times, key status then and now, revocation or compromise reason, offline-verification posture, and any required re-sign, correction, withdrawal, or abstention.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0168","triad_id":"KFM-TRIAD-056","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Trust-Root Lifecycle and Historical Signature Verification Implementation Surface","category":"SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-MAPMASTER","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define TrustRootRecord, SignerAuthorization, KeyStatusEvent, and HistoricalVerificationReceipt with synthetic active, rotated, expired, revoked, compromised, unknown, offline, and policy-version mismatch fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0169","triad_id":"KFM-TRIAD-057","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Replay-Safe Event Identity and Side-Effect Ledger Pattern","category":"DAT - Data Lifecycle, Provenance, Receipts","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should separate deterministic event identity, delivery attempt, processing result, side-effect intent, effect reservation, effect completion, and replay outcome so duplicate delivery cannot silently repeat a consequential action.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0170","triad_id":"KFM-TRIAD-057","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Replay-Safe Event Identity and Side-Effect Ledger Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let operators trace an event through deliveries, retries, locks or reservations, completed effects, stale attempts, poison handling, compensations, and final finite state without interpreting retry count as work completed.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0171","triad_id":"KFM-TRIAD-057","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Replay-Safe Event Identity and Side-Effect Ledger Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-PIPE","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define GovernedEventEnvelope, DeliveryAttempt, SideEffectIntent, and EffectLedgerEntry contracts with deterministic identity, compare-and-set reservation, idempotency scope, ordering, replay, crash recovery, compensation, and duplicate-delivery fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0172","triad_id":"KFM-TRIAD-058","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Conditional Decision Obligations and Closure Pattern","category":"POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-ENCYC","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should treat conditional approval as a set of versioned obligations whose application, evidence, satisfaction, waiver, expiry, violation, reopening, supersession, and correction remain explicit and fail closed for consequential transitions.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0173","triad_id":"KFM-TRIAD-058","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Conditional Decision Obligations and Closure Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-ENCYC","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show every active obligation, responsible steward, due or expiry condition, satisfaction evidence, waiver authority, affected artifacts and releases, unmet consequences, and downstream reopening or withdrawal state.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0174","triad_id":"KFM-TRIAD-058","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Conditional Decision Obligations and Closure Implementation Surface","category":"POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW423","SRC-GREEN","SRC-ENCYC","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define ConditionalDecision, ObligationRecord, and ObligationClosureDecision contracts with applicability, dependency, satisfaction evidence, waiver, expiry, re-evaluation, correction, and release-blocking negative fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0175","triad_id":"KFM-TRIAD-059","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Reversible Entity Reconciliation and Conflict-Preserving Dedupe Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FAUNA","SRC-FLORA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should preserve source-native entity assertions and treat match, non-match, merge, split, cluster, and unresolved conflict as reversible decisions supported by versioned evidence rather than destructive normalization.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0176","triad_id":"KFM-TRIAD-059","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Reversible Entity Reconciliation and Conflict-Preserving Dedupe Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FAUNA","SRC-FLORA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let stewards compare candidate entities, inspect contributing and conflicting attributes, approve or reject matches, split prior clusters, restore source views, and see every downstream artifact affected by reconciliation changes.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0177","triad_id":"KFM-TRIAD-059","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Reversible Entity Reconciliation and Conflict-Preserving Dedupe Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FAUNA","SRC-FLORA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define MatchProposal, ReconciliationDecision, EntityCluster, and SplitDecision objects with blocking keys, feature evidence, confidence limits, authority roles, transitivity guards, reversal, correction, and false-merge fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0178","triad_id":"KFM-TRIAD-060","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Taxonomic Concept and Name-Usage Lineage Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FLORA","SRC-FAUNA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should separate source-native NameUsage from TaxonConcept and preserve authorship, rank, treatment, valid time, concept relation, source role, and unresolved disagreement instead of treating an accepted-name string as timeless identity.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0179","triad_id":"KFM-TRIAD-060","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Taxonomic Concept and Name-Usage Lineage Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FLORA","SRC-FAUNA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show accepted-for-use context, synonyms, homonyms, misapplied names, split and lump history, source treatments, unresolved mappings, affected occurrence or distribution claims, and the version used for a query or release.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0180","triad_id":"KFM-TRIAD-060","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Taxonomic Concept and Name-Usage Lineage Implementation Surface","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-FLORA","SRC-FAUNA","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define NameUsage, TaxonConcept, ConceptRelation, and TaxonomyReconciliationDecision contracts with source-native identifiers and synthetic synonym, homonym, split, lump, misapplication, unresolved, supersession, and reversal fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0181","triad_id":"KFM-TRIAD-061","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Place-Name Authority and Temporal Alias Graph Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-SETTLE","SRC-ROADS","SRC-TEMPORAL"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should model place names as time-bounded, source-role-bound assertions linked to but distinct from feature identity, geometry, jurisdiction, legal status, and ownership.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0182","triad_id":"KFM-TRIAD-061","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Place-Name Authority and Temporal Alias Graph Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-SETTLE","SRC-ROADS","SRC-TEMPORAL"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should support search across official, variant, historical, translated, superseded, and disputed names while disclosing source, valid time, language or community context, feature binding, ambiguity, and withheld-sensitive-name posture.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0183","triad_id":"KFM-TRIAD-061","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Place-Name Authority and Temporal Alias Graph Implementation Surface","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-SETTLE","SRC-ROADS","SRC-TEMPORAL"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define PlaceNameAssertion, TemporalAliasEdge, FeatureNameBinding, and NameAuthorityDecision contracts with collision, homonym, rename, translation, dispute, unbound name, feature split or merge, and supersession fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0184","triad_id":"KFM-TRIAD-062","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Survey-Control and Boundary Derivation Provenance Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GIS","SRC-TEMPORAL","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should preserve survey observation, monument or control status, survey generation, adjustment, georeference, residual, transformation, derived geometry, valid time, source role, and legal-use limitation as distinct provenance.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0185","triad_id":"KFM-TRIAD-062","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Survey-Control and Boundary Derivation Provenance Capability","category":"MAP - Map Surface, MapLibre, Tiles, Styling","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GIS","SRC-TEMPORAL","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show whether geometry is source-recorded, reconstructed, adjusted, georeferenced, interpolated, generalized, conflicting, or unresolved together with residuals, control status, source vintage, derivation lineage, and non-survey or non-legal-use warnings.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0186","triad_id":"KFM-TRIAD-062","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Survey-Control and Boundary Derivation Provenance Implementation Surface","category":"DAT - Data Lifecycle, Provenance, Receipts","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GIS","SRC-TEMPORAL","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define SurveyObservation, ControlStatusEvent, GeoreferenceReport, BoundaryDerivation, and SurveyFitnessDecision objects with conflicting-control, lost-monument, adjustment, high-residual, datum, temporal, incomplete-record, and legal-authority abstention fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0187","triad_id":"KFM-TRIAD-063","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Adversarial Validator Assurance and Mutation Adequacy Pattern","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GREEN","SRC-PIPE","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should assess release-critical validators and policies with adversarial semantic mutations, property checks, negative fixtures, and gap-class coverage rather than treating execution or line coverage as sufficient assurance.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0188","triad_id":"KFM-TRIAD-063","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Adversarial Validator Assurance and Mutation Adequacy Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GREEN","SRC-PIPE","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers inspect tested invariants, mutant classes, killed and surviving mutants, equivalent or waived rationale, untested finite outcomes, dependency and network posture, and the consequence of each assurance gap.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0189","triad_id":"KFM-TRIAD-063","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Adversarial Validator Assurance and Mutation Adequacy Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW425","SRC-GREEN","SRC-PIPE","SRC-GAI"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define ValidatorAssurancePlan and MutationAssessmentReport with deterministic no-network mutants for removed required fields, inverted allow or deny, bypassed abstention, stale profile, altered authority, skipped signature check, truncated evidence, and swallowed failure.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0190","triad_id":"KFM-TRIAD-064","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Bitemporal Verification-State Replay Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-TEMPORAL","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should represent every verification-state change with subject identity, state, reason, effective time, recorded time, predecessor, authority, evidence, policy profile, and trust profile so current and as_of answers remain reproducible without rewriting prior history.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0191","triad_id":"KFM-TRIAD-064","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Bitemporal Verification-State Replay Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-TEMPORAL","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers replay verification state at a declared time, distinguish late-recorded from backdated-effective events, inspect active evidence and release context, and follow supersession, correction, rollback, and revocation edges.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0192","triad_id":"KFM-TRIAD-064","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Bitemporal Verification-State Replay Implementation Surface","category":"DAT - Data Lifecycle, Provenance, Receipts","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-TEMPORAL","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define VerificationStateEvent, VerificationStateGraph, AsOfVerificationQuery, and VerificationReplayReport contracts with synthetic active, late-recorded, corrected, superseded, revoked, missing-predecessor, cyclic, ambiguous, and unknown-history fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0193","triad_id":"KFM-TRIAD-065","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Source-Conflict Topology and Influence Accounting Pattern","category":"EVD - Evidence, EvidenceBundle, EvidenceRef, Cite-or-Abstain","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-GAI","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should assess jointly used sources under a versioned comparison profile that preserves source roles and classifies their relationship as consistent, divergent, conflicting, insufficient, inapplicable, or containing revoked evidence before producing a finite result.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0194","triad_id":"KFM-TRIAD-065","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Source-Conflict Topology and Influence Accounting Capability","category":"UIX - UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-GAI","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show compared inputs, eligibility and exclusions, comparison axes, tolerance-profile identity, conflict class, uncertainty, and which sources were dominant, contributing, context-only, excluded, or non-influential in the result.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0195","triad_id":"KFM-TRIAD-065","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Source-Conflict Topology and Influence Accounting Implementation Surface","category":"POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-GAI","SRC-GREEN","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define SourceConflictProfile, SourceComparison, InfluenceLedger, and FederationDecision contracts with unit, scale, time, precision, support, source-role, missingness, revocation, threshold-boundary, order-invariance, and irreconcilable-conflict fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0196","triad_id":"KFM-TRIAD-066","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Cross-Layer Outcome Projection and Parity Pattern","category":"POL - Policy, OPA, Conftest, Decisions  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should preserve finite-outcome meaning and reason lineage across policy, release, runtime, API, UI, export, and cache projections through a versioned matrix of allowed transformations, permitted degradations, and prohibited upgrades.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0197","triad_id":"KFM-TRIAD-066","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Cross-Layer Outcome Projection and Parity Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers inspect each projection step, input and output outcome, reason-code mapping, omitted fields, authorized degradation, policy/profile identity, and any parity failure before a consequential surface is trusted.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0198","triad_id":"KFM-TRIAD-066","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Cross-Layer Outcome Projection and Parity Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GAI","SRC-MAP"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define OutcomeProjectionProfile, OutcomeProjectionStep, and OutcomeParityReport contracts with synthetic ANSWER, ABSTAIN, DENY, ERROR, redacted, stale, unavailable, reason-loss, empty-success, cache, and unauthorized-upgrade fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0199","triad_id":"KFM-TRIAD-067","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Verifier Profile and Capability Portability Pattern","category":"SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GREEN","SRC-MAPMASTER"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should interpret verification only relative to an explicit verifier profile that binds supported algorithms, canonicalization, trust and revocation inputs, dependency versions, network posture, time source, and resource limits; unsupported capability must produce an explicit fail-safe result.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0200","triad_id":"KFM-TRIAD-067","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Verifier Profile and Capability Portability Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GREEN","SRC-MAPMASTER"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show verifier identity, environment class, profile and dependency versions, available and missing capabilities, trust freshness, network assumptions, resource limits, attempted checks, and whether results are portable, qualified, unsupported, or incomparable.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0201","triad_id":"KFM-TRIAD-067","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Verifier Profile and Capability Portability Implementation Surface","category":"SEC - Security, Signing, Cosign, DSSE, Rekor  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-GREEN","SRC-MAPMASTER"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define VerifierProfile, VerificationCapabilityClaim, VerificationAttempt, and PortabilityAssessment contracts with synthetic CI, browser, offline, unsupported-algorithm, canonicalization-mismatch, stale-trust, missing-revocation, dependency-drift, clock, network, and resource-exhaustion fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0202","triad_id":"KFM-TRIAD-068","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Source-Native Quality Translation and Health Separation Pattern","category":"MOD - Data Modeling, Domain Semantics, Temporal Structure, SQL","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-SOIL","SRC-ATM","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should preserve source-native quality vocabulary and code, vocabulary version, mapping rule and version, normalized interpretation, semantic loss, unmapped state, station or sensor health, observation validity, analytic fitness, and decision reason as separate lineage.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0203","triad_id":"KFM-TRIAD-068","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Source-Native Quality Translation and Health Separation Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-SOIL","SRC-ATM","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers compare native and normalized quality, inspect mapping evidence and loss, distinguish offline or maintenance state from invalid reading and missing support, and see which declared uses admit, exclude, quarantine, deny, or abstain from the observation.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0204","triad_id":"KFM-TRIAD-068","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Source-Native Quality Translation and Health Separation Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-SOIL","SRC-ATM","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define NativeQualityAssertion, QualityMappingDecision, SourceHealthEvent, ObservationValidityDecision, and ObservationFitnessDecision contracts with known, unknown, contradictory, deprecated, lossy, offline, maintenance, calibration, invalid-value, stale, missing-depth, missing-support, and valid fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0205","triad_id":"KFM-TRIAD-069","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Generated Runtime-Proof Artifact Lifecycle Pattern","category":"DAT - Data Lifecycle, Provenance, Receipts","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-GREEN","SRC-PIPE","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should govern generated runtime-proof artifacts through explicit ephemeral, retained-for-review, promoted-golden, stale, invalidated, corrected, and deleted states while preserving runner, contract, fixture, configuration, dependency, environment, and digest identity.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0206","triad_id":"KFM-TRIAD-069","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Generated Runtime-Proof Artifact Lifecycle Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-GREEN","SRC-PIPE","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should let reviewers inspect actual-versus-expected differences, generation provenance, determinism and redaction posture, retention and expiry, review decision, golden-promotion rationale, affected tests, and later invalidation or correction.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0207","triad_id":"KFM-TRIAD-069","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Generated Runtime-Proof Artifact Lifecycle Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW415","SRC-GREEN","SRC-PIPE","SRC-ENCYC"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define RuntimeProofArtifactRecord, GoldenPromotionDecision, and ProofArtifactInvalidationNotice contracts with synthetic ephemeral, retained, promoted, rejected, nondeterministic, sensitive, stale-contract, dependency-drift, expired, invalidated, corrected, and deleted fixtures.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0208","triad_id":"KFM-TRIAD-070","stable_id_template":"KFM-P{PASS}-IDEA-{NNNN}","pass":"{PASS}","class":"idea","title":"Observed Interface Evolution and Compatibility Window Pattern","category":"SRC - Source Registry, Connectors, Ingestion  (PROPOSED extension)","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-PIPE","SRC-DIR"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should preserve declared interface identity separately from observed behavior and govern discovery, compatibility, deprecation, dual-read, migration, rollback, consumer debt, retirement, and correction without treating URL, ETag, timestamp, redirect, or one sample as canonical identity.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0209","triad_id":"KFM-TRIAD-070","stable_id_template":"KFM-P{PASS}-FEAT-{NNNN}","pass":"{PASS}","class":"feature","title":"Observed Interface Evolution and Compatibility Window Capability","category":"DOC - Documentation, Doctrine, Reader Surfaces","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-PIPE","SRC-DIR"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should show declared and observed contract/profile versions, observation evidence, changed capabilities, compatibility class, affected consumers, dual-read comparison, deprecation and sunset signals, migration decision, rollback readiness, and retirement blockers.","implementation_status":"NEEDS_VERIFICATION"}
+{"candidate_key":"KFM-CAND-0210","triad_id":"KFM-TRIAD-070","stable_id_template":"KFM-P{PASS}-PROG-{NNNN}","pass":"{PASS}","class":"programming","title":"Observed Interface Evolution and Compatibility Window Implementation Surface","category":"PIP - Pipelines, Pipeline Specs, Validators","status":"active","carry_forward_state":"NEW_GAP_FILL","source_ids":["SRC-NEW414","SRC-NEW415","SRC-PIPE","SRC-DIR"],"spec_hash":"PROPOSED","normalized_statement":"PROPOSED: KFM should define InterfaceObservation, CompatibilityAssessment, InterfaceMigrationDecision, and InterfaceRetirementRecord contracts with synthetic unchanged, additive, breaking, redirect, undocumented, partial-sample, dual-read mismatch, rollback, consumer-blocked, retired, and reactivated fixtures.","implementation_status":"NEEDS_VERIFICATION"}
 ```
 
 ---
@@ -1561,6 +2009,8 @@ This manifest is generated from the optimized card register. It is **not canonic
 
 | Version | Date | Change |
 |---|---:|---|
+| v0.6 | 2026-07-29 | Reconciled the prior Pass 23 sources `New Ideas 4-14-26` and `New Ideas 4-15-26` against the pinned remote-main snapshot and added 21 gap-fill cards in 7 triads covering bitemporal verification replay, source-conflict influence, cross-layer outcome parity, verifier portability, source-native quality translation and health separation, generated runtime-proof artifact lifecycle, and observed interface evolution. |
+| v0.5 | 2026-07-29 | Reconciled `New Ideas 4-23-26` and `New Ideas 4-25-26` against the pinned remote-main snapshot and added 30 gap-fill cards in 10 triads covering cross-boundary custody, composed-claim closure, trust-root history, replay-safe effects, conditional obligations, reversible reconciliation, taxonomic concepts, temporal place-name authority, survey-control provenance, and adversarial validator assurance. |
 | v0.4 | 2026-07-29 | Reconciled `New Ideas 4-30-26` against the pinned remote-main snapshot and added 33 gap-fill cards in 11 triads covering retrieval intent, source terms drift, sampling support, distribution meaning, coverage bias, measurement reconciliation, delivery latency, asynchronous transfer state, offline trust, verified rendering, and confounder-aware observation fitness. |
 | v0.3 | 2026-07-29 | Reconciled `New Ideas 4-16-26` against the pinned remote-main snapshot and added 30 gap-fill cards in 10 triads covering materiality, precision lineage, correctable environmental events, baseline governance, corroboration roles, purpose-bound consent, governed playback, STAC conformance, historical uncertainty, and hash profiles. |
 | v0.2 | 2026-06-12 | Optimized pasted seed-card draft into deduplicated triad register with source ledger, shared controls, category/source distributions, candidate keys, implementation slices, and JSONL manifest. |
@@ -1573,14 +2023,14 @@ This manifest is generated from the optimized card register. It is **not canonic
 ```yaml
 kfm_footer:
   document: "KFM Atlas Seed Cards — Optimized Carry-Forward Register"
-  version: "v0.4"
+  version: "v0.6"
   status: "draft"
   authority_class: "candidate-card register / synthesis; not canonical doctrine"
   requested_path: "docs/kfm_full_atlas_seed_cards.md"
   current_repository_home: "docs/kfm_full_atlas_seed_cards.md"
-  current_repository_home_status: "CONFIRMED at main 3a9ebaf842e4dfe65deda95be0d15d6af62723eb; retained in place"
-  card_count: 159
-  triad_count: 53
+  current_repository_home_status: "CONFIRMED at main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; retained in place"
+  card_count: 210
+  triad_count: 70
   implementation_claims: "UNKNOWN unless separately verified"
   stable_id_policy: "placeholder IDs retained until PASS and ordinal assignment"
   spec_hash_policy: "pending canonical JCS + SHA-256 computation"
