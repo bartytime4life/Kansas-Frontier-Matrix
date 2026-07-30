@@ -22,8 +22,11 @@ related:
   - ./correction_or_withdrawal.md
   - ../../../schemas/contracts/v1/domains/water_planning/construction_milestone.schema.json
   - ../../../fixtures/domains/water_planning/construction_milestone/
+  - ../../../fixtures/domains/water_planning/status_collapse/
   - ../../../tests/schemas/test_water_planning_contracts.py
   - ../../../tools/validators/_common/jsonschema_runner.py
+  - ../../../tools/validators/domains/water_planning/validate_status_collapse.py
+  - ../../../tests/domains/water_planning/test_status_collapse.py
   - ../../../docs/sources/catalog/kansas/kwo.md
   - ../../../.github/workflows/schema-validation.yml
   - ../../../.github/workflows/briefing-integration.yml
@@ -82,6 +85,7 @@ This contract defines record meaning. The paired JSON Schema defines accepted do
 | [Valid and invalid fixtures](../../../fixtures/domains/water_planning/construction_milestone/) | Synthetic test inputs | Exercise representative schema acceptance and rejection; they are not project or construction evidence. |
 | [Schema tests](../../../tests/schemas/test_water_planning_contracts.py) | Repository test surface | Check schema presence, distinct entity titles, and representative valid/invalid fixture polarity. |
 | [Shared schema runner](../../../tools/validators/_common/jsonschema_runner.py) | Draft 2020-12 structural validator | Loads local schemas and reports structural errors; it does not resolve source evidence or enable an explicit format checker. |
+| [Status-collapse validator](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [tests](../../../tests/domains/water_planning/test_status_collapse.py) | Deterministic, no-network synthetic-fixture checks | Reject payment/construction and construction/completion collapse claims; they do not validate a `ConstructionMilestone` instance. |
 | [KWO source catalog entry](../../../docs/sources/catalog/kansas/kwo.md) | Bounded source-family documentation | Excludes authenticated portal content and unsupported construction or benefit inference; it does not activate a connector or authorize release. |
 | `policy/domains/water_planning/` | Forward pointer in schema metadata; policy behavior remains `NEEDS VERIFICATION` | No policy outcome may be inferred from this contract or schema. |
 
@@ -139,6 +143,17 @@ A construction milestone is not a project, award, payment, completion, inspectio
 | Source reference != evidence closure | A non-empty `source_ref` does not establish field-level support, integrity, review, policy, release, or publication. |
 | Schema-valid != true or public-safe | Structural acceptance does not establish real-world correctness, source admission, sensitivity clearance, release, or KFM publication. |
 
+### Executable sequence guardrails
+
+The status-collapse suite makes the two boundaries around construction executable in a separate synthetic candidate shape:
+
+| Invalid synthetic claim | Stable finding | Contract boundary retained |
+|---|---|---|
+| [`payment_is_construction`](../../../fixtures/domains/water_planning/status_collapse/invalid/payment_is_construction.json) | `PAYMENT_IS_NOT_CONSTRUCTION` | Disbursement does not prove physical progress or a milestone. |
+| [`construction_is_completion`](../../../fixtures/domains/water_planning/status_collapse/invalid/construction_is_completion.json) | `CONSTRUCTION_IS_NOT_COMPLETION` | Construction activity, including a source-stated milestone, does not become a `Completion` record. |
+
+The validator rejects those boolean collapse claims; it does not inspect the construction-milestone schema, resolve `project_ref`, establish chronology, or prove that construction or completion occurred.
+
 [Back to top](#top)
 
 ## Schema posture
@@ -187,12 +202,29 @@ Run commands from the repository root.
 python -m pytest -q tests/schemas/test_water_planning_contracts.py
 ```
 
+### Exercise the accepted synthetic anti-collapse envelope
+
+```bash
+python tools/validators/domains/water_planning/validate_status_collapse.py \
+  fixtures/domains/water_planning/status_collapse/valid/valid_1.json
+```
+
+### Run the no-network cross-record boundary tests
+
+```bash
+python -m unittest discover \
+  --start-directory tests/domains/water_planning \
+  --pattern 'test_status_collapse.py' \
+  --verbose
+```
+
 | Validation surface | What it checks | What success does not prove |
 | --- | --- | --- |
 | [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) | All 15 entity schema files, distinct titles, and one representative valid/invalid fixture pair per entity | Milestone vocabulary, project referential integrity, achieved-time syntax, source truth, rights, policy, or release |
 | [`valid_1.json`](../../../fixtures/domains/water_planning/construction_milestone/valid/valid_1.json) | One synthetic shape with a required identity, project reference, source-stated type, null achievement time, and source reference | That a project or milestone exists, is current, or is source-supported |
 | [`invalid_1.json`](../../../fixtures/domains/water_planning/construction_milestone/invalid/invalid_1.json) | Rejection of one record missing `milestone_id` | Exhaustive negative coverage for empty references, type vocabulary, time, evidence, or cross-entity collapse |
 | [`jsonschema_runner.py`](../../../tools/validators/_common/jsonschema_runner.py) | Local Draft 2020-12 structural validation and deterministic valid/invalid polarity | Date-time format enforcement, reference resolution, semantic truth, or policy |
+| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | Stable `PAYMENT_IS_NOT_CONSTRUCTION` and `CONSTRUCTION_IS_NOT_COMPLETION` findings, complete invalid-fixture polarity, no-network execution, and protected-value non-echo | Validation of a `ConstructionMilestone` instance, event chronology, project resolution, or real construction evidence |
 | [`schema-validation.yml`](../../../.github/workflows/schema-validation.yml) | Pull-request schema inventory, meta-schema checks, configured aggregate fixtures, and repository-owned schema/contract tests under read-only permissions | Milestone evidence, source admission, rights, sensitivity, policy, release, or publication |
 | [`briefing-integration.yml`](../../../.github/workflows/briefing-integration.yml) | Path-triggered no-network water-planning semantic and RAC-registry checks under `contents: read` | Milestone-schema exhaustiveness, project progress, review approval, evidence closure, release, deployment, or publication |
 
@@ -248,6 +280,9 @@ Before merge, rollback is to close the draft pull request and abandon its scoped
 | [`construction_milestone.schema.json`](../../../schemas/contracts/v1/domains/water_planning/construction_milestone.schema.json) | Canonical machine shape for this record. |
 | [Water-planning schema index](../../../schemas/contracts/v1/domains/water_planning/README.md) | Schema-family scope, invariants, validation, and public-safe boundary. |
 | [Synthetic construction-milestone fixtures](../../../fixtures/domains/water_planning/construction_milestone/) | Representative valid and invalid inputs. |
+| [Synthetic status-collapse fixtures](../../../fixtures/domains/water_planning/status_collapse/) | Cross-record payment/construction and construction/completion rejection envelopes. |
+| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) | Deterministic synthetic anti-collapse validator. |
+| [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | No-network regression tests for stable cross-record findings. |
 | [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) | Schema-family regression tests. |
 | [`jsonschema_runner.py`](../../../tools/validators/_common/jsonschema_runner.py) | Shared local Draft 2020-12 validator construction. |
 | [KWO source catalog entry](../../../docs/sources/catalog/kansas/kwo.md) | Source role, access, rights, freshness, and inference limitations. |
