@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/datasets/readme
 name: Dataset Registry README
 path: data/registry/datasets/README.md
 type: data-registry-datasets-parent-readme
-version: v0.4.0
+version: v0.5.0
 status: draft
 owners:
   - "NEEDS VERIFICATION: registry steward"
@@ -18,7 +18,7 @@ truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: dataset-identity-and-state
-path_posture: confirmed-live-canonical-subtype-first-parent; flora-child-confirmed; water-planning-record-confirmed; complete-inventory-partial; schema-and-validator-coverage-partial
+path_posture: confirmed-live-canonical-subtype-first-parent; flora-child-confirmed; water-planning-child-and-record-confirmed; complete-inventory-partial; shared-schema-and-registry-wide-validator-coverage-partial
 sensitivity_posture: registry-internal; no-public-path; source-role-preserving; rights-and-sensitivity-fail-closed; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -62,9 +62,16 @@ tags:
   - no-public-path
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: a254b4345f2944a453d9a86a23951074a106a853
-  prior_blob: 04b67852e50ba3174cc122b8166686e507070253
+  base_commit: 0f93ec146d61fde5309fa386f02908e9f0e5d5bd
+  prior_blob: a49b5be1f508dfc33715316f25f83c2517cfc629
   flora_child_blob: 025cade8130a07ee2e5243ee5929d86c182e8162
+  water_planning_child_blob: 36522cd91ca05ced03bcf0a3cdb7500c7aeb6f33
+  water_planning_record_blob: 6969df8d5125a64c7dd52a07b80a9bfa196a1077
+  rac_contract_blob: 8dba083a2d7a9023e786372a809edd7ca802ea61
+  rac_dataset_schema_blob: f2ec9b87107e7c431c3332da8df060f0c9e81a3f
+  rac_validator_blob: 11c26cc4ed3d387ab1669e30a71434ffc1aab873
+  rac_tests_blob: a5779da0e9190c7d0a7d1960e7a52bfac6d97cbf
+  briefing_workflow_blob: d076618e57770b1e2bb0ff419faaab38442ce7e8
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
   registry_schema_guardrail_blob: 9af6574ec32bde3d60a904fccf9b0dc4bb71703b
@@ -73,7 +80,8 @@ evidence_snapshot:
 notes:
   - "This README preserves and upgrades the existing document at the same canonical subtype-first registry path."
   - "ADR-0029 accepted Directory Rules v2; its topology resolves `data/registry/datasets/` as the canonical dataset registry parent."
-  - "Current repository evidence confirms the Flora child README and one concrete water-planning RAC geometry dataset record; complete lane inventory remains partial."
+  - "Current repository evidence confirms the Flora child README, the water-planning child README, and one concrete RAC geometry dataset record; complete lane inventory remains partial."
+  - "The water-planning slice has a proposed contract, a concrete schema, a deterministic no-network validator, focused tests, and path-scoped read-only CI; those checks do not close registry-wide validation, rights, evidence, review, release, or publication."
   - "The shared registry-schema lane is README-only and names `dataset_registry_record.schema.json` as a candidate that is not present."
   - "The adjacent `DatasetVersion` contract is draft and its paired schema is explicitly a permissive placeholder."
   - "Registry presence does not admit a source, validate a dataset, prove a claim, clear rights or sensitivity, authorize release, or publish KFM content."
@@ -96,7 +104,7 @@ notes:
 
 ## Navigation
 
-[Status](#status) · [Scope](#scope) · [Authority](#authority-and-path-posture) · [Repository fit](#repository-fit) · [Boundary](#dataset-registry-boundary) · [Inventory](#confirmed-inventory) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs and outputs](#inputs-and-outputs) · [Lifecycle](#lifecycle-and-publication-boundary) · [Semantic concerns](#minimum-semantic-concerns) · [Validation](#validation-and-maintenance) · [Checks](#required-checks-before-use) · [Verification](#open-verification-items) · [Rollback](#correction-supersession-and-rollback)
+[Status](#status) · [Scope](#scope) · [Authority](#authority-and-path-posture) · [Repository fit](#repository-fit) · [Boundary](#dataset-registry-boundary) · [Inventory](#confirmed-inventory) · [Implemented slice](#implemented-water-planning-slice) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs and outputs](#inputs-and-outputs) · [Lifecycle](#lifecycle-and-publication-boundary) · [Semantic concerns](#minimum-semantic-concerns) · [Validation](#validation-and-maintenance) · [Review](#review-burden) · [Checks](#required-checks-before-use) · [Verification](#open-verification-items) · [Rollback](#correction-supersession-and-rollback)
 
 ---
 
@@ -109,12 +117,13 @@ notes:
 | Directory placement | **CONFIRMED canonical** subtype-first registry topology under accepted Directory Rules v2 |
 | Placement outcome | `PLACE` at the existing path |
 | Document lifecycle | `draft` |
-| Confirmed child lanes | [`flora/`](flora/README.md) — README evidence only; [`water_planning/`](water_planning/README.md) — one concrete RAC geometry dataset record |
+| Confirmed child lanes | [`flora/`](flora/README.md) — detailed boundary README; [`water_planning/`](water_planning/README.md) — compact boundary README plus one concrete RAC geometry record |
 | Concrete dataset-registry record inventory | [`water_planning/kwo_rac_regions_2026-06-24.json`](water_planning/kwo_rac_regions_2026-06-24.json) — one digest-pinned 14-feature internal record; complete lane inventory remains partial |
 | Accepted shared dataset-registry schema | **NEEDS VERIFICATION**; the shared registry-schema lane is README-only |
 | Adjacent `DatasetVersion` contract | **CONFIRMED draft**; its paired schema is explicitly a permissive placeholder |
-| Dataset-registry validators, fixtures, tests, and CI | **PARTIAL** — concrete water-planning validator/tests/read-only CI; registry-wide coverage remains unresolved |
-| Accountable owners and reviewers | **NEEDS VERIFICATION** |
+| Dataset-registry validators, fixtures, tests, and CI | **PARTIAL** — concrete water-planning validator/tests/path-scoped read-only CI; registry-wide coverage remains unresolved |
+| Review routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes `data/registry/` to `@bartytime4life`; routing is not independent approval or proof of review |
+| Accountable registry, dataset, and domain stewards | **NEEDS VERIFICATION** |
 | Direct public access | **DENY** |
 | KFM publication effect | None |
 
@@ -221,12 +230,37 @@ Domain-first registry paths such as `data/registry/<domain>/datasets/` must not 
 |---|---|---|
 | `data/registry/datasets/README.md` | **CONFIRMED** parent README | Documentation and placement boundary only |
 | [`data/registry/datasets/flora/`](flora/README.md) | **CONFIRMED** child README | Flora dataset-registry boundary; not proof of emitted records |
-| [`data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json`](water_planning/kwo_rac_regions_2026-06-24.json) | **CONFIRMED concrete record** | Points to a digest-pinned 14-feature processed GeoJSON; release remains denied |
+| [`data/registry/datasets/water_planning/`](water_planning/README.md) | **CONFIRMED** child README | Water-planning dataset-registry boundary; one record is currently inventoried |
+| [`data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json`](water_planning/kwo_rac_regions_2026-06-24.json) | **CONFIRMED concrete record** | Stable dataset and version IDs; `current`; `not-released`; points to a digest-pinned 14-feature processed GeoJSON |
 | Complete machine-readable dataset-registry inventory | **PARTIAL** | One water-planning record is concrete; do not infer completeness for other domains |
 | Shared `dataset_registry_record` schema | **NOT FOUND / NEEDS VERIFICATION** | Candidate name only in the shared schema guardrail |
-| Dataset-registry-specific validator, fixture, test, or CI lane | **NEEDS VERIFICATION** | No completeness claim |
+| Registry-wide validator, fixture, test, or CI lane | **NEEDS VERIFICATION** | The bounded water-planning slice is concrete; no registry-wide completeness claim |
 
 This inventory is intentionally bounded. The water-planning record is concrete; search-limited repository inspection is not proof of completeness outside the surfaced paths.
+
+---
+
+## Implemented water-planning slice
+
+The current repository contains one bounded dataset-registry implementation. Its dependency and authority flow is:
+
+```mermaid
+flowchart TD
+    S["KWO source descriptor candidate"] --> P["Processed 14-feature RAC geometry"]
+    P --> R["Versioned dataset registry record"]
+    R --> V["Schema + no-network validator + tests"]
+    V --> G["Evidence, policy, review, and release gates"]
+```
+
+The first four nodes are confirmed repository surfaces at the pinned base. The source descriptor remains `proposed`, `needs_review`, `not_released`, and connector-disabled. The final gates are not closed; this flow does not assert active ingestion, source freshness, rights clearance, evidence closure, release, or publication.
+
+| Surface | Confirmed role | Authority limit |
+|---|---|---|
+| [KWO source descriptor candidate](../sources/water_planning/kwo_rac_feature_service.source.json) | Identifies the observed KWO Regional Planning Areas source and pins the observed source-response digest | Does not activate a recurring connector or clear independent rights review |
+| [Processed RAC geometry](../../processed/water_planning/rac_regions/kwo_rac_regions_2026-06-24.geojson) | 14-feature GeoJSON payload referenced by path, byte count, CRS, and SHA-256 | Processed bytes are not automatically public or released |
+| [Dataset registry record](water_planning/kwo_rac_regions_2026-06-24.json) | Preserves stable dataset/version IDs, source lineage, payload digest, correction state, and `not-released` state | Registry state is not source truth, policy, proof, or release authority |
+| [Semantic contract](../../../contracts/domains/water_planning/rac_geometry_registry.md) and [machine schema](../../../schemas/contracts/v1/domains/water_planning/rac_geometry_dataset_registry.schema.json) | Define the proposed RAC registry meaning and concrete record shape | The contract remains proposed; schema conformance does not prove semantics or admissibility |
+| [Validator](../../../tools/validators/domains/water_planning/validate_rac_registry.py), [tests](../../../tests/domains/water_planning/test_rac_registry.py), and [workflow](../../../.github/workflows/briefing-integration.yml) | Check pinned repository bytes deterministically without network access for the declared water-planning scope | The workflow path filter covers the water-planning child, not this parent README, and no green check grants release or publication authority |
 
 ---
 
@@ -347,7 +381,30 @@ Exact field names, requiredness, formats, enums, and validation outcomes remain 
 
 Validation should be deterministic and no-network where practical. Network freshness and source availability checks belong in separately receipted source or runtime workflows.
 
-At minimum, an accepted validator should test:
+### Confirmed bounded validation
+
+Run the concrete water-planning registry checks from the repository root:
+
+```bash
+python tools/validators/domains/water_planning/validate_rac_registry.py
+
+python -m unittest discover \
+  --start-directory tests/domains/water_planning \
+  --pattern 'test_rac_registry.py' \
+  --verbose
+```
+
+The validator's bounded success line is:
+
+```text
+RAC_REGISTRY_OK regions=14 counties=105 mappings=209
+```
+
+These checks pin the RAC dataset record together with its processed geometry, source descriptors, county crosswalk, and release posture. They do not refetch sources, recompute geometry, prove official county membership, clear rights, close evidence, or authorize release. The [`briefing-integration` workflow](../../../.github/workflows/briefing-integration.yml) runs this slice for changes under the water-planning child and related paths; this parent README alone is outside that workflow's path filter.
+
+### Registry-wide acceptance target
+
+At minimum, an accepted registry-wide validator should test:
 
 - stable and unique dataset-family and version identity;
 - resolvable source identity and source-role references;
@@ -381,12 +438,24 @@ Schema validity alone is insufficient. Meaning, evidence, policy, review, releas
 
 ---
 
+## Review burden
+
+| Review concern | Current requirement |
+|---|---|
+| GitHub routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes this lane to `@bartytime4life`; this is review routing, not independent approval or a policy decision. |
+| Local stewardship | Registry, dataset, source, domain, contract, schema, policy, validation, evidence, and release stewardship remain **NEEDS VERIFICATION**. |
+| Required review triggers | Re-review when inventory, identity, source role, contract/schema, validator/fixture/test coverage, public exposure, rights/sensitivity posture, correction state, or release state changes. |
+| Authority-changing edits | Require the applicable contract, schema, policy, evidence, release, migration, and rollback review; a README edit cannot self-authorize the change. |
+| Independent review | **NEEDS VERIFICATION**; do not represent owner routing, self-review, or automation as independent approval. |
+
+---
+
 ## Open verification items
 
 - [ ] Assign accountable registry, dataset, source, domain, contract, schema, policy, validation, evidence, and release owners.
 - [ ] Accept or identify the semantic contract for dataset registry records.
 - [ ] Accept or identify the machine schema and canonical `$id`.
-- [x] Inventory the first concrete water-planning record and its validator/CI consumers; complete registry and producer inventory remains open.
+- [x] Inventory the water-planning child, its first concrete record, and its validator/CI consumers; complete registry and producer inventory remains open.
 - [ ] Define stable naming, versioning, index, digest, and supersession conventions.
 - [ ] Implement valid and invalid fixtures without real sensitive payloads.
 - [x] Implement deterministic validation and stable failure codes for the bounded RAC geometry record; registry-wide validation remains open.
@@ -400,6 +469,12 @@ Do not remove these holds merely because this README is merged.
 ---
 
 ## Correction, supersession, and rollback
+
+| Dimension | Parent-lane rule |
+|---|---|
+| Exposure | Internal governance state; ordinary public clients use governed interfaces or release-approved carriers. |
+| Mutation | Version or correct records under their governing contract; never silently rewrite stable identity, source lineage, payload digest, or release state. |
+| Retention | Preserve superseded identities, digests, correction lineage, and rollback targets; a time-based retention schedule remains **NEEDS VERIFICATION**. |
 
 Dataset identities and versions must remain historically traceable:
 
@@ -419,6 +494,13 @@ For this README change:
 ---
 
 ## Change history
+
+### v0.5.0 — 2026-07-30
+
+- promoted the confirmed water-planning child README into the parent inventory;
+- documented the concrete record-to-schema-to-validator chain and its authority limits;
+- added grounded no-network commands, workflow path-filter limits, review burden, and mutation/retention posture;
+- preserved the existing static evidence-backed badges and kept registry-wide schema, stewardship, rights, evidence, release, and publication holds open.
 
 ### v0.4.0 — 2026-07-30
 
