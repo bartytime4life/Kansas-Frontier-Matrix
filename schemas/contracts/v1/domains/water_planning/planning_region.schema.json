@@ -3,48 +3,70 @@
   "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/planning_region.schema.json",
   "title": "planning_region",
   "type": "object",
-  "description": "A governed Kansas Regional Advisory Committee (RAC) planning area identity. Kansas has exactly 14 RAC planning areas that provide regional input into state water planning. Missing or unresolvable geometry must be represented as geometry_confidence: unresolved.",
+  "description": "A governed Kansas Regional Advisory Committee (RAC) planning area identity. Kansas has exactly 14 RAC planning areas. The kwo-rac-01 through kwo-rac-14 identifiers use the KFM identity inventory's stable ordinal and are not claimed to be KWO-native numeric identifiers. Missing or unresolvable geometry and county crosswalks remain explicit unresolved states.",
   "x-kfm": {
     "status": "PROPOSED",
     "contract_doc": "contracts/domains/water_planning/planning_region.md",
     "fixtures_root": "fixtures/domains/water_planning/planning_region/",
+    "authority_fixtures_root": "fixtures/domains/water_planning/geometry_authority/",
+    "authority_validator": "tools/validators/domains/water_planning/validate_geometry_authority.py",
     "policy": "policy/domains/water_planning/",
     "source": "https://www.kwo.ks.gov/about-us/regional-advisory-committees"
   },
   "properties": {
     "region_id": {
       "type": "string",
-      "pattern": "^kwo-rac-[0-9]{2}$",
-      "description": "Stable governed identity for this RAC planning area, e.g. kwo-rac-01 through kwo-rac-14."
+      "pattern": "^kwo-rac-(0[1-9]|1[0-4])$",
+      "description": "Stable KFM identity for this RAC planning area: exactly kwo-rac-01 through kwo-rac-14."
     },
     "name": {
       "type": "string",
       "minLength": 1,
-      "description": "Official name of the RAC planning region."
+      "description": "Source-grounded official name of the RAC planning region."
     },
     "rac_number": {
       "type": "integer",
       "minimum": 1,
       "maximum": 14,
-      "description": "RAC number 1–14 as enumerated by the Kansas Water Office."
+      "description": "KFM stable ordinal 1–14 assigned by the governed RAC identity inventory; not a claim of a KWO-native number."
     },
     "geometry_ref": {
-      "type": ["string", "null"],
-      "description": "Reference to the geometry record for this planning region, or null if not yet resolved."
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "description": "Reference to a governed region-geometry authority record, or null while unresolved. Geometry is never embedded here."
     },
     "geometry_confidence": {
       "type": "string",
-      "enum": ["unresolved", "approximate", "confirmed"],
-      "description": "Confidence in the geometry resolution. Missing or unverified geometry must be stored as unresolved, never guessed."
+      "enum": [
+        "unresolved",
+        "approximate",
+        "confirmed"
+      ],
+      "description": "Reference resolution state. Approximate and confirmed require a non-null authority-backed geometry_ref; missing or unverified geometry remains unresolved."
     },
     "county_crosswalk_ref": {
-      "type": ["string", "null"],
-      "description": "Reference to the county-crosswalk authority record for this region."
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "description": "Reference to a governed county-crosswalk authority record, or null while unresolved. County membership is not embedded here."
+    },
+    "county_crosswalk_resolution_status": {
+      "type": "string",
+      "enum": [
+        "unresolved",
+        "resolved"
+      ],
+      "description": "Explicit resolution state for county_crosswalk_ref."
     },
     "source_ref": {
       "type": "string",
       "minLength": 1,
-      "description": "Reference to the KWO source record providing authority for this identity."
+      "description": "Reference to the governed KWO identity-authority record."
     }
   },
   "required": [
@@ -53,7 +75,65 @@
     "rac_number",
     "geometry_ref",
     "geometry_confidence",
+    "county_crosswalk_ref",
+    "county_crosswalk_resolution_status",
     "source_ref"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "geometry_confidence": {
+            "const": "unresolved"
+          }
+        },
+        "required": [
+          "geometry_confidence"
+        ]
+      },
+      "then": {
+        "properties": {
+          "geometry_ref": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "geometry_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "county_crosswalk_resolution_status": {
+            "const": "unresolved"
+          }
+        },
+        "required": [
+          "county_crosswalk_resolution_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "county_crosswalk_ref": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "county_crosswalk_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
   ],
   "additionalProperties": false
 }

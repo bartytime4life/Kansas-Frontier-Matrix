@@ -1,8 +1,10 @@
 {
   "region_id": "kwo-rac-01",
-  "name": "Southwestern Kansas",
+  "name": "Cimarron",
   "rac_number": 1,
   "geometry_ref": null,
   "geometry_confidence": "unresolved",
+  "county_crosswalk_ref": null,
+  "county_crosswalk_resolution_status": "unresolved",
   "source_ref": "kwo:rac:regional-advisory-committees"
 }
