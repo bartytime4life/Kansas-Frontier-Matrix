@@ -23,6 +23,9 @@ related:
   - ../../../schemas/contracts/v1/domains/water_planning/completion.schema.json
   - ../../../schemas/contracts/v1/domains/water_planning/README.md
   - ../../../fixtures/domains/water_planning/completion/
+  - ../../../fixtures/domains/water_planning/status_collapse/
+  - ../../../tools/validators/domains/water_planning/validate_status_collapse.py
+  - ../../../tests/domains/water_planning/test_status_collapse.py
   - ../../../tests/schemas/test_water_planning_contracts.py
   - ../../../docs/sources/catalog/kansas/kwo.md
   - ../../../docs/doctrine/directory-rules.md
@@ -83,6 +86,7 @@ The contract describes record meaning. The paired JSON Schema defines accepted d
 | [Paired JSON Schema](../../../schemas/contracts/v1/domains/water_planning/completion.schema.json) | Draft 2020-12; `x-kfm.status: PROPOSED` | Defines machine-checkable shape, not source truth, project resolution, policy, or release. |
 | [Valid and invalid fixtures](../../../fixtures/domains/water_planning/completion/) | Synthetic test inputs | Exercise representative schema behavior; they are not project or completion evidence. |
 | [Schema tests](../../../tests/schemas/test_water_planning_contracts.py) | Repository test surface | Check representative acceptance/rejection and preserve the completion-versus-award distinction. |
+| [Status-collapse validator](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [tests](../../../tests/domains/water_planning/test_status_collapse.py) | Deterministic, no-network synthetic-fixture checks | Reject selected application/award, award/payment, payment/construction, and construction/completion collapse claims; they do not validate a `Completion` instance. |
 | [KWO source catalog entry](../../../docs/sources/catalog/kansas/kwo.md) | Bounded source-family documentation | Excludes completion or operational-benefit claims inferred beyond source evidence; it does not activate a source or authorize release. |
 | `policy/domains/water_planning/` | Forward pointer in schema metadata; policy behavior remains `NEEDS VERIFICATION` | No policy outcome or public-safe projection may be inferred from this contract or schema. |
 
@@ -159,6 +163,19 @@ A completion is not a payment, award, project, construction milestone, inspectio
 | [`ConstructionMilestone`](./construction_milestone.md) | Bounded construction-progress event | Project completion or operational benefit |
 | `Completion` | Explicit completion-state record | Operational readiness, service, impact, effectiveness, or benefit |
 
+### Executable sequence guardrails
+
+The no-network status-collapse suite preserves the upstream chain that must remain separate before a completion claim can be interpreted:
+
+| Invalid synthetic claim | Stable finding | Contract boundary retained |
+|---|---|---|
+| [`application_is_award`](../../../fixtures/domains/water_planning/status_collapse/invalid/application_is_award.json) | `APPLICATION_IS_NOT_AWARD` | A submitted request does not become a funding decision. |
+| [`award_is_payment`](../../../fixtures/domains/water_planning/status_collapse/invalid/award_is_payment.json) | `AWARD_IS_NOT_PAYMENT` | An award does not prove disbursement. |
+| [`payment_is_construction`](../../../fixtures/domains/water_planning/status_collapse/invalid/payment_is_construction.json) | `PAYMENT_IS_NOT_CONSTRUCTION` | Payment does not prove physical progress. |
+| [`construction_is_completion`](../../../fixtures/domains/water_planning/status_collapse/invalid/construction_is_completion.json) | `CONSTRUCTION_IS_NOT_COMPLETION` | Construction activity does not become an explicit completion state. |
+
+These findings apply to the synthetic status-collapse candidate only. They do not validate a `Completion` document, establish event order, resolve `project_ref`, or prove any real application, award, payment, milestone, or completion.
+
 [Back to top](#top)
 
 ## Schema posture
@@ -214,11 +231,28 @@ python -m pytest -q tests/schemas/test_water_planning_contracts.py -k completion
 python -m pytest -q tests/schemas/test_water_planning_contracts.py
 ```
 
+### Exercise the accepted synthetic anti-collapse envelope
+
+```bash
+python tools/validators/domains/water_planning/validate_status_collapse.py \
+  fixtures/domains/water_planning/status_collapse/valid/valid_1.json
+```
+
+### Run the no-network cross-record boundary tests
+
+```bash
+python -m unittest discover \
+  --start-directory tests/domains/water_planning \
+  --pattern 'test_status_collapse.py' \
+  --verbose
+```
+
 | Validation surface | What it checks | What success does not prove |
 | --- | --- | --- |
 | [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) | Schema presence, distinct entity titles, representative valid/invalid fixtures, and completion-versus-award separation | Project resolution, state/time coherence, source accuracy, rights, policy, operation, benefit, or release |
 | [`valid_1.json`](../../../fixtures/domains/water_planning/completion/valid/valid_1.json) | One representative `complete` record accepted by the paired schema | That the example is real, current, source-supported, operational, or beneficial |
 | [`invalid_1.json`](../../../fixtures/domains/water_planning/completion/invalid/invalid_1.json) | An unrecognized `done` state is rejected | Exhaustive negative coverage for identity, references, time, evidence, transitions, or state semantics |
+| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | Stable findings for synthetic application/award, award/payment, payment/construction, and construction/completion collapse; complete invalid-fixture polarity; no-network execution; and protected-value non-echo | Validation of a `Completion` instance, lifecycle chronology, project resolution, or real completion evidence |
 | [`schema-validation.yml`](../../../.github/workflows/schema-validation.yml) | Pull-request schema inventory, meta-schema checks, aggregate fixtures, and repository-owned schema/contract tests under read-only permissions | Semantic truth, source admission, policy, rights, sensitivity, release, or publication |
 | [`briefing-integration.yml`](../../../.github/workflows/briefing-integration.yml) | Path-triggered no-network water-planning domain and RAC-registry checks under `contents: read` | Completion-schema exhaustiveness, project resolution, review approval, evidence closure, release, deployment, or publication |
 
@@ -275,6 +309,9 @@ Before merge, rollback is to close the draft pull request and abandon its scoped
 | [`completion.schema.json`](../../../schemas/contracts/v1/domains/water_planning/completion.schema.json) | Canonical machine shape for this record. |
 | [Water-planning schema index](../../../schemas/contracts/v1/domains/water_planning/README.md) | Schema-family scope, invariants, validation, and public-safe boundary. |
 | [Synthetic completion fixtures](../../../fixtures/domains/water_planning/completion/) | Representative valid and invalid inputs. |
+| [Synthetic status-collapse fixtures](../../../fixtures/domains/water_planning/status_collapse/) | Cross-record application, award, payment, construction, and completion rejection envelopes. |
+| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) | Deterministic synthetic anti-collapse validator. |
+| [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | No-network regression tests for stable cross-record findings. |
 | [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) | Schema-family regression tests. |
 | [KWO source catalog entry](../../../docs/sources/catalog/kansas/kwo.md) | Source role, rights, freshness, access, and admission limitations. |
 | [Directory Rules v2](../../../docs/doctrine/directory-rules.md) | Adopted responsibility-root and domain-lane placement authority. |
