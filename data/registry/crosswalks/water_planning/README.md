@@ -41,6 +41,8 @@
 
 This is a nested boundary under the canonical subtype-first `data/registry/crosswalks/` lane. It stores compact crosswalk identity and mapping state, not source payloads, canonical domain facts, semantic contracts, policy decisions, proofs, release decisions, or published geometry.
 
+<a id="concrete-inventory"></a>
+
 ## Registry inventory
 
 | Record | Stable identity | Coverage | State |
