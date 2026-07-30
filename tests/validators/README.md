@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.5
-status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; pnpm-audit-readiness-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.6
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
-updated: 2026-07-29
+updated: 2026-07-30
 supersedes: v0.1 planning-oriented validator-test README
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
-truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, focused pnpm audit readiness/result/CLI suite, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder and dependency-report classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED broader helper and entrypoint coverage, complete manifest, trusted repository-control workflow, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
+truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder and dependency-report classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -69,10 +69,16 @@ repository_control_change_evidence:
   incident_test: tests/validators/test_repository_control_incident_1829.py
   amended_incident_test: tests/validators/test_repository_control_incident_1789.py
   fixture: tests/fixtures/governance/repository_control/context_pr_1829_terminal_divergence.json
+  transition_schema: schemas/contracts/v1/governance/repository_transition_authorization.schema.json
+  transition_validator: tools/validators/repository_control/validate_transition_authorization.py
+  transition_test: tests/validators/test_repository_transition_authorization.py
+  transition_workflow: .github/workflows/repository-control.yml
+  transition_authority_record: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136495687
+  transition_base_renewal: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5136682127
   scope_amendment:
     - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5121858163
     - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5121864305
-  workflow_integration: deliberately_deferred_to_a_separately_authorized_trusted_check_batch
+  workflow_integration: proposed_trusted_base_read_only_check; advisory_until_separately_required_by_ruleset_15484585
 pnpm_audit_change_evidence:
   base_commit: b5f156c32efa149846ad1022b9661b766f464485
   target_prior_blob: 027f7531b86ddfd7a6a10cd38ae0c62e1d07d523
@@ -92,6 +98,7 @@ related:
   - ../schemas/test_hydrology_alias_contracts.py
   - test_ci_readiness.py
   - test_repository_control.py
+  - test_repository_transition_authorization.py
   - test_repository_control_incident_1789.py
   - test_repository_control_incident_1829.py
   - test_pnpm_audit_readiness.py
@@ -99,6 +106,7 @@ related:
   - ../../tools/validators/README.md
   - ../../tools/validators/ci_readiness.py
   - ../../tools/validators/repository_control/validate_repository_control.py
+  - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tools/validators/dependencies/README.md
   - ../../tools/validators/dependencies/pnpm_audit_readiness.py
   - ../../tools/validators/_common/README.md
@@ -120,8 +128,10 @@ related:
   - ../../.github/workflows/schema-validation.yml
   - ../../.github/workflows/validator-suite.yml
   - ../../.github/workflows/dependency-scan.yml
+  - ../../.github/workflows/repository-control.yml
 tags: [kfm, tests, validators, repository-control, dependency-audit, pnpm, json-schema, pytest, fixtures, entrypoints, cli, exit-codes, diagnostics, no-network, fail-closed, coverage, correction, rollback]
 notes:
+  - "v0.6 adds focused no-network transition-authorization proof and one trusted-base, read-only pull_request_target workflow; the workflow remains advisory until separately required by the main ruleset and cannot distinguish a human from an app using the same owner identity."
   - "v0.5 adds focused synthetic no-network proof for pnpm manager/workspace/lockfile readiness and PASS/REGRESSION/ERROR audit-report classification; it does not make the registry query deterministic or authoritative."
   - "v0.4 records the repository-control v2 observed-base semantics and PR #1829 terminal-divergence regression proof; no workflow or required check is added."
   - "v0.3 adds focused executable proof for the shared placeholder-readiness checker; the broader validator runtime and entrypoint coverage gaps remain."
@@ -282,6 +292,7 @@ tests/validators/
 ├── test_repository_control_incident_1791.py
 ├── test_repository_control_incident_1792.py
 ├── test_repository_control_incident_1829.py
+├── test_repository_transition_authorization.py
 └── test_pnpm_audit_readiness.py
 ```
 
@@ -298,7 +309,9 @@ This bounded map is not proof against ignored, generated, historical, branch-loc
 
 `test_ci_readiness.py` is now confirmed focused proof for `tools/validators/ci_readiness.py`. Its non-vacuity rule is category-wide: every supplied root must exist and be path-safe, at least one Python file must be discovered across the complete test-root set and across the complete validator-root set, and every discovered Python file must be an exact recognized placeholder. README-only sibling roots do not fail merely for containing no Python. Within both root categories, only recognized Python placeholders, `README`/`LICENSE`/`NOTICE`, `.md`/`.markdown`/`.rst`/`.txt` documentation, `.gitkeep`, and whitespace-only extensionless sentinels are allowed; other regular files fail closed as `unexpected_test_source` or `unexpected_validator_source` so a readiness hold cannot hide substantive non-Python material.
 
-The repository-control pair is confirmed focused proof for `tools/validators/repository_control/`. It binds an active claim to `base.current_main_sha` as the SHA observed at `base.observed_at`, while a held or otherwise non-active projection does not become stale merely because the live branch head later moves. The PR #1829 fixture preserves the merged event as terminal divergence even when an input attempts to mark it not applicable.
+The repository-control suites are confirmed focused proof for `tools/validators/repository_control/`. The original evaluator binds an active claim to `base.current_main_sha` as the SHA observed at `base.observed_at`, while a held or otherwise non-active projection does not become stale merely because the live branch head later moves. The PR #1829 fixture preserves the merged event as terminal divergence even when an input attempts to mark it not applicable.
+
+`test_repository_transition_authorization.py` separately proves strict JSON and schema shape, unedited owner-comment binding at evaluation time, exact repository/issue/PR/base/head matching, draft holds, four-hour maximum expiry at evaluation time, duplicate/unknown-field refusal, bounded non-echoing output, CLI polarity, and the fact that PR #1869 would have remained held without a distinct transition record. It does not prove hosted execution, required-check coupling, automatic expiry or rerun of a previously recorded successful GitHub check after comment mutation, human authorship, app/token identity, independent review, or merge legitimacy.
 
 ### Shared runtime and aggregate
 
@@ -326,7 +339,7 @@ tools/validators/validate_run_receipt.py
 | Test | Primary assertion | Why it is adjacent rather than direct lane coverage |
 |---|---|---|
 | `tests/validators/test_ci_readiness.py` | Exact placeholder AST shapes, substantive/syntax/missing/unsafe/symlink/path refusal, unexpected non-Python test/validator-source denial, allowed documentation/sentinel files in both categories, category-wide non-vacuity, README-only sibling roots, deterministic diagnostics, repeated-root behavior, and CLI exit polarity. | Direct focused coverage for `ci_readiness.py`; not broad coverage of schema runners or domain validators. |
-| `tests/validators/test_repository_control.py` and `test_repository_control_incident_1829.py` | State schema/digest/scope, claim-state gating, observation-time base semantics, later live-head movement, and PR #1829 terminal divergence. | Direct focused coverage for repository control; no trusted workflow, branch-setting mutation, or initiating-client attribution. |
+| `tests/validators/test_repository_control.py`, `test_repository_control_incident_1829.py`, and `test_repository_transition_authorization.py` | State schema/digest/scope, claim-state gating, observation-time base semantics, terminal divergence, and strict exact-head owner transition records. | Direct focused coverage; hosted workflow execution, required-check settings, human-versus-app identity, and initiating-client attribution remain separate. |
 | `tests/schemas/test_common_contracts.py` | Selected schema families accept valid fixtures and reject invalid fixtures. | Primary authority is schema conformance and fixture polarity. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | Three Hydrology aliases accept one valid fixture each and reject added unknown properties. | Primary authority is domain schema alias behavior. |
 | `validator-suite` invalid EvidenceBundle canary | One explicit invalid fixture must produce a nonzero validator result. | Workflow-level canary, not a unit suite for all helpers or validators. |
@@ -831,7 +844,8 @@ Run the confirmed focused repository-control suites:
 ```bash
 python -m pytest \
   tests/validators/test_repository_control.py \
-  tests/validators/test_repository_control_incident_1829.py -q
+  tests/validators/test_repository_control_incident_1829.py \
+  tests/validators/test_repository_transition_authorization.py -q
 ```
 
 Run the confirmed focused pnpm-audit readiness and result-classifier suite:
@@ -852,7 +866,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | `validator-suite` workflow | `make schemas` plus one invalid EvidenceBundle canary. |
 | `schema-validation` workflow | `make schemas`. |
 | focused `pytest tests/validators/test_ci_readiness.py` | Confirmed exact placeholder classification, fail-closed path/input and unexpected test/validator-source behavior, explicit documentation/sentinel allowances in both root categories, deterministic output, non-vacuity, and CLI polarity for `ci_readiness.py`. |
-| focused repository-control pytest pair | Confirmed state/schema/digest/scope validation, active-claim observation binding, non-active later-head behavior, and PR #1829 terminal-divergence refusal. No trusted workflow is installed by this batch. |
+| focused repository-control pytest set | Confirmed state/schema/digest/scope validation, active-claim observation binding, non-active later-head behavior, PR #1829 terminal-divergence refusal, and strict exact-head transition-authorization parsing. The proposed trusted-base workflow remains advisory until separately required. |
 | focused `pytest tests/validators/test_pnpm_audit_readiness.py` | Confirmed manager/engine/workspace/lockfile preconditions, importer closure, competing-lockfile and unsafe-input denial, deterministic output, audit threshold and error polarity, and CLI exits. Networked advisory truth remains outside the fixture suite. |
 | eleven domain readiness workflows | Same-batch integration with `ci_readiness.py`: ten call the root-scanning CLI; Hydrology imports the source classifiers inside a bespoke exact inventory because its validator roots intentionally mix Python placeholders with separately inventoried schema and policy files. Each workflow retains its domain-specific checks and authority limits. |
 
@@ -869,6 +883,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | `schema-validation` | Installs the project and runs `make schemas`. | Complete validator inventory, direct helper tests, or promotion dependency. |
 | `validator-suite` | Runs `make schemas` and confirms one invalid EvidenceBundle is rejected. | Every invalid fixture, every helper branch, every entrypoint, or complete fail-closed behavior. |
 | `contracts-validate` | Runs `make test`. | Direct validator-unit coverage because `make test` omits this lane. |
+| `repository-control` | Proposed trusted-base `pull_request_target` check runs the strict transition validator over GitHub event and #1675 comment JSON with read-only permissions. | Required-check coupling, independent review, initiating-client attribution, or ruleset enforcement until separately configured. |
 
 ### Required CI graduation
 
@@ -1078,7 +1093,7 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | VAL-TST-013 | What path and resource budgets are required? | NEEDS VERIFICATION | Security + Python tooling stewards |
 | VAL-TST-014 | Which sensitive fixture classes require extra review? | NEEDS VERIFICATION | Sensitivity + Domain stewards |
 | VAL-TST-015 | What machine-readable CI artifact and retention policy are accepted? | NEEDS VERIFICATION | CI + QA stewards |
-| VAL-TST-016 | Are validator workflows required checks under branch protection? | UNKNOWN | Repository administrator |
+| VAL-TST-016 | Are validator workflows required checks under branch protection? | The 2026-07-29 settings snapshot had no required checks; the proposed `repository-control / authorize-ready-and-merge` check remains advisory until a later exact ruleset read/write/read-back. | Repository administrator |
 | VAL-TST-017 | Does any release gate depend on validator-suite or schema-validation? | UNKNOWN | Release steward |
 | VAL-TST-018 | Is the proposed schema-registry package extraction accepted? | UNKNOWN | Architecture + Schema stewards |
 | VAL-TST-019 | What migration and deprecation window protects current imports? | NEEDS VERIFICATION | Python tooling + Consumer owners |
@@ -1098,7 +1113,8 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | `tools/validators/ci_readiness.py` | CONFIRMED executable | Python 3.9-compatible, standard-library AST classification, safe repeated-root inspection, unexpected test/validator-source denial, bounded diagnostics, and CLI polarity. | Placeholder readiness only; it does not run tests or validators or establish domain truth. |
 | `tests/validators/test_ci_readiness.py` | CONFIRMED executable test | Allowed exact forms and documentation/sentinels in both categories, substantive and unexpected-source rejection, syntax/missing/path/symlink failures, category-wide non-vacuity, README-only siblings, determinism, and CLI outcomes. | Focused checker coverage, not complete validator-suite coverage. |
 | `control_plane/repository_control_state.yaml` and its schema/contract | CONFIRMED tracked projection | Version 2 observation-time base semantics, digest closure, governed claim/settings state, and bounded authorization/evidence references. | A tracked snapshot is not a live branch-head oracle or a trusted check result. |
-| `tools/validators/repository_control/` and focused tests | CONFIRMED executable and executable tests | State/context validation, active claim binding, held-state behavior after later head movement, and terminal-divergence refusal. | No workflow, required check, repository-setting mutation, or complete incident attribution. |
+| `tools/validators/repository_control/` and focused tests | CONFIRMED executable and executable tests | State/context validation, active claim binding, held-state behavior after later head movement, terminal-divergence refusal, and strict transition-record validation. | Hosted guard execution, required-check mutation, human-versus-app distinction, and complete incident attribution remain unproved. |
+| `.github/workflows/repository-control.yml` | PROPOSED exact workflow definition | Trusted-base-only checkout, full-SHA checkout action pin, read-only token, bounded issue/event input, and stable check name. | Advisory until required by ruleset `15484585`; cannot distinguish a human from an app acting as the owner. |
 | PR #1829 terminal-divergence fixture | CONFIRMED regression fixture | Exact base/head/merge SHAs, changed-path scope, merge time, and evidence references used by the incident regression. | The initiating client remains `UNKNOWN`; the fixture does not infer it. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` and focused tests | CONFIRMED executable and executable tests | No-network pnpm contract/readiness validation plus finite structured audit-result classification. | Does not query the registry, decide dependency admission, or prove vulnerability absence. |
 | `.github/workflows/dependency-scan.yml` pnpm lane | PROPOSED exact workflow definition | Preserves the stable `npm-audit` job id, runs the repository checker, then performs a high-threshold pnpm registry audit. | Exact-head remote execution and the mutable advisory result remain NEEDS VERIFICATION. |

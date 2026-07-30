@@ -1,20 +1,24 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.3.0
+version: v0.4.0
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
-updated: 2026-07-29
+updated: 2026-07-30
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 related:
   - ../../docs/doctrine/directory-rules.md
   - ../../control_plane/repository_control_state.yaml
   - ../../schemas/contracts/v1/governance/repository_control_state.schema.json
   - ../../schemas/contracts/v1/governance/repository_control_context.schema.json
+  - ../../schemas/contracts/v1/governance/repository_transition_authorization.schema.json
   - ../../schemas/contracts/v1/governance/ci_outcome.schema.json
   - ../../tools/validators/repository_control/validate_repository_control.py
+  - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tests/validators/test_repository_control.py
+  - ../../tests/validators/test_repository_transition_authorization.py
+  - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675
 [/KFM_META_BLOCK_V2] -->
 
@@ -37,6 +41,7 @@ This contract defines semantic meaning under `contracts/governance/`. Machine sh
 | Permissions | Every consequential permission is explicit and defaults to `false`, including ready transition, merge, source activation, proof construction, release, deployment, and publication. |
 | Settings snapshot | Records only settings that were actually verified. A `CONFIRMED` snapshot must contain determinate review, status-check, bypass, direct-push, force-push, deletion, and draft-merge fields. |
 | Prepared context | Carries the current base/head/branch/PR/path/operation/open-PR evidence and, when merge permission is true, a separately evidenced platform block for draft state, ready transition, approvals, conversations, normalized required checks, and mergeability. |
+| Transition authorization | Records a short-lived Model B owner-account decision for one repository, control issue, PR, base SHA, head SHA, and expiry. It does not identify the initiating client or create independent review. |
 | Digest | `state_digest` covers every top-level state field except itself under `KFM-REPOSITORY-CONTROL-2`. |
 | Boundary | States what the projection and evaluator cannot do. |
 
@@ -79,6 +84,37 @@ Confirmed platform evidence is one atomic prepared-context snapshot: its PR numb
 
 A required check satisfies the merge-readiness evaluation only with `PASS`. `EXPECTED_READINESS_HOLD`, `SKIPPED_EXPLICIT`, and `NOT_APPLICABLE` remain holds for a required check; `UNKNOWN` remains unknown; `REGRESSION` remains a regression. The evaluator does not infer GitHub settings or convert raw workflow failures into a classification.
 
+## Head-bound transition records
+
+The proposed `RepositoryTransitionAuthorization` is a separate, short-lived record embedded as strict JSON in a comment intended to remain append-only on the repository-control issue. It exists to make a Model B ready-and-merge decision explicit and exact-head bound when independent review is unavailable.
+
+An accepted record must match:
+
+- the repository and designated control issue;
+- the pull-request number;
+- the current default-branch base SHA and pull-request head SHA;
+- the repository-owner login recorded both in the record and by GitHub as the unedited comment author;
+- the finite decision `ALLOW_READY_AND_MERGE`; and
+- an expiry after comment creation and no more than four hours later.
+
+The trusted-base workflow rejects draft PRs, edited comments, duplicate or unknown JSON fields, stale or overlong records, and base/head mismatches. Comment bodies are treated as untrusted bounded data and are never executed or echoed.
+
+Post each authorization as a new comment on issue #1675 after the PR base and head are frozen. Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
+
+```html
+<!-- KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1
+{"schema_version":"1.0.0","authorization_id":"kfm-rta-pr-9001-head-222222222222","repository":"bartytime4life/Kansas-Frontier-Matrix","control_issue":1675,"pr_number":9001,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","authorizing_actor":"bartytime4life","decision":"ALLOW_READY_AND_MERGE","expires_at":"2026-07-30T22:00:00Z","reason":"Synthetic exact-head transition example.","evidence_refs":["fixture://repository-control/pr/9001/head/222222222222"]}
+-->
+```
+
+Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #1675 record.
+
+The expiry and unedited-comment condition are evaluated at workflow run time. GitHub does not automatically turn an already-recorded successful check into a failure when the timestamp later passes or the issue comment is later edited or deleted. Therefore the record is an exact-head point-in-time transition decision, not a continuously enforced time lease or immutable ledger: post it only when the ready-and-merge transition is actually intended, preserve it, and request a fresh run before relying on it after expiry or any comment mutation. A later head or base change invalidates the exact binding and causes a new run to hold.
+
+This control closes an auditability gap, not an identity-separation gap. An owner login observed on a GitHub comment establishes the authenticated account identity exposed by the API. It does **not** establish whether a human browser, OAuth token, GitHub App, PAT, or another client initiated the action. If an app acts through the same owner identity, this record cannot distinguish it from the human owner. Security-log evidence, app/token restriction, and future Model A independent review remain separate controls.
+
+The workflow check name is `repository-control / authorize-ready-and-merge`. It is advisory until GitHub ruleset `15484585` separately requires that exact check with strict/up-to-date behavior. A workflow file cannot make itself required, and this contract does not authorize a ruleset mutation.
+
 ## Failure behavior
 
 Malformed, unavailable, digest-mismatched, observed-base-mismatched, expired, branch-mismatched, PR-mismatched, path-out-of-scope, operation-out-of-scope, control-self-modifying, or unauthorized terminal state fails closed. Later live-head movement alone is not an observed-base mismatch for a non-active historical snapshot. For a merged PR, terminal divergence is evaluated before applicability or explicit-skip handling: a merged state observed while the claim is not active or `merge=false` is a `REGRESSION`, not evidence that merge was authorized. An observed, confirmed, current ready transition without permission is also a regression in `IDLE`, `ACTIVE`, `HELD`, and `TERMINAL` claim states. Unverified settings or non-current platform state produce `UNKNOWN` when a decision depends on them. An explicit skip is otherwise recorded distinctly and remains merge-blocking by default.
@@ -105,10 +141,10 @@ The paired `CIOutcome` schema records what a declared check established without 
 - `control_plane/` owns the machine projection of what governs what.
 - `tools/validators/` owns the checker.
 - `tests/fixtures/` and `tests/` own test-local examples and executable conformance evidence.
-- `.github/` may later orchestrate the checker, but it does not become authorization authority.
+- `.github/` may orchestrate the trusted-base checker, but it does not become authorization authority and cannot make its own check required.
 
 This split follows adopted Directory Rules v2 responsibility ownership and avoids a parallel policy, release, proof, or platform-settings authority.
 
 ## Rollback
 
-Before merge, close the draft PR and abandon the branch. After merge, revert the scoped commits. Preserve issue history and incident fixtures; do not rewrite shared history or represent rollback as erasing the observed control incident.
+Before merge, close the draft PR and abandon the branch. After merge, remove any required-check coupling before reverting or renaming the workflow so `main` is not deadlocked, then use a focused reviewed revert. Preserve issue history and incident fixtures; do not rewrite shared history or represent rollback as erasing the observed control incident.
