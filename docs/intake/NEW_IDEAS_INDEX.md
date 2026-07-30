@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.4
+version: v1.6
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
 updated: 2026-07-29
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified at remote main 3a9ebaf842e4dfe65deda95be0d15d6af62723eb; New Ideas 4-16-26, New Ideas 4-30-26, and New Ideas 5 source identities and bounded triage maps added; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified at remote main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, and New Ideas 5 source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -21,7 +21,7 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@3a9ebaf842e4dfe65deda95be0d15d6af62723eb` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -55,7 +55,7 @@ This file does **not** make any packet authoritative. It does **not** prove that
 | Field | Value |
 | --- | --- |
 | Intended home | `docs/intake/NEW_IDEAS_INDEX.md` |
-| Placement status | CONFIRMED present at `main@3a9ebaf842e4dfe65deda95be0d15d6af62723eb`; content remains draft and non-authoritative. |
+| Placement status | CONFIRMED present at `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7`; content remains draft and non-authoritative. |
 | Responsibility root | `docs/` — documentation control, human-readable intake navigation, and governance orientation. |
 | Directory Rules basis | A human-readable intake index belongs under `docs/`; downstream implementation artifacts stay under their owning roots. Domain names appear as segments inside responsibility roots, not as new repo roots. |
 | Intake lane role | Capture and classify exploratory packets before promotion. |
@@ -166,7 +166,11 @@ This table records only the packet sources visible or directly retrieved in this
 | --- | --- | --- | --- | --- | --- | --- |
 | `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher `DecisionEnvelope`; `RunReceipt`; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
 | `NIP-2026-05-10` | `New Ideas 5-10-26.pdf` | Filename date | CAPTURED / EXPLORATORY | PMTiles operational hardening; versioned artifacts; sidecar + Bao/BLAKE3 proofs; DSSE/cosign/Rekor; OCI/ORAS publication; fail-closed CI gate; MapLibre performance testing; automation starter pack; promotion/rollback rehearsal. | `tools/attest/`, `tools/validators/`, `schemas/contracts/v1/artifacts/`, `.github/workflows/`, `release/`, `docs/architecture/map/`, `docs/runbooks/` after repo verification. | Verify current tool versions and licenses, package availability, OCI/referrer support, schema-home authority, workflow conventions, public-safe artifact exposure, and rollback evidence. |
+| `NIP-2026-04-14-verification-conflict` | `New Ideas 4-14-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY / PASS-23-LINEAGE | Watcher/policy/hydrology carry-forward; bitemporal verification replay; source-conflict influence; cross-layer outcome parity; verifier portability; observed interface evolution. | Detailed routing in [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md); five contributed triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not duplicate Pass 23 watcher, hydro, promotion, signing, runtime, or release cards. Resolve temporal, conflict, projection, verifier, and interface semantics before implementation; keep peer-renderer code excluded. |
+| `NIP-2026-04-15-quality-proof-interface` | `New Ideas 4-15-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY / PASS-23-LINEAGE | Soil/runtime carry-forward; cross-layer outcome parity; verifier portability; source-native quality and health separation; generated runtime-proof lifecycle; observed interface evolution. | Detailed routing in [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md); five contributed triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not duplicate Pass 23 soil/runtime/API work or copy source, consent, threshold, route, workflow, or peer-renderer code. Resolve quality mapping, proof-artifact, parity, verifier, and interface semantics first. |
 | `NIP-2026-04-16-governed-baselines` | `New Ideas 4-16-26(1).pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | Fauna/soil governed ingest; vegetation/hydrology baselines; air-quality anomaly lifecycle; consent/revocation; MapLibre time buckets; PMTiles verification; STAC conformance; historical post-office/trail networks. | Detailed routing in [`exploratory/new-ideas-4-16-source-map.md`](exploratory/new-ideas-4-16-source-map.md); ten gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy packet paths or code. Reuse existing domain lanes; resolve canonical hash profiles, materiality, baseline/event semantics, consent placement, STAC profile, source authority/rights, and exact bounded authorization per candidate. |
+| `NIP-2026-04-23-evidence-custody-composition` | `New Ideas 4-23-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | Cross-boundary evidence custody; composed-claim closure; trust-root history; replay-safe event effects; conditional review obligations; catalog, hydrology, ecology, and consent corroboration. | Detailed routing in [`exploratory/new-ideas-4-23-source-map.md`](exploratory/new-ideas-4-23-source-map.md); five gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy packet evidence stacks, key-service recipes, event actions, or publication paths. Resolve dependency roles, trust authority, idempotent effect boundaries, obligation closure, and exact authorization per candidate. |
+| `NIP-2026-04-25-identity-authority-assurance` | `New Ideas 4-25-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | Reversible entity reconciliation; taxonomic concepts and name usage; temporal place-name authority; PLSS/GLO survey-control provenance; validator mutation adequacy. | Detailed routing in [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md); five gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy loaders, authority ranks, PLSS/GNIS overclaims, thresholds, network installs, sensitive examples, or AI promotion recipes. Resolve identity, role separation, derivation limits, assurance meaning, and exact authorization per candidate. |
 | `NIP-2026-04-30-retrieval-offline-trust` | `New Ideas 4-30-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | USDA PLANTS, eBird, GBIF, soil/air fusion, source terms, query provenance, sampling/non-detection, PMTiles/offline delivery, verified rendering, STAC/validators, vegetation confounders, and source cadence/latency. | Detailed routing in [`exploratory/new-ideas-4-30-source-map.md`](exploratory/new-ideas-4-30-source-map.md); eleven gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy packet code, paths, credentials, thresholds, cloud examples, or dated external claims. Resolve retrieval, rights, distribution, support, latency, transfer, offline-trust, and renderer-budget semantics before implementation. |
 | `NIP-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | Capture date only; source date `NEEDS VERIFICATION` | TRIAGED / EXPLORATORY | Dual-renderer Story Node; STAC/catalog QA; signing and provenance; NWIS watcher; pipeline resilience; atmosphere fusion; soil/geology conversion; reproducible models; graph/AI retrieval; license automation. | Detailed routing in [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream candidates remain under existing ADR, contract, schema, policy, tool, pipeline, source, domain, data, and release roots. | Do not copy packet paths or code. Resolve renderer ADR, catalog profile/placeholder, external source facts, rights, dependency approval, contract/policy/test consequences, and exact bounded authorization per candidate. |
 
@@ -178,7 +182,7 @@ Prior source ledgers and documentation architecture passes refer to earlier New 
 | --- | --- | --- | --- |
 | February 2026 New Ideas docs | NEEDS VERIFICATION | Some related files were discoverable as prior uploads, but not all are present in the visible `/mnt/data` workspace. | Confirm packet filenames, hashes, dates, duplicates, source IDs, and promotion status. |
 | March 2026 New Ideas packets | NEEDS VERIFICATION | Prior reports list multiple March packets as EXPLORATORY lineage. | Inventory packets and add one row per dated source. |
-| April 2026 New Ideas packets | PARTIAL | `New Ideas 4-16-26(1).pdf` and `New Ideas 4-30-26.pdf` are identity-pinned and triaged; other April packets and Part 2 variants remain outside these rows. | Inventory the remaining April packets, de-duplicate them against both April source maps, and preserve one row per distinct source. |
+| April 2026 New Ideas packets | PARTIAL | `New Ideas 4-14-26.pdf`, `New Ideas 4-15-26.pdf`, `New Ideas 4-16-26(1).pdf`, `New Ideas 4-23-26.pdf`, `New Ideas 4-25-26.pdf`, and `New Ideas 4-30-26.pdf` are identity-pinned and triaged; 4-14 and 4-15 are also reconciled with Pass 23 lineage. Other April packets and Part 2 variants remain outside these rows. | Inventory the remaining April packets, de-duplicate them against all six April source maps and prior pass carriers, and preserve one row per distinct source. |
 
 ## Intake taxonomy
 
@@ -309,6 +313,74 @@ Explain why the disposition is safe, reversible, and bounded.
 ## Appendix: packet cards
 
 <details>
+<summary><strong>NIP-2026-04-14-verification-conflict - verification history, source conflict, parity, and interface evolution</strong></summary>
+
+### Source
+
+`New Ideas 4-14-26.pdf`
+
+- SHA-256: `432c5930b66fac814b21680c60015cff2eb286520ec01211bef69c0c78117f3e`
+- Pages: `410`
+- Bytes: `3,029,468`
+- Source date: `2026-04-14`
+- Capture and triage date: `2026-07-29`
+- Prior lineage: Pass 23 `SRC-P23-003`
+- Detailed review: [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md)
+
+### Captured themes
+
+- USGS/Mesonet watcher, deterministic observations, policy, receipts, signing, and promotion.
+- NHDPlus permanent identifiers, legacy COMID compatibility, HUC12 context, and join receipts.
+- Finite runtime outcomes, corrections, releases, rollback, CLI/package/SBOM delivery, and browser verification.
+- Evidence timeline, correction graph, multi-source conflict, and source influence.
+
+### Triage notes
+
+Pass 23 already carried the packet's watcher, hydrology, runtime, policy, signing, release, and soil-adjacent breadth. The retained delta is connective: bitemporal verification-state replay, explicit conflict topology and influence, cross-layer outcome projection, verifier capability portability, and a common observed-interface compatibility window.
+
+Placeholder proof, direct dataset publication, source activation, generic paths, package/workflow recipes, browser verifier stubs, signature-as-truth, source-count consensus, and Cesium hooks are not carried forward.
+
+### Candidate next extraction
+
+Define a contract-only bitemporal verification-state record with synthetic active, superseded, corrected, revoked, late-recorded, and unknown-history fixtures. No live source, key, policy bundle, release, or publication.
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-04-15-quality-proof-interface - quality translation, generated proof, parity, and interface evolution</strong></summary>
+
+### Source
+
+`New Ideas 4-15-26.pdf`
+
+- SHA-256: `fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111`
+- Pages: `435`
+- Bytes: `4,077,386`
+- Source date: `2026-04-15`
+- Capture and triage date: `2026-07-29`
+- Prior lineage: Pass 23 `SRC-P23-004`
+- Detailed review: [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md)
+
+### Captured themes
+
+- Soil-moisture source inventory, station metadata, normalization, quality, health, validators, runtime/API, and proof.
+- HLS/NDVI/STAC change detection, people/place authority, genealogy/DNA consent, and correction.
+- Time-aware MapLibre metadata, Cesium proposal, STAC watcher, and generic contract/runtime waves.
+- Hybrid generated-artifact policy: runtime actuals by default, explicitly reviewed golden promotion only.
+
+### Triage notes
+
+Pass 23 and current domain lanes already carry most soil, source, runtime, API, STAC, consent, MapLibre, evidence, and release scaffolding. The retained delta is connective: native-quality translation with operational-health separation, generated runtime-proof artifact lifecycle, cross-layer outcome parity, verifier portability, and observed-interface evolution.
+
+Live source code, hard-coded thresholds, sensitive people/DNA examples, automatic golden replacement, generic paths, workflow recipes, and Cesium integration are not carried forward.
+
+### Candidate next extraction
+
+Define a contract-only generated runtime-proof artifact record with synthetic ephemeral, retained-for-review, promoted-golden, stale, invalidated, and deleted states. No source activation, sensitive payload, runtime authority, or publication.
+
+</details>
+
+<details>
 <summary><strong>NIP-2026-04-16-governed-baselines - governed baselines, correction seams, and time-aware carriers</strong></summary>
 
 ### Source
@@ -342,6 +414,76 @@ The packet's Cesium implementation is not carried forward. Only renderer-neutral
 ### Candidate next extraction
 
 Implement the repository's already-recorded deterministic `stable_diff.py` slice with synthetic same/changed/malformed fixtures. Keep it non-authoritative; use a later contract to decide materiality.
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-04-23-evidence-custody-composition - custody, composed claims, trust history, replay, and obligations</strong></summary>
+
+### Source
+
+`New Ideas 4-23-26.pdf`
+
+- SHA-256: `76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d`
+- Pages: `652`
+- Bytes: `5,902,114`
+- Source date: `2026-04-23`
+- Capture and triage date: `2026-07-29`
+- Detailed review: [`exploratory/new-ideas-4-23-source-map.md`](exploratory/new-ideas-4-23-source-map.md)
+
+### Captured themes
+
+- Deterministic ETL, environment handoffs, run receipts, quarantine, retry, and reconciliation.
+- Evidence contracts, runtime resolution, composed claims, catalog closure, proof, signing, and correction.
+- Trust roots, key rotation, revocation, historical verification, and signed decisions.
+- Hydrology reach identity, spatial ambiguity, permanence, and source roles.
+- Deterministic event envelopes, replay, evaluator decisions, and approval obligations.
+- Flora/habitat events, consent, revocation, and protected-location posture.
+
+### Triage notes
+
+Most packet evidence, catalog, hydrology, signing, consent, and release objects overlap stronger repository surfaces. The durable additions are cross-cutting seams: sender/receiver custody reconciliation, composed-claim dependency roles, trust-root history, event-to-effect idempotence, and evidence-backed obligation closure.
+
+Packet key-service recipes, shallow canonicalization, ETag-as-identity, direct side effects, approve-with-obligation shortcuts, and publication flows are not carried forward.
+
+### Candidate next extraction
+
+Define a contract-only composed-claim dependency profile with synthetic `required`, `optional`, `one_of`, `excluded`, `missing`, `denied`, and `contradictory` evidence. No keys, live sources, event infrastructure, or publication.
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-04-25-identity-authority-assurance - reversible identity, authority roles, survey provenance, and validator assurance</strong></summary>
+
+### Source
+
+`New Ideas 4-25-26.pdf`
+
+- SHA-256: `47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061`
+- Pages: `337`
+- Bytes: `4,581,310`
+- Source date: `2026-04-25`
+- Capture and triage date: `2026-07-29`
+- Detailed review: [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md)
+
+### Captured themes
+
+- Biodiversity and flora ingestion, normalization, deduplication, rights, and sensitivity.
+- PLSS/CadNSDI, GLO plats and field notes, survey generations, georeferencing, and residuals.
+- Taxonomic sources, identifiers, synonymy, splits, lumps, source roles, and reconciliation.
+- GNIS official and variant names, historical aliases, place identity, and role separation.
+- Policy testing, property/fuzz testing, mutation testing, and validator adequacy.
+- Structured AI output, watchers, consent, revocation, evidence, review, and release.
+
+### Triage notes
+
+Most packet loaders, trust objects, workflows, and consent machinery duplicate existing lanes. The durable additions are reversible match/merge/split decisions, source-native taxonomic concept lineage, time-bounded place-name authority, survey-control-to-derived-boundary provenance, and adversarial validator assurance.
+
+Hard-coded authority ranks, destructive dedupe, scientific-name string identity, GNIS role collapse, PLSS “ground truth” claims, fixed mutation thresholds, unpinned network installs, random sensitive-location jitter, and AI-driven promotion are not carried forward.
+
+### Candidate next extraction
+
+Define a cross-domain taxonomy concept decision packet with synthetic synonym, homonym, split, lump, misapplied-name, unresolved, and reversal fixtures. No live fetch, permanent authority ranking, sensitive record, or public distribution.
 
 </details>
 

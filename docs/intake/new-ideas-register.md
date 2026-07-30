@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.4
+version: v0.6
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
 updated: 2026-07-29
 policy_label: public
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified at remote main 3a9ebaf842e4dfe65deda95be0d15d6af62723eb; New Ideas 4-16-26, New Ideas 4-30-26, and New Ideas 5 are triaged exploratory packets; register rows remain intake records and not implementation or promotion authority.]
+notes: [Repository path and sibling intake surfaces verified at remote main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, and New Ideas 5 are triaged exploratory packets; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -21,7 +21,7 @@ A governed intake ledger for exploratory KFM idea packets so useful proposals st
 > **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@3a9ebaf842e4dfe65deda95be0d15d6af62723eb` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -198,11 +198,47 @@ Each row should carry enough information for a maintainer to decide whether to p
 |---|---|---:|---|---|---|---|---|
 | `NI-2026-05-08-ecology-watchers` | `New Ideas 5-8-26` | 2026-05-08 | `EXPLORATORY` | `captured` | `policy-gate-proposal` | `policy/ecology/tiles/v1.rego`; `tools/ci/probes/`; `docs/domains/ecology/gating-spec.md` — all `PROPOSED` | Verify source rights, cadence, thresholds, and fail-closed policy shape before drafting fixtures. |
 | `NI-2026-05-10-pmtiles-attestation` | `New Ideas 5-10-26` | 2026-05-10 | `EXPLORATORY` | `captured` | `schema-contract-proposal` | `schemas/contracts/v1/...`; `tools/attest/`; `tools/validators/`; `.github/workflows/pmtiles-attestation.yml` — all `PROPOSED` | Convert sidecar concept into schema + valid/invalid fixture + validator plan after repo path inspection. |
+| `NI-2026-04-14-verification-conflict` | `New Ideas 4-14-26.pdf` | 2026-04-14 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md); five contributed atlas triads, three shared with the April 15 packet; downstream homes remain candidate-only | Review a contract-only bitemporal verification-state record with synthetic replay fixtures before any live source, key, policy, or release integration. |
+| `NI-2026-04-15-quality-proof-interface` | `New Ideas 4-15-26.pdf` | 2026-04-15 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md); five contributed atlas triads, three shared with the April 14 packet; downstream homes remain candidate-only | Review a contract-only generated runtime-proof artifact lifecycle with synthetic states before source activation, route work, golden promotion, or publication. |
 | `NI-2026-04-16-governed-baselines` | `New Ideas 4-16-26(1).pdf` | 2026-04-16 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-16-source-map.md`](exploratory/new-ideas-4-16-source-map.md); ten packet-local atlas triads; downstream homes remain candidate-only | Implement the existing stable JSON-diff gap first; keep materiality, live sources, consent credentials, renderer dependencies, and publication outside that slice. |
+| `NI-2026-04-23-evidence-custody-composition` | `New Ideas 4-23-26.pdf` | 2026-04-23 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-23-source-map.md`](exploratory/new-ideas-4-23-source-map.md); five packet-local atlas triads; downstream homes remain candidate-only | Review a contract-only composed-claim dependency profile with synthetic closure fixtures before any live key, event, review, or release integration. |
+| `NI-2026-04-25-identity-authority-assurance` | `New Ideas 4-25-26.pdf` | 2026-04-25 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md); five packet-local atlas triads; downstream homes remain candidate-only | Review a cross-domain taxonomy concept decision packet with synthetic split/lump/homonym fixtures before live source or distribution work. |
 | `NI-2026-04-30-retrieval-offline-trust` | `New Ideas 4-30-26.pdf` | 2026-04-30 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-30-source-map.md`](exploratory/new-ideas-4-30-source-map.md); eleven packet-local atlas triads; downstream homes remain candidate-only | Review a contract-only distribution and coverage semantics slice with synthetic fixtures before any source-specific loader, adapter, or public layer. |
 | `NI-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | `NEEDS VERIFICATION` (captured 2026-07-29) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream homes remain candidate-only | Review the dependency-ordered source map and authorize at most one path-bounded candidate after its ADR, profile, source, rights, contract, policy, test, and rollback gates close. |
 
 ### Register detail cards
+
+#### `NI-2026-04-14-verification-conflict`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 4-14-26.pdf`; SHA-256 `432c5930b66fac814b21680c60015cff2eb286520ec01211bef69c0c78117f3e`; 410 pages; 3,029,468 bytes |
+| Source date | `2026-04-14`, supported by filename and PDF title metadata |
+| Prior lineage | Pass 23 `SRC-P23-003`; 195 cited cards; watcher, hydrology bridge, finite-outcome, promotion, and correction candidates |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `watcher`, `spec-hash`, `hydrology-identity`, `verification-history`, `as-of`, `source-conflict`, `influence`, `outcome-parity`, `verifier-profile`, `interface-evolution`, `correction` |
+| Detailed source map | [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md) |
+| Evidence threshold | Current repository evidence for gap claims; accepted temporal, conflict, projection, verifier, and interface semantics; deterministic synthetic fixtures; finite outcomes; correction and rollback. |
+| Promotion blockers | Extensive Pass 23 overlap; no confirmed common bitemporal verification graph, conflict/influence contract, cross-layer projection matrix, verifier portability profile, or observed-interface migration contract; external source, dependency, crypto, and renderer assumptions. |
+| Atlas carry-forward | Five contributed noncanonical triads: `KFM-TRIAD-064` through `KFM-TRIAD-067` and `KFM-TRIAD-070`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). Triads 066, 067, and 070 are jointly sourced with the April 15 packet. |
+| Smallest next action | Define a bitemporal VerificationStateEvent and `as_of` replay report with synthetic active, superseded, corrected, revoked, late-recorded, and unknown-history fixtures. |
+| Decision note | Triaged as high-value connective trust pressure. Prior Pass 23 cards are not duplicated. Packet code, paths, source activation, placeholder proof, browser verifier stubs, signature-as-truth, source-count consensus, peer-renderer code, and release automation are not promoted. |
+
+#### `NI-2026-04-15-quality-proof-interface`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 4-15-26.pdf`; SHA-256 `fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111`; 435 pages; 4,077,386 bytes |
+| Source date | `2026-04-15`, supported by filename and PDF title metadata |
+| Prior lineage | Pass 23 `SRC-P23-004`; 190 cited cards; soil source, normalization, PMTiles, validator, runtime/API, and route-test candidates |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `soil-moisture`, `native-quality`, `quality-mapping`, `station-health`, `observation-validity`, `runtime-proof`, `golden-fixture`, `outcome-parity`, `verifier-profile`, `interface-evolution`, `MapLibre`, `STAC` |
+| Detailed source map | [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md) |
+| Evidence threshold | Current repository evidence for gap claims; accepted quality, health, proof-artifact, projection, verifier, and interface semantics; deterministic synthetic fixtures; finite outcomes; correction and rollback. |
+| Promotion blockers | Extensive Pass 23 overlap; no confirmed common source-quality translation, health-separation, generated-proof lifecycle, cross-layer projection matrix, verifier portability profile, or observed-interface migration contract; source, threshold, sensitivity, dependency, route, and renderer assumptions. |
+| Atlas carry-forward | Five contributed noncanonical triads: `KFM-TRIAD-066` through `KFM-TRIAD-070`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). Triads 066, 067, and 070 are jointly sourced with the April 14 packet. |
+| Smallest next action | Define a RuntimeProofArtifactRecord lifecycle with synthetic ephemeral, retained-for-review, promoted-golden, stale, invalidated, corrected, and deleted fixtures. |
+| Decision note | Triaged as high-value connective quality and proof pressure. Prior Pass 23 cards are not duplicated. Packet source code, hard-coded thresholds, sensitive examples, automatic golden replacement, generic paths, workflow recipes, peer-renderer code, and publication automation are not promoted. |
 
 #### `NI-2026-05-08-ecology-watchers`
 
@@ -238,6 +274,36 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Atlas carry-forward | Ten noncanonical gap-fill triads, `KFM-TRIAD-033` through `KFM-TRIAD-042`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
 | Smallest next action | Implement the already-recorded `tools/diff/stable_diff.py` contract with public-safe synthetic fixtures, deterministic output, finite status, and no policy or publication authority. |
 | Decision note | Triaged as high-value connective design pressure. Paste-ready code, generic paths, real data examples, hard-coded thresholds, Cesium integration, source activation, and release automation are not promoted. |
+
+#### `NI-2026-04-23-evidence-custody-composition`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 4-23-26.pdf`; SHA-256 `76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d`; 652 pages; 5,902,114 bytes |
+| Source date | `2026-04-23`, supported by filename and PDF title metadata |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `custody`, `reconciliation`, `EvidenceBundle`, `composed-claim`, `dependency-closure`, `signing`, `trust-root`, `key-rotation`, `historical-verification`, `event`, `replay`, `side-effect`, `review`, `obligation`, `correction` |
+| Detailed source map | [`exploratory/new-ideas-4-23-source-map.md`](exploratory/new-ideas-4-23-source-map.md) |
+| Evidence threshold | Current repository evidence for path and gap claims; accepted dependency, trust-root, event, effect, review, and obligation semantics; deterministic synthetic fixtures; finite outcomes; correction and rollback. |
+| Promotion blockers | Duplicated evidence/catalog/release scaffolding; unresolved trust-root machine authority; no confirmed common composed-claim profile, custody reconciliation, event-effect ledger, or obligation-closure enforcement; external cryptographic and infrastructure assumptions. |
+| Atlas carry-forward | Five noncanonical gap-fill triads, `KFM-TRIAD-054` through `KFM-TRIAD-058`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
+| Smallest next action | Define a contract-only composed-claim dependency profile with synthetic `required`, `optional`, `one_of`, `excluded`, `missing`, `denied`, and `contradictory` evidence fixtures. |
+| Decision note | Triaged as high-value trust and orchestration pressure. Parallel evidence stacks, key-service recipes, shallow canonicalization, ETag-as-identity, direct side effects, obligation shortcuts, and publication workflows are not promoted. |
+
+#### `NI-2026-04-25-identity-authority-assurance`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 4-25-26.pdf`; SHA-256 `47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061`; 337 pages; 4,581,310 bytes |
+| Source date | `2026-04-25`, supported by filename and PDF title metadata |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `biodiversity`, `dedupe`, `reconciliation`, `taxonomy`, `name-usage`, `taxon-concept`, `GNIS`, `place-name`, `temporal-alias`, `PLSS`, `CadNSDI`, `GLO`, `survey-control`, `georeference`, `mutation-testing`, `validator-assurance` |
+| Detailed source map | [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md) |
+| Evidence threshold | Current repository evidence for path and gap claims; accepted identity, taxonomy, naming, survey-control, derivation, and validator-assurance semantics; official source-role verification; synthetic fixtures; finite outcomes; correction and rollback. |
+| Promotion blockers | Duplicated loaders and trust machinery; incomplete cross-domain taxonomy surface; unresolved common reversible reconciliation, temporal alias, survey-derivation, and mutation-assurance contracts; authority-role, legal-use, source, rights, sensitivity, and threshold decisions. |
+| Atlas carry-forward | Five noncanonical gap-fill triads, `KFM-TRIAD-059` through `KFM-TRIAD-063`, in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md). |
+| Smallest next action | Define a cross-domain taxonomy concept decision packet with synthetic synonym, homonym, split, lump, misapplied-name, unresolved, supersession, and reversal fixtures. |
+| Decision note | Triaged as useful identity and assurance pressure. Destructive dedupe, hard-coded authority ranks, scientific-name string identity, GNIS role collapse, PLSS ground-truth claims, fixed mutation thresholds, unpinned installs, sensitive examples, and AI-driven promotion are not promoted. |
 
 #### `NI-2026-04-30-retrieval-offline-trust`
 
