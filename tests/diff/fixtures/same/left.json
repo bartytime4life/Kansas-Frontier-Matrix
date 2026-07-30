@@ -1,0 +1,10 @@
+{
+  "alpha": 1,
+  "nested": {
+    "first": true,
+    "second": [
+      "x",
+      "y"
+    ]
+  }
+}
