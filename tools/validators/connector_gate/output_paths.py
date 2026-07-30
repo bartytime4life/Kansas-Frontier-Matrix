@@ -2310,8 +2310,11 @@ def scan_yaml_source(
         r'''["']?(?:command|run|script|shell|destination|output[_-]path|sink)["']?\s*:''',
         re.IGNORECASE,
     )
+    # Keep escaped and ordinary double-quoted characters disjoint. Allowing a
+    # backslash through both alternatives makes rejection of an unterminated
+    # scalar exponentially expensive (CodeQL py/redos).
     flow_pair_pattern = re.compile(
-        r'''(?:^|[{,]\s*)(?P<key>"[A-Za-z_][\w-]*"|'[A-Za-z_][\w-]*'|[A-Za-z_][\w-]*)\s*:\s*(?P<value>"(?:\\.|[^"])*"|'(?:''|[^'])*'|[^,}]+)'''
+        r'''(?:^|[{,]\s*)(?P<key>"[A-Za-z_][\w-]*"|'[A-Za-z_][\w-]*'|[A-Za-z_][\w-]*)\s*:\s*(?P<value>"(?:\\.|[^"\\])*"|'(?:''|[^'])*'|[^,}]+)'''
     )
     block_pattern = re.compile(r"^[|>](?:[1-9])?[+-]?$|^[|>][+-](?:[1-9])?$")
     while index < len(lines):
