@@ -1,5 +1,6 @@
-# Validate non-authoritative briefing integration and the existing water-planning
-# anti-collapse boundary. This workflow is read-only and emits no KFM authority.
+# Validate non-authoritative briefing integration and the water-planning
+# semantic, authority-reference, and canonical registry boundaries. This
+# workflow is read-only and emits no KFM release or publication authority.
 
 name: briefing-integration
 
@@ -13,9 +14,15 @@ name: briefing-integration
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
-      - "tools/validators/domains/water_planning/validate_status_collapse.py"
-      - "tests/domains/water_planning/test_status_collapse.py"
-      - "fixtures/domains/water_planning/status_collapse/**"
+      - "contracts/domains/water_planning/**"
+      - "schemas/contracts/v1/domains/water_planning/**"
+      - "fixtures/domains/water_planning/**"
+      - "data/registry/datasets/water_planning/**"
+      - "data/registry/crosswalks/water_planning/**"
+      - "data/registry/sources/water_planning/**"
+      - "data/processed/water_planning/rac_regions/**"
+      - "tools/validators/domains/water_planning/**"
+      - "tests/domains/water_planning/**"
   push:
     branches:
       - main
@@ -27,9 +34,15 @@ name: briefing-integration
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
-      - "tools/validators/domains/water_planning/validate_status_collapse.py"
-      - "tests/domains/water_planning/test_status_collapse.py"
-      - "fixtures/domains/water_planning/status_collapse/**"
+      - "contracts/domains/water_planning/**"
+      - "schemas/contracts/v1/domains/water_planning/**"
+      - "fixtures/domains/water_planning/**"
+      - "data/registry/datasets/water_planning/**"
+      - "data/registry/crosswalks/water_planning/**"
+      - "data/registry/sources/water_planning/**"
+      - "data/processed/water_planning/rac_regions/**"
+      - "tools/validators/domains/water_planning/**"
+      - "tests/domains/water_planning/**"
   workflow_dispatch:
 
 permissions:
@@ -107,20 +120,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run existing water-planning semantic suite
+      - name: Run water-planning semantic and registry suites
         run: |
           python -m unittest discover \
             --start-directory tests/domains/water_planning \
-            --pattern 'test_status_collapse.py' \
+            --pattern 'test_*.py' \
             --verbose
+
+      - name: Validate canonical RAC registry
+        run: |
+          python tools/validators/domains/water_planning/validate_rac_registry.py
 
       - name: Record water-planning boundary
         if: always()
         run: |
           {
-            echo "### Water-planning anti-collapse"
+            echo "### Water-planning boundaries"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- The suite keeps meetings, applications, recommendations, awards, payments, construction, completion, program versions, scoring matrices, identities, geometries, and lineage distinct."
-            echo "- It does not admit a source, validate a real applicant or project, construct proof, approve release, or publish."
+            echo "- The suites keep meetings, applications, recommendations, awards, payments, construction, completion, program versions, scoring matrices, identities, geometries, crosswalks, and lineage distinct."
+            echo "- The RAC registry check pins the 14-feature KWO geometry payload, all 105 Kansas county GEOIDs, the ordered 209-row intersection digest, and the not-released posture."
+            echo "- A green result does not prove source freshness, rights clearance, governance membership, evidence closure, release, deployment, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -4,13 +4,18 @@
 
 ## Status
 
-**PROPOSED / draft.** Slice 4 adds bounded RAC identity and region/project reference coherence checks. The schemas remain unpromoted, and broader implementation remains blocked by bartytime4life/Kansas-Frontier-Matrix#1675 except for an exact recorded candidate-PR authorization.
+**PROPOSED / source-grounded candidate.** Slice 4 now has an exact,
+digest-pinned KWO geometry dataset record and a deterministic Census-county
+intersection crosswalk under the bounded authorization recorded in issue
+#1675. The records remain internal and `not-released`.
 
 ## Schemas
 
 | Schema | Entity | Title |
 |---|---|---|
 | [`planning_region.schema.json`](./planning_region.schema.json) | `PlanningRegion` | Exact 14-record RAC ID shape plus explicit geometry/county-crosswalk states |
+| [`rac_geometry_dataset_registry.schema.json`](./rac_geometry_dataset_registry.schema.json) | RAC geometry dataset registry | KWO source version, processed GeoJSON payload, digest, and release hold |
+| [`rac_county_crosswalk_registry.schema.json`](./rac_county_crosswalk_registry.schema.json) | RAC/county crosswalk registry | Census 2025 positive-area intersection mappings and derivation metadata |
 | [`public_meeting.schema.json`](./public_meeting.schema.json) | `PublicMeeting` | KWO public meeting events |
 | [`advisory_committee_meeting.schema.json`](./advisory_committee_meeting.schema.json) | `AdvisoryCommitteeMeeting` | RAC advisory meeting events |
 | [`program_version.schema.json`](./program_version.schema.json) | `ProgramVersion` | Versioned grant program (HB 2462 creates new version) |
@@ -33,7 +38,11 @@
 - Unresolved geometry requires a null reference. Approximate or confirmed geometry requires a non-null reference.
 - County-crosswalk and project-region resolution states are explicit and coherent with their nullable references.
 - Referential integrity, authority version/digest/correction metadata, exact source-grounded names, GMD/RAC separation, inline-geometry denial, and non-echoing findings are enforced by the deterministic validator rather than JSON Schema alone.
-- No real geometry or county membership is included. CI wiring is not part of this slice.
+- Canonical geometry bytes live in `data/processed/`, not in a registry record.
+- County rows are measured polygon intersections. They do not assert county
+  membership; `boundary-sliver` remains distinct from material overlap.
+- Both new registry records remain `not-released`. No deployment or
+  publication is part of this slice.
 
 ```bash
 python tools/validators/domains/water_planning/validate_geometry_authority.py \
@@ -42,6 +51,13 @@ python tools/validators/domains/water_planning/validate_geometry_authority.py \
 python -m unittest discover \
   --start-directory tests/domains/water_planning \
   --pattern 'test_geometry_authority.py' \
+  --verbose
+
+python tools/validators/domains/water_planning/validate_rac_registry.py
+
+python -m unittest discover \
+  --start-directory tests/domains/water_planning \
+  --pattern 'test_rac_registry.py' \
   --verbose
 ```
 
@@ -52,5 +68,8 @@ python -m unittest discover \
 - [`fixtures/domains/water_planning/geometry_authority/`](../../../../../fixtures/domains/water_planning/geometry_authority/) — Slice 4 authority fixtures
 - [`tools/validators/domains/water_planning/validate_geometry_authority.py`](../../../../../tools/validators/domains/water_planning/validate_geometry_authority.py) — Slice 4 validator
 - [`tests/domains/water_planning/test_geometry_authority.py`](../../../../../tests/domains/water_planning/test_geometry_authority.py) — Slice 4 tests
+- [`contracts/domains/water_planning/rac_geometry_registry.md`](../../../../../contracts/domains/water_planning/rac_geometry_registry.md) — Concrete geometry/crosswalk contract
+- [`tools/validators/domains/water_planning/validate_rac_registry.py`](../../../../../tools/validators/domains/water_planning/validate_rac_registry.py) — Concrete registry validator
+- [`tests/domains/water_planning/test_rac_registry.py`](../../../../../tests/domains/water_planning/test_rac_registry.py) — Concrete registry regression tests
 - [`tests/schemas/test_water_planning_contracts.py`](../../../../../tests/schemas/test_water_planning_contracts.py) — Schema tests
 - [`docs/sources/catalog/kansas/kwo.md`](../../../../../docs/sources/catalog/kansas/kwo.md) — KWO source catalog entry

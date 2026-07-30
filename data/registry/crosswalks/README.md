@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/crosswalks/readme
 name: Crosswalk Registry README
 path: data/registry/crosswalks/README.md
 type: data-registry-crosswalks-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
   - "NEEDS VERIFICATION: registry steward"
@@ -12,13 +12,13 @@ owners:
   - "NEEDS VERIFICATION: contract, schema, and policy stewards"
   - "NEEDS VERIFICATION: validation, proof, and release stewards"
 created: 2026-06-28
-updated: 2026-07-27
+updated: 2026-07-30
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: governed-crosswalk-mapping-state
-path_posture: confirmed-live-registry-lane; crosswalk-record-inventory-unknown; schema-and-validator-coverage-partial; no-public-path
+path_posture: confirmed-live-registry-lane; water-planning-record-confirmed; complete-inventory-partial; schema-and-validator-coverage-partial; no-public-path
 sensitivity_posture: registry-internal; no-public-path; source-role-preserving; evidence-aware; policy-aware; rights-and-sensitivity-fail-closed; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -59,17 +59,17 @@ tags:
   - no-public-path
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 7863cf4cdd330e056cf22880fecc1eda9a545057
+  base_commit: a254b4345f2944a453d9a86a23951074a106a853
   prior_blob: 2048acd39e2acf57e6a55e2f2e3c3cb735e1c993
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
   crosswalk_contracts_blob: 7dd131c6b6b5339eb6e433940d7ace169a350dbc
-  inspection_date: 2026-07-27
+  inspection_date: 2026-07-30
 notes:
   - "This README preserves the existing crosswalk registry lane and updates its claims against current repository evidence."
   - "Crosswalk registry records are mapping-state records. They do not define semantic meaning, machine schema shape, policy, validator behavior, proof, catalog closure, release decisions, or public claims."
-  - "Current repository evidence confirms crosswalk contracts and at least one executable Hydrology crosswalk validator, but complete registry-record, schema, fixture, test, and CI coverage remains NEEDS VERIFICATION."
-  - "No concrete crosswalk registry payload inventory was established for this lane in the inspected scope."
+  - "Current repository evidence confirms the Hydrology validator plus one schema- and validator-backed water-planning crosswalk record; registry-wide coverage remains NEEDS VERIFICATION."
+  - "One concrete 209-row water-planning RAC/county crosswalk is now inventoried; complete lane inventory remains bounded and partial."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -103,8 +103,8 @@ notes:
 | Artifact family | Crosswalk mapping-state registry |
 | Semantic contract home | [`contracts/crosswalks/`](../../../contracts/crosswalks/README.md) |
 | Concrete child contract evidence | [`contracts/crosswalks/taxonomy/`](../../../contracts/crosswalks/taxonomy/README.md) |
-| Executable validator evidence | [`tools/validators/hydro/check_crosswalk.py`](../../../tools/validators/hydro/check_crosswalk.py) — Hydrology-specific only |
-| Concrete registry record inventory | **UNKNOWN** in the inspected scope |
+| Executable validator evidence | Hydrology checker plus [`validate_rac_registry.py`](../../../tools/validators/domains/water_planning/validate_rac_registry.py) for the bounded RAC/county slice |
+| Concrete registry record inventory | [`water_planning/kwo_rac_counties_2026-06-24__tiger2025.json`](water_planning/kwo_rac_counties_2026-06-24__tiger2025.json) — 209 rows / 105 counties / 14 regions; complete lane inventory remains partial |
 | Complete crosswalk schema family | **NEEDS VERIFICATION** |
 | Direct public access | **DENY** |
 | KFM publication effect | None |
@@ -149,7 +149,7 @@ This path must not absorb:
 - receipts, proofs, catalogs, or release decisions;
 - public API, map, search, graph, export, or AI payloads.
 
-No alternate crosswalk-registry writer or migration conflict was established in the inspected scope. Complete record inventory and machine enforcement remain unresolved.
+No alternate crosswalk-registry writer or migration conflict was established in the inspected scope. The water-planning record and domain enforcement are concrete; complete lane inventory and registry-wide enforcement remain unresolved.
 
 ---
 
@@ -268,12 +268,13 @@ The diagram shows responsibility flow, not implementation maturity. Registry sta
 - `contracts/crosswalks/taxonomy/README.md` exists.
 - Multiple domain-specific crosswalk documents exist.
 - `tools/validators/hydro/check_crosswalk.py` exists as executable Hydrology-specific validation evidence.
+- `tools/validators/domains/water_planning/validate_rac_registry.py` pins the concrete RAC/county mapping digest, 105-county inventory, 14-region inventory, overlap classes, and release hold.
 
 ### Needs verification
 
 - Complete child and payload inventory under `data/registry/crosswalks/`.
-- A canonical crosswalk registry schema and `$id`.
-- Registry-wide validators, fixtures, negative cases, and CI wiring.
+- A registry-wide crosswalk schema; the water-planning slice now has a domain schema and `$id`.
+- Registry-wide validators, fixtures, negative cases, and CI wiring; the water-planning coverage is concrete but bounded.
 - Which domain validators write or consume registry state.
 - Crosswalk correction, supersession, and rollback behavior in emitted artifacts.
 - Public API, MapLibre, graph, search, export, and AI consumer behavior.
@@ -303,9 +304,9 @@ Passing a domain validator proves only its declared scope. It does not establish
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Complete registry inventory | **UNKNOWN** | Pinned recursive tree and content classification |
-| Canonical registry-record schema | **NEEDS VERIFICATION** | Accepted schema path, `$id`, fields, enums, compatibility policy |
-| Registry-wide validator coverage | **NEEDS VERIFICATION** | Validator source, fixtures, commands, and representative runs |
+| Complete registry inventory | **PARTIAL** | Water-planning record confirmed; remaining children require pinned recursive inventory |
+| Canonical registry-record schema | **PARTIAL** | Water-planning schema exists; registry-wide schema/compatibility policy remains unresolved |
+| Registry-wide validator coverage | **PARTIAL** | Water-planning validator/tests/CI exist; remaining registry families need coverage |
 | Source/target authority versioning | **NEEDS VERIFICATION** | Contract and registry examples with stale/superseded cases |
 | Correction and rollback propagation | **NEEDS VERIFICATION** | Corrected mapping fixture, receipt, catalog/release delta, consumer behavior |
 | Public-consumer isolation | **NEEDS VERIFICATION** | API/UI/search/graph tests denying internal or candidate registry reads |
