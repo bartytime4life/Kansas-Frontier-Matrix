@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/datasets/readme
 name: Dataset Registry README
 path: data/registry/datasets/README.md
 type: data-registry-datasets-parent-readme
-version: v0.3.0
+version: v0.4.0
 status: draft
 owners:
   - "NEEDS VERIFICATION: registry steward"
@@ -12,13 +12,13 @@ owners:
   - "NEEDS VERIFICATION: contract, schema, and policy stewards"
   - "NEEDS VERIFICATION: validation, evidence, and release stewards"
 created: 2026-06-28
-updated: 2026-07-28
+updated: 2026-07-30
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: dataset-identity-and-state
-path_posture: confirmed-live-canonical-subtype-first-parent; flora-child-confirmed; record-inventory-unknown; schema-and-validator-coverage-unverified
+path_posture: confirmed-live-canonical-subtype-first-parent; flora-child-confirmed; water-planning-record-confirmed; complete-inventory-partial; schema-and-validator-coverage-partial
 sensitivity_posture: registry-internal; no-public-path; source-role-preserving; rights-and-sensitivity-fail-closed; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -28,6 +28,7 @@ related:
   - ../sensitivity/README.md
   - ../crosswalks/README.md
   - flora/README.md
+  - water_planning/README.md
   - ../../raw/README.md
   - ../../work/README.md
   - ../../quarantine/README.md
@@ -61,18 +62,18 @@ tags:
   - no-public-path
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: be2f629ebd26735d3303e0f132ff678aafac4e93
+  base_commit: a254b4345f2944a453d9a86a23951074a106a853
   prior_blob: 04b67852e50ba3174cc122b8166686e507070253
   flora_child_blob: 025cade8130a07ee2e5243ee5929d86c182e8162
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
   registry_schema_guardrail_blob: 9af6574ec32bde3d60a904fccf9b0dc4bb71703b
   dataset_version_contract_blob: 06a0345b19f753632068978c61d5d0e50011305d
-  inspection_date: 2026-07-28
+  inspection_date: 2026-07-30
 notes:
   - "This README preserves and upgrades the existing document at the same canonical subtype-first registry path."
   - "ADR-0029 accepted Directory Rules v2; its topology resolves `data/registry/datasets/` as the canonical dataset registry parent."
-  - "Current repository evidence confirms the Flora child README but did not establish a concrete dataset-registry record inventory."
+  - "Current repository evidence confirms the Flora child README and one concrete water-planning RAC geometry dataset record; complete lane inventory remains partial."
   - "The shared registry-schema lane is README-only and names `dataset_registry_record.schema.json` as a candidate that is not present."
   - "The adjacent `DatasetVersion` contract is draft and its paired schema is explicitly a permissive placeholder."
   - "Registry presence does not admit a source, validate a dataset, prove a claim, clear rights or sensitivity, authorize release, or publish KFM content."
@@ -108,11 +109,11 @@ notes:
 | Directory placement | **CONFIRMED canonical** subtype-first registry topology under accepted Directory Rules v2 |
 | Placement outcome | `PLACE` at the existing path |
 | Document lifecycle | `draft` |
-| Confirmed child lane | [`flora/`](flora/README.md) — README evidence only |
-| Concrete dataset-registry record inventory | **UNKNOWN** in the inspected scope |
+| Confirmed child lanes | [`flora/`](flora/README.md) — README evidence only; [`water_planning/`](water_planning/README.md) — one concrete RAC geometry dataset record |
+| Concrete dataset-registry record inventory | [`water_planning/kwo_rac_regions_2026-06-24.json`](water_planning/kwo_rac_regions_2026-06-24.json) — one digest-pinned 14-feature internal record; complete lane inventory remains partial |
 | Accepted shared dataset-registry schema | **NEEDS VERIFICATION**; the shared registry-schema lane is README-only |
 | Adjacent `DatasetVersion` contract | **CONFIRMED draft**; its paired schema is explicitly a permissive placeholder |
-| Dataset-registry validators, fixtures, tests, and CI | **NEEDS VERIFICATION** |
+| Dataset-registry validators, fixtures, tests, and CI | **PARTIAL** — concrete water-planning validator/tests/read-only CI; registry-wide coverage remains unresolved |
 | Accountable owners and reviewers | **NEEDS VERIFICATION** |
 | Direct public access | **DENY** |
 | KFM publication effect | None |
@@ -220,11 +221,12 @@ Domain-first registry paths such as `data/registry/<domain>/datasets/` must not 
 |---|---|---|
 | `data/registry/datasets/README.md` | **CONFIRMED** parent README | Documentation and placement boundary only |
 | [`data/registry/datasets/flora/`](flora/README.md) | **CONFIRMED** child README | Flora dataset-registry boundary; not proof of emitted records |
-| Concrete machine-readable dataset-registry records | **UNKNOWN** in the inspected scope | Do not infer from README presence |
+| [`data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json`](water_planning/kwo_rac_regions_2026-06-24.json) | **CONFIRMED concrete record** | Points to a digest-pinned 14-feature processed GeoJSON; release remains denied |
+| Complete machine-readable dataset-registry inventory | **PARTIAL** | One water-planning record is concrete; do not infer completeness for other domains |
 | Shared `dataset_registry_record` schema | **NOT FOUND / NEEDS VERIFICATION** | Candidate name only in the shared schema guardrail |
 | Dataset-registry-specific validator, fixture, test, or CI lane | **NEEDS VERIFICATION** | No completeness claim |
 
-This inventory is intentionally bounded. Search-limited repository inspection is not proof that no records or implementation exist outside the surfaced paths.
+This inventory is intentionally bounded. The water-planning record is concrete; search-limited repository inspection is not proof of completeness outside the surfaced paths.
 
 ---
 
@@ -384,11 +386,11 @@ Schema validity alone is insufficient. Meaning, evidence, policy, review, releas
 - [ ] Assign accountable registry, dataset, source, domain, contract, schema, policy, validation, evidence, and release owners.
 - [ ] Accept or identify the semantic contract for dataset registry records.
 - [ ] Accept or identify the machine schema and canonical `$id`.
-- [ ] Inventory concrete registry records, producers, consumers, and domain lanes.
+- [x] Inventory the first concrete water-planning record and its validator/CI consumers; complete registry and producer inventory remains open.
 - [ ] Define stable naming, versioning, index, digest, and supersession conventions.
 - [ ] Implement valid and invalid fixtures without real sensitive payloads.
-- [ ] Implement deterministic validators and stable failure codes.
-- [ ] Add focused tests and CI enforcement without publication authority.
+- [x] Implement deterministic validation and stable failure codes for the bounded RAC geometry record; registry-wide validation remains open.
+- [x] Add focused RAC registry tests and read-only CI enforcement without publication authority; other dataset families remain open.
 - [ ] Define compatibility handling for any domain-first registry readers or writers.
 - [ ] Verify correction, withdrawal, supersession, and rollback drills.
 - [ ] Verify that public and governed-AI surfaces resolve released carriers and evidence rather than registry internals.
@@ -411,12 +413,18 @@ Dataset identities and versions must remain historically traceable:
 For this README change:
 
 - before merge, close the draft PR or leave it unmerged;
-- after merge, transparently revert the single documentation commit to prior blob `04b67852e50ba3174cc122b8166686e507070253`;
+- after merge, use a focused revert of the scoped registry commit; preserve prior data/version lineage and do not rewrite shared history;
 - do not rewrite history, move registry records, change source activation, alter release state, or treat documentation rollback as data rollback.
 
 ---
 
 ## Change history
+
+### v0.4.0 — 2026-07-30
+
+- inventoried the first concrete water-planning dataset-registry record;
+- linked its 14-feature digest-pinned processed geometry, domain contract/schema, validator, tests, and read-only CI;
+- kept rights review, release, publication, and complete lane inventory fail-closed.
 
 ### v0.3.0 — 2026-07-28
 

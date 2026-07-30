@@ -49,7 +49,17 @@ The KWO page exposes no source-native version. The identity inventory therefore 
 - A resolved county crosswalk is reference-only and must resolve to a declared authority record. County membership is not embedded or invented here.
 - Geometry, GeoJSON, coordinates, polygons, centroids, addresses, and inferred containment are not valid `PlanningRegion` payload fields.
 
-The repository has a governed crosswalk registry lane at `data/registry/crosswalks/`, but its own README reports that the concrete record inventory is unknown. This slice therefore keeps all real RAC geometry and county crosswalks unresolved. Its reference-authority records are synthetic test fixtures, not canonical registry entries.
+The canonical registry now contains one source-grounded KWO RAC geometry
+dataset version and one derived Census 2025 county-intersection crosswalk.
+Resolved region records may reference
+`kfm:dataset-version:water-planning:kwo-rac-regions:2026-06-24` and
+`kfm:crosswalk:water-planning:kwo-rac-to-county:2026-06-24:tiger-2025`
+through their governing authority records. The original synthetic authority
+fixtures remain test-only and do not override those canonical records.
+
+The county crosswalk records positive-area geometry overlap, not county
+membership. A `boundary-sliver` must not be silently promoted to a political,
+administrative, funding, or governance relationship.
 
 ## Anti-collapse boundaries
 

@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/rac_geometry_dataset_registry.schema.json",
+  "title": "water_planning_rac_geometry_dataset_registry",
+  "description": "Registry shape for one source-grounded KWO RAC geometry dataset version. The record identifies a processed payload but does not release it.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/rac_geometry_registry.md",
+    "record_root": "data/registry/datasets/water_planning/",
+    "validator": "tools/validators/domains/water_planning/validate_rac_registry.py"
+  },
+  "properties": {
+    "record_type": {
+      "const": "water-planning-rac-geometry-dataset"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "dataset_id": {
+      "const": "kfm:dataset:water-planning:kwo-rac-regions"
+    },
+    "dataset_version_id": {
+      "const": "kfm:dataset-version:water-planning:kwo-rac-regions:2026-06-24"
+    },
+    "record_status": {
+      "const": "current"
+    },
+    "release_status": {
+      "const": "not-released"
+    },
+    "authority_kind": {
+      "const": "regional-planning-area-boundary"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "descriptor_ref": {
+          "const": "kfm://source/kansas/kwo/regional-planning-areas"
+        },
+        "authority_id": {
+          "const": "kwo:geometry:regional-planning-areas:cd87ef7a0bb34cc4a7f57e662d73ec0f:0"
+        },
+        "agency": {
+          "const": "Kansas Water Office"
+        },
+        "source_role": {
+          "const": "official-administrative-planning-boundary"
+        },
+        "item_id": {
+          "const": "cd87ef7a0bb34cc4a7f57e662d73ec0f"
+        },
+        "item_owner": {
+          "const": "ks_wateroffice"
+        },
+        "item_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://www\\.arcgis\\.com/"
+        },
+        "layer_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://services1\\.arcgis\\.com/"
+        },
+        "query_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://services1\\.arcgis\\.com/"
+        },
+        "source_modified_at": {
+          "const": "2026-06-24T15:17:37+00:00"
+        },
+        "source_observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_geojson_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "source_license_statement": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "descriptor_ref",
+        "authority_id",
+        "agency",
+        "source_role",
+        "item_id",
+        "item_owner",
+        "item_url",
+        "layer_url",
+        "query_url",
+        "source_modified_at",
+        "source_observed_at",
+        "source_geojson_sha256",
+        "source_license_statement"
+      ],
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "data/processed/water_planning/rac_regions/kwo_rac_regions_2026-06-24.geojson"
+        },
+        "media_type": {
+          "const": "application/geo+json"
+        },
+        "coordinate_reference_system": {
+          "const": "OGC:CRS84"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "feature_count": {
+          "const": 14
+        }
+      },
+      "required": [
+        "path",
+        "media_type",
+        "coordinate_reference_system",
+        "sha256",
+        "byte_count",
+        "feature_count"
+      ],
+      "additionalProperties": false
+    },
+    "identity_authority_ref": {
+      "const": "kwo:rac:regional-advisory-committees"
+    },
+    "region_ids": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "kwo-rac-01"
+        },
+        {
+          "const": "kwo-rac-02"
+        },
+        {
+          "const": "kwo-rac-03"
+        },
+        {
+          "const": "kwo-rac-04"
+        },
+        {
+          "const": "kwo-rac-05"
+        },
+        {
+          "const": "kwo-rac-06"
+        },
+        {
+          "const": "kwo-rac-07"
+        },
+        {
+          "const": "kwo-rac-08"
+        },
+        {
+          "const": "kwo-rac-09"
+        },
+        {
+          "const": "kwo-rac-10"
+        },
+        {
+          "const": "kwo-rac-11"
+        },
+        {
+          "const": "kwo-rac-12"
+        },
+        {
+          "const": "kwo-rac-13"
+        },
+        {
+          "const": "kwo-rac-14"
+        }
+      ],
+      "minItems": 14,
+      "maxItems": 14
+    },
+    "crosswalk_refs": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "kfm:crosswalk:water-planning:kwo-rac-to-county:2026-06-24:tiger-2025"
+        }
+      ],
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "rights_status": {
+      "const": "source-statement-recorded-review-pending"
+    },
+    "sensitivity_status": {
+      "const": "public-administrative-boundary"
+    },
+    "correction_status": {
+      "enum": [
+        "current",
+        "corrected",
+        "superseded"
+      ]
+    },
+    "supersedes_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    }
+  },
+  "required": [
+    "record_type",
+    "schema_version",
+    "dataset_id",
+    "dataset_version_id",
+    "record_status",
+    "release_status",
+    "authority_kind",
+    "source",
+    "payload",
+    "identity_authority_ref",
+    "region_ids",
+    "crosswalk_refs",
+    "rights_status",
+    "sensitivity_status",
+    "correction_status",
+    "supersedes_ref"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "correction_status": {
+            "const": "current"
+          }
+        },
+        "required": [
+          "correction_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "supersedes_ref": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "supersedes_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}
