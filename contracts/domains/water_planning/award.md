@@ -86,7 +86,7 @@ The contract describes record meaning. The paired JSON Schema defines accepted d
 | [Paired JSON Schema](../../../schemas/contracts/v1/domains/water_planning/award.schema.json) | Draft 2020-12; `x-kfm.status: PROPOSED` | Defines machine-checkable shape, not source truth, funding authority, or policy. |
 | [Valid and invalid fixtures](../../../fixtures/domains/water_planning/award/) | Synthetic test inputs | Exercise representative schema behavior; they are not award records or funding evidence. |
 | [Schema tests](../../../tests/schemas/test_water_planning_contracts.py) | Repository test surface | Check representative fixture polarity, distinct entity titles, amount separation, and award/completion separation. |
-| [Status-collapse validator](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [tests](../../../tests/domains/water_planning/test_status_collapse.py) | Deterministic, no-network synthetic-fixture checks | Reject selected award/payment and amount collapses; they do not validate a live award record. |
+| [Status-collapse validator](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [tests](../../../tests/domains/water_planning/test_status_collapse.py) | Deterministic, no-network synthetic-fixture checks | Reject selected application/award, award/payment, payment/construction, construction/completion, and amount collapses; they do not validate a live award record. |
 | [KWO source catalog entry](../../../docs/sources/catalog/kansas/kwo.md) | Bounded source-family documentation | Excludes unsupported funding and benefit inferences; it does not activate a connector or authorize release. |
 | `policy/domains/water_planning/` | Forward pointer in schema metadata; policy behavior remains `NEEDS VERIFICATION` | No policy outcome may be inferred from this contract or schema. |
 
@@ -156,6 +156,20 @@ An award is a funding decision event. Each upstream request, downstream agreemen
 | `recommended_amount` | [`Recommendation`](./recommendation.md) | Award or disbursement |
 | `awarded_amount` | `Award` | Payment, expenditure, construction, completion, or benefit |
 | `paid_amount` | [`FundingAgreement`](./funding_agreement.md) | Expenditure, completion, or operational benefit |
+
+### Executable sequence guardrails
+
+The no-network status-collapse suite carries a separate synthetic envelope for cross-record claims. It does not validate an `Award` instance, but it makes the application-to-delivery separation executable:
+
+| Invalid synthetic claim | Stable finding | Contract boundary retained |
+|---|---|---|
+| [`application_is_award`](../../../fixtures/domains/water_planning/status_collapse/invalid/application_is_award.json) | `APPLICATION_IS_NOT_AWARD` | A submitted request does not become a funding decision. |
+| [`award_is_payment`](../../../fixtures/domains/water_planning/status_collapse/invalid/award_is_payment.json) | `AWARD_IS_NOT_PAYMENT` | A funding decision does not become a disbursement. |
+| [`payment_is_construction`](../../../fixtures/domains/water_planning/status_collapse/invalid/payment_is_construction.json) | `PAYMENT_IS_NOT_CONSTRUCTION` | A payment does not prove physical progress or a milestone. |
+| [`construction_is_completion`](../../../fixtures/domains/water_planning/status_collapse/invalid/construction_is_completion.json) | `CONSTRUCTION_IS_NOT_COMPLETION` | Construction activity does not become an explicit completion state. |
+| [collapsed `amount` field](../../../fixtures/domains/water_planning/status_collapse/invalid/collapsed_amount_facts.json) | `COLLAPSED_AMOUNT_FIELD_FORBIDDEN` | Requested, recommended, awarded, and paid amounts keep distinct owning fields. |
+
+These findings enforce rejection only within the synthetic status-collapse candidate shape. They do not resolve entity references, prove event order, or establish that any application, award, payment, milestone, or completion exists.
 
 [Back to top](#top)
 
@@ -230,7 +244,7 @@ python -m unittest discover \
 | [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) | Schema presence, distinct entity titles, representative valid/invalid fixtures, amount-field separation, and completion/award separation | Referential integrity, currency semantics, source accuracy, funding authority, rights, policy, payment, or release |
 | [`valid_1.json`](../../../fixtures/domains/water_planning/award/valid/valid_1.json) | One representative award shape accepted by the paired schema | That the example is real, current, complete, source-supported, or publicly releasable |
 | [`invalid_1.json`](../../../fixtures/domains/water_planning/award/invalid/invalid_1.json) | A fiscal-year value without the required `FY` prefix is rejected | Exhaustive negative coverage for references, timestamps, amounts, funding source, or evidence |
-| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | Stable findings for synthetic award/payment collapse, collapsed amount fields, blocked live behavior, no-network execution, and protected-value non-echo | Validation of an `Award` instance or evidence for a real application, award, payment, project, or benefit |
+| [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) and [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) | Stable findings for synthetic application/award, award/payment, payment/construction, construction/completion, and amount-field collapse; blocked live behavior; no-network execution; and protected-value non-echo | Validation of an `Award` instance, lifecycle ordering, or evidence for a real application, award, payment, milestone, completion, or benefit |
 | [`schema-validation.yml`](../../../.github/workflows/schema-validation.yml) | Pull-request schema inventory, meta-schema checks, aggregate fixtures, and repository-owned schema/contract tests under read-only permissions | Semantic truth, source admission, policy, rights, sensitivity, release, or publication |
 | [`briefing-integration.yml`](../../../.github/workflows/briefing-integration.yml) | Path-triggered no-network water-planning domain and RAC-registry checks under `contents: read` | Award-schema exhaustiveness, evidence closure, review approval, release, deployment, or publication |
 
@@ -297,6 +311,7 @@ Rollback changes repository documentation only. It does not reverse an external 
 - [`correction_or_withdrawal.md`](./correction_or_withdrawal.md) — Correction and withdrawal lineage
 - [`award.schema.json`](../../../schemas/contracts/v1/domains/water_planning/award.schema.json) — Canonical machine shape
 - [`award` fixtures](../../../fixtures/domains/water_planning/award/) — Synthetic valid and invalid examples
+- [Status-collapse fixtures](../../../fixtures/domains/water_planning/status_collapse/) — Synthetic cross-record and amount-boundary envelopes
 - [`validate_status_collapse.py`](../../../tools/validators/domains/water_planning/validate_status_collapse.py) — Synthetic anti-collapse validator
 - [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) — Paired schema and fixture tests
 - [`test_status_collapse.py`](../../../tests/domains/water_planning/test_status_collapse.py) — No-network semantic boundary tests
