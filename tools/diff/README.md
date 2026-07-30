@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-diff-readme
 title: tools/diff README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-07-29
 policy_label: public
 owning_root: tools/
 responsibility: repo-wide diff helpers for deterministic reviewer and CI comparisons
@@ -43,8 +43,8 @@ notes:
 - [Governance boundary](#governance-boundary)
 - [What belongs here](#what-belongs-here)
 - [What does not belong here](#what-does-not-belong-here)
-- [Current thin-slice target](#current-thin-slice-target)
-- [Expected report envelope](#expected-report-envelope)
+- [Current thin slice](#current-thin-slice)
+- [Report envelope](#report-envelope)
 - [Inputs and outputs](#inputs-and-outputs)
 - [Suggested commands](#suggested-commands)
 - [Validation](#validation)
@@ -76,9 +76,9 @@ The lane is intentionally narrow:
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/diff/README.md` | **CONFIRMED** | This file documents the lane boundary and expected thin-slice contract. |
-| `tools/diff/stable_diff.py` | **PROPOSED-to-create / NEEDS VERIFICATION** | Name used for the first executable target. Confirm branch state before invoking. |
-| `tests/diff/test_stable_diff.py` | **PROPOSED-to-create / NEEDS VERIFICATION** | Expected proof surface for the first executable helper. |
-| `tests/diff/fixtures/...` | **PROPOSED-to-create / NEEDS VERIFICATION** | Suggested fixture home for test-only inputs. |
+| `tools/diff/stable_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Offline top-level JSON object comparator with deterministic finite output. |
+| `tests/diff/test_stable_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Executable proof for same, changed, malformed, missing, duplicate-key, non-finite-number, and non-object inputs. |
+| `tests/diff/fixtures/...` | **IMPLEMENTED / PUBLIC-SAFE** | Synthetic same, changed, and malformed inputs. |
 | Nested semantic diff | **OUT OF SCOPE for first slice** | The first contract should compare top-level JSON keys only unless an ADR or test expands it. |
 | Policy interpretation | **DENY here** | Policy meaning belongs in `policy/` and promotion/release validators, not this helper. |
 | Promotion authority | **DENY here** | Promotion remains a governed state transition, not a diff output. |
@@ -164,17 +164,17 @@ A helper belongs here only when it is:
 
 ---
 
-## Current thin-slice target
+## Current thin slice
 
-The recommended first executable is:
+The implemented first executable is:
 
 ```text
 tools/diff/stable_diff.py
 ```
 
-### Proposed first behavior
+### Implemented behavior
 
-`stable_diff.py` should:
+`stable_diff.py`:
 
 1. accept two local JSON file paths;
 2. parse both files as JSON objects;
@@ -184,9 +184,9 @@ tools/diff/stable_diff.py
 6. optionally return a non-zero exit code when differences are found and `--fail-on-change` is passed;
 7. fail closed on missing, unreadable, or malformed input.
 
-### Non-goals for the first behavior
+### Non-goals
 
-The first helper should not attempt:
+The helper does not attempt:
 
 - nested semantic diff;
 - geospatial topology comparison;
@@ -200,9 +200,9 @@ The first helper should not attempt:
 
 ---
 
-## Expected report envelope
+## Report envelope
 
-The first stable JSON report should stay small and deterministic.
+The stable JSON report stays small and deterministic.
 
 ```json
 {
@@ -277,7 +277,8 @@ If a diff report becomes promotion-significant, the owning promotion or release 
 ## Suggested commands
 
 > [!NOTE]
-> These commands are the intended first-slice interface once `tools/diff/stable_diff.py` and its tests exist on the active branch. Confirm file presence before running them.
+> These commands exercise the implemented first-slice interface. The helper
+> remains non-authoritative even when a caller chooses `--fail-on-change`.
 
 ```bash
 pytest -q tests/diff/test_stable_diff.py
@@ -305,7 +306,7 @@ python tools/diff/stable_diff.py \
 
 The first proof surface should be narrow and fixture-driven.
 
-Recommended files:
+Current files:
 
 ```text
 tests/diff/
@@ -318,12 +319,11 @@ tests/diff/
     ├── changed/
     │   ├── left.json
     │   └── right.json
-    └── trust_chain/
-        ├── receipt_prior.json
-        └── receipt_current.json
+    └── malformed/
+        └── invalid.json
 ```
 
-Recommended first assertions:
+Current assertions:
 
 - equivalent JSON under different key order returns `status == "same"`;
 - one added, one removed, and one changed top-level key returns deterministic sorted arrays;
@@ -341,8 +341,8 @@ Recommended first assertions:
 | Step | Status | Outcome |
 |---|---|---|
 | Replace README stub with lane contract | **DONE in this README** | Documents scope, boundaries, and first-slice behavior. |
-| Add `stable_diff.py` | **PROPOSED** | First executable comparator. |
-| Add `tests/diff/` proof pack | **PROPOSED** | Locks deterministic comparison behavior. |
+| Add `stable_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | First executable comparator. |
+| Add `tests/diff/` proof pack | **IMPLEMENTED / REVIEW REQUIRED** | Locks deterministic comparison behavior. |
 | Add CI renderer handoff | **PROPOSED** | Convert machine report into reviewer-facing summary without changing diff semantics. |
 | Wire selected reports into promotion review | **PROPOSED / later** | Promotion validators may consume diff reports, but diff remains non-authoritative. |
 | Expand beyond top-level keys | **NEEDS ADR or explicit test-backed decision** | Avoid silent semantic expansion. |
@@ -374,5 +374,5 @@ Before merging a new diff helper or changing this lane's behavior, reviewers sho
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement; executable helper still needs branch verification. |
-| Next smallest safe change | Add `tools/diff/stable_diff.py` plus `tests/diff/test_stable_diff.py` and minimal public-safe fixtures. |
+| Review state | First executable slice implemented with public-safe synthetic proof; independent review still required. |
+| Next smallest safe change | Review the output envelope and exit-code contract; keep CI and materiality interpretation in later, separately authorized work. |
