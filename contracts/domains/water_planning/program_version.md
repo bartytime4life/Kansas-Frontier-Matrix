@@ -39,7 +39,6 @@ related:
 
 [![Contract status: PROPOSED](https://img.shields.io/badge/contract-PROPOSED-d29922?style=flat-square)](#status-and-authority)
 [![Schema: Draft 2020-12](https://img.shields.io/badge/schema-Draft%202020--12-0969da?style=flat-square)](../../../schemas/contracts/v1/domains/water_planning/program_version.schema.json)
-[![Schema validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/schema-validation.yml/badge.svg?branch=main)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/schema-validation.yml)
 
 Defines the identity, lineage, source-document, and anti-overwrite semantics of a versioned Kansas water-planning program record.
 
