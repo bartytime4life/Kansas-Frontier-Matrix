@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.5
+version: v0.6
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
@@ -14,9 +14,10 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: f93357688c0178e90db7cb976798ef998995d009
+  read_commit: 149614a560de9ecb299de8ee9bb30b2f0ecfa7fe
   workflow_inventory_snapshot: 1180cf7ec53d5acbbb859a39d93c1d129ec83df9
-  documented_workflow_files: 41
+  proposed_head_workflow_files: 44
+  documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
 related:
   - ../README.md
@@ -36,10 +37,11 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
-  - "The v0.4 prior README bytes were inspected at main@f93357688c0178e90db7cb976798ef998995d009."
-  - "The detailed 41-file workflow inventory and static findings remain pinned to 1180cf7ec53d5acbbb859a39d93c1d129ec83df9 until a new complete inventory is generated."
+  - "The v0.5 prior README bytes and all 43 current-main workflow files were inspected at main@149614a560de9ecb299de8ee9bb30b2f0ecfa7fe."
+  - "The detailed 41-file workflow inventory remains lineage at 1180cf7ec53d5acbbb859a39d93c1d129ec83df9; v0.6 reconciles briefing-integration.yml, infra-compose-smoke.yml, and the proposed repository-control.yml."
   - "Workflow maturity groups describe inspected files and steps; they do not certify current run success, branch protection, release readiness, or KFM publication."
   - "v0.5 narrowly reconciles shared domain holds and the E2E, Focus mock, and rollback-drill readiness checks; it does not establish UI or runtime readiness."
+  - "v0.6 adds one explicitly approved trusted-base pull_request_target guard with read-only permissions and a full-SHA checkout pin; it remains advisory until separately required by the main ruleset."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -47,8 +49,8 @@ notes:
 # `.github/workflows/`
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Inventory snapshot: 41 workflows](https://img.shields.io/badge/inventory%20snapshot-41%20workflows-1f6feb?style=flat-square)](#complete-workflow-inventory)
-[![Permissions snapshot: explicit](https://img.shields.io/badge/permissions%20snapshot-41%2F41%20explicit-15803d?style=flat-square)](#trigger-permission-and-workflow-threat-preflight)
+[![Proposed-head inventory: 44 workflows](https://img.shields.io/badge/proposed--head%20inventory-44%20workflows-1f6feb?style=flat-square)](#complete-workflow-inventory)
+[![Permissions: explicit](https://img.shields.io/badge/permissions-44%2F44%20explicit-15803d?style=flat-square)](#trigger-permission-and-workflow-threat-preflight)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c?style=flat-square)](#authority-level)
 [![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-8250df?style=flat-square)](../../docs/doctrine/ai-build-operating-contract.md)
 
@@ -110,7 +112,8 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ### Current document state
 
-- **CONFIRMED:** this README was read on `main@f93357688c0178e90db7cb976798ef998995d009`.
+- **CONFIRMED:** this README and all 43 current-main workflow files were read on `main@149614a560de9ecb299de8ee9bb30b2f0ecfa7fe`.
+- **PROPOSED / EXACT DIFF:** `repository-control.yml` raises the proposed-head count to 44 and is the only active `pull_request_target` workflow.
 - **CONFIRMED / LINEAGE:** the detailed static inventory below was generated from `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` and documented 41 tracked `.yml` workflows.
 - **NEEDS VERIFICATION:** whether workflow files, action references, permissions, triggers, or maturity groups changed between the inventory snapshot and the current read commit.
 - **UNKNOWN:** current branch-protection coupling, recent workflow conclusions, logs, organization defaults, artifact retention, and runtime behavior unless separately inspected.
@@ -119,13 +122,13 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 | Finding | Snapshot status | Interpretation |
 |---|---|---|
-| Workflow inventory | **CONFIRMED at inventory commit: 41 tracked `.yml` files** | Complete for the pinned tree. No `.yaml` workflow was recorded. |
-| Explicit permissions | **CONFIRMED at inventory commit: 41/41** | Every inspected workflow declared a top-level permissions boundary. |
-| Privileged PR trigger | **CONFIRMED absent at inventory commit** | No active `pull_request_target` trigger key. |
+| Workflow inventory | **CONFIRMED current main: 43; PROPOSED head: 44 tracked `.yml` files** | The proposed delta adds `repository-control.yml`; no `.yaml` workflow is present. |
+| Explicit permissions | **CONFIRMED proposed head: 44/44** | Every workflow declares a top-level permissions boundary. |
+| Privileged PR trigger | **PROPOSED exactly one** | `repository-control.yml` uses `pull_request_target` with an inline threat model, a trusted-base-only checkout, bounded untrusted-data parsing, and read-only permissions. |
 | Runner trust | **CONFIRMED GitHub-hosted at inventory commit** | No `self-hosted` occurrence. |
 | Direct secret expressions | **CONFIRMED absent at inventory commit** | No direct `secrets.*` occurrence; repository and organization settings remain external. |
-| Write scopes | **CodeQL only at inventory commit** | `security-events: write` supported code-scanning upload; ordinary repository write grants were absent. |
-| External action pinning | **Version tags, not immutable SHAs** | Reviewable and Dependabot-visible, but not immutable. |
+| Write scopes | **CodeQL only on proposed head** | `security-events: write` supports code-scanning upload; the transition guard has no write grant. |
+| External action pinning | **Mixed** | The new transition guard pins checkout to a full SHA; existing workflows retain version tags. |
 | Branch protection | **NEEDS VERIFICATION** | Static workflow inspection cannot establish required checks or rulesets. |
 | Workflow execution | **NEEDS VERIFICATION** | Inventory does not establish recent success, failure, or readiness. |
 
@@ -272,12 +275,12 @@ Before a workflow change bends a trust or placement invariant, inspect [`docs/ad
 
 | Field | Value |
 |---|---|
-| README content read | 2026-07-23 |
+| README content read | 2026-07-30 |
 | Read ref | `main` |
-| Read commit | `f93357688c0178e90db7cb976798ef998995d009` |
+| Read commit | `149614a560de9ecb299de8ee9bb30b2f0ecfa7fe` |
 | Detailed workflow inventory snapshot | `1180cf7ec53d5acbbb859a39d93c1d129ec83df9` |
 | Bounded readiness reconciliation | 2026-07-29; shared domain holds plus E2E, Focus mock, and rollback-drill checks only |
-| Inventory refresh status | **NEEDS VERIFICATION** against the proposed head before relying on counts as current |
+| Inventory refresh status | **CONFIRMED static proposed-head count: 44**; hosted execution and ruleset coupling remain separate |
 
 ## Complete workflow inventory
 
@@ -335,6 +338,7 @@ UI readiness.
 ### Command-bearing and partial gates
 
 - [`api-test.yml`](api-test.yml)
+- [`briefing-integration.yml`](briefing-integration.yml)
 - [`codeql.yml`](codeql.yml)
 - [`connector-gate.yml`](connector-gate.yml)
 - [`contract-drift.yml`](contract-drift.yml)
@@ -342,12 +346,14 @@ UI readiness.
 - [`deny-test.yml`](deny-test.yml)
 - [`dependency-scan.yml`](dependency-scan.yml)
 - [`docs-control-plane.yml`](docs-control-plane.yml)
+- [`infra-compose-smoke.yml`](infra-compose-smoke.yml)
 - [`maplibre-perf-governance.yml`](maplibre-perf-governance.yml)
 - [`pmtiles-attestation.yml`](pmtiles-attestation.yml)
 - [`policy-boundary-guards.yml`](policy-boundary-guards.yml)
 - [`policy-test.yml`](policy-test.yml)
 - [`promotion-gate.yml`](promotion-gate.yml)
 - [`release-dry-run.yml`](release-dry-run.yml)
+- [`repository-control.yml`](repository-control.yml)
 - [`rollback-drill.yml`](rollback-drill.yml)
 - [`schema-validation.yml`](schema-validation.yml)
 - [`source-descriptor-validate.yml`](source-descriptor-validate.yml)
@@ -368,6 +374,22 @@ command/report polarity mismatches fail closed. The result is point-in-time
 supply-chain evidence only; exact-head remote execution remains
 **NEEDS VERIFICATION**, and this change does not satisfy the separate E2E hold.
 
+`repository-control.yml` is a deliberately narrow exception to the usual
+`pull_request` preference. It uses `pull_request_target` so a pull request
+cannot replace the guard before evaluation, checks out only the GitHub-supplied
+base SHA, never executes head code, reads only issue/event JSON, and grants only
+read access to contents, issues, and pull requests. Its strict local validator
+requires an unedited owner-account record for the exact repository, control
+issue, PR, base, head, and four-hour-or-shorter window. The check is advisory
+until a separate administrator action requires
+`repository-control / authorize-ready-and-merge` in the `main` ruleset. Even
+then, it records an explicit owner-account decision; it cannot distinguish a
+human browser from an installed app or token acting through the same identity.
+Expiry is evaluated when the workflow runs; GitHub does not automatically
+time-expire a successful check or rerun it after the issue comment is edited or
+deleted. The result is point-in-time evidence and must be rerun before reliance
+after expiry or comment mutation.
+
 ## Trigger, permission, and workflow-threat preflight
 
 Before changing or relying on a workflow, record:
@@ -387,27 +409,28 @@ Before changing or relying on a workflow, record:
 | Check name | Is the workflow or job name coupled to branch protection? |
 | Rollback | How can the workflow be disabled or reverted without weakening unrelated gates? |
 
-### Static threat findings at the inventory snapshot
+### Static threat findings at the proposed head
 
 | Threat surface | Finding |
 |---|---|
-| `pull_request_target` | No active trigger key; one safety comment named it without enabling it. |
+| `pull_request_target` | Exactly `repository-control.yml`; trusted-base checkout only, no head-code execution, bounded issue/event parsing, and read-only contents/issues/pull-requests access. |
 | Self-hosted runner | No occurrence. |
 | Direct secret expressions | No `secrets.*` occurrence. |
 | Ordinary write permissions | No `contents`, `issues`, `pull-requests`, `packages`, `deployments`, or `id-token` write grant. |
 | Code scanning | [`codeql.yml`](codeql.yml) granted `security-events: write`; re-review if its event or trust boundary changes. |
-| External action immutability | Action refs used version tags, not immutable commit SHAs. |
+| External action immutability | The transition guard pins `actions/checkout` to full SHA `3d3c42e…`; existing action refs remain tagged. |
 | Publication path | No file-presence claim authorized publication; every invoked command still requires inspection. |
 
 ## External action inventory
 
-Snapshot at `1180cf7ec53d5acbbb859a39d93c1d129ec83df9`:
+Proposed-head static inventory from `main@149614a560de…` plus `repository-control.yml`:
 
 | Action reference | Occurrences | Pinning posture |
 |---|---:|---|
-| `actions/checkout@v7` | 88 | Major tag; mutable. |
-| `actions/setup-python@v7` | 54 | Major tag; mutable. |
-| `actions/setup-node@v7.0.0` | 3 | Release tag; mutable. |
+| `actions/checkout@v7` | 93 | Major tag; mutable. |
+| `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` | 1 | Immutable full SHA resolving the inspected v7 tag. |
+| `actions/setup-python@v7` | 60 | Major tag; mutable. |
+| `actions/setup-node@v7.0.0` | 4 | Release tag; mutable. |
 | `actions/upload-artifact@v7` | 1 | Major tag; mutable. |
 | `github/codeql-action/init@v4` | 1 | Major tag; mutable. |
 | `github/codeql-action/analyze@v4` | 1 | Major tag; mutable. |
@@ -444,8 +467,9 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — regenerate the complete workflow inventory against the proposed head and reconcile any delta from the 41-file snapshot.
-- **NEEDS VERIFICATION** — required checks, rulesets, and exact branch-protection coupling.
+- **CONFIRMED proposed-head static inventory** — 44 workflows, 44 explicit permission blocks, one `pull_request_target`, one ordinary write grant (`security-events: write` in CodeQL), and GitHub-hosted runners only.
+- **NEEDS VERIFICATION** — add `repository-control / authorize-ready-and-merge` to ruleset `15484585` as a required strict check only after this workflow is merged and its exact check name is observed; it is advisory until then.
+- **NEEDS VERIFICATION** — current rulesets and exact branch-protection coupling outside the 2026-07-29 settings snapshot.
 - **NEEDS VERIFICATION** — current workflow run results, failure causes, logs, and artifact retention.
 - **NEEDS VERIFICATION** — repository and organization default token permissions.
 - **NEEDS VERIFICATION** — whether every path filter covers intended implementation and documentation surfaces.
@@ -458,6 +482,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-07-30 | v0.6 | Reconciled the current 43-file inventory plus the proposed trusted-base repository transition guard; documented its `pull_request_target` threat model, read-only token, immutable checkout pin, advisory check status, and human-versus-app attribution limit. |
 | 2026-07-29 | v0.5 | Reconciled shared domain hold semantics and the bounded E2E, Focus mock, and rollback-drill readiness checks with current structured repository evidence; preserved explicit holds and no UI/runtime readiness claim. |
 | 2026-07-23 | v0.4 | Aligned the README with the canonical-root contract; separated current document evidence from the pinned workflow inventory; added belongs/non-belongs, review burden, related-folder, ADR, threat-preflight, rollback, accessibility, and anti-overclaim guidance. |
 | 2026-07-22 | v0.3 | Replaced the stale 34-stub/7-command snapshot with the complete 41-file inventory; reconciled maturity groups, explicit permissions, action refs, and removal of prior OIDC drift. |

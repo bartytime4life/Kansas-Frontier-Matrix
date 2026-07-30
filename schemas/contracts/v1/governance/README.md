@@ -5,8 +5,8 @@ doc_id: kfm://doc/schemas-contracts-v1-governance-readme
 title: schemas/contracts/v1/governance/ — Governance Schema Family Index
 type: readme; schema-family-index; governance-boundary; review-stewardship-shape
 authority_class: schema-family-index
-version: v0.2
-status: draft; schema-stubs-present; PROPOSED; overlap-sensitive; release-adjacent; NEEDS VERIFICATION before promotion
+version: v0.3
+status: draft; nine-schema-current-inventory; mixed-maturity; repository-transition-authorization-PROPOSED; overlap-sensitive; release-adjacent; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Governance steward
   - OWNER_TBD — Schema steward
@@ -16,15 +16,19 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — short stub existed before v0.2 expansion
-updated: 2026-07-04
+updated: 2026-07-30
 policy_label: public; schemas; contracts-v1; governance; review-record; stewardship-assignment; promotion-decision; redaction-receipt; separation-of-duties; auditability; release-adjacent; no-parallel-authority
-tags: [kfm, schemas, contracts, v1, governance, ReviewRecord, StewardshipAssignment, PromotionDecision, RedactionReceipt, review, stewardship, separation-of-duties, drift, verification, release-gates, auditability, rollback]
+tags: [kfm, schemas, contracts, v1, governance, ReviewRecord, StewardshipAssignment, PromotionDecision, RedactionReceipt, RepositoryControlState, RepositoryTransitionAuthorization, review, stewardship, separation-of-duties, drift, verification, release-gates, auditability, rollback]
 related:
   - ../README.md
   - ./review_record.schema.json
   - ./steward_assignment.schema.json
   - ./promotion_decision.schema.json
   - ./redaction_receipt.schema.json
+  - ./repository_control_state.schema.json
+  - ./repository_control_context.schema.json
+  - ./repository_transition_authorization.schema.json
+  - ./ci_outcome.schema.json
   - ../../../../contracts/governance/README.md
   - ../../../../contracts/governance/ReviewRecord.md
   - ../../../../contracts/governance/steward_assignment.md
@@ -42,10 +46,11 @@ related:
   - ../../../../docs/registers/VERIFICATION_BACKLOG.md
 notes:
   - "Expanded from a short stub at schemas/contracts/v1/governance/README.md."
-  - "Current GitHub search surfaced review_record.schema.json, steward_assignment.schema.json, promotion_decision.schema.json, and redaction_receipt.schema.json under this folder."
+  - "The 2026-07-30 mounted-checkout inventory contains nine schema files under this folder."
   - "review_record.schema.json has concrete required fields and additionalProperties false, but remains x-kfm.status PROPOSED."
   - "steward_assignment.schema.json is a permissive PROPOSED stub requiring only id."
   - "promotion_decision.schema.json and redaction_receipt.schema.json are permissive PROPOSED scaffolds with empty properties and additionalProperties true."
+  - "The repository-control state, context, CI outcome, and transition-authorization schemas are strict PROPOSED shapes with focused executable tests; the transition check remains advisory until separately required by the main ruleset."
   - "PromotionDecision and RedactionReceipt are release/policy/evidence-adjacent; this folder must not become a parallel release, policy, evidence, or receipt authority without ADR/migration notes."
 [/KFM_META_BLOCK_V2] -->
 
@@ -76,8 +81,8 @@ notes:
 | Question | Answer | Truth label |
 |---|---|---|
 | Does this README path exist? | Yes: `schemas/contracts/v1/governance/README.md`. It was a short stub before this expansion. | **CONFIRMED** |
-| Are governance schema files present in this folder? | Yes. Search surfaced four schema files under `schemas/contracts/v1/governance/`. | **CONFIRMED path presence** |
-| Are all governance schemas mature/field-complete? | No. `review_record.schema.json` has concrete fields, while the other opened schemas are permissive or empty scaffolds. | **CONFIRMED mixed maturity** |
+| Are governance schema files present in this folder? | Yes. The current mounted checkout contains nine `*.schema.json` files under `schemas/contracts/v1/governance/`. | **CONFIRMED path presence at `main@149614a560de…` plus this proposed file** |
+| Are all governance schemas mature/field-complete? | No. Repository-control and review shapes are concrete, while stewardship, promotion, and redaction families retain permissive scaffolding. | **CONFIRMED mixed maturity** |
 | Is there paired governance contract prose? | Yes. `contracts/governance/README.md`, `ReviewRecord.md`, and `steward_assignment.md` were surfaced and inspected. | **CONFIRMED** |
 | Is this folder release authority? | No. Release decisions, manifests, corrections, withdrawals, and rollback belong to release lanes; governance schemas may reference them. | **CONFIRMED boundary** |
 | Can these schemas alone prove governance happened? | No. They shape records; proof requires actual records, reviewers, policy, release state, and audit trail. | **CONFIRMED governance boundary** |
@@ -118,10 +123,15 @@ schemas/
         ├── README.md
         ├── governance/
         │   ├── README.md                         # this file
-        │   ├── review_record.schema.json         # PROPOSED concrete schema
-        │   ├── steward_assignment.schema.json    # PROPOSED permissive stub
-        │   ├── promotion_decision.schema.json    # PROPOSED empty scaffold; release-adjacent
-        │   └── redaction_receipt.schema.json     # PROPOSED empty scaffold; receipt/policy/evidence-adjacent
+        │   ├── briefing_signal.schema.json
+        │   ├── ci_outcome.schema.json
+        │   ├── promotion_decision.schema.json
+        │   ├── redaction_receipt.schema.json
+        │   ├── repository_control_context.schema.json
+        │   ├── repository_control_state.schema.json
+        │   ├── repository_transition_authorization.schema.json
+        │   ├── review_record.schema.json
+        │   └── steward_assignment.schema.json
         ├── release/                              # release object shapes; separate authority
         ├── policy/                               # policy object shapes; separate authority
         └── evidence/                             # evidence object shapes; separate authority
@@ -151,7 +161,7 @@ release/
 
 ## Current schema inventory
 
-Current GitHub search surfaced the following files under `schemas/contracts/v1/governance/`. This is a search-derived index, not a complete mounted-checkout manifest.
+The current mounted-checkout inventory contains the following nine files. Path presence and machine shape do not establish adoption, review, platform enforcement, release, or publication.
 
 | File | Current opened signal | Paired contract signal | Status |
 |---|---|---|---|
@@ -159,6 +169,11 @@ Current GitHub search surfaced the following files under `schemas/contracts/v1/g
 | `steward_assignment.schema.json` | Draft 2020-12 object; permissive stub with `id`, `version`, `spec_hash`; requires only `id`; `additionalProperties: true`; `x-kfm.status: PROPOSED`. | `contracts/governance/steward_assignment.md` exists and defines stewardship-assignment meaning. | **PROPOSED scaffold** |
 | `promotion_decision.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; `contract_doc: null`. | Release-adjacent; paired governance contract not confirmed. | **PROPOSED scaffold / placement-sensitive** |
 | `redaction_receipt.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; `contract_doc: null`. | Receipt/policy/evidence-adjacent; paired governance contract not confirmed. | **PROPOSED scaffold / placement-sensitive** |
+| `briefing_signal.schema.json` | Strict Draft 2020-12 BriefingSignal shape. | `contracts/governance/briefing_signal.md`. | **PROPOSED / focused validation present** |
+| `ci_outcome.schema.json` | Strict finite repository-control check outcome shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
+| `repository_control_context.schema.json` | Strict prepared PR/platform evidence shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
+| `repository_control_state.schema.json` | Strict observation-time projection, claim, permission, settings, and digest shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
+| `repository_transition_authorization.schema.json` | Strict short-lived repository/issue/PR/base/head/owner/decision/expiry shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / advisory workflow until ruleset coupling** |
 
 > [!NOTE]
 > These files confirm path presence and scaffold intent. They do not confirm final field shape, validator behavior, fixture coverage, policy enforcement, release readiness, or public-safe behavior.
@@ -180,6 +195,7 @@ Current GitHub search surfaced the following files under `schemas/contracts/v1/g
 
 - This README.
 - Governance-family JSON Schema files after schema/contract review.
+- Exact-head repository transition-authorization shapes when they remain governance records rather than policy, review, or release decisions.
 - Machine-readable shapes for review records, stewardship assignments, escalation records, governance decisions, drift records, verification backlog items, separation-of-duties records, and governance-support decision records where accepted.
 - Migration notes, mirror notes, deprecation notes, and drift notes for governance schema placement.
 - Links to paired semantic contracts, fixtures, validators, policy references, release references, evidence references, correction references, rollback references, and tests.
@@ -273,6 +289,7 @@ find schemas/contracts/v1/governance -name '*.schema.json' -print0 \
   | xargs -0 -r -I{} python -m json.tool {} >/dev/null
 python tools/validate_all.py || true
 pytest tests/schemas tests/contract tests/governance tests/policy tests/release || true
+python -m pytest tests/validators/test_repository_transition_authorization.py -q
 ```
 
 Replace `|| true` with fail-closed CI behavior once validator and test paths are confirmed.
@@ -304,6 +321,7 @@ Rollback for future governance schema changes requires checking every downstream
 | Should `redaction_receipt.schema.json` live under governance, evidence, policy, receipts, or domain lanes? | **NEEDS VERIFICATION / ADR-sensitive** | Governance steward + evidence steward + policy steward |
 | Which governance schemas are field-complete and fixture-tested? | **NEEDS VERIFICATION** | Validation steward |
 | Which governance records are required for publication gates? | **NEEDS VERIFICATION / release-gated** | Release steward + governance steward |
+| Is `repository-control / authorize-ready-and-merge` configured as a strict required check, and can the owner-account credential boundary distinguish a human from installed apps? | **NEEDS VERIFICATION / platform-controlled** | Repository administrator + security reviewer |
 
 ---
 

@@ -1,0 +1,102 @@
+# Trusted-base, read-only Model B transition guard.
+#
+# Threat model:
+# - pull_request_target is required so pull-request changes cannot replace this
+#   workflow or the validator before the check runs.
+# - The workflow checks out only github.event.pull_request.base.sha and never
+#   checks out or executes head code.
+# - The token can read contents, issues, and pull requests only. It cannot write
+#   comments, statuses, branches, settings, releases, deployments, or packages.
+# - Issue text and event JSON are untrusted bounded data. The validator parses a
+#   strict JSON marker and never echoes comment bodies or executes their content.
+# - This workflow does not distinguish a human from an app acting through the
+#   same owner account. Security-log evidence and credential/app controls remain
+#   separate requirements.
+#
+# Enforcement boundary:
+# The check is advisory until the exact check name below is configured as a
+# required, strict status check for main in the repository ruleset.
+
+name: repository-control
+
+"on":
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - converted_to_draft
+      - edited
+      - labeled
+      - unlabeled
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: repository-control-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  KFM_CONTROL_ISSUE: "1675"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  authorize-ready-and-merge:
+    name: authorize-ready-and-merge
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out trusted base without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Read repository-control issue comments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api \
+            --paginate \
+            --slurp \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/issues/${KFM_CONTROL_ISSUE}/comments?per_page=100" \
+            > "${RUNNER_TEMP}/repository-control-comments.json"
+
+      - name: Require an exact owner transition record
+        env:
+          KFM_AUTHORIZED_LOGIN: ${{ github.event.repository.owner.login }}
+          KFM_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/validators/repository_control/validate_transition_authorization.py \
+            --event "${GITHUB_EVENT_PATH}" \
+            --comments "${RUNNER_TEMP}/repository-control-comments.json" \
+            --control-issue "${KFM_CONTROL_ISSUE}" \
+            --authorized-login "${KFM_AUTHORIZED_LOGIN}" \
+            --default-branch "${KFM_DEFAULT_BRANCH}"
+
+      - name: Record authority boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Repository transition guard"
+            echo
+            echo "- Check: \`repository-control / authorize-ready-and-merge\`."
+            echo "- Result: ${{ job.status }}."
+            echo "- Trust boundary: trusted base checkout; no pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
+            echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
+            echo "- It is not independent review, human-versus-app attribution, ruleset evidence, source activation, proof, release, deployment, or publication authority."
+          } >> "${GITHUB_STEP_SUMMARY}"
