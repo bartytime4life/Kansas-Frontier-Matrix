@@ -1,0 +1,26 @@
+{
+  "id": "kfm:hydrology:aquifer-observation:synthetic-invalid-basis",
+  "version": "v0.3",
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "object_type": "AquiferObservation",
+  "source_descriptor_ref": "source:synthetic-groundwater-observations:v1",
+  "source_record_ref": "synthetic:groundwater-reading:invalid-basis",
+  "source_role": "observed",
+  "parameter": {
+    "name": "groundwater level"
+  },
+  "measurement": {
+    "source_value": 18.2,
+    "unit": "ft",
+    "status": "final",
+    "no_data": false
+  },
+  "observed_time": "2026-01-20T12:00:00Z",
+  "spatial_context": {
+    "site_ref": "synthetic:monitoring-site:invalid-basis",
+    "geometry_role": "withheld"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-groundwater-reading:invalid-basis"
+  ]
+}

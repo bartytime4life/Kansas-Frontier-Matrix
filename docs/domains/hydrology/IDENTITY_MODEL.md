@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-05-18
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -57,7 +57,7 @@ notes:
 | **Doctrine confidence** | **CONFIRMED** for identity rule shape, temporal handling, lifecycle, and ABSTAIN posture |
 | **Implementation confidence** | **PROPOSED** — field-level realization not yet verified against mounted repo |
 | **Owners** | `<hydrology lane steward>` + `<docs steward>` — *TODO assign* |
-| **Last updated** | 2026-06-06 |
+| **Last updated** | 2026-07-30 |
 
 > [!IMPORTANT]
 > Identity decisions in this document are **doctrinal**. They describe how objects are made distinguishable in the Hydrology lane regardless of representation, vintage, or pipeline phase. Identity is **not** a file path, an internal database key, or a UI handle — it is a deterministic property of the object's evidence, role, scope, and content. Where an `Identity rule` field reads `PROPOSED deterministic basis`, the *shape* of the rule is fixed by KFM doctrine; the *field names and normalization rules* are pending schema realization. This session exposed doctrine documents only, not a mounted repo, so every concrete path here is PROPOSED.
@@ -150,13 +150,20 @@ This is the doctrinal shape recorded for every Hydrology object family in the Do
 | `FlowObservation` | Discharge / streamflow observation | NWIS series + parameter code | Instant or aggregation window |
 | `WaterLevelObservation` | Gauge height / stage observation | NWIS series + parameter code | Instant or aggregation window |
 | `WaterQualityObservation` | Water-quality measurement | Water-quality program + station | Instant or sampling window |
+| `AquiferObservation` | Groundwater-level or aquifer-state measurement | Groundwater source record/series + parameter and measurement basis | Observation instant or sampling window |
 | `GroundwaterWell` | Groundwater well of record | State / NWIS well registry | Well lifetime |
+| `AquiferContextLink` | Hydrology-to-Geology aquifer interpretation | Typed Hydrology subject + Geology `HydrostratigraphicUnit` + interpretation basis | Source/valid interval of the relationship |
 | `NFHLZone` / `FloodContext` | FEMA NFHL regulatory polygon | NFHL panel + effective date | Effective interval |
 | `ObservedFloodEvent` | Observed inundation evidence | Historical / observed source family | Event interval |
 | `Hydrograph` / `UpstreamTrace` | Derivative views over the above | Composition of underlying objects | Inherited from inputs |
 
 > [!NOTE]
 > Each row carries the **same** doctrinal identity rule: `source_id + object_role + temporal_scope + normalized_digest`. The columns differ in *what fills* the slots, never in *which slots exist*. `Hydrograph` is a **modeled** derivative — it carries model identity, a run receipt, and bounds, and is never relabeled observed.
+
+`AquiferObservation` and `AquiferContextLink` rotate independently. A
+link-only correction does not change the measurement identity; a measurement
+correction does not silently rewrite the relation. Producers preserve explicit
+supersession for whichever object changed.
 
 [⬆ back to top](#contents)
 

@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/aquifer_context_link.schema.json",
+  "title": "Aquifer Context Link",
+  "description": "PROPOSED closed cross-lane relation from a Hydrology AquiferObservation or GroundwaterWell to a Geology-owned HydrostratigraphicUnit. The link carries no measurement or copied Geology geometry.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/hydrology/aquifer_context_link.md",
+    "fixtures_root": "fixtures/domains/hydrology/aquifer_context_link/",
+    "validator": "tools/validators/domains/hydrology/validate_aquifer_context_link.py",
+    "policy": "policy/domains/hydrology/"
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^kfm:hydrology:aquifer-context-link:[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v[0-9]+(?:\\.[0-9]+){0,2}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "object_type": {
+      "const": "AquiferContextLink"
+    },
+    "hydrology_subject": {
+      "type": "object",
+      "properties": {
+        "object_type": {
+          "enum": [
+            "AquiferObservation",
+            "GroundwaterWell"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "object_type",
+        "id"
+      ],
+      "oneOf": [
+        {
+          "properties": {
+            "object_type": {
+              "const": "AquiferObservation"
+            },
+            "id": {
+              "pattern": "^kfm:hydrology:aquifer-observation:"
+            }
+          }
+        },
+        {
+          "properties": {
+            "object_type": {
+              "const": "GroundwaterWell"
+            },
+            "id": {
+              "pattern": "^kfm:hydrology:groundwater-well:"
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "geology_endpoint": {
+      "type": "object",
+      "properties": {
+        "owner_domain": {
+          "const": "geology"
+        },
+        "object_type": {
+          "const": "HydrostratigraphicUnit"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^kfm:geology:hydrostratigraphic-unit:"
+        }
+      },
+      "required": [
+        "owner_domain",
+        "object_type",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "relationship_type": {
+      "enum": [
+        "observed_in",
+        "screened_in",
+        "associated_with",
+        "interpreted_against"
+      ]
+    },
+    "source_roles": {
+      "type": "object",
+      "properties": {
+        "hydrology": {
+          "enum": [
+            "observed",
+            "administrative",
+            "aggregate",
+            "modeled",
+            "regulatory",
+            "candidate",
+            "synthetic"
+          ]
+        },
+        "geology": {
+          "enum": [
+            "observed",
+            "administrative",
+            "aggregate",
+            "modeled",
+            "regulatory",
+            "candidate",
+            "synthetic"
+          ]
+        }
+      },
+      "required": [
+        "hydrology",
+        "geology"
+      ],
+      "additionalProperties": false
+    },
+    "temporal_scope": {
+      "type": "object",
+      "properties": {
+        "source_time": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "valid_from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "valid_to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "retrieval_time": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        }
+      },
+      "required": [
+        "source_time"
+      ],
+      "additionalProperties": false
+    },
+    "interpretation_basis": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_record_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "qualifier": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "method",
+        "source_record_refs",
+        "confidence"
+      ],
+      "additionalProperties": false
+    },
+    "sensitivity": {
+      "type": "object",
+      "properties": {
+        "geometry_posture": {
+          "enum": [
+            "exact_internal",
+            "generalized_public",
+            "aggregate_public",
+            "withheld",
+            "restricted"
+          ]
+        },
+        "policy_review_required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "geometry_posture",
+        "policy_review_required"
+      ],
+      "additionalProperties": false
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "correction": {
+      "type": "object",
+      "properties": {
+        "supersedes_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correction_time": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        }
+      },
+      "required": [
+        "supersedes_ref",
+        "reason",
+        "correction_time"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "spec_hash",
+    "object_type",
+    "hydrology_subject",
+    "geology_endpoint",
+    "relationship_type",
+    "source_roles",
+    "temporal_scope",
+    "interpretation_basis",
+    "sensitivity",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

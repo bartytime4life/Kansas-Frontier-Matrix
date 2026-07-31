@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -41,7 +41,7 @@ notes:
 ![Trust](https://img.shields.io/badge/trust-cite--or--abstain-success)
 ![Policy](https://img.shields.io/badge/policy-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
 
 ---
 
@@ -133,7 +133,7 @@ The hydrology lane doc suite. Status reflects this authoring sprint; **all docum
 **CONFIRMED ownership / PROPOSED field realization.** Full term definitions: [`GLOSSARY.md`](./GLOSSARY.md); identity rules: [`identity-model.md`](./identity-model.md).
 
 **Object families owned by the lane:**
-`Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace` (plus cross-lane links `AquiferObservation`, `WaterUseLink`, `DroughtLink`, `IrrigationLink`). [DOM-HYD §E]
+`Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `AquiferObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace` (plus cross-lane links `AquiferContextLink`, `WaterUseLink`, `DroughtLink`, `IrrigationLink`). [DOM-HYD §E plus the separated aquifer-pair decision]
 
 **Source roles** — the canonical seven classes, **fixed at admission, never upgraded by promotion**: `observed / regulatory / modeled / aggregate / administrative / candidate / synthetic`. [Atlas §24.1]
 
@@ -260,6 +260,6 @@ A consolidated view of the cross-document open items. Each doc carries its own b
 
 ---
 
-<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-06-06 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
+<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-07-30 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
 
 [⬆ back to top](#contents)

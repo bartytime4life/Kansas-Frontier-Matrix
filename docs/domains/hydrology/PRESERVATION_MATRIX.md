@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: <hydrology domain steward> + <source steward> + <docs steward>   # placeholders — resolve via CODEOWNERS
 created: 2026-05-18
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -22,10 +22,10 @@ related:
 tags: [kfm, hydrology, preservation, lifecycle, evidence, receipts, retention]
 notes:
   - This matrix is navigational; canonical authority is the schema/contract tree, the per-domain dossier [DOM-HYD], and Master Atlas v1.1.
-  - No mounted repo this session; all implementation paths are PROPOSED / NEEDS VERIFICATION.
+  - Current repository evidence confirms a separated AquiferObservation measurement and AquiferContextLink relation pair with bounded schemas/tests.
   - Retention SLAs across the lifecycle are an OPEN corpus gap (Pass 10 §8.4); this matrix proposes a posture, not numbers.
   - Tier scheme is the full T0–T4 (T0 Open / T1 Generalized / T2 Reviewer / T3 Restricted / T4 Denied). Hydrology well/withdrawal records default T1/T2 per Atlas §24.5.2 (v1 erroneously wrote T1/T4).
-  - AquiferObservation/WaterUseLink/DroughtLink/IrrigationLink are link objects in Atlas §A scope language, NOT in the §E object table — flagged.
+  - Historical Atlas placement omitted AquiferObservation from §E; the separated-pair decision now treats it as a measurement family and AquiferContextLink as the link record.
   - v2 fixes the doc_id, adds Pre-RAW, corrects the tier values + adds T2/T3, reconciles source roles to the canonical seven, pins CONTRACT_VERSION, and corrects relative-link depth. See Changelog (§14).
 [/KFM_META_BLOCK_V2] -->
 
@@ -45,7 +45,7 @@ notes:
 ![Policy](https://img.shields.io/badge/policy-fail--closed-critical)
 ![Source roles](https://img.shields.io/badge/source%20roles-anti--collapse-purple)
 
-**Status:** draft · **Owners:** `<hydrology domain steward>` · `<source steward>` · `<docs steward>` (placeholders) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology domain steward>` · `<source steward>` · `<docs steward>` (placeholders) · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Updated:** 2026-07-30
 
 ---
 
@@ -78,7 +78,11 @@ notes:
 The **CONFIRMED §E object families** are: Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, FlowObservation, WaterLevelObservation, WaterQualityObservation, GroundwaterWell, NFHLZone (+ FloodContext), ObservedFloodEvent, Hydrograph, and UpstreamTrace.
 
 > [!NOTE]
-> **Link objects (not §E families).** `AquiferObservation`, `WaterUseLink`, `DroughtLink`, and `IrrigationLink` appear in the Atlas §A scope language ("drought and irrigation links") and are tracked here for preservation completeness, but they are **not** in the §E object table — they are cross-lane *link* records (see [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) §8, OQ-HYD-OBJ-02). The v1 of this matrix also omitted `ObservedFloodEvent`, a genuine §E family; it is restored below.
+> **Aquifer decision.** Historical Atlas placement did not include
+> `AquiferObservation` in §E. The current contract/catalog decision preserves it
+> as the groundwater measurement family and names `AquiferContextLink` as the
+> separate Geology seam record. `WaterUseLink`, `DroughtLink`, and
+> `IrrigationLink` retain their unresolved link posture.
 
 **Explicitly out of scope.** Emergency alerts and life-safety warnings (Hazards / official-source concern); flood as observed inundation collapsed with regulatory NFHL context (forbidden by source-role anti-collapse); soil/agriculture/geology/infrastructure canonical claims (those domains preserve their own). `[DOM-HYD]` `[DOM-HAZ]` `[ENCY]`
 
@@ -201,11 +205,12 @@ Per Hydrology object family: identity-rule basis, mandatory temporal fields, def
 | **WaterLevelObservation** | site id + parameter code + observed_time + datum | source_time, **observed_time**, valid_time, retrieval_time | T0 | Same as FlowObservation |
 | **WaterQualityObservation** | sample id + parameter code + method id + observed_time | source_time, **observed_time**, valid_time, retrieval_time | T0; **T1/T2** on sensitive joins | + detection-limit preservation; sensitive joins fail closed |
 | **GroundwaterWell** | well id + datum + source id | source_time, valid_time, retrieval_time | T0; **T1/T2** if landowner-private | RedactionReceipt where landowner-sensitive |
+| **AquiferObservation** | source record/series + parameter + observed_time + measurement basis | source_time, **observed_time**, retrieval_time | T0; **T1/T2** if well/location-sensitive | Evidence support; optional context-link ref; no embedded Geology truth |
 | **NFHLZone** (+ FloodContext) | panel id + zone code + effective date | **effective/valid_time**, retrieval_time, release_time | T0 (regulatory context) | **DENY** if relabeled as observed inundation |
 | **ObservedFloodEvent** | source family + event interval + geometry vintage | observed_time, valid_time, retrieval_time | T0 (aggregate); review on sensitive joins | source-role-isolated from NFHL; transform record if generalized |
 | **Hydrograph** | series ref + window + reconstruction method | observed_time (composite), valid_time, retrieval_time | T0 | + ModelRunReceipt (role = `modeled`) |
 | **UpstreamTrace** | seed reach + network vintage + algorithm version | valid_time, retrieval_time, release_time | T0 | + ModelRunReceipt (derived product) |
-| *link objects:* **AquiferObservation / WaterUseLink / DroughtLink / IrrigationLink** *(not §E)* | link id + endpoints + scope + temporal window | valid_time, retrieval_time, release_time | T0 (aggregate) / T1 (field-level) | + AggregationReceipt where summarized; cross-lane join inference-risk (ADR-S-14) |
+| *link objects:* **AquiferContextLink / WaterUseLink / DroughtLink / IrrigationLink** | link id + typed endpoints + scope + temporal window | source_time, valid_time, retrieval_time, release_time | T0 (aggregate) / T1/T2 (field-level or sensitive) | Evidence and policy review; cross-lane join inference-risk (ADR-S-14) |
 
 > [!NOTE]
 > **Temporal preservation is multi-axis.** Hydrology preserves `source_time`, `observed_time`, `valid_time`, `retrieval_time`, `release_time`, and (post-publication) `correction_time` as **distinct** fields wherever material. Collapsing them is a documented anti-pattern. `[DOM-HYD]` `[ENCY]`
@@ -393,7 +398,7 @@ Published hydrology claims are **amendable** but never quietly. The corrections 
 | 9 | NWIS endpoint phase-out posture (legacy WaterServices → modern api.waterdata.usgs.gov) | Source descriptor + watcher fixture | **NEEDS VERIFICATION** |
 | 10 | Reviewer separation-of-duties threshold for hydrology releases | ADR-S-09 disposition | **OPEN** `[Atlas §24.7]` |
 | 11 | Hydrology well/withdrawal default tier — confirm **T1/T2** (Atlas §24.5.2), not T1/T4 | Atlas §24.5.2 row + policy bundle | **NEEDS VERIFICATION** |
-| 12 | `AquiferObservation`/`WaterUseLink`/`DroughtLink`/`IrrigationLink` — first-class families or link records? (not in §E) | §E reconciliation; ADR | **OPEN** (cf. OQ-HYD-OBJ-02) |
+| 12 | Aquifer responsibility split; classification of `WaterUseLink`/`DroughtLink`/`IrrigationLink` remains | Aquifer pair contracts/schemas/tests; later §E or ADR reconciliation | **PARTIALLY RESOLVED** (cf. OQ-HYD-OBJ-02) |
 
 [⬆ Back to top](#top)
 
@@ -428,7 +433,8 @@ Published hydrology claims are **amendable** but never quietly. The corrections 
 | Added **Pre-RAW** to the lifecycle string, the §3 diagram, and the §6 receipt matrix (watcher `EventEnvelope`/`EventRunReceipt`, non-publisher) | gap closure | Pre-RAW is a CONFIRMED phase. |
 | **Corrected the tier scheme:** restored the full **T0–T4** (added T2 Reviewer, T3 Restricted); changed groundwater-well and water-quality-join defaults from `T1/T4` to **`T1/T2`** per Atlas §24.5.2; clarified that T4 cases reached *through* hydrology are owned by the joined lane | reconciliation | v1 skipped T2/T3 and mis-stated hydrology well records as T1/T4; the Atlas hydrology row is T1/T2. |
 | Reconciled source roles to the **canonical seven** (`observed/regulatory/modeled/aggregate/administrative/candidate/synthetic`), noting the Atlas "as the role requires" per-descriptor assignment | reconciliation | v1 used the four-value `authority/observation/context/model` framing. |
-| Restored **`ObservedFloodEvent`** as a §E family (v1 object table omitted it); flagged `AquiferObservation`/`WaterUseLink`/`DroughtLink`/`IrrigationLink` as **link objects, not §E** | gap closure | §E completeness; consistency with OBJECT_FAMILIES.md. |
+| Restored **`ObservedFloodEvent`** as a §E family (v1 object table omitted it); historically flagged the Atlas-omitted aquifer and other links | gap closure | Historical v2 reconciliation; superseded for aquifer responsibilities by the separated-pair row below. |
+| Split `AquiferObservation` measurement preservation from `AquiferContextLink` relation preservation | reconciliation | Aligns glossary, object catalog, contracts, schemas, fixtures, validators, and tests. |
 | Added `data/triplets/` (plural, cross-cutting) to the CATALOG/TRIPLET node | clarification | §18.a plural. |
 | Surfaced schema-home + crosswalk-validator home as **CONFLICTED** (ADR-0001, ADR-S-CWV-01) in the backlog | gap closure | Consistency with the lane suite. |
 | Corrected relative-link depth and removed unverified split-file Atlas paths (`docs/doctrine/*`, `docs/atlases/master-atlas-v1.1/24.x-*`) | reconciliation | directory-rules / operating contract are at repo root (`../../../`); the §24.x atlas split-files are unverified guesses — pointed to the actual corpus instead. |

@@ -1,7 +1,8 @@
 # KFM Hydrology domain CI readiness workflow.
 # Status: executable bounded shape/polarity checks for the PROPOSED Hydrology
-# EvidenceBundle alias plus explicit broader holds; proof and release-dry-run
-# producers are not established in current repository evidence.
+# EvidenceBundle alias and separated AquiferObservation/AquiferContextLink pair,
+# plus explicit broader holds; proof and release-dry-run producers are not
+# established in current repository evidence.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not act as flood
@@ -90,7 +91,11 @@ jobs:
           )
 
           test_root = Path("tests/domains/hydrology")
-          accepted_test_path = test_root / "test_hydrology_smoke.py"
+          accepted_test_paths = {
+              test_root / "test_hydrology_smoke.py",
+              test_root / "test_aquifer_observation.py",
+              test_root / "test_aquifer_context_link.py",
+          }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
           if test_symlinks:
@@ -113,13 +118,15 @@ jobs:
           test_paths = [path for path in test_inventory if path.suffix == ".py"]
           if not test_paths:
               raise SystemExit("Hydrology test inventory contains no Python modules.")
-          if accepted_test_path not in test_paths:
+          missing_accepted_tests = accepted_test_paths - set(test_paths)
+          if missing_accepted_tests:
               raise SystemExit(
-                  f"Accepted bounded Hydrology test is missing: {accepted_test_path}."
+                  "Accepted bounded Hydrology tests are missing: "
+                  f"{sorted(path.as_posix() for path in missing_accepted_tests)}."
               )
           for path in test_paths:
               classification = classify_test_source(path.read_text(encoding="utf-8"))
-              if path == accepted_test_path:
+              if path in accepted_test_paths:
                   if classification.placeholder:
                       raise SystemExit(
                           f"Accepted bounded Hydrology test regressed to a placeholder: {path}."
@@ -164,6 +171,14 @@ jobs:
               "validate_source_descriptor.py",
           }
           expected_schema_wrappers = {
+              "validate_aquifer_context_link.py": (
+                  "schemas/contracts/v1/domains/hydrology/aquifer_context_link.schema.json",
+                  "fixtures/domains/hydrology/aquifer_context_link",
+              ),
+              "validate_aquifer_observation.py": (
+                  "schemas/contracts/v1/domains/hydrology/aquifer_observation.schema.json",
+                  "fixtures/domains/hydrology/aquifer_observation",
+              ),
               "validate_decision_envelope.py": (
                   "schemas/contracts/v1/domains/hydrology/decision_envelope.schema.json",
                   "fixtures/domains/hydrology/decision_envelope",
@@ -340,11 +355,12 @@ jobs:
           print("Inspected valid Hydrology JSON fixtures parse successfully.")
           print("Inspected Hydrology source/spec YAML remains explicitly PROPOSED placeholder material.")
           print(
-              f"Reserved {accepted_test_path} for bounded execution and classified "
-              f"the remaining {len(test_paths) - 1} Hydrology test modules as placeholders."
+              f"Reserved {len(accepted_test_paths)} Hydrology modules for bounded execution "
+              f"and classified the remaining {len(test_paths) - len(accepted_test_paths)} "
+              "Hydrology test modules as placeholders."
           )
           print(
-              "Inventoried three Hydrology schema wrappers without importing or executing them; "
+              "Inventoried five Hydrology schema wrappers without importing or executing them; "
               "inventory is not acceptance of an executable validation suite."
           )
           print(
@@ -361,7 +377,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-broader-readiness"
           echo "WORKFLOW_HOLD: broader executable Hydrology validation is not established"
 
-      - name: Run bounded Hydrology EvidenceBundle validation
+      - name: Run bounded Hydrology schema validation
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -370,7 +386,9 @@ jobs:
           set -euo pipefail
 
           python -m pytest -q -p no:cacheprovider \
-            tests/domains/hydrology/test_hydrology_smoke.py
+            tests/domains/hydrology/test_hydrology_smoke.py \
+            tests/domains/hydrology/test_aquifer_observation.py \
+            tests/domains/hydrology/test_aquifer_context_link.py
 
           python tools/validators/domains/hydrology/validate_evidence_bundle.py \
             fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json
@@ -382,7 +400,15 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Hydrology EvidenceBundle fixture"
+
+          python tools/validators/domains/hydrology/validate_aquifer_observation.py \
+            --fixtures
+
+          python tools/validators/domains/hydrology/validate_aquifer_context_link.py \
+            --fixtures
+
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape"
           echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
 
       - name: Record Hydrology validation result and broader hold
@@ -394,26 +420,33 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape`
+
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed the bounded domain test and the
-          existing EvidenceBundle wrapper against one accepted-shape fixture and
-          one expected-invalid fixture. The domain test installs fail-closed
-          socket, DNS, and URL guards before invoking the local schema validator.
+          When this job is green, it has executed three bounded domain modules
+          and the EvidenceBundle, AquiferObservation, and AquiferContextLink
+          wrappers against their valid and expected-invalid synthetic fixtures.
+          The tests install fail-closed socket, DNS, and URL guards before
+          invoking the local schema validators.
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
-          placeholders, three bounded schema wrappers, and PROPOSED schema/policy
+          placeholders, five inventoried schema wrappers, and PROPOSED schema/policy
           scaffolds. Every such file is checked against an explicit inventory.
 
           This is acceptance only of local JSON Schema shape and valid/invalid
-          fixture polarity for the PROPOSED Hydrology EvidenceBundle alias. The
-          remaining test modules, semantic validators, shorthand validators,
-          sources, pipeline specifications, and policy scaffolds remain held.
+          fixture polarity for the PROPOSED Hydrology EvidenceBundle alias and
+          the separated aquifer pair. It also checks that observations may remain
+          unlinked and that relation records cannot absorb measurements or copied
+          Geology geometry. The remaining test modules, endpoint/evidence
+          resolution, semantic validators, shorthand validators, sources,
+          pipeline specifications, and policy scaffolds remain held.
 
           It does not resolve EvidenceRefs, establish EvidenceBundle closure or
           actual evidence, admit sources, validate HUC/reach/gauge identity,
-          observations, units, freshness, NFHL interpretation, regulatory status,
+          broader observations, endpoint existence, actual aquifer membership,
+          units, freshness, NFHL interpretation, regulatory status,
           public-safe geometry, policy, review, correction, rollback, proof,
           release, deployment, or publication. It grants no flood-warning,
           emergency, navigation, insurance, engineering, or regulatory authority.

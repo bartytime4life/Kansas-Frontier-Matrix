@@ -164,7 +164,8 @@ flowchart TB
   GW --> REL["ReleaseManifest + RollbackCard"]
 
   GW -. "anchors" .-> AQ["AquiferObservation<br/>groundwater-level / aquifer-state reading"]
-  GEOL["Geology / Hydrogeology<br/>aquifer geometry · stratigraphy"] -. "referenced, not absorbed" .-> GW
+  GW -. "subject of" .-> LINK["AquiferContextLink<br/>typed relation only"]
+  LINK -. "references" .-> GEOL["Geology HydrostratigraphicUnit<br/>identity · geometry · stratigraphy"]
   ADMIN["Water rights / owner / parcel<br/>administrative/title context"] -. "context only" .-> GW
 ```
 
@@ -223,7 +224,7 @@ The following fields are **PROPOSED** targets for future schema expansion. They 
 | `well_id` | State/NWIS/source-native well ID. |
 | `well_name_or_label` | Source-provided label if allowed. |
 | `operator_or_agency` | Operating/reporting agency or source provider where source supplies it. |
-| `aquifer_context_ref` | Cross-lane aquifer/hydrogeologic context ref; not owned by Hydrology. |
+| `aquifer_context_link_refs` | Outbound refs to `AquiferContextLink` records; no embedded Geology identity or geometry. |
 | `screened_interval` | Screened interval/depth range where source supplies it. |
 | `measuring_point_ref` | Measuring point/reference datum if source supplies it. |
 | `well_status` | active, inactive, abandoned, monitoring, unknown, or accepted enum. |
@@ -329,8 +330,8 @@ Public derivatives should prefer generalized or aggregate geometry when precise 
 Before this contract is promoted beyond draft:
 
 - [ ] Expand `schemas/contracts/v1/domains/hydrology/groundwater_well.schema.json` beyond empty `properties`.
-- [ ] Decide required fields for source descriptor, source record, well ID, geometry role, aquifer context ref, screened interval, measuring point, status, source/valid/retrieval/release/correction times, evidence refs, policy refs, redaction refs, release refs, and rollback refs.
-- [ ] Confirm whether GroundwaterWell inherits from or profiles `domain_feature_identity` and how it links to `AquiferObservation`.
+- [ ] Decide required fields for source descriptor, source record, well ID, geometry role, `AquiferContextLink` refs, screened interval, measuring point, status, source/valid/retrieval/release/correction times, evidence refs, policy refs, redaction refs, release refs, and rollback refs.
+- [ ] Confirm whether GroundwaterWell inherits from or profiles `domain_feature_identity`; observations and aquifer context remain external typed references.
 - [ ] Add positive fixtures for state/NWIS well identity, generalized public well, well with screened interval, well with linked AquiferObservation, corrected well metadata, and released public-safe well layer entry.
 - [ ] Add negative fixtures for groundwater-level reading embedded as well truth, aquifer geometry absorbed into Hydrology, private well exact public exposure, owner/parcel inference, modeled groundwater surface as well, aggregate aquifer summary as well, candidate public exposure, AI-summary-as-evidence, missing well ID, missing EvidenceBundle, missing redaction receipt, and direct RAW/WORK public access.
 - [ ] Add validator coverage for source role, SourceDescriptor, well ID, aquifer context, screened interval, geometry role, sensitivity, redaction/generalization receipt, evidence, policy, release, correction, and rollback.
@@ -367,7 +368,8 @@ Rollback artifacts should include affected GroundwaterWell IDs, linked AquiferOb
 | `docs/domains/hydrology/GLOSSARY.md` | CONFIRMED | Defines GroundwaterWell and AquiferObservation separation; confirms Geology/hydrogeology cross-lane boundary. | Field realization remains PROPOSED. |
 | `docs/domains/hydrology/SOURCE_ROLE_MATRIX.md` | CONFIRMED | GroundwaterWell may be built from observed and administrative well-registry bases; water-quality/groundwater sources may prove measurements but not aquifer-boundary regulatory truth. | Machine enforcement requires SourceDescriptor, EvidenceBundle, policy, fixtures, and validators. |
 | `docs/domains/hydrology/BOUNDARY.md` | CONFIRMED | Hydrology owns Groundwater Well but not emergency alerts, ownership/parcels/title, cross-lane canonical truth, or aquifer geometry. | Path-shaped enforcement details remain partly PROPOSED. |
-| `contracts/domains/hydrology/aquifer_observation.md` | CONFIRMED | Companion AquiferObservation contract separates groundwater/aquifer-state readings from well identity. | Semantic contract, not schema enforcement. |
+| `contracts/domains/hydrology/aquifer_observation.md` | CONFIRMED | Companion AquiferObservation contract separates groundwater/aquifer-state readings from well identity. | Its closed schema validates local shape only. |
+| `contracts/domains/hydrology/aquifer_context_link.md` | CONFIRMED | Separate typed Hydrology-to-Geology relation for well or observation context. | Does not resolve endpoints, evidence, policy, or release. |
 | User-provided authoring role | CONFIRMED user instruction | Requires evidence-grounded, repo-ready Markdown and visible verification boundaries. | Authoring rule, not implementation proof. |
 
 ---
@@ -380,7 +382,7 @@ Rollback artifacts should include affected GroundwaterWell IDs, linked AquiferOb
 | Should GroundwaterWell inherit from `domain_feature_identity`, `domain_observation`, or a separate site/registry base profile? | NEEDS VERIFICATION | Contract/schema design decision. |
 | Which source-native well ID vocabularies are canonical across state and NWIS sources? | NEEDS VERIFICATION | SourceDescriptor + schema/fixture review. |
 | Which screened-interval and measuring-point fields are safe for public exposure? | NEEDS VERIFICATION | Policy/sensitivity/release review. |
-| How should Geology/Hydrogeology aquifer context be referenced without absorbing aquifer geometry truth? | NEEDS VERIFICATION | Cross-lane contract review. |
+| How should Geology/Hydrogeology aquifer context be referenced without absorbing aquifer geometry truth? | RESOLVED FOR SHAPE | Use `AquiferContextLink`; cross-lane steward, evidence, policy, and release review remain required. |
 | Which validator proves private-property/well-owner exposure fails closed or requires RedactionReceipt? | NEEDS VERIFICATION | Negative fixtures and validator implementation. |
 
 ---
@@ -389,6 +391,7 @@ Rollback artifacts should include affected GroundwaterWell IDs, linked AquiferOb
 
 - [`./README.md`](./README.md) — Hydrology contract-root README.
 - [`./aquifer_observation.md`](./aquifer_observation.md) — groundwater-level / aquifer-state observation contract.
+- [`./aquifer_context_link.md`](./aquifer_context_link.md) — typed Geology seam relation.
 - [`./domain_observation.md`](./domain_observation.md) — shared Hydrology observation envelope.
 - [`./domain_feature_identity.md`](./domain_feature_identity.md) — feature identity and `spec_hash` companion.
 - [`./domain_layer_descriptor.md`](./domain_layer_descriptor.md) — public layer descriptor, not well truth.

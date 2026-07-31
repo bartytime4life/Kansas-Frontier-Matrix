@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -26,7 +26,7 @@ notes:
   - Object-family spine and the three Atlas §E columns (Purpose, Identity rule, Temporal handling) are CONFIRMED doctrine; every concrete field/attribute below is INFERRED field realization (PROPOSED) unless tied to a stated invariant.
   - The Atlas §2.2 spine list omits UpstreamTrace and Flood Context that §B/§E include — surfaced as an open question, not smoothed.
   - Detailed semantics per object belong in contracts/domains/hydrology/*.md; machine shape in schemas/contracts/v1/domains/hydrology/. This doc is the lane's object catalog and index into both.
-  - No mounted repo this session; all path/field claims are PROPOSED or NEEDS VERIFICATION.
+  - AquiferObservation and AquiferContextLink adopt a separated measurement/relation pair with closed PROPOSED schemas and bounded offline tests.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Object Families
@@ -40,7 +40,7 @@ notes:
 ![Fields](https://img.shields.io/badge/field_realization-PROPOSED-orange)
 ![Policy](https://img.shields.io/badge/policy_label-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
 
 ---
 
@@ -71,10 +71,15 @@ This is the hydrology lane's **object catalog** — one entry per owned object f
 
 **CONFIRMED object-family spine / PROPOSED implementation** [DOM-HYD §B, §E; Atlas §2.2]. The lane owns:
 
-`Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace`.
+`Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `AquiferObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace`.
 
 > [!NOTE]
-> **Spine inconsistency (surfaced, not smoothed).** The Atlas §B scope list and §E object table include `UpstreamTrace` and `FloodContext`; the §2.2 cross-domain spine list omits both (it stops at `Hydrograph`). This catalog treats all thirteen as owned (per §B/§E, the lane-specific sources) and flags the §2.2 omission as an open question (§10, `OQ-HYD-OBJ-01`).
+> **Spine inconsistency (surfaced, not smoothed).** The Atlas §B scope list and
+> §E object table include `UpstreamTrace` and `FloodContext`; the §2.2
+> cross-domain spine list omits both (it stops at `Hydrograph`). This catalog
+> preserves those thirteen lane-specific entries and adds `AquiferObservation`
+> under the separated-pair decision. The historical §2.2 omission remains an
+> open question (§10, `OQ-HYD-OBJ-01`).
 
 ```mermaid
 flowchart TB
@@ -89,6 +94,7 @@ flowchart TB
     FO["FlowObservation"]
     WL["WaterLevelObservation"]
     WQ["WaterQualityObservation"]
+    AO["AquiferObservation"]
     GW["GroundwaterWell"]
   end
   subgraph FLD["Flood families — kept separate"]
@@ -101,6 +107,7 @@ flowchart TB
   end
   G --> FO
   G --> WL
+  GW --> AO
   R --> UT
   FO --> HG
   WL --> HG
@@ -182,10 +189,16 @@ Direct, time-stamped, in-situ readings. **Observed** role; provisional/final sta
 - **Role / sensitivity.** observed; **sensitive joins fail closed** (Atlas §D); rights vary by program (NEEDS VERIFICATION).
 
 ### GroundwaterWell
-- **Purpose.** A well identity with screened-interval context and level observations.
+- **Purpose.** A well identity with screened-interval context that can anchor separate level observations.
 - **Typical identity anchor (PROPOSED).** state / NWIS well registry id.
-- **Key attributes (INFERRED/PROPOSED).** well id, completion/screened interval, level observations.
+- **Key attributes (INFERRED/PROPOSED).** well id, completion/screened interval, and outbound observation/context-link refs.
 - **Role / sensitivity.** observed; **review-required** — private-property / well-owner implications; private-well joins fail closed; generalize or redact precise location with a `RedactionReceipt`.
+
+### AquiferObservation
+- **Purpose.** A first-class, time-stamped groundwater-level or aquifer-state measurement.
+- **Typical identity anchor (PROPOSED).** source record/series + parameter + observation time + measurement basis.
+- **Key attributes (PROPOSED closed schema).** source refs, observed role, parameter, source value or explicit no-data state, unit, measurement basis, observation time, site/well context, evidence refs, and optional `AquiferContextLink` refs.
+- **Role / sensitivity.** observed; private-well and exact-location exposure remains review-required. Aquifer interpretation is not embedded.
 
 ## 6. Flood families (the separation that must hold)
 
@@ -226,13 +239,16 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 
 | Link object | Neighboring lane | Hydrology does **not** own |
 |---|---|---|
-| `AquiferObservation` | Geology | aquifer geometry, hydrogeology, lithology |
+| `AquiferContextLink` | Geology | aquifer identity definition, geometry, hydrogeology, lithology, or observation values |
 | `WaterUseLink` | Agriculture | crop / yield / withdrawal claims |
 | `IrrigationLink` | Agriculture | irrigation administration |
 | `DroughtLink` | Atmosphere / Hazards | observed/modeled atmospheric truth; hazard-event truth |
 
 > [!NOTE]
-> `AquiferObservation`, `WaterUseLink`, `DroughtLink`, and `IrrigationLink` appear in the Atlas §A scope language ("drought and irrigation links") and the sibling docs, but **not** in the §E object table. They are treated here as lane link objects (PROPOSED), distinct from the twelve/thirteen core families.
+> `AquiferObservation` is resolved as the measurement family. Its former
+> cross-lane responsibility is named `AquiferContextLink`, a separate PROPOSED
+> link record. `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remain
+> unresolved link families outside this decision.
 
 ## 9. Object → home crosswalk
 
@@ -251,11 +267,13 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 | FlowObservation | `flow_observation.md` | `flow_observation.schema.json` | observed |
 | WaterLevelObservation | `water_level_observation.md` | `water_level_observation.schema.json` | observed |
 | WaterQualityObservation | `water_quality_observation.md` | `water_quality_observation.schema.json` | observed |
+| AquiferObservation | `aquifer_observation.md` | `aquifer_observation.schema.json` | observed |
 | GroundwaterWell | `groundwater_well.md` | `groundwater_well.schema.json` | observed (review-required) |
 | NFHLZone / FloodContext | `nfhl_zone.md` | `nfhl_zone.schema.json` | regulatory |
 | ObservedFloodEvent | `observed_flood_event.md` | `observed_flood_event.schema.json` | observed / modeled |
 | Hydrograph | `hydrograph.md` | `hydrograph.schema.json` | modeled |
 | UpstreamTrace | `upstream_trace.md` | `upstream_trace.schema.json` | derived |
+| AquiferContextLink | `aquifer_context_link.md` | `aquifer_context_link.schema.json` | cross-lane relation |
 | *(crosswalk)* COMID↔HUC12 row | `comid_huc12_crosswalk.md` | `comid_huc12_crosswalk.schema.json` *(or `crosswalks/` — OPEN)* | — |
 
 </details>
@@ -265,7 +283,7 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 | ID | Item | Status |
 |---|---|---|
 | OQ-HYD-OBJ-01 | Atlas §2.2 spine omits `UpstreamTrace` and `FloodContext` that §B/§E include — reconcile the canonical spine count (12 vs 13). | OPEN |
-| OQ-HYD-OBJ-02 | Are `AquiferObservation` / `WaterUseLink` / `DroughtLink` / `IrrigationLink` first-class object families or link records only? (Not in §E.) | OPEN |
+| OQ-HYD-OBJ-02 | `AquiferObservation` is the first-class measurement and `AquiferContextLink` is the Geology seam record. Classification of `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remains open. | PARTIALLY RESOLVED |
 | OQ-HYD-OBJ-03 | All per-object "Key attributes" are INFERRED field realization — confirm against the schemas once authored. | NEEDS VERIFICATION |
 | OQ-HYD-OBJ-04 | `SourceDescriptor` schema path `source/` vs `sources/`. | CONFLICTED (ADR-0001) |
 | OQ-HYD-OBJ-05 | Crosswalk schema home `domains/hydrology/` vs `crosswalks/`. | OPEN |
@@ -286,4 +304,4 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 
 ---
 
-<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-06-06 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
+<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-07-30 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>

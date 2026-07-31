@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: <hydrology-domain-stewards@kfm — assign in CODEOWNERS>   # TODO confirm handles
 created: 2026-05-17
-updated: 2026-06-07
+updated: 2026-07-30
 policy_label: public
 related:
   - ai-build-operating-contract.md
@@ -215,7 +215,8 @@ flowchart LR
 | **WaterLevelObservation**      | An observed gage-height / stage reading. _Observed role._                      |
 | **WaterQualityObservation**    | An observed water-quality measurement with parameter code, unit, qualifier.    |
 | **GroundwaterWell**            | A registered well location with construction/use metadata where rights permit. |
-| **AquiferObservation**         | An observed aquifer-state reading (water level, withdrawal) bound to a well or aquifer. |
+| **AquiferObservation**         | A first-class observed groundwater-level or aquifer-state measurement, optionally anchored to a well. |
+| **AquiferContextLink**         | A typed, evidence-scoped relation from a Hydrology observation or well to Geology-owned hydrostratigraphic context. |
 | **NFHLZone**                   | A FEMA-designated flood-hazard zone. _Regulatory role only — never observed event._ |
 | **Hydrograph**                 | Time-series projection of flow or level; flagged Observed vs Modeled per `source_role`. |
 | **UpstreamTrace**              | A network-traversal result identifying upstream/downstream reaches of a feature. |
@@ -289,7 +290,8 @@ Identity rule (PROPOSED, deterministic basis): `source_id + object_role + tempor
 | `WaterLevelObservation`   | (linked)                | Observed gage-height / stage reading.                             |
 | `WaterQualityObservation` | (linked)                | Observed WQ parameter reading with qualifier & unit.              |
 | `GroundwaterWell`         | Point                   | Registered well with construction/use metadata (rights-sensitive). |
-| `AquiferObservation`      | (linked)                | Aquifer-state reading (level, withdrawal).                        |
+| `AquiferObservation`      | (site/well linked)      | Groundwater-level or aquifer-state measurement.                  |
+| `AquiferContextLink`      | (edge)                  | Separate Hydrology-to-Geology hydrostratigraphic relation.       |
 | `NFHLZone`                | Polygon                 | FEMA regulatory flood-hazard zone; **regulatory role only.**      |
 | `Hydrograph`              | Time series             | Flow or level series; Observed vs Modeled flagged per role.       |
 | `UpstreamTrace`           | (line collection)       | Result of an upstream/downstream traversal.                       |
@@ -300,9 +302,10 @@ Identity rule (PROPOSED, deterministic basis): `source_id + object_role + tempor
 > [!NOTE]
 > The Atlas §4.E object table CONFIRMS `Watershed`, `HUCUnit`, `HydroFeature`, `ReachIdentity`,
 > `GaugeSite`, `FlowObservation`, `WaterLevelObservation`, `Water Quality Observation`,
-> `Groundwater Well`, and `NFHLZone`. The remaining families (`AquiferObservation`,
-> `Hydrograph`, `UpstreamTrace`, `*Link`) are INFERRED from the lane's coverage description and
-> are PROPOSED until confirmed in `contracts/domains/hydrology/`.
+> `Groundwater Well`, and `NFHLZone`. The current Hydrology contracts resolve
+> `AquiferObservation` as the measurement family and `AquiferContextLink` as
+> its separate Geology seam record. `Hydrograph`, `UpstreamTrace`, and the
+> remaining `*Link` families retain their documented proposal status.
 
 <details>
 <summary><b>Field shape note (PROPOSED)</b></summary>
@@ -718,6 +721,6 @@ conformance review._
 
 **Related docs:** [`docs/domains/hydrology/PUBLICATION_POSTURE.md`](./PUBLICATION_POSTURE.md) · [`docs/standards/`](../../standards/) · [`docs/runbooks/`](../../runbooks/) · [`docs/architecture/`](../../architecture/) · [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`directory-rules.md`](../../../directory-rules.md) · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md)
 
-*Last updated: 2026-06-07 · `CONTRACT_VERSION = "3.0.0"` · status: `draft`*
+*Last updated: 2026-07-30 · `CONTRACT_VERSION = "3.0.0"` · status: `draft`*
 
 [⬆ Back to top](#-hydrology--domain-readme)

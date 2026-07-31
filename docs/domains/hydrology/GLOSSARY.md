@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -38,7 +38,7 @@ notes:
 ![Policy](https://img.shields.io/badge/policy_label-public-2ea44f)
 ![Backlog](https://img.shields.io/badge/backlog-HYD--M12-success)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
 
 ---
 
@@ -103,8 +103,9 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **FlowObservation** | A time-stamped, in-situ discharge observation. | Carries `parameter_code` (e.g., `00060` discharge), `unit`, `qualifier`, `no_data`. **Observed**, not modeled. |
 | **WaterLevelObservation** | A time-stamped gauge-height / stage observation. | Provisional vs final state preserved. **Observed**. |
 | **WaterQualityObservation** | A parameter/value/unit/qualifier water-quality observation. | Parameter discipline required; sensitive joins fail closed. |
-| **GroundwaterWell** | A well identity with screened-interval context and level observations. | Review-required class — private-property implications. |
-| **AquiferObservation** | A groundwater-level or aquifer-state observation. | Cross-lane with Geology (hydrogeology); hydrology does not own aquifer geometry. |
+| **GroundwaterWell** | A well identity with screened-interval context that can anchor separate level observations. | Review-required class — private-property implications; it is not a measurement carrier. |
+| **AquiferObservation** | A first-class groundwater-level or aquifer-state measurement. | Carries observed measurement semantics; optional `AquiferContextLink` refs carry aquifer interpretation. Hydrology does not own aquifer geometry. |
+| **AquiferContextLink** | An evidence-scoped relation from a Hydrology `AquiferObservation` or `GroundwaterWell` to a Geology-owned `HydrostratigraphicUnit`. | Carries typed references and interpretation metadata only; no measurement values or copied Geology geometry. |
 | **NFHLZone** | A FEMA National Flood Hazard Layer regulatory flood-hazard area. | `source_role: "regulatory"` — **never** an observed-flood claim. Carries `EFFECTIVE_DATE`, `VERSION_ID`, `DFIRM_ID`. |
 | **FloodContext** | Regulatory or contextual flood framing for a location. | Context, not event truth; not emergency authority. |
 | **ObservedFloodEvent** | Historical or sourced inundation evidence backed by an admissible observed source. | **Observed**; never NFHL-derived (see §8). |
@@ -312,6 +313,6 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ---
 
-**Last updated:** 2026-06-06 · **Status:** draft · **Lane:** hydrology · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Backlog:** HYD-M12
+**Last updated:** 2026-07-30 · **Status:** draft · **Lane:** hydrology · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Backlog:** HYD-M12
 
 [⬆ Back to top](#-hydrology--ubiquitous-language-glossary)
