@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/hydrology/object-families
 title: Hydrology — Object Families
 type: standard
-version: v1
-status: draft
+version: v1.1
+status: draft; identity decision REMAIN_PROPOSED; family profiles proposed
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS
 created: 2026-06-06
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -15,7 +15,7 @@ related:
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
   - docs/domains/hydrology/GLOSSARY.md
-  - docs/domains/hydrology/identity-model.md
+  - docs/domains/hydrology/IDENTITY_MODEL.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/hydrology/FILE_SYSTEM_PLAN.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
@@ -23,7 +23,7 @@ related:
   - schemas/contracts/v1/domains/hydrology/
 tags: [kfm, domain, hydrology, object-families, contracts, governance]
 notes:
-  - Object-family spine and the three Atlas §E columns (Purpose, Identity rule, Temporal handling) are CONFIRMED doctrine; every concrete field/attribute below is INFERRED field realization (PROPOSED) unless tied to a stated invariant.
+  - Object-family vocabulary is documented; decision #1886 keeps the common four-slot identity tuple and every family projection REMAIN_PROPOSED pending profile closure.
   - The Atlas §2.2 spine list omits UpstreamTrace and Flood Context that §B/§E include — surfaced as an open question, not smoothed.
   - Detailed semantics per object belong in contracts/domains/hydrology/*.md; machine shape in schemas/contracts/v1/domains/hydrology/. This doc is the lane's object catalog and index into both.
   - AquiferObservation and AquiferContextLink adopt a separated measurement/relation pair with closed PROPOSED schemas and bounded offline tests.
@@ -31,30 +31,31 @@ notes:
 
 # 💧 Hydrology — Object Families
 
-> The catalog of every object family the hydrology lane owns: what each represents, how its identity is formed, how its times stay distinct, the source roles it may carry, its sensitivity posture, and where its meaning and shape live. The companion to [`GLOSSARY.md`](./GLOSSARY.md) (term definitions) and [`identity-model.md`](./identity-model.md) (the identity machinery).
+> The catalog of every object family the hydrology lane owns: what each represents, how its identity is formed, how its times stay distinct, the source roles it may carry, its sensitivity posture, and where its meaning and shape live. The companion to [`GLOSSARY.md`](./GLOSSARY.md) (term definitions) and [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) (the identity machinery).
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)
 ![Domain](https://img.shields.io/badge/domain-hydrology-1f9eda)
-![Spine](https://img.shields.io/badge/object_spine-CONFIRMED-blue)
+![Identity](https://img.shields.io/badge/identity-REMAIN__PROPOSED-yellow)
 ![Fields](https://img.shields.io/badge/field_realization-PROPOSED-orange)
 ![Policy](https://img.shields.io/badge/policy_label-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
+**Status:** draft / identity `REMAIN_PROPOSED` · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-31
 
 ---
 
 ## Contents
 
-- [1. Purpose & how to read this catalog](#1-purpose--how-to-read-this-catalog)
+- [1. Purpose & how to read this catalog](#1-purpose-how-to-read-this-catalog)
 - [2. The object-family spine](#2-the-object-family-spine)
 - [3. Shared invariants (every family)](#3-shared-invariants-every-family)
-- [4. Accounting & network families](#4-accounting--network-families)
+- [3.1 Minimum family-profile candidates](#31-minimum-family-profile-candidates)
+- [4. Accounting & network families](#4-accounting-network-families)
 - [5. Observation families](#5-observation-families)
 - [6. Flood families (the separation that must hold)](#6-flood-families-the-separation-that-must-hold)
 - [7. Derived families](#7-derived-families)
 - [8. Cross-lane link objects](#8-cross-lane-link-objects)
-- [9. Object → home crosswalk](#9-object--home-crosswalk)
+- [9. Object → home crosswalk](#9-object-home-crosswalk)
 - [10. Open questions](#10-open-questions)
 - [11. Related docs](#11-related-docs)
 
@@ -65,11 +66,16 @@ notes:
 This is the hydrology lane's **object catalog** — one entry per owned object family, expanding the Atlas §E table into a usable reference. It sits between [`GLOSSARY.md`](./GLOSSARY.md) (one-line term meanings) and the per-object `contracts/domains/hydrology/*.md` files (full semantics). It does **not** define machine shape — that lives in `schemas/contracts/v1/domains/hydrology/` — and it enforces nothing; it indexes.
 
 > [!IMPORTANT]
-> **What is CONFIRMED vs PROPOSED here.** The Atlas states three things for every hydrology object: its **Purpose** ("Represents X evidence or released derivative within Hydrology"), its **Identity rule** (PROPOSED basis: `source id + object role + temporal scope + normalized digest`), and its **Temporal handling** (CONFIRMED: source / observed / valid / retrieval / release / correction times stay distinct where material). Those three columns are **CONFIRMED doctrine** [DOM-HYD §E]. **Every concrete attribute below** — field names, code values, digit counts, identifiers — is **INFERRED field realization (PROPOSED)** drawn from standard hydrology usage and the sibling docs, not Atlas-stated, unless it restates a named invariant (e.g., NFHL = regulatory only). Treat the per-object "Key attributes" as design intent pending schema realization.
+> **Decision posture.** The family terms and anti-collapse boundaries are the
+> vocabulary this catalog indexes. Under decision #1886, the common tuple and
+> every concrete family projection remain **PROPOSED**, not accepted doctrine
+> or machine behavior. The exact fields, canonicalization, digest, profile
+> versions, and correction rules are design targets pending schema, fixture,
+> validator, test, migration, and consumer closure.
 
 ## 2. The object-family spine
 
-**CONFIRMED object-family spine / PROPOSED implementation** [DOM-HYD §B, §E; Atlas §2.2]. The lane owns:
+**Documented family vocabulary / PROPOSED identity profiles** [DOM-HYD §B, §E; Atlas §2.2]. The lane catalogs:
 
 `Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `AquiferObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace`.
 
@@ -125,12 +131,42 @@ flowchart TB
 Every entry in this catalog carries these, so they are stated once here rather than repeated per object [DOM-HYD §E] [Atlas §24.1]:
 
 - **Purpose form.** Each object "represents *X* evidence or a released derivative within Hydrology" — it is never raw bytes; it is an admitted, role-tagged, time-scoped claim.
-- **Identity rule (PROPOSED basis).** `source_id + object_role + temporal_scope + normalized_digest`. Full machinery: [`identity-model.md`](./identity-model.md).
+- **Identity decision (`REMAIN_PROPOSED`).** `source_id + object_role + temporal_scope + normalized_digest` is the sole candidate. Full graduation boundary: [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md).
 - **Temporal handling (CONFIRMED).** Source / observed / valid / retrieval / release / correction times stay distinct where material; collapsing them is a correctness failure.
-- **Source role (CONFIRMED vocabulary).** One of the canonical seven — `observed / regulatory / modeled / aggregate / administrative / candidate / synthetic` — **fixed at admission, never upgraded by promotion**. The Atlas source table assigns role "as the source role requires," so a family's role travels with each admitted descriptor, not with the family name.
+- **Source-role target.** An immutable/versioned SourceDescriptor owns one of the documented seven roles — `observed / regulatory / modeled / aggregate / administrative / candidate / synthetic`. The identity candidate mirrors it and must pass exact offline parity; promotion never upgrades a role to `observed`.
 - **Cite-or-abstain.** A public claim about any object resolves an `EvidenceRef` to an `EvidenceBundle`, or the surface abstains.
 
 The per-object sections below add only what is **distinctive** to each family (its typical identity anchor, role, sensitivity, and the field-realization intent).
+
+### 3.1 Minimum family-profile candidates
+
+Every row also inherits `source_id`, parity-verified `source_role`,
+`object_role`, family-specific temporal scope, `identity_profile`, and
+`family_profile`. The following are proposed minimums, not current schema
+requirements:
+
+| Family | Minimum proposed family identity fields |
+|---|---|
+| `Watershed` | Source-native watershed/HUC anchor, WBD/source snapshot, identity-defining outlet, boundary geometry fingerprint. |
+| `HUCUnit` | `huc_code`, `huc_level`, `wbd_snapshot`, boundary geometry fingerprint. |
+| `HydroFeature` | Source family/version, source feature ID, feature class, identity-bearing geometry/topology fingerprint. |
+| `ReachIdentity` | Source network/version, permanent identifier/reachcode/COMID or successor key, material geometry fingerprint, accepted crosswalk/ambiguity profile. |
+| `GaugeSite` | Operator/source family, stable site ID, site-lifetime interval, identity-defining datum/location fingerprint; mutable display name excluded. |
+| `GroundwaterWell` | Registry/source well ID, identity-defining screened interval or measuring point, well-lifetime interval, protected location fingerprint. |
+| `FlowObservation` | Site/series, parameter, observed instant or aggregation window, value/no-data state, unit, qualifier, provisional/final state. |
+| `WaterLevelObservation` | Site/series, parameter, observed instant/window, measurement datum/basis, value/no-data state, unit, qualifier. |
+| `WaterQualityObservation` | Site, activity/result ID, characteristic/parameter, sample media/fraction, method, sample instant/window, result/no-data, unit, limits, qualifiers. |
+| `AquiferObservation` | Source record/series, parameter, value/no-data state, unit, measurement basis, observation time, site/well identity; optional context-link presence excluded. |
+| `NFHLZone` | NFHL panel/source key, `version_id`, zone code, effective/valid interval, regulatory geometry fingerprint; role must be `regulatory`. |
+| `ObservedFloodEvent` | Event/source key, observation basis, event interval, observed geometry fingerprint; `HOLD` until paired contract and schema exist. |
+| `Hydrograph` | Series role, input identities/digests, parameter, series/aggregation window, model/profile version and parameters when modeled, uncertainty, output-series digest; runtime `run_id` excluded. |
+| `UpstreamTrace` | Seed reach, network version, direction, traversal algorithm/version and parameters, reach-set ordering semantics, resolved-set digest, ambiguity result. |
+| `AquiferContextLink` | Typed endpoint IDs, relation type, interpretation basis, source roles, confidence, valid interval, sensitivity; measurement fields and copied Geology geometry forbidden. |
+| `WaterUseLink`, `DroughtLink`, `IrrigationLink` | `HOLD`; eventual profiles use typed endpoints, relationship basis, and temporal scope without absorbing neighboring-lane identity. |
+
+`DomainObservation` is an envelope and delegates identity to its concrete
+observation family. It must not mint a second identity for the same
+observation.
 
 ## 4. Accounting & network families
 
@@ -140,25 +176,30 @@ These define *where* water is accounted and *how* the network connects. Typicall
 - **Purpose.** A drainage area whose surface flow converges to a common outlet.
 - **Typical identity anchor (PROPOSED).** WBD snapshot + HUC nesting.
 - **Key attributes (INFERRED/PROPOSED).** outlet reference, parent/child HUC nesting, area, `wbd_snapshot`.
-- **Role / sensitivity.** authority-geometry / context; public-safe; vintage tracked.
+- **Role / sensitivity.** role is descriptor-owned; the family does not mint an
+  `authority` or `context` role outside the documented seven-value vocabulary.
+  Public-safe posture and vintage remain separately reviewed.
 
 ### HUCUnit
 - **Purpose.** A Watershed Boundary Dataset hydrologic unit (HUC2 … HUC12).
 - **Typical identity anchor (PROPOSED).** HUC code + `wbd_snapshot`.
 - **Key attributes (INFERRED/PROPOSED).** `huc_code`; for HUC12, a 12-digit string; level; parent HUC; `wbd_snapshot`. *(The 12-digit rule is a standard-usage inference, not Atlas-stated.)*
-- **Role / sensitivity.** authority-geometry / context; public-safe; **vintage MUST NOT be silently mixed**.
+- **Role / sensitivity.** role is descriptor-owned; public-safe posture remains
+  separately reviewed; **vintage MUST NOT be silently mixed**.
 
 ### HydroFeature
 - **Purpose.** A surface-water network feature — stream, lake, wetland, or reservoir.
 - **Typical identity anchor (PROPOSED).** NHDPlus version (`v2.1` / `HR` / `3DHP`) + feature identifier.
 - **Key attributes (INFERRED/PROPOSED).** feature class, geometry, `nhdplus_version`. Distinguish from `ReachIdentity` (which is the *stable reach identity*, not the generic feature).
-- **Role / sensitivity.** authority-network / context; public-safe; version-tracked.
+- **Role / sensitivity.** role is descriptor-owned; public-safe posture remains
+  separately reviewed; source network/version is identity-bearing.
 
 ### ReachIdentity
 - **Purpose.** The stable identity of a flowline reach across vintages.
 - **Typical identity anchor (PROPOSED).** NHDPlus permanent identifier + reachcode + version.
 - **Key attributes (INFERRED/PROPOSED).** `permanent_identifier`, `reachcode`, `nhdplus_version`, `vpuid`; VAAs **labeled model-derived**, never observed.
-- **Role / sensitivity.** authority-network; public-safe. **Ambiguous reach identity → ABSTAIN, never a guess** (a CONFIRMED ABSTAIN trigger).
+- **Role / sensitivity.** role is descriptor-owned; public-safe posture remains
+  separately reviewed. **Ambiguous reach identity → ABSTAIN, never a guess.**
 
 ## 5. Observation families
 
@@ -215,7 +256,9 @@ Direct, time-stamped, in-situ readings. **Observed** role; provisional/final sta
 - **Purpose.** Historical or sourced inundation evidence (high-water marks, imagery footprints).
 - **Typical identity anchor (PROPOSED).** historical/observed source family + event interval.
 - **Key attributes (INFERRED/PROPOSED).** event identity, geometry vintage, source-role, public-safe transform record.
-- **Role / sensitivity.** observed (or `modeled` when reconstructed — labeled as such); **never NFHL-derived**.
+- **Role / sensitivity.** `HOLD` for common-profile admission until a paired
+  contract and schema exist. A later observed family is never NFHL-derived;
+  reconstruction remains a separately labeled modeled role.
 
 ## 7. Derived families
 
@@ -248,7 +291,8 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 > `AquiferObservation` is resolved as the measurement family. Its former
 > cross-lane responsibility is named `AquiferContextLink`, a separate PROPOSED
 > link record. `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remain
-> unresolved link families outside this decision.
+> explicit `HOLD` families until their meaning, shape, and family profiles are
+> separately reviewed.
 
 ## 9. Object → home crosswalk
 
@@ -257,23 +301,23 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 <details>
 <summary>Show the object → home crosswalk</summary>
 
-| Object family | Meaning (`contracts/`) | Shape (`schemas/contracts/v1/domains/hydrology/`) | Default role |
+| Object family | Meaning (`contracts/`) | Shape (`schemas/contracts/v1/domains/hydrology/`) | Proposed role posture |
 |---|---|---|---|
-| Watershed | `watershed.md` | `watershed.schema.json` | authority-geometry |
-| HUCUnit | `huc_unit.md` | `huc_unit.schema.json` | authority-geometry |
-| HydroFeature | `hydro_feature.md` | `hydro_feature.schema.json` | authority-network |
-| ReachIdentity | `reach_identity.md` | `reach_identity.schema.json` | authority-network |
+| Watershed | `watershed.md` | `watershed.schema.json` | descriptor-owned; no family default |
+| HUCUnit | `huc_unit.md` | `huc_unit.schema.json` | descriptor-owned; no family default |
+| HydroFeature | `hydro_feature.md` | `hydro_feature.schema.json` | descriptor-owned; no family default |
+| ReachIdentity | `reach_identity.md` | `reach_identity.schema.json` | descriptor-owned; no family default |
 | GaugeSite | `gauge_site.md` | `gauge_site.schema.json` | observed |
 | FlowObservation | `flow_observation.md` | `flow_observation.schema.json` | observed |
 | WaterLevelObservation | `water_level_observation.md` | `water_level_observation.schema.json` | observed |
 | WaterQualityObservation | `water_quality_observation.md` | `water_quality_observation.schema.json` | observed |
 | AquiferObservation | `aquifer_observation.md` | `aquifer_observation.schema.json` | observed |
-| GroundwaterWell | `groundwater_well.md` | `groundwater_well.schema.json` | observed (review-required) |
+| GroundwaterWell | `groundwater_well.md` | `groundwater_well.schema.json` | descriptor-owned; review-required |
 | NFHLZone / FloodContext | `nfhl_zone.md` | `nfhl_zone.schema.json` | regulatory |
-| ObservedFloodEvent | `observed_flood_event.md` | `observed_flood_event.schema.json` | observed / modeled |
-| Hydrograph | `hydrograph.md` | `hydrograph.schema.json` | modeled |
-| UpstreamTrace | `upstream_trace.md` | `upstream_trace.schema.json` | derived |
-| AquiferContextLink | `aquifer_context_link.md` | `aquifer_context_link.schema.json` | cross-lane relation |
+| ObservedFloodEvent | `observed_flood_event.md` | `observed_flood_event.schema.json` | `HOLD`; paired surfaces absent |
+| Hydrograph | `hydrograph.md` | `hydrograph.schema.json` | descriptor-owned; often `modeled` |
+| UpstreamTrace | `upstream_trace.md` | `upstream_trace.schema.json` | descriptor-owned; no `derived` role token |
+| AquiferContextLink | `aquifer_context_link.md` | `aquifer_context_link.schema.json` | descriptor-owned relation |
 | *(crosswalk)* COMID↔HUC12 row | `comid_huc12_crosswalk.md` | `comid_huc12_crosswalk.schema.json` *(or `crosswalks/` — OPEN)* | — |
 
 </details>
@@ -288,19 +332,20 @@ These name the *seam* to a neighboring lane. The link belongs to hydrology; the 
 | OQ-HYD-OBJ-04 | `SourceDescriptor` schema path `source/` vs `sources/`. | CONFLICTED (ADR-0001) |
 | OQ-HYD-OBJ-05 | Crosswalk schema home `domains/hydrology/` vs `crosswalks/`. | OPEN |
 | OQ-HYD-OBJ-06 | Whether `FloodContext` is a distinct family or an aspect of `NFHLZone` (Atlas pairs them as "NFHLZone / Flood Context"). | OPEN |
+| OQ-HYD-OBJ-07 | Graduate the common tuple and family projections only after ADR-0013/common SpecHash, SourceDescriptor, profile-version, migration, and executable coverage gates close. | HELD — #1886 |
 
 ## 11. Related docs
 
 - [`README.md`](./README.md) — lane landing page.
 - [`INDEX.md`](./INDEX.md) — lane navigation hub.
 - [`GLOSSARY.md`](./GLOSSARY.md) — one-line term definitions for these families.
-- [`identity-model.md`](./identity-model.md) — the identity rule and `spec_hash` machinery.
+- [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — the proposed identity rule and profile-graduation boundary.
 - [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — the source families that feed these objects (*PROPOSED, not yet authored*).
 - [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — where the `contracts/` and `schemas/` files live.
 - [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — how these objects move `Pre-RAW → PUBLISHED`.
 - `contracts/domains/hydrology/*.md` — full per-object semantics (*PROPOSED*).
 - `schemas/contracts/v1/domains/hydrology/*.schema.json` — machine shape (*PROPOSED*).
-- [`directory-rules.md`](../../../directory-rules.md) · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — placement law; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — placement law; `CONTRACT_VERSION = "3.0.0"`.
 
 ---
 

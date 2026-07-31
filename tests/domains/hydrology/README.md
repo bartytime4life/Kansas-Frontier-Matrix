@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hydrology-readme
 title: Hydrology Domain Tests README
 type: test-index-readme
-version: v0.1
-status: draft; parent-index; bounded EvidenceBundle and separated aquifer-pair shape checks executable; broader lanes PROPOSED / NEEDS VERIFICATION
+version: v0.2
+status: draft; parent-index; identity REMAIN_PROPOSED and unimplemented; bounded EvidenceBundle and separated aquifer-pair shape checks executable
 owners:
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — Source steward
@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: public-doc; tests; hydrology; parent-index; no-network; evidence-bound; source-role-aware; temporal-aware; policy-filtered; release-gated; rollback-aware
 tags: [kfm, tests, hydrology, parent-index, enforceability, no-network, fixtures, SourceDescriptor, ReachIdentity, JSON-Schema, PolicyDecision, RedactionReceipt, EvidenceBundle, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -48,6 +48,7 @@ notes:
   - "This is a parent test index only. It does not define Hydrology doctrine, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
   - "The current executable slice checks the proposed Hydrology EvidenceBundle alias plus closed AquiferObservation and AquiferContextLink shapes, valid/invalid fixture polarity, type separation, optional-link behavior, and fail-closed in-process network guards."
   - "The broader parent invariant remains proposed: Hydrology tests should prove enforceable trust boundaries across continuity inventory, identity, no-network discipline, policy gates, redaction/generalization, schemas, source descriptors, temporal state, evidence posture, release relationship, correction, and rollback."
+  - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED; the identity and temporal child lanes document graduation tests but contain no dedicated executable common-profile modules."
   - "Default posture is deterministic and no-network. Live source checks, upstream fetches, real source exports, lifecycle data, public tiles, and restricted records do not belong in default Hydrology tests."
   - "Rollback target for this replacement is previous stub blob SHA 21c112566e721a6a831a263b1fefa1e102b28dee."
 [/KFM_META_BLOCK_V2] -->
@@ -67,7 +68,7 @@ notes:
 </p>
 
 **Path:** `tests/domains/hydrology/README.md`  
-**Status:** draft / parent index / bounded EvidenceBundle and aquifer-pair shape slices executable / broader lanes PROPOSED
+**Status:** draft / parent index / common feature identity `REMAIN_PROPOSED` and unimplemented / bounded EvidenceBundle and aquifer-pair shape slices executable
 
 **Owning root:** `tests/`  
 **Domain segment:** `hydrology`  
@@ -95,7 +96,7 @@ Core checks:
 | Check | Required behavior | Failure outcome |
 |---|---|---|
 | Source-role preservation | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles remain visible where material. | validation failure / `ABSTAIN`. |
-| Deterministic identity | Source, role, temporal scope, and digest posture stay stable and auditable. | validation failure / `ABSTAIN`. |
+| Proposed common identity | Once accepted, source, mirrored role, temporal scope, profile versions, and digest posture remain stable and auditable. Until then, identity-profile admission is `HOLD`. | validation failure / `ABSTAIN` / `HOLD`. |
 | Evidence support | Evidence-dependent claims resolve support or return a finite non-answer. | `ABSTAIN`. |
 | Policy posture | Rights, sensitivity, source-role, lifecycle, and release checks return finite outcomes and fail closed where unresolved. | `DENY` / `ABSTAIN` / `ERROR`. |
 | Temporal posture | Source vintage, observed time, valid time, retrieval time, release time, stale state, correction, and rollback remain distinct. | validation failure / `ABSTAIN`. |
@@ -110,7 +111,7 @@ Core checks:
 | Lane | Primary responsibility | Boundary |
 |---|---|---|
 | [`continuity_inventory_check/`](continuity_inventory_check/README.md) | Check that the Hydrology continuity inventory remains lineage, disposition, and verification guidance. | Continuity is not implementation proof, source admission, policy approval, or promotion authority. |
-| [`identity/`](identity/README.md) | Deterministic Hydrology identity checks. | Identity is not derived from path, UI handle, release timestamp, incidental serialization, mixed source vintage, or generated text. |
+| [`identity/`](identity/README.md) | Documentation for the future common-profile suite. | No executable module currently proves the #1886 tuple, SourceDescriptor parity, SpecHash derivation, family profiles, migration, or correction lineage. |
 | [`no_network/`](no_network/README.md) | Default offline / fixture-only Hydrology test enforcement. | Default tests do not fetch live sources, call upstream services, read lifecycle stores as authority, or depend on public tiles. |
 | [`policy/`](policy/README.md) | Hydrology policy fail-closed checks. | Policy tests prove finite outcomes; they do not approve publication. |
 | [`redaction/`](redaction/README.md) | Hydrology redaction/generalization checks. | Redaction is deterministic governance, not presentation polish or release approval. |
@@ -127,7 +128,7 @@ The documented lanes support these Hydrology trust families:
 | Family | Expected proof point |
 |---|---|
 | Source admission | SourceDescriptor-like fixtures expose source identity, role, rights, cadence, permitted claims, activation state, evidence relationship, policy, correction, and rollback. |
-| Identity | Hydrology object identities remain deterministic and object-role-specific across source/version/time/digest posture. |
+| Identity | Future tests prove the accepted common and family profiles across source/version/role/time/digest posture; decision #1886 prevents treating the planned suite as current behavior. |
 | Schema/contract parity | Machine schemas stay paired with semantic contracts and keep scaffold maturity visible. |
 | Aquifer responsibility separation | `AquiferObservation` carries the measurement; `AquiferContextLink` carries typed relation metadata and rejects measurement or copied Geology geometry. |
 | Temporal state | Time fields and freshness state remain distinct and auditable. |
@@ -186,7 +187,8 @@ optional-link behavior, type separation, and in-process socket/DNS/URL denial.
 It does not resolve endpoints or EvidenceRefs or establish source admission,
 scientific correctness, policy, review, proof, release, or publication.
 
-Selected broader child-lane examples remain proposed:
+Selected broader child-lane commands remain proposed. In particular,
+`identity/` and `temporal/` are documentation-only lanes at this snapshot:
 
 ```bash
 pytest tests/domains/hydrology/continuity_inventory_check
@@ -232,6 +234,9 @@ Before treating this parent README as implemented behavior, verify:
 - [ ] Synthetic fixtures exist in accepted fixture homes and are not source payloads.
 - [ ] Schema paths and field expectations are accepted beyond scaffold status where tests enforce them.
 - [ ] SourceDescriptor and source-role behavior are available to tests or safely stubbed.
+- [ ] Common `identity_profile` and per-family `family_profile` are accepted;
+      legacy-profile, profile-mismatch, role-parity, canonical-equivalence,
+      rotation, correction, migration, and rollback fixtures exist.
 - [ ] EvidenceRef resolution and EvidenceBundle closure behavior is available to tests or safely stubbed; alias shape alone is insufficient.
 - [ ] PolicyDecision, RuntimeResponseEnvelope, ReleaseManifest, CorrectionNotice, RedactionReceipt, and RollbackCard expectations are defined before enforcing them.
 - [x] CI runs the three bounded no-network schema slices and marks incomplete

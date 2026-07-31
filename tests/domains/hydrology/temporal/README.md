@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hydrology-temporal-readme
 title: Hydrology Temporal Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; temporal-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; documentation-only temporal-test lane; common identity REMAIN_PROPOSED; executable coverage absent
 owners:
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — Temporal steward
@@ -14,7 +14,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+updated: 2026-07-31
 policy_label: public-doc; tests; hydrology; temporal; no-network; source-vintage-aware; cadence-aware; stale-state-aware; evidence-bound; release-gated; rollback-aware
 tags: [kfm, tests, hydrology, temporal, source-vintage, observed-time, valid-time, retrieval-time, release-time, correction-time, stale-state, cadence, EvidenceBundle, PolicyDecision, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -40,6 +40,7 @@ notes:
   - "This file replaces a blank placeholder at tests/domains/hydrology/temporal/README.md."
   - "This is a test-lane README only. It does not define Hydrology doctrine, temporal doctrine, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that Hydrology temporal checks preserve separate time semantics: source vintage, observed time, valid time, retrieval time, release time, correction time, stale state, cadence, evidence relationship, policy posture, release relationship, correction, and rollback remain visible before public carriers."
+  - "Decision #1886 keeps identity-bearing temporal_scope family-specific and REMAIN_PROPOSED; this README documents future coverage and does not claim an accepted family profile or executable temporal identity tests."
   - "Default posture is deterministic and no-network. Live source checks, upstream fetches, real source exports, lifecycle data, and public tiles do not belong in this lane."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
@@ -60,12 +61,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hydrology/temporal/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until executable tests are verified  
+**Status:** draft / documentation-only / common identity `REMAIN_PROPOSED` / no executable temporal-profile tests
 **Owning root:** `tests/`  
 **Domain segment:** `hydrology`  
 **Test lane:** `temporal`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED Hydrology lifecycle doctrine carries source role, rights, sensitivity, citation, time, cadence, source vintage, evidence closure, release state, correction, and rollback posture · CONFIRMED Hydrology publication posture separates stale from wrong and requires visible markers and traceable lifecycles · NEEDS VERIFICATION for executable temporal tests, fixture payload inventory, schema enforcement, validator behavior, policy runtime, release integration, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED this directory contains documentation only · CONFIRMED decision #1886 records family-specific temporal scope under `REMAIN_PROPOSED` · CONFIRMED no executable temporal module exists here · NEEDS VERIFICATION for accepted profiles, fixtures, validator behavior, correction/migration coverage, CI, and pass rates.
 
 ---
 
@@ -109,7 +110,8 @@ Core checks:
 | Observation time | Observed readings carry observed/provider time and do not become release time. | validation failure. |
 | Retrieval time | Retrieval timestamp is fetch context only, not claim truth. | validation failure / `ABSTAIN`. |
 | Stale state | Cadence-aged fixtures produce stale/hold/abstain posture, not silent currency. | `ABSTAIN` / `DENY` / validation failure. |
-| Correction time | Correction lineage records detected error or new evidence without silent edit. | validation failure. |
+| Identity-bearing time | An accepted `family_profile` declares which instant, interval, snapshot, vintage band, or lifetime participates in identity. | profile mismatch / validation failure. |
+| Correction time | Correction lineage records detected error or new evidence without silent edit; identity-bearing corrections create a new immutable identity. | validation failure. |
 | Release boundary | Release time does not prove source freshness, evidence closure, policy approval, or source truth. | promotion-blocking failure. |
 | No network | Default temporal tests use local files only. | validation failure / `ERROR`. |
 
@@ -120,9 +122,12 @@ Core checks:
 Tests in this lane may validate:
 
 - distinct source-vintage, observed, valid, retrieval, release, correction, stale-state, and rollback fields;
-- stable identity when release timestamp changes but source/vintage/content do not;
+- stable identity when release timestamp changes but the accepted
+  source/version, role, family temporal scope, and family projection do not;
+- identity rotation when an accepted family profile's temporal scope changes;
 - stale-state when cadence tolerance is exceeded in a synthetic fixture;
-- correction lineage when new evidence or error state supersedes a prior carrier;
+- correction lineage when new evidence or error state supersedes a prior
+  immutable identity; link-only and measurement corrections rotate independently;
 - rejection of fixtures that present retrieval freshness as claim truth;
 - no network behavior in the default suite.
 
@@ -155,6 +160,8 @@ Fixture requirements:
 | Cadence tolerance is exceeded | stale / `ABSTAIN` / `HOLD`. |
 | Correction changes public meaning without correction lineage | validation failure. |
 | Release timestamp is treated as source freshness proof | promotion-blocking failure. |
+| Temporal scope does not match the declared `family_profile` | profile mismatch / validation failure. |
+| Legacy `version` is silently treated as a current profile | `legacy-profile-unknown` / validation failure. |
 | Network check runs in default lane | validation failure / `ERROR`. |
 
 ---
@@ -169,7 +176,10 @@ tests/domains/hydrology/temporal/
 ├── test_observed_time_not_release_time.py
 ├── test_retrieval_time_not_claim_truth.py
 ├── test_cadence_stale_state.py
+├── test_family_profile_temporal_scope.py
+├── test_legacy_profile_not_silently_upgraded.py
 ├── test_correction_time_and_supersession.py
+├── test_link_and_measurement_corrections_rotate_independently.py
 └── test_release_correction_rollback_required.py
 ```
 
@@ -181,7 +191,8 @@ tests/domains/hydrology/temporal/
 pytest tests/domains/hydrology/temporal
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that executable test modules exist. This README does not claim the command currently passes.
+Status of the command above: **DOCUMENTATION-ONLY / EXPECTED NO TESTS**. No
+executable module in this directory proves family-profile temporal behavior.
 
 ---
 
@@ -205,6 +216,10 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 - [ ] Synthetic temporal fixtures exist for valid time-kind separation, missing source vintage, stale cadence, retrieval-time misuse, correction supersession, release timestamp misuse, and missing rollback cases.
 - [ ] Temporal field names are accepted by paired contracts/schemas or safely stubbed.
 - [ ] SourceDescriptor cadence behavior is available to tests or safely stubbed.
+- [ ] Accepted family profiles define instant/interval/snapshot/vintage/lifetime
+      semantics and tests cover profile mismatch, transient stability,
+      identity-bearing rotation, immutable supersession, legacy-profile
+      handling, migration, and rollback.
 - [ ] EvidenceRef / EvidenceBundle behavior is available to tests or safely stubbed.
 - [ ] PolicyDecision, ReleaseManifest, CorrectionNotice, RedactionReceipt, and RollbackCard expectations are defined before enforcing them.
 - [ ] CI runs the no-network Hydrology temporal suite or marks it as an expected gap.
