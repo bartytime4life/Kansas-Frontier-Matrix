@@ -87,8 +87,8 @@ class LinkReference:
     image: bool
 
 
-def _masked_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
-    """Yield lines outside fenced code and HTML comments with code spans masked."""
+def _visible_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
+    """Yield lines outside fenced code and HTML comments with markup intact."""
 
     fence: str | None = None
     in_comment = False
@@ -124,7 +124,14 @@ def _masked_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
             cursor = start + 4
             in_comment = True
 
-        yield line_number, _mask_code_spans("".join(visible))
+        yield line_number, "".join(visible)
+
+
+def _masked_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
+    """Yield link-visible Markdown lines with inline code spans masked."""
+
+    for line_number, line in _visible_markdown_lines(text):
+        yield line_number, _mask_code_spans(line)
 
 
 def _mask_code_spans(line: str) -> str:
@@ -220,21 +227,53 @@ def extract_links(path: Path) -> tuple[LinkReference, ...]:
     return tuple(links)
 
 
-def _heading_text(value: str) -> str:
-    value = re.sub(r"!\[[^]]*]\([^)]*\)", "", value)
+def _plain_heading_markup(value: str) -> str:
+    """Remove supported inline markup while retaining its visible contents."""
+
+    value = re.sub(r"!\[([^]]*)]\([^)]*\)", r"\1", value)
     value = re.sub(r"\[([^]]+)]\([^)]*\)", r"\1", value)
     value = re.sub(r"<[^>]+>", "", value)
-    return html.unescape(value).replace("`", "").strip()
+    return html.unescape(value)
+
+
+def _heading_text(value: str) -> str:
+    """Return visible heading text without treating code contents as markup."""
+
+    parts: list[str] = []
+    plain_start = 0
+    cursor = 0
+    while cursor < len(value):
+        if value[cursor] != "`" or (cursor and value[cursor - 1] == "\\"):
+            cursor += 1
+            continue
+        end_run = cursor
+        while end_run < len(value) and value[end_run] == "`":
+            end_run += 1
+        marker = value[cursor:end_run]
+        closing = value.find(marker, end_run)
+        if closing == -1:
+            cursor = end_run
+            continue
+        parts.append(_plain_heading_markup(value[plain_start:cursor]))
+        parts.append(value[end_run:closing])
+        cursor = closing + len(marker)
+        plain_start = cursor
+
+    parts.append(_plain_heading_markup(value[plain_start:]))
+    return "".join(parts).strip()
 
 
 def _github_slug(value: str) -> str:
     value = _heading_text(value).lower()
-    value = "".join(
-        character
+    return "".join(
+        "-" if character == " " else character
         for character in value
-        if character.isalnum() or character in {" ", "-", "_"}
+        if character == " "
+        or (
+            not character.isspace()
+            and (character.isalnum() or character in {"-", "_"})
+        )
     )
-    return re.sub(r"\s+", "-", value.strip())
 
 
 def collect_anchors(path: Path) -> frozenset[str]:
@@ -246,8 +285,11 @@ def collect_anchors(path: Path) -> frozenset[str]:
     anchors: set[str] = set()
     slug_counts: dict[str, int] = {}
     previous: tuple[int, str] | None = None
-    for line_number, line in _masked_markdown_lines(text):
-        anchors.update(match.group(2) for match in HTML_ANCHOR_RE.finditer(line))
+    for line_number, line in _visible_markdown_lines(text):
+        anchors.update(
+            match.group(2)
+            for match in HTML_ANCHOR_RE.finditer(_mask_code_spans(line))
+        )
         heading = ATX_HEADING_RE.match(line)
         heading_text: str | None = heading.group(2) if heading else None
         if heading_text is None and previous and SETEXT_RE.match(line):

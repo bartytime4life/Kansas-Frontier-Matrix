@@ -141,6 +141,51 @@ class DocsLinkCheckTests(unittest.TestCase):
 
         self.assertEqual(self.run_check("docs/source.md").exit_code, 0)
 
+    def test_github_heading_slugs_preserve_markup_content_and_spaces(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[inline code](target.md#2-focusmodepayload-semantic-shape)\n"
+            "[em dash](target.md#appendix-a--no-loss-preservation)\n"
+            "[slash](target.md#input--output-boundary)\n"
+            "[arrow](target.md#plan--payload-crosswalk)\n"
+            "[ampersand](target.md#contracts--schemas)\n"
+            "[styled](target.md#diagram--linked-heading)\n"
+            "[code placeholder](target.md#phase-payload)\n"
+            "[duplicate](target.md#plan--payload-crosswalk-1)\n",
+        )
+        self.write(
+            "docs/target.md",
+            "# 2. `FocusModePayload` semantic shape\n\n"
+            "# Appendix A — No-loss preservation\n\n"
+            "# Input / output boundary\n\n"
+            "# Plan → payload crosswalk\n\n"
+            "# Contracts & schemas\n\n"
+            "# ![Diagram](synthetic.png) & [linked heading](https://example.invalid)\n\n"
+            "# `<phase>` payload\n\n"
+            "# Plan → payload crosswalk\n",
+        )
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+        self.assertEqual(result.checked_local_targets, 8)
+        self.assertEqual(result.findings, ())
+
+    def test_inline_code_does_not_create_an_explicit_html_anchor(self) -> None:
+        self.write("docs/source.md", "[anchor](target.md#not-an-anchor)\n")
+        self.write(
+            "docs/target.md",
+            "# Target\n\n`<a id=\"not-an-anchor\"></a>`\n",
+        )
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            [finding.outcome for finding in result.findings],
+            ["ANCHOR_MISSING"],
+        )
+
     def test_cli_emits_stable_json_and_exit_polarity(self) -> None:
         self.write("docs/source.md", "[missing](absent.md)\n")
         command = [
