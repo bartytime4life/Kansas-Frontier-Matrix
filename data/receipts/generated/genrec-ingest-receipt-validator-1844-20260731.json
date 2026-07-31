@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-ingest-receipt-validator-1844-20260731",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/source/ingest_receipt.md",
+    "tests/validators/README.md",
+    "tests/validators/test_validate_ingest_receipt.py",
+    "tools/validators/_common/run_all.py",
+    "tools/validators/validate_ingest_receipt.py"
+  ],
+  "artifact_hashes": {
+    "contracts/source/ingest_receipt.md": "sha256:4da16ca8ced43069ca699da378c8c6a63e9b1f92fa049929f400b047bd6f7983",
+    "tests/validators/README.md": "sha256:f8b9ba85b714507c0256c22798bbeed7c17757ac6adc948066ee0da186c2c39f",
+    "tests/validators/test_validate_ingest_receipt.py": "sha256:95fe0b97b25485498150cedeed2589698e58bbd5addaf3fdb418f1f533761001",
+    "tools/validators/_common/run_all.py": "sha256:a45c1aeb956145aaa2d9159b089e229eb2437d3d57e68b53dc5c9d84b4d9e73f",
+    "tools/validators/validate_ingest_receipt.py": "sha256:f4dcf2629b5a396c872e976ee6d23714ba7ba5c71f97e8557c3d7892804cf393"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:0c054962d535e590f08f72043ad837f030abd239e584fdd28f9c278750081f26",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0c054962d535e590f08f72043ad837f030abd239e584fdd28f9c278750081f26",
+      "sha256:2fe2c0580e41d811778f58e2839086321903fbb7314208821bc466f477711d1c",
+      "sha256:5dedca74aefd81e9b7eb17259e6db6bf10a762d9b0bc0078cedac01f472518cc",
+      "sha256:83c5ddcf2c1388f3b8e5813c53eaf1f04188cb56e55f534aa631eaeb944bd653",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fda0c25f226df85f0d3a321572703f794b2cbdc9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1844",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fda0c25f226df85f0d3a321572703f794b2cbdc9/schemas/contracts/v1/source/ingest_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fda0c25f226df85f0d3a321572703f794b2cbdc9/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fda0c25f226df85f0d3a321572703f794b2cbdc9/.github/workflows/connector-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fda0c25f226df85f0d3a321572703f794b2cbdc9/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "contracts/source/ingest_receipt.md": "CONFIRMED",
+    "tests/validators/README.md": "CONFIRMED",
+    "tests/validators/test_validate_ingest_receipt.py": "CONFIRMED",
+    "tools/validators/_common/run_all.py": "CONFIRMED",
+    "tools/validators/validate_ingest_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, issues #1844 and #1675, owner authoring resolution 5143810920, open pull requests, and overlapping branch names were inspected before mutation; draft-only bounded authoring is allowed while ready, merge, source activation, and release actions remain denied."
+    },
+    {
+      "gate": "kwo-document-observation",
+      "outcome": "SKIPPED",
+      "reason": "No KWO or grant-portal request was made. Prior issue evidence contains no trustworthy carrier or five-document bytes/digests, so document identity, manifest, fixture-digest replacement, and source-record authoring remain held."
+    },
+    {
+      "gate": "focused-ingest-receipt-validator-tests",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic no-network tests plus two subtests passed for schema/format, time order, placeholder denial, source identity and source-head binding, exact artifact digests, byte totals, SUCCESS gating, fixture polarity, deterministic output, and body non-echo."
+    },
+    {
+      "gate": "ingest-receipt-fixture-mode",
+      "outcome": "PASS",
+      "reason": "The stable command validated nonempty polarity for two existing valid fixtures and three existing invalid fixtures."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "The seven-entry aggregate completed with expected invalid-fixture diagnostics and the schema/contract suite passed 139 tests."
+    },
+    {
+      "gate": "full-repository-pytest",
+      "outcome": "PASS",
+      "reason": "With the isolated declared dependency environment on PATH, 443 tests and 74 subtests passed; an initial system-python subprocess dependency miss was corrected without a repository change."
+    },
+    {
+      "gate": "connector-non-publisher-policy",
+      "outcome": "PASS",
+      "reason": "The bounded connector/pipeline non-publisher policy suite passed two tests."
+    },
+    {
+      "gate": "changed-document-local-link-check",
+      "outcome": "PASS",
+      "reason": "Two changed Markdown documents resolved 59 local targets with no external requests."
+    },
+    {
+      "gate": "connector-gate-graduation",
+      "outcome": "SKIPPED",
+      "reason": "The connector-gate workflow was intentionally not changed; ingest-receipt-presence remains WORKFLOW_HOLD pending KWO-specific host/media/manifest bindings, ownership review, compatibility review, and separately authorized graduation."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are pending draft pull-request delivery."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "water-planning-slice-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1844"
+    },
+    {
+      "id": "repository-authoring-hold-lift",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "ingest-receipt-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/source/ingest_receipt.schema.json"
+    },
+    {
+      "id": "source-descriptor-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "connector-gate-readiness-hold",
+      "validated": true,
+      "evidence_ref": ".github/workflows/connector-gate.yml"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-31T20:55:44Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1844"
+  },
+  "notes": "Closes only the generic repository-owned validate_ingest_receipt.py prerequisite. It does not claim or create KWO document identities, replace null/all-zero water-planning fixture digests, admit or activate a source, validate host/media-type allowlists, create a KWO manifest or ingest instance, alter immutable supersession lineage, graduate connector-gate, construct proof, or authorize release, deployment, or publication. Compatibility is additive: schemas and existing fixtures are unchanged, PARTIAL and FAIL remain schema-valid records, and --require-success supplies fail-closed operational polarity. Rollback is a focused revert of the five artifacts while leaving connector-gate held."
+}

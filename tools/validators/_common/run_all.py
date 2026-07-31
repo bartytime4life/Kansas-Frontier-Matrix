@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 
-# Only execute top-level validators that are wired to the shared JSON Schema runner.
+# Execute the bounded top-level validators that expose deterministic fixture mode.
 # Placeholder validator stubs intentionally raising NotImplementedError are excluded.
 RUNNER_VALIDATORS = [
     "validate_source_descriptor.py",
@@ -12,6 +12,7 @@ RUNNER_VALIDATORS = [
     "validate_runtime_response_envelope.py",
     "validate_decision_envelope.py",
     "validate_run_receipt.py",
+    "validate_ingest_receipt.py",
 ]
 
 
