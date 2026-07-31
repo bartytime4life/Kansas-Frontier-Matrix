@@ -274,10 +274,10 @@ grouping:
 | Group | Examples | Shared identity obligation | Current limitation |
 | --- | --- | --- | --- |
 | Accounting and network | `Watershed`, `HUCUnit`, `HydroFeature`, `ReachIdentity` | Preserve source/version, object role, temporal scope, and geometry/network identity. | Per-family normalization is not enforced by this schema. |
-| Sites and observations | `GaugeSite`, `FlowObservation`, `WaterLevelObservation`, `WaterQualityObservation`, `GroundwaterWell` | Keep site identity separate from measurements and preserve observation time and basis. | Related schemas are minimal or permissive scaffolds. |
+| Sites and observations | `GaugeSite`, `FlowObservation`, `WaterLevelObservation`, `WaterQualityObservation`, `AquiferObservation`, `GroundwaterWell` | Keep site identity separate from measurements and preserve observation time and basis. | `AquiferObservation` has a bounded closed shape; most related schemas remain minimal or permissive scaffolds. |
 | Flood context and evidence | `NFHLZone` / `FloodContext`, proposed `ObservedFloodEvent` | Keep regulatory, observed, modeled, and emergency-authority classes separate. | No `ObservedFloodEvent` contract or schema was found at the pinned snapshot. |
 | Derived views | `Hydrograph`, `UpstreamTrace` | Inherit input identity, source version, algorithm/model lineage, and ambiguity posture. | Dedicated semantic validation remains held or missing. |
-| Proposed cross-lane links | `AquiferObservation`, `WaterUseLink`, `DroughtLink`, `IrrigationLink` | Reference each neighboring lane's canonical identity without absorbing it. | First-class family versus link-record treatment remains open; several paired schemas are missing. |
+| Proposed cross-lane links | `AquiferContextLink`, `WaterUseLink`, `DroughtLink`, `IrrigationLink` | Reference each neighboring lane's canonical identity without absorbing it. | The aquifer seam now has a separate bounded shape; treatment of the other links remains open. |
 
 This contract supplies a common profile, not a universal normalization
 algorithm. Every family still needs an explicit profile that states which
@@ -300,6 +300,7 @@ enforced by the current schema:
 | `WaterQualityObservation` | Parameter measurement | Program, station, and sample reference | Sampling instant or window |
 | `GroundwaterWell` | Well or site of record | State or NWIS well registry | Well lifetime |
 | `AquiferObservation` | Groundwater-level or aquifer-state observation | Source reading plus well or site reference | Measurement instant or window |
+| `AquiferContextLink` | Hydrology subject to Geology hydrostratigraphic relation | Typed endpoints plus interpretation basis | Relationship source/valid interval |
 | `NFHLZone` / `FloodContext` | Regulatory flood-hazard context | NFHL panel plus effective date | Effective interval |
 | Proposed `ObservedFloodEvent` | Observed inundation evidence | Historical or observed source family | Event interval |
 | `Hydrograph` | Time-series view or derivative | Composition of source observations or models | Inherited from inputs |
@@ -589,7 +590,7 @@ layer descriptors, decision envelopes, public carriers, caches, or styles.
 | [Paired schema](../../../schemas/contracts/v1/domains/hydrology/domain_feature_identity.schema.json) | CONFIRMED / `PROPOSED` | Declares `id`, `spec_hash`, `version`, metadata pointers, and `id` as the only required property. | Allows arbitrary properties and does not enforce the documented tuple. |
 | [Hydrology identity model](../../../docs/domains/hydrology/IDENTITY_MODEL.md) | CONFIRMED draft repository evidence; semantic status mixed | Documents the tuple, time separation, digest proposal, role boundary, lifecycle, and open questions. | Calls the tuple both `CONFIRMED` doctrine and `PROPOSED` basis; contains stale repository-verification language and unresolved paths. |
 | [Source-role matrix](../../../docs/domains/hydrology/SOURCE_ROLE_MATRIX.md) | CONFIRMED draft repository evidence | Documents the seven-role vocabulary and anti-collapse rules. | Machine enforcement and source-registry population remain proposed or unverified. |
-| [Object-family catalog](../../../docs/domains/hydrology/OBJECT_FAMILIES.md) | CONFIRMED draft repository evidence | Names the core family spine, shared identity obligations, and proposed cross-lane links. | Per-field realization and first-class-versus-link decisions remain open. |
+| [Object-family catalog](../../../docs/domains/hydrology/OBJECT_FAMILIES.md) | CONFIRMED draft repository evidence | Names the core family spine, shared identity obligations, and proposed cross-lane links. | Aquifer measurement/link responsibilities are resolved; other per-field and link-family decisions remain open. |
 | [Hydrology canonical paths](../../../docs/domains/hydrology/CANONICAL_PATHS.md) | CONFIRMED draft repository evidence | Records Hydrology responsibility-root and schema-home guidance. | Accepted Directory Rules and ADR-0029 control where the sources differ; some path claims remain proposed or stale. |
 | [Hydrology tests](../../../tests/domains/hydrology/README.md), [validator index](../../../tools/validators/domains/hydrology/README.md), and [workflows](../../../.github/workflows/domain-hydrology.yml) | CONFIRMED bounded implementation evidence | One EvidenceBundle alias slice and process-level network denial are executable; broader identity validation is held. | No dedicated `domain_feature_identity` behavior. |
 | Direct reads of the schema-declared fixture and validator paths plus the expected test path | CONFIRMED missing at the pinned snapshot | Dedicated implementation support is absent at those paths. | Does not prove that no experimental identity logic exists elsewhere. |
@@ -607,7 +608,7 @@ layer descriptors, decision envelopes, public carriers, caches, or styles.
 | `HYD-DFI-04` | `OPEN` | Decide whether `spec_hash` is the normalized identity digest or a distinct conformance hash. |
 | `HYD-DFI-05` | `OPEN` | Accept canonicalization, digest algorithm, algorithm prefix, ID derivation, and profile-version rules. |
 | `HYD-DFI-06` | `NEEDS VERIFICATION` | Define per-family identity-bearing fields, ambiguity behavior, and correction rotation for core Hydrology families. |
-| `HYD-DFI-07` | `OPEN` | Resolve core-family versus cross-lane-link treatment for `AquiferObservation`, `WaterUseLink`, `DroughtLink`, and `IrrigationLink`. |
+| `HYD-DFI-07` | `PARTIALLY RESOLVED` | `AquiferObservation` is the measurement family and `AquiferContextLink` is its separate Geology seam record. Resolve treatment of `WaterUseLink`, `DroughtLink`, and `IrrigationLink` independently. |
 | `HYD-DFI-08` | `MISSING` | Expand the schema and add dedicated public-safe fixtures, validator, tests, and stable validation reason codes. |
 | `HYD-DFI-09` | `HELD` | Prove evidence, policy, review, release, correction, withdrawal, rollback, and governed-consumer closure before any public identity edge. |
 | `HYD-DFI-10` | `NEEDS VERIFICATION` | Assign the cross-cutting reach/HUC crosswalk validator to an accepted execution lane without creating parallel semantic authority. |

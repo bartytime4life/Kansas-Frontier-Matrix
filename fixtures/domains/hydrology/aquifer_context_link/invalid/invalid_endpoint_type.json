@@ -1,0 +1,37 @@
+{
+  "id": "kfm:hydrology:aquifer-context-link:synthetic-invalid-endpoint",
+  "version": "v0.1",
+  "spec_hash": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "object_type": "AquiferContextLink",
+  "hydrology_subject": {
+    "object_type": "AquiferObservation",
+    "id": "kfm:hydrology:aquifer-observation:synthetic-001"
+  },
+  "geology_endpoint": {
+    "owner_domain": "geology",
+    "object_type": "GeologicUnit",
+    "id": "kfm:geology:geologic-unit:synthetic-001"
+  },
+  "relationship_type": "associated_with",
+  "source_roles": {
+    "hydrology": "observed",
+    "geology": "aggregate"
+  },
+  "temporal_scope": {
+    "source_time": "2026-02-02T00:00:00Z"
+  },
+  "interpretation_basis": {
+    "method": "synthetic crosswalk",
+    "source_record_refs": [
+      "synthetic:relation:003"
+    ],
+    "confidence": "unknown"
+  },
+  "sensitivity": {
+    "geometry_posture": "withheld",
+    "policy_review_required": true
+  },
+  "evidence_refs": [
+    "evidence:synthetic-invalid-link:003"
+  ]
+}

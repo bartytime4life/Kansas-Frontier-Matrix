@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: ["TODO: hydrology-domain-stewards", "TODO: directory-rules-owners"]
 created: 2026-05-17
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -54,7 +54,7 @@ notes:
 
 | Status | Contract | Owners | Last updated |
 |---|---|---|---|
-| Draft | `CONTRACT_VERSION = "3.0.0"` | `TODO: hydrology-domain-stewards`, `TODO: directory-rules-owners` | 2026-06-06 |
+| Draft | `CONTRACT_VERSION = "3.0.0"` | `TODO: hydrology-domain-stewards`, `TODO: directory-rules-owners` | 2026-07-30 |
 
 ---
 
@@ -256,7 +256,7 @@ Each subsection below is a **placement contract** for one lane segment. Lane *ex
 | `BOUNDARY.md` | Owns / does-not-own table; collapse-prevention rules (NFHL ≠ observed flood; warnings ≠ life-safety authority). | **PROPOSED** |
 | `UBIQUITOUS_LANGUAGE.md` | Glossary of hydrology terms (Watershed, HUCUnit, ReachIdentity, GaugeSite, FlowObservation, NFHLZone, etc.). | **PROPOSED** |
 | `SOURCE_FAMILIES.md` | Authoritative source families and source-role assignments (USGS WBD/HUC, NHDPlus HR, USGS Water Data, FEMA NFHL/MSC, 3DEP, state water offices, water quality, groundwater). | **PROPOSED** |
-| `OBJECT_FAMILIES.md` | Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, FlowObservation, WaterLevelObservation, WaterQualityObservation, GroundwaterWell, AquiferObservation, NFHLZone, Hydrograph, UpstreamTrace, WaterUseLink, DroughtLink, IrrigationLink. | **PROPOSED** |
+| `OBJECT_FAMILIES.md` | Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, FlowObservation, WaterLevelObservation, WaterQualityObservation, GroundwaterWell, AquiferObservation, AquiferContextLink, NFHLZone, Hydrograph, UpstreamTrace, WaterUseLink, DroughtLink, IrrigationLink. | **PROPOSED** |
 | `THIN_SLICE_PLAN.md` | Kansas HUC12 + one USGS gauge fixture + one NHDPlus identity crosswalk + NFHL contextual overlay + hydrograph panel + EvidenceBundle closure + ABSTAIN on ambiguous reach identity. | **PROPOSED** |
 | `VERIFICATION_BACKLOG.md` | Domain-local backlog, mirrored from `docs/registers/VERIFICATION_BACKLOG.md`. | **PROPOSED** |
 
@@ -757,7 +757,8 @@ ADR-linked rows reference the open-ADR backlog in Atlas §24.12 and Directory Ru
 | WaterLevelObservation | `contracts/domains/hydrology/water_level_observation.md` | `.../water_level_observation.schema.json` | — |
 | WaterQualityObservation | `contracts/domains/hydrology/water_quality_observation.md` | `.../water_quality_observation.schema.json` | — |
 | GroundwaterWell | `contracts/domains/hydrology/groundwater_well.md` | `.../groundwater_well.schema.json` | Review-required class. |
-| AquiferObservation | `contracts/domains/hydrology/aquifer_observation.md` | `.../aquifer_observation.schema.json` | Cross-lane with Geology. |
+| AquiferObservation | `contracts/domains/hydrology/aquifer_observation.md` | `.../aquifer_observation.schema.json` | First-class observed measurement; optional external context-link refs. |
+| AquiferContextLink | `contracts/domains/hydrology/aquifer_context_link.md` | `.../aquifer_context_link.schema.json` | Typed Hydrology-to-Geology relation; no measurement or copied geometry. |
 | NFHLZone | `contracts/domains/hydrology/nfhl_zone.md` | `.../nfhl_zone.schema.json` | `source_role: "regulatory"` enforced. |
 | Hydrograph | `contracts/domains/hydrology/hydrograph.md` | `.../hydrograph.schema.json` | Modeled projection; carries run receipt + bounds. |
 | UpstreamTrace | `contracts/domains/hydrology/upstream_trace.md` | `.../upstream_trace.schema.json` | Network traversal projection. |

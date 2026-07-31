@@ -29,6 +29,8 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | `decision_envelope/` | Synthetic Hydrology bounded runtime envelopes for governed API, drawer, Focus Mode, layer resolver, export, and review-facing outcomes. | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, validation pass/failure, review-required, or blocked render. |
 | `evidence_bundle/` | Synthetic Hydrology claim-scope evidence-support examples. | Validation pass/failure, review-ready, evidence-resolved, citation-ready, `ABSTAIN`, `DENY`, `ERROR`, or release-readiness failure when consumed. |
 | `run_receipt/` | Synthetic Hydrology governed-run provenance examples. | Validation pass/failure, provenance-resolved, replay-reviewable, review-required, release-readiness failure, or rollback-readiness failure. |
+| `aquifer_observation/` | Synthetic groundwater measurement shapes, including linked and unlinked observations. | Valid observed measurement or expected rejection for source-role or embedded-Geology collapse. |
+| `aquifer_context_link/` | Synthetic typed Hydrology-to-Geology relation shapes. | Valid observation/well relation or expected rejection for endpoint, measurement, or copied-geometry collapse. |
 | `sources/` | Synthetic source-reference, source-role, rights, sensitivity, cadence, freshness, source-head, and admission examples. | Validation pass, review-ready, source-role-preserved, or fail-closed when source posture is unresolved. |
 | `valid/` | Broad positive-path staging and navigation lane. | Validation pass, review-ready, evidence-resolved, citation-ready, provenance-resolved, public-safe context, or governed `ANSWER`. |
 | `invalid/` | Broad fail-closed staging and navigation lane for known invalid families. | `ABSTAIN`, `DENY`, `ERROR`, validation failure, review-required, blocked render, or release-readiness failure. |
@@ -43,6 +45,8 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | `run_receipt/` | Exercises governed-run provenance; does not prove truth, policy approval, or release. |
 | `evidence_bundle/` | Exercises claim-scope evidence support; does not publish or decide policy. |
 | `decision_envelope/` | Exercises bounded runtime outcomes; does not bypass evidence, policy, release, source-role, or trust-membrane gates. |
+| `aquifer_observation/` | Exercises the measurement carrier; aquifer interpretation remains an optional external link. |
+| `aquifer_context_link/` | Exercises relation metadata and typed endpoints; carries no measurement or Geology geometry. |
 | `valid/` | Indexes broad positive cases and routes stable cases to more specific family lanes. |
 | `invalid/` | Indexes broad fail-closed cases and routes stable defects to more specific invalid child lanes. |
 | `negative/` | Stages exploratory negative cases before they become stable invalid fixtures. |
@@ -55,6 +59,8 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | Runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` shape | `decision_envelope/` |
 | Evidence refs, claim scopes, citations, rights, sensitivity, transforms, checksums, and spec linkage | `evidence_bundle/` |
 | Run identity, stage, inputs, outputs, code ref, source descriptor refs, validation refs, spec hash, and outcome | `run_receipt/` |
+| Groundwater-level or aquifer-state measurement shape | `aquifer_observation/` |
+| Hydrology observation/well to Geology hydrostratigraphic relation shape | `aquifer_context_link/` |
 | Source-like role, rights, sensitivity, cadence, source-head, and admission examples | `sources/` |
 | Broad valid scenario not yet sorted | `valid/` |
 | Broad known fail-closed scenario not yet sorted | `invalid/` |
@@ -73,6 +79,8 @@ The following Hydrology fixture lanes have populated README coverage. This table
 - `run_receipt/README.md`
 - `run_receipt/valid/README.md`
 - `run_receipt/invalid/README.md`
+- `aquifer_observation/README.md`
+- `aquifer_context_link/README.md`
 - `sources/README.md`
 - `valid/README.md`
 - `invalid/README.md`
@@ -139,7 +147,9 @@ Do not use this root or its child lanes for real records, real source exports, l
 ## Verification status
 
 - Target README: replaced greenfield stub content.
-- Fixture payload inventory: no payload files verified under this root during this update.
+- Fixture payload inventory: the two aquifer families contain public-safe
+  synthetic valid and expected-invalid JSON payloads; broader inventory remains
+  only partially verified.
 - Child README inventory: PARTIALLY VERIFIED against populated child lane READMEs fetched during this update and recent preceding updates.
 - Decision-envelope fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/decision_envelope/README.md`.
 - EvidenceBundle fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/evidence_bundle/README.md`.
@@ -151,4 +161,6 @@ Do not use this root or its child lanes for real records, real source exports, l
 - Golden fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/golden/README.md`.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Consumer alignment: NEEDS VERIFICATION against validators, Hydrology governed-API tests, decision-envelope checks, evidence-bundle checks, run-receipt checks, source-descriptor checks, source-role checks, drawer checks, Focus Mode checks, layer-manifest checks, evidence-resolution checks, citation-validation checks, rights checks, sensitivity checks, source-head checks, trust-membrane checks, release-readiness checks, rollback-readiness checks, schema checks, policy checks, renderer checks, and UI implementation.
-- Tests and validators: NOT RUN.
+- Aquifer pair tests and validators: VERIFIED locally with fixture polarity and
+  fail-closed network guards; no source, endpoint, evidence, policy, proof, or
+  release resolution is claimed.

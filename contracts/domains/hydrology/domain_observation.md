@@ -98,7 +98,8 @@ It applies to source-role-aware Hydrology observations such as:
 - `FlowObservation` discharge/streamflow readings;
 - `WaterLevelObservation` stage/gage-height readings;
 - `WaterQualityObservation` parameter measurements;
-- `GroundwaterWell` and `AquiferObservation` measurement-linked context;
+- `AquiferObservation` groundwater-level or aquifer-state measurements,
+  optionally anchored to a `GroundwaterWell`;
 - `ObservedFloodEvent` records grounded in observed evidence;
 - candidate observations that remain in WORK/QUARANTINE until governed promotion resolves source role, evidence, rights, sensitivity, identity, and review state.
 
@@ -122,6 +123,7 @@ The envelope must preserve:
 | Source-role doctrine | `docs/domains/hydrology/SOURCE_ROLE_MATRIX.md` | Defines observed/regulatory/modeled/aggregate/admin/candidate/synthetic roles and deny conditions. |
 | Contract root | `contracts/domains/hydrology/README.md` | Directory root and object-family boundaries. |
 | Feature identity | `contracts/domains/hydrology/domain_feature_identity.md` | Stable identity, source role, time, geography/version, digest companion. |
+| Aquifer context seam | `contracts/domains/hydrology/aquifer_context_link.md` | Separate typed relation from an observation or well to Geology-owned hydrostratigraphic context. |
 | Layer descriptor | `contracts/domains/hydrology/domain_layer_descriptor.md` | Public/release layer delivery descriptor, not observation truth. |
 | Decision envelope | `contracts/domains/hydrology/decision_envelope.md` | Runtime finite-outcome wrapper. |
 | Source registry | `data/registry/sources/hydrology/` | Expected SourceDescriptor instances and role/rights/cadence. |
@@ -160,7 +162,7 @@ The schema currently does not prove enforcement of source role, source descripto
 | Discharge / streamflow reading | `FlowObservation` | Observed reading; never a forecast or modeled series. |
 | Gage height / stage reading | `WaterLevelObservation` | Observed reading with unit/qualifier/provisional state. |
 | Water-quality parameter measurement | `WaterQualityObservation` | Parameter/method/detection limits and program rights matter. |
-| Groundwater/aquifer-state reading | `GroundwaterWell` / `AquiferObservation` | Private-property/well-owner and Geology cross-lane context require review. |
+| Groundwater/aquifer-state reading | `AquiferObservation` | The reading is first-class; an optional `GroundwaterWell` anchors site identity and a separate `AquiferContextLink` carries Geology context. |
 | Observed inundation evidence | `ObservedFloodEvent` | Must not be derived from NFHL alone. |
 | Hydrograph series | `Hydrograph` | May include observed or modeled series, but role flag and receipt/uncertainty are required where modeled. |
 | Unverified mark/report/source row | Candidate observation | WORK/QUARANTINE only until governed transition. |
@@ -319,7 +321,7 @@ Before this contract is promoted beyond draft:
 - [ ] Expand `schemas/contracts/v1/domains/hydrology/domain_observation.schema.json` beyond `spec_hash`, `id`, and `version`.
 - [ ] Decide whether this envelope is a shared base schema for all observation families or only a semantic contract.
 - [ ] Define canonical values for `downstream_object_family`, `source_role`, `candidate_disposition`, `geometry_role`, `qualifier`, and `quality_flags`.
-- [ ] Add positive fixtures for `GaugeSite`, `FlowObservation`, `WaterLevelObservation`, `WaterQualityObservation`, `GroundwaterWell` / `AquiferObservation`, `ObservedFloodEvent`, candidate observation, and corrected observation.
+- [ ] Add positive fixtures for the still-unimplemented shared-envelope profiles. `AquiferObservation` now has its own bounded valid/invalid fixtures and must remain separate from `GroundwaterWell` and `AquiferContextLink`.
 - [ ] Add negative fixtures for NFHL-as-observed-flood, modeled-hydrograph-as-observed, aggregate-as-per-place, administrative-registry-as-observation, candidate-as-public, AI-summary-as-evidence, retrieval-time-as-observed-time, missing unit, missing observed time, missing EvidenceBundle, and RAW/WORK public exposure.
 - [ ] Add validator coverage for source role, SourceDescriptor, value/unit/qualifier, temporal fields, geometry role, evidence refs, policy refs, release refs, correction refs, and rollback refs.
 - [ ] Confirm public API/UI uses `decision_envelope` outcomes and never silently falls through to raw source or generic AI answer.

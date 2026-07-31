@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -35,7 +35,7 @@ notes:
 ![Intra-lane](https://img.shields.io/badge/intra--lane_edges-PROPOSED-orange)
 ![Policy](https://img.shields.io/badge/policy_label-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
 
 ---
 
@@ -191,7 +191,7 @@ Every edge in this map — intra- or cross-lane — obeys these (CONFIRMED) [DOM
 | OQ-HYD-MAP-01 | Intra-lane cardinalities (§3) are INFERRED — confirm against the schemas once authored. | NEEDS VERIFICATION |
 | OQ-HYD-MAP-02 | Is `FloodContext` a node distinct from `NFHLZone`, and does it take its own edges? (Atlas pairs them.) | OPEN |
 | OQ-HYD-MAP-03 | Does `ReachIdentity → HUCUnit` become `ReachIdentity → 3DHP id → HUCUnit` once 3DHP supersedes v2.1? | CONFLICTED (corpus-open) |
-| OQ-HYD-MAP-04 | Cross-lane link objects (`AquiferObservation`, `WaterUseLink`, `DroughtLink`, `IrrigationLink`) — are they edges in this map or nodes in OBJECT_FAMILIES? | OPEN (cross-ref OQ-HYD-OBJ-02) |
+| OQ-HYD-MAP-04 | `AquiferObservation` is a measurement node and `AquiferContextLink` is its Geology edge; placement of `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remains open. | PARTIALLY RESOLVED (cross-ref OQ-HYD-OBJ-02) |
 | OQ-HYD-MAP-05 | §F lists 4 neighboring lanes; §24.14 adds Habitat/Fauna/Flora/Frontier as citers — confirm the citer set is complete. | NEEDS VERIFICATION |
 
 ## 8. Related docs
@@ -206,4 +206,4 @@ Every edge in this map — intra- or cross-lane — obeys these (CONFIRMED) [DOM
 
 ---
 
-<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Object **relationship** map (companion to OBJECT_FAMILIES.md) · Last updated: 2026-06-06 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
+<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Object **relationship** map (companion to OBJECT_FAMILIES.md) · Last updated: 2026-07-30 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>

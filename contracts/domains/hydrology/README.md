@@ -32,11 +32,11 @@ related:
   - ../../../.github/CODEOWNERS
 tags: [kfm, contracts, hydrology, DOM-HYD, watershed, huc, gauge, observation, nfhl, source-role, evidence-bundle, release-gated, rollback]
 notes:
-  - "Same-path modernization grounded in main@0fd7b2ed59e22f60491b267c244c04e55e965e96."
+  - "Current inventory and aquifer-pair decision grounded in main@748f1d92ea7cdd94c274b0287bc01d41506d4b3b."
   - "Accepted Directory Rules v2 returns PLACE for contracts/domains/hydrology/; older flat-path proposals are historical drift, not a competing current authority."
-  - "The directory contains 23 semantic contract documents plus this README. Every object contract remains v0.2 draft / PROPOSED."
-  - "Eighteen contract-declared schema paths resolve; five are missing. Existing schemas are mixed shared-profile aliases, minimal identity envelopes, and permissive empty-object scaffolds."
-  - "Executable Hydrology coverage is bounded to local EvidenceBundle alias shape, fixture polarity, and process-level network denial. Evidence closure, policy, proof, catalog closure, release, and publication remain held."
+  - "The directory contains 24 semantic contract documents plus this README."
+  - "Twenty contract-declared schema paths resolve and four are missing. AquiferObservation and AquiferContextLink have closed PROPOSED shapes; the remaining schemas are mixed aliases, minimal envelopes, and permissive scaffolds."
+  - "Executable Hydrology coverage includes the EvidenceBundle alias and the separated aquifer observation/context-link pair. Evidence closure, policy, proof, catalog closure, release, and publication remain held."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -77,9 +77,9 @@ derived relationships, and trust-support envelopes.
 | Surface | Current posture at the pinned snapshot | Authority boundary |
 |---|---|---|
 | This README | v0.3; `draft`; `PLACE`; `BOUNDARY_COMPACT` | Indexes this directory and records verified limits. It does not upgrade any child contract. |
-| Direct semantic contracts | 23 files; each v0.2 and `draft` / `PROPOSED` | Define candidate object/interface meaning only. |
-| Contract-declared schemas | 18 paths resolve; 5 are missing | Existing shape does not establish semantic truth, evidence, policy, or release. |
-| Hydrology tests | One executable smoke module with three tests; seven named modules remain documentation-only placeholders | Proves only the bounded behavior actually asserted. |
+| Direct semantic contracts | 24 files; all remain `draft` / `PROPOSED` | Define candidate object/interface meaning only. |
+| Contract-declared schemas | 20 paths resolve; 4 are missing | Two closed aquifer shapes and the existing aliases/scaffolds do not establish semantic truth, evidence, policy, or release. |
+| Hydrology tests | Three executable bounded modules with thirteen tests; seven named modules remain documentation-only placeholders | Proves only local alias/shape polarity, type separation, optional-link behavior, and process-level network denial. |
 | Hydrology policy | Four five-line `PROPOSED` scaffolds with `default allow := false` | Deny-by-default scaffolding is not accepted policy semantics or a release decision. |
 | Proof-bearing designation | ADR-0009 is `proposed`; configured lane maturity is partial | The lane is not semantically closed or proof-bearing in operation. |
 | Release and publication | No authority created by this directory or README | Publication requires separate evidence, policy, review, release, correction, and rollback closure. |
@@ -244,12 +244,13 @@ file move or successful documentation check.
 ## Verified direct-child map
 
 The following map is verified from repository search at
-`main@0fd7b2ed59e22f60491b267c244c04e55e965e96`. It shows direct children only,
+`main@748f1d92ea7cdd94c274b0287bc01d41506d4b3b`. It shows direct children only,
 as required by Directory Rules v2.
 
 ```text
 contracts/domains/hydrology/
 ├── README.md                       # boundary contract and verified index
+├── aquifer_context_link.md          # typed Hydrology-to-Geology relation
 ├── aquifer_observation.md           # aquifer-state observation meaning
 ├── decision_envelope.md             # finite runtime outcome semantics
 ├── domain_feature_identity.md       # shared Hydrology feature identity
@@ -275,9 +276,9 @@ contracts/domains/hydrology/
 └── watershed.md                     # watershed meaning and scope
 ```
 
-All 23 child contract documents are v0.2 `draft` / `PROPOSED` at the pinned
-snapshot. File presence and prose depth do not make them validated, released,
-or published.
+All 24 child contract documents remain `draft` / `PROPOSED`. File presence,
+prose depth, and bounded schema tests do not make them source-admitted,
+evidence-closed, released, or published.
 
 [Back to top](#top)
 
@@ -303,7 +304,7 @@ or published.
 | [`flow_observation.md`](./flow_observation.md) | Observed discharge/flow meaning with unit and qualifier expectations. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/flow_observation.schema.json). |
 | [`water_level_observation.md`](./water_level_observation.md) | Observed level/stage meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/water_level_observation.schema.json). |
 | [`water_quality_observation.md`](./water_quality_observation.md) | Water-quality measurement meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/water_quality_observation.schema.json). |
-| [`aquifer_observation.md`](./aquifer_observation.md) | Aquifer-state observation and well-reference boundary. | `MISSING`: declared `aquifer_observation.schema.json` does not resolve. |
+| [`aquifer_observation.md`](./aquifer_observation.md) | First-class groundwater-level or aquifer-state measurement. | [Closed bounded schema](../../../schemas/contracts/v1/domains/hydrology/aquifer_observation.schema.json) with dedicated fixtures, validator, and offline tests. |
 | [`hydrograph.md`](./hydrograph.md) | Time series whose observed/modeled role must remain explicit. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/hydrograph.schema.json). |
 
 ### Regulatory, derived, and cross-domain contracts
@@ -311,6 +312,7 @@ or published.
 | Contract | Semantic role | Contract-declared schema posture |
 |---|---|---|
 | [`nfhl_zone.md`](./nfhl_zone.md) | FEMA regulatory flood-hazard context; never observed flooding. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/nfhl_zone.schema.json). |
+| [`aquifer_context_link.md`](./aquifer_context_link.md) | Typed Hydrology observation/well relation to Geology-owned hydrostratigraphic context. | [Closed bounded schema](../../../schemas/contracts/v1/domains/hydrology/aquifer_context_link.schema.json) with dedicated fixtures, validator, and offline tests. |
 | [`upstream_trace.md`](./upstream_trace.md) | Derived network traversal with source/version/ambiguity lineage. | `MISSING`: declared `upstream_trace.schema.json` does not resolve. |
 | [`water_use_link.md`](./water_use_link.md) | Evidence-bearing relationship to water-use authority. | `MISSING`: declared `water_use_link.schema.json` does not resolve. |
 | [`drought_link.md`](./drought_link.md) | Relationship to drought status or indicators without ownership collapse. | `MISSING`: declared `drought_link.schema.json` does not resolve. |
@@ -330,14 +332,15 @@ or published.
 
 ## Schema posture and drift
 
-The 23 contract-declared schema paths resolve as follows:
+The 24 contract-declared schema paths resolve as follows:
 
 | Schema class | Count | Current consequence |
 |---|---:|---|
+| Closed bounded schemas | 2 | `aquifer_observation` and `aquifer_context_link` reject unknown fields and responsibility collapse; tests establish local shape/polarity only. |
 | Shared-profile aliases | 3 | `decision_envelope`, `evidence_bundle`, and `run_receipt` delegate through `$ref`; the domain aliases do not add Hydrology semantics. |
 | Minimal identity envelopes | 4 | `domain_feature_identity`, `domain_layer_descriptor`, `domain_observation`, and `domain_validation_report` require only `id` and permit additional properties. |
 | Empty-object scaffolds | 11 | Stable `$id` and title exist, but no properties or required fields are defined and arbitrary properties are accepted. |
-| Missing contract-declared schemas | 5 | Aquifer observation, drought link, irrigation link, upstream trace, and water-use link lack their declared machine-shape file. |
+| Missing contract-declared schemas | 4 | Drought link, irrigation link, upstream trace, and water-use link lack their declared machine-shape file. |
 
 Additional drift found in the schema lane:
 
@@ -347,9 +350,7 @@ Additional drift found in the schema lane:
 - [`hydro-crosswalk-manifest.schema.json`](../../../schemas/contracts/v1/domains/hydrology/hydro-crosswalk-manifest.schema.json)
   is a permissive empty-object scaffold whose declared contract path is absent.
 - The [Hydrology schema README](../../../schemas/contracts/v1/domains/hydrology/README.md)
-  still says no concrete schemas were confirmed, despite the current files.
-  That README is stale documentation debt and requires a separate,
-  schema-owned update.
+  now records the complete mixed inventory and the separated aquifer pair.
 
 Do not describe any Hydrology object family as `schema-aligned`,
 `validated`, or `active` from these files alone.
@@ -399,17 +400,23 @@ The repository-defined no-network smoke slice is:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 python -m pytest -q -p no:cacheprovider \
-  tests/domains/hydrology/test_hydrology_smoke.py
+  tests/domains/hydrology/test_hydrology_smoke.py \
+  tests/domains/hydrology/test_aquifer_observation.py \
+  tests/domains/hydrology/test_aquifer_context_link.py
 ```
 
-The module contains three executable tests:
+The three modules contain thirteen executable tests:
 
 1. accept one synthetic EvidenceBundle alias fixture;
 2. reject one fixture missing the reviewed required field; and
-3. fail closed for process-level socket, DNS, and URL calls.
+3. fail closed for process-level socket, DNS, and URL calls;
+4. accept linked and unlinked `AquiferObservation` shapes;
+5. reject non-observed or Geology-embedding observation payloads; and
+6. accept typed context links while rejecting endpoint, measurement, and
+   copied-geometry responsibility collapse.
 
 The [`domain-hydrology` workflow](../../../.github/workflows/domain-hydrology.yml)
-runs that module and the EvidenceBundle wrapper. It also guards the broader
+runs those modules and all three corresponding wrappers. It also guards the broader
 test, validator, source, schema, and policy inventories so placeholder changes
 must be reviewed deliberately.
 
@@ -419,6 +426,7 @@ must be reviewed deliberately.
 |---|---|---|
 | Seven named domain test modules | One-line `PROPOSED` placeholders | HUC fingerprinting, NFHL role separation, NHDPlus ambiguity, reach ambiguity, USGS normalization, no-network proof, and EvidenceBundle semantic closure |
 | Decision-envelope and run-receipt wrappers | Present and inventoried | Accepted domain semantics or executed Hydrology coverage |
+| Aquifer pair schemas, fixtures, validators, and tests | Closed local shape and polarity checks | Endpoint resolution, real source admission, evidence closure, scientific validity, policy, proof, or release |
 | Broader Hydrology schemas | Permissive, minimal, alias-only, or missing | Contract/schema parity and meaningful negative rejection |
 | Hydrology policy | Four deny-default scaffolds | Source-role, freshness, sensitivity, groundwater, rights, evidence, or release decisions |
 | [`hydrology-proof-slice` workflow](../../../.github/workflows/hydrology-proof-slice.yml) | Readiness inspection with explicit holds | Proof production, semantic EvidenceRef-to-EvidenceBundle closure, and CatalogMatrix closure |
@@ -451,8 +459,8 @@ Rollback this documentation change if it:
 
 - recreates a flat or parallel contract/schema authority;
 - treats permissive scaffolds as meaningful validation;
-- hides the five missing contract-declared schemas or the two unpaired schema
-  scaffolds;
+- hides the four missing contract-declared schemas, mixed scaffold posture, or
+  same-name-unpaired support schemas;
 - upgrades placeholder tests, policy, pipelines, or workflows to implemented
   status;
 - collapses NFHL, modeled, aggregate, administrative, candidate, or synthetic
@@ -475,9 +483,9 @@ state, or publication.
 |---|---|---|---|
 | [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) at blob `fd49a0b…` | CONFIRMED / adopted through ADR-0029 | `contracts/` owns meaning; domain Hydrology uses this path; BOUNDARY_COMPACT fields and direct-child map law apply. | Does not implement contract semantics. |
 | [`ADR-0029`](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | ACCEPTED | Makes the exact Directory Rules v2 bytes effective repository authority. | Does not implement later topology or maturity work. |
-| Current `contracts/domains/hydrology/` search at `main@0fd7b2e…` | CONFIRMED | 24 direct Markdown files: this README plus 23 v0.2 draft contracts. | Search and file presence do not prove semantics or runtime use. |
-| Contract-by-contract schema-reference resolution | CONFIRMED | 18 resolved paths and five missing paths; resolved shapes fall into alias, minimal, or empty-stub classes. | Does not prove validators, consumers, or field-level parity. |
-| [`test_hydrology_smoke.py`](../../../tests/domains/hydrology/test_hydrology_smoke.py) and its workflow | CONFIRMED executable boundary | Three bounded local tests for alias shape, fixture polarity, and process-level network denial. | Not evidence closure, source admission, policy, proof, release, or publication. |
+| Current `contracts/domains/hydrology/` search at `main@748f1d9…` plus this change | CONFIRMED | 25 direct Markdown files: this README plus 24 draft contracts. | Search and file presence do not prove semantics or runtime use. |
+| Contract-by-contract schema-reference resolution | CONFIRMED | 20 resolved paths and four missing paths; resolved shapes include two closed bounded schemas plus alias, minimal, and empty-stub classes. | Does not prove endpoint resolution, consumers, source truth, or full semantic parity. |
+| Three bounded Hydrology test modules and their workflow | CONFIRMED executable boundary | Thirteen local tests for alias/shape polarity, pair separation, typed endpoint/ID alignment, optional link behavior, and process-level network denial. | Not evidence closure, source admission, policy, proof, release, or publication. |
 | Seven other `tests/domains/hydrology/test_*.py` modules | CONFIRMED placeholders | Records intended coverage names. | No executable assertions. |
 | Four `policy/domains/hydrology/*.rego` files | CONFIRMED scaffolds | Deny-by-default placeholder posture. | No accepted Hydrology policy behavior. |
 | [`ADR-0009`](../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) | CONFIRMED proposed decision and current gate ledger | Hydrology is the configured candidate for first proof-bearing graduation; current proof, evidence, and catalog gates are held. | Does not accept the ADR or graduate the lane. |
@@ -491,10 +499,10 @@ state, or publication.
 |---|---|---|
 | `HYD-CONTRACT-01` | `NEEDS VERIFICATION` | Assign verified Hydrology, contract, evidence, policy, sensitivity, and release stewards without treating CODEOWNERS as role assignment. |
 | `HYD-CONTRACT-02` | `NEEDS VERIFICATION` | Reconcile each v0.2 contract with a meaningful closed schema, positive and negative fixtures, validator, tests, and known consumers. |
-| `HYD-CONTRACT-03` | `NEEDS VERIFICATION` | Add or deliberately defer schemas for aquifer observation, drought link, irrigation link, upstream trace, and water-use link. |
+| `HYD-CONTRACT-03` | `PARTIALLY RESOLVED` | Aquifer observation now has a closed shape and separate context-link type. Add or deliberately defer schemas for drought link, irrigation link, upstream trace, and water-use link. |
 | `HYD-CONTRACT-04` | `NEEDS VERIFICATION` | Resolve the unpaired CatalogMatrix and hydro-crosswalk-manifest schema scaffolds without creating parallel authority. |
-| `HYD-CONTRACT-05` | `NEEDS VERIFICATION` | Update the schema-lane README whose concrete inventory is stale; keep that work schema-owned and path-scoped. |
-| `HYD-CONTRACT-06` | `NEEDS VERIFICATION` | Replace the seven placeholder test modules with deterministic, fixture-backed negative and positive coverage in bounded slices. |
+| `HYD-CONTRACT-05` | `RESOLVED FOR CURRENT INVENTORY` | Keep the schema-lane README synchronized as schema files and pairing change. |
+| `HYD-CONTRACT-06` | `IN PROGRESS` | The aquifer pair now has deterministic fixture-backed coverage; replace the seven remaining placeholder test modules in bounded slices. |
 | `HYD-CONTRACT-07` | `NEEDS VERIFICATION` | Implement and test source-role, freshness, sensitivity, groundwater, rights, evidence, and release policy with finite fail-closed outcomes. |
 | `HYD-CONTRACT-08` | `NEEDS VERIFICATION` | Prove EvidenceRef-to-EvidenceBundle semantic closure, citation behavior, and cite-or-abstain response handling. |
 | `HYD-CONTRACT-09` | `NEEDS VERIFICATION` | Close CatalogMatrix, proof, promotion, correction, rollback, governed API, map/UI, and publication gates without executing placeholder approval logic. |
