@@ -3,22 +3,16 @@ doc_id: kfm://doc/contracts-domains-hydrology-domain-layer-descriptor
 title: Domain Layer Descriptor Contract — Hydrology
 type: semantic-contract
 version: v0.2
-status: draft; PROPOSED; NEEDS VERIFICATION before promotion
+status: draft; PROPOSED; schema stub; dedicated validation absent; published-layer topology conflicted; NEEDS VERIFICATION before promotion
 owners:
-  - OWNER_TBD — Hydrology domain steward
-  - OWNER_TBD — Map/UI steward
-  - OWNER_TBD — Governed API steward
-  - OWNER_TBD — Contracts steward
-  - OWNER_TBD — Source steward
-  - OWNER_TBD — Evidence steward
-  - OWNER_TBD — Schema steward
-  - OWNER_TBD — Policy steward
-  - OWNER_TBD — Release steward
-  - OWNER_TBD — Docs steward
+  - "@bartytime4life — CODEOWNERS review route"
+  - "Hydrology semantic steward assignment — NEEDS VERIFICATION"
+  - "Map/UI stewardship assignment — NEEDS VERIFICATION"
+  - "Governed API stewardship assignment — NEEDS VERIFICATION"
 created: 2026-06-22
-updated: 2026-06-22
+updated: 2026-07-30
 policy_label: public-with-gates; semantic-contract; hydrology; layer-descriptor; map-ui-profile; source-role-aware; evidence-bound; release-gated; rollback-aware; not-for-life-safety
-tags: [kfm, contracts, hydrology, domain-layer-descriptor, LayerManifest, MapReleaseManifest, MapLibre, EvidenceDrawerPayload, source-role, NFHL, regulatory-context, observed-flood, hydrograph, release-manifest, rollback]
+tags: [kfm, contracts, hydrology, domain-layer-descriptor, LayerManifest, MapReleaseManifest, MapLibre, EvidenceDrawerPayload, source-role, NFHL, regulatory-context, observed-flood, hydrograph, release-manifest, rollback, schema-stub, topology-drift]
 related:
   - ./README.md
   - ./decision_envelope.md
@@ -35,15 +29,25 @@ related:
   - ../../../docs/domains/hydrology/IDENTITY_MODEL.md
   - ../../../docs/domains/hydrology/CANONICAL_PATHS.md
   - ../../../schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json
-  - ../../../policy/domains/hydrology/
-  - ../../../fixtures/domains/hydrology/domain_layer_descriptor/
-  - ../../../tests/domains/hydrology/test_domain_layer_descriptor.*
-  - ../../../data/published/layers/hydrology/
-  - ../../../release/candidates/hydrology/
+  - ../../../fixtures/domains/hydrology/README.md
+  - ../../../tests/domains/hydrology/README.md
+  - ../../../tools/validators/domains/hydrology/README.md
+  - ../../../policy/domains/hydrology/README.md
+  - ../../../data/registry/sources/hydrology/README.md
+  - ../../../data/published/hydrology/README.md
+  - ../../../data/published/layers/hydrology/README.md
+  - ../../../release/candidates/hydrology/README.md
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/workflows/domain-hydrology.yml
+  - ../../../.github/CODEOWNERS
 notes:
-  - "Expanded from a greenfield scaffold at contracts/domains/hydrology/domain_layer_descriptor.md."
-  - "The paired schema exists at schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json, but it remains a PROPOSED stub with only spec_hash, id, and version properties; only id is required and additionalProperties=true."
-  - "Hydrology API doctrine confirms a Hydrology layer manifest resolver returning LayerManifest/domain layer descriptor with ANSWER / DENY / ERROR, but route names, mounts, DTO field shapes, and enforcement remain PROPOSED / NEEDS VERIFICATION."
+  - "Same-path semantic-contract modernization grounded in main@54a5e22c9c6bb256e1c2c511b1dcc5db3f78f81f."
+  - "Accepted Directory Rules v2 returns PLACE for this semantic Markdown under contracts/domains/hydrology/."
+  - "The paired schema remains a PROPOSED stub with spec_hash, id, and version properties; only id is required and additionalProperties=true."
+  - "The schema-declared dedicated fixture root and validator, plus a dedicated test module, were absent at the pinned snapshot."
+  - "Both data/published/hydrology/ and data/published/layers/hydrology/ exist; their authority and migration relationship is CONFLICTED / NEEDS VERIFICATION."
+  - "Hydrology API doctrine defines the PROPOSED layer-manifest resolver as ANSWER / DENY / ERROR; ABSTAIN belongs to evidence-bearing feature, drawer, focus, or answer surfaces where defined."
   - "This descriptor profiles public/release layer delivery. It is not source truth, EvidenceBundle proof, PolicyDecision, ReleaseManifest, RunReceipt, public API implementation, emergency warning, or life-safety instruction."
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,317 +55,497 @@ notes:
 
 # Domain Layer Descriptor Contract — Hydrology
 
-> Semantic contract for `domain_layer_descriptor`: the Hydrology layer/view descriptor that binds a public or release-candidate map/API layer to released artifacts, source-role posture, evidence, policy, release state, UI obligations, correction lineage, and rollback support without turning a layer into source truth, evidence proof, or flood-warning authority.
+Semantic contract for the proposed Hydrology `domain_layer_descriptor`: a
+layer/view descriptor that binds governed map, API, and UI delivery to artifact
+identity, source role, evidence, policy, release state, display obligations,
+correction lineage, and rollback support without turning the layer into source
+truth, proof, policy, publication authority, or flood-warning guidance.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts%2F-0a7ea4">
-  <img alt="Domain: Hydrology" src="https://img.shields.io/badge/domain-Hydrology%20%5BDOM--HYD%5D-1f9eda">
-  <img alt="Object: domain_layer_descriptor" src="https://img.shields.io/badge/object-domain__layer__descriptor-blue">
-  <img alt="Boundary: layer not truth" src="https://img.shields.io/badge/boundary-layer__not__truth-critical">
-  <img alt="NFHL: regulatory not observed" src="https://img.shields.io/badge/NFHL-regulatory__not__observed-critical">
-  <img alt="Schema: stub" src="https://img.shields.io/badge/schema-stub%20%2F%20NEEDS__VERIFICATION-orange">
-</p>
+[![Document status: draft](https://img.shields.io/badge/document-draft-yellow?style=flat-square)](#status)
+[![Authority root: contracts](https://img.shields.io/badge/authority-contracts%2F-0a7ea4?style=flat-square)](../../../docs/doctrine/directory-rules.md#93-contracts-schemas-and-policy)
+[![Schema posture: proposed stub](https://img.shields.io/badge/schema-PROPOSED%20stub-orange?style=flat-square)](../../../schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json)
 
-`contracts/domains/hydrology/domain_layer_descriptor.md`
+> [!IMPORTANT]
+> The checked-in schema currently proves only that an instance is an object
+> with a string `id`; it does not enforce the semantic obligations in this
+> contract. No dedicated fixture family, validator, or test for this descriptor
+> was found at the pinned snapshot.
 
 ## Quick jumps
 
-[Status](#status) · [Meaning](#meaning) · [Repo fit](#repo-fit) · [Schema posture](#schema-posture) · [Layer descriptor vs trust objects](#layer-descriptor-vs-trust-objects) · [Assertions](#assertions) · [Exclusions](#exclusions) · [Recommended fields](#recommended-fields) · [Layer classes](#layer-classes) · [Display obligations](#display-obligations) · [Source-role rules](#source-role-rules) · [Lifecycle](#lifecycle) · [Validation](#validation) · [Rollback](#rollback) · [Evidence basis](#evidence-basis) · [Open questions](#open-questions)
+- [Status](#status) · [Meaning](#meaning) · [Repo fit](#repo-fit) · [Schema posture](#schema-posture)
+- [Layer descriptor vs trust objects](#layer-descriptor-vs-trust-objects) · [Assertions](#assertions) · [Exclusions](#exclusions)
+- [Recommended fields](#recommended-fields) · [Layer classes](#layer-classes) · [Display obligations](#display-obligations)
+- [Layer-load decision flow](#layer-load-decision-flow) · [Source-role rules](#source-role-rules) · [Lifecycle](#lifecycle)
+- [Validation](#validation) · [Rollback](#rollback) · [Evidence basis](#evidence-basis) · [Open questions](#open-questions)
 
 ---
 
 ## Status
 
-> [!IMPORTANT]
-> **Status:** `draft` / semantic contract  
-> **Contract path:** `contracts/domains/hydrology/domain_layer_descriptor.md`  
-> **Schema path:** `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json`  
-> **Schema posture:** paired schema exists, but remains a `PROPOSED` stub with only `spec_hash`, `id`, and `version` visible. Only `id` is required and `additionalProperties: true` is still allowed.  
-> **Truth posture:** Hydrology API doctrine confirms the layer manifest resolver and public-layer release gates. Field-level schema shape, validators, fixtures, policy enforcement, runtime route implementation, layer artifacts, release manifests, and UI behavior remain **NEEDS VERIFICATION**.
+| Surface | Confirmed posture at the pinned snapshot | Consequence |
+|---|---|---|
+| Semantic contract | v0.2; `draft`; `PROPOSED` | Defines a reviewable semantic boundary only. |
+| Canonical path | `contracts/domains/hydrology/domain_layer_descriptor.md`; `PLACE` | Keep semantic edits here; do not create a flat or parallel contract. |
+| Paired schema | Present, `PROPOSED`, and permissive | Only `id` is required; the proposed layer envelope is not machine-enforced. |
+| Dedicated fixtures, validator, and test | Schema-declared fixture root and validator are absent; `test_domain_layer_descriptor.py` is absent | No dedicated positive, negative, or cross-field behavior is proven. |
+| Governed API surface | H-API-02 is documented as `PROPOSED`; route and implementation remain unverified | `ANSWER`, `DENY`, and `ERROR` are contract-level outcomes, not observed runtime behavior. |
+| Published-layer topology | `data/published/hydrology/` and `data/published/layers/hydrology/` both exist | Writer, canonical-target, compatibility, and migration relationships remain unresolved. |
+| Review route | `CODEOWNERS` routes `contracts/` to `@bartytime4life` | Review routing is not semantic stewardship, independent approval, policy, or release authority. |
+| Proof and release | Hydrology proof and release workflows retain explicit holds | No public-ready descriptor, released layer, deployment, or publication is asserted. |
 
 > [!CAUTION]
-> A Hydrology layer descriptor is not a layer's proof, source feed, release approval, or emergency guidance. It is a downstream descriptor for governed delivery of released or release-candidate Hydrology views.
+> A Hydrology layer descriptor is not the layer's evidence, source feed,
+> release approval, sensitivity control, or emergency guidance. It is a
+> downstream descriptor for governed delivery of released or release-candidate
+> Hydrology views.
 
----
+[Back to top](#top)
 
 ## Meaning
 
-`domain_layer_descriptor` records how a Hydrology map/API/UI layer may be presented safely once it is bound to evidence, policy, release, correction, and rollback controls.
+`domain_layer_descriptor` records how a Hydrology map/API/UI layer may be
+described and, only after all applicable gates close, presented safely.
 
 It answers:
 
 - Which Hydrology layer is being described?
-- Which released artifact or release-candidate artifact may be served?
-- Which object family and source role does the layer represent?
-- Does the layer include observed readings, regulatory context, modeled derivatives, aggregate summaries, administrative context, candidates, or synthetic content?
-- Which EvidenceRefs, EvidenceBundles, PolicyDecisions, ReleaseManifests, CorrectionNotices, and RollbackCards must resolve before public use?
-- Which UI obligations must be displayed: regulatory badge, provisional-status notice, generalized-geometry notice, citation/Evidence Drawer link, stale-source badge, release/correction state, or not-for-life-safety warning?
+- Which immutable released or release-candidate artifact is bound to it?
+- Which object family, source role, temporal scope, and geometry posture does
+  the layer represent?
+- Does the layer contain observed readings, regulatory context, modeled
+  derivatives, aggregate summaries, administrative context, candidates, or
+  synthetic content?
+- Which EvidenceRefs, EvidenceBundles, PolicyDecisions, ReleaseManifests,
+  CorrectionNotices, and RollbackCards must resolve before public use?
+- Which display duties apply, including regulatory, provisional, modeled,
+  generalized-geometry, stale-source, correction, citation, and
+  not-for-life-safety notices?
 
-The descriptor is the bridge between Hydrology object contracts and the public renderer/API surface. It does not replace either side.
+The descriptor is a semantic bridge between Hydrology object contracts and a
+governed renderer/API surface. It does not replace either side.
 
----
+[Back to top](#top)
 
 ## Repo fit
 
-| Responsibility | Path or root | This contract's role |
-|---|---|---|
-| Human-readable layer meaning | `contracts/domains/hydrology/domain_layer_descriptor.md` | This file; semantic contract for Hydrology layer descriptors. |
-| Machine schema | `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` | Confirmed stub; full layer descriptor shape is not enforced yet. |
-| Hydrology API doctrine | `docs/domains/hydrology/API_CONTRACTS.md` | Defines the layer manifest resolver, finite outcomes, trust membrane, deny rules, DTO families, and release gates. |
-| Contract root | `contracts/domains/hydrology/README.md` | Directory root and object-family boundaries. |
-| Feature identity | `contracts/domains/hydrology/domain_feature_identity.md` | Stable identity, source role, time, geography/version, digest companion. |
-| Decision envelope | `contracts/domains/hydrology/decision_envelope.md` | Runtime finite-outcome wrapper. |
-| Observation envelope | `contracts/domains/hydrology/domain_observation.md` | Observation/source-role boundary, if present/expanded. |
-| Source registry | `data/registry/sources/hydrology/` | Expected SourceDescriptor instances and role/rights/cadence. |
-| Published artifacts | `data/published/layers/hydrology/` | Expected public-safe artifacts, never release authority by themselves. |
-| Policy | `policy/domains/hydrology/` | Expected deny/restrict/abstain and sensitivity gates. |
-| Release | `release/candidates/hydrology/` and release roots | ReleaseManifest, MapReleaseManifest, CorrectionNotice, RollbackCard. |
+Accepted [Directory Rules v2](../../../docs/doctrine/directory-rules.md) and
+[ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+separate meaning, machine shape, policy, lifecycle data, and release decisions.
 
----
+| Responsibility | Owning path or root | This contract's relationship |
+|---|---|---|
+| Human-readable layer meaning | `contracts/domains/hydrology/domain_layer_descriptor.md` | This file owns the proposed Hydrology descriptor semantics. |
+| Machine shape | `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` | Present stub; does not yet enforce the semantic envelope. |
+| Policy decisions | `policy/domains/hydrology/` | Owns allow, deny, restrict, hold, or abstain rules where applicable. |
+| Hydrology API doctrine | `docs/domains/hydrology/API_CONTRACTS.md` | Defines H-API-02, finite outcomes, public-layer gates, and trust-membrane constraints. |
+| Contract inventory | `contracts/domains/hydrology/README.md` | Indexes this object family and records broader Hydrology holds. |
+| Feature identity | `contracts/domains/hydrology/domain_feature_identity.md` | Owns stable identity, source role, temporal scope, and digest companion semantics. |
+| Decision envelope | `contracts/domains/hydrology/decision_envelope.md` | Owns the runtime finite-outcome carrier; this descriptor does not redefine it. |
+| Validation report | `contracts/domains/hydrology/domain_validation_report.md` | Owns inspectable gate results; this descriptor may reference, not replace, them. |
+| Source registry | `data/registry/sources/hydrology/` | Carries source identity, role, rights, cadence, and claim limits. |
+| Published Hydrology data | `data/published/hydrology/` | Directory Rules-conforming domain lane; its README proposes a `layers/` child. |
+| Existing layer-first published lane | `data/published/layers/hydrology/` | Existing competing topology; treat as `CONFLICTED / NEEDS VERIFICATION`, not a second writer by assumption. |
+| Release candidates and decisions | `release/candidates/hydrology/` and accepted release object families | Candidate review, release, correction, withdrawal, and rollback remain distinct from carrier bytes. |
+
+Path decision:
+
+- Artifact kind: semantic Markdown contract.
+- Authority owner: object and interface meaning.
+- Responsibility root: `contracts/`.
+- Scope kind and ID: domain, `hydrology`.
+- Existing home: `contracts/domains/hydrology/`.
+- Outcome: `PLACE`.
+- Governing rules: `DIR-AUTHROOT-002` and `DIR-SCOPELANE-001` through
+  `DIR-SCOPELANE-004`.
+
+The same contract may reference many trust objects. It must not absorb their
+authority or settle the published-lane migration through prose.
+
+[Back to top](#top)
 
 ## Schema posture
 
 | Schema fact | Current posture |
 |---|---|
 | Confirmed schema path | `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` |
-| Schema status | `PROPOSED` |
+| Schema `$id` | `https://schemas.kfm.local/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` |
 | Schema title | `domain_layer_descriptor` |
-| Visible properties | `spec_hash`, `id`, `version` |
+| Schema status | `PROPOSED` |
+| JSON type | `object` |
+| Defined properties | `spec_hash`, `id`, `version` |
 | Required fields | `id` only |
 | Additional properties | `true` |
-| Contract pointer | `contracts/domains/hydrology/domain_layer_descriptor.md` |
-| Fixtures pointer | `fixtures/domains/hydrology/domain_layer_descriptor/` |
-| Validator pointer | `tools/validators/domains/hydrology/validate_domain_layer_descriptor.py` |
-| Policy pointer | `policy/domains/hydrology/` |
-| Full layer descriptor enforcement | NEEDS VERIFICATION |
+| Contract pointer | Resolves to this file |
+| Fixtures pointer | Declares `fixtures/domains/hydrology/domain_layer_descriptor/`; path absent at the pinned snapshot |
+| Validator pointer | Declares `tools/validators/domains/hydrology/validate_domain_layer_descriptor.py`; file absent at the pinned snapshot |
+| Dedicated test | `tests/domains/hydrology/test_domain_layer_descriptor.py` absent at the pinned snapshot |
+| Policy pointer | Resolves to the Hydrology policy lane; object-specific enforcement is not established |
+| Full descriptor enforcement | `NEEDS VERIFICATION` |
 
-The current schema does not prove enforcement of layer ID, artifact refs, release refs, evidence refs, source role, UI obligations, geometry posture, or rollback linkage.
+This object satisfies the current schema shape:
 
----
+```json
+{
+  "id": "illustrative-schema-only"
+}
+```
+
+That example is intentionally insufficient. The schema does not define an ID
+format or enforce layer identity, artifact refs, source role, evidence,
+validation, policy, release, UI duties, public-safe geometry, correction, or
+rollback. Schema acceptance must not be reported as semantic conformance or
+public readiness.
+
+[Back to top](#top)
 
 ## Layer descriptor vs trust objects
 
-| Object / artifact | What it owns | Boundary |
+| Object or artifact | What it owns | Boundary |
 |---|---|---|
-| `domain_layer_descriptor` | Layer meaning, source-role posture, artifact binding, display duties, and public-delivery constraints. | This contract. |
-| `LayerManifest` | Cross-cutting layer manifest payload returned by a layer manifest resolver. | Descriptor profiles Hydrology requirements; does not redefine shared manifest. |
-| `MapReleaseManifest` | Active map/layer release set and version lock. | Required for public layer load; descriptor does not publish. |
-| `EvidenceBundle` | Evidence support for claims. | Descriptor cites it; descriptor is not proof. |
-| `PolicyDecision` | Allow/restrict/deny/abstain. | Descriptor cites policy; descriptor does not decide policy. |
-| `ReleaseManifest` | Publication authority and rollback target. | Descriptor cites it; descriptor is not release approval. |
-| `RunReceipt` | Build/tile/pipeline generation memory. | Descriptor may cite artifacts from a run; it is not the run receipt. |
-| `CorrectionNotice` | Public correction/supersession. | Descriptor must expose correction state where material. |
-| Map tiles/styles | Delivery artifacts. | Never evidence, proof, release, source truth, or redaction policy by themselves. |
-| Evidence Drawer payload | UI projection of evidence. | Descriptor must make drawer resolution possible, but drawer owns projection. |
+| `domain_layer_descriptor` | Layer meaning, source-role posture, artifact binding, display duties, and public-delivery constraints | This contract |
+| `LayerManifest` | Cross-cutting layer-manifest payload returned by a resolver | This descriptor profiles Hydrology requirements; it does not redefine the shared manifest |
+| `MapReleaseManifest` | Active map/layer release set and version lock | Required by API doctrine for public layer load; this descriptor does not publish |
+| `EvidenceBundle` | Evidence support and citation scope | Descriptor cites it; descriptor is not proof |
+| `PolicyDecision` | Allowed, restricted, denied, held, or abstained posture according to the applicable policy | Descriptor cites it; descriptor does not decide policy |
+| `DomainValidationReport` | Deterministic gate results and failed checks | Descriptor may reference it; a report is not proof or release authority |
+| `ReleaseManifest` | Publication authority and immutable rollback target | Descriptor cites it; descriptor is not release approval |
+| `RunReceipt` | Build, tile, or pipeline process memory | Descriptor may cite an artifact from a run; it is not the receipt |
+| `CorrectionNotice` | Correction, withdrawal, or supersession lineage | Descriptor must expose material correction state |
+| Map tiles and styles | Delivery artifacts | Never evidence, proof, release, source truth, or redaction policy by themselves |
+| `EvidenceDrawerPayload` | UI projection of evidence | Descriptor must permit resolution; the drawer owns the projection |
 
----
+[Back to top](#top)
 
 ## Assertions
 
-A reviewed `domain_layer_descriptor` should assert:
+Within this draft contract, **must** denotes a proposed semantic requirement
+for review. It does not claim that the current schema, validator, workflow, API,
+or client enforces the requirement.
 
-1. **Layer identity** — stable descriptor ID, layer ID, Hydrology domain, layer class, version, and `spec_hash`.
-2. **Artifact binding** — artifact refs, digests, media type, CRS, bounds, zoom/resolution, temporal extent, and public-safe flag.
-3. **Source-role binding** — observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles remain visible and do not collapse.
-4. **Evidence binding** — EvidenceRefs/EvidenceBundles are resolvable for layer claims and Evidence Drawer inspection.
-5. **Policy binding** — PolicyDecision refs and exposure/restriction state travel with the descriptor.
-6. **Release binding** — ReleaseManifest / MapReleaseManifest, correction path, and rollback target exist before public layer loading.
-7. **Temporal posture** — source, observed, valid, retrieval, release, correction, and stale/freshness states are not collapsed.
-8. **Display duties** — NFHL/regulatory, provisional, modeled, aggregate, generalized, sensitive, stale, correction, and not-for-life-safety badges/notes are machine-inspectable where material.
-9. **Public path safety** — layer loads only through governed APIs and released artifacts; no direct RAW/WORK/source endpoint path.
-10. **Correction/rollback readiness** — changed source, artifact, policy, or release state can invalidate the descriptor and all downstream surfaces.
+A reviewable `domain_layer_descriptor` must assert:
 
----
+1. **Layer identity** — stable descriptor ID, layer ID, Hydrology domain,
+   layer class, version, and deterministic digest posture.
+2. **Artifact binding** — artifact refs, digests, media type, CRS, bounds,
+   zoom or resolution, temporal extent, and public-safe posture.
+3. **Source-role binding** — observed, regulatory, modeled, aggregate,
+   administrative, candidate, and synthetic roles remain visible and do not
+   collapse.
+4. **Evidence binding** — EvidenceRefs and EvidenceBundles resolve for material
+   layer claims and Evidence Drawer inspection.
+5. **Validation binding** — applicable validation reports identify the checked
+   revision, gates, results, and unresolved holds.
+6. **Policy binding** — PolicyDecision refs and exposure/restriction state
+   travel with the descriptor.
+7. **Release binding** — ReleaseManifest or MapReleaseManifest, correction
+   path, and rollback target exist before public layer loading.
+8. **Temporal posture** — source, observed, valid, retrieval, release,
+   correction, and stale/freshness states are not collapsed.
+9. **Display duties** — regulatory, provisional, modeled, aggregate,
+   generalized, sensitive, stale, correction, and not-for-life-safety notices
+   are machine-inspectable where material.
+10. **Public path safety** — public clients load only through governed
+    interfaces and released artifacts, never RAW, WORK, QUARANTINE, source
+    endpoints, or release candidates.
+11. **Correction and rollback readiness** — a source, artifact, evidence,
+    policy, or release change can invalidate the descriptor and every
+    downstream cache, export, or view.
+
+[Back to top](#top)
 
 ## Exclusions
 
-| Misuse | Why it is denied or abstained |
+| Misuse | Why it is denied or requires abstention |
 |---|---|
 | Layer descriptor as source truth | SourceDescriptor and source payloads own source authority. |
-| Layer descriptor as evidence proof | EvidenceBundle/proof support remains separate. |
-| Layer descriptor as release authority | ReleaseManifest/MapReleaseManifest own publication. |
-| Tile URL as public release | Tile artifacts require release, digest, policy, evidence, and rollback refs. |
-| Map style as sensitivity control | Style is delivery; redaction/generalization needs policy and receipt support. |
+| Layer descriptor as evidence proof | EvidenceBundle and proof support remain separate. |
+| Layer descriptor as policy decision | Policy source and decision records remain separate. |
+| Layer descriptor as release authority | ReleaseManifest and MapReleaseManifest own publication decisions. |
+| Tile URL as public release | Tile artifacts require digest, evidence, policy, release, correction, and rollback closure. |
+| Map style as sensitivity control | Styling is delivery; redaction or generalization requires policy and receipt support. |
 | NFHL layer as observed flood extent | Regulatory context is not observed inundation. |
-| Modeled hydrograph layer as observed series | Modeled source role must remain visible. |
-| Aggregate HUC layer as per-place truth | Aggregation scope must remain visible. |
-| Candidate layer as public layer | WORK/QUARANTINE/release-candidate material is not public. |
-| Emergency warning or life-safety instruction layer | Hydrology is not an alert authority. |
-| AI/focus answer inferred from layer alone | AI answers require released EvidenceBundle support and AIReceipt/citation closure. |
+| Modeled hydrograph layer as observed series | Modeled source role and run/uncertainty lineage must remain visible. |
+| Aggregate HUC layer as per-place truth | Aggregation unit and window must remain visible. |
+| Candidate layer as public layer | WORK, QUARANTINE, and release-candidate material is not public. |
+| Emergency warning or life-safety layer | KFM Hydrology is not an alert authority. |
+| AI or Focus Mode answer inferred from a layer alone | Answers require released EvidenceBundle support and citation/AI receipt closure. |
 
----
+[Back to top](#top)
 
 ## Recommended fields
 
-The following fields are **PROPOSED** targets for future schema expansion. They are not enforced by the current schema stub.
+The following fields are **PROPOSED** targets for future schema work. They are
+not enforced by the current schema stub.
 
-| Field | Meaning |
+| Field | Proposed semantic meaning |
 |---|---|
-| `id` | Canonical Hydrology layer descriptor ID. |
-| `version` | Contract/object version. |
-| `spec_hash` | Deterministic digest over normalized layer descriptor semantics. |
-| `domain` | Must resolve to `hydrology`. |
-| `layer_id` | Stable layer identifier used by governed API/UI. |
-| `layer_class` | HUC/watershed, reach, gauge, observation, NFHL regulatory, hydrograph, upstream trace, groundwater, cross-link, aggregate, or accepted enum. |
-| `object_family_refs` | Hydrology object families represented in the layer. |
-| `artifact_refs` | Released artifact refs such as PMTiles, vector tiles, COG, GeoParquet, API payload, or report/export artifact. |
-| `artifact_digests` | Content digests for layer artifacts. |
-| `source_descriptor_refs` | Source identity, role, rights, cadence, authority, citation. |
-| `source_role_summary` | Role set represented in the layer. |
-| `temporal_extent` | Source/observed/valid/retrieval/release/correction time coverage. |
-| `freshness_state` | current, historical, stale_source, superseded, withdrawn, provisional, unknown, or accepted enum. |
-| `geometry_role` | exact_internal, source_scale, generalized_public, aggregate_public, withheld, restricted, or accepted enum. |
-| `evidence_ref_ids` | EvidenceRefs available for feature/drawer resolution. |
-| `evidence_bundle_ids` | EvidenceBundles supporting public layer claims. |
-| `policy_decision_refs` | Policy decisions controlling exposure. |
-| `release_refs` | ReleaseManifest, MapReleaseManifest, or PromotionDecision refs. |
-| `correction_refs` | CorrectionNotice/supersession refs. |
-| `rollback_refs` | RollbackCard/rollback target refs. |
+| `id` | Canonical Hydrology layer-descriptor ID. |
+| `version` | Contract or object version. |
+| `spec_hash` | Deterministic digest over normalized descriptor semantics. |
+| `domain` | Hydrology domain binding. |
+| `layer_id` | Stable layer identifier used by governed API and UI surfaces. |
+| `layer_class` | HUC/watershed, reach, gauge, observation, NFHL regulatory, hydrograph, upstream trace, groundwater, cross-link, aggregate, or an accepted enum. |
+| `object_family_refs` | Hydrology object families represented by the layer. |
+| `artifact_refs` | Immutable refs for PMTiles, vector tiles, COG, GeoParquet, API payload, report, or export artifacts. |
+| `artifact_digests` | Content digests for each bound artifact. |
+| `artifact_profile` | Media type, CRS, bounds, zoom/resolution, and other delivery properties. |
+| `source_descriptor_refs` | Source identity, role, rights, cadence, authority, and citation refs. |
+| `source_role_summary` | Role set represented by the layer. |
+| `temporal_extent` | Source, observed, valid, retrieval, release, and correction coverage. |
+| `freshness_state` | Current, historical, stale-source, superseded, withdrawn, provisional, unknown, or an accepted enum. |
+| `geometry_role` | Exact internal, source scale, generalized public, aggregate public, withheld, restricted, or an accepted enum. |
+| `evidence_ref_ids` | EvidenceRefs available for feature and drawer resolution. |
+| `evidence_bundle_ids` | EvidenceBundles supporting material public claims. |
+| `validation_report_refs` | Validation reports bound to the descriptor and artifact revision. |
+| `policy_decision_refs` | Policy decisions controlling exposure and interaction. |
+| `release_refs` | ReleaseManifest, MapReleaseManifest, or PromotionDecision refs as accepted by the owning contracts. |
+| `correction_refs` | CorrectionNotice, withdrawal, or supersession refs. |
+| `rollback_refs` | RollbackCard or immutable rollback-target refs. |
 | `ui_obligations` | Required legend badges, caveats, disclaimers, drawer links, and export notes. |
-| `interaction_policy` | view, click, drawer, focus_context, export, download, denied, or accepted enum. |
-| `quality_flags` | missing_evidence, missing_release, stale_source, source_role_conflict, nfhl_observed_collapse, modeled_as_observed, aggregate_as_per_place, sensitive_join, schema_stub. |
+| `interaction_policy` | View, click, drawer, focus context, export, download, denied, or an accepted enum. |
+| `quality_flags` | Missing evidence, missing release, stale source, role conflict, NFHL/observed collapse, modeled/observed collapse, aggregate/per-place collapse, sensitive join, or schema-stub state. |
 
----
+Field names, requiredness, enums, formats, reference syntax, and cross-field
+rules remain subject to schema, policy, fixture, and validator review.
+
+[Back to top](#top)
 
 ## Layer classes
 
-| Layer class | Publishable posture | Required display behavior |
+| Layer class | Proposed publishable posture | Required display behavior |
 |---|---|---|
-| `huc_unit` / `watershed` | Boundary/accounting context. | Snapshot/vintage and source role visible. |
-| `hydro_feature` / `reach_identity` | Hydrographic network context. | Source version, ambiguity/ABSTAIN state, and evidence support visible. |
-| `gauge_site` | Monitoring site identity. | Site metadata separate from observations. |
-| `flow_observation` / `water_level_observation` | Observed reading layer. | Unit, qualifier/provisional status, observed/source time, evidence drawer. |
-| `water_quality_observation` | Observed parameter layer. | Parameter, unit, qualifier, sampling window. |
-| `groundwater_well` / `aquifer_observation` | Groundwater context or observation. | Private-property/sensitive geometry review; generalized public geometry where needed. |
-| `nfhl_zone` / `flood_context` | Regulatory flood-hazard context. | Regulatory badge; never observed flooding. |
-| `observed_flood_event` | Observed inundation evidence. | Event time, source evidence, and distinction from NFHL. |
-| `hydrograph` | Observed or modeled time-series view. | Role badge; model/run/uncertainty for modeled outputs. |
-| `upstream_trace` | Derived network traversal result. | Source graph/version, algorithm, evidence/receipt. |
-| `water_use_link` / `drought_link` / `irrigation_link` | Cross-domain relation layer. | Both lanes' source roles and evidence; sensitive joins reviewed. |
+| `huc_unit` or `watershed` | Boundary and accounting context | Snapshot or vintage and source role visible |
+| `hydro_feature` or `reach_identity` | Hydrographic network context | Source version, ambiguity/abstention state, and evidence support visible |
+| `gauge_site` | Monitoring-site identity | Site metadata remains separate from observations |
+| `flow_observation` or `water_level_observation` | Observed reading layer | Unit, qualifier/provisional status, observed/source time, and Evidence Drawer |
+| `water_quality_observation` | Observed parameter layer | Parameter, unit, qualifier, sampling method/window |
+| `groundwater_well` or `aquifer_observation` | Groundwater context or observation | Private-property and sensitivity review; public geometry generalized where policy requires |
+| `nfhl_zone` or `flood_context` | Regulatory flood-hazard context | Regulatory notice; never observed flooding |
+| `observed_flood_event` | Observed inundation evidence | Event time, source evidence, and explicit distinction from NFHL |
+| `hydrograph` | Observed, modeled, or explicitly mixed time series | Role notice; model, run, and uncertainty for modeled outputs |
+| `upstream_trace` | Derived network traversal | Source graph/version, algorithm, evidence, and process receipt |
+| `water_use_link`, `drought_link`, or `irrigation_link` | Cross-domain relationship | Both lanes' source roles and evidence; sensitive joins reviewed |
 
----
+These values are semantic candidates, not an accepted machine enum.
+
+[Back to top](#top)
 
 ## Display obligations
 
-Every public Hydrology layer descriptor should make these duties machine-inspectable before a public client can render it as `ANSWER`:
+Before the proposed layer-manifest resolver can return `ANSWER`, a public
+Hydrology descriptor must make these applicable duties machine-inspectable:
 
-- release state and ReleaseManifest / MapReleaseManifest reference;
+- release state and ReleaseManifest or MapReleaseManifest reference;
 - EvidenceBundle or EvidenceRef resolution path;
-- source-role badges for observed/regulatory/modeled/aggregate/administrative/candidate/synthetic content;
-- NFHL regulatory caveat where NFHL or flood-regulatory context is present;
-- provisional/final status for USGS/NWIS observations where material;
-- model/run/uncertainty caveat for modeled hydrograph or derived surfaces;
-- generalized/restricted geometry notice where public geometry differs from source/internal geometry;
-- stale, superseded, withdrawn, or correction state when material;
-- rollback target for published layer artifacts;
-- not-for-life-safety notice when a Hydrology layer could be mistaken for emergency flood guidance.
+- source-role notices for observed, regulatory, modeled, aggregate,
+  administrative, candidate, or synthetic content;
+- NFHL regulatory caveat wherever NFHL or flood-regulatory context appears;
+- provisional or final status for observations where material;
+- model, run, and uncertainty caveat for modeled hydrographs or derivatives;
+- generalized or restricted geometry notice where public geometry differs from
+  source or internal geometry;
+- stale, superseded, withdrawn, or corrected state where material;
+- immutable rollback target for released layer artifacts;
+- not-for-life-safety notice where a layer could be mistaken for emergency
+  flood guidance.
 
-A layer that cannot provide these duties may still be useful internally, but it is not public-ready.
+A layer that cannot satisfy its applicable duties may remain useful internally,
+but this contract does not classify it as public-ready.
 
----
+[Back to top](#top)
+
+## Layer-load decision flow
+
+The documented H-API-02 surface separates successful layer serving from policy
+denial and evaluation failure:
+
+```mermaid
+flowchart TD
+    C["Candidate descriptor + immutable artifact"] --> S{"Shape evaluable?"}
+    S -->|"No"| E["ERROR: no public layer"]
+    S -->|"Yes"| G{"Evidence, source role, policy, release, correction, rollback, and UI duties resolve?"}
+    G -->|"Policy, rights, sensitivity, release, or exposure blocks"| D["DENY: no public layer"]
+    G -->|"Evaluation fails"| E
+    G -->|"Yes"| A["ANSWER: public-safe LayerManifest"]
+```
+
+`ABSTAIN` remains available on evidence-bearing feature, drawer, Focus Mode, or
+answer surfaces where their contracts define it. It is not listed as an H-API-02
+layer-load outcome in the inspected API contract.
+
+[Back to top](#top)
 
 ## Source-role rules
 
-| Source role | Layer descriptor behavior |
+| Source role | Required descriptor behavior |
 |---|---|
-| `observed` | May support observed readings/events when time, unit, qualifier, evidence, and release resolve. |
-| `regulatory` | May support NFHL/FloodContext as regulatory context only; observed-flood framing is denied. |
-| `modeled` | May support modeled hydrograph or derived surfaces with run/receipt/uncertainty; observed framing is denied. |
-| `aggregate` | May support HUC/watershed/county rollups with aggregation scope; per-place framing is denied. |
-| `administrative` | May support registry/allocation/accounting context; not an observation unless separately evidenced. |
+| `observed` | May support observed readings or events only when identity, time, unit, qualifier, evidence, policy, and release resolve. |
+| `regulatory` | May support NFHL or FloodContext as regulatory context only; observed-flood framing is denied. |
+| `modeled` | May support modeled hydrograph or derived surfaces with model, run, receipt, and uncertainty lineage; observed framing is denied. |
+| `aggregate` | May support HUC, watershed, or county rollups with aggregation unit and window; per-place framing is denied. |
+| `administrative` | May support registry, allocation, or accounting context; it is not an observation unless separately evidenced. |
 | `candidate` | No public layer serving before governed promotion. |
-| `synthetic` | Never observed reality; representation/AI boundaries required. |
+| `synthetic` | Never observed reality; fixture, simulation, reconstruction, or AI boundaries remain visible. |
 
----
+[Back to top](#top)
 
 ## Lifecycle
 
-| Phase | Layer descriptor handling |
+| Phase | Descriptor handling |
 |---|---|
-| RAW | Source metadata/artifact references may be captured, but no public descriptor is served. |
-| WORK / QUARANTINE | Candidate descriptor is normalized; missing source role, evidence, release, sensitivity, or role-collapse issues are held. |
-| PROCESSED | Descriptor can bind candidate artifact, digest, temporal extent, source-role summary, EvidenceRefs, ValidationReport, and quality flags. |
-| CATALOG / TRIPLET | Descriptor may support catalog/discovery and release candidates, but not public serving without release closure. |
-| RELEASE CANDIDATE | ReleaseManifest, MapReleaseManifest, EvidenceBundle, PolicyDecision, correction path, rollback target, and UI obligations are checked. |
-| PUBLISHED | Governed API may return layer descriptor / LayerManifest for released public-safe artifacts only. |
-| CORRECTED / SUPERSEDED | Source update, policy change, artifact digest change, correction, withdrawal, or rollback invalidates the descriptor and downstream caches. |
+| RAW | Source metadata or artifact refs may be captured; no public descriptor is served. |
+| WORK or QUARANTINE | Candidate descriptor is normalized; missing role, evidence, release, rights, sensitivity, or role-collapse findings are held. |
+| PROCESSED | Descriptor may bind a candidate artifact, digest, time extent, role summary, EvidenceRefs, validation report, and quality flags. |
+| CATALOG or TRIPLET | Descriptor may support discovery and relationship projections; this does not authorize public serving. |
+| RELEASE CANDIDATE | Evidence, policy, review, release, correction, rollback, artifact integrity, and UI obligations are evaluated. |
+| PUBLISHED | Governed interfaces may return a descriptor or LayerManifest for released public-safe artifacts only. |
+| CORRECTED, WITHDRAWN, or SUPERSEDED | Source, artifact, evidence, policy, correction, withdrawal, or rollback changes invalidate affected descriptors and downstream caches. |
 
----
+Promotion is a governed state transition, not a copy, file move, branch, commit,
+pull request, merge, badge, or GitHub release.
+
+[Back to top](#top)
 
 ## Validation
 
-Before this contract is promoted beyond draft:
+### Current executable boundary
 
-- [ ] Expand `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` beyond `spec_hash`, `id`, and `version`.
-- [ ] Decide whether this domain descriptor is a profile of shared `LayerManifest` or an independent Hydrology DTO.
-- [ ] Define canonical `layer_class`, `geometry_role`, `freshness_state`, `interaction_policy`, `ui_obligations`, and `quality_flags` values.
-- [ ] Add positive fixtures for HUCUnit boundary, gauge-site, provisional flow observation, NFHL regulatory context, observed flood event, modeled hydrograph, upstream trace, and generalized groundwater/aquifer layer.
-- [ ] Add negative fixtures for NFHL-as-observed-flood, modeled-hydrograph-as-observed, aggregate-as-per-place, unreleased-layer-load, RAW/WORK path exposure, candidate-as-public, missing ReleaseManifest, missing EvidenceBundle, missing rollback target, and life-safety layer framing.
-- [ ] Confirm policy can DENY or RESTRICT sensitive groundwater/private-property, infrastructure, and cross-lane joins.
-- [ ] Confirm governed API layer manifest resolver returns `ANSWER`, `DENY`, or `ERROR` for layer loads and never silently falls through to source endpoints.
-- [ ] Confirm MapLibre/public UI surfaces render negative states rather than blank/generic error states.
+The checked-in `domain-hydrology` workflow:
 
-Recommended finite outcomes:
+- inventories the exact Hydrology validator lane and does not include a
+  domain-layer-descriptor validator;
+- reserves executable coverage for the bounded Hydrology EvidenceBundle alias
+  shape/polarity slice and process-level network denial;
+- keeps broader Hydrology semantics, evidence closure, proof, and release on
+  explicit hold.
 
-| Condition | Outcome |
+No repository-native command was found that validates this descriptor family.
+Do not invent one or cite the current Hydrology workflow as proof of descriptor
+conformance.
+
+### Required promotion work
+
+- [ ] Reconcile the schema's absent `fixtures_root` and `validator` pointers
+      with actual, reviewed repository paths.
+- [ ] Expand the paired schema beyond `spec_hash`, `id`, and `version`.
+- [ ] Decide whether this descriptor is a Hydrology profile of shared
+      `LayerManifest` or an independent domain DTO.
+- [ ] Define canonical `layer_class`, `geometry_role`, `freshness_state`,
+      `interaction_policy`, `ui_obligations`, and `quality_flags` values.
+- [ ] Add synthetic positive fixtures for boundary, site, provisional
+      observation, regulatory context, observed event, modeled hydrograph,
+      derived trace, and generalized groundwater cases.
+- [ ] Add synthetic negative fixtures for NFHL-as-observed, modeled-as-observed,
+      aggregate-as-per-place, unreleased load, internal-path exposure,
+      candidate-as-public, missing evidence, missing release, missing rollback,
+      and life-safety framing.
+- [ ] Add a dedicated validator and deterministic no-network tests that fail
+      closed with finite reason codes.
+- [ ] Confirm policy can deny or restrict sensitive groundwater,
+      private-property, infrastructure, and cross-lane joins.
+- [ ] Confirm the layer-manifest resolver returns `ANSWER`, `DENY`, or `ERROR`
+      and cannot fall through to source or lifecycle-internal endpoints.
+- [ ] Confirm public clients render negative and stale/corrected states rather
+      than blank or generic error states.
+- [ ] Resolve the two published-layer topologies through the adopted
+      placement/migration process before authorizing a writer.
+
+### Surface outcomes
+
+| Condition | Contract-level outcome |
 |---|---|
-| Descriptor, artifact, evidence, source role, policy, release, correction, rollback, and display obligations resolve | `ANSWER` / public-safe layer manifest |
-| Release, policy, sensitivity, role-collapse, source-rights, or public-path rule blocks layer | `DENY` |
-| Schema, artifact, evidence, policy, release, or resolver failure prevents evaluation | `ERROR` |
-| Feature/drawer/focus question against the layer lacks evidence/citation support | `ABSTAIN` on that surface, not necessarily layer manifest resolver |
+| Descriptor, artifact, evidence, source role, policy, release, correction, rollback, and display duties resolve | `ANSWER` with a public-safe LayerManifest |
+| Policy, rights, sensitivity, role-collapse, release, or public-path rule blocks the layer | `DENY` |
+| Shape, artifact, evidence, policy, release, or resolver failure prevents evaluation | `ERROR` |
+| A feature, drawer, or answer request lacks evidence or citation support | `ABSTAIN` on that surface; not an H-API-02 layer-load outcome |
 
----
+[Back to top](#top)
 
 ## Rollback
 
-Rollback is required when a Hydrology layer descriptor weakens source-role integrity, evidence closure, policy/release state, sensitivity posture, correction lineage, or the public trust membrane.
+Semantic rollback is required when a Hydrology layer descriptor weakens source
+role, evidence closure, validation, policy/release state, sensitivity posture,
+correction lineage, or the public trust membrane.
 
-Rollback triggers include descriptor serving without ReleaseManifest or MapReleaseManifest; missing artifact digest; missing EvidenceBundle; missing rollback target; NFHL regulatory layer rendered as observed flood extent; modeled hydrograph rendered as observation; aggregate HUC rollup rendered as per-place observation; private-property or sensitive infrastructure join exposed without review; public client reading RAW/WORK/QUARANTINE/source endpoints directly; Focus Mode answer derived from a layer without CitationValidationReport; tile/style used as redaction or proof; correction/withdrawal not propagated; or schema/contract drift after migration.
+Triggers include:
 
-Rollback artifacts should include affected descriptor IDs, layer IDs, artifact refs/digests, object-family refs, source descriptors, source-role summaries, temporal extents, geometry roles, EvidenceRefs/EvidenceBundles, ValidationReports, PolicyDecisions, ReleaseManifests, MapReleaseManifests, CorrectionNotices, RollbackCards, invalidated decision envelopes, invalidated exports, and public-cache/style invalidation instructions.
+- serving without an applicable ReleaseManifest or MapReleaseManifest;
+- a missing or mismatched artifact digest;
+- unresolved EvidenceBundle, validation, policy, correction, or rollback refs;
+- NFHL regulatory context rendered as observed flood extent;
+- modeled hydrograph rendered as an observation;
+- aggregate rollup rendered as a per-place observation;
+- private-property or sensitive infrastructure join exposed without review;
+- a public client reading RAW, WORK, QUARANTINE, source, or candidate paths;
+- a Focus Mode answer derived from a layer without citation validation;
+- tile or style artifacts used as sensitivity policy or proof;
+- correction, withdrawal, or supersession not propagated;
+- a second published-layer writer created before topology resolution; or
+- schema/contract drift after migration.
 
----
+Rollback records should identify affected descriptor and layer IDs, artifact
+refs/digests, object-family refs, source descriptors, role summaries, temporal
+extents, geometry roles, evidence, validation reports, policy decisions,
+release manifests, corrections, rollback cards, invalidated envelopes,
+exports, caches, and style versions.
+
+For this documentation change, rollback before merge is to close the draft pull
+request and abandon its scoped branch. After merge, use a focused revert or
+corrective pull request against the actual merge commit. A documentation revert
+does not alter source data, evidence, policy decisions, release state, caches,
+deployed artifacts, or publication state.
+
+[Back to top](#top)
 
 ## Evidence basis
 
-| Source | Status | Supports | Limits |
+| Evidence | Status | Supports | Limits |
 |---|---|---|---|
-| `contracts/domains/hydrology/domain_layer_descriptor.md` scaffold | CONFIRMED | Target existed as a greenfield scaffold. | Did not contain Hydrology-specific layer semantics. |
-| `schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json` | CONFIRMED | Schema pointer, current stub fields, fixtures/validator/policy pointers. | Does not enforce full layer descriptor fields. |
-| `docs/domains/hydrology/API_CONTRACTS.md` | CONFIRMED | Layer manifest resolver, trust-membrane posture, finite outcomes, DTO/object-family map, deny rules, lifecycle gates, anti-patterns, validation fixture families. | Route names, DTO shapes, policy runtime, and implementation remain PROPOSED / NEEDS VERIFICATION. |
-| `contracts/domains/hydrology/README.md` | CONFIRMED | Contract-root object families, trust flow, source-role rules, validation and rollback expectations. | Orientation doc, not schema enforcement. |
-| `contracts/domains/hydrology/domain_feature_identity.md` | CONFIRMED | Identity/source-role/time/digest companion semantics. | Identity contract, not layer schema enforcement. |
-| `contracts/domains/hydrology/decision_envelope.md` | CONFIRMED | Runtime finite-outcome alias and Hydrology deny/obligation profile. | Runtime envelope, not layer descriptor schema. |
-| `docs/domains/hydrology/CANONICAL_PATHS.md` | CONFIRMED | Responsibility-root doctrine and schema-home rule. | Some path-as-applied claims in that doc are PROPOSED, though this target path is directly verified. |
-| User-provided authoring role | CONFIRMED user instruction | Requires evidence-grounded, repo-ready Markdown and visible verification boundaries. | Authoring rule, not implementation proof. |
+| Pre-modernization target at blob `04de489fa0d6e05607b86c13f1fc4072b882753b` | CONFIRMED | Same-path v0.2 semantic identity and the strong anti-collapse, lifecycle, display, validation, and rollback baseline | Does not prove runtime implementation |
+| [Directory Rules v2](../../../docs/doctrine/directory-rules.md) at blob `fd49a0b83e55cef52c1124281f093e263526898d` and [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | CONFIRMED / accepted | `contracts/` owns semantic meaning; domain lanes follow responsibility; `data/<lane>/<domain>/` is the illustrative domain pattern | Placement does not prove truth, policy, release, or implementation |
+| [Paired schema](../../../schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json) at blob `f998ee7a7409bcaa2b3164f51ad73e030e720295` | CONFIRMED | Object shape, three visible properties, `id` required, permissive additional properties, and declared companion paths | Does not enforce the proposed descriptor envelope |
+| Missing dedicated fixture root, validator, and test reads at the pinned snapshot | CONFIRMED | Dedicated descriptor validation is absent | Does not rule out unrelated generic validation |
+| [Hydrology API contracts](../../../docs/domains/hydrology/API_CONTRACTS.md) at blob `f741ef5da9752977aae4a8d4c5a5e6d08fc5fbe0` | CONFIRMED doctrine; implementation PROPOSED | H-API-02, `LayerManifest`, `ANSWER / DENY / ERROR`, no unreleased layer load, Evidence Drawer and life-safety boundaries | Route, DTO, policy runtime, clients, and release behavior remain unverified |
+| [Hydrology contract README](./README.md) at blob `2dd051df101407d54402f8c6e4c271ca45f8ba31` | CONFIRMED orientation | Object-family inventory, role separation, bounded workflow evidence, and current holds | README prose is not schema or runtime enforcement |
+| [Hydrology workflow](../../../.github/workflows/domain-hydrology.yml) | CONFIRMED executable boundary | Exact validator inventory, bounded EvidenceBundle checks, and explicit proof/release holds | Does not validate this descriptor |
+| [`data/published/hydrology/`](../../../data/published/hydrology/README.md) and [`data/published/layers/hydrology/`](../../../data/published/layers/hydrology/README.md) | CONFIRMED competing repository homes | Both paths and their README claims exist | Canonical writer, alias, migration, and consumer closure remain unresolved |
+| [`CODEOWNERS`](../../../.github/CODEOWNERS) | CONFIRMED review route | `@bartytime4life` is the GitHub review route for `contracts/` | Not a stewardship assignment, review record, policy decision, or release approval |
 
----
+[Back to top](#top)
 
 ## Open questions
 
-| Question | Status | Resolution path |
-|---|---|---|
-| Is `domain_layer_descriptor` a Hydrology profile of shared `LayerManifest` or a separate domain DTO? | NEEDS VERIFICATION | Schema/API steward review. |
-| Which fields must be required in `domain_layer_descriptor.schema.json`? | NEEDS VERIFICATION | Schema PR with valid/invalid fixtures. |
-| Which layer classes and geometry roles are canonical? | NEEDS VERIFICATION | Contract/schema/policy review. |
-| Which public UI badges are required for NFHL, provisional observations, modeled hydrographs, generalized geometry, and stale sources? | NEEDS VERIFICATION | Map/UI + policy fixture review. |
-| Which validator proves a layer cannot load without ReleaseManifest and rollback target? | NEEDS VERIFICATION | Validator/test implementation. |
-| Which MapReleaseManifest contract is canonical for Hydrology layer sets? | NEEDS VERIFICATION | Release/schema review. |
+| ID | Question | Status | Resolution path |
+|---|---|---|---|
+| `HYD-LAYER-01` | Is `domain_layer_descriptor` a Hydrology profile of shared `LayerManifest` or a separate DTO? | NEEDS VERIFICATION | Contract, schema, and governed-API review |
+| `HYD-LAYER-02` | Which fields are required, and which refs and cross-field constraints fail closed? | NEEDS VERIFICATION | Schema, synthetic fixtures, validator, and tests |
+| `HYD-LAYER-03` | Which layer classes, geometry roles, freshness states, interaction policies, UI duties, and quality flags are canonical? | NEEDS VERIFICATION | Contract/schema/policy review |
+| `HYD-LAYER-04` | Which public UI notices are mandatory for NFHL, provisional observations, modeled hydrographs, generalized geometry, corrections, and stale sources? | NEEDS VERIFICATION | Map/UI and policy fixture review |
+| `HYD-LAYER-05` | Which validator proves that a layer cannot load without evidence, release, correction, and rollback closure? | NEEDS VERIFICATION | Validator and deterministic negative-test slice |
+| `HYD-LAYER-06` | Which MapReleaseManifest contract and release object family is canonical for Hydrology layer sets? | NEEDS VERIFICATION | Release contract/schema/ADR review |
+| `HYD-LAYER-07` | Is `data/published/layers/hydrology/` a compatibility path, migration source, or unauthorized parallel topology relative to `data/published/hydrology/`? | CONFLICTED / NEEDS VERIFICATION | Inventory writers/consumers, record path decision, and apply a reversible migration |
+| `HYD-LAYER-08` | Should the schema's unresolved fixture and validator pointers be implemented at those exact paths or corrected through a versioned schema change? | NEEDS VERIFICATION | Schema-owner and validation-owner review |
+| `HYD-LAYER-09` | Who holds verified Hydrology semantic, Map/UI, governed API, policy, sensitivity, and release stewardship? | NEEDS VERIFICATION | Stewardship assignment; do not infer from CODEOWNERS |
 
----
+[Back to top](#top)
 
 ## Related contracts and docs
 
-- [`./README.md`](./README.md) — Hydrology contract-root README.
-- [`./decision_envelope.md`](./decision_envelope.md) — Hydrology runtime decision-envelope alias.
-- [`./domain_feature_identity.md`](./domain_feature_identity.md) — Hydrology feature identity contract.
-- [`./domain_observation.md`](./domain_observation.md) — Hydrology observation envelope, if present/expanded.
-- [`./domain_validation_report.md`](./domain_validation_report.md) — Hydrology validation report, if present/expanded.
-- [`../../../docs/domains/hydrology/API_CONTRACTS.md`](../../../docs/domains/hydrology/API_CONTRACTS.md) — Hydrology governed API and layer-manifest doctrine.
+- [`./README.md`](./README.md) — Hydrology contract inventory and current holds.
+- [`./decision_envelope.md`](./decision_envelope.md) — runtime outcome carrier.
+- [`./domain_feature_identity.md`](./domain_feature_identity.md) — stable feature identity and role/time/digest semantics.
+- [`./domain_observation.md`](./domain_observation.md) — Hydrology observation boundary.
+- [`./domain_validation_report.md`](./domain_validation_report.md) — inspectable validation-report meaning.
+- [`../../../docs/domains/hydrology/API_CONTRACTS.md`](../../../docs/domains/hydrology/API_CONTRACTS.md) — governed API and layer-manifest doctrine.
 - [`../../../docs/domains/hydrology/SOURCE_ROLE_MATRIX.md`](../../../docs/domains/hydrology/SOURCE_ROLE_MATRIX.md) — source-role anti-collapse matrix.
-- [`../../../docs/domains/hydrology/IDENTITY_MODEL.md`](../../../docs/domains/hydrology/IDENTITY_MODEL.md) — identity and deterministic hash doctrine.
-- [`../../../docs/domains/hydrology/CANONICAL_PATHS.md`](../../../docs/domains/hydrology/CANONICAL_PATHS.md) — responsibility-root path map.
+- [`../../../docs/domains/hydrology/IDENTITY_MODEL.md`](../../../docs/domains/hydrology/IDENTITY_MODEL.md) — deterministic identity doctrine.
 - [`../../../schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json`](../../../schemas/contracts/v1/domains/hydrology/domain_layer_descriptor.schema.json) — current schema stub.
+- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — accepted responsibility-root and domain-lane law.
+- [`../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) — Directory Rules v2 adoption decision.
+- [`../../../data/published/hydrology/README.md`](../../../data/published/hydrology/README.md) — domain-first published Hydrology lane.
+- [`../../../data/published/layers/hydrology/README.md`](../../../data/published/layers/hydrology/README.md) — existing layer-first published Hydrology lane requiring reconciliation.
+- [`../../../release/candidates/hydrology/README.md`](../../../release/candidates/hydrology/README.md) — candidate review boundary.
+- [`../../../.github/workflows/domain-hydrology.yml`](../../../.github/workflows/domain-hydrology.yml) — bounded executable checks and explicit holds.
 
 [Back to top](#top)
