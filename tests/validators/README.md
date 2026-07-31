@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.6
-status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.7
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
 updated: 2026-07-30
 supersedes: v0.1 planning-oriented validator-test README
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
-truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder and dependency-report classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
+truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -102,6 +102,8 @@ related:
   - test_repository_control_incident_1789.py
   - test_repository_control_incident_1829.py
   - test_pnpm_audit_readiness.py
+  - docs/link-check/README.md
+  - docs/link-check/test_docs_link_check.py
   - ../fixtures/governance/repository_control/README.md
   - ../../tools/validators/README.md
   - ../../tools/validators/ci_readiness.py
@@ -109,6 +111,8 @@ related:
   - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tools/validators/dependencies/README.md
   - ../../tools/validators/dependencies/pnpm_audit_readiness.py
+  - ../../tools/validators/docs/link-check/README.md
+  - ../../tools/validators/docs/link-check/check_links.py
   - ../../tools/validators/_common/README.md
   - ../../tools/validators/_common/jsonschema_runner.py
   - ../../tools/validators/_common/local_resolver.py
@@ -128,9 +132,11 @@ related:
   - ../../.github/workflows/schema-validation.yml
   - ../../.github/workflows/validator-suite.yml
   - ../../.github/workflows/dependency-scan.yml
+  - ../../.github/workflows/link-check.yml
   - ../../.github/workflows/repository-control.yml
 tags: [kfm, tests, validators, repository-control, dependency-audit, pnpm, json-schema, pytest, fixtures, entrypoints, cli, exit-codes, diagnostics, no-network, fail-closed, coverage, correction, rollback]
 notes:
+  - "v0.7 adds focused standard-library proof for local Markdown files, directories, images, fragments, path boundaries, external-link abstention, determinism, and CLI polarity; it does not request external URLs or prove document truth."
   - "v0.6 adds focused no-network transition-authorization proof and one trusted-base, read-only pull_request_target workflow; the workflow remains advisory until separately required by the main ruleset and cannot distinguish a human from an app using the same owner identity."
   - "v0.5 adds focused synthetic no-network proof for pnpm manager/workspace/lockfile readiness and PASS/REGRESSION/ERROR audit-report classification; it does not make the registry query deterministic or authoritative."
   - "v0.4 records the repository-control v2 observed-base semantics and PR #1829 terminal-divergence regression proof; no workflow or required check is added."
@@ -170,7 +176,7 @@ notes:
 > **Historical v0.2 snapshot:** `main@52275a5710400a9f794a8fcf8e0945e0c21544e4`
 > **Current change base:** `main@b5f156c32efa149846ad1022b9661b766f464485`
 > **Prior target blob:** `027f7531b86ddfd7a6a10cd38ae0c62e1d07d523`
-> **Direct lane:** README plus focused CI-readiness, repository-control, and pnpm-audit suites; broader shared-runtime and entrypoint unit coverage remains partial
+> **Direct lane:** README plus focused CI-readiness, repository-control, pnpm-audit, and local documentation-link suites; broader shared-runtime and entrypoint unit coverage remains partial
 > **Current `make test`:** runs `tests/schemas` and `tests/contracts`; it does not collect `tests/validators`
 > **Current validator aggregate:** six hard-coded top-level entrypoints through `make schemas`
 
@@ -285,6 +291,9 @@ Directory Rules place executable checkers under implementation roots such as `to
 ```text
 tests/validators/
 ├── README.md
+├── docs/link-check/
+│   ├── README.md
+│   └── test_docs_link_check.py
 ├── test_ci_readiness.py
 ├── test_repository_control.py
 ├── test_repository_control_incident_1789.py
@@ -313,6 +322,15 @@ The repository-control suites are confirmed focused proof for `tools/validators/
 
 `test_repository_transition_authorization.py` separately proves strict JSON and schema shape, unedited owner-comment binding at evaluation time, exact repository/issue/PR/base/head matching, draft holds, four-hour maximum expiry at evaluation time, duplicate/unknown-field refusal, bounded non-echoing output, CLI polarity, and the fact that PR #1869 would have remained held without a distinct transition record. It does not prove hosted execution, required-check coupling, automatic expiry or rerun of a previously recorded successful GitHub check after comment mutation, human authorship, app/token identity, independent review, or merge legitimacy.
 
+`docs/link-check/test_docs_link_check.py` proves the bounded standard-library
+documentation checker resolves local files, directories, images, heading and
+explicit anchors, rejects missing, case-mismatched, or escaping targets, ignores
+code/comment examples, denies symbolic-link inputs, classifies external URLs
+without requesting or fully echoing them, and preserves deterministic JSON and
+CLI exit polarity. It does not cover
+reference-style links, inline HTML links, citation semantics, redirects, ignore
+rules, historical whole-repository remediation, or external availability.
+
 ### Shared runtime and aggregate
 
 ```text
@@ -340,6 +358,7 @@ tools/validators/validate_run_receipt.py
 |---|---|---|
 | `tests/validators/test_ci_readiness.py` | Exact placeholder AST shapes, substantive/syntax/missing/unsafe/symlink/path refusal, unexpected non-Python test/validator-source denial, allowed documentation/sentinel files in both categories, category-wide non-vacuity, README-only sibling roots, deterministic diagnostics, repeated-root behavior, and CLI exit polarity. | Direct focused coverage for `ci_readiness.py`; not broad coverage of schema runners or domain validators. |
 | `tests/validators/test_repository_control.py`, `test_repository_control_incident_1829.py`, and `test_repository_transition_authorization.py` | State schema/digest/scope, claim-state gating, observation-time base semantics, terminal divergence, and strict exact-head owner transition records. | Direct focused coverage; hosted workflow execution, required-check settings, human-versus-app identity, and initiating-client attribution remain separate. |
+| `tests/validators/docs/link-check/test_docs_link_check.py` | Local files, directories, images, heading/explicit anchors, path escape, exact case, external abstention, determinism, and CLI polarity. | Direct focused coverage for the bounded inline Markdown checker; no external availability, citation, truth, or release claim. |
 | `tests/schemas/test_common_contracts.py` | Selected schema families accept valid fixtures and reject invalid fixtures. | Primary authority is schema conformance and fixture polarity. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | Three Hydrology aliases accept one valid fixture each and reject added unknown properties. | Primary authority is domain schema alias behavior. |
 | `validator-suite` invalid EvidenceBundle canary | One explicit invalid fixture must produce a nonzero validator result. | Workflow-level canary, not a unit suite for all helpers or validators. |
@@ -854,6 +873,15 @@ Run the confirmed focused pnpm-audit readiness and result-classifier suite:
 python -m pytest tests/validators/test_pnpm_audit_readiness.py -q
 ```
 
+Run the confirmed standard-library local documentation-link suite:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
 The broader `python -m pytest tests/validators -q` collection is not a claim of complete validator coverage. Each focused command proves only its named implementation slice.
 
 ### Command distinctions
@@ -868,6 +896,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | focused `pytest tests/validators/test_ci_readiness.py` | Confirmed exact placeholder classification, fail-closed path/input and unexpected test/validator-source behavior, explicit documentation/sentinel allowances in both root categories, deterministic output, non-vacuity, and CLI polarity for `ci_readiness.py`. |
 | focused repository-control pytest set | Confirmed state/schema/digest/scope validation, active-claim observation binding, non-active later-head behavior, PR #1829 terminal-divergence refusal, and strict exact-head transition-authorization parsing. The proposed trusted-base workflow remains advisory until separately required. |
 | focused `pytest tests/validators/test_pnpm_audit_readiness.py` | Confirmed manager/engine/workspace/lockfile preconditions, importer closure, competing-lockfile and unsafe-input denial, deterministic output, audit threshold and error polarity, and CLI exits. Networked advisory truth remains outside the fixture suite. |
+| focused standard-library docs link-check suite | Confirmed local inline Markdown target/fragment behavior, path-boundary denial, external-target abstention, deterministic output, and CLI polarity. Historical documents and external availability remain outside scope. |
 | eleven domain readiness workflows | Same-batch integration with `ci_readiness.py`: ten call the root-scanning CLI; Hydrology imports the source classifiers inside a bespoke exact inventory because its validator roots intentionally mix Python placeholders with separately inventoried schema and policy files. Each workflow retains its domain-specific checks and authority limits. |
 
 [Back to top](#top)
@@ -1117,6 +1146,7 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | `.github/workflows/repository-control.yml` | PROPOSED exact workflow definition | Trusted-base-only checkout, full-SHA checkout action pin, read-only token, bounded issue/event input, and stable check name. | Advisory until required by ruleset `15484585`; cannot distinguish a human from an app acting as the owner. |
 | PR #1829 terminal-divergence fixture | CONFIRMED regression fixture | Exact base/head/merge SHAs, changed-path scope, merge time, and evidence references used by the incident regression. | The initiating client remains `UNKNOWN`; the fixture does not infer it. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` and focused tests | CONFIRMED executable and executable tests | No-network pnpm contract/readiness validation plus finite structured audit-result classification. | Does not query the registry, decide dependency admission, or prove vulnerability absence. |
+| `tools/validators/docs/link-check/check_links.py` and focused tests | CONFIRMED executable and executable tests | Standard-library local inline Markdown files, directories, images, fragments, exact-case/path-boundary checks, external abstention, and deterministic outputs. | Does not check external availability, reference-style or HTML links, citations, truth, policy, release, or unchanged historical docs in CI. |
 | `.github/workflows/dependency-scan.yml` pnpm lane | PROPOSED exact workflow definition | Preserves the stable `npm-audit` job id, runs the repository checker, then performs a high-threshold pnpm registry audit. | Exact-head remote execution and the mutable advisory result remain NEEDS VERIFICATION. |
 | `tools/validators/_common/README.md` | CONFIRMED | Current implementation inventory, consumer count, workflows, and known conflicts. | Documentation is not a substitute for direct tests. |
 | `jsonschema_runner.py` | CONFIRMED executable | Explicit-file and fixture-mode behavior, output, and exit paths. | No direct unit suite established. |
@@ -1181,5 +1211,10 @@ Before merge, close the review branch or restore the affected files from their r
 After merge, revert the documentation commit through a reviewed pull request. Do not reset shared history.
 
 For the pnpm-audit slice, rollback restores the dependency workflow and affected README preimages, then removes the dependency validator, its lane README, and focused test. Preserve Git history and prior workflow outcomes. A rollback removes only this audit graduation; it does not alter manifests, lockfiles, application code, data, evidence, policy, release, deployment, or publication state.
+
+For the local documentation-link slice, rollback restores the prior explicit
+workflow hold and affected README preimages, then removes the checker and its
+focused test lane. Preserve the stable workflow/job names and verify any active
+ruleset coupling before reverting the workflow.
 
 [Back to top](#top)

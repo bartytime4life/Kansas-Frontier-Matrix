@@ -323,7 +323,6 @@ runtime, UI, policy, proof, release, or publication readiness.
 - [`evidence-resolver.yml`](evidence-resolver.yml)
 - [`focus-mock-test.yml`](focus-mock-test.yml)
 - [`hydrology-proof-slice.yml`](hydrology-proof-slice.yml)
-- [`link-check.yml`](link-check.yml)
 
 These jobs intentionally expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim.
 
@@ -347,6 +346,7 @@ UI readiness.
 - [`dependency-scan.yml`](dependency-scan.yml)
 - [`docs-control-plane.yml`](docs-control-plane.yml)
 - [`infra-compose-smoke.yml`](infra-compose-smoke.yml)
+- [`link-check.yml`](link-check.yml)
 - [`maplibre-perf-governance.yml`](maplibre-perf-governance.yml)
 - [`pmtiles-attestation.yml`](pmtiles-attestation.yml)
 - [`policy-boundary-guards.yml`](policy-boundary-guards.yml)
@@ -361,6 +361,15 @@ UI readiness.
 - [`validator-suite.yml`](validator-suite.yml)
 
 Read the exact steps and job summaries before relying on any workflow as a merge gate. “Command-bearing” does not mean complete, current, or production-ready.
+
+`link-check.yml` preserves the stable workflow and `docs-link-check` job names
+while replacing the prior readiness hold with a standard-library, local-only
+checker. It runs synthetic no-network tests and validates inline local file,
+directory, image, and fragment targets only in Markdown changed by the triggering
+revision. External targets are reported as `EXTERNAL_TARGET_UNVERIFIED` and are
+never requested. Reference-style links, inline HTML links, citations, redirects,
+ignore rules, and unchanged historical documents remain outside this bounded
+check; a green result is documentation QA only.
 
 `dependency-scan.yml` preserves the stable `npm-audit` job id for check-name
 compatibility but now proposes the repository's accepted pnpm contract. Its
