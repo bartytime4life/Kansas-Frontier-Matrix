@@ -1,0 +1,182 @@
+{
+  "receipt_id": "genrec-doc-link-check-local-validation-20260730",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/link-check.yml",
+    "tests/validators/README.md",
+    "tests/validators/docs/link-check/README.md",
+    "tests/validators/docs/link-check/test_docs_link_check.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/link-check/README.md",
+    "tools/validators/docs/link-check/check_links.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:f61cf6de28821e2036ded982d6aad1e40519938afd31827c79eda8b7815d8d58",
+    ".github/workflows/link-check.yml": "sha256:1ef88f7ff0461392c7231e7a1369535bcaf1b6f239d48e368ece5a0fa99c578a",
+    "tests/validators/README.md": "sha256:4aa84ff943787bc84eb8584e526ba766608a90d7d06b91e48ffd353afbb9fa00",
+    "tests/validators/docs/link-check/README.md": "sha256:b449f6c8a7d0db2ad8753caf4447cb9ffac64335d8aa5a13374f01e6c740c8fa",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "sha256:f7cf366ee72ac98c81f8269dbe033465736ca2f4de55716dfb853b4afe20e0f4",
+    "tools/validators/docs/README.md": "sha256:2a5aadc7051f2b694290cbbf2b2fc124bdafa6b481578fb84d95290526e8faaf",
+    "tools/validators/docs/link-check/README.md": "sha256:68883a99d9114acb45ed32dbb17478e000021ac92d2ce0b50f40854ac3407671",
+    "tools/validators/docs/link-check/check_links.py": "sha256:1cfb5ca2cf6b81dffecfacb57f1d43e309ab010ed9df9efe6d277efab0aadc35"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub CLI",
+      "local repository inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3c4f01cf5133d57a8522df0c30d83681702dd179",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5138638788",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5138813113",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/.github/workflows/link-check.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/tools/validators/docs/link-check/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/link-check.yml": "PROPOSED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/docs/link-check/README.md": "PROPOSED",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "CONFIRMED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/link-check/README.md": "PROPOSED",
+    "tools/validators/docs/link-check/check_links.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, main@3c4f01cf5133d57a8522df0c30d83681702dd179, the empty open-PR set, campaign cursor v30, issue #1675, Directory Rules, accepted ADR-0029, contribution contract, operating contract, workflow, validator lane, tests lane, and generated-receipt schema were inspected. Issue #1675 comment 5138813113 records the exact ten-path draft-only authorization before branch creation or edits."
+    },
+    {
+      "gate": "directory-placement-and-authority",
+      "outcome": "PASS",
+      "reason": "Reusable implementation remains under tools/, conformance proof under tests/, orchestration under .github/, and process provenance under data/receipts/generated/. No new root or parallel truth, schema, contract, policy, evidence, proof, release, or publication authority was created."
+    },
+    {
+      "gate": "focused-standard-library-link-check-tests",
+      "outcome": "PASS",
+      "reason": "Eleven tests passed on Python 3.12, covering local files, directories, images, heading and explicit anchors, duplicate heading suffixes, missing targets, missing anchors, case mismatch, path escape, symbolic-link denial, fenced/code/comment exclusions, external abstention and bounded diagnostics, explicit empty scope, real git-diff discovery, deterministic JSON, and CLI polarity."
+    },
+    {
+      "gate": "validator-suite-tests",
+      "outcome": "PASS",
+      "reason": "The complete tests/validators collection passed: 139 tests."
+    },
+    {
+      "gate": "repository-baseline-validation",
+      "outcome": "PASS",
+      "reason": "make validate passed; the configured schema aggregate completed with expected invalid-fixture diagnostics and the schema/contract pytest set passed 139 tests."
+    },
+    {
+      "gate": "boundary-guards",
+      "outcome": "PASS",
+      "reason": "make boundary-guards passed 16 tests after the sparse checkout was expanded to include its connector and governed-API inventories."
+    },
+    {
+      "gate": "full-repository-pytest",
+      "outcome": "PASS",
+      "reason": "The full collected suite passed: 420 tests and 72 subtests."
+    },
+    {
+      "gate": "changed-document-local-links",
+      "outcome": "PASS",
+      "reason": "The new checker validated five changed Markdown documents and 149 local targets. Fourteen external targets were classified as unverified with path, query, fragment, and credentials omitted; no external request was made."
+    },
+    {
+      "gate": "workflow-static-parse-and-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The workflow parsed as YAML, preserves stable workflow/job names, grants read-only contents permission, uses GitHub-hosted runners, fetches full Git history only through checkout, installs no Python package, consumes no secrets or OIDC, writes no repository or artifact output, and invokes repository-owned standard-library checks. actionlint was unavailable and remains separately skipped."
+    },
+    {
+      "gate": "actionlint",
+      "outcome": "SKIPPED",
+      "reason": "actionlint is not installed in the local environment. YAML parsing, focused behavior tests, and hosted workflow execution remain the available validation layers."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation with date-time format checking passed; artifact_paths exactly match artifact_hashes; and all eight SHA-256 artifact hashes were recomputed against the final packet. The receipt is excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "hosted-workflow-and-ruleset-coupling",
+      "outcome": "SKIPPED",
+      "reason": "Hosted execution and required-check coupling cannot be observed until draft delivery. The authorization denies ready, merge, and settings mutation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "campaign-current-state-cursor-v30",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5138638788"
+    },
+    {
+      "id": "bounded-authoring-authorization",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5138813113"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3c4f01cf5133d57a8522df0c30d83681702dd179/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-31T03:17:54Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820"
+  },
+  "notes": "This packet closes only GAP-DOC-LINK-CHECK-IMPLEMENTATION-001 with bounded changed-Markdown local target checks. The obsolete empty-directory .gitkeep is deleted but cannot be content-hashed. External availability, reference-style links, inline HTML links, citations, redirects, ignore rules, unchanged historical documents, document truth, source admission, evidence closure, policy, review, proof, release, deployment, and publication remain outside scope. Human review is pending; ready, merge, and settings mutation remain denied."
+}

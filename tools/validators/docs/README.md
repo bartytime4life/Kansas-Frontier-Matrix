@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; one-bounded-child-executable; remaining-children-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-07-30
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
-responsibility: proposed parent/index lane for documentation validators that check Markdown metadata, links, anchors, freshness, terminology, truth-label posture, implementation-overclaim signals, and docs-QA reports without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, directory-rule exceptions, release approval, or publication
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: parent/index lane for documentation validators that check Markdown metadata, links, anchors, freshness, terminology, truth-label posture, implementation-overclaim signals, and docs-QA reports without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, directory-rule exceptions, release approval, or publication
+truth_posture: CONFIRMED bounded local-only link-check executable and synthetic tests / PROPOSED remaining child executables and broader docs-QA orchestration / NEEDS VERIFICATION hosted exact-head results and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
@@ -31,9 +31,9 @@ related:
   - ../../../artifacts/qa/
   - ../../../tests/
 notes:
-  - "This README documents a proposed parent lane for docs validators. It does not confirm executable files."
+  - "This parent lane contains one bounded local-only link-check executable; the remaining child lanes are README-only proposals."
   - "Documentation validators can report metadata, link, freshness, terminology, and truth-label QA issues. They cannot decide that a claim is true, a source is admissible, a policy exception is valid, a Directory Rules exception is valid, or a release is approved."
-  - "Child README lanes exist for link-check, meta-block, stale-scan, terminology-parity, and truth-label-lint; executable behavior remains NEEDS VERIFICATION unless verified separately."
+  - "External URL availability, citation semantics, metadata, stale-scan, terminology-parity, and truth-label behavior remain outside the bounded link checker."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,10 +70,10 @@ The answer should be deterministic validation results and, where configured, doc
 |---|---|---|
 | `tools/validators/docs/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
 | Parent docs validator executables | **PROPOSED / NEEDS VERIFICATION** | No parent runner or script name is claimed here. |
-| Child README lanes | **CONFIRMED README siblings / executable proposed** | `link-check/`, `meta-block/`, `stale-scan/`, `terminology-parity/`, and `truth-label-lint/` README files exist. |
+| Child README lanes | **CONFIRMED mixed maturity** | `link-check/` has a bounded executable and synthetic suite; `meta-block/`, `stale-scan/`, `terminology-parity/`, and `truth-label-lint/` remain README-only proposals. |
 | Parent docs tooling boundary | **CONFIRMED in repo evidence / draft** | `tools/docs/README.md` says docs tooling may check metadata, links, warnings, drift, overclaims, and house style, but cannot decide truth, admissibility, release approval, or Directory Rules exceptions. |
 | Validator scope profile | **PROPOSED / NEEDS VERIFICATION** | Exact required fields, freshness thresholds, allowed truth labels, terminology profile, ignore rules, and report destinations must be accepted outside this README before CI enforcement. |
-| CI wiring | **PROPOSED / NEEDS VERIFICATION** | This README does not prove CI, pre-commit, scheduled checks, artifacts, or receipts are wired. |
+| CI wiring | **CONFIRMED definition / NEEDS VERIFICATION execution** | `link-check.yml` invokes the bounded checker for changed Markdown; hosted exact-head results and required-check coupling remain unverified. |
 
 [Back to top](#top)
 
@@ -83,7 +83,7 @@ The answer should be deterministic validation results and, where configured, doc
 
 | Child lane | Validator question | Status |
 |---|---|---|
-| `link-check/` | Do documentation links, anchors, image refs, citation refs, and external-link postures resolve as configured? | README confirmed; executable proposed. |
+| `link-check/` | Do local inline Markdown file, directory, image, and fragment targets resolve without network access? | Bounded executable and synthetic suite confirmed; external URLs remain unverified. |
 | `meta-block/` | Does a document carry a parseable, internally consistent `KFM_META_BLOCK_V2` or accepted metadata block profile? | README confirmed; executable proposed. |
 | `stale-scan/` | Does a document show stale metadata, overdue review posture, expired caveats, unresolved TODOs, or implementation-overclaim drift? | README confirmed; executable proposed. |
 | `terminology-parity/` | Does a document use KFM terminology, casing, source-role vocabulary, truth-label terms, and authority pointers consistently? | README confirmed; executable proposed. |

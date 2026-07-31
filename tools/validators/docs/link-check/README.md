@@ -2,243 +2,177 @@
 doc_id: kfm://doc/tools-validators-docs-link-check-readme
 title: tools/validators/docs/link-check README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded-executable; local-only; no-network; non-authoritative
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-07-30
 policy_label: repository-facing; docs-validator; link-check; markdown-qa; non-authoritative
 owning_root: tools/
-responsibility: proposed documentation link-check validator lane for Markdown link, anchor, path, citation, redirect, generated-report, and docs-QA checks without deciding doctrine, evidence sufficiency, source admissibility, or release approval
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: deterministic local Markdown target and fragment validation without deciding doctrine, evidence sufficiency, source admissibility, policy, review, release, or publication
+truth_posture: CONFIRMED standard-library local target checker, synthetic tests, and changed-Markdown CI wiring / NEEDS VERIFICATION broader Markdown dialect coverage, historical repository backlog, hosted exact-head results, and required-check coupling
 related:
+  - ../README.md
   - ../../README.md
-  - ../../../docs/README.md
-  - ../../../../docs/README.md
-  - ../../../../docs/registers/DOCUMENT_REGISTRY.md
-  - ../../../../docs/architecture/directory-rules.md
-  - ../../../../docs/architecture/trust-membrane.md
-  - ../../../../docs/adr/
-  - ../../../../data/receipts/validation/
-  - ../../../../artifacts/qa/
-  - ../../../../tests/
+  - ../../../../tests/validators/docs/link-check/README.md
+  - ../../../../.github/workflows/link-check.yml
+  - ../../../../docs/doctrine/directory-rules.md
 notes:
-  - "This README documents a proposed docs link-check validator lane. It does not confirm executable files."
-  - "A link checker can report missing files, broken anchors, malformed URLs, stale redirects, and unresolved citations. It cannot decide that a claim is true, a source is admissible, a policy exception is valid, or a release is approved."
-  - "The parent docs-tooling README confirms documentation tooling may check links and anchors while keeping doctrine and release authority outside tools code."
+  - "External targets are classified as EXTERNAL_TARGET_UNVERIFIED and are never requested."
+  - "A passing result proves local target resolution only within the supplied Markdown scope."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# tools/validators/docs/link-check
+# `tools/validators/docs/link-check/` — Bounded Local Markdown Link Check
 
-![status](https://img.shields.io/badge/status-draft-orange)
+![status](https://img.shields.io/badge/status-bounded--executable-success)
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-docs--link--check-informational)
+![network](https://img.shields.io/badge/network-denied-critical)
 ![authority](https://img.shields.io/badge/authority-QA--only-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/docs/link-check/` is the proposed documentation link-check validator lane for Markdown files: intra-repo links, relative paths, anchors, image references, generated citation references, external-link posture, redirect notes, allowlists, ignore rules, and docs-QA reports.
+> **Purpose.** Validate repository-local inline Markdown file, directory,
+> image, and fragment targets deterministically while abstaining from all
+> external URL availability claims.
 
----
-
-## Purpose
-
-`tools/validators/docs/link-check/` exists for link and anchor validation of repository documentation.
-
-The durable KFM question for this lane is:
-
-> Do documentation links resolve to the intended local files, anchors, references, or approved external targets without implying that link existence proves truth, policy approval, evidence closure, or release state?
-
-The answer should be a deterministic validation result and, where configured, a docs QA report. It should not edit doctrine, approve ADRs, validate evidence sufficiency, decide source admissibility, promote releases, or publish documents.
-
-[Back to top](#top)
-
----
+**Quick navigation:** [Status](#status) · [Repository fit](#repository-fit) ·
+[Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Behavior](#behavior-contract) ·
+[Run](#run) · [CI](#ci-integration) · [Rollback](#rollback)
 
 ## Status
 
-| Surface | Status | Notes |
+| Surface | Current evidence | Limit |
 |---|---|---|
-| `tools/validators/docs/link-check/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Link-check validator executables | **PROPOSED / NEEDS VERIFICATION** | No script name is claimed here. |
-| Parent docs-tooling boundary | **CONFIRMED in repo evidence / draft** | `tools/docs/README.md` says docs tooling may check links and anchors but cannot decide truth, admissibility, or release approval. |
-| `tools/validators/docs/README.md` | **NOT FOUND in this task** | A parent validator README may be useful later, but this file does not create that parent authority. |
-| CI wiring | **PROPOSED / NEEDS VERIFICATION** | This README does not prove CI, pre-commit, scheduled checks, or artifact uploads are wired. |
-| External-link status | **NEEDS VERIFICATION** | External link availability is time-sensitive and should be checked only by a configured validator run. |
+| `check_links.py` | **CONFIRMED executable** | Standard-library, local inline Markdown targets only. |
+| Focused tests | **CONFIRMED executable** | Synthetic temporary fixtures; no production documents or external requests. |
+| `link-check.yml` | **CONFIRMED command-bearing definition** | Hosted exact-head result and required-check coupling remain **NEEDS VERIFICATION**. |
+| External URLs | **EXTERNAL_TARGET_UNVERIFIED** | Classified and reported; never requested. |
+| Whole repository | **NOT CLAIMED** | CI checks changed Markdown, not every historical document. |
 
-[Back to top](#top)
+## Repository fit
 
----
+The accepted Directory Rules place reusable validator implementation under
+`tools/`, conformance proof under `tests/`, and GitHub orchestration under
+`.github/`. This existing lane is therefore a `PLACE` outcome: no new authority
+root or parallel documentation store is created.
 
-## Authority boundary
-
-| Responsibility | Home |
+| Responsibility | Owning surface |
 |---|---|
-| Docs link-check validator entrypoints | `tools/validators/docs/link-check/` |
-| Shared validator plumbing | `tools/validators/_common/` |
-| General docs tooling | `tools/docs/` |
-| Documentation content | `docs/` and each owning responsibility root |
-| Documentation registry | `docs/registers/` or accepted docs registry home |
-| Doctrine, ADRs, runbooks, standards | owning docs lanes under `docs/` |
-| Policy rules | `policy/` |
-| Contracts and schemas | `contracts/`, `schemas/` |
-| Receipts from validation runs | `data/receipts/validation/` or accepted receipt home |
-| QA artifacts and summaries | `artifacts/qa/` when non-authoritative and non-trust-bearing |
-| Tests and fixtures | `tests/` and accepted fixture conventions |
+| Local link-check implementation | This directory |
+| Synthetic behavior proof | [`tests/validators/docs/link-check/`](../../../../tests/validators/docs/link-check/README.md) |
+| Pull-request and main-push orchestration | [`.github/workflows/link-check.yml`](../../../../.github/workflows/link-check.yml) |
+| Documentation content and meaning | Each document's responsibility root |
+| Evidence, policy, review, and release | Their existing governed roots; never this checker |
 
-Safe interpretation:
+## Accepted inputs
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** link-check validator code may live here when it checks links, paths, anchors, and reference hygiene.
-- **NEEDS VERIFICATION:** exact executable names, configuration files, ignore rules, fixture paths, CI wiring, and report destinations.
-- **DENY:** using this folder as docs content authority, doctrine authority, ADR authority, source-admissibility authority, policy authority, evidence validator, release validator, receipt store, generated-docs store, or public documentation surface.
+- explicit UTF-8 `.md` or `.markdown` files;
+- directories, recursively limited to Markdown files;
+- a strict `<base-sha>...HEAD` changed-file selector;
+- repository-relative links, root-relative links, images, directories, heading
+  fragments, and explicit HTML `id` or `name` anchors.
 
-[Back to top](#top)
+Every input must resolve within the declared repository root with exact path
+casing. Symbolic-link inputs and links inside recursively scanned input
+directories are denied. Inputs larger than 5 MB fail closed.
 
----
+## Exclusions
 
-## What belongs here
+This bounded version does not:
 
-Good fits for `tools/validators/docs/link-check/` include checks that:
+- request external URLs, follow redirects, or claim external availability;
+- parse reference-style Markdown links or inline HTML `href`/`src` attributes;
+- validate citations, reference semantics, link text, or document authority;
+- support ignores, allowlists, suppressions, or generated report files;
+- edit documentation;
+- validate source admission, evidence closure, policy, review, proof, release,
+  deployment, or publication.
 
-- validate relative Markdown links against the current repository tree;
-- validate fragment anchors for headings and explicit HTML anchors;
-- detect links to files that moved, were renamed, or never existed;
-- detect image references that point to missing local assets;
-- distinguish internal repository links from external URLs;
-- record external-link checks as time-sensitive results rather than permanent truth;
-- support allowlists, denylists, retry rules, and ignore rules with explicit reasons;
-- detect generated citation/reference fragments that no longer resolve;
-- emit deterministic docs QA summaries and validation receipts where configured;
-- preserve a correction path for renamed docs, stale anchors, and broken references.
+Unsupported features remain visible scope limits. They are not silently treated
+as passing coverage.
 
-[Back to top](#top)
+## Behavior contract
 
----
+| Outcome | Exit | Meaning |
+|---|---:|---|
+| `DOC_LINK_CHECK_PASS` | `0` | No failing local target was found in the supplied scope. |
+| `DOC_LINK_CHECK_FAIL` | `1` | At least one local target, fragment, case, or root-boundary check failed. |
+| `ERROR` | `2` | Input, encoding, size, repository, or changed-file discovery could not complete safely. |
+| `LOCAL_TARGET_MISSING` | contributes to `1` | File, directory, or image is absent or case-mismatched. |
+| `ANCHOR_MISSING` | contributes to `1` | Target exists, but the fragment does not match a heading or explicit anchor. |
+| `PATH_ESCAPE` | contributes to `1` | A local target resolves outside the repository root. |
+| `EXTERNAL_TARGET_UNVERIFIED` | informational | External target was classified but not requested. |
 
-## What does not belong here
+Findings are sorted by repository-relative source path, line, outcome, and
+target. External findings retain only scheme and hostname; path, query,
+fragment, and credentials are omitted from logs. JSON output uses stable key
+ordering and compact encoding.
 
-| Do not put in `tools/validators/docs/link-check/` | Correct home |
-|---|---|
-| Documentation content | `docs/` or the owning root |
-| Doctrine decisions | accepted doctrine / ADR lanes under `docs/` |
-| Policy rules | `policy/` |
-| Contracts or schemas | `contracts/`, `schemas/` |
-| EvidenceBundle validation | evidence/proof validator lanes |
-| Receipts | `data/receipts/` |
-| Proofs | `data/proofs/` |
-| Release decisions or release manifests | `release/` |
-| Published docs or public site output | accepted public/docs publishing root |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
+## Run
 
-[Back to top](#top)
-
----
-
-## Link-check posture
-
-Link checking is QA, not governance approval.
-
-A passing link check means only that the configured validator could resolve the checked references at the time of the run. It does not mean:
-
-- the linked document is authoritative;
-- the linked claim is true;
-- the source is admissible;
-- the policy posture is correct;
-- the release state is approved;
-- the document is safe for public publication.
-
-A failing link check should route to one of these actions:
-
-- fix the path or anchor;
-- update the renamed target;
-- add a documented ignore rule with owner and expiry;
-- quarantine or remove a stale public-facing reference;
-- open a docs verification backlog item where the target authority is unclear.
-
-[Back to top](#top)
-
----
-
-## Standard outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `DOC_LINK_CHECK_PASS` | Configured link checks passed. |
-| `DOC_LINK_CHECK_FAIL` | One or more configured link checks failed. |
-| `LOCAL_TARGET_MISSING` | Local file or asset target does not exist. |
-| `ANCHOR_MISSING` | Target file exists but requested fragment/anchor does not resolve. |
-| `EXTERNAL_TARGET_UNVERIFIED` | External URL was not checked or could not be treated as stable. |
-| `EXTERNAL_TARGET_FAILED` | External URL check failed during a configured run. |
-| `CITATION_REF_UNRESOLVED` | Generated or structured citation/reference marker does not resolve. |
-| `IGNORED_WITH_REASON` | Failure was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `DOC_AUTHORITY_CONFUSION` | Link text or target implies authority the linked artifact does not hold. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Suggested future test surface:
-
-```text
-tests/validators/docs/link-check/
-├── README.md
-├── test_docs_link_check.py
-└── fixtures/
-    ├── valid_local_links/
-    ├── missing_local_target/
-    ├── missing_anchor/
-    ├── missing_image_asset/
-    ├── unresolved_citation_ref/
-    ├── ignored_with_reason/
-    ├── expired_ignore_rule/
-    └── authority_confusing_link_text/
-```
-
-Suggested future command pattern:
+Check explicit files or directories:
 
 ```bash
-pytest -q tests/validators/docs/link-check
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  README.md docs/
 ```
+
+Check Markdown changed from an immutable base:
 
 ```bash
-python tools/validators/docs/link-check/check_links.py --repo-root . --format json
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --git-diff <BASE_SHA>...HEAD \
+  --format json
 ```
 
-> [!NOTE]
-> This is a proposed interface, not proof that `check_links.py` or the test path exists.
+Run the synthetic no-network suite:
 
-[Back to top](#top)
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+```
 
----
+## CI integration
+
+The stable workflow name `link-check` and job id `docs-link-check` are retained.
+The job uses read-only contents permission, a GitHub-hosted runner, no secrets,
+no OIDC, and no write or artifact-upload step. It runs the focused tests and
+then checks local targets in Markdown files changed by the triggering revision.
+
+When a triggering revision changes no Markdown, the command reports
+`changed_markdown_empty` with zero checked documents. That is an explicit empty
+scope, not whole-repository link coverage.
 
 ## Review checklist
 
-- [ ] Validator checks local paths and anchors deterministically.
-- [ ] External link checks are marked time-sensitive and not treated as permanent truth.
-- [ ] Ignore rules include reason, owner, scope, and review/expiry posture.
-- [ ] Link text does not imply doctrine, evidence, policy, or release authority where none exists.
-- [ ] Reports and receipts are written only to accepted non-authority roots.
-- [ ] Validator does not edit docs without a separate explicit change process.
-- [ ] Tests use synthetic fixtures and do not require network access by default.
-- [ ] Executable claims are backed by current repo evidence.
+- [x] Local paths and anchors are checked deterministically.
+- [x] Path escape and exact-case mismatch fail closed.
+- [x] Symbolic-link inputs fail closed.
+- [x] External URLs remain unrequested and visibly unverified.
+- [x] Tests use synthetic fixtures and standard-library runners.
+- [x] Workflow permissions remain read-only and names remain stable.
+- [ ] Reference-style and inline-HTML link parsing — **DEFERRED**.
+- [ ] Historical whole-repository remediation — **DEFERRED**.
+- [ ] Hosted exact-head result and ruleset coupling — **NEEDS VERIFICATION**.
 
-[Back to top](#top)
+## Rollback
 
----
+Before merge, close the draft PR and abandon its branch. After an authorized
+merge, revert the focused commit. The workflow and job names are unchanged, so
+rollback does not require a check-name migration; separately verify any ruleset
+coupling before removing an active check.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for empty file. |
-| Next smallest safe change | Verify actual link-check scripts, configuration, ignore files, fixtures, report destinations, receipts, and CI wiring before promoting this lane beyond draft. |
+| Review date | 2026-07-30 |
+| Evidence base | `main@3c4f01cf5133d57a8522df0c30d83681702dd179` |
+| Human review | Pending |
+
+[Back to top](#top)
