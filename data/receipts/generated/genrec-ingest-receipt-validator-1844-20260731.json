@@ -2,6 +2,7 @@
   "receipt_id": "genrec-ingest-receipt-validator-1844-20260731",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    ".github/workflows/schema-validation.yml",
     "contracts/source/ingest_receipt.md",
     "tests/validators/README.md",
     "tests/validators/test_validate_ingest_receipt.py",
@@ -9,6 +10,7 @@
     "tools/validators/validate_ingest_receipt.py"
   ],
   "artifact_hashes": {
+    ".github/workflows/schema-validation.yml": "sha256:ce8f89341cf1068cb7bc98d726f7ce4e43ec3f81392c17176a63fa5064757f72",
     "contracts/source/ingest_receipt.md": "sha256:4da16ca8ced43069ca699da378c8c6a63e9b1f92fa049929f400b047bd6f7983",
     "tests/validators/README.md": "sha256:f8b9ba85b714507c0256c22798bbeed7c17757ac6adc948066ee0da186c2c39f",
     "tests/validators/test_validate_ingest_receipt.py": "sha256:95fe0b97b25485498150cedeed2589698e58bbd5addaf3fdb418f1f533761001",
@@ -53,6 +55,7 @@
     ]
   },
   "truth_labels": {
+    ".github/workflows/schema-validation.yml": "CONFIRMED",
     "contracts/source/ingest_receipt.md": "CONFIRMED",
     "tests/validators/README.md": "CONFIRMED",
     "tests/validators/test_validate_ingest_receipt.py": "CONFIRMED",
@@ -106,9 +109,14 @@
       "reason": "The connector-gate workflow was intentionally not changed; ingest-receipt-presence remains WORKFLOW_HOLD pending KWO-specific host/media/manifest bindings, ownership review, compatibility review, and separately authorized graduation."
     },
     {
-      "gate": "hosted-exact-head-checks",
+      "gate": "hosted-schema-validation-exact-head",
+      "outcome": "PASS",
+      "reason": "The initial draft head exposed the schema workflow's intentionally pinned six-validator inventory. After adding the existing IngestReceipt schema and paired fixture family to that inventory, schema-validation and contracts-validate passed at exact head 6bc3046f6aab8124508c0bfdaf830d83170b4e10."
+    },
+    {
+      "gate": "hosted-full-matrix",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks are pending draft pull-request delivery."
+      "reason": "The broader hosted pull-request matrix was still in flight when this receipt was reconciled; no pending result is inferred."
     },
     {
       "gate": "human-review",
@@ -158,9 +166,9 @@
   "created_at": "2026-07-31T20:55:44Z",
   "emitter": "openai/codex-gpt-5",
   "links": {
-    "pr_number": null,
+    "pr_number": 1889,
     "adr_link": null,
     "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1844"
   },
-  "notes": "Closes only the generic repository-owned validate_ingest_receipt.py prerequisite. It does not claim or create KWO document identities, replace null/all-zero water-planning fixture digests, admit or activate a source, validate host/media-type allowlists, create a KWO manifest or ingest instance, alter immutable supersession lineage, graduate connector-gate, construct proof, or authorize release, deployment, or publication. Compatibility is additive: schemas and existing fixtures are unchanged, PARTIAL and FAIL remain schema-valid records, and --require-success supplies fail-closed operational polarity. Rollback is a focused revert of the five artifacts while leaving connector-gate held."
+  "notes": "Closes only the generic repository-owned validate_ingest_receipt.py prerequisite and its static schema-validation inventory entry. It does not claim or create KWO document identities, replace null/all-zero water-planning fixture digests, admit or activate a source, validate host/media-type allowlists, create a KWO manifest or ingest instance, alter immutable supersession lineage, graduate connector-gate, construct proof, or authorize release, deployment, or publication. Compatibility is additive: schemas and existing fixtures are unchanged, PARTIAL and FAIL remain schema-valid records, workflow/check identities remain stable, and --require-success supplies fail-closed operational polarity. Rollback is a focused revert of the six authored artifacts while leaving connector-gate held."
 }
