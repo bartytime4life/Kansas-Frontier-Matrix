@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.6
+version: v1.7
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-07-29
+updated: 2026-07-30
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified at remote main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, and New Ideas 5 source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified at remote main 0e4e2ee717730a4b4bfa22cf59c13241eba14bef; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -21,7 +21,7 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@0e4e2ee717730a4b4bfa22cf59c13241eba14bef` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -173,6 +173,7 @@ This table records only the packet sources visible or directly retrieved in this
 | `NIP-2026-04-25-identity-authority-assurance` | `New Ideas 4-25-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | Reversible entity reconciliation; taxonomic concepts and name usage; temporal place-name authority; PLSS/GLO survey-control provenance; validator mutation adequacy. | Detailed routing in [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md); five gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy loaders, authority ranks, PLSS/GNIS overclaims, thresholds, network installs, sensitive examples, or AI promotion recipes. Resolve identity, role separation, derivation limits, assurance meaning, and exact authorization per candidate. |
 | `NIP-2026-04-30-retrieval-offline-trust` | `New Ideas 4-30-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | USDA PLANTS, eBird, GBIF, soil/air fusion, source terms, query provenance, sampling/non-detection, PMTiles/offline delivery, verified rendering, STAC/validators, vegetation confounders, and source cadence/latency. | Detailed routing in [`exploratory/new-ideas-4-30-source-map.md`](exploratory/new-ideas-4-30-source-map.md); eleven gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy packet code, paths, credentials, thresholds, cloud examples, or dated external claims. Resolve retrieval, rights, distribution, support, latency, transfer, offline-trust, and renderer-budget semantics before implementation. |
 | `NIP-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | Capture date only; source date `NEEDS VERIFICATION` | TRIAGED / EXPLORATORY | Dual-renderer Story Node; STAC/catalog QA; signing and provenance; NWIS watcher; pipeline resilience; atmosphere fusion; soil/geology conversion; reproducible models; graph/AI retrieval; license automation. | Detailed routing in [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream candidates remain under existing ADR, contract, schema, policy, tool, pipeline, source, domain, data, and release roots. | Do not copy packet paths or code. Resolve renderer ADR, catalog profile/placeholder, external source facts, rights, dependency approval, contract/policy/test consequences, and exact bounded authorization per candidate. |
+| `NIP-2026-07-30-spatiotemporal-modernization` | `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix` (`Pasted text(32).txt`) | Capture date only; source date `NEEDS VERIFICATION` | TRIAGED / EXPLORATORY | GeoParquet version readiness and optimization; STAC GeoParquet bulk mirrors; receipt-backed lifecycle transitions; PMTiles range hosting and cache fallback; MapLibre performance envelopes; source-role discipline; documentation and CI validation. | Detailed routing in [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md); downstream candidates remain under existing standards, ADR, catalog, lifecycle, renderer, deployment, source, validation, and release responsibilities. | Do not adopt GeoParquet 2.0, fixed row-group/grid constants, a bbox rule, Cloudflare topology, whole-file cache, dependency, source fact, or performance guarantee from the packet. Resolve upstream stability, compatibility, benchmark, catalog-closure, hosting, correction, and rollback semantics first. |
 
 ### Known lineage backlog to inventory
 
@@ -606,6 +607,43 @@ The packet is broad, internally heterogeneous, and contains implementation-looki
 ### Candidate next extraction
 
 Create a separately authorized decision packet for deterministic, record-local STAC readiness after resolving profile ownership and the placeholder `collection.json` disposition. Do not copy the PDF's networked workflow directly.
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-07-30-spatiotemporal-modernization - cloud-native spatial formats, delivery, performance, and governance</strong></summary>
+
+### Source
+
+`Pasted text(32).txt`
+
+- Captured title: `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix`
+- SHA-256: `798d8ee3ab1d99ce92cb04d5e2e69a66c5c89407d1868da350be153c3b9f04a4`
+- Lines: `226`
+- Bytes: `22,806`
+- Source authoring date: `NEEDS VERIFICATION`
+- Capture and triage date: `2026-07-30`
+- Detailed review: [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md)
+
+### Captured themes
+
+- GeoParquet 2.0 native logical types, spatial ordering, row groups, compression, statistics, and partitioning.
+- STAC GeoParquet as a bulk Item/Collection mirror.
+- Receipt-backed lifecycle transitions, evidence closure, cite-or-abstain, and reversible claims.
+- PMTiles range delivery, Cloudflare Pages/R2, service-worker caching, and tile-generation tools.
+- MapLibre GPU rendering, static/dynamic layer separation, and proposed frame/entity budgets.
+- Source-role distinctions across soils, land cover, botany, moisture, hydrography, and planning.
+- Markdown modernization levels and CI validation pressure.
+
+### Triage notes
+
+The blueprint is directionally useful but mixes current KFM doctrine, current repository implementation claims, upstream development specifications, deployment choices, and universal performance mandates. Stable GeoParquet remains 1.1.0 in the upstream stable channel; 2.0 is a development-track decision for KFM. Row-group, ordering, partition, cache, hosting, and renderer values require dataset- and device-specific evidence.
+
+Existing KFM lifecycle, evidence, renderer, STAC, PMTiles, source, and documentation responsibilities remain authoritative. No packet tool, vendor, dependency, version, path, fixed threshold, or source summary is promoted.
+
+### Candidate next extraction
+
+Create a separately authorized decision-only GeoParquet version-readiness issue. Inventory current writers/readers/validators/consumers, distinguish stable 1.1.0 from the 2.0 development track, define dual-evaluation and rollback outcomes, and replace fixed layout mandates with a benchmark-profile decision. No data rewrite, source activation, release, deployment, or publication.
 
 </details>
 

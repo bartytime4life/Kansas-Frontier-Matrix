@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.6
+version: v0.7
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-07-29
+updated: 2026-07-30
 policy_label: public
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified at remote main 5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, and New Ideas 5 are triaged exploratory packets; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
+notes: [Repository path and sibling intake surfaces verified at remote main 0e4e2ee717730a4b4bfa22cf59c13241eba14bef; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint are triaged exploratory packets; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -21,7 +21,7 @@ A governed intake ledger for exploratory KFM idea packets so useful proposals st
 > **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@0e4e2ee717730a4b4bfa22cf59c13241eba14bef` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -205,6 +205,7 @@ Each row should carry enough information for a maintainer to decide whether to p
 | `NI-2026-04-25-identity-authority-assurance` | `New Ideas 4-25-26.pdf` | 2026-04-25 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-25-source-map.md`](exploratory/new-ideas-4-25-source-map.md); five packet-local atlas triads; downstream homes remain candidate-only | Review a cross-domain taxonomy concept decision packet with synthetic split/lump/homonym fixtures before live source or distribution work. |
 | `NI-2026-04-30-retrieval-offline-trust` | `New Ideas 4-30-26.pdf` | 2026-04-30 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-30-source-map.md`](exploratory/new-ideas-4-30-source-map.md); eleven packet-local atlas triads; downstream homes remain candidate-only | Review a contract-only distribution and coverage semantics slice with synthetic fixtures before any source-specific loader, adapter, or public layer. |
 | `NI-2026-07-29-new-ideas-5` | `New Ideas 5.pdf` | `NEEDS VERIFICATION` (captured 2026-07-29) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-5-source-map.md`](exploratory/new-ideas-5-source-map.md); downstream homes remain candidate-only | Review the dependency-ordered source map and authorize at most one path-bounded candidate after its ADR, profile, source, rights, contract, policy, test, and rollback gates close. |
+| `NI-2026-07-30-spatiotemporal-modernization` | `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix` | `NEEDS VERIFICATION` (captured 2026-07-30) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md); downstream homes remain candidate-only | Review a decision-only GeoParquet version-readiness issue before any standard, dependency, data, catalog, hosting, runtime, release, deployment, or publication change. |
 
 ### Register detail cards
 
@@ -333,6 +334,20 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Promotion blockers | Proposed peer-renderer conflict; unresolved catalog profile and placeholder record; stale or unverified endpoints, versions, licenses, and service claims; overlapping existing KFM lanes; dependency, rights, sensitivity, and public-release burden. |
 | Smallest next action | Review a decision-only packet for record-local STAC readiness and placeholder disposition, or choose another single dependency-closed candidate under a fresh exact authorization. |
 | Decision note | Triaged as useful multi-cluster implementation pressure. No packet code or suggested directory tree is promoted or implemented by this register update. |
+
+#### `NI-2026-07-30-spatiotemporal-modernization`
+
+| Field | Value |
+|---|---|
+| Source identity | `Pasted text(32).txt`; captured title `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix`; SHA-256 `798d8ee3ab1d99ce92cb04d5e2e69a66c5c89407d1868da350be153c3b9f04a4`; 226 lines; 22,806 bytes |
+| Source date | `NEEDS VERIFICATION`; `2026-07-30` is capture and triage date only |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `GeoParquet`, `STAC GeoParquet`, `Hilbert`, `row-group`, `ZSTD`, `H3`, `S2`, `PMTiles`, `MapLibre`, `Cloudflare`, `lifecycle`, `EvidenceBundle`, `performance`, `documentation`, `CI` |
+| Detailed source map | [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md) |
+| Evidence threshold | Current repository evidence for path and gap claims; primary upstream stable/development status; accepted version and catalog profiles; writer/reader/validator compatibility; dataset/device-specific benchmarks; synthetic fixtures; finite outcomes; dependency, rights, sensitivity, correction, and rollback review. |
+| Promotion blockers | KFM currently tracks stable GeoParquet 1.1.0; STAC GeoParquet remains under development; packet row/grid/cache/hosting/performance mandates are not universal evidence; existing lifecycle, evidence, renderer, source, and modernization authorities would be duplicated; dependency, infrastructure, release, and public-trust burdens remain open. |
+| Smallest next action | Draft a decision-only GeoParquet version-readiness issue with `KEEP_1_1`, `DUAL_EVALUATE`, `ADOPT_LATER`, and `DENY_UNSUPPORTED` outcomes plus benchmark-profile, migration, correction, and rollback requirements. |
+| Decision note | Triaged as useful modernization pressure with significant version, benchmark, and authority corrections. No standard, schema, dependency, data, source, catalog, workflow, runtime, hosting, release, deployment, or publication change is promoted. |
 
 ## Promotion criteria
 
