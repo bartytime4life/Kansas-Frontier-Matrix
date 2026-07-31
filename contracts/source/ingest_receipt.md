@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-source-ingest-receipt
 title: contracts/source/ingest_receipt.md — IngestReceipt Contract
 type: contract
-version: v0.2
-status: draft; PROPOSED; schema-paired; source-ingest-receipt; integrity-bound
+version: v0.3
+status: draft; PROPOSED; schema-paired; validator-implemented; source-ingest-receipt; integrity-bound
 owners: OWNER_TBD — Source steward · Ingest steward · Contracts steward · Schema steward · Policy steward · Validation steward · Evidence steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-07-31
 policy_label: public; contracts; source; ingest-receipt; source-admission; provenance; digest; lifecycle-aware; no-release-authority
 tags: [kfm, contracts, source, ingest-receipt, receipt, source-id, run-id, started-at, finished-at, success, partial, fail, bytes-in, sha256, provenance, source-admission]
 related:
@@ -29,6 +29,7 @@ notes:
   - "Expanded from a generic schema-paired stub at `contracts/source/ingest_receipt.md`."
   - "Paired schema verified at `schemas/contracts/v1/source/ingest_receipt.schema.json`; schema status is PROPOSED."
   - "The schema requires id, source_id, run_id, started_at, finished_at, outcome, bytes_in, and digests; additional properties are false."
+  - "The repository-owned no-network validator checks schema and format, temporal order, all-zero digest denial, optional SUCCESS gating, SourceDescriptor source-head binding, local artifact SHA-256 binding, and bound byte totals."
   - "IngestReceipt records a source ingest event and content digests. It is not SourceDescriptor, not RunReceipt, not EvidenceBundle, not PolicyDecision, not ReleaseManifest, and not publication approval."
   - "Rollback target for this expansion is previous stub blob SHA `e15e622390e9bb4fdfb0da53188075b92a8f11c5`."
 [/KFM_META_BLOCK_V2] -->
@@ -52,10 +53,10 @@ notes:
 **Path:** `contracts/source/ingest_receipt.md`  
 **Paired schema:** `schemas/contracts/v1/source/ingest_receipt.schema.json`  
 **Schema status:** PROPOSED  
-**Validator path named by schema:** `tools/validators/validate_ingest_receipt.py` — NEEDS VERIFICATION for implementation/wiring  
+**Validator path named by schema:** `tools/validators/validate_ingest_receipt.py` — CONFIRMED repository-owned no-network implementation and fixture-mode aggregate wiring
 **Policy authority:** `policy/source/`, not this contract  
 **Lifecycle authority:** lifecycle/data roots, ingest pipelines, and source registry records, not this contract  
-**Truth posture:** CONFIRMED target was a generic schema-paired stub · CONFIRMED paired schema exists and points to this contract · CONFIRMED finite outcome enum and digest pattern · CONFIRMED additional properties are closed · NEEDS VERIFICATION for validator wiring, fixtures, ingest pipeline integration, source descriptor resolution, receipt persistence, and CI enforcement
+**Truth posture:** CONFIRMED target was a generic schema-paired stub · CONFIRMED paired schema exists and points to this contract · CONFIRMED finite outcome enum and digest pattern · CONFIRMED additional properties are closed · CONFIRMED dedicated validator, deterministic fixture polarity, semantic time/placeholder checks, optional source-head/artifact/byte binding, and SUCCESS-gate polarity · NEEDS VERIFICATION for live ingest integration, KWO document identities, receipt persistence, connector-gate graduation, and broader CI enforcement
 
 ## Quick jumps
 
@@ -257,17 +258,50 @@ Typical uses:
 
 ## Validation expectations
 
-NEEDS VERIFICATION in implementation:
+CONFIRMED in the repository-owned implementation:
 
-- validator existence and wiring for `tools/validators/validate_ingest_receipt.py`;
-- fixture coverage under `fixtures/contracts/v1/source/ingest_receipt/`;
+- Draft 2020-12 schema and date-time format validation for the receipt;
+- deterministic nonempty positive/negative fixture polarity under
+  `fixtures/contracts/v1/source/ingest_receipt/`;
 - temporal validation that `finished_at >= started_at`;
-- source_id resolution against SourceDescriptor/source registry records;
-- digest calculation profile and canonicalization for API payloads, archives, streamed content, and normalized snapshots;
-- policy behavior for unresolved, credentialed, closed, restricted, or rights-unknown sources;
-- behavior for `PARTIAL` ingest and zero-byte cases;
+- rejection of all-zero SHA-256 placeholders;
+- optional `--require-success` gating that rejects valid `PARTIAL` and `FAIL`
+  records as unsuccessful operational outcomes without redefining their schema validity;
+- optional SourceDescriptor schema validation, exact `source_id` equality, and
+  explicit source-head SHA-256 binding through a named receipt digest key;
+- optional `DIGEST_KEY=PATH` artifact bindings that recompute exact local file
+  SHA-256 values, reject symbolic links and duplicate bindings, and bind
+  `bytes_in` to the unique artifact byte total; and
+- bounded diagnostics that report codes and field locations without echoing
+  receipt values or artifact contents.
+
+The stable no-network command is:
+
+```bash
+python tools/validators/validate_ingest_receipt.py RECEIPT.json \
+  --source-descriptor SOURCE_DESCRIPTOR.json \
+  --source-head-key source_head \
+  --artifact source_head=PATH/TO/CARRIER \
+  --artifact document=PATH/TO/DOCUMENT \
+  --require-success
+```
+
+`--fixtures` runs the existing schema fixture family without source or artifact
+I/O. Neither mode performs network access, source admission, connector
+activation, lifecycle promotion, proof construction, release, deployment, or
+publication.
+
+Still NEEDS VERIFICATION:
+
+- digest/canonicalization profiles for API payloads, archives, streamed
+  content, and normalized snapshots beyond exact local file bytes;
+- policy behavior for unresolved, credentialed, closed, restricted, or
+  rights-unknown sources;
+- KWO-specific host/media-type/allowlist and document-manifest cross-binding;
 - linkage to runtime `RunReceipt` where a larger pipeline run exists;
-- correction/supersession workflow for re-ingest and source refresh.
+- immutable correction/supersession records for a concrete source refresh; and
+- connector-gate graduation, ownership, required-check compatibility, and
+  hosted exact-head evidence.
 
 ---
 
@@ -306,6 +340,13 @@ Fixtures must use synthetic/safe source ids and synthetic digest values only.
 
 Rollback is required if this contract is used as source truth, SourceDescriptor replacement, runtime execution summary, validation proof, policy decision, release approval, source payload storage, public API permission, or AI/source authority.
 
-Rollback target for this expansion: previous stub blob SHA `e15e622390e9bb4fdfb0da53188075b92a8f11c5`.
+For the bounded validator prerequisite, rollback is a focused revert of the
+validator, its direct tests, aggregate entry, and this implementation-status
+documentation. The IngestReceipt schema and existing fixtures remain unchanged;
+the connector-gate readiness hold must remain in place unless separately
+authorized and verified.
+
+Historical rollback target for the v0.2 semantic expansion: previous stub blob
+SHA `e15e622390e9bb4fdfb0da53188075b92a8f11c5`.
 
 <p align="right"><a href="#top">Back to top</a></p>

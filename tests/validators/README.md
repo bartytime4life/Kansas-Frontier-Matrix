@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.7
-status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; shared-validator-runtime-executable; six-entry-aggregate-ci-invoked; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.8
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; shared-validator-runtime-executable; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
-updated: 2026-07-30
+updated: 2026-07-31
 supersedes: v0.1 planning-oriented validator-test README
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
-truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, shared validator runtime under tools/validators/_common, current six-entry aggregate, existing schema/contract tests, deterministic placeholder, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED six-entry aggregate versus broader executable validator inventory and fixture-mode output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
+truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, focused no-network IngestReceipt schema/semantic/source-head/artifact/byte/outcome suite, shared validator runtime under tools/validators/_common, current seven-entry aggregate, existing schema/contract tests, deterministic placeholder, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED seven-entry aggregate versus broader executable validator inventory and legacy shared-runner fixture-output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -104,6 +104,7 @@ related:
   - test_pnpm_audit_readiness.py
   - docs/link-check/README.md
   - docs/link-check/test_docs_link_check.py
+  - test_validate_ingest_receipt.py
   - ../fixtures/governance/repository_control/README.md
   - ../../tools/validators/README.md
   - ../../tools/validators/ci_readiness.py
@@ -123,6 +124,7 @@ related:
   - ../../tools/validators/validate_runtime_response_envelope.py
   - ../../tools/validators/validate_decision_envelope.py
   - ../../tools/validators/validate_run_receipt.py
+  - ../../tools/validators/validate_ingest_receipt.py
   - ../../tools/validators/release/validate_promotion_decision.py
   - ../../pipelines/validate/README.md
   - ../../fixtures/contracts/v1/README.md
@@ -145,7 +147,8 @@ notes:
   - "Working validator code exists under tools/validators and is exercised by make schemas and two workflows; that execution must not be relabeled as direct tests/validators coverage."
   - "The current fixture runner prints expected invalid fixtures as FAIL during its first pass, then separately verifies that invalid fixtures fail and may return success."
   - "The current fixture mode does not assert that valid or invalid fixture sets are nonempty; an empty fixture family can therefore complete successfully."
-  - "The current aggregate runs six hard-coded top-level validators; the historical v0.2 snapshot ran five, and bounded current search surfaced additional executable validators outside the current list."
+  - "v0.8 adds focused no-network proof for IngestReceipt schema and format validation, temporal order, placeholder denial, optional SUCCESS gating, SourceDescriptor source-head binding, local artifact digests, byte totals, deterministic non-echoing output, and fixture polarity; the connector-gate job remains held."
+  - "The current aggregate runs seven hard-coded top-level validators; the historical v0.2 snapshot ran five, and bounded current search surfaced additional executable validators outside the current list."
   - "The repository-control slice changes its paired governance contract, state schema, tracked projection, evaluator semantics, fixtures, and tests only; it changes no policy, domain runtime, source, receipt, proof, release record, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
@@ -159,8 +162,8 @@ notes:
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
   <img alt="Direct inventory: focused suite" src="https://img.shields.io/badge/direct__inventory-focused__suite-success">
   <img alt="Shared runtime: executable" src="https://img.shields.io/badge/shared__runtime-executable-success">
-  <img alt="Aggregate: six entrypoints" src="https://img.shields.io/badge/aggregate-six__entrypoints-informational">
-  <img alt="Unit suites: readiness, repository control, and pnpm audit" src="https://img.shields.io/badge/unit__suites-readiness__%2B__control__%2B__pnpm-success">
+  <img alt="Aggregate: seven entrypoints" src="https://img.shields.io/badge/aggregate-seven__entrypoints-informational">
+  <img alt="Unit suites: focused families" src="https://img.shields.io/badge/unit__suites-focused__families-success">
   <img alt="Coverage: partial" src="https://img.shields.io/badge/coverage-PARTIAL-red">
   <img alt="Network: denied by default" src="https://img.shields.io/badge/network-denied__by__default-critical">
   <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-purple">
@@ -174,28 +177,28 @@ notes:
 
 > [!IMPORTANT]
 > **Historical v0.2 snapshot:** `main@52275a5710400a9f794a8fcf8e0945e0c21544e4`
-> **Current change base:** `main@b5f156c32efa149846ad1022b9661b766f464485`
-> **Prior target blob:** `027f7531b86ddfd7a6a10cd38ae0c62e1d07d523`
-> **Direct lane:** README plus focused CI-readiness, repository-control, pnpm-audit, and local documentation-link suites; broader shared-runtime and entrypoint unit coverage remains partial
+> **Current change base:** `main@fda0c25f226df85f0d3a321572703f794b2cbdc9`
+> **Prior target blob:** `f4b29797c7f131cf73d3c50f56b812e2277b5eaf`
+> **Direct lane:** README plus focused CI-readiness, repository-control, pnpm-audit, local documentation-link, and IngestReceipt-validator suites; broader shared-runtime and entrypoint unit coverage remains partial
 > **Current `make test`:** runs `tests/schemas` and `tests/contracts`; it does not collect `tests/validators`
-> **Current validator aggregate:** six hard-coded top-level entrypoints through `make schemas`
+> **Current validator aggregate:** seven hard-coded top-level entrypoints through `make schemas`
 
 ### Safe conclusion
 
-`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. Focused direct executable suites now prove `ci_readiness.py`, the repository-control state/evaluator slice, and the locked-pnpm audit readiness/result classifier; they do not establish broad unit coverage for the other shared helpers or validator entrypoints.
+`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. Focused direct executable suites now prove `ci_readiness.py`, the repository-control state/evaluator slice, the locked-pnpm audit readiness/result classifier, the local documentation link checker, and the IngestReceipt validator prerequisite; they do not establish broad unit coverage for the other shared helpers or validator entrypoints.
 
 The repository nevertheless contains working validator implementation and adjacent proof:
 
 - `tools/validators/_common/local_resolver.py` builds a repository-local schema registry.
 - `tools/validators/_common/jsonschema_runner.py` constructs Draft 2020-12 validators, validates explicit files, and supports fixture mode.
-- `tools/validators/_common/run_all.py` invokes six hard-coded top-level validator scripts with `--fixtures` and stops on the first nonzero result.
+- `tools/validators/_common/run_all.py` invokes seven hard-coded top-level validator scripts with `--fixtures` and stops on the first nonzero result.
 - `make schemas` runs that aggregate.
 - `.github/workflows/schema-validation.yml` runs `make schemas` on pushes and pull requests.
 - `.github/workflows/validator-suite.yml` runs `make schemas` and separately confirms that one invalid EvidenceBundle fixture is rejected.
 - `tests/schemas/test_common_contracts.py` exercises valid and invalid fixture polarity for selected schema families.
 - `tests/schemas/test_hydrology_alias_contracts.py` exercises three domain alias validators through the shared loader.
-- Bounded exact-import evidence records eighteen validator scripts and four test modules consuming the shared runner or resolver.
-- Additional executable validators exist outside the six-entry aggregate, including release and MapLibre validator families.
+- Bounded exact-import evidence records nineteen validator scripts and five test modules consuming the shared runner or resolver.
+- Additional executable validators exist outside the seven-entry aggregate, including release and MapLibre validator families.
 
 These are meaningful implementation facts. They do **not** establish direct unit coverage for the shared helper branches, every entrypoint, every validator family, every fixture family, every exit code, or every diagnostic contract.
 
@@ -210,7 +213,7 @@ These are meaningful implementation facts. They do **not** establish direct unit
 | Limitation | Current evidence | Consequence |
 |---|---|---|
 | Focused direct suites only | `test_ci_readiness.py` covers placeholder readiness; repository-control tests cover the bounded state/evaluator slice. | Other helper branches, entrypoints, and fixture families still lack complete direct unit coverage. |
-| Aggregate is hard-coded | `run_all.py` names six top-level wrappers. | Other executable validators may not run under `make schemas`. |
+| Aggregate is hard-coded | `run_all.py` names seven top-level validators. | Other executable validators may not run under `make schemas`. |
 | Fixture mode prints expected invalids as `FAIL` | `validate_files()` evaluates valid and invalid files together before polarity checks. | Human logs can look failed while the process ultimately succeeds. |
 | Empty fixture sets are accepted | Fixture mode has no nonempty valid/invalid assertion. | A missing or emptied fixture family can produce a green result. |
 | `rc == 2` branch is unreachable from `validate_files()` | `validate_files()` returns only `0` or `1`. | The branch does not currently protect fixture mode as written. |
@@ -302,7 +305,8 @@ tests/validators/
 ├── test_repository_control_incident_1792.py
 ├── test_repository_control_incident_1829.py
 ├── test_repository_transition_authorization.py
-└── test_pnpm_audit_readiness.py
+├── test_pnpm_audit_readiness.py
+└── test_validate_ingest_receipt.py
 ```
 
 At the historical v0.2 snapshot, checked representative paths did not establish:
@@ -331,6 +335,16 @@ CLI exit polarity. It does not cover
 reference-style links, inline HTML links, citation semantics, redirects, ignore
 rules, historical whole-repository remediation, or external availability.
 
+`test_validate_ingest_receipt.py` proves the dedicated no-network validator
+accepts a correctly bound synthetic receipt and fails closed on source identity,
+source-head digest, local artifact digest, byte-count, all-zero placeholder,
+temporal-order, and required-success mismatches. It also preserves `PARTIAL` and
+`FAIL` as schema-valid receipt outcomes while denying them at the optional
+operational gate, verifies nonempty fixture polarity, and confirms diagnostics
+are deterministic and do not echo artifact contents. It does not validate KWO
+document bytes, host/media-type allowlists, immutable supersession instances,
+connector execution, source activation, or release/publication state.
+
 ### Shared runtime and aggregate
 
 ```text
@@ -350,6 +364,7 @@ tools/validators/validate_evidence_bundle.py
 tools/validators/validate_runtime_response_envelope.py
 tools/validators/validate_decision_envelope.py
 tools/validators/validate_run_receipt.py
+tools/validators/validate_ingest_receipt.py
 ```
 
 ### Confirmed adjacent tests
@@ -359,13 +374,14 @@ tools/validators/validate_run_receipt.py
 | `tests/validators/test_ci_readiness.py` | Exact placeholder AST shapes, substantive/syntax/missing/unsafe/symlink/path refusal, unexpected non-Python test/validator-source denial, allowed documentation/sentinel files in both categories, category-wide non-vacuity, README-only sibling roots, deterministic diagnostics, repeated-root behavior, and CLI exit polarity. | Direct focused coverage for `ci_readiness.py`; not broad coverage of schema runners or domain validators. |
 | `tests/validators/test_repository_control.py`, `test_repository_control_incident_1829.py`, and `test_repository_transition_authorization.py` | State schema/digest/scope, claim-state gating, observation-time base semantics, terminal divergence, and strict exact-head owner transition records. | Direct focused coverage; hosted workflow execution, required-check settings, human-versus-app identity, and initiating-client attribution remain separate. |
 | `tests/validators/docs/link-check/test_docs_link_check.py` | Local files, directories, images, heading/explicit anchors, path escape, exact case, external abstention, determinism, and CLI polarity. | Direct focused coverage for the bounded inline Markdown checker; no external availability, citation, truth, or release claim. |
+| `tests/validators/test_validate_ingest_receipt.py` | Receipt and SourceDescriptor schema/format checks, time order, placeholder denial, source-head and exact local artifact digest binding, byte totals, SUCCESS gating, deterministic non-echoing output, and fixture polarity. | Direct focused coverage for `validate_ingest_receipt.py`; no live source, KWO host/media profile, connector, activation, proof, release, or publication claim. |
 | `tests/schemas/test_common_contracts.py` | Selected schema families accept valid fixtures and reject invalid fixtures. | Primary authority is schema conformance and fixture polarity. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | Three Hydrology aliases accept one valid fixture each and reject added unknown properties. | Primary authority is domain schema alias behavior. |
 | `validator-suite` invalid EvidenceBundle canary | One explicit invalid fixture must produce a nonzero validator result. | Workflow-level canary, not a unit suite for all helpers or validators. |
 
 ### Broader executable inventory
 
-Bounded import search surfaced validator scripts beyond the six-entry aggregate, including:
+Bounded import search surfaced validator scripts beyond the seven-entry aggregate, including:
 
 - `tools/validators/release/validate_promotion_decision.py`;
 - domain Hydrology wrappers;
@@ -406,7 +422,7 @@ The diagram describes inspected code flow. It is not a claim that a rendered dia
 | `validate_files(validator, files)` | Parses each file, sorts errors by path, prints first error, returns `0` or `1`. | Test valid, invalid, malformed JSON, unreadable file, stable ordering, and bounded diagnostics. |
 | explicit-file mode | Requires one or more files; no files returns `2`. | Pin the CLI contract and stderr text. |
 | fixture mode | Collects JSON under `valid/` and `invalid/`, runs combined validation, then checks polarity. | Separate log semantics from expected polarity; require nonempty fixture sets. |
-| aggregate mode | Runs six scripts sequentially and stops at first nonzero exit. | Test ordering, fail-fast behavior, missing scripts, subprocess errors, and coverage manifest drift. |
+| aggregate mode | Runs seven scripts sequentially and stops at first nonzero exit. | Test ordering, fail-fast behavior, missing scripts, subprocess errors, and coverage manifest drift. |
 
 ### Known fixture-mode conflict
 
@@ -818,7 +834,7 @@ This is a proposed review artifact, not current repository implementation.
 
 ### Confirmed commands
 
-Run the six-entry aggregate:
+Run the seven-entry aggregate:
 
 ```bash
 make schemas
@@ -1086,7 +1102,7 @@ Cover:
 
 Build a manifest of executable validators, then add binding and fixture tests for:
 
-- the six current aggregate wrappers;
+- the seven current aggregate validators;
 - release validators;
 - domain wrappers;
 - MapLibre validators;
@@ -1151,8 +1167,8 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | `tools/validators/_common/README.md` | CONFIRMED | Current implementation inventory, consumer count, workflows, and known conflicts. | Documentation is not a substitute for direct tests. |
 | `jsonschema_runner.py` | CONFIRMED executable | Explicit-file and fixture-mode behavior, output, and exit paths. | No direct unit suite established. |
 | `local_resolver.py` | CONFIRMED executable by adjacent README evidence | Local schema registry behavior. | Not directly reprinted or exhaustively tested in this revision. |
-| `run_all.py` | CONFIRMED executable | Six-entry hard-coded aggregate and fail-fast subprocess behavior. | Not complete validator inventory. |
-| six top-level wrappers | CONFIRMED through aggregate and files/search | Concrete schema/fixture bindings. | Wrapper-by-wrapper direct tests not established. |
+| `run_all.py` | CONFIRMED executable | Seven-entry hard-coded aggregate and fail-fast subprocess behavior. | Not complete validator inventory. |
+| seven top-level validators | CONFIRMED through aggregate and files/search | Concrete schema/fixture bindings. | Wrapper-by-wrapper direct tests remain incomplete outside the dedicated IngestReceipt suite. |
 | release promotion validator | CONFIRMED executable | Additional validator outside the aggregate. | One example does not exhaust broader inventory. |
 | `tests/schemas/test_common_contracts.py` | CONFIRMED executable test code | Valid/invalid schema fixture polarity for selected families. | Shape coverage, not shared runtime unit coverage or complete inventory. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | CONFIRMED executable test code | Three domain alias positive/strictness cases. | Narrow domain coverage. |

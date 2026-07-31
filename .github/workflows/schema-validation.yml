@@ -2,7 +2,7 @@
 #
 # Responsibility:
 #   Check repository schema JSON structure, canonical v1 schema identity, the
-#   six configured aggregate-validator fixture families, and the executable
+#   seven configured aggregate-validator fixture families, and the executable
 #   schema/contract test lane without treating shape validity as truth.
 #
 # Trigger and trust boundary:
@@ -117,6 +117,10 @@ jobs:
               "validate_run_receipt.py": (
                   Path("schemas/contracts/v1/runtime/run_receipt.schema.json"),
                   Path("fixtures/contracts/v1/runtime/run_receipt"),
+              ),
+              "validate_ingest_receipt.py": (
+                  Path("schemas/contracts/v1/source/ingest_receipt.schema.json"),
+                  Path("fixtures/contracts/v1/source/ingest_receipt"),
               ),
           }
           assert RUNNER_VALIDATORS == list(configured), (
