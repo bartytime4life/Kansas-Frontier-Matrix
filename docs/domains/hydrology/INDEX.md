@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/hydrology/index
 title: Hydrology — Lane Index
 type: standard
-version: v1
-status: draft
+version: v1.1
+status: draft; identity decision REMAIN_PROPOSED
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-06-06
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -19,11 +19,11 @@ related:
   - docs/domains/hydrology/EXPANSION_PLAN.md
   - docs/domains/hydrology/FILE_SYSTEM_PLAN.md
   - docs/domains/hydrology/GLOSSARY.md
-  - docs/domains/hydrology/identity-model.md
+  - docs/domains/hydrology/IDENTITY_MODEL.md
 tags: [kfm, domain, hydrology, index, navigation, governance]
 notes:
   - This is a navigation/index surface over the hydrology lane doc suite; it is not machine truth and does not enforce gates.
-  - No mounted repo this session; every path is PROPOSED or NEEDS VERIFICATION.
+  - Repository evidence was verified at main@9f42d4c3a35f5df4dbf027cbec3922cc03e22b7e for decision #1886; implementation and acceptance claims remain bounded by that evidence.
   - Directory Rules treat docs/domains/<domain>/ as the human-facing lane index; README vs INDEX as the landing filename is a convention question (§7, OQ-HYD-IDX-01).
   - Doc-suite status reflects this authoring sprint; merge/promotion state is pending (GENERATED_RECEIPT human_review pending).
 [/KFM_META_BLOCK_V2] -->
@@ -35,13 +35,13 @@ notes:
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)
 ![Domain](https://img.shields.io/badge/domain-hydrology-1f9eda)
-![Doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-blue)
+![Identity](https://img.shields.io/badge/identity-REMAIN__PROPOSED-yellow)
 ![Implementation](https://img.shields.io/badge/implementation-PROPOSED-orange)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-PreRAW→PUBLISHED-informational)
 ![Trust](https://img.shields.io/badge/trust-cite--or--abstain-success)
 ![Policy](https://img.shields.io/badge/policy-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
+**Status:** draft / identity `REMAIN_PROPOSED` · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-31
 
 ---
 
@@ -64,7 +64,11 @@ notes:
 The hydrology lane governs **watersheds, hydrologic accounting units, the surface-water network, in-situ observations, regulatory flood context, observed flood evidence, and the drought/irrigation links** that connect water to its neighboring lanes. It is the KFM **proof lane** — fixture-first, no-network, and the earliest place the trust membrane is made real end-to-end. [DOM-HYD §A] [ENCY]
 
 > [!IMPORTANT]
-> Hydrology doctrine — what the lane owns, what it must not collapse, what fails closed — is **CONFIRMED**. Every claim about repo state, paths, routes, schemas, tests, and CI in this lane is **PROPOSED** until verified against a mounted repo. This session exposed doctrine documents only.
+> Hydrology's object vocabulary and anti-collapse boundaries remain documented.
+> Decision #1886 explicitly keeps the common feature-identity tuple
+> `REMAIN_PROPOSED`: it is the sole candidate, not accepted doctrine or runtime
+> truth. Current repository evidence confirms only a permissive minimal schema
+> and no dedicated identity fixture, validator, or executable identity suite.
 
 **Three things the lane must never collapse** (source-role anti-collapse, fail-closed):
 
@@ -78,21 +82,23 @@ The hydrology lane governs **watersheds, hydrologic accounting units, the surfac
 
 ## 2. Document map
 
-The hydrology lane doc suite. Status reflects this authoring sprint; **all documents are draft and AI-authored, with `human_review.state: "pending"` — not yet merged or promoted.**
+The hydrology lane documentation suite at the verified snapshot. Document
+presence does not establish semantic acceptance, machine enforcement, review,
+release, or promotion.
 
 | Document | Purpose | Status |
 |---|---|---|
-| [`README.md`](./README.md) | Canonical lane landing page (one-line purpose, scope, exclusions, navigation). | **PROPOSED** *(not yet authored; see §7)* |
+| [`README.md`](./README.md) | Lane landing page (purpose, scope, exclusions, navigation, and readiness). | **draft / present** |
 | [`INDEX.md`](./INDEX.md) | *This file* — navigation hub over the suite. | **draft (this doc)** |
 | [`GLOSSARY.md`](./GLOSSARY.md) | Ubiquitous-language glossary (object families, source roles, temporal vocab, collapse-prevention terms). Backlog `HYD-M12`. | **draft** |
-| [`identity-model.md`](./identity-model.md) | Deterministic, evidence-bounded identity rules; `spec_hash` machinery; COMID→HUC12 worked example. | **draft** |
+| [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) | `REMAIN_PROPOSED` identity candidate, profile boundary, family projections, correction, migration, and graduation gates. | **draft / #1886** |
 | [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) | Lane governance, gates, artifact homes across `Pre-RAW → PUBLISHED`. | **draft** |
 | [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) | Per-root placement contract for every hydrology file. | **draft** |
 | [`EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) | Ordered work register (`HYD-H/M/L`, `OQ-HYD-*`). | **draft** |
 | [`EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) | Phased roadmap (P0–P6) and small reversible PR sequence (PR-00–PR-10). | **draft** |
 | `BOUNDARY.md` | Owns / does-not-own table; collapse-prevention rules. | **PROPOSED** *(not yet authored)* |
 | `SOURCE_FAMILIES.md` | Source families + source-role assignments. | **PROPOSED** *(not yet authored)* |
-| `OBJECT_FAMILIES.md` | Per-object-family detail. | **PROPOSED** *(not yet authored)* |
+| [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) | Per-object-family detail and proposed minimum family-profile matrix. | **draft / present** |
 | `THIN_SLICE_PLAN.md` | Kansas HUC12 fixture-first proof slice. | **PROPOSED** *(not yet authored)* |
 | `VERIFICATION_BACKLOG.md` | Domain-local verification queue (mirrors the global register). | **PROPOSED** *(not yet authored)* |
 
@@ -130,21 +136,25 @@ The hydrology lane doc suite. Status reflects this authoring sprint; **all docum
 
 ## 4. Object families and source roles
 
-**CONFIRMED ownership / PROPOSED field realization.** Full term definitions: [`GLOSSARY.md`](./GLOSSARY.md); identity rules: [`identity-model.md`](./identity-model.md).
+**Documented family vocabulary / `REMAIN_PROPOSED` identity realization.** Full term definitions: [`GLOSSARY.md`](./GLOSSARY.md); identity decision and gates: [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md).
 
 **Object families owned by the lane:**
 `Watershed` · `HUCUnit` · `HydroFeature` · `ReachIdentity` · `GaugeSite` · `FlowObservation` · `WaterLevelObservation` · `WaterQualityObservation` · `AquiferObservation` · `GroundwaterWell` · `NFHLZone` / `FloodContext` · `ObservedFloodEvent` · `Hydrograph` · `UpstreamTrace` (plus cross-lane links `AquiferContextLink`, `WaterUseLink`, `DroughtLink`, `IrrigationLink`). [DOM-HYD §E plus the separated aquifer-pair decision]
 
-**Source roles** — the canonical seven classes, **fixed at admission, never upgraded by promotion**: `observed / regulatory / modeled / aggregate / administrative / candidate / synthetic`. [Atlas §24.1]
+**Source-role target** — an immutable/versioned SourceDescriptor owns one of
+the documented seven classes and the identity candidate mirrors it for exact
+offline parity. Promotion never upgrades a role to `observed`:
+`observed / regulatory / modeled / aggregate / administrative / candidate /
+synthetic`. [Atlas §24.1]
 
 | Source family | Typical role | Discipline |
 |---|---|---|
-| USGS WBD / HUC12 | authority / context | vintage-tracked (`wbd_snapshot`) |
-| NHDPlus HR / 3DHP | authority / context | version-tracked (`nhdplus_version`) |
+| USGS WBD / HUC12 | descriptor-owned; no family default | vintage-tracked (`wbd_snapshot`); no `authority/context` role tokens |
+| NHDPlus HR / 3DHP | descriptor-owned; no family default | version-tracked (`nhdplus_version`) |
 | USGS Water Data / NWIS | observed | provisional/final status preserved |
 | FEMA NFHL / MSC | regulatory (context only) | never observed inundation → DENY on collapse |
-| 3DEP terrain | observed / context | tile-version-pinned |
-| Water-quality / groundwater | observed | sensitive joins fail closed |
+| 3DEP terrain | descriptor-owned | tile-version-pinned; do not infer role from family name |
+| Water-quality / groundwater | descriptor-owned | measurement records require admitted `observed`; sensitive joins fail closed |
 | Historical flood evidence | observed (archival) | distinct from regulatory NFHL |
 
 [⬆ back to top](#contents)
@@ -207,6 +217,9 @@ A consolidated view of the cross-document open items. Each doc carries its own b
 | Source-role enum vocabulary | **PROPOSED** | **ADR-S-04** |
 | Lane landing filename: `README.md` vs `INDEX.md` | **OPEN** | **OQ-HYD-IDX-01** (§7) |
 | Mounted-repo presence of all `docs/`, `schemas/`, `policy/`, `data/`, `tools/` hydrology paths | **NEEDS VERIFICATION** | repo inspection |
+| Common feature-identity tuple | **`REMAIN_PROPOSED`** | #1886; acceptance only after ADR-0013/common SpecHash, SourceDescriptor, exact profile/version grammar, closed shape, fixtures, validator/tests, consumer inventory, migration, and rollback rehearsal |
+| `normalized_digest` versus `spec_hash` | **PROPOSED TARGET** | `normalized_digest` is the semantic term; `spec_hash` is its persisted realization; common profile acceptance required |
+| Identity stewardship | **MISSING** | accountable Hydrology, identity, hashing, schema, source-registry, family, correction, sensitivity, and consumer/release stewards |
 
 [⬆ back to top](#contents)
 
@@ -217,7 +230,7 @@ A consolidated view of the cross-document open items. Each doc carries its own b
 | If you want to… | Start here |
 |---|---|
 | Understand what a hydrology term means | [`GLOSSARY.md`](./GLOSSARY.md) |
-| Know how an object is made distinguishable | [`identity-model.md`](./identity-model.md) |
+| Review the proposed identity candidate and graduation gates | [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) |
 | Place a new hydrology file | [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) → §3 here |
 | Understand gates and promotion | [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) |
 | Pick up the next piece of work | [`EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) |
@@ -235,6 +248,9 @@ A consolidated view of the cross-document open items. Each doc carries its own b
 **PROPOSED** (per-domain Definition of Done; the shared envelope is CONFIRMED, the hydrology-specific checklist is design intent). [C14-05] A hydrology artifact is promotable from CATALOG to PUBLISHED only when:
 
 - [ ] `SourceDescriptor` exists with declared **role** (one of the canonical seven), rights, sensitivity, citation, time, and content hash.
+- [ ] Any identity-bearing record uses an accepted `identity_profile` and
+      `family_profile`; until profile closure, common feature identity remains
+      `HOLD` and legacy `id`-only records remain `legacy-profile-unknown`.
 - [ ] `EvidenceRef` resolves to a closed `EvidenceBundle` for every public claim.
 - [ ] `ValidationReport` passes — schema, geometry validity, temporal logic, identity, and (where applicable) COMID↔HUC12 manifest closure.
 - [ ] Source-role separation holds — no NFHL-as-observed-flood, no version-drift collapse.
@@ -255,11 +271,12 @@ A consolidated view of the cross-document open items. Each doc carries its own b
 | Version | Date | Change |
 |---|---|---|
 | v1 | 2026-06-06 | Initial lane index over the hydrology doc suite (DATA_LIFECYCLE, EXPANSION_BACKLOG, EXPANSION_PLAN, FILE_SYSTEM_PLAN, GLOSSARY, identity-model). Surfaced lane-wide open questions and the README-vs-INDEX convention question (OQ-HYD-IDX-01). |
+| v1.1 | 2026-07-31 | Converged the lane index on decision #1886: the common tuple remains proposed pending cross-cutting profile, machine, migration, stewardship, and consumer closure. |
 
 [⬆ back to top](#contents)
 
 ---
 
-<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-07-30 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
+<sub>Status: draft / identity REMAIN_PROPOSED · Version: v1.1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Last updated: 2026-07-31 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
 
 [⬆ back to top](#contents)

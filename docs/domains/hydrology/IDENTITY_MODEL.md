@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/hydrology/identity-model
 title: Hydrology Identity Model
 type: standard
-version: v2
-status: draft
+version: v2.1
+status: draft; REMAIN_PROPOSED; decision #1886; profile closure held
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-05-18
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -32,9 +32,9 @@ related:
 tags: [kfm, domain, hydrology, identity, evidence, governance]
 notes:
   - Path conformant to Directory Rules §12 (Domain Placement Law).
-  - Identity rule structure (source id + object role + temporal scope + normalized digest) is CONFIRMED doctrine; field-level realization is PROPOSED.
+  - Decision #1886 records the four-slot identity tuple as the sole Hydrology candidate with disposition REMAIN_PROPOSED; neither its exact semantics nor field realization is accepted or enforced.
   - SourceDescriptor schema home is schemas/contracts/v1/source/source-descriptor.json (ADR-0001); source/ vs sources/ is CONFLICTED.
-  - Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); spec_hash machinery (RFC 8785 JCS + SHA-256) is CONFIRMED (Pass 10 C1-02).
+  - Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); ADR-0013's RFC 8785 JCS + SHA-256 grammar remains proposed and conflicts with the current common SpecHash schema.
   - v2 reconciles CONTRACT_VERSION pin, doc_id slug, Pre-RAW phase, crosswalk validator placement, alignment threshold, and companion cross-links. See Changelog (§14).
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,7 +44,7 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![CONTRACT_VERSION](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-brightgreen)
+![decision](https://img.shields.io/badge/identity-REMAIN__PROPOSED-yellow)
 ![implementation](https://img.shields.io/badge/implementation-PROPOSED-orange)
 ![lifecycle](https://img.shields.io/badge/lifecycle-PreRAW%E2%86%92PUBLISHED-blue)
 ![policy](https://img.shields.io/badge/policy-public%20when%20released-lightgrey)
@@ -54,13 +54,18 @@ notes:
 |---|---|
 | **Status** | `draft` — under review by the hydrology lane steward |
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` |
-| **Doctrine confidence** | **CONFIRMED** for identity rule shape, temporal handling, lifecycle, and ABSTAIN posture |
-| **Implementation confidence** | **PROPOSED** — field-level realization not yet verified against mounted repo |
+| **Identity decision** | **`REMAIN_PROPOSED`** — sole four-slot candidate; not accepted doctrine or runtime truth |
+| **Implementation confidence** | **MISSING** for the common identity profile; the paired schema remains a permissive minimal envelope |
 | **Owners** | `<hydrology lane steward>` + `<docs steward>` — *TODO assign* |
-| **Last updated** | 2026-07-30 |
+| **Last updated** | 2026-07-31 |
 
 > [!IMPORTANT]
-> Identity decisions in this document are **doctrinal**. They describe how objects are made distinguishable in the Hydrology lane regardless of representation, vintage, or pipeline phase. Identity is **not** a file path, an internal database key, or a UI handle — it is a deterministic property of the object's evidence, role, scope, and content. Where an `Identity rule` field reads `PROPOSED deterministic basis`, the *shape* of the rule is fixed by KFM doctrine; the *field names and normalization rules* are pending schema realization. This session exposed doctrine documents only, not a mounted repo, so every concrete path here is PROPOSED.
+> **Decision #1886: `REMAIN_PROPOSED`.** The tuple in this document is the sole
+> Hydrology candidate, not fixed doctrine or implemented identity behavior.
+> Exact slot semantics, canonicalization, hash and ID grammar, profile
+> versions, per-family projections, machine shape, migration, and consumers
+> must close before graduation. Identity is not a file path, database key, UI
+> handle, evidence object, policy decision, release, or publication authority.
 
 This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md) (terms), [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) (object detail), [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) (gates), and [`FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) (homes).
 
@@ -71,9 +76,9 @@ This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md)
 1. [Scope and identity boundaries](#1-scope-and-identity-boundaries)
 2. [The deterministic identity rule](#2-the-deterministic-identity-rule)
 3. [Object families and their identities](#3-object-families-and-their-identities)
-4. [Temporal handling — six times that stay distinct](#4-temporal-handling--six-times-that-stay-distinct)
-5. [Identity machinery — `spec_hash`, digests, ID derivation](#5-identity-machinery--spec_hash-digests-id-derivation)
-6. [Reach identity: COMID → HUC12 worked example](#6-reach-identity-comid--huc12-worked-example)
+4. [Temporal handling — six times that stay distinct](#4-temporal-handling-six-times-that-stay-distinct)
+5. [Identity machinery — `spec_hash`, digests, ID derivation](#5-identity-machinery-digests-id-derivation)
+6. [Reach identity: COMID → HUC12 worked example](#6-reach-identity-comid-huc12-worked-example)
 7. [Edge cases and ABSTAIN semantics](#7-edge-cases-and-abstain-semantics)
 8. [Source-role discipline and identity](#8-source-role-discipline-and-identity)
 9. [Cross-domain identity edges](#9-cross-domain-identity-edges)
@@ -81,13 +86,13 @@ This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md)
 11. [Where this lives in the repo](#11-where-this-lives-in-the-repo)
 12. [Verification backlog and open questions](#12-verification-backlog-and-open-questions)
 13. [Related documents](#13-related-documents)
-14. [Changelog](#14-changelog-v1--v2)
+14. [Changelog](#14-changelog-v1-v2)
 
 ---
 
 ## 1. Scope and identity boundaries
 
-**CONFIRMED doctrine / PROPOSED implementation.** The Hydrology lane governs identity for watersheds, HUC units, hydro features, reaches, gauges, flow and level observations, water quality, groundwater context, regulatory flood context, observed flood evidence, drought, and irrigation links. *(Sources: `[DOM-HYD]` §A–B, `[ENCY]`.)*
+**CONFIRMED family vocabulary / PROPOSED common identity profile.** The Hydrology lane documents the families below, while their common identity derivation remains held under decision #1886. *(Sources: `[DOM-HYD]` §A–B, `[ENCY]`.)*
 
 ### What this lane owns
 
@@ -108,7 +113,7 @@ This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md)
 
 ## 2. The deterministic identity rule
 
-**PROPOSED deterministic basis** for every hydrology object family:
+**`REMAIN_PROPOSED` candidate** for every admitted hydrology family profile:
 
 ```text
 identity(object) = f(  source_id
@@ -117,20 +122,27 @@ identity(object) = f(  source_id
                      , normalized_digest )
 ```
 
-This is the doctrinal shape recorded for every Hydrology object family in the Domain Atlas and is consistent with the identity rules used across Spatial Foundation, Soil, Fauna, Flora, Habitat, Geology, Hazards, Roads/Rail, and other KFM lanes. *(Source: `[DOM-HYD]` §E; `[ENCY]` §5.)*
+This is the sole Hydrology candidate selected by decision #1886. Similar draft
+language in neighboring lanes does not make it a cross-domain accepted grammar.
+Hydrology must reference the eventual common profile rather than create an
+incompatible local implementation. *(Source: `[DOM-HYD]` §E; `[ENCY]` §5.)*
 
 | Component | Purpose | Realization status |
 |---|---|---|
-| `source_id` | Pins identity to a registered `SourceDescriptor` — vintage, authority, rights, and source role flow from here. | **PROPOSED** schema field; descriptor schema home `schemas/contracts/v1/source/source-descriptor.json` per ADR-0001 (see §5 CONFLICTED note). |
+| `source_id` | References an immutable, versioned SourceDescriptor fixing source identity, role, authority, and source version. | **PROPOSED** schema field; canonical descriptor contract/schema path remains unresolved. |
 | `object_role` | The object family within this lane (e.g., `ReachIdentity`, `GaugeSite`, `FlowObservation`) — prevents cross-family identity collisions. | **CONFIRMED** vocabulary (§3); **PROPOSED** field realization. |
 | `temporal_scope` | The window of time the identity covers (instant, valid-interval, vintage band) — keeps WBD snapshots and NHDPlus vintages distinct. | **CONFIRMED** semantics (§4); **PROPOSED** field shape. |
-| `normalized_digest` | A deterministic content hash (default `jcs:sha256:<hex>`) over the canonicalized identity-bearing fields — makes identity reproducible across runs and tools. | **CONFIRMED** algorithm default (§5); **NEEDS VERIFICATION** for per-object normalization rules. |
+| `normalized_digest` | Semantic digest term over a named family projection under named common and family profiles. | **PROPOSED**; `spec_hash` is the proposed persisted realization and exact grammar remains blocked by ADR-0013/common-schema conflict. |
 
-### Three invariants the rule must preserve
+### Three graduation obligations the rule must preserve
 
-1. **Two objects with the same logical content from the same source and vintage MUST produce the same identity.** This is what makes pipelines idempotent and corrections targeted.
-2. **An object's identity MUST NOT change because a path moved, a timestamp ticked, or a serializer reformatted the JSON.** Transport, location, and incidental ordering are excluded from the digest.
-3. **A change to evidentiary content MUST rotate identity.** Drift, partial promotion, or accidental substitution becomes detectable as a hash mismatch.
+1. Equivalent identity-bearing content under the same source, role, temporal
+   scope, identity profile, and family profile must produce the same identity.
+2. Path movement, serializer formatting, retrieval/release time, signatures,
+   run IDs, and other excluded metadata must not rotate identity by themselves.
+3. A change to source/version, effective source role, object role,
+   identity-bearing time, family/profile version, or declared family field must
+   rotate identity and preserve explicit supersession lineage.
 
 [⬆ back to top](#contents)
 
@@ -138,7 +150,7 @@ This is the doctrinal shape recorded for every Hydrology object family in the Do
 
 ## 3. Object families and their identities
 
-**CONFIRMED ownership / PROPOSED field realization.** Every Hydrology object family shares the same identity rule structure. The columns below summarize the per-family role, what `source_id` typically resolves to, and what `temporal_scope` looks like in practice. *(Source: `[DOM-HYD]` §E; `[ENCY]`.)*
+**CONFIRMED family vocabulary / PROPOSED profile matrix.** Every admitted family would use the same candidate tuple, while a reviewed family profile declares the exact identity-bearing fields and temporal scope. *(Source: `[DOM-HYD]` §E; `[ENCY]`.)*
 
 | Object family | What it represents (in this lane) | Typical `source_id` anchor | Typical `temporal_scope` |
 |---|---|---|---|
@@ -158,7 +170,16 @@ This is the doctrinal shape recorded for every Hydrology object family in the Do
 | `Hydrograph` / `UpstreamTrace` | Derivative views over the above | Composition of underlying objects | Inherited from inputs |
 
 > [!NOTE]
-> Each row carries the **same** doctrinal identity rule: `source_id + object_role + temporal_scope + normalized_digest`. The columns differ in *what fills* the slots, never in *which slots exist*. `Hydrograph` is a **modeled** derivative — it carries model identity, a run receipt, and bounds, and is never relabeled observed.
+> Each row is a **proposed** projection of the sole candidate tuple. No row is
+> accepted or machine-enforced by this document. `Hydrograph` keeps its series
+> role and model/profile inputs; runtime `run_id` is excluded from content
+> identity.
+
+The minimum proposed family projections are maintained in
+[`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) and the semantic
+[`DomainFeatureIdentity` contract](../../../contracts/domains/hydrology/domain_feature_identity.md).
+`ObservedFloodEvent`, `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remain
+`HOLD` until their paired meaning and shape close.
 
 `AquiferObservation` and `AquiferContextLink` rotate independently. A
 link-only correction does not change the measurement identity; a measurement
@@ -191,41 +212,61 @@ supersession for whichever object changed.
 
 ## 5. Identity machinery — `spec_hash`, digests, ID derivation
 
-**CONFIRMED doctrine / PROPOSED per-object realization.** Hydrology identities are realized through the same `spec_hash` machinery used across KFM. *(Sources: Pass 10 `C1-02` Deterministic `spec_hash` via RFC 8785 JCS + SHA-256 [CONFIRMED]; `C8-05` JCS vs URDNA2015 [CONFIRMED]; Build Manual §7.3 Hashing discipline.)*
+**`REMAIN_PROPOSED`.** Hydrology proposes to reference the eventual common
+`SpecHash` profile. ADR-0013 proposes JCS + SHA-256, while the current common
+schema requires a wrapped bare `sha256:<hex>` value and the dedicated validator
+is a `NotImplementedError` stub. Documentation convergence is not profile
+closure.
 
-### The default algorithm
+### Proposed JSON v1 target
 
-- **Canonicalize** the identity-bearing JSON with **RFC 8785 JCS** (sorted keys, no whitespace variance, normalized number representation).
-- **Hash** the canonical bytes with **SHA-256**.
-- **Record** the digest as `jcs:sha256:<hex>`.
-
-> [!NOTE]
-> **JCS is the default; URDNA2015 is reserved for RDF.** Per Pass 10 `C8-05`, the KFM default for receipts and bundle hashes is JCS + SHA-256; W3C URDNA2015 RDF dataset canonicalization is invoked only when RDF-semantic equivalence is the relevant invariant (e.g., merging KFM bundles into a federated SPARQL query). The two can disagree for the same logical content; the choice is recorded in the receipt.
-
-### Derived IDs (PROPOSED scheme)
-
-```text
-bundle_id        = "eb-" + base32( lowercase( SHA-256( spec_hash ) ) )[:26]
-evidence_ref_id  = "er-" + base32( lowercase( SHA-256( target_bundle_spec_hash ) ) )[:26]
-```
+- select fields through a named, versioned family profile;
+- reject duplicate keys and non-finite or profile-invalid numbers;
+- apply only declared, versioned pre-canonicalization transforms;
+- perform no silent Unicode normalization;
+- canonicalize as RFC 8785 JCS UTF-8;
+- hash with SHA-256 and encode lowercase hexadecimal; and
+- bind both `identity_profile` and `family_profile` versions into derivation.
 
 > [!NOTE]
-> The `eb-` / `er-` prefix scheme is **PROPOSED** and **NEEDS VERIFICATION** against the mounted repository before being treated as canonical. Adopt or amend via an accepted ADR before any consumer relies on the exact prefix or length.
+> If ADR-0013 is accepted unchanged, the target digest form is
+> `jcs:sha256:<64-lowercase-hex>`. Until that ADR or a successor is accepted,
+> the string is a target, not canonical repository truth. RDF canonicalization
+> is outside Hydrology identity profile v1.
+
+### `normalized_digest`, `spec_hash`, and `id`
+
+- `normalized_digest` is the semantic tuple term.
+- `spec_hash` is its proposed persisted machine realization; the two are not
+  independently writable.
+- `id` derives from the complete tuple, including `spec_hash`; it is not the
+  digest itself.
+- Exact wrapper/scalar representation and ID prefix, alphabet, length, and
+  derivation depend on the accepted cross-cutting identity grammar.
+- Hash validity proves deterministic content identity only. It does not prove
+  source admission, evidence sufficiency, correctness, policy allowance,
+  release, or publication.
 
 ### What goes into the digest
 
 | **Included** (changes the digest) | **Excluded** (does not change the digest) |
 |---|---|
-| `object_type`, `schema_version` | retrieval timestamp |
-| `source_refs`, `dataset_refs` | storage URL / file path |
-| `evidence_refs`, `object_refs` | run nonce / orchestrator session id |
-| `policy_label`, `rights_status`, `sensitivity` | signatures / attestations (attached separately) |
-| Identity-bearing geometry fingerprints | transport encoding artifacts |
+| Source identity/version and effective role | retrieval or release timestamp |
+| Object/link role and family-specific temporal scope | storage URL, file path, serializer order, or whitespace |
+| Declared family identity projection | `run_id`, session ID, nonce, signature, or attestation |
+| Identity-bearing geometry/topology fingerprints | evidence, policy, review, release, correction, and rollback record IDs |
 
 ### `SourceDescriptor` schema home
 
 > [!CAUTION]
-> **CONFLICTED — `SourceDescriptor` schema home.** `source_id` resolves to a `SourceDescriptor` whose schema home is `schemas/contracts/v1/source/source-descriptor.json` (singular `source/`) per Atlas §24.1.3 / ADR-0001, while the Operating Contract's worked `GENERATED_RECEIPT` example references `schemas/contracts/v1/sources/source_descriptor.schema.json` (plural `sources/`, underscore, `.schema.json`). Descriptor **instances** live in `data/registry/sources/hydrology/`. Log for ADR-0001 confirmation + DRIFT_REGISTER; do not assert one. [ENCY §24.1.3] [AIBOC §46]
+> **CONFLICTED — `SourceDescriptor` authority.** Both
+> `schemas/contracts/v1/source/source-descriptor.json` and
+> `schemas/contracts/v1/sources/source_descriptor.schema.json` exist as
+> incompatible permissive proposed scaffolds. Profile graduation requires one
+> canonical contract/schema path, immutable versioning, and the source-role
+> enum. The proposed identity record mirrors `source_role`, and offline
+> validation requires exact parity with the referenced descriptor;
+> mismatch is `FAIL_SOURCE_ROLE_MISMATCH`.
 
 ### Hash policy is ADR-class
 
@@ -368,18 +409,23 @@ Only advance to the next tier if the higher one is missing or insufficient. **Re
 
 ## 8. Source-role discipline and identity
 
-**CONFIRMED.** Source role is part of identity context, not a label that can be retro-edited. A role is one of the canonical seven classes (`observed / regulatory / modeled / aggregate / administrative / candidate / synthetic`), **fixed at admission and never upgraded by promotion**. *(Sources: `[DOM-HYD]`, `[ENCY]`, Atlas §24.1 / §24.1.3.)*
+**PROPOSED identity binding / documented anti-collapse vocabulary.** Source role
+is owned by the immutable/versioned SourceDescriptor and mirrored on the
+identity candidate for offline parity validation. Missing/unresolved role is
+validator `FAIL` and governed runtime `ABSTAIN`; role changes create a new
+descriptor version and identity. Promotion never upgrades a role to
+`observed`. *(Sources: `[DOM-HYD]`, `[ENCY]`, Atlas §24.1 / §24.1.3.)*
 
 ### Source families for Hydrology (CONFIRMED ownership)
 
 | Source family | Role | Rights / sensitivity |
 |---|---|---|
-| USGS WBD / HUC12 | authority / context as the source role requires | rights `NEEDS VERIFICATION`; sensitive joins fail closed |
-| NHDPlus HR / v2.1 / 3DHP-oriented hydrography | authority / context | rights `NEEDS VERIFICATION` |
+| USGS WBD / HUC12 | descriptor-owned; no family default | rights `NEEDS VERIFICATION`; sensitive joins fail closed; do not mint `authority/context` role tokens |
+| NHDPlus HR / v2.1 / 3DHP-oriented hydrography | descriptor-owned; no family default | rights `NEEDS VERIFICATION`; preserve source network/version |
 | USGS Water Data / NWIS | **observed** | rights `NEEDS VERIFICATION`; freshness-sensitive |
 | FEMA NFHL / MSC | **regulatory** | regulatory context only; `DENY` cross-tag as observed inundation |
-| 3DEP terrain | observed / context | rights `NEEDS VERIFICATION` |
-| Water quality and groundwater sources | observed / context | rights and sensitivity vary by program |
+| 3DEP terrain | descriptor-owned | rights `NEEDS VERIFICATION`; do not infer role from family name |
+| Water quality and groundwater sources | descriptor-owned | rights and sensitivity vary by program; measurement records require admitted `observed` role |
 | Historical observed flood evidence | observed (archival) | source-vintage specific |
 | Hydrograph / reconstruction | **modeled** | carries model identity + run receipt + bounds; never relabeled observed |
 
@@ -451,6 +497,28 @@ flowchart LR
 
 [⬆ back to top](#contents)
 
+### Immutability, correction, and versioning
+
+An identity-bearing state is immutable. Changes to source/version, effective
+role, object role, identity-bearing time, family/profile version, declared
+family field, canonicalization, or digest profile create a new identity.
+Corrections retain the prior identity, create explicit supersession lineage,
+inventory affected consumers, and preserve rollback references. Link-only and
+measurement corrections rotate independently.
+
+Version concepts remain separate:
+
+| Field | Meaning |
+|---|---|
+| `schema_version` | Machine-shape version. |
+| `identity_profile` | Common tuple, canonicalization, digest, and ID derivation. |
+| `family_profile` | Per-family identity fields and temporal scope. |
+| legacy `version` | Compatibility-only input until inventoried and migrated. |
+
+Readers never silently upgrade a legacy profile. New writers emit exactly one
+accepted profile. An authorized transition is dual-read/single-write. Existing
+IDs retain their original profile; missing inputs are never fabricated.
+
 ---
 
 ## 11. Where this lives in the repo
@@ -517,6 +585,31 @@ tools/validators/<topic>/                               # cross-cutting crosswal
 | 15 | `triplets/` (plural) vs `triplet/` (singular) form. | One-line ADR (DIRRULES §18.a recommends plural). | OPEN |
 | 16 | `PROV.md` vs `PROVENANCE.md` provenance-profile filename. | Directory Rules **OPEN-DR-01** (PROV.md is the live artifact). | OPEN |
 
+### Decision #1886 graduation gates
+
+The tuple may become `ACCEPTED` only after all applicable gates close:
+
+- accepted cross-cutting identity/hash ADR and one canonicalization authority;
+- accepted SourceDescriptor and source-role authority;
+- exact ID and `spec_hash` grammars and representations;
+- closed paired schema with stable `$id` and explicit profile fields;
+- public-safe positive, negative, correction, ambiguity, and migration fixtures;
+- deterministic no-network constructor/checker with stable reason codes;
+- canonical equivalence, meaningful rotation, transient stability, role/time
+  separation, profile mismatch, and correction-lineage tests;
+- one fixture per admitted family and explicit `HOLD` for unresolved families;
+- producer/consumer inventory, legacy-read/new-write window, removal trigger,
+  and rollback rehearsal; and
+- path-bound non-vacuous CI that grants no release authority.
+
+### Stewardship gaps
+
+Hydrology semantics, common identity, hashing/canonicalization, schema,
+SourceDescriptor, object-family fields, correction/migration, sensitive wells,
+and consumer/release responsibilities all remain `MISSING` until accountable
+identities are recorded. `CODEOWNERS` is a review route, not stewardship or
+independent approval.
+
 > [!NOTE]
 > `NEEDS VERIFICATION` items are checkable against a mounted repository. `OPEN` items need an ADR or steward decision. `CONFLICTED` rows MUST carry a `DRIFT_REGISTER.md` entry until the ADR resolves them. Until all are resolved, every path-bearing claim in this document remains PROPOSED.
 
@@ -526,8 +619,8 @@ tools/validators/<topic>/                               # cross-cutting crosswal
 
 ## 13. Related documents
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law (§12), lifecycle invariant, OPEN-DR-01
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), lifecycle invariant, OPEN-DR-01
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology lane orientation *(TODO if absent)*
 - [`docs/domains/hydrology/GLOSSARY.md`](./GLOSSARY.md) — ubiquitous-language glossary (companion)
 - [`docs/domains/hydrology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — object-family detail (companion)
@@ -539,9 +632,9 @@ tools/validators/<topic>/                               # cross-cutting crosswal
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed-API boundary
 - [`docs/standards/CANONICALIZATION.md`](../../standards/CANONICALIZATION.md) — JCS / URDNA2015 decision matrix
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — `contracts/` vs `schemas/` vs `policy/`
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — canonical schema home *(TODO link target verification)*
+- `docs/adr/ADR-0001-schema-home.md` — proposed canonical schema-home ADR; file is not present on the frozen base
 - [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/) — PROPOSED machine-schema home
-- [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — shared `SourceDescriptor` schema (`source/` vs `sources/` CONFLICTED)
+- [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — one conflicting `SourceDescriptor` scaffold (`source/` vs `sources/` remains unresolved)
 - [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/) — PROPOSED object-meaning home
 - [`policy/domains/hydrology/`](../../../policy/domains/hydrology/) — PROPOSED admissibility / release home
 - `tools/validators/<topic>/` — PROPOSED cross-cutting crosswalk validator (home CONFLICTED, ADR-S-CWV-01)
@@ -576,4 +669,4 @@ tools/validators/<topic>/                               # cross-cutting crosswal
 
 > **Lineage.** This document synthesizes hydrology-identity doctrine from `[DOM-HYD]`, `[ENCY]` (Master Domain Atlas §5; Domains Culmination Atlas §4, §24.1, §24.4.2), the Unified Implementation Architecture Build Manual (§7 deterministic identity and hashing discipline), the crosswalk card (Atlas KFM-P5-PROG-0008: COMID → HUC12 recipe; validator gates; finite outcomes), Pass 10 Idea Index entries `C1-01` (Universal Run Receipt), `C1-02` (Deterministic `spec_hash` via JCS + SHA-256), and `C8-05` (JCS vs URDNA2015), and Directory Rules §§12, 18. No content was sourced from external (web) research; all citations are internal KFM doctrine.
 >
-> **Last updated:** 2026-06-06 · **Version:** v2 · **Status:** draft · **Contract:** `CONTRACT_VERSION = "3.0.0"` · [⬆ back to top](#contents)
+> **Last updated:** 2026-07-31 · **Version:** v2.1 · **Status:** draft / `REMAIN_PROPOSED` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · [⬆ back to top](#contents)

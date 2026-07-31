@@ -2,13 +2,13 @@
 doc_id: kfm://doc/contracts-domains-hydrology-readme
 title: Hydrology Contracts — README
 type: boundary-compact-readme; semantic-contract-index
-version: v0.3
-status: draft; PLACE; PROPOSED semantic contracts; mixed schema coverage; bounded validation only; no publication authority
+version: v0.4
+status: draft; PLACE; feature identity REMAIN_PROPOSED; mixed schema coverage; bounded validation only; no publication authority
 owners:
   - "@bartytime4life — CODEOWNERS review route"
   - "Hydrology semantic steward assignment — NEEDS VERIFICATION"
 created: 2026-06-22
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: public; contract-root; hydrology; evidence-bound; source-role-aware; not-for-life-safety; release-gated; rollback-aware
 related:
   - ../README.md
@@ -37,6 +37,7 @@ notes:
   - "The directory contains 24 semantic contract documents plus this README."
   - "Twenty contract-declared schema paths resolve and four are missing. AquiferObservation and AquiferContextLink have closed PROPOSED shapes; the remaining schemas are mixed aliases, minimal envelopes, and permissive scaffolds."
   - "Executable Hydrology coverage includes the EvidenceBundle alias and the separated aquifer observation/context-link pair. Evidence closure, policy, proof, catalog closure, release, and publication remain held."
+  - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED and records its profile, family, correction, migration, stewardship, and graduation boundaries without changing schemas or executable behavior."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -55,6 +56,10 @@ derived relationships, and trust-support envelopes.
 > This directory defines human-readable meaning. It does not prove a Hydrology
 > claim, admit a source, validate real-world evidence, make policy, approve a
 > release, publish data, or provide emergency flood guidance.
+>
+> Decision #1886 keeps `DomainFeatureIdentity` **`REMAIN_PROPOSED`**. The
+> four-slot tuple is the sole Hydrology candidate, not accepted or enforced
+> identity behavior.
 
 ## Quick navigation
 
@@ -76,7 +81,7 @@ derived relationships, and trust-support envelopes.
 
 | Surface | Current posture at the pinned snapshot | Authority boundary |
 |---|---|---|
-| This README | v0.3; `draft`; `PLACE`; `BOUNDARY_COMPACT` | Indexes this directory and records verified limits. It does not upgrade any child contract. |
+| This README | v0.4; `draft`; `PLACE`; `BOUNDARY_COMPACT` | Indexes this directory and records verified limits. It does not upgrade any child contract. |
 | Direct semantic contracts | 24 files; all remain `draft` / `PROPOSED` | Define candidate object/interface meaning only. |
 | Contract-declared schemas | 20 paths resolve; 4 are missing | Two closed aquifer shapes and the existing aliases/scaffolds do not establish semantic truth, evidence, policy, or release. |
 | Hydrology tests | Three executable bounded modules with thirteen tests; seven named modules remain documentation-only placeholders | Proves only local alias/shape polarity, type separation, optional-link behavior, and process-level network denial. |
@@ -288,7 +293,7 @@ evidence-closed, released, or published.
 
 | Contract | Semantic role | Contract-declared schema posture |
 |---|---|---|
-| [`domain_feature_identity.md`](./domain_feature_identity.md) | Shared domain feature identity and deterministic-reference boundary. | [Minimal `id` envelope](../../../schemas/contracts/v1/domains/hydrology/domain_feature_identity.schema.json); permissive beyond three generic properties. |
+| [`domain_feature_identity.md`](./domain_feature_identity.md) | `REMAIN_PROPOSED` common candidate, profile/family matrix, immutability, migration, and graduation boundary under #1886. | [Minimal `id` envelope](../../../schemas/contracts/v1/domains/hydrology/domain_feature_identity.schema.json); only `id` required, arbitrary properties allowed, no tuple/profile enforcement. |
 | [`huc_unit.md`](./huc_unit.md) | HUC identity, level, source-vintage, and boundary meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json). |
 | [`watershed.md`](./watershed.md) | Watershed identity and drainage-area context. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/watershed.schema.json). |
 | [`hydro_feature.md`](./hydro_feature.md) | Stream, river, waterbody, and hydrographic-feature meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/hydro_feature.schema.json). |
@@ -431,6 +436,7 @@ must be reviewed deliberately.
 | Hydrology policy | Four deny-default scaffolds | Source-role, freshness, sensitivity, groundwater, rights, evidence, or release decisions |
 | [`hydrology-proof-slice` workflow](../../../.github/workflows/hydrology-proof-slice.yml) | Readiness inspection with explicit holds | Proof production, semantic EvidenceRef-to-EvidenceBundle closure, and CatalogMatrix closure |
 | Pipeline and E2E proof path | Placeholder/TODO surfaces | Governed proof, promotion, correction, rollback, release, or publication |
+| Common feature identity | #1886 decision documentation converged; schema remains a permissive minimal envelope | Accepted tuple/profile semantics, SourceDescriptor parity, SpecHash grammar, fixtures, validator/tests, producers/consumers, migration, or rollback rehearsal |
 
 A green smoke or workflow result is evidence only for the tested revision and
 boundary. It must not be cited as evidence that a Hydrology source is admitted,
@@ -445,6 +451,8 @@ Before any contract-backed Hydrology carrier can become public, the owning
 workflow must close, as applicable:
 
 - deterministic identity and source-version lineage;
+- accepted `identity_profile` and `family_profile`, with legacy records handled
+  as `legacy-profile-unknown` rather than silently upgraded;
 - admitted source role, rights, cadence, and permitted claims;
 - meaningful machine shape and negative fixtures;
 - evidence resolution and citation scope;
@@ -507,6 +515,8 @@ state, or publication.
 | `HYD-CONTRACT-08` | `NEEDS VERIFICATION` | Prove EvidenceRef-to-EvidenceBundle semantic closure, citation behavior, and cite-or-abstain response handling. |
 | `HYD-CONTRACT-09` | `NEEDS VERIFICATION` | Close CatalogMatrix, proof, promotion, correction, rollback, governed API, map/UI, and publication gates without executing placeholder approval logic. |
 | `HYD-CONTRACT-10` | `NEEDS VERIFICATION` | Audit remaining Hydrology docs for stale flat-path and “repo not mounted” claims now contradicted by accepted Directory Rules and current repository evidence. |
+| `HYD-CONTRACT-11` | `HELD — #1886` | Graduate the common tuple only after ADR-0013/common SpecHash, one SourceDescriptor authority, exact profile/version/ID grammar, family reviews, fixtures, deterministic validator/tests, consumer inventory, dual-read/single-write migration, and rollback rehearsal close. |
+| `HYD-CONTRACT-12` | `MISSING` | Assign accountable Hydrology identity, common identity, hashing, schema, source-registry, family, correction, sensitivity, and consumer/release stewards; CODEOWNERS is only a review route. |
 
 Re-review this README when direct children, schema posture, test or validator
 coverage, policy, CODEOWNERS, source admission, exposure, sensitivity, ADR
