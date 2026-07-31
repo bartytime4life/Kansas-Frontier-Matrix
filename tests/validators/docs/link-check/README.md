@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-docs-link-check-readme
 title: tests/validators/docs/link-check README
 type: README
-version: v1.0
+version: v1.1
 status: draft; executable; no-network; synthetic; non-authoritative
 owners: OWNER_TBD — QA steward · Docs steward · Validator steward · CI steward
 created: 2026-07-30
-updated: 2026-07-30
+updated: 2026-07-31
 policy_label: repository-facing; tests; documentation-qa; no-network; non-authoritative
 owning_root: tests/
 responsibility: deterministic synthetic behavior tests for the local-only documentation link checker
-truth_posture: CONFIRMED executable standard-library test suite / NEEDS VERIFICATION hosted exact-head execution and required-check coupling
+truth_posture: CONFIRMED executable standard-library suite including GitHub basic heading-anchor fidelity and code-span boundary cases / NEEDS VERIFICATION hosted exact-head execution, broader Markdown dialect coverage, and required-check coupling
 related:
   - ../../README.md
   - ../../../../tools/validators/docs/link-check/README.md
@@ -52,6 +52,11 @@ and the workflow only orchestrates both surfaces.
 
 - files, directories, images, heading anchors, explicit anchors, and duplicate
   GitHub-style heading suffixes;
+- heading slugs containing inline code (including angle-bracket placeholders),
+  image alt text, link labels, em dashes, slashes, arrows, ampersands, adjacent
+  spaces, and normalized duplicates;
+- separate code-span policies: inline-code links and explicit anchors remain
+  inert, while inline-code heading content remains part of the heading slug;
 - missing targets, missing anchors, exact-case mismatch, and repository escape;
 - symbolic-link input denial and explicit zero-Markdown changed scope;
 - fenced code, inline code, and HTML-comment exclusion;
@@ -74,7 +79,7 @@ that every repository Markdown dialect or historical link is covered.
 ## Rollback
 
 Before merge, close the draft PR. After an authorized merge, revert the focused
-validator/workflow commit; do not treat removal of this test lane as permission
-to weaken unrelated documentation or release controls.
+validator/test/docs/receipt commit; do not treat removal of this test lane as
+permission to weaken unrelated documentation or release controls.
 
 [Back to top](#top)
