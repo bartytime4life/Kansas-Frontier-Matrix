@@ -1,771 +1,711 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/encyclopedia-index
-title: KFM Encyclopedia — Master Index
+title: KFM Encyclopedia — Domain and Capability Planning Index
 type: reference
-subtype: encyclopedia-index
-version: v0.1
-status: draft
-owners: <encyclopedia-stewards>  # PLACEHOLDER — assign before review
+subtype: planning-encyclopedia-index
+version: v0.2
+prior_version: v0.1
+status: draft; repository-grounded; planning-synthesis; non-authoritative; no-publication
+owners: "NEEDS VERIFICATION — .github/CODEOWNERS routes this path through the default @bartytime4life rule; no accepted encyclopedia stewardship assignment or independent approval control was verified"
 created: 2026-05-18
-updated: 2026-05-18
-policy_label: public
-edition: v0.1 PDF-ready master planning manuscript (2026-05-05)
+updated: 2026-08-01
+policy_label: public; planning-reference; cite-or-abstain; no-sensitive-detail
+current_path: docs/KFM-encyclopedia.md
+owning_root: docs/
+canonical_relationship: same-path planning reference; distinct from and subordinate to docs/doctrine/encyclopedia.md
+source_edition: Kansas Frontier Matrix Domain and Capability Encyclopedia v0.1 PDF-ready master planning manuscript, 2026-05-05
+source_artifact:
+  pages: 82
+  bytes: 239723
+  sha256: cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a
+  repository_path: UNKNOWN
+authority_posture: synthesis and planning artifact; supersedes no doctrine, source report, official standard, contract, schema, policy, evidence, review, release, correction, or rollback object
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION]
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 6161830859c8a51a942fcbadb7f718527b8250bb
+  target_prior_blob: f48e05a314da6f975c8360599b5412516dba1a36
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: cd044a38047cc9b3725d2e083eb201eb86109308
+  doctrine_encyclopedia_blob: a5c8f452ca02cc63770b973bf47bd7c1f286a3fa
+  domain_index_blob: 0477583eb94b060e92d0aa33c085325a62422280
+  atlases_index_blob: 71a2bc4e2b150a324ac05389dbe89f9ac8f1cba5
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  link_check_workflow_blob: ebf97093ed26b51de3aa1e8a0c90301115667d2a
 related:
-  - docs/encyclopedia/kfm_encyclopedia.pdf       # PROPOSED placement; NEEDS VERIFICATION
-  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf  # PROPOSED placement per ADR-S-02; NEEDS VERIFICATION
+  - docs/doctrine/encyclopedia.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/map-shell.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/domains/README.md
-  - docs/standards/README.md
-  - docs/runbooks/README.md
-  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/atlases/README.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/adr/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
   - control_plane/document_registry.yaml
-extends:
-  - KFM Domains Culmination Atlas v1.1 (full doctrinal core; supersession-by-extension model)
-  - Pass 23 + Pass 32 Consolidated Deduplicated Atlas
-  - kfm_encyclopedia.pdf §1–16 + Appendices A–L (the v0.1 manuscript this index spines)
-authority_posture: synthesis/planning artifact — supersedes no source doctrine; subordinate to attached governing dossiers, ADRs, and contracts/schemas/policy.
-truth_labels: [CONFIRMED, PROPOSED, NEEDS VERIFICATION, UNKNOWN, INFERRED, DENY, ABSTAIN, ERROR]
-tags: [kfm, encyclopedia, reference, index, governance, planning, synthesis, doctrine-adjacent]
+  - .github/CODEOWNERS
+  - .github/workflows/link-check.yml
+tags: [kfm, encyclopedia, planning, synthesis, domains, capabilities, governance, evidence, map-first, time-aware]
 notes:
-  - "This index navigates the kfm_encyclopedia.pdf v0.1 manuscript. The PDF remains the body; this README is the spine."
-  - "Placement under docs/encyclopedia/ is PROPOSED. The alternative — folding the artifact under docs/atlases/ — is captured in §15 Open Questions and is ADR-class."
-  - "No mounted repo was inspected in the authoring session. Every quoted repo path is PROPOSED or NEEDS VERIFICATION."
-  - "Per Encyclopedia Appendix L: 'This encyclopedia is a synthesis and planning artifact. It supersedes no source doctrine, source report or official standard.' That posture is binding here."
--->
+  - "v0.2 is a same-path repository-grounded modernization of docs/KFM-encyclopedia.md; it does not move the source PDF, create docs/encyclopedia/, or change doctrine."
+  - "The source PDF was inspected as an attached lineage artifact. No repository path for those exact PDF bytes was verified at the pinned base."
+  - "The manuscript's sixteen-section map is preserved as source lineage; current repository state is reported separately and does not retroactively rewrite the PDF."
+  - "Static badges summarize document posture only. The workflow badge reports the default-branch link-check workflow, not this document's review, release, or publication state."
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # KFM Encyclopedia — Master Index
 
-> **Kansas Frontier Matrix Domain and Capability Encyclopedia** — navigable index for the v0.1 PDF-ready master planning manuscript (2026-05-05). Spines the 16-section, ~82-page synthesis into a repo-resident reference. Subordinate to doctrine, dossiers, ADRs, and the contract/schema/policy split — never a substitute for them.
+> **A repository-grounded guide to the 82-page KFM Domain and Capability Encyclopedia v0.1: what the manuscript covers, how it relates to current KFM authority surfaces, and where readers must verify before acting.**
 
-[![Status: draft](https://img.shields.io/badge/status-draft-yellow)](#status--authority)
-[![Edition: v0.1](https://img.shields.io/badge/edition-v0.1%20manuscript-blue)](#3-edition-lineage-and-supersession)
-[![Truth Posture: synthesis](https://img.shields.io/badge/truth%20posture-synthesis%2Fplanning-orange)](#2-authority-and-truth-posture)
-[![Doc Lint](https://img.shields.io/badge/doc%20lint-pending-lightgrey)](#)
-[![Meta Block: v2](https://img.shields.io/badge/meta%20block-v2-blue)](#)
-[![License](https://img.shields.io/badge/license-NEEDS%20VERIFICATION-lightgrey)](#)
+[![Status: draft planning reference](https://img.shields.io/badge/status-draft%20planning%20reference-d4a72c?style=flat-square)](#0-status--authority)
+[![Source: PDF v0.1](https://img.shields.io/badge/source-PDF%20v0.1-1f6feb?style=flat-square)](#3-edition-lineage-and-supersession)
+[![Directory Rules: v2 adopted](https://img.shields.io/badge/Directory%20Rules-v2%20adopted-1a7f37?style=flat-square)](./adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Local links: main workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/link-check.yml/badge.svg?branch=main)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/link-check.yml)
+[![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-6e7781?style=flat-square)](#1-purpose-and-non-purpose)
+[![Reviewed: 2026-08-01](https://img.shields.io/badge/reviewed-2026--08--01-0969da?style=flat-square)](#12-maintenance-and-update-cadence)
 
 > [!IMPORTANT]
-> **This is a synthesis and planning artifact, not doctrine.** When this index disagrees with `docs/doctrine/`, accepted ADRs, `contracts/`, `schemas/`, or `policy/`, **those win**. File the disagreement to `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5. The encyclopedia does not promote any path, route, or behavior to implementation truth; it organizes planning.
+> **This file and the source manuscript are planning references, not doctrine or implementation proof.** For terminology and KFM-wide rules, use the [Doctrine Encyclopedia](./doctrine/encyclopedia.md), the [adopted Directory Rules v2](./doctrine/directory-rules.md), accepted ADRs, and the owning contracts, schemas, policy, evidence, validation, and release records. If a planning claim conflicts with an owning authority, the planning claim must be corrected or explicitly retained as superseded lineage.
 
------
+> [!CAUTION]
+> A map, badge, diagram, repository path, workflow result, generated explanation, or planning matrix does not establish source authority, rights clearance, sensitivity clearance, review, promotion, release, or KFM publication.
+
+---
 
 ## Mini TOC
 
-- [0. Status & Authority](#0-status--authority)
-- [1. Purpose and Non-Purpose](#1-purpose-and-non-purpose)
-- [2. Authority and Truth Posture](#2-authority-and-truth-posture)
-- [3. Edition Lineage and Supersession](#3-edition-lineage-and-supersession)
-- [4. Resource Layout](#4-resource-layout)
-- [5. Encyclopedia Structure — 16-Section Map](#5-encyclopedia-structure--16-section-map)
-- [6. How the Encyclopedia Relates to the Rest of `docs/`](#6-how-the-encyclopedia-relates-to-the-rest-of-docs)
-- [7. Cross-Reference Maps](#7-cross-reference-maps)
-- [8. Source Ledger Reference](#8-source-ledger-reference)
-- [9. How to Read This Resource](#9-how-to-read-this-resource)
-- [10. Truth-Label Vocabulary](#10-truth-label-vocabulary)
-- [11. Sensitive / Deny-by-Default Posture](#11-sensitive--deny-by-default-posture)
-- [12. Maintenance and Update Cadence](#12-maintenance-and-update-cadence)
-- [13. Authoring Contract for Encyclopedia Edits](#13-authoring-contract-for-encyclopedia-edits)
-- [14. Self-Check Results — Inherited from v0.1](#14-self-check-results--inherited-from-v01)
-- [15. Open Questions and Verification Backlog](#15-open-questions-and-verification-backlog)
-- [16. Change Log for This Index](#16-change-log-for-this-index)
-- [17. Footer and Provenance](#17-footer-and-provenance)
+| Orientation | Manuscript map | Governance and use | Maintenance |
+|---|---|---|---|
+| [Status](#0-status--authority) · [Purpose](#1-purpose-and-non-purpose) · [Authority](#2-authority-and-truth-posture) · [Lineage](#3-edition-lineage-and-supersession) | [Resource layout](#4-resource-layout) · [16-section map](#5-encyclopedia-structure--16-section-map) · [Relationship to docs](#6-how-the-encyclopedia-relates-to-the-rest-of-docs) · [Cross-references](#7-cross-reference-maps) · [Source ledger](#8-source-ledger-reference) | [How to read](#9-how-to-read-this-resource) · [Truth labels](#10-truth-label-vocabulary) · [Sensitive material](#11-sensitive--deny-by-default-posture) | [Maintenance](#12-maintenance-and-update-cadence) · [Authoring](#13-authoring-contract-for-encyclopedia-edits) · [Self-check](#14-self-check-results--inherited-from-v01) · [Open work](#15-open-questions-and-verification-backlog) · [Changelog](#16-change-log-for-this-index) · [Provenance](#17-footer-and-provenance) |
 
------
+---
 
 ## 0. Status & Authority
 
-|Field                                     |Value                                                                                                   |
-|------------------------------------------|--------------------------------------------------------------------------------------------------------|
-|**Document type**                         |Reference index (encyclopedia spine)                                                                    |
-|**Edition**                               |**v0.1 manuscript** — indexes `kfm_encyclopedia.pdf` dated 2026-05-05                                   |
-|**Authority of this index**               |**PROPOSED** — placement under `docs/encyclopedia/` not yet ADR-confirmed (see §15 OPEN-ENC-01)         |
-|**Authority of the manuscript it indexes**|**CONFIRMED as synthesis** — see `kfm_encyclopedia.pdf` Appendix L                                      |
-|**Authority of any quoted repo path**     |**NEEDS VERIFICATION** until mounted-repo inspection                                                    |
-|**Owner**                                 |Encyclopedia stewards (PLACEHOLDER) + Docs steward                                                      |
-|**Reviewers required for change**         |Docs steward + at least one cross-domain reviewer; ADR required for placement change                    |
-|**Supersedes**                            |Nothing. v0.1 is the inaugural edition.                                                                 |
-|**Superseded by**                         |Nothing (current)                                                                                       |
-|**Related doctrine**                      |`docs/doctrine/directory-rules.md` §6.1 (`docs/` tree), §2.5 (drift), §18 (open-DR backlog)             |
-|**Lifecycle posture**                     |Doc artifact; not a lifecycle data object. Follows `docs/` review cadence, not data-lifecycle promotion.|
-|**Last reviewed**                         |2026-05-18 (authoring session)                                                                          |
+| Field | Current posture |
+|---|---|
+| **Current file** | **CONFIRMED** at `docs/KFM-encyclopedia.md` on the pinned repository snapshot |
+| **Document role** | Planning-encyclopedia index and repository crosswalk |
+| **Source edition** | **CONFIRMED** 82-page PDF-ready v0.1 manuscript dated 2026-05-05 |
+| **Source PDF repository path** | **UNKNOWN** — the exact inspected PDF bytes were supplied to this update; no canonical repository path was verified |
+| **Authority** | Synthesis / planning only; subordinate to doctrine, accepted decisions, semantic and machine contracts, policy, evidence, tests, and release records |
+| **Distinct authority surface** | [`docs/doctrine/encyclopedia.md`](./doctrine/encyclopedia.md) is the doctrine-vocabulary index; this file must not redefine it |
+| **Directory Rules basis** | [Directory Rules v2](./doctrine/directory-rules.md) assigns human-readable explanation to `docs/`; [ADR-0029](./adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts its exact bytes |
+| **Review route** | **CONFIRMED** default CODEOWNERS route to `@bartytime4life`; stewardship and independent approval remain **NEEDS VERIFICATION** |
+| **Publication authority** | None |
+| **Last evidence review** | 2026-08-01 against `main@6161830859c8a51a942fcbadb7f718527b8250bb` |
 
+The v0.1 manuscript accurately records its original evidence boundary: no mounted KFM repository was available in its authoring session. This v0.2 index has a different evidence boundary. It inspected current repository bytes and therefore replaces stale path-presence claims in this index, but it does **not** rewrite the historical evidence conditions stated inside the PDF.
 
 > [!NOTE]
-> **Authority order (inherited from Directory Rules §2.1).** When sources disagree about anything indexed here, resolve in order: (1) core invariants and doctrine, (2) accepted ADRs, (3) Directory Rules, (4) per-root READMEs, (5) domain dossiers, (6) current mounted-repo state. This encyclopedia sits no higher than (5) “domain dossiers / prior architecture reports — lineage / proposed only.”
+> Current repository evidence is authoritative for what is present at the pinned commit. Presence alone is not canon, adoption, implementation maturity, policy approval, release, or publication.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 1. Purpose and Non-Purpose
 
 ### 1.1 Purpose — what this resource IS
 
-The Encyclopedia is the **planning-synthesis** layer between the source dossiers and implementation. It consolidates:
+This file makes the planning manuscript usable inside the current repository. It:
 
-- The **KFM Operating Law** (cite-or-abstain, evidence-first, governed-API public surface, deterministic identity, lifecycle invariant, watcher-as-non-publisher).
-- The **Master Domain Atlas** — every named domain (Hydrology, Soil, Habitat, Fauna, Flora, Agriculture, Geology, Atmosphere, Hazards, Roads/Rail/Trade, Settlements/Infrastructure, Archaeology, People/Genealogy/DNA/Land, Frontier Matrix synthesis, Planetary/3D).
-- The **Cross-Domain Capability Taxonomy** — features, actions, views, knowledge systems, functions, programming possibilities.
-- The **Cross-Domain Systems Chapters** — MapLibre, Evidence Drawer, Focus Mode, graph, catalog/proof loop, review, public/restricted surfaces.
-- The **Master Matrices** — feature × domain, action × domain, viewing-mode atlas.
-- The **Programming Possibilities Backlog** — design space the implementation MAY draw from.
-- The **Sensitive / Deny-by-Default Register** — cross-domain failure-closed lanes.
-- An **Implementation Roadmap** and **Validation/Acceptance Plan**.
-- A **Source Ledger** and **Self-Check** so the synthesis is inspectable.
+- preserves the manuscript's domain, capability, action, viewing-mode, evidence, policy, roadmap, and validation coverage;
+- routes readers from planning concepts to current repository authority surfaces;
+- separates source-manuscript facts from current repository facts;
+- exposes stale, conflicting, unresolved, and unregistered relationships;
+- keeps map and AI surfaces subordinate to evidence, policy, review, and release;
+- provides a bounded authoring and validation contract for later encyclopedia updates.
 
-It exists to make the *body of design pressure* discoverable: a single inspectable surface where a reviewer, steward, or implementer can locate “what KFM is trying to be, across all domains,” without rereading every dossier.
+The durable public unit of KFM value remains the **inspectable claim**: a claim whose evidence, source role, spatial and temporal scope, rights and sensitivity posture, policy decision, review state, release state, correction lineage, and rollback target can be inspected.
 
 ### 1.2 Non-Purpose — what this resource is NOT
 
-> [!CAUTION]
-> **The Encyclopedia is not implementation truth.** It is not allowed to play any of the following roles:
+- **Not doctrine.** KFM-wide vocabulary and rules belong in [`docs/doctrine/`](./doctrine/README.md).
+- **Not an ADR.** Architecture decisions belong in [`docs/adr/`](./adr/INDEX.md).
+- **Not a semantic contract, schema, or policy source.** Those belong in `contracts/`, `schemas/`, and `policy/`.
+- **Not a source registry, EvidenceBundle, receipt, proof, or release record.**
+- **Not a complete recursive repository inventory.**
+- **Not a claim that every manuscript feature or domain object is implemented.**
+- **Not a public API, map, viewer, AI runtime, review surface, release gate, or publisher.**
+- **Not a repository home for the source PDF unless a later governed decision and provenance record establish one.**
 
-- **Not doctrine.** Doctrine lives in `docs/doctrine/`. The encyclopedia narrates and connects doctrine; it cannot amend or replace it.
-- **Not a schema home.** Object shape lives in `schemas/contracts/v1/<…>` per ADR-0001.
-- **Not a contract home.** Object meaning lives in `contracts/<…>/`.
-- **Not a policy home.** Admissibility / release decisions live in `policy/<…>/`.
-- **Not an ADR.** Decisions of record live in `docs/adr/ADR-NNNN-<slug>.md`.
-- **Not a runbook.** Operational procedures live in `docs/runbooks/<…>/`.
-- **Not a source dossier.** Per-domain authoritative dossiers remain canonical; encyclopedia chapters point to them, not the other way around.
-- **Not a release manifest, evidence bundle, validation report, or proof.** Those live in `data/` and `release/` per the lifecycle invariant.
-- **Not a substitute for verification.** Per Directory Rules §17 working method: presence of a chapter here does not establish implementation maturity for anything it describes.
+This file may explain and cross-reference authority. It cannot create authority outside its planning-reference role.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 2. Authority and Truth Posture
 
-CONFIRMED, inherited verbatim in posture from `kfm_encyclopedia.pdf` Appendix L:
-
-> *This encyclopedia is a synthesis and planning artifact. It supersedes no source doctrine, source report or official standard. It consolidates the supplied KFM domain reports, UI/AI manuals, pipeline manual, Directory Rules, greenfield plan and build companion into an encyclopedia view. Prior scaffold reports and older implementation references are retained as lineage and design pressure; none are upgraded to current implementation proof without a mounted repo, tests, logs or generated artifacts.*
+The source manuscript closes with a binding lineage statement: it is a synthesis and planning artifact, supersedes no source doctrine, source report, or official standard, and does not promote earlier planning material to implementation proof without repository, test, log, or generated-artifact evidence.
 
 ### 2.1 Authority subordination
 
 ```mermaid
 flowchart TD
-  INV["KFM Core Invariants & Doctrine<br/>(docs/doctrine/, contracts/, schemas/, policy/, release/)"]
-  ADR["Accepted ADRs<br/>(docs/adr/)"]
-  DIR["Directory Rules v1.1<br/>(docs/doctrine/directory-rules.md)"]
-  READMES["Per-Root READMEs<br/>(refine but do not contradict)"]
-  DOSSIERS["Domain Dossiers & Atlases<br/>(docs/domains/, docs/atlases/)"]
-  ENCY["This Encyclopedia<br/>(docs/encyclopedia/)"]
-  REPO["Current Mounted Repo State<br/>(observation, not authority)"]
-
-  INV --> ADR --> DIR --> READMES --> DOSSIERS --> ENCY --> REPO
-
-  classDef high fill:#1f6feb,stroke:#0a2e6b,color:#fff;
-  classDef mid fill:#2da44e,stroke:#0e4429,color:#fff;
-  classDef low fill:#bf8700,stroke:#5c4400,color:#fff;
-  classDef obs fill:#6e7681,stroke:#30363d,color:#fff;
-  class INV,ADR high;
-  class DIR,READMES mid;
-  class DOSSIERS,ENCY low;
-  class REPO obs;
+    INV["Trust, lifecycle, evidence, correction, and rollback invariants"] --> ADR["Accepted ADRs"]
+    ADR --> DIR["Adopted Directory Rules"]
+    DIR --> OWN["Owning doctrine, contracts, schemas, policy, and release records"]
+    REPO["Pinned repository evidence"] --> ENC["This planning index"]
+    SRC["Source PDF and lineage dossiers"] --> ENC
+    ENC -. "routes readers; does not amend" .-> OWN
 ```
 
-The encyclopedia sits at the **synthesis tier**: above current-repo observation, below dossiers, doctrine, and ADRs. A claim in the encyclopedia that conflicts with anything upstream is **the encyclopedia’s bug**, not the upstream’s.
+The diagram separates two questions:
+
+1. **What controls?** Invariants, accepted decisions, adopted placement law, and the owning authority surface.
+2. **What is currently present?** Pinned repository evidence.
+
+The encyclopedia helps readers navigate both. It cannot convert observation or source lineage into governing authority.
 
 ### 2.2 Trust membrane
 
-Public access to anything described here flows through the **governed API trust membrane** per `docs/architecture/governed-api.md`. The encyclopedia describes the design space but does not — and cannot — open new public surfaces. Any reader who wants to *act* on encyclopedia content does so by:
+Anything described here that could reach a public or semi-public user remains subject to the KFM trust membrane:
 
-1. Reading the underlying dossier or doctrine.
-1. Confirming the relevant contract, schema, and policy exist.
-1. Opening an ADR if a placement, shape, or admissibility change is needed.
-1. Implementing against the governed API.
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+Promotion is a governed state transition, not a file move, branch, commit, pull request, merge, badge, or release tag. Public and ordinary UI surfaces use governed interfaces and released public-safe artifacts; they do not read RAW, WORK, QUARANTINE, restricted, canonical/internal, or unreleased candidate stores directly.
 
------
+[Back to top](#top)
+
+---
 
 ## 3. Edition Lineage and Supersession
 
-|Edition            |Date      |Form                        |Status             |Notes                                                              |
-|-------------------|----------|----------------------------|-------------------|-------------------------------------------------------------------|
-|**v0.1 manuscript**|2026-05-05|PDF (`kfm_encyclopedia.pdf`)|**CURRENT**        |82-page master planning manuscript; self-check passed (Appendix L).|
-|v0.1 index         |2026-05-18|This `README.md`            |**CURRENT (draft)**|Repo-resident navigable spine. Does not modify the v0.1 manuscript.|
+| Edition | Date | Form | Current relationship |
+|---|---|---|---|
+| **Source v0.1** | 2026-05-05 | 82-page PDF-ready master planning manuscript | **CONFIRMED source lineage**; exact inspected bytes are not at a verified repository path |
+| **Index v0.1** | 2026-05-18 | Earlier bytes at this path | Initial planning index; carried unverified folder, path, owner, badge, and repository-state claims |
+| **Index v0.2** | 2026-08-01 | This same-path Markdown revision | Repository-grounded reconciliation; preserves manuscript coverage and corrects index-level drift |
 
-**CONFIRMED supersession rule (inherited from Atlas v1.1 lineage doctrine):** future editions of this encyclopedia extend by **integrated extension, not overwrite**. v0.1 content is preserved verbatim as the doctrinal core when a v0.2 / v1.0 is authored. Removal of any later edition reverts cleanly to v0.1.
+v0.2 does **not** supersede or rewrite the PDF. It supersedes only the prior repository index bytes at this same path.
 
-**PROPOSED future editions** (not yet authored; tracked in §15):
+Future manuscript editions should preserve explicit source lineage, content identity, and a clear relationship to prior editions. “Extension” is a planning preference from the source corpus, not permission to duplicate canonical authority or retain a false claim. Corrections may narrow or remove unsupported index content while preserving the historical source reference.
 
-- **v0.2** — incorporate Pass 23 + Pass 32 Consolidated Atlas cards by reference (the encyclopedia would gain cross-reference rows linking each capability to its stable card IDs).
-- **v1.0** — first edition consumed by a mounted repo with verified paths, contracts, schemas, and CI; truth labels collapse from PROPOSED → CONFIRMED for items demonstrably present.
+[Back to top](#top)
 
-[↑ back to top](#kfm-encyclopedia--master-index)
-
------
+---
 
 ## 4. Resource Layout
 
-**CONFIRMED current contents of this folder (PROPOSED placement):**
+### Current verified relationship
 
-```
-docs/encyclopedia/
-├── README.md                          # this file — navigable spine and entry point
-└── kfm_encyclopedia.pdf               # v0.1 PDF-ready master planning manuscript (2026-05-05)
-                                       # PROPOSED home — see §15 OPEN-ENC-01 (atlases/ alternative)
-```
+| Surface | Role | Relationship to this file |
+|---|---|---|
+| `docs/KFM-encyclopedia.md` | Planning encyclopedia index | **This file; same-path target** |
+| [`docs/doctrine/encyclopedia.md`](./doctrine/encyclopedia.md) | Doctrine vocabulary and concept index | Separate, higher-rank authority for KFM terminology |
+| [`docs/domains/`](./domains/README.md) | Human domain-lane documentation | Current repository domain orientation and bounded status |
+| [`docs/atlases/`](./atlases/README.md) | Atlas documentation lane | Versioned atlas carriers and references; naming conflicts remain visible |
+| [`docs/registers/`](./registers/VERIFICATION_BACKLOG.md) | Human drift and verification views | Destination for repository-wide unresolved evidence, when governed there |
+| Source PDF v0.1 | Full planning manuscript | Inspected input; canonical repository carrier remains **UNKNOWN** |
 
-**PROPOSED future contents (not authored in this PR):**
+### Reclassified v0.1 layout claims
 
-```
-docs/encyclopedia/
-├── README.md
-├── kfm_encyclopedia.pdf
-├── CHANGELOG.md                       # edition-to-edition lineage record (PROPOSED v0.2+)
-├── chapters/                          # PROPOSED — only if ADR resolves chapter-split question
-│   ├── 01-executive-summary.md
-│   ├── 02-source-ledger.md
-│   ├── 03-operating-law.md
-│   ├── 04-master-domain-atlas.md
-│   ├── 05-capability-taxonomy.md
-│   ├── 06-domain-chapters/
-│   ├── 07-cross-domain-systems.md
-│   ├── 08-feature-matrix.md
-│   ├── 09-action-matrix.md
-│   ├── 10-viewing-mode-atlas.md
-│   ├── 11-programming-possibilities.md
-│   ├── 12-sensitive-deny-register.md
-│   ├── 13-implementation-roadmap.md
-│   ├── 14-validation-acceptance.md
-│   └── appendices/
-└── crosswalks/                        # PROPOSED — encyclopedia ↔ Pass 23/32 card-ID maps
-    └── encyclopedia-to-pass23-32.csv
-```
+The former index described `docs/encyclopedia/README.md`, `docs/encyclopedia/kfm_encyclopedia.pdf`, future `chapters/`, and a crosswalk CSV as if this file already governed that folder. Current evidence does not establish that relationship.
 
-> [!WARNING]
-> **No chapter-split file has been authored.** Splitting the PDF into 16+ Markdown chapter files is an ADR-class decision (see §15 OPEN-ENC-02): it doubles the surface area, creates a synchronization burden between PDF and chapters, and may collide with the dossier scope of `docs/domains/<domain>/`. Until the ADR is decided, the PDF remains the single body of record.
+| Prior claim | v0.2 disposition |
+|---|---|
+| This file is `docs/encyclopedia/README.md` | **STALE / repaired** — the verified path is `docs/KFM-encyclopedia.md` |
+| The PDF is present under `docs/encyclopedia/` | **UNKNOWN** — no exact repository carrier was verified |
+| A chapter-split folder is the planned next structure | **PROPOSED only** — requires duplication, authority, generation, and maintenance analysis |
+| A Pass 23/32 CSV belongs under a new encyclopedia folder | **PROPOSED only** — no path is authorized by this index |
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+This update creates no folder, mirror, generated copy, or parallel authority.
 
------
+[Back to top](#top)
+
+---
 
 ## 5. Encyclopedia Structure — 16-Section Map
 
-CONFIRMED structure from `kfm_encyclopedia.pdf` p. 2 contents listing. Each row is a chapter in the PDF; the **Status** column reflects what is confirmed *in the manuscript itself*, not in any mounted repo.
+The source PDF contains the following sixteen sections. “Source status” describes the manuscript; “repository reading” describes only bounded current evidence.
 
-|§ |Chapter                             |Manuscript status   |Implementation status (this session)                            |Maps to                                                                                          |
-|--|------------------------------------|--------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-|1 |Cover Page                          |CONFIRMED           |n/a                                                             |—                                                                                                |
-|2 |Executive Summary                   |CONFIRMED           |n/a (narrative)                                                 |KFM Operating Law (Ch. 4)                                                                        |
-|3 |Source Ledger and Evidence Method   |CONFIRMED           |NEEDS VERIFICATION (mounted source registry)                    |`data/registry/sources/`, `control_plane/source_authority_register.yaml`                         |
-|4 |KFM Operating Law                   |CONFIRMED (doctrine)|CONFIRMED (doctrine layer) / NEEDS VERIFICATION (enforced layer)|`docs/doctrine/`, `policy/runtime/`                                                              |
-|5 |Master Domain Atlas                 |CONFIRMED           |PROPOSED (atlas chs.) / NEEDS VERIFICATION (lane existence)     |`docs/atlases/`, `docs/domains/`                                                                 |
-|6 |Cross-Domain Capability Taxonomy    |CONFIRMED           |PROPOSED                                                        |`contracts/`, `packages/`, `apps/`                                                               |
-|7 |Domain Chapters (per-domain)        |CONFIRMED           |PROPOSED per domain                                             |`docs/domains/<domain>/`, `contracts/domains/<domain>/`, `schemas/contracts/v1/domains/<domain>/`|
-|8 |Cross-Domain Systems Chapters       |CONFIRMED           |PROPOSED                                                        |`docs/architecture/`, `packages/maplibre/`, evidence-drawer, focus-mode                          |
-|9 |Master Feature Matrix               |CONFIRMED           |PROPOSED                                                        |feature × domain crosswalk                                                                       |
-|10|Master Action Matrix                |CONFIRMED           |PROPOSED                                                        |governed-API action surface                                                                      |
-|11|Master Viewing Mode Atlas           |CONFIRMED           |PROPOSED                                                        |MapLibre view modes, Focus Mode, time slider                                                     |
-|12|Programming Possibilities Backlog   |CONFIRMED           |PROPOSED                                                        |`docs/intake/NEW_IDEAS_INDEX.md`, Pass 23/32 cards                                               |
-|13|Sensitive / Deny-by-Default Register|CONFIRMED (doctrine)|NEEDS VERIFICATION (enforcement)                                |`policy/sensitivity/`, `policy/rights/`, `policy/domains/<…>/`                                   |
-|14|Implementation Roadmap              |CONFIRMED (as plan) |PROPOSED                                                        |release-roadmap, milestones                                                                      |
-|15|Validation and Acceptance Plan      |CONFIRMED (as plan) |NEEDS VERIFICATION (CI / tests)                                 |`tests/`, `schemas/tests/`, `policy/tests/`                                                      |
-|16|Appendices and Self-Check           |CONFIRMED           |n/a                                                             |source family appendix, supersession ledger, self-check                                          |
+| § | Manuscript section | Source status | Repository reading |
+|---:|---|---|---|
+| 1 | Cover Page | CONFIRMED | Source identity only |
+| 2 | Executive Summary | CONFIRMED | Planning narrative, not implementation proof |
+| 3 | Source Ledger and Evidence Method | CONFIRMED | Machine and human source registers exist, but completeness and authority remain mixed |
+| 4 | KFM Operating Law | CONFIRMED as manuscript synthesis | Doctrine surfaces exist; adoption and document status must be checked per surface |
+| 5 | Master Domain Atlas | CONFIRMED | Current human domain index documents 13 lanes |
+| 6 | Cross-Domain Capability Taxonomy | CONFIRMED | Planning taxonomy; implementation varies by owning root |
+| 7 | Domain Chapters | CONFIRMED | Manuscript has 16 chapter scopes; current `docs/domains/` has 13 registered lane names |
+| 8 | Cross-Domain Systems Chapters | CONFIRMED | Architecture and app/package surfaces exist with mixed maturity |
+| 9 | Master Feature Matrix | CONFIRMED | Planning matrix, not a current feature inventory |
+| 10 | Master Action Matrix | CONFIRMED | Planning action surface; permissions remain policy- and role-dependent |
+| 11 | Master Viewing Mode Atlas | CONFIRMED | Planning view catalog; current Explorer baseline is narrower |
+| 12 | Programming Possibilities Backlog | CONFIRMED | Design space, not accepted implementation scope |
+| 13 | Sensitive / Deny-by-Default Register | CONFIRMED as planning synthesis | Policy enforcement must be verified in owning policy and tests |
+| 14 | Implementation Roadmap | CONFIRMED as plan | Historical sequencing, not current authorization |
+| 15 | Validation and Acceptance Plan | CONFIRMED as plan | Repository tests and workflows provide bounded, surface-specific evidence |
+| 16 | Appendices and Self-Check | CONFIRMED | Source lineage and self-assessment |
 
 ### 5.1 Per-domain chapter index (Ch. 7 expansion)
 
-CONFIRMED — each of the following has a dedicated Ch. 7 sub-chapter in the manuscript:
+The manuscript's 16 chapter scopes and the current 13 human domain lanes are related but not identical.
 
-|Domain                                   |Manuscript Ch.|Dossier tag    |Primary responsibility root (PROPOSED)                                                |Sensitivity baseline                                         |
-|-----------------------------------------|--------------|---------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------|
-|Spatial Foundation                       |7.1           |[SPATIAL]      |`schemas/contracts/v1/spatial/`, `packages/maplibre/`                                 |T0–T1                                                        |
-|Hydrology                                |7.2           |[DOM-HYD]      |`schemas/contracts/v1/hydrology/`                                                     |T1–T2                                                        |
-|Soil                                     |7.3           |[DOM-SOIL]     |`schemas/contracts/v1/soil/`                                                          |T1                                                           |
-|Habitat                                  |7.4           |[DOM-HAB]      |`schemas/contracts/v1/habitat/`                                                       |T2                                                           |
-|Fauna                                    |7.5           |[DOM-FAUNA]    |`schemas/contracts/v1/fauna/`, `policy/sensitivity/fauna/`                            |**T4 default** (sensitive occurrences)                       |
-|Flora                                    |7.6           |[DOM-FLORA]    |`schemas/contracts/v1/flora/`, `policy/sensitivity/flora/`                            |T3–T4 (rare plants)                                          |
-|Agriculture                              |7.7           |[DOM-AG]       |`schemas/contracts/v1/agriculture/`                                                   |T2; aggregation receipts; private-join **deny**              |
-|Geology / Natural Resources              |7.8           |[DOM-GEOL]     |`schemas/contracts/v1/geology/`                                                       |T1–T3                                                        |
-|Atmosphere / Air                         |7.9           |[DOM-AIR]      |`schemas/contracts/v1/air/`                                                           |T0–T1                                                        |
-|Hazards                                  |7.10          |[DOM-HAZ]      |`schemas/contracts/v1/hazards/`, `policy/release/hazards/`                            |T1; **KFM is never an alert authority**                      |
-|Roads / Rail / Trade                     |7.11          |[DOM-ROADS]    |`schemas/contracts/v1/transport/`                                                     |T1–T2                                                        |
-|Settlements / Infrastructure             |7.12          |[DOM-SETTLE]   |`schemas/contracts/v1/settlement/`, `policy/sensitivity/infrastructure/`              |T2; **critical-asset deny lane**                             |
-|Archaeology / Cultural Heritage          |7.13          |[DOM-ARCH]     |`schemas/contracts/v1/archaeology/`, `policy/sensitivity/archaeology/`                |**T4 default** (site coords deny); sovereignty review        |
-|People / Genealogy / DNA / Land          |7.14          |[DOM-PEOPLE]   |`schemas/contracts/v1/people/`, `policy/sensitivity/people/`, `policy/consent/people/`|**T4** (living-person, DNA, person-parcel lanes deny-default)|
-|Frontier Matrix (synthesis)              |7.15          |[DOM-FM]       |cross-domain                                                                          |n/a (composition)                                            |
-|Planetary / 3D / Digital Twin / Synthetic|7.16          |[DOM-PLANETARY]|`packages/maplibre/`, `packages/cesium/` (PROPOSED)                                   |T0–T1; INFERRED scope                                        |
+| Manuscript scope | Current repository relationship | Current boundary |
+|---|---|---|
+| Spatial Foundation | Cross-domain foundation; not one of the 13 `docs/domains/` lane slugs | Spatial contracts, schemas, packages, and standards must be checked in their owning roots |
+| Hydrology | [`hydrology`](./domains/hydrology/README.md) | Early proof-lane documentation; flood context is not alert authority |
+| Soil | [`soil`](./domains/soil/README.md) | Human landing page remains a minimal placeholder |
+| Habitat | [`habitat`](./domains/habitat/README.md) | Suitability and connectivity are evidence- and sensitivity-dependent |
+| Fauna | [`fauna`](./domains/fauna/README.md) | Exact sensitive occurrences restrict or deny by default |
+| Flora | [`flora`](./domains/flora/README.md) | Rare and culturally sensitive detail fails closed |
+| Agriculture | [`agriculture`](./domains/agriculture/README.md) | Private joins and field-level exposure require rights and policy support |
+| Geology / Natural Resources | [`geology`](./domains/geology/README.md) | Sensitive subsurface or resource detail requires policy gating |
+| Atmosphere / Air | [`atmosphere`](./domains/atmosphere/README.md) | Context only; not emergency or life-safety authority |
+| Hazards | [`hazards`](./domains/hazards/README.md) | KFM is never a life-safety alert authority |
+| Roads / Rail / Trade | [`roads-rail-trade`](./domains/roads-rail-trade/README.md) | Infrastructure-vulnerability detail may require restriction |
+| Settlements / Infrastructure | [`settlements-infrastructure`](./domains/settlements-infrastructure/README.md) | Critical-asset exactness fails closed |
+| Archaeology / Cultural Heritage | [`archaeology`](./domains/archaeology/README.md) | Sites, burials, sacred places, and sovereignty-sensitive records restrict or deny |
+| People / Genealogy / DNA / Land | [`people-dna-land`](./domains/people-dna-land/README.md) | Living-person, genomic, kinship, title-like, and person-parcel joins fail closed |
+| Frontier Matrix synthesis | Cross-domain composition, not a current domain-lane slug | Composition does not own the underlying domain truth |
+| Planetary / 3D / Digital Twin / Synthetic | Planning scope, not a current domain-lane slug | Renderer and representation choices require current architecture and evidence |
 
-Sensitivity tier letters (T0–T4) follow the Master Sensitivity / Rights Tier Reference (Atlas v1.1 Ch. 24.5). T0 = open public, T4 = deny-default; intermediate tiers carry redaction, generalization, or staged access duties.
+The [domain index](./domains/README.md) is the current human-facing lane inventory. It reports 13 lane README paths, mixed documentation maturity, and an empty machine domain register at its evidence snapshot. That finding does not establish complete domain implementation.
 
 ### 5.2 Cross-domain systems index (Ch. 8 expansion)
 
-CONFIRMED — each of the following has a dedicated Ch. 8 sub-chapter:
+The manuscript's systems remain useful as a planning checklist:
 
-- **MapLibre Map Surface** — base layers, style rules, projection transform, generalization, scale support, uncertainty surface. Source: `Master_MapLibre_Components-Functions-Features.pdf`.
-- **Evidence Drawer** — per-claim EvidenceBundle resolution, citation surface, stale/uncertainty badges, public-safe redaction.
-- **Focus Mode** — bounded-scope AI, evidence-before-model, ABSTAIN / DENY behavior, scope narrowing.
-- **Graph Projection** — derived layer, never canonical truth; queryable via governed API.
-- **Catalog / Proof Loop** — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED lifecycle invariant.
-- **Review Surface** — ReviewRecord, sign-off, separation-of-duties at release maturity.
-- **Public / Restricted Surface Split** — governed API outside, canonical/internal stores inside; no public client touches canonical directly.
+- **Map surface** — released layer context, time, uncertainty, generalization, and correction visibility.
+- **Evidence Drawer** — EvidenceRef-to-EvidenceBundle resolution and claim support.
+- **Focus Mode** — bounded scope, evidence before generation, and finite negative outcomes.
+- **Graph projection** — derived, queryable representation; never canonical truth.
+- **Catalog / proof loop** — lifecycle closure, receipts, proofs, manifests, and release boundaries.
+- **Review surface** — accountable review and separation of duties where required.
+- **Public / restricted split** — governed public interfaces outside; canonical and restricted stores inside.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+These are responsibilities and trust constraints. Their appearance in the manuscript does not prove a route, component, package, test, deployment, or release.
 
------
+[Back to top](#top)
+
+---
 
 ## 6. How the Encyclopedia Relates to the Rest of `docs/`
 
-CONFIRMED structural relationship per Directory Rules §6.1:
-
-```mermaid
-flowchart LR
-  subgraph DOCTRINE["docs/doctrine/ — what is true by rule"]
-    DR[directory-rules.md]
-    AL[authority-ladder.md]
-    TP[truth-posture.md]
-    TM[trust-membrane.md]
-    LL[lifecycle-law.md]
-  end
-
-  subgraph ARCH["docs/architecture/ — how the system fits"]
-    GA[governed-api.md]
-    MS[map-shell.md]
-    CSP[contract-schema-policy-split.md]
-  end
-
-  subgraph ADRS["docs/adr/ — decisions of record"]
-    AD0[ADR-0001-schema-home.md]
-  end
-
-  subgraph DOM["docs/domains/ — per-domain dossiers"]
-    HYD[hydrology/]
-    FAU[fauna/]
-    ETC[…]
-  end
-
-  subgraph ATL["docs/atlases/ — versioned domain atlases"]
-    A11[Domains Culmination Atlas v1.1]
-  end
-
-  subgraph ENC["docs/encyclopedia/ — THIS RESOURCE"]
-    EI[README.md<br/>=this index]
-    EP[kfm_encyclopedia.pdf]
-  end
-
-  subgraph STD["docs/standards/ — external standards"]
-    PROV[PROV.md]
-    ISO[ISO-19115.md]
-    PMT[PMTILES.md]
-  end
-
-  subgraph RUN["docs/runbooks/ — operational procedures"]
-    FRB[fauna/SOURCE_REFRESH_RUNBOOK.md]
-  end
-
-  subgraph REG["docs/registers/ — drift & verification"]
-    DREG[DRIFT_REGISTER.md]
-    VBL[VERIFICATION_BACKLOG.md]
-  end
-
-  DOCTRINE -.governs.-> ENC
-  ADRS -.amends.-> DOCTRINE
-  ADRS -.amends.-> ENC
-  ENC -.indexes & cites.-> DOM
-  ENC -.indexes & cites.-> ATL
-  ENC -.indexes & cites.-> STD
-  ENC -.indexes & cites.-> RUN
-  ENC -.indexes & cites.-> ARCH
-  ENC -.files conflicts to.-> REG
-  DOM -.are authoritative for their domain over.-> ENC
-  ATL -.is authoritative for its atlas scope over.-> ENC
-
-  classDef authoritative fill:#1f6feb,stroke:#0a2e6b,color:#fff;
-  classDef synth fill:#bf8700,stroke:#5c4400,color:#fff;
-  classDef reg fill:#cf222e,stroke:#82071e,color:#fff;
-  class DOCTRINE,ADRS,DOM,ATL,STD,ARCH authoritative;
-  class ENC synth;
-  class REG reg;
-```
+| Reader need | Current starting point | Authority relationship |
+|---|---|---|
+| KFM-wide term or invariant | [Doctrine Encyclopedia](./doctrine/encyclopedia.md) and [doctrine index](./doctrine/README.md) | Doctrine and accepted amendments outrank this planning index |
+| Placement | [Directory Rules v2](./doctrine/directory-rules.md) and [ADR-0029](./adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted placement law |
+| Architecture | `docs/architecture/` and accepted ADRs | Architecture explains realization; accepted decisions control within scope |
+| Domain guidance | [`docs/domains/`](./domains/README.md) | Human lane documentation; contracts, schemas, policy, and evidence remain elsewhere |
+| Atlas material | [`docs/atlases/`](./atlases/README.md) | Curated atlas lane with visible naming and carrier conflicts |
+| Operational procedure | `docs/runbooks/` | Procedures, not doctrine or release authority |
+| Drift and verification | [drift register](./registers/DRIFT_REGISTER.md) and [verification backlog](./registers/VERIFICATION_BACKLOG.md) | Human views; machine projections and status must be checked separately |
 
 ### 6.1 Encyclopedia vs. Atlas
 
-|Property             |`docs/encyclopedia/` (this)                                                    |`docs/atlases/`                                                     |
-|---------------------|-------------------------------------------------------------------------------|--------------------------------------------------------------------|
-|**Scope**            |Whole-system synthesis: all domains + cross-domain systems + matrices + backlog|Per-atlas dossier (e.g., Domains Culmination Atlas, by domain set)  |
-|**Edition cadence**  |Manuscript editions (v0.1 → v0.2 → …)                                          |Per-atlas edition (v1.0 → v1.1 by extension)                        |
-|**Authority posture**|Synthesis / planning — supersedes no doctrine                                  |Versioned dossier — supersedes prior edition by integrated extension|
-|**Lifecycle**        |Doc artifact; review-driven                                                    |Doc artifact; review-driven (ADR-S-02 placement)                    |
-|**Conflict**         |Files to DRIFT_REGISTER and defers to atlas, dossier, doctrine                 |Files to DRIFT_REGISTER and defers to doctrine, ADRs                |
-|**Relationship**     |Encyclopedia *indexes and consolidates* atlases; atlases supply detail         |Atlas chapters supply per-domain detail; encyclopedia cites         |
+| Planning encyclopedia | Atlas lane |
+|---|---|
+| Whole-system narrative spanning domains, capabilities, actions, views, systems, roadmap, and validation | Versioned atlas carriers, crosswalks, and atlas-derived references |
+| Current repository carrier is this same-path Markdown index; source PDF carrier is unknown | Current lane is [`docs/atlases/`](./atlases/README.md) |
+| Subordinate synthesis | Human-facing reference lane; individual carriers may still be proposed or conflicted |
 
-**OPEN-ENC-01 (see §15):** whether the encyclopedia should fold into `docs/atlases/` as a master-atlas variant, given the overlapping shape.
+This file does not resolve the atlas lane's carrier-name conflicts and does not create a new encyclopedia collection.
 
 ### 6.2 Encyclopedia vs. Domain Dossier (`docs/domains/<domain>/`)
 
-The encyclopedia carries **one chapter** per domain (Ch. 7.1–7.16). The domain dossier under `docs/domains/<domain>/` carries the **authoritative dossier** for that domain — README, ARCHITECTURE, PRESERVATION_MATRIX, VERIFICATION_BACKLOG, etc.
+The manuscript gives broad chapter-level synthesis. Domain landing pages give current repository orientation for one lane. Neither replaces the contracts, schemas, policy, fixtures, lifecycle records, or release decisions that own enforceable state.
 
-**Rule (CONFIRMED, inherited from Directory Rules §6.1 — `docs/` is the human-facing control plane):** when an encyclopedia chapter disagrees with the domain dossier, **the dossier wins**. File the disagreement to `docs/registers/DRIFT_REGISTER.md`.
+When the planning manuscript and a current domain landing page disagree about repository presence or bounded status, use the current pinned repository evidence. When either disagrees with an owning authority, use the owning authority and record the drift.
 
 ### 6.3 Encyclopedia vs. Pass 23/32 Consolidated Atlas
 
-The Pass 23 + Pass 32 Consolidated Deduplicated Atlas (`KFM Pass 23 + Pass 32 consolidated atlas`) is a **card-level idea index** carrying ~1,058 stable-ID cards organized by category (ANA, CAT, DAT, DOC, EVD, MAP, MDP, MOD, PIP, POL, REL, SEC, UIX). The encyclopedia is a **narrative chapter-level synthesis** of the same design pressure.
+The Pass 23/32 material is a stable-card idea and capability corpus. The planning encyclopedia is a narrative synthesis. A future crosswalk could connect chapter claims to stable card IDs, but its identity, canonical input, path, generation method, review burden, and update cadence remain **PROPOSED**.
 
-**PROPOSED crosswalk (v0.2):** `docs/encyclopedia/crosswalks/encyclopedia-to-pass23-32.csv` mapping every encyclopedia capability to the stable card IDs that support it. Not authored in this PR; tracked in §15 OPEN-ENC-03.
+[Back to top](#top)
 
-[↑ back to top](#kfm-encyclopedia--master-index)
-
------
+---
 
 ## 7. Cross-Reference Maps
 
 ### 7.1 Domain → Atlas section → Responsibility root
 
-CONFIRMED from Atlas v1.1 Ch. 24.13 Atlas ↔ Dossier ↔ Responsibility-Root Crosswalk:
+The v0.1 index mixed manuscript domains with proposed flat contract and schema paths. Current Directory Rules instead require choosing the responsibility owner first, then adding a domain lane. Use these patterns as routing rules, not universal presence claims:
 
-|Domain                         |Atlas §|Dossier tag                          |Primary responsibility root (PROPOSED)                                                                     |
-|-------------------------------|-------|-------------------------------------|-----------------------------------------------------------------------------------------------------------|
-|Spatial Foundation             |3      |spine: encyclopedia + MapLibre master|`schemas/contracts/v1/spatial/`, `contracts/spatial/`, `packages/maplibre/`                                |
-|Hydrology                      |4      |[DOM-HYD]                            |`schemas/contracts/v1/hydrology/`, `contracts/hydrology/`                                                  |
-|Soil                           |5      |[DOM-SOIL]                           |`schemas/contracts/v1/soil/`, `contracts/soil/`                                                            |
-|Habitat                        |6      |[DOM-HAB] [DOM-HF]                   |`schemas/contracts/v1/habitat/`, `contracts/habitat/`                                                      |
-|Fauna                          |7      |[DOM-FAUNA] [DOM-HF]                 |`schemas/contracts/v1/fauna/`, `contracts/fauna/`, `policy/sensitivity/fauna/`                             |
-|Flora                          |8      |[DOM-FLORA]                          |`schemas/contracts/v1/flora/`, `contracts/flora/`, `policy/sensitivity/flora/`                             |
-|Agriculture                    |9      |[DOM-AG]                             |`schemas/contracts/v1/agriculture/`, `contracts/agriculture/`                                              |
-|Geology / Natural Resources    |10     |[DOM-GEOL]                           |`schemas/contracts/v1/geology/`, `contracts/geology/`                                                      |
-|Atmosphere / Air               |11     |[DOM-AIR]                            |`schemas/contracts/v1/air/`, `contracts/air/`                                                              |
-|Hazards                        |12     |[DOM-HAZ]                            |`schemas/contracts/v1/hazards/`, `contracts/hazards/`, `policy/release/hazards/`                           |
-|Roads / Rail / Trade           |13     |[DOM-ROADS]                          |`schemas/contracts/v1/transport/`, `contracts/transport/`                                                  |
-|Settlements / Infrastructure   |14     |[DOM-SETTLE]                         |`schemas/contracts/v1/settlement/`, `contracts/settlement/`, `policy/sensitivity/infrastructure/`          |
-|Archaeology / Cultural Heritage|15     |[DOM-ARCH]                           |`schemas/contracts/v1/archaeology/`, `contracts/archaeology/`, `policy/sensitivity/archaeology/`           |
-|People / Genealogy / DNA / Land|16     |[DOM-PEOPLE]                         |`schemas/contracts/v1/people/`, `contracts/people/`, `policy/sensitivity/people/`, `policy/consent/people/`|
-
-All responsibility-root paths are **PROPOSED** per Directory Rules v1.1 §6.1 notes; mounted-repo presence is **NEEDS VERIFICATION**.
+| Question | Owning surface | Encyclopedia role |
+|---|---|---|
+| What does a domain object mean? | `contracts/`, commonly a reviewed domain lane | Summarize and link; never redefine |
+| What machine shape is valid? | `schemas/`, commonly a versioned contract-schema lane | Summarize and link; never embed parallel authority |
+| When is it allowed, denied, held, restricted, or abstained? | `policy/` | Preserve finite outcomes and fail-closed posture |
+| What proves representative behavior? | `tests/` and `fixtures/` | Report bounded evidence and its limits |
+| Where does lifecycle material live? | Governed `data/` phases | Never promote by documentation |
+| Who decides release, correction, withdrawal, or rollback? | `release/` and its governed records | Never approve from this file |
+| What may normal public clients read? | Governed API plus released/public-safe artifacts | Preserve the trust membrane |
 
 ### 7.2 Cross-domain object-family family map
 
-CONFIRMED — every domain consumes the same canonical object-family backbone, per Atlas v1.1 Ch. 24.14:
+The source manuscript repeatedly uses the following planning backbone. The family names are retained as design lineage; current field shape, status, implementation, and authority must be verified in the owning repository surface.
 
-```
-SourceDescriptor      → RAW capture
-SchemaProfile         → shape contract
-RightsBundle          → license / consent / sovereignty
-SensitivityProfile    → tier T0..T4 + redaction rules
-EvidenceRef           → resolves to EvidenceBundle
-LayerManifest         → public surface (MapLibre)
-                      + time slider, EvidenceDrawer, Focus Mode
-ReleaseManifest       → published unit; correction + rollback target
-ReviewRecord          → review state (where required)
-```
+| Family | Planning role | Verification route |
+|---|---|---|
+| `SourceDescriptor` | Source identity, role, rights, cadence, and admission context | Semantic contract, schema, registry, fixtures, validator, tests |
+| `RightsBundle` / sensitivity profile | Rights, consent, sovereignty, sensitivity, and transform obligations | Policy, contracts, evidence, review, public-safe fixtures |
+| `EvidenceRef` / `EvidenceBundle` | Claim support and evidence closure | Contract, schema, resolver, fixtures, citation/evidence tests |
+| `LayerManifest` | Released map-layer delivery context | Contract, schema, release binding, map/client tests |
+| `ReviewRecord` | Accountable review state where required | Review contract, identity and subject binding, separation controls |
+| `ReleaseManifest` | Release identity, contents, correction, and rollback target | Release authority, proofs, signatures where required, rollback evidence |
 
-This backbone is **invariant across domains** (CONFIRMED from `kfm_encyclopedia.pdf` Master Domain Atlas table; same row shape repeats for every domain). Domain-specific objects (e.g., `Taxon`, `Geologic Unit`, `AirObservation`) layer onto the backbone.
+Do not collapse receipts, proofs, evidence bundles, catalogs, review records, promotion decisions, release manifests, correction notices, or rollback records merely because they participate in one lifecycle.
 
 ### 7.3 Capability category map (Pass 23/32)
 
-PROPOSED v0.2 — full crosswalk file. CONFIRMED categories from Pass 23/32 consolidated atlas:
+The prior index recorded these category labels and counts from its Pass 23/32 source lineage. They are retained for continuity, not represented as a current repository inventory:
 
-|Category                                                     |Cards (Pass 32 consolidated)                   |Encyclopedia anchor                 |
-|-------------------------------------------------------------|----------------------------------------------:|------------------------------------|
-|ANA — Analysis, Indicators, Statistics, ML                   |161                                            |§6, §11                             |
-|CAT — Catalog, Discovery, Registration                       |83                                             |§3, §6                              |
-|DAT — Data Lifecycle, Provenance, Receipts                   |115                                            |§3, §4                              |
-|DOC — Documentation, Doctrine, Reader Surfaces               |50                                             |§1, §16                             |
-|EVD — Evidence, EvidenceBundle, Cite-or-Abstain              |108                                            |§4 (Operating Law)                  |
-|MAP — Map Surface, MapLibre, Tiles, Styling                  |137                                            |§8 (Cross-domain systems / MapLibre)|
-|MDP — Metadata, Profiles, Crosswalks                         |75                                             |§6, §8                              |
-|MOD — Data Modeling, Domain Semantics, Temporal              |113                                            |§5, §7                              |
-|PIP — Pipelines, Pipeline Specs, Validators                  |300                                            |§14 (Validation), §3                |
-|POL — Policy-as-Code, Sensitivity, Rights, Sovereignty       |124                                            |§13 (Deny register)                 |
-|REL — Catalog Closure, Publication, Release, Rollback        |95                                             |§4, §13 (Roadmap)                   |
-|SEC — Security, Auditability, Signatures, Attestation        |130                                            |§4, §13                             |
-|UIX — UI / UX, Viewer Affordances, Focus Mode, EvidenceDrawer|(full count NEEDS VERIFICATION; 61+ in Pass 23)|§8, §11                             |
+| Category | Prior index count | Planning relationship |
+|---|---:|---|
+| ANA — Analysis, Indicators, Statistics, ML | 161 | Analysis and programming possibilities |
+| CAT — Catalog, Discovery, Registration | 83 | Catalog and discovery |
+| DAT — Data Lifecycle, Provenance, Receipts | 115 | Source ledger and operating law |
+| DOC — Documentation, Doctrine, Reader Surfaces | 50 | Reader and governance surfaces |
+| EVD — Evidence and Cite-or-Abstain | 108 | Evidence method and trust posture |
+| MAP — Map Surface, Tiles, Styling | 137 | Cross-domain map systems and views |
+| MDP — Metadata, Profiles, Crosswalks | 75 | Crosswalk and metadata design |
+| MOD — Data Modeling, Domain Semantics, Temporal | 113 | Domain atlas and object modeling |
+| PIP — Pipelines, Specs, Validators | 300 | Validation and implementation planning |
+| POL — Policy, Sensitivity, Rights, Sovereignty | 124 | Sensitive and deny-by-default register |
+| REL — Publication, Release, Correction, Rollback | 95 | Lifecycle closure and reversibility |
+| SEC — Security, Auditability, Attestation | 130 | Trust and assurance |
+| UIX — UI/UX, Viewer, Focus Mode, Evidence Drawer | NEEDS VERIFICATION | Cross-domain interaction surfaces |
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+The counts require source-card reconciliation before they may be treated as a complete, deduplicated, current inventory.
 
------
+[Back to top](#top)
+
+---
 
 ## 8. Source Ledger Reference
 
-CONFIRMED — the manuscript’s **Source Ledger** (Appendix / §3) catalogs every PDF and dossier consulted, with explicit support/cannot-prove columns. The ledger is the authoritative source list for v0.1. **It is not duplicated here**; reproduce it from the PDF itself or from `control_plane/source_authority_register.yaml` once that register is populated.
+The manuscript's source ledger is a control surface: each source states what it supports and what it cannot prove. v0.2 preserves that method.
+
+| Evidence input | What it supports here | What it cannot prove |
+|---|---|---|
+| Source encyclopedia PDF v0.1 | Title, date, 82-page structure, planning scope, lineage statement, and final self-check | Current repository implementation or a canonical repository carrier |
+| Current target bytes | Prior index content, stable headings, gaps, and stale claims | Correctness of the underlying manuscript or system |
+| Directory Rules v2 + ADR-0029 | Current placement authority and adoption boundary | Whether every repository path already conforms |
+| Doctrine Encyclopedia | Current distinction between doctrine vocabulary and planning synthesis | Adoption or enforcement of every doctrine statement |
+| Domain and atlas indexes | Bounded current documentation-lane status | Complete recursive implementation, policy, release, or publication |
+| Registers, CODEOWNERS, and workflows | Current human/machine scaffolds, review routing, and bounded CI behavior | Stewardship, independent approval, complete controls, release, or publication |
 
 ### 8.1 Source families consulted by v0.1 (summary)
 
-|Family               |Examples                                                                                                                                                                                                                                |Status in ledger                                                                     |
-|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-|KFM doctrine corpus  |Unified Implementation Architecture Build Manual; Domains v1.1 + Pass23/Pass32 Consolidated Atlas; Pass 10 Idea Index; this Encyclopedia; Master MapLibre Components-Functions-Features; Domain-Driven Design Reference; Directory Rules|CONFIRMED supplied                                                                   |
-|GIS reference        |`a-primer-of-gis-fundamentals.pdf`, `GIS Succinctly.pdf`, `Earth, Space, and Environmental Science Explorations with ArcGIS Pro ed2.pdf`, `GIS in Sustainable Urban Planning…`, `Archaeological 3D GIS.pdf`                             |CONFIRMED supplied; **background reference only — does not prove KFM implementation**|
-|Software architecture|`Domain-Driven Design Reference.pdf`                                                                                                                                                                                                    |CONFIRMED supplied; does not define KFM-specific paths                               |
-|Temporal databases   |`developing-time-oriented-database-applications-in-sql.pdf`                                                                                                                                                                             |CONFIRMED supplied; does not prove KFM DB design                                     |
-|SQL / analytics      |`Advanced-SQL-Concepts.pdf`                                                                                                                                                                                                             |CONFIRMED supplied; general                                                          |
-|API design           |`Designing Great Web APIs.pdf`                                                                                                                                                                                                          |CONFIRMED supplied; not KFM-specific authority                                       |
-|UI / React           |`Building User Interfaces…React Programming.pdf`, `fullstack-react-with-typescript.pdf`                                                                                                                                                 |CONFIRMED supplied; no KFM UI implementation proof                                   |
+<details>
+<summary>Preserved source-family lineage from the prior index</summary>
 
-**Rule (CONFIRMED, from `kfm_encyclopedia.pdf` Source Ledger):** background-reference sources **may inform vocabulary and patterns** but **do not promote** any KFM implementation claim. The encyclopedia never cites a background source as proof of KFM behavior.
+| Family | Examples | Evidence limit |
+|---|---|---|
+| KFM doctrine and architecture | Unified implementation architecture, Directory Rules, connected-dots architecture, AI operating contract, pipeline and MapLibre manuals | Doctrine and design lineage; current implementation requires repository evidence |
+| Domain reports | Hydrology, soil, habitat, fauna, flora, agriculture, geology, atmosphere, hazards, transport, settlements, archaeology, people/DNA/land | Domain planning and source vocabulary; not live connector, policy, or release proof |
+| GIS and spatial references | GIS primers, spatial-analysis references, 3D GIS material | Background patterns only |
+| Software and data architecture | Domain-driven design, temporal database, SQL, API, React/UI references | Generic technique; not KFM-specific authority |
+| Atlas and card corpora | Domains v1.1, Pass 23/32 consolidated atlas, full atlas seed cards | Planning coverage and stable idea lineage; reconciliation remains required |
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+</details>
 
------
+Background references may inform vocabulary and design patterns. They do not prove KFM-specific paths, behavior, adoption, security, compliance, or release.
+
+[Back to top](#top)
+
+---
 
 ## 9. How to Read This Resource
 
 ### 9.1 Reader paths by goal
 
-|Goal                                      |Path                                                                                                                         |
-|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-|“What is KFM, at a glance?”               |`kfm_encyclopedia.pdf` §1–2 (Cover + Executive Summary) → §4 (Operating Law)                                                 |
-|“How does the system govern itself?”      |§4 (Operating Law) → `docs/doctrine/` (esp. `truth-posture.md`, `trust-membrane.md`, `lifecycle-law.md`)                     |
-|“What domains exist and what do they own?”|§5 (Master Domain Atlas) → §7 (per-domain chapters) → `docs/domains/<domain>/`                                               |
-|“What does the map do?”                   |§8 (Cross-domain systems / MapLibre) → `Master_MapLibre_Components-Functions-Features.pdf` → `docs/architecture/map-shell.md`|
-|“What is sensitive? Who is denied?”       |§13 (Sensitive / Deny-by-Default Register) → `policy/sensitivity/`, `policy/rights/`, per-domain `policy/domains/<domain>/`  |
-|“What can be built? In what order?”       |§6 (Capability taxonomy) + §12 (Programming possibilities) + §14 (Roadmap) → Pass 23/32 cards                                |
-|“How do we know it works?”                |§15 (Validation/acceptance) → `tests/`, `schemas/tests/`, `policy/tests/`                                                    |
-|“Where does a file live?”                 |`docs/doctrine/directory-rules.md` §6 — **not** the encyclopedia                                                             |
-|“What decisions have been made?”          |`docs/adr/` — **not** the encyclopedia                                                                                       |
+| Goal | Recommended path |
+|---|---|
+| Understand the planning vision | Source PDF executive summary → operating law → domain and systems chapters |
+| Resolve a KFM term | [Doctrine Encyclopedia](./doctrine/encyclopedia.md) → owning doctrine, contract, schema, or policy |
+| Find a current domain lane | [Domain index](./domains/README.md) → selected lane README → owning roots |
+| Understand placement | [Directory Rules v2](./doctrine/directory-rules.md) → accepted ADRs → adjacent README |
+| Inspect atlas lineage | [Atlas index](./atlases/README.md) |
+| Verify a claim about code or behavior | Pinned implementation/config → representative fixture/test/run |
+| Verify public readiness | Evidence + rights + sensitivity + policy + validation + review + release + correction + rollback |
+| Record unresolved evidence | [Verification backlog](./registers/VERIFICATION_BACKLOG.md) or [drift register](./registers/DRIFT_REGISTER.md), when their scope applies |
 
 ### 9.2 Reading discipline
 
-> [!TIP]
-> **Three rules for reading the encyclopedia honestly:**
-> 
-> 1. **Read the truth label before the claim.** Every assertion in the manuscript carries a label (CONFIRMED, PROPOSED, NEEDS VERIFICATION, UNKNOWN). The label is part of the claim, not decoration.
-> 1. **Treat the manuscript as a map, not the territory.** Implementation maturity for anything described here remains UNKNOWN until the mounted-repo evidence is inspected.
-> 1. **Confirm against doctrine before acting.** If a chapter implies a behavior, find the doctrine, ADR, contract, schema, or policy that backs it. Absence of upstream backing means the claim is design pressure, not implementation truth.
+1. **Read the truth label as part of the claim.**
+2. **Distinguish source lineage from current repository evidence.**
+3. **Follow the responsibility root before acting.**
+4. **Treat maps, AI, badges, diagrams, and summaries as derived surfaces.**
+5. **Narrow or abstain when evidence is insufficient.**
+6. **Keep rights, sensitivity, correction, and rollback visible.**
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 10. Truth-Label Vocabulary
 
-CONFIRMED — inherited verbatim from the manuscript’s truth-posture row and from the user-supplied governance contract:
+### Core truth labels
 
-|Label                 |Meaning                                                                                              |
-|----------------------|-----------------------------------------------------------------------------------------------------|
-|**CONFIRMED**         |Verified in this session from attached docs, workspace evidence, tests, logs, or generated artifacts.|
-|**PROPOSED**          |Design, recommendation, file path, placement, or inference not yet verified in implementation.       |
-|**NEEDS VERIFICATION**|Checkable, but not yet checked strongly enough to act as fact.                                       |
-|**UNKNOWN**           |Not verified strongly enough in this session, or not resolvable without more evidence.               |
-|**INFERRED**          |Drawn from doctrine + composition rules; not in any source verbatim.                                 |
-|**DENY**              |Policy outcome — request blocked by sensitivity, rights, sovereignty, or release-state rule.         |
-|**ABSTAIN**           |Governed-AI outcome — evidence insufficient or scope unsupportable; system declines to speak.        |
-|**ERROR**             |Pipeline/operational outcome — gate failure with reason code.                                        |
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Verified in the current evidence boundary from source artifacts, pinned repository bytes, tests, logs, or generated artifacts |
+| **PROPOSED** | A design, recommendation, future state, or unaccepted decision |
+| **UNKNOWN** | Evidence is insufficient or inaccessible |
+| **NEEDS VERIFICATION** | A concrete check is known but not yet closed strongly enough to rely on |
 
+### Separate qualifiers and outcomes
+
+`INFERRED`, `CONFLICTED`, `STALE`, and `SUPERSEDED` may qualify a core truth label; they do not replace it.
+
+`ANSWER`, `ABSTAIN`, `DENY`, `HOLD`, `ALLOW`, `PASS`, `FAIL`, and `ERROR` are decision, policy, runtime, validation, or workflow outcomes only where the applicable contract defines them. Document lifecycle, component maturity, test status, and release state remain separate axes.
 
 > [!CAUTION]
-> **Memory is not evidence.** A claim that “the system does X” or “the repo contains Y” is only CONFIRMED when supported by file presence, schema shape, contract field, config, test, workflow, runtime/log, or a realistic governed flow. Recollection, guessed paths, “likely behavior,” and generic best practice are **not** evidence.
+> Memory, plausibility, a filename, an old pull request, a badge, or a planning document is not current implementation evidence.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 11. Sensitive / Deny-by-Default Posture
 
-CONFIRMED, from `kfm_encyclopedia.pdf` §13 (Sensitive / Deny-by-Default Register) and per-domain dossiers:
+The manuscript correctly treats sensitive scope as fail-closed planning territory. This index preserves the categories without publishing sensitive values.
 
 ### 11.1 Cross-cutting deny lanes
 
-The encyclopedia documents — but does not enforce — the following deny-by-default lanes. Enforcement lives in `policy/`.
-
-|Lane                                                                                                         |Default                                                       |Doctrine source                                   |
-|-------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------|
-|Living-person identifiers, DNA/genomic data                                                                  |**DENY**                                                      |[DOM-PEOPLE]; `policy/consent/people/`            |
-|Archaeological site coordinates                                                                              |**DENY** (generalized release only after sovereignty review)  |[DOM-ARCH]; `policy/sensitivity/archaeology/`     |
-|Rare/sensitive fauna occurrences (nests, dens, roosts, hibernacula, spawning sites)                          |**DENY** (T4); generalized only after rights/sensitivity check|[DOM-FAUNA]; `policy/sensitivity/fauna/`          |
-|Rare-plant precise locations                                                                                 |**DENY** (T4); ethnobotanical context governed                |[DOM-FLORA]; `policy/sensitivity/flora/`          |
-|Critical-infrastructure precise locations                                                                    |**DENY**                                                      |[DOM-SETTLE]; `policy/sensitivity/infrastructure/`|
-|Private agriculture join (farm/operator × parcel)                                                            |**DENY**                                                      |[DOM-AG]; aggregation receipts central            |
-|Hazard alert authority claims                                                                                |**DENY** (“KFM is never an alert authority”)                  |[DOM-HAZ]; `policy/release/hazards/`              |
-|Unknown rights, unresolved license, missing consent                                                          |**DENY**                                                      |trust membrane; cite-or-abstain                   |
-|Public release without ReleaseManifest + EvidenceBundle + validation + policy + (where required) ReviewRecord|**DENY**                                                      |lifecycle invariant; Operating Law §4             |
+| Sensitive lane | Default planning posture |
+|---|---|
+| Living-person identifiers, DNA/genomic data, kinship, and person-parcel joins | Restrict, quarantine, abstain, or deny until consent, rights, purpose, policy, and review close |
+| Archaeological sites, burials, sacred places, and sovereignty-sensitive records | Deny precise public detail; require sovereignty-aware review and public-safe generalization |
+| Rare fauna and flora occurrences | Deny or generalize precise locations according to rights, sensitivity, and stewardship controls |
+| Critical infrastructure and vulnerability-revealing detail | Restrict or deny precise exposure |
+| Private agriculture/operator joins | Deny public person/operator-to-parcel or field-level joins without explicit governed authority |
+| Unknown rights, license, consent, or redistribution posture | Hold, quarantine, abstain, or deny |
+| Hazard or emergency-authority claims | Deny authority substitution; KFM is contextual and not a life-safety alert service |
+| Public release without governed closure | Hold or deny until evidence, policy, validation, review, release, correction, and rollback requirements are met |
 
 ### 11.2 Encyclopedia handling rule for sensitive material
 
-> [!WARNING]
-> **The encyclopedia describes deny lanes; it does not narrate sensitive details.** No chapter quotes living-person identifiers, precise sensitive locations, DNA sequences, or critical-infrastructure coordinates. When chapters need to illustrate a deny lane, they use **schematic examples**, not real values. This rule applies recursively to any future chapter file or crosswalk.
+This file may name a sensitive category, risk, transform, or finite outcome. It must not include living-person data, genomic detail, private title-like assertions, precise sensitive species or archaeological locations, sacred-place detail, critical-infrastructure coordinates, credentials, signed URLs, or restricted evidence.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+Examples must be synthetic and visibly non-operational.
 
------
+[Back to top](#top)
+
+---
 
 ## 12. Maintenance and Update Cadence
 
-PROPOSED — pending review by Docs steward and Encyclopedia stewards.
+Review is event- and risk-based under Directory Rules v2, not an invented blanket quarterly timer.
 
-|Event                                               |Action                                                                                                |
-|----------------------------------------------------|------------------------------------------------------------------------------------------------------|
-|New ADR amends doctrine                             |Flag affected chapters in `docs/registers/DRIFT_REGISTER.md`; mark NEEDS VERIFICATION until reconciled|
-|Domain dossier (`docs/domains/<domain>/`) is revised|Update the encyclopedia chapter cross-reference in §5.1 and §7.1                                      |
-|New atlas edition lands in `docs/atlases/`          |Update §3 Edition Lineage and §6 cross-references                                                     |
-|New `docs/standards/` profile authored              |Add row to §7 crosswalk if it affects a published encyclopedia capability                             |
-|New Pass card index released                        |Bump §6.3 counts; refresh `crosswalks/encyclopedia-to-pass23-32.csv` once authored                    |
-|Mounted repo first observed                         |Walk §5.1 and §7.1; collapse PROPOSED → CONFIRMED where mounted-repo evidence supports                |
-|Quarterly review (PROPOSED cadence)                 |Docs steward verifies labels still match doctrine state; logs to `docs/reports/`                      |
-|Edition bump (v0.1 → v0.2 → v1.0)                   |Author new PDF + extend this README §3; preserve v0.1 verbatim per supersession-by-extension rule     |
+Re-review this index when:
+
+- a source encyclopedia edition changes;
+- an accepted ADR changes relevant authority or placement;
+- the doctrine encyclopedia changes a term used here;
+- a domain lane is added, renamed, merged, retired, or materially re-scoped;
+- the canonical source-PDF carrier or provenance record is established;
+- atlas or Pass-card identity changes;
+- link-check coverage, CODEOWNERS routing, or the document registry changes;
+- a drift, correction, withdrawal, security event, or rollback affects a material claim.
 
 ### 12.1 Edition rule
 
-The encyclopedia edition rule mirrors Atlas v1.1’s supersession-by-extension model: **new editions extend; they do not overwrite**. Each prior edition remains a standalone, citable artifact. Removal of any later edition reverts cleanly to the prior edition.
+Every revision must distinguish:
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+1. **source-manuscript edition**;
+2. **repository-index edition**;
+3. **evidence snapshot**;
+4. **authority or lifecycle state**.
 
------
+Do not use a documentation version bump to imply implementation, release, or publication.
+
+[Back to top](#top)
+
+---
 
 ## 13. Authoring Contract for Encyclopedia Edits
 
-PROPOSED — codifies how new content lands in this resource.
-
 ### 13.1 What an edit MUST do
 
-1. **Cite-or-abstain.** Every material claim carries a truth label and a source citation (doctrine, dossier, atlas, ADR, or Pass card ID).
-1. **Stay subordinate.** No edit promotes the encyclopedia above its tier in the authority order (§2.1). When the encyclopedia and an upstream source disagree, the edit either fixes the encyclopedia or files a drift entry.
-1. **Preserve the lifecycle invariant.** No edit implies a public path that bypasses the trust membrane. No edit implies a release that bypasses RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED.
-1. **Preserve sensitivity defaults.** No edit narrates sensitive material directly; deny lanes remain deny by default; schematic examples only.
-1. **Preserve reversibility.** Edits are small, scoped, and reversible. Broad rewrites require a PR with explicit justification and an entry in §16.
-1. **Update §16 changelog.** Every PR ends with a new row.
+1. Read the complete current file and preserve its stable identity.
+2. Keep this path unless a separately authorized migration decision exists.
+3. Separate manuscript lineage, current repository observation, and governing authority.
+4. Cite or link the owning surface for consequential claims.
+5. Preserve the lifecycle and governed public boundary.
+6. Fail closed on sensitive or rights-unclear material.
+7. Update the evidence snapshot, validation statement, open work, and changelog.
+8. Keep the source PDF's historical evidence boundary intact.
 
 ### 13.2 What an edit MUST NOT do
 
-- Create a parallel doctrine, contract, schema, policy, source registry, release, or proof home. (Directory Rules §2.4)
-- Promote a PROPOSED claim to CONFIRMED without mounted-repo or test/log evidence.
-- Quote sensitive material directly.
-- Add badges that are not deterministic (i.e., not computed by recorded checks).
-- Drop or rewrite v0.1 manuscript content. The PDF is the body of record.
+- create `docs/encyclopedia/`, a sibling “v2” file, chapter mirrors, or a crosswalk merely because the manuscript describes them;
+- redefine a doctrine term, contract, schema, policy outcome, or release state;
+- convert a path or workflow presence claim into maturity;
+- promote a proposal to confirmed without current evidence;
+- add placeholder owners, badges, licenses, commands, routes, counts, or states;
+- hide critical trust, sensitivity, correction, or rollback guidance in collapsed content;
+- publish the source PDF or derivative material without provenance, rights, and placement review.
 
 ### 13.3 Review burden
 
-|Edit class                                   |Required reviewers                                                                     |
-|---------------------------------------------|---------------------------------------------------------------------------------------|
-|Typographical / formatting only              |Docs steward                                                                           |
-|Add row to a matrix, update a cross-reference|Docs steward + one domain reviewer                                                     |
-|New chapter or major restructure             |Docs steward + cross-domain reviewer + ADR (if structure changes)                      |
-|Edition bump (v0.x → v0.y)                   |Docs steward + Encyclopedia stewards + at least one subsystem owner per affected domain|
-|Placement change (folder move)               |**ADR required** per Directory Rules §2.4                                              |
+- CODEOWNERS currently routes this path to `@bartytime4life`.
+- That route is not a StewardshipAssignment, ReviewRecord, required approval, independent review, release approval, or publication authority.
+- A planning-only same-path clarification is a bounded documentation change.
+- A doctrine, placement, object-family, public-boundary, sensitivity, or release change must be made in the owning authority surface through its applicable decision and review process.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+### Validation commands
 
------
+Run the repository-owned, no-network local-link checks when a checkout is available:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/KFM-encyclopedia.md
+```
+
+The checker validates bounded local Markdown targets and fragments. It does not request external URLs or prove content truth, accessibility, GitHub rendering, review, release, or publication.
+
+[Back to top](#top)
+
+---
 
 ## 14. Self-Check Results — Inherited from v0.1
 
-CONFIRMED — `kfm_encyclopedia.pdf` p. 82, “Final self-check”:
+The following results are claims made by the source PDF's final self-check. They describe coverage in that manuscript, not current repository implementation.
 
-|# |Self-check question                                                                              |v0.1 result              |This index inherits                                                                                  |
-|-:|-------------------------------------------------------------------------------------------------|-------------------------|-----------------------------------------------------------------------------------------------------|
-|1 |Are all domains covered?                                                                         |YES                      |YES — §5.1 enumerates all 16                                                                         |
-|2 |Are all cross-domain systems covered?                                                            |YES                      |YES — §5.2 enumerates all                                                                            |
-|3 |Are features, actions, views, knowledge systems, functions and programming possibilities covered?|YES                      |INHERITED — index points to manuscript chapters                                                      |
-|4 |Are sensitive domains fail-closed?                                                               |YES                      |YES — §11 deny lanes preserved                                                                       |
-|5 |Are AI and maps subordinate to evidence?                                                         |YES                      |YES — §2 Authority and §9.2 reading discipline                                                       |
-|6 |Are old conversations used only when actually available?                                         |YES (none were available)|YES — no transcript fabricated                                                                       |
-|7 |Are unsupported claims labeled?                                                                  |YES                      |YES — §10 vocabulary applied throughout                                                              |
-|8 |Are tables readable?                                                                             |YES                      |YES — narrow rows, wrapped, split where needed                                                       |
-|9 |Are publication, correction and rollback included?                                               |YES                      |INHERITED — manuscript §4, §13, §14                                                                  |
-|10|Is the document useful for future implementation?                                                |YES                      |INHERITED — manuscript ledger, chapters, roadmap, validators, APIs, thin slices, verification backlog|
+| # | Source self-check | v0.1 result |
+|---:|---|---|
+| 1 | Are all named domains covered? | YES |
+| 2 | Are cross-domain systems covered? | YES |
+| 3 | Are features, actions, views, knowledge systems, functions, and programming possibilities covered? | YES |
+| 4 | Are sensitive domains fail-closed? | YES |
+| 5 | Are AI and maps subordinate to evidence? | YES |
+| 6 | Were unavailable conversation transcripts avoided as evidence? | YES |
+| 7 | Are unsupported claims labeled? | YES |
+| 8 | Are the PDF tables readable? | YES |
+| 9 | Are publication, correction, and rollback included? | YES |
+| 10 | Is the manuscript useful for future implementation? | YES |
 
-### 14.1 Self-check for THIS index (v0.1 README)
+### 14.1 Self-check for THIS index (v0.2)
 
-|#|Check                                                                             |Result                                                                                                                               |
-|-|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-|A|Does this index supersede the manuscript?                                         |NO — index spines and cross-references; manuscript remains body of record                                                            |
-|B|Does this index promote any PROPOSED claim to CONFIRMED without evidence?         |NO — labels preserved                                                                                                                |
-|C|Does this index introduce a new authority root, lifecycle phase, or object family?|NO                                                                                                                                   |
-|D|Does this index narrate sensitive material directly?                              |NO — schematic only                                                                                                                  |
-|E|Does this index point to a verified mounted-repo path?                            |NO — every repo path is PROPOSED or NEEDS VERIFICATION                                                                               |
-|F|Does this index have a reversible placement?                                      |YES — single folder, easy to move under ADR                                                                                          |
-|G|Is the placement question open?                                                   |YES — §15 OPEN-ENC-01                                                                                                                |
-|H|Does this index include a changelog?                                              |YES — §16                                                                                                                            |
-|I|Does this index use deterministic badges only?                                    |The truth-posture and status badges are deterministic; the doc-lint and license badges are placeholders pending CI/legal verification|
+| Check | Result |
+|---|---|
+| Same canonical path and `doc_id` retained | PASS |
+| Planning and doctrine encyclopedia roles separated | PASS |
+| Historical source boundary preserved | PASS |
+| Stale no-repository and false self-path claims repaired | PASS |
+| Placeholder owner, lint, metadata, and license badges removed | PASS |
+| Current Directory Rules adoption reflected | PASS |
+| Sensitive categories retained without sensitive values | PASS |
+| Manuscript's 16-section and domain coverage retained | PASS |
+| Current repository maturity kept bounded | PASS |
+| Source PDF canonical repository carrier resolved | OPEN / UNKNOWN |
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 15. Open Questions and Verification Backlog
 
-Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BACKLOG.md` or `docs/adr/` as appropriate.
-
 ### 15.1 Placement and structure (ADR-class)
 
-- **OPEN-ENC-01 — `docs/encyclopedia/` vs `docs/atlases/`.** Whether the encyclopedia should live as its own subfolder under `docs/` (current PROPOSAL) or fold into `docs/atlases/` as a master-atlas variant. The encyclopedia overlaps in shape with an atlas (versioned dossier, supersession-by-extension), but differs in posture (whole-system synthesis vs. domain-set atlas). **Resolution required by ADR.** Until resolved, this README and the PDF live under `docs/encyclopedia/`; any new cross-reference to `docs/atlases/kfm_encyclopedia.pdf` is treated as a drift candidate.
-- **OPEN-ENC-02 — Chapter-split convention.** Whether the 16-section PDF should be split into 16+ Markdown chapter files under `docs/encyclopedia/chapters/`, kept as a monolithic PDF, or both (with the chapters indexing into the PDF). Each path has costs: chapter files duplicate content but enable diff-review and link granularity; monolithic PDF preserves single body of record but resists version control. **Resolution required by ADR.**
-- **OPEN-ENC-03 — Pass 23/32 crosswalk file.** Whether `docs/encyclopedia/crosswalks/encyclopedia-to-pass23-32.csv` should be authored and on what cadence. The file would map every encyclopedia capability claim to its stable Pass-card IDs, enabling round-trip auditing. **Resolution via routine PR + Docs steward decision; not ADR-class.**
-- **OPEN-ENC-04 — Per-domain dossier naming alignment.** Encyclopedia §7.8 PROPOSES `docs/domains/geology-and-natural-resources/`; prior user-authored work uses `docs/domains/geology/`. Parallel to OPEN-DR-01 (PROV vs PROVENANCE). **Resolution via ADR**, then alias the other; the encyclopedia chapter naming aligns with whatever ADR decides.
+| ID | Current state | Closure evidence |
+|---|---|---|
+| OPEN-ENC-01 | **PARTIALLY RESOLVED.** This planning index is confirmed at `docs/KFM-encyclopedia.md`; the doctrine encyclopedia is confirmed separately. The durable long-term planning-reference path and any collection structure remain undecided. | Reviewed decision only if a move, collection, mirror, or generated relationship is proposed |
+| OPEN-ENC-02 | **OPEN.** No chapter-split convention is authorized. | Canonical source, generator/parity rule, inbound-link plan, review burden, correction, and rollback |
+| OPEN-ENC-03 | **OPEN.** Pass 23/32 crosswalk remains proposed. | Stable input identity, deduplication rules, canonical path, deterministic generation or maintenance process, tests, and reviewer |
+| OPEN-ENC-04 | **OPEN.** The 16 manuscript scopes and 13 current domain lanes need an explicit conceptual crosswalk without inventing new lanes. | Reviewed crosswalk grounded in domain register and source chapter identities |
 
-### 15.2 Naming and casing
+### 15.2 Source identity and provenance
 
-- **OPEN-ENC-05 — `kfm_encyclopedia.pdf` filename casing.** Lowercase-with-underscores per current artifact. The Atlas v1.1 uses `KFM_Domains_Culmination_Atlas_v1_1.pdf` (UPPERCASE_WITH_UNDERSCORES). Pattern mismatch parallels OPEN-DR-04. **Resolution via per-root README** at `docs/encyclopedia/README.md` (this file, once finalized) or via the docs steward decision documented in Directory Rules §6.1.a equivalent.
+| ID | Current state | Closure evidence |
+|---|---|---|
+| OPEN-ENC-05 | **UNKNOWN.** Exact source PDF bytes have no verified canonical repository carrier. | Approved provenance record and canonical path or durable external reference |
+| OPEN-ENC-06 | **NEEDS VERIFICATION.** The PDF's rights and redistribution posture were not established by its embedded metadata. | Rights record and approved repository visibility/publication posture |
+| OPEN-ENC-07 | **NEEDS VERIFICATION.** No machine registry entry for `kfm://doc/encyclopedia-index` is present in the inspected `control_plane/document_registry.yaml`. | Reviewed registry entry or explicit decision that this planning document remains unregistered |
 
-### 15.3 Authoring / lifecycle
+### 15.3 Stewardship and validation
 
-- **OPEN-ENC-06 — Encyclopedia stewards roster.** No owner names have been assigned. Meta block carries `<encyclopedia-stewards>` as placeholder. **Resolution by Docs steward + project lead before review.**
-- **OPEN-ENC-07 — Review cadence.** Quarterly review (§12) is PROPOSED, not adopted. **Resolution by Docs steward.**
-- **OPEN-ENC-08 — Edition-bump trigger.** When v0.1 → v0.2 happens (e.g., once Pass 23/32 crosswalk is in, or once first mounted-repo verification pass is done) is not yet decided. **Resolution by Encyclopedia stewards.**
+| ID | Current state | Closure evidence |
+|---|---|---|
+| OPEN-ENC-08 | **NEEDS VERIFICATION.** CODEOWNERS routing exists; encyclopedia stewardship and independent approval do not. | Approved responsibility assignment and repository control evidence |
+| OPEN-ENC-09 | **NEEDS VERIFICATION.** Hosted exact-head checks for this revision begin only after a draft PR exists. | PR check results for the verified head |
+| OPEN-ENC-10 | **KNOWN LIMIT.** The local link checker excludes external availability, reference-style links, inline HTML links, and full GitHub render proof. | Expanded reviewed validator coverage or separately recorded bounded checks |
 
-### 15.4 Mounted-repo NEEDS VERIFICATION items
+### 15.4 Closed or reclassified v0.1 items
 
-|ID       |Item                                                                                                                          |Evidence that would settle it                                        |
-|---------|------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
-|VB-ENC-01|`docs/encyclopedia/` exists in the mounted repo                                                                               |Repo tree listing                                                    |
-|VB-ENC-02|`kfm_encyclopedia.pdf` is at the indexed path                                                                                 |Repo file inspection                                                 |
-|VB-ENC-03|All §7.1 responsibility-root paths exist                                                                                      |Repo tree listing for `schemas/contracts/v1/<…>` and `contracts/<…>/`|
-|VB-ENC-04|Sensitivity policy bundles (`policy/sensitivity/fauna/`, `…/archaeology/`, `…/people/`, `…/flora/`, `…/infrastructure/`) exist|Repo tree listing                                                    |
-|VB-ENC-05|`control_plane/document_registry.yaml` registers this doc                                                                     |Registry inspection                                                  |
-|VB-ENC-06|Doc-lint CI runs against this file                                                                                            |Workflow file + recent run                                           |
-|VB-ENC-07|License badge resolves to actual repo license                                                                                 |LICENSE file + meta block                                            |
-|VB-ENC-08|`docs/atlases/` actually exists (parallel to OPEN-DR Atlas v1.1 §6.1 NEEDS VERIFICATION)                                      |Repo tree listing                                                    |
-|VB-ENC-09|Pass 23/32 Consolidated Atlas has a canonical repo home                                                                       |Repo tree listing                                                    |
-|VB-ENC-10|All §6 cross-referenced docs (doctrine, architecture, registers, etc.) exist                                                  |Repo tree listing                                                    |
+- `docs/KFM-encyclopedia.md` existence: **CONFIRMED**.
+- `docs/domains/` and `docs/atlases/` existence: **CONFIRMED**.
+- Current Directory Rules authority: **CONFIRMED adopted** through ADR-0029.
+- “No mounted repo inspected” as a current index claim: **STALE and repaired**; retained only as the PDF's historical source boundary.
+- Placeholder document-lint and license badges: **REMOVED** because they represented no verified fact.
 
-[↑ back to top](#kfm-encyclopedia--master-index)
+[Back to top](#top)
 
------
+---
 
 ## 16. Change Log for This Index
 
-|Date      |Edition          |Author               |Change                                                                                                            |Rationale                                                                                                                                                |
-|----------|-----------------|---------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-|2026-05-18|v0.1 (this draft)|<pending-attribution>|Inaugural authoring of `docs/encyclopedia/README.md` as navigable spine for `kfm_encyclopedia.pdf` v0.1 manuscript|Build the new Encyclopedia resource per project request; expose the PDF as a first-class repo-resident reference under governed truth-posture conventions|
+| Date | Edition | Change | Authority effect |
+|---|---|---|---|
+| 2026-05-18 | v0.1 | Initial planning index; described an intended `docs/encyclopedia/README.md` relationship and source PDF placement that were not repository-verified | None; planning draft |
+| 2026-08-01 | v0.2 | Same-path repository-grounded modernization: preserved manuscript coverage, corrected file and authority relationships, separated truth labels from outcomes, repaired badges and navigation, added verified links and validation commands, and exposed unresolved provenance and registration | None; planning reference only |
 
+Every substantive update must add a row without converting a documentation change into doctrine, implementation, release, or publication.
 
-> [!NOTE]
-> All future edits to this file MUST add a row. Per §13.1, the changelog is non-optional.
+[Back to top](#top)
 
-[↑ back to top](#kfm-encyclopedia--master-index)
-
------
+---
 
 ## 17. Footer and Provenance
 
 ### 17.1 Evidence basis for this draft
 
-- **CONFIRMED inputs:** `kfm_encyclopedia.pdf` (v0.1 PDF-ready master planning manuscript, 2026-05-05); `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`; `directory-rules.md` (v1.1); `kfm_full_atlas_seed_cards.md`; `Master_MapLibre_Components-Functions-Features.pdf`; `KFM_Unified_Implementation_Architecture_Build_Manual.pdf`; `DomainDriven_Design_Reference.pdf`; prior-session authoring conventions retrieved via past-chat search.
-- **No mounted repo, CI, workflow, dashboard, or runtime log was inspected.** All repo paths in this file are PROPOSED or NEEDS VERIFICATION per Directory Rules §0.
-- **No fabricated paths or identifiers.** Where a path is unknown, it is left as a placeholder with the appropriate label, not invented.
+**CONFIRMED source evidence**
+
+- `Kansas Frontier Matrix Domain and Capability Encyclopedia` v0.1 PDF-ready master planning manuscript, created 2026-05-05;
+- 82 pages, 239,723 bytes, SHA-256 `cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a`;
+- visual inspection of the cover, contents, and final lineage/self-check page;
+- text extraction used for section and lineage verification, not as a substitute for visual review.
+
+**CONFIRMED repository evidence**
+
+- `bartytime4life/Kansas-Frontier-Matrix` at `main@6161830859c8a51a942fcbadb7f718527b8250bb`;
+- complete prior target bytes and blob `f48e05a314da6f975c8360599b5412516dba1a36`;
+- adopted Directory Rules v2 bytes and accepted ADR-0029;
+- doctrine encyclopedia, domain index, atlas index, registers, CODEOWNERS, and bounded link-check workflow;
+- no open pull request at the overlap preflight.
+
+Current implementation, policy, evidence, review, release, and publication claims remain bounded to the specific inspected sources. This index does not claim a full recursive repository audit.
 
 ### 17.2 Inheritance statement
 
-This index inherits the truth posture, supersession rule, sensitivity defaults, lifecycle invariant, trust-membrane subordination, and cite-or-abstain discipline from `kfm_encyclopedia.pdf` v0.1, Atlas v1.1, and Directory Rules v1.1. Where this index appears to add a new rule, it is restating an inherited one in this file’s context.
+The planning index inherits the source manuscript's evidence-first, map-first, time-aware, cite-or-abstain, fail-closed, correction-visible, and reversible posture. Current doctrine and accepted decisions control when terminology or authority has changed since the manuscript was authored.
 
 ### 17.3 Reversibility
 
-This file is fully reversible: delete `docs/encyclopedia/README.md` and the encyclopedia returns to its prior state (PDF only, no repo-resident navigable spine). No other file is modified. No contract, schema, policy, registry, or release artifact is touched.
+Before merge, rollback is to close the draft PR and abandon the feature branch. After an authorized merge, revert the single documentation commit. Do not delete this path or move it as a shortcut: deletion or migration changes document identity and inbound-link behavior and requires separate evidence and authority.
 
 ### 17.4 Contact
 
-- **Docs steward:** PLACEHOLDER (assign before review)
-- **Encyclopedia stewards:** PLACEHOLDER (assign before review)
-- **Drift entries:** `docs/registers/DRIFT_REGISTER.md`
-- **Verification backlog:** `docs/registers/VERIFICATION_BACKLOG.md`
-- **ADR intake:** `docs/adr/`
+- **GitHub review route:** [`.github/CODEOWNERS`](../.github/CODEOWNERS) → `@bartytime4life`
+- **Encyclopedia steward:** NEEDS VERIFICATION
+- **Drift:** [`docs/registers/DRIFT_REGISTER.md`](./registers/DRIFT_REGISTER.md)
+- **Verification:** [`docs/registers/VERIFICATION_BACKLOG.md`](./registers/VERIFICATION_BACKLOG.md)
+- **ADRs:** [`docs/adr/INDEX.md`](./adr/INDEX.md)
 
 ### 17.5 Closing rule
 
 > [!IMPORTANT]
-> **The encyclopedia is a synthesis, not a sovereign.** Maps, tiles, graphs, AI answers, scenes, dashboards, indexes — and this index — are downstream carriers. The durable public unit of value remains the inspectable claim, supported by evidence, governed by policy, released by manifest, correctable by notice, and reversible by rollback. Everything in this folder serves that, or it does not belong here.
+> **The encyclopedia is a synthesis, not a sovereign.** Maps, tiles, graphs, AI answers, scenes, dashboards, indexes, and this document are downstream carriers. KFM earns public trust only through inspectable evidence, bounded authority, policy-aware decisions, review, governed release, visible correction, and reversible rollback.
 
------
+---
 
-*End of `docs/encyclopedia/README.md` v0.1 draft.*
+*End of `docs/KFM-encyclopedia.md` v0.2 draft.*
 
-*[↑ back to top](#kfm-encyclopedia--master-index)*
+[Back to top](#top)
