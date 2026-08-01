@@ -47,7 +47,7 @@ notes:
 
 1. [Scope](#1-scope)
 2. [Code shape](#2-code-shape)
-3. [Classes — at-a-glance](#3-classes--ataglance)
+3. [Classes — at-a-glance](#3-classes--at-a-glance)
 4. [Class — `error/schema`](#4-class--errorschema)
 5. [Class — `error/rate`](#5-class--errorrate)
 6. [Class — `error/upstream`](#6-class--errorupstream)
