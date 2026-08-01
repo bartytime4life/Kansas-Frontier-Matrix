@@ -20,8 +20,10 @@
 # Commands:
 # - `node --check` for the seven repository-owned MapLibre scripts.
 # - Three repository-owned pure-Python negative-path test functions are invoked
-#   directly because the repository has no dependency lockfile for pytest setup.
+#   directly; this lane does not install workspace dependencies or browsers.
 # - Readiness inspection is standard-library-only and does not replace validators.
+# - The repository pnpm lock records workspace dependency state. It is not evidence
+#   that the dependency-free MapLibre package or held browser runtime is ready.
 # Inputs:
 # - MapLibre scripts, placeholder schemas/validators, config, fixture/test lanes,
 #   package/Make commands, renderer/docs boundaries, and candidate trust builders.
@@ -30,6 +32,7 @@
 #   receipt, attestation, proof, release record, correction, rollback, or artifact upload.
 # Outcome:
 # - Static syntax/negative tests pass and held assumptions remain: explicit HOLD.
+#   A successful check means the reviewed hold is intact, not runtime readiness.
 # - Static failure, missing boundary, or surfaced runtime/governance maturity:
 #   WORKFLOW_FAIL until commands, fixtures, schemas, policy, and authority are reviewed.
 # Compatibility:
@@ -54,6 +57,7 @@ name: MapLibre Perf Governance
       - "package-lock.json"
       - "npm-shrinkwrap.json"
       - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
       - "yarn.lock"
       - "apps/explorer-web/**"
       - "apps/web/**"
@@ -81,6 +85,7 @@ name: MapLibre Perf Governance
       - "package-lock.json"
       - "npm-shrinkwrap.json"
       - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
       - "yarn.lock"
       - "apps/explorer-web/**"
       - "apps/web/**"
@@ -207,6 +212,9 @@ jobs:
             "fixtures/heavy/README.md"
             "fixtures/slim/README.md"
             "package.json"
+            "pnpm-lock.yaml"
+            "pnpm-workspace.yaml"
+            "packages/maplibre/package.json"
             "packages/maplibre/README.md"
             "schemas/maplibre/perf-correction-notice.schema.json"
             "schemas/maplibre/perf-envelope.schema.json"
@@ -236,18 +244,68 @@ jobs:
           import re
           from pathlib import Path
 
-          lockfiles = (
+          alternative_lockfiles = (
               Path("package-lock.json"),
               Path("npm-shrinkwrap.json"),
-              Path("pnpm-lock.yaml"),
               Path("yarn.lock"),
           )
-          surfaced_lockfiles = [path for path in lockfiles if path.exists()]
-          if surfaced_lockfiles:
+          surfaced_alternatives = [
+              path for path in alternative_lockfiles if path.exists()
+          ]
+          if surfaced_alternatives:
               raise SystemExit(
-                  "A dependency lockfile surfaced. Review the accepted package manager, "
-                  "browser install, cache, and no-network split before restoring runtime CI:\n"
-                  + "\n".join(str(path) for path in surfaced_lockfiles)
+                  "An alternative dependency lockfile surfaced. Reconcile the accepted "
+                  "pnpm workspace, install, cache, and no-network posture before changing CI:\n"
+                  + "\n".join(str(path) for path in surfaced_alternatives)
+              )
+
+          package = json.loads(Path("package.json").read_text(encoding="utf-8"))
+          if package.get("packageManager") != "pnpm@11.17.0":
+              raise SystemExit(
+                  "The accepted root package-manager pin changed. Review lockfile format, "
+                  "runner setup, cache behavior, and rollback before changing CI."
+              )
+
+          workspace_text = Path("pnpm-workspace.yaml").read_text(encoding="utf-8")
+          for workspace_marker in ('  - "apps/*"', '  - "packages/*"'):
+              if workspace_marker not in workspace_text:
+                  raise SystemExit(
+                      "The accepted pnpm workspace boundary changed. Reconcile Explorer and "
+                      f"package ownership before changing CI; missing: {workspace_marker}"
+                  )
+
+          lock_text = Path("pnpm-lock.yaml").read_text(encoding="utf-8")
+          for lock_marker in (
+              "lockfileVersion: '9.0'",
+              "  apps/explorer-web:",
+              "  packages/maplibre: {}",
+          ):
+              if lock_marker not in lock_text:
+                  raise SystemExit(
+                      "The reviewed pnpm lockfile boundary changed. Reconcile the Explorer "
+                      "importer and MapLibre dependency posture before changing CI; "
+                      f"missing: {lock_marker}"
+                  )
+
+          maplibre_package = json.loads(
+              Path("packages/maplibre/package.json").read_text(encoding="utf-8")
+          )
+          dependency_fields = (
+              "dependencies",
+              "devDependencies",
+              "optionalDependencies",
+              "peerDependencies",
+          )
+          surfaced_maplibre_dependencies = {
+              field: maplibre_package[field]
+              for field in dependency_fields
+              if maplibre_package.get(field)
+          }
+          if surfaced_maplibre_dependencies:
+              raise SystemExit(
+                  "The @kfm/maplibre package gained dependencies. Review runtime ownership, "
+                  "browser installation, license, cache, and no-network behavior before "
+                  "changing CI."
               )
 
           fixture_root = Path("tests/fixtures/maplibre")
@@ -366,12 +424,11 @@ jobs:
                   "contract and meaningful schema before changing CI."
               )
 
-          package = json.loads(Path("package.json").read_text(encoding="utf-8"))
           dev_dependencies = package.get("devDependencies", {})
           for dependency in ("pixelmatch", "playwright", "pngjs"):
               if dependency not in dev_dependencies:
                   raise SystemExit(
-                      f"Expected unlocked MapLibre dependency changed or disappeared: {dependency}"
+                      f"Expected root MapLibre QA dependency changed or disappeared: {dependency}"
                   )
           govern_command = package.get("scripts", {}).get("maplibre:govern", "")
           if govern_command.strip() != (
@@ -444,7 +501,9 @@ jobs:
                   "content and move it to accepted roots before changing CI."
               )
 
-          print("No dependency lockfile or executable MapLibre fixture payloads exist.")
+          print("The reviewed pnpm workspace lockfile is present and no alternative lockfile exists.")
+          print("The @kfm/maplibre importer and package remain dependency-free.")
+          print("No executable MapLibre fixture payloads exist.")
           print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
           print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
           print("Browser smoke remains live-CDN-dependent and lacks its referenced local style fixtures.")
@@ -460,7 +519,8 @@ jobs:
             echo "- Executed: Node syntax checks and three deterministic negative-path unit tests."
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
-            echo "- Blockers: no lockfile; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
+            echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
+            echo "- Blockers: dependency-free MapLibre package; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::WORKFLOW_HOLD — MapLibre runtime performance governance is not release-grade."
