@@ -2,12 +2,12 @@
 doc_id: kfm://doc/tests-readme
 title: tests/ — Canonical Enforceability Root and Mixed-Maturity Test Matrix
 type: README
-version: v1.3
+version: v1.4
 status: draft; repository-grounded; canonical test root; mixed-maturity; no-full-suite-established; non-authoritative
 owner: NEEDS VERIFICATION — current CODEOWNERS routes /tests/ and /fixtures/ to @bartytime4life; independent QA/test stewardship, required review, and separation-of-duties enforcement are not verified
 created: NEEDS VERIFICATION — file predates the v1.2 repository-grounded rewrite
-updated: 2026-07-23
-supersedes: v1.2 documentation at the same path; no executable behavior, fixture, workflow, release object, or public surface is superseded
+updated: 2026-07-31
+supersedes: v1.3 documentation at the same path; no executable behavior, fixture, workflow, release object, or public surface is superseded
 policy_label: repository-facing; canonical-root; enforceability-proof; deterministic; no-network-default; fail-closed; public-safe-fixtures; non-publisher
 owning_root: tests/
 responsibility: authored enforceability proof and test-routing contract for KFM schemas, contracts, validators, policy boundaries, source admission, lifecycle behavior, evidence resolution, release controls, applications, runtime envelopes, UI/map surfaces, domain lanes, correction, and rollback
@@ -26,6 +26,11 @@ evidence_snapshot:
   workflow_inventory: 41 tracked .yml files at the workflow README snapshot
   aggregate_validator_count: 6
   boundary_suite_count: 15 tests in four modules
+current_correction_snapshot:
+  base_commit: fe5f2b87f57469e49abe00d0135c34ea2f977d35
+  observed_at: 2026-07-31
+  boundary_suite_count: 16 tests in four modules
+  cause: "PR #1860 added the bounded YAML escaped-scalar security regression test after the historical evidence snapshot."
 related:
   - ../CONTRIBUTING.md
   - ../docs/architecture/directory-rules.md
@@ -40,12 +45,14 @@ related:
   - ../policy/README.md
   - ../release/README.md
 notes:
+  - "v1.4 is a bounded current-count correction: PR #1860 raised the policy boundary suite from 15 to 16 tests, while the workflow inventory guard and this README remained at 15."
+  - "The v1.3 evidence snapshot remains historical; this correction does not claim a fresh audit of every test lane or workflow."
   - "v1.3 is a same-path documentation modernization and evidence refresh after 717 intervening commits from the v1.2 evidence base."
   - "Directory Rules §15 controls the required canonical-root README section order."
   - "Current repository evidence confirms several executable tests and workflow checks, but no accepted root-wide full-suite command, complete test-lane registry, comprehensive coverage artifact, branch-protection mapping, or production-parity proof."
   - "The Makefile test and validate targets remain intentionally narrow. They must not be described as the full repository suite."
   - "Policy-test is no longer echo-only: it now contains bounded readiness/drift checks. It still does not execute an accepted policy evaluator or emit PolicyDecision authority."
-  - "Deny-path checks, SourceDescriptor validation, EvidenceRef validator polarity, PromotionDecision shape checks, schema inventory checks, and the 15-test boundary suite are current bounded evidence surfaces."
+  - "Deny-path checks, SourceDescriptor validation, EvidenceRef validator polarity, PromotionDecision shape checks, schema inventory checks, and the 16-test boundary suite are current bounded evidence surfaces."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -150,12 +157,12 @@ Snapshot: `main@f3abc3195c09711135674db0ae972aa8c232f329`, inspected on 2026-07-
 
 | Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `tests/README.md` | **CONFIRMED** at prior blob `2c03b844...`; this revision is v1.3 | Canonical-root documentation exists and is modernized in place |
+| `tests/README.md` | **CONFIRMED** at prior blob `2c03b844...`; this revision is v1.4 | Canonical-root documentation exists and is modernized in place |
 | Root Python test configuration | **CONFIRMED** in [`pyproject.toml`](../pyproject.toml) | Python `>=3.11`, `jsonschema>=4.26,<5`, optional `pytest>=9.1.1,<10`, root `pythonpath` |
 | `make test` | **CONFIRMED command-bearing and narrow** | Runs only `tests/schemas` and `tests/contracts` |
 | `make schemas` | **CONFIRMED command-bearing** | Runs six configured top-level validators in fixture mode |
 | `make validate` | **CONFIRMED partial aggregate** | Runs `make schemas` then the narrow `make test`; not a full suite |
-| Boundary suite | **CONFIRMED substantive** | Four modules, 15 tests, JUnit QA report, structural/static scope |
+| Boundary suite | **CONFIRMED substantive** | Four modules, 16 tests, JUnit QA report, structural/static scope |
 | Governed API suite | **CONFIRMED app-owned** | Smoke, ABSTAIN-envelope, route, method, import, and internal-store-literal checks |
 | Schema and fixture validation | **CONFIRMED substantive but partial** | Repository schema JSON/meta-schema/ID checks plus configured fixture families |
 | SourceDescriptor and EvidenceRef checks | **CONFIRMED bounded** | Nonempty SourceDescriptor fixture validation and a two-test EvidenceRef validator polarity module |
@@ -462,7 +469,7 @@ Current GitHub routing maps `/tests/` and `/fixtures/` to `@bartytime4life`. Tha
 | `tests/maplibre/` versus package/app-local renderer tests | **NEEDS VERIFICATION** | Retain current bounded tests; resolve ownership before broad expansion |
 | Runtime envelope and policy outcome profiles | **CONFLICTED** | Tests must name the profile exercised and avoid silent vocabulary normalization |
 
-No ADR is required for this v1.3 same-path documentation refresh. Any future change that creates a root, parallel authority, or structural migration follows Directory Rules and migration discipline.
+No ADR is required for this v1.4 same-path documentation correction. Any future change that creates a root, parallel authority, or structural migration follows Directory Rules and migration discipline.
 
 [Back to top](#top)
 
@@ -484,6 +491,7 @@ No ADR is required for this v1.3 same-path documentation refresh. Any future cha
 
 | Date | Version | Change | Status |
 |---|---:|---|---|
+| 2026-07-31 | v1.4 | Reconciled the current policy-boundary inventory with PR #1860's added security regression test: four modules now collect 16 tests. Preserved the historical v1.3 evidence snapshot and made no broader maturity claim. | **CONFIRMED bounded documentation correction** |
 | 2026-07-23 | v1.3 | Reordered the canonical-root contract to Directory Rules §15; refreshed evidence against current main; corrected validator, governed-API, policy, deny, source, release, schema, CI, and MapLibre claims; preserved strong test doctrine and legacy anchors. | **CONFIRMED documentation change / executable maturity bounded** |
 | 2026-07-16 | v1.2 | Replaced broad scaffold claims with a repository-grounded mixed-maturity test matrix and trust-spine contract. | **LINEAGE / prior repository-grounded edition** |
 
@@ -558,7 +566,7 @@ A README, directory, or workflow name is not proof of executable depth.
 | `tests/invalid/` / `tests/valid/` | Compatibility/routing lanes | Generic polarity is not ownership | Retain only as routing guard or migrate |
 | `tests/maplibre/` | Helper plus three direct scalar negative tests; static workflow checks | Partial implementation exists | Hermetic browser fixtures, runtime metrics, visual diff, release boundaries |
 | `tests/pipelines/` | Documentation; non-publisher guard lives under policy | Dedicated pipeline behavior suite absent | Lifecycle, idempotency, receipts, partial failure, mutation denial |
-| `tests/policy/` | Four verified direct modules plus constants; 15-test boundary suite includes three | Structural/static and doctrine-prerequisite checks exist | Accepted evaluator, bundles, obligations, rights/sensitivity, replay |
+| `tests/policy/` | Four verified direct modules plus constants; 16-test boundary suite includes three | Structural/static and doctrine-prerequisite checks exist | Accepted evaluator, bundles, obligations, rights/sensitivity, replay |
 | `tests/release/` | One direct PromotionDecision fixture test | Shape validation exists; release governance absent | ReleaseManifest, review, correction, withdrawal, rollback composition |
 | `tests/runtime_proof/` | Documentation; app tests and validators adjacent | No accepted composed runtime proof | Resolve envelope profile; add evidence/policy/freshness/release cases |
 | `tests/schemas/` | Common fixture harness, Hydrology aliases, EvidenceRef polarity | Partial machine-shape evidence | Complete discovery, nonempty polarity, metaschema, coverage manifest |
@@ -974,7 +982,7 @@ The workflow root records 41 tracked `.yml` files at its 2026-07-22 snapshot. Wo
 |---|---|
 | `schema-validation` | Parses schema JSON, meta-schema checks schemas, enforces canonical `$id` uniqueness, requires nonempty configured fixtures, runs `make schemas` and schema/contract tests |
 | `validator-suite` | Requires nonempty unique aggregate entries, runs `make schemas`, and verifies a precise invalid EvidenceBundle canary |
-| `policy-boundary-guards` | Runs 15 tests in four modules, validates nonempty zero-failure JUnit, uploads 14-day QA artifact |
+| `policy-boundary-guards` | Runs 16 tests in four modules, validates nonempty zero-failure JUnit, uploads 14-day QA artifact |
 | `api-test` | Runs governed API smoke and focused ABSTAIN-envelope tests |
 | `deny-test` | Runs route/method/API manifest, internal-store-literal, and forbidden-runtime-import checks |
 | `source-descriptor-validate` | Requires nonempty SourceDescriptor polarity, runs validator and targeted schema test, surfaces schema-path drift |
@@ -1214,7 +1222,7 @@ The root system is not complete merely because individual checks are green.
 | `.github/workflows/README.md` | `CONFIRMED repository-grounded inventory` | 41-workflow taxonomy, permissions, runner/trigger/action posture | Snapshot is not run history or branch protection |
 | `schema-validation.yml` | `CONFIRMED definition` | Schema inventory, unique IDs, six fixture families, schema/contract tests | No current run result claimed here |
 | `validator-suite.yml` | `CONFIRMED definition` | Aggregate non-vacuity and precise EvidenceBundle canary | One configured aggregate/canary |
-| `policy-boundary-guards.yml` | `CONFIRMED definition` | 15-test, four-module suite and JUnit contract | Static/structural, not policy engine |
+| `policy-boundary-guards.yml` | `CONFIRMED definition` | 16-test, four-module suite and JUnit contract | Static/structural, not policy engine |
 | `policy-test.yml` | `CONFIRMED definition` | Readiness/drift and PolicyDecision fixture boundary | No evaluator/bundle execution |
 | `deny-test.yml` | `CONFIRMED definition` | Narrow route/method/store/import denial checks | Not complete authorization |
 | `api-test.yml` | `CONFIRMED definition` | App smoke and ABSTAIN-envelope checks | Scaffold/application scope |
@@ -1227,7 +1235,7 @@ The root system is not complete merely because individual checks are green.
 
 ### No-loss ledger
 
-| v1.2 surface | v1.3 result |
+| v1.3 surface | v1.4 result |
 |---|---|
 | Stable `kfm://doc/tests-readme`, path, H1 | Preserved |
 | Canonical test-root authority | Preserved and moved into required §15 Authority section |
