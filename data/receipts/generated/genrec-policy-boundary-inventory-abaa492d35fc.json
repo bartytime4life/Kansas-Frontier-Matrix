@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-policy-boundary-inventory-abaa492d35fc",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/policy-boundary-guards.yml",
+    "tests/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/policy-boundary-guards.yml": "sha256:abaa492d35fc17e8667b7f86dcbfd98b61a0eb7f3a14979334cf8d23e1a3d015",
+    "tests/README.md": "sha256:891f367305147568f3e77897a8f5663579afd89fe5721fb93375cba9cfd9e7f8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:e9b9a3a246761f7cf68d13bbda8d73eace76538e017ffe321e90a6e82de8019e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0652693aeb93c465741f7726444c4ba6d721b2d63a8c58b74d21680c1be0e96d",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:6da0947228ad2bc95990a777f91f776bc0af3f848a15d41af900446404b08929",
+      "sha256:c6f730a68486cc0e70df956bb1793030ddbca064be1e0ef4ca4f7c7fa8c21394",
+      "sha256:ca081b39bc8988a4810094d00ff42b41844b3b40705c3d5028cd4f0af94678e2",
+      "sha256:e9b9a3a246761f7cf68d13bbda8d73eace76538e017ffe321e90a6e82de8019e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/fe5f2b87f57469e49abe00d0135c34ea2f977d35",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1860",
+      ".github/workflows/policy-boundary-guards.yml@fe5f2b87f57469e49abe00d0135c34ea2f977d35",
+      "tests/README.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35",
+      "docs/doctrine/directory-rules.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/policy-boundary-guards.yml": "CONFIRMED",
+    "tests/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "pinned-base-workflow-wiring-reproduces-15-versus-16-failure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "patched-workflow-wiring-collects-16-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "boundary-suite-16-tests-and-junit-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "aggregate-schema-and-contract-validation-139-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "full-python-suite-455-tests-plus-74-subtests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "deterministic-no-network-posture",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this process-memory receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-fe5f2b87f574",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "PR-1860-SECURITY-REGRESSION-TEST",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1860"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    },
+    {
+      "id": "POLICY-BOUNDARY-WORKFLOW-BASE-6da0947228ad",
+      "validated": true,
+      "evidence_ref": ".github/workflows/policy-boundary-guards.yml@fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    },
+    {
+      "id": "TESTS-README-BASE-ca081b39bc89",
+      "validated": true,
+      "evidence_ref": "tests/README.md@fe5f2b87f57469e49abe00d0135c34ea2f977d35"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T04:15:13Z",
+  "emitter": "openai/codex-gpt-5-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One canonical process-memory receipt for the bounded policy-boundary inventory repair. The change preserves PR #1860's security regression test and reconciles only the workflow's fail-closed reviewed count plus current-count statements in tests/README.md. It does not weaken tests, rename checks, change triggers or permissions, decide policy, activate sources, construct proof, promote, release, deploy, publish, or establish repository completeness. Rollback is to close the unmerged draft pull request or transparently revert the bounded commit and paired receipt through a reviewed branch."
+}
