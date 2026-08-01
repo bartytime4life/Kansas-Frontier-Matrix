@@ -21,6 +21,7 @@ help:
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
 	@echo "  boundary-guards       Run policy/API boundary tests"
 	@echo "  boundary-guards-ci    Run boundary tests with JUnit output"
+	@echo "  deny-test             Run bounded public route, store, and runtime-import guards"
 	@echo "  ui-build              Build the Explorer Web baseline"
 	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
@@ -37,7 +38,6 @@ help:
 	@echo "  catalog               Catalog record builder"
 	@echo "  release-dry-run       Candidate release assembly"
 	@echo "  publish-check         Promotion gate"
-	@echo "  deny-test             Public-boundary deny suite"
 	@echo
 	@echo "Cleanup targets:"
 	@echo "  maplibre-clean        Remove artifacts/perf"
@@ -72,7 +72,7 @@ publish-check:
 	@echo "TODO: tools/validators/promotion_gate"
 
 deny-test:
-	@echo "TODO: tests/api deny suite"
+	PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers apps/governed-api/tests/test_boundary_guards.py
 
 ui-build:
 	pnpm --filter explorer-web build

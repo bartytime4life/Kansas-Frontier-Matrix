@@ -775,7 +775,7 @@ The current Rego scaffold’s default deny does not prove correct model/observat
 make test
 ```
 
-Current `make test` runs `tests/schemas` and `tests/contracts`; it excludes this lane. Root policy, fixtures, release dry-run, publish-check, and deny targets remain TODOs.
+Current `make test` runs `tests/schemas` and `tests/contracts`; it excludes this lane. Root policy, fixtures, release dry-run, and publish-check targets remain TODOs. Root `make deny-test` runs five generic app-owned route, method, manifest, internal-store-literal, and forbidden-import guards, but it does not collect or prove this Atmosphere model-versus-observed lane.
 
 [Back to top](#top)
 

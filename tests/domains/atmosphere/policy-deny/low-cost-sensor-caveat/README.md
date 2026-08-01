@@ -750,7 +750,7 @@ The current Rego scaffold’s default deny does not prove correct case behavior.
 make test
 ```
 
-Current `make test` runs `tests/schemas` and `tests/contracts`; it excludes this lane. Root policy, fixtures, and deny targets remain TODOs.
+Current `make test` runs `tests/schemas` and `tests/contracts`; it excludes this lane. Root policy and fixtures targets remain TODOs. Root `make deny-test` runs five generic app-owned route, method, manifest, internal-store-literal, and forbidden-import guards, but it does not collect or prove this Atmosphere low-cost-sensor-caveat lane.
 
 [Back to top](#top)
 

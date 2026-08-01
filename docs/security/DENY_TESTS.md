@@ -2,11 +2,11 @@
 doc_id: kfm://doc/security-deny-tests
 title: KFM Deny Tests — Doctrine, Catalog, and Authoring Guide
 type: standard
-version: v1
-status: draft
+version: v1.1
+status: draft; doctrine-catalog; bounded-five-test-implementation-confirmed; broader-coverage-proposed
 owners: <docs steward + security steward + policy steward — TODO>
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-08-01
 policy_label: public
 related: [
   docs/doctrine/trust-membrane.md,
@@ -23,31 +23,31 @@ related: [
 ]
 tags: [kfm, security, policy, tests, governance, deny]
 notes: [
-  "Path-shaped claims are PROPOSED until verified against a mounted repo.",
+  "Repository paths were rechecked at main@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5.",
+  "The current app-owned suite contains five bounded route, method, manifest, internal-store-literal, and forbidden-import checks; the broader deny catalog remains PROPOSED or NEEDS VERIFICATION.",
   "OPA/Conftest examples follow the project's PROPOSED policy-as-code bootstrap; engine choice tracked in ADR backlog.",
-  "Related sibling files in docs/security/ are placeholders pending creation."
+  "Referenced sibling paths are labeled by current presence; code-formatted proposed paths are not asserted as links."
 ]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Deny Tests
 
-> **Negative-path proofs that the trust membrane fails closed — not just open.** Deny tests turn every refusal KFM promises (RAW exposure, uncited claims, sensitive coordinates, unresolved rights, missing receipts) into a reproducible, CI-enforced check.
+> **Negative-path proofs that the trust membrane fails closed — not just open.** Deny tests are intended to turn every refusal KFM promises (RAW exposure, uncited claims, sensitive coordinates, unresolved rights, missing receipts) into a reproducible check. The current repository implementation covers only five bounded structural/scaffold guards.
 
-<!-- BADGES — placeholder Shields.io targets; replace endpoints once repo + CI workflow names are verified. -->
 ![Doc Status](https://img.shields.io/badge/status-draft-blue)
 ![Authority](https://img.shields.io/badge/authority-doctrine%20%2B%20test%20catalog-purple)
 ![Policy Label](https://img.shields.io/badge/policy_label-public-green)
 ![Truth Posture](https://img.shields.io/badge/posture-cite--or--abstain-orange)
 ![Fail Mode](https://img.shields.io/badge/default-fail--closed-critical)
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
-![Coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
+![CI](https://img.shields.io/badge/CI-5__bounded__guards-blue)
+![Coverage](https://img.shields.io/badge/coverage-partial-orange)
 
 | Field | Value |
 |---|---|
-| **Status** | `draft` — doctrine CONFIRMED, implementation PROPOSED |
+| **Status** | `draft` — doctrine/catalog retained; five bounded guards CONFIRMED; broader implementation PROPOSED |
 | **Owners** | Docs steward · Security steward · Policy steward *(individual names TODO)* |
-| **Last updated** | 2026-05-13 |
-| **Authority** | Doctrine: CONFIRMED (per KFM encyclopedia + unified manual). Paths/tooling: PROPOSED until repo-verified. |
+| **Last updated** | 2026-08-01 |
+| **Authority** | Doctrine/catalog: documentation authority only. Current paths and five-test selectors: CONFIRMED in repository source. Broader tooling and coverage: PROPOSED or NEEDS VERIFICATION. |
 | **Conformance language** | RFC 2119-style — `MUST`, `SHOULD`, `MAY` |
 | **Related doctrine** | [Trust membrane](../doctrine/trust-membrane.md) · [Truth posture](../doctrine/truth-posture.md) · [Lifecycle law](../doctrine/lifecycle-law.md) · [Directory Rules](../doctrine/directory-rules.md) |
 
@@ -123,8 +123,8 @@ It does **not** define schemas, contracts, policy bundles, or specific routes �
 
 ## 3. Where Deny Tests Live
 
-> [!WARNING]
-> The repository is **not mounted in the current session**. Every path below is **PROPOSED** per Directory Rules §6.5–§6.6 and ADR-0001 (schema-home convention). Treat as a placement *target*, verify against current repo evidence before relying on it, and record drift in `docs/registers/DRIFT_REGISTER.md`.
+> [!IMPORTANT]
+> These paths were checked against `main@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5`. Path presence establishes placement and source availability only; it does not establish complete deny behavior, hosted required-check status, release readiness, deployment, or publication.
 
 ### 3.1 Proposed homes
 
@@ -137,7 +137,16 @@ It does **not** define schemas, contracts, policy bundles, or specific routes �
 | `tests/domains/<domain>/` | CONFIRMED canonical | Domain-specific deny tests (e.g., archaeology exact-site denial). |
 | `policy/tests/` | CONFIRMED (Dir. Rules §6.5) | Tests packaged *with* a policy bundle when needed; `MUST NOT` become a parallel home for `tests/policy/`. |
 | `tests/fixtures/` **or** `fixtures/` | CONFIRMED — one home, not two | Deny fixtures. Two competing fixture roots are forbidden unless their READMEs declare the difference. |
-| `docs/security/DENY_TESTS.md` | PROPOSED — this file | The doctrine + catalog (you are here). |
+| `docs/security/DENY_TESTS.md` | CONFIRMED — this file | The doctrine + catalog (you are here). |
+
+#### Current bounded implementation
+
+| Surface | Current behavior | Limit |
+|---|---|---|
+| `apps/governed-api/tests/test_boundary_guards.py` | Five executable assertions: unknown route returns `404`; non-`GET` methods on scaffold routes return `405`; route manifest is exactly `/bootstrap`, `/layers`, `/evidence`; governed API source contains no configured internal-store literals; governed API Python source has no direct MapLibre, Cesium, or Ollama import prefixes. | Structural/scaffold evidence only; no complete authentication, authorization, finite `DENY` envelope, runtime payload, network, policy, evidence, rights, sensitivity, release, or production proof. |
+| `make deny-test` | Runs the five app-owned assertions in one strict pytest process and propagates collection/assertion failures. | Local command parity is test-set parity, not hosted environment or job-isolation parity. |
+| `.github/workflows/deny-test.yml` | Three read-only jobs split the same five-test set into public-boundary, raw-leak, and model-runtime checks. | Workflow definition does not prove required-check configuration or a passing run for an arbitrary revision. |
+| `tests/api/deny/` | Contract and routing README only after two vacuous `assert True` modules were removed. | Zero direct collection must not be reported as green coverage; the executable companion remains app-owned. |
 
 ### 3.2 What does *not* belong here
 
@@ -448,6 +457,8 @@ CONFIRMED *(KFM Components Pass 10, C5-03 and C5-04)*: what runs in production p
 > [!CAUTION]
 > A deny test that passes in CI but cannot be reproduced against the production PDP is not a deny test — it is **policy theatre**. Parity is the line between the two.
 
+The current local target and workflow have **five-test selector parity**. Production policy-bundle, PDP, fixture-lock, spec-hash, admission-control, and deployment parity remain `PROPOSED` or `NEEDS VERIFICATION`; the structural suite does not establish them.
+
 [↑ Back to top](#kfm-deny-tests)
 
 ---
@@ -569,9 +580,9 @@ A new deny test is acceptable when **every** box can be checked:
 - [docs/doctrine/directory-rules.md](../doctrine/directory-rules.md) — placement authority
 - [docs/architecture/governed-api.md](../architecture/governed-api.md) *(PROPOSED — finite-outcome envelopes)*
 - [docs/security/THREAT_MODEL.md](./THREAT_MODEL.md) *(PROPOSED — sibling, may not yet exist)*
-- [docs/security/EXPOSURE_POSTURE.md](./EXPOSURE_POSTURE.md) *(PROPOSED — sibling, may not yet exist)*
+- `docs/security/EXPOSURE_POSTURE.md` *(PROPOSED — path absent at the checked revision)*
 - [docs/security/INCIDENT_RESPONSE.md](./INCIDENT_RESPONSE.md) *(PROPOSED — sibling, may not yet exist)*
-- [docs/runbooks/POLICY_VALIDATION.md](../runbooks/POLICY_VALIDATION.md) *(PROPOSED)*
+- `docs/runbooks/POLICY_VALIDATION.md` *(PROPOSED — path absent at the checked revision)*
 - [policy/README.md](../../policy/README.md) *(PROPOSED)*
 - [tests/policy/README.md](../../tests/policy/README.md) *(PROPOSED)*
 
@@ -635,16 +646,16 @@ Each entry `SHOULD` be accompanied by:
 ## 17. Appendix B — Open Verification Items
 
 > [!NOTE]
-> These items are NEEDS VERIFICATION until a mounted repo confirms them.
+> Repository-presence questions below were updated from the checked revision. Operational, policy-engine, hosted configuration, and deployment questions remain `NEEDS VERIFICATION`.
 
 | Item | Current label | Verification step |
 |---|---|---|
-| Existence of `tests/policy/`, `tests/runtime_proof/`, `policy/tests/` | NEEDS VERIFICATION | Inspect repo against Directory Rules §6.5–§6.6. |
+| Existence of `tests/policy/`, `tests/runtime_proof/`, `policy/tests/` | PARTIAL | `tests/policy/` and `tests/runtime_proof/` are present; `policy/tests/` was not surfaced at the checked revision. |
 | Policy engine choice (OPA/Conftest vs alternative) | PROPOSED | Open / locate ADR; pin engine and bundle format. |
 | Bundle pinning mechanism (digest source of truth) | PROPOSED | Confirm `governance/policy-bundle.json` or equivalent (per C5-03). |
 | Fixture-lock format | PROPOSED | Confirm `fixtures.lock` or per-bundle digest manifest. |
-| CI workflow names for deny suites | UNKNOWN | Inspect `.github/workflows/` once mounted. |
-| Sibling `docs/security/` files referenced here | NEEDS VERIFICATION | Confirm `THREAT_MODEL.md`, `EXPOSURE_POSTURE.md`, `INCIDENT_RESPONSE.md` paths. |
+| CI workflow names for deny suites | CONFIRMED definition | `.github/workflows/deny-test.yml` defines workflow `deny-test` and three jobs; hosted required-check status remains `UNKNOWN`. |
+| Sibling `docs/security/` files referenced here | PARTIAL | `THREAT_MODEL.md` and `INCIDENT_RESPONSE.md` are present; `EXPOSURE_POSTURE.md` is absent at the checked revision. |
 | Sensitive-class enumeration parity | NEEDS VERIFICATION | Cross-check this file's §10 against `policy/sensitivity/` once present. |
 | In-cluster admission control parity (Gatekeeper-style) | PROPOSED | Verify whether Kubernetes admission is in scope for current deployment topology. |
 
@@ -653,6 +664,6 @@ Each entry `SHOULD` be accompanied by:
 ---
 
 <sub>
-**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api.md) · [Threat model](./THREAT_MODEL.md) · [Exposure posture](./EXPOSURE_POSTURE.md) · [Incident response](./INCIDENT_RESPONSE.md)<br/>
-**Last updated:** 2026-05-13 · **Version:** v1 (draft) · **Owners:** Docs / Security / Policy stewards *(TODO)* · [↑ Back to top](#kfm-deny-tests)
+**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api.md) · [Threat model](./THREAT_MODEL.md) · `Exposure posture (PROPOSED; path absent)` · [Incident response](./INCIDENT_RESPONSE.md)<br/>
+**Last updated:** 2026-08-01 · **Version:** v1.1 (draft) · **Owners:** Docs / Security / Policy stewards *(TODO)* · [↑ Back to top](#kfm-deny-tests)
 </sub>

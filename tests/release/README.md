@@ -194,7 +194,7 @@ The bounded search limit matters: absence from search results is not proof of pe
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
 | `make release-dry-run` | Emits a TODO message. | No release dry-run implementation is established. |
 | `make publish-check` | Emits a TODO message. | No promotion-gate implementation is established by this target. |
-| `make deny-test` | Emits a TODO message. | No release/public-boundary deny suite is established by this target. |
+| `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
 
 ### Adjacent schema coverage
 

@@ -1,16 +1,16 @@
 # `tests/api/` — Governed API Test Lane
 
-Governed API envelope, route, trust-boundary, and negative-behavior tests for KFM. This lane proves that API surfaces respect evidence, policy, release, lifecycle, runtime-envelope, privacy, correction, and rollback boundaries; it does not implement API routes, define policy, store fixtures, or own public-client authority.
+Governed API envelope, route, trust-boundary, and negative-behavior test boundary for KFM. The current executable companion proves five bounded route, method, manifest, internal-store-literal, and forbidden-import assertions; this lane does not claim complete policy, release, lifecycle, privacy, correction, rollback, or production enforcement.
 
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-api-readme
 title: tests/api/README.md — Governed API Test Lane
 type: readme; directory-readme; api-test-guardrail; trust-spine-test-index
-version: v0.1
-status: draft; greenfield-stub-expanded; child-deny-lane-confirmed; implementation-depth-NEEDS-VERIFICATION
+version: v0.2
+status: draft; repository-grounded; child-deny-lane-contract-only; app-owned-boundary-suite-confirmed; executable-workflow-confirmed; broader-coverage-NEEDS-VERIFICATION
 owners: OWNER_TBD — QA steward · API steward · Runtime steward · Policy steward · Evidence steward · Security steward · Docs steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-07-05
+updated: 2026-08-01
 policy_label: public; tests; api; governed-api; finite-outcomes; no-api-authority
 tags: [kfm, tests, api, governed-api, runtime-envelope, answer, abstain, deny, error, policy, evidence, release]
 related:
@@ -24,14 +24,18 @@ related:
   - ../../fixtures/
   - ../../tools/validators/
   - ../../apps/
+  - ../../apps/governed-api/tests/test_boundary_guards.py
   - ../../data/
   - ../../release/
+  - ../../.github/workflows/deny-test.yml
+  - ../../Makefile
 notes:
   - "Expanded from a greenfield stub containing only '# tests/api' and 'Greenfield stub.'."
-  - "Current-session search did not surface API test modules under tests/api; direct fetch confirms tests/api/deny/README.md exists."
+  - "Two vacuous assert-true modules under tests/api/deny were removed; no direct executable module remains under tests/api at this revision."
+  - "Five bounded deny-path assertions remain app-owned in apps/governed-api/tests/test_boundary_guards.py and are invoked by make deny-test and the deny-test workflow."
   - "tests/ is confirmed as the canonical enforceability-proof root and includes governed API envelope tests."
-  - "tests/api/deny/ is confirmed as the deny/fail-closed child lane."
-  - "This README does not prove actual API route implementation, test modules, fixtures, CI coverage, schemas, policy bundles, runtime envelope implementation, or public-client behavior."
+  - "tests/api/deny/ is confirmed as the deny/fail-closed contract and routing child lane; it is not a second executable owner for the app boundary assertions."
+  - "This README does not prove complete API route implementation, fixtures, required-check status, schemas, policy bundles, runtime envelope enforcement, release safety, or public-client behavior."
 [/KFM_META_BLOCK_V2] -->
 
 <p>
@@ -45,7 +49,7 @@ notes:
 **Status:** draft / governed API test index
 **Path:** `tests/api/`
 **Current role:** parent lane for governed API route, envelope, trust-boundary, and negative behavior tests
-**Truth posture:** CONFIRMED greenfield stub before this update; CONFIRMED `tests/api/deny/README.md`; NEEDS VERIFICATION for actual test files, route inventory, fixtures, schemas, validators, CI, and pass/fail behavior.
+**Truth posture:** CONFIRMED `tests/api/deny/README.md`, app-owned five-test boundary suite, local Make target, and three-job workflow definition; CONFIRMED no direct executable module remains below `tests/api/` after removal of two vacuous placeholders; NEEDS VERIFICATION for broader route, policy, evidence, release, leakage, fixture, deployment, and required-check coverage.
 
 ## Purpose
 
@@ -86,9 +90,12 @@ request
 
 | Path | Status | Notes |
 |---|---|---|
-| `tests/api/README.md` | present | Greenfield stub expanded by this README. |
-| `tests/api/deny/README.md` | present | Governed API deny-test child lane. |
-| `tests/api/*` | no direct modules confirmed in current search | No API test modules, snapshots, fixtures, or route inventories confirmed in this pass. |
+| `tests/api/README.md` | present | Governed API test parent boundary. |
+| `tests/api/deny/README.md` | present | Governed API deny-test contract and routing child lane. |
+| `tests/api/**/test_*.py` | none at this revision | Two vacuous `assert True` placeholders were removed instead of preserving false-green test evidence. |
+| `apps/governed-api/tests/test_boundary_guards.py` | **CONFIRMED executable companion** | Owns five bounded route, method, manifest, internal-store-literal, and forbidden-import assertions. |
+| `Makefile` `deny-test` target | **CONFIRMED executable entry point** | Runs the full five-test app-owned module in one strict pytest process. |
+| `.github/workflows/deny-test.yml` | **CONFIRMED workflow definition** | Existing read-only jobs split the same five-test set across three selectors; hosted required-check status remains `UNKNOWN`. |
 | `tests/README.md` | present | Canonical enforceability-proof root. |
 | `runtime/README.md` | present | Runtime root with finite `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` outcomes. |
 | `policy/README.md` | present | Canonical policy root for allow / deny / restrict / abstain and public-release posture. |
@@ -101,9 +108,12 @@ tests/
 └── api/
     ├── README.md                     # this file; governed API test parent lane
     └── deny/
-        └── README.md                 # deny/fail-closed child lane
+        └── README.md                 # deny/fail-closed contract and routing lane
 
-apps/                                 # governed API implementation roots, if present
+apps/governed-api/tests/
+└── test_boundary_guards.py           # current app-owned executable companion
+.github/workflows/deny-test.yml        # three job-aligned selectors
+Makefile                               # local five-test aggregate
 runtime/                              # finite runtime outcomes and envelopes
 policy/                               # allow / deny / restrict / abstain posture
 contracts/                            # semantic meaning
@@ -207,11 +217,12 @@ ANSWER / ABSTAIN / DENY / ERROR / RESTRICTED / REDACTED
 
 ```bash
 find tests/api -maxdepth 5 -type f | sort
-find tests policy runtime contracts schemas fixtures tools/validators apps data release -maxdepth 5 -type f 2>/dev/null | sort
-pytest tests/api tests/policy tests/runtime || true
+make deny-test
+PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers \
+  apps/governed-api/tests/test_boundary_guards.py
 ```
 
-Replace `|| true` with fail-closed CI behavior once accepted API test commands are confirmed.
+Both commands fail on collection or assertion errors. Passing them proves only the five named structural guards, not the broader test families described above.
 
 ## Review checklist
 
@@ -231,4 +242,4 @@ Replace `|| true` with fail-closed CI behavior once accepted API test commands a
 | Which RuntimeResponseEnvelope or API envelope schema is canonical for tests? | NEEDS VERIFICATION |
 | Should `tests/api/` grow child lanes for `envelopes/`, `abstain/`, `error/`, `release/`, and `leakage/`? | NEEDS VERIFICATION |
 | Which fixtures are canonical for API tests, and should snapshots live here or under `fixtures/`? | NEEDS VERIFICATION |
-| Which CI workflow blocks release or promotion when API tests fail? | NEEDS VERIFICATION |
+| Are the three `deny-test` jobs required by current repository rulesets? | UNKNOWN — workflow definition and runs do not prove branch-protection configuration. |
