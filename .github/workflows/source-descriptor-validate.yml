@@ -196,7 +196,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "::notice::The shared runner labels expected-invalid fixtures as FAIL in line output; its final polarity checks and process exit determine this step."
+          echo "::notice::The shared runner labels expected schema rejection as EXPECTED_FAIL and reserves FAIL for harness or polarity errors; its process exit determines this step."
           python tools/validators/validate_source_descriptor.py --fixtures
 
       - name: Run the repository-owned SourceDescriptor schema test

@@ -6,12 +6,12 @@
 doc_id: kfm://doc/schemas-readme
 title: schemas/ — Canonical Machine-Shape Root and Compatibility Boundary
 type: README
-version: v0.4
+version: v0.5
 status: draft; repository-grounded; canonical-machine-shape-root; configured-v1-validation-surface; compatibility-debt-visible; non-semantic; non-policy; non-release
 owner: NEEDS VERIFICATION — explicit CODEOWNERS routing is @bartytime4life; no accepted schema-steward assignment, required-review enforcement, or independent approval control was established
 created: NEEDS VERIFICATION — a short root stub existed before v0.2
-updated: 2026-07-23
-supersedes: v0.3 documentation at the same path; no schema, contract, policy, fixture, validator, workflow, runtime, release, or publication behavior is superseded
+updated: 2026-08-01
+supersedes: v0.4 schema-root boundary guide
 policy_label: repository-facing; schemas; json-schema; machine-shape; no-parallel-authority; fail-closed; correction-aware; rollback-aware
 current_path: schemas/README.md
 owning_root: schemas/
@@ -20,14 +20,14 @@ truth_posture: cite-or-abstain; schema validity proves only the tested machine s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050
-  target_prior_blob: 43c989a3bead8289bdbaba1a645980f95b0baf3a
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  schema_home_adr_blob: ab0010a278d766356845c23055f882f328abb418
+  base_commit: cb8a46fff89861b8f0ca57c1c29bacf1fec885a5
+  target_prior_blob: 15c84131862c00584664dfafa497c012ae765d33
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  schema_home_adr_blob: 3c520ea8f2f8bcb3d478329a87d98b135ea335fd
   contracts_v1_readme_blob: bbe931c9f7a5f0132522c0bda4fa5455c050a973
-  schema_validation_workflow_blob: e6b26337aa1eea142b96560e041419f855c44d59
-  validator_suite_workflow_blob: 1694afdd762ce515b53fc8e9d7d51324c2d0929d
-  aggregate_runner_blob: f734a3e0944346bf2635fb9188702f13b45c8a64
+  schema_validation_workflow_prior_blob: fd0e53722b9d8406c5fde052672f760f00f2626b
+  validator_suite_workflow_prior_blob: 1694afdd762ce515b53fc8e9d7d51324c2d0929d
+  aggregate_runner_blob: 7595f40bafb70f8eb4af51d73a74923cf77bcd5b
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
   - ./contracts/v1/README.md
@@ -42,7 +42,10 @@ related:
   - ../tests/README.md
   - ../tests/schemas/README.md
   - ../tools/validators/README.md
+  - ../tools/validators/_common/README.md
+  - ../tools/validators/_common/jsonschema_runner.py
   - ../tools/validators/_common/run_all.py
+  - ../tests/validators/test_jsonschema_runner.py
   - ../.github/workflows/schema-validation.yml
   - ../.github/workflows/validator-suite.yml
   - ../docs/adr/INDEX.md
@@ -52,12 +55,12 @@ related:
   - ../docs/registers/DRIFT_REGISTER.md
   - ../data/receipts/generated/README.md
 notes:
-  - "v0.4 is a same-path documentation modernization and current-evidence reconciliation."
+  - "v0.5 reconciles the seven-entry aggregate and the shared runner's sorted, nonempty fixture lanes with direct tests and aligned CI diagnostics."
   - "The first twelve H2 sections follow the Directory Rules folder-README contract exactly."
   - "schemas/contracts/v1 is the current configured validation surface and the Directory Rules default logical home, while ADR-0001 and ADR-0002 remain proposed rather than accepted."
   - "Root-level evidence, governance, maplibre, and people-dna-land schema lanes are documented as compatibility debt, not silently promoted to parallel authority."
-  - "The aggregate runner currently invokes six fixture-backed validators and stops on the first nonzero exit."
-  - "No executable, schema, contract, fixture, validator, policy, workflow, lifecycle, release, deployment, or public-surface behavior changes in this documentation update."
+  - "The aggregate runner currently invokes seven fixture-backed validators and stops on the first nonzero exit."
+  - "This README is a direct documentation companion to the runner/test/workflow correction; no schema, semantic contract, fixture payload, policy, lifecycle, release, deployment, or public-surface behavior changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,7 +68,7 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Authority: machine shape](https://img.shields.io/badge/authority-machine%20shape-1f6feb?style=flat-square)](#authority-level)
 [![Dialect: JSON Schema 2020-12](https://img.shields.io/badge/JSON%20Schema-2020--12-8250df?style=flat-square)](#authoring-and-identity-contract)
-[![Aggregate validators: 6](https://img.shields.io/badge/aggregate%20validators-6-2da44e?style=flat-square)](#configured-validator-surface)
+[![Aggregate validators: 7](https://img.shields.io/badge/aggregate%20validators-7-2da44e?style=flat-square)](#configured-validator-surface)
 [![CI: bounded shape checks](https://img.shields.io/badge/CI-bounded%20shape%20checks-0969da?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
@@ -157,8 +160,8 @@ Public clients use governed APIs and released artifacts. They do not treat schem
 
 | Surface | Current evidence at the pinned snapshot | Safe conclusion |
 |---|---:|---|
-| `schemas/README.md` | **CONFIRMED v0.3 baseline** | Root guidance exists, but its three-child topology and CI snapshot are stale. |
-| `schemas/contracts/v1/` | **CONFIRMED configured v1 validation surface** | Current schema workflow meta-validates this tree, requires Draft 2020-12 and unique canonical `$id` values, and wires six fixture-backed object families. |
+| `schemas/README.md` | **CONFIRMED v0.4 baseline** | Root guidance identified the configured validation surface; v0.5 reconciles current aggregate and fixture diagnostics. |
+| `schemas/contracts/v1/` | **CONFIRMED configured v1 validation surface** | Current schema workflow meta-validates this tree, requires Draft 2020-12 and unique canonical `$id` values, and wires seven fixture-backed object families. |
 | ADR-0001 / ADR-0002 | **CONFIRMED present; status `proposed`** | The default schema-home and contracts-versus-schemas split are documented but not accepted ADR decisions. |
 | `schemas/policy/` | **CONFIRMED compatibility/documentation lane** | It does not establish executable policy or a second policy authority. |
 | `schemas/tests/` | **CONFIRMED compatibility/documentation lane** | Executable tests currently run from `tests/schemas/` and `tests/contracts/`. |
@@ -167,7 +170,7 @@ Public clients use governed APIs and released artifacts. They do not treat schem
 | `schemas/maplibre/` | **CONFIRMED transitional compatibility lane** | Eight MapLibre schema names currently remain accept-any-object placeholders under the readiness workflow. |
 | `schemas/people-dna-land/` | **CONFIRMED transitional compatibility lane** | Sensitive-domain legacy paths remain migration and policy-review work, not parallel authority. |
 | `schema-validation` workflow | **CONFIRMED command-bearing definition** | Parses schema JSON, meta-validates schemas, checks canonical IDs and configured fixtures, then runs aggregate validators and schema/contract tests. |
-| `validator-suite` workflow | **CONFIRMED command-bearing definition** | Requires a nonempty aggregate inventory, runs it, and exercises one fail-closed EvidenceBundle canary. |
+| `validator-suite` workflow | **CONFIRMED command-bearing definition** | Runs ten focused shared-runner tests, requires a nonempty aggregate inventory, runs it, and exercises one fail-closed EvidenceBundle canary. |
 | Current PR-run results | **NEEDS VERIFICATION per revision** | A workflow definition is not proof that the current branch passed. |
 | Complete recursive schema inventory | **UNKNOWN in this README edit** | The compatibility list below is bounded to inspected direct lanes; it is not a complete tree claim. |
 | Authoritative schema registry | **NOT ESTABLISHED in bounded inspection** | ADR-0001 names a proposed registry path, but the referenced registry file was not found at this snapshot. |
@@ -343,7 +346,7 @@ Current command scope:
 [`schema-validation.yml`](../.github/workflows/schema-validation.yml) currently:
 
 1. installs the declared test dependencies on Python 3.11;
-2. requires the configured validator inventory to match six exact schema/fixture families;
+2. requires the configured validator inventory to match seven exact schema/fixture families;
 3. requires nonempty valid and invalid fixture lanes;
 4. requires an `.expected_error.txt` sidecar for each configured invalid fixture;
 5. parses every JSON file under `schemas/`;
@@ -354,20 +357,20 @@ Current command scope:
 10. runs `python -m pytest -q tests/schemas tests/contracts`;
 11. records only workflow logs and a step summary.
 
-[`validator-suite.yml`](../.github/workflows/validator-suite.yml) separately requires a nonempty, unique aggregate inventory, confirms fixture-mode invocation, runs `make schemas`, and rejects a reviewed invalid EvidenceBundle canary with the expected missing-`bundle_id` failure.
+[`validator-suite.yml`](../.github/workflows/validator-suite.yml) separately runs ten focused shared-runner tests, requires a nonempty unique aggregate inventory, confirms fixture-mode invocation, runs `make schemas`, and rejects a reviewed invalid EvidenceBundle canary with the expected missing-`bundle_id` failure.
 
 Neither workflow emits or authorizes a governed ValidationReport, receipt, proof, policy decision, lifecycle record, release record, or publication.
 
 ### Validation interpretation
 
 > [!NOTE]
-> The shared runner intentionally prints expected-invalid fixtures with a `FAIL` line. The fixture is successful when the validator rejects it for the reviewed reason and the final validator process exits successfully. Read the terminal exit and final summary, not an isolated line label.
+> The shared runner prints `EXPECTED_FAIL` only when a well-formed declared-invalid fixture is schema-invalid as required. `FAIL` means an empty lane, malformed fixture, validator exception, or polarity error. `EXPECTED_FAIL` is a console token, not a governed denial, policy decision, ValidationReport, release result, or publication decision.
 
 | Exit | Shared schema-runner meaning |
 |---:|---|
-| `0` | All configured valid fixtures passed and all configured invalid fixtures were rejected for expected reasons. |
-| `1` | A tested valid fixture failed, an invalid fixture was accepted, or expected error evidence did not match. |
-| `2` | Schema, reference, fixture, or operating error prevented valid evaluation. |
+| `0` | Every explicit file validated, or both fixture lanes were nonempty and every fixture satisfied its declared polarity. |
+| `1` | An explicit file failed, or a fixture lane was empty, polarity was wrong, or fixture parsing/validation raised. |
+| `2` | Neither explicit files nor `--fixtures` was supplied; the runner reports this before schema loading. |
 
 ### Documentation-only validation for this README
 
@@ -452,7 +455,7 @@ Any temporary consolidation of duties must be explicit, reviewed, bounded, and r
 | [`data/receipts/generated/`](../data/receipts/generated/) | Generated provenance records for AI-authored changes. |
 | [`release/`](../release/) | Promotion, release, correction, withdrawal, and rollback authority. |
 | [Schema validation workflow](../.github/workflows/schema-validation.yml) | Canonical v1 identity, fixture, aggregate, and schema/contract test checks. |
-| [Validator suite workflow](../.github/workflows/validator-suite.yml) | Aggregate inventory and fail-closed canary checks. |
+| [Validator suite workflow](../.github/workflows/validator-suite.yml) | Focused shared-runner tests, aggregate inventory, and fail-closed canary checks. |
 | [Directory Rules](../docs/doctrine/directory-rules.md) | Responsibility-root, compatibility, migration, and README-order doctrine. |
 | [ADR index](../docs/adr/INDEX.md) | Current decision inventory and ADR status. |
 | [Drift register](../docs/registers/DRIFT_REGISTER.md) | Repository drift disclosures; schema migration coverage remains incomplete. |
@@ -495,14 +498,14 @@ No ADR is accepted, superseded, or implemented by this README change.
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-23 |
-| Evidence base | `main@0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050` |
-| Prior README blob | `43c989a3bead8289bdbaba1a645980f95b0baf3a` |
-| Review mode | Complete-baseline, repository-grounded, same-path documentation modernization |
-| Implementation effect | None — documentation and generated provenance only |
+| Last reviewed | 2026-08-01 |
+| Evidence base | `main@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5` |
+| Prior README blob | `15c84131862c00584664dfafa497c012ae765d33` |
+| Review mode | Complete-file, same-path runner-semantics and aggregate reconciliation |
+| Implementation effect | None from this README; paired runner, focused-test, and CI diagnostic changes are documented explicitly |
 | Runtime/release effect | None |
 | Human review | Pending |
-| Rollback | Close the draft PR before merge, or revert the README and generated-receipt commits after merge |
+| Rollback | Close the draft PR before merge, or revert the complete runner/test/workflow/docs/receipt commit after merge |
 
 Re-review this README when:
 
@@ -558,7 +561,10 @@ This tree is a **bounded inspected view**, not an assertion that these are the o
 
 ### Known documentation discrepancy
 
-[`tests/schemas/README.md`](../tests/schemas/) still describes an older five-validator aggregate in its current text, while current `run_all.py` and `schema-validation.yml` configure six different core object validators. This root README records the current code/workflow evidence and leaves the child README correction as a separate same-path documentation task.
+The v0.2 `tests/schemas/README.md` baseline described an older five-validator
+aggregate. Its companion update in this slice reconciles the current
+seven-entry `run_all.py` and `schema-validation.yml` configuration without
+claiming complete schema-tree or validator coverage.
 
 [Back to top](#top)
 
@@ -684,7 +690,7 @@ Do not add wrapper-level `additionalProperties: false` when it would reject prop
 
 ## Configured validator surface
 
-The aggregate runner currently invokes these six validators in order and stops on the first nonzero result:
+The aggregate runner currently invokes these seven validators in order and stops on the first nonzero result:
 
 | Order | Validator | Schema | Fixture root |
 |---:|---|---|---|
@@ -694,6 +700,7 @@ The aggregate runner currently invokes these six validators in order and stops o
 | 4 | `validate_runtime_response_envelope.py` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `fixtures/contracts/v1/runtime/runtime_response_envelope/` |
 | 5 | `validate_decision_envelope.py` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | `fixtures/contracts/v1/runtime/decision_envelope/` |
 | 6 | `validate_run_receipt.py` | `schemas/contracts/v1/runtime/run_receipt.schema.json` | `fixtures/contracts/v1/runtime/run_receipt/` |
+| 7 | `validate_ingest_receipt.py` | `schemas/contracts/v1/source/ingest_receipt.schema.json` | `fixtures/contracts/v1/source/ingest_receipt/` |
 
 For each configured family, current CI requires:
 
@@ -809,7 +816,11 @@ A version directory does not by itself prove semantic versioning, external suppo
 
 ### Documentation rollback
 
-Before merge, close the draft PR and delete or abandon its branch. After merge, revert the README and generated-receipt commits or restore prior README blob `43c989a3bead8289bdbaba1a645980f95b0baf3a`.
+Before merge, close the draft PR and delete or abandon its branch. After merge,
+revert the complete runner/test/workflow/docs/receipt commit or restore the v0.4
+README blob `15c84131862c00584664dfafa497c012ae765d33` together with the paired behavior
+surfaces. Never leave workflow diagnostics or documentation on semantics that
+the restored runner no longer implements.
 
 ### Schema correction triggers
 
@@ -867,7 +878,6 @@ For a consequential schema regression:
 | KFM-SCH-14 | Full validator coverage | Registry of all implementation-bearing schemas, fixture/test matrix, gaps |
 | KFM-SCH-15 | Policy-significant field coverage | Policy fixtures and tests for rights, sensitivity, access, release fields |
 | KFM-SCH-16 | Generated code compatibility | Generator identity, locked versions, reproducibility, diff and rollback tests |
-| KFM-SCH-17 | Stale `tests/schemas/README.md` aggregate count | Same-path child README update grounded in current runner/workflow |
 | KFM-SCH-18 | Branch protection and required checks | Repository ruleset evidence |
 | KFM-SCH-19 | Schema release binding | ReleaseManifest/receipt/proof references and rollback drill |
 | KFM-SCH-20 | Historical-record validation | Retained schema versions and fixtures for released/corrected records |
@@ -878,7 +888,7 @@ For a consequential schema regression:
 
 ## No-loss ledger
 
-| v0.3 surface | v0.4 disposition |
+| v0.4 surface | v0.5 disposition |
 |---|---|
 | Stable path, H1, and `kfm://doc/schemas-readme` identity | Preserved |
 | Machine-shape purpose | Preserved and tightened |
@@ -889,14 +899,14 @@ For a consequential schema regression:
 | JSON Schema 2020-12 posture | Preserved and grounded in current CI |
 | Contract pairing | Preserved |
 | Domain alias strictness with `unevaluatedProperties` | Preserved |
-| Valid/invalid fixture polarity and `FAIL` log caveat | Preserved and expanded |
+| Valid/invalid fixture polarity and ambiguous `FAIL` log caveat | Corrected to sorted nonempty lanes with explicit `EXPECTED_FAIL` versus `FAIL` semantics |
 | `$id` uniqueness guidance | Preserved and grounded in current workflow; prefix remains explicitly proposed |
 | Versioning and change planning | Preserved and expanded |
 | Open questions | Preserved and converted to an actionable register |
 | Last-reviewed information | Added as required section |
 | Root-level compatibility lanes | Newly surfaced from current evidence |
-| Current six-validator aggregate | Reconciled to current runner/workflow |
-| Stale child README discrepancy | Newly disclosed without expanding file scope |
+| Current seven-validator aggregate | Reconciled to current runner/workflow |
+| Stale child README discrepancy | Corrected in the paired `tests/schemas/README.md` update |
 | Ownership | Replaced placeholder role list with verified routing limits |
 | Legacy fragments | Preserved through explicit anchors |
 
@@ -908,14 +918,15 @@ For a consequential schema regression:
 
 | Evidence | Observation supported | Status |
 |---|---|---:|
-| `schemas/README.md@0ca82aa…` / blob `43c989a…` | Complete v0.3 baseline and stable identity | `CONFIRMED` |
-| `docs/doctrine/directory-rules.md` / blob `2affb08…` | Canonical machine-shape responsibility and required README order | `CONFIRMED doctrine` |
-| ADR-0001 / blob `ab0010a…` | Proposed `schemas/contracts/v1` canonical-home decision | `CONFIRMED file; PROPOSED decision` |
+| `schemas/README.md@cb8a46f…` / prior blob `15c8413…` | Complete v0.4 baseline and stable identity | `CONFIRMED` |
+| `docs/doctrine/directory-rules.md` / blob `fd49a0b…` | Canonical machine-shape responsibility and required README order | `CONFIRMED doctrine` |
+| ADR-0001 / blob `3c520ea…` | Proposed `schemas/contracts/v1` canonical-home decision | `CONFIRMED file; PROPOSED decision` |
 | ADR-0002 | Proposed contract-meaning/schema-shape split | `CONFIRMED file; PROPOSED decision` |
 | `schemas/contracts/v1/README.md` / blob `bbe931c…` | Current versioned schema-family guidance | `CONFIRMED` |
-| `schema-validation.yml` / blob `e6b2633…` | Canonical IDs, fixture non-vacuity, aggregate and pytest workflow definition | `CONFIRMED definition` |
-| `validator-suite.yml` / blob `1694afd…` | Aggregate inventory and fail-closed canary definition | `CONFIRMED definition` |
-| `tools/validators/_common/run_all.py` / blob `f734a3e…` | Current six-validator order and stop-on-nonzero behavior | `CONFIRMED source` |
+| `schema-validation.yml` / prior blob `fd0e537…` / candidate blob `b9d03f4…` | Baseline canonical IDs, fixture non-vacuity, seven-entry aggregate, and pytest plus the candidate diagnostic alignment | `CONFIRMED baseline and candidate definition` |
+| `validator-suite.yml` / prior blob `1694afd…` / candidate blob `e5e1a3c…` | Baseline aggregate/canary plus the candidate focused shared-runner test step | `CONFIRMED baseline and candidate definition` |
+| `tools/validators/_common/jsonschema_runner.py` and focused tests | Sorted nonempty fixture lanes, explicit polarity diagnostics, bounded harness failures, and no-input behavior | `CONFIRMED source and 10 local tests` |
+| `tools/validators/_common/run_all.py` / blob `7595f40…` | Current seven-validator order and stop-on-nonzero behavior | `CONFIRMED source` |
 | Root compatibility READMEs | Evidence, governance, MapLibre, and people/DNA/land migration debt | `CONFIRMED bounded inspection` |
 | `.github/CODEOWNERS` / blob `dd2a84a…` | `/schemas/` review routing and its authority limits | `CONFIRMED` |
 | Generated-receipt schema | Provenance record shape for this AI-authored documentation change | `CONFIRMED schema file` |
@@ -931,5 +942,6 @@ For a consequential schema regression:
 | v0.2 | Before 2026-07-19 | Expanded the short schema-root stub into a boundary guide | Retained in Git history |
 | v0.3 | 2026-07-19 | Added child-lane, CI, strictness, alias, `$id`, and change-planning guidance | Restore v0.2 through Git history |
 | v0.4 | 2026-07-23 | Reordered to Directory Rules, refreshed current workflows and validator inventory, surfaced compatibility lanes and ADR status, replaced placeholder ownership, preserved strong guidance and anchors, added no-loss/evidence/rollback registers | Restore blob `43c989a3bead8289bdbaba1a645980f95b0baf3a` |
+| v0.5 | 2026-08-01 | Reconciled the seven-entry aggregate, sorted nonempty fixture lanes, `EXPECTED_FAIL` diagnostics, focused direct tests, and aligned workflow guidance. | Restore blob `15c84131862c00584664dfafa497c012ae765d33` with the paired code/test/workflow/docs rollback |
 
 <p align="right"><a href="#top">Back to top</a></p>
