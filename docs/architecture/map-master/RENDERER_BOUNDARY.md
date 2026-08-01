@@ -53,7 +53,7 @@ notes:
 7. [Authority 5 — NOT the review authority](#7-authority-5--not-the-review-authority)
 8. [Authority 6 — NOT the publication authority](#8-authority-6--not-the-publication-authority)
 9. [Authority 7 — NOT the AI authority](#9-authority-7--not-the-ai-authority)
-10. [Renderer-as-downstream contract](#10-rendereras-downstream-contract)
+10. [Renderer-as-downstream contract](#10-renderer-as-downstream-contract)
 11. [Boundary enforcement](#11-boundary-enforcement)
 12. [Anti-patterns](#12-anti-patterns)
 13. [Open questions and ADR triggers](#13-open-questions-and-adr-triggers)
