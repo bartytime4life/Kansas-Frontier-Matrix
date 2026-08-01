@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-docs-link-check-readme
 title: tests/validators/docs/link-check README
 type: README
-version: v1.1
+version: v1.2
 status: draft; executable; no-network; synthetic; non-authoritative
 owners: OWNER_TBD — QA steward · Docs steward · Validator steward · CI steward
 created: 2026-07-30
-updated: 2026-07-31
+updated: 2026-08-01
 policy_label: repository-facing; tests; documentation-qa; no-network; non-authoritative
 owning_root: tests/
 responsibility: deterministic synthetic behavior tests for the local-only documentation link checker
-truth_posture: CONFIRMED executable standard-library suite including GitHub basic heading-anchor fidelity and code-span boundary cases / NEEDS VERIFICATION hosted exact-head execution, broader Markdown dialect coverage, and required-check coupling
+truth_posture: CONFIRMED executable standard-library suite including bounded defined reference-style links, GitHub basic heading-anchor fidelity, and code-span boundary cases / NEEDS VERIFICATION hosted exact-head execution, broader Markdown dialect coverage, and required-check coupling
 related:
   - ../../README.md
   - ../../../../tools/validators/docs/link-check/README.md
@@ -21,8 +21,8 @@ related:
 
 # `tests/validators/docs/link-check/` — Local Markdown Link-Check Tests
 
-> **Purpose.** Prove the bounded documentation checker resolves local files,
-> directories, images, and Markdown anchors deterministically, fails closed for
+> **Purpose.** Prove the bounded documentation checker resolves inline and
+> defined reference-style local files, directories, images, and Markdown anchors deterministically, fails closed for
 > missing or escaping targets, and never requests external URLs.
 
 ## Repository fit
@@ -52,6 +52,13 @@ and the workflow only orchestrates both surfaces.
 
 - files, directories, images, heading anchors, explicit anchors, and duplicate
   GitHub-style heading suffixes;
+- full, collapsed, shortcut, and image references backed by first-wins
+  single-line definitions, including case/whitespace label normalization and
+  optional titles;
+- missing reference targets and fragments through the existing fail-closed
+  outcomes, plus external reference abstention with network entrypoints denied;
+- undefined reference-like citation forms remaining outside the bounded link
+  contract;
 - heading slugs containing inline code (including angle-bracket placeholders),
   image alt text, link labels, em dashes, slashes, arrows, ampersands, adjacent
   spaces, and normalized duplicates;

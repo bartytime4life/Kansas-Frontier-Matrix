@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.9
+version: v0.10
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
@@ -53,6 +53,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.10 extends the existing link-check implementation and focused no-network suite to bounded defined reference-style links; workflow name, job ID, triggers, permissions, actions, runner, network posture, and artifact posture are unchanged."
   - "v0.9 wires ten focused standard-library shared-runner tests into validator-suite before make schemas and aligns schema/source workflow diagnostics with EXPECTED_FAIL versus FAIL; workflow names, job IDs, triggers, permissions, actions, runners, network posture, and artifact posture are unchanged."
   - "v0.8 replaces the stale inline exact-TODO Explorer assumption in e2e-smoke with a tested repository-owned readiness validator; the composed E2E suite remains explicitly held."
   - "The v0.6 prior README bytes and all 44 current-main workflow files were inspected at main@c455e51be776a355a392284711898af092fb423f."
@@ -387,11 +388,12 @@ Read the exact steps and job summaries before relying on any workflow as a merge
 `link-check.yml` preserves the stable workflow and `docs-link-check` job names
 while replacing the prior readiness hold with a standard-library, local-only
 checker. It runs synthetic no-network tests and validates inline local file,
-directory, image, and fragment targets only in Markdown changed by the triggering
-revision. External targets are reported as `EXTERNAL_TARGET_UNVERIFIED` and are
-never requested. Reference-style links, inline HTML links, citations, redirects,
-ignore rules, and unchanged historical documents remain outside this bounded
-check; a green result is documentation QA only.
+directory, image, and fragment targets plus bounded, defined reference-style
+uses only in Markdown changed by the triggering revision. External targets are
+reported as `EXTERNAL_TARGET_UNVERIFIED` and are never requested. Multiline or
+nested-label reference definitions, undefined reference-like citations, inline
+HTML links, redirects, ignore rules, and unchanged historical documents remain
+outside this bounded check; a green result is documentation QA only.
 
 `validator-suite.yml` preserves the stable `validator-suite` workflow and
 `run-validators` / `ensure-fail-closed` job IDs. The first job installs the
@@ -535,6 +537,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-01 | v0.10 | Extended the existing standard-library link checker and focused no-network suite to bounded defined reference-style links without changing workflow identity, triggers, permissions, actions, runner, network posture, artifacts, or publication authority. |
 | 2026-08-01 | v0.9 | Added the focused shared JSON Schema runner suite to `validator-suite/run-validators`, aligned schema/source workflow diagnostics with `EXPECTED_FAIL` versus `FAIL`, and documented the bounded fixture semantics without changing triggers, permissions, names, runners, artifacts, or publication authority. |
 | 2026-07-31 | v0.8 | Replaced `e2e-smoke`'s stale inline TODO-only Explorer assumption with the tested no-network `e2e_readiness.py` checker; documented the implemented Explorer build/unit-test baseline and preserved the explicit composed-suite hold. |
 | 2026-07-31 | v0.7 | Reconciled all 44 workflows to current `main@c455e51…`; converted the repository-control guard from proposed-head language to current implementation fact while keeping ruleset enforcement unverified; refreshed static permission, trigger, runner, secret, write-scope, action-pin, and inventory evidence. |

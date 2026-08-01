@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.2
+version: v0.3
 status: draft; one-bounded-child-executable; remaining-children-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-30
+updated: 2026-08-01
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
 responsibility: parent/index lane for documentation validators that check Markdown metadata, links, anchors, freshness, terminology, truth-label posture, implementation-overclaim signals, and docs-QA reports without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, directory-rule exceptions, release approval, or publication
-truth_posture: CONFIRMED bounded local-only link-check executable and synthetic tests / PROPOSED remaining child executables and broader docs-QA orchestration / NEEDS VERIFICATION hosted exact-head results and required-check coupling
+truth_posture: CONFIRMED bounded local-only inline and defined reference-style link-check executable and synthetic tests / PROPOSED remaining child executables and broader docs-QA orchestration / NEEDS VERIFICATION hosted exact-head results and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
@@ -83,7 +83,7 @@ The answer should be deterministic validation results and, where configured, doc
 
 | Child lane | Validator question | Status |
 |---|---|---|
-| `link-check/` | Do local inline Markdown file, directory, image, and fragment targets resolve without network access? | Bounded executable and synthetic suite confirmed; external URLs remain unverified. |
+| `link-check/` | Do local inline and defined reference-style Markdown file, directory, image, and fragment targets resolve without network access? | Bounded executable and synthetic suite confirmed; external URLs remain unverified. |
 | `meta-block/` | Does a document carry a parseable, internally consistent `KFM_META_BLOCK_V2` or accepted metadata block profile? | README confirmed; executable proposed. |
 | `stale-scan/` | Does a document show stale metadata, overdue review posture, expired caveats, unresolved TODOs, or implementation-overclaim drift? | README confirmed; executable proposed. |
 | `terminology-parity/` | Does a document use KFM terminology, casing, source-role vocabulary, truth-label terms, and authority pointers consistently? | README confirmed; executable proposed. |

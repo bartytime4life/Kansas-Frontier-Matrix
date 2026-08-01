@@ -141,6 +141,91 @@ class DocsLinkCheckTests(unittest.TestCase):
 
         self.assertEqual(self.run_check("docs/source.md").exit_code, 0)
 
+    def test_accepts_full_collapsed_shortcut_and_image_references(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[full][Target   Ref]\n"
+            "[Target Ref][]\n"
+            "[target ref]\n"
+            "![image][image ref]\n\n"
+            "[target ref]: target.md#target-heading \"optional title\"\n"
+            "[image ref]: assets/pixel.png\n",
+        )
+        self.write("docs/target.md", "# Target Heading\n")
+        self.write("docs/assets/pixel.png", "synthetic-not-a-real-image\n")
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+        self.assertEqual(result.checked_local_targets, 4)
+        self.assertEqual(result.findings, ())
+
+    def test_reference_definitions_are_first_wins(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[first definition][duplicate]\n\n"
+            "[duplicate]: target.md\n"
+            "[DUPLICATE]: missing.md\n",
+        )
+        self.write("docs/target.md", "# Target\n")
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+        self.assertEqual(result.checked_local_targets, 1)
+
+    def test_reference_targets_fail_with_existing_local_outcomes(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[missing file][missing-ref]\n"
+            "[missing anchor][anchor-ref]\n\n"
+            "[missing-ref]: absent.md\n"
+            "[anchor-ref]: target.md#absent\n",
+        )
+        self.write("docs/target.md", "# Present\n")
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            [finding.outcome for finding in result.findings],
+            ["LOCAL_TARGET_MISSING", "ANCHOR_MISSING"],
+        )
+
+    def test_external_reference_targets_are_unverified_without_network(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[web][external]\n![remote][external image]\n\n"
+            "[external]: https://example.invalid/path\n"
+            "[external image]: https://example.invalid/image.png\n",
+        )
+        with mock.patch.object(
+            socket, "create_connection", side_effect=AssertionError("network used")
+        ), mock.patch.object(
+            urllib.request, "urlopen", side_effect=AssertionError("network used")
+        ):
+            result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.external_targets_unverified, 2)
+        self.assertEqual(
+            {finding.outcome for finding in result.findings},
+            {"EXTERNAL_TARGET_UNVERIFIED"},
+        )
+        self.assertNotIn("/path", result.to_json())
+        self.assertNotIn("/image.png", result.to_json())
+
+    def test_undefined_reference_like_citations_remain_out_of_scope(self) -> None:
+        self.write(
+            "docs/source.md",
+            "[DOM-AIR][ENCY]\n[plain bracketed text]\n[^footnote]\n",
+        )
+
+        result = self.run_check("docs/source.md")
+
+        self.assertEqual(result.outcome, "DOC_LINK_CHECK_PASS")
+        self.assertEqual(result.checked_local_targets, 0)
+
     def test_github_heading_slugs_preserve_markup_content_and_spaces(self) -> None:
         self.write(
             "docs/source.md",
