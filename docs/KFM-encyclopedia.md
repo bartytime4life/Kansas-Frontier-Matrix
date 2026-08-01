@@ -3,8 +3,8 @@ doc_id: kfm://doc/encyclopedia-index
 title: KFM Encyclopedia — Domain and Capability Planning Index
 type: reference
 subtype: planning-encyclopedia-index
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft; repository-grounded; planning-synthesis; non-authoritative; no-publication
 owners: "NEEDS VERIFICATION — .github/CODEOWNERS routes this path through the default @bartytime4life rule; no accepted encyclopedia stewardship assignment or independent approval control was verified"
 created: 2026-05-18
@@ -46,6 +46,7 @@ related:
   - .github/workflows/link-check.yml
 tags: [kfm, encyclopedia, planning, synthesis, domains, capabilities, governance, evidence, map-first, time-aware]
 notes:
+  - "v0.3 reconciles OPEN-ENC-10 after bounded defined reference-style coverage entered the local link checker; multiline definitions, undefined reference-like citations, inline HTML links, external availability, and full-render proof remain outside that checker."
   - "v0.2 is a same-path repository-grounded modernization of docs/KFM-encyclopedia.md; it does not move the source PDF, create docs/encyclopedia/, or change doctrine."
   - "The source PDF was inspected as an attached lineage artifact. No repository path for those exact PDF bytes was verified at the pinned base."
   - "The manuscript's sixteen-section map is preserved as source lineage; current repository state is reported separately and does not retroactively rewrite the PDF."
@@ -635,7 +636,7 @@ The following results are claims made by the source PDF's final self-check. They
 |---|---|---|
 | OPEN-ENC-08 | **NEEDS VERIFICATION.** CODEOWNERS routing exists; encyclopedia stewardship and independent approval do not. | Approved responsibility assignment and repository control evidence |
 | OPEN-ENC-09 | **NEEDS VERIFICATION.** Hosted exact-head checks for this revision begin only after a draft PR exists. | PR check results for the verified head |
-| OPEN-ENC-10 | **KNOWN LIMIT.** The local link checker excludes external availability, reference-style links, inline HTML links, and full GitHub render proof. | Expanded reviewed validator coverage or separately recorded bounded checks |
+| OPEN-ENC-10 | **KNOWN LIMIT.** The local link checker covers bounded defined reference-style links but excludes multiline definitions, undefined reference-like citations, external availability, inline HTML links, and full GitHub render proof. | Expanded reviewed validator coverage or separately recorded bounded checks |
 
 ### 15.4 Closed or reclassified v0.1 items
 

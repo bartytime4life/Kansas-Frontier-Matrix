@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-doc-link-reference-style-20260801",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/link-check.yml",
+    "docs/KFM-encyclopedia.md",
+    "docs/domains/fauna/RELEASE_INDEX.md",
+    "tests/validators/README.md",
+    "tests/validators/docs/link-check/README.md",
+    "tests/validators/docs/link-check/test_docs_link_check.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/link-check/README.md",
+    "tools/validators/docs/link-check/check_links.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:ac64565cc836a776e72517c75f9fd3e57a70b29f5a3fafc245571408627699d5",
+    ".github/workflows/link-check.yml": "sha256:0c2310c5651d81b53f72da7eac9ff3a2fc2797ddea5ac6bdbcb0f8f2915e6bea",
+    "docs/KFM-encyclopedia.md": "sha256:327edfe2ed42cd8a43cb811386fbb3a08361ac1621590184ec1d08acd7834557",
+    "docs/domains/fauna/RELEASE_INDEX.md": "sha256:64621811beec96cfd1a460979c4f8f89967594ac060dba94df71fd5eb2d0d74f",
+    "tests/validators/README.md": "sha256:46454233ddcbd88c0bee6c409c8f79990a9812ac51378c36396046ae5b856443",
+    "tests/validators/docs/link-check/README.md": "sha256:1dd6bf01e32871bfc9af36c3a4b785e0fab7d8bf9acd78eca6305344a826331c",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "sha256:348ae292d0e8ad5a34999f08d902a7b45d200ddd04e6cdd7df3eea1683cbf88d",
+    "tools/validators/docs/README.md": "sha256:d2adcc3dfa39ded488d123fd57ae85f0b8056fd93d08fcfa86bb6d752eb99875",
+    "tools/validators/docs/link-check/README.md": "sha256:1f850284dd73d62bbec3be919b2ede80f6cb30d3c4ce028a4b8639c3603c4ba4",
+    "tools/validators/docs/link-check/check_links.py": "sha256:55a96cb9d3bd725bde8af222a5841978878b937378b68a61c269c168cdd913db"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "Git",
+      "GitHub connector",
+      "official GitHub documentation discovery",
+      "deterministic standard-library Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:c004dd39146eceb62f9d5952c713978c9a29b9a8850e237f31fab3b05de3a37a",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e83e8f291e5a8824c18affec0a19d897d3058001",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5143195769",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.github.com/gfm/#link-reference-definitions"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/link-check.yml": "PROPOSED",
+    "docs/KFM-encyclopedia.md": "PROPOSED",
+    "docs/domains/fauna/RELEASE_INDEX.md": "PROPOSED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/docs/link-check/README.md": "PROPOSED",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "CONFIRMED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/link-check/README.md": "PROPOSED",
+    "tools/validators/docs/link-check/check_links.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The repository, current main@e83e8f291e5a8824c18affec0a19d897d3058001, accepted ADR-0029, adopted Directory Rules, contribution guidance, CODEOWNERS, open issues, open pull requests, branches, validator/test/workflow consumers, and final issue #1675 owner resolution were inspected before mutation. No open pull request or branch owned this component. Issue #1675 comment 5143810920 permits bounded feature branches, non-force pushes, and draft pull requests while preserving merge, release, deployment, publication, and settings holds."
+    },
+    {
+      "gate": "attachment-assay-and-repository-gap",
+      "outcome": "PASS",
+      "reason": "The attached structure guide and atlas supported tools/tests/workflow separation and deterministic no-network proof but were not treated as implementation authority. Current repository evidence confirmed an explicit doctrine recommendation for reference-style links, actual defined reference uses, and an existing checker that excluded them. The issue #1820 anchor-fidelity candidate was rejected as already implemented on current main."
+    },
+    {
+      "gate": "directory-placement-and-authority",
+      "outcome": "PASS",
+      "reason": "Reusable validation remains under tools/, executable conformance proof under tests/, workflow orchestration under .github/, explanatory documentation under docs/, and one process-memory receipt under data/receipts/generated/. No new root or parallel contract, schema, policy, evidence, proof, release, rollback, or publication authority was created."
+    },
+    {
+      "gate": "focused-standard-library-link-check-tests",
+      "outcome": "PASS",
+      "reason": "Eighteen deterministic tests passed. New positive, negative, and boundary cases cover defined full, collapsed, shortcut, and image references; case and whitespace label normalization; optional titles; first-definition wins; missing files; missing anchors; external abstention with socket and URL entrypoints denied; and undefined KFM citation-like syntax remaining out of scope."
+    },
+    {
+      "gate": "changed-document-integration",
+      "outcome": "PASS",
+      "reason": "The checker passed across all seven changed Markdown documents with 281 local targets and 29 external occurrences classified as unverified. The new reference path initially exposed three stale adopted-Directory-Rules fragment uses in the Fauna Release Index; rebinding them to v2 sections 11.3 and 11.5 removed all three failures and current v2 rules resolved the adjacent rollback allocation question."
+    },
+    {
+      "gate": "current-main-whole-repository-diagnostic",
+      "outcome": "PASS",
+      "reason": "The no-network checker completed across 3,814 Markdown documents and 105,228 local targets, adding six repository reference-style uses to coverage. The historical diagnostic remains DOC_LINK_CHECK_FAIL with 394 ANCHOR_MISSING, 2,194 LOCAL_TARGET_MISSING, and 52 PATH_ESCAPE findings while 12,832 external occurrences remain unverified; those pre-existing findings are candidates, not asserted defect counts or part of this bounded repair."
+    },
+    {
+      "gate": "python-compile-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile with the available standard-library Python; changed-document link validation and git diff --check pass for the bounded artifact set."
+    },
+    {
+      "gate": "generated-receipt-json-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON, artifact_paths exactly match artifact_hashes and truth_labels, and all ten SHA-256 hashes were recomputed against the final artifacts. The receipt is excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "Both available Python runtimes lack the repository-declared jsonschema dependency and no compatible cached validator was found. The dependency was not downloaded; hosted schema validation remains pending."
+    },
+    {
+      "gate": "repository-make-validate-and-boundary-guards",
+      "outcome": "SKIPPED",
+      "reason": "make validate stopped before repository tests because jsonschema is unavailable, and the chained boundary-guards target was not reached. Pytest is also unavailable. This environment blocker is separate from the passing standard-library component suite."
+    },
+    {
+      "gate": "hosted-workflow-and-ruleset-coupling",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks and required-check coupling remain unobserved until draft delivery. No workflow identity or repository setting is changed by this slice."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "reference-style-gap-cursor-v32",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5143195769"
+    },
+    {
+      "id": "repository-authoring-hold-lift",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "ai-build-link-style",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e83e8f291e5a8824c18affec0a19d897d3058001/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "gfm-reference-link-contract",
+      "validated": true,
+      "evidence_ref": "https://github.github.com/gfm/#link-reference-definitions"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T18:11:52Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820"
+  },
+  "notes": "Closes only the bounded defined-reference-style gap in the existing documentation link checker and its direct consumer closure. The implementation supports first-wins single-line definitions and defined full, collapsed, shortcut, and image uses, reusing existing local, anchor, path-boundary, external-abstention, deterministic-output, and fail-closed behavior. Multiline definitions, nested-label edge cases, undefined reference-like citations, inline HTML links, external availability, historical remediation, document truth, source admission, evidence closure, policy, proof, release, deployment, publication, and repository settings remain outside scope. The Fauna correction changes no release decision or published artifact. Human review remains pending."
+}

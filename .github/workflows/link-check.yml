@@ -1,7 +1,8 @@
 # KFM bounded local documentation link check.
 #
 # The stable workflow name and job id are preserved. The job checks only local
-# inline Markdown file, directory, image, and fragment targets in Markdown files
+# inline and defined reference-style Markdown file, directory, image, and
+# fragment targets in Markdown files
 # changed by the triggering revision. It classifies external URLs as unverified
 # and never requests them. A green result is documentation QA, not evidence,
 # policy, review, release, deployment, or publication authority.
@@ -79,8 +80,8 @@ jobs:
           {
             echo "### Documentation link check"
             echo "- Outcome: DOC_LINK_CHECK_PASS"
-            echo "- Scope: local inline Markdown targets in files changed by the triggering revision."
+            echo "- Scope: local inline and defined reference-style Markdown targets in files changed by the triggering revision."
             echo "- Network: external targets were classified as EXTERNAL_TARGET_UNVERIFIED and were not requested."
-            echo "- Coverage hold: reference-style links, inline HTML links, citations, redirects, ignore rules, and historical unchanged documents remain outside this bounded check."
+            echo "- Coverage hold: multiline or nested-label reference definitions, undefined reference-like citations, inline HTML links, redirects, ignore rules, and historical unchanged documents remain outside this bounded check."
             echo "- Authority: link resolution is QA only, not truth, evidence, policy, review, release, deployment, or publication approval."
           } >> "$GITHUB_STEP_SUMMARY"

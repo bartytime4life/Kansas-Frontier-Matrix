@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-link-check-readme
 title: tools/validators/docs/link-check README
 type: README
-version: v0.3
+version: v0.4
 status: draft; bounded-executable; local-only; no-network; non-authoritative
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-31
+updated: 2026-08-01
 policy_label: repository-facing; docs-validator; link-check; markdown-qa; non-authoritative
 owning_root: tools/
 responsibility: deterministic local Markdown target and fragment validation without deciding doctrine, evidence sufficiency, source admissibility, policy, review, release, or publication
-truth_posture: CONFIRMED standard-library local target checker, GitHub basic heading-anchor fidelity fixtures, synthetic tests, changed-Markdown CI wiring, and deterministic historical diagnostic / NEEDS VERIFICATION broader Markdown dialect coverage, remaining historical-candidate classification, hosted exact-head results, and required-check coupling
+truth_posture: CONFIRMED standard-library local target checker, bounded defined reference-style link support, GitHub basic heading-anchor fidelity fixtures, synthetic tests, changed-Markdown CI wiring, and deterministic historical diagnostic / NEEDS VERIFICATION broader Markdown dialect coverage, remaining historical-candidate classification, hosted exact-head results, and required-check coupling
 related:
   - ../README.md
   - ../../README.md
@@ -20,6 +20,7 @@ related:
 notes:
   - "External targets are classified as EXTERNAL_TARGET_UNVERIFIED and are never requested."
   - "Heading fragments follow GitHub's documented basic section-link rules: markup content is retained, punctuation and non-space whitespace are removed, spaces become hyphens one-for-one, and duplicate slugs receive numeric suffixes."
+  - "Reference-style coverage is intentionally bounded to first-wins single-line definitions and full, collapsed, shortcut, and image uses whose definitions are present in the same document."
   - "A passing result proves local target resolution only within the supplied Markdown scope."
 [/KFM_META_BLOCK_V2] -->
 
@@ -32,8 +33,8 @@ notes:
 ![network](https://img.shields.io/badge/network-denied-critical)
 ![authority](https://img.shields.io/badge/authority-QA--only-lightgrey)
 
-> **Purpose.** Validate repository-local inline Markdown file, directory,
-> image, and fragment targets deterministically while abstaining from all
+> **Purpose.** Validate repository-local inline and defined reference-style
+> Markdown file, directory, image, and fragment targets deterministically while abstaining from all
 > external URL availability claims.
 
 **Quick navigation:** [Status](#status) · [Repository fit](#repository-fit) ·
@@ -44,7 +45,7 @@ notes:
 
 | Surface | Current evidence | Limit |
 |---|---|---|
-| `check_links.py` | **CONFIRMED executable** | Standard-library, local inline Markdown targets only. |
+| `check_links.py` | **CONFIRMED executable** | Standard-library, local inline and bounded defined reference-style Markdown targets. |
 | Heading fragments | **CONFIRMED bounded fidelity** | Covers documented basic GitHub slug rules; not a complete Markdown renderer. |
 | Focused tests | **CONFIRMED executable** | Synthetic temporary fixtures, including real-shape heading cases; no production payloads or external requests. |
 | `link-check.yml` | **CONFIRMED command-bearing definition** | Hosted exact-head result and required-check coupling remain **NEEDS VERIFICATION**. |
@@ -72,7 +73,13 @@ root or parallel documentation store is created.
 - directories, recursively limited to Markdown files;
 - a strict `<base-sha>...HEAD` changed-file selector;
 - repository-relative links, root-relative links, images, directories, heading
-  fragments, and explicit HTML `id` or `name` anchors.
+  fragments, and explicit HTML `id` or `name` anchors;
+- first-wins single-line reference definitions plus full (`[text][label]`),
+  collapsed (`[label][]`), shortcut (`[label]`), and image reference uses.
+
+Reference labels are matched case-insensitively after internal whitespace is
+collapsed. A definition's optional single-line title does not become part of
+the target. Definitions inside fenced code or HTML comments remain inert.
 
 Heading fragments use the bounded basic rules documented by
 [GitHub section links](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links):
@@ -96,7 +103,8 @@ directories are denied. Inputs larger than 5 MB fail closed.
 This bounded version does not:
 
 - request external URLs, follow redirects, or claim external availability;
-- parse reference-style Markdown links or inline HTML `href`/`src` attributes;
+- parse multiline reference definitions, nested-label edge cases, undefined
+  reference-like text, or inline HTML `href`/`src` attributes;
 - validate citations, reference semantics, link text, or document authority;
 - support ignores, allowlists, suppressions, or generated report files;
 - claim complete GitHub Flavored Markdown parsing or undocumented anchor
@@ -175,9 +183,14 @@ scope, not whole-repository link coverage.
 - [x] Path escape and exact-case mismatch fail closed.
 - [x] Symbolic-link inputs fail closed.
 - [x] External URLs remain unrequested and visibly unverified.
+- [x] Defined full, collapsed, shortcut, and image references reuse the same
+  local, anchor, path-boundary, and external-abstention outcomes.
+- [x] Reference labels normalize case and whitespace; duplicate definitions use
+  the first definition; undefined reference-like citations remain out of scope.
 - [x] Tests use synthetic fixtures and standard-library runners.
 - [x] Workflow permissions remain read-only and names remain stable.
-- [ ] Reference-style and inline-HTML link parsing — **DEFERRED**.
+- [ ] Multiline/nested-label reference definitions and inline-HTML link parsing
+  — **DEFERRED**.
 - [ ] Historical whole-repository remediation — **DEFERRED**.
 - [ ] Hosted exact-head result and ruleset coupling — **NEEDS VERIFICATION**.
 

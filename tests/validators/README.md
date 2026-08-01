@@ -2,12 +2,12 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.11
+version: v0.12
 status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; focused-e2e-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; ingest-receipt-connector-gate-prerequisite-configured; connector-run-receipt-presence-held; shared-validator-runtime-executable; shared-runner-fixture-contract-confirmed; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
 updated: 2026-08-01
-supersedes: v0.10 validator-test boundary guide
+supersedes: v0.11 validator-test boundary guide
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
 truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused shared-runner fixture suite, focused ci_readiness and e2e_readiness unit suites, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, focused no-network IngestReceipt schema/semantic/source-head/artifact/byte/outcome suite, shared validator runtime under tools/validators/_common, current seven-entry aggregate, existing schema/contract tests, deterministic placeholder, readiness-hold, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, composed E2E suite, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED seven-entry aggregate versus broader executable validator inventory / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
@@ -373,13 +373,16 @@ The repository-control suites are confirmed focused proof for `tools/validators/
 `test_repository_transition_authorization.py` separately proves strict JSON and schema shape, unedited owner-comment binding at evaluation time, exact repository/issue/PR/base/head matching, draft holds, four-hour maximum expiry at evaluation time, duplicate/unknown-field refusal, bounded non-echoing output, CLI polarity, and the fact that PR #1869 would have remained held without a distinct transition record. It does not prove hosted execution, required-check coupling, automatic expiry or rerun of a previously recorded successful GitHub check after comment mutation, human authorship, app/token identity, independent review, or merge legitimacy.
 
 `docs/link-check/test_docs_link_check.py` proves the bounded standard-library
-documentation checker resolves local files, directories, images, heading and
-explicit anchors, rejects missing, case-mismatched, or escaping targets, ignores
-code/comment examples, denies symbolic-link inputs, classifies external URLs
-without requesting or fully echoing them, and preserves deterministic JSON and
-CLI exit polarity. It does not cover
-reference-style links, inline HTML links, citation semantics, redirects, ignore
-rules, historical whole-repository remediation, or external availability.
+documentation checker resolves inline and defined reference-style local files,
+directories, images, heading and explicit anchors, rejects missing,
+case-mismatched, or escaping targets, ignores code/comment examples, denies
+symbolic-link inputs, classifies external URLs without requesting or fully
+echoing them, and preserves deterministic JSON and CLI exit polarity. Defined
+reference coverage includes first-wins single-line definitions and full,
+collapsed, shortcut, and image uses. It does not cover multiline or nested-label
+reference definitions, undefined reference-like citations, inline HTML links,
+redirects, ignore rules, historical whole-repository remediation, or external
+availability.
 
 `test_validate_ingest_receipt.py` proves the dedicated no-network validator
 accepts a correctly bound synthetic receipt and fails closed on source identity,
@@ -991,7 +994,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | focused standard-library E2E-readiness suite | Confirmed locked Explorer/UI/API/root-hold inputs, exact placeholder inventory, surfaced-E2E detection, safe paths, deterministic output, and explicit-hold CLI polarity for `e2e_readiness.py`; no application code or composed journey runs. |
 | focused repository-control pytest set | Confirmed state/schema/digest/scope validation, active-claim observation binding, non-active later-head behavior, PR #1829 terminal-divergence refusal, and strict exact-head transition-authorization parsing. The proposed trusted-base workflow remains advisory until separately required. |
 | focused `pytest tests/validators/test_pnpm_audit_readiness.py` | Confirmed manager/engine/workspace/lockfile preconditions, importer closure, competing-lockfile and unsafe-input denial, deterministic output, audit threshold and error polarity, and CLI exits. Networked advisory truth remains outside the fixture suite. |
-| focused standard-library docs link-check suite | Confirmed local inline Markdown target/fragment behavior, path-boundary denial, external-target abstention, deterministic output, and CLI polarity. Historical documents and external availability remain outside scope. |
+| focused standard-library docs link-check suite | Confirmed local inline and bounded defined reference-style Markdown target/fragment behavior, path-boundary denial, external-target abstention, deterministic output, and CLI polarity. Historical documents and external availability remain outside scope. |
 | focused standard-library shared-runner suite | Ten synthetic cases confirm explicit polarity, no-input behavior, sorted nonempty fixture lanes, expected-invalid diagnostics, harness failures, exception containment, and configuration failure. Resolver, aggregate, semantic, policy, evidence, and release coverage remain separate. |
 | eleven domain readiness workflows | Same-batch integration with `ci_readiness.py`: ten call the root-scanning CLI; Hydrology imports the source classifiers inside a bespoke exact inventory because its validator roots intentionally mix Python placeholders with separately inventoried schema and policy files. Each workflow retains its domain-specific checks and authority limits. |
 
@@ -1250,7 +1253,7 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | `.github/workflows/repository-control.yml` | PROPOSED exact workflow definition | Trusted-base-only checkout, full-SHA checkout action pin, read-only token, bounded issue/event input, and stable check name. | Advisory until required by ruleset `15484585`; cannot distinguish a human from an app acting as the owner. |
 | PR #1829 terminal-divergence fixture | CONFIRMED regression fixture | Exact base/head/merge SHAs, changed-path scope, merge time, and evidence references used by the incident regression. | The initiating client remains `UNKNOWN`; the fixture does not infer it. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` and focused tests | CONFIRMED executable and executable tests | No-network pnpm contract/readiness validation plus finite structured audit-result classification. | Does not query the registry, decide dependency admission, or prove vulnerability absence. |
-| `tools/validators/docs/link-check/check_links.py` and focused tests | CONFIRMED executable and executable tests | Standard-library local inline Markdown files, directories, images, fragments, exact-case/path-boundary checks, external abstention, and deterministic outputs. | Does not check external availability, reference-style or HTML links, citations, truth, policy, release, or unchanged historical docs in CI. |
+| `tools/validators/docs/link-check/check_links.py` and focused tests | CONFIRMED executable and executable tests | Standard-library local inline and defined reference-style Markdown files, directories, images, fragments, exact-case/path-boundary checks, external abstention, and deterministic outputs. | Does not check external availability, multiline or nested-label reference definitions, undefined reference-like citations, HTML links, truth, policy, release, or unchanged historical docs in CI. |
 | `.github/workflows/dependency-scan.yml` pnpm lane | PROPOSED exact workflow definition | Preserves the stable `npm-audit` job id, runs the repository checker, then performs a high-threshold pnpm registry audit. | Exact-head remote execution and the mutable advisory result remain NEEDS VERIFICATION. |
 | `tools/validators/_common/README.md` | CONFIRMED | Current implementation inventory, consumer count, workflows, and known conflicts. | Documentation is not a substitute for direct tests. |
 | `jsonschema_runner.py` | CONFIRMED executable | Explicit-file behavior plus sorted, nonempty fixture lanes and distinct expected-invalid/harness diagnostics. | Focused suite does not cover every explicit-file, resolver, path, resource, or compatibility branch. |

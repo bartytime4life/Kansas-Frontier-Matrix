@@ -36,6 +36,12 @@ HTML_ANCHOR_RE = re.compile(
     r"<[^>]+\s(?:id|name)\s*=\s*([\"'])(.*?)\1",
     re.IGNORECASE,
 )
+REFERENCE_DEFINITION_RE = re.compile(
+    r"^\s{0,3}\[([^\]\n]{1,999})\]:[ \t]*"
+    r"(?:<([^>\n]+)>|([^\s]+))"
+    r"(?:[ \t]+(?:\"(?:[^\"\\]|\\.)*\"|'(?:[^'\\]|\\.)*'|"
+    r"\((?:[^()\\]|\\.)*\)))?[ \t]*$"
+)
 GIT_DIFF_RE = re.compile(
     r"^[0-9a-fA-F]{7,40}\.\.\.(?:HEAD|[0-9a-fA-F]{7,40})$"
 )
@@ -85,6 +91,12 @@ class LinkReference:
     line: int
     target: str
     image: bool
+
+
+@dataclass(frozen=True)
+class ReferenceDefinition:
+    line: int
+    target: str
 
 
 def _visible_markdown_lines(text: str) -> Iterator[tuple[int, str]]:
@@ -211,6 +223,112 @@ def _inline_links(line: str, line_number: int) -> Iterator[LinkReference]:
             yield LinkReference(line=line_number, target=target, image=image)
 
 
+def _normalize_reference_label(value: str) -> str:
+    """Normalize a bounded GFM reference label for deterministic matching."""
+
+    return " ".join(html.unescape(value).casefold().split())
+
+
+def _reference_definitions(
+    text: str,
+) -> tuple[dict[str, ReferenceDefinition], frozenset[int]]:
+    """Collect first-wins, single-line reference definitions outside code/comments."""
+
+    definitions: dict[str, ReferenceDefinition] = {}
+    definition_lines: set[int] = set()
+    for line_number, line in _visible_markdown_lines(text):
+        match = REFERENCE_DEFINITION_RE.fullmatch(line)
+        if not match or match.group(1).lstrip().startswith("^"):
+            continue
+        label = _normalize_reference_label(match.group(1))
+        if not label:
+            continue
+        target = match.group(2) or match.group(3)
+        definitions.setdefault(
+            label,
+            ReferenceDefinition(line=line_number, target=target),
+        )
+        definition_lines.add(line_number)
+    return definitions, frozenset(definition_lines)
+
+
+def _closing_bracket(line: str, start: int, *, allow_nested: bool) -> int | None:
+    depth = 1
+    cursor = start
+    while cursor < len(line):
+        character = line[cursor]
+        if character == "\\":
+            cursor += 2
+            continue
+        if allow_nested and character == "[":
+            depth += 1
+        elif character == "]":
+            depth -= 1
+            if depth == 0:
+                return cursor
+        cursor += 1
+    return None
+
+
+def _reference_links(
+    line: str,
+    line_number: int,
+    definitions: dict[str, ReferenceDefinition],
+) -> Iterator[LinkReference]:
+    """Yield bounded full, collapsed, and defined shortcut reference links."""
+
+    cursor = 0
+    while cursor < len(line):
+        bracket = line.find("[", cursor)
+        if bracket == -1:
+            return
+        if bracket > 0 and line[bracket - 1] == "\\":
+            cursor = bracket + 1
+            continue
+
+        label_end = _closing_bracket(line, bracket + 1, allow_nested=True)
+        if label_end is None:
+            return
+        link_text = line[bracket + 1 : label_end]
+        image = bracket > 0 and line[bracket - 1] == "!"
+        following = label_end + 1
+
+        if following < len(line) and line[following] == "(":
+            cursor = following + 1
+            continue
+
+        if following < len(line) and line[following] == "[":
+            reference_end = _closing_bracket(
+                line,
+                following + 1,
+                allow_nested=False,
+            )
+            if reference_end is None:
+                cursor = following + 1
+                continue
+            reference_text = line[following + 1 : reference_end] or link_text
+            label = _normalize_reference_label(reference_text)
+            definition = definitions.get(label)
+            if definition is not None:
+                yield LinkReference(
+                    line=line_number,
+                    target=definition.target,
+                    image=image,
+                )
+            cursor = reference_end + 1
+            continue
+
+        label = _normalize_reference_label(link_text)
+        definition = definitions.get(label)
+        if definition is not None:
+            yield LinkReference(
+                line=line_number,
+                target=definition.target,
+                image=image,
+            )
+        cursor = label_end + 1
+
+
 def extract_links(path: Path) -> tuple[LinkReference, ...]:
     try:
         if path.stat().st_size > MAX_MARKDOWN_BYTES:
@@ -221,9 +339,12 @@ def extract_links(path: Path) -> tuple[LinkReference, ...]:
     except (OSError, UnicodeError) as error:
         raise LinkCheckError(f"Cannot read Markdown input {path}: {error}") from error
 
+    definitions, definition_lines = _reference_definitions(text)
     links: list[LinkReference] = []
     for line_number, line in _masked_markdown_lines(text):
         links.extend(_inline_links(line, line_number))
+        if line_number not in definition_lines:
+            links.extend(_reference_links(line, line_number, definitions))
     return tuple(links)
 
 
