@@ -42,7 +42,7 @@ notes:
   <img alt="Naming: CONFLICTED" src="https://img.shields.io/badge/naming-CONFLICTED%20%C2%B7%204%20variants-critical">
 </p>
 
-**Quick jump:** [Purpose](#1-purpose-and-role) · [Source A defined](#2-what-source-a-is) · [Cover block](#3-cover-supersession-block) · [Edition note](#4-edition-note) · [What's new](#5-what-is-new-in-v11) · [Integrated contents](#6-integrated-contents) · [v1.0 interior](#7-v10-interior-chs-1-23) · [Ch. 24](#8-chapter-24--extended-master-atlases) · [App. G](#9-appendix-g--v10--v11-lineage) · [Reversibility](#10-reversibility-property) · [Vs consolidated](#11-distinction-from-the-consolidated-atlas) · [Naming](#12-naming-convention-reconciliation-conflicted) · [Verification](#15-verification-checklist)
+**Quick jump:** [Purpose](#1-purpose-and-role) · [Source A defined](#2-what-source-a-is) · [Cover block](#3-cover-supersession-block) · [Edition note](#4-edition-note) · [What's new](#5-what-is-new-in-v11) · [Integrated contents](#6-integrated-contents) · [v1.0 interior](#7-v10-interior-chs-123) · [Ch. 24](#8-chapter-24--extended-master-atlases) · [App. G](#9-appendix-g--v10--v11-lineage) · [Reversibility](#10-reversibility-property) · [Vs consolidated](#11-distinction-from-the-consolidated-atlas) · [Naming](#12-naming-convention-reconciliation-conflicted) · [Verification](#15-verification-checklist)
 
 > [!IMPORTANT]
 > **Status:** `PROPOSED file` / `CONFIRMED doctrine` (Atlas v1.1 cover supersession block, front matter, Integrated Contents, Ch. 24 §§24.1–24.14, Appendix G) / `UNKNOWN repo implementation depth`
