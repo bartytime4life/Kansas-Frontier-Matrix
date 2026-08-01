@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.8
+version: v0.9
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-07-31
+updated: 2026-08-01
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
@@ -19,6 +19,15 @@ evidence_snapshot:
   current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
+validator_runner_change_evidence:
+  base_commit: cb8a46fff89861b8f0ca57c1c29bacf1fec885a5
+  readme_prior_blob: 5d1ab22c5dac921c86c64c138c35a16adac0738a
+  runner_prior_blob: ce05ae25d0cb6fc29a2ea41db6c65a99ca5e13e6
+  validator_suite_prior_blob: 1694afdd762ce515b53fc8e9d7d51324c2d0929d
+  schema_validation_prior_blob: fd0e53722b9d8406c5fde052672f760f00f2626b
+  source_descriptor_validate_prior_blob: fc808375a73e0d4ddfdc80fd5f0199a0486c93ce
+  focused_test: ../../tests/validators/test_jsonschema_runner.py
+  local_result: PASS; 10 tests
 related:
   - ../README.md
   - ../CODEOWNERS
@@ -30,6 +39,10 @@ related:
   - ../../docs/doctrine/ai-build-operating-contract.md
   - ../../docs/adr/README.md
   - ../../tools/validators/README.md
+  - ../../tools/validators/_common/README.md
+  - ../../tools/validators/_common/jsonschema_runner.py
+  - ../../tests/validators/README.md
+  - ../../tests/validators/test_jsonschema_runner.py
   - ../../tools/validators/e2e_readiness.py
   - ../../tests/validators/test_e2e_readiness.py
   - ../../tests/e2e/README.md
@@ -40,6 +53,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.9 wires ten focused standard-library shared-runner tests into validator-suite before make schemas and aligns schema/source workflow diagnostics with EXPECTED_FAIL versus FAIL; workflow names, job IDs, triggers, permissions, actions, runners, network posture, and artifact posture are unchanged."
   - "v0.8 replaces the stale inline exact-TODO Explorer assumption in e2e-smoke with a tested repository-owned readiness validator; the composed E2E suite remains explicitly held."
   - "The v0.6 prior README bytes and all 44 current-main workflow files were inspected at main@c455e51be776a355a392284711898af092fb423f."
   - "The detailed 41-file workflow inventory remains lineage at 1180cf7ec53d5acbbb859a39d93c1d129ec83df9; v0.7 reconciles the complete current 44-file inventory, including repository-control.yml and link-check.yml as implemented orchestration."
@@ -204,6 +218,7 @@ make schemas
 make test
 make governed-api-smoke
 make boundary-guards-ci
+python -m unittest discover --start-directory tests/validators --pattern 'test_jsonschema_runner.py' --verbose
 ```
 
 Inspect the target before relying on it. A Make target that only echoes `TODO`, a skipped job, or a hold condition is not substantive validation.
@@ -279,11 +294,11 @@ Before a workflow change bends a trust or placement invariant, inspect [`docs/ad
 
 | Field | Value |
 |---|---|
-| README content read | 2026-07-31 |
+| README content read | 2026-08-01 |
 | Read ref | `main` |
-| Read commit | `c455e51be776a355a392284711898af092fb423f` |
+| Read commit | `cb8a46fff89861b8f0ca57c1c29bacf1fec885a5` |
 | Detailed workflow inventory snapshot | `c455e51be776a355a392284711898af092fb423f` |
-| Bounded readiness reconciliation | 2026-07-29; shared domain holds plus E2E, Focus mock, and rollback-drill checks only |
+| Bounded readiness reconciliation | 2026-08-01; shared JSON Schema runner tests and three directly affected workflow definitions |
 | Inventory refresh status | **CONFIRMED current static count: 44**; hosted execution and ruleset coupling remain separate |
 
 ## Complete workflow inventory
@@ -377,6 +392,26 @@ revision. External targets are reported as `EXTERNAL_TARGET_UNVERIFIED` and are
 never requested. Reference-style links, inline HTML links, citations, redirects,
 ignore rules, and unchanged historical documents remain outside this bounded
 check; a green result is documentation QA only.
+
+`validator-suite.yml` preserves the stable `validator-suite` workflow and
+`run-validators` / `ensure-fail-closed` job IDs. The first job installs the
+declared Python dependencies, runs all ten focused standard-library cases in
+`tests/validators/test_jsonschema_runner.py`, and then runs `make schemas`.
+Those tests require sorted, nonempty valid and invalid fixture lanes and
+distinguish expected schema rejection from malformed data, validator
+exceptions, and polarity errors. The second job remains the reviewed invalid
+EvidenceBundle canary. Triggers, permissions, actions, hosted runner, network
+posture, artifact posture, and check names are unchanged. Hosted execution at
+the proposed head remains **NEEDS VERIFICATION**; a green result would prove
+only these bounded mechanics, not semantic truth, policy, evidence closure,
+release readiness, or publication.
+
+`schema-validation.yml` and `source-descriptor-validate.yml` retain their
+existing commands, triggers, permissions, runners, and job names. Their
+diagnostic text now names `EXPECTED_FAIL` as a successful schema-rejection
+observation and reserves `FAIL` for harness, malformed-input, exception, or
+polarity errors. This is an observability alignment with the shared runner, not
+a broader validation or publication claim.
 
 `dependency-scan.yml` preserves the stable `npm-audit` job id for check-name
 compatibility but now proposes the repository's accepted pnpm contract. Its
@@ -500,6 +535,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-01 | v0.9 | Added the focused shared JSON Schema runner suite to `validator-suite/run-validators`, aligned schema/source workflow diagnostics with `EXPECTED_FAIL` versus `FAIL`, and documented the bounded fixture semantics without changing triggers, permissions, names, runners, artifacts, or publication authority. |
 | 2026-07-31 | v0.8 | Replaced `e2e-smoke`'s stale inline TODO-only Explorer assumption with the tested no-network `e2e_readiness.py` checker; documented the implemented Explorer build/unit-test baseline and preserved the explicit composed-suite hold. |
 | 2026-07-31 | v0.7 | Reconciled all 44 workflows to current `main@c455e51…`; converted the repository-control guard from proposed-head language to current implementation fact while keeping ruleset enforcement unverified; refreshed static permission, trigger, runner, secret, write-scope, action-pin, and inventory evidence. |
 | 2026-07-30 | v0.6 | Reconciled the current 43-file inventory plus the proposed trusted-base repository transition guard; documented its `pull_request_target` threat model, read-only token, immutable checkout pin, advisory check status, and human-versus-app attribution limit. |

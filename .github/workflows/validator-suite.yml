@@ -14,8 +14,8 @@
 #
 # Inputs:
 #   The root Makefile and pyproject, tools/validators/_common/run_all.py, its
-#   configured validator scripts and fixtures, and the reviewed EvidenceBundle
-#   invalid fixture plus expected-error sidecar.
+#   configured validator scripts and fixtures, the focused shared-runner tests,
+#   and the reviewed EvidenceBundle invalid fixture plus expected-error sidecar.
 #
 # Outputs and outcomes:
 #   GitHub job conclusions, logs, and step summaries only. This workflow emits
@@ -130,6 +130,15 @@ jobs:
           )
           PY
 
+      - name: Test shared JSON Schema runner fixture semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_jsonschema_runner.py' \
+            --verbose
+
       - name: Run repository aggregate validators
         shell: bash
         run: |
@@ -144,7 +153,9 @@ jobs:
             echo "### Aggregate validator suite"
             echo
             echo "- Result: ${{ job.status }}."
+            echo "- Shared-runner command: focused standard-library tests in \`tests/validators/test_jsonschema_runner.py\`."
             echo "- Command: \`make schemas\`."
+            echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
             echo "- A green result proves only the configured validator/fixture behavior; it does not establish semantic truth, EvidenceBundle closure, source authority, policy approval, rights or sensitivity clearance, release readiness, or publication authority."
             echo "- No validation report, receipt, proof, policy decision, lifecycle record, release record, or published artifact was emitted."

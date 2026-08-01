@@ -2,30 +2,45 @@
 doc_id: kfm://doc/tests-schemas-readme
 title: tests/schemas/ — Executable Schema Conformance, Fixture Coverage, and Drift Guardrail
 type: readme; directory-readme; schema-test-root; json-schema-conformance-contract; fixture-coverage-index; ci-boundary
-version: v0.2
+version: v0.3
 status: draft; repository-grounded; executable; pytest-collected; fixture-driven; partial-family-coverage; hydrology-alias-coverage; schema-ci-present; coverage-gaps-visible; non-authoritative; NEEDS VERIFICATION
 policy_label: public-doc; tests; schemas; machine-shape; synthetic-only; no-network; fail-closed; coverage-aware; compatibility-aware; trust-spine
 owners: OWNER_TBD — QA steward · Schema steward · Contract steward · Fixture steward · Validator steward · Domain stewards · CI steward · Security reviewer · Docs steward
 created: 2026-07-07
-updated: 2026-07-16
+updated: 2026-08-01
+supersedes: v0.2 schema-test boundary guide
 current_path: tests/schemas/README.md
-truth_posture: CONFIRMED target README and prior blob, canonical tests responsibility root, schema authority root, schemas/tests compatibility index, two directly surfaced executable test modules, generic top-level fixture harness behavior, Hydrology alias test behavior, shared JSON Schema runner, recursive local schema registry, five-validator aggregate runner, root Makefile schema/test targets, root Python and pytest dependencies, schema-validation workflow, validator-suite workflow, and mixed-maturity v1 schema family index at the pinned snapshot / PROPOSED complete schema inventory contract, recursive family discovery, required fixture manifests, nonempty valid-invalid polarity, metaschema validation, contract-pairing enforcement, namespace policy, compatibility-lane migration, coverage report, dedicated schema-test artifact, required promotion check, and branch-protection status / CONFLICTED executable ownership under tests/schemas versus README-only compatibility placement under schemas/tests, generic harness top-level family allowlist versus the much broader v1 family tree, direct pytest coverage versus the five-validator make schemas path, and schema-shape success versus evidence-policy-release truth / UNKNOWN exhaustive ignored/generated test inventory, exact collected case count, current pass state, full schema count, full fixture count, dynamic consumers, required-check configuration, promotion dependency, and production behavior / NEEDS VERIFICATION owners, CODEOWNERS, accepted schema family registry, all schema and fixture inventories, every schema-to-contract pairing, every schema-to-validator binding, CI path filters, current logs, correction consumers, and migration plan
+truth_posture: CONFIRMED target README and prior blob, canonical tests responsibility root, schema authority root, schemas/tests compatibility index, six directly surfaced executable schema-test modules, focused shared-runner fixture tests, generic top-level fixture harness behavior, bounded Hydrology, Hazards, USDM SourceDescriptor, and water-planning coverage, shared JSON Schema runner, recursive local schema registry, seven-validator aggregate runner, root Makefile schema/test targets, root Python and pytest dependencies, schema-validation workflow, validator-suite workflow, and mixed-maturity v1 schema family index at the pinned snapshot / PROPOSED complete schema inventory contract, recursive family discovery, required fixture manifests, metaschema validation beyond the configured workflow, contract-pairing enforcement, namespace policy, compatibility-lane migration, coverage report, required promotion check, and branch-protection status / CONFLICTED executable ownership under tests/schemas versus README-only compatibility placement under schemas/tests, generic harness top-level family allowlist versus the much broader v1 family tree, direct pytest coverage versus the seven-validator make schemas path, and schema-shape success versus evidence-policy-release truth / UNKNOWN exhaustive ignored/generated test inventory, exact collected case count, hosted pass state, full schema count, full fixture count, dynamic consumers, required-check configuration, promotion dependency, and production behavior / NEEDS VERIFICATION owners, CODEOWNERS, accepted schema family registry, all schema and fixture inventories, every schema-to-contract pairing, every schema-to-validator binding, current hosted logs, correction consumers, and migration plan
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 0165bbf59e9c7ce85148ff254ba723ef8c116a79
-  prior_blob: 0c5954cbc6ff761411f6d5df937e1e55f167e760
+  base_commit: cb8a46fff89861b8f0ca57c1c29bacf1fec885a5
+  prior_blob: 895e892294ac5d81df683e2dcc7cbf4b2ed88308
   direct_test_modules:
     - tests/schemas/test_common_contracts.py
+    - tests/schemas/test_evidence_ref_validator.py
     - tests/schemas/test_hydrology_alias_contracts.py
+    - tests/schemas/test_kdhe_hab_advisory_snapshot_contracts.py
+    - tests/schemas/test_usdm_source_descriptor_contracts.py
+    - tests/schemas/test_water_planning_contracts.py
+  focused_runner_test:
+    - tests/validators/test_jsonschema_runner.py
   compatibility_index:
     - schemas/tests/README.md
   execution_surfaces:
     - Makefile
     - .github/workflows/schema-validation.yml
+    - .github/workflows/source-descriptor-validate.yml
     - .github/workflows/validator-suite.yml
+  runner_change_evidence:
+    runner_prior_blob: ce05ae25d0cb6fc29a2ea41db6c65a99ca5e13e6
+    aggregate_runner_blob: 7595f40bafb70f8eb4af51d73a74923cf77bcd5b
+    schema_validation_workflow_prior_blob: fd0e53722b9d8406c5fde052672f760f00f2626b
+    source_descriptor_workflow_prior_blob: fc808375a73e0d4ddfdc80fd5f0199a0486c93ce
+    validator_suite_workflow_prior_blob: 1694afdd762ce515b53fc8e9d7d51324c2d0929d
+    local_result: PASS; 10 focused tests
   shared_validator_surfaces:
     - tools/validators/_common/jsonschema_runner.py
     - tools/validators/_common/local_resolver.py
@@ -48,18 +63,20 @@ related:
   - ../../tools/validators/_common/jsonschema_runner.py
   - ../../tools/validators/_common/local_resolver.py
   - ../../tools/validators/_common/run_all.py
+  - ../validators/test_jsonschema_runner.py
   - ../../Makefile
   - ../../pyproject.toml
   - ../../.github/workflows/schema-validation.yml
+  - ../../.github/workflows/source-descriptor-validate.yml
   - ../../.github/workflows/validator-suite.yml
 tags: [kfm, tests, schemas, json-schema, draft-2020-12, fixtures, validators, pytest, schema-ids, refs, aliases, hydrology, contracts, ci, drift, coverage, no-parallel-authority]
 notes:
-  - "v0.2 replaces a planning-oriented README with a repository-grounded account of the two confirmed test modules, their exact coverage, and their known blind spots."
+  - "v0.3 reconciles the seven-entry aggregate and shared fixture runner with focused regression coverage and current workflow behavior while preserving the schema-test authority boundary."
   - "The generic harness discovers only immediate *.schema.json files in seven hard-coded top-level families and only when a matching fixture directory exists."
   - "The Hydrology alias module explicitly covers decision_envelope, run_receipt, and evidence_bundle aliases with one valid fixture each and one added-property negative."
-  - "make test runs tests/schemas plus tests/contracts; make schemas runs five dedicated validator entry points. These are overlapping but non-identical proof paths."
-  - "schema-validation and validator-suite execute make schemas; they do not directly invoke pytest tests/schemas."
-  - "This revision changes documentation only and creates, moves, deletes, or activates no schema, contract, fixture, validator, test, workflow, package, policy, data, receipt, proof, release record, or public artifact."
+  - "make test runs tests/schemas plus tests/contracts; make schemas runs seven dedicated validator entry points. These are overlapping but non-identical proof paths."
+  - "schema-validation executes make schemas and pytest tests/schemas plus tests/contracts; validator-suite executes focused shared-runner tests, make schemas, and an EvidenceBundle rejection canary."
+  - "This README documents paired runner, test, workflow, and generated-receipt changes; it creates no schema, semantic contract, fixture payload, policy, proof, release record, or public artifact."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -86,7 +103,7 @@ notes:
 
 ## Quick navigation
 
-[Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-scope) · [Placement](#placement-and-authority) · [Inventory](#confirmed-repository-inventory) · [Commands](#current-execution-surfaces) · [Generic harness](#generic-contract-fixture-harness) · [Hydrology aliases](#hydrology-alias-tests) · [Resolver](#schema-resolution-and-validator-runtime) · [Coverage](#coverage-boundary-and-known-blind-spots) · [Fixtures](#fixture-contract) · [IDs and refs](#schema-id-reference-and-namespace-tests) · [Contracts](#contract-pairing-and-semantic-boundary) · [Compatibility](#schemas-tests-compatibility-boundary) · [CI](#ci-and-gate-acceptance) · [Security](#security-rights-sensitivity-and-data-minimization) · [Authoring](#test-authoring-contract) · [Validation](#validation) · [Done](#definition-of-done) · [Migration](#smallest-sound-improvement-sequence) · [Rollback](#correction-and-rollback) · [Backlog](#open-verification-backlog) · [Evidence](#evidence-basis)
+[Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-scope) · [Placement](#placement-and-authority) · [Inventory](#confirmed-repository-inventory) · [Commands](#current-execution-surfaces) · [Generic harness](#generic-contract-fixture-harness) · [Hydrology aliases](#hydrology-alias-tests) · [Resolver](#schema-resolution-and-validator-runtime) · [Coverage](#coverage-boundary-and-known-blind-spots) · [Fixtures](#fixture-contract) · [IDs and refs](#schema-id-reference-and-namespace-tests) · [Contracts](#contract-pairing-and-semantic-boundary) · [Compatibility](#schemas-tests-compatibility-boundary) · [CI](#ci-and-gate-acceptance) · [Security](#security-rights-sensitivity-and-data-minimization) · [Authoring](#test-authoring-contract) · [Validation](#validation) · [Done](#definition-of-done) · [Migration](#smallest-sound-improvement-sequence) · [Rollback](#correction-and-rollback) · [Backlog](#open-verification-backlog) · [Changelog](#changelog) · [Evidence](#evidence-basis)
 
 ---
 
@@ -96,21 +113,25 @@ notes:
 
 | Surface | Status at the pinned snapshot | Safe conclusion |
 |---|---|---|
-| `tests/schemas/README.md` | **CONFIRMED** | Existing v0.1 README is replaced in place; prior blob is pinned in metadata. |
+| `tests/schemas/README.md` | **CONFIRMED** | v0.3 updates the v0.2 guide in place; the prior blob is pinned in metadata. |
 | `tests/schemas/test_common_contracts.py` | **CONFIRMED executable pytest module** | Provides fixture-driven validation for a hard-coded set of immediate v1 schema families. |
+| `tests/schemas/test_evidence_ref_validator.py` | **CONFIRMED executable pytest module** | Exercises the EvidenceRef CLI with one valid and one missing-ref fixture. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | **CONFIRMED executable pytest module** | Provides explicit positive and extra-property-negative coverage for three Hydrology aliases. |
-| Other direct executable modules in `tests/schemas/` | **NOT SURFACED in bounded search** | Do not claim a larger direct inventory without recursive verification. |
+| `tests/schemas/test_kdhe_hab_advisory_snapshot_contracts.py` | **CONFIRMED executable pytest module** | Covers KDHE HAB snapshot shape, deterministic identity, lineage, scope, and fail-closed release posture. |
+| `tests/schemas/test_usdm_source_descriptor_contracts.py` | **CONFIRMED executable pytest module** | Covers the inactive USDM SourceDescriptor candidate and synthetic no-network connector fixtures. |
+| `tests/schemas/test_water_planning_contracts.py` | **CONFIRMED executable pytest module** | Covers fifteen water-planning schemas, positive/negative fixtures, identity separation, and bounded acceptance criteria. |
+| Other direct executable modules in `tests/schemas/` | **NOT SURFACED in complete tracked-lane inspection** | Ignored, generated, branch-local, or dynamic consumers remain unknown. |
 | Root Python project | **CONFIRMED scaffold** | Requires Python 3.11+, `jsonschema>=4.26,<5`, and optional `pytest>=9.1.1,<10`; sets `pythonpath = ["."]`. |
 | `schemas/` | **CONFIRMED machine-shape authority root** | Tests reference schemas; they do not define them. |
 | `schemas/contracts/v1/` | **CONFIRMED mixed-maturity tree** | Contains many family lanes, compatibility surfaces, scaffolds, domain paths, and schema files. |
 | `schemas/tests/` | **CONFIRMED README-only compatibility index in inspected evidence** | Executable ownership remains with accepted test roots unless formally migrated. |
 | Shared resolver/runner | **CONFIRMED executable Python** | Builds a repository-local registry and creates Draft 2020-12 validators. |
-| Aggregate validator runner | **CONFIRMED executable Python** | Runs five selected top-level validators with `--fixtures`; not a complete schema-tree traversal. |
+| Aggregate validator runner | **CONFIRMED executable Python** | Runs seven selected top-level validators with `--fixtures`; not a complete schema-tree traversal. |
 | `make test` | **CONFIRMED executable target** | Runs `python -m pytest tests/schemas tests/contracts -q`. |
 | `make schemas` | **CONFIRMED executable target** | Runs `python tools/validators/_common/run_all.py`. |
-| `schema-validation` workflow | **CONFIRMED** | Installs the root project and runs `make schemas`. |
-| `validator-suite` workflow | **CONFIRMED** | Runs `make schemas` and one EvidenceBundle invalid-fixture canary. |
-| Direct workflow invocation of `pytest tests/schemas` | **NOT SURFACED in the two inspected schema workflows** | Do not equate schema-validator workflow success with direct pytest schema-lane execution. |
+| `schema-validation` workflow | **CONFIRMED** | Installs declared test dependencies, checks schema/fixture inventory, runs `make schemas`, and runs `pytest tests/schemas tests/contracts`. |
+| `validator-suite` workflow | **CONFIRMED proposed-head wiring** | Runs ten focused shared-runner tests before `make schemas`, plus one EvidenceBundle invalid-fixture canary; hosted execution remains unverified. |
+| Direct workflow invocation of `pytest tests/schemas` | **CONFIRMED in `schema-validation`** | Direct pytest coverage remains distinct from the focused shared-runner unit suite and aggregate validators. |
 | Current test counts and pass state | **UNKNOWN** | Files and workflow definitions are not execution logs. |
 | Branch-protection or promotion requirement | **UNKNOWN** | Workflow presence does not prove required-check status. |
 | Production/public safety | **UNKNOWN** | Schema conformance is not evidence, policy, review, release, or deployment proof. |
@@ -258,9 +279,14 @@ schema-valid        = production behavior
 
 ```text
 tests/schemas/
+├── __init__.py
 ├── README.md
 ├── test_common_contracts.py
-└── test_hydrology_alias_contracts.py
+├── test_evidence_ref_validator.py
+├── test_hydrology_alias_contracts.py
+├── test_kdhe_hab_advisory_snapshot_contracts.py
+├── test_usdm_source_descriptor_contracts.py
+└── test_water_planning_contracts.py
 ```
 
 This is a bounded inventory from connector search and exact path reads. It does not prove the permanent absence of ignored, generated, branch-local, or unindexed files.
@@ -276,6 +302,7 @@ tools/validators/_common/
 Makefile
 pyproject.toml
 .github/workflows/schema-validation.yml
+.github/workflows/source-descriptor-validate.yml
 .github/workflows/validator-suite.yml
 ```
 
@@ -295,7 +322,11 @@ tools/validators/README.md
 | Module | Confirmed responsibility | Confirmed limits |
 |---|---|---|
 | `test_common_contracts.py` | Parameterizes selected immediate v1 schemas that have matching fixture directories; checks valid fixtures pass and invalid fixtures fail. | Hard-coded seven-family allowlist; non-recursive schema glob; missing fixture directories omit cases; no explicit minimum fixture count. |
+| `test_evidence_ref_validator.py` | Runs the EvidenceRef validator CLI against one valid and one missing-ref fixture and asserts exact exit/output polarity. | Narrow two-case entrypoint check; not full EvidenceRef semantics. |
 | `test_hydrology_alias_contracts.py` | Validates three Hydrology alias fixtures and rejects an injected unknown top-level property. | Only three aliases; one valid fixture per alias; no broad missing-field, ref, namespace, or expected-keyword matrix. |
+| `test_kdhe_hab_advisory_snapshot_contracts.py` | Exercises KDHE HAB snapshot schema fixtures plus deterministic identity, correction lineage, scope, and denied publication/alerting posture. | Bounded synthetic fixture family; no connector activation or live source verification. |
+| `test_usdm_source_descriptor_contracts.py` | Checks the inactive USDM SourceDescriptor candidate and deterministic no-network connector fixtures. | Candidate/fixture governance only; no live source, rights, release, or publication proof. |
+| `test_water_planning_contracts.py` | Exercises fifteen water-planning schema families and explicit identity, time, version, geometry, and region constraints. | Bounded fixtures and selected acceptance criteria; not source-truth or publication proof. |
 
 [Back to top](#top)
 
@@ -330,19 +361,21 @@ python tools/validators/_common/run_all.py
 |---|---|---|
 | `python -m pytest tests/schemas -q` | Direct pytest collection beneath this lane. | Validator CLI wiring outside imported runner behavior; full schema inventory; release safety. |
 | `make test` | `tests/schemas` and `tests/contracts`. | Policy, API, UI, E2E, runtime proof, release, and domain suites. |
-| `make schemas` | Five selected top-level validator wrappers with `--fixtures`. | Every schema file, every family, direct pytest modules, domain aliases beyond selected wrappers. |
-| `schema-validation` workflow | Root install and `make schemas`. | Direct `pytest tests/schemas`; test counts; branch-protection requirement. |
-| `validator-suite` workflow | `make schemas` plus a single EvidenceBundle invalid-fixture canary. | Comprehensive schema-lane collection or all invalid families. |
+| `make schemas` | Seven selected top-level validator wrappers with `--fixtures`. | Every schema file, every family, direct pytest modules, domain aliases beyond selected wrappers. |
+| `schema-validation` workflow | Declared test dependency install, schema/fixture inventory checks, `make schemas`, and `pytest tests/schemas tests/contracts`. | Complete semantic, evidence, policy, release, or public-safety coverage; branch-protection requirement. |
+| `validator-suite` workflow | Ten focused shared-runner tests before `make schemas`, plus an EvidenceBundle invalid-fixture canary. | Comprehensive schema-lane collection or all invalid families. |
 
-### Confirmed five-validator aggregate
+### Confirmed seven-validator aggregate
 
 `run_all.py` currently executes:
 
 1. `validate_source_descriptor.py`
-2. `validate_evidence_bundle.py`
-3. `validate_runtime_response_envelope.py`
-4. `validate_decision_envelope.py`
-5. `validate_run_receipt.py`
+2. `validate_evidence_ref.py`
+3. `validate_evidence_bundle.py`
+4. `validate_runtime_response_envelope.py`
+5. `validate_decision_envelope.py`
+6. `validate_run_receipt.py`
+7. `validate_ingest_receipt.py`
 
 The runner stops on the first nonzero return code. It does not dynamically discover every validator or every schema family.
 
@@ -351,8 +384,8 @@ The runner stops on the first nonzero return code. It does not dynamically disco
 ```text
 pytest tests/schemas     executable test-lane proof
 make schemas             selected validator-wrapper fixture proof
-schema-validation CI     make schemas
-validator-suite CI       make schemas + one negative canary
+schema-validation CI     inventory + make schemas + schema/contract pytest
+validator-suite CI       focused runner tests + make schemas + one negative canary
 ```
 
 These paths overlap but are not interchangeable.
@@ -581,13 +614,16 @@ Do not claim that every schema is itself validated against the Draft 2020-12 met
 The shared CLI runner:
 
 - accepts explicit files or `--fixtures`;
-- returns `2` when no files are provided and `--fixtures` is absent;
-- prints first validation errors for explicit file validation;
-- validates both valid and invalid files in an initial pass;
-- then separately enforces valid acceptance and invalid rejection for `--fixtures`;
-- returns nonzero on fixture-polarity failure.
+- returns `2` before schema loading when neither input mode is supplied;
+- preserves explicit-file validation and its first-error diagnostics;
+- sorts `valid/*.json`, then sorts `invalid/*.json`;
+- requires both fixture lanes to be nonempty;
+- emits `OK` for a schema-valid positive fixture;
+- emits `EXPECTED_FAIL` for a well-formed negative fixture rejected by the schema;
+- reserves `FAIL` for polarity failures, malformed JSON, validator exceptions, or fixture configuration/non-vacuity failures;
+- returns `1` when any fixture-mode failure occurs.
 
-The initial `validate_files` pass prints invalid fixtures as `FAIL`, even though later polarity logic expects them to fail. CI correctness is governed by final return code, not by interpreting every printed `FAIL` as a suite failure.
+`EXPECTED_FAIL` records schema rejection only. Expected-error sidecar matching remains a separate schema-test or workflow assertion.
 
 [Back to top](#top)
 
@@ -657,7 +693,10 @@ Domain schemas under:
 schemas/contracts/v1/domains/<domain>/
 ```
 
-are outside the generic harness. Only the three explicitly coded Hydrology aliases receive confirmed direct domain coverage in this lane.
+are outside the generic harness. Dedicated modules provide bounded Hydrology,
+KDHE Hazards, and water-planning coverage, while the USDM module checks a
+cross-domain SourceDescriptor candidate. These explicit cases do not establish
+complete domain-schema coverage.
 
 ### Compatibility blind spot
 
@@ -731,7 +770,11 @@ An invalid fixture should isolate one primary failure where practical:
 
 ### Nonempty requirement
 
-A mature harness should fail when a registered fixture family contains zero valid cases or zero invalid cases.
+Shared aggregate fixture mode now fails when either configured valid or invalid
+lane is empty. `schema-validation` also asserts nonempty lanes for the same
+seven configured families. The generic `test_common_contracts.py` glob can
+still complete vacuously for an empty matching family, so repository-wide
+fixture non-vacuity remains incomplete.
 
 ### Expected-error requirement
 
@@ -901,20 +944,17 @@ When executable files are discovered under `schemas/tests/`:
 
 | Workflow | Current command | Coverage meaning |
 |---|---|---|
-| `schema-validation` | `make schemas` | Five selected validator wrappers and their fixture families. |
-| `validator-suite` / `run-validators` | `make schemas` | Same selected validator aggregate. |
+| `schema-validation` | inventory checks, `make schemas`, `pytest tests/schemas tests/contracts` | Seven configured validator families plus the direct schema and contract pytest lanes. |
+| `validator-suite` / `run-validators` | focused shared-runner unit suite, then `make schemas` | Ten fixture-mode regression cases plus the same seven-validator aggregate. |
 | `validator-suite` / `ensure-fail-closed` | explicit invalid EvidenceBundle validation | One negative CLI canary. |
 | Root `make test` | `pytest tests/schemas tests/contracts -q` | Direct schema and contract pytest lanes when invoked. |
 
 ### Current gap
 
-The two inspected schema-oriented workflows do not directly run:
-
-```bash
-python -m pytest tests/schemas -q
-```
-
-A workflow may still reach schema behavior through validators, but that is not the same as collecting the direct test modules.
+`schema-validation` directly collects `tests/schemas` together with
+`tests/contracts`. `validator-suite` instead exercises the shared runner's
+fixture contract and aggregate wrappers. The two paths overlap, but neither is
+a complete schema-tree, semantic-contract, policy, evidence, or release gate.
 
 ### Required mature gate
 
@@ -1140,19 +1180,18 @@ PY
 | Result | Safe interpretation |
 |---|---|
 | Pytest passes | Collected assertions passed against the checked repository state. |
-| `make schemas` passes | Five selected validator fixture families passed the aggregate runner. |
+| `make schemas` passes | Seven selected validator fixture families passed the aggregate runner. |
 | Registry builds | Registered `$id` values were parseable and unique among included resources. |
 | Invalid fixture rejected | That fixture violated at least one tested schema rule. |
 | All checks green | Necessary structural proof only; policy/evidence/release remain separate. |
 
-### This documentation update
+### This implementation slice
 
-For this README-only revision:
-
-- repository tests were not executed;
-- schema validators were not executed;
-- workflow logs were not used as pass evidence;
-- no schema, test, fixture, validator, or workflow behavior changed.
+- the focused standard-library shared-runner suite passed all ten cases locally;
+- Python compilation and workflow YAML parsing passed locally;
+- dependency-backed aggregate and schema/contract pytest execution were not run locally because `jsonschema`, `referencing`, and `pytest` are unavailable in the isolated runtime;
+- hosted workflow results remain **NEEDS VERIFICATION**;
+- no schema, semantic contract, fixture payload, policy, release, or publication behavior changes.
 
 [Back to top](#top)
 
@@ -1203,10 +1242,12 @@ This lane is mature only when:
 
 ### CI acceptance complete
 
-- [ ] Direct schema pytest runs in CI.
-- [ ] Dedicated validator aggregate runs in CI.
-- [ ] At least one negative canary proves fail-closed behavior.
-- [ ] CI fails on zero tests and zero fixture cases.
+- [x] Direct schema pytest runs in `schema-validation`.
+- [x] The dedicated validator aggregate runs in both schema workflows.
+- [x] An EvidenceBundle negative canary proves the reviewed rejection path.
+- [x] The seven configured aggregate fixture families fail on an empty valid or invalid lane.
+- [ ] Direct pytest collection has an explicit fail-on-zero-test assertion.
+- [ ] Every promoted schema family fails on zero fixture cases.
 - [ ] Coverage counts and omissions are visible.
 - [ ] Schema, fixture, validator, and test path triggers are complete.
 - [ ] Required-check and promotion significance are documented.
@@ -1243,8 +1284,8 @@ This lane is mature only when:
 
 ### Phase 3 — Add coverage closure checks
 
-- fail on promoted schemas without fixtures;
-- fail on empty valid/invalid sets;
+- fail on promoted schemas outside the seven configured families when fixtures are absent;
+- extend current aggregate nonempty-lane enforcement to the accepted promoted inventory;
 - fail on orphan fixtures;
 - fail on missing expected diagnostics where required.
 
@@ -1277,8 +1318,7 @@ Do not silently broaden collection without reviewing compatibility and scaffold 
 
 ### Phase 7 — Align CI
 
-- run direct schema pytest;
-- run validator wrappers;
+- preserve the implemented direct schema pytest and validator-wrapper checks;
 - report counts;
 - fail on zero cases;
 - add complete path triggers;
@@ -1376,10 +1416,14 @@ Rollback is required when a change:
 Before merge, leave the review unmerged or restore prior blob:
 
 ```text
-0c5954cbc6ff761411f6d5df937e1e55f167e760
+895e892294ac5d81df683e2dcc7cbf4b2ed88308
 ```
 
 After merge, revert the implementation commit or pull request through normal Git history. Do not reset or rewrite shared history.
+
+When rolling back this runner slice, restore the runner, focused tests, workflow
+diagnostics, and owning documentation together. Do not leave `EXPECTED_FAIL`
+prose attached to code that emits the prior ambiguous fixture output.
 
 [Back to top](#top)
 
@@ -1433,8 +1477,9 @@ After merge, revert the implementation commit or pull request through normal Git
 
 ### CI verification
 
-- [ ] Add direct `pytest tests/schemas` to an accepted workflow.
-- [ ] Add fail-on-zero-test and fail-on-zero-fixture controls.
+- [x] Direct `pytest tests/schemas tests/contracts` runs in `schema-validation`.
+- [x] Configured aggregate families fail on an empty valid or invalid fixture lane.
+- [ ] Add an explicit fail-on-zero-direct-test control and extend fixture non-vacuity to every promoted family.
 - [ ] Add complete path filters.
 - [ ] Emit schema/fixture/test counts.
 - [ ] Confirm required-check status.
@@ -1453,26 +1498,45 @@ After merge, revert the implementation commit or pull request through normal Git
 
 ---
 
+<a id="changelog"></a>
+
+## Changelog
+
+| Date | Version | Change |
+|---|---|---|
+| 2026-08-01 | v0.3 | Reconciled six direct schema-test modules, the seven-entry aggregate, sorted nonempty fixture lanes, `EXPECTED_FAIL`/`FAIL` semantics, ten focused runner tests, and current CI definitions. |
+| 2026-07-16 | v0.2 | Replaced the planning-oriented predecessor with a repository-grounded account of the then-inspected direct modules, coverage limits, and CI surfaces. |
+
+[Back to top](#top)
+
+---
+
 <a id="evidence-basis"></a>
 
 ## Evidence basis
 
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
-| Prior `tests/schemas/README.md` | **CONFIRMED** | Existing lane purpose, prior blob, and stale verification claims. | Did not reflect executable modules or current CI. |
+| Prior v0.2 `tests/schemas/README.md` | **CONFIRMED** | Existing lane purpose, prior blob, and verification lineage. | Did not reflect all six executable modules or current runner/CI behavior. |
 | `tests/README.md` | **CONFIRMED** | Canonical tests root and machine-shape test responsibility. | Root README still marks broad implementation depth as needing verification. |
 | `schemas/README.md` | **CONFIRMED** | Machine-shape authority and separation from tests/contracts/policy/data/release. | Does not prove complete schema inventory or coverage. |
 | `schemas/contracts/v1/README.md` | **CONFIRMED mixed-maturity index** | Broad family tree, compatibility drift, scaffolds, and promotion expectations. | Parent index is not schema-file proof. |
 | `schemas/tests/README.md` | **CONFIRMED compatibility index** | README-only valid/invalid placement tree and executable-home warning. | Does not prove absence of all executable files recursively. |
 | `test_common_contracts.py` | **CONFIRMED executable test** | Seven-family immediate schema discovery, fixture gating, valid/invalid assertions, expected-error matching. | Non-recursive; omits schemas without fixture dirs; no nonempty-case assertion. |
+| `test_evidence_ref_validator.py` | **CONFIRMED executable test** | Exact CLI success/failure polarity for two EvidenceRef fixtures. | Narrow entrypoint coverage. |
 | `test_hydrology_alias_contracts.py` | **CONFIRMED executable test** | Three alias positives and added-property negatives. | Narrow Hydrology-only coverage. |
+| `test_kdhe_hab_advisory_snapshot_contracts.py` | **CONFIRMED executable test** | KDHE HAB snapshot schema, identity, lineage, scope, and denied-publication conditions. | Synthetic fixtures; no live source or connector proof. |
+| `test_usdm_source_descriptor_contracts.py` | **CONFIRMED executable test** | Inactive USDM descriptor and no-network fixture posture. | Candidate governance checks; no source, rights, release, or publication proof. |
+| `test_water_planning_contracts.py` | **CONFIRMED executable test** | Fifteen water-planning schemas and selected domain invariants. | Bounded fixtures and acceptance criteria only. |
 | `jsonschema_runner.py` | **CONFIRMED executable runner** | Draft 2020-12 validator construction, file/fixture validation, exit codes. | No explicit metaschema check in inspected code. |
 | `local_resolver.py` | **CONFIRMED executable resolver** | Recursive v1 registry, missing-ID skip, duplicate-ID rejection. | Does not require all schemas to have IDs or define namespace policy. |
-| `run_all.py` | **CONFIRMED executable aggregate** | Five selected validator wrappers and fail-fast execution. | Not dynamic and not complete schema-tree coverage. |
+| `run_all.py` | **CONFIRMED executable aggregate** | Seven selected validator wrappers and fail-fast execution. | Not dynamic and not complete schema-tree coverage. |
 | Root `Makefile` | **CONFIRMED** | `make test` and `make schemas` command definitions. | Help text calls the repo a greenfield scaffold; target presence is not pass evidence. |
 | Root `pyproject.toml` | **CONFIRMED** | Python 3.11+, jsonschema and pytest dependency posture, pytest path config. | Does not prove installed environment or current run. |
-| `schema-validation.yml` | **CONFIRMED workflow definition** | Root install and `make schemas`. | Does not directly run the schema pytest lane. |
-| `validator-suite.yml` | **CONFIRMED workflow definition** | Aggregate validators and one negative EvidenceBundle canary. | Not complete direct schema-test coverage. |
-| Current-session execution | **NOT RUN** | Documentation-only connector workflow. | No current test, validator, workflow, or production pass claim. |
+| `schema-validation.yml` | **CONFIRMED workflow definition** | Inventory checks, aggregate validators, and direct schema/contract pytest execution. | Hosted proposed-head result remains unverified. |
+| `source-descriptor-validate.yml` | **CONFIRMED workflow definition** | SourceDescriptor validation and aligned shared-runner diagnostics. | Does not establish source activation, rights, release, or publication authority. |
+| `validator-suite.yml` | **CONFIRMED proposed-head workflow definition** | Ten focused shared-runner tests, aggregate validators, and one negative EvidenceBundle canary. | Not complete direct schema-test coverage. |
+| `tests/validators/test_jsonschema_runner.py` | **CONFIRMED focused unit suite** | Ten deterministic cases cover fixture ordering, lane non-vacuity, polarity, malformed JSON, validator exceptions, missing inputs, and missing fixture configuration. | Uses synthetic validator doubles; dependency-backed aggregate behavior remains a separate check. |
+| Current-session execution | **PASS / LIMITED** | Ten focused tests and Python/workflow syntax checks passed locally. | Dependency-backed aggregate and hosted workflow results remain unverified. |
 
 [Back to top](#top)
