@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.8
-status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; shared-validator-runtime-executable; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.9
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; focused-e2e-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; shared-validator-runtime-executable; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
 updated: 2026-07-31
 supersedes: v0.1 planning-oriented validator-test README
 policy_label: public-doc; tests; validators; json-schema; entrypoints; fixtures; deterministic; no-network; fail-closed; coverage-aware; non-authoritative; correction-aware; rollback-aware
 current_path: tests/validators/README.md
-truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness unit suite, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, focused no-network IngestReceipt schema/semantic/source-head/artifact/byte/outcome suite, shared validator runtime under tools/validators/_common, current seven-entry aggregate, existing schema/contract tests, deterministic placeholder, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED seven-entry aggregate versus broader executable validator inventory and legacy shared-runner fixture-output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
+truth_posture: CONFIRMED historical v0.2 snapshot and prior blob, canonical tests responsibility root, focused ci_readiness and e2e_readiness unit suites, repository-control state/schema/digest/scope/terminal-divergence suite, repository-transition-authorization schema/parser/base-head-owner-expiry/CLI suite, focused pnpm audit readiness/result/CLI suite, focused local-only documentation link-check suite, focused no-network IngestReceipt schema/semantic/source-head/artifact/byte/outcome suite, shared validator runtime under tools/validators/_common, current seven-entry aggregate, existing schema/contract tests, deterministic placeholder, readiness-hold, dependency-report, and local-link classification, CLI exit polarity, non-vacuity, and fail-closed negative cases / PROPOSED trusted-base repository-control workflow pending hosted execution and ruleset coupling, composed E2E suite, broader helper and entrypoint coverage, complete manifest, CI artifact, promotion dependency, correction tests, migration plan, and rollback drills / CONFLICTED seven-entry aggregate versus broader executable validator inventory and legacy shared-runner fixture-output/polarity gaps / UNKNOWN exhaustive validator and consumer inventory, coverage, mutation score, flake rate, production invocation, emitted ValidationReport objects, and release dependency / NEEDS VERIFICATION accepted owners, CODEOWNERS, required-check status, initiating-client attribution, broader stable public helper API, complete bindings, artifact retention, CI ownership, resource budgets, exact-head dependency audit, and operational rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
@@ -87,6 +87,12 @@ pnpm_audit_change_evidence:
   workflow: .github/workflows/dependency-scan.yml
   authority_record: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5122442558
   workflow_integration: proposed_locked_pnpm_audit_with_point_in_time_registry_query
+e2e_readiness_change_evidence:
+  base_commit: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
+  implementation: tools/validators/e2e_readiness.py
+  focused_test: tests/validators/test_e2e_readiness.py
+  workflow: .github/workflows/e2e-smoke.yml
+  held_boundary: implemented_explorer_build_and_unit_test_plus_absent_composed_browser_api_e2e
 related:
   - ../README.md
   - ../schemas/README.md
@@ -97,6 +103,7 @@ related:
   - ../schemas/test_common_contracts.py
   - ../schemas/test_hydrology_alias_contracts.py
   - test_ci_readiness.py
+  - test_e2e_readiness.py
   - test_repository_control.py
   - test_repository_transition_authorization.py
   - test_repository_control_incident_1789.py
@@ -108,6 +115,7 @@ related:
   - ../fixtures/governance/repository_control/README.md
   - ../../tools/validators/README.md
   - ../../tools/validators/ci_readiness.py
+  - ../../tools/validators/e2e_readiness.py
   - ../../tools/validators/repository_control/validate_repository_control.py
   - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tools/validators/dependencies/README.md
@@ -134,10 +142,12 @@ related:
   - ../../.github/workflows/schema-validation.yml
   - ../../.github/workflows/validator-suite.yml
   - ../../.github/workflows/dependency-scan.yml
+  - ../../.github/workflows/e2e-smoke.yml
   - ../../.github/workflows/link-check.yml
   - ../../.github/workflows/repository-control.yml
 tags: [kfm, tests, validators, repository-control, dependency-audit, pnpm, json-schema, pytest, fixtures, entrypoints, cli, exit-codes, diagnostics, no-network, fail-closed, coverage, correction, rollback]
 notes:
+  - "v0.9 adds focused standard-library proof for the static E2E readiness boundary, including the implemented Explorer scripts, explicit composed-suite hold, exact placeholder inventory, surfaced-E2E detection, safe inputs, deterministic diagnostics, and CLI polarity."
   - "v0.7 adds focused standard-library proof for local Markdown files, directories, images, fragments, path boundaries, external-link abstention, determinism, and CLI polarity; it does not request external URLs or prove document truth."
   - "v0.6 adds focused no-network transition-authorization proof and one trusted-base, read-only pull_request_target workflow; the workflow remains advisory until separately required by the main ruleset and cannot distinguish a human from an app using the same owner identity."
   - "v0.5 adds focused synthetic no-network proof for pnpm manager/workspace/lockfile readiness and PASS/REGRESSION/ERROR audit-report classification; it does not make the registry query deterministic or authoritative."
@@ -185,7 +195,7 @@ notes:
 
 ### Safe conclusion
 
-`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. Focused direct executable suites now prove `ci_readiness.py`, the repository-control state/evaluator slice, the locked-pnpm audit readiness/result classifier, the local documentation link checker, and the IngestReceipt validator prerequisite; they do not establish broad unit coverage for the other shared helpers or validator entrypoints.
+`tests/validators/` is the correct responsibility lane for validator unit tests, shared-runtime tests, and validator-entrypoint contract tests. Focused direct executable suites now prove `ci_readiness.py`, `e2e_readiness.py`, the repository-control state/evaluator slice, the locked-pnpm audit readiness/result classifier, the local documentation link checker, and the IngestReceipt validator prerequisite; they do not establish a composed E2E suite or broad unit coverage for the other shared helpers or validator entrypoints.
 
 The repository nevertheless contains working validator implementation and adjacent proof:
 
@@ -204,6 +214,13 @@ These are meaningful implementation facts. They do **not** establish direct unit
 
 `test_ci_readiness.py` separately confirms the placeholder-readiness checker’s accepted AST shapes, rejection of substantive tests and validators, denial of unexpected non-Python sources in both root categories, syntax and missing-root failures, symlink/path escape denial, deterministic diagnostics, CLI exit polarity, and non-vacuity. It does not execute or validate the domain code it classifies.
 
+`test_e2e_readiness.py` confirms the static readiness checker against synthetic
+and current-tree inputs, including the implemented Explorer script mapping,
+required UI/API orchestration markers, the exact five-file placeholder lane,
+new E2E script/file detection, missing markers, placeholder drift, symlink
+denial, deterministic bounded diagnostics, and CLI exit polarity. It does not
+execute Explorer, Governed API, a browser, or a composed journey.
+
 `test_repository_control.py` and `test_repository_control_incident_1829.py` confirm the repository-control state schema, digest, scope, fail-closed claim semantics, observation-time base binding, non-active projection behavior after later head movement, and the PR #1829 terminal-divergence case. They do not identify the client that initiated that merge, install a trusted workflow, or make the tracked projection self-refreshing.
 
 `test_pnpm_audit_readiness.py` confirms exact manager and Node-engine posture, workspace-definition agreement, lockfile importer closure, competing-lockfile denial, safe input handling, deterministic JSON, threshold polarity, malformed or unavailable audit errors, and CLI exits. Its fixtures are synthetic and no-network. It does not prove current registry availability, vulnerability absence, dependency provenance, admission, release, deployment, or publication.
@@ -212,7 +229,7 @@ These are meaningful implementation facts. They do **not** establish direct unit
 
 | Limitation | Current evidence | Consequence |
 |---|---|---|
-| Focused direct suites only | `test_ci_readiness.py` covers placeholder readiness; repository-control tests cover the bounded state/evaluator slice. | Other helper branches, entrypoints, and fixture families still lack complete direct unit coverage. |
+| Focused direct suites only | `test_ci_readiness.py` covers placeholder readiness; `test_e2e_readiness.py` covers one static E2E hold; repository-control tests cover the bounded state/evaluator slice. | No composed E2E suite is established, and other helper branches, entrypoints, and fixture families still lack complete direct unit coverage. |
 | Aggregate is hard-coded | `run_all.py` names seven top-level validators. | Other executable validators may not run under `make schemas`. |
 | Fixture mode prints expected invalids as `FAIL` | `validate_files()` evaluates valid and invalid files together before polarity checks. | Human logs can look failed while the process ultimately succeeds. |
 | Empty fixture sets are accepted | Fixture mode has no nonempty valid/invalid assertion. | A missing or emptied fixture family can produce a green result. |
@@ -298,6 +315,7 @@ tests/validators/
 │   ├── README.md
 │   └── test_docs_link_check.py
 ├── test_ci_readiness.py
+├── test_e2e_readiness.py
 ├── test_repository_control.py
 ├── test_repository_control_incident_1789.py
 ├── test_repository_control_incident_1790.py
@@ -321,6 +339,14 @@ tests/validators/pytest.ini
 This bounded map is not proof against ignored, generated, historical, branch-local, dynamically collected, package-local, domain-local, external, or uninspected tests.
 
 `test_ci_readiness.py` is now confirmed focused proof for `tools/validators/ci_readiness.py`. Its non-vacuity rule is category-wide: every supplied root must exist and be path-safe, at least one Python file must be discovered across the complete test-root set and across the complete validator-root set, and every discovered Python file must be an exact recognized placeholder. README-only sibling roots do not fail merely for containing no Python. Within both root categories, only recognized Python placeholders, `README`/`LICENSE`/`NOTICE`, `.md`/`.markdown`/`.rst`/`.txt` documentation, `.gitkeep`, and whitespace-only extensionless sentinels are allowed; other regular files fail closed as `unexpected_test_source` or `unexpected_validator_source` so a readiness hold cannot hide substantive non-Python material.
+
+`test_e2e_readiness.py` is focused proof for
+`tools/validators/e2e_readiness.py`. Twelve deterministic `unittest` cases cover a
+synthetic accepted hold, the pinned current-tree boundary, the prior TODO-only
+Explorer regression, surfaced root/Explorer E2E scripts and implementation
+files, inventory and placeholder drift, missing UI or workflow markers, symlink
+refusal, non-echoing diagnostics, and CLI polarity. A pass confirms only the
+static readiness contract.
 
 The repository-control suites are confirmed focused proof for `tools/validators/repository_control/`. The original evaluator binds an active claim to `base.current_main_sha` as the SHA observed at `base.observed_at`, while a held or otherwise non-active projection does not become stale merely because the live branch head later moves. The PR #1829 fixture preserves the merged event as terminal divergence even when an input attempts to mark it not applicable.
 
@@ -372,6 +398,7 @@ tools/validators/validate_ingest_receipt.py
 | Test | Primary assertion | Why it is adjacent rather than direct lane coverage |
 |---|---|---|
 | `tests/validators/test_ci_readiness.py` | Exact placeholder AST shapes, substantive/syntax/missing/unsafe/symlink/path refusal, unexpected non-Python test/validator-source denial, allowed documentation/sentinel files in both categories, category-wide non-vacuity, README-only sibling roots, deterministic diagnostics, repeated-root behavior, and CLI exit polarity. | Direct focused coverage for `ci_readiness.py`; not broad coverage of schema runners or domain validators. |
+| `tests/validators/test_e2e_readiness.py` | Locked Explorer scripts, UI/API workflow markers, root holds, exact E2E placeholder inventory, surfaced E2E detection, unsafe-input denial, deterministic diagnostics, and CLI polarity. | Direct focused coverage for `e2e_readiness.py`; not a browser/API journey or E2E coverage. |
 | `tests/validators/test_repository_control.py`, `test_repository_control_incident_1829.py`, and `test_repository_transition_authorization.py` | State schema/digest/scope, claim-state gating, observation-time base semantics, terminal divergence, and strict exact-head owner transition records. | Direct focused coverage; hosted workflow execution, required-check settings, human-versus-app identity, and initiating-client attribution remain separate. |
 | `tests/validators/docs/link-check/test_docs_link_check.py` | Local files, directories, images, heading/explicit anchors, path escape, exact case, external abstention, determinism, and CLI polarity. | Direct focused coverage for the bounded inline Markdown checker; no external availability, citation, truth, or release claim. |
 | `tests/validators/test_validate_ingest_receipt.py` | Receipt and SourceDescriptor schema/format checks, time order, placeholder denial, source-head and exact local artifact digest binding, byte totals, SUCCESS gating, deterministic non-echoing output, and fixture polarity. | Direct focused coverage for `validate_ingest_receipt.py`; no live source, KWO host/media profile, connector, activation, proof, release, or publication claim. |
@@ -874,6 +901,15 @@ Run the confirmed focused placeholder-readiness suite:
 python -m pytest tests/validators/test_ci_readiness.py -q
 ```
 
+Run the confirmed focused E2E-readiness suite without pytest:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_e2e_readiness.py' \
+  --verbose
+```
+
 Run the confirmed focused repository-control suites:
 
 ```bash
@@ -910,6 +946,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | `validator-suite` workflow | `make schemas` plus one invalid EvidenceBundle canary. |
 | `schema-validation` workflow | `make schemas`. |
 | focused `pytest tests/validators/test_ci_readiness.py` | Confirmed exact placeholder classification, fail-closed path/input and unexpected test/validator-source behavior, explicit documentation/sentinel allowances in both root categories, deterministic output, non-vacuity, and CLI polarity for `ci_readiness.py`. |
+| focused standard-library E2E-readiness suite | Confirmed locked Explorer/UI/API/root-hold inputs, exact placeholder inventory, surfaced-E2E detection, safe paths, deterministic output, and explicit-hold CLI polarity for `e2e_readiness.py`; no application code or composed journey runs. |
 | focused repository-control pytest set | Confirmed state/schema/digest/scope validation, active-claim observation binding, non-active later-head behavior, PR #1829 terminal-divergence refusal, and strict exact-head transition-authorization parsing. The proposed trusted-base workflow remains advisory until separately required. |
 | focused `pytest tests/validators/test_pnpm_audit_readiness.py` | Confirmed manager/engine/workspace/lockfile preconditions, importer closure, competing-lockfile and unsafe-input denial, deterministic output, audit threshold and error polarity, and CLI exits. Networked advisory truth remains outside the fixture suite. |
 | focused standard-library docs link-check suite | Confirmed local inline Markdown target/fragment behavior, path-boundary denial, external-target abstention, deterministic output, and CLI polarity. Historical documents and external availability remain outside scope. |
@@ -1157,6 +1194,7 @@ Each phase should be a small, reversible PR with clear rollback and no authority
 | `tools/validators/README.md` | CONFIRMED | Validator implementation root and broad routing map. | Parent metadata understates now-verified executable shared runtime. |
 | `tools/validators/ci_readiness.py` | CONFIRMED executable | Python 3.9-compatible, standard-library AST classification, safe repeated-root inspection, unexpected test/validator-source denial, bounded diagnostics, and CLI polarity. | Placeholder readiness only; it does not run tests or validators or establish domain truth. |
 | `tests/validators/test_ci_readiness.py` | CONFIRMED executable test | Allowed exact forms and documentation/sentinels in both categories, substantive and unexpected-source rejection, syntax/missing/path/symlink failures, category-wide non-vacuity, README-only siblings, determinism, and CLI outcomes. | Focused checker coverage, not complete validator-suite coverage. |
+| `tools/validators/e2e_readiness.py` and `tests/validators/test_e2e_readiness.py` | CONFIRMED executable and executable test | Static no-network inspection of the implemented Explorer baseline, adjacent workflow markers, root holds, exact E2E placeholder inventory, surfaced-suite changes, safe inputs, deterministic diagnostics, and explicit hold output. | No service, browser, API journey, evidence resolution, policy decision, release, deployment, or publication. |
 | `control_plane/repository_control_state.yaml` and its schema/contract | CONFIRMED tracked projection | Version 2 observation-time base semantics, digest closure, governed claim/settings state, and bounded authorization/evidence references. | A tracked snapshot is not a live branch-head oracle or a trusted check result. |
 | `tools/validators/repository_control/` and focused tests | CONFIRMED executable and executable tests | State/context validation, active claim binding, held-state behavior after later head movement, terminal-divergence refusal, and strict transition-record validation. | Hosted guard execution, required-check mutation, human-versus-app distinction, and complete incident attribution remain unproved. |
 | `.github/workflows/repository-control.yml` | PROPOSED exact workflow definition | Trusted-base-only checkout, full-SHA checkout action pin, read-only token, bounded issue/event input, and stable check name. | Advisory until required by ruleset `15484585`; cannot distinguish a human from an app acting as the owner. |
