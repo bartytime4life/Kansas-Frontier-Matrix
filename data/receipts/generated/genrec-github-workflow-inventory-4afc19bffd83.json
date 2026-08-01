@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-github-workflow-inventory-4afc19bffd83",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/README.md",
+    ".github/workflows/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/README.md": "sha256:dcedad134aa7747576ee9cf023ebc3ed7b5dc60eef46c480dd3ab29db4a51480",
+    ".github/workflows/README.md": "sha256:fb80b143087b0f9774b53a64812442edadfe007d3a89f6de3e0f600dcf114f30"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5.6 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c455e51be776a355a392284711898af092fb423f",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "docs/doctrine/directory-rules.md@c455e51be776a355a392284711898af092fb423f",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c455e51be776a355a392284711898af092fb423f",
+      ".github/workflows/@c455e51be776a355a392284711898af092fb423f"
+    ]
+  },
+  "truth_labels": {
+    ".github/README.md": "CONFIRMED",
+    ".github/workflows/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-and-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-static-inventory",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "changed-doc-local-link-and-fragment-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "link-checker-unit-tests-13",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-json-parse-and-hash-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-draft-2020-12-schema",
+      "outcome": "SKIPPED",
+      "reason": "The jsonschema Python package was unavailable and the no-network validation posture prohibited dependency installation."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "A pre-edit environment probe exited before validation because the jsonschema dependency was unavailable; targeted standard-library checks were used without downloading dependencies."
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this process-memory receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-c455e51be776a355a392284711898af092fb423f",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c455e51be776a355a392284711898af092fb423f"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@c455e51be776a355a392284711898af092fb423f"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c455e51be776a355a392284711898af092fb423f"
+    },
+    {
+      "id": "WORKFLOW-TREE-c455e51be776",
+      "validated": true,
+      "evidence_ref": ".github/workflows/@c455e51be776a355a392284711898af092fb423f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T01:29:49Z",
+  "emitter": "openai/codex-gpt-5.6-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One canonical process-memory receipt for a bounded two-document workflow-inventory reconciliation. It proves neither review, policy approval, release, publication, deployment, nor repository completeness. Rollback is to close the unmerged draft pull request or revert the documentation commit and its paired receipt through a reviewed branch."
+}
