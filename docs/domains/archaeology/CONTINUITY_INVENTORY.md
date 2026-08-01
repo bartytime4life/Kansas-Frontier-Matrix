@@ -528,7 +528,7 @@ This document is done enough to enter the repository when:
   [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — archaeology schemas (ADR-0001 default; vs `schemas/contracts/v1/archaeology/` in Atlas §24.13 / ENCY §7.13 — `OQ-CI-02`) ·
   [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/) — archaeology object-meaning Markdown ·
   [`schemas/contracts/v1/receipts/redaction_receipt.schema.json`](../../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) — §23.2 receipt schema ·
-  [`schemas/contracts/v1/release/map_release_manifest.schema.json`](../../../schemas/contracts/v1/release/map_release_manifest.schema.json) — §23.2 manifest schema ·
+  [`schemas/contracts/v1/map/map_release_manifest.schema.json`](../../../schemas/contracts/v1/map/map_release_manifest.schema.json) — §23.2 manifest schema ·
   [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — `GENERATED_RECEIPT.json` schema (`[CONTRACT v3.0]` §34.1, §47)
 - **ADR entries**: <!-- TODO: link archaeology-relevant ADRs (sensitive-geometry policy, candidate-promotion rule, steward-authority model, OQ-CI-01–08 proposals) once filed. -->
 
