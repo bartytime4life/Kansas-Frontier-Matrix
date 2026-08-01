@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.7
+version: v0.8
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
@@ -14,8 +14,8 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: c455e51be776a355a392284711898af092fb423f
-  workflow_inventory_snapshot: c455e51be776a355a392284711898af092fb423f
+  read_commit: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
+  workflow_inventory_snapshot: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
   current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
@@ -30,6 +30,9 @@ related:
   - ../../docs/doctrine/ai-build-operating-contract.md
   - ../../docs/adr/README.md
   - ../../tools/validators/README.md
+  - ../../tools/validators/e2e_readiness.py
+  - ../../tests/validators/test_e2e_readiness.py
+  - ../../tests/e2e/README.md
   - ../../policy/
   - ../../schemas/
   - ../../contracts/
@@ -37,6 +40,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.8 replaces the stale inline exact-TODO Explorer assumption in e2e-smoke with a tested repository-owned readiness validator; the composed E2E suite remains explicitly held."
   - "The v0.6 prior README bytes and all 44 current-main workflow files were inspected at main@c455e51be776a355a392284711898af092fb423f."
   - "The detailed 41-file workflow inventory remains lineage at 1180cf7ec53d5acbbb859a39d93c1d129ec83df9; v0.7 reconciles the complete current 44-file inventory, including repository-control.yml and link-check.yml as implemented orchestration."
   - "Workflow maturity groups describe inspected files and steps; they do not certify current run success, branch protection, release readiness, or KFM publication."
@@ -112,7 +116,7 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ### Current document state
 
-- **CONFIRMED:** this README and all 44 current-main workflow files were read on `main@c455e51be776a355a392284711898af092fb423f`.
+- **CONFIRMED:** this README and all 44 current-main workflow files were read on `main@f4b6aea4bd7351339a32e2cd5c3b10edbe068968`.
 - **CONFIRMED:** `repository-control.yml` is tracked on `main` and is the only active `pull_request_target` workflow.
 - **CONFIRMED / LINEAGE:** the detailed static inventory below was generated from `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` and documented 41 tracked `.yml` workflows.
 - **CONFIRMED:** the current tree has 44 `.yml` workflows, 44 explicit top-level permission blocks, one privileged PR trigger, no self-hosted runner or direct `secrets.*` expression, one ordinary write grant, and the mixed action-pinning inventory below.
@@ -326,13 +330,16 @@ runtime, UI, policy, proof, release, or publication readiness.
 
 These jobs intentionally expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim.
 
-The current E2E inspection accepts only the root manifest's exact fail-closed
-`WORKFLOW_HOLD` scripts and still runs no composed browser/API journey. The
-Focus mock inspection relies on structured synthetic, non-authoritative,
-do-not-publish, expected-`ABSTAIN` markers and still produces no runtime
-response. The rollback drill relies on ADR-0015's structured draft/proposed and
-held/alias-absent markers and remains read-only. None of these checks establishes
-UI readiness.
+The current E2E inspection calls the repository-owned standard-library
+`e2e_readiness.py` checker. It confirms the root manifest's exact fail-closed
+`WORKFLOW_HOLD` scripts, the implemented Explorer Web build/unit-test baseline,
+the adjacent UI/API orchestration markers, and the exact bounded placeholder
+inventory while still running no composed browser/API journey. The Focus mock
+inspection relies on structured synthetic, non-authoritative, do-not-publish,
+expected-`ABSTAIN` markers and still produces no runtime response. The rollback
+drill relies on ADR-0015's structured draft/proposed and held/alias-absent
+markers and remains read-only. Explorer UI build/unit-test readiness is separate
+from composed E2E, runtime, evidence, policy, release, or publication readiness.
 
 ### Command-bearing and partial gates
 
@@ -493,6 +500,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-07-31 | v0.8 | Replaced `e2e-smoke`'s stale inline TODO-only Explorer assumption with the tested no-network `e2e_readiness.py` checker; documented the implemented Explorer build/unit-test baseline and preserved the explicit composed-suite hold. |
 | 2026-07-31 | v0.7 | Reconciled all 44 workflows to current `main@c455e51…`; converted the repository-control guard from proposed-head language to current implementation fact while keeping ruleset enforcement unverified; refreshed static permission, trigger, runner, secret, write-scope, action-pin, and inventory evidence. |
 | 2026-07-30 | v0.6 | Reconciled the current 43-file inventory plus the proposed trusted-base repository transition guard; documented its `pull_request_target` threat model, read-only token, immutable checkout pin, advisory check status, and human-versus-app attribution limit. |
 | 2026-07-29 | v0.5 | Reconciled shared domain hold semantics and the bounded E2E, Focus mock, and rollback-drill readiness checks with current structured repository evidence; preserved explicit holds and no UI/runtime readiness claim. |

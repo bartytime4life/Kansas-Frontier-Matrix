@@ -1,7 +1,8 @@
 # KFM end-to-end smoke readiness workflow.
-# Status: PROPOSED bounded readiness checks plus explicit holds; an accepted
-# executable Explorer Web + Governed API + deterministic mock-runtime E2E suite
-# is not established in current repository evidence.
+# Status: CONFIRMED bounded readiness checks plus explicit holds; Explorer Web
+# has a separately validated build/test baseline, while an accepted executable
+# Explorer Web + Governed API + deterministic mock-runtime E2E suite is not
+# established in current repository evidence.
 #
 # Responsibility:
 # - Preserve the existing mock-runtime and E2E check names while making the
@@ -17,12 +18,14 @@
 # - Readiness checks are no-network after checkout and action setup.
 # Inputs:
 # - Repository-owned runtime/UI READMEs, package manifests, Makefile, example
-#   environment, and neighboring mock/API workflow definitions.
+#   environment, neighboring mock/API/UI workflow definitions, the bounded E2E
+#   inventory, and repository-owned readiness validators.
 # Outputs:
 # - GitHub job conclusions, logs, and step summaries only; no receipt, proof,
 #   release record, deployment, or published artifact is emitted.
 # Outcome:
-# - Current documentation/TODO scaffolds produce an explicit WORKFLOW_HOLD.
+# - The implemented Explorer baseline plus current composed-suite absence
+#   produce an explicit WORKFLOW_HOLD.
 # - Newly surfaced implementation fails the readiness check until an accepted,
 #   deterministic, no-live-source E2E command and negative fixtures are wired.
 # Compatibility:
@@ -170,185 +173,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          required_paths=(
-            "package.json"
-            "apps/explorer-web/package.json"
-            "apps/explorer-web/README.md"
-            "apps/governed-api/README.md"
-            ".github/workflows/api-test.yml"
-          )
-
-          for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required E2E boundary is missing: $required_path"
-              exit 1
-            fi
-          done
-
-          python - <<'PY'
-          import ast
-          import json
-          from pathlib import Path
-
-          root_manifest = json.loads(Path("package.json").read_text(encoding="utf-8"))
-          explorer_manifest = json.loads(
-              Path("apps/explorer-web/package.json").read_text(encoding="utf-8")
-          )
-
-          root_scripts = root_manifest.get("scripts", {})
-          explorer_scripts = explorer_manifest.get("scripts", {})
-
-          expected_root_holds = {
-              "lint": (
-                  "node -e \"console.error('WORKFLOW_HOLD: root workspace lint "
-                  "is not implemented.'); process.exit(1)\""
-              ),
-              "test": (
-                  "node -e \"console.error('WORKFLOW_HOLD: root workspace tests "
-                  "are not implemented.'); process.exit(1)\""
-              ),
-              "build": (
-                  "node -e \"console.error('WORKFLOW_HOLD: root workspace build "
-                  "is not implemented.'); process.exit(1)\""
-              ),
-          }
-          changed_root_holds = sorted(
-              name
-              for name, expected in expected_root_holds.items()
-              if root_scripts.get(name) != expected
-          )
-          if changed_root_holds:
-              raise SystemExit(
-                  "Root package hold scripts changed. Inspect whether implementation "
-                  "or a different failure posture surfaced before wiring E2E: "
-                  + ", ".join(changed_root_holds)
-              )
-
-          expected_explorer_placeholders = {
-              "dev": "echo TODO",
-              "build": "echo TODO",
-              "test": "echo TODO",
-          }
-          if explorer_scripts != expected_explorer_placeholders:
-              changed_explorer_placeholders = sorted(
-                  name
-                  for name in set(explorer_scripts) | set(expected_explorer_placeholders)
-                  if explorer_scripts.get(name) != expected_explorer_placeholders.get(name)
-              )
-              raise SystemExit(
-                  "Explorer Web scripts changed from the exact TODO-only mapping. "
-                  "Inspect runtime startup, build, tests, and governed-API boundaries "
-                  "before wiring E2E: "
-                  + ", ".join(changed_explorer_placeholders)
-              )
-
-          surfaced_e2e_scripts = sorted(
-              f"root:{name}"
-              for name in root_scripts
-              if "e2e" in name.lower()
-          ) + sorted(
-              f"explorer-web:{name}"
-              for name in explorer_scripts
-              if "e2e" in name.lower()
-          )
-          if surfaced_e2e_scripts:
-              raise SystemExit(
-                  "E2E package script surfaced. Replace this hold with the accepted "
-                  "deterministic suite: " + ", ".join(surfaced_e2e_scripts)
-              )
-
-          accepted_e2e_inventory = {
-              Path("tests/e2e/README.md"),
-              Path("tests/e2e/__init__.py"),
-              Path("tests/e2e/agriculture/.gitkeep"),
-              Path("tests/e2e/agriculture/README.md"),
-              Path("tests/e2e/test_hydrology_proof_slice.py"),
-          }
-          observed_e2e_inventory = {
-              path
-              for path in Path("tests/e2e").rglob("*")
-              if path.is_file()
-          }
-          if observed_e2e_inventory != accepted_e2e_inventory:
-              additions = sorted(observed_e2e_inventory - accepted_e2e_inventory)
-              removals = sorted(accepted_e2e_inventory - observed_e2e_inventory)
-              detail = [f"added: {path}" for path in additions]
-              detail.extend(f"removed: {path}" for path in removals)
-              raise SystemExit(
-                  "The bounded E2E inventory changed. Inspect ownership, fixtures, harness, "
-                  "network posture, finite outcomes, and runner before wiring CI:\n"
-                  + "\n".join(detail)
-              )
-
-          init_path = Path("tests/e2e/__init__.py")
-          if init_path.read_text(encoding="utf-8").strip():
-              raise SystemExit(
-                  "tests/e2e/__init__.py is no longer empty. Inspect the E2E harness "
-                  "and command deliberately."
-              )
-
-          placeholder_path = Path("tests/e2e/test_hydrology_proof_slice.py")
-          placeholder_text = placeholder_path.read_text(encoding="utf-8")
-          placeholder_tree = ast.parse(placeholder_text, filename=str(placeholder_path))
-          expected_placeholder_tree = ast.parse(
-              "def test_proof_slice_placeholder():\n"
-              "    assert True\n",
-              filename=f"expected:{placeholder_path}",
-          )
-          if ast.dump(placeholder_tree, include_attributes=False) != ast.dump(
-              expected_placeholder_tree,
-              include_attributes=False,
-          ):
-              raise SystemExit(
-                  "The Hydrology E2E module changed from the exact assert-true "
-                  "placeholder semantics. Inspect imports, helpers, classes, calls, "
-                  "and tests before wiring the accepted deterministic suite."
-              )
-
-          candidate_roots = (Path("apps/explorer-web"), Path("packages"))
-          surfaced_e2e_files = []
-          for root in candidate_roots:
-              if not root.exists():
-                  continue
-              for path in sorted(root.rglob("*")):
-                  if not path.is_file():
-                      continue
-                  lower_parts = [part.lower() for part in path.parts]
-                  lower_name = path.name.lower()
-                  if (
-                      "e2e" in lower_parts
-                      or "e2e" in lower_name
-                      or lower_name.startswith("playwright.config.")
-                  ):
-                      surfaced_e2e_files.append(str(path))
-
-          if surfaced_e2e_files:
-              raise SystemExit(
-                  "E2E files surfaced. Establish their owner, fixtures, network posture, "
-                  "finite negative outcomes, and repository-native command before wiring CI:\n"
-                  + "\n".join(surfaced_e2e_files)
-              )
-
-          print("Root and Explorer Web package manifests parse as JSON.")
-          print("Root lint/test/build remain exact WORKFLOW_HOLD commands that exit 1.")
-          print("Explorer Web dev/build/test remain explicit TODO placeholders.")
-          print("The exact bounded tests/e2e documentation and placeholder inventory remains non-executable.")
-          print("No accepted E2E package script, composed test lane, or Playwright config was detected.")
-          PY
-
-          if ! grep -Fq "make governed-api-smoke" ".github/workflows/api-test.yml"; then
-            echo "::error::The Governed API smoke command changed. Reconcile API-test and E2E ownership before wiring a composed suite."
-            exit 1
-          fi
-
-          if grep -Eq '^(e2e|e2e-smoke|test-e2e):' Makefile; then
-            echo "::error::An E2E Make target now exists. Wire and verify it deliberately instead of retaining this hold."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke"
-          echo "WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite"
+          python tools/validators/e2e_readiness.py
 
       - name: Record E2E hold
         if: always()
@@ -362,10 +187,11 @@ jobs:
           `WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite`
 
           The Governed API has a separate repository-owned smoke workflow. Root
-          lint/test/build are exact fail-closed `WORKFLOW_HOLD` commands, while
-          Explorer Web build/test and the composed E2E surface remain TODO
-          scaffolds. This job verifies that boundary and detects newly surfaced
-          E2E commands or files.
+          lint/test/build remain exact fail-closed `WORKFLOW_HOLD` commands.
+          Explorer Web has implemented build and unit-test commands validated
+          separately by `ui-build`; the composed E2E surface remains absent.
+          This job verifies that boundary and fails closed on newly surfaced E2E
+          commands, files, or changes to the locked readiness inputs.
 
           No E2E browser journey ran. Graduate this hold only with deterministic
           valid and negative fixtures covering `ANSWER`, `ABSTAIN`, `DENY`, and

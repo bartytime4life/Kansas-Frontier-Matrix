@@ -2,17 +2,18 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.4
-status: draft; shared-ci-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed
+version: v0.5
+status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-07-29
+updated: 2026-07-31
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; neither is domain truth, dependency admission, or release authority
+truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; e2e_readiness.py is a confirmed bounded static readiness-and-hold checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; none is domain truth, end-to-end proof, dependency admission, or release authority
 related:
   - ci_readiness.py
+  - e2e_readiness.py
   - dependencies/README.md
   - dependencies/pnpm_audit_readiness.py
   - _common/README.md
@@ -55,9 +56,13 @@ related:
   - ../../fixtures/
   - ../../tests/
   - ../../tests/validators/test_ci_readiness.py
+  - ../../tests/validators/test_e2e_readiness.py
+  - ../../tests/e2e/README.md
+  - ../../.github/workflows/e2e-smoke.yml
   - ../../tests/validators/test_pnpm_audit_readiness.py
   - ../../.github/workflows/dependency-scan.yml
 notes:
+  - "v0.5 adds a standard-library E2E readiness validator and focused synthetic tests; it recognizes the implemented Explorer baseline while preserving the composed browser/API E2E hold."
   - "v0.4 records the focused locked-pnpm audit preflight and finite PASS/REGRESSION/ERROR classifier; the registry audit remains point-in-time and non-authoritative."
   - "v0.3 confirms one standard-library placeholder-readiness checker and its focused unit tests; it does not establish domain validation, registry wiring, generated reports, receipt emission, runtime behavior, or release authority."
   - "Validators are fail-closed checkers. They do not define domain meaning, create canonical schemas, admit sources, create EvidenceBundles, decide policy, approve release, publish artifacts, or authorize public API/UI/map/AI surfaces."
@@ -107,6 +112,7 @@ A validator may check that evidence exists, policy was evaluated, release refere
 |---|---|---|
 | `tools/validators/README.md` | **CONFIRMED README** | This file replaces the previous two-line parent stub. |
 | `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
+| `tools/validators/e2e_readiness.py` | **CONFIRMED bounded executable checker** | Statically reconciles the locked Explorer baseline, adjacent UI/API workflow markers, root holds, and exact five-file E2E placeholder inventory; it emits an explicit hold and never starts services or executes discovered application code. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
@@ -135,6 +141,41 @@ python tools/validators/ci_readiness.py \
   --test-root tests/domains/example \
   --validator-root tools/validators/domains/example
 ```
+
+[Back to top](#top)
+
+---
+
+## E2E readiness hold checker
+
+`e2e_readiness.py` is a Python 3.11-compatible, standard-library-only checker
+for the current composed-E2E boundary. It reads a fixed set of repository-owned
+manifests, workflows, UI/API boundary files, and the exact `tests/e2e/`
+inventory. It confirms the implemented Explorer Web `dev`, `build`, and `test`
+mapping and its separate `ui-build` orchestration while requiring the root
+workspace holds and the absence of a repository-owned composed E2E command.
+
+The checker fails closed when a required file is missing, unsafe, unreadable,
+too large, or malformed; when the locked package/workflow markers drift; when
+the placeholder inventory changes; or when an E2E script, Make target,
+Playwright configuration, or E2E-named implementation file surfaces. Its
+diagnostics contain bounded paths and reason codes, never input contents. It
+does not install packages, import application code, start services, request the
+network, inspect secrets, execute a browser journey, or grant evidence, policy,
+release, deployment, or publication status.
+
+```bash
+python tools/validators/e2e_readiness.py
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_e2e_readiness.py' \
+  --verbose
+```
+
+A zero exit means only that the locked implemented-UI-plus-absent-composed-E2E
+boundary still matches the reviewed snapshot. It deliberately prints
+`WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`.
 
 [Back to top](#top)
 
@@ -313,6 +354,7 @@ Future implementation should remain modular and reversible:
 tools/validators/
 ├── README.md
 ├── ci_readiness.py                  # confirmed placeholder-readiness checker
+├── e2e_readiness.py                 # confirmed static E2E readiness-hold checker
 ├── _common/                         # shared validator utilities, if verified
 ├── domains/                         # per-domain validator lanes
 ├── policy/                          # policy-facing validation routing
@@ -342,6 +384,7 @@ This README is complete for documentation purposes when:
 - [x] It marks executable behavior, registry wiring, schemas, fixtures, tests, policy bundles, report destinations, receipt emission, release integration, runtime behavior, and CI wiring as **NEEDS VERIFICATION**.
 - [x] It includes finite parent-level outcomes and denies validator overclaim.
 - [x] It records the bounded `ci_readiness.py` CLI/import API, exact placeholder shapes, fail-closed path posture, tests, and authority limits.
+- [x] It records the bounded `e2e_readiness.py` static contract, focused tests, explicit hold output, and no-execution authority limit.
 
 Future implementation is not complete until:
 
@@ -361,5 +404,6 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-07-31 | Added the standard-library E2E readiness-hold checker, focused synthetic/current-tree tests, and workflow integration that recognizes the implemented Explorer baseline without claiming a composed suite. | **CONFIRMED bounded checker and explicit hold** |
 | 2026-07-29 | Added the standard-library placeholder-readiness checker, focused tests including unexpected test/validator-source denial, bounded behavior/authority documentation, and same-batch integration into eleven domain readiness workflows: ten root-scanning CLI calls and one Hydrology classifier import for its mixed-root inventory. | **CONFIRMED bounded checker and workflow integration** |
 | 2026-07-08 | Expanded parent validators README from two-line stub into governed validator-root index. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
