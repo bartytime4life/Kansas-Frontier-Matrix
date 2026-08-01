@@ -915,9 +915,9 @@ The current Makefile:
 - leaves `make policy` as a TODO echo;
 - leaves `make fixtures` as a TODO echo;
 - runs `make test` only against `tests/schemas` and `tests/contracts`;
-- leaves `make deny-test` as a TODO echo.
+- runs `make deny-test` against five generic app-owned route, method, manifest, internal-store-literal, and forbidden-import guards.
 
-Therefore none of those targets currently proves this lane.
+Those generic guards do not collect or prove this Atmosphere AQI-versus-concentration lane. None of the other targets above currently proves it either.
 
 [Back to top](#top)
 
@@ -988,7 +988,7 @@ A mature required job should:
 
 `domain-atmosphere.yml` currently runs TODO echo commands. A successful run is not substantive evidence for this lane.
 
-The root `make test` excludes this path. The root policy and deny targets are TODOs.
+The root `make test` excludes this path. The root policy target remains a TODO. Root `make deny-test` runs five generic app-owned route, method, manifest, internal-store-literal, and forbidden-import guards, but it does not collect or prove this Atmosphere AQI-versus-concentration lane.
 
 ### Promotion significance
 
