@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Runtime, Entrypoint, and Fail-Closed Test Boundary
 type: readme; directory-readme; validator-test-boundary; shared-runtime-tests; entrypoint-contract-tests
-version: v0.9
-status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; focused-e2e-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; shared-validator-runtime-executable; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
+version: v0.10
+status: draft; repository-grounded; focused-ci-readiness-unit-suite-confirmed; focused-e2e-readiness-unit-suite-confirmed; repository-control-suite-confirmed; repository-transition-authorization-suite-confirmed; trusted-base-workflow-PROPOSED-and-advisory; pnpm-audit-readiness-suite-confirmed; docs-link-check-suite-confirmed; ingest-receipt-validator-suite-confirmed; ingest-receipt-connector-gate-prerequisite-configured; connector-run-receipt-presence-held; shared-validator-runtime-executable; seven-entry-aggregate-local-confirmed; hosted-exact-head-needs-verification; schema-fixture-tests-confirmed-elsewhere; broader-validator-unit-coverage-partial; runner-contract-gaps-visible; no-network-by-default; fail-closed; non-authoritative
 owners: OWNER_TBD — QA steward · Validator steward · Python tooling steward · Schema steward · Contract steward · Fixture steward · Policy steward · Evidence steward · Release steward · Security reviewer · CI steward · Domain stewards · Docs steward
 created: 2026-07-07
 updated: 2026-07-31
@@ -147,6 +147,7 @@ related:
   - ../../.github/workflows/repository-control.yml
 tags: [kfm, tests, validators, repository-control, dependency-audit, pnpm, json-schema, pytest, fixtures, entrypoints, cli, exit-codes, diagnostics, no-network, fail-closed, coverage, correction, rollback]
 notes:
+  - "v0.10 wires the focused IngestReceipt validator suite and deterministic fixture command into connector-gate as a CI prerequisite while preserving a separate hold on connector-run receipt presence and persistence."
   - "v0.9 adds focused standard-library proof for the static E2E readiness boundary, including the implemented Explorer scripts, explicit composed-suite hold, exact placeholder inventory, surfaced-E2E detection, safe inputs, deterministic diagnostics, and CLI polarity."
   - "v0.7 adds focused standard-library proof for local Markdown files, directories, images, fragments, path boundaries, external-link abstention, determinism, and CLI polarity; it does not request external URLs or prove document truth."
   - "v0.6 adds focused no-network transition-authorization proof and one trusted-base, read-only pull_request_target workflow; the workflow remains advisory until separately required by the main ruleset and cannot distinguish a human from an app using the same owner identity."
@@ -157,7 +158,7 @@ notes:
   - "Working validator code exists under tools/validators and is exercised by make schemas and two workflows; that execution must not be relabeled as direct tests/validators coverage."
   - "The current fixture runner prints expected invalid fixtures as FAIL during its first pass, then separately verifies that invalid fixtures fail and may return success."
   - "The current fixture mode does not assert that valid or invalid fixture sets are nonempty; an empty fixture family can therefore complete successfully."
-  - "v0.8 adds focused no-network proof for IngestReceipt schema and format validation, temporal order, placeholder denial, optional SUCCESS gating, SourceDescriptor source-head binding, local artifact digests, byte totals, deterministic non-echoing output, and fixture polarity; the connector-gate job remains held."
+  - "v0.8 added focused no-network proof for IngestReceipt schema and format validation, temporal order, placeholder denial, optional SUCCESS gating, SourceDescriptor source-head binding, local artifact digests, byte totals, deterministic non-echoing output, and fixture polarity; v0.10 later wires that prerequisite while retaining the connector-run presence hold."
   - "The current aggregate runs seven hard-coded top-level validators; the historical v0.2 snapshot ran five, and bounded current search surfaced additional executable validators outside the current list."
   - "The repository-control slice changes its paired governance contract, state schema, tracked projection, evaluator semantics, fixtures, and tests only; it changes no policy, domain runtime, source, receipt, proof, release record, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
@@ -934,13 +935,21 @@ python -m unittest discover \
   --verbose
 ```
 
+Run the focused no-network IngestReceipt validator suite and contract-fixture polarity:
+
+```bash
+python -m pytest tests/validators/test_validate_ingest_receipt.py \
+  -q --strict-config --strict-markers
+python tools/validators/validate_ingest_receipt.py --fixtures
+```
+
 The broader `python -m pytest tests/validators -q` collection is not a claim of complete validator coverage. Each focused command proves only its named implementation slice.
 
 ### Command distinctions
 
 | Command | Current coverage |
 |---|---|
-| `make schemas` | Six hard-coded validator wrappers in fixture mode. |
+| `make schemas` | Seven hard-coded validator wrappers in fixture mode. |
 | `make test` | Pytest under `tests/schemas` and `tests/contracts`. |
 | `make validate` | Runs `make schemas` followed by `make test`. |
 | `validator-suite` workflow | `make schemas` plus one invalid EvidenceBundle canary. |
@@ -966,6 +975,7 @@ The broader `python -m pytest tests/validators -q` collection is not a claim of 
 | `validator-suite` | Runs `make schemas` and confirms one invalid EvidenceBundle is rejected. | Every invalid fixture, every helper branch, every entrypoint, or complete fail-closed behavior. |
 | `contracts-validate` | Runs `make test`. | Direct validator-unit coverage because `make test` omits this lane. |
 | `repository-control` | Proposed trusted-base `pull_request_target` check runs the strict transition validator over GitHub event and #1675 comment JSON with read-only permissions. | Required-check coupling, independent review, initiating-client attribution, or ruleset enforcement until separately configured. |
+| `connector-gate` | Runs the focused IngestReceipt suite and deterministic fixture polarity in the existing `connector-output-gate` setup; `ingest-receipt-presence` then fails closed unless that prerequisite job passes and retains the presence hold. | A connector run, connector-emitted receipt instance, governed persistence, source-specific profile, replay, correction, activation, proof, release, or publication. |
 
 ### Required CI graduation
 
@@ -1263,6 +1273,12 @@ Before merge, close the review branch or restore the affected files from their r
 ```
 
 After merge, revert the documentation commit through a reviewed pull request. Do not reset shared history.
+
+For the connector-gate IngestReceipt prerequisite slice, rollback restores the
+prior workflow and affected README preimages together with the paired generated
+receipt. The validator, schema, fixtures, direct tests, and aggregate wiring
+remain unchanged; connector-run receipt presence remains held before and after
+rollback.
 
 For the pnpm-audit slice, rollback restores the dependency workflow and affected README preimages, then removes the dependency validator, its lane README, and focused test. Preserve Git history and prior workflow outcomes. A rollback removes only this audit graduation; it does not alter manifests, lockfiles, application code, data, evidence, policy, release, deployment, or publication state.
 

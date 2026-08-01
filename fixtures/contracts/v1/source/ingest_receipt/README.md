@@ -2,18 +2,23 @@
 doc_id: kfm://fixture/contracts/v1/source/ingest-receipt/readme
 title: ingest_receipt fixtures README
 type: fixture-readme
-version: v0.1.0
-status: draft
+version: v0.2.0
+status: draft; inventory-reconciled; deterministic-polarity; validator-prerequisite-executable; fixture-only; no-release-authority
 owners: TODO(owner): source steward; TODO(owner): ingest steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-07-01 expansion
-updated: 2026-07-01
+updated: 2026-07-31
 policy_label: public-review
 related:
   - valid/README.md
   - valid/valid_1.json
+  - valid/valid_2.json
   - invalid/README.md
   - invalid/invalid_1.json
   - invalid/invalid_1.expected_error.txt
+  - invalid/invalid_2.json
+  - invalid/invalid_2.expected_error.txt
+  - invalid/invalid_3.json
+  - invalid/invalid_3.expected_error.txt
   - ../../../../../schemas/contracts/v1/source/ingest_receipt.schema.json
   - ../../../../../contracts/source/ingest_receipt.md
   - ../../../../../contracts/source/source_descriptor.md
@@ -21,14 +26,15 @@ related:
   - ../../../../../policy/source/
   - ../../../../../tools/validators/validate_ingest_receipt.py
   - ../../../../../tests/schemas/test_common_contracts.py
+  - ../../../../../tests/validators/test_validate_ingest_receipt.py
   - ../../../../../docs/doctrine/directory-rules.md
 tags: [kfm, fixtures, contracts, v1, source, ingest-receipt, valid-fixtures, invalid-fixtures, expected-error, json-schema, source-ingest, receipt, sha256, lifecycle, non-authoritative]
 notes:
   - "This README replaces a blank file at `fixtures/contracts/v1/source/ingest_receipt/README.md`."
   - "This directory is the fixture family for `ingest_receipt`."
   - "Fixtures are sample test inputs only; semantic meaning, schema shape, source ingest, policy behavior, lifecycle transitions, and release authority stay in their owning roots."
-  - "Current fixture coverage includes one valid case and one invalid missing-required-field case."
-  - "No tests, validators, source ingest workflows, source registry checks, policy checks, release checks, or CI jobs were run during this documentation update."
+  - "Current fixture coverage includes two valid cases and three invalid cases covering a missing required id, an extra property, and an invalid id pattern."
+  - "The repository-owned validator checks this nonempty positive/negative family; focused tests exercise schema, semantic, source-head, artifact, byte, outcome, deterministic-diagnostic, and fixture-polarity behavior without network access."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -60,7 +66,7 @@ Fixture family for the KFM `ingest_receipt` source contract schema.
 
 This directory groups positive and negative JSON fixtures for the `ingest_receipt` schema.
 
-Use this fixture family to verify that KFM accepts a minimal well-shaped `IngestReceipt`-like object and rejects receipt-shaped metadata that lacks a required stable identifier. The fixture family helps protect KFM's source-ingest boundary by keeping ingest receipt shape testable without turning fixture examples into real ingest workflow proof, source truth, policy approval, release approval, or permission for public clients to read lifecycle-internal source material.
+Use this fixture family to verify that KFM accepts schema-valid `SUCCESS` and `PARTIAL` receipt shapes and rejects receipt-shaped metadata with a missing required identifier, an unknown property, or an invalid identifier pattern. The fixture family helps protect KFM's source-ingest boundary by keeping ingest receipt shape testable without turning fixture examples into real ingest workflow proof, source truth, policy approval, release approval, or permission for public clients to read lifecycle-internal source material.
 
 A passing fixture proves schema shape only. It does not prove the described ingest actually ran, `source_id` resolves to a governed source descriptor, digest values were computed from real captured material, source policy allows downstream use, or any lifecycle transition is approved.
 
@@ -71,8 +77,11 @@ A passing fixture proves schema shape only. It does not prove the described inge
 | Lane | File | Current role | Status |
 |---|---|---|---|
 | [`valid/`](valid/README.md) | [`valid_1.json`](valid/valid_1.json) | Minimal positive fixture with every required field, valid date-time values, allowed `SUCCESS` outcome, nonnegative `bytes_in`, and one SHA-256 digest value. | CONFIRMED |
+| [`valid/`](valid/README.md) | [`valid_2.json`](valid/valid_2.json) | Positive fixture preserving `PARTIAL` as a schema-valid capture outcome with zero captured bytes and one well-shaped digest. | CONFIRMED |
 | [`invalid/`](invalid/README.md) | [`invalid_1.json`](invalid/invalid_1.json) | Negative fixture missing required `id`. | CONFIRMED |
 | [`invalid/`](invalid/README.md) | [`invalid_1.expected_error.txt`](invalid/invalid_1.expected_error.txt) | Expected-error matcher currently set to `required`. | CONFIRMED |
+| [`invalid/`](invalid/README.md) | [`invalid_2.json`](invalid/invalid_2.json) and [`invalid_2.expected_error.txt`](invalid/invalid_2.expected_error.txt) | Negative fixture with an unknown property; matcher requires the additional-properties failure family. | CONFIRMED |
+| [`invalid/`](invalid/README.md) | [`invalid_3.json`](invalid/invalid_3.json) and [`invalid_3.expected_error.txt`](invalid/invalid_3.expected_error.txt) | Negative fixture with an uppercase identifier; matcher requires the pattern failure family. | CONFIRMED |
 
 Current positive fixture shape:
 
@@ -149,8 +158,9 @@ Confirmed schema facts:
 | Machine-checkable shape | `schemas/contracts/v1/source/ingest_receipt.schema.json` | CONFIRMED |
 | Semantic contract | `contracts/source/ingest_receipt.md` | CONFIRMED |
 | Source policy | `policy/source/` | OUT OF SCOPE FOR THIS README |
-| Dedicated validator implementation | `tools/validators/validate_ingest_receipt.py` | NEEDS VERIFICATION |
-| Common schema fixture harness | `tests/schemas/test_common_contracts.py` | CONFIRMED doctrine pattern from prior fixture work / NOT RUN |
+| Dedicated validator implementation | `tools/validators/validate_ingest_receipt.py` | CONFIRMED repository-owned, no-network, and aggregate-registered |
+| Focused validator tests | `tests/validators/test_validate_ingest_receipt.py` | CONFIRMED direct fail-closed semantic, binding, deterministic-diagnostic, and fixture-polarity coverage |
+| Common schema fixture harness | `tests/schemas/test_common_contracts.py` | CONFIRMED adjacent schema-conformance coverage |
 
 `IngestReceipt` must remain distinguishable from:
 
@@ -189,10 +199,15 @@ fixtures/contracts/v1/source/ingest_receipt/
   valid/
     README.md
     valid_1.json
+    valid_2.json
   invalid/
     README.md
     invalid_1.json
     invalid_1.expected_error.txt
+    invalid_2.json
+    invalid_2.expected_error.txt
+    invalid_3.json
+    invalid_3.expected_error.txt
 ```
 
 Observed expectations:
@@ -203,7 +218,19 @@ Observed expectations:
 | `invalid/invalid_*.json` | at least one JSON Schema error |
 | `invalid/invalid_*.expected_error.txt` | expected text appears in combined schema error messages |
 
-This README documents expected fixture behavior only. It does not claim that pytest, CI, source ingest policy, source registry resolution, lifecycle transition checks, release checks, or the dedicated IngestReceipt validator was run during this update.
+The stable no-network fixture command is:
+
+```bash
+python tools/validators/validate_ingest_receipt.py --fixtures
+```
+
+The focused direct suite is:
+
+```bash
+python -m pytest tests/validators/test_validate_ingest_receipt.py -q
+```
+
+These commands validate shape, semantic rules, optional local bindings, deterministic diagnostics, and fixture polarity. They do not run a connector or establish source ingest policy, source registry resolution, connector-emitted receipt presence, persistence, lifecycle transition, release, or publication.
 
 ---
 
@@ -231,11 +258,11 @@ Before changing this fixture family:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Valid lane | CONFIRMED | `valid/README.md` and `valid/valid_1.json` exist. |
-| Invalid lane | CONFIRMED | `invalid/README.md`, `invalid/invalid_1.json`, and `invalid_1.expected_error.txt` exist. |
+| Valid lane | CONFIRMED | The lane contains two JSON fixtures: `SUCCESS` and `PARTIAL`. |
+| Invalid lane | CONFIRMED | The lane contains three JSON fixtures with paired expected-error matchers: required id, additional property, and id pattern. |
 | Schema | CONFIRMED | `ingest_receipt.schema.json` defines required fields, identifier pattern, date-time fields, finite outcome enum, byte minimum, digest object, digest pattern, declared fixture root, declared validator, declared policy path, and additional-property behavior. |
 | Contract | CONFIRMED | `contracts/source/ingest_receipt.md` defines semantic meaning and separates IngestReceipt from SourceDescriptor, RunReceipt, ValidationReport, EvidenceBundle, PolicyDecision, ReleaseManifest, source raw data, and publication authority. |
-| Test execution | NOT RUN | No validators, pytest, source policy checks, source registry checks, ingest workflow checks, lifecycle transition checks, release checks, or CI were run during this README update. |
+| Validator and focused tests | CONFIRMED | The repository-owned fixture command and focused no-network suite execute this family; this does not establish a connector run, source activation, persistence, release, or CI required-check status. |
 
 ---
 
@@ -245,11 +272,11 @@ Before changing this fixture family:
 |---|---|---|---|
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define fixture-family guidance. |
 | [`valid/README.md`](valid/README.md) | CONFIRMED | Positive fixture lane guidance. | Does not prove tests were run. |
-| [`valid/valid_1.json`](valid/valid_1.json) | CONFIRMED | Current positive fixture includes all required fields and schema-compatible values. | Only one valid fixture is currently documented. |
+| [`valid/valid_1.json`](valid/valid_1.json) and [`valid/valid_2.json`](valid/valid_2.json) | CONFIRMED | Current positive fixtures preserve schema-valid `SUCCESS` and `PARTIAL` outcomes. | They are synthetic shapes, not observed ingest runs. |
 | [`invalid/README.md`](invalid/README.md) | CONFIRMED | Negative fixture lane guidance. | Does not prove tests were run. |
-| [`invalid/invalid_1.json`](invalid/invalid_1.json) | CONFIRMED | Current negative fixture omits required `id`. | Only one invalid fixture is currently documented. |
-| [`invalid/invalid_1.expected_error.txt`](invalid/invalid_1.expected_error.txt) | CONFIRMED | Current expected matcher is `required`. | Broad matcher; may be tightened later. |
-| [`../../../../../schemas/contracts/v1/source/ingest_receipt.schema.json`](../../../../../schemas/contracts/v1/source/ingest_receipt.schema.json) | CONFIRMED | Schema shape, required fields, identifier pattern, date-time fields, outcome enum, byte minimum, digest object, digest value pattern, fixture root, validator path, policy path, and status. | Schema status is `PROPOSED`; validator implementation was not verified. |
+| [`invalid/`](invalid/README.md) JSON and expected-error pairs | CONFIRMED | Current negative fixtures cover required id, additional-property denial, and id-pattern denial. | The family does not exhaust every schema or semantic failure. |
+| [`../../../../../schemas/contracts/v1/source/ingest_receipt.schema.json`](../../../../../schemas/contracts/v1/source/ingest_receipt.schema.json) | CONFIRMED | Schema shape, required fields, identifier pattern, date-time fields, outcome enum, byte minimum, digest object, digest value pattern, fixture root, validator path, policy path, and status. | Schema status remains `PROPOSED`; schema validity is not source admission. |
+| [`../../../../../tools/validators/validate_ingest_receipt.py`](../../../../../tools/validators/validate_ingest_receipt.py) and [`../../../../../tests/validators/test_validate_ingest_receipt.py`](../../../../../tests/validators/test_validate_ingest_receipt.py) | CONFIRMED | No-network fixture polarity plus focused semantic, binding, and diagnostic behavior. | No connector execution, live source, persistence, policy, release, or publication. |
 | [`../../../../../contracts/source/ingest_receipt.md`](../../../../../contracts/source/ingest_receipt.md) | CONFIRMED | Semantic meaning, source-ingest lifecycle role, field surface, invariants, and boundary against source truth, RunReceipt, ValidationReport, EvidenceBundle, PolicyDecision, ReleaseManifest, and source raw data. | Does not prove ingest workflow, source registry resolution, validator wiring, policy behavior, release checks, or CI status. |
 | `../../../../../docs/doctrine/directory-rules.md` | CONFIRMED doctrine | `fixtures/` is within the validate/operate authority surface and supports test inputs while contracts, schemas, policy, and lifecycle data remain separate roots. | Specific fixture completeness requires inventory and tests. |
 

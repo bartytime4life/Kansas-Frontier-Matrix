@@ -2,8 +2,8 @@
 doc_id: kfm://doc/contracts-source-ingest-receipt
 title: contracts/source/ingest_receipt.md — IngestReceipt Contract
 type: contract
-version: v0.3
-status: draft; PROPOSED; schema-paired; validator-implemented; source-ingest-receipt; integrity-bound
+version: v0.4
+status: draft; PROPOSED; schema-paired; validator-implemented; connector-gate-prerequisite-wired; connector-run-presence-held; source-ingest-receipt; integrity-bound
 owners: OWNER_TBD — Source steward · Ingest steward · Contracts steward · Schema steward · Policy steward · Validation steward · Evidence steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
 updated: 2026-07-31
@@ -30,6 +30,7 @@ notes:
   - "Paired schema verified at `schemas/contracts/v1/source/ingest_receipt.schema.json`; schema status is PROPOSED."
   - "The schema requires id, source_id, run_id, started_at, finished_at, outcome, bytes_in, and digests; additional properties are false."
   - "The repository-owned no-network validator checks schema and format, temporal order, all-zero digest denial, optional SUCCESS gating, SourceDescriptor source-head binding, local artifact SHA-256 binding, and bound byte totals."
+  - "Connector-gate executes the validator's focused tests and deterministic fixture polarity as a prerequisite; it does not validate a connector-emitted receipt instance or governed persistence route."
   - "IngestReceipt records a source ingest event and content digests. It is not SourceDescriptor, not RunReceipt, not EvidenceBundle, not PolicyDecision, not ReleaseManifest, and not publication approval."
   - "Rollback target for this expansion is previous stub blob SHA `e15e622390e9bb4fdfb0da53188075b92a8f11c5`."
 [/KFM_META_BLOCK_V2] -->
@@ -56,7 +57,7 @@ notes:
 **Validator path named by schema:** `tools/validators/validate_ingest_receipt.py` — CONFIRMED repository-owned no-network implementation and fixture-mode aggregate wiring
 **Policy authority:** `policy/source/`, not this contract  
 **Lifecycle authority:** lifecycle/data roots, ingest pipelines, and source registry records, not this contract  
-**Truth posture:** CONFIRMED target was a generic schema-paired stub · CONFIRMED paired schema exists and points to this contract · CONFIRMED finite outcome enum and digest pattern · CONFIRMED additional properties are closed · CONFIRMED dedicated validator, deterministic fixture polarity, semantic time/placeholder checks, optional source-head/artifact/byte binding, and SUCCESS-gate polarity · NEEDS VERIFICATION for live ingest integration, KWO document identities, receipt persistence, connector-gate graduation, and broader CI enforcement
+**Truth posture:** CONFIRMED target was a generic schema-paired stub · CONFIRMED paired schema exists and points to this contract · CONFIRMED finite outcome enum and digest pattern · CONFIRMED additional properties are closed · CONFIRMED dedicated validator, deterministic fixture polarity, semantic time/placeholder checks, optional source-head/artifact/byte binding, SUCCESS-gate polarity, and connector-gate prerequisite wiring · NEEDS VERIFICATION for live ingest integration, KWO document identities, connector-emitted receipt presence, governed persistence, source-specific profiles, replay, correction, and required-check significance
 
 ## Quick jumps
 
@@ -300,8 +301,9 @@ Still NEEDS VERIFICATION:
 - KWO-specific host/media-type/allowlist and document-manifest cross-binding;
 - linkage to runtime `RunReceipt` where a larger pipeline run exists;
 - immutable correction/supersession records for a concrete source refresh; and
-- connector-gate graduation, ownership, required-check compatibility, and
-  hosted exact-head evidence.
+- connector-run receipt presence, governed persistence, source-specific profile,
+  replay/correction behavior, ownership, required-check compatibility, and
+  hosted exact-head evidence beyond the validator prerequisite.
 
 ---
 
@@ -340,10 +342,10 @@ Fixtures must use synthetic/safe source ids and synthetic digest values only.
 
 Rollback is required if this contract is used as source truth, SourceDescriptor replacement, runtime execution summary, validation proof, policy decision, release approval, source payload storage, public API permission, or AI/source authority.
 
-For the bounded validator prerequisite, rollback is a focused revert of the
-validator, its direct tests, aggregate entry, and this implementation-status
-documentation. The IngestReceipt schema and existing fixtures remain unchanged;
-the connector-gate readiness hold must remain in place unless separately
+For the bounded connector-gate prerequisite wiring, rollback restores the prior
+workflow and affected documentation together with the paired generated receipt.
+The validator, its direct tests, aggregate entry, schema, and fixtures remain
+unchanged. Connector-run receipt presence remains held unless separately
 authorized and verified.
 
 Historical rollback target for the v0.2 semantic expansion: previous stub blob
