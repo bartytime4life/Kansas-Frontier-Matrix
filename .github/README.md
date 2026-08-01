@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-folder-readme
 title: .github — GitHub Platform Governance Hooks
 type: README
-version: v1.3
+version: v1.4
 status: draft; repository-grounded
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-07-22
+updated: 2026-07-31
 policy_label: public
 owning_root: .github/
 responsibility: GitHub-platform governance hooks, review routing, dependency intake, issue and pull-request intake, and CI orchestration
@@ -14,8 +14,8 @@ truth_posture: cite-or-abstain; implementation claims are bounded to the pinned 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 1180cf7ec53d5acbbb859a39d93c1d129ec83df9
-  inventory: 54 tracked paths; 41 workflow YAML files; 6 issue chooser templates
+  base_commit: c455e51be776a355a392284711898af092fb423f
+  inventory: 57 tracked paths; 44 workflow YAML files; 6 issue chooser templates
 related:
   - ../README.md
   - ../CONTRIBUTING.md
@@ -30,8 +30,8 @@ related:
   - ISSUE_TEMPLATE/README.md
   - workflows/README.md
 notes:
-  - "This README records repository files and static configuration; it does not prove GitHub settings, branch protection, workflow success, release approval, or publication."
-  - "Directory Rules identifies .github/ as the canonical GitHub-platform hook root. The repository retains two Directory Rules editions whose placement remains a documented conflict; this README does not resolve it."
+  - "This README records the complete tracked .github tree and static workflow configuration at main@c455e51be776a355a392284711898af092fb423f; it does not prove GitHub settings, branch protection, workflow success, release approval, or publication."
+  - "Accepted ADR-0029 makes docs/doctrine/directory-rules.md the sole writable Directory Rules authority. The architecture-path copy is a read-only compatibility surface and is not a second authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -43,8 +43,8 @@ notes:
 # `.github/` — GitHub platform governance hooks
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status-and-evidence-boundary)
-[![Inventory: 54 paths](https://img.shields.io/badge/inventory-54%20tracked%20paths-1f6feb)](#confirmed-inventory)
-[![Workflows: 41](https://img.shields.io/badge/workflows-41-2563eb)](workflows/README.md)
+[![Inventory: 57 paths](https://img.shields.io/badge/inventory-57%20tracked%20paths-1f6feb)](#confirmed-inventory)
+[![Workflows: 44](https://img.shields.io/badge/workflows-44-2563eb)](workflows/README.md)
 [![Issue templates: 6](https://img.shields.io/badge/issue%20templates-6-7c3aed)](ISSUE_TEMPLATE/README.md)
 [![Publication: denied](https://img.shields.io/badge/publication-denied-b91c1c)](#authority-boundary)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-15803d)](#authority-boundary)
@@ -99,12 +99,12 @@ It translates repository-owned commands and KFM governance expectations into rev
 
 ## Status and evidence boundary
 
-This document is pinned to `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` on 2026-07-22.
+This document is pinned to `main@c455e51be776a355a392284711898af092fb423f` on 2026-07-31.
 
 | Surface | Confirmed repository state | Boundary |
 |---|---|---|
-| Tracked `.github/` paths | **54** | Count includes the three README files. GitHub settings are external to this tree. |
-| Workflows | **41 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | File presence and static syntax do not prove recent successful runs or required-check status. |
+| Tracked `.github/` paths | **57** | Count includes the three README files. GitHub settings are external to this tree. |
+| Workflows | **44 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | File presence and static syntax do not prove recent successful runs or required-check status. |
 | Issue intake | **6 Markdown chooser templates** plus [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | No issue-form YAML or chooser `config.yml` is present. Blank-issue behavior remains settings-dependent. |
 | Pull-request intake | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Rendering and use are repository-visible; completion and enforcement remain review questions. |
 | Review routing | [`CODEOWNERS`](CODEOWNERS) routes all paths to `@bartytime4life` with narrower path entries | Branch protection and required code-owner review remain **NEEDS VERIFICATION**. |
@@ -134,7 +134,7 @@ This document is pinned to `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` on 20
 │   └── source_admission.md
 └── workflows/
     ├── README.md
-    └── 41 workflow .yml files
+    └── 44 workflow .yml files
 ```
 
 The complete workflow filename and maturity inventory lives in [`workflows/README.md`](workflows/README.md). The issue chooser contract lives in [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md).
@@ -189,13 +189,14 @@ Neither a merged pull request nor a green check is a KFM data-publication event.
 
 The current workflow snapshot has these static properties:
 
-- all 41 workflows declare a top-level `permissions` boundary;
-- no `pull_request_target` trigger, self-hosted runner, or direct `secrets.*` reference is present;
+- all 44 workflows declare a top-level `permissions` boundary;
+- `repository-control.yml` is the only `pull_request_target` workflow; it checks out the trusted base SHA, does not execute pull-request head code, and grants read-only permissions;
+- no self-hosted runner or direct `secrets.*` reference is present;
 - no ordinary `contents`, `issues`, `pull-requests`, `packages`, `deployments`, or `id-token` write grant is present;
 - CodeQL alone grants `security-events: write`, which is required to upload code-scanning results;
-- all external action references use major-version tags rather than immutable commit SHAs.
+- one `actions/checkout` reference is pinned to a full commit SHA in `repository-control.yml`; the remaining external action references use mutable version tags.
 
-These are static findings, not a runtime security certification. See the [workflow threat preflight](workflows/README.md#trigger-and-permission-preflight) for maintenance rules.
+These are static findings, not a runtime security certification. See the [workflow threat preflight](workflows/README.md#trigger-permission-and-workflow-threat-preflight) for maintenance rules.
 
 > [!CAUTION]
 > Do not place vulnerabilities, credentials, restricted source material, living-person private data, DNA/genomic data, exact rare-species or archaeology locations, or critical-infrastructure exposure details in public issues, pull requests, logs, artifacts, or generated receipts. Follow [`SECURITY.md`](../SECURITY.md) and fail closed.
@@ -242,8 +243,8 @@ Do not claim a command passed unless it was actually run. A README-only batch sh
 |---|---|
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Repository contribution, evidence, validation, branch, PR, and receipt discipline. |
 | [`../SECURITY.md`](../SECURITY.md) | Private-first security reporting and sensitive-information boundary. |
-| [`../docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Directory Rules edition at the proposed doctrine home. |
-| [`../docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) | Parallel Directory Rules edition; placement conflict remains recorded. |
+| [`../docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Sole writable Directory Rules authority adopted by ADR-0029. |
+| [`../docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) | Read-only compatibility surface retained by ADR-0029's migration plan. |
 | [`../docs/doctrine/ai-build-operating-contract.md`](../docs/doctrine/ai-build-operating-contract.md) | AI-assisted work, truth labels, receipts, review, and rollback. |
 | [`../policy/`](../policy/) | Allow, deny, restrict, hold, and abstain authority. |
 | [`../tools/validators/`](../tools/validators/) | Repository-owned validator logic invoked by CI. |
@@ -272,6 +273,7 @@ For documentation-only changes, restore the previous README blobs or revert the 
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-07-31 | v1.4 | Reconciled the complete 57-path tree and 44-workflow static posture at `main@c455e51…`; recorded the trusted-base `pull_request_target` exception, mixed action-pinning posture, accepted Directory Rules authority, and corrected the workflow-threat-preflight fragment. |
 | 2026-07-22 | v1.3 | Reconciled the parent README to the complete 54-path tree, 41 workflows, six issue templates, current CODEOWNERS and Dependabot configuration, static permission posture, and explicit external-settings boundary. Removed the obsolete target tree and unmatched HTML close tag. |
 | 2026-07-08 | v1.2 | Added a repository-aware draft, but retained a partial inventory and target workflow map. |
 | 2026-05-22 | v1.1 | Established the doctrine-grounded GitHub governance boundary. |

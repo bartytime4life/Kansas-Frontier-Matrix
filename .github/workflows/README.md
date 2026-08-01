@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.6
+version: v0.7
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-07-29
+updated: 2026-07-31
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
@@ -14,9 +14,9 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: 149614a560de9ecb299de8ee9bb30b2f0ecfa7fe
-  workflow_inventory_snapshot: 1180cf7ec53d5acbbb859a39d93c1d129ec83df9
-  proposed_head_workflow_files: 44
+  read_commit: c455e51be776a355a392284711898af092fb423f
+  workflow_inventory_snapshot: c455e51be776a355a392284711898af092fb423f
+  current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
 related:
@@ -37,11 +37,11 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
-  - "The v0.5 prior README bytes and all 43 current-main workflow files were inspected at main@149614a560de9ecb299de8ee9bb30b2f0ecfa7fe."
-  - "The detailed 41-file workflow inventory remains lineage at 1180cf7ec53d5acbbb859a39d93c1d129ec83df9; v0.6 reconciles briefing-integration.yml, infra-compose-smoke.yml, and the proposed repository-control.yml."
+  - "The v0.6 prior README bytes and all 44 current-main workflow files were inspected at main@c455e51be776a355a392284711898af092fb423f."
+  - "The detailed 41-file workflow inventory remains lineage at 1180cf7ec53d5acbbb859a39d93c1d129ec83df9; v0.7 reconciles the complete current 44-file inventory, including repository-control.yml and link-check.yml as implemented orchestration."
   - "Workflow maturity groups describe inspected files and steps; they do not certify current run success, branch protection, release readiness, or KFM publication."
   - "v0.5 narrowly reconciles shared domain holds and the E2E, Focus mock, and rollback-drill readiness checks; it does not establish UI or runtime readiness."
-  - "v0.6 adds one explicitly approved trusted-base pull_request_target guard with read-only permissions and a full-SHA checkout pin; it remains advisory until separately required by the main ruleset."
+  - "v0.6 added one explicitly approved trusted-base pull_request_target guard with read-only permissions and a full-SHA checkout pin. Whether its exact check is currently required by the main ruleset remains NEEDS VERIFICATION from static repository bytes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -49,7 +49,7 @@ notes:
 # `.github/workflows/`
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Proposed-head inventory: 44 workflows](https://img.shields.io/badge/proposed--head%20inventory-44%20workflows-1f6feb?style=flat-square)](#complete-workflow-inventory)
+[![Current inventory: 44 workflows](https://img.shields.io/badge/current%20inventory-44%20workflows-1f6feb?style=flat-square)](#complete-workflow-inventory)
 [![Permissions: explicit](https://img.shields.io/badge/permissions-44%2F44%20explicit-15803d?style=flat-square)](#trigger-permission-and-workflow-threat-preflight)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c?style=flat-square)](#authority-level)
 [![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-8250df?style=flat-square)](../../docs/doctrine/ai-build-operating-contract.md)
@@ -112,22 +112,22 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ### Current document state
 
-- **CONFIRMED:** this README and all 43 current-main workflow files were read on `main@149614a560de9ecb299de8ee9bb30b2f0ecfa7fe`.
-- **PROPOSED / EXACT DIFF:** `repository-control.yml` raises the proposed-head count to 44 and is the only active `pull_request_target` workflow.
+- **CONFIRMED:** this README and all 44 current-main workflow files were read on `main@c455e51be776a355a392284711898af092fb423f`.
+- **CONFIRMED:** `repository-control.yml` is tracked on `main` and is the only active `pull_request_target` workflow.
 - **CONFIRMED / LINEAGE:** the detailed static inventory below was generated from `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` and documented 41 tracked `.yml` workflows.
-- **NEEDS VERIFICATION:** whether workflow files, action references, permissions, triggers, or maturity groups changed between the inventory snapshot and the current read commit.
+- **CONFIRMED:** the current tree has 44 `.yml` workflows, 44 explicit top-level permission blocks, one privileged PR trigger, no self-hosted runner or direct `secrets.*` expression, one ordinary write grant, and the mixed action-pinning inventory below.
 - **UNKNOWN:** current branch-protection coupling, recent workflow conclusions, logs, organization defaults, artifact retention, and runtime behavior unless separately inspected.
 
 ### Documented inventory findings
 
 | Finding | Snapshot status | Interpretation |
 |---|---|---|
-| Workflow inventory | **CONFIRMED current main: 43; PROPOSED head: 44 tracked `.yml` files** | The proposed delta adds `repository-control.yml`; no `.yaml` workflow is present. |
-| Explicit permissions | **CONFIRMED proposed head: 44/44** | Every workflow declares a top-level permissions boundary. |
-| Privileged PR trigger | **PROPOSED exactly one** | `repository-control.yml` uses `pull_request_target` with an inline threat model, a trusted-base-only checkout, bounded untrusted-data parsing, and read-only permissions. |
-| Runner trust | **CONFIRMED GitHub-hosted at inventory commit** | No `self-hosted` occurrence. |
-| Direct secret expressions | **CONFIRMED absent at inventory commit** | No direct `secrets.*` occurrence; repository and organization settings remain external. |
-| Write scopes | **CodeQL only on proposed head** | `security-events: write` supports code-scanning upload; the transition guard has no write grant. |
+| Workflow inventory | **CONFIRMED current main: 44 tracked `.yml` files** | `repository-control.yml` is part of the current tree; no `.yaml` workflow is present. |
+| Explicit permissions | **CONFIRMED current main: 44/44** | Every workflow declares a top-level permissions boundary. |
+| Privileged PR trigger | **CONFIRMED exactly one** | `repository-control.yml` uses `pull_request_target` with an inline threat model, a trusted-base-only checkout, bounded untrusted-data parsing, and read-only permissions. |
+| Runner trust | **CONFIRMED at current snapshot** | No `self-hosted` occurrence. |
+| Direct secret expressions | **CONFIRMED absent at current snapshot** | No direct `secrets.*` occurrence; repository and organization settings remain external. |
+| Write scopes | **CodeQL only at current snapshot** | `security-events: write` supports code-scanning upload; the transition guard has no write grant. |
 | External action pinning | **Mixed** | The new transition guard pins checkout to a full SHA; existing workflows retain version tags. |
 | Branch protection | **NEEDS VERIFICATION** | Static workflow inspection cannot establish required checks or rulesets. |
 | Workflow execution | **NEEDS VERIFICATION** | Inventory does not establish recent success, failure, or readiness. |
@@ -275,16 +275,16 @@ Before a workflow change bends a trust or placement invariant, inspect [`docs/ad
 
 | Field | Value |
 |---|---|
-| README content read | 2026-07-30 |
+| README content read | 2026-07-31 |
 | Read ref | `main` |
-| Read commit | `149614a560de9ecb299de8ee9bb30b2f0ecfa7fe` |
-| Detailed workflow inventory snapshot | `1180cf7ec53d5acbbb859a39d93c1d129ec83df9` |
+| Read commit | `c455e51be776a355a392284711898af092fb423f` |
+| Detailed workflow inventory snapshot | `c455e51be776a355a392284711898af092fb423f` |
 | Bounded readiness reconciliation | 2026-07-29; shared domain holds plus E2E, Focus mock, and rollback-drill checks only |
-| Inventory refresh status | **CONFIRMED static proposed-head count: 44**; hosted execution and ruleset coupling remain separate |
+| Inventory refresh status | **CONFIRMED current static count: 44**; hosted execution and ruleset coupling remain separate |
 
 ## Complete workflow inventory
 
-The groups below preserve the repository-grounded v0.3 inventory. They describe the inspected code and status comments at the inventory commit; they are not release-readiness grades.
+The groups below preserve the repository-grounded v0.3 classification and reconcile every current workflow filename exactly once. They describe inspected code and status comments; they are not release-readiness grades.
 
 ### Explicit greenfield, non-enforcing scaffolds
 
@@ -390,10 +390,12 @@ base SHA, never executes head code, reads only issue/event JSON, and grants only
 read access to contents, issues, and pull requests. Its strict local validator
 requires an unedited owner-account record for the exact repository, control
 issue, PR, base, head, and four-hour-or-shorter window. The check is advisory
-until a separate administrator action requires
-`repository-control / authorize-ready-and-merge` in the `main` ruleset. Even
-then, it records an explicit owner-account decision; it cannot distinguish a
-human browser from an installed app or token acting through the same identity.
+unless the `main` ruleset separately requires
+`repository-control / authorize-ready-and-merge`; static repository bytes do
+not establish that coupling, so its current enforcement is **NEEDS
+VERIFICATION**. When relied upon, the check records an explicit owner-account
+decision; it cannot distinguish a human browser from an installed app or token
+acting through the same identity.
 Expiry is evaluated when the workflow runs; GitHub does not automatically
 time-expire a successful check or rerun it after the issue comment is edited or
 deleted. The result is point-in-time evidence and must be rerun before reliance
@@ -418,7 +420,7 @@ Before changing or relying on a workflow, record:
 | Check name | Is the workflow or job name coupled to branch protection? |
 | Rollback | How can the workflow be disabled or reverted without weakening unrelated gates? |
 
-### Static threat findings at the proposed head
+### Static threat findings at the current snapshot
 
 | Threat surface | Finding |
 |---|---|
@@ -432,7 +434,7 @@ Before changing or relying on a workflow, record:
 
 ## External action inventory
 
-Proposed-head static inventory from `main@149614a560de…` plus `repository-control.yml`:
+Current-main static inventory from `main@c455e51be776a355a392284711898af092fb423f`:
 
 | Action reference | Occurrences | Pinning posture |
 |---|---:|---|
@@ -476,8 +478,8 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 ## Open verification items
 
-- **CONFIRMED proposed-head static inventory** — 44 workflows, 44 explicit permission blocks, one `pull_request_target`, one ordinary write grant (`security-events: write` in CodeQL), and GitHub-hosted runners only.
-- **NEEDS VERIFICATION** — add `repository-control / authorize-ready-and-merge` to ruleset `15484585` as a required strict check only after this workflow is merged and its exact check name is observed; it is advisory until then.
+- **CONFIRMED current-main static inventory** — 44 workflows, 44 explicit permission blocks, one `pull_request_target`, one ordinary write grant (`security-events: write` in CodeQL), and GitHub-hosted runners only.
+- **NEEDS VERIFICATION** — whether ruleset `15484585` currently requires the exact strict check `repository-control / authorize-ready-and-merge`; static workflow bytes and a successful canary do not prove current settings enforcement.
 - **NEEDS VERIFICATION** — current rulesets and exact branch-protection coupling outside the 2026-07-29 settings snapshot.
 - **NEEDS VERIFICATION** — current workflow run results, failure causes, logs, and artifact retention.
 - **NEEDS VERIFICATION** — repository and organization default token permissions.
@@ -491,6 +493,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-07-31 | v0.7 | Reconciled all 44 workflows to current `main@c455e51…`; converted the repository-control guard from proposed-head language to current implementation fact while keeping ruleset enforcement unverified; refreshed static permission, trigger, runner, secret, write-scope, action-pin, and inventory evidence. |
 | 2026-07-30 | v0.6 | Reconciled the current 43-file inventory plus the proposed trusted-base repository transition guard; documented its `pull_request_target` threat model, read-only token, immutable checkout pin, advisory check status, and human-versus-app attribution limit. |
 | 2026-07-29 | v0.5 | Reconciled shared domain hold semantics and the bounded E2E, Focus mock, and rollback-drill readiness checks with current structured repository evidence; preserved explicit holds and no UI/runtime readiness claim. |
 | 2026-07-23 | v0.4 | Aligned the README with the canonical-root contract; separated current document evidence from the pinned workflow inventory; added belongs/non-belongs, review burden, related-folder, ADR, threat-preflight, rollback, accessibility, and anti-overclaim guidance. |
