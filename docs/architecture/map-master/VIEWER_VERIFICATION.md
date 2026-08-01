@@ -52,7 +52,7 @@ notes:
 6. [Step 4 — Chunk verification (BAO)](#6-step-4--chunk-verification-bao)
 7. [Step 5 — Policy precheck](#7-step-5--policy-precheck)
 8. [Step 6 — Budget admission](#8-step-6--budget-admission)
-9. [Fails-closed semantics](#9-failsclosed-semantics)
+9. [Fails-closed semantics](#9-fails-closed-semantics)
 10. [Implementation surface](#10-implementation-surface)
 11. [Anti-patterns](#11-anti-patterns)
 12. [Open questions and ADR triggers](#12-open-questions-and-adr-triggers)
