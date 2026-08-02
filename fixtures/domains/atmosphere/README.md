@@ -2,7 +2,7 @@
 
 `fixtures/domains/atmosphere/`
 
-Status: draft / fixture index.
+Status: draft / fixture index / bounded synthetic precipitation profile executable.
 
 This directory groups Atmosphere-domain fixture lanes used by bounded tests, validators, no-network checks, helpers, renderer checks, release dry-runs, and documentation examples. Files here are examples only. They are not authoritative project records, source records, evidence, policy decisions, source admissions, rights approvals, release state, live advisory output, health guidance, emergency guidance, public API material, public map material, or published artifacts.
 
@@ -20,6 +20,7 @@ Atmosphere fixtures are for offline, deterministic checks. They may exercise sch
 | `invalid/air-observation/` | Negative `AirObservation` examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `invalid/air-station/` | Negative `AirStation` examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `objects/` | Object-shaped examples across the Atmosphere roster. | README present; payload inventory NEEDS VERIFICATION. |
+| `public_safe_precipitation/` | Frozen synthetic precipitation profile with one positive fixture and one exact fail-closed fixture/sidecar pair. | CONFIRMED bounded executable input; not source or observation truth. |
 | `sources/` | Source-shaped examples for source-role, rights, sensitivity, freshness, and admission behavior. | README present; payload inventory NEEDS VERIFICATION. |
 | `valid/` | Positive examples for bounded checks. | README present; payload inventory NEEDS VERIFICATION. |
 
@@ -94,5 +95,5 @@ Do not use this fixture root for:
 
 - Parent README: updated from a greenfield stub.
 - Child README coverage: PARTIAL; based on current fetches and recent updates.
-- Payload inventory: NEEDS VERIFICATION.
-- Tests and validators: NOT RUN.
+- Payload inventory: the bounded `public_safe_precipitation/` pair is CONFIRMED; broader payload inventory remains NEEDS VERIFICATION.
+- Tests and validators: the standard-library precipitation fixture suite is CONFIRMED executable; broader Atmosphere behavior remains NEEDS VERIFICATION.

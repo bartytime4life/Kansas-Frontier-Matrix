@@ -1,8 +1,9 @@
 # KFM Hydrology domain CI readiness workflow.
 # Status: executable bounded shape/polarity checks for the PROPOSED Hydrology
-# EvidenceBundle alias and separated AquiferObservation/AquiferContextLink pair,
-# plus explicit broader holds; proof and release-dry-run producers are not
-# established in current repository evidence.
+# EvidenceBundle alias, separated AquiferObservation/AquiferContextLink pair,
+# and frozen synthetic FlowObservation profile, plus explicit broader holds;
+# proof and release-dry-run producers are not established in current repository
+# evidence.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not act as flood
@@ -62,9 +63,14 @@ jobs:
             "contracts/domains/hydrology/README.md"
             "schemas/contracts/v1/domains/hydrology/README.md"
             "fixtures/domains/hydrology/README.md"
+            "fixtures/domains/hydrology/public_safe_flow/valid/public_safe_flow.json"
+            "fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json"
             "policy/domains/hydrology/README.md"
             "tests/domains/hydrology/README.md"
+            "tests/domains/hydrology/test_public_safe_flow_fixture.py"
+            "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/hydrology/README.md"
+            "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py"
             "tools/validators/hydrology/README.md"
             "tools/validators/hydro/README.md"
             "data/registry/sources/hydrology/README.md"
@@ -95,6 +101,7 @@ jobs:
               test_root / "test_hydrology_smoke.py",
               test_root / "test_aquifer_observation.py",
               test_root / "test_aquifer_context_link.py",
+              test_root / "test_public_safe_flow_fixture.py",
           }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
@@ -192,10 +199,14 @@ jobs:
                   "fixtures/domains/hydrology/run_receipt",
               ),
           }
+          expected_semantic_validators = {
+              "validate_public_safe_flow_fixture.py",
+          }
           expected_domain_inventory = {
               "README.md",
               *expected_placeholder_validators,
               *expected_schema_wrappers,
+              *expected_semantic_validators,
           }
           domain_validator_symlinks = sorted(
               path for path in domain_validator_root.rglob("*") if path.is_symlink()
@@ -218,7 +229,11 @@ jobs:
               )
           observed_validators = {
               name: observed_domain_inventory[name]
-              for name in expected_placeholder_validators | set(expected_schema_wrappers)
+              for name in (
+                  expected_placeholder_validators
+                  | set(expected_schema_wrappers)
+                  | expected_semantic_validators
+              )
           }
 
           for name in sorted(expected_placeholder_validators):
@@ -254,6 +269,16 @@ jobs:
               if actual_ast != expected_ast:
                   raise SystemExit(
                       f"Hydrology schema-wrapper semantics changed at {path}; review it deliberately."
+                  )
+
+          for name in sorted(expected_semantic_validators):
+              classification = classify_validator_source(
+                  observed_validators[name].read_text(encoding="utf-8")
+              )
+              if classification.placeholder:
+                  raise SystemExit(
+                      f"Accepted Hydrology validator regressed to a placeholder: "
+                      f"{observed_validators[name]}"
                   )
 
           hydro_routing_root = Path("tools/validators/hydro")
@@ -363,6 +388,7 @@ jobs:
               "Inventoried five Hydrology schema wrappers without importing or executing them; "
               "inventory is not acceptance of an executable validation suite."
           )
+          print("Confirmed one bounded semantic Hydrology fixture validator.")
           print(
               "Inventoried the exact Hydrology shorthand placeholder, PROPOSED schema, "
               "and deny-by-default policy scaffolds without executing them."
@@ -390,6 +416,9 @@ jobs:
             tests/domains/hydrology/test_aquifer_observation.py \
             tests/domains/hydrology/test_aquifer_context_link.py
 
+          python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
+          python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
+
           python tools/validators/domains/hydrology/validate_evidence_bundle.py \
             fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json
 
@@ -407,8 +436,20 @@ jobs:
           python tools/validators/domains/hydrology/validate_aquifer_context_link.py \
             --fixtures
 
+          python tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py \
+            fixtures/domains/hydrology/public_safe_flow/valid/public_safe_flow.json
+
+          if python tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py \
+            fixtures/domains/hydrology/public_safe_flow/invalid/role_location_time_governance_collapse.json; then
+            echo "::error::The known-invalid Hydrology flow fixture was accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Hydrology flow fixture"
+
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture"
           echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
 
       - name: Record Hydrology validation result and broader hold
@@ -422,11 +463,15 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture`
+
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed three bounded domain modules
+          When this job is green, it has executed four bounded domain modules
           and the EvidenceBundle, AquiferObservation, and AquiferContextLink
-          wrappers against their valid and expected-invalid synthetic fixtures.
+          wrappers plus the synthetic FlowObservation profile against their
+          valid and expected-invalid fixtures. It also runs the
+          Soil/Atmosphere/Hydrology ownership-isolation test.
           The tests install fail-closed socket, DNS, and URL guards before
           invoking the local schema validators.
 
@@ -437,10 +482,11 @@ jobs:
 
           This is acceptance only of local JSON Schema shape and valid/invalid
           fixture polarity for the PROPOSED Hydrology EvidenceBundle alias and
-          the separated aquifer pair. It also checks that observations may remain
+          the separated aquifer pair and the frozen fixture-only flow profile.
+          It also checks that observations may remain
           unlinked and that relation records cannot absorb measurements or copied
           Geology geometry. The remaining test modules, endpoint/evidence
-          resolution, semantic validators, shorthand validators, sources,
+          resolution, broader semantic validators, shorthand validators, sources,
           pipeline specifications, and policy scaffolds remain held.
 
           It does not resolve EvidenceRefs, establish EvidenceBundle closure or

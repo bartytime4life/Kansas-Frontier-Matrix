@@ -2,12 +2,12 @@
 doc_id: kfm://doc/tests-cross-domain-readme
 title: tests/cross_domain/ — Cross-Domain Enforceability Test Routing and Placement Guardrail
 type: readme; directory-readme; cross-domain-test-parent-index; placement-guardrail; migration-index
-version: v0.2
-status: draft; surviving-cross-domain-parent; placement-conflicted; child-lane-present; executable-depth-unknown; no-parallel-authority; NEEDS VERIFICATION
+version: v0.3
+status: draft; surviving-cross-domain-parent; placement-conflicted; child-lane-present; environmental-observation-isolation-test-executable; no-parallel-authority; NEEDS VERIFICATION
 policy_label: public-doc; restricted-review-when-child-sensitivity-requires
 owners: OWNER_TBD — QA steward · Cross-domain architecture steward · Domain stewards for affected children · Fixture steward · Validation steward · Policy steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — placeholder expanded on 2026-07-05
-updated: 2026-07-16
+updated: 2026-08-02
 current_path: tests/cross_domain/README.md
 truth_posture: CONFIRMED target README and prior blob, tests responsibility root, Domain Placement Law, cross-domain placement guidance, explicit deletion of tests/cross-domain/, surviving tests/cross_domain parent and fauna_habitat child, merged child README, and bounded absence of other surfaced children or executable files at the pinned snapshot / CONFLICTED intermediate cross_domain segment and topic naming versus tests/<topic>/ doctrine, overlapping domain-owned cross-domain test and fixture lanes, and exact long-term parent role / UNKNOWN exhaustive recursive inventory, inbound references, executable test modules, fixture payloads, accepted child registry, CI callers, pass state, production enforcement, and migration consumers / NEEDS VERIFICATION naming ADR, child registration rule, deduplication plan, fixture normalization, CI wiring, correction propagation, and rollback proof
 evidence_snapshot:
@@ -20,6 +20,7 @@ evidence_snapshot:
 related:
   - ../README.md
   - ./fauna_habitat/README.md
+  - ./test_environmental_observation_boundaries.py
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/architecture/cross-domain/multi-domain-placement.md
   - ../../docs/architecture/domain-placement-law.md
@@ -36,8 +37,8 @@ tags: [kfm, tests, cross-domain, cross-domain-placement, enforceability, ownersh
 notes:
   - "v0.2 replaces a stale compatibility index that pointed to a deleted hyphenated tree."
   - "The underscore-form parent survives in the repository, but its long-term naming and nesting remain unresolved."
-  - "The only surfaced child at the pinned snapshot is fauna_habitat/, whose README is itself placement-conflicted and README-only."
-  - "This revision changes documentation only and creates, moves, deletes, or activates no test, fixture, schema, contract, validator, workflow, pipeline, data, receipt, proof, policy, or release artifact."
+  - "The surviving parent now also contains one direct executable isolation test for the existing Soil profile plus the bounded Atmosphere precipitation and Hydrology flow fixture profiles."
+  - "The isolation test proves only validator ownership separation over synthetic fixtures; it creates no join schema, joined object, source, evidence, policy, proof, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -73,7 +74,7 @@ notes:
 | `tests/cross_domain/README.md` | **CONFIRMED** | Parent exists; prior blob is pinned in metadata. |
 | `tests/cross_domain/fauna_habitat/README.md` | **CONFIRMED / merged v0.2** | One detailed child lane exists and is marked placement-conflicted, README-only, and sensitivity-critical. |
 | Other surfaced children under `tests/cross_domain/` | **NOT SURFACED in bounded search** | Do not invent additional child inventory. |
-| Direct executable tests under this parent | **NOT SURFACED in bounded search** | README presence does not establish executable proof. |
+| `test_environmental_observation_boundaries.py` | **CONFIRMED bounded executable** | Proves each synthetic Soil, Atmosphere, and Hydrology profile accepts its own fixture and rejects the other two even when generalized place/time context overlaps. |
 | `tests/cross-domain/` | **CONFIRMED deleted** | Former hyphenated parent and Habitat–Fauna child were removed from `main`. |
 | `tests/` | **CONFIRMED canonical responsibility root** | Tests own enforceability proof, not truth or policy. |
 | Domain Placement Law | **CONFIRMED rule** | Multi-domain files use the lowest common responsibility root without assigning ownership to one participating domain. |

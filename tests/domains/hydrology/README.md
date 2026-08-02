@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hydrology-readme
 title: Hydrology Domain Tests README
 type: test-index-readme
-version: v0.2
-status: draft; parent-index; identity REMAIN_PROPOSED and unimplemented; bounded EvidenceBundle and separated aquifer-pair shape checks executable
+version: v0.3
+status: draft; parent-index; identity REMAIN_PROPOSED; bounded EvidenceBundle, aquifer-pair, and synthetic flow fixture checks executable
 owners:
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — Source steward
@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-07-31
+updated: 2026-08-02
 policy_label: public-doc; tests; hydrology; parent-index; no-network; evidence-bound; source-role-aware; temporal-aware; policy-filtered; release-gated; rollback-aware
 tags: [kfm, tests, hydrology, parent-index, enforceability, no-network, fixtures, SourceDescriptor, ReachIdentity, JSON-Schema, PolicyDecision, RedactionReceipt, EvidenceBundle, ReleaseManifest, CorrectionNotice, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -46,7 +46,7 @@ related:
 notes:
   - "This file replaces the greenfield stub at tests/domains/hydrology/README.md."
   - "This is a parent test index only. It does not define Hydrology doctrine, contracts, schemas, fixtures, source descriptors, lifecycle records, EvidenceBundles, policy rules, release decisions, pipeline code, public API material, public map material, public tiles, or published artifacts."
-  - "The current executable slice checks the proposed Hydrology EvidenceBundle alias plus closed AquiferObservation and AquiferContextLink shapes, valid/invalid fixture polarity, type separation, optional-link behavior, and fail-closed in-process network guards."
+  - "The current executable slice checks the proposed Hydrology EvidenceBundle alias, closed AquiferObservation and AquiferContextLink shapes, and a frozen synthetic public-safe FlowObservation fixture profile with fail-closed in-process network guards."
   - "The broader parent invariant remains proposed: Hydrology tests should prove enforceable trust boundaries across continuity inventory, identity, no-network discipline, policy gates, redaction/generalization, schemas, source descriptors, temporal state, evidence posture, release relationship, correction, and rollback."
   - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED; the identity and temporal child lanes document graduation tests but contain no dedicated executable common-profile modules."
   - "Default posture is deterministic and no-network. Live source checks, upstream fetches, real source exports, lifecycle data, public tiles, and restricted records do not belong in default Hydrology tests."
@@ -68,12 +68,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hydrology/README.md`  
-**Status:** draft / parent index / common feature identity `REMAIN_PROPOSED` and unimplemented / bounded EvidenceBundle and aquifer-pair shape slices executable
+**Status:** draft / parent index / common feature identity `REMAIN_PROPOSED` / bounded EvidenceBundle, aquifer-pair, and synthetic flow fixture slices executable
 
 **Owning root:** `tests/`  
 **Domain segment:** `hydrology`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED `tests/` is the canonical enforceability root · CONFIRMED three bounded modules exercise EvidenceBundle, AquiferObservation, and AquiferContextLink local shapes with synthetic fixture polarity and network denial · CONFIRMED the Hydrology workflow runs those modules · NEEDS VERIFICATION for endpoint/evidence resolution, every broader lane, policy runtime, release integration, public route/UI behavior, and broader pass rates.
+**Truth posture:** CONFIRMED `tests/` is the canonical enforceability root · CONFIRMED four bounded modules exercise EvidenceBundle, AquiferObservation, AquiferContextLink, and a fixture-only FlowObservation profile with synthetic polarity and network denial · CONFIRMED the Hydrology workflow runs those modules · NEEDS VERIFICATION for endpoint/evidence resolution, broader semantics, policy runtime, release integration, public route/UI behavior, and broader pass rates.
 
 ---
 
@@ -179,11 +179,16 @@ python -m pytest -q -p no:cacheprovider \
   tests/domains/hydrology/test_hydrology_smoke.py \
   tests/domains/hydrology/test_aquifer_observation.py \
   tests/domains/hydrology/test_aquifer_context_link.py
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
 ```
 
-This command runs thirteen tests over the proposed EvidenceBundle alias and the
-two closed aquifer schemas. It checks synthetic valid/invalid polarity,
-optional-link behavior, type separation, and in-process socket/DNS/URL denial.
+These commands run the proposed EvidenceBundle alias and two closed aquifer
+schemas plus ten standard-library checks over the frozen synthetic flow
+profile. They check synthetic valid/invalid polarity, optional-link behavior,
+type separation, flow parameter/unit/time/location/governance boundaries, and
+in-process socket/DNS/URL denial.
 It does not resolve endpoints or EvidenceRefs or establish source admission,
 scientific correctness, policy, review, proof, release, or publication.
 
@@ -215,6 +220,7 @@ VERIFICATION** and must not be inferred from the bounded pass.
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof, canonical, trust-bearing, and failure should block promotion where trust-spine checks fail. | Does not prove Hydrology executable modules or pass rate. |
 | `test_hydrology_smoke.py`, the EvidenceBundle alias schema/wrapper, and its fixture pair | CONFIRMED bounded executable slice | Local alias shape, valid/invalid polarity, and fail-closed process-level network guards. | Does not prove EvidenceRef resolution, EvidenceBundle closure, source or semantic validity, policy, proof, release, or publication. |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` with their schemas, wrappers, and fixtures | CONFIRMED bounded executable slice | Closed local shapes, valid/invalid polarity, optional observation links, typed endpoints, responsibility separation, and network denial. | Does not prove endpoint resolution, aquifer membership, real source validity, evidence, policy, proof, release, or publication. |
+| `test_public_safe_flow_fixture.py` with its validator and fixture pair | CONFIRMED bounded executable slice | Frozen synthetic FlowObservation profile, exact fail-closed findings, 00060/ft3/s measurement shape, generalized county support, time ordering, fixture-only governance, not-flood-warning limitations, bounded parsing, CLI behavior, and network denial. | Does not prove a real observation, gauge/source identity, EvidenceBundle resolution, policy, flood warning, proof, release, or publication. |
 | Child README files under this subtree | CONFIRMED for files updated in this documentation pass | Provide lane-specific scope and boundary statements. | Do not prove executable tests, fixtures, validators, CI, or release wiring. |
 | `docs/domains/hydrology/DATA_LIFECYCLE.md` | CONFIRMED doctrine / PROPOSED implementation | Provides Hydrology lifecycle, source-role, source-vintage, evidence, release, correction, and rollback posture. | Concrete validators, fixtures, routes, policy runtime, and pass rates remain NEEDS VERIFICATION. |
 | `docs/domains/hydrology/SOURCE_REGISTRY.md` and `SOURCE_ROLE_MATRIX.md` | CONFIRMED doctrine / PROPOSED implementation | Provide source admission, source-role, rights, cadence, permitted-claims, and fail-closed posture. | Machine enforcement remains NEEDS VERIFICATION. |
@@ -229,6 +235,9 @@ Before treating this parent README as implemented behavior, verify:
 - [x] One bounded EvidenceBundle alias-shape module executes with valid/invalid fixture polarity and fail-closed process-level network guards.
 - [x] Two bounded aquifer-pair modules execute with closed shapes, fixture
   polarity, separation assertions, and fail-closed network guards.
+- [x] One bounded synthetic FlowObservation fixture module executes with exact
+  positive/negative polarity, public-safe location, time, measurement,
+  governance, warning-boundary, parser, CLI, and no-network checks.
 - [ ] Executable test modules exist for each documented lane or the lane is explicitly documentation-only.
 - [ ] Test runner and import paths match the repo's accepted convention.
 - [ ] Synthetic fixtures exist in accepted fixture homes and are not source payloads.

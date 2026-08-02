@@ -1,0 +1,37 @@
+{
+  "record_id": "fixture:hydrology:flow:99999:20260802T120000Z",
+  "object_family": "FlowObservation",
+  "source_descriptor_ref": "fixture://sources/hydrology/synthetic-gauge",
+  "evidence_refs": [
+    "fixture://evidence/hydrology/flow/99999/20260802T120000Z"
+  ],
+  "gauge_site_ref": "fixture://hydrology/gauge/generalized/99999",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-08-02T12:00:00Z",
+    "retrieved_at": "2026-08-02T12:05:00Z"
+  },
+  "measurement": {
+    "parameter_code": "00060",
+    "value": 125.0,
+    "unit": "ft3/s",
+    "qualifier": "synthetic",
+    "no_data": false
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_a_flood_warning",
+    "not_life_safety_guidance",
+    "synthetic_fixture_only"
+  ]
+}

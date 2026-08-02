@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-hydrology-readme
 title: tools/validators/domains/hydrology README
 type: README
-version: v0.1
-status: draft; EvidenceBundle alias and separated aquifer-pair shape validation executable; broader validator families held
+version: v0.2
+status: draft; EvidenceBundle alias, separated aquifer-pair, and synthetic flow fixture validation executable; broader validator families held
 owner: TODO-tooling-qa-owner-plus-hydrology-steward-plus-flood-boundary-reviewer-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-07-30
+updated: 2026-08-02
 policy_label: repository-facing; per-domain-validator-index; hydrology; huc; reach; gauge; nfhl; source-role-aware; not-flood-warning; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Hydrology validator index for Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, GroundwaterWell, FlowObservation, WaterLevelObservation, WaterQualityObservation, AquiferObservation, AquiferContextLink, Hydrograph, NFHLZone, UpstreamTrace, WaterUseLink, DroughtLink, IrrigationLink, source-role separation, HUC/COMID/reach identity, freshness/time posture, not-flood-warning boundaries, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Hydrology meaning, policy decisions, proof records, and release authority to their owning roots
@@ -41,6 +41,7 @@ notes:
   - "Hydrology owns watersheds, HUC units, reaches, gauges, observations, hydrographs, regulatory flood context, and upstream traces. It does not own emergency alerts, life-safety warnings, soil truth, agriculture truth, geology truth, infrastructure truth, or hazards alert authority."
   - "NFHL and similar flood layers are regulatory context only; validators must deny treating them as observed inundation, forecast flood extent, or emergency instruction."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Hydrology meaning, create EvidenceBundles, issue flood warnings, approve release, or publish public outputs."
+  - "v0.2 adds a frozen standard-library synthetic FlowObservation fixture validator with exact fail-closed polarity; it does not validate a real gauge, source, observation, EvidenceBundle, policy decision, proof, release, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -86,6 +87,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Local JSON Schema wrappers | **CONFIRMED** | Five wrappers delegate to the shared local JSON Schema runner: DecisionEnvelope, EvidenceBundle, RunReceipt, AquiferObservation, and AquiferContextLink. |
 | Bounded EvidenceBundle alias validation | **CONFIRMED executable** | The workflow runs `validate_evidence_bundle.py` and `tests/domains/hydrology/test_hydrology_smoke.py` against one valid and one deliberately invalid local fixture under fail-closed process-level network guards. This proves shape and polarity only. |
 | Bounded aquifer pair validation | **CONFIRMED executable** | The workflow runs both aquifer wrappers and dedicated tests against synthetic valid/invalid families with network denied. This proves closed shape, fixture polarity, optional observation links, and responsibility separation only. |
+| `validate_public_safe_flow_fixture.py` | **CONFIRMED bounded executable** | Validates a frozen synthetic fixture-only FlowObservation profile with no real source, gauge, evidence, policy, proof, release, or publication effect. |
 | Broader executables, semantic schemas, policy bundles, receipts, and CI wiring | **HELD / NEEDS VERIFICATION** | Placeholder validators and proposed schema/policy surfaces remain; no broad Hydrology semantics, evidence closure, policy, proof, or release behavior is accepted here. |
 
 [Back to top](#top)
