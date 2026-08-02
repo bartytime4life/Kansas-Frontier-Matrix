@@ -1,6 +1,6 @@
 # KFM Geology domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Geology validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# Status: one bounded synthetic resource-class fixture profile is executable;
+# broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without opening restricted
@@ -44,7 +44,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Geology validation readiness
+      - name: Inspect Geology validation boundaries
         shell: bash
         run: |
           set -euo pipefail
@@ -56,8 +56,12 @@ jobs:
             "fixtures/domains/geology/README.md"
             "policy/domains/geology/README.md"
             "tests/domains/geology/README.md"
+            "tests/domains/geology/test_source_role_anti_collapse.py"
             "tools/validators/domains/geology/README.md"
+            "tools/validators/domains/geology/validate_resource_class_distinction.py"
             "tools/validators/geology/README.md"
+            "tools/validators/geology/resource_class/README.md"
+            "fixtures/domains/geology/resource_class/README.md"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -70,38 +74,114 @@ jobs:
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Geology" \
-            --test-root tests/domains/geology \
-            --validator-root tools/validators/domains/geology \
-            --validator-root tools/validators/geology
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_tests = {
+              Path(
+                  "tests/domains/geology/"
+                  "test_source_role_anti_collapse.py"
+              ),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_resource_class_distinction.py"
+              ),
+          }
+
+          for path in sorted(Path("tests/domains/geology").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(f"Accepted Geology test regressed: {path}")
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Geology test became substantive: {path}"
+                  )
+
+          validator_roots = (
+              Path("tools/validators/domains/geology"),
+              Path("tools/validators/geology"),
+          )
+          for root in validator_roots:
+              for path in sorted(root.rglob("*.py")):
+                  classification = classify_validator_source(
+                      path.read_text(encoding="utf-8")
+                  )
+                  if path in accepted_validators:
+                      if classification.placeholder:
+                          raise SystemExit(
+                              f"Accepted Geology validator regressed: {path}"
+                          )
+                  elif not classification.placeholder:
+                      raise SystemExit(
+                          f"Unwired Geology validator became substantive: {path}"
+                      )
+
+          print("Geology executable and placeholder inventories are explicit.")
+          PY
 
           if grep -Eq '^(geology-validate|validate-geology):' Makefile; then
             echo "::error::A Geology validation target now exists. Wire and verify it deliberately instead of retaining this hold."
             exit 1
           fi
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-geology"
-          echo "WORKFLOW_HOLD: executable Geology validation is not established"
+          echo "WORKFLOW_CHECK_EXECUTED: geology-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader Geology validation is not established"
 
-      - name: Record Geology validation hold
+      - name: Run bounded Geology resource-class fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/geology/test_source_role_anti_collapse.py --verbose
+
+          python tools/validators/domains/geology/validate_resource_class_distinction.py \
+            fixtures/domains/geology/resource_class/valid/*.json
+
+          if python tools/validators/domains/geology/validate_resource_class_distinction.py \
+            fixtures/domains/geology/resource_class/invalid/*.json; then
+            echo "::error::Known-invalid Geology resource-class fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Geology resource-class fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture"
+
+      - name: Record Geology validation result and broader hold
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Geology validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
 
-          `WORKFLOW_HOLD: executable Geology validation is not established`
+          `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          When green, this job has executed a frozen, synthetic fixture profile
+          that keeps MineralOccurrence, ResourceDeposit, and ResourceEstimate
+          distinct. It checks exact positive/negative polarity, occurrence-
+          as-deposit, modeled-potential-as-deposit, permit-as-deposit,
+          production-as-deposit, estimate-as-observation, estimate-as-reserve,
+          missing estimate-classification support, sensitive-location denial,
+          bounded JSON input, deterministic CLI behavior, and explicit network
+          denial.
 
-          Current repository evidence is documentation-heavy: sampled Geology
-          test modules are placeholders, and the inspected per-domain and broad
-          Geology validator lanes are README-backed rather than accepted
-          executable validators.
+          The profile is not a canonical resource-classification vocabulary and
+          does not evaluate live Geology records, source rights, EvidenceBundles,
+          policy, economic viability, title, reserves, or regulatory state.
+          Other Geology test and validator modules remain explicit placeholders
+          or documentation-only lanes and are checked as such.
 
           This check does not establish geologic interpretation, resource class,
           reserve or estimate validity, permit or production status, mineral or

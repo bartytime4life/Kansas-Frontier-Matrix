@@ -8,7 +8,7 @@ owners: Docs steward / OWNER_TBD
 created: 2026-05-16
 updated: 2026-08-02
 policy_label: public
-related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
+related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ./geology-natural-resources-architecture-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
 tags: [kfm, intake, exploratory, governance, documentation]
 notes: [Path and active source-map convention confirmed through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; owners and policy labels remain NEEDS VERIFICATION; records remain non-authoritative intake.]
 [/KFM_META_BLOCK_V2] -->

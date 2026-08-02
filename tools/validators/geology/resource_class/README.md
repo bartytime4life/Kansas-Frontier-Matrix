@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-geology-resource-class-readme
 title: tools/validators/geology/resource_class README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-geology-steward-plus-natural-resources-steward-plus-claim-class-steward-plus-source-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-02
 policy_label: repository-facing; geology-validator; resource-class; claim-class; natural-resources; occurrence-deposit-estimate-permit-production-reserve; anti-collapse; source-role-aware; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed Geology resource-class validator lane for checking MineralOccurrence, ResourceDeposit, ResourceEstimate, permit, production, reserve, extraction-site, reclamation, ownership, lease, title, hazard, and public-summary anti-collapse, source-role separation, classification-scheme posture, assumption posture, rights/sensitivity posture, public-safe geometry posture, EvidenceRef/EvidenceBundle linkage, source registry linkage, policy/review/release linkage, correction and rollback linkage, and public-surface denial checks while deferring Geology meaning, source registry authority, resource/reserve decisions, policy decisions, evidence records, proof records, receipts, and release authority to their owning roots
@@ -89,8 +89,9 @@ The answer should be a deterministic validation result. This folder should not c
 | MineralOccurrence contract | **CONFIRMED in repo evidence / draft** | `MineralOccurrence` is reported presence and is explicitly not deposit, estimate, economic viability, reserve, extraction, ownership, permit, production, reclamation, hazards risk, or AI/UI truth by itself. |
 | ResourceDeposit contract | **CONFIRMED in repo evidence / draft** | `ResourceDeposit` is a named/delineated deposit body with characterization and is explicitly distinct from occurrences, estimates, reserves, extraction, ownership, permits, production, and hazards risk. |
 | ResourceEstimate contract | **CONFIRMED in repo evidence / draft** | `ResourceEstimate` is a modeled or compiled quantity/classification claim with assumptions and is distinct from direct measurement, occurrence, deposit, reserve, economic viability, extraction, production, ownership, lease, permit, and public safety. |
-| Claim-class test lane | **CONFIRMED README / executable NEEDS VERIFICATION** | `tests/domains/geology/claim-class/README.md` states claim class is not source role and documents proposed anti-collapse test coverage. |
-| Resource-class executable, accepted schemas, fixtures, policy bundles, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README does not claim a validator script, schema, fixture set, receipt path, runtime route, or CI check exists. |
+| Bounded fixture validator | **CONFIRMED executable** | `tools/validators/domains/geology/validate_resource_class_distinction.py` checks the frozen synthetic profile under the current per-domain validator convention. |
+| Fixtures and test | **CONFIRMED executable** | `fixtures/domains/geology/resource_class/` and `tests/domains/geology/test_source_role_anti_collapse.py` provide exact positive and negative proof. |
+| Canonical schemas, vocabulary, policy bundles, evidence/proof, live-source, runtime, and release behavior | **NEEDS VERIFICATION** | The fixture profile deliberately does not settle or implement these authority surfaces. |
 
 [Back to top](#top)
 
@@ -275,38 +276,16 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/validators/geology/resource_class/
-├── README.md
-├── test_resource_class_validator.py
-└── fixtures/
-    ├── valid_mineral_occurrence/
-    ├── valid_resource_deposit/
-    ├── valid_resource_estimate_aggregate/
-    ├── missing_resource_class/
-    ├── mineral_occurrence_collapse/
-    ├── resource_deposit_collapse/
-    ├── resource_estimate_collapse/
-    ├── unsupported_reserve_claim/
-    ├── permit_as_resource_truth/
-    ├── production_as_reserve/
-    └── summary_overclaim/
-```
-
-Suggested future command pattern:
+Run the bounded fixture implementation with:
 
 ```bash
-pytest -q tests/validators/geology/resource_class
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/geology/test_source_role_anti_collapse.py --verbose
 ```
 
-```bash
-python tools/validators/geology/resource_class/validate_resource_class.py --repo-root . --format json
-```
-
-> [!NOTE]
-> This is a proposed interface, not proof that `validate_resource_class.py` or the test path exists here.
+The executable remains in `tools/validators/domains/geology/` because that is
+the repository's current accepted Geology workflow inventory. This README is a
+specialization index; it is not a second implementation or authority root.
 
 [Back to top](#top)
 

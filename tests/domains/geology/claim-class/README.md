@@ -74,7 +74,7 @@ notes:
 | Related semantic contracts | `contracts/domains/geology/` |
 | Fixture counterpart | `fixtures/domains/geology/` |
 | Adjacent proof lane | `tests/domains/geology/catalog-closure/` |
-| Current implementation status | README path exists; executable tests, fixtures, validators, and CI wiring remain `UNKNOWN` until verified. |
+| Current implementation status | The bounded `fixtures/domains/geology/resource_class/` profile, `test_source_role_anti_collapse.py`, its validator, and `domain-geology.yml` wiring are CONFIRMED; the broader claim-class lane remains PROPOSED. |
 
 **Directory basis.** Directory Rules place enforceability proofs under `tests/` and domain-specific proof lanes under `tests/domains/<domain>/`. This lane tests classification behavior; it must not become a contract, schema, source registry, catalog, proof, policy, release, or fixture home.
 
@@ -243,7 +243,12 @@ Before adding or changing tests in this lane, confirm:
 
 ## 10. Current implementation note
 
-This lane is documentation-first. The target README existed as an empty placeholder before this update. The Geology promotion runbook identifies a proposed resource-class anti-collapse test, and the object-family doctrine records the occurrence/deposit/estimate distinctions. This README does not prove that executable claim-class tests, fixtures, validators, or CI wiring already exist.
+This lane remains documentation-first beyond the bounded synthetic
+occurrence/deposit/estimate profile. Current repository evidence now confirms
+that profile's fixtures, validator, focused test, and Geology CI wiring. It does
+not prove canonical classification vocabulary, live-data behavior, source
+admission, policy enforcement, EvidenceBundle closure, reserve certification,
+or release integration.
 
 ---
 

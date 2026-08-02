@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-07-05
+updated: 2026-08-02
 policy_label: public-doc; tests; geology; no-network; deny-by-default; cite-or-abstain; release-gated
 tags: [kfm, tests, geology, natural-resources, evidence, policy, source-role, catalog-closure, public-safe-geometry, well-rights, FocusMode, EvidenceBundle, PolicyDecision, ReleaseManifest]
 related:
@@ -35,7 +35,7 @@ notes:
   - "This file replaces the prior greenfield stub at tests/domains/geology/README.md."
   - "This is a domain-test index and boundary README only. It does not define schemas, contracts, policy rules, source descriptors, fixtures, evidence bundles, receipts, proofs, release decisions, production code, or published artifacts."
   - "The default Geology test posture is deterministic, no-network, synthetic/public-safe fixtures only, and fail-closed for missing evidence, source role, policy, review, release, or rights context."
-  - "README-backed child lanes currently documented in this session include catalog closure, evidence before AI, public-safe geometry, source-role anti-collapse, and well-rights. Actual test modules, runners, fixtures, CI wiring, and pass rates remain NEEDS VERIFICATION."
+  - "The bounded resource-class/source-role anti-collapse fixture suite is executable and CI-wired. Catalog closure, evidence before AI, public-safe geometry, well-rights, broader schemas, policy, proof, and release integration remain NEEDS VERIFICATION."
   - "Rollback target for this replacement is previous stub blob SHA 1942e419bb84a7de7b8834cfe8b7a93747777849."
 [/KFM_META_BLOCK_V2] -->
 
@@ -55,11 +55,11 @@ notes:
 </p>
 
 **Path:** `tests/domains/geology/README.md`  
-**Status:** draft / stub-expanded / domain-test-index / PROPOSED until paired test files are verified  
+**Status:** draft domain-test index / one bounded fixture suite executable / broader lane PROPOSED
 **Owning root:** `tests/`  
 **Domain segment:** `geology`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a greenfield stub before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED KFM doctrine places domain-specific tests under `tests/domains/<domain>/` · CONFIRMED Geology doctrine requires evidence discipline, source-role anti-collapse, deny-by-default exact subsurface/private-well exposure, and governed promotion · NEEDS VERIFICATION for actual test modules, fixtures, runner configuration, imports, CI coverage, receipt emission, and release-gate integration.
+**Truth posture:** CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED `test_source_role_anti_collapse.py` executes the frozen synthetic resource-class profile under `domain-geology.yml` · broader schema, policy, evidence, proof, live-source, runtime, and release-gate integration remains NEEDS VERIFICATION.
 
 **Quick jumps:** [Purpose](#purpose) · [Directory basis](#directory-basis) · [Geology invariants under test](#geology-invariants-under-test) · [README-backed test lanes](#readme-backed-test-lanes) · [Expected test scope](#expected-test-scope) · [Fixture posture](#fixture-posture) · [Assertions](#assertions) · [Forbidden shortcuts](#forbidden-shortcuts) · [Suggested layout](#suggested-layout) · [Run posture](#run-posture) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
 
