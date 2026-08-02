@@ -1,7 +1,8 @@
 # KFM Hydrology domain CI readiness workflow.
 # Status: executable bounded shape/polarity checks for the PROPOSED Hydrology
 # EvidenceBundle alias, separated AquiferObservation/AquiferContextLink pair,
-# and frozen synthetic FlowObservation profile, plus explicit broader holds;
+# frozen synthetic FlowObservation profile, and bounded synthetic NHDPlus
+# waterbody crosswalk profile, plus explicit broader holds;
 # proof and release-dry-run producers are not established in current repository
 # evidence.
 #
@@ -68,9 +69,16 @@ jobs:
             "policy/domains/hydrology/README.md"
             "tests/domains/hydrology/README.md"
             "tests/domains/hydrology/test_public_safe_flow_fixture.py"
+            "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/hydrology/README.md"
             "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py"
+            "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py"
+            "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md"
+            "schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json"
+            "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/README.md"
+            "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/exact.json"
+            "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/collapsed_ambiguity.json"
             "tools/validators/hydrology/README.md"
             "tools/validators/hydro/README.md"
             "data/registry/sources/hydrology/README.md"
@@ -102,6 +110,7 @@ jobs:
               test_root / "test_aquifer_observation.py",
               test_root / "test_aquifer_context_link.py",
               test_root / "test_public_safe_flow_fixture.py",
+              test_root / "test_nhdplus_hr_ambiguity.py",
           }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
@@ -200,6 +209,7 @@ jobs:
               ),
           }
           expected_semantic_validators = {
+              "validate_nhdplus_waterbody_crosswalk.py",
               "validate_public_safe_flow_fixture.py",
           }
           expected_domain_inventory = {
@@ -388,7 +398,7 @@ jobs:
               "Inventoried five Hydrology schema wrappers without importing or executing them; "
               "inventory is not acceptance of an executable validation suite."
           )
-          print("Confirmed one bounded semantic Hydrology fixture validator.")
+          print("Confirmed two bounded semantic Hydrology fixture validators.")
           print(
               "Inventoried the exact Hydrology shorthand placeholder, PROPOSED schema, "
               "and deny-by-default policy scaffolds without executing them."
@@ -414,7 +424,8 @@ jobs:
           python -m pytest -q -p no:cacheprovider \
             tests/domains/hydrology/test_hydrology_smoke.py \
             tests/domains/hydrology/test_aquifer_observation.py \
-            tests/domains/hydrology/test_aquifer_context_link.py
+            tests/domains/hydrology/test_aquifer_context_link.py \
+            tests/domains/hydrology/test_nhdplus_hr_ambiguity.py
 
           python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
@@ -447,9 +458,13 @@ jobs:
 
           echo "EXPECTED_REJECTION: invalid Hydrology flow fixture"
 
+          python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py \
+            --fixtures
+
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-nhdplus-waterbody-crosswalk"
           echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
 
       - name: Record Hydrology validation result and broader hold
@@ -465,12 +480,16 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-public-safe-flow-fixture`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-nhdplus-waterbody-crosswalk`
+
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed four bounded domain modules
+          When this job is green, it has executed five bounded domain modules
           and the EvidenceBundle, AquiferObservation, and AquiferContextLink
-          wrappers plus the synthetic FlowObservation profile against their
-          valid and expected-invalid fixtures. It also runs the
+          wrappers plus the synthetic FlowObservation and NHDPlus waterbody
+          crosswalk profiles against their valid and expected-invalid fixtures.
+          The crosswalk coverage preserves exact/split/merge/complex overlap
+          cardinality and abstains on non-exact lookups. It also runs the
           Soil/Atmosphere/Hydrology ownership-isolation test.
           The tests install fail-closed socket, DNS, and URL guards before
           invoking the local schema validators.
@@ -482,7 +501,8 @@ jobs:
 
           This is acceptance only of local JSON Schema shape and valid/invalid
           fixture polarity for the PROPOSED Hydrology EvidenceBundle alias and
-          the separated aquifer pair and the frozen fixture-only flow profile.
+          the separated aquifer pair, the frozen fixture-only flow profile, and
+          the synthetic waterbody-only crosswalk profile.
           It also checks that observations may remain
           unlinked and that relation records cannot absorb measurements or copied
           Geology geometry. The remaining test modules, endpoint/evidence

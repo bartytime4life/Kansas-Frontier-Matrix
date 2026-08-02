@@ -88,6 +88,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Bounded EvidenceBundle alias validation | **CONFIRMED executable** | The workflow runs `validate_evidence_bundle.py` and `tests/domains/hydrology/test_hydrology_smoke.py` against one valid and one deliberately invalid local fixture under fail-closed process-level network guards. This proves shape and polarity only. |
 | Bounded aquifer pair validation | **CONFIRMED executable** | The workflow runs both aquifer wrappers and dedicated tests against synthetic valid/invalid families with network denied. This proves closed shape, fixture polarity, optional observation links, and responsibility separation only. |
 | `validate_public_safe_flow_fixture.py` | **CONFIRMED bounded executable** | Validates a frozen synthetic fixture-only FlowObservation profile with no real source, gauge, evidence, policy, proof, release, or publication effect. |
+| `validate_nhdplus_waterbody_crosswalk.py` | **CONFIRMED bounded executable** | Validates the closed synthetic USGS NHDPlusHR waterbody Permanent Identifier to NHDPlusV2 COMID profile, deterministic document hash, exact/multi-match cardinality, overlap-area bounds, and fail-closed ambiguity outcomes. |
 | Broader executables, semantic schemas, policy bundles, receipts, and CI wiring | **HELD / NEEDS VERIFICATION** | Placeholder validators and proposed schema/policy surfaces remain; no broad Hydrology semantics, evidence closure, policy, proof, or release behavior is accepted here. |
 
 [Back to top](#top)
@@ -154,6 +155,8 @@ Good fits for `tools/validators/domains/hydrology/` include:
 - child README lanes for narrow Hydrology validator families;
 - optional parent runner code that delegates to child validators without redefining their rules;
 - validators that check WBD/HUC, NHD/NHDPlus, COMID, reach, gauge, well, observation, hydrograph, NFHL, upstream-trace, drought, water-use, and irrigation-link posture;
+- the bounded NHDPlus waterbody crosswalk validator, which preserves overlap
+  cardinality without redefining source identity or fetching source bytes;
 - validators that check source-role discipline, official-source attribution, time/freshness windows, validity, units, identity crosswalks, public-safe geometry, evidence closure, review state, policy decisions, release references, correction cascade, and rollback support;
 - validators that check cross-lane joins preserve Hazards, Atmosphere, Geology, Soil, Agriculture, Infrastructure, Roads/Rail/Trade, Habitat, People/Land, and other neighboring-domain authority boundaries;
 - synthetic fixture references and test-surface guidance;
@@ -259,6 +262,16 @@ socket, DNS, and URL denial guards. They establish neither endpoint or
 EvidenceRef resolution nor actual evidence, source admission, policy, proof,
 review, release, or publication.
 
+The bounded NHDPlus waterbody crosswalk profile runs separately:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py --fixtures
+```
+
+It proves synthetic shape, hash, overlap bounds, and cardinality behavior only.
+It does not validate or ingest the USGS release bytes.
+
 Suggested future test surface:
 
 ```text
@@ -319,6 +332,6 @@ python tools/validators/domains/hydrology/run_hydrology_domain_validators.py --r
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-30 |
-| Review state | Draft parent index with three bounded schema families and broader holds. |
+| Last reviewed | 2026-08-02 |
+| Review state | Draft parent index with the bounded EvidenceBundle alias, aquifer pair, public-safe flow profile, NHDPlus waterbody crosswalk profile, and broader holds. |
 | Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, identity-crosswalk behavior, freshness/expiry behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
