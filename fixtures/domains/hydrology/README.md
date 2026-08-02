@@ -31,6 +31,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 | `run_receipt/` | Synthetic Hydrology governed-run provenance examples. | Validation pass/failure, provenance-resolved, replay-reviewable, review-required, release-readiness failure, or rollback-readiness failure. |
 | `aquifer_observation/` | Synthetic groundwater measurement shapes, including linked and unlinked observations. | Valid observed measurement or expected rejection for source-role or embedded-Geology collapse. |
 | `aquifer_context_link/` | Synthetic typed Hydrology-to-Geology relation shapes. | Valid observation/well relation or expected rejection for endpoint, measurement, or copied-geometry collapse. |
+| `public_safe_flow/` | Frozen synthetic FlowObservation public-safe profile with exact positive/negative polarity. | Valid fixture-only flow shape or expected rejection for role, location, time, unit, governance, and warning-authority collapse. |
 | `sources/` | Synthetic source-reference, source-role, rights, sensitivity, cadence, freshness, source-head, and admission examples. | Validation pass, review-ready, source-role-preserved, or fail-closed when source posture is unresolved. |
 | `valid/` | Broad positive-path staging and navigation lane. | Validation pass, review-ready, evidence-resolved, citation-ready, provenance-resolved, public-safe context, or governed `ANSWER`. |
 | `invalid/` | Broad fail-closed staging and navigation lane for known invalid families. | `ABSTAIN`, `DENY`, `ERROR`, validation failure, review-required, blocked render, or release-readiness failure. |
@@ -148,8 +149,9 @@ Do not use this root or its child lanes for real records, real source exports, l
 
 - Target README: replaced greenfield stub content.
 - Fixture payload inventory: the two aquifer families contain public-safe
-  synthetic valid and expected-invalid JSON payloads; broader inventory remains
-  only partially verified.
+  synthetic valid and expected-invalid JSON payloads, and `public_safe_flow/`
+  contains one positive plus one exact expected-invalid profile; broader
+  inventory remains only partially verified.
 - Child README inventory: PARTIALLY VERIFIED against populated child lane READMEs fetched during this update and recent preceding updates.
 - Decision-envelope fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/decision_envelope/README.md`.
 - EvidenceBundle fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/evidence_bundle/README.md`.

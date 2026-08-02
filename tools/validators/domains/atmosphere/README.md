@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-atmosphere-readme
 title: tools/validators/domains/atmosphere README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded synthetic precipitation fixture validator executable; broader validators held
 owner: TODO-tooling-qa-owner-plus-atmosphere-steward-plus-cross-domain-steward-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-02
 policy_label: repository-facing; per-domain-validator-index; atmosphere; cross-lane; source-role-aware; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Atmosphere validator index for edge-specific and specialty Atmosphere validators under tools/validators/domains/atmosphere while deferring domain meaning to docs/contracts and broader cross-domain invariants to their existing validator lanes
@@ -36,9 +36,9 @@ related:
   - ../../../../../data/receipts/
   - ../../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "v0.2 confirms one standard-library synthetic public-safe precipitation fixture validator; it does not establish Atmosphere source, schema, evidence, policy, proof, release, or publication authority."
   - "Existing cross-domain Atmosphere validator lanes include atmosphere_hydrology, atmosphere_agriculture, atmosphere_biodiversity, atmosphere_hazards, and air-hazards. This subtree is for narrower per-domain child or specialty validators, not a competing Atmosphere authority."
-  - "Child README lanes currently confirmed here include smoke/. Executable behavior remains NEEDS VERIFICATION unless verified separately."
+  - "Child README lanes currently confirmed here include smoke/. Broader executable behavior remains NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -78,7 +78,8 @@ The answer should be a navigable validator index and deterministic validation ou
 | Child README lanes | **CONFIRMED README child / executable proposed** | `smoke/` README exists for Atmosphere smoke validation. |
 | Existing cross-domain Atmosphere validator lanes | **CONFIRMED README siblings / executable proposed** | README lanes exist for `air-hazards/`, `atmosphere_agriculture/`, `atmosphere_biodiversity/`, `atmosphere_hazards/`, and `atmosphere_hydrology/`; executable behavior remains unverified. |
 | Atmosphere smoke lane | **CONFIRMED in repo evidence / draft** | `smoke/README.md` defines `SmokeContext`, `AODRaster`, source-role, freshness, Hazards seam, sensitive-join, release, and public-surface checks. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| `validate_public_safe_precipitation_fixture.py` | **CONFIRMED bounded executable** | Validates only the frozen synthetic precipitation fixture profile with no source resolution, policy decision, evidence closure, release, or publication effect. |
+| Broader executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | Other script/test paths, schema maturity, policy bundles, receipts, runtime behavior, and release behavior remain unverified. |
 
 [Back to top](#top)
 
@@ -109,6 +110,7 @@ This README does not move or rename any existing Atmosphere cross-domain validat
 | Child lane | Validator question | Status |
 |---|---|---|
 | `smoke/` | Does an Atmosphere smoke candidate preserve source role, product type, time/freshness, uncertainty, rights, sensitivity, Hazards seam boundaries, evidence support, policy posture, release readiness, correction paths, and rollback support before it reaches a governed surface? | README confirmed; executable proposed. |
+| Parent precipitation profile | Does a synthetic PrecipitationObservation preserve observed-sensor character, generalized location, observed/retrieval time, millimetre units, accumulation window, fixture-only governance, and no-alert limitations? | `validate_public_safe_precipitation_fixture.py` confirmed executable with file-backed positive/negative tests. |
 
 Future child lanes should be added only when they represent a distinct Atmosphere specialty, edge, fixture family, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics. Avoid creating a child lane for every object family unless the validator has distinct boundary rules.
 

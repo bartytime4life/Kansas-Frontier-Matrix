@@ -1,6 +1,6 @@
-# KFM Atmosphere domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Atmosphere validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Atmosphere domain CI workflow.
+# Status: one bounded synthetic precipitation fixture profile is executable;
+# broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without performing live source
@@ -43,7 +43,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Atmosphere validation readiness
+      - name: Inspect Atmosphere validation boundaries
         shell: bash
         run: |
           set -euo pipefail
@@ -55,7 +55,10 @@ jobs:
             "fixtures/domains/atmosphere/README.md"
             "policy/domains/atmosphere/README.md"
             "tests/domains/atmosphere/README.md"
+            "tests/domains/atmosphere/test_atmosphere_smoke.py"
+            "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
+            "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
             "data/registry/sources/atmosphere/README.md"
             "release/candidates/atmosphere/README.md"
           )
@@ -67,42 +70,108 @@ jobs:
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Atmosphere" \
-            --test-root tests/domains/atmosphere \
-            --validator-root tools/validators/domains/atmosphere \
-            --validator-root tools/validators/air-hazards \
-            --validator-root tools/validators/atmosphere_agriculture \
-            --validator-root tools/validators/atmosphere_biodiversity \
-            --validator-root tools/validators/atmosphere_hazards \
-            --validator-root tools/validators/atmosphere_hydrology
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_test = Path("tests/domains/atmosphere/test_atmosphere_smoke.py")
+          accepted_validator = Path(
+              "tools/validators/domains/atmosphere/"
+              "validate_public_safe_precipitation_fixture.py"
+          )
+
+          for path in sorted(Path("tests/domains/atmosphere").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path == accepted_test:
+                  if classification.placeholder:
+                      raise SystemExit(f"Accepted Atmosphere test regressed: {path}")
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Atmosphere test became substantive: {path}"
+                  )
+
+          validator_roots = (
+              Path("tools/validators/domains/atmosphere"),
+              Path("tools/validators/air-hazards"),
+              Path("tools/validators/atmosphere_agriculture"),
+              Path("tools/validators/atmosphere_biodiversity"),
+              Path("tools/validators/atmosphere_hazards"),
+              Path("tools/validators/atmosphere_hydrology"),
+          )
+          for root in validator_roots:
+              for path in sorted(root.rglob("*.py")):
+                  classification = classify_validator_source(
+                      path.read_text(encoding="utf-8")
+                  )
+                  if path == accepted_validator:
+                      if classification.placeholder:
+                          raise SystemExit(
+                              f"Accepted Atmosphere validator regressed: {path}"
+                          )
+                  elif not classification.placeholder:
+                      raise SystemExit(
+                          f"Unwired Atmosphere validator became substantive: {path}"
+                      )
+
+          print("Atmosphere executable and placeholder inventories are explicit.")
+          PY
 
           if grep -Eq '^(atmosphere-validate|validate-atmosphere):' Makefile; then
             echo "::error::An Atmosphere validation target now exists. Wire and verify it deliberately instead of retaining this hold."
             exit 1
           fi
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-atmosphere"
-          echo "WORKFLOW_HOLD: executable Atmosphere validation is not established"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader Atmosphere validation is not established"
 
-      - name: Record Atmosphere validation hold
+      - name: Run bounded Atmosphere precipitation validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+          python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
+
+          python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
+            fixtures/domains/atmosphere/public_safe_precipitation/valid/public_safe_precipitation.json
+
+          if python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
+            fixtures/domains/atmosphere/public_safe_precipitation/invalid/role_location_time_governance_collapse.json; then
+            echo "::error::The known-invalid Atmosphere precipitation fixture was accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere precipitation fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
+
+      - name: Record Atmosphere validation result and broader hold
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Atmosphere validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture`
 
-          `WORKFLOW_HOLD: executable Atmosphere validation is not established`
+          `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          When green, this job has executed the frozen synthetic precipitation
+          profile and the Soil/Atmosphere/Hydrology ownership-isolation test.
+          It checks exact positive/negative polarity, observed-sensor character,
+          generalized county support, observed/retrieval time ordering,
+          millimetre units, accumulation bounds, fixture-only governance,
+          alert/life-safety denials, bounded JSON input, deterministic CLI
+          behavior, and explicit network denial.
 
-          Current repository evidence is documentation-heavy: sampled Atmosphere
-          test modules are placeholders, and the inspected per-domain and
-          cross-domain Atmosphere validator lanes are README-backed rather than
-          accepted executable validators.
+          Other Atmosphere test and validator modules remain explicit
+          placeholders or documentation-only lanes and are checked as such.
 
           This check performs no live source request. It does not establish
           observation accuracy, AQI or concentration equivalence, model-as-observed

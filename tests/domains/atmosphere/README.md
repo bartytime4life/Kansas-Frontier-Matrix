@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests/domains/atmosphere/readme
 title: Atmosphere Domain Test Lane README
 type: domain-test-readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded synthetic precipitation fixture profile executable
 owners:
   - <PLACEHOLDER — Atmosphere steward>
   - <PLACEHOLDER — Test steward>
@@ -11,10 +11,10 @@ owners:
   - <PLACEHOLDER — Schema steward>
   - <PLACEHOLDER — Evidence/governance reviewer>
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-08-02
 policy_label: public
-implementation_status: scaffold
-verification_status: current-session path verified; child lanes listed in plan; executable tests, fixtures, validators, and CI not verified
+implementation_status: one bounded standard-library precipitation profile executable; broader lane scaffolded
+verification_status: current-session path verified; precipitation positive, negative, boundary, parser, CLI, no-network, and cross-domain isolation checks executable; broader semantics and release state unverified
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -56,14 +56,14 @@ tags:
 ![lane: tests%2Fdomains%2Fatmosphere-informational](https://img.shields.io/badge/lane-tests%2Fdomains%2Fatmosphere-informational)
 ![authority: tests--only](https://img.shields.io/badge/authority-tests--only-lightgrey)
 ![posture: no--network](https://img.shields.io/badge/posture-no--network-blue)
-![implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-yellow)
+![implementation: bounded](https://img.shields.io/badge/implementation-bounded-blue)
 
 **Status:** `draft`  
 **Authority:** parent domain-test README; not a schema, contract, policy implementation, validator, fixture inventory, source registry, receipt, proof, release decision, or published artifact  
 **Owning root:** `tests/`  
 **Domain segment:** `domains/atmosphere/`  
 **Default posture:** deterministic, public-safe fixtures; finite outcomes; cite-or-abstain  
-**Last reviewed:** 2026-07-05
+**Last reviewed:** 2026-08-02
 
 ---
 
@@ -149,8 +149,9 @@ This path is correct because:
 | `tests/README.md` allows schema, contract, validator, policy, evidence, lifecycle, receipt/proof, release-manifest, API, UI, e2e, runtime-proof, and domain-specific tests | CONFIRMED from current repo docs. |
 | Atmosphere file-system plan lists `tests/domains/atmosphere/` child lanes | CONFIRMED from current repo docs. |
 | Atmosphere policy spine lists key deny/restrict rules | CONFIRMED from current repo docs. |
-| Executable tests under each child lane | UNKNOWN in this README. |
-| Fixture inventory | NEEDS VERIFICATION. |
+| `test_atmosphere_smoke.py` | CONFIRMED bounded executable for the synthetic precipitation fixture profile; it is not Atmosphere truth or release proof. |
+| Executable tests under every broader child lane | NEEDS VERIFICATION. |
+| Fixture inventory | The bounded precipitation pair is CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
 | Validator modules and commands | NEEDS VERIFICATION. |
 | CI job names / pytest markers | NEEDS VERIFICATION. |
 | Runtime/API/UI behavior | NEEDS VERIFICATION unless supported by executable tests. |
@@ -172,6 +173,18 @@ The Atmosphere file-system plan names these child lanes under `tests/domains/atm
 | `policy-deny/` | Negative policy tests that fail closed for unsupported or collapsed claims. | Parent/child README work may exist in open PRs; executable tests NEED VERIFICATION. |
 | `no-network-fixtures/` | Public-safe deterministic fixture discipline for no-network tests. | README work may exist in open PRs; fixture inventory NEEDS VERIFICATION. |
 | `no-network/` | Default offline/no-network behavior for Atmosphere tests. | README work may exist in open PRs; enforcement NEEDS VERIFICATION. |
+
+The bounded accepted command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+```
+
+It exercises only the frozen synthetic precipitation profile, including exact
+fixture polarity, observation-vs-model role separation, generalized location,
+time ordering, millimetre units, bounded accumulation/value fields, fixture-only
+governance, parser/file limits, CLI behavior, and explicit network denial.
 
 Additional sublanes may be added when they have a clear test responsibility and do not duplicate an existing authority root.
 

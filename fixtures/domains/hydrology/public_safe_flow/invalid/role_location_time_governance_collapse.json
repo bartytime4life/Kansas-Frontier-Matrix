@@ -1,0 +1,34 @@
+{
+  "record_id": "fixture:hydrology:invalid",
+  "object_family": "NFHLZone",
+  "source_descriptor_ref": "",
+  "evidence_refs": [],
+  "gauge_site_ref": "",
+  "spatial_support": {
+    "kind": "exact_gauge",
+    "county_fips": "20-53",
+    "longitude": "synthetic-forbidden-location"
+  },
+  "temporal_scope": {
+    "observed_at": "not-a-time",
+    "retrieved_at": "2026-08-02T11:00:00Z"
+  },
+  "measurement": {
+    "parameter_code": "forecast",
+    "value": -1,
+    "unit": "cfs forecast",
+    "qualifier": "modeled",
+    "no_data": 0
+  },
+  "governance": {
+    "rights_state": "unknown",
+    "sensitivity_state": "unknown",
+    "review_state": "approved",
+    "release_state": "released",
+    "promotion_eligible": true,
+    "rollback_state": "missing"
+  },
+  "limitations": [
+    "official_flood_warning"
+  ]
+}

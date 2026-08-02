@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-validators-common-readme
-title: tools/validators/_common/ — Shared JSON Schema Validator Runtime Boundary
+title: tools/validators/_common/ — Shared Validator Runtime Boundary
 type: readme; directory-readme; shared-validator-runtime; schema-resolution-helper; compatibility-boundary
-version: v0.4
-status: draft; repository-grounded; executable; widely-consumed; fixture-driven; ci-invoked; extraction-decision-open; non-authoritative
+version: v0.5
+status: draft; repository-grounded; executable; widely-consumed; fixture-driven; bounded-public-safe-fixture-mechanics; ci-invoked; extraction-decision-open; non-authoritative
 owners: OWNER_TBD — Validator steward · Schema steward · Contract steward · Test/fixture steward · Python tooling steward · Security steward · CI steward · Release steward · Docs steward
 created: 2026-05-09
-updated: 2026-08-01
+updated: 2026-08-02
 supersedes: v0.3 shared-validator runtime guide
 policy_label: "public-review; tools; validators; shared-runtime; json-schema; draft-2020-12; local-resolution; no-network; deterministic-intent; fail-closed; schema-authority-external; contract-authority-external; policy-authority-external; evidence-authority-external; release-authority-external; extraction-aware; correction-aware; rollback-aware"
 current_path: tools/validators/_common/README.md
@@ -72,6 +72,7 @@ related:
   - ../README.md
   - jsonschema_runner.py
   - local_resolver.py
+  - public_safe_fixture.py
   - run_all.py
   - ../../../pyproject.toml
   - ../../../Makefile
@@ -101,9 +102,9 @@ notes:
 
 <a id="top"></a>
 
-# `tools/validators/_common/` — Shared JSON Schema Validator Runtime Boundary
+# `tools/validators/_common/` — Shared Validator Runtime Boundary
 
-> **One-line purpose.** Provide the current repository-local JSON Schema loading, `$id` registry, fixture execution, and aggregate-runner plumbing used by multiple validator entrypoints—without becoming schema authority, semantic contract authority, policy, evidence, release approval, or public truth.
+> **One-line purpose.** Provide repository-local JSON Schema loading, `$id` registry, bounded synthetic fixture mechanics, and aggregate-runner plumbing used by validator entrypoints—without becoming schema authority, semantic contract authority, policy, evidence, release approval, or public truth.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -183,6 +184,7 @@ tools/validators/_common/
 ├── README.md
 ├── jsonschema_runner.py
 ├── local_resolver.py
+├── public_safe_fixture.py
 └── run_all.py
 ```
 
@@ -193,6 +195,7 @@ tools/validators/_common/
 | `README.md` | Human-facing contract, evidence boundary, maintenance guidance | Cannot establish implementation by itself. |
 | `local_resolver.py` | Build a local `$id` registry from canonical-candidate schema files | Does not decide schema admission, status, aliases, or canonicality. |
 | `jsonschema_runner.py` | Construct validator, validate explicit files, exercise fixture directories | Does not produce a governed `ValidationReport` object. |
+| `public_safe_fixture.py` | Bounded regular-file JSON parsing, duplicate/non-finite rejection, stable findings, and deterministic CLI reporting for synthetic public-safe profiles | Does not define any domain field, meaning, source role, evidence, policy, or release state. |
 | `run_all.py` | Sequentially invoke seven top-level validators in fixture mode | Not dynamic discovery and not the complete validator inventory. |
 
 No `_common/__init__.py` was surfaced in bounded search. Current imports rely on the repository's Python path/package layout rather than an explicitly exported `_common` API module.

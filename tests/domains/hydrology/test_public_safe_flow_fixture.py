@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic tests for the synthetic Atmosphere precipitation profile."""
+"""Deterministic tests for the synthetic Hydrology flow profile."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in __import__("sys").path:
     __import__("sys").path.insert(0, str(REPO_ROOT))
 
-from tools.validators.domains.atmosphere.validate_public_safe_precipitation_fixture import (  # noqa: E402
+from tools.validators.domains.hydrology.validate_public_safe_flow_fixture import (  # noqa: E402
     FORBIDDEN_LOCATION_ALIASES,
     MAX_FIXTURE_BYTES,
     Finding,
@@ -29,10 +29,8 @@ from tools.validators.domains.atmosphere.validate_public_safe_precipitation_fixt
 )
 
 
-FIXTURE_ROOT = (
-    REPO_ROOT / "fixtures/domains/atmosphere/public_safe_precipitation"
-)
-VALID_FIXTURE = FIXTURE_ROOT / "valid/public_safe_precipitation.json"
+FIXTURE_ROOT = REPO_ROOT / "fixtures/domains/hydrology/public_safe_flow"
+VALID_FIXTURE = FIXTURE_ROOT / "valid/public_safe_flow.json"
 INVALID_FIXTURE = (
     FIXTURE_ROOT / "invalid/role_location_time_governance_collapse.json"
 )
@@ -53,9 +51,9 @@ def _load_expected() -> list[Finding]:
     return findings
 
 
-class AtmospherePrecipitationFixtureTests(unittest.TestCase):
+class HydrologyFlowFixtureTests(unittest.TestCase):
     def setUp(self) -> None:
-        denied = RuntimeError("network access is forbidden in Atmosphere tests")
+        denied = RuntimeError("network access is forbidden in Hydrology tests")
         for patcher in (
             mock.patch.object(socket.socket, "connect", side_effect=denied),
             mock.patch.object(socket, "create_connection", side_effect=denied),
@@ -76,11 +74,11 @@ class AtmospherePrecipitationFixtureTests(unittest.TestCase):
         self.assertEqual(validate_file(INVALID_FIXTURE), expected)
 
     def test_measurement_boundaries_and_boolean_separation(self) -> None:
-        for value in (0, 1_000):
+        for value in (0, 1_000_000_000):
             candidate = _load_candidate()
             candidate["measurement"]["value"] = value  # type: ignore[index]
             self.assertEqual(validate_candidate(candidate), [])
-        for value in (-1, 1_001, True, False, float("nan"), float("inf")):
+        for value in (-1, 1_000_000_001, True, False, float("nan"), float("inf")):
             candidate = _load_candidate()
             candidate["measurement"]["value"] = value  # type: ignore[index]
             self.assertIn(
@@ -88,19 +86,12 @@ class AtmospherePrecipitationFixtureTests(unittest.TestCase):
                 validate_candidate(candidate),
             )
 
-    def test_accumulation_period_boundaries(self) -> None:
-        for value in (1, 10_080):
+    def test_no_data_must_be_the_boolean_false(self) -> None:
+        for value in (0, "false", None, True):
             candidate = _load_candidate()
-            candidate["measurement"]["accumulation_minutes"] = value  # type: ignore[index]
-            self.assertEqual(validate_candidate(candidate), [])
-        for value in (0, 10_081, True, 1.5, "60"):
-            candidate = _load_candidate()
-            candidate["measurement"]["accumulation_minutes"] = value  # type: ignore[index]
+            candidate["measurement"]["no_data"] = value  # type: ignore[index]
             self.assertIn(
-                Finding(
-                    "ACCUMULATION_PERIOD_INVALID",
-                    "$.measurement.accumulation_minutes",
-                ),
+                Finding("NO_DATA_STATE_INVALID", "$.measurement.no_data"),
                 validate_candidate(candidate),
             )
 
@@ -127,32 +118,30 @@ class AtmospherePrecipitationFixtureTests(unittest.TestCase):
         for alias in sorted(FORBIDDEN_LOCATION_ALIASES):
             candidate = _load_candidate()
             candidate["spatial_support"][alias.upper()] = "protected"  # type: ignore[index]
-            findings = validate_candidate(candidate)
             self.assertIn(
                 Finding(
                     "PRECISE_LOCATION_FIELD_FORBIDDEN",
                     f"$.spatial_support.{alias.upper()}",
                 ),
-                findings,
+                validate_candidate(candidate),
             )
 
     def test_closed_shapes_and_deterministic_findings(self) -> None:
         candidate = _load_candidate()
-        candidate["generated_claim"] = "not allowed"
+        candidate["warning_state"] = "official"
         candidate["measurement"]["forecast"] = True  # type: ignore[index]
-        findings = validate_candidate(candidate)
         expected = [
             Finding("UNDECLARED_MEASUREMENT_FIELD", "$.measurement.forecast"),
-            Finding("UNDECLARED_TOP_LEVEL_FIELD", "$.generated_claim"),
+            Finding("UNDECLARED_TOP_LEVEL_FIELD", "$.warning_state"),
         ]
-        self.assertEqual(findings, expected)
+        self.assertEqual(validate_candidate(candidate), expected)
         reordered = dict(reversed(list(copy.deepcopy(candidate).items())))
         self.assertEqual(validate_candidate(reordered), expected)
 
     def test_parser_rejects_duplicate_nonfinite_and_nonobject_json(self) -> None:
         cases = (
             b'{"record_id":"a","record_id":"b"}',
-            b'{"measurement":{"value":NaN}}',
+            b'{"measurement":{"value":Infinity}}',
             b"[]",
         )
         expected = (
