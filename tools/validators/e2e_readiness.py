@@ -375,6 +375,9 @@ def _check_e2e_inventory(
     try:
         for path in sorted(root.rglob("*")):
             if path.is_file():
+                rel = path.relative_to(root)
+                if any(part in IGNORED_SCAN_DIRECTORIES for part in rel.parts[:-1]):
+                    continue
                 relative = _display(path, repository_root)
                 observed.add(relative)
                 inspected.add(relative)
