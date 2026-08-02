@@ -5,20 +5,22 @@
   "network_access": "forbidden",
   "document_receipts": [
     {
-      "document_id": "kwo-swigp-fy2027-guidelines",
-      "document_title": "FY2027 State Water Infrastructure Grant Program Guidelines",
-      "document_version": "FY2027",
-      "document_digest": "sha256:c47a86543e3a6fabe680b6172f177191099d5c77109f6e8d491cc0d987ab17a3",
-      "source_ref": "kwo:grant-programs:swigp:fy2027",
-      "pinned_at": "2026-07-01T00:00:00Z"
+      "document_id": "fixture-water-planning-guidance-v1",
+      "document_title": "Synthetic water-planning guidance fixture",
+      "document_version": "v1",
+      "document_digest": "sha256:1c81aaa08d523f32a53420b24a6d782001f456ebf0418bcffbc98f3e9cb6a75d",
+      "source_ref": "fixture:water-planning:document-receipts:guidance-v1",
+      "fixture_payload_utf8": "KFM synthetic water-planning guidance fixture v1\n",
+      "pinned_at": "2026-08-02T00:00:00Z"
     },
     {
-      "document_id": "kwo-swigp-fy2027-scoring-v1",
-      "document_title": "FY2027 SWIGP Scoring Matrix",
+      "document_id": "fixture-water-planning-scoring-v1",
+      "document_title": "Synthetic water-planning scoring fixture",
       "document_version": "v1",
-      "document_digest": "sha256:861b1e5bb696ab3d382833fb78b8cf414ba8d5424ca80f78126ba5e21ddd7835",
-      "source_ref": "kwo:grant-programs:swigp:fy2027:scoring",
-      "pinned_at": "2026-07-01T00:00:00Z"
+      "document_digest": "sha256:3101e5efbb2583ab5791a9f92146175ec19379b485af2274a251e889db4f8bba",
+      "source_ref": "fixture:water-planning:document-receipts:scoring-v1",
+      "fixture_payload_utf8": "KFM synthetic water-planning scoring fixture v1\n",
+      "pinned_at": "2026-08-02T00:00:00Z"
     }
   ],
   "blocked_behaviors": {

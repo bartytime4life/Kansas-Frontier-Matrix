@@ -5,11 +5,12 @@
   "network_access": "forbidden",
   "document_receipts": [
     {
-      "document_id": "kwo-swigp-fy2027-scoring-v1",
-      "document_title": "FY2027 SWIGP Scoring Matrix",
+      "document_id": "fixture-water-planning-scoring-v1",
+      "document_title": "Synthetic water-planning scoring fixture",
       "document_version": "v1",
       "document_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "source_ref": "kwo:grant-programs:swigp:fy2027:scoring"
+      "source_ref": "fixture:water-planning:document-receipts:scoring-v1",
+      "fixture_payload_utf8": "KFM synthetic water-planning scoring fixture v1\n"
     }
   ],
   "blocked_behaviors": {

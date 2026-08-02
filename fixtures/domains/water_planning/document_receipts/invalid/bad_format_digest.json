@@ -5,11 +5,12 @@
   "network_access": "forbidden",
   "document_receipts": [
     {
-      "document_id": "kwo-swigp-fy2027-guidelines",
-      "document_title": "FY2027 State Water Infrastructure Grant Program Guidelines",
-      "document_version": "FY2027",
+      "document_id": "fixture-water-planning-guidance-v1",
+      "document_title": "Synthetic water-planning guidance fixture",
+      "document_version": "v1",
       "document_digest": "not-a-valid-sha256-digest",
-      "source_ref": "kwo:grant-programs:swigp:fy2027"
+      "source_ref": "fixture:water-planning:document-receipts:guidance-v1",
+      "fixture_payload_utf8": "KFM synthetic water-planning guidance fixture v1\n"
     }
   ],
   "blocked_behaviors": {

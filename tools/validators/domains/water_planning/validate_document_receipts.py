@@ -1,17 +1,19 @@
-"""Deterministic, no-network document receipt validator for water-planning.
+"""Deterministic, no-network receipt-fixture validator for water planning.
 
-Enforces that every admitted KWO water-planning document record carries a
-properly formed, non-placeholder SHA-256 digest.  A null or all-zero digest
-signals an unpinned placeholder and is rejected.
+This validator checks a bounded synthetic fixture envelope. Positive digest
+examples must be bound to embedded synthetic bytes and ``fixture:`` source
+references. A fixture must never assign a digest to an official ``kwo:``
+source reference; official document identities require separately captured
+source bytes and repository-owned ingest receipts.
 
-This validator operates on a bounded fixture envelope.  It does not fetch
-sources, retrieve documents, construct proofs, make release decisions, or
-publish.
+The validator does not fetch sources, retrieve documents, construct proofs,
+make release decisions, activate connectors, or publish.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -62,6 +64,7 @@ ALLOWED_RECEIPT_KEYS = frozenset(
         "source_ref",
         "pinned_at",
         "correction_ref",
+        "fixture_payload_utf8",
     }
 )
 
@@ -82,6 +85,8 @@ def _validate_receipt(
     receipt: object,
     index: int,
     findings: list[Finding],
+    *,
+    fixture_only: bool,
 ) -> None:
     path = f"$.document_receipts[{index}]"
     if not isinstance(receipt, Mapping):
@@ -98,40 +103,67 @@ def _validate_receipt(
 
     title = receipt.get("document_title")
     digest = receipt.get("document_digest")
+    source_ref = receipt.get("source_ref")
+    payload = receipt.get("fixture_payload_utf8")
+    digest_shape_valid = False
 
     if title is not None:
-        # A document with a title must have a pinned digest.
         if digest is None:
             _add(
                 findings,
                 "DOCUMENT_DIGEST_UNPINNED",
                 f"{path}.document_digest",
             )
-        elif not isinstance(digest, str):
-            _add(
-                findings,
-                "DOCUMENT_DIGEST_FORMAT_INVALID",
-                f"{path}.document_digest",
-            )
-        elif not DIGEST_PATTERN.match(digest):
+        elif not isinstance(digest, str) or not DIGEST_PATTERN.match(digest):
             _add(
                 findings,
                 "DOCUMENT_DIGEST_FORMAT_INVALID",
                 f"{path}.document_digest",
             )
         elif digest == ZERO_DIGEST:
-            # All-zero digest is a placeholder, not a real pinned document.
             _add(
                 findings,
                 "DOCUMENT_DIGEST_IS_PLACEHOLDER",
                 f"{path}.document_digest",
             )
-
+        else:
+            digest_shape_valid = True
     elif digest is not None:
-        # Digest without title is inconsistent.
         _add(
             findings,
             "DOCUMENT_DIGEST_WITHOUT_TITLE",
+            f"{path}.document_digest",
+        )
+
+    if isinstance(source_ref, str) and source_ref.startswith("fixture:"):
+        if not fixture_only:
+            _add(findings, "FIXTURE_SOURCE_OUTSIDE_FIXTURE", f"{path}.source_ref")
+        if not isinstance(payload, str):
+            _add(findings, "FIXTURE_PAYLOAD_MISSING", f"{path}.fixture_payload_utf8")
+        elif digest_shape_valid:
+            expected = "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+            if digest != expected:
+                _add(
+                    findings,
+                    "FIXTURE_DIGEST_MISMATCH",
+                    f"{path}.document_digest",
+                )
+    elif payload is not None:
+        _add(
+            findings,
+            "FIXTURE_PAYLOAD_SCOPE_INVALID",
+            f"{path}.fixture_payload_utf8",
+        )
+
+    if (
+        fixture_only
+        and isinstance(source_ref, str)
+        and source_ref.startswith("kwo:")
+        and digest is not None
+    ):
+        _add(
+            findings,
+            "OFFICIAL_SOURCE_DIGEST_FORBIDDEN_IN_FIXTURE",
             f"{path}.document_digest",
         )
 
@@ -144,11 +176,11 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
 
     record_type = candidate.get("record_type")
     if record_type != RECORD_TYPE:
-        _add(
-            findings,
-            "RECORD_TYPE_INVALID",
-            "$.record_type",
-        )
+        _add(findings, "RECORD_TYPE_INVALID", "$.record_type")
+
+    fixture_only = candidate.get("fixture_only")
+    if fixture_only is not True:
+        _add(findings, "FIXTURE_ONLY_REQUIRED", "$.fixture_only")
 
     network_access = candidate.get("network_access")
     if network_access != "forbidden":
@@ -165,7 +197,12 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
         _add(findings, "RECEIPTS_ARRAY_EMPTY", "$.document_receipts")
     else:
         for i, receipt in enumerate(receipts):
-            _validate_receipt(receipt, i, findings)
+            _validate_receipt(
+                receipt,
+                i,
+                findings,
+                fixture_only=fixture_only is True,
+            )
 
     blocked = candidate.get("blocked_behaviors")
     if isinstance(blocked, Mapping):
