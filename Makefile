@@ -26,6 +26,7 @@ help:
 	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
+	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
 	@echo
 	@echo "Implemented local runtime targets:"
 	@echo "  api-run               Start the governed API locally (alias of governed-api-dev)"
@@ -37,7 +38,6 @@ help:
 	@echo "  proof-slice           Hydrology proof-slice pipeline"
 	@echo "  catalog               Catalog record builder"
 	@echo "  release-dry-run       Candidate release assembly"
-	@echo "  publish-check         Promotion gate"
 	@echo
 	@echo "Cleanup targets:"
 	@echo "  maplibre-clean        Remove artifacts/perf"
@@ -69,7 +69,8 @@ release-dry-run:
 	@echo "TODO: tools/release dry-run"
 
 publish-check:
-	@echo "TODO: tools/validators/promotion_gate"
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/validate_promotion_gate.py --fixtures
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest -q tests.release.test_promotion_gate
 
 deny-test:
 	PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers apps/governed-api/tests/test_boundary_guards.py

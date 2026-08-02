@@ -2,25 +2,28 @@
 doc_id: kfm://doc/tests-release-readme
 title: tests/release/ — Release Governance Enforceability and Promotion-Safety Boundary
 type: readme; directory-readme; release-test-boundary; promotion-safety; correction-and-rollback
-version: v0.2
-status: draft; repository-grounded; direct-lane-readme-only; pytest-configured; release-schema-harness-present-but-fixture-gated; dedicated-release-suite-not-established; release-policy-stubs; release-tooling-documentation-only; no-network-by-default; fail-closed; non-authoritative
+version: v1.0
+status: implemented-promotion-gate-thin-slice; repository-grounded; unittest-and-pytest-compatible; no-network; fail-closed; non-authoritative; broader-release-suite-partial
 owners: OWNER_TBD — QA steward · Release steward · Promotion steward · Contract steward · Schema steward · Fixture steward · Validator steward · Evidence steward · Policy steward · Correction steward · Rollback steward · CI steward · Security reviewer · Docs steward
 created: 2026-07-06
-updated: 2026-07-16
+updated: 2026-08-02
 supersedes: v0.1 planning-oriented release-test README
 policy_label: public-doc; tests; release; promotion; correction; rollback; withdrawal; supersession; synthetic-only; no-network; evidence-aware; policy-aware; review-aware; fail-closed; no-release-authority
 current_path: tests/release/README.md
-truth_posture: CONFIRMED target README and prior blob, tests responsibility root, release governance root, release contract family, mixed-maturity release schema family, root pytest configuration, Makefile test targets, common schema fixture harness, release fixture parent and PromotionDecision child README lanes, release and promotion policy stubs, release tooling and release-validator README-only maturity, selected workflow definitions, proposed promotion-gate ADR status, and bounded repository search that did not establish a direct executable under tests/release / PROPOSED dedicated release-governance tests, fixture-consumer contracts, A-G gate mapping, no-network release test target, coverage manifest, CI artifact, promotion dependency, and maturity ladder / CONFLICTED release fixture parent-child documentation freshness and fixture homes used by schema versus release-behavior tests / UNKNOWN exhaustive recursive direct-lane inventory, fixture payload inventory, dynamic test generation, ignored files, current collected cases, current pass rates, branch-protection requirements, release runtime behavior, emitted receipts, and production promotion behavior / NEEDS VERIFICATION accepted owners, CODEOWNERS, direct test runner, actual release fixture payloads, schema-to-fixture coverage, validator implementations, policy bundle implementations, CI path filters, required checks, correction consumers, and rollback drill execution
+truth_posture: CONFIRMED bounded promotion-gate implementation, direct release tests, synthetic fixture matrix, Make target, and workflow invocation / PARTIAL broader release, policy, review, evidence, signature, correction, rollback, and publication coverage / NEEDS VERIFICATION hosted exact-head enforcement and accepted owners
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
   base_commit: 04e9cbac69305a5d708509ceef62c6f43ca1f41c
+  implementation_base_commit: 83cca9c66a1eb218f010a75b862d417d429c3c85
   target_prior_blob: 011984d8e32031d07d1e4590d8ced348b1ab206f
   direct_lane_files_confirmed:
     - tests/release/README.md
-  bounded_inventory_note: connector code search did not establish a direct executable test under tests/release; this does not prove permanent absence from history, other refs, ignored files, generated workspaces, dynamic test generation, or uninspected paths
+    - tests/release/test_promotion_decision_schema.py
+    - tests/release/test_promotion_gate.py
+  bounded_inventory_note: the v0.2 snapshot was README-oriented; v1.0 records the implemented promotion-gate thin slice without claiming complete release-governance coverage
 related:
   - ../README.md
   - ../schemas/README.md
@@ -30,9 +33,12 @@ related:
   - ../../contracts/release/README.md
   - ../../schemas/contracts/v1/release/README.md
   - ../../fixtures/release/README.md
+  - ../../fixtures/release/promotion_gate/README.md
   - ../../fixtures/contracts/v1/README.md
   - ../../tools/release/README.md
   - ../../tools/validators/release/README.md
+  - ../../tools/validators/promotion_gate/README.md
+  - ../../tools/validators/validate_promotion_gate.py
   - ../../policy/release/README.md
   - ../../policy/promotion/README.md
   - ../../docs/doctrine/directory-rules.md
@@ -42,16 +48,17 @@ related:
   - ../../.github/workflows/contracts-validate.yml
   - ../../.github/workflows/schema-validation.yml
   - ../../.github/workflows/validator-suite.yml
+  - ../../.github/workflows/promotion-gate.yml
   - ../../.github/workflows/policy-boundary-guards.yml
 tags: [kfm, tests, release, promotion, ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, fixtures, pytest, no-network, fail-closed, correction, rollback, CI, trust-spine]
 notes:
-  - "v0.2 replaces a planning-oriented README with a repository-grounded release-test boundary and current maturity assessment."
-  - "The direct tests/release lane is README-only in the bounded snapshot; no dedicated executable release test module was established."
+  - "v1.0 adds an implemented bounded promotion-gate thin slice while preserving the broader release maturity gaps documented by v0.2."
+  - "The direct lane now includes a 10-test promotion-gate suite plus the existing PromotionDecision schema-fixture test."
   - "The generic schema fixture harness names the release family but only creates a case when fixtures/contracts/v1/release/<schema_name>/ exists; the fixture parent records release schema-fixture coverage as unresolved."
-  - "fixtures/release/ documents synthetic release-governance examples and PromotionDecision sublanes, but its own payload inventory was not verified and child READMEs contain stale parent-not-found statements."
+  - "fixtures/release/promotion_gate contains one PASS, five DENY, one ABSTAIN, and two ERROR packets with exact consumer bindings."
   - "make test executes tests/schemas and tests/contracts only; it does not directly execute tests/release."
-  - "policy/release and policy/promotion are greenfield stubs; tools/release and tools/validators/release are documentation boundaries without confirmed executables."
-  - "This revision changes documentation only and creates no test, fixture, schema, contract, validator, policy, workflow, release record, receipt, proof, lifecycle artifact, or public output."
+  - "policy/release and policy/promotion remain separate greenfield/stub surfaces; the validator checks only declared policy evaluation and never executes policy."
+  - "No test or validator creates a release record, receipt, proof, lifecycle artifact, or public output."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -62,10 +69,10 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
+  <img alt="Direct inventory: executable thin slice" src="https://img.shields.io/badge/direct__inventory-executable__thin__slice-green">
   <img alt="Runner: pytest configured" src="https://img.shields.io/badge/runner-pytest__configured-blue">
-  <img alt="Dedicated suite: not established" src="https://img.shields.io/badge/dedicated__suite-not__established-orange">
-  <img alt="Fixture coverage: unresolved" src="https://img.shields.io/badge/fixture__coverage-UNRESOLVED-red">
+  <img alt="Dedicated suite: promotion gate" src="https://img.shields.io/badge/dedicated__suite-promotion__gate-green">
+  <img alt="Fixture coverage: bounded matrix" src="https://img.shields.io/badge/fixture__coverage-bounded__matrix-blue">
   <img alt="Failure posture: fail closed" src="https://img.shields.io/badge/failure-fail__closed-critical">
   <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-purple">
 </p>
@@ -77,23 +84,23 @@ notes:
 ## Status and evidence boundary
 
 > [!IMPORTANT]
-> **CONFIRMED direct lane:** the bounded repository snapshot establishes `tests/release/README.md` but did not establish a direct `test_*.py` or equivalent executable under `tests/release/`.
+> **CONFIRMED direct lane:** `tests/release/test_promotion_gate.py` executes the bounded promotion-readiness profile, and `test_promotion_decision_schema.py` preserves the separate PromotionDecision shape check.
 >
 > **CONFIRMED adjacent execution:** the repository configures pytest, and `tests/schemas/test_common_contracts.py` can include the `release` schema family when a matching fixture directory exists.
 >
-> **NOT established:** a dedicated release-governance suite, confirmed release fixture payload inventory, release policy implementation, release validator implementation, release dry-run implementation, release-specific CI artifact, or promotion-blocking required check.
+> **PARTIAL:** the promotion-gate thin slice is implemented; full ReleaseManifest, policy-engine, evidence-resolution, signature, reviewer-authority, rollback-execution, correction-cascade, publication, and required-check closure remain outside this proof.
 
 ### Safe conclusion
 
-`tests/release/` is the correct cross-cutting test boundary for release governance, but the direct lane remains documentation-only in the checked snapshot. Existing adjacent machinery provides a partial foundation, not a release suite:
+`tests/release/` is the correct cross-cutting test boundary for release governance. It now contains one executable thin slice while the broader suite remains partial:
 
 - `pyproject.toml` configures Python 3.11+, pytest as a test extra, and the repository root on `pythonpath`.
-- `make test` runs `tests/schemas` and `tests/contracts`; it does **not** directly run `tests/release`.
+- `make test` still runs `tests/schemas` and `tests/contracts`; `make publish-check` owns the focused promotion-gate suite.
 - `tests/schemas/test_common_contracts.py` names `release` in its hard-coded family list, but it creates a test case only when `fixtures/contracts/v1/release/<schema_name>/` exists.
 - `fixtures/contracts/v1/README.md` records release schema-fixture coverage as `NEEDS VERIFICATION`.
-- `fixtures/release/README.md` documents a synthetic release-governance fixture parent and PromotionDecision child lanes, but it did not verify payload files.
+- `fixtures/release/promotion_gate/` contains an exact finite-outcome packet matrix consumed by the validator and focused suite.
 - `policy/release/README.md` and `policy/promotion/README.md` are greenfield stubs.
-- `tools/release/README.md` and `tools/validators/release/README.md` document intended boundaries, while executable behavior remains verification-bound.
+- `tools/validators/promotion_gate/validate_promotion_gate.py` is implemented; broader release helpers and validators remain mixed-maturity.
 - `schemas/contracts/v1/release/README.md` records a mixed-maturity schema family: one concrete PromotionDecision schema, several permissive stubs, and several empty scaffolds.
 
 ### Truth labels used here
@@ -178,10 +185,11 @@ Do not use this lane as:
 | Surface | Status | Evidence-bounded conclusion |
 |---|---:|---|
 | `tests/release/README.md` | `CONFIRMED` | Existing v0.1 planning README; this revision replaces it. |
-| Direct executable test module | `NOT ESTABLISHED` | Bounded code search did not establish a direct executable under `tests/release/`. |
+| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Ten standard-library-compatible tests cover the bounded A-G promotion profile. |
+| `tests/release/test_promotion_decision_schema.py` | `CONFIRMED` | Preserves the separate proposed PromotionDecision shape-fixture boundary. |
 | Direct test-local fixtures | `NOT ESTABLISHED` | No test-local fixture inventory was established for this lane. |
-| Dedicated runner or marker | `NOT ESTABLISHED` | No lane-specific pytest marker, Make target, or runner was verified. |
-| Dedicated CI workflow or artifact | `NOT ESTABLISHED` | No release-test workflow or release-test report artifact was verified. |
+| Dedicated command | `CONFIRMED` | `make publish-check` runs fixture polarity plus the focused direct suite with no network. |
+| Dedicated CI invocation | `CONFIRMED definition / hosted result NEEDS VERIFICATION` | `promotion-gate.yml` preserves workflow/job identities and invokes the bounded proof. |
 
 The bounded search limit matters: absence from search results is not proof of permanent nonexistence across history, other refs, ignored files, generated workspaces, or dynamic test generation.
 
@@ -193,7 +201,7 @@ The bounded search limit matters: absence from search results is not proof of pe
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Direct `tests/release/` coverage is excluded. |
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
 | `make release-dry-run` | Emits a TODO message. | No release dry-run implementation is established. |
-| `make publish-check` | Emits a TODO message. | No promotion-gate implementation is established by this target. |
+| `make publish-check` | Runs the nine-file finite-outcome matrix and ten focused tests. | Proves bounded declared-closure behavior only; never promotion or publication. |
 | `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
 
 ### Adjacent schema coverage
@@ -226,7 +234,7 @@ Two fixture responsibilities are present and must not be collapsed:
 | Fixture home | Intended role | Current evidence |
 |---|---|---|
 | `fixtures/contracts/v1/release/<schema_name>/` | Shape fixtures consumed by the generic schema harness. | Parent fixture README records release coverage as unresolved. |
-| `fixtures/release/` | Synthetic release-governance behavior examples and PromotionDecision child lanes. | Parent and child READMEs exist; payload inventory was not verified. |
+| `fixtures/release/` | PromotionDecision shape fixtures plus the bounded promotion-gate behavior matrix. | Selected promotion-gate payloads and consumers are verified; broader family inventory remains partial. |
 
 There is a documentation freshness conflict: `fixtures/release/README.md` now exists, but older PromotionDecision child READMEs still state that the parent was not found. Treat this as `CONFLICTED / NEEDS VERIFICATION`; do not infer payload or consumer maturity from README hierarchy alone.
 
@@ -509,24 +517,27 @@ At minimum, future tests should prove:
 
 ## Promotion gate coverage
 
-`ADR-0018-promotion-gate-sequence.md` is currently `proposed`. Its A–G sequence is useful as a future test organization, but it is not accepted implementation evidence.
+`ADR-0018-promotion-gate-sequence.md` remains `proposed`. The implemented
+validator therefore uses A-G only as a bounded readiness profile derived from
+current repository documentation and the supplied design packet; it does not
+accept the ADR or create release authority.
 
-### Proposed A–G mapping
+### Implemented bounded A–G mapping
 
-| Proposed gate | Proposed outcome name | Release-test responsibility |
+| Gate | Implemented check | Release-test responsibility |
 |:---:|---|---|
-| A | `schema_valid` | Positive/negative schema cases; no unknown enum values; deterministic spec/hash checks where accepted. |
-| B | `inputs_pinned` | Source, artifact, version, digest, rights, and license inputs are explicit and resolvable. |
-| C | `checks_pass` | Required validators and domain-quality checks run and report bounded results. |
-| D | `signatures_valid` | Required receipt/signature/attestation checks fail closed on missing or mismatched support. |
-| E | `provenance_complete` | Evidence and provenance closure, supersession, and rollback refs resolve. |
-| F | `no_policy_violations` | Policy returns a finite outcome; obligations and human-review holds are visible. |
-| G | `release_ready` | Manifest candidate, catalog/proof closure level, rollback target, public DTO, and unresolved holds are checked. |
+| A | Identity and closure | Candidate, author, spec hash, lifecycle boundary, and manifest identity. |
+| B | Asset integrity | Candidate/manifest/receipt hashes and declared digest-set agreement. |
+| C | Geometry and CRS | Validity, deterministic processing, CRS, and bounded bbox. |
+| D | Temporal semantics | Strict real UTC seconds and ordered interval. |
+| E | Policy context | Known profile/labels and finite declared policy result. |
+| F | Proof and catalog support | Evidence, attestation, run receipt, STAC/DCAT/PROV, conditional AI receipt. |
+| G | Review and rollback | Approval, separation of duties, rollback target, and correction linkage. |
 
-Tests must preserve these caveats:
+Tests preserve these caveats:
 
-- The ADR is proposed, so names and exact mapping remain `PROPOSED` until accepted.
-- Gate success supports a PromotionReceipt or release review; it is not publication by itself.
+- The ADR is proposed, so this profile cannot amend or accept it.
+- Gate success yields only `APPROVE_READY`; it is not a PromotionDecision or publication.
 - A missing gate result is a failure or hold, not implicit success.
 - Gate H Merkle integrity and Gate I ReleaseManifest closure are explicitly outside that ADR and must not be silently claimed.
 - Per-domain tests may strengthen checks inside a gate but must not invent competing gate authority.
@@ -535,13 +546,15 @@ Tests must preserve these caveats:
 
 ---
 
-## Suggested test families and future layout
+## Current thin slice and future layout
 
 The direct lane should remain small and cross-cutting. Domain-specific release behavior belongs under domain test lanes.
 
 ```text
 tests/release/
 |-- README.md
+|-- test_promotion_gate.py                          # CONFIRMED
+|-- test_promotion_decision_schema.py               # CONFIRMED
 |-- test_candidate_is_not_release.py                 # PROPOSED
 |-- test_release_manifest_closure.py                 # PROPOSED
 |-- test_promotion_decision_boundary.py              # PROPOSED
@@ -839,7 +852,9 @@ The direct release lane is not mature until all applicable criteria pass.
 | Promotion use | Any promotion dependency is explicit, reviewed, and never equated with release approval. |
 | Documentation | README, fixture indexes, contracts/schemas/policy links, and open gaps are current. |
 
-Current status: **PARTIAL / NOT ESTABLISHED**. The README boundary is present; the direct executable suite and its proof artifacts are not established in the checked snapshot.
+Current status: **PARTIAL / IMPLEMENTED THIN SLICE**. The direct promotion-gate
+suite and fixture matrix are established; full release-governance and public-path
+proof remain outside this slice.
 
 [Back to top](#top)
 
@@ -851,7 +866,7 @@ Prefer the smallest proof-bearing sequence:
 
 1. **Inventory and drift check** — enumerate the direct lane, release fixtures, release schemas, contracts, policy stubs, validators, tools, workflows, and domain release test lanes.
 2. **Coverage manifest** — add a deterministic inventory test that fails on zero direct tests and reports unresolved fixture families.
-3. **PromotionDecision thin slice** — pair its concrete schema and semantic contract with confirmed synthetic valid/invalid fixtures and a direct boundary test.
+3. **PromotionDecision and promotion-gate thin slices** — **CONFIRMED bounded implementation**; preserve the distinction between shape and readiness.
 4. **Candidate-not-release rule** — prove candidate, review, merge, file move, and schema validity do not equal release.
 5. **Evidence/policy/review holds** — add missing evidence, stale policy, missing review, and unresolved obligation cases.
 6. **ReleaseManifest hardening** — only after contract/schema fields are accepted; add dependency-closure tests.
@@ -870,14 +885,14 @@ Each step should be independently reviewable and reversible. Do not create empty
 
 | ID | Question | Evidence needed | Current status |
 |---|---|---|---|
-| RELTEST-001 | What files actually exist under `tests/release/` beyond the README? | Recursive tree at pinned ref or mounted checkout. | `NEEDS VERIFICATION` |
+| RELTEST-001 | What files actually exist under `tests/release/` beyond the README? | Mounted checkout inventory. | `CONFIRMED` for two direct modules; exhaustive history remains out of scope |
 | RELTEST-002 | Are any release tests dynamically generated or located under another cross-cutting lane? | Pytest collection report and full test inventory. | `UNKNOWN` |
-| RELTEST-003 | What release fixture payload files exist under `fixtures/release/`? | Recursive fixture tree, hashes, and consumer map. | `NEEDS VERIFICATION` |
+| RELTEST-003 | What release fixture payload files exist under `fixtures/release/`? | Recursive fixture tree, hashes, and consumer map. | `CONFIRMED` for selected promotion-gate matrix; broader inventory partial |
 | RELTEST-004 | Does `fixtures/contracts/v1/release/` contain schema fixtures despite the parent README gap? | Direct tree and test collection. | `NEEDS VERIFICATION` |
 | RELTEST-005 | Which release schemas are accepted versus scaffolds? | Accepted ADR/schema registry and current schema review state. | `NEEDS VERIFICATION` |
-| RELTEST-006 | Is the PromotionDecision schema paired with real valid/invalid fixtures and a validator? | Fixture files, validator implementation, tests, and CI logs. | `NEEDS VERIFICATION` |
+| RELTEST-006 | Is the PromotionDecision schema paired with real valid/invalid fixtures and a validator? | Fixture files, validator implementation, tests, and CI logs. | `CONFIRMED` shape pairing; semantic readiness is separate |
 | RELTEST-007 | Are `policy/release/` and `policy/promotion/` executable policy bundles? | Rego/equivalent files, tests, bundle IDs/digests, and logs. | `NOT ESTABLISHED` |
-| RELTEST-008 | Are release validators or release helpers executable? | Source files, entry points, tests, and run evidence. | `NOT ESTABLISHED` |
+| RELTEST-008 | Are release validators or release helpers executable? | Source files, entry points, tests, and run evidence. | `PARTIAL`: promotion-gate validator confirmed; broader helpers mixed |
 | RELTEST-009 | Is ADR-0018 accepted, superseded, or still proposed at implementation time? | Current ADR status and decision log. | `PROPOSED` at snapshot |
 | RELTEST-010 | Which workflows run release tests, and are they required? | Workflow definitions, branch protection/rulesets, and recent runs. | `UNKNOWN` |
 | RELTEST-011 | What are current collected counts and pass rates? | Local/CI pytest collection and run artifacts at pinned commit. | `UNKNOWN` |
@@ -975,12 +990,12 @@ Rolling back this README does not roll back a KFM release, workflow, policy bund
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-16 |
-| Review state | Draft, repository-grounded documentation update |
-| Direct lane maturity | README-only at bounded snapshot |
-| Executable release suite | Not established |
-| Next smallest safe change | Inventory actual release fixture payloads and add one PromotionDecision boundary test only after schema, contract, expected outcomes, and consumer path are verified. |
+| Last reviewed | 2026-08-02 |
+| Review state | Implemented bounded promotion-gate thin slice; human review pending |
+| Direct lane maturity | Two executable modules; broader release suite partial |
+| Executable release suite | Promotion-gate proof confirmed; no full release/publish proof |
+| Next smallest safe change | Resolve one existing ReviewRecord or rollback-card prerequisite without widening this validator into release authority. |
 
 ---
 
-*Last updated: 2026-07-16 · Version: v0.2 · Authority: enforceability documentation only · [Back to top](#top)*
+*Last updated: 2026-08-02 · Version: v1.0 · Authority: bounded enforceability only · [Back to top](#top)*
