@@ -2,21 +2,21 @@
 doc_id: kfm://doc/tests-runtime-proof-readme
 title: tests/runtime_proof/ — Governed Runtime Proof Root, Finite-Outcome Contract, and Placement Guardrail
 type: readme; directory-readme; runtime-proof-root; finite-outcome-test-contract; trust-membrane-proof-index; migration-guardrail
-version: v0.2
-status: draft; canonical-runtime-proof-root; shared-envelope-schema-present; governed-api-stub-tested; domain-placement-conflicted; policy-runtime-stub; envelope-package-scaffold; no-dedicated-runtime-proof-ci; proof-not-closed; NEEDS VERIFICATION
+version: v0.3
+status: draft; canonical-runtime-proof-root; finite-envelope-shape-proof-executable; shared-envelope-schema-present; governed-api-stub-tested; domain-placement-conflicted; policy-runtime-stub; envelope-package-scaffold; no-full-runtime-proof-ci; proof-not-closed; NEEDS VERIFICATION
 policy_label: public-doc; restricted-review-when-sensitive-domain-or-private-runtime-state-is-in-scope
 owners: OWNER_TBD — QA steward · Runtime-proof steward · Governed API steward · Runtime steward · Domain architecture steward · Evidence steward · Policy steward · Rights/sensitivity reviewer · Release steward · UI/E2E steward · CI steward · Docs steward
 created: 2026-07-07
-updated: 2026-07-16
+updated: 2026-08-02
 current_path: tests/runtime_proof/README.md
-truth_posture: CONFIRMED target README and prior blob, tests responsibility root, merged domain-placement index, Roads–Rail–Trade capability-first child, Flora domain-first alternate lane, RuntimeResponseEnvelope contract/schema/validator/minimal fixtures, DecisionEnvelope schema, governed-api WSGI scaffold, three registered GET routes, deterministic ABSTAIN stub, governed-api abstain and boundary tests, runtime/envelopes canonical handoff lane, packages/envelopes 0.0.0 scaffold, policy/runtime stub, root Makefile test scope, api-test workflow, validator-suite workflow, and bounded absence of a dedicated runtime-proof workflow at the pinned snapshot / PROPOSED accepted envelope profile, domain child placement winner, shared reason/state vocabularies, domain payload contracts, evidence resolution, policy execution, receipt persistence, runtime-proof fixture matrix, dedicated CI gate, correction propagation, cache invalidation, and promotion integration / CONFLICTED RuntimeResponseEnvelope versus DecisionEnvelope-shaped governed-api scaffold, contract/schema/architecture profile drift, tests/runtime_proof/domains/<domain> versus tests/domains/<domain>/runtime_proof placement, schema-shape success versus runtime-proof claims, and green generic/domain workflows versus actual runtime-proof collection / UNKNOWN exhaustive executable inventory, current pass state, production routes, runtime consumers, deployed policy/evidence/release behavior, public-client conformance, and operational health / NEEDS VERIFICATION owners, accepted ADR/profile decisions, recursive inventory, runtime-proof test collection, route coverage, fixture coverage, policy and evidence bindings, release/correction/rollback integration, and required-check status
+truth_posture: CONFIRMED target README and prior blob, tests responsibility root, finite-envelope executable suite, four-outcome schema fixture matrix, Focus compatibility alias, focus-mock-test finite-envelope job, merged domain-placement index, Roads–Rail–Trade capability-first child, Flora domain-first alternate lane, RuntimeResponseEnvelope contract/schema/validator, DecisionEnvelope schema, governed-api WSGI scaffold, three registered GET routes, deterministic ABSTAIN stub, governed-api abstain and boundary tests, runtime/envelopes canonical handoff lane, packages/envelopes 0.0.0 scaffold, policy/runtime stub, root Makefile test scope, api-test workflow, and validator-suite workflow at the pinned snapshot / PROPOSED accepted envelope profile, domain child placement winner, shared reason/state vocabularies, domain payload contracts, evidence resolution, policy execution, receipt persistence, full runtime-proof matrix, dedicated runtime CI gate, correction propagation, cache invalidation, and promotion integration / CONFLICTED RuntimeResponseEnvelope versus DecisionEnvelope-shaped governed-api scaffold, contract/schema/architecture profile drift, tests/runtime_proof/domains/<domain> versus tests/domains/<domain>/runtime_proof placement, schema-shape success versus runtime-proof claims, and green generic/domain workflows versus actual runtime-proof collection / UNKNOWN exhaustive executable inventory, current pass state, production routes, runtime consumers, deployed policy/evidence/release behavior, public-client conformance, and operational health / NEEDS VERIFICATION owners, accepted ADR/profile decisions, recursive inventory, route coverage, policy and evidence bindings, release/correction/rollback integration, and required-check status
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 2ab8e92cfc76f19838de5be5e3d138d33d980bd7
-  prior_blob: 3e33777d72a5fa346b82c948f9c1837d23675fc5
+  base_commit: 248aabf0dc038670560e570230bdc86cc7a1cb6a
+  prior_blob: 4011ec6c36893357d49eb8f8334fa7145cb21c2c
 related:
   - ../README.md
   - ./domains/README.md
@@ -34,6 +34,7 @@ related:
   - ../../fixtures/contracts/v1/runtime/runtime_response_envelope/
   - ../../fixtures/contracts/v1/runtime/decision_envelope/
   - ../../tests/schemas/test_common_contracts.py
+  - ./test_envelope_finite_outcomes.py
   - ../../runtime/envelopes/README.md
   - ../../packages/envelopes/README.md
   - ../../policy/runtime/README.md
@@ -45,13 +46,14 @@ related:
   - ../../Makefile
   - ../../.github/workflows/api-test.yml
   - ../../.github/workflows/validator-suite.yml
+  - ../../.github/workflows/focus-mock-test.yml
 tags: [kfm, tests, runtime-proof, governed-api, trust-membrane, finite-outcomes, answer, abstain, deny, error, runtime-response-envelope, decision-envelope, evidence, policy, freshness, correction, release, receipts, no-network, domain-placement, migration, rollback, no-parallel-authority]
 notes:
   - "v0.2 replaces a planning-oriented root README with a repository-grounded runtime-proof contract and explicit implementation boundary."
   - "The governed API currently exposes three deterministic scaffold routes that return ABSTAIN and are tested against a DecisionEnvelope subset; this is useful proof of bounded scaffold behavior, not proof of the full RuntimeResponseEnvelope profile."
   - "Domain runtime-proof placement is conflicted and frozen for new children by the merged domains index."
   - "Root make test and validator-suite do not collect tests/runtime_proof; api-test exercises governed-api scaffold tests but is not a dedicated runtime-proof gate."
-  - "This revision changes documentation only and creates, moves, deletes, or activates no test, fixture, route, schema, validator, workflow, package, policy, data, receipt, proof, or release record."
+  - "v0.3 records a standard-library finite-envelope proof, four-outcome schema fixtures, an unknown-outcome negative case, and the existing focus-mock-test finite-envelope job; this remains shape proof rather than runtime proof."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -88,14 +90,14 @@ notes:
 | Surface | Status at the pinned snapshot | Safe conclusion |
 |---|---|---|
 | `tests/runtime_proof/README.md` | **CONFIRMED** | Root README exists; prior blob is pinned in metadata. |
-| Direct executable files under `tests/runtime_proof/` | **NOT SURFACED in bounded search** | Treat the root as coordination/documentation until recursive inventory proves otherwise. |
+| Direct executable files under `tests/runtime_proof/` | **CONFIRMED finite-envelope suite** | `test_envelope_finite_outcomes.py` checks canonical aliasing, the closed top-level profile, all four outcomes, and negative boundary fixtures without network access. |
 | `tests/runtime_proof/domains/README.md` | **CONFIRMED merged v0.2** | Human routing/migration index; `INDEX_ONLY`, placement-conflicted, and frozen for new children. |
 | `tests/runtime_proof/domains/roads-rail-trade/` | **CONFIRMED capability-first child** | README-only in bounded evidence; route/schema/tests/CI not closed. |
 | `tests/domains/flora/runtime_proof/` | **CONFIRMED domain-first alternate** | Scaffold README; executable tests, routes, fixtures, validators, and CI remain unverified. |
 | Shared `RuntimeResponseEnvelope` contract/schema | **CONFIRMED paired / status PROPOSED** | Closed shape with ten required fields and four finite outcomes. |
 | Shared `DecisionEnvelope` schema | **CONFIRMED concrete / status PROPOSED** | Closed policy-style envelope with finite outcomes and required decision fields. |
 | Runtime envelope validator wrappers | **CONFIRMED executable entry points** | Validate JSON Schema fixtures; do not prove runtime composition. |
-| Runtime envelope fixtures | **CONFIRMED minimal** | One valid and one invalid example for the shared families; coverage is schema-only. |
+| Runtime envelope fixtures | **CONFIRMED four-outcome shape matrix** | Four valid and four invalid examples cover the finite enum plus missing, extra, pattern, and unknown-outcome failures; coverage remains schema-only. |
 | Generic schema harness | **CONFIRMED executable test code** | Discovers runtime schemas with matching fixture directories. |
 | Governed API application | **CONFIRMED WSGI scaffold** | Routes registered through a local in-process application; not production deployment proof. |
 | Governed API route registry | **CONFIRMED three routes** | `/bootstrap`, `/layers`, and `/evidence`. |
@@ -108,7 +110,7 @@ notes:
 | Root `make test` | **CONFIRMED narrow** | Runs `tests/schemas` and `tests/contracts`; excludes this root. |
 | `api-test` workflow | **CONFIRMED substantive scaffold/API check** | Runs governed-api tests and the abstain-route test; not a full runtime-proof matrix. |
 | `validator-suite` workflow | **CONFIRMED schema-oriented** | Runs schema validators and an EvidenceBundle fail-closed canary; not runtime proof. |
-| Dedicated runtime-proof workflow | **NOT SURFACED in bounded search** | Do not claim this root is a required CI gate. |
+| Runtime-proof CI surface | **CONFIRMED bounded finite-envelope job** | `focus-mock-test / finite-envelope-shape` runs the standard-library suite; no full runtime-proof workflow or required-check status is established. |
 | Production runtime behavior | **UNKNOWN** | Repository scaffolds and tests do not prove deployed behavior or operational health. |
 
 **Authority of this README:** root routing, proof taxonomy, finite-outcome semantics, cross-lane composition, minimum fixture/test coverage, CI acceptance criteria, migration discipline, correction guidance, and rollback guidance.
@@ -799,14 +801,15 @@ Fixtures must be:
 | hidden restricted payload | test failure |
 | zero tests/scenarios | configuration failure |
 
-### Current minimal fixture boundary
+### Current finite-outcome shape boundary
 
 The confirmed RuntimeResponseEnvelope fixtures currently demonstrate:
 
-- one valid `ABSTAIN` object with empty evidence refs;
-- one invalid object missing `id`.
+- valid synthetic shapes for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
+- fail-closed rejection for a missing `id`, an extra property, an invalid `id`, and an unknown outcome;
+- one synthetic `ANSWER` EvidenceRef plus bounded `DENY` and `ERROR` objects with no payload field.
 
-That is useful schema coverage. It does not cover `ANSWER`, `DENY`, `ERROR`, evidence resolution, state vocabularies, payload profiles, policy, correction, release, or client behavior.
+That is useful schema and finite-outcome shape coverage. It does not prove semantic outcome selection, evidence resolution, state vocabularies, payload profiles, policy, correction, release, runtime behavior, or client behavior.
 
 ### Fixture anti-authority rule
 
@@ -1332,7 +1335,7 @@ After merge, rollback is a normal revert commit or revert pull request. Do not r
 | RuntimeResponseEnvelope contract/schema | CONFIRMED paired / PROPOSED | Closed client-facing field surface and finite outcomes | Does not prove runtime behavior |
 | DecisionEnvelope schema | CONFIRMED concrete / PROPOSED | Policy-style finite envelope and optional scaffold fields | Profile overlap unresolved |
 | Runtime validators | CONFIRMED executable wrappers | Schema/fixture validation entry points | Do not prove evidence, policy, release, or clients |
-| Runtime fixtures | CONFIRMED minimal | One valid and one invalid shared example | Narrow shape-only coverage |
+| Runtime fixtures | CONFIRMED shape matrix | Four valid outcomes and four invalid failure classes | Shape-only coverage; no semantic/runtime proof |
 | Common schema test harness | CONFIRMED executable test | Runtime schemas with fixture roots are discoverable | Not runtime integration proof |
 | Governed API main/registry/stub | CONFIRMED executable scaffold | Three registered routes and deterministic ABSTAIN builder | Not production or accepted profile proof |
 | Governed API abstain tests | CONFIRMED executable pytest | All registered routes return expected ABSTAIN and validate DecisionEnvelope subset | No ANSWER/DENY/ERROR or full RuntimeResponseEnvelope proof |
@@ -1344,6 +1347,6 @@ After merge, rollback is a normal revert commit or revert pull request. Do not r
 | `api-test` workflow | CONFIRMED | Governed API and abstain-route checks run in CI | Not a full runtime-proof gate |
 | `validator-suite` workflow | CONFIRMED | Schema validation and fail-closed evidence canary | Not runtime-proof CI |
 | ADR-0020 | CONFIRMED document / PROPOSED | Cite-or-abstain and finite-outcome intent | Not accepted implementation authority |
-| Current-session execution | NOT RUN | Documentation-only API update | No test, route, validator, workflow, or production pass claim |
+| Finite-envelope suite and workflow | CONFIRMED executable | Standard-library proof plus canonical JSON Schema fixture validation | No route, runtime, policy, evidence-resolution, release, or production claim |
 
 [Back to top](#top)

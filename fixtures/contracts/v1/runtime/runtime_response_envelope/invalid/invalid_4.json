@@ -1,0 +1,12 @@
+{
+  "id": "resp5",
+  "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "version": "v1",
+  "issued_at": "2026-05-09T00:00:00Z",
+  "outcome": "WAITING",
+  "reason_code": "UNRECOGNIZED_OUTCOME",
+  "evidence_refs": [],
+  "policy_state": "baseline",
+  "freshness": "current",
+  "correction_state": "none"
+}

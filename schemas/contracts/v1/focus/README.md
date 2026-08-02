@@ -5,8 +5,8 @@ doc_id: kfm://doc/schemas-contracts-v1-focus-readme
 title: schemas/contracts/v1/focus/ — Focus Schema Family Index
 type: readme; schema-family-index; focus-mode-governance-boundary; ui-runtime-trust-membrane
 owner_class: schema-family
-version: v0.1
-status: draft; schema-stubs-present; PROPOSED; path-family-present; ui-schema-overlap-visible; NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; mixed-scaffolds-and-compatibility-alias; PROPOSED; path-family-present; ui-schema-overlap-visible; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Focus Mode steward
   - OWNER_TBD — UI steward
@@ -19,7 +19,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — empty README existed before v0.1 expansion
-updated: 2026-07-04
+updated: 2026-08-02
 policy_label: public; schemas; contracts-v1; focus; focus-mode; FocusRequest; FocusResponse; RuntimeResponseEnvelope; CitationValidationReport; governed-api; governed-ai; finite-outcomes; trust-membrane; evidence-bound; policy-bound; release-gated; no-sovereign-truth
 tags: [kfm, schemas, contracts, v1, focus, FocusRequest, FocusResponse, RuntimeResponseEnvelope, CitationValidationReport, FocusModePayload, EvidenceBundle, EvidenceRef, PolicyDecision, AIReceipt, governed-api, governed-ai, finite-outcomes, ANSWER, ABSTAIN, DENY, ERROR]
 related:
@@ -32,6 +32,7 @@ related:
   - ../../../../contracts/ui/focus_response.md
   - ../../../../contracts/focus_mode/
   - ../../../../contracts/runtime/
+  - ../runtime/runtime_response_envelope.schema.json
   - ../../../../contracts/evidence/
   - ../../../../contracts/policy/
   - ../../../../docs/architecture/ui/FOCUS_FLOW.md
@@ -46,7 +47,7 @@ related:
 notes:
   - "Expanded from an empty file at schemas/contracts/v1/focus/README.md."
   - "Current GitHub search surfaced focus_request.schema.json, focus_response.schema.json, runtime_response_envelope.schema.json, and citation_validation_report.schema.json under this folder."
-  - "Opened focus schema files are permissive PROPOSED scaffolds with empty properties and additionalProperties true."
+  - "Focus request, response, and citation-report files remain permissive PROPOSED scaffolds. The Focus-local runtime envelope path is now a compatibility alias to the canonical runtime schema and does not define a second shape."
   - "contracts/ui/focus_request.md and contracts/ui/focus_response.md refer to paired UI schema paths under schemas/contracts/v1/ui/, while this folder also contains focus_request and focus_response schema stubs; this overlap is recorded as NEEDS VERIFICATION."
   - "Focus output must remain downstream of evidence, policy, citation validation, release state, correction posture, and rollback support."
 [/KFM_META_BLOCK_V2] -->
@@ -157,7 +158,7 @@ Current GitHub search surfaced the following files under `schemas/contracts/v1/f
 |---|---|---|
 | `focus_request.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; source doc points to Archaeology map UI contracts. | **PROPOSED scaffold** |
 | `focus_response.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; source doc points to Archaeology map UI contracts. | **PROPOSED scaffold** |
-| `runtime_response_envelope.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; source doc points to Hazards API contracts. | **PROPOSED scaffold** |
+| `runtime_response_envelope.schema.json` | Draft 2020-12 compatibility alias whose `$ref` targets `../runtime/runtime_response_envelope.schema.json`; no local `properties` or `additionalProperties` shape is declared. | **PROPOSED compatibility alias** |
 | `citation_validation_report.schema.json` | Draft 2020-12 object; empty `properties`; `additionalProperties: true`; `x-kfm.status: PROPOSED`; source doc points to Archaeology map UI contracts. | **PROPOSED scaffold** |
 
 > [!NOTE]
@@ -170,7 +171,7 @@ Current GitHub search surfaced the following files under `schemas/contracts/v1/f
 | Risk | Evidence | Required posture |
 |---|---|---|
 | Focus request/response schema home overlap | `contracts/ui/focus_request.md` and `contracts/ui/focus_response.md` point to paired UI schema paths under `schemas/contracts/v1/ui/`, while similarly named stubs exist in `schemas/contracts/v1/focus/`. | Do not let both families become parallel authorities. Resolve with schema steward review or ADR/migration note. |
-| Runtime envelope duplication | `runtime_response_envelope.schema.json` exists under `focus/`, but runtime authority belongs with runtime contracts/schemas if the envelope is general-purpose. | Decide whether this is a Focus-profile of a runtime envelope or misplaced runtime schema. |
+| Runtime envelope compatibility path | `runtime_response_envelope.schema.json` exists under `focus/`, while runtime authority belongs under `schemas/contracts/v1/runtime/`. | Preserve this path only as a `$ref` compatibility alias; change the canonical profile in the runtime schema and contract. |
 | Citation validation duplication | `citation_validation_report.schema.json` exists under `focus/`, while citation validation also belongs near evidence/UI families. | Decide whether this is a Focus-specific projection or duplicate shared evidence schema. |
 | Domain-source scaffolding | Current stubs were generated from domain docs such as Archaeology and Hazards surfaces. | Promote only after cross-domain Focus semantics and contracts are reviewed. |
 
@@ -312,17 +313,17 @@ Rollback for future Focus schema changes requires checking every downstream refe
 | Question | Status | Owner |
 |---|---|---|
 | Should `focus_request.schema.json` and `focus_response.schema.json` live under `focus/`, `ui/`, or both with a clear profile/mirror rule? | **NEEDS VERIFICATION / ADR-sensitive** | Schema steward + UI steward + Focus steward |
-| Is `runtime_response_envelope.schema.json` a Focus-specific profile or should it live under runtime schemas? | **NEEDS VERIFICATION** | Runtime steward + schema steward |
+| Is `runtime_response_envelope.schema.json` a Focus-specific profile or should it live under runtime schemas? | **PROPOSED RESOLUTION IMPLEMENTED:** compatibility alias to canonical runtime schema; acceptance still requires review. | Runtime steward + schema steward |
 | Is `citation_validation_report.schema.json` a Focus-specific projection or duplicate shared evidence/citation schema? | **NEEDS VERIFICATION** | Evidence steward + schema steward |
 | Which fields are required for FocusRequest and FocusResponse? | **NEEDS VERIFICATION** | Focus steward + UI steward |
-| Which fixtures prove finite outcomes and deny-by-default behavior? | **NEEDS VERIFICATION** | Validation steward |
+| Which fixtures prove finite outcomes and deny-by-default behavior? | **PARTIAL:** shared runtime fixtures prove all four shapes and unknown-outcome rejection; semantic Focus behavior remains NEEDS VERIFICATION. | Validation steward |
 | Which Focus outputs are safe for public UI, export, and Focus Mode county plans? | **NEEDS VERIFICATION / release-gated** | Release steward + policy steward |
 
 ---
 
 ## Maintainer notes
 
-- Treat current focus schemas as permissive scaffolds until fields, fixtures, validators, and CI are verified.
+- Treat Focus request, response, and citation-report schemas as permissive scaffolds until fields, fixtures, validators, and CI are verified. Treat the runtime envelope path only as a compatibility alias to the canonical runtime schema.
 - Resolve overlap with `schemas/contracts/v1/ui/`, runtime, evidence, and focus-mode schema homes before promotion.
 - Preserve finite outcomes, cite-or-abstain, governed API boundaries, release state, correction path, and rollback support.
 - Never let Focus Mode become a direct AI answer path around evidence and policy.

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-runtime-runtime-response-envelope
 title: contracts/runtime/runtime_response_envelope.md — RuntimeResponseEnvelope Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft; PROPOSED; schema-paired; api-facing-runtime-envelope; trust-membrane
 owners: OWNER_TBD — Runtime steward · API steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Correction steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-02
 policy_label: public; contracts; runtime; runtime-response-envelope; api-facing; finite-outcomes; evidence-refs; policy-state; freshness; correction-state; governed-runtime; no-internal-store-bypass
 tags: [kfm, contracts, runtime, runtime-response-envelope, governed-api, trust-membrane, answer, abstain, deny, error, evidence-refs, policy-state, freshness, correction-state, cite-or-abstain]
 related:
@@ -30,6 +30,7 @@ notes:
   - "Expanded from existing `contracts/runtime/runtime_response_envelope.md`."
   - "Paired schema verified at `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`; schema status is PROPOSED."
   - "The schema requires id, spec_hash, version, issued_at, outcome, reason_code, evidence_refs, policy_state, freshness, and correction_state; additional properties are false."
+  - "v0.3 records the canonical validator wiring, Focus compatibility alias, and synthetic schema fixtures covering all four finite outcomes plus four fail-closed shape cases."
   - "RuntimeResponseEnvelope is the governed API/client-facing response envelope. It is not raw evidence storage, not canonical lifecycle storage, not policy execution, not model truth, and not release approval."
   - "Rollback target for this expansion is previous blob SHA `070e7f178f04bd1cf7577de1046aa3eaa3530edc`."
 [/KFM_META_BLOCK_V2] -->
@@ -53,10 +54,10 @@ notes:
 **Path:** `contracts/runtime/runtime_response_envelope.md`  
 **Paired schema:** `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`  
 **Schema status:** PROPOSED  
-**Validator path named by schema:** `tools/validators/validate_runtime_response_envelope.py` — existing file previously marked wired in this document; current implementation wiring still NEEDS VERIFICATION unless checked in this session  
+**Validator path named by schema:** `tools/validators/validate_runtime_response_envelope.py` — wired to the canonical schema and its positive/negative fixture root
 **Policy authority:** `policy/runtime/`, not this contract  
 **Runtime/API authority:** implementation/API roots, not this contract  
-**Truth posture:** CONFIRMED schema pairing and required field surface · CONFIRMED finite outcome enum · CONFIRMED evidence refs use the EvidenceRef schema · CONFIRMED additional properties are closed · NEEDS VERIFICATION for validator wiring, fixtures, policy-state/freshness/correction-state vocabularies, public-client tests, and runtime implementation
+**Truth posture:** CONFIRMED schema pairing, validator wiring, four-outcome schema fixtures, required field surface, EvidenceRef shape reference, and closed additional properties · NEEDS VERIFICATION for policy-state/freshness/correction-state vocabularies, semantic outcome selection, evidence resolution, public-client tests, and runtime implementation
 
 ## Quick jumps
 
@@ -327,10 +328,15 @@ Typical roles:
 
 ## Validation expectations
 
-NEEDS VERIFICATION in implementation:
+CONFIRMED shape-validation surface:
 
-- validator existence and current wiring for `tools/validators/validate_runtime_response_envelope.py`;
-- fixture coverage under `fixtures/contracts/v1/runtime/runtime_response_envelope/`;
+- `tools/validators/validate_runtime_response_envelope.py` targets the canonical schema and fixture root;
+- valid synthetic fixtures cover `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
+- invalid fixtures cover a missing required field, an extra property, an invalid identifier, and an unknown outcome;
+- `tests/runtime_proof/test_envelope_finite_outcomes.py` checks the closed profile and Focus compatibility alias without network access.
+
+NEEDS VERIFICATION in runtime and client implementation:
+
 - controlled vocabularies for `policy_state`, `freshness`, and `correction_state`;
 - required non-empty evidence refs for public `ANSWER` cases, if adopted;
 - safe reason-code vocabulary;
@@ -343,20 +349,27 @@ NEEDS VERIFICATION in implementation:
 
 ## Fixtures
 
-Minimum fixture set PROPOSED:
+Current synthetic schema fixtures:
 
 | Fixture | Purpose |
 |---|---|
-| `valid_answer_with_evidence.json` | Valid answer with evidence refs and allow policy state. |
-| `valid_abstain_no_evidence.json` | Valid abstention when evidence is insufficient. |
-| `valid_deny_sensitive.json` | Valid denial due to sensitivity/access policy. |
-| `valid_error_safe.json` | Valid safe runtime error envelope. |
+| `valid/valid_1.json` | Shape-valid `ABSTAIN` with no evidence refs. |
+| `valid/valid_2.json` | Shape-valid `ANSWER` with one synthetic EvidenceRef. |
+| `valid/valid_3.json` | Shape-valid `DENY` without a restricted payload. |
+| `valid/valid_4.json` | Shape-valid safe `ERROR` without internal diagnostics. |
+| `invalid/invalid_1.json` | Missing required `id`. |
+| `invalid/invalid_2.json` | Disallowed extra property. |
+| `invalid/invalid_3.json` | Identifier pattern violation. |
+| `invalid/invalid_4.json` | Unknown outcome outside the finite enum. |
+
+Additional semantic/runtime fixture set PROPOSED:
+
+| Fixture | Purpose |
+|---|---|
 | `valid_stale_corrected.json` | Valid stale/corrected response posture. |
 | `valid_withdrawn.json` | Valid withdrawn/correction-state envelope. |
 | `invalid_missing_spec_hash.json` | Confirms required spec hash. |
 | `invalid_bad_spec_hash.json` | Confirms SHA-256 pattern. |
-| `invalid_unknown_outcome.json` | Confirms finite outcome enum. |
-| `invalid_extra_property.json` | Confirms additional properties are closed. |
 
 Fixtures must use synthetic/safe refs only.
 
