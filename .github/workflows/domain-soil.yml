@@ -61,6 +61,8 @@ jobs:
             "tests/domains/soil/README.md"
             "tools/validators/domains/soil/README.md"
             "tools/validators/domains/soil/validate_public_safe_fixture.py"
+            "tools/validators/domains/soil/moisture/validate_soil_moisture.py"
+            "fixtures/domains/soil/soil_moisture/README.md"
             "data/registry/sources/soil/README.md"
             "release/candidates/soil/README.md"
           )
@@ -73,6 +75,7 @@ jobs:
           done
 
           python tests/domains/soil/test_soil_smoke.py --verbose
+          python tests/domains/soil/test_soil_moisture_qc.py --verbose
 
       - name: Record Soil validation scope
         if: always()
@@ -81,15 +84,19 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Soil validation status
 
-          `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
+          `VALIDATION_SCOPE: synthetic-public-safe-and-station-moisture-fixtures-only`
 
           This job runs only the accepted deterministic standard-library suite in
-          `tests/domains/soil/test_soil_smoke.py`. The suite reads only small
-          synthetic positive and fail-closed fixtures, exercises the repository
+          `tests/domains/soil/test_soil_smoke.py` and
+          `tests/domains/soil/test_soil_moisture_qc.py`. The suites read only
+          small synthetic positive and fail-closed fixtures, exercise the repository
           validator at `tools/validators/domains/soil/validate_public_safe_fixture.py`,
-          blocks network calls in the test boundary, and checks explicit support
+          the bounded station profile at
+          `tools/validators/domains/soil/moisture/validate_soil_moisture.py`, block
+          network calls in the test boundary, and check explicit support
           type, source and evidence references, generalized spatial support,
-          depth ordering, units, bounded measurement values, fixture-only rights
+          depth ordering, canonical UTC, preserved source timezone, QC flags,
+          deterministic reading deduplication, units, bounded measurement values, fixture-only rights
           and sensitivity, non-release state, non-promotion eligibility, rollback
           posture, and rejection of precise-location aliases or undeclared fields.
 

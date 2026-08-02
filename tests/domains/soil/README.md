@@ -138,13 +138,14 @@ Core checks that all child lanes should preserve:
 
 ## Confirmed Test Families
 
-The current accepted executable scope is one bounded synthetic public-safe
-fixture profile. It is a validation guardrail, not an object-family schema,
+The current accepted executable scope is two bounded synthetic fixture
+profiles. They are validation guardrails, not object-family schemas,
 source admission path, policy engine, proof slice, or release gate.
 
 | Family | Status | Current confirmed child lanes | Boundary |
 |---|---|---|---|
 | `test_soil_smoke.py` | CONFIRMED executable | File-backed positive/negative fixture polarity, validator bounds and CLI behavior, deterministic findings, and no-network guard | Does not validate Soil truth, source admission, canonical support vocabulary, schemas, policy, lineage, proof, release, or publication. |
+| `test_soil_moisture_qc.py` | CONFIRMED executable | Closed synthetic station profile with unit, depth, canonical UTC, source-timezone, QC, dedupe, identity, geometry, parser-bound, CLI, and no-network checks | Does not validate live sources, scientific fitness, staleness, schemas, policy, evidence closure, runtime, proof, release, or publication. |
 | Other named `test_*.py` modules | PLACEHOLDER / PROPOSED | Backlog markers only | Zero executable coverage is claimed for those files until implemented. |
 
 ---
@@ -239,12 +240,15 @@ All child directories are PROPOSED until files and executable tests exist.
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/soil/test_soil_smoke.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_moisture_qc.py --verbose
 ```
 
 Required run posture: no network access, no live service calls, no real secrets,
 no production logs, no production trust artifacts, no sensitive farm, field,
 station, or location detail, no public artifact writes, and deterministic
-synthetic fixture inputs. The command proves only the bounded fixture profile.
+synthetic fixture inputs. The commands prove only the bounded fixture profiles.
 
 ---
 

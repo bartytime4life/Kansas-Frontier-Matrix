@@ -1,0 +1,35 @@
+{
+  "record_id": "",
+  "schema_version": "1",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "",
+  "source_role": "observation",
+  "evidence_refs": [],
+  "spec_hash": "not-a-sha256",
+  "readings": [
+    {
+      "station_id": "SYNTHETIC-KS-IDENTITY",
+      "spatial_support": {
+        "kind": "generalized_county",
+        "county_fips": "99999"
+      },
+      "depth_cm": 10,
+      "measure": "volumetric_water_content",
+      "value": 0.24,
+      "unit": "m3/m3",
+      "timestamp_iso": "2026-04-15T14:00:00Z",
+      "source_timezone": "America/Chicago",
+      "qc_flags": [
+        "synthetic-ok"
+      ]
+    }
+  ],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  }
+}
