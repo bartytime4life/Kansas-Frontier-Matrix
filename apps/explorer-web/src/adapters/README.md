@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/adapters/readme
 title: Explorer Web Adapters README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-08-02
 policy_label: public
 related:
   - ../README.md
@@ -31,7 +31,8 @@ related:
 tags: [kfm, apps, explorer-web, adapters, map-adapter, governed-client, renderer-boundary, maplibre, cesium, trust-membrane, no-direct-data-root]
 notes:
   - "v0.2 updates the uploaded Explorer Web adapters README into a current repo-aware adapter-boundary contract."
-  - "apps/explorer-web/src/adapters/README.md, apps/explorer-web/src/README.md, and apps/explorer-web/README.md were verified through the GitHub app in this update. Adapter implementation files, imports, tests, fixtures, client validators, renderer wrappers, package scripts, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
+  - "GovernedClient.ts now implements one closed, fixture-only Evidence Drawer projection parser with bounded fields, HTTPS citation checks, finite-outcome invariants, and no network behavior."
+  - "Live governed API transport, canonical schema binding, renderer wrappers, other adapters, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
   - "Adapters may translate between Explorer Web UI code and governed API envelopes, renderer ports, evidence payloads, layer manifests, export requests, and diagnostics; they must not become source truth, policy authority, release authority, lifecycle storage, schema/contract authority, direct model surface, or renderer authority."
   - "Claim-bearing UI state must come from governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states; adapters must not directly read RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data roots or canonical/internal stores."
 [/KFM_META_BLOCK_V2] -->
@@ -60,11 +61,11 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
+> **Status:** draft / bounded fixture adapter executable / broader implementation `NEEDS VERIFICATION`
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/adapters/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path and parent Explorer Web READMEs / PROPOSED adapter-boundary contract / UNKNOWN adapter files, imports, tests, fixtures, client validators, renderer wrappers, package scripts, runtime wiring, and deployment behavior
+> **Truth posture:** CONFIRMED README path, `GovernedClient.ts` fixture-only Evidence Drawer parser, synthetic fixtures, app-local tests, and no-network/no-lifecycle-store structural guard / PROPOSED broader adapter-boundary contract / UNKNOWN live client transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior
 
 > [!CAUTION]
 > Adapter code must not bypass the trust membrane. It may translate governed API envelopes, renderer ports, evidence payloads, layer manifests, and export requests into UI-friendly shapes, but it must not directly read lifecycle data roots, canonical/internal stores, raw renderer internals as truth, direct model output, or local source files as user-facing claims.
@@ -106,7 +107,7 @@ Adapters should isolate integration details so route and component code can rema
 - export requests into governed export payloads;
 - diagnostics and telemetry into safe, non-secret UI diagnostics.
 
-This README does not prove those adapters are implemented.
+The bounded Evidence Drawer fixture parser is implemented. Other adapters and live transport remain unproved.
 
 [Back to top](#top)
 
@@ -116,11 +117,13 @@ This README does not prove those adapters are implemented.
 
 | Surface | Status | What it proves | What it does **not** prove |
 |---|---|---|---|
-| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.2. | Adapter files, imports, tests, fixtures, client validators, renderer wrappers, runtime wiring, package scripts, or deployment behavior. |
+| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.3. | Live transport, renderer wrappers, broader runtime wiring, or deployment behavior. |
 | `apps/explorer-web/src/README.md` | **CONFIRMED parent source README** | Parent source tree defines Explorer Web source as map-first implementation boundary and denies direct lifecycle/canonical/model reads. | That routes, adapters, renderer wiring, or tests are implemented. |
 | `apps/explorer-web/README.md` | **CONFIRMED parent app README** | Parent app lane defines Explorer Web as map-first public/semi-public shell that must read through governed API and avoid direct lifecycle/canonical/internal store reads. | That app routes, clients, adapters, tests, or deployment exist. |
+| `apps/explorer-web/src/adapters/GovernedClient.ts` | **CONFIRMED bounded executable** | Validates one closed, fixture-only public-safe Evidence Drawer projection and enforces finite outcome combinations without network access. | Live governed API transport, canonical schema acceptance, policy execution, citation validation, or production readiness. |
+| `apps/explorer-web/tests/evidence-drawer.test.ts` | **CONFIRMED bounded tests** | Covers accepted and rejected projections, negative-state no-leak behavior, size limits, and direct-store/network source guards. | Browser E2E behavior or complete accessibility. |
 | Uploaded adapter Markdown | **CONFIRMED source text for this update** | Provided the base adapter-boundary contract updated here. | Does not prove live implementation. |
-| Adapter files beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, import-boundary tests, fixtures, package scripts, and runtime evidence. | Not claimed by this README. |
+| Other adapter files and live transport | **NEEDS VERIFICATION** | Checkable by repo scan, import-boundary tests, fixtures, package scripts, and runtime evidence. | Not claimed by this README. |
 
 [Back to top](#top)
 

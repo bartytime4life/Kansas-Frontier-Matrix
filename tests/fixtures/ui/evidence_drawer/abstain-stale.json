@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:abstain-stale-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "STALE_EVIDENCE",
+  "title": "This supplied title is not rendered for an abstention",
+  "summary": "This supplied summary is not rendered for an abstention.",
+  "evidence_refs": ["kfm:evidence:synthetic:stale-001"],
+  "citations": [],
+  "limitations": ["The supporting fixture is outside its declared freshness window."],
+  "trust_state": {
+    "source_role": "context",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "RELEASED",
+    "freshness": "STALE",
+    "correction": "NONE"
+  }
+}
