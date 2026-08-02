@@ -119,8 +119,8 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fq "echo TODO finite-envelope-shape" ".github/workflows/focus-mock-test.yml"; then
-            echo "::error::The neighboring finite-envelope workflow changed. Coordinate its accepted command and fixtures before wiring E2E."
+          if ! grep -Fq "python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose" ".github/workflows/focus-mock-test.yml"; then
+            echo "::error::The neighboring finite-envelope proof command changed. Preserve the finite outcome boundary while mock-runtime E2E remains held."
             exit 1
           fi
 

@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-finite-runtime-envelope-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/focus-mock-test.yml",
+    "contracts/runtime/runtime_response_envelope.md",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/README.md",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/README.md",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.expected_error.txt",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.json",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/README.md",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_3.json",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json",
+    "schemas/contracts/v1/focus/README.md",
+    "schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+    "tests/runtime_proof/README.md",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:f84fc8a3631a5f9265655514c015b489d318e3c10637eb38928ad55b8b0c4312",
+    ".github/workflows/e2e-smoke.yml": "sha256:ee27887578a855e966d7ea05aa77e981832c0f2cd91e844dff07a497184d6993",
+    ".github/workflows/focus-mock-test.yml": "sha256:7c24404f4ae17c6bd41e08a07dfb26f3845e198b6d27f55c6a438e7d7f215cab",
+    "contracts/runtime/runtime_response_envelope.md": "sha256:4cd295ef182e4ea23475b5d22c9ec7708bc8a4eed296b7a7b6b04c854e49f136",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/README.md": "sha256:287910040771eeb43d10e392a7aa78a91be09c67279253c978927017d396ea8d",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/README.md": "sha256:f3c1323d1b67a2d7672d0d0057c89e1678a4efb7878680593dd348625bff2e08",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.expected_error.txt": "sha256:8dac9515f5d1c0f2d476044df46cda72716b3ad10a41a012717218f26c203fc8",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.json": "sha256:bce4a575e7f4b05ed7b7c21784febb78969bbec787b79baa4d1cf3731b9578e0",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/README.md": "sha256:1aeebb8a32e562628d718a75d89619dad18e16af9c861a1010d3b2fa6b3c01ff",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_3.json": "sha256:108bf269287a5859db3c222ba0d73107e33f6b4138ef1ada86ce0d2128cc3f46",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json": "sha256:421192d780b320a395ae51389a599f02aefb561090ab0b16396676edbf8f326b",
+    "schemas/contracts/v1/focus/README.md": "sha256:2fcf5cc53f13f61ee7f95f77297d29bc8e56b0ea45085f423568522410e4d262",
+    "schemas/contracts/v1/focus/runtime_response_envelope.schema.json": "sha256:0d56628252bc78dee275c867875ea2ffb7d86c4fc2344f5ca73f671b3e04c1f0",
+    "tests/runtime_proof/README.md": "sha256:0c034b50abd9515088f5386ded8171d924736e67b9a7217dbd728bfa043d98a9",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "sha256:f59e6650e67b62a493568a57f8906d2bb4ae9989a32fc4776592ad82cd12226d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "container",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@248aabf0dc038670560e570230bdc86cc7a1cb6a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/focus/runtime_response_envelope.schema.json@248aabf0dc038670560e570230bdc86cc7a1cb6a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/runtime_proof/test_envelope_finite_outcomes.py@248aabf0dc038670560e570230bdc86cc7a1cb6a",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/focus-mock-test.yml@248aabf0dc038670560e570230bdc86cc7a1cb6a",
+      "source:Unified-Implementation-Architecture-Build-Manual.md:sections-2.2,15.2-15.5,17.1-17.3,appendix-A:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "source:Pipeline-Living-Implementation-Manual-v0.3:sections-18.2,19,20,22:sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "source:Pass-20-Part-2:KFM-IDX-VAL-005,KFM-IDX-API-002:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    ".github/workflows/focus-mock-test.yml": "PROPOSED",
+    "contracts/runtime/runtime_response_envelope.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/README.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.expected_error.txt": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_4.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_3.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json": "PROPOSED",
+    "schemas/contracts/v1/focus/README.md": "PROPOSED",
+    "schemas/contracts/v1/focus/runtime_response_envelope.schema.json": "PROPOSED",
+    "tests/runtime_proof/README.md": "PROPOSED",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "finite-envelope-standard-library-suite",
+      "outcome": "PASS",
+      "reason": "Four tests confirmed canonical closed shape, Focus compatibility aliasing, all four finite outcomes, and negative fixture failure classes without network access."
+    },
+    {
+      "gate": "canonical-json-schema-fixtures",
+      "outcome": "PASS",
+      "reason": "The canonical validator accepted four valid fixtures and rejected four invalid fixtures with expected polarity."
+    },
+    {
+      "gate": "schema-contract-regression",
+      "outcome": "PASS",
+      "reason": "The focused tests/schemas, tests/contracts, and finite-envelope suite completed with 143 passing tests."
+    },
+    {
+      "gate": "aggregate-schema-validators",
+      "outcome": "PASS",
+      "reason": "make schemas completed successfully across the repository-owned seven-entry aggregate validator inventory."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "Eighteen link-check unit tests passed and the bounded checker resolved 224 local targets across seven changed Markdown files; twenty external targets were classified without network access."
+    },
+    {
+      "gate": "workflow-yaml-and-identity",
+      "outcome": "PASS",
+      "reason": "Both changed workflows parsed as YAML and preserved workflow names, job ids, and contents-read permissions."
+    },
+    {
+      "gate": "e2e-readiness-regression",
+      "outcome": "PASS",
+      "reason": "Twelve focused readiness tests and the current repository inspection passed while preserving the explicit composed-E2E hold."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check completed without findings."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository-owned generated-receipt validator confirmed schema, path, artifact-map, and SHA-256 integrity for all fifteen bound artifacts; human review remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The branch has not yet been pushed; exact-head hosted checks remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+  ],
+  "citations": [
+    {
+      "id": "repo:canonical-runtime-envelope-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@248aabf0dc038670560e570230bdc86cc7a1cb6a"
+    },
+    {
+      "id": "repo:focus-runtime-envelope-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/focus/runtime_response_envelope.schema.json@248aabf0dc038670560e570230bdc86cc7a1cb6a"
+    },
+    {
+      "id": "repo:finite-envelope-placeholder-test",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/runtime_proof/test_envelope_finite_outcomes.py@248aabf0dc038670560e570230bdc86cc7a1cb6a"
+    },
+    {
+      "id": "repo:focus-mock-held-workflow",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/focus-mock-test.yml@248aabf0dc038670560e570230bdc86cc7a1cb6a"
+    },
+    {
+      "id": "source:unified-implementation-manual-finite-outcomes",
+      "validated": true,
+      "evidence_ref": "source:Unified-Implementation-Architecture-Build-Manual.md:sections-2.2,15.2-15.5,17.1-17.3,appendix-A:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    },
+    {
+      "id": "source:pipeline-manual-runtime-envelope",
+      "validated": true,
+      "evidence_ref": "source:Pipeline-Living-Implementation-Manual-v0.3:sections-18.2,19,20,22:sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf"
+    },
+    {
+      "id": "source:pass20-no-network-finite-envelope",
+      "validated": true,
+      "evidence_ref": "source:Pass-20-Part-2:KFM-IDX-VAL-005,KFM-IDX-API-002:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T17:02:44Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed, synthetic, no-network finite-envelope shape proof. No copied third-party code or assets were used; implementation was written against repository-native contracts and public-safe fixtures. The Focus path is a compatibility alias, not a new authority root. Revert the feature commits to roll back. This receipt is process memory, not evidence closure, policy approval, runtime acceptance, review approval, release authority, or publication authority."
+}
