@@ -1,0 +1,22 @@
+{
+  "record_type": "water_planning_document_receipt_check",
+  "fixture_id": "fixture:water-planning:document-receipts:invalid-zero-digest",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "document_receipts": [
+    {
+      "document_id": "kwo-swigp-fy2027-scoring-v1",
+      "document_title": "FY2027 SWIGP Scoring Matrix",
+      "document_version": "v1",
+      "document_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "source_ref": "kwo:grant-programs:swigp:fy2027:scoring"
+    }
+  ],
+  "blocked_behaviors": {
+    "connector": false,
+    "proof": false,
+    "release": false,
+    "publication": false,
+    "source_activation": false
+  }
+}

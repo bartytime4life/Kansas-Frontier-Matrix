@@ -1,0 +1,22 @@
+{
+  "record_type": "water_planning_document_receipt_check",
+  "fixture_id": "fixture:water-planning:document-receipts:invalid-null-digest",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "document_receipts": [
+    {
+      "document_id": "kwo-swigp-fy2027-guidelines",
+      "document_title": "FY2027 State Water Infrastructure Grant Program Guidelines",
+      "document_version": "FY2027",
+      "document_digest": null,
+      "source_ref": "kwo:grant-programs:swigp:fy2027"
+    }
+  ],
+  "blocked_behaviors": {
+    "connector": false,
+    "proof": false,
+    "release": false,
+    "publication": false,
+    "source_activation": false
+  }
+}
