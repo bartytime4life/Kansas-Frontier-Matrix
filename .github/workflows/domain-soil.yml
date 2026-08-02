@@ -1,5 +1,5 @@
 # KFM Soil domain CI workflow.
-# Status: validate-soil runs one accepted synthetic no-network validation slice;
+# Status: validate-soil runs one accepted synthetic no-network fixture profile;
 # proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -60,6 +60,7 @@ jobs:
             "policy/domains/soil/README.md"
             "tests/domains/soil/README.md"
             "tools/validators/domains/soil/README.md"
+            "tools/validators/domains/soil/validate_public_safe_fixture.py"
             "data/registry/sources/soil/README.md"
             "release/candidates/soil/README.md"
           )
@@ -80,11 +81,13 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Soil validation status
 
-          `VALIDATION_SCOPE: synthetic-public-safe-in-memory-fixture-only`
+          `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
           This job runs only the accepted deterministic standard-library suite in
-          `tests/domains/soil/test_soil_smoke.py`. It blocks network calls in the
-          test boundary and validates synthetic candidates for explicit support
+          `tests/domains/soil/test_soil_smoke.py`. The suite reads only small
+          synthetic positive and fail-closed fixtures, exercises the repository
+          validator at `tools/validators/domains/soil/validate_public_safe_fixture.py`,
+          blocks network calls in the test boundary, and checks explicit support
           type, source and evidence references, generalized spatial support,
           depth ordering, units, bounded measurement values, fixture-only rights
           and sensitivity, non-release state, non-promotion eligibility, rollback

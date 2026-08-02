@@ -1,0 +1,5 @@
+UNDECLARED_DEPTH_INTERVAL_FIELD	$.depth_interval_cm.datum
+UNDECLARED_GOVERNANCE_FIELD	$.governance.approval_state
+UNDECLARED_MEASUREMENT_FIELD	$.measurement.method
+UNDECLARED_SPATIAL_SUPPORT_FIELD	$.spatial_support.soil_series
+UNDECLARED_TOP_LEVEL_FIELD	$.generated_claim

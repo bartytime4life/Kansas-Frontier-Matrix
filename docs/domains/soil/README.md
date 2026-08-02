@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/soil/readme
 title: Soil Domain
 type: domain-readme
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; implementation-partial
 owners:
   - OWNER_TBD - Soil domain steward
@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - Source steward
   - OWNER_TBD - Policy and release steward
 created: 2026-05-19
-updated: 2026-07-29
+updated: 2026-08-02
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable scope, boundaries, maturity, and navigation for the Soil domain lane
@@ -25,11 +25,13 @@ related:
   - docs/domains/soil/VERIFICATION.md
   - contracts/domains/soil/README.md
   - schemas/contracts/v1/domains/soil/README.md
+  - fixtures/domains/soil/README.md
   - tests/domains/soil/test_soil_smoke.py
+  - tools/validators/domains/soil/validate_public_safe_fixture.py
 tags: [kfm, domain, soil, support-type, source-role, evidence, lifecycle, maplibre, cite-or-abstain]
 notes:
   - "Replaces the two-line greenfield placeholder with a repository-grounded domain index."
-  - "Repository snapshot: main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7."
+  - "Repository snapshot: main@fc451ecd469654f34f67135ef39184a9b15be60e plus the bounded fixture-validator batch described below."
   - "Planning lineage: KFM Soil Architecture Extended Pro PDF-Only Planning Report, 25 pages, SHA-256 7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea."
   - "The planning report explicitly had no mounted repository. Its proposed paths and implementation claims are not imported as current facts."
 [/KFM_META_BLOCK_V2] -->
@@ -57,7 +59,7 @@ dependency order for future implementation.
 | Owning root | `docs/` - human-readable domain guidance |
 | Domain segment | `soil` |
 | Status | `draft / repository-grounded / implementation-partial` |
-| Evidence snapshot | `main@5266ba5f2d8f39cad2d54b066d514be8ca8eb3b7` |
+| Evidence snapshot | `main@fc451ecd469654f34f67135ef39184a9b15be60e` plus this bounded fixture-validator batch |
 | Truth posture | `CONFIRMED` paths and inspected bytes; `PROPOSED` unresolved semantics; `NEEDS VERIFICATION` operational maturity |
 | Lifecycle | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` |
 | Public posture | Governed interfaces and released artifacts only |
@@ -223,27 +225,31 @@ This matrix distinguishes path presence from substantive implementation.
 | Pipeline implementation | Ingest, normalize, validate, catalog, triplets, publish, and rollback modules exist | Greenfield placeholders |
 | Pipeline specs | Five YAML specs exist with empty `stages` arrays | Declarative scaffolding only |
 | Policy | Soil Rego files exist | Default/empty proposed scaffolds; no substantive policy behavior proven |
-| Validators | Soil validator files and lane READMEs exist | Several executable files are one-line placeholders |
-| Domain tests | Eight no-network tests in `test_soil_smoke.py` are executable | One bounded active slice |
+| Validators | `validate_public_safe_fixture.py` is executable; other Soil validator files and lane READMEs remain | One bounded standard-library fixture profile; several adjacent executable files are one-line placeholders |
+| Domain tests | The no-network tests in `test_soil_smoke.py` are executable | One bounded active slice with explicit positive, negative, parser, CLI, and input-bound coverage |
 | Other named test modules | Six additional domain test files exist | Documentation-only placeholder modules; zero executable assertions |
 | Explorer Web | README plus `EvidenceDrawer.tsx`, `FocusFlow.tsx`, and `layers.ts` exist | Components are explicit greenfield placeholders |
 | Published Soil output | No release-grade Soil product was verified in this review | `UNKNOWN / NOT PROVEN` |
 
 ## Active bounded test slice
 
-The current active test validates only a synthetic in-memory candidate. It
-checks:
+The current active suite reads a frozen synthetic fixture corpus and exercises
+the reusable `validate_public_safe_fixture.py` validator. It checks:
 
+- exact positive/negative fixture inventory and expected-finding sidecars;
 - a closed set of four support types;
 - required source-descriptor and evidence references;
 - generalized county spatial support and denial of common precise-location
   aliases;
-- bounded depth intervals;
-- volumetric-water-content units and range;
+- closed top-level and nested objects;
+- finite, ordered depth intervals;
+- finite volumetric-water-content values, units, and range;
 - fixture-only rights, sensitivity, review, release, promotion, and rollback
   states;
-- rejection of undeclared top-level fields;
-- deterministic JSON round trips;
+- bounded file size, JSON integer length, document depth, and document nodes;
+- rejection of malformed JSON, duplicate keys, and non-standard numbers;
+- deterministic code-and-path findings, JSON-line output, and CLI exit codes;
+  and
 - no network access through patched socket and `urllib` entry points.
 
 It does not establish source truth, schema closure, policy execution, pipeline
@@ -251,7 +257,8 @@ behavior, catalog closure, proof construction, release approval, or
 publication.
 
 ```bash
-python -m pytest -q tests/domains/soil/test_soil_smoke.py
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_smoke.py --verbose
 ```
 
 ## Lifecycle and public boundary
@@ -364,23 +371,25 @@ docs/domains/soil/
 
 ## Validation and rollback
 
-This change is documentation-only. Validate it with:
+Validate this bounded Soil lane with:
 
 ```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_smoke.py --verbose
+python tools/validators/docs/link-check/check_links.py docs/domains/soil/README.md
 git diff --check
-python -m pytest -q tests/domains/soil/test_soil_smoke.py
-python tools/validate_all.py
 ```
 
-Rollback before merge is closing the draft PR. After merge, revert this single
-file through review. Reverting this README does not delete domain artifacts or
-change source, policy, pipeline, release, deployment, or publication state.
+Rollback before merge is closing the draft PR. After merge, revert the bounded
+validator, fixtures, tests, workflow notes, Soil lane documentation, and
+generated receipt through review. Reverting this batch does not change source,
+policy, pipeline, release, deployment, or publication state.
 
 ## Evidence basis
 
 | Evidence | Status | Used for | Does not prove |
 |---|---|---|---|
-| Current repository at `5266ba5...` | `CONFIRMED` | Exact paths, placeholder bytes, active smoke test, current responsibility roots | Runtime or external source behavior |
+| Current repository at `fc451ec...` plus this bounded batch | `CONFIRMED` | Exact paths, placeholder bytes, active fixture validator and smoke suite, current responsibility roots | Runtime or external source behavior |
 | [Directory Rules v2](../../doctrine/directory-rules.md) and [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `CONFIRMED accepted authority` | Placement and responsibility boundaries | Soil object semantics by themselves |
 | *KFM Soil Architecture Extended Pro PDF-Only Planning Report* | `CONFIRMED supplied lineage` | Source-family breadth, anti-collapse pressure, intended gates, and implementation questions | Current implementation; the report states no repo was mounted |
 | [Architecture](ARCHITECTURE.md), [identity](IDENTITY_MODEL.md), [lifecycle](DATA_LIFECYCLE.md), and [source](SOURCES.md) docs | `CONFIRMED present / mixed maturity` | Existing Soil language and intended boundaries | Complete schema, policy, validator, or release closure |

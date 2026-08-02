@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-soil-readme
 title: tools/validators/domains/soil README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded-public-safe-fixture-validator-confirmed
 owner: TODO-tooling-qa-owner-plus-soil-steward-plus-source-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-02
 policy_label: repository-facing; per-domain-validator-index; soil; SSURGO; support-type-separation; source-role-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Soil validator index for catalog closure, dual-hash posture, horizon-depth integrity, lineage closure, soil-moisture observations, support-type separation, source-role discipline, MUKEY/COKEY/CHKEY continuity, EvidenceRef/EvidenceBundle closure, policy, release, correction, rollback, and public-surface denial checks while deferring Soil meaning, source registry authority, evidence records, policy decisions, proof records, and release authority to their owning roots
@@ -24,6 +24,10 @@ related:
   - lineage/README.md
   - moisture/README.md
   - support_type/README.md
+  - validate_public_safe_fixture.py
+  - ../../../../fixtures/domains/soil/README.md
+  - ../../../../tests/domains/soil/test_soil_smoke.py
+  - ../../../../.github/workflows/domain-soil.yml
   - ../../../../docs/domains/soil/README.md
   - ../../../../docs/domains/soil/CANONICAL_PATHS.md
   - ../../../../docs/domains/soil/DATA_LIFECYCLE.md
@@ -36,8 +40,8 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
-  - "Confirmed child README lanes in this task sequence: catalog_closure, dual_hash, horizon_depth, lineage, moisture, and support_type. Executable behavior remains NEEDS VERIFICATION."
+  - "v0.2 records one confirmed executable: the standard-library synthetic public-safe fixture validator exercised by the Soil smoke suite."
+  - "Confirmed child README lanes remain documentation-only: catalog_closure, dual_hash, horizon_depth, lineage, moisture, and support_type. Their executable behavior remains NEEDS VERIFICATION."
   - "Soil validators enforce declared contracts, schemas, source-role rules, support-type separation, evidence closure, policy posture, release references, correction paths, and rollback targets. They do not define Soil meaning, create SourceDescriptors, create EvidenceBundles, decide policy, approve release, or publish public outputs."
   - "Static survey, gridded derivative, station observation, satellite grid, pedon/profile, and interpretation support types must not collapse."
 [/KFM_META_BLOCK_V2] -->
@@ -50,7 +54,7 @@ notes:
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
 ![scope](https://img.shields.io/badge/scope-soil--validators-informational)
 ![invariant](https://img.shields.io/badge/invariant-no--support--collapse-critical)
-![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
+![authority](https://img.shields.io/badge/authority-bounded__fixture__validator-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
 > **One-line purpose.** `tools/validators/domains/soil/` is the per-domain Soil validator index for catalog closure, dual-hash posture, horizon-depth integrity, lineage closure, moisture observations, support-type separation, source-role discipline, Soil identity continuity, evidence, policy, release, correction, rollback, and public-surface denial checks.
@@ -79,7 +83,9 @@ The answer should be a navigable validator index and deterministic validation ou
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps Soil-specific boundaries explicit. |
 | Child README lanes | **CONFIRMED** | `catalog_closure/`, `dual_hash/`, `horizon_depth/`, `lineage/`, `moisture/`, and `support_type/` each have README guidance. |
 | Soil contract/proof/catalog evidence | **CONFIRMED in repo evidence / draft** | Current repo evidence defines Soil contract, proof, source-registry, catalog, and selected object-family surfaces as draft/release-gated and support-type-aware. |
-| Executables, schemas, fixtures, policy bundles, source mappings, and CI wiring | **NEEDS VERIFICATION** | No parent runner, executable behavior, test paths, field-level schema enforcement, report destinations, policy bundle behavior, receipt emission, runtime behavior, or CI behavior are claimed as implemented here. |
+| `validate_public_safe_fixture.py` | **CONFIRMED bounded executable** | Standard-library, no-network validation of one synthetic fixture-only profile; it creates no Soil, source, schema, policy, evidence, proof, release, or publication authority. |
+| Public-safe fixtures and Soil smoke suite | **CONFIRMED bounded coverage** | Positive and exact negative fixture polarity is exercised by `tests/domains/soil/test_soil_smoke.py` and the existing `domain-soil` validation job. |
+| Other executables, schemas, policy bundles, source mappings, and runtime wiring | **NEEDS VERIFICATION** | Child validator lanes, field-level schema enforcement, source admission, policy evaluation, reports, receipts, runtime behavior, proof, and release remain outside this executable slice. |
 
 [Back to top](#top)
 
@@ -228,7 +234,19 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
+Accepted bounded command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_smoke.py --verbose
+```
+
+The suite exercises the file-backed valid and invalid fixture inventory, exact
+finding polarity, parser and input bounds, deterministic output, CLI exit
+semantics, and explicit socket/URL-opening denial. A pass proves only this
+synthetic fixture profile.
+
+Suggested future test surface beyond the accepted profile:
 
 ```text
 tests/validators/domains/soil/
@@ -251,7 +269,7 @@ tests/validators/domains/soil/
     └── public_surface_leak_risk/
 ```
 
-Suggested future command pattern:
+Suggested future command pattern for the still-proposed parent runner:
 
 ```bash
 pytest -q tests/validators/domains/soil
@@ -290,6 +308,7 @@ python tools/validators/domains/soil/run_soil_domain_validators.py --repo-root .
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-08 |
-| Review state | Draft README replacement for greenfield Soil validator parent stub. |
-| Next smallest safe change | Verify actual Soil parent runner, child scripts, accepted field names, support-type vocabulary, schemas, source mappings, source descriptors, fixtures, report destinations, receipts, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-02 |
+| Review state | Bounded synthetic fixture validator and standard-library smoke suite validated locally; human review and exact-head hosted checks pending. |
+| Current accepted scope | One fixture-only public-safe candidate profile, deterministic positive/negative fixture polarity, no-network tests, and no production Soil authority. |
+| Next smallest safe change | Resolve the conflicting Soil support-type vocabularies before tightening object schemas or implementing source/pipeline behavior. |
