@@ -21,7 +21,8 @@ truth_posture: >
   AirObservation fixture placeholder; parent-level test_aqi_as_concentration_denied.py containing only
   a one-line PROPOSED placeholder docstring; named-path probes finding no direct conftest.py or child
   test module; EPA AirNow source profile draft separating PUBLIC_AQI_REPORT from provisional raw
-  pollutant readings and regulatory AQS posture; TODO-only domain-atmosphere workflow; root Makefile
+  pollutant readings and regulatory AQS posture; bounded parent-level fixture denial in the
+  domain-atmosphere workflow but no executable child policy lane; root Makefile
   test target excluding this lane / PROPOSED focused negative-path tests, policy input adapter, stable
   decision envelope, reason-code vocabulary, real synthetic fixtures, case manifest, pollutant and
   units assertions, averaging/standard/version preservation, AirNow/AQS anti-collapse tests,
@@ -206,7 +207,7 @@ KFM has strong semantic documentation for the AQI-versus-concentration distincti
 | Observation schemas | **Permissive scaffolds** | Shape validation does not enforce AQI/concentration meaning. |
 | Invalid fixture | **Metadata-only placeholder** | No executable invalid object or expected decision is established. |
 | AirNow source profile | **Draft documentation** | It distinguishes AQI aggregate/report from provisional raw pollutant values and AQS. |
-| Atmosphere workflow | **TODO-only** | Green execution cannot prove the denial. |
+| Atmosphere workflow | **Bounded fixture denial** | The knowledge-character profile rejects AQI-as-concentration; it is not Rego policy, evidence closure, or release authority. |
 | Root `make test` | **Excludes this lane** | It runs schema and contract test directories only. |
 
 ### Truth labels
@@ -986,7 +987,7 @@ A mature required job should:
 
 ### Current CI boundary
 
-`domain-atmosphere.yml` currently runs TODO echo commands. A successful run is not substantive evidence for this lane.
+`domain-atmosphere.yml` now executes a bounded synthetic AQI-as-concentration denial through the parent knowledge-character profile while retaining broader proof and release holds. A successful run does not prove this child Rego-policy lane, live AQI records, evidence closure, or release behavior.
 
 The root `make test` excludes this path. The root policy target remains a TODO. Root `make deny-test` runs five generic app-owned route, method, manifest, internal-store-literal, and forbidden-import guards, but it does not collect or prove this Atmosphere AQI-versus-concentration lane.
 

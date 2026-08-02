@@ -1,0 +1,35 @@
+{
+  "fixture_id": "fixture:atmosphere:knowledge-character:invalid-precise-site-exposure",
+  "profile_id": "kfm-atmosphere-knowledge-character-fixture-v1",
+  "object_family": "AirStation",
+  "knowledge_character": "NETWORK_AND_SITE_CONTEXT",
+  "source_role": "administrative",
+  "source_descriptor_ref": "fixture://sources/atmosphere/synthetic-site-context",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/knowledge-character/invalid-precise-site-exposure"
+  ],
+  "claim": {
+    "kind": "site_context",
+    "parameter": "station_metadata",
+    "unit": "none",
+    "intended_use": "metadata_context"
+  },
+  "spatial_support": {
+    "kind": "exact_site",
+    "county_fips": "99999",
+    "latitude": "SYNTHETIC_PRECISE_SITE_SENTINEL"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "generalized_location_only",
+    "not_an_observation",
+    "synthetic_fixture_only"
+  ]
+}

@@ -20,7 +20,8 @@ truth_posture: >
   observed/context posture excluding forecasts; AirObservation and pollutant observation boundaries;
   permissive paired schemas; fixture indexes with payload inventory unverified; Map/UI documentation
   treating model-field label, model run time, valid-time window, and source-role label as load-bearing;
-  TODO-only Atmosphere workflow and root make test excluding this lane / PROPOSED canonical policy
+  bounded parent-level fixture denial in the Atmosphere workflow but no executable child policy lane;
+  root make test excluding this lane / PROPOSED canonical policy
   input/result/obligation contracts, reason codes, substantive fixtures, adapter tests, model-run and
   temporal matrices, positive controls, carrier regressions, nonzero collection, CI, correction,
   supersession, and rollback / UNKNOWN active policy/validator runtime, accepted model and observation
@@ -154,7 +155,7 @@ KFM has expanded semantic contracts and trust-visible model-label doctrine, but 
 | Paired schemas | **Permissive scaffolds** | Empty properties and `additionalProperties: true`; no anti-collapse enforcement. |
 | Fixture indexes | **README-only indexes inspected** | Payload inventory and consumers remain unverified. |
 | Map/UI contracts | **Draft doctrine** | Model-field label, model run time, valid-time window, source role, and limitations are load-bearing. |
-| Atmosphere workflow | **TODO-only** | Green execution cannot prove model-versus-observed enforcement. |
+| Atmosphere workflow | **Bounded fixture denial** | The knowledge-character profile rejects model-as-observation; it is not Rego policy, evidence closure, or release authority. |
 | Root `make test` | **Excludes this lane** | Runs schema and contract tests only. |
 
 ### Maturity ladder
@@ -830,7 +831,7 @@ A mature required job should:
 
 ### Current CI boundary
 
-`domain-atmosphere.yml` contains TODO echo steps. A successful run is not substantive evidence for this lane.
+`domain-atmosphere.yml` now executes a bounded synthetic model-as-observation denial through the parent knowledge-character profile while retaining broader proof and release holds. A successful run does not prove this child Rego-policy lane, live model products, evidence closure, or release behavior.
 
 The root `make test` excludes this lane.
 

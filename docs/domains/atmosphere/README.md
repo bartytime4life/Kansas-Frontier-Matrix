@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: TBD (domain steward: Atmosphere/Air); TBD (governance reviewer)
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-08-02
 policy_label: public
 related: [docs/domains/README.md, docs/doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/domains/atmosphere/VERIFICATION_BACKLOG.md, control_plane/domain_lane_register.yaml, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, weather]
@@ -23,12 +23,12 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains At
 ![authority: canonical](https://img.shields.io/badge/authority-canonical-blue)
 ![lane: docs%2Fdomains](https://img.shields.io/badge/lane-docs%2Fdomains-informational)
 ![sensitivity: public](https://img.shields.io/badge/sensitivity-public-green)
-![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-yellow)
+![implementation: bounded fixture proof](https://img.shields.io/badge/implementation-bounded__fixture__proof-blue)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-success)
 ![docs build: TODO](https://img.shields.io/badge/docs--build-TODO-lightgrey)
-![last reviewed: 2026--05--29](https://img.shields.io/badge/last%20reviewed-2026--05--29-blue)
+![last reviewed: 2026--08--02](https://img.shields.io/badge/last%20reviewed-2026--08--02-blue)
 
-**Status:** `draft` · **Authority level:** `canonical` (domain explanation) · **Owners:** TBD (Atmosphere steward), TBD (governance reviewer) — see [Review burden](#17-review-burden) · **Updated:** 2026-05-29 · `CONTRACT_VERSION = "3.0.0"`
+**Status:** `draft` · **Authority level:** `canonical` (domain explanation) · **Owners:** TBD (Atmosphere steward), TBD (governance reviewer) — see [Review burden](#17-review-burden) · **Updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
 > KFM Atmosphere is **not** an emergency alert system. It carries air-quality, weather, smoke, AOD, climate, and model-field **context** as evidence-labeled observations, archives, and derived products. Emergency advisories and life-safety direction belong to the **Hazards** lane and must redirect to the **official issuing authority**. See [§15 — Sensitivity, Rights, and Publication Posture](#15-sensitivity-rights-and-publication-posture).
@@ -429,17 +429,17 @@ flowchart LR
 
 ## 14. Validation
 
-The validators below are **PROPOSED** (per atlas §11.K) and live in `tests/domains/atmosphere/` once implemented. They enforce the doctrinal denials in [§2.2](#22-what-this-lane-explicitly-does-not-own) and the source-role discipline in [§9](#9-key-source-families-and-source-roles).
+The validators below are **PROPOSED** (per atlas §11.K) and live in `tests/domains/atmosphere/` once implemented. They enforce the doctrinal denials in [§2.2](#22-what-this-lane-explicitly-does-not-own-confirmed-boundary) and the source-role discipline in [§9](#9-key-source-families-and-source-roles).
 
 | # | Validator | What it proves | Status |
 |---|---|---|---|
-| 1 | Knowledge-character registry tests | All admitted Atmosphere objects carry a registered knowledge character. | PROPOSED |
+| 1 | Knowledge-character registry tests | The frozen synthetic profile requires one known character and rejects missing, unknown, or multiple values; admitted live objects and the canonical registry remain unverified. | CONFIRMED fixture profile / NEEDS VERIFICATION beyond fixtures |
 | 2 | Unit normalization tests | All observations carry units; conversions emit `RunReceipt`s. | PROPOSED |
-| 3 | **AQI-as-concentration denial** | An AQI value cannot be promoted as a concentration measurement. | PROPOSED |
-| 4 | **AOD-as-PM2.5 denial** | `AODRaster` cannot be promoted as `PM25Observation`. | PROPOSED |
-| 5 | **Model-as-observed denial** | `ForecastContext` / `WindField` model fields cannot be promoted as observations. | PROPOSED |
+| 3 | **AQI-as-concentration denial** | An AQI value cannot be promoted as a concentration measurement. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
+| 4 | **AOD-as-PM2.5 denial** | `AODRaster` cannot be promoted as `PM25Observation`. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
+| 5 | **Model-as-observed denial** | `ForecastContext` / `WindField` model fields cannot be promoted as observations. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
 | 6 | Low-cost sensor caveat tests | Low-cost sensor public release requires correction, caveats, confidence, limitations; Barkjohn correction-version pinned; FILTER-style QA label present. | PROPOSED |
-| 7 | Dry-run / no-network fixture tests | Pipelines run reproducibly against fixtures without external network. | PROPOSED |
+| 7 | Dry-run / no-network fixture tests | The bounded precipitation and knowledge-character validators run reproducibly against fixtures without external network; pipelines remain unverified. | CONFIRMED fixture profiles / pipelines NEEDS VERIFICATION |
 | 8 | Source-role mismatch denial | Authority / observation / context / model roles cannot be silently swapped. | PROPOSED |
 | 9 | Public-safe redaction & generalization tests | Sensitive joins fail closed; redaction emits receipts. | PROPOSED |
 | 10 | Citation validation | Public claims resolve to `EvidenceBundle`; uncited claims fail. | PROPOSED |
@@ -560,7 +560,7 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 
 - [`docs/domains/README.md`](../README.md) — domain index *(TODO link target)*.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law and README contract *(TODO link target)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-route-through-governed-API invariant *(TODO link target)*.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance *(TODO link target)*.
 - [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `RuntimeResponseEnvelope`, ANSWER/ABSTAIN/DENY/ERROR *(TODO link target)*.
@@ -645,7 +645,7 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 - [`UBIQUITOUS_LANGUAGE.md`](UBIQUITOUS_LANGUAGE.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
 - [`docs/domains/README.md`](../README.md) *(TODO)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(TODO)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md)
 - [`docs/domains/hazards/README.md`](../hazards/README.md) *(TODO)*
 
-**Last updated:** 2026-05-29 · `CONTRACT_VERSION = "3.0.0"` · [↑ Back to top](#top)
+**Last updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"` · [↑ Back to top](#top)

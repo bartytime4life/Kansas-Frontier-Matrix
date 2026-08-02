@@ -14,7 +14,8 @@ truth_posture: >
   CONFIRMED target v0.1 README and prior blob; Directory Rules responsibility-root placement;
   Atmosphere domain-test parent; sibling no-network README and its broad egress-denial responsibility;
   reusable Atmosphere fixture parent and its documented child README lanes; Atmosphere no-network
-  runbook; TODO-only domain-atmosphere workflow; Makefile test target excluding this lane; named-path
+  runbook; domain-atmosphere workflow with bounded fixture profiles but no dedicated test for this
+  lane; Makefile test target excluding this lane; named-path
   probes showing no direct conftest.py, test_no_network_fixtures.py, manifest_expectations.json, or
   parent-level tests/domains/atmosphere/test_no_network_fixtures.py; named-path probe showing no
   tests/fixtures/domains/atmosphere/README.md; no matching task branch / PROPOSED this lane own
@@ -163,7 +164,7 @@ The repository documents a clear offline-fixture posture, but focused executable
 | [`fixtures/domains/atmosphere/`](../../../../fixtures/domains/atmosphere/README.md) | **CONFIRMED reusable fixture parent README** | Child README inventory exists; payload inventory and validity remain unverified. |
 | [`NO_NETWORK_TEST_RUNBOOK.md`](../../../../docs/runbooks/atmosphere/NO_NETWORK_TEST_RUNBOOK.md) | **CONFIRMED draft runbook** | Defines an ambitious fixture-only proof slice; most implementation statements remain proposed. |
 | Atmosphere policy | **Greenfield scaffold** | Policy execution for fixture safety is not established. |
-| Atmosphere workflow | **TODO-only scaffold** | A green workflow cannot prove fixture governance. |
+| Atmosphere workflow | **Bounded executable profiles** | Precipitation and knowledge-character tests deny network access; this reusable fixture-governance lane remains unimplemented. |
 | Root `make test` | **Excludes this lane** | It currently invokes schema and contract test directories only. |
 | Direct test module | **Not found at checked path** | No direct executable fixture-governance test was established. |
 | Direct manifest | **Not found at checked path** | No accepted case or fixture expectation manifest was established. |
@@ -1058,7 +1059,9 @@ Fixture tests are bounded enforceability evidence, not sovereign truth.
 
 ### Current evidence
 
-- `.github/workflows/domain-atmosphere.yml` contains TODO echo jobs.
+- `.github/workflows/domain-atmosphere.yml` executes bounded precipitation and
+  knowledge-character fixture profiles with explicit network-denial tests;
+  broader proof and release jobs remain held.
 - `make test` runs schema and contract test directories, not this lane.
 - No dedicated Atmosphere fixture-governance workflow, retained report, or required-check significance was established.
 - No network blocker, marker registration, or manifest validator was established for this lane.
@@ -1235,7 +1238,7 @@ The lane is not implementation-complete until:
 | [`fixtures/domains/atmosphere/README.md`](../../../../fixtures/domains/atmosphere/README.md) | Reusable fixture root and documented child README families. | Payload inventory and validity are unverified. |
 | [`NO_NETWORK_TEST_RUNBOOK.md`](../../../../docs/runbooks/atmosphere/NO_NETWORK_TEST_RUNBOOK.md) | Offline first-slice doctrine and proposed fixture flow. | Draft runbook; many concrete claims remain proposed. |
 | Named-path probes | Direct test, conftest, manifest, parent-level test, and test-local wrapper parent were not found at checked paths. | Does not prove permanent or exhaustive absence. |
-| [`domain-atmosphere.yml`](../../../../.github/workflows/domain-atmosphere.yml) | Current domain workflow is TODO-only. | Later commits may change it. |
+| [`domain-atmosphere.yml`](../../../../.github/workflows/domain-atmosphere.yml) | Runs two bounded fixture profiles with no-network assertions. | Does not implement this reusable manifest lane or establish fixture-governance authority. |
 | [`Makefile`](../../../../Makefile) | Current `make test` excludes this lane. | Recheck after later changes. |
 | [`Directory Rules`](../../../../docs/doctrine/directory-rules.md) | Responsibility-root placement and anti-parallel-authority posture. | Does not prove implementation maturity. |
 
@@ -1286,6 +1289,6 @@ Rollback of future executable work must also restore:
 
 ## Maintainer summary
 
-`tests/domains/atmosphere/no-network-fixtures/` should prove that local Atmosphere test inputs are deterministic, public-safe, traceable, and incapable of becoming live-source or publication authority. The repository has strong documentation for the intended split, but the checked lane remains README-only, the reusable fixture payload inventory is unverified, no accepted manifest or direct test was established, `make test` excludes the lane, and the domain workflow is TODO-only. The next sound change is one small executable proof slice: local allowlisted fixture, remote-reference denial, secret/private-endpoint denial, digest check, consumer backlink, nonzero collection assertion, and active integration with the sibling network blocker.
+`tests/domains/atmosphere/no-network-fixtures/` should prove that local Atmosphere test inputs are deterministic, public-safe, traceable, and incapable of becoming live-source or publication authority. The repository has strong documentation for the intended split, but the checked lane remains README-only, the reusable fixture payload inventory is unverified, no accepted manifest or direct test was established, and `make test` excludes the lane. The domain workflow now executes bounded precipitation and knowledge-character profiles with active network-denial assertions, but that does not implement this reusable lane. The next sound change is one small executable proof slice: local allowlisted fixture, remote-reference denial, secret/private-endpoint denial, digest check, consumer backlink, nonzero collection assertion, and active integration with the sibling network blocker.
 
 [Back to top](#top)
