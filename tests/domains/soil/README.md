@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-soil-readme
 title: Soil Domain Tests README
 type: test-domain-readme
-version: v0.1
-status: draft; greenfield-stub-replaced; domain-test-parent-index; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; bounded-public-safe-fixture-suite-confirmed
 owners:
   - OWNER_TBD - Soil domain steward
   - OWNER_TBD - QA steward
@@ -14,7 +14,7 @@ owners:
   - OWNER_TBD - Release steward
   - OWNER_TBD - Source steward
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-08-02
 policy_label: public-doc; tests; soil; domain-test-parent-index; no-network; source-role-aware; support-type-aware; temporal-scope-aware; evidence-bound; policy-gated; release-gated; rollback-aware
 tags: [kfm, tests, soil, domain-tests, source-role, support-type, temporal-scope, SoilMapUnit, SoilComponent, Horizon, SoilProperty, HydrologicSoilGroup, SoilMoistureObservation, Pedon, SoilProfileView, ErosionRisk, SuitabilityRating, SoilTimeCaveat, EvidenceBundle, EvidenceRef, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, ABSTAIN, DENY, ERROR]
 related:
@@ -35,6 +35,8 @@ related:
   - ../../../data/work/soil/README.md
   - ../../../data/catalog/domain/soil/README.md
   - ../../../fixtures/domains/soil/
+  - ../../../tools/validators/domains/soil/validate_public_safe_fixture.py
+  - ../../../.github/workflows/domain-soil.yml
   - ../../../pipelines/domains/soil/README.md
   - ../../../pipelines/domains/soil/ssurgo_ingest/README.md
   - ../../../pipelines/domains/soil/gssurgo_ingest/README.md
@@ -48,8 +50,8 @@ related:
 notes:
   - "This README replaces the greenfield stub at tests/domains/soil/README.md."
   - "Directory Rules place enforceability proof under tests/. This directory is the domain-level test parent for Soil; it is not source, contract, schema, policy, proof, receipt, release, map, API, package, pipeline, or AI authority."
-  - "Search and fetch evidence confirmed mature adjacent Soil lanes under contracts, schemas, data registry, docs, packages, pipelines, and data lifecycle surfaces; executable test coverage remains NEEDS VERIFICATION."
-  - "No child README lanes under tests/domains/soil/ were confirmed during authoring. Child lanes listed here are PROPOSED until files and executable tests are verified."
+  - "v0.2 records the confirmed standard-library test suite for the bounded synthetic public-safe fixture validator."
+  - "The other named Soil test modules remain placeholders or proposed lanes and are not counted as executable coverage."
   - "Default posture is deterministic and no-network with synthetic fixtures only."
 [/KFM_META_BLOCK_V2] -->
 
@@ -69,11 +71,11 @@ notes:
 </p>
 
 **Path:** `tests/domains/soil/README.md`  
-**Status:** draft / greenfield stub replaced / domain test parent index / PROPOSED until executable tests are verified  
+**Status:** draft / bounded synthetic public-safe fixture suite confirmed
 **Owning root:** `tests/`  
 **Domain segment:** `soil`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target file existed as a greenfield stub before replacement; CONFIRMED `tests/domains/README.md` exists as a per-domain test-package index; CONFIRMED adjacent Soil docs, contract, schema, registry, package, pipeline, and lifecycle READMEs exist; NEEDS VERIFICATION for executable tests, child lanes, fixtures, validators, schema maturity, policy runtime, CI coverage, release integration, and pass rates.
+**Truth posture:** CONFIRMED the standard-library smoke suite, file-backed synthetic fixtures, validator implementation, and workflow invocation exist; other Soil test modules, child lanes, schemas, policy runtime, sources, pipelines, proof, release integration, and public behavior remain PROPOSED or NEEDS VERIFICATION.
 
 ---
 
@@ -136,11 +138,14 @@ Core checks that all child lanes should preserve:
 
 ## Confirmed Test Families
 
-At authoring time, no child README lanes under `tests/domains/soil/` were confirmed. This README is therefore the domain parent and backlog anchor only.
+The current accepted executable scope is one bounded synthetic public-safe
+fixture profile. It is a validation guardrail, not an object-family schema,
+source admission path, policy engine, proof slice, or release gate.
 
 | Family | Status | Current confirmed child lanes | Boundary |
 |---|---|---|---|
-| `README.md` | CONFIRMED README | Domain test parent only | Does not claim executable coverage. |
+| `test_soil_smoke.py` | CONFIRMED executable | File-backed positive/negative fixture polarity, validator bounds and CLI behavior, deterministic findings, and no-network guard | Does not validate Soil truth, source admission, canonical support vocabulary, schemas, policy, lineage, proof, release, or publication. |
+| Other named `test_*.py` modules | PLACEHOLDER / PROPOSED | Backlog markers only | Zero executable coverage is claimed for those files until implemented. |
 
 ---
 
@@ -231,14 +236,15 @@ All child directories are PROPOSED until files and executable tests exist.
 
 ## Run Posture
 
-No executable runner was verified while authoring this README. Once tests exist, the expected local command should be documented and verified here.
-
 ```bash
-: "PROPOSED / NEEDS VERIFICATION"
-pytest tests/domains/soil
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_smoke.py --verbose
 ```
 
-Required run posture: no network access, no live service calls, no real secrets, no production logs, no production trust artifacts, no sensitive farm/field/station geometry, no public artifact writes, deterministic fixture inputs, and finite outcomes only: `PASS`, `DENY`, `ABSTAIN`, or `ERROR`.
+Required run posture: no network access, no live service calls, no real secrets,
+no production logs, no production trust artifacts, no sensitive farm, field,
+station, or location detail, no public artifact writes, and deterministic
+synthetic fixture inputs. The command proves only the bounded fixture profile.
 
 ---
 

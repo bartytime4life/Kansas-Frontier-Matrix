@@ -1,0 +1,29 @@
+{
+  "record_id": "soil-fixture-missing-references",
+  "support_type": "station_observation",
+  "source_descriptor_ref": " ",
+  "evidence_refs": [
+    ""
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "depth_interval_cm": {
+    "top": 10,
+    "bottom": 20
+  },
+  "measurement": {
+    "property": "volumetric_water_content",
+    "value": 0.24,
+    "unit": "m3/m3"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  }
+}
