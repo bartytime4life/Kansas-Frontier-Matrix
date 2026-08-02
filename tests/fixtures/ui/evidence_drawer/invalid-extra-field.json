@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:invalid-extra-field-001",
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "title": "Synthetic title",
+  "summary": "Synthetic summary.",
+  "evidence_refs": ["kfm:evidence:synthetic:answer-001"],
+  "citations": [
+    {
+      "label": "Synthetic citation",
+      "href": "https://example.invalid/kfm/evidence/answer-001"
+    }
+  ],
+  "limitations": [],
+  "private_detail": "PRIVATE_FIELD_CANARY_981cba",
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ALLOW",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "CURRENT",
+    "correction": "CURRENT"
+  }
+}

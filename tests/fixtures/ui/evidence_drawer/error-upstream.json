@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:error-upstream-001",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "title": "INTERNAL_ERROR_CANARY_e6f1af",
+  "summary": "INTERNAL_ERROR_CANARY_e6f1af",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [],
+  "trust_state": {
+    "source_role": "context",
+    "policy": "ERROR",
+    "review": "NOT_APPLICABLE",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  }
+}

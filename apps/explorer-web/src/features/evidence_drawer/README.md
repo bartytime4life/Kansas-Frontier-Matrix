@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/evidence_drawer/readme
 title: Explorer Web Evidence Drawer Feature README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Evidence steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-08-02
 policy_label: public
 related:
   - ../README.md
@@ -30,8 +30,9 @@ tags: [kfm, apps, explorer-web, features, evidence-drawer, evidencebundle, evide
 notes:
   - "Replaces the greenfield Evidence Drawer feature stub with a governed feature README."
   - "Evidence Drawer UI features may render governed evidence projections, but they must not become canonical evidence, source registry, citation authority, policy engine, release authority, correction authority, renderer truth, or direct model-output truth."
-  - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, schemas, adapters, accessibility behavior, telemetry, and package scripts remain NEEDS VERIFICATION."
-  - "v0.2 refreshes the evidence basis, aligns the truth posture with current GitHub evidence, adds a minimum safe implementation slice, and strengthens reviewer anti-bypass checks without claiming runtime maturity."
+  - "A bounded fixture-only projection parser, finite view-state resolver, app-shell rendering path, synthetic outcome fixtures, and app-local tests are now executable."
+  - "Canonical EvidenceDrawerPayload schema binding, live governed API transport, map-click routing, focus management, telemetry, Focus Mode/correction handoffs, and production accessibility remain NEEDS VERIFICATION."
+  - "v0.3 implements the first fail-closed view-state slice without ratifying the unresolved UI/evidence schema-home split."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -48,7 +49,7 @@ notes:
 ![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
 ![feature](https://img.shields.io/badge/feature-evidence__drawer-0a7ea4)
 ![boundary](https://img.shields.io/badge/browser-projection__only-df7e00)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
+![truth](https://img.shields.io/badge/truth-bounded__executable-green)
 
 [Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-evidence-drawer-feature-map) · [Minimum slice](#8-minimum-safe-implementation-slice) · [Definition of done](#16-definition-of-done)
 
@@ -57,12 +58,12 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
+> **Status:** draft / bounded executable view-state slice
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Evidence steward · Governed API steward · Policy steward · Accessibility steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/evidence_drawer/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
 > **Directory Rules basis:** deployable application feature code belongs under `apps/`; the drawer is an app-local UI composition surface, not a new root, evidence store, policy home, schema home, contract home, source registry, release home, or lifecycle-data lane.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent feature-boundary README posture / CONFIRMED Evidence Drawer architecture docs exist / CONFIRMED evidence helper and resolver package READMEs exist / PROPOSED feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, schemas, package scripts, accessibility behavior, telemetry, and runtime behavior
+> **Truth posture:** CONFIRMED fixture-only projection parser, finite `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` resolver, shell-rendered default abstention, synthetic fixtures, no-leak tests, and Explorer build/test execution / PROPOSED full feature contract / UNKNOWN canonical payload schema binding, live governed API transport, map-click route wiring, focus trap/return focus, telemetry, Focus Mode/correction handoffs, and deployment behavior
 
 > [!CAUTION]
 > The Evidence Drawer is a browser-side projection, not the evidence source. It must not read RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, canonical stores, unsigned evidence, local files, model runtimes, renderer feature properties, map popups, badge labels, or AI text as truth. It renders governed API projections only.
@@ -257,7 +258,20 @@ A smallest useful Evidence Drawer slice should prove the trust membrane before a
 | Accessibility path | Keyboard open/close, focus trap, return focus, labels, and non-color status | Makes trust usable without a mouse or color-only cues |
 | Lifecycle denial test | Prove browser code does not import/read lifecycle roots or canonical stores | Preserves public-client boundary |
 
-This slice is still `PROPOSED` until files, fixtures, tests, and route wiring are verified.
+The complete slice remains `PROPOSED`; the verified non-network subset is recorded below.
+
+### Current bounded implementation
+
+The repository now implements the first non-network subset of this slice:
+
+- `src/adapters/GovernedClient.ts` validates a closed, fixture-only public-safe projection profile and performs no fetch or lifecycle-store read;
+- `src/features/evidence_drawer/index.tsx` maps valid projections to explicit finite view states and replaces malformed input with a fixed `ERROR` state;
+- denied and error projections never reflect supplied title, summary, evidence, citation, or diagnostic text;
+- the app shell renders the no-response `ABSTAIN` state as a labeled complementary landmark with text trust status;
+- `tests/fixtures/ui/evidence_drawer/` supplies synthetic `ANSWER`, stale `ABSTAIN`, sensitive `DENY`, upstream `ERROR`, and invalid cases;
+- `apps/explorer-web/tests/evidence-drawer.test.ts` covers positive, negative, boundary, no-leak, and no-direct-store/network behavior.
+
+This is not canonical `EvidenceDrawerPayload` schema adoption, a live API client, a map-click flow, complete drawer interaction, citation validation authority, policy execution, release approval, or production accessibility proof.
 
 ## 9. Diagram
 
@@ -329,7 +343,7 @@ Every long-lived Evidence Drawer view should document or encode:
 
 ## 13. Inspection path
 
-Evidence Drawer implementation files, route wiring, tests, fixtures, governed API envelopes, schema bindings, accessibility behavior, telemetry, package scripts, and Focus Mode/correction handoffs remain `NEEDS VERIFICATION`.
+The bounded parser, resolver, default shell rendering, fixtures, tests, and locked Explorer build are now confirmed. Live route wiring, governed API transport, canonical schema binding, complete keyboard/focus behavior, telemetry, and Focus Mode/correction handoffs remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/features/evidence_drawer -maxdepth 5 -type f | sort
@@ -368,11 +382,11 @@ For Evidence Drawer feature changes:
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Evidence basis is refreshed when parent README, architecture docs, evidence packages, governed API, policy, schema, release, telemetry, or fixture evidence changes.
-- [ ] Evidence Drawer feature file inventory and route ownership are documented.
-- [ ] Governed API and adapter dependencies are explicit.
+- [x] Evidence Drawer feature file inventory and bounded shell ownership are documented.
+- [x] The fixture-only governed projection adapter dependency is explicit.
 - [ ] `EvidenceDrawerPayload` schema binding is verified.
-- [ ] `DecisionEnvelope` outcomes and negative states are represented in UI fixtures.
-- [ ] Direct lifecycle/canonical-data import/read checks are covered.
+- [x] `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, and invalid projections are represented in synthetic UI fixtures.
+- [x] Direct lifecycle/canonical-data import and network-call checks cover the bounded adapter and resolver.
 - [ ] Citation, policy, release, review, correction, rollback, limitations, and transform fields are preserved.
 - [ ] Focus Mode and correction/report handoffs are tested for safe bounded behavior if present.
 - [ ] Telemetry is tested as non-secret and policy-safe if present.

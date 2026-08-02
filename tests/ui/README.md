@@ -33,7 +33,7 @@ evidence_snapshot:
     explorer_web_readme: 755dae3e175b103702caba573a5171d62ed710da
     explorer_web_source_readme: 770cace029d0b9016ec7bd1c2d879b1bb49c896a
     explorer_web_package_json_preimage: ce981192e725483c747affb45ca3de36a22ce9ce
-    evidence_drawer_placeholder: 6438397db43b465a90fc9a33ac7c3d2f11406603
+    evidence_drawer_bounded_view_state: local_feature_branch
     focus_panel_placeholder: 73e8763e372009f8a537e596abc6755a90967c8f
     trust_header_placeholder: 2938d6ba019c0bebddd8c224d5a0decd2b7558eb
     ui_fixture_readme: 8d87d87b0d318e55518daba478962e092f523390
@@ -123,7 +123,7 @@ notes:
 - **CONFIRMED:** `packages/ui/` and `apps/explorer-web/` are the intended shared-component and deployable-shell homes.
 - **CONFIRMED:** Explorer Web has real build/test scripts, exact direct tool versions, and app-local baseline tests.
 - **CONFIRMED:** the shared UI package manifest has no test, build, story, type-check, or accessibility scripts.
-- **CONFIRMED:** the Explorer shell resolver is implementation-bearing; sampled Evidence Drawer, Focus Panel, Trust Header, and shared UI entrypoints remain placeholders.
+- **CONFIRMED:** the Explorer shell resolver and bounded Evidence Drawer projection/view-state slice are implementation-bearing; sampled Focus Panel, Trust Header, and shared UI entrypoints remain placeholders.
 - **CONFIRMED:** representative UI fixture payloads named by the fixture README were not found at checked paths.
 - **CONFIRMED:** a static policy test checks renderer-import placement and forbidden internal-store literals under Explorer Web source.
 - **CONFIRMED:** that static test does not render components, launch a browser, exercise keyboard navigation, validate ARIA behavior, inspect screenshots, or prove non-vacuous source coverage.
@@ -141,7 +141,7 @@ notes:
 | Lane harness/config | `NOT FOUND AT CHECKED PATHS` | No independent collection contract is established. |
 | UI fixtures | `README CONFIRMED; REPRESENTATIVE PAYLOADS ABSENT` | Fixture intent exists; payload coverage does not. |
 | Shared UI implementation | `PLACEHOLDER-HEAVY` | Package/source READMEs exist; sampled entrypoint is a placeholder. |
-| Explorer Web implementation | `BOUNDED BASELINE` | Static entrypoint and shell resolver are real; broader features remain placeholders. |
+| Explorer Web implementation | `BOUNDED BASELINE + EVIDENCE DRAWER VIEW STATE` | Static entrypoint, shell resolver, strict fixture-only drawer parser/resolver, synthetic fixtures, and app-local tests are real; live transport, map interaction, and broader features remain placeholders. |
 | Static UI boundary guard | `CONFIRMED EXECUTABLE` | Selected import and literal boundaries are checked. |
 | Component rendering tests | `NOT ESTABLISHED` | No component harness or renderer was verified. |
 | Browser/E2E UI tests | `NOT ESTABLISHED` | No browser runner was verified for this lane. |
@@ -313,7 +313,7 @@ The Explorer Web package manifest confirms a private `0.0.0` bounded app whose s
 }
 ```
 
-The static entrypoint and shell resolver are implementation-bearing. Sampled broader feature entrypoints remain placeholders:
+The static entrypoint, shell resolver, and Evidence Drawer projection/view-state entry are implementation-bearing. Sampled broader feature entrypoints remain placeholders:
 
 ```text
 apps/explorer-web/src/main.ts
@@ -323,7 +323,7 @@ apps/explorer-web/src/features/focus_panel/index.tsx
 apps/explorer-web/src/features/trust_header/index.tsx
 ```
 
-`apps/explorer-web/tests/shell-baseline.test.ts` owns fixed positive and negative baseline-state tests. It is not a component-rendering, browser, accessibility, governed API, map, or claim test.
+`apps/explorer-web/tests/shell-baseline.test.ts` owns fixed positive and negative baseline-state tests. `apps/explorer-web/tests/evidence-drawer.test.ts` owns the fixture-only parser/resolver, finite-state, no-leak, size-boundary, and source-boundary cases. Neither suite is browser E2E, complete accessibility, live governed API, map, policy-execution, or release proof.
 
 ### Shared UI package
 
@@ -822,11 +822,10 @@ The capability is not operationally complete until owners/placement are accepted
 | Explorer README `755dae3e…` | `CONFIRMED DOCUMENTATION` | Map-first shell and governed-API boundary. | Routes or deployment. |
 | Explorer source README | `CONFIRMED DOCUMENTATION` | Bounded shell source and broader source-layout obligations. | Routes or deployment. |
 | Explorer package JSON | `CONFIRMED BOUNDED TOOLING` | Exact direct tool versions and real dev/build/test scripts. | Hosted run, browser behavior, or deployment. |
-| Evidence Drawer entry `6438397d…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Drawer behavior. |
+| Evidence Drawer entry | `CONFIRMED BOUNDED EXECUTABLE` | Closed fixture-only parser, finite view-state resolver, and default shell abstention exist. | Live API, map click, canonical schema, complete interaction/accessibility, or production behavior. |
 | Focus Panel entry `73e8763e…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Focus Mode behavior. |
 | Trust Header entry `2938d6ba…` | `CONFIRMED PLACEHOLDER` | Named feature path exists. | Trust-header behavior. |
-| UI fixture README `8d87d87b…` | `CONFIRMED PLANNING DOC` | Fixture intent and safety posture. | Payload inventory or consumers. |
-| checked fixture paths | `NOT FOUND AT CHECKED PATHS` | Representative proposed payloads are not established. | Exhaustive fixture absence. |
+| UI fixture README and `evidence_drawer/` | `CONFIRMED BOUNDED EXECUTABLE FIXTURES` | Six synthetic positive, negative, and invalid projections are consumed by Explorer tests. | Canonical schema acceptance or broader UI fixture closure. |
 | Explorer boundary test `97d44069…` | `CONFIRMED EXECUTABLE STATIC GUARD` | Adapter import and path-literal assertions. | Rendering, browser, accessibility, or non-vacuous source coverage. |
 | Makefile | `CONFIRMED` | Default tests exclude tests/ui; ui-build invokes the real Explorer build. | Dynamic/external UI collection. |
 | ui-build workflow | `CONFIRMED BOUNDED CI` | Frozen install plus real Explorer build/test commands. | Browser, accessibility, map, deployment, or release behavior. |

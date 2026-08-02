@@ -42,7 +42,7 @@ tags: [kfm, apps, explorer-web, features, routes, map-first, governed-shell, evi
 notes:
   - "Refreshes the Explorer Web feature source boundary README."
   - "Feature modules may compose governed API results and adapters into user-facing surfaces, but they must not become source truth, policy authority, release authority, lifecycle storage, renderer authority, direct model-output surfaces, telemetry payload authority, schema homes, or contract homes."
-  - "Feature implementation files, route inventory, tests, fixtures, adapter wiring, package scripts, child-feature maturity, telemetry policy wiring, accessibility behavior, and runtime behavior remain NEEDS VERIFICATION."
+  - "The shell baseline and a bounded fixture-only Evidence Drawer projection/view-state slice are executable; broader route inventory, child-feature maturity, telemetry policy wiring, complete accessibility, and runtime behavior remain NEEDS VERIFICATION."
   - "policy/telemetry/README.md may still be stub-level; executable telemetry policy wiring remains NEEDS VERIFICATION unless separately verified."
   - "v0.2 adds a current evidence basis, child-feature umbrella contract, minimum safe implementation slice, runtime anti-bypass matrix, stronger feature-family map, and validation/definition-of-done gates without claiming runtime maturity."
 [/KFM_META_BLOCK_V2] -->
@@ -75,7 +75,7 @@ notes:
 > **Path:** `apps/explorer-web/src/features/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
 > **Directory Rules basis:** deployable application feature code belongs under `apps/`; `features/` is an app-local UI composition boundary, not a governed API implementation, source registry, evidence store, policy home, schema home, contract home, release home, shared package root, renderer package, telemetry policy home, model runtime, or lifecycle-data lane.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent feature-boundary README exists / CONFIRMED Directory Rules document exists / CONFIRMED selected UI architecture docs exist / PROPOSED feature-boundary contract / UNKNOWN implementation files, route inventory, child-feature maturity, tests, fixtures, adapter wiring, schemas, package scripts, telemetry policy wiring, accessibility behavior, deployment state, and runtime behavior
+> **Truth posture:** CONFIRMED current README path, shell baseline, and bounded Evidence Drawer parser/resolver/fixture/test slice / CONFIRMED Directory Rules and selected UI architecture docs / PROPOSED broader feature-boundary contract / UNKNOWN live route inventory, most child-feature maturity, canonical schema binding, telemetry policy wiring, complete accessibility, deployment state, and runtime behavior
 
 > [!CAUTION]
 > Feature code must not treat map features, tile properties, local files, model text, telemetry events, route parameters, screenshots, story text, diagnostics output, or lifecycle data as claim truth. Claim-bearing surfaces should render only governed API envelopes, finite outcomes, EvidenceBundle-derived payloads, released or bounded-safe layer artifacts, and policy-preserved redaction/generalization states.
@@ -364,7 +364,7 @@ Every long-lived feature family should document or encode:
 
 ## 13. Inspection path
 
-Feature implementation files, route inventory, tests, fixtures, adapter wiring, package scripts, accessibility behavior, telemetry wiring, child-feature maturity, and deployment state remain `NEEDS VERIFICATION`.
+The shell and bounded Evidence Drawer projection/view-state paths are executable. Live route inventory, broader adapter wiring, canonical schema binding, complete accessibility, telemetry wiring, most child-feature maturity, and deployment state remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/features -maxdepth 5 -type f | sort

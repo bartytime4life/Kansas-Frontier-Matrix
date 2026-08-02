@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:deny-sensitive-001",
+  "outcome": "DENY",
+  "reason_code": "SENSITIVE_DETAIL_RESTRICTED",
+  "title": "SENSITIVE_DENIAL_CANARY_4d7ec2",
+  "summary": "SENSITIVE_DENIAL_CANARY_4d7ec2",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [],
+  "trust_state": {
+    "source_role": "authoritative",
+    "policy": "DENY",
+    "review": "REVIEWED",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  }
+}
