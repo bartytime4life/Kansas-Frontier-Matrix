@@ -249,7 +249,7 @@ A README or index cannot promote an ADR. A doctrine-changing PR must cite the ex
 
 **2026-07-23** — v0.3 repository-grounded same-path modernization.
 
-Older than six months: flag for review under [`directory-rules.md` §15](./directory-rules.md#15-required-readme-contract).
+Re-review when an event- or risk-based trigger applies under [`directory-rules.md` §16.5](./directory-rules.md#165-review-triggers).
 
 | Edition | Date | Change |
 |---|---|---|
