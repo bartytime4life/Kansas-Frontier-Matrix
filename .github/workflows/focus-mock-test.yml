@@ -1,11 +1,13 @@
 # KFM Focus mock readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; an
-# accepted deterministic mock Focus runtime, fixture suite, and mock-generated
-# finite-envelope test command are not established in current repository evidence.
+# Status: PROPOSED bounded static readiness for the mock Focus lane plus a
+# CONFIRMED deterministic, no-network finite-envelope shape proof. An accepted
+# executable mock Focus runtime and mock-generated response suite are not
+# established in current repository evidence.
 #
 # Responsibility:
 # - Preserve the existing mock Focus and finite-envelope check surfaces while
-#   making their actual repository maturity and trust boundaries visible.
+#   testing the canonical finite envelope and keeping mock-runtime maturity and
+#   trust boundaries visible.
 # Trigger:
 # - Existing pull-request and push-to-main triggers are preserved because
 #   required-check and branch-protection dependencies remain unverified.
@@ -17,26 +19,27 @@
 # - GitHub-hosted Ubuntu and pinned major action versions are used. Checks are
 #   no-network after checkout and Python action setup; no packages are installed.
 # Command:
-# - No mock Focus command exists. Inline standard-library checks inspect only
-#   documented scaffolds and stop succeeding when executable behavior, fixtures,
-#   or an accepted repository-native command appears.
+# - No mock Focus command exists. Inline standard-library checks inspect its
+#   documented scaffolds. The finite-envelope job executes the repository-owned
+#   standard-library proof suite and verifies validator/fixture wiring.
 # Inputs:
 # - Mock runtime/adapter boundaries, Focus examples, schemas, contracts, policy
-#   scaffolds, runtime-envelope fixtures, placeholder tests, and the Makefile.
+#   scaffolds, runtime-envelope fixtures, executable shape tests, and the Makefile.
 # Outputs:
 # - GitHub job conclusions, logs, and step summaries only; no model output,
 #   RuntimeResponseEnvelope, receipt, proof, release record, or published artifact.
 # Outcome:
-# - Current scaffolds report WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD.
+# - The mock Focus scaffold reports WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD.
+# - The finite-envelope job tests canonical aliasing, all four outcomes, and
+#   positive/negative closed-shape fixtures without starting a runtime.
 # - Missing boundaries or newly surfaced implementation fail readiness until
 #   owners wire reviewed deterministic commands and valid/negative fixtures.
 # Compatibility:
 # - Workflow name `focus-mock-test` and job ids `mock-focus-flows` and
 #   `finite-envelope-shape` are preserved.
-# - e2e-smoke currently detects the two held lanes with these legacy text
-#   sentinels. They are comments only and are never executed:
+# - e2e-smoke detects the remaining mock-runtime hold with this legacy text
+#   sentinel. It is a comment only and is never executed:
 #     echo TODO mock-focus-flows
-#     echo TODO finite-envelope-shape
 # Rollback / disable:
 # - Revert this workflow revision. Do not restore TODO-success jobs or disable a
 #   required check without branch-protection and governed-runtime review.
@@ -527,143 +530,29 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate mock envelope readiness
+      - name: Test the finite envelope boundary
         shell: bash
         run: |
           set -euo pipefail
-
-          required_paths=(
-            "contracts/runtime/runtime_response_envelope.md"
-            "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
-            "schemas/contracts/v1/focus/runtime_response_envelope.schema.json"
-            "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_1.json"
-            "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_2.json"
-            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_1.json"
-            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_2.json"
-            "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_3.json"
-            "tools/validators/validate_runtime_response_envelope.py"
-            "tests/runtime_proof/test_envelope_finite_outcomes.py"
-            "tests/fixtures/focus/README.md"
-            "Makefile"
-          )
-
-          for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required finite-envelope boundary is missing: $required_path"
-              exit 1
-            fi
-          done
+          python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
 
           python - <<'PY'
           import ast
-          import json
-          import re
           from pathlib import Path
-
-          runtime_schema_path = Path(
-              "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
-          )
-          runtime_schema = json.loads(
-              runtime_schema_path.read_text(encoding="utf-8")
-          )
-          expected_outcomes = ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
-          expected_required = [
-              "id",
-              "spec_hash",
-              "version",
-              "issued_at",
-              "outcome",
-              "reason_code",
-              "evidence_refs",
-              "policy_state",
-              "freshness",
-              "correction_state",
-          ]
-          runtime_shape = (
-              runtime_schema.get("x-kfm", {}).get("status") == "PROPOSED"
-              and runtime_schema.get("properties", {})
-                  .get("outcome", {}).get("enum") == expected_outcomes
-              and runtime_schema.get("required") == expected_required
-              and runtime_schema.get("additionalProperties") is False
-          )
-          if not runtime_shape:
-              raise SystemExit(
-                  "The RuntimeResponseEnvelope schema profile changed. Reconcile the "
-                  "accepted contract, clients, fixtures, and validator before mock CI."
-              )
-
-          focus_schema_path = Path(
-              "schemas/contracts/v1/focus/runtime_response_envelope.schema.json"
-          )
-          focus_schema = json.loads(focus_schema_path.read_text(encoding="utf-8"))
-          focus_placeholder = (
-              focus_schema.get("x-kfm", {}).get("status") == "PROPOSED"
-              and focus_schema.get("properties") == {}
-              and focus_schema.get("additionalProperties") is True
-              and focus_schema.get("x-kfm", {}).get("contract_doc") is None
-          )
-          if not focus_placeholder:
-              raise SystemExit(
-                  "The Focus-local runtime envelope schema changed. Reconcile it with "
-                  "the paired runtime contract/schema instead of silently choosing one."
-              )
 
           fixture_root = Path(
               "fixtures/contracts/v1/runtime/runtime_response_envelope"
           )
-          expected_fixture_files = {
-              fixture_root / "README.md",
-              fixture_root / "valid/README.md",
-              fixture_root / "valid/valid_1.json",
-              fixture_root / "valid/valid_2.json",
-              fixture_root / "invalid/README.md",
-              fixture_root / "invalid/invalid_1.json",
-              fixture_root / "invalid/invalid_1.expected_error.txt",
-              fixture_root / "invalid/invalid_2.json",
-              fixture_root / "invalid/invalid_2.expected_error.txt",
-              fixture_root / "invalid/invalid_3.json",
-              fixture_root / "invalid/invalid_3.expected_error.txt",
-          }
-          observed_fixture_files = {
-              path for path in fixture_root.rglob("*") if path.is_file()
-          }
-          if observed_fixture_files != expected_fixture_files:
-              additions = sorted(observed_fixture_files - expected_fixture_files)
-              removals = sorted(expected_fixture_files - observed_fixture_files)
-              detail = [f"added: {path}" for path in additions]
-              detail.extend(f"removed: {path}" for path in removals)
+          invalid = sorted((fixture_root / "invalid").glob("invalid_*.json"))
+          missing_sidecars = [
+              path.as_posix()
+              for path in invalid
+              if not path.with_suffix(".expected_error.txt").is_file()
+          ]
+          if missing_sidecars:
               raise SystemExit(
-                  "Runtime envelope fixture inventory changed. Review whether fixtures "
-                  "are generic schema cases or mock Focus outputs before wiring CI:\n"
-                  + "\n".join(detail)
-              )
-
-          fixture_outcomes = set()
-          for path in sorted((fixture_root / "valid").glob("valid_*.json")):
-              fixture = json.loads(path.read_text(encoding="utf-8"))
-              fixture_outcomes.add(fixture.get("outcome"))
-          if fixture_outcomes != {"ANSWER", "ABSTAIN"}:
-              raise SystemExit(
-                  "The bounded generic valid-envelope outcome coverage changed. Inspect "
-                  "DENY/ERROR and mock-marker coverage before workflow graduation."
-              )
-
-          test_path = Path("tests/runtime_proof/test_envelope_finite_outcomes.py")
-          test_text = test_path.read_text(encoding="utf-8")
-          tree = ast.parse(test_text, filename=str(test_path))
-          expected_tree = ast.parse(
-              "def test_envelope_outcomes_placeholder():\n"
-              "    assert True\n",
-              filename=f"expected:{test_path}",
-          )
-          if ast.dump(tree, include_attributes=False) != ast.dump(
-              expected_tree,
-              include_attributes=False,
-          ):
-              raise SystemExit(
-                  "The finite-envelope runtime-proof module changed from the exact "
-                  "assert-true placeholder semantics. Inspect imports, helpers, classes, "
-                  "calls, and tests before wiring the deterministic mock envelope suite."
+                  "Invalid finite-envelope fixtures lack expected-error sidecars: "
+                  + ", ".join(missing_sidecars)
               )
 
           validator_path = Path(
@@ -671,70 +560,36 @@ jobs:
           )
           validator_text = validator_path.read_text(encoding="utf-8")
           ast.parse(validator_text, filename=str(validator_path))
-          if "runtime_response_envelope.schema.json" not in validator_text:
-              raise SystemExit(
-                  "The generic RuntimeResponseEnvelope validator target changed. "
-                  "Reconcile its profile before wiring mock Focus envelope tests."
-              )
-
-          focus_fixture_root = Path("tests/fixtures/focus")
-          focus_payloads = [
-              path
-              for path in focus_fixture_root.rglob("*")
-              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
-          ]
-          if focus_payloads:
-              raise SystemExit(
-                  "Mock Focus fixture payloads surfaced. Establish their schema bindings, "
-                  "synthetic-data controls, all finite outcomes, evidence/citation/policy "
-                  "expectations, and repository-native command:\n"
-                  + "\n".join(str(path) for path in sorted(focus_payloads))
-              )
-
-          makefile = Path("Makefile").read_text(encoding="utf-8")
-          if re.search(
-              r"^(?:focus-envelope|mock-envelope|finite-envelope-shape):",
-              makefile,
-              re.MULTILINE,
+          for expected_target in (
+              "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+              "fixtures/contracts/v1/runtime/runtime_response_envelope",
           ):
-              raise SystemExit(
-                  "A mock/Focus envelope target surfaced. Verify all finite outcomes, "
-                  "invalid fixtures, no-network behavior, and safe diagnostics before "
-                  "wiring it."
-              )
+              if expected_target not in validator_text:
+                  raise SystemExit(
+                      "The canonical validator target changed; reconcile schema and "
+                      f"fixture wiring before CI graduation: {expected_target}"
+                  )
 
-          print("The paired runtime envelope schema remains closed and PROPOSED.")
-          print("Its generic fixtures cover ANSWER/ABSTAIN shape plus three invalid cases.")
-          print("The Focus-local envelope schema remains an open competing placeholder.")
-          print("The runtime-proof test remains an assert-true placeholder.")
-          print("No mock Focus envelope fixture payload or Make target surfaced.")
+          print("FINITE_ENVELOPE_PROOF: canonical shape, alias, outcomes, and fixture polarity confirmed")
+          print("BOUNDARY: no runtime, evidence resolution, policy evaluation, release, or publication action ran")
           PY
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: finite-envelope-shape"
-          echo "WORKFLOW_HOLD: no mock-generated envelope suite covering ANSWER, ABSTAIN, DENY, and ERROR"
-
-      - name: Record finite-envelope readiness hold
+      - name: Record finite-envelope proof boundary
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
-          ## Mock finite-envelope readiness
+          ## Finite-envelope shape proof
 
-          `WORKFLOW_SKIPPED_EXPLICIT: finite-envelope-shape`
+          The repository-owned standard-library suite checked the canonical
+          RuntimeResponseEnvelope closed shape, the Focus compatibility alias,
+          valid fixtures for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, and
+          fail-closed negative fixtures including an unknown outcome. The
+          canonical JSON Schema validator remains wired to the same schema and
+          fixture family and is exercised by the schema/validator workflows.
 
-          `WORKFLOW_HOLD: no mock-generated envelope suite covering ANSWER, ABSTAIN, DENY, and ERROR`
-
-          The repository has a paired generic RuntimeResponseEnvelope schema,
-          generic shape fixtures, and a validator, but the Focus-local envelope
-          schema remains an open scaffold and the runtime-proof test is still an
-          assert-true placeholder. No mock Focus envelope was produced here.
-
-          Graduate this hold only with an accepted envelope profile and
-          deterministic mock fixtures for all four finite outcomes, invalid
-          shapes, evidence/citation gaps, policy denial, sensitive-data denial,
-          correction/withdrawal state, adapter errors, no-network enforcement,
-          safe diagnostics, receipts, and rollback.
-
-          A green held result is not runtime behavior, evidence closure, policy
-          approval, citation validation, release approval, or publication authority.
+          This is fixture and machine-shape proof only. No mock response was
+          generated, no runtime or public client executed, and no evidence was
+          resolved. A green result is not policy approval, citation validation,
+          runtime acceptance, release approval, or publication authority.
           EOF

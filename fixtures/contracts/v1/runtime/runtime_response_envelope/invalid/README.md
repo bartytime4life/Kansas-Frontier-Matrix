@@ -2,16 +2,22 @@
 doc_id: kfm://fixture/contracts/v1/runtime/runtime-response-envelope/invalid/readme
 title: runtime_response_envelope invalid fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): runtime steward; TODO(owner): API steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): evidence steward; TODO(owner): correction steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-08-02
 policy_label: public-review
 related:
   - ../valid/valid_1.json
   - invalid_1.json
   - invalid_1.expected_error.txt
+  - invalid_2.json
+  - invalid_2.expected_error.txt
+  - invalid_3.json
+  - invalid_3.expected_error.txt
+  - invalid_4.json
+  - invalid_4.expected_error.txt
   - ../../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - ../../../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json
   - ../../../../../../contracts/runtime/runtime_response_envelope.md
@@ -24,13 +30,14 @@ related:
   - ../../../../../../policy/runtime/
   - ../../../../../../tools/validators/validate_runtime_response_envelope.py
   - ../../../../../../tests/schemas/test_common_contracts.py
+  - ../../../../../../tests/runtime_proof/test_envelope_finite_outcomes.py
   - ../../../../../../docs/doctrine/directory-rules.md
 tags: [kfm, fixtures, contracts, v1, runtime, runtime-response-envelope, invalid-fixtures, expected-error, json-schema, governed-api, trust-membrane, finite-outcomes, evidence-refs, policy-state, freshness, correction-state, non-authoritative]
 notes:
   - "This README replaces a blank file at `fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/README.md`."
   - "Invalid fixtures are intentionally failing examples for the `runtime_response_envelope` schema."
-  - "Current invalid fixture coverage is one missing-required-field case: `invalid_1.json` omits `id`; expected error matcher is `required`."
-  - "No tests, validators, runtime/API implementations, policy checks, evidence-ref resolution, correction-state checks, public-client tests, or CI jobs were run during this documentation update."
+  - "Current invalid fixture coverage includes missing id, extra property, invalid id pattern, and unknown outcome rejection."
+  - "Negative fixtures prove fail-closed schema shape only; they do not evaluate runtime outcome selection, evidence, policy, rights, sensitivity, release, or publication posture."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -51,7 +58,7 @@ Negative fixture lane for the KFM `runtime_response_envelope` runtime contract s
 **Path:** `fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/README.md`  
 **Fixture posture:** invalid JSON Schema fixture lane  
 **Authority posture:** fixture only; schema authority lives in `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`  
-**Quick links:** [Purpose](#purpose) · [Current inventory](#current-inventory) · [Schema basis](#schema-basis) · [Why this fixture fails](#why-this-fixture-fails) · [Authority boundary](#authority-boundary) · [Harness behavior](#harness-behavior) · [Maintenance checklist](#maintenance-checklist) · [Status notes](#status-notes) · [Evidence ledger](#evidence-ledger)
+**Quick links:** [Purpose](#purpose) · [Current inventory](#current-inventory) · [Schema basis](#schema-basis) · [Why these fixtures fail](#why-these-fixtures-fail) · [Authority boundary](#authority-boundary) · [Harness behavior](#harness-behavior) · [Maintenance checklist](#maintenance-checklist) · [Status notes](#status-notes) · [Evidence ledger](#evidence-ledger)
 
 > [!IMPORTANT]
 > Files in this directory are expected to fail schema validation. They are not RuntimeResponseEnvelopes, governed API responses, evidence, EvidenceBundles, PolicyDecisions, DecisionEnvelopes, AIReceipts, RunReceipts, release approval, review approval, public-client permission, or publication authority.
@@ -72,6 +79,12 @@ Use this lane to prove that malformed or incomplete `RuntimeResponseEnvelope`-li
 |---|---|---|---|
 | [`invalid_1.json`](invalid_1.json) | Negative fixture missing required `id`. | Schema validation should fail. | CONFIRMED |
 | [`invalid_1.expected_error.txt`](invalid_1.expected_error.txt) | Expected-error matcher for `invalid_1.json`. | Combined schema errors should include `required`. | CONFIRMED / BROAD MATCHER |
+| [`invalid_2.json`](invalid_2.json) | Negative fixture with disallowed `extra_field`. | Schema validation should fail. | CONFIRMED |
+| [`invalid_2.expected_error.txt`](invalid_2.expected_error.txt) | Expected-error matcher for `invalid_2.json`. | Combined schema errors should include `additional properties`. | CONFIRMED |
+| [`invalid_3.json`](invalid_3.json) | Negative fixture whose uppercase `id` violates the identifier pattern. | Schema validation should fail. | CONFIRMED |
+| [`invalid_3.expected_error.txt`](invalid_3.expected_error.txt) | Bounded matcher for enum, pattern, or date-time failure wording. | Combined errors should match the supported failure class. | CONFIRMED |
+| [`invalid_4.json`](invalid_4.json) | Negative fixture with unknown outcome `WAITING`. | Schema validation should fail. | CONFIRMED |
+| [`invalid_4.expected_error.txt`](invalid_4.expected_error.txt) | Expected-error matcher for `invalid_4.json`. | Combined schema errors should include an enum failure. | CONFIRMED |
 
 Current invalid fixture:
 
@@ -140,7 +153,7 @@ Confirmed schema facts:
 
 ---
 
-## Why this fixture fails
+## Why these fixtures fail
 
 `invalid_1.json` omits `id`, which is required by the paired schema.
 
@@ -153,6 +166,12 @@ required
 ```
 
 This matcher is intentionally broad. It confirms the missing-field class of failure, but it does not pin the full validator wording. A later fixture pass may tighten it to the exact missing property name once validator output is stable enough.
+
+The remaining cases prove three additional closed-shape boundaries:
+
+- `invalid_2.json` adds an unrecognized top-level property;
+- `invalid_3.json` violates the stable identifier pattern;
+- `invalid_4.json` uses `WAITING`, which is outside `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
 
 > [!WARNING]
 > A `RuntimeResponseEnvelope` is not raw evidence storage, canonical lifecycle storage, policy execution, model truth, or release approval. It is the governed response boundary clients may interpret only within policy and evidence constraints.
@@ -170,7 +189,8 @@ This matcher is intentionally broad. It confirms the missing-field class of fail
 | EvidenceRef schema | `schemas/contracts/v1/evidence/evidence_ref.schema.json` | REFERENCED BY SCHEMA / NOT RECHECKED HERE |
 | Runtime policy | `policy/runtime/` | OUT OF SCOPE FOR THIS README |
 | Validator implementation | `tools/validators/validate_runtime_response_envelope.py` | NEEDS VERIFICATION |
-| Schema test harness | `tests/schemas/test_common_contracts.py` | CONFIRMED / NOT RUN |
+| Schema test harness | `tests/schemas/test_common_contracts.py` | CONFIRMED executable coverage |
+| Finite-outcome proof | `tests/runtime_proof/test_envelope_finite_outcomes.py` | CONFIRMED standard-library negative and enum-boundary coverage |
 
 Do not collapse this fixture lane into the semantic contract, schema, executable runtime/API behavior, evidence bundle, evidence-ref resolver, policy decision, decision envelope, AI receipt, run receipt, release manifest, review record, correction record, or receipt persistence layer.
 
@@ -222,12 +242,12 @@ Before changing this invalid fixture lane:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Invalid fixture | CONFIRMED | `invalid_1.json` exists and omits required `id`. |
-| Expected-error file | CONFIRMED | `invalid_1.expected_error.txt` exists and contains `required`. |
+| Invalid fixtures | CONFIRMED | Four fixtures cover required-field, extra-property, identifier-pattern, and outcome-enum rejection. |
+| Expected-error files | CONFIRMED | Every invalid fixture has a bounded expected-error sidecar. |
 | Positive fixture | CONFIRMED | `valid/valid_1.json` exists and includes `id`. |
 | Schema | CONFIRMED | `runtime_response_envelope.schema.json` defines required fields, digest pattern, date-time field, finite outcome enum, EvidenceRef array, fixture root, and additional-property behavior. |
 | Contract | CONFIRMED | `contracts/runtime/runtime_response_envelope.md` defines semantic meaning and distinguishes RuntimeResponseEnvelope from raw evidence storage, canonical lifecycle storage, policy execution, model truth, and release approval. |
-| Test execution | NOT RUN | No validators, pytest, runtime/API tests, policy tests, evidence-ref resolution checks, correction checks, public-client tests, or CI were run during this README update. |
+| Test wiring | CONFIRMED | The canonical validator, common schema harness, runtime-proof suite, and finite-envelope workflow cover this lane. |
 
 ---
 
@@ -236,12 +256,12 @@ Before changing this invalid fixture lane:
 | Source | Status | Supports | Limits |
 |---|---|---|---|
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define invalid-fixture guidance. |
-| [`invalid_1.json`](invalid_1.json) | CONFIRMED | Current negative fixture omits required `id`. | Only one invalid case is currently documented here. |
-| [`invalid_1.expected_error.txt`](invalid_1.expected_error.txt) | CONFIRMED | Current expected-error matcher is `required`. | Broad matcher; may be tightened later. |
+| [`invalid_1.json`](invalid_1.json) through [`invalid_4.json`](invalid_4.json) | CONFIRMED | Current negative fixtures cover missing, extra, pattern, and enum failure classes. | Does not cover every possible schema failure. |
 | [`../valid/valid_1.json`](../valid/valid_1.json) | CONFIRMED | Paired positive fixture includes `id` and other required fields. | Positive lane README was not checked during this update. |
 | [`../../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | CONFIRMED | Schema shape, required fields, digest pattern, date-time field, enum values, EvidenceRef array, fixture root, validator path, and status. | Schema status is `PROPOSED`; validator implementation was not verified. |
 | [`../../../../../../contracts/runtime/runtime_response_envelope.md`](../../../../../../contracts/runtime/runtime_response_envelope.md) | CONFIRMED | Semantic meaning, governed API trust membrane, field surface, and distinction from evidence storage, policy execution, model truth, and release approval. | Does not prove runtime/API implementation, evidence-ref resolution, policy behavior, correction handling, validator wiring, or CI status. |
-| `../../../../../../tests/schemas/test_common_contracts.py` | CONFIRMED / NOT RUN | Fixture discovery and invalid fixture behavior. | Tests were not run during this update. |
+| `../../../../../../tests/schemas/test_common_contracts.py` | CONFIRMED | Fixture discovery and invalid JSON Schema polarity. | Does not prove runtime or policy behavior. |
+| `../../../../../../tests/runtime_proof/test_envelope_finite_outcomes.py` | CONFIRMED | No-network negative and closed-enum boundary checks. | Complements rather than replaces JSON Schema validation. |
 | `../../../../../../docs/doctrine/directory-rules.md` | CONFIRMED | `fixtures/` is the root for golden, valid, and invalid test inputs; contracts/schemas/policy split remains separate. | Specific fixture completeness requires tests or inventory. |
 
 [Back to top](#top)

@@ -1,0 +1,12 @@
+{
+  "id": "resp4",
+  "spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "version": "v1",
+  "issued_at": "2026-05-09T00:00:00Z",
+  "outcome": "ERROR",
+  "reason_code": "SAFE_RUNTIME_ERROR",
+  "evidence_refs": [],
+  "policy_state": "unknown_fail_closed",
+  "freshness": "unknown_fail_closed",
+  "correction_state": "none"
+}

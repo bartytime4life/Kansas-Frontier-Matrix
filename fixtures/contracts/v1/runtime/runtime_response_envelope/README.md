@@ -2,18 +2,27 @@
 doc_id: kfm://fixture/contracts/v1/runtime/runtime-response-envelope/readme
 title: runtime_response_envelope fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): runtime steward; TODO(owner): API steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): evidence steward; TODO(owner): correction steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-08-02
 policy_label: public-review
 related:
   - valid/README.md
   - valid/valid_1.json
+  - valid/valid_2.json
+  - valid/valid_3.json
+  - valid/valid_4.json
   - invalid/README.md
   - invalid/invalid_1.json
   - invalid/invalid_1.expected_error.txt
+  - invalid/invalid_2.json
+  - invalid/invalid_2.expected_error.txt
+  - invalid/invalid_3.json
+  - invalid/invalid_3.expected_error.txt
+  - invalid/invalid_4.json
+  - invalid/invalid_4.expected_error.txt
   - ../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - ../../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json
   - ../../../../../contracts/runtime/runtime_response_envelope.md
@@ -26,14 +35,16 @@ related:
   - ../../../../../policy/runtime/
   - ../../../../../tools/validators/validate_runtime_response_envelope.py
   - ../../../../../tests/schemas/test_common_contracts.py
+  - ../../../../../tests/runtime_proof/test_envelope_finite_outcomes.py
   - ../../../../../docs/doctrine/directory-rules.md
 tags: [kfm, fixtures, contracts, v1, runtime, runtime-response-envelope, valid-fixtures, invalid-fixtures, expected-error, json-schema, governed-api, trust-membrane, finite-outcomes, evidence-refs, policy-state, freshness, correction-state, non-authoritative]
 notes:
   - "This README replaces a blank file at `fixtures/contracts/v1/runtime/runtime_response_envelope/README.md`."
   - "This directory is the schema-declared fixture root for `runtime_response_envelope`."
   - "Fixtures are sample test inputs only; semantic meaning, machine schema shape, runtime/API behavior, evidence resolution, policy behavior, and release authority stay in their owning roots."
-  - "Current fixture coverage includes one valid case and one invalid missing-required-field case."
-  - "No tests, validators, runtime/API implementations, policy checks, evidence-ref resolution, correction-state checks, public-client tests, or CI jobs were run during this documentation update."
+  - "Current valid fixtures cover ANSWER, ABSTAIN, DENY, and ERROR machine shape."
+  - "Current invalid fixtures cover missing id, extra property, invalid id pattern, and unknown outcome rejection."
+  - "Schema fixtures and no-network runtime-proof tests do not establish semantic outcome selection, runtime/API behavior, evidence resolution, policy correctness, release approval, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,7 +76,7 @@ Fixture family for the KFM `runtime_response_envelope` runtime contract schema.
 
 This directory groups positive and negative JSON fixtures for the `runtime_response_envelope` schema.
 
-Use this fixture family to verify that KFM accepts a minimal well-shaped `RuntimeResponseEnvelope`-like object and rejects an incomplete one. The schema-declared fixture root is:
+Use this fixture family to verify that KFM accepts well-shaped examples for all four finite outcomes and rejects incomplete or open-ended shapes. The schema-declared fixture root is:
 
 ```text
 fixtures/contracts/v1/runtime/runtime_response_envelope/
@@ -80,8 +91,14 @@ A passing fixture proves schema shape only. It does not prove that evidence refs
 | Lane | File | Current role | Status |
 |---|---|---|---|
 | [`valid/`](valid/README.md) | [`valid_1.json`](valid/valid_1.json) | Minimal positive fixture with every required top-level field, SHA-256 spec hash, finite outcome, state strings, and empty `evidence_refs`. | CONFIRMED |
+| [`valid/`](valid/README.md) | [`valid_2.json`](valid/valid_2.json) | Shape-valid `ANSWER` with one synthetic EvidenceRef. | CONFIRMED |
+| [`valid/`](valid/README.md) | [`valid_3.json`](valid/valid_3.json) | Shape-valid `DENY` without a restricted payload. | CONFIRMED |
+| [`valid/`](valid/README.md) | [`valid_4.json`](valid/valid_4.json) | Shape-valid safe `ERROR` without internal diagnostics. | CONFIRMED |
 | [`invalid/`](invalid/README.md) | [`invalid_1.json`](invalid/invalid_1.json) | Minimal negative fixture matching the positive case but missing required `id`. | CONFIRMED |
 | [`invalid/`](invalid/README.md) | [`invalid_1.expected_error.txt`](invalid/invalid_1.expected_error.txt) | Current expected-error matcher: `required`. | CONFIRMED / BROAD MATCHER |
+| [`invalid/`](invalid/README.md) | [`invalid_2.json`](invalid/invalid_2.json) | Negative fixture with a disallowed extra property. | CONFIRMED |
+| [`invalid/`](invalid/README.md) | [`invalid_3.json`](invalid/invalid_3.json) | Negative fixture with an invalid identifier. | CONFIRMED |
+| [`invalid/`](invalid/README.md) | [`invalid_4.json`](invalid/invalid_4.json) | Negative fixture with unknown outcome `WAITING`. | CONFIRMED |
 
 Current positive fixture shape:
 
@@ -162,7 +179,8 @@ Confirmed schema facts:
 | EvidenceRef schema | `schemas/contracts/v1/evidence/evidence_ref.schema.json` | REFERENCED BY SCHEMA / NOT RECHECKED HERE |
 | Runtime policy | `policy/runtime/` | OUT OF SCOPE FOR THIS README |
 | Validator implementation | `tools/validators/validate_runtime_response_envelope.py` | NEEDS VERIFICATION |
-| Schema test harness | `tests/schemas/test_common_contracts.py` | CONFIRMED / NOT RUN |
+| Schema test harness | `tests/schemas/test_common_contracts.py` | CONFIRMED executable coverage |
+| Finite-outcome proof | `tests/runtime_proof/test_envelope_finite_outcomes.py` | CONFIRMED standard-library positive, negative, boundary, and alias coverage |
 
 `RuntimeResponseEnvelope` must remain distinguishable from:
 
@@ -237,12 +255,12 @@ Before changing this fixture family:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Valid lane | CONFIRMED | `valid/README.md` and `valid/valid_1.json` exist. |
-| Invalid lane | CONFIRMED | `invalid/README.md`, `invalid/invalid_1.json`, and `invalid_1.expected_error.txt` exist. |
+| Valid lane | CONFIRMED | Four fixtures cover the complete schema outcome enum. |
+| Invalid lane | CONFIRMED | Four fixtures cover missing, extra, pattern, and enum failure classes with expected-error sidecars. |
 | Schema | CONFIRMED | `runtime_response_envelope.schema.json` defines required fields, digest pattern, date-time field, finite outcome enum, EvidenceRef array, fixture root, and additional-property behavior. |
 | Contract | CONFIRMED | `contracts/runtime/runtime_response_envelope.md` defines semantic meaning and separates RuntimeResponseEnvelope from evidence storage, canonical lifecycle storage, policy execution, model truth, and release approval. |
 | Validator file | NEEDS VERIFICATION | `tools/validators/validate_runtime_response_envelope.py` is declared by schema but implementation/wiring was not verified during this update. |
-| Test execution | NOT RUN | No validators, pytest, runtime/API tests, policy tests, evidence-ref resolution checks, correction checks, public-client tests, or CI were run during this README update. |
+| Test wiring | CONFIRMED | The canonical validator, common schema harness, runtime-proof suite, and finite-envelope workflow cover this fixture family. |
 
 ---
 
@@ -252,13 +270,13 @@ Before changing this fixture family:
 |---|---|---|---|
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define fixture-family guidance. |
 | [`valid/README.md`](valid/README.md) | CONFIRMED | Positive fixture lane guidance. | Does not prove tests were run. |
-| [`valid/valid_1.json`](valid/valid_1.json) | CONFIRMED | Current positive fixture includes required fields, digest pattern, finite `outcome`, state strings, and empty `evidence_refs`. | Only one valid fixture is currently documented. |
+| [`valid/`](valid/README.md) | CONFIRMED | Four synthetic fixtures cover every finite outcome and the closed top-level shape. | Shape coverage is not semantic/runtime proof. |
 | [`invalid/README.md`](invalid/README.md) | CONFIRMED | Negative fixture lane guidance. | Does not prove tests were run. |
-| [`invalid/invalid_1.json`](invalid/invalid_1.json) | CONFIRMED | Current negative fixture omits required `id`. | Only one invalid fixture is currently documented. |
-| [`invalid/invalid_1.expected_error.txt`](invalid/invalid_1.expected_error.txt) | CONFIRMED | Current expected-error matcher is `required`. | Broad matcher; may be tightened later. |
+| [`invalid/`](invalid/README.md) | CONFIRMED | Four synthetic fixtures exercise missing field, extra property, identifier pattern, and finite enum rejection. | Does not cover every possible schema failure. |
 | [`../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | CONFIRMED | Schema shape, required fields, digest pattern, date-time field, enum values, EvidenceRef array, fixture root, validator path, and status. | Schema status is `PROPOSED`; validator implementation was not verified. |
 | [`../../../../../contracts/runtime/runtime_response_envelope.md`](../../../../../contracts/runtime/runtime_response_envelope.md) | CONFIRMED | Semantic meaning, governed API trust membrane, field surface, and distinction from evidence storage, policy execution, model truth, and release approval. | Does not prove runtime/API implementation, evidence-ref resolution, policy behavior, correction handling, validator wiring, or CI status. |
-| `../../../../../tests/schemas/test_common_contracts.py` | CONFIRMED / NOT RUN | Fixture discovery and valid/invalid fixture behavior. | Tests were not run during this update. |
+| `../../../../../tests/schemas/test_common_contracts.py` | CONFIRMED | Fixture discovery and JSON Schema polarity. | Does not prove semantic outcome selection or runtime behavior. |
+| `../../../../../tests/runtime_proof/test_envelope_finite_outcomes.py` | CONFIRMED | No-network closed-shape, alias, outcome coverage, and negative boundary checks. | Lightweight proof complements rather than replaces JSON Schema validation. |
 | `../../../../../docs/doctrine/directory-rules.md` | CONFIRMED | `fixtures/` is the root for golden, valid, and invalid test inputs; contracts/schemas/policy split remains separate. | Specific fixture completeness requires tests or inventory. |
 
 [Back to top](#top)

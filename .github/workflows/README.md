@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.12
+version: v0.13
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
@@ -14,8 +14,8 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: 46d0536017655e69b6de451fd57759a463f0d252
-  workflow_inventory_snapshot: 46d0536017655e69b6de451fd57759a463f0d252
+  read_commit: 248aabf0dc038670560e570230bdc86cc7a1cb6a
+  workflow_inventory_snapshot: 248aabf0dc038670560e570230bdc86cc7a1cb6a
   current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
@@ -48,6 +48,7 @@ related:
   - ../../fixtures/generated_receipt/
   - ../../tools/validators/e2e_readiness.py
   - ../../tests/validators/test_e2e_readiness.py
+  - ../../tests/runtime_proof/test_envelope_finite_outcomes.py
   - ../../tests/e2e/README.md
   - ../../policy/
   - ../../schemas/
@@ -56,6 +57,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.13 graduates only focus-mock-test/finite-envelope-shape from static hold detection to a deterministic standard-library shape proof while preserving the mock-focus and composed-E2E holds, workflow/job identities, permissions, and non-publisher posture."
   - "v0.12 adds the focused no-network GENERATED_RECEIPT unittest suite and exact fixture-failure command to validator-suite before the unchanged seven-entry aggregate; workflow/job identities, triggers, permissions, actions, runners, artifact posture, and publication boundaries are unchanged."
   - "v0.11 pins every external GitHub Action reference to the immutable commit currently resolved by its existing tag; triggers, permissions, runners, workflow and job identities, inputs, commands, no-network semantics, artifact behavior, and publication boundaries are unchanged."
   - "v0.10 extends the existing link-check implementation and focused no-network suite to bounded defined reference-style links; workflow name, job ID, triggers, permissions, actions, runner, network posture, and artifact posture are unchanged."
@@ -349,7 +351,7 @@ runtime, UI, policy, proof, release, or publication readiness.
 - [`focus-mock-test.yml`](focus-mock-test.yml)
 - [`hydrology-proof-slice.yml`](hydrology-proof-slice.yml)
 
-These jobs intentionally expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim.
+These jobs expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim. The `focus-mock-test / finite-envelope-shape` job is a bounded exception: it now executes canonical alias, closed-shape, four-outcome, and negative fixture tests while the mock Focus runtime lane remains held.
 
 The current E2E inspection calls the repository-owned standard-library
 `e2e_readiness.py` checker. It confirms the root manifest's exact fail-closed
@@ -357,7 +359,10 @@ The current E2E inspection calls the repository-owned standard-library
 the adjacent UI/API orchestration markers, and the exact bounded placeholder
 inventory while still running no composed browser/API journey. The Focus mock
 inspection relies on structured synthetic, non-authoritative, do-not-publish,
-expected-`ABSTAIN` markers and still produces no runtime response. The rollback
+expected-`ABSTAIN` markers and still produces no runtime response. Its sibling
+finite-envelope job executes shape-only tests for all four outcomes and does
+not establish semantic outcome selection, runtime behavior, policy, evidence,
+release, or publication status. The rollback
 drill relies on ADR-0015's structured draft/proposed and held/alias-absent
 markers and remains read-only. Explorer UI build/unit-test readiness is separate
 from composed E2E, runtime, evidence, policy, release, or publication readiness.
@@ -574,6 +579,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-02 | v0.13 | Replaced the finite-envelope assert-true/TODO hold with a deterministic standard-library four-outcome shape proof, preserved the mock-runtime and composed-E2E holds, and kept workflow/job identities and non-publisher boundaries unchanged. |
 | 2026-08-02 | v0.12 | Added focused GENERATED_RECEIPT validation and exact positive/negative fixture behavior to `validator-suite/run-validators` without changing workflow identities, triggers, permissions, actions, runners, artifacts, aggregate membership, or publication authority. |
 | 2026-08-01 | v0.11 | Replaced all 160 floating external-action references with the exact full commits resolved by their existing official tags, preserving all workflow behavior and leaving weekly Dependabot review as the update path. |
 | 2026-08-01 | v0.10 | Extended the existing standard-library link checker and focused no-network suite to bounded defined reference-style links without changing workflow identity, triggers, permissions, actions, runner, network posture, artifacts, or publication authority. |
