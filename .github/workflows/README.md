@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.10
+version: v0.11
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
@@ -14,8 +14,8 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
-  workflow_inventory_snapshot: f4b6aea4bd7351339a32e2cd5c3b10edbe068968
+  read_commit: 46d0536017655e69b6de451fd57759a463f0d252
+  workflow_inventory_snapshot: 46d0536017655e69b6de451fd57759a463f0d252
   current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
@@ -53,6 +53,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.11 pins every external GitHub Action reference to the immutable commit currently resolved by its existing tag; triggers, permissions, runners, workflow and job identities, inputs, commands, no-network semantics, artifact behavior, and publication boundaries are unchanged."
   - "v0.10 extends the existing link-check implementation and focused no-network suite to bounded defined reference-style links; workflow name, job ID, triggers, permissions, actions, runner, network posture, and artifact posture are unchanged."
   - "v0.9 wires ten focused standard-library shared-runner tests into validator-suite before make schemas and aligns schema/source workflow diagnostics with EXPECTED_FAIL versus FAIL; workflow names, job IDs, triggers, permissions, actions, runners, network posture, and artifact posture are unchanged."
   - "v0.8 replaces the stale inline exact-TODO Explorer assumption in e2e-smoke with a tested repository-owned readiness validator; the composed E2E suite remains explicitly held."
@@ -131,10 +132,10 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ### Current document state
 
-- **CONFIRMED:** this README and all 44 current-main workflow files were read on `main@f4b6aea4bd7351339a32e2cd5c3b10edbe068968`.
+- **CONFIRMED:** this README and all 44 current-main workflow files were read on `main@46d0536017655e69b6de451fd57759a463f0d252`.
 - **CONFIRMED:** `repository-control.yml` is tracked on `main` and is the only active `pull_request_target` workflow.
 - **CONFIRMED / LINEAGE:** the detailed static inventory below was generated from `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` and documented 41 tracked `.yml` workflows.
-- **CONFIRMED:** the current tree has 44 `.yml` workflows, 44 explicit top-level permission blocks, one privileged PR trigger, no self-hosted runner or direct `secrets.*` expression, one ordinary write grant, and the mixed action-pinning inventory below.
+- **CONFIRMED:** the current tree has 44 `.yml` workflows, 44 explicit top-level permission blocks, one privileged PR trigger, no self-hosted runner or direct `secrets.*` expression, one ordinary write grant, and the full-SHA action inventory below.
 - **UNKNOWN:** current branch-protection coupling, recent workflow conclusions, logs, organization defaults, artifact retention, and runtime behavior unless separately inspected.
 
 ### Documented inventory findings
@@ -147,7 +148,7 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 | Runner trust | **CONFIRMED at current snapshot** | No `self-hosted` occurrence. |
 | Direct secret expressions | **CONFIRMED absent at current snapshot** | No direct `secrets.*` occurrence; repository and organization settings remain external. |
 | Write scopes | **CodeQL only at current snapshot** | `security-events: write` supports code-scanning upload; the transition guard has no write grant. |
-| External action pinning | **Mixed** | The new transition guard pins checkout to a full SHA; existing workflows retain version tags. |
+| External action pinning | **Full SHA** | All 161 external-action uses resolve through immutable 40-character commits; version comments preserve Dependabot update context. |
 | Branch protection | **NEEDS VERIFICATION** | Static workflow inspection cannot establish required checks or rulesets. |
 | Workflow execution | **NEEDS VERIFICATION** | Inventory does not establish recent success, failure, or readiness. |
 
@@ -473,24 +474,53 @@ Before changing or relying on a workflow, record:
 | Direct secret expressions | No `secrets.*` occurrence. |
 | Ordinary write permissions | No `contents`, `issues`, `pull-requests`, `packages`, `deployments`, or `id-token` write grant. |
 | Code scanning | [`codeql.yml`](codeql.yml) granted `security-events: write`; re-review if its event or trust boundary changes. |
-| External action immutability | The transition guard pins `actions/checkout` to full SHA `3d3c42e…`; existing action refs remain tagged. |
+| External action immutability | All external action references are pinned to full 40-character commits that were verified against their official upstream tags at this snapshot. |
 | Publication path | No file-presence claim authorized publication; every invoked command still requires inspection. |
 
 ## External action inventory
 
-Current-main static inventory from `main@c455e51be776a355a392284711898af092fb423f`:
+The dependency-closed pinning slice started from this complete floating
+inventory at `main@46d0536017655e69b6de451fd57759a463f0d252`:
 
-| Action reference | Occurrences | Pinning posture |
+| Floating action reference | Occurrences | Workflow files | Official immutable commit verified for the existing tag |
+|---|---:|---:|---|
+| `actions/checkout@v7` | 93 | 41 | [`3d3c42e5aac5ba805825da76410c181273ba90b1`](https://github.com/actions/checkout/commit/3d3c42e5aac5ba805825da76410c181273ba90b1) (`v7.0.1`) |
+| `actions/setup-python@v7` | 60 | 38 | [`5fda3b95a4ea91299a34e894583c3862153e4b97`](https://github.com/actions/setup-python/commit/5fda3b95a4ea91299a34e894583c3862153e4b97) (`v7.0.0`) |
+| `actions/setup-node@v7.0.0` | 4 | 3 | [`820762786026740c76f36085b0efc47a31fe5020`](https://github.com/actions/setup-node/commit/820762786026740c76f36085b0efc47a31fe5020) (`v7.0.0`) |
+| `actions/upload-artifact@v7` | 1 | 1 | [`043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`](https://github.com/actions/upload-artifact/commit/043fb46d1a93c77aae656e7c1c64a875d1fc6a0a) (`v7.0.1`) |
+| `github/codeql-action/init@v4` | 1 | 1 | [`f205ea1c3313d32999d8d6a48b4f6530d4437b38`](https://github.com/github/codeql-action/commit/f205ea1c3313d32999d8d6a48b4f6530d4437b38) (`v4.37.4`) |
+| `github/codeql-action/analyze@v4` | 1 | 1 | [`f205ea1c3313d32999d8d6a48b4f6530d4437b38`](https://github.com/github/codeql-action/commit/f205ea1c3313d32999d8d6a48b4f6530d4437b38) (`v4.37.4`) |
+
+The base also contained one already-immutable checkout use, so the complete
+post-change inventory is:
+
+| Action commit | Occurrences | Pinning posture |
 |---|---:|---|
-| `actions/checkout@v7` | 93 | Major tag; mutable. |
-| `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` | 1 | Immutable full SHA resolving the inspected v7 tag. |
-| `actions/setup-python@v7` | 60 | Major tag; mutable. |
-| `actions/setup-node@v7.0.0` | 4 | Release tag; mutable. |
-| `actions/upload-artifact@v7` | 1 | Major tag; mutable. |
-| `github/codeql-action/init@v4` | 1 | Major tag; mutable. |
-| `github/codeql-action/analyze@v4` | 1 | Major tag; mutable. |
+| `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` | 94 | Immutable full SHA; 93 uses document `v7.0.1`, and the pre-existing transition-guard use retains its `v7` comment. |
+| `actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97` | 60 | Immutable full SHA resolving `v7.0.0`. |
+| `actions/setup-node@820762786026740c76f36085b0efc47a31fe5020` | 4 | Immutable full SHA resolving `v7.0.0`. |
+| `actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` | 1 | Immutable full SHA resolving `v7.0.1`. |
+| `github/codeql-action/init@f205ea1c3313d32999d8d6a48b4f6530d4437b38` | 1 | Immutable peeled commit for annotated tag `v4.37.4`. |
+| `github/codeql-action/analyze@f205ea1c3313d32999d8d6a48b4f6530d4437b38` | 1 | Immutable peeled commit for annotated tag `v4.37.4`. |
 
-Dependabot monitoring reduces update toil but does not make tags immutable, establish compatibility, or replace review of changelogs and runtime requirements.
+The replacements freeze the exact commits the prior tags resolved to; they do
+not change action inputs or outputs. Weekly GitHub Actions Dependabot monitoring
+remains the reviewable update path. It reduces update toil but does not establish
+compatibility or replace changelog, runner-runtime, and security review.
+
+A repository-wide text scan also found 14 floating references inside fenced,
+non-executing Markdown examples. They are inventoried but excluded from this
+executable-workflow slice so historical and domain runbook examples are not
+silently re-versioned:
+
+| Non-executing example reference | Occurrences | Markdown documents | Official immutable commit verified for the existing tag | Disposition |
+|---|---:|---:|---|---|
+| `actions/checkout@v4` | 11 | 11 | [`11d5960a326750d5838078e36cf38b85af677262`](https://github.com/actions/checkout/commit/11d5960a326750d5838078e36cf38b85af677262) (`v4.4.0`) | Residual documentation-example modernization; never executed from `.github/workflows/`. |
+| `actions/upload-artifact@v4` | 3 | 3 | [`ea165f8d65b6e75b540449e92b4886f43607fa02`](https://github.com/actions/upload-artifact/commit/ea165f8d65b6e75b540449e92b4886f43607fa02) (`v4.6.2`) | Residual documentation-example modernization; never executed from `.github/workflows/`. |
+
+Historical generated receipts and documents explicitly pinned to older evidence
+snapshots retain their original tag strings as lineage. They are not executable
+Action references and are not rewritten as current-state evidence.
 
 ## Workflow authoring contract
 
@@ -529,7 +559,8 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 - **NEEDS VERIFICATION** — repository and organization default token permissions.
 - **NEEDS VERIFICATION** — whether every path filter covers intended implementation and documentation surfaces.
 - **NEEDS VERIFICATION** — whether hold and readiness job names could be mistaken for substantive enforcement.
-- **NEEDS VERIFICATION** — whether immutable action SHA pinning will be adopted and enforced.
+- **NEEDS VERIFICATION** — whether a repository-owned validator or ruleset will enforce full-SHA action pinning and whether Dependabot action-update pull requests will meet the intended review cadence.
+- **NEEDS VERIFICATION** — whether the 14 non-executing `v4` Action references in fenced Markdown examples should be modernized in a separate documentation-owned slice.
 - **NEEDS VERIFICATION** — complete CI/runtime policy-bundle parity and proof/release closure.
 - **NEEDS VERIFICATION** — whether workflow-generated artifacts contain sensitive data or outlive their review purpose.
 
@@ -537,6 +568,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-01 | v0.11 | Replaced all 160 floating external-action references with the exact full commits resolved by their existing official tags, preserving all workflow behavior and leaving weekly Dependabot review as the update path. |
 | 2026-08-01 | v0.10 | Extended the existing standard-library link checker and focused no-network suite to bounded defined reference-style links without changing workflow identity, triggers, permissions, actions, runner, network posture, artifacts, or publication authority. |
 | 2026-08-01 | v0.9 | Added the focused shared JSON Schema runner suite to `validator-suite/run-validators`, aligned schema/source workflow diagnostics with `EXPECTED_FAIL` versus `FAIL`, and documented the bounded fixture semantics without changing triggers, permissions, names, runners, artifacts, or publication authority. |
 | 2026-07-31 | v0.8 | Replaced `e2e-smoke`'s stale inline TODO-only Explorer assumption with the tested no-network `e2e_readiness.py` checker; documented the implemented Explorer build/unit-test baseline and preserved the explicit composed-suite hold. |
