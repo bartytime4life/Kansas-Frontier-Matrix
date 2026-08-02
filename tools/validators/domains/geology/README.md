@@ -78,8 +78,8 @@ The answer should be a navigable validator index and deterministic validation ou
 | Broad `tools/validators/geology/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Geology validator index. |
 | Geology domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/README.md` defines scope, anti-collapse posture, lifecycle, public trust path, deny-by-default exact subsurface/private-well posture, and responsibility-root split. |
 | Geology policy posture | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/POLICY.md` states mixed-tier posture, exact borehole/well/resource sensitivity, claim-distinction rules, and fail-closed public promotion conditions. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Geology validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Resource-class lane | **CONFIRMED bounded fixture implementation** | `validate_resource_class_distinction.py` checks a frozen synthetic occurrence/deposit/estimate profile; `tools/validators/geology/resource_class/README.md` records its limits. |
+| Broader executables, schemas, policy bundles, proof, and release wiring | **NEEDS VERIFICATION** | Other validator scripts remain placeholders; this profile does not establish schema, policy, evidence, proof, source, or release authority. |
 
 [Back to top](#top)
 
@@ -87,7 +87,10 @@ The answer should be a navigable validator index and deterministic validation ou
 
 ## Child lanes
 
-No child README lanes were confirmed during this edit.
+The resource-class specialization is documented at
+`tools/validators/geology/resource_class/README.md`; its executable is retained
+in this per-domain lane to follow the repository's current validator inventory.
+Other child lanes remain proposed.
 
 Future child lanes should be added only when they represent a distinct Geology validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
 

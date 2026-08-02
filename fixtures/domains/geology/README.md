@@ -24,6 +24,7 @@ The root fixture README states that `fixtures/` is for operational rendering inp
 | `units/` | Synthetic `GeologicUnit` and map-unit examples. | Populated. |
 | `cross_sections/` | Synthetic `CrossSection` semantic and pipeline dry-run examples. | Populated. |
 | `map-ui/` | Synthetic map/UI envelope, renderer, Evidence Drawer, Focus Mode, and view-state examples. | Populated. |
+| `resource_class/` | Frozen synthetic occurrence/deposit/estimate anti-collapse profile with exact negative sidecars. | Executable bounded profile. |
 | `source_role/` | Synthetic source-role anti-collapse and source-admission examples. | Populated. |
 | `tier-transitions/` | Synthetic sensitivity, redaction, generalization, review, release-tier, correction, and withdrawal examples. | Populated. |
 | `sublanes/` | ADR-sensitive parent lane for sublane-specific fixture families. | Populated. |
@@ -40,6 +41,7 @@ Future child lanes may be added for other Geology object families only when they
 - `units/README.md`
 - `cross_sections/README.md`
 - `map-ui/README.md`
+- `resource_class/README.md`
 - `source_role/README.md`
 - `tier-transitions/README.md`
 - `sublanes/README.md`
@@ -97,6 +99,7 @@ Do not use this fixture root for real geology records, real source exports, live
 | Geologic unit example | `units/` | Unit fixtures do not become public layer authority. |
 | Cross-section example | `cross_sections/` | Cross-section fixtures remain interpretive and evidence-bound. |
 | Map/UI envelope example | `map-ui/` | UI/runtime state remains downstream of governed evidence. |
+| Resource-class example | `resource_class/` | Fixture-only occurrence/deposit/estimate distinctions do not define the canonical classification scheme. |
 | Source-role example | `source_role/` | Source role remains fixed at admission and not upgraded by wording. |
 | Sensitivity or release-tier transition | `tier-transitions/` | Transform/review/release posture remains auditable. |
 | Sublane-specific example | `sublanes/<name>/` | Sublane convention is ADR-sensitive; keep child README explicit. |
@@ -114,10 +117,10 @@ Do not use this fixture root for real geology records, real source exports, live
 
 - Target README: replaced greenfield stub content.
 - Child README inventory: PARTIALLY VERIFIED against the populated child README files available during this documentation pass.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: the bounded `resource_class/` profile is executable; other child payloads retain their documented posture.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology file-system plan.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Sublane convention alignment: NEEDS VERIFICATION / ADR-sensitive where `sublanes/` is used.
 - Contract/schema alignment: NEEDS VERIFICATION per child lane because several paired schemas and validators remain unconfirmed or explicitly bounded as draft/proposed.
-- Consumer alignment: NEEDS VERIFICATION against validators, topology checks, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, source-role checks, sensitivity/tier-transition checks, pipeline dry-runs, schema checks, and policy checks.
-- Tests and validators: NOT RUN.
+- Consumer alignment: CONFIRMED only for `validate_resource_class_distinction.py` and its focused test; other validators, UI surfaces, pipelines, schemas, and policy checks remain NEEDS VERIFICATION.
+- Tests and validators: the resource-class fixture profile is wired into `domain-geology.yml`; broader Geology validation remains held.

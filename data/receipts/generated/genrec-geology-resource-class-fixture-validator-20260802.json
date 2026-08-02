@@ -1,0 +1,249 @@
+{
+  "receipt_id": "genrec-geology-resource-class-fixture-validator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-geology.yml",
+    "docs/domains/geology/README.md",
+    "docs/intake/exploratory/README.md",
+    "docs/intake/exploratory/geology-natural-resources-architecture-source-map.md",
+    "fixtures/domains/geology/README.md",
+    "fixtures/domains/geology/resource_class/README.md",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.json",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.json",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.json",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.json",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.json",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.json",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.json",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.expected_error.txt",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.json",
+    "fixtures/domains/geology/resource_class/valid/mineral_occurrence.json",
+    "fixtures/domains/geology/resource_class/valid/resource_deposit.json",
+    "fixtures/domains/geology/resource_class/valid/resource_estimate.json",
+    "tests/domains/geology/README.md",
+    "tests/domains/geology/claim-class/README.md",
+    "tests/domains/geology/test_source_role_anti_collapse.py",
+    "tests/domains/geology/test_source_role_anti_collapse/README.md",
+    "tools/validators/domains/geology/README.md",
+    "tools/validators/domains/geology/validate_resource_class_distinction.py",
+    "tools/validators/geology/resource_class/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-geology.yml": "sha256:7b7cb14479cf140dfd8a6533b7c773affa430dd330fe72fcc004e19bc8e04282",
+    "docs/domains/geology/README.md": "sha256:1bb063db3ebc115b51fd84eb3e6bc746133f3ff2ae8f9bcce788865d1307aa5e",
+    "docs/intake/exploratory/README.md": "sha256:66be8b048dc8c7a5f6f4b2d07546d857569abc6ade31fa5698c88026b04fe92d",
+    "docs/intake/exploratory/geology-natural-resources-architecture-source-map.md": "sha256:10963fbed1aeadbc6ad0bf759f980901dd9f94053788442e77ae570bee6ee834",
+    "fixtures/domains/geology/README.md": "sha256:73c610c1e7827635c1ac8bf199ba5beba311bc15996adebb9782bc94661f1417",
+    "fixtures/domains/geology/resource_class/README.md": "sha256:48262044a8ff1755df9ccdc2a2aac32f40a0a08c9ee565b44f7d9b028e9e2c68",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.expected_error.txt": "sha256:f27adfd6f18e5ceaafee7afe5eaf51d89f91242abab5c3ca1b78b4ae5892de99",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.json": "sha256:6987eb9e8bfb7ffb88472e23f2ac122bfdac49c5fc3207bc22dd856ef9be56f7",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.expected_error.txt": "sha256:7c540d039e04d35445bdf6a93bf932fc2f889c1dce74d78fc8e49f2c4dd1af19",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.json": "sha256:87be3296d2dea2c84d0daa1afb8d9f9ae2d1c8ff426377cf016ad66be627ca17",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.expected_error.txt": "sha256:de11a8c313c31f8087077eac273e4a2b9a6de82d8489d500c1b3dede4a3d558c",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.json": "sha256:c0306bdf4c8a0d8aee0142eda22f236505b0df7d3a5a918a03be6b56e6aa45f0",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.expected_error.txt": "sha256:5bbee4c210987e325275cbb4c4e2c427500daf09935e8aa91d4d51fc73755945",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.json": "sha256:7c5d04638fe0144395a286ac24f08012ac4db4d60affc09350a791e23896a66a",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.expected_error.txt": "sha256:dc5e4448bd450c8a032c2605caa09301856aff5dfb3a7b142a01f976c7ef8938",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.json": "sha256:29e9cec30bfb175d5e5d0c056cd7993286bff98e96ff709a5aefef90cd6d2eac",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.expected_error.txt": "sha256:ce206da9c309f0c342e0c03817bb932c74ef2adea1228e72e4497b37c2b566ad",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.json": "sha256:772f59d4726abebf1158398310fb213d7b4676ab7a93e39ed0465cf8ddf1758b",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.expected_error.txt": "sha256:c77217d5b9c5515f1b990b917948dfd458647aff6ca4c512967c4cd66f9a05ae",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.json": "sha256:3956fe8d884bd5ec5682028f88b6fc5c5a4443c718d3d958c300347f2b3af0fb",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.expected_error.txt": "sha256:19265feb5793ad1d14724dc7738bf78937604818ca8c12e1239739b5acbaacfc",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.json": "sha256:4b034d84cd479e3ad5e5a1c67d47455a3c203fe15e1fe65980ef58a2030d43cf",
+    "fixtures/domains/geology/resource_class/valid/mineral_occurrence.json": "sha256:79c725826a1b351984e5f838cc65017c3ec19adac237eef10886e244eb4863c1",
+    "fixtures/domains/geology/resource_class/valid/resource_deposit.json": "sha256:0a477f65c52e980256bc2c7b2c8d0cba55d780d88afda1dedc92b34dadb490fc",
+    "fixtures/domains/geology/resource_class/valid/resource_estimate.json": "sha256:43246d630f18a3e8afc0e4936e7e969479a219cf808055b8d3c1b3a499d236d1",
+    "tests/domains/geology/README.md": "sha256:d501498521a96f16b849b57adbc32e75eeba404261a7693bdb4302686d2f3d8f",
+    "tests/domains/geology/claim-class/README.md": "sha256:b920fc104d817d457dd748e5127f0e8962fa08e5c2c5201e62535b36009dd316",
+    "tests/domains/geology/test_source_role_anti_collapse.py": "sha256:7017ca928a42f3b6e595965d81060dc508edc89c115e15e56714576e0db5af75",
+    "tests/domains/geology/test_source_role_anti_collapse/README.md": "sha256:3292a88f37158d17c7c4bc24920b636d3ea81a0d1fdfc07c7817609f68fda319",
+    "tools/validators/domains/geology/README.md": "sha256:f9fdbc974a3187690b1bb0651fa8268f515d5cf3eb29be5dac982d68b661baa1",
+    "tools/validators/domains/geology/validate_resource_class_distinction.py": "sha256:98ce89b5cbb963e09e3516e88967b9810b0e568ff473c874782548b2f553f9bb",
+    "tools/validators/geology/resource_class/README.md": "sha256:c73390728cdc69c1253bf78c3d1fee5377a0519d7b4c18934cab2cff5122364d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source and repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker",
+      "PDF extraction and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c67525219afe179f8632c4cb8a3800d769491497a033d3f21915d4f67ea959f7",
+      "sha256:f79311284fb374062047e6caa98025fd852185130b1b7f80fd3bc2e9fdcf099c",
+      "sha256:3849bdf3a9d97b8b860745adbedf6a88a45f7505c101538372e084a43ea05c5c",
+      "sha256:8fc65ccb21e3919e2671e174d92b1945f38d83c9991ca157b5ffe35dd7034b02"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9cdfa7decad14becde07d772d0d9c13c00379fd0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/contracts/domains/geology/MineralOccurrence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/contracts/domains/geology/ResourceDeposit.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/contracts/domains/geology/ResourceEstimate.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/tools/validators/domains/geology/validate_resource_class_distinction.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/tests/domains/geology/test_source_role_anti_collapse.py",
+      "attachment://KFM-Geology-Natural-Resources-Architecture:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-geology.yml": "PROPOSED",
+    "docs/domains/geology/README.md": "PROPOSED",
+    "docs/intake/exploratory/README.md": "PROPOSED",
+    "docs/intake/exploratory/geology-natural-resources-architecture-source-map.md": "PROPOSED",
+    "fixtures/domains/geology/README.md": "PROPOSED",
+    "fixtures/domains/geology/resource_class/README.md": "PROPOSED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_observation.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_as_reserve.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/estimate_missing_classification.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/modeled_potential_as_deposit.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/occurrence_as_deposit.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/permit_as_deposit.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/precise_resource_location.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/invalid/production_as_deposit.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/valid/mineral_occurrence.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/valid/resource_deposit.json": "CONFIRMED",
+    "fixtures/domains/geology/resource_class/valid/resource_estimate.json": "CONFIRMED",
+    "tests/domains/geology/README.md": "PROPOSED",
+    "tests/domains/geology/claim-class/README.md": "PROPOSED",
+    "tests/domains/geology/test_source_role_anti_collapse.py": "CONFIRMED",
+    "tests/domains/geology/test_source_role_anti_collapse/README.md": "PROPOSED",
+    "tools/validators/domains/geology/README.md": "PROPOSED",
+    "tools/validators/domains/geology/validate_resource_class_distinction.py": "CONFIRMED",
+    "tools/validators/geology/resource_class/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, accepted Directory Rules, exact base 9cdfa7decad14becde07d772d0d9c13c00379fd0, clean starting worktree, and open pull-request set were inspected. No open pull request overlapped this slice. The request authorizes bounded feature-branch implementation while ready, merge, source activation, release, deployment, publication, and repository-setting operations remain denied."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied Geology report pages 7, 16, 19, and 22 were extracted and visually inspected, then reconciled with current contracts, placeholders, workflow, and Directory Rules. Existing Geology validator, fixture, test, and workflow homes support the bounded profile without a new authority root or schema migration."
+    },
+    {
+      "gate": "focused-geology-resource-class-suite",
+      "outcome": "PASS",
+      "reason": "Sixteen standard-library tests passed across three valid characters and eight exact-negative fixtures, plus missing, unknown, multiple, pairing, date, count, closed-shape, duplicate-key, non-finite, non-object, oversized-input, sensitive-location, CLI-polarity, deterministic ordering, non-echo, and active socket, DNS, and urllib network-denial cases."
+    },
+    {
+      "gate": "geology-domain-regression",
+      "outcome": "PASS",
+      "reason": "Complete tests/domains/geology pytest discovery passed 17 tests plus 11 subtests with KFM_NO_NETWORK enabled."
+    },
+    {
+      "gate": "workflow-boundary-and-command-execution",
+      "outcome": "PASS",
+      "reason": "Static inventory recognizes exactly one accepted substantive Geology test and one accepted substantive validator while all other classified modules remain held. The workflow commands accept all three valid fixtures, reject all eight invalid fixtures, retain stable job IDs and contents-read permissions, and perform no live access or write action."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "Using a repository-declared isolated test environment, make validate completed: all aggregate schema fixture validators passed with expected invalid polarity, and 148 schema/contract tests plus 15 subtests passed."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "All 18 no-network link-check unit tests passed. The checker validated 10 changed Markdown documents and 112 local targets; 28 external badge targets were classified without requests. One stale local link in the directly changed Geology README was corrected."
+    },
+    {
+      "gate": "canonical-authority-roots-unchanged",
+      "outcome": "PASS",
+      "reason": "The permissive Geology schemas, source registries, policy surfaces, contracts, and release/proof roots remain unchanged. The frozen profile is explicitly PROPOSED and cannot claim canonical vocabulary, source admission, evidence resolution, policy approval, resource/reserve certification, title, economic viability, release, or publication authority."
+    },
+    {
+      "gate": "python-json-yaml-diff-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Changed Python parses and executes through the focused tests; all profile JSON and the workflow YAML parse; git diff --check passes; and all 32 authored artifact paths are SHA-256 bound by this receipt. The receipt is excluded from its own artifact map to avoid recursive hashing."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks have not yet been observed for the local feature head. Remote publication is limited to an open draft pull request and will be verified separately without changing this local receipt claim."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "geology-object-family-contracts",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/9cdfa7decad14becde07d772d0d9c13c00379fd0/contracts/domains/geology"
+    },
+    {
+      "id": "prior-resource-class-validator-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/tools/validators/domains/geology/validate_resource_class_distinction.py"
+    },
+    {
+      "id": "prior-source-role-test-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9cdfa7decad14becde07d772d0d9c13c00379fd0/tests/domains/geology/test_source_role_anti_collapse.py"
+    },
+    {
+      "id": "geology-natural-resources-architecture-report",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Geology-Natural-Resources-Architecture:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T19:55:48Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts anti-collapse and public-safety concepts from the supplied Geology report into the repository-native bounded fixture pattern; no third-party code, source rows, or assets were copied. Every input is synthetic and uses the non-real generalized county sentinel 99999. The profile does not contact or activate KGS, USGS, KCC, MRDS, a model provider, or another source; define canonical resource classification; assess a real occurrence, deposit, estimate, reserve, title, permit, production record, economic value, or extraction target; resolve evidence; evaluate policy; promote; release; deploy; or publish. Rollback is a clean revert of the feature commit; no lifecycle, source, policy, review, proof, release, or published state is created."
+}

@@ -1,0 +1,4 @@
+SENSITIVE_RESOURCE_LOCATION_DENIED	$.spatial_support.kind
+SENSITIVE_RESOURCE_LOCATION_DENIED	$.spatial_support.latitude
+SPATIAL_SUPPORT_NOT_PUBLIC_SAFE	$.spatial_support.kind
+UNDECLARED_SPATIAL_SUPPORT_FIELD	$.spatial_support.latitude

@@ -510,12 +510,12 @@ Governed AI **MUST**:
 
 <a id="15-validators-tests-and-fixtures-proposed"></a>
 
-## 15. Validators, tests, and fixtures (proposed)
+## 15. Validators, tests, and fixtures
 
 The lane's first-PR scope is **docs / registry / schema / fixture / validator / policy / dry-run only** — no live fetch, no public promotion, no UI / API binding beyond typed contract notes.
 
 - [ ] **Source-role validators** — authority / observation / context / model split is enforced per record.
-- [ ] **Resource-class anti-collapse tests** — `Occurrence` / `Deposit` / `Estimate` / `Permit` / `Production` / `Reserve` cannot interchange.
+- [x] **Bounded resource-class fixture proof** — the synthetic `MineralOccurrence` / `ResourceDeposit` / `ResourceEstimate` profile rejects permit, production, modeled-potential, observation, reserve, missing-classification, and sensitive-location collapse. Canonical vocabulary, policy, and live-data validation remain PROPOSED.
 - [ ] **Public-safe geometry tests** — exact borehole, well, sample geometries are denied on public outputs.
 - [ ] **Borehole / well-log rights tests** — KGS LAS and similar rights-controlled sources fail closed without confirmed terms.
 - [ ] **Catalog closure tests** — every released geology object has a resolvable `EvidenceBundle`.
@@ -525,7 +525,7 @@ The lane's first-PR scope is **docs / registry / schema / fixture / validator / 
 - [ ] **Rollback drill** — `ReleaseManifest` + `RollbackCard` for every release candidate.
 - [ ] **Non-regression tests** — prior lineage preserved on schema or boundary updates.
 
-All items above are **PROPOSED** (DOM-GEOL §K names the first five explicitly); concrete file paths and validator names depend on mounted-repo evidence.
+Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five explicitly). The checked item proves only the repository's frozen synthetic fixture profile; it is not resource/reserve certification, source admission, evidence resolution, policy approval, or release authority.
 
 [Back to top ↑](#top)
 
@@ -561,7 +561,7 @@ All items above are **PROPOSED** (DOM-GEOL §K names the first five explicitly);
 ## 17. Related docs
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement rules, lane pattern, §15 README contract _(path PROPOSED)_
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law, §23.2 sensitive-domain matrix _(path PROPOSED; `CONTRACT_VERSION = "3.0.0"`)_
+- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law, §23.2 sensitive-domain matrix _(path CONFIRMED; `CONTRACT_VERSION = "3.0.0"`)_
 - [`docs/domains/README.md`](../README.md) — domain index across the lane atlas _(path PROPOSED)_
 - [`docs/domains/geology/POLICY.md`](./POLICY.md) — geology policy & sensitivity posture _(path PROPOSED)_
 - [`docs/domains/geology/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — per-family preservation/tier/transform rules _(path PROPOSED)_
