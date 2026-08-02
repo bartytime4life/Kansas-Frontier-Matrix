@@ -58,7 +58,7 @@ fixtures/domains/soil/
 ├── golden/                # Reserved compatibility scaffold; no accepted golden output
 ├── invalid/               # Synthetic fail-closed cases and expected findings
 ├── smap/                  # Existing scaffold; consumer and maturity NEED VERIFICATION
-├── soil_moisture/         # Existing scaffold; consumer and maturity NEED VERIFICATION
+├── soil_moisture/         # Confirmed bounded station fixture profile; not source data
 ├── spec_hash/             # Existing scaffold; consumer and maturity NEED VERIFICATION
 ├── ssurgo_mapunit/        # Existing scaffold; consumer and maturity NEED VERIFICATION
 └── valid/                 # Synthetic accepted public-safe candidate
@@ -69,10 +69,13 @@ fixtures/domains/soil/
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/soil/test_soil_smoke.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_moisture_qc.py --verbose
 ```
 
-A pass proves only the declared fixture profile and deterministic finding
-behavior. It does not resolve the open Soil support-type taxonomy, validate
+A pass proves only the declared public-safe and synthetic station fixture
+profiles and deterministic finding behavior. It does not resolve the open Soil support-type taxonomy, validate
 MUKEY/COKEY/CHKEY lineage, admit a source, close an EvidenceBundle, apply policy,
 construct proof, approve release, or publish data.
 

@@ -1,0 +1,54 @@
+{
+  "record_id": "soil-moisture-fixture-duplicate-0001",
+  "schema_version": "v1",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "src:synthetic-soil-station",
+  "source_role": "fixture_only",
+  "evidence_refs": [
+    "evidence:synthetic-soil-moisture-duplicate"
+  ],
+  "spec_hash": "sha256:a66686f8783156849eb5c0a2cc26fb03a5e0cfcd7283fcc35047088b12cbd8f1",
+  "run_receipt_ref": "receipt:synthetic-soil-moisture-run-invalid-0001",
+  "readings": [
+    {
+      "station_id": "SYNTHETIC-KS-DUPLICATE",
+      "spatial_support": {
+        "kind": "generalized_county",
+        "county_fips": "99999"
+      },
+      "depth_cm": 10,
+      "measure": "volumetric_water_content",
+      "value": 0.24,
+      "unit": "m3/m3",
+      "timestamp_iso": "2026-04-15T14:00:00Z",
+      "source_timezone": "America/Chicago",
+      "qc_flags": [
+        "synthetic-ok"
+      ]
+    },
+    {
+      "station_id": "SYNTHETIC-KS-DUPLICATE",
+      "spatial_support": {
+        "kind": "generalized_county",
+        "county_fips": "99999"
+      },
+      "depth_cm": 10,
+      "measure": "volumetric_water_content",
+      "value": 0.25,
+      "unit": "m3/m3",
+      "timestamp_iso": "2026-04-15T14:00:00Z",
+      "source_timezone": "America/Chicago",
+      "qc_flags": [
+        "synthetic-ok"
+      ]
+    }
+  ],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  }
+}

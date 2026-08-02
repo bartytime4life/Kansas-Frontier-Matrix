@@ -85,7 +85,8 @@ The answer should be a navigable validator index and deterministic validation ou
 | Soil contract/proof/catalog evidence | **CONFIRMED in repo evidence / draft** | Current repo evidence defines Soil contract, proof, source-registry, catalog, and selected object-family surfaces as draft/release-gated and support-type-aware. |
 | `validate_public_safe_fixture.py` | **CONFIRMED bounded executable** | Standard-library, no-network validation of one synthetic fixture-only profile using the shared bounded fixture runtime; it creates no Soil, source, schema, policy, evidence, proof, release, or publication authority. |
 | Public-safe fixtures and Soil smoke suite | **CONFIRMED bounded coverage** | Positive and exact negative fixture polarity is exercised by `tests/domains/soil/test_soil_smoke.py` and the existing `domain-soil` validation job. |
-| Other executables, schemas, policy bundles, source mappings, and runtime wiring | **NEEDS VERIFICATION** | Child validator lanes, field-level schema enforcement, source admission, policy evaluation, reports, receipts, runtime behavior, proof, and release remain outside this executable slice. |
+| `moisture/validate_soil_moisture.py` | **CONFIRMED bounded executable** | Standard-library validation of the closed synthetic station soil-moisture profile, including UTC/unit/depth/QC, dedupe, public-safe geometry, parser bounds, and non-echoing CLI behavior. |
+| Other executables, schemas, policy bundles, source mappings, and runtime wiring | **NEEDS VERIFICATION** | Other child lanes, field-level schema enforcement, source admission, policy evaluation, reports, receipts, runtime behavior, proof, and release remain outside these executable slices. |
 
 [Back to top](#top)
 
@@ -99,7 +100,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | [`dual_hash/`](dual_hash/README.md) | Soil-specific paired content/provenance hash posture using accepted canonicalization while delegating generic hashing to `tools/spec_hash/`. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 | [`horizon_depth/`](horizon_depth/README.md) | Horizon top/bottom depth ordering, units, non-overlap, gap/continuity posture, component-horizon join consistency, and pedon/profile depth checks. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 | [`lineage/`](lineage/README.md) | Source descriptor linkage, source-family separation, support-type separation, source vintage, transform lineage, MUKEY/COKEY/CHKEY continuity, and release/correction/rollback lineage. | **CONFIRMED README / executable NEEDS VERIFICATION** |
-| [`moisture/`](moisture/README.md) | SoilMoistureObservation unit, depth, QC, cadence, stale-state, source-role, support-type, evidence, policy, release, correction, rollback, and public-surface posture. | **CONFIRMED README / executable NEEDS VERIFICATION** |
+| [`moisture/`](moisture/README.md) | Frozen synthetic station unit/depth/UTC/QC/dedupe profile plus broader proposed SoilMoistureObservation posture. | **CONFIRMED bounded executable / broader lane draft** |
 | [`support_type/`](support_type/README.md) | Static survey, gridded derivative, station observation, satellite grid, pedon/profile, interpretation, and public-safe derivative anti-collapse checks. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 
 Possible future child lanes remain **PROPOSED** until created and verified:

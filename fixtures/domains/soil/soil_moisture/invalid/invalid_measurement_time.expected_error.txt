@@ -1,0 +1,7 @@
+DEPTH_CM_INVALID	$.readings[0].depth_cm
+MEASURE_INVALID	$.readings[0].measure
+QC_FLAGS_INVALID	$.readings[0].qc_flags
+SOURCE_TIMEZONE_MISSING	$.readings[0].source_timezone
+TIMESTAMP_NOT_CANONICAL_UTC	$.readings[0].timestamp_iso
+UNIT_INVALID	$.readings[0].unit
+VALUE_OUT_OF_RANGE	$.readings[0].value

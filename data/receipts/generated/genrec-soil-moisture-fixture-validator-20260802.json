@@ -1,0 +1,209 @@
+{
+  "receipt_id": "genrec-soil-moisture-fixture-validator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-soil.yml",
+    "fixtures/domains/soil/README.md",
+    "fixtures/domains/soil/soil_moisture/README.md",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.json",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.json",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.json",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.json",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.json",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.json",
+    "fixtures/domains/soil/soil_moisture/valid/boundary_values.json",
+    "fixtures/domains/soil/soil_moisture/valid/station_series.json",
+    "tests/domains/soil/README.md",
+    "tests/domains/soil/test_soil_moisture_qc.py",
+    "tools/validators/domains/soil/README.md",
+    "tools/validators/domains/soil/moisture/README.md",
+    "tools/validators/domains/soil/moisture/validate_soil_moisture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-soil.yml": "sha256:6fe2f34748569b96f3373cf108db38434c80c15ce885cf2500294814dbbfdb77",
+    "fixtures/domains/soil/README.md": "sha256:1e9252d22525020ed938263272896f43f99aaa4510c95d509515e5977ea73ddc",
+    "fixtures/domains/soil/soil_moisture/README.md": "sha256:21980dd44773d5ae2d7123d8591410721b0ac54a49aad36cff8810fea7bb43f1",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.expected_error.txt": "sha256:07e41cf5f8452ecf868e5d9c3a8d73f150e32a22602dbe392397a03b0e48e667",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.json": "sha256:8377a05097f090a42d9e2e2123e1e0a6671e2dc66b0b3fb82593e5e28f5e6524",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.expected_error.txt": "sha256:b1d9558cf1f0f7dcf65328e2f936044e972b5818ec62de0502247675a0819e1e",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.json": "sha256:c64e267a03abada915afeade7727be138e499c6f61720407ae945be032acde69",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.expected_error.txt": "sha256:0b02954ec93f29f0f052a53832fde0b8be7a451372b0b181f150c2d71444e4f6",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.json": "sha256:4297bc0ff7e77fb76a854d8ead9d3ac36f05af7cf7382cb6a1f10c8cc006a139",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.expected_error.txt": "sha256:f6c89f439d29ec6afc7c12f6dffaf75866e280c4ab5cb90e2420702a048df2a1",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.json": "sha256:9740ab8112220421ded88173c83922f3c2d3452fa4844123ac4f7eb861db70ca",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.expected_error.txt": "sha256:c0b2be608b42a6b2db404f6e23cfa385a0f134b148895d880bb64d6af88a5792",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.json": "sha256:378cb046681b46e3fba038dc3e117e33a71af109d906aaec2508fa8e0b8cbbaf",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.expected_error.txt": "sha256:829c5f06dab535dfa24099666a9e26f52286eb76ff432c43dfbcc3e5625c9605",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.json": "sha256:9fda1ea854d4e7dea44050d813dc0886d796c34712be268b25d83d725da75263",
+    "fixtures/domains/soil/soil_moisture/valid/boundary_values.json": "sha256:1683ef0984d49772b547e85a404d06499669a4e58f523d48535e5994826120ae",
+    "fixtures/domains/soil/soil_moisture/valid/station_series.json": "sha256:f1c8eab24e2c768a0c9a80f7f23a54985fc91e27f3e9a7b4ff6493147bb82030",
+    "tests/domains/soil/README.md": "sha256:090925262a923bd0c860b08e2ad9649b9b90b26124491708f26e377421d6cabb",
+    "tests/domains/soil/test_soil_moisture_qc.py": "sha256:e05c730018167a5077fb995a85ca5687c5432d4d38d2f545b49c642bbdfd9137",
+    "tools/validators/domains/soil/README.md": "sha256:fd34996e686c5a4cd64519644a86f2f911d257f3c4bf90edbe2099cbda9f2e84",
+    "tools/validators/domains/soil/moisture/README.md": "sha256:b42586b8752158063a1e016ee47734fd88e73d2544bf8feaa942e6e45f4417c0",
+    "tools/validators/domains/soil/moisture/validate_soil_moisture.py": "sha256:5c4f24c553393eb6ea3da065076704cc19d6bac9b7bd700ae2105986e270182a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5.6-sol Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:ca71714619855527afa641a855dcff18306494234a39daec74bff3c62331d239",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF text extraction and rendered-page inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "PyYAML workflow validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b"
+    ],
+    "attached_docs": [
+      "New Ideas 4-15-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/contracts/domains/soil/soil_moisture_observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/tools/validators/domains/soil/moisture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/tools/validators/domains/soil/validate_public_safe_fixture.py",
+      "attachment://New-Ideas-4-15-26/pages-1-85:sha256:fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-soil.yml": "PROPOSED",
+    "fixtures/domains/soil/README.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture/README.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/duplicate_reading.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_measurement_time.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_shapes.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/invalid_source_profile.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/missing_identity.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/invalid/unsafe_spatial_support.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/valid/boundary_values.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/valid/station_series.json": "CONFIRMED",
+    "tests/domains/soil/README.md": "PROPOSED",
+    "tests/domains/soil/test_soil_moisture_qc.py": "CONFIRMED",
+    "tools/validators/domains/soil/README.md": "PROPOSED",
+    "tools/validators/domains/soil/moisture/README.md": "PROPOSED",
+    "tools/validators/domains/soil/moisture/validate_soil_moisture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, the historical held control projection, accepted Directory Rules, exact base db6426d6a6cafcf5a4be7beb8811202eb45cf1d7, clean worktree, and open pull-request set were inspected. The current directly authored request authorizes bounded feature-branch implementation while ready, merge, source activation, release, deployment, publication, and repository-setting operations remain denied."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The attached 435-page dossier was indexed and its soil-moisture validator section inspected. Current repository evidence showed an existing README-only validator lane, empty fixture directories, a placeholder test, and an established standard-library public-safe fixture pattern. Code remains in tools, synthetic inputs in fixtures, tests in tests, and orchestration in the existing workflow."
+    },
+    {
+      "gate": "focused-soil-moisture-suite",
+      "outcome": "PASS",
+      "reason": "Twelve focused tests passed with exact positive and negative fixture polarity, canonical UTC and source-timezone handling, VWC unit/depth/value bounds, QC preservation, deterministic dedupe identity, all-zero digest rejection, parser and reading-count bounds, no-network enforcement, non-echoing output, and CLI exit semantics."
+    },
+    {
+      "gate": "soil-domain-regression",
+      "outcome": "PASS",
+      "reason": "The complete Soil domain unittest discovery passed 28 tests, including the prior public-safe fixture profile and the new station soil-moisture profile."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "In an isolated environment installed from the repository-declared .[test] extra, make validate completed: all aggregate schema fixture validators passed with expected invalid polarity and 139 schema/contract tests passed."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "The repository no-network link checker passed all five changed Markdown documents with 28 local targets; 12 external badge targets were classified without requests."
+    },
+    {
+      "gate": "workflow-syntax-and-boundary",
+      "outcome": "PASS",
+      "reason": "PyYAML parsed domain-soil.yml and confirmed its stable workflow name, three job IDs, and read-only contents permission. The new check performs no source access, artifact upload, release, promotion, deployment, or publication."
+    },
+    {
+      "gate": "python-json-diff-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Changed Python compiles, all fixture JSON parses, workflow YAML parses, git diff --check passes, and the 22 artifact paths are SHA-256 bound by this receipt. The receipt is excluded from its own artifact map to avoid recursive hashing."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Remote delivery is intentionally held because the prior two draft pull requests were merged by an unidentified repository-side mechanism and the required GitHub CLI is unavailable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "soil-moisture-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/contracts/domains/soil/soil_moisture_observation.md"
+    },
+    {
+      "id": "prior-moisture-validator-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/tools/validators/domains/soil/moisture/README.md"
+    },
+    {
+      "id": "repository-public-safe-fixture-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/tools/validators/domains/soil/validate_public_safe_fixture.py"
+    },
+    {
+      "id": "new-ideas-soil-moisture-validator-source",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-4-15-26/pages-1-85:sha256:fb3af560b6698f41d3b75aa7bffe96be07aeb2ba2fb356219886ceda7eea2111"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T18:06:59Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts the supplied soil-moisture validator concept into the repository-native bounded fixture pattern; no third-party code or assets were copied. The profile is synthetic and station-only. It does not admit or contact Kansas Mesonet, SCAN, USCRN, SMAP, or another source; define the missing full SoilMoistureObservation schema; assess scientific fitness or staleness; resolve evidence or receipts; apply policy; build proof; promote; release; deploy; or publish. Rollback is a clean revert of the local feature commit; no lifecycle, source, release, or published state exists."
+}
