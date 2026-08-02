@@ -3,20 +3,20 @@ doc_id: kfm://data/receipts/generated/readme
 name: Generated Work Receipts README
 path: data/receipts/generated/README.md
 type: data-generated-receipts-lane-readme
-version: v0.1.0
-status: draft; repository-grounded
+version: v0.2.0
+status: draft; repository-grounded; bounded-validator-confirmed
 owners:
   - <receipt-steward>
   - <docs-steward>
   - <validation-steward>
 created: 2026-07-17
-updated: 2026-07-17
+updated: 2026-08-02
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: generated-receipts
 receipt_scope: AI-authored artifact provenance and process memory
-path_posture: existing-populated-lane; fifty-nine-json-receipts-observed-at-base-snapshot; exact-emission-automation-needs-verification
+path_posture: existing-populated-lane; bounded-validator-and-command-confirmed; exact-emission-automation-needs-verification
 sensitivity_posture: receipt-internal; no-public-path; no-secrets; no-hidden-reasoning; process-memory-not-proof; receipt-not-release
 related:
   - ../README.md
@@ -26,6 +26,8 @@ related:
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
   - ../../../.github/PULL_REQUEST_TEMPLATE.md
+  - ../../../tools/validators/validate_generated_receipt.py
+  - ../../../tests/validators/test_validate_generated_receipt.py
 tags:
   - kfm
   - data
@@ -38,6 +40,7 @@ tags:
 notes:
   - "This README documents an existing populated lane; it does not certify every pre-existing receipt or prove an emitter is automated."
   - "A generated receipt records provenance for AI-authored work. It is not human approval, factual proof, policy permission, catalog closure, release authority, or publication authority."
+  - "v0.2 records the bounded no-network schema, cross-field, local-path, SHA-256-prefix, citation-presence, and optional declared-review-claim validator; BLAKE3 verification remains unsupported without an admitted dependency."
 [/KFM_META_BLOCK_V2] -->
 
 # Generated work receipts
@@ -71,8 +74,9 @@ The bounded inventory at `main@2e31e0cf51c08d792cc1f301ceb21b235424cb40` found:
 | Surface | Repository evidence | Status |
 |---|---|---:|
 | Lane | `data/receipts/generated/` exists and contains JSON files. | CONFIRMED |
-| Bounded payload count | Fifty-nine direct-child `*.json` receipts existed before this README was added. | CONFIRMED at the recorded base commit |
+| Bounded payload count | 256 direct-child `*.json` receipts existed at `main@029ed6b66240358aaacc97e0b18ad3f0378b9de1`. | CONFIRMED at the recorded base commit |
 | Machine shape | `schemas/contracts/v1/receipts/generated_receipt.schema.json` defines the receipt schema. | CONFIRMED schema file; enforcement breadth NEEDS VERIFICATION |
+| Bounded validator | `tools/validators/validate_generated_receipt.py` checks duplicate-free finite JSON under parser/schema budgets, shape, artifact-map parity, canonical local paths, SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, plus an optional declared review/override claim. | CONFIRMED implementation and focused synthetic tests; references and review claims are not authenticated |
 | PR requirement | `.github/PULL_REQUEST_TEMPLATE.md` requires a generated receipt when any diff file is AI-authored. | CONFIRMED |
 | Filename pattern | Existing files predominantly use `genrec-<scope>-<digest>.json`. | CONFIRMED observation; not a naming authority |
 | Generator or emitter automation | No canonical generator was established by this completion pass. | NEEDS VERIFICATION |
@@ -144,12 +148,24 @@ For a newly emitted receipt, reviewers should:
 Useful bounded checks include:
 
 ```bash
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json
+
+# Require a declared approved-review or override claim without authenticating it.
+python tools/validators/validate_generated_receipt.py \
+  --require-review-claim data/receipts/generated/<receipt>.json
+
+# Exercise the repository-owned positive and negative synthetic lanes.
+python tools/validators/validate_generated_receipt.py --fixtures
+
 python -m json.tool data/receipts/generated/<receipt>.json >/dev/null
 make validate
 git diff --check
 ```
 
-`make validate` is a repository-wide schema/contract baseline. It does not, by itself, prove that every generated receipt was individually checked or that human review is complete.
+Default validator success means the receipt passed bounded schema, cross-field, path, and supported SHA-256-prefix integrity checks. It reports whether an approved-review or override claim is present without authenticating the reviewer, approver, scope, expiry, or external authorization. `--require-review-claim` requires only that schema-valid declaration; it never authorizes repository mutation, approval, ready-for-review, or merge.
+
+The validator fails closed on BLAKE3 artifact bindings because the repository has not admitted a BLAKE3 implementation dependency. It does not resolve evidence or citations, evaluate Rego, approve review, authorize merge, or grant release/publication status. `make validate` remains a repository-wide schema/contract baseline and does not, by itself, prove that every generated receipt was individually checked.
 
 ## Review burden
 
@@ -167,6 +183,8 @@ Changes that affect a sensitive domain, authority root, lifecycle boundary, publ
 | [`../../../docs/doctrine/ai-build-operating-contract.md`](../../../docs/doctrine/ai-build-operating-contract.md) | AI build discipline and receipt contract version. |
 | [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) | Repository placement and responsibility boundaries; parallel copies remain a documented conflict outside this lane. |
 | [`../../../.github/PULL_REQUEST_TEMPLATE.md`](../../../.github/PULL_REQUEST_TEMPLATE.md) | Pull-request field requiring a generated receipt for AI-authored diffs. |
+| [`../../../tools/validators/validate_generated_receipt.py`](../../../tools/validators/validate_generated_receipt.py) | Bounded local receipt and SHA-256 artifact-integrity checker. |
+| [`../../../tests/validators/test_validate_generated_receipt.py`](../../../tests/validators/test_validate_generated_receipt.py) | Focused no-network behavior and negative proof. |
 
 ## ADRs
 
@@ -176,9 +194,9 @@ No accepted ADR was found that promotes this lane to proof, release, catalog, po
 
 ## Last reviewed
 
-- Date: 2026-07-17
-- Evidence snapshot: `main@2e31e0cf51c08d792cc1f301ceb21b235424cb40`
-- Direct-child JSON receipts observed before this README: 59
+- Date: 2026-08-02
+- Evidence snapshot: `main@029ed6b66240358aaacc97e0b18ad3f0378b9de1`
+- Direct-child JSON receipts observed before this change: 256
 - Validation of every pre-existing receipt: NOT RUN
 - Emitter automation and review workflow: NEEDS VERIFICATION
 

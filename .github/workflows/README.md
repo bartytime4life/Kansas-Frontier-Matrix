@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.11
+version: v0.12
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-08-01
+updated: 2026-08-02
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
@@ -43,6 +43,9 @@ related:
   - ../../tools/validators/_common/jsonschema_runner.py
   - ../../tests/validators/README.md
   - ../../tests/validators/test_jsonschema_runner.py
+  - ../../tools/validators/validate_generated_receipt.py
+  - ../../tests/validators/test_validate_generated_receipt.py
+  - ../../fixtures/generated_receipt/
   - ../../tools/validators/e2e_readiness.py
   - ../../tests/validators/test_e2e_readiness.py
   - ../../tests/e2e/README.md
@@ -53,6 +56,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.12 adds the focused no-network GENERATED_RECEIPT unittest suite and exact fixture-failure command to validator-suite before the unchanged seven-entry aggregate; workflow/job identities, triggers, permissions, actions, runners, artifact posture, and publication boundaries are unchanged."
   - "v0.11 pins every external GitHub Action reference to the immutable commit currently resolved by its existing tag; triggers, permissions, runners, workflow and job identities, inputs, commands, no-network semantics, artifact behavior, and publication boundaries are unchanged."
   - "v0.10 extends the existing link-check implementation and focused no-network suite to bounded defined reference-style links; workflow name, job ID, triggers, permissions, actions, runner, network posture, and artifact posture are unchanged."
   - "v0.9 wires ten focused standard-library shared-runner tests into validator-suite before make schemas and aligns schema/source workflow diagnostics with EXPECTED_FAIL versus FAIL; workflow names, job IDs, triggers, permissions, actions, runners, network posture, and artifact posture are unchanged."
@@ -399,14 +403,16 @@ outside this bounded check; a green result is documentation QA only.
 `validator-suite.yml` preserves the stable `validator-suite` workflow and
 `run-validators` / `ensure-fail-closed` job IDs. The first job installs the
 declared Python dependencies, runs all ten focused standard-library cases in
-`tests/validators/test_jsonschema_runner.py`, and then runs `make schemas`.
-Those tests require sorted, nonempty valid and invalid fixture lanes and
-distinguish expected schema rejection from malformed data, validator
-exceptions, and polarity errors. The second job remains the reviewed invalid
-EvidenceBundle canary. Triggers, permissions, actions, hosted runner, network
-posture, artifact posture, and check names are unchanged. Hosted execution at
-the proposed head remains **NEEDS VERIFICATION**; a green result would prove
-only these bounded mechanics, not semantic truth, policy, evidence closure,
+`tests/validators/test_jsonschema_runner.py`, then runs the focused no-network
+`test_validate_generated_receipt.py` unittest suite and the generated-receipt
+fixture command before the unchanged seven-entry `make schemas` aggregate. The
+generated-receipt negative lane must match its exact bounded expected-finding
+sidecar; an unrelated rejection does not pass fixture polarity. The second job
+remains the reviewed invalid EvidenceBundle canary. Triggers, permissions,
+actions, hosted runner, network posture, artifact posture, and check names are
+unchanged. Hosted execution at the proposed head remains **NEEDS VERIFICATION**;
+a green result would prove only these bounded mechanics, not authenticated
+review or mutation authority, semantic truth, policy, evidence closure, merge,
 release readiness, or publication.
 
 `schema-validation.yml` and `source-descriptor-validate.yml` retain their
@@ -568,6 +574,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-02 | v0.12 | Added focused GENERATED_RECEIPT validation and exact positive/negative fixture behavior to `validator-suite/run-validators` without changing workflow identities, triggers, permissions, actions, runners, artifacts, aggregate membership, or publication authority. |
 | 2026-08-01 | v0.11 | Replaced all 160 floating external-action references with the exact full commits resolved by their existing official tags, preserving all workflow behavior and leaving weekly Dependabot review as the update path. |
 | 2026-08-01 | v0.10 | Extended the existing standard-library link checker and focused no-network suite to bounded defined reference-style links without changing workflow identity, triggers, permissions, actions, runner, network posture, artifacts, or publication authority. |
 | 2026-08-01 | v0.9 | Added the focused shared JSON Schema runner suite to `validator-suite/run-validators`, aligned schema/source workflow diagnostics with `EXPECTED_FAIL` versus `FAIL`, and documented the bounded fixture semantics without changing triggers, permissions, names, runners, artifacts, or publication authority. |

@@ -2,11 +2,11 @@
 doc_id: kfm://policy/ai-builder
 title: AI Builder Policy README
 type: policy-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — AI surface steward · Policy steward · Security steward · Docs steward · Release steward · Receipt/provenance steward
 created: 2026-06-15
-updated: 2026-07-14
+updated: 2026-08-02
 policy_label: restricted
 supersedes: v0.1 (2026-06-15)
 related:
@@ -27,11 +27,15 @@ related:
   - ../../packages/policy-runtime/README.md
   - ../../apps/governed-api/README.md
   - ../../.github/PULL_REQUEST_TEMPLATE.md
+  - ../../tools/validators/validate_generated_receipt.py
+  - ../../tests/validators/test_validate_generated_receipt.py
+  - ../../fixtures/generated_receipt/
 tags: [kfm, policy, ai-builder, governed-ai, evidence, generated-receipt, prompt-injection, review, rollback, deny-by-default]
 notes:
+  - "v0.3 records the bounded GENERATED_RECEIPT validator, SHA-256-prefix integrity checks, synthetic fixture polarity, focused tests, and validator-suite wiring without claiming automatic corpus-wide enforcement or merge authority."
   - "v0.2 reconciles this lane with the live Rego policy stub, GENERATED_RECEIPT schema, emitted receipt examples, PR template, first-governed-PR runbook, and current policy decision vocabulary."
   - "The existing underscore path is CONFIRMED in the repository. No parallel policy/ai-builder lane is created; any rename requires a reviewed migration or ADR."
-  - "The Rego module and receipt mechanism are partially implemented. CI invocation, test coverage, input assembly, reviewer-state updates, and merge enforcement remain NEEDS VERIFICATION."
+  - "The Rego module and receipt mechanism are partially implemented. AI-builder Rego CI invocation, corpus-wide receipt coverage, input assembly, reviewer-state updates, and merge enforcement remain NEEDS VERIFICATION; the bounded receipt validator's focused CI step is configured."
   - "This README defines AI-builder admissibility and governance posture; it is not model authority, repository truth, release approval, credential storage, or an executable workflow."
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,7 +48,7 @@ notes:
 **Governed policy lane for AI-assisted repository work: evidence-bound action selection, safe mutation, generated-work provenance, human review, validation, correction, and rollback.**
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-1f6feb)
+![version](https://img.shields.io/badge/version-v0.3-1f6feb)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-6e7681)
 ![policy](https://img.shields.io/badge/policy-ai__builder-0a7ea4)
 ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)
@@ -708,9 +712,10 @@ A receipt with `human_review.state: pending` may be schema-valid and audit-usefu
 | Rego rules reference receipts | CONFIRMED |
 | PR template requests receipts | CONFIRMED |
 | Runbook describes receipt workflow | CONFIRMED |
+| Bounded generated-receipt validator | CONFIRMED for schema, cross-field, canonical-path, SHA-256-prefix, protected-root policy-reference and documentation-citation presence, plus optional declared-review-claim checks; references and review claims are not authenticated |
 | Automatic receipt generation | NEEDS VERIFICATION |
-| Automatic schema validation in CI | NEEDS VERIFICATION |
-| Automatic artifact-hash reconciliation | NEEDS VERIFICATION |
+| Automatic schema validation in CI | PARTIAL — synthetic fixtures and focused tests are configured in `validator-suite`; every emitted receipt is not established |
+| Automatic artifact-hash reconciliation | PARTIAL — on-demand SHA-256 recomputation is implemented; automatic post-edit updates and BLAKE3 verification are not |
 | Automatic reviewer-state updates | NEEDS VERIFICATION |
 | Merge-blocking enforcement | NEEDS VERIFICATION |
 
@@ -973,8 +978,12 @@ opa eval \
   --input fixtures/policy/ai_builder/pr_input_valid.json \
   'data.kfm.ai_builder.operating_contract.report'
 
-# Validate generated receipts with the repository's accepted validator.
-# Exact command remains NEEDS VERIFICATION.
+# Validate generated receipts with the repository-owned bounded validator.
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json
+
+# Exercise the synthetic positive and fail-closed fixture lanes.
+python tools/validators/validate_generated_receipt.py --fixtures
 ```
 
 The illustrative fixture path above is `PROPOSED` until verified.
@@ -1105,8 +1114,8 @@ Changing `CONTRACT_VERSION` affects doctrine, Rego, receipt schema/instances, PR
 | Rego input assembly | NEEDS VERIFICATION | Trusted builder/action implementation |
 | AI-authored change detection | NEEDS VERIFICATION | Workflow/tool tests |
 | Generated receipt requirement scope | NEEDS VERIFICATION | Accepted policy and exceptions |
-| Receipt schema validation workflow | NEEDS VERIFICATION | Workflow + logs |
-| Artifact hash verification | NEEDS VERIFICATION | Validator and negative fixture |
+| Receipt schema validation workflow | CONFIGURED / HOSTED RESULT NEEDED | `validator-suite` focused test and fixture steps plus hosted logs |
+| Artifact hash verification | CONFIRMED for bounded SHA-256 / BLAKE3 NEEDS VERIFICATION | Validator, focused negative tests, and any admitted BLAKE3 dependency decision |
 | Receipt review-state update mechanism | NEEDS VERIFICATION | App/tool/runbook implementation |
 | Policy-decision reference requirement | NEEDS VERIFICATION | Accepted mapping and tests |
 | PR template token enforcement | NEEDS VERIFICATION | Rego/CI test |
@@ -1201,6 +1210,13 @@ v0.2 retains the strongest v0.1 principles:
 
 ### Corrected or expanded
 
+v0.3:
+
+- records the separate `GENERATED_RECEIPT` validator and keeps runtime `AIReceipt` out of scope;
+- replaces the unknown validator command with the exact no-network CLI;
+- confirms focused schema, cross-field, local-path, SHA-256-prefix, citation-presence, declared-review-claim, and exact negative-fixture tests plus synthetic wiring;
+- keeps corpus-wide enforcement, BLAKE3 verification, policy evaluation, approval, merge, release, and publication explicitly unproved or separate.
+
 v0.2:
 
 - recognizes the live Rego policy module;
@@ -1215,7 +1231,7 @@ v0.2:
 
 ### Reversibility
 
-Reverting the v0.2 README commit restores v0.1. This documentation change does not alter `operating_contract.rego`, schemas, receipt instances, workflows, tests, branch protection, or release state.
+Reverting the v0.3 implementation commit removes the validator/test/fixture workflow slice and restores the earlier command uncertainty. The change does not alter `operating_contract.rego`, schemas, branch protection, release, deployment, or publication state.
 
 ---
 

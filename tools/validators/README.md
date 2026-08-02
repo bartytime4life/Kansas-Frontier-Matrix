@@ -2,20 +2,21 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.5
-status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed
+version: v0.6
+status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed; generated-receipt-validator-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-07-31
+updated: 2026-08-02
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; e2e_readiness.py is a confirmed bounded static readiness-and-hold checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; none is domain truth, end-to-end proof, dependency admission, or release authority
+truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; e2e_readiness.py is a confirmed bounded static readiness-and-hold checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; validate_generated_receipt.py is a confirmed bounded repository-artifact provenance checker; none is domain truth, end-to-end proof, dependency admission, merge approval, or release authority
 related:
   - ci_readiness.py
   - e2e_readiness.py
   - dependencies/README.md
   - dependencies/pnpm_audit_readiness.py
+  - validate_generated_receipt.py
   - _common/README.md
   - domains/README.md
   - source/README.md
@@ -60,8 +61,10 @@ related:
   - ../../tests/e2e/README.md
   - ../../.github/workflows/e2e-smoke.yml
   - ../../tests/validators/test_pnpm_audit_readiness.py
+  - ../../tests/validators/test_validate_generated_receipt.py
   - ../../.github/workflows/dependency-scan.yml
 notes:
+  - "v0.6 adds the bounded no-network GENERATED_RECEIPT duplicate-free finite-JSON, parser/schema-budget, cross-field, local-path, SHA-256-prefix, and optional declared-review-claim validator with focused tests and synthetic fixture wiring."
   - "v0.5 adds a standard-library E2E readiness validator and focused synthetic tests; it recognizes the implemented Explorer baseline while preserving the composed browser/API E2E hold."
   - "v0.4 records the focused locked-pnpm audit preflight and finite PASS/REGRESSION/ERROR classifier; the registry audit remains point-in-time and non-authoritative."
   - "v0.3 confirms one standard-library placeholder-readiness checker and its focused unit tests; it does not establish domain validation, registry wiring, generated reports, receipt emission, runtime behavior, or release authority."
@@ -114,6 +117,7 @@ A validator may check that evidence exists, policy was evaluated, release refere
 | `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
 | `tools/validators/e2e_readiness.py` | **CONFIRMED bounded executable checker** | Statically reconciles the locked Explorer baseline, adjacent UI/API workflow markers, root holds, and exact five-file E2E placeholder inventory; it emits an explicit hold and never starts services or executes discovered application code. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
+| `tools/validators/validate_generated_receipt.py` | **CONFIRMED bounded executable checker** | Validates duplicate-free finite JSON under parser/schema budgets, `GENERATED_RECEIPT` shape, exact artifact maps, canonical local paths, supported SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, plus an optional declared review/override claim. It does not authenticate those references or claims and cannot grant truth, policy, review, mutation, merge, release, or publication authority. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
 | `tools/validators/release/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Release validator routing; not release governance or publication authority. |
@@ -355,6 +359,7 @@ tools/validators/
 ├── README.md
 ├── ci_readiness.py                  # confirmed placeholder-readiness checker
 ├── e2e_readiness.py                 # confirmed static E2E readiness-hold checker
+├── validate_generated_receipt.py    # confirmed repository-artifact provenance checker
 ├── _common/                         # shared validator utilities, if verified
 ├── domains/                         # per-domain validator lanes
 ├── policy/                          # policy-facing validation routing
