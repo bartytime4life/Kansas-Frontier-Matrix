@@ -125,7 +125,7 @@ schemas/
             ├── README.md                              # this file
             ├── focus_request.schema.json              # PROPOSED permissive scaffold
             ├── focus_response.schema.json             # PROPOSED permissive scaffold
-            ├── runtime_response_envelope.schema.json  # PROPOSED permissive scaffold
+            ├── runtime_response_envelope.schema.json  # PROPOSED compatibility alias to runtime/
             └── citation_validation_report.schema.json # PROPOSED permissive scaffold
 
 contracts/

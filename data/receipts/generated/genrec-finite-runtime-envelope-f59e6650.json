@@ -30,7 +30,7 @@
     "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/README.md": "sha256:1aeebb8a32e562628d718a75d89619dad18e16af9c861a1010d3b2fa6b3c01ff",
     "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_3.json": "sha256:108bf269287a5859db3c222ba0d73107e33f6b4138ef1ada86ce0d2128cc3f46",
     "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json": "sha256:421192d780b320a395ae51389a599f02aefb561090ab0b16396676edbf8f326b",
-    "schemas/contracts/v1/focus/README.md": "sha256:2fcf5cc53f13f61ee7f95f77297d29bc8e56b0ea45085f423568522410e4d262",
+    "schemas/contracts/v1/focus/README.md": "sha256:68ab9de3c2ebe3bb673720bb87153c589ff2186d31dcef31b05d5e945ac4bda1",
     "schemas/contracts/v1/focus/runtime_response_envelope.schema.json": "sha256:0d56628252bc78dee275c867875ea2ffb7d86c4fc2344f5ca73f671b3e04c1f0",
     "tests/runtime_proof/README.md": "sha256:0c034b50abd9515088f5386ded8171d924736e67b9a7217dbd728bfa043d98a9",
     "tests/runtime_proof/test_envelope_finite_outcomes.py": "sha256:f59e6650e67b62a493568a57f8906d2bb4ae9989a32fc4776592ad82cd12226d"
