@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-evidence-readme
 title: Evidence Contracts README
 type: root-readme; governance-index; contract-family-guide
-version: v0.2
+version: v0.3
 status: draft; repo-facing; responsibility-root-index; implementation-bounded; NEEDS STEWARD REVIEW
 owners:
   - OWNER_TBD — Evidence steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — placeholder existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-02
 policy_label: public; contracts; evidence; evidence-ref; evidence-bundle; evidence-drawer; citation-validation; semantic-contracts; proof-boundary; closure-artifact; claim-support; rights; sensitivity; transforms; checksums; release-gated; rollback-aware; not-schema; not-data-proofs; not-receipts; not-policy; not-release-manifest; not-runtime-proof
 tags: [kfm, contracts, evidence, README, EvidenceRef, EvidenceBundle, EvidenceDrawerPayload, CitationValidationReport, SourceDescriptor, EvidenceRef, EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, AIReceipt, data-proofs, catalog, receipts, trust-membrane]
 related:
@@ -23,11 +23,14 @@ related:
   - ./evidence_bundle/README.md
   - ./evidence_drawer_payload.md
   - ./citation_validation_report.md
+  - ./verification_state_history.md
   - ../../schemas/contracts/v1/evidence/evidence_ref.schema.json
   - ../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - ../../schemas/contracts/v1/evidence/verification_state_history.schema.json
   - ../../fixtures/contracts/v1/evidence/
   - ../../tools/validators/validate_evidence_bundle.py
   - ../../tools/validators/validate_evidence_ref.py
+  - ../../tools/validators/validate_verification_state_history.py
   - ../../policy/evidence/
   - ../../data/proofs/README.md
   - ../../catalog/proof/README.md
@@ -41,6 +44,7 @@ notes:
   - "This README governs the contracts/evidence/ contract family and does not store materialized EvidenceBundles, proof packs, receipts, release records, source records, or published artifacts."
   - "Contracts define evidence semantics. Schemas define machine shape. data/proofs/ is the proof-record home unless an ADR says otherwise. release/ decides publication."
   - "EvidenceBundle is the closure artifact; EvidenceRef is a governed pointer that does not by itself guarantee closure."
+  - "VerificationStateHistory is a bounded PROPOSED replay profile; active history does not itself authorize an ANSWER."
   - "This README is not an exhaustive live inventory of every evidence contract file. Use repo search or generated manifests for complete inventory."
 [/KFM_META_BLOCK_V2] -->
 
@@ -116,6 +120,7 @@ The root purpose is to make KFM cite-or-abstain behavior inspectable.
 | `EvidenceDrawerPayload` | `contracts/evidence/evidence_drawer_payload.md` | Evidence-facing UI/API payload semantics, if present and reviewed. | Observed by repo search; details NEED VERIFICATION. |
 | `CitationValidationReport` | `contracts/evidence/citation_validation_report.md` | Citation-checking report semantics, if present and reviewed. | Observed by repo search; details NEED VERIFICATION. |
 | `KFM Geo Manifest` | `contracts/evidence/kfm_geo_manifest.md` | Geo artifact/evidence manifest semantics, if present and reviewed. | Referenced by sibling contracts; current details NEED VERIFICATION. |
+| `VerificationStateHistory` | `contracts/evidence/verification_state_history.md` | Bitemporal, append-ordered replay of active, corrected, superseded, and revoked verification state. | PROPOSED bounded profile; schema, synthetic fixtures, validator, and no-network tests are executable. |
 
 This table is a root guide, not a complete manifest. Use generated inventory or repo search for full coverage.
 
@@ -166,6 +171,14 @@ schemas/contracts/v1/evidence/evidence_ref.schema.json
 ```
 
 Its flat contract states that `EvidenceRef` requires `ref` and `kind`, and that `bundle_ref` remains optional/pre-closure until resolver integrity is enforced.
+
+The bounded `VerificationStateHistory` profile points to:
+
+```text
+schemas/contracts/v1/evidence/verification_state_history.schema.json
+```
+
+Its validator proves deterministic synthetic shape, hash, append order, transition-chain, and bitemporal replay behavior. It does not resolve evidence references or create policy, review, release, correction, or publication authority.
 
 > [!CAUTION]
 > Schema confirmation does not prove resolver behavior, fixture coverage, CI enforcement, policy enforcement, source rights, release state, or runtime behavior. Mark those `NEEDS VERIFICATION` unless checked in the current session.
@@ -270,6 +283,7 @@ Before promoting an evidence contract change:
 - [ ] confirm receipts/catalog/release records remain in their own roots;
 - [ ] confirm no public surface reads RAW/WORK/QUARANTINE/internal proof stores directly;
 - [ ] confirm EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, and RollbackCard boundaries are preserved;
+- [ ] confirm verification-history replay cannot turn `ACTIVE` into automatic answer authority or let corrected, superseded, revoked, or unknown history produce `ANSWER`;
 - [ ] confirm AI surfaces cite or abstain and do not generate uncited ANSWER text.
 
 ---

@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:revocation",
+  "subject_ref": "kfm://synthetic/evidence/item-101",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:5d4eec3c695ea6e7a287510ea691b04017de4a77e6237526f631ab7a5e0e9e41",
+  "events": [
+    {
+      "event_id": "evt:101",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-01T00:00:00Z",
+      "recorded_at": "2026-01-01T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-101"
+      ]
+    },
+    {
+      "event_id": "evt:102",
+      "event_type": "REVOKED",
+      "state": "REVOKED",
+      "effective_at": "2026-02-01T00:00:00Z",
+      "recorded_at": "2026-02-02T00:00:00Z",
+      "reason_code": "VERIFICATION_REVOKED",
+      "basis_refs": [
+        "kfm://synthetic/evidence/revocation-basis-101"
+      ],
+      "relates_to_event_id": "evt:101",
+      "revocation_ref": "kfm://synthetic/correction/revocation-101"
+    },
+    {
+      "event_id": "evt:103",
+      "event_type": "REVERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-02-10T00:00:00Z",
+      "recorded_at": "2026-02-15T00:00:00Z",
+      "reason_code": "REVOCATION_REMEDIATED",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-102"
+      ],
+      "relates_to_event_id": "evt:102"
+    }
+  ]
+}

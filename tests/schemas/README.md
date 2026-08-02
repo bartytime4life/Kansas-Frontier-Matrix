@@ -2,22 +2,22 @@
 doc_id: kfm://doc/tests-schemas-readme
 title: tests/schemas/ — Executable Schema Conformance, Fixture Coverage, and Drift Guardrail
 type: readme; directory-readme; schema-test-root; json-schema-conformance-contract; fixture-coverage-index; ci-boundary
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; executable; pytest-collected; fixture-driven; partial-family-coverage; hydrology-alias-coverage; schema-ci-present; coverage-gaps-visible; non-authoritative; NEEDS VERIFICATION
 policy_label: public-doc; tests; schemas; machine-shape; synthetic-only; no-network; fail-closed; coverage-aware; compatibility-aware; trust-spine
 owners: OWNER_TBD — QA steward · Schema steward · Contract steward · Fixture steward · Validator steward · Domain stewards · CI steward · Security reviewer · Docs steward
 created: 2026-07-07
-updated: 2026-08-01
+updated: 2026-08-02
 supersedes: v0.2 schema-test boundary guide
 current_path: tests/schemas/README.md
-truth_posture: CONFIRMED target README and prior blob, canonical tests responsibility root, schema authority root, schemas/tests compatibility index, six directly surfaced executable schema-test modules, focused shared-runner fixture tests, generic top-level fixture harness behavior, bounded Hydrology, Hazards, USDM SourceDescriptor, and water-planning coverage, shared JSON Schema runner, recursive local schema registry, seven-validator aggregate runner, root Makefile schema/test targets, root Python and pytest dependencies, schema-validation workflow, validator-suite workflow, and mixed-maturity v1 schema family index at the pinned snapshot / PROPOSED complete schema inventory contract, recursive family discovery, required fixture manifests, metaschema validation beyond the configured workflow, contract-pairing enforcement, namespace policy, compatibility-lane migration, coverage report, required promotion check, and branch-protection status / CONFLICTED executable ownership under tests/schemas versus README-only compatibility placement under schemas/tests, generic harness top-level family allowlist versus the much broader v1 family tree, direct pytest coverage versus the seven-validator make schemas path, and schema-shape success versus evidence-policy-release truth / UNKNOWN exhaustive ignored/generated test inventory, exact collected case count, hosted pass state, full schema count, full fixture count, dynamic consumers, required-check configuration, promotion dependency, and production behavior / NEEDS VERIFICATION owners, CODEOWNERS, accepted schema family registry, all schema and fixture inventories, every schema-to-contract pairing, every schema-to-validator binding, current hosted logs, correction consumers, and migration plan
+truth_posture: CONFIRMED canonical tests responsibility root, seven directly surfaced executable schema-test modules, bounded VerificationStateHistory schema and semantic replay coverage, shared JSON Schema runner, recursive local registry, seven-validator aggregate runner, Makefile targets, declared dependencies, and schema-validation workflow / PROPOSED complete recursive coverage and promotion coupling / CONFLICTED direct pytest coverage versus the curated aggregate and shape proof versus evidence-policy-release truth / UNKNOWN hosted exact-head state and production consumers / NEEDS VERIFICATION owners, full bindings, correction consumers, and migration plan
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: cb8a46fff89861b8f0ca57c1c29bacf1fec885a5
-  prior_blob: 895e892294ac5d81df683e2dcc7cbf4b2ed88308
+  base_commit: dfc546e9d93ce87cda76e54a8d45a44e72ee19d6
+  prior_blob: 249487886f2d1dfc9cbe50d530aa47ab6ebf3e0d
   direct_test_modules:
     - tests/schemas/test_common_contracts.py
     - tests/schemas/test_evidence_ref_validator.py
@@ -25,6 +25,7 @@ evidence_snapshot:
     - tests/schemas/test_kdhe_hab_advisory_snapshot_contracts.py
     - tests/schemas/test_usdm_source_descriptor_contracts.py
     - tests/schemas/test_water_planning_contracts.py
+    - tests/schemas/test_verification_state_history.py
   focused_runner_test:
     - tests/validators/test_jsonschema_runner.py
   compatibility_index:
@@ -48,6 +49,13 @@ evidence_snapshot:
   schema_surfaces:
     - schemas/README.md
     - schemas/contracts/v1/README.md
+  verification_state_history_slice:
+    contract: contracts/evidence/verification_state_history.md
+    schema: schemas/contracts/v1/evidence/verification_state_history.schema.json
+    fixtures: fixtures/contracts/v1/evidence/verification_state_history/
+    validator: tools/validators/validate_verification_state_history.py
+    focused_test: tests/schemas/test_verification_state_history.py
+    local_result: PASS; 8 tests and 15 subtests
   bounded_inventory_note: direct connector search and exact path reads establish only the checked snapshot; they do not prove permanent absence from history, ignored files, generated workspaces, branch-local changes, dynamically generated tests, or uninspected paths
 related:
   - ../README.md
@@ -64,6 +72,11 @@ related:
   - ../../tools/validators/_common/local_resolver.py
   - ../../tools/validators/_common/run_all.py
   - ../validators/test_jsonschema_runner.py
+  - ./test_verification_state_history.py
+  - ../../contracts/evidence/verification_state_history.md
+  - ../../schemas/contracts/v1/evidence/verification_state_history.schema.json
+  - ../../fixtures/contracts/v1/evidence/verification_state_history/README.md
+  - ../../tools/validators/validate_verification_state_history.py
   - ../../Makefile
   - ../../pyproject.toml
   - ../../.github/workflows/schema-validation.yml
@@ -72,6 +85,7 @@ related:
 tags: [kfm, tests, schemas, json-schema, draft-2020-12, fixtures, validators, pytest, schema-ids, refs, aliases, hydrology, contracts, ci, drift, coverage, no-parallel-authority]
 notes:
   - "v0.3 reconciles the seven-entry aggregate and shared fixture runner with focused regression coverage and current workflow behavior while preserving the schema-test authority boundary."
+  - "v0.4 adds bounded VerificationStateHistory schema, semantic, parser, replay, CLI, and no-network coverage without adding it to the curated seven-entry aggregate."
   - "The generic harness discovers only immediate *.schema.json files in seven hard-coded top-level families and only when a matching fixture directory exists."
   - "The Hydrology alias module explicitly covers decision_envelope, run_receipt, and evidence_bundle aliases with one valid fixture each and one added-property negative."
   - "make test runs tests/schemas plus tests/contracts; make schemas runs seven dedicated validator entry points. These are overlapping but non-identical proof paths."
@@ -113,13 +127,14 @@ notes:
 
 | Surface | Status at the pinned snapshot | Safe conclusion |
 |---|---|---|
-| `tests/schemas/README.md` | **CONFIRMED** | v0.3 updates the v0.2 guide in place; the prior blob is pinned in metadata. |
+| `tests/schemas/README.md` | **CONFIRMED** | v0.4 adds the bounded VerificationStateHistory module while preserving the existing aggregate boundary. |
 | `tests/schemas/test_common_contracts.py` | **CONFIRMED executable pytest module** | Provides fixture-driven validation for a hard-coded set of immediate v1 schema families. |
 | `tests/schemas/test_evidence_ref_validator.py` | **CONFIRMED executable pytest module** | Exercises the EvidenceRef CLI with one valid and one missing-ref fixture. |
 | `tests/schemas/test_hydrology_alias_contracts.py` | **CONFIRMED executable pytest module** | Provides explicit positive and extra-property-negative coverage for three Hydrology aliases. |
 | `tests/schemas/test_kdhe_hab_advisory_snapshot_contracts.py` | **CONFIRMED executable pytest module** | Covers KDHE HAB snapshot shape, deterministic identity, lineage, scope, and fail-closed release posture. |
 | `tests/schemas/test_usdm_source_descriptor_contracts.py` | **CONFIRMED executable pytest module** | Covers the inactive USDM SourceDescriptor candidate and synthetic no-network connector fixtures. |
 | `tests/schemas/test_water_planning_contracts.py` | **CONFIRMED executable pytest module** | Covers fifteen water-planning schemas, positive/negative fixtures, identity separation, and bounded acceptance criteria. |
+| `tests/schemas/test_verification_state_history.py` | **CONFIRMED executable pytest module** | Covers closed schema shape, semantic negatives, canonical hash, bitemporal replay, correction/revocation/supersession, parser bounds, CLI polarity, and no-network behavior. |
 | Other direct executable modules in `tests/schemas/` | **NOT SURFACED in complete tracked-lane inspection** | Ignored, generated, branch-local, or dynamic consumers remain unknown. |
 | Root Python project | **CONFIRMED scaffold** | Requires Python 3.11+, `jsonschema>=4.26,<5`, and optional `pytest>=9.1.1,<10`; sets `pythonpath = ["."]`. |
 | `schemas/` | **CONFIRMED machine-shape authority root** | Tests reference schemas; they do not define them. |
@@ -327,6 +342,7 @@ tools/validators/README.md
 | `test_kdhe_hab_advisory_snapshot_contracts.py` | Exercises KDHE HAB snapshot schema fixtures plus deterministic identity, correction lineage, scope, and denied publication/alerting posture. | Bounded synthetic fixture family; no connector activation or live source verification. |
 | `test_usdm_source_descriptor_contracts.py` | Checks the inactive USDM SourceDescriptor candidate and deterministic no-network connector fixtures. | Candidate/fixture governance only; no live source, rights, release, or publication proof. |
 | `test_water_planning_contracts.py` | Exercises fifteen water-planning schema families and explicit identity, time, version, geometry, and region constraints. | Bounded fixtures and selected acceptance criteria; not source-truth or publication proof. |
+| `test_verification_state_history.py` | Exercises one bounded evidence-history schema and specialized validator across active, corrected, reverified, superseded, revoked, late-recorded, and unknown replay states. | Synthetic profile only; no EvidenceRef resolution, policy, review, release, publication, or runtime-answer authority. |
 
 [Back to top](#top)
 
@@ -1504,6 +1520,7 @@ prose attached to code that emits the prior ambiguous fixture output.
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-02 | v0.4 | Added the bounded VerificationStateHistory module with schema/semantic polarity, deterministic replay, parser, CLI, and no-network checks; the seven-entry aggregate is unchanged. |
 | 2026-08-01 | v0.3 | Reconciled six direct schema-test modules, the seven-entry aggregate, sorted nonempty fixture lanes, `EXPECTED_FAIL`/`FAIL` semantics, ten focused runner tests, and current CI definitions. |
 | 2026-07-16 | v0.2 | Replaced the planning-oriented predecessor with a repository-grounded account of the then-inspected direct modules, coverage limits, and CI surfaces. |
 
@@ -1528,6 +1545,7 @@ prose attached to code that emits the prior ambiguous fixture output.
 | `test_kdhe_hab_advisory_snapshot_contracts.py` | **CONFIRMED executable test** | KDHE HAB snapshot schema, identity, lineage, scope, and denied-publication conditions. | Synthetic fixtures; no live source or connector proof. |
 | `test_usdm_source_descriptor_contracts.py` | **CONFIRMED executable test** | Inactive USDM descriptor and no-network fixture posture. | Candidate governance checks; no source, rights, release, or publication proof. |
 | `test_water_planning_contracts.py` | **CONFIRMED executable test** | Fifteen water-planning schemas and selected domain invariants. | Bounded fixtures and acceptance criteria only. |
+| `test_verification_state_history.py` | **CONFIRMED executable test** | Two positive fixtures, seven exact negative fixture outcomes, bitemporal replay, hash/order/identity, parser bounds, CLI, and no-network behavior. | Does not resolve evidence or authorize policy, review, release, publication, or runtime answers. |
 | `jsonschema_runner.py` | **CONFIRMED executable runner** | Draft 2020-12 validator construction, file/fixture validation, exit codes. | No explicit metaschema check in inspected code. |
 | `local_resolver.py` | **CONFIRMED executable resolver** | Recursive v1 registry, missing-ID skip, duplicate-ID rejection. | Does not require all schemas to have IDs or define namespace policy. |
 | `run_all.py` | **CONFIRMED executable aggregate** | Seven selected validator wrappers and fail-fast execution. | Not dynamic and not complete schema-tree coverage. |
