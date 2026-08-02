@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-evidence-readme
 title: tools/validators/evidence README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-evidence-steward-plus-proof-steward-plus-policy-steward-plus-release-steward-plus-ui-evidence-drawer-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-02
 policy_label: repository-facing; evidence-validator-index; EvidenceRef; EvidenceBundle; citation-validation; cite-or-abstain; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed evidence validator index for EvidenceRef resolution, EvidenceBundle closure, citation validation, source-role preservation, rights/sensitivity posture, transform/digest/spec-hash posture, policy/review/release linkage, correction and rollback linkage, governed-answer readiness, finite negative outcomes, and public-surface denial checks while deferring evidence semantics, schemas, proof storage, receipts, policy decisions, release authority, and public outputs to their owning roots
@@ -20,7 +20,11 @@ related:
   - ../../contracts/evidence/evidence_ref.md
   - ../../contracts/evidence/evidence_bundle.md
   - ../../contracts/evidence/citation_validation_report.md
+  - ../../contracts/evidence/verification_state_history.md
   - ../../schemas/contracts/v1/evidence/README.md
+  - ../../schemas/contracts/v1/evidence/verification_state_history.schema.json
+  - ../validate_verification_state_history.py
+  - ../../tests/schemas/test_verification_state_history.py
   - ../../data/proofs/README.md
   - ../../data/proofs/evidence_bundle/README.md
   - ../../data/proofs/citation_validation/README.md
@@ -31,7 +35,7 @@ related:
   - ../../packages/evidence-resolver/src/README.md
   - ../../packages/citation/README.md
 notes:
-  - "This README replaces a stray one-character file. It does not confirm executable files."
+  - "This README originally replaced a stray one-character file; the bounded top-level VerificationStateHistory validator is now confirmed executable and indexed here."
   - "Evidence validators check readiness and closure. They do not define evidence semantics, create EvidenceBundles, store proofs, store receipts, decide policy, approve release, publish public outputs, or authorize generated answers."
   - "Contracts define evidence semantics; schemas define machine shape; data/proofs stores materialized proof support; data/receipts stores receipts; policy decides admissibility; release decides publication."
   - "EvidenceBundle outranks generated language, but a valid EvidenceBundle is still not a PolicyDecision or ReleaseManifest."
@@ -75,7 +79,8 @@ The answer should be a deterministic validation result. This folder should not c
 | EvidenceBundle proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/evidence_bundle/README.md` supports EvidenceRef → EvidenceBundle closure, claim support, digest closure, finite negative outcomes, and governed-answer readiness. |
 | Citation validation proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/citation_validation/README.md` supports EvidenceRef resolution checks, citation closure, finite negative outcomes, and governed answer readiness. |
 | AI evidence-before-model lane | **CONFIRMED README / executable NEEDS VERIFICATION** | `tools/validators/ai/evidence_before_model/README.md` checks that evidence and policy gates happen before model interpretation. |
-| Executables, schemas, fixtures, policy bundles, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This index does not claim a validator implementation, report schema, fixture set, receipt path, runtime route, or CI check exists. |
+| VerificationStateHistory validator | **CONFIRMED bounded executable** | `tools/validators/validate_verification_state_history.py` checks closed shape, canonical hash, append order, time axes, transition chain, and replay semantics against synthetic fixtures. |
+| Broader executables, policy bundles, report destinations, receipt emission, runtime behavior, and release wiring | **NEEDS VERIFICATION** | The bounded history validator does not establish a general evidence resolver, policy runtime, report lane, receipt emitter, release gate, or public route. |
 
 [Back to top](#top)
 
@@ -104,7 +109,7 @@ This README does not move, replace, or override those roots. It only defines whe
 
 ## Proposed child lanes
 
-No child README lanes under `tools/validators/evidence/` were confirmed during this edit.
+No child executable lane under `tools/validators/evidence/` is established by this slice. One bounded top-level entrypoint is confirmed at `tools/validators/validate_verification_state_history.py`, following the repository's existing top-level EvidenceRef/EvidenceBundle wrapper convention.
 
 Possible future children remain **PROPOSED** until created and verified:
 
@@ -225,6 +230,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 | `RIGHTS_OR_SENSITIVITY_GAP` | Rights, sensitivity, redaction, aggregation, or access posture is incomplete. |
 | `POLICY_OR_RELEASE_GAP` | Required PolicyDecision, ReviewRecord, ReleaseManifest, correction path, or rollback target is absent. |
 | `EVIDENCE_STALE_OR_SUPERSEDED` | Evidence is stale, corrected, withdrawn, superseded, or embargoed for the requested use. |
+| `VERIFICATION_HISTORY_*` | Stable schema, hash, event identity/order, timestamp, chain, or transition finding from the bounded history profile. |
 | `EVIDENCE_AS_RELEASE_DENIED` | Candidate treats evidence closure as release approval. |
 | `GENERATED_TEXT_AS_EVIDENCE_DENIED` | Candidate treats generated text or model output as source evidence. |
 | `PUBLIC_SURFACE_LEAK_RISK` | Candidate is unsafe for public/governed output as shaped. |
@@ -239,6 +245,15 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ---
 
 ## Validation
+
+Confirmed bounded commands:
+
+```bash
+KFM_NO_NETWORK=1 python tools/validators/validate_verification_state_history.py --fixtures
+KFM_NO_NETWORK=1 python -m pytest -q tests/schemas/test_verification_state_history.py
+```
+
+These commands prove only synthetic history validation and replay. They do not resolve evidence or authorize policy, review, release, publication, or a runtime `ANSWER`.
 
 Suggested future test surface:
 
@@ -297,6 +312,6 @@ python tools/validators/evidence/run_evidence_validators.py --repo-root . --form
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-08 |
-| Review state | Draft README replacement for stray one-character evidence validator file. |
-| Next smallest safe change | Verify actual evidence validator scripts, child lanes, schema bindings, fixtures, resolver behavior, report destinations, receipt emission, release linkage, governed route behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-02 |
+| Review state | Draft evidence-validator index with one bounded bitemporal history validator confirmed executable. |
+| Next smallest safe change | Review the PROPOSED history semantics, then separately verify resolver behavior, broader child lanes, report destinations, receipt emission, release linkage, governed route behavior, and CI/runtime wiring before promoting this lane beyond draft. |
