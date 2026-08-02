@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: TODO-atmosphere-domain-steward, TODO-docs-steward
 created: 2026-05-16
-updated: 2026-05-29
+updated: 2026-08-02
 policy_label: public
 contract_version: 3.0.0
 related:
@@ -20,8 +20,8 @@ related:
 tags: [kfm, atmosphere, air, planning, register, directory-rules, proposed-paths]
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent register.
-  - PROPOSED register. No mounted repo verified this session.
-  - Every path below is PROPOSED until inspected against current repo state.
+  - PROPOSED register reconciled against current repository state on 2026-08-02.
+  - Each row carries its own current truth label; unverified paths remain PROPOSED.
   - Companion to the Atmosphere/Air domain README and the cross-repo verification backlog.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
@@ -336,7 +336,7 @@ All rows below are **PROPOSED**. Treat each table as a candidate path inventory 
 
 | Path | Test / fixture purpose | Truth label | Notes |
 |---|---|---|---|
-| `tests/domains/atmosphere/test_knowledge_character_registry.py` | Validate registry coverage and category distinctness. | PROPOSED | Atlas §11.K. |
+| `tests/domains/atmosphere/test_knowledge_character_registry.py` | Validate the frozen synthetic profile's character coverage and anti-collapse boundaries. | CONFIRMED bounded executable | Does not settle the canonical enum/registry, execute Rego policy, or validate live records; Atlas §11.K. |
 | `tests/domains/atmosphere/test_unit_normalization.py` | Round-trip unit conversions; reject ambiguous units. | PROPOSED | — |
 | `tests/domains/atmosphere/test_aqi_as_concentration_denied.py` | Negative test: AQI presented as concentration → DENY. | PROPOSED | — |
 | `tests/domains/atmosphere/test_aod_as_pm25_denied.py` | Negative test: AOD presented as PM2.5 → DENY. | PROPOSED | — |
@@ -652,8 +652,8 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related:** [README](./README.md) · [Domains Index](../README.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../../ai-build-operating-contract.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
+**Related:** [README](./README.md) · [Domains Index](../README.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-05-29 · **Version:** v2 · **Status:** draft · **CONTRACT_VERSION = "3.0.0"**
+**Last updated:** 2026-08-02 · **Version:** v2 · **Status:** draft · **CONTRACT_VERSION = "3.0.0"**
 
 [⤴ Back to top](#table-of-contents)

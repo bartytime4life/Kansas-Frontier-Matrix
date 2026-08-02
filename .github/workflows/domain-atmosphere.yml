@@ -1,6 +1,7 @@
 # KFM Atmosphere domain CI workflow.
-# Status: one bounded synthetic precipitation fixture profile is executable;
-# broader validation, proof, and release-dry-run producers remain held.
+# Status: bounded synthetic precipitation and knowledge-character fixture
+# profiles are executable; broader validation, proof, and release-dry-run
+# producers remain held.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without performing live source
@@ -56,9 +57,12 @@ jobs:
             "policy/domains/atmosphere/README.md"
             "tests/domains/atmosphere/README.md"
             "tests/domains/atmosphere/test_atmosphere_smoke.py"
+            "tests/domains/atmosphere/test_knowledge_character_registry.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
+            "tools/validators/domains/atmosphere/validate_knowledge_character.py"
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
+            "fixtures/domains/atmosphere/knowledge_character/README.md"
             "data/registry/sources/atmosphere/README.md"
             "release/candidates/atmosphere/README.md"
           )
@@ -78,15 +82,27 @@ jobs:
               classify_validator_source,
           )
 
-          accepted_test = Path("tests/domains/atmosphere/test_atmosphere_smoke.py")
-          accepted_validator = Path(
-              "tools/validators/domains/atmosphere/"
-              "validate_public_safe_precipitation_fixture.py"
-          )
+          accepted_tests = {
+              Path("tests/domains/atmosphere/test_atmosphere_smoke.py"),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_knowledge_character_registry.py"
+              ),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_knowledge_character.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_public_safe_precipitation_fixture.py"
+              ),
+          }
 
           for path in sorted(Path("tests/domains/atmosphere").rglob("*.py")):
               classification = classify_test_source(path.read_text(encoding="utf-8"))
-              if path == accepted_test:
+              if path in accepted_tests:
                   if classification.placeholder:
                       raise SystemExit(f"Accepted Atmosphere test regressed: {path}")
               elif not classification.placeholder:
@@ -107,7 +123,7 @@ jobs:
                   classification = classify_validator_source(
                       path.read_text(encoding="utf-8")
                   )
-                  if path == accepted_validator:
+                  if path in accepted_validators:
                       if classification.placeholder:
                           raise SystemExit(
                               f"Accepted Atmosphere validator regressed: {path}"
@@ -128,7 +144,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-validation-boundary-inventory"
           echo "WORKFLOW_HOLD: broader Atmosphere validation is not established"
 
-      - name: Run bounded Atmosphere precipitation validation
+      - name: Run bounded Atmosphere fixture validation
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -137,6 +153,7 @@ jobs:
           set -euo pipefail
 
           python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+          python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
 
           python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
@@ -149,7 +166,18 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Atmosphere precipitation fixture"
+          python tools/validators/domains/atmosphere/validate_knowledge_character.py \
+            fixtures/domains/atmosphere/knowledge_character/valid/*.json
+
+          if python tools/validators/domains/atmosphere/validate_knowledge_character.py \
+            fixtures/domains/atmosphere/knowledge_character/invalid/*.json; then
+            echo "::error::Known-invalid Atmosphere knowledge-character fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere knowledge-character fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()
@@ -160,6 +188,8 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture`
 
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture`
+
           `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
 
           When green, this job has executed the frozen synthetic precipitation
@@ -169,6 +199,13 @@ jobs:
           millimetre units, accumulation bounds, fixture-only governance,
           alert/life-safety denials, bounded JSON input, deterministic CLI
           behavior, and explicit network denial.
+
+          The synthetic knowledge-character profile checks six distinct
+          characters plus exact denials for missing, unknown, or multiple
+          character state; model-as-observation, AQI-as-concentration,
+          AOD-as-ground-PM2.5, advisory-as-life-safety, and precise-site
+          exposure. The profile is not the canonical enum or registry and
+          does not evaluate live Atmosphere records or Rego policy.
 
           Other Atmosphere test and validator modules remain explicit
           placeholders or documentation-only lanes and are checked as such.

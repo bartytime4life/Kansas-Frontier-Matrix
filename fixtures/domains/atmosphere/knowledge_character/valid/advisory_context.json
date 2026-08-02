@@ -1,0 +1,34 @@
+{
+  "fixture_id": "fixture:atmosphere:knowledge-character:advisory-context",
+  "profile_id": "kfm-atmosphere-knowledge-character-fixture-v1",
+  "object_family": "AdvisoryContext",
+  "knowledge_character": "ALERT_AND_ADVISORY_CONTEXT",
+  "source_role": "regulatory",
+  "source_descriptor_ref": "fixture://sources/atmosphere/synthetic-advisory-context",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/knowledge-character/advisory-context"
+  ],
+  "claim": {
+    "kind": "advisory_context",
+    "parameter": "air_quality_advisory",
+    "unit": "categorical",
+    "intended_use": "referral_context"
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_an_alert",
+    "not_life_safety_guidance",
+    "synthetic_fixture_only"
+  ]
+}

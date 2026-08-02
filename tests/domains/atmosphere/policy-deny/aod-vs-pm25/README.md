@@ -18,7 +18,8 @@ truth_posture: >
   CamelCase contracts; paired AODRaster and PM25Observation schemas with empty properties and
   additionalProperties true; metadata-only invalid fixture placeholder; parent-level
   test_aod_as_pm25_denied.py containing only a one-line PROPOSED placeholder docstring; named-path
-  probes finding no direct conftest.py or child test module; TODO-only domain-atmosphere workflow;
+  probes finding no direct conftest.py or child test module; bounded parent-level fixture denial in
+  the domain-atmosphere workflow but no executable child policy lane;
   root Makefile test target excluding this lane / PROPOSED focused negative-path tests, policy input
   adapter, stable decision envelope, reason-code vocabulary, fixture manifest, derived-product
   admissibility tests, UI/API/map/search/AI carrier assertions, nonempty collection, CI artifacts,
@@ -186,7 +187,7 @@ KFM has strong semantic documentation for the AOD-versus-PM2.5 distinction, but 
 | Invalid fixture | **Metadata-only placeholder** | No invalid AOD payload or expected denial is present. |
 | Atmosphere policy doctrine | **Human-facing rule confirmed** | AOD-as-PM2.5 denial is explicit; machine enforcement remains unproven. |
 | Parent policy-deny README | **Scaffold/mixed maturity** | Child lanes are documented; executable depth remains bounded. |
-| `domain-atmosphere` workflow | **TODO-only** | A green echo job is not policy evidence. |
+| `domain-atmosphere` workflow | **Bounded fixture denial** | The knowledge-character profile rejects AOD-as-ground-PM2.5; it is not Rego policy, evidence closure, or release authority. |
 | Root `make test` | **Excludes this lane** | It currently runs schema and contract test directories only. |
 
 ### Truth-label use
@@ -910,7 +911,7 @@ A substantive CI gate should:
 10. fail when reason codes or decision shape drift unexpectedly;
 11. remain separate from human review and release approval.
 
-The current `domain-atmosphere` workflow contains TODO echo steps. Its success is not substantive evidence for this lane. The root `make test` target excludes this lane.
+The current `domain-atmosphere` workflow executes a bounded synthetic AOD-as-ground-PM2.5 denial through the parent knowledge-character profile while retaining broader proof and release holds. Its success is not evidence that this child Rego-policy lane, live records, or release gates are complete. The root `make test` target excludes this lane.
 
 ### Proposed report fields
 
@@ -1054,7 +1055,7 @@ This lane is mature when all applicable items are checked:
 | AOD and PM2.5 schemas | `CONFIRMED permissive scaffolds` | Paths and contract pointers | Empty properties cannot enforce semantics |
 | Invalid fixture file | `CONFIRMED metadata placeholder` | Intended negative-case path | No object payload |
 | Parent-level test file | `CONFIRMED one-line placeholder` | Proposed test name/location | No executable assertions |
-| `domain-atmosphere.yml` | `CONFIRMED TODO scaffold` | Workflow path exists | Green echo job is not proof |
+| `domain-atmosphere.yml` | `CONFIRMED bounded fixture proof` | Parent profile rejects AOD-as-ground-PM2.5 | Not canonical policy, evidence, or release proof |
 | Makefile | `CONFIRMED` | Root `test` command scope | Excludes this lane |
 | Named-path probes/search | `CONFIRMED bounded evidence` | Direct child tests not established | Not exhaustive of generated/external paths |
 

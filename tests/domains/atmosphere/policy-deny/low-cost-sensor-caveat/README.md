@@ -20,7 +20,8 @@ truth_posture: >
   inventory unverified; draft source registry describing PurpleAir as community observed and never
   regulatory with rights needing verification; draft Barkjohn page describing versioned correction
   and corrected/uncorrected preservation while runtime/version remain unverified; draft map/UI
-  requirements treating qualification as load-bearing; TODO-only workflow and root make test
+  requirements treating qualification as load-bearing; bounded domain workflow that does not yet
+  exercise this caveat lane; root make test
   excluding this lane / PROPOSED substantive fixtures, policy adapter, reason codes, correction
   version/pair tests, rights and carrier tests, nonzero collection, CI, correction, and rollback /
   UNKNOWN active policy/validator/correction runtime, accepted mandatory fields, current Barkjohn
@@ -152,7 +153,7 @@ KFM has detailed low-cost-sensor governance documentation, but substantive execu
 | Atmosphere source registry | **Draft doctrine** | PurpleAir is community observed, never regulatory; rights/terms need verification. |
 | Barkjohn product page | **Draft doctrine** | Describes required versioning and corrected/uncorrected preservation; runtime not established. |
 | Map/UI contracts | **Draft doctrine** | Qualification labels and correction state are load-bearing; machine binding unverified. |
-| Atmosphere workflow | **TODO-only** | Green execution cannot prove caveat enforcement. |
+| Atmosphere workflow | **Bounded unrelated profiles** | Precipitation and knowledge-character fixtures execute, but no low-cost-sensor caveat test is wired. |
 | Root `make test` | **Excludes this lane** | Runs schema and contract tests only. |
 
 ### Maturity ladder
@@ -803,7 +804,7 @@ A mature job should:
 
 ### Current CI boundary
 
-`domain-atmosphere.yml` contains TODO echo steps. A successful run does not prove caveat enforcement.
+`domain-atmosphere.yml` executes bounded precipitation and knowledge-character profiles while broader proof and release jobs remain held. A successful run does not prove low-cost-sensor caveat enforcement.
 
 The root `make test` excludes this lane.
 

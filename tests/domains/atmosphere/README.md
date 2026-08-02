@@ -3,7 +3,7 @@ doc_id: kfm://doc/tests/domains/atmosphere/readme
 title: Atmosphere Domain Test Lane README
 type: domain-test-readme
 version: v0.2
-status: draft; bounded synthetic precipitation fixture profile executable
+status: draft; bounded synthetic precipitation and knowledge-character fixture profiles executable
 owners:
   - <PLACEHOLDER — Atmosphere steward>
   - <PLACEHOLDER — Test steward>
@@ -13,8 +13,8 @@ owners:
 created: 2026-07-05
 updated: 2026-08-02
 policy_label: public
-implementation_status: one bounded standard-library precipitation profile executable; broader lane scaffolded
-verification_status: current-session path verified; precipitation positive, negative, boundary, parser, CLI, no-network, and cross-domain isolation checks executable; broader semantics and release state unverified
+implementation_status: two bounded standard-library fixture profiles executable; broader lane scaffolded
+verification_status: current-session paths verified; precipitation and knowledge-character positive, negative, boundary, parser, CLI, and no-network checks executable; cross-domain isolation check executable; broader semantics and release state unverified
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -150,9 +150,10 @@ This path is correct because:
 | Atmosphere file-system plan lists `tests/domains/atmosphere/` child lanes | CONFIRMED from current repo docs. |
 | Atmosphere policy spine lists key deny/restrict rules | CONFIRMED from current repo docs. |
 | `test_atmosphere_smoke.py` | CONFIRMED bounded executable for the synthetic precipitation fixture profile; it is not Atmosphere truth or release proof. |
+| `test_knowledge_character_registry.py` | CONFIRMED bounded executable for the synthetic anti-collapse fixture profile; it does not settle the canonical enum, registry, policy, or release state. |
 | Executable tests under every broader child lane | NEEDS VERIFICATION. |
-| Fixture inventory | The bounded precipitation pair is CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
-| Validator modules and commands | NEEDS VERIFICATION. |
+| Fixture inventory | The bounded precipitation pair and knowledge-character corpus are CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
+| Validator modules and commands | The two bounded fixture validators are CONFIRMED; broader commands remain NEEDS VERIFICATION. |
 | CI job names / pytest markers | NEEDS VERIFICATION. |
 | Runtime/API/UI behavior | NEEDS VERIFICATION unless supported by executable tests. |
 
@@ -168,7 +169,7 @@ The Atmosphere file-system plan names these child lanes under `tests/domains/atm
 |---|---|---|
 | `schema/` | Schema shape, metadata, and schema-to-contract alignment tests. | Parent/child README work may exist in open PRs; executable tests NEED VERIFICATION. |
 | `source-role/` | Source-role anti-collapse tests. | NEEDS VERIFICATION beyond existing docs. |
-| `knowledge-character/` | Knowledge-character boundary tests. | README work may exist in open PRs; executable tests NEED VERIFICATION. |
+| `knowledge-character/` | Knowledge-character boundary tests. | Parent-level executable covers the frozen fixture profile; broader authority, identity, correction, and release simulations remain NEEDS VERIFICATION. |
 | `unit-normalization/` | Unit conversion and normalization behavior tests. | README work may exist in an open PR; executable tests NEED VERIFICATION. |
 | `policy-deny/` | Negative policy tests that fail closed for unsupported or collapsed claims. | Parent/child README work may exist in open PRs; executable tests NEED VERIFICATION. |
 | `no-network-fixtures/` | Public-safe deterministic fixture discipline for no-network tests. | README work may exist in open PRs; fixture inventory NEEDS VERIFICATION. |
@@ -185,6 +186,20 @@ It exercises only the frozen synthetic precipitation profile, including exact
 fixture polarity, observation-vs-model role separation, generalized location,
 time ordering, millimetre units, bounded accumulation/value fields, fixture-only
 governance, parser/file limits, CLI behavior, and explicit network denial.
+
+The bounded knowledge-character command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+```
+
+It exercises six synthetic character pairings, five exact-negative fixtures,
+three in-memory missing/unknown/multiple cases,
+closed shapes, reference/file limits, deterministic non-echoing findings, CLI
+polarity, generalized geometry, and active network denial. The fixture profile
+does not become the canonical enum, registry, policy, evidence, or release
+authority.
 
 Additional sublanes may be added when they have a clear test responsibility and do not duplicate an existing authority root.
 

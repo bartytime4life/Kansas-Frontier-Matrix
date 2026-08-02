@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tests/domains/atmosphere/knowledge-character/readme
 title: tests/domains/atmosphere/knowledge-character/ — Atmosphere Knowledge-Character Test Boundary and Anti-Collapse Index
 type: readme; directory-readme; domain-test-lane; atmosphere; knowledge-character; anti-collapse; sensitive-interpretation; non-authoritative
-version: v0.2
-status: draft; repository-grounded; direct-lane-readme-only; parent-level-placeholder-test-confirmed; executable-enforcement-not-established; canonical-prose-explainer-confirmed; registry-index-confirmed; machine-enum-open; machine-registry-placeholder; domain-contract-confirmed; cross-domain-contract-drift-visible; schema-permissive-scaffold; policy-greenfield-scaffold; validator-executable-absent-at-proposed-path; domain-workflow-todo-only; make-test-excludes-lane; no-network-by-default; fail-closed; not-emergency-authority
+version: v0.3
+status: draft; repository-grounded; bounded-fixture-profile-executable; parent-level-test-substantive; canonical-prose-explainer-confirmed; registry-index-confirmed; machine-enum-open; machine-registry-placeholder; domain-contract-confirmed; schema-permissive-scaffold; policy-greenfield-scaffold; validator-fixture-executable; domain-workflow-wired; make-test-excludes-lane; no-network-by-default; fail-closed; not-emergency-authority
 owners: OWNER_TBD — Atmosphere steward · Test/QA steward · Knowledge-governance steward · Source-role steward · Contract steward · Schema steward · Registry steward · Policy steward · Evidence steward · Validator steward · Release steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-05
-updated: 2026-07-16
+updated: 2026-08-02
 supersedes: v0.1 Atmosphere Knowledge Character Test Lane README
 policy_label: "public-review; tests; atmosphere; air; knowledge-character; anti-collapse; source-role-aware; evidence-aware; time-aware; release-aware; synthetic-only; no-network; deny-by-default; correction-aware; rollback-aware; not-emergency-authority; no-truth-authority; no-registry-authority; no-policy-authority; no-release-authority"
 current_path: tests/domains/atmosphere/knowledge-character/README.md
@@ -15,25 +15,24 @@ truth_posture: >
   Atmosphere test parent; canonical prose explainer KNOWLEDGE_CHARACTERS.md; thin registry index
   KNOWLEDGE_CHARACTER_REGISTRY.md; Atmosphere KnowledgeCharacter semantic contract; permissive
   paired schema; machine-registry placeholder; cross-domain KnowledgeCharacter semantic contract;
-  parent-level test_knowledge_character_registry.py containing only a one-line PROPOSED placeholder
-  docstring; Atmosphere fixture parent; policy/domains/atmosphere greenfield scaffold; per-domain
-  validator README with no knowledge-character executable at the proposed path; TODO-only
-  domain-atmosphere workflow; Makefile test target excluding this lane; direct bounded search
-  surfacing only this README inside the knowledge-character child directory / PROPOSED this lane
+  parent-level test_knowledge_character_registry.py with fourteen executable standard-library tests;
+  Atmosphere fixture parent and dedicated synthetic knowledge_character corpus;
+  policy/domains/atmosphere greenfield scaffold; bounded fixture validator at the proposed path;
+  wired domain-atmosphere workflow; Makefile test target excluding this lane / PROPOSED this lane
   own focused executable anti-collapse tests, nonempty collection requirements, fixture-consumer
   contracts, finite outcomes, safe reason codes, diagnostics, correction, rollback, and CI
   expectations while importing meaning, shape, registry, policy, validator, evidence, and release
   authority from their owning roots / CONFLICTED or drift-prone child-lane ownership versus the
-  parent-level placeholder test; exact machine enum and registry home; domain-specific versus
+  parent-level executable test; exact machine enum and registry home; domain-specific versus
   cross-domain KnowledgeCharacter contract scope; stale cross-domain contract statements about
   unverified Atmosphere artifacts; broad policy scaffold language; proposed validator paths;
   Atmosphere/Air compatibility surfaces; and docs filename collision between explainer and index /
   UNKNOWN exhaustive recursive lane inventory, ignored/generated files, dynamic test generation,
-  actual collected case count, fixture payload inventory, active machine registry, accepted policy
+  exhaustive repository inventory, active machine registry, accepted policy
   evaluator, production consumers, retained reports, branch-protection significance, current pass
   rates, coverage, mutation score, flake rate, release dependency, and production use / NEEDS
-  VERIFICATION accepted owners, CODEOWNERS, lane-retention and migration decision, executable tests,
-  fixture IDs and backlinks, accepted enum and registry ADRs, schema closure, validator command,
+  VERIFICATION accepted owners, CODEOWNERS, lane-retention and migration decision,
+  accepted enum and registry ADRs, schema closure, policy command,
   policy bundle, no-network enforcement, stable reason-code registry, CI artifact retention,
   required-check status, correction cascade, and rollback rehearsal
 evidence_snapshot:
@@ -42,13 +41,14 @@ evidence_snapshot:
   visibility: public
   base_ref: main
   base_commit: 0bc925d42301025dbf5e5ce08a154bbc35388bca
+  snapshot_note: historical v0.2 evidence checkpoint retained for lineage; current executable state is documented below
   prior_blob: 7c5d14099cb00efe8d8f231b4286582267408386
   direct_lane_files_confirmed:
     - tests/domains/atmosphere/knowledge-character/README.md
   adjacent_test_file:
     path: tests/domains/atmosphere/test_knowledge_character_registry.py
     blob: cf7fa6c315ddb438c1ce59e77058d6e50bfc17ad
-    status: one-line PROPOSED placeholder docstring
+    status: historical snapshot; current file is a substantive bounded fixture test
   related_repository_blobs:
     atmosphere_test_parent: 6474cc33c3bdd668fd8713e06e94f7dacda97b6b
     knowledge_characters_explainer: 62e406aca51aede4fd273755ea4b724adef081a5
@@ -68,7 +68,6 @@ evidence_snapshot:
     - tests/domains/atmosphere/knowledge-character/test_knowledge_character_registry.py
     - tests/domains/atmosphere/knowledge-character/test_anti_collapse.py
     - tests/domains/atmosphere/knowledge-character/manifest_expectations.json
-    - tools/validators/domains/atmosphere/validate_knowledge_character.py
   bounded_inventory_note: >
     Direct reads, named-path probes, and indexed search establish only the checked snapshot. They do
     not prove permanent absence from history, forks, ignored files, generated workspaces, dynamic
@@ -99,10 +98,10 @@ related:
   - ../../../../schemas/contracts/v1/receipts/generated_receipt.schema.json
 tags: [kfm, tests, atmosphere, air, knowledge-character, anti-collapse, source-role, AQI, AOD, PM2.5, models, low-cost-sensors, advisories, evidence, no-network, correction, rollback]
 notes:
-  - "This revision changes only this README; a generated provenance receipt is paired separately."
-  - "The child lane is README-only in bounded evidence; the only surfaced named test is a parent-level placeholder."
+  - "v0.3 records the bounded synthetic knowledge-character validator, fixture corpus, parent-level executable test, and existing workflow wiring."
+  - "The child lane remains documentation-only; executable test placement stays at the existing parent-level path to avoid an ungoverned move."
   - "The README does not freeze the open enum or registry home and does not select between domain-specific and cross-domain contract authority."
-  - "No test code, fixture payload, registry artifact, schema, contract, policy, validator, workflow, lifecycle object, release object, alert, or public artifact is created or modified."
+  - "The fixture profile changes test, fixture, validator, workflow, and documentation state only; no registry, schema, contract, policy, lifecycle, release, alert, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -115,10 +114,10 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
+  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
   <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
   <img alt="Direct inventory: README only" src="https://img.shields.io/badge/direct__inventory-README__only-lightgrey">
-  <img alt="Adjacent test: placeholder" src="https://img.shields.io/badge/adjacent__test-placeholder-orange">
+  <img alt="Adjacent test: executable" src="https://img.shields.io/badge/adjacent__test-executable-blue">
   <img alt="Enum: open" src="https://img.shields.io/badge/enum-OPEN-critical">
   <img alt="Network: denied by default" src="https://img.shields.io/badge/network-denied__by__default-critical">
   <img alt="Authority: tests only" src="https://img.shields.io/badge/authority-tests__only-success">
@@ -128,7 +127,7 @@ notes:
 > **Knowledge character is an identity and interpretation constraint, not a display label.** Tests must prove that a record cannot be re-characterized in place, relabeled into a stronger authority class, or exposed without the source-role, evidence, time, caveat, policy, review, release, correction, and rollback context required for its actual epistemic kind.
 
 > [!CAUTION]
-> **Current executable enforcement is not established.** Bounded readback surfaced only this README inside the direct child lane. The adjacent [`test_knowledge_character_registry.py`](../test_knowledge_character_registry.py) exists one level up but contains only a one-line `PROPOSED` placeholder docstring. A filename, README, TODO workflow, permissive schema, or green zero-case collection is not proof of enforcement.
+> **Current executable enforcement is bounded to fixtures.** The adjacent [`test_knowledge_character_registry.py`](../test_knowledge_character_registry.py) exercises a standard-library validator against six positive fixtures, five exact-negative fixtures, and three in-memory character-state denials. This proves only the frozen fixture profile; the canonical enum, registry, schema closure, Rego policy, live records, evidence, review, release, and public surfaces remain open or held.
 
 > [!WARNING]
 > **KFM is not the official alerting, emergency, health, or life-safety authority.** `ALERT_AND_ADVISORY_CONTEXT` may preserve evidence-labeled context and redirect to the issuing authority. It must not become an official warning, protective-action instruction, evacuation order, exposure determination, or medical guidance.
@@ -172,12 +171,12 @@ This lane does not define the vocabulary, schema, registry, policy, validator, e
 
 ### Safe conclusion
 
-The repository contains a strong documentation and semantic foundation for Atmosphere knowledge character, but focused executable enforcement is not established in the checked test lane.
+The repository contains a strong documentation and semantic foundation plus one focused executable fixture profile. Broader authority and runtime enforcement are not established.
 
 | Surface | Inspected status | Safe conclusion |
 |---|---|---|
 | This direct lane | **CONFIRMED README-only in bounded evidence** | No child-lane executable module or manifest surfaced. |
-| [`test_knowledge_character_registry.py`](../test_knowledge_character_registry.py) | **CONFIRMED parent-level placeholder** | Named intent exists; file contributes no executable test object in its present one-line form. |
+| [`test_knowledge_character_registry.py`](../test_knowledge_character_registry.py) | **CONFIRMED bounded executable** | Thirteen standard-library tests cover fixture polarity, anti-collapse, parser/file bounds, deterministic safe diagnostics, generalized geometry, CLI behavior, and active network denial. |
 | [`KNOWLEDGE_CHARACTERS.md`](../../../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md) | **CONFIRMED canonical prose explainer** | Defines the current human-facing vocabulary, anti-collapse rationale, and open enum posture. |
 | [`KNOWLEDGE_CHARACTER_REGISTRY.md`](../../../../docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md) | **CONFIRMED thin registry index** | Avoids duplicate prose; machine enum and registry home remain open. |
 | Atmosphere semantic contract | **CONFIRMED draft v0.2** | Defines domain-level meaning and anti-collapse invariants. |
@@ -185,9 +184,9 @@ The repository contains a strong documentation and semantic foundation for Atmos
 | Paired Atmosphere schema | **CONFIRMED permissive scaffold** | Empty `properties` and `additionalProperties: true`; does not enforce the vocabulary. |
 | Machine registry candidate | **CONFIRMED placeholder** | Contains only status, source document, path, and note; not a usable registry. |
 | Atmosphere policy root | **CONFIRMED greenfield scaffold** | No knowledge-character policy evaluator or deny bundle is established by this README. |
-| Per-domain Atmosphere validator index | **CONFIRMED README** | Documents intent and smoke child; no knowledge-character executable exists at the proposed path. |
-| Atmosphere fixture root | **CONFIRMED parent README** | Child README coverage exists; knowledge-character payload inventory is not established. |
-| `domain-atmosphere` workflow | **CONFIRMED TODO-only** | A green run cannot prove knowledge-character enforcement. |
+| Per-domain Atmosphere validator index | **CONFIRMED bounded executable** | `validate_knowledge_character.py` checks only the frozen synthetic profile and returns stable code/path findings. |
+| Atmosphere fixture root | **CONFIRMED bounded corpus** | Dedicated `knowledge_character/` lane contains six valid and five invalid JSON fixtures with exact sidecars; missing/unknown/multiple states are generated in memory. |
+| `domain-atmosphere` workflow | **CONFIRMED wired** | The existing read-only job runs the bounded profile while retaining broader proof and release holds. |
 | Root `make test` | **CONFIRMED excludes this lane** | Runs only schema and contract test directories. |
 
 ### Truth labels
@@ -207,12 +206,12 @@ The repository contains a strong documentation and semantic foundation for Atmos
 |---|---|---|
 | L0 — Lane documentation | README explains responsibility and boundaries. | **CONFIRMED** |
 | L1 — Named test module | A test filename records intended coverage. | **CONFIRMED only at parent level** |
-| L2 — Collected test objects | Pytest collects one or more focused cases. | **NOT ESTABLISHED** |
-| L3 — Accepted fixture binding | Tests reference synthetic fixtures with stable IDs and consumers. | **NEEDS VERIFICATION** |
+| L2 — Collected test objects | Pytest or standard-library discovery collects one or more focused cases. | **CONFIRMED: 14 standard-library cases** |
+| L3 — Accepted fixture binding | Tests reference synthetic fixtures with stable IDs and consumers. | **CONFIRMED for the PROPOSED fixture profile** |
 | L4 — Authority binding | Contract, schema, registry, policy, validator, and version refs are explicit. | **NEEDS VERIFICATION** |
-| L5 — Positive and fail-closed polarity | Valid and invalid cases execute for each required guard. | **NEEDS VERIFICATION** |
-| L6 — No-network and side-effect denial | Live network and unauthorized writes are actively blocked. | **NEEDS VERIFICATION** |
-| L7 — Safe diagnostics | Stable outcomes and reason codes are asserted without leaking sensitive or secret data. | **NEEDS VERIFICATION** |
+| L5 — Positive and fail-closed polarity | Valid and invalid cases execute for each required guard. | **CONFIRMED for six characters, five exact fixture denials, and three in-memory character-state denials** |
+| L6 — No-network and side-effect denial | Live network and unauthorized writes are actively blocked. | **CONFIRMED for socket, DNS, and urllib access in the focused suite** |
+| L7 — Safe diagnostics | Stable outcomes and reason codes are asserted without leaking sensitive or secret data. | **CONFIRMED for the focused validator output** |
 | L8 — Retained QA artifact | CI retains safe collection/results with version and digest context. | **NEEDS VERIFICATION** |
 | L9 — Promotion significance | Failure blocks the relevant governed transition. | **UNKNOWN / NEEDS VERIFICATION** |
 | L10 — Operational evidence | Current pass, coverage, mutation, flake, correction, and rollback evidence exists. | **UNKNOWN** |
@@ -333,7 +332,7 @@ Bounded evidence shows:
 
 ```text
 tests/domains/atmosphere/
-├── test_knowledge_character_registry.py   # one-line PROPOSED placeholder
+├── test_knowledge_character_registry.py   # bounded executable fixture proof
 └── knowledge-character/
     └── README.md                           # this lane
 ```
@@ -345,7 +344,7 @@ The child directory and parent-level test filename express overlapping ownership
 | Option | Posture | Requirements |
 |---|---|---|
 | Keep executable tests at parent level | Transitional/acceptable when parent owns the test | Child README becomes a focused index; parent README and test file link back here; no duplicate child test. |
-| Move executable tests into this child | Preferred only after reviewed migration | Preserve Git history, update imports/CI/links/fixtures, remove or redirect parent placeholder, verify collection, document rollback. |
+| Move executable tests into this child | Preferred only after reviewed migration | Preserve Git history, update imports/CI/links/fixtures, remove or redirect the parent executable, verify collection, document rollback. |
 | Split parent orchestration from child cases | Possible | Parent test checks registry integration; child tests own detailed character cases; responsibility must be non-overlapping. |
 | Create a second equivalent test file | `DENY` | Duplicate coverage and divergent expected outcomes create parallel test authority. |
 
@@ -589,7 +588,12 @@ Minimum proof:
 
 ### Current fixture evidence
 
-The Atmosphere fixture parent documents valid and invalid object lanes, but bounded search did not establish a dedicated reusable `knowledge_character/` payload lane. The tree proposed by v0.1 therefore remains a design, not a repo fact.
+The Atmosphere fixture parent now indexes a dedicated reusable
+`knowledge_character/` payload lane. It contains six valid and five invalid
+JSON fixtures plus exact finding sidecars. Missing, unknown, and multiple
+character states are generated in memory. The fixtures are bound to the
+`kfm-atmosphere-knowledge-character-fixture-v1` synthetic profile; they are not
+the canonical enum, registry, policy, evidence, or release contract.
 
 ### Fixture-home rule
 
@@ -971,7 +975,7 @@ Tests are bounded evidence of behavior, not sovereign truth or release authority
 
 ### Current CI evidence
 
-- `.github/workflows/domain-atmosphere.yml` runs only TODO echo steps;
+- `.github/workflows/domain-atmosphere.yml` runs the bounded precipitation and knowledge-character profiles while broader proof and release jobs remain held;
 - root `make test` excludes this lane;
 - `make schemas` has no verified knowledge-character entrypoint;
 - no focused retained report or expected case-count manifest is established;
@@ -1034,9 +1038,9 @@ Do not edit tests first and infer authority later. A vocabulary change should be
 
 ### Parent-versus-child placement
 
-Until placement is resolved, do not duplicate the parent placeholder inside this lane. A reviewed implementation should either:
+Until placement is resolved, do not duplicate the parent executable inside this lane. A reviewed implementation should either:
 
-- replace the parent placeholder with executable parent-level coverage and treat this README as the focused index; or
+- retain the parent-level executable and treat this README as the focused index; or
 - move the test into this child with history-preserving migration and update all consumers; or
 - split orchestration and detailed cases with explicit non-overlapping responsibility.
 
@@ -1060,13 +1064,18 @@ Update this README when:
 
 ## Smallest sound implementation sequence
 
+Steps 4 through 7 are now complete for the bounded synthetic fixture profile.
+The remaining steps concern accepted registry/schema/policy authority, broader
+surface behavior, correction/rollback simulation, and retained operational
+evidence; the current fixture proof must not be promoted into those claims.
+
 1. Resolve or document parent-level versus child-lane test placement.
 2. Run a complete current inventory and `--collect-only`.
 3. Record zero-case, placeholder, and missing-fixture findings.
-4. Implement one narrow proof slice: missing/unknown/multiple character plus model-as-observed denial.
+4. Implement one narrow proof slice: missing/unknown/multiple character plus model-as-observed denial. **Complete for the fixture profile.**
 5. Bind the Atmosphere semantic contract and current schema explicitly.
-6. Use a transitional deterministic registry fixture only with a clear `PROPOSED` label; do not freeze the enum.
-7. Add AQI/concentration, AOD/PM2.5, low-cost-caveat, climate aggregate, fusion, advisory, and site-context cases.
+6. Use a transitional deterministic registry fixture only with a clear `PROPOSED` label; do not freeze the enum. **Complete for the six-character fixture subset.**
+7. Add AQI/concentration, AOD/PM2.5, low-cost-caveat, climate aggregate, fusion, advisory, and site-context cases. **AQI, AOD, advisory, and site context are complete for the fixture profile; low-cost, climate, and fusion remain open.**
 8. Add evidence, policy, release, correction, and rollback simulations.
 9. Actively deny network and unauthorized writes.
 10. Canary-scan all diagnostics and retained reports.
@@ -1101,8 +1110,8 @@ This lane is not implementation-complete until:
 - [ ] the enum and registry home are accepted or a reviewed transitional adapter exists;
 - [ ] registry identity/version/digest is checked;
 - [ ] substantive schema constraints exist;
-- [ ] accepted policy and validator entrypoints exist;
-- [ ] reusable/test-local fixtures have stable IDs, consumers, and digests;
+- [ ] accepted policy entrypoint exists; the bounded fixture validator is executable but is not accepted policy;
+- [x] reusable synthetic fixtures have stable IDs and an explicit test/validator consumer; artifact digests are recorded in the paired generated receipt;
 - [ ] positive and fail-closed polarity covers every material character and collapse risk;
 - [ ] no-network and no-write enforcement is active;
 - [ ] safe outcomes and reason codes are asserted;
@@ -1164,7 +1173,7 @@ This lane is not implementation-complete until:
 | [`policy/domains/atmosphere/README.md`](../../../../policy/domains/atmosphere/README.md) | Policy root exists. | Greenfield scaffold; broad wording and no executable evaluator. |
 | [`tools/validators/domains/atmosphere/README.md`](../../../../tools/validators/domains/atmosphere/README.md) | Per-domain validator boundary and anti-collapse intent. | No knowledge-character executable at proposed path. |
 | [`fixtures/domains/atmosphere/README.md`](../../../../fixtures/domains/atmosphere/README.md) | Reusable fixture responsibility and object lanes. | Payload inventory and dedicated character lane unverified. |
-| [`domain-atmosphere.yml`](../../../../.github/workflows/domain-atmosphere.yml) | Workflow exists and is TODO-only. | Green scaffold is not enforcement. |
+| [`domain-atmosphere.yml`](../../../../.github/workflows/domain-atmosphere.yml) | Workflow runs the bounded synthetic profile and preserves broader holds. | Green fixture proof is not registry, policy, evidence, or release authority. |
 | [`Makefile`](../../../../Makefile) | Current `test` and `schemas` commands. | Focused lane excluded. |
 | Directory Rules blob `2affb080e6f0043867c64c7f06c1ca52030fbd55` | Responsibility-root placement and anti-parallel-authority posture. | Does not decide whether an artifact should exist. |
 
@@ -1175,6 +1184,14 @@ When implementation and documentation disagree, record the conflict. Never let a
 ---
 
 ## Changelog, correction, and rollback
+
+### v0.3 — 2026-08-02
+
+- records the bounded standard-library fixture validator as executable;
+- records six positive and five exact-negative synthetic fixtures plus three in-memory character-state denials;
+- records fourteen focused tests and read-only workflow wiring;
+- preserves the open canonical enum, registry-home, schema, and policy posture;
+- keeps the child lane documentation-only and retains the existing parent test path.
 
 ### v0.2 — 2026-07-16
 
@@ -1214,6 +1231,6 @@ Rollback of future executable work must also restore:
 
 ## Maintainer summary
 
-`tests/domains/atmosphere/knowledge-character/` is the focused proof boundary for Atmosphere epistemic anti-collapse. The documentation and semantic contracts are substantial, but the direct lane is README-only, the adjacent test is a placeholder, the schema and registry are scaffolds, policy and validator execution are unestablished, and CI is TODO-only. The next sound change is a small, no-network proof slice that does not freeze the open enum, does not duplicate parent/child tests, and proves one accepted character plus missing/unknown/multiple and model-as-observed denial with safe diagnostics, correction posture, and rollback.
+`tests/domains/atmosphere/knowledge-character/` is the focused proof boundary for Atmosphere epistemic anti-collapse. The direct child remains documentation-only, while the existing parent-level test now exercises a bounded standard-library validator against six positive fixtures, five exact-negative fixtures, and three in-memory character-state denials. The workflow runs that profile with no-network and safe-diagnostic checks. The schema, registry, and policy surfaces remain scaffolds; the canonical enum, accepted policy, evidence/release behavior, correction drills, and public-surface enforcement remain open. The next sound change should close one of those explicit dependencies rather than treating this fixture proof as production authority.
 
 [Back to top](#top)

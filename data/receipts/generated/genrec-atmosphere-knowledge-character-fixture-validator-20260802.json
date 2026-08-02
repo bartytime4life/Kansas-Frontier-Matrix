@@ -1,0 +1,250 @@
+{
+  "receipt_id": "genrec-atmosphere-knowledge-character-fixture-validator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-atmosphere.yml",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md",
+    "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md",
+    "docs/domains/atmosphere/README.md",
+    "docs/domains/atmosphere/VERIFICATION_BACKLOG.md",
+    "fixtures/domains/atmosphere/README.md",
+    "fixtures/domains/atmosphere/knowledge_character/README.md",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.expected_error.txt",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.json",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.expected_error.txt",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.json",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.expected_error.txt",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.json",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.expected_error.txt",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.json",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.expected_error.txt",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/advisory_context.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/aqi_report.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/model_field.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/observed_sensor.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/remote_sensing_aod.json",
+    "fixtures/domains/atmosphere/knowledge_character/valid/site_context.json",
+    "tests/domains/atmosphere/README.md",
+    "tests/domains/atmosphere/knowledge-character/README.md",
+    "tests/domains/atmosphere/no-network-fixtures/README.md",
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md",
+    "tests/domains/atmosphere/test_knowledge_character_registry.py",
+    "tools/validators/domains/atmosphere/README.md",
+    "tools/validators/domains/atmosphere/validate_knowledge_character.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-atmosphere.yml": "sha256:649f03ec459f1c51ab1f6c4c9020cfc49f469745419d4c8c30b9df3fdca911cf",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md": "sha256:ea789a1953268c4ea8e53b69fb9ae3130191c10e65d48c10ce94d2d601930836",
+    "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md": "sha256:f9f4290996c22aa2a00a3aad72ecf5dcae283194d3d932f1e08416b43882f702",
+    "docs/domains/atmosphere/README.md": "sha256:a2aca4324cf375c9b020e0617699743d1bede910e02a2f85e7b06591419fb40d",
+    "docs/domains/atmosphere/VERIFICATION_BACKLOG.md": "sha256:3b73b8053e306ddfbd4caef5e9a74230b9561a5ef021d9adacaeb2c0a0614545",
+    "fixtures/domains/atmosphere/README.md": "sha256:e5d55f686ddeb780dd5a806f1b8c578dad1930164c6fcefcc917adee64c7a4db",
+    "fixtures/domains/atmosphere/knowledge_character/README.md": "sha256:b168885791d9393ab003472c806ad2b94ad03979f6f06b02d2b75917de493811",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.expected_error.txt": "sha256:146a55df3f4acc103d244fd60027478a902a0f9c1950b6fe7205553bf32b7f51",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.json": "sha256:cd831da227b8c8e235b113745d83bb30fd4f91601703ba8e2aa36951dac07422",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.expected_error.txt": "sha256:fa91a2a490052c8d0eeb43bc78570261b64cb421eb45a13a14c50e91a15e3d37",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.json": "sha256:6644c57bd35cd3d55c1a0bcf875a349e9048541d5f2c9a3084544ee662aeb21d",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.expected_error.txt": "sha256:572537c0628827ab27f0ea19443ce71237358bc6062a6d3186a01cc8705fcd02",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.json": "sha256:4c103f7accf7621d1d5434c52802f628e4075cf3fdd52223ace0c0f598401b79",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.expected_error.txt": "sha256:f4b0afd2701942140fc98a702cc06e68f3d66d3853015c773c40a0f85524b4b1",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.json": "sha256:54f448eb51b8d936173ea54f4027b1cb6693c8ab1ab3e508ba3f23e52da15132",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.expected_error.txt": "sha256:9953bdd8d0b34ebe8757ac80b580658b7230966dc024d9cb5c9513c3ee00e8bf",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.json": "sha256:4517dfd57b0690844c6e13a38752e676336cdff5b2114b7b363423dfe645b839",
+    "fixtures/domains/atmosphere/knowledge_character/valid/advisory_context.json": "sha256:f995e9d4fe9c56b8548787f8c5bf36fe25482d29e7b6cc5ef4c9448547aa02ed",
+    "fixtures/domains/atmosphere/knowledge_character/valid/aqi_report.json": "sha256:20927869e50bee44310e7b096a2901f370f626d3ed37caf1829967ba340906af",
+    "fixtures/domains/atmosphere/knowledge_character/valid/model_field.json": "sha256:04bf9fbc1978a935b839176b143b1518c375b03232e9cef844012518dc57deaf",
+    "fixtures/domains/atmosphere/knowledge_character/valid/observed_sensor.json": "sha256:43402f8b41a0105ef5f9505a358c045464ee0c25518b629119af692bf4fba326",
+    "fixtures/domains/atmosphere/knowledge_character/valid/remote_sensing_aod.json": "sha256:841f90f8ae778b2b81af3133db8cc6b1fa667eac485b5af4aa79788dbdd42767",
+    "fixtures/domains/atmosphere/knowledge_character/valid/site_context.json": "sha256:2682c16d59a2cdc3278ef438cf5a714cfa7815eb99ff853cec7f69d2d870cfa4",
+    "tests/domains/atmosphere/README.md": "sha256:1219da827690483793a803c105f35b919d8b3d93907437ffa870a5ab5d2a5044",
+    "tests/domains/atmosphere/knowledge-character/README.md": "sha256:1195598302476f18219a11e379c3381ee55ff74b0ecf848f0644530a1b983117",
+    "tests/domains/atmosphere/no-network-fixtures/README.md": "sha256:d5860ce20fafc3de5569cb0a807bec4e7e57d7ae4db88aca7a19b55bd1c83090",
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md": "sha256:2e287473b93d597198593da3f4452bf50058872c7fb5c1d0b2aa8fdb23c2c999",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "sha256:e4364bfd3d1792070fb4212997a8f6aae5f8123002b746b5e53eca6471473dc3",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "sha256:3e9e4668263019d668b2012ab7bb39deb96c9e49a1768be0b18f7797c94eaea4",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "sha256:7ebba351d00eb0a170593a355e114370d8ab57bb1c16f2f3915f443a62f0cf86",
+    "tests/domains/atmosphere/test_knowledge_character_registry.py": "sha256:6eec8490da445611dcc15e0d3a4394fd23f2470f56a7ce667f95e8e456c163b6",
+    "tools/validators/domains/atmosphere/README.md": "sha256:a1d34a15cbbde699cf6126de2dec5a2a7fd3336a016d4694132564d1c53dc982",
+    "tools/validators/domains/atmosphere/validate_knowledge_character.py": "sha256:20f5de87ea72c45f8fb2b118aaaa3efb42a59ccfaae9e5bd6622009c1617f2a3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source and repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fd1efe2c5c7b3dca582ab328ed8eefc7518974038cc1383616e892191e42a693",
+      "sha256:da8f3ba80929febaec0b8e5233a8d8c76ef619a1d02224d7e5d903f5479b7579",
+      "sha256:1184d8cb8fc0d555519f4cc555d09864147386cdcd8a2942b44d6930cce1eeb8",
+      "sha256:fd9ea244644bec2cdfdb0c4d359ab8f36edb1e2f4a03c8436dbf8b50e741f16a"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/83cca9c66a1eb218f010a75b862d417d429c3c85",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tests/domains/atmosphere/test_knowledge_character_registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tools/validators/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/.github/workflows/domain-atmosphere.yml",
+      "attachment://KFM-Pass-20-Part-2:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-atmosphere.yml": "PROPOSED",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md": "PROPOSED",
+    "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md": "PROPOSED",
+    "docs/domains/atmosphere/README.md": "PROPOSED",
+    "docs/domains/atmosphere/VERIFICATION_BACKLOG.md": "PROPOSED",
+    "fixtures/domains/atmosphere/README.md": "PROPOSED",
+    "fixtures/domains/atmosphere/knowledge_character/README.md": "PROPOSED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/advisory_as_life_safety.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aod_as_pm25.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/aqi_as_concentration.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/model_as_observation.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/invalid/precise_site_exposure.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/advisory_context.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/aqi_report.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/model_field.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/observed_sensor.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/remote_sensing_aod.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/knowledge_character/valid/site_context.json": "CONFIRMED",
+    "tests/domains/atmosphere/README.md": "PROPOSED",
+    "tests/domains/atmosphere/knowledge-character/README.md": "PROPOSED",
+    "tests/domains/atmosphere/no-network-fixtures/README.md": "PROPOSED",
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md": "PROPOSED",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "PROPOSED",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "PROPOSED",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "PROPOSED",
+    "tests/domains/atmosphere/test_knowledge_character_registry.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/README.md": "PROPOSED",
+    "tools/validators/domains/atmosphere/validate_knowledge_character.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, accepted Directory Rules, exact base 83cca9c66a1eb218f010a75b862d417d429c3c85, clean starting worktree, and open pull-request set were inspected. No open pull request overlapped this slice. The request authorizes bounded feature-branch implementation while ready, merge, source activation, release, deployment, publication, and repository-setting operations remain denied."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The Pass 20 dossier and current repository surfaces were reconciled. The existing Atmosphere validator root, synthetic fixture root, parent test module, domain workflow, and adopted Directory Rules support a bounded anti-collapse fixture profile without creating a new authority root or activating a live source."
+    },
+    {
+      "gate": "focused-atmosphere-knowledge-character-suite",
+      "outcome": "PASS",
+      "reason": "Fourteen standard-library tests passed with six valid character pairings, five exact-negative fixtures, three in-memory missing/unknown/multiple denials, pairing and count boundaries, duplicate/non-finite/non-object parser failures, exact-location alias denial, deterministic non-echoing findings, CLI polarity, and active socket, DNS, and urllib network denial."
+    },
+    {
+      "gate": "atmosphere-domain-and-cross-domain-regression",
+      "outcome": "PASS",
+      "reason": "Complete Atmosphere unittest discovery passed 24 tests. The workflow-aligned focused run passed 27 tests plus 23 subtests across precipitation, knowledge-character, and Soil/Atmosphere/Hydrology ownership-isolation coverage."
+    },
+    {
+      "gate": "workflow-boundary-and-command-execution",
+      "outcome": "PASS",
+      "reason": "Static inventory confirmed exactly two accepted substantive Atmosphere tests and two accepted substantive validators while all other classified modules remain held. The workflow commands accepted six valid knowledge-character fixtures, rejected five invalid fixtures, exercised both domain profiles and the cross-domain boundary, retained three stable job IDs and contents-read permissions, and performed no live access or write action."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "In an isolated environment installed from the repository-declared .[test] extra, make validate completed: all aggregate schema fixture validators passed with expected invalid polarity, and 148 schema/contract tests plus 15 subtests passed."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "All 18 no-network link-check unit tests passed. The checker validated 14 changed Markdown documents and 584 local targets; 40 external badge targets were classified without requests."
+    },
+    {
+      "gate": "canonical-authority-roots-unchanged",
+      "outcome": "PASS",
+      "reason": "The permissive knowledge-character schema, placeholder registry, and Rego policy surfaces remain byte-identical to the base. The frozen profile is explicitly PROPOSED and cannot claim canonical enum, registry, policy, evidence, source-admission, review, release, or publication authority."
+    },
+    {
+      "gate": "python-json-diff-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Changed Python and JSON inputs execute or parse through the focused tests, git diff --check passes, and all 33 authored artifact paths are SHA-256 bound by this receipt. The receipt is excluded from its own artifact map to avoid recursive hashing."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks have not yet been observed for the local feature head. Remote publication is limited to an open draft pull request and will be verified separately without changing this local receipt claim."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "atmosphere-knowledge-character-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md"
+    },
+    {
+      "id": "prior-placeholder-test-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tests/domains/atmosphere/test_knowledge_character_registry.py"
+    },
+    {
+      "id": "prior-atmosphere-validator-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tools/validators/domains/atmosphere/README.md"
+    },
+    {
+      "id": "pass-20-atmosphere-anti-collapse-source",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Pass-20-Part-2:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T18:50:23Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts Atmosphere anti-collapse concepts from the supplied dossier into the repository-native bounded fixture pattern; no third-party code or assets were copied. All inputs are synthetic and use generalized county support. The profile does not contact or activate AirNow, AQS, NOAA, Mesonet, a model provider, or another source; define the canonical knowledge-character enum or registry; mutate the permissive schema or Rego policy; assess air quality; equate AQI with concentration or AOD with ground PM2.5; issue medical, regulatory, emergency, advisory, or life-safety guidance; resolve evidence; promote; release; deploy; or publish. Rollback is a clean revert of the feature commit; no lifecycle, source, policy, review, release, or published state is created."
+}
