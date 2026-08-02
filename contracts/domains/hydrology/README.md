@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — CODEOWNERS review route"
   - "Hydrology semantic steward assignment — NEEDS VERIFICATION"
 created: 2026-06-22
-updated: 2026-07-31
+updated: 2026-08-02
 policy_label: public; contract-root; hydrology; evidence-bound; source-role-aware; not-for-life-safety; release-gated; rollback-aware
 related:
   - ../README.md
@@ -34,9 +34,9 @@ tags: [kfm, contracts, hydrology, DOM-HYD, watershed, huc, gauge, observation, n
 notes:
   - "Current inventory and aquifer-pair decision grounded in main@748f1d92ea7cdd94c274b0287bc01d41506d4b3b."
   - "Accepted Directory Rules v2 returns PLACE for contracts/domains/hydrology/; older flat-path proposals are historical drift, not a competing current authority."
-  - "The directory contains 24 semantic contract documents plus this README."
-  - "Twenty contract-declared schema paths resolve and four are missing. AquiferObservation and AquiferContextLink have closed PROPOSED shapes; the remaining schemas are mixed aliases, minimal envelopes, and permissive scaffolds."
-  - "Executable Hydrology coverage includes the EvidenceBundle alias and the separated aquifer observation/context-link pair. Evidence closure, policy, proof, catalog closure, release, and publication remain held."
+  - "The directory contains 25 semantic contract documents plus this README."
+  - "Twenty-one contract-declared schema paths resolve and four are missing. AquiferObservation, AquiferContextLink, and the NHDPlus waterbody crosswalk have closed PROPOSED shapes; the remaining schemas are mixed aliases, minimal envelopes, and permissive scaffolds."
+  - "Executable Hydrology coverage includes the EvidenceBundle alias, separated aquifer observation/context-link pair, public-safe flow profile, and synthetic NHDPlus waterbody crosswalk profile. Evidence closure, policy, proof, catalog closure, release, and publication remain held."
   - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED and records its profile, family, correction, migration, stewardship, and graduation boundaries without changing schemas or executable behavior."
 [/KFM_META_BLOCK_V2] -->
 
@@ -82,9 +82,9 @@ derived relationships, and trust-support envelopes.
 | Surface | Current posture at the pinned snapshot | Authority boundary |
 |---|---|---|
 | This README | v0.4; `draft`; `PLACE`; `BOUNDARY_COMPACT` | Indexes this directory and records verified limits. It does not upgrade any child contract. |
-| Direct semantic contracts | 24 files; all remain `draft` / `PROPOSED` | Define candidate object/interface meaning only. |
-| Contract-declared schemas | 20 paths resolve; 4 are missing | Two closed aquifer shapes and the existing aliases/scaffolds do not establish semantic truth, evidence, policy, or release. |
-| Hydrology tests | Three executable bounded modules with thirteen tests; seven named modules remain documentation-only placeholders | Proves only local alias/shape polarity, type separation, optional-link behavior, and process-level network denial. |
+| Direct semantic contracts | 25 files; all remain `draft` / `PROPOSED` | Define candidate object/interface meaning only. |
+| Contract-declared schemas | 21 paths resolve; 4 are missing | Three closed bounded shapes and the existing aliases/scaffolds do not establish semantic truth, evidence, policy, or release. |
+| Hydrology tests | Five accepted bounded modules plus held placeholders | Proves only local shape, fixture polarity, type/cardinality separation, deterministic hashing, finite ambiguity outcomes, and process-level network denial. |
 | Hydrology policy | Four five-line `PROPOSED` scaffolds with `default allow := false` | Deny-by-default scaffolding is not accepted policy semantics or a release decision. |
 | Proof-bearing designation | ADR-0009 is `proposed`; configured lane maturity is partial | The lane is not semantically closed or proof-bearing in operation. |
 | Release and publication | No authority created by this directory or README | Publication requires separate evidence, policy, review, release, correction, and rollback closure. |
@@ -272,6 +272,7 @@ contracts/domains/hydrology/
 ├── hydrograph.md                    # observed or modeled time-series meaning
 ├── irrigation_link.md               # Hydrology-to-irrigation relationship
 ├── nfhl_zone.md                     # regulatory flood context only
+├── nhdplus_waterbody_crosswalk.md    # version-bound waterbody ID overlap mapping
 ├── reach_identity.md                # reach identity and ambiguity boundary
 ├── run_receipt.md                   # process-memory semantics
 ├── upstream_trace.md                # derived network traversal meaning
@@ -281,7 +282,7 @@ contracts/domains/hydrology/
 └── watershed.md                     # watershed meaning and scope
 ```
 
-All 24 child contract documents remain `draft` / `PROPOSED`. File presence,
+All 25 child contract documents remain `draft` / `PROPOSED`. File presence,
 prose depth, and bounded schema tests do not make them source-admitted,
 evidence-closed, released, or published.
 
@@ -297,6 +298,7 @@ evidence-closed, released, or published.
 | [`huc_unit.md`](./huc_unit.md) | HUC identity, level, source-vintage, and boundary meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json). |
 | [`watershed.md`](./watershed.md) | Watershed identity and drainage-area context. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/watershed.schema.json). |
 | [`hydro_feature.md`](./hydro_feature.md) | Stream, river, waterbody, and hydrographic-feature meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/hydro_feature.schema.json). |
+| [`nhdplus_waterbody_crosswalk.md`](./nhdplus_waterbody_crosswalk.md) | Version-bound USGS waterbody Permanent Identifier/COMID overlap mapping with explicit multi-match abstention. | [Closed bounded schema](../../../schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json) with synthetic positive, negative, boundary, and no-network tests. |
 | [`reach_identity.md`](./reach_identity.md) | Reach identity, source-version, crosswalk, and ambiguity boundary. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/reach_identity.schema.json). |
 | [`gauge_site.md`](./gauge_site.md) | Monitoring-location identity, separate from observations. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/gauge_site.schema.json). |
 | [`groundwater_well.md`](./groundwater_well.md) | Well identity, access, location, and sensitivity meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/groundwater_well.schema.json). |
@@ -337,11 +339,11 @@ evidence-closed, released, or published.
 
 ## Schema posture and drift
 
-The 24 contract-declared schema paths resolve as follows:
+The 25 contract-declared schema paths resolve as follows:
 
 | Schema class | Count | Current consequence |
 |---|---:|---|
-| Closed bounded schemas | 2 | `aquifer_observation` and `aquifer_context_link` reject unknown fields and responsibility collapse; tests establish local shape/polarity only. |
+| Closed bounded schemas | 3 | `aquifer_observation`, `aquifer_context_link`, and `nhdplus_waterbody_crosswalk` reject unknown fields and responsibility/cardinality collapse; tests establish local shape/polarity only. |
 | Shared-profile aliases | 3 | `decision_envelope`, `evidence_bundle`, and `run_receipt` delegate through `$ref`; the domain aliases do not add Hydrology semantics. |
 | Minimal identity envelopes | 4 | `domain_feature_identity`, `domain_layer_descriptor`, `domain_observation`, and `domain_validation_report` require only `id` and permit additional properties. |
 | Empty-object scaffolds | 11 | Stable `$id` and title exist, but no properties or required fields are defined and arbitrary properties are accepted. |

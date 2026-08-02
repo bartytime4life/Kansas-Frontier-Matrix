@@ -9,8 +9,8 @@ policy_label: public
 owners:
   - <schema-steward>
   - <hydrology-domain-steward>
-updated: 2026-07-30
-tags: [kfm, schemas, contracts, hydrology, json-schema, aquifer-observation, aquifer-context-link]
+updated: 2026-08-02
+tags: [kfm, schemas, contracts, hydrology, json-schema, aquifer-observation, aquifer-context-link, nhdplus, crosswalk]
 [/KFM_META_BLOCK_V2] -->
 
 This is the canonical machine-shape lane for Hydrology domain contracts.
@@ -35,20 +35,22 @@ The `AquiferObservation` decision adopts a separated pair:
 |---|---|---|
 | [`aquifer_observation.schema.json`](./aquifer_observation.schema.json) | Observed groundwater-level or aquifer-state measurement | Closed shape; linked and unlinked valid fixtures; role and embedded-Geology negative fixtures; dedicated offline validator/tests |
 | [`aquifer_context_link.schema.json`](./aquifer_context_link.schema.json) | Typed relation from Hydrology observation/well to Geology `HydrostratigraphicUnit` | Closed shape; observation/well valid fixtures; endpoint, measurement-collapse, and copied-geometry negative fixtures; dedicated offline validator/tests |
+| [`nhdplus_waterbody_crosswalk.schema.json`](./nhdplus_waterbody_crosswalk.schema.json) | Version-bound NHDPlusHR waterbody Permanent Identifier to NHDPlusV2 COMID spatial-overlap mapping | Closed shape; exact and many-to-many valid fixtures; ambiguity-collapse, duplicate, scope, area, geometry-claim, and hash negative fixtures; dedicated offline semantic validator/tests |
 
-Both are `PROPOSED`. Their tests establish shape and fixture polarity only.
+All three are `PROPOSED`. Their tests establish bounded local shape and fixture
+semantics only.
 
 ## Contract-paired inventory
 
 | Shape class | Count | Schema files |
 |---|---:|---|
-| Closed bounded schemas | 2 | `aquifer_observation`, `aquifer_context_link` |
+| Closed bounded schemas | 3 | `aquifer_observation`, `aquifer_context_link`, `nhdplus_waterbody_crosswalk` |
 | Shared-schema aliases | 3 | `decision_envelope`, `evidence_bundle`, `run_receipt` |
 | Minimal open envelopes | 4 | `domain_feature_identity`, `domain_layer_descriptor`, `domain_observation`, `domain_validation_report` |
 | Permissive empty-property scaffolds | 11 | `flow_observation`, `gauge_site`, `groundwater_well`, `huc_unit`, `hydro_feature`, `hydrograph`, `nfhl_zone`, `reach_identity`, `water_level_observation`, `water_quality_observation`, `watershed` |
 | Missing contract-declared schemas | 4 | `drought_link`, `irrigation_link`, `upstream_trace`, `water_use_link` |
 
-These counts cover the 24 direct child semantic contracts indexed by
+These counts cover the 25 direct child semantic contracts indexed by
 `contracts/domains/hydrology/README.md`.
 
 ## Other schema files in this lane
@@ -78,6 +80,11 @@ promote them or create parallel semantic authority.
 | Validator | `tools/validators/domains/hydrology/validate_aquifer_observation.py` | `tools/validators/domains/hydrology/validate_aquifer_context_link.py` |
 | Tests | `tests/domains/hydrology/test_aquifer_observation.py` | `tests/domains/hydrology/test_aquifer_context_link.py` |
 | CI | `.github/workflows/domain-hydrology.yml` | `.github/workflows/domain-hydrology.yml` |
+
+The NHDPlus waterbody crosswalk is a separate bounded family. Its contract,
+fixtures, semantic validator, tests, and CI wiring live in their owning roots;
+it does not alter either aquifer type or the still-proposed COMID-to-HUC12
+crosswalk family.
 
 ## Compatibility rules
 
