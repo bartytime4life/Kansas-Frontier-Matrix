@@ -2,11 +2,11 @@
 doc_id: kfm://doc/fixtures-release-readme
 title: fixtures/release/README.md — Release Fixture Families
 class: README
-version: v0.2
+version: v0.3
 status: draft; repository-grounded; nested-fixture-parent; mixed-maturity; synthetic; no-network-default; non-authoritative
 owner: NEEDS VERIFICATION — no path-specific CODEOWNERS rule or accepted release-fixture steward was inspected for this update
 created: NEEDS VERIFICATION — file predates this versioned documentation contract
-updated: 2026-07-24
+updated: 2026-08-02
 supersedes: prior documentation at the same path; no fixture payload, contract, schema, policy, validator, release object, or runtime behavior is superseded
 policy_label: repository-facing; fixtures; release; synthetic; public-safe; no-network-default; correction-aware; rollback-aware; non-publisher
 owning_root: fixtures/
@@ -32,6 +32,7 @@ related:
   - ./promotion_decision/README.md
   - ./promotion_decision/valid/README.md
   - ./promotion_decision/invalid/README.md
+  - ./promotion_gate/README.md
   - ../../contracts/release/README.md
   - ../../contracts/release/promotion_decision.md
   - ../../schemas/contracts/v1/release/
@@ -43,8 +44,8 @@ related:
   - ../../docs/architecture/directory-rules.md
 notes:
   - "This is a same-path Markdown modernization. It creates no sibling README, fixture payload, schema, contract, policy, validator, release object, or publication state."
-  - "PromotionDecision is the only release-fixture family whose schema, validator binding, and valid/invalid child-lane contracts were verified in this update."
-  - "The current PromotionDecision consumer is a JSON Schema runner, not a complete promotion gate."
+  - "PromotionDecision remains the schema-shape family; promotion_gate is now a separate implemented readiness-profile family with deterministic finite outcomes."
+  - "A promotion-gate PASS means APPROVE_READY for review only and cannot create promotion, release, or publication authority."
   - "Other release object families remain PROPOSED or NEEDS VERIFICATION until their contracts, schemas, consumers, fixtures, and expected outcomes are inspected together."
 [/KFM_META_BLOCK_V2] -->
 
@@ -136,10 +137,11 @@ Snapshot: `main@d38b2886d1786eeaf0e8ec1f1ab83da5f0c93b3a`, inspected on 2026-07-
 | PromotionDecision valid lane | **CONFIRMED** at [`promotion_decision/valid/README.md`](promotion_decision/valid/README.md) | Direct-child `valid/*.json` files are schema-positive inputs |
 | PromotionDecision invalid lane | **CONFIRMED** at [`promotion_decision/invalid/README.md`](promotion_decision/invalid/README.md) | Direct-child `invalid/*.json` files are schema-negative inputs |
 | PromotionDecision schema and validator | **CONFIRMED** | Paired schema, validator entry point, and shared runner are present and inspected |
+| Promotion-gate readiness family | **CONFIRMED** at [`promotion_gate/README.md`](promotion_gate/README.md) | Implemented no-network A-G declared-closure matrix with `PASS`, `DENY`, `ABSTAIN`, and `ERROR` outcomes |
 | Other release fixture families | **UNKNOWN / not verified** | No claim is made that ReleaseManifest, RollbackCard, WithdrawalNotice, CorrectionNotice, proof, receipt, or publication fixture families exist here |
 | Exact recursive lane inventory | **UNKNOWN / not performed** | Verified navigation is not an exhaustive repository tree listing |
 | Fixture payload inventory | **UNKNOWN / not performed** | No payload-by-payload review is claimed |
-| Policy, evidence, review, rollback, release-readiness, correction, or withdrawal enforcement | **NEEDS VERIFICATION** | The confirmed PromotionDecision consumer establishes JSON Schema behavior only |
+| External policy, evidence, review, rollback, correction, signature, or catalog-reference resolution | **NEEDS VERIFICATION** | The promotion gate checks declared presence and consistency but does not authenticate or dereference support |
 | CI and branch-protection enforcement | **NEEDS VERIFICATION** | Workflow presence and individual runs do not prove required-check policy |
 | Release or publication state | **DENIED as inference** | Fixture presence or success cannot establish KFM publication |
 
@@ -147,7 +149,7 @@ Snapshot: `main@d38b2886d1786eeaf0e8ec1f1ab83da5f0c93b3a`, inspected on 2026-07-
 
 - Replaces broad language suggesting that one fixture family currently exercises the full release-governance surface.
 - Aligns this parent with the modernized PromotionDecision parent, valid, and invalid READMEs.
-- Makes `PromotionDecision` the only **verified current** release-fixture family in this documentation pass.
+- Adds `promotion_gate/` as a second verified family without collapsing it into `PromotionDecision` schema fixtures.
 - Separates current JSON Schema coverage from policy, evidence-resolution, reviewer-authority, rollback-readiness, release-readiness, correction, withdrawal, supersession, bounded-projection, proof, receipt, and publication checks.
 - Clarifies that payload files should normally live in a named family lane with a documented consumer rather than directly in this parent directory.
 - Replaces conditional “if present” wording for verified PromotionDecision surfaces with pinned repository evidence.
@@ -166,6 +168,7 @@ The following lanes are confirmed in this update. This is a documentation index,
 | [`promotion_decision/`](promotion_decision/README.md) | Parent for paired positive and negative `PromotionDecision` schema fixtures | JSON Schema validation only |
 | [`promotion_decision/valid/`](promotion_decision/valid/README.md) | Structurally valid synthetic `PromotionDecision` objects | Each direct-child `.json` must produce zero schema errors |
 | [`promotion_decision/invalid/`](promotion_decision/invalid/README.md) | Deliberately schema-invalid synthetic `PromotionDecision` objects | Each direct-child `.json` must produce at least one schema error |
+| [`promotion_gate/`](promotion_gate/README.md) | Synthetic declared-closure packets with filename-bound finite outcomes | Root promotion-gate validator, focused release tests, and `make publish-check` |
 
 ### Current PromotionDecision consumer
 
@@ -206,18 +209,19 @@ A scenario belongs here only when its owning consumer and expected result are ex
 |---|---|---|---|
 | Structurally valid `PromotionDecision` | `promotion_decision/valid/` | PromotionDecision JSON Schema runner | **CONFIRMED** |
 | Structurally invalid `PromotionDecision` | `promotion_decision/invalid/` | PromotionDecision JSON Schema runner | **CONFIRMED** |
-| Unresolvable evidence reference with schema-valid strings | Evidence-resolution test lane or a future consumer-bound child lane | Evidence resolver | **NEEDS VERIFICATION** |
+| Promotion packet declared-closure readiness | `promotion_gate/valid/` and `promotion_gate/invalid/` | Bounded promotion-gate validator and focused tests | **CONFIRMED** |
+| Missing evidence support in a declared promotion packet | `promotion_gate/invalid/abstain__missing_evidence_ref.json` | Promotion-gate readiness validator | **CONFIRMED `ABSTAIN`; actual resolution remains NEEDS VERIFICATION** |
 | Stale, unknown, or disallowed policy bundle | Policy fixtures/tests or a future consumer-bound child lane | Promotion/release policy engine | **NEEDS VERIFICATION** |
-| Reviewer fields present but actor lacks authority | Review/policy test lane | Review authority or separation-of-duties check | **NEEDS VERIFICATION** |
+| Candidate author equals recorded reviewer | Focused release test mutation | Promotion-gate separation-of-duties check | **CONFIRMED `DENY`; reviewer authority remains NEEDS VERIFICATION** |
 | Rollback URI present but target is missing or unusable | Rollback fixtures/tests | Rollback validator or drill | **NEEDS VERIFICATION** |
-| Candidate is schema-valid but not release-ready | Release-readiness test or dry-run lane | Promotion/release gate | **NEEDS VERIFICATION** |
+| Candidate is shape-plausible but missing required release support | `promotion_gate/invalid/` | Promotion-gate readiness validator | **CONFIRMED bounded behavior** |
 | ReleaseManifest machine shape | Future family only after contract/schema/consumer verification | ReleaseManifest validator | **UNKNOWN / PROPOSED** |
 | RollbackCard machine shape or execution case | Future family only after contract/schema/consumer verification | Rollback validator or drill | **UNKNOWN / PROPOSED** |
 | WithdrawalNotice or CorrectionNotice case | Future family only after authority and placement verification | Correction/withdrawal validator and policy | **UNKNOWN / PROPOSED** |
 | Proof-pack or receipt closure case | Proof/receipt-specific fixture or test lane | Proof/receipt validator | **NEEDS VERIFICATION** |
 | Bounded public release summary | Public-projection fixture/test lane | Governed projection validator | **NEEDS VERIFICATION** |
 | Supersession history | Object-specific fixture/test lane after schema/contract support exists | Supersession/correction validator | **NEEDS VERIFICATION** |
-| Malformed JSON/parser failure | Parser-specific test or explicit direct-file invocation | Parser/error-path test | **NEEDS VERIFICATION** for stable `--fixtures` use |
+| Malformed or duplicate-key JSON | Promotion-gate invalid fixture and focused parser test | Bounded JSON parser | **CONFIRMED `ERROR` without value echo** |
 | Actual release, correction, rollback, or publication | Not a fixture lane | Governed release process | **DENY** |
 
 > [!NOTE]
@@ -341,7 +345,7 @@ It does not emit:
 
 ## Validation
 
-### Confirmed current command
+### Confirmed current commands
 
 From repository root, the verified PromotionDecision schema fixture command is:
 
@@ -354,6 +358,18 @@ Direct-file mode is also supported by the current shared runner:
 ```bash
 python tools/validators/release/validate_promotion_decision.py \
   fixtures/release/promotion_decision/valid/<fixture>.json
+```
+
+The bounded promotion-readiness matrix and focused behavior suite run with:
+
+```bash
+make publish-check
+```
+
+Direct promotion-packet evaluation is also available:
+
+```bash
+python tools/validators/validate_promotion_gate.py <candidate.json>
 ```
 
 ### Expected PromotionDecision behavior
@@ -388,6 +404,12 @@ It does not prove:
 - public-summary safety;
 - CI required-check enforcement;
 - release or publication.
+
+A successful `make publish-check` additionally proves the checked-in A-G
+declared-closure matrix, finite outcome precedence, exact negative behavior,
+bounded parser behavior, deterministic non-echoing JSON, and no-network unit
+path. It still does not authenticate or resolve any referenced support and does
+not create a `PromotionDecision`, release, rollback, or publication.
 
 ### Future consumer rule
 
@@ -480,6 +502,7 @@ Reviewers should verify:
 | [`promotion_decision/README.md`](promotion_decision/README.md) | Verified current release-fixture family |
 | [`promotion_decision/valid/README.md`](promotion_decision/valid/README.md) | PromotionDecision schema-positive lane |
 | [`promotion_decision/invalid/README.md`](promotion_decision/invalid/README.md) | PromotionDecision schema-negative lane |
+| [`promotion_gate/README.md`](promotion_gate/README.md) | Implemented bounded promotion-readiness fixture family |
 | [`../../contracts/release/README.md`](../../contracts/release/README.md) | Release object semantic-contract family |
 | [`../../contracts/release/promotion_decision.md`](../../contracts/release/promotion_decision.md) | PromotionDecision semantic meaning and invariants |
 | `../../schemas/contracts/v1/release/` | Machine-shape authority for verified release schema families |
@@ -530,9 +553,11 @@ A new child family under this existing parent does not automatically require an 
 | PromotionDecision schema | **CONFIRMED** at blob `a2d087a46772cf60e4b9dfb394892690e8a88b31`; schema status remains `PROPOSED` |
 | PromotionDecision validator binding | **CONFIRMED** at blob `ead33d6c5c073f319627ee42d99c5933c0e370d1` |
 | Shared runner behavior | **CONFIRMED by source inspection** at blob `ce05ae25d0cb6fc29a2ea41db6c65a99ca5e13e6` |
-| Other release fixture families | **UNKNOWN / not verified** |
-| Exact recursive fixture inventory | **UNKNOWN / not performed** |
-| Python validator execution | **NOT RUN locally** — no executable checkout mounted |
+| Promotion-gate fixture family | **CONFIRMED in current update** — one `PASS`, five `DENY`, one `ABSTAIN`, and two `ERROR` fixtures |
+| Promotion-gate executable and focused tests | **CONFIRMED in current update** — repository-owned no-network command and direct release test module |
+| Other release fixture families beyond PromotionDecision and promotion gate | **UNKNOWN / not verified** |
+| Exact recursive fixture inventory beyond the selected family | **UNKNOWN / not performed** |
+| Python promotion-gate execution | **CONFIRMED in current update**; full repository and hosted validation recorded in the paired change receipt/PR |
 | Markdown lint, docs build, and link checker | **NOT RUN locally** |
 | Policy/evidence/review/rollback/release tests | **NOT RUN / not established by the confirmed consumer** |
 | CI required-check enforcement | **NEEDS VERIFICATION** |

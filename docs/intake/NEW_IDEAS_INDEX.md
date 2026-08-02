@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.7
+version: v1.8
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-07-30
+updated: 2026-08-02
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified at remote main 0e4e2ee717730a4b4bfa22cf59c13241eba14bef; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -21,7 +21,7 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@0e4e2ee717730a4b4bfa22cf59c13241eba14bef` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -166,6 +166,7 @@ This table records only the packet sources visible or directly retrieved in this
 | --- | --- | --- | --- | --- | --- | --- |
 | `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher `DecisionEnvelope`; `RunReceipt`; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
 | `NIP-2026-05-10` | `New Ideas 5-10-26.pdf` | Filename date | CAPTURED / EXPLORATORY | PMTiles operational hardening; versioned artifacts; sidecar + Bao/BLAKE3 proofs; DSSE/cosign/Rekor; OCI/ORAS publication; fail-closed CI gate; MapLibre performance testing; automation starter pack; promotion/rollback rehearsal. | `tools/attest/`, `tools/validators/`, `schemas/contracts/v1/artifacts/`, `.github/workflows/`, `release/`, `docs/architecture/map/`, `docs/runbooks/` after repo verification. | Verify current tool versions and licenses, package availability, OCI/referrer support, schema-home authority, workflow conventions, public-safe artifact exposure, and rollback evidence. |
+| `NIP-2026-04-13-promotion-proof` | `New Ideas 4-13-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY; bounded slice implemented | Promotion proof; receipt/manifest integrity; A-G gate grammar; finite outcomes; review separation; correction and rollback; signing/publishing proposals. | Detailed routing in [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md); bounded offline behavior implemented under existing validator, fixture, test, and workflow homes. | Keep `PASS` review-ready only. Authenticate evidence, policy, attestations, catalogs, actors, and rollback separately; do not carry over packet network installs, write permissions, paths, or publication automation. |
 | `NIP-2026-04-14-verification-conflict` | `New Ideas 4-14-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY / PASS-23-LINEAGE | Watcher/policy/hydrology carry-forward; bitemporal verification replay; source-conflict influence; cross-layer outcome parity; verifier portability; observed interface evolution. | Detailed routing in [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md); five contributed triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not duplicate Pass 23 watcher, hydro, promotion, signing, runtime, or release cards. Resolve temporal, conflict, projection, verifier, and interface semantics before implementation; keep peer-renderer code excluded. |
 | `NIP-2026-04-15-quality-proof-interface` | `New Ideas 4-15-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY / PASS-23-LINEAGE | Soil/runtime carry-forward; cross-layer outcome parity; verifier portability; source-native quality and health separation; generated runtime-proof lifecycle; observed interface evolution. | Detailed routing in [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md); five contributed triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not duplicate Pass 23 soil/runtime/API work or copy source, consent, threshold, route, workflow, or peer-renderer code. Resolve quality mapping, proof-artifact, parity, verifier, and interface semantics first. |
 | `NIP-2026-04-16-governed-baselines` | `New Ideas 4-16-26(1).pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY | Fauna/soil governed ingest; vegetation/hydrology baselines; air-quality anomaly lifecycle; consent/revocation; MapLibre time buckets; PMTiles verification; STAC conformance; historical post-office/trail networks. | Detailed routing in [`exploratory/new-ideas-4-16-source-map.md`](exploratory/new-ideas-4-16-source-map.md); ten gap-fill triads in [`../kfm_full_atlas_seed_cards.md`](../kfm_full_atlas_seed_cards.md); downstream artifacts remain candidate-only. | Do not copy packet paths or code. Reuse existing domain lanes; resolve canonical hash profiles, materiality, baseline/event semantics, consent placement, STAC profile, source authority/rights, and exact bounded authorization per candidate. |
@@ -183,7 +184,7 @@ Prior source ledgers and documentation architecture passes refer to earlier New 
 | --- | --- | --- | --- |
 | February 2026 New Ideas docs | NEEDS VERIFICATION | Some related files were discoverable as prior uploads, but not all are present in the visible `/mnt/data` workspace. | Confirm packet filenames, hashes, dates, duplicates, source IDs, and promotion status. |
 | March 2026 New Ideas packets | NEEDS VERIFICATION | Prior reports list multiple March packets as EXPLORATORY lineage. | Inventory packets and add one row per dated source. |
-| April 2026 New Ideas packets | PARTIAL | `New Ideas 4-14-26.pdf`, `New Ideas 4-15-26.pdf`, `New Ideas 4-16-26(1).pdf`, `New Ideas 4-23-26.pdf`, `New Ideas 4-25-26.pdf`, and `New Ideas 4-30-26.pdf` are identity-pinned and triaged; 4-14 and 4-15 are also reconciled with Pass 23 lineage. Other April packets and Part 2 variants remain outside these rows. | Inventory the remaining April packets, de-duplicate them against all six April source maps and prior pass carriers, and preserve one row per distinct source. |
+| April 2026 New Ideas packets | PARTIAL | `New Ideas 4-13-26.pdf`, `New Ideas 4-14-26.pdf`, `New Ideas 4-15-26.pdf`, `New Ideas 4-16-26(1).pdf`, `New Ideas 4-23-26.pdf`, `New Ideas 4-25-26.pdf`, and `New Ideas 4-30-26.pdf` are identity-pinned and triaged; 4-14 and 4-15 are also reconciled with Pass 23 lineage. Other April packets and Part 2 variants remain outside these rows. | Inventory the remaining April packets, de-duplicate them against all seven April source maps and prior pass carriers, and preserve one row per distinct source. |
 
 ## Intake taxonomy
 
@@ -312,6 +313,29 @@ Explain why the disposition is safe, reversible, and bounded.
 ```
 
 ## Appendix: packet cards
+
+<details>
+<summary><strong>NIP-2026-04-13-promotion-proof - bounded A-G promotion readiness</strong></summary>
+
+### Source
+
+`New Ideas 4-13-26.pdf`
+
+- SHA-256: `7289fad4b6fded40cb58c8ffa7d8c051f6004f6c2720d9eb2c52c20f232f78f2`
+- Pages: `462`
+- Bytes: `4,444,054`
+- Source date: `2026-04-13`
+- Detailed review: [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md)
+
+### Disposition
+
+- `TRIAGED / EXPLORATORY`; one bounded implementation slice exists.
+- Retained: fail-closed A-G candidate checks, receipt/manifest integrity, finite outcomes, review separation, rollback/correction linkage, and deterministic synthetic tests.
+- Rejected as direct transfer: packet paths and schemas, `PROMOTE` authority, network installs, signing-service claims, write-capable CI, hard-coded facts, and publication automation.
+- Implemented boundary: a `PASS` is `APPROVE_READY` only and emits no PromotionDecision, review record, receipt, proof, release, or public artifact.
+- Remaining: evidence/catalog/attestation resolution, policy execution, accountable review, signing, candidate assembly, rollback execution, and release authority are `PROPOSED` or `NEEDS VERIFICATION`.
+
+</details>
 
 <details>
 <summary><strong>NIP-2026-04-14-verification-conflict - verification history, source conflict, parity, and interface evolution</strong></summary>

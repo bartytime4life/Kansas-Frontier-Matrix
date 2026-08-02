@@ -3,7 +3,8 @@
 # Responsibility:
 #   Exercise the repository-owned doctrine and PromotionDecision shape checks,
 #   prove the currently documented doctrine-artifact failure is fail-closed,
-#   and expose the missing promotion/review implementation as an explicit hold.
+#   execute the bounded A-G promotion-readiness proof, and keep unresolved
+#   review and release authority visible as explicit holds.
 #   This workflow never promotes, publishes, or writes a release decision.
 #
 # Trigger and trust boundary:
@@ -15,8 +16,8 @@
 # Inputs:
 #   Doctrine registry/checker/tests, DoctrineArtifactDescriptor schema fixtures,
 #   PromotionDecision contract/schema/fixtures/validator/test, promotion policy
-#   source inventory, review/promotion validator scaffolds, and the tracked
-#   hydrology automation-smoke decision.
+#   source inventory, bounded promotion-gate fixtures/validator/tests, review
+#   validator scaffold, and the tracked hydrology automation-smoke decision.
 #
 # Outputs and outcomes:
 #   Test output and job summaries only. Shape checks may pass while promotion
@@ -225,6 +226,12 @@ jobs:
           set -euo pipefail
           python -m pytest -q tests/release/test_promotion_decision_schema.py
 
+      - name: Prove bounded promotion-gate readiness behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
+
       - name: Record promotion prerequisite boundary
         if: always()
         shell: bash
@@ -232,8 +239,9 @@ jobs:
           {
             echo "### Promotion prerequisites"
             echo
-            echo "- The repository-owned PromotionDecision fixture test ran after a non-empty fixture and schema-metadata check."
-            echo "- **WORKFLOW_HOLD:** the schema is PROPOSED; this job does not resolve EvidenceRefs, execute promotion policy, verify a bundle digest, enforce review separation, validate rollback targets, or authorize a lifecycle transition."
+            echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
+            echo "- A promotion-gate PASS means only APPROVE_READY for review. The PROPOSED PromotionDecision schema and every external support reference remain separately governed."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, execute promotion policy, verify DSSE/cosign, authenticate reviewers, resolve catalog records, execute rollback, or authorize a lifecycle transition."
             echo "- Result: ${{ job.status }}. No PromotionDecision, receipt, proof, manifest, release, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -254,7 +262,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Confirm review and promotion implementation hold
+      - name: Confirm review hold beside implemented promotion gate
         shell: bash
         run: |
           set -euo pipefail
@@ -268,8 +276,11 @@ jobs:
               Path("release/promotion_decisions/hydrology/run-local-smoke.json"),
               Path("release/reviews/README.md"),
               Path("tools/validators/validate_promotion_gate.py"),
+              Path("tools/validators/promotion_gate/validate_promotion_gate.py"),
               Path("tools/validators/validate_review_record.py"),
               Path("tools/validators/promotion_gate/README.md"),
+              Path("fixtures/release/promotion_gate/README.md"),
+              Path("tests/release/test_promotion_gate.py"),
               Path("policy/promotion/promotion_prerequisites.rego"),
               Path("policy/promotion/rollback_card_required.rego"),
               Path("Makefile"),
@@ -322,39 +333,44 @@ jobs:
                   f"fail-closed tests before executing it in CI: missing marker {marker}"
               )
 
-          for placeholder in (
-              Path("tools/validators/validate_promotion_gate.py"),
-              Path("tools/validators/validate_review_record.py"),
-          ):
-              text = placeholder.read_text(encoding="utf-8")
-              assert 'raise NotImplementedError("Greenfield placeholder")' in text, (
-                  f"{placeholder} is no longer the confirmed placeholder; wire its accepted "
-                  "CLI, fixtures, tests, and finite outcomes deliberately"
-              )
+          review_validator = Path("tools/validators/validate_review_record.py")
+          assert 'raise NotImplementedError("Greenfield placeholder")' in (
+              review_validator.read_text(encoding="utf-8")
+          ), "ReviewRecord validator changed; wire accountable fixtures and tests deliberately"
+
+          promotion_wrapper = Path(
+              "tools/validators/validate_promotion_gate.py"
+          ).read_text(encoding="utf-8")
+          assert "promotion_gate.validate_promotion_gate import main" in promotion_wrapper
 
           validator_inventory = {
               path.relative_to("tools/validators/promotion_gate").as_posix()
               for path in Path("tools/validators/promotion_gate").rglob("*")
-              if path.is_file()
+              if path.is_file() and "__pycache__" not in path.parts
           }
-          assert validator_inventory == {".gitkeep", "README.md"}, (
-              "the promotion-gate validator lane is no longer documentation-only; "
-              f"wire the surfaced implementation deliberately: {sorted(validator_inventory)}"
-          )
+          assert validator_inventory == {
+              "README.md", "__init__.py", "validate_promotion_gate.py"
+          }, f"promotion-gate implementation inventory drifted: {sorted(validator_inventory)}"
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^publish-check:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile publish-check target is missing"
-          assert target.group("body").splitlines() == [
-              '\t@echo "TODO: tools/validators/promotion_gate"'
-          ], "publish-check changed; invoke and verify the accepted command deliberately"
+          target_body = target.group("body")
+          assert "validate_promotion_gate.py --fixtures" in target_body
+          assert "tests.release.test_promotion_gate" in target_body
 
           print("CONFIRMED: release/reviews contains guidance only, not review records.")
-          print("CONFIRMED: generic promotion-gate and review validators are placeholders.")
+          print("CONFIRMED: bounded promotion-gate validator is wired; ReviewRecord remains a placeholder.")
           print("WORKFLOW_SKIPPED_EXPLICIT: the hydrology promoter was not executed.")
           print("WORKFLOW_HOLD: its automation-approved smoke decision has unresolved support refs.")
           print("No review, promotion, release, or publication authority was created.")
           PY
+
+      - name: Re-run bounded promotion gate without release authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
 
       - name: Record review readiness outcome
         if: always()
@@ -363,8 +379,9 @@ jobs:
           {
             echo "### Review records"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and the generic promotion-gate and review validators remain NotImplementedError scaffolds."
+            echo "- The bounded promotion gate is implemented and re-ran here; its PASS is only APPROVE_READY and does not authenticate references or actors."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and the ReviewRecord validator remains a NotImplementedError scaffold."
             echo "- The hydrology promoter was intentionally not run: it writes a timestamped automation-approved smoke decision whose EvidenceBundle and rollback-card paths are unresolved."
             echo "- Result: ${{ job.status }}. This readiness inventory is not reviewer approval, separation-of-duties proof, promotion, release, rollback readiness, or publication authority."
-            echo "- **NEEDS VERIFICATION:** repository documentation describing the predecessor as partially executable must be reconciled separately."
+            echo "- **NEEDS VERIFICATION:** accountable review, support resolution, and the held hydrology promoter remain separate future work."
           } >> "$GITHUB_STEP_SUMMARY"

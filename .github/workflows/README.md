@@ -134,6 +134,15 @@ The subtree exists to make triggers, path filters, permissions, runners, command
 
 The workflow layer is a **non-publisher**. Watchers, drift detectors, documentation checks, release dry-runs, and promotion-gate simulations may propose or verify work; they must not silently promote candidates or write public truth.
 
+`promotion-gate.yml` and the `promotion-gate-check` job in
+`release-dry-run.yml` execute `make publish-check`. That target validates one
+bounded, synthetic A-G readiness profile and its exact failure matrix. A
+`PASS` result means only `APPROVE_READY` for review; it does not assemble a
+release candidate, authenticate supporting references, record human approval,
+evaluate production policy, execute rollback, change lifecycle state, or
+publish. Candidate assembly, the ReviewRecord validator, and rollback-card
+execution remain separately held.
+
 ## Status
 
 ### Current document state

@@ -118,9 +118,10 @@ A validator may check that evidence exists, policy was evaluated, release refere
 | `tools/validators/e2e_readiness.py` | **CONFIRMED bounded executable checker** | Statically reconciles the locked Explorer baseline, adjacent UI/API workflow markers, root holds, and exact five-file E2E placeholder inventory; it emits an explicit hold and never starts services or executes discovered application code. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
 | `tools/validators/validate_generated_receipt.py` | **CONFIRMED bounded executable checker** | Validates duplicate-free finite JSON under parser/schema budgets, `GENERATED_RECEIPT` shape, exact artifact maps, canonical local paths, supported SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, plus an optional declared review/override claim. It does not authenticate those references or claims and cannot grant truth, policy, review, mutation, merge, release, or publication authority. |
+| `tools/validators/validate_promotion_gate.py` | **CONFIRMED bounded compatibility entry point** | Routes to the no-network A-G declared-closure validator, emits `PASS`, `DENY`, `ABSTAIN`, or `ERROR`, and never creates a PromotionDecision, release, or publication. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
-| `tools/validators/release/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Release validator routing; not release governance or publication authority. |
+| `tools/validators/release/README.md` | **CONFIRMED README / mixed executable maturity** | Release validator routing; the adjacent promotion-gate thin slice is executable, while broader release validation remains incomplete. |
 | `tools/validators/source/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Source-admission and source-registry validation routing; not the source registry. |
 | `tools/validators/sensitivity/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Sensitivity posture checks; not tier, policy, redaction, or release authority. |
 | Domain validators, registry wiring, other CLI/package entrypoints, CI integration, report outputs, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | The narrow readiness checker does not establish these broader surfaces. |
@@ -218,7 +219,7 @@ The folders below are routing lanes, indexes, or validator-local documentation. 
 | [`sensitive_location_allow/`](sensitive_location_allow/README.md) | Allow-exception packet checks after deny-by-default sensitive-location posture. | Does not make policy decisions or publish sensitive locations. |
 | [`evidence/`](evidence/README.md) | EvidenceRef/EvidenceBundle/proof closure and citation checks. | Evidence/proof authority remains in `data/proofs/` and accepted evidence homes. |
 | [`lifecycle/`](lifecycle/README.md) | Lifecycle boundary, transition, quarantine, promotion, correction, and rollback checks. | Does not move files or decide promotion. |
-| [`promotion_gate/`](promotion_gate/README.md) | Promotion gate checks at governed publication transitions. | Promotion decisions remain governed records, not validator output alone. |
+| [`promotion_gate/`](promotion_gate/README.md) | Implemented bounded declared-closure checks at governed publication transitions. | A pass is only `APPROVE_READY`; promotion decisions remain governed records. |
 | [`release/`](release/README.md) | ReleaseManifest, PromotionDecision, rollback/correction/withdrawal, artifact-integrity, and public-surface readiness checks. | Release records and publication authority remain in `release/`. |
 | [`dependencies/`](dependencies/README.md) | Package-manager, workspace, lockfile-importer, competing-lockfile, and structured audit-result checks. | Manifests and lockfiles remain root coordination records; advisory data, dependency admission, exceptions, and release decisions remain outside validators. |
 | [`smoke/`](smoke/README.md) | Fast import/CLI/registry/fixture/side-effect health checks. | Smoke pass is not correctness, policy, evidence, or release proof. |
@@ -360,6 +361,7 @@ tools/validators/
 ├── ci_readiness.py                  # confirmed placeholder-readiness checker
 ├── e2e_readiness.py                 # confirmed static E2E readiness-hold checker
 ├── validate_generated_receipt.py    # confirmed repository-artifact provenance checker
+├── validate_promotion_gate.py       # confirmed compatibility entry point
 ├── _common/                         # shared validator utilities, if verified
 ├── domains/                         # per-domain validator lanes
 ├── policy/                          # policy-facing validation routing
@@ -367,6 +369,7 @@ tools/validators/
 ├── sensitivity/                     # sensitivity posture validation routing
 ├── evidence/                         # evidence/proof reference validation routing
 ├── lifecycle/                        # lifecycle transition validation routing
+├── promotion_gate/                   # confirmed bounded promotion-readiness validator
 ├── release/                          # release-readiness validation routing
 ├── smoke/                            # shallow health checks
 └── <specialized-lane>/               # narrow validator routes with clear authority boundaries

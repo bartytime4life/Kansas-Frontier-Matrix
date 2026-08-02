@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.7
+version: v0.8
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-07-30
+updated: 2026-08-02
 policy_label: public
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified at remote main 0e4e2ee717730a4b4bfa22cf59c13241eba14bef; New Ideas 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint are triaged exploratory packets; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
+notes: [Repository path and sibling intake surfaces verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint are triaged exploratory packets; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -21,7 +21,7 @@ A governed intake ledger for exploratory KFM idea packets so useful proposals st
 > **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces at remote `main@0e4e2ee717730a4b4bfa22cf59c13241eba14bef` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -198,6 +198,7 @@ Each row should carry enough information for a maintainer to decide whether to p
 |---|---|---:|---|---|---|---|---|
 | `NI-2026-05-08-ecology-watchers` | `New Ideas 5-8-26` | 2026-05-08 | `EXPLORATORY` | `captured` | `policy-gate-proposal` | `policy/ecology/tiles/v1.rego`; `tools/ci/probes/`; `docs/domains/ecology/gating-spec.md` — all `PROPOSED` | Verify source rights, cadence, thresholds, and fail-closed policy shape before drafting fixtures. |
 | `NI-2026-05-10-pmtiles-attestation` | `New Ideas 5-10-26` | 2026-05-10 | `EXPLORATORY` | `captured` | `schema-contract-proposal` | `schemas/contracts/v1/...`; `tools/attest/`; `tools/validators/`; `.github/workflows/pmtiles-attestation.yml` — all `PROPOSED` | Convert sidecar concept into schema + valid/invalid fixture + validator plan after repo path inspection. |
+| `NI-2026-04-13-promotion-proof` | `New Ideas 4-13-26.pdf` | 2026-04-13 | `EXPLORATORY`; bounded slice implemented | `triaged` | `policy-gate / validation implementation` | [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md); existing promotion validator, release fixture/test, Make, and workflow homes | Preserve the offline `APPROVE_READY` proof; require separate authority before evidence resolution, accountable review, signing, candidate assembly, release, or publication. |
 | `NI-2026-04-14-verification-conflict` | `New Ideas 4-14-26.pdf` | 2026-04-14 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md); five contributed atlas triads, three shared with the April 15 packet; downstream homes remain candidate-only | Review a contract-only bitemporal verification-state record with synthetic replay fixtures before any live source, key, policy, or release integration. |
 | `NI-2026-04-15-quality-proof-interface` | `New Ideas 4-15-26.pdf` | 2026-04-15 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md); five contributed atlas triads, three shared with the April 14 packet; downstream homes remain candidate-only | Review a contract-only generated runtime-proof artifact lifecycle with synthetic states before source activation, route work, golden promotion, or publication. |
 | `NI-2026-04-16-governed-baselines` | `New Ideas 4-16-26(1).pdf` | 2026-04-16 | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-16-source-map.md`](exploratory/new-ideas-4-16-source-map.md); ten packet-local atlas triads; downstream homes remain candidate-only | Implement the existing stable JSON-diff gap first; keep materiality, live sources, consent credentials, renderer dependencies, and publication outside that slice. |
@@ -208,6 +209,22 @@ Each row should carry enough information for a maintainer to decide whether to p
 | `NI-2026-07-30-spatiotemporal-modernization` | `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix` | `NEEDS VERIFICATION` (captured 2026-07-30) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md); downstream homes remain candidate-only | Review a decision-only GeoParquet version-readiness issue before any standard, dependency, data, catalog, hosting, runtime, release, deployment, or publication change. |
 
 ### Register detail cards
+
+#### `NI-2026-04-13-promotion-proof`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 4-13-26.pdf`; SHA-256 `7289fad4b6fded40cb58c8ffa7d8c051f6004f6c2720d9eb2c52c20f232f78f2`; 462 pages; 4,444,054 bytes |
+| Source date | `2026-04-13`, supported by filename and PDF title metadata |
+| Primary category | `policy-gate / validation implementation` |
+| Secondary tags | `promotion-gate`, `release-readiness`, `receipt`, `manifest`, `attestation`, `catalog-closure`, `A-G`, `finite-outcomes`, `review`, `rollback`, `correction` |
+| Detailed source map | [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md) |
+| Evidence threshold | Current repository gap; existing responsibility roots; deterministic positive, negative, boundary, parser, CLI, and no-network tests; workflow integration; explicit non-authority. |
+| Implemented disposition | The placeholder promotion gate became a bounded offline A-G validator. `PASS` means only `APPROVE_READY`; no release object or transition is emitted. |
+| Promotion blockers | Evidence/attestation/catalog resolution, policy execution, actor authentication, accountable ReviewRecord validation, candidate assembly, signing, rollback execution, and release authority remain unimplemented or unverified. |
+| Unsafe direct transfers | Packet paths, code, network installs, OIDC/signing, write-capable CI, direct `PROMOTE`, hard-coded source/policy facts, and publication automation are rejected. |
+| Next action | Human review of the bounded slice. Any ReviewRecord, resolver, signing, or release continuation requires a separate dependency-closed authorization. |
+| Decision note | Triaged and partially implemented because a real repository placeholder matched the packet's strongest fail-closed proof idea. The source remains exploratory and non-authoritative. |
 
 #### `NI-2026-04-14-verification-conflict`
 

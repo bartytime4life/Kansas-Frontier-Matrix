@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: Exploratory Intake README
 type: readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-grounded
 owners: Docs steward / OWNER_TBD
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-08-02
 policy_label: public
-related: [../README.md, ../new-ideas-register.md, ../canonicalization-policy.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
+related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
 tags: [kfm, intake, exploratory, governance, documentation]
-notes: [PROPOSED placement; verify path, owners, links, and policy label against mounted repo evidence before merge.]
+notes: [Path and active source-map convention confirmed through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; owners and policy labels remain NEEDS VERIFICATION; records remain non-authoritative intake.]
 [/KFM_META_BLOCK_V2] -->
 
 # Exploratory intake
@@ -19,13 +19,13 @@ Active, non-canonical idea intake for exploratory KFM notes that still need clas
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![authority: exploratory](https://img.shields.io/badge/authority-exploratory-blue)
-![repo depth: unknown](https://img.shields.io/badge/repo_depth-UNKNOWN-lightgrey)
+![repo depth: partial](https://img.shields.io/badge/repo_depth-PARTIAL-yellow)
 
 > [!IMPORTANT]
-> **Status:** experimental / `PROPOSED` placement  
+> **Status:** experimental / repository-grounded
 > **Owner:** Docs steward / `OWNER_TBD`  
 > **Path:** `docs/intake/exploratory/README.md`  
-> **Truth posture:** `CONFIRMED` doctrine / `PROPOSED` path / `UNKNOWN` repo implementation depth  
+> **Truth posture:** `CONFIRMED` path and source-map convention / exploratory content / `PARTIAL` packet inventory
 > **Badges:** static status badges only; they do **not** imply CI, release, policy enforcement, or deployment readiness.
 
 ## Quick jumps
@@ -221,12 +221,13 @@ flowchart TD
 
 ## Directory tree
 
-`NEEDS VERIFICATION`: confirm this tree against the mounted repo before merge.
+The active lane contains this README and named source maps. The glob below is
+descriptive; it does not make every dated packet present or complete.
 
 ```text
 docs/intake/exploratory/
 ├── README.md
-└── YYYY-MM-DD-<slug>.md        # optional active exploratory record; PROPOSED convention
+└── new-ideas-*-source-map.md   # identity-pinned, non-authoritative packet maps
 ```
 
 Use individual files only when a register entry is too dense for review. Lightweight items should remain in `../new-ideas-register.md` until they need their own record.

@@ -2,8 +2,9 @@
 #
 # Responsibility:
 #   Inspect whether a release candidate can be assembled, exercise the concrete
-#   PromotionDecision shape-fixture test, and verify rollback-card readiness
-#   without writing release records or presenting placeholders as a dry run.
+#   PromotionDecision shape-fixture test and bounded A-G readiness proof, and
+#   verify rollback-card readiness without writing release records or
+#   presenting placeholders as a dry run.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
@@ -15,8 +16,8 @@
 # Inputs:
 #   Release candidate inventory, release-support tooling and Make target,
 #   ReleaseManifest/PromotionDecision/RollbackCard contracts and schemas,
-#   PromotionDecision fixtures/test, rollback-card records, validator/fixture
-#   inventories, and release/promotion policy routing surfaces.
+#   PromotionDecision fixtures/test, promotion-gate fixtures/validator/tests,
+#   rollback-card records, inventories, and release/promotion policy routing.
 #
 # Outputs and outcomes:
 #   Test output and job summaries only. Jobs either confirm the bounded current
@@ -230,6 +231,12 @@ jobs:
           set -euo pipefail
           python -m pytest -q tests/release/test_promotion_decision_schema.py
 
+      - name: Prove bounded promotion-gate behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
+
       - name: Record promotion check boundary
         if: always()
         shell: bash
@@ -237,8 +244,9 @@ jobs:
           {
             echo "### Promotion gate check"
             echo
-            echo "- The repository-owned PromotionDecision fixture test ran after a non-empty fixture check."
-            echo "- **WORKFLOW_HOLD:** this is shape validation for a PROPOSED contract. It does not assemble a candidate, resolve EvidenceRefs, evaluate promotion policy, enforce accountable review, validate rollback, or bind another workflow result."
+            echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
+            echo "- PASS means only APPROVE_READY over declared synthetic closure; it never assembles or promotes a release candidate."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, evaluate promotion policy, verify attestations, enforce reviewer authority, execute rollback, or bind another workflow result."
             echo "- Result: ${{ job.status }}. No PromotionDecision, release transition, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
