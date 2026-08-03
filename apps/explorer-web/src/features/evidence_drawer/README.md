@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/evidence_drawer/readme
 title: Explorer Web Evidence Drawer Feature README
 type: app-readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Evidence steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: public
 related:
   - ../README.md
@@ -30,9 +30,11 @@ tags: [kfm, apps, explorer-web, features, evidence-drawer, evidencebundle, evide
 notes:
   - "Replaces the greenfield Evidence Drawer feature stub with a governed feature README."
   - "Evidence Drawer UI features may render governed evidence projections, but they must not become canonical evidence, source registry, citation authority, policy engine, release authority, correction authority, renderer truth, or direct model-output truth."
-  - "A bounded fixture-only projection parser, finite view-state resolver, app-shell rendering path, synthetic outcome fixtures, and app-local tests are now executable."
-  - "Canonical EvidenceDrawerPayload schema binding, live governed API transport, map-click routing, focus management, telemetry, Focus Mode/correction handoffs, and production accessibility remain NEEDS VERIFICATION."
+  - "A bounded fixture-only projection parser, finite view-state resolver, keyboard-operable app-shell rendering path, synthetic outcome fixtures, and app-local unit/browser tests are now executable."
+  - "Keyboard open/close, focus entry/return, labeled landmarks, and denied/error DOM no-leak behavior are covered by deterministic Playwright fixtures."
+  - "Canonical EvidenceDrawerPayload schema binding, live governed API transport, map-click routing, focus trapping, reduced-motion and non-map alternatives, telemetry, Focus Mode/correction handoffs, and production accessibility remain NEEDS VERIFICATION."
   - "v0.3 implements the first fail-closed view-state slice without ratifying the unresolved UI/evidence schema-home split."
+  - "v0.4 adds the bounded browser-accessibility slice without expanding projection or policy authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -63,7 +65,7 @@ notes:
 > **Path:** `apps/explorer-web/src/features/evidence_drawer/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
 > **Directory Rules basis:** deployable application feature code belongs under `apps/`; the drawer is an app-local UI composition surface, not a new root, evidence store, policy home, schema home, contract home, source registry, release home, or lifecycle-data lane.  
-> **Truth posture:** CONFIRMED fixture-only projection parser, finite `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` resolver, shell-rendered default abstention, synthetic fixtures, no-leak tests, and Explorer build/test execution / PROPOSED full feature contract / UNKNOWN canonical payload schema binding, live governed API transport, map-click route wiring, focus trap/return focus, telemetry, Focus Mode/correction handoffs, and deployment behavior
+> **Truth posture:** CONFIRMED fixture-only projection parser, finite `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` resolver, native keyboard open/close, focus entry/return, labeled landmarks, synthetic fixtures, DOM no-leak checks, and Explorer build/test execution / PROPOSED full feature contract / UNKNOWN canonical payload schema binding, live governed API transport, map-click route wiring, focus trapping, reduced-motion/non-map alternatives, telemetry, Focus Mode/correction handoffs, and deployment behavior
 
 > [!CAUTION]
 > The Evidence Drawer is a browser-side projection, not the evidence source. It must not read RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, canonical stores, unsigned evidence, local files, model runtimes, renderer feature properties, map popups, badge labels, or AI text as truth. It renders governed API projections only.
@@ -229,7 +231,7 @@ Exact modules remain `NEEDS VERIFICATION`. Candidate modules should be introduce
 
 | Candidate module | Purpose | Required safeguard | Status |
 |---|---|---|---|
-| `drawer-shell` | Drawer layout, resize/close, focus trap, keyboard path | Accessibility and focus-return tests | PROPOSED |
+| `drawer-shell` | Drawer layout, resize/close, focus trap, keyboard path | Accessibility and focus-return tests | BOUNDED keyboard open/close and focus return; resize/trap PROPOSED |
 | `claim-header` | Claim label, feature id, layer id, valid time, release state | Stable opened-from context | PROPOSED |
 | `decision-state` | Render finite `DecisionEnvelope` outcomes | Finite state coverage | PROPOSED |
 | `source-summary` | Show source role, authority, knowledge character | SourceDescriptor-derived payload only | PROPOSED |
@@ -266,12 +268,14 @@ The repository now implements the first non-network subset of this slice:
 
 - `src/adapters/GovernedClient.ts` validates a closed, fixture-only public-safe projection profile and performs no fetch or lifecycle-store read;
 - `src/features/evidence_drawer/index.tsx` maps valid projections to explicit finite view states and replaces malformed input with a fixed `ERROR` state;
+- the same app-local module mounts a native trigger and labeled complementary landmark, moves focus to the close control, handles Escape, and restores focus to the opener;
 - denied and error projections never reflect supplied title, summary, evidence, citation, or diagnostic text;
-- the app shell renders the no-response `ABSTAIN` state as a labeled complementary landmark with text trust status;
+- the app shell mounts the no-response `ABSTAIN` state through that keyboard-operable controller;
 - `tests/fixtures/ui/evidence_drawer/` supplies synthetic `ANSWER`, stale `ABSTAIN`, sensitive `DENY`, upstream `ERROR`, and invalid cases;
-- `apps/explorer-web/tests/evidence-drawer.test.ts` covers positive, negative, boundary, no-leak, and no-direct-store/network behavior.
+- `apps/explorer-web/tests/evidence-drawer.test.ts` covers positive, negative, boundary, no-leak, and no-direct-store/network behavior;
+- `apps/explorer-web/tests/browser/evidence-drawer.spec.ts` drives deterministic fixtures in Chrome and verifies keyboard open/Escape close, focus entry/return, labeled main/complementary landmarks, safe `ANSWER` rendering, and denied/error DOM no-leak behavior.
 
-This is not canonical `EvidenceDrawerPayload` schema adoption, a live API client, a map-click flow, complete drawer interaction, citation validation authority, policy execution, release approval, or production accessibility proof.
+This is not canonical `EvidenceDrawerPayload` schema adoption, a live API client, a map-click flow, a focus trap, complete accessibility coverage, citation validation authority, policy execution, release approval, or production accessibility proof.
 
 ## 9. Diagram
 
@@ -343,7 +347,7 @@ Every long-lived Evidence Drawer view should document or encode:
 
 ## 13. Inspection path
 
-The bounded parser, resolver, default shell rendering, fixtures, tests, and locked Explorer build are now confirmed. Live route wiring, governed API transport, canonical schema binding, complete keyboard/focus behavior, telemetry, and Focus Mode/correction handoffs remain `NEEDS VERIFICATION`.
+The bounded parser, resolver, keyboard-operable shell rendering, focus entry/return, labeled landmarks, fixture-driven browser checks, and locked Explorer build are now confirmed. Live route wiring, governed API transport, canonical schema binding, focus trapping, reduced-motion/non-map alternatives, telemetry, and Focus Mode/correction handoffs remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/features/evidence_drawer -maxdepth 5 -type f | sort
@@ -402,7 +406,7 @@ For Evidence Drawer feature changes:
 | Confirm governed API claim-resolution envelope | Required for trust membrane enforcement |
 | Confirm `EvidenceDrawerPayload` schema and fixtures | Required before claim-bearing drawer UI claims |
 | Confirm negative-state fixtures | Required to avoid silent evidence failures |
-| Confirm accessibility tests | Required because trust signals must be accessible |
+| Complete focus-trap, reduced-motion, non-map, and broader screen-reader checks | The bounded keyboard/focus/landmark path is covered; complete accessibility remains open |
 | Confirm Focus Mode and correction/report handoffs | Required before downstream workflow claims |
 | Confirm telemetry is safe and non-secret | Required before diagnostics/observability claims |
 | Confirm package scripts beyond TODO | Required before build/test claims |
@@ -411,7 +415,7 @@ For Evidence Drawer feature changes:
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README already contained a strong Evidence Drawer feature contract. This revision preserves that contract, refreshes metadata, adds a current evidence-basis section, strengthens anti-bypass and telemetry safeguards, and keeps implementation claims bounded. It does not claim drawer components, routes, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, schemas, accessibility behavior, telemetry, Focus Mode launch, correction flow, or export/compare/story integrations are implemented.
+The previous README already contained a strong Evidence Drawer feature contract. This revision preserves that contract, refreshes metadata, records the bounded keyboard/focus/landmark browser checks, and keeps implementation claims scoped. It does not claim live routes, governed API envelopes, canonical schemas, focus trapping, complete accessibility, telemetry, Focus Mode launch, correction flow, or export/compare/story integrations are implemented.
 
 </details>
 
