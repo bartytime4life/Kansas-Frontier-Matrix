@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests/domains/atmosphere/readme
 title: Atmosphere Domain Test Lane README
 type: domain-test-readme
-version: v0.3
-status: draft; bounded synthetic precipitation, knowledge-character, and low-cost-sensor calibration fixture profiles executable
+version: v0.4
+status: draft; bounded synthetic precipitation, knowledge-character, low-cost-sensor calibration, and observed-versus-modeled fixture profiles executable
 owners:
   - <PLACEHOLDER — Atmosphere steward>
   - <PLACEHOLDER — Test steward>
@@ -13,8 +13,8 @@ owners:
 created: 2026-07-05
 updated: 2026-08-03
 policy_label: public
-implementation_status: three bounded standard-library fixture profiles executable; broader lane scaffolded
-verification_status: current-session paths verified; precipitation, knowledge-character, and low-cost-sensor calibration positive, negative, boundary, parser, CLI, and no-network checks executable; cross-domain isolation check executable; broader semantics, scientific validity, policy, and release state unverified
+implementation_status: four bounded standard-library fixture profiles executable; broader lane scaffolded
+verification_status: current-session paths verified; precipitation, knowledge-character, low-cost-sensor calibration, and observed-versus-modeled positive, negative, boundary, parser, CLI, and no-network checks executable; cross-domain isolation check executable; broader semantics, scientific validity, policy, and release state unverified
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -152,9 +152,10 @@ This path is correct because:
 | `test_atmosphere_smoke.py` | CONFIRMED bounded executable for the synthetic precipitation fixture profile; it is not Atmosphere truth or release proof. |
 | `test_knowledge_character_registry.py` | CONFIRMED bounded executable for the synthetic anti-collapse fixture profile; it does not settle the canonical enum, registry, policy, or release state. |
 | `test_low_cost_sensor_caveat_required.py` | CONFIRMED bounded executable for the synthetic low-cost PM2.5 calibration profile; it does not establish scientific validity, live-record acceptance, Rego policy, source admission, or release state. |
+| `test_observed_modeled_separation.py` | CONFIRMED bounded executable for closed AirObservation and ForecastContext profiles, exact ABSTAIN/DENY behavior, source/evidence/time/unit/model-lineage boundaries, schema mirrors, and active no-network denial; no live observation, model, policy, evidence, release, or life-safety authority. |
 | Executable tests under every broader child lane | NEEDS VERIFICATION. |
-| Fixture inventory | The bounded precipitation pair, knowledge-character corpus, and low-cost-sensor calibration corpus are CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
-| Validator modules and commands | The three bounded fixture validators are CONFIRMED; broader commands remain NEEDS VERIFICATION. |
+| Fixture inventory | The bounded precipitation pair, knowledge-character corpus, low-cost-sensor calibration corpus, and observed-versus-modeled corpus are CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
+| Validator modules and commands | The four bounded fixture validators are CONFIRMED; broader commands remain NEEDS VERIFICATION. |
 | CI job names / pytest markers | NEEDS VERIFICATION. |
 | Runtime/API/UI behavior | NEEDS VERIFICATION unless supported by executable tests. |
 
@@ -219,6 +220,22 @@ transferability/drift posture, fixture-only governance, deterministic
 diagnostics, bounded parsing, and active network denial. It does not determine
 measurement accuracy, select a correction, resolve evidence, admit a source,
 execute Rego, or approve release.
+
+The bounded observed-versus-modeled command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
+```
+
+It exercises three synthetic positive/abstaining fixtures and twelve exact
+negative fixtures. The checks keep AirObservation and ForecastContext
+non-substitutable, require station versus model-run identity, preserve
+observed/retrieval versus generated/valid times, require units, DERIVED_FROM
+lineage and uncertainty, expose unresolved source/evidence/QA/rights as
+ABSTAIN, deny false release state, and actively block network access. The
+profile does not validate current air quality, scientific model skill, policy,
+EvidenceBundle resolution, release, or life-safety output.
 
 Additional sublanes may be added when they have a clear test responsibility and do not duplicate an existing authority root.
 

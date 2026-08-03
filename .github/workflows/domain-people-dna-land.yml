@@ -1,14 +1,16 @@
 # KFM People/DNA/Land domain CI readiness workflow.
-# Status: PROPOSED bounded readiness checks plus explicit holds; accepted
-# executable validation, proof, consent, revocation, and release-dry-run
-# producers are not established in current repository evidence.
+# Status: one bounded synthetic consent-overlay fixture profile is executable;
+# broader validation, policy-runtime, proof, revocation execution, and release
+# producers remain held.
 #
 # Authority boundary:
-# - This workflow inspects repository structure and executable maturity only. It
-#   does not open real person, genealogy, DNA/genomic, consent, revocation,
+# - This workflow opens only repository-owned synthetic fixture payloads under
+#   fixtures/domains/people-dna-land/consent_overlay/.
+# - It does not open real person, genealogy, DNA/genomic, consent, revocation,
 #   parcel, deed, title, assessor, tax, or private person-land payloads.
 # - It does not establish identity, kinship, consent validity, title, boundary,
-#   rights, sensitivity, EvidenceBundle closure, release approval, or public use.
+#   rights, sensitivity, EvidenceBundle closure, policy approval, release
+#   approval, or public use.
 name: domain-people-dna-land
 
 "on":
@@ -44,7 +46,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate People DNA Land validation readiness
+      - name: Inspect People DNA Land validation boundaries
         shell: bash
         run: |
           set -euo pipefail
@@ -55,13 +57,20 @@ jobs:
             "docs/domains/people-dna-land/SENSITIVITY.md"
             "docs/domains/people-dna-land/DNA_HANDLING.md"
             "contracts/domains/people-dna-land/README.md"
+            "contracts/domains/people-dna-land/consented_genealogy_overlay.md"
             "schemas/contracts/v1/domains/people-dna-land/README.md"
+            "schemas/contracts/v1/domains/people-dna-land/consented_genealogy_overlay.schema.json"
+            "schemas/contracts/v1/domains/people-dna-land/genealogy_overlay_revocation_manifest.schema.json"
             "fixtures/domains/people-dna-land/README.md"
+            "fixtures/domains/people-dna-land/consent_overlay/README.md"
+            "fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json"
             "policy/domains/people-dna-land/README.md"
             "policy/consent/people-dna-land/README.md"
             "tests/domains/people-dna-land/README.md"
             "tests/domains/people-dna-land/consent/revocation/README.md"
+            "tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py"
             "tools/validators/domains/people-dna-land/README.md"
+            "tools/validators/domains/people-dna-land/validate_consent_overlay.py"
             "tools/validators/genealogy/README.md"
             "data/registry/sources/people-dna-land/README.md"
             "release/candidates/people-dna-land/README.md"
@@ -74,22 +83,66 @@ jobs:
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "People/DNA/Land" \
-            --test-root tests/domains/people-dna-land \
-            --validator-root tools/validators/domains/people-dna-land \
-            --validator-root tools/validators/genealogy
-
           python - <<'PY'
           from pathlib import Path
 
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_tests = {
+              Path(
+                  "tests/domains/people-dna-land/consent/revocation/"
+                  "test_consent_overlay_safety.py"
+              ),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_consent_overlay.py"
+              ),
+          }
+
+          for path in sorted(Path("tests/domains/people-dna-land").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(
+                          f"Accepted People/DNA/Land test regressed: {path}"
+                      )
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired People/DNA/Land test became substantive: {path}"
+                  )
+
+          validator_roots = (
+              Path("tools/validators/domains/people-dna-land"),
+              Path("tools/validators/genealogy"),
+          )
+          for root in validator_roots:
+              for path in sorted(root.rglob("*.py")):
+                  classification = classify_validator_source(
+                      path.read_text(encoding="utf-8")
+                  )
+                  if path in accepted_validators:
+                      if classification.placeholder:
+                          raise SystemExit(
+                              f"Accepted People/DNA/Land validator regressed: {path}"
+                          )
+                  elif not classification.placeholder:
+                      raise SystemExit(
+                          f"Unwired People/DNA/Land validator became substantive: {path}"
+                      )
+
           fixture_root = Path("fixtures/domains/people-dna-land")
+          accepted_fixture_root = fixture_root / "consent_overlay"
           expected_markers = {
-              Path("fixtures/domains/people-dna-land/golden/PLACEHOLDER.md"):
+              fixture_root / "golden/PLACEHOLDER.md":
                   "Greenfield placeholder for golden fixture set.",
-              Path("fixtures/domains/people-dna-land/invalid/PLACEHOLDER.md"):
+              fixture_root / "invalid/PLACEHOLDER.md":
                   "Greenfield placeholder for invalid fixture set.",
-              Path("fixtures/domains/people-dna-land/valid/PLACEHOLDER.md"):
+              fixture_root / "valid/PLACEHOLDER.md":
                   "Greenfield placeholder for valid fixture set.",
           }
           observed_markers = set(fixture_root.rglob("PLACEHOLDER.md"))
@@ -112,16 +165,17 @@ jobs:
               for path in fixture_root.rglob("*")
               if path.is_file()
               and path.name not in {"README.md", ".gitkeep", "PLACEHOLDER.md"}
+              and not path.is_relative_to(accepted_fixture_root)
           )
           if surfaced_payloads:
               raise SystemExit(
-                  "People/DNA/Land fixture payloads surfaced; review them as synthetic "
-                  f"and public-safe before wiring any consumer: {surfaced_payloads}."
+                  "Unreviewed People/DNA/Land fixture payloads surfaced outside "
+                  f"the accepted synthetic profile: {surfaced_payloads}."
               )
 
           print(
-              "Confirmed the exact three one-line People/DNA/Land fixture markers; "
-              "no fixture payload was opened."
+              "People/DNA/Land executable, placeholder, marker, and synthetic "
+              "fixture inventories are explicit."
           )
           PY
 
@@ -136,38 +190,64 @@ jobs:
           fi
 
           if grep -Eq '^(people-dna-land-validate|validate-people-dna-land):' Makefile; then
-            echo "::error::A People/DNA/Land validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            echo "::error::A People/DNA/Land validation target now exists. Wire and verify it deliberately instead of retaining this bounded workflow path."
             exit 1
           fi
 
-          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-readiness"
-          echo "WORKFLOW_HOLD: executable People/DNA/Land validation and consent enforcement are not established"
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader People/DNA/Land validation and consent enforcement are not established"
 
-      - name: Record People DNA Land validation hold
+      - name: Run bounded consent-safe genealogy-overlay validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py --verbose
+
+          python tools/validators/domains/people-dna-land/validate_consent_overlay.py \
+            --revocation-manifest fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json \
+            fixtures/domains/people-dna-land/consent_overlay/valid/*.json
+
+          if python tools/validators/domains/people-dna-land/validate_consent_overlay.py \
+            --revocation-manifest fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json \
+            fixtures/domains/people-dna-land/consent_overlay/invalid/*.json; then
+            echo "::error::Known-invalid consent-overlay fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid consent-overlay fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture"
+
+      - name: Record People DNA Land validation result and broader hold
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### People/DNA/Land validation status
 
-          `WORKFLOW_CHECK_EXECUTED: people-dna-land-readiness`
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture`
 
-          `WORKFLOW_HOLD: executable People/DNA/Land validation and consent enforcement are not established`
+          `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          When green, this job has executed a frozen, synthetic, no-network
+          fixture profile for a consent-safe genealogy-overlay candidate. It
+          checks active consent for living-person and DNA-derived summaries,
+          expiry and revocation precedence, manifest-root and membership checks,
+          deterministic hashes, fixture EvidenceRefs, coarse synthetic place and
+          time buckets, high-confidence evidence support, identifying-field and
+          raw-genomic denial, public-release denial, bounded JSON parsing,
+          deterministic diagnostics, and explicit network denial.
 
-          This job verifies responsibility boundaries, checks for newly executable
-          tests and validator bodies, confirms current policy scaffolding,
-          recognizes the exact three one-line `golden`, `invalid`, and `valid`
-          `PLACEHOLDER.md` markers, and refuses to open newly surfaced fixture
-          payloads automatically.
-
-          It does not establish person identity, relationship or kinship truth,
-          DNA/genomic support, consent validity, revocation execution, land title,
-          parcel boundary truth, rights, privacy, public-safe transformation,
-          EvidenceBundle closure, policy approval, legal sufficiency, or release
-          readiness.
+          The profile is not a production overlay contract or consent system. It
+          does not validate real people, identity, kinship, DNA, consent legal
+          sufficiency, source rights, EvidenceBundles, policy approval, public-safe
+          transforms, release readiness, withdrawal execution, cache invalidation,
+          or publication. Other People/DNA/Land test and validator modules remain
+          explicit placeholders or documentation-only lanes.
           EOF
 
   build-proof-people-dna-land:
