@@ -1,0 +1,27 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_missing_required_source_ref",
+    "fault": "missing_required_source_ref",
+    "notes": "source_ref is required. Unbound source evidence must fail closed."
+  },
+  "object_type": "DroughtObservation",
+  "schema_version": "v1",
+  "observation_id": "obs:usdm:kansas:2026-07-29",
+  "profile_version": "0.1.0",
+  "source_resolution_status": "unresolved",
+  "observed_at": "2026-07-29T08:00:00Z",
+  "observed_interval_end": null,
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "publication_time": null,
+  "geometry_ref": null,
+  "geometry_resolution_status": "unresolved",
+  "geometry_version": null,
+  "classification_vocabulary": "usdm_d0_d4",
+  "source_native_severity": "D2",
+  "method_ref": null,
+  "superseded_by": null,
+  "correction_of": null,
+  "rights_status": "unknown",
+  "sensitivity": "public",
+  "release_posture": "not_released"
+}
