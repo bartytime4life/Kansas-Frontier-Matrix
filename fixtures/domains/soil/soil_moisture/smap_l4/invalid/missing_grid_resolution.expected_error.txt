@@ -1,0 +1,1 @@
+GRID_RESOLUTION_REQUIRED	$.spatial_support.source_resolution_m

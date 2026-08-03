@@ -1,0 +1,1 @@
+UNCERTAINTY_REQUIRED	$.observation.uncertainty

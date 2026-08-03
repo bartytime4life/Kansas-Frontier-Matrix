@@ -1,5 +1,6 @@
 # KFM Soil domain CI workflow.
-# Status: validate-soil runs two accepted synthetic no-network fixture profiles;
+# Status: validate-soil runs three bounded synthetic no-network validator
+# profiles plus the bounded SSURGO package-drift fixture proof;
 # proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -44,7 +45,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run accepted deterministic Soil fixture suite
+      - name: Run bounded deterministic Soil fixture suites
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -62,7 +63,10 @@ jobs:
             "tools/validators/domains/soil/README.md"
             "tools/validators/domains/soil/validate_public_safe_fixture.py"
             "tools/validators/domains/soil/moisture/validate_soil_moisture.py"
+            "tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py"
             "fixtures/domains/soil/soil_moisture/README.md"
+            "fixtures/domains/soil/soil_moisture/smap_l4/README.md"
+            "tests/domains/soil/test_smap_l4_anti_collapse.py"
             "data/registry/sources/soil/README.md"
             "release/candidates/soil/README.md"
             "tools/ingest/ssurgo_watch/README.md"
@@ -80,6 +84,7 @@ jobs:
 
           python tests/domains/soil/test_soil_smoke.py --verbose
           python tests/domains/soil/test_soil_moisture_qc.py --verbose
+          python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
 
       - name: Run bounded SSURGO package-drift fixture proof
         shell: bash
@@ -97,30 +102,35 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Soil validation status
 
-          `VALIDATION_SCOPE: synthetic-public-safe-station-moisture-and-ssurgo-drift-fixtures-only`
+          `VALIDATION_SCOPE: synthetic-public-safe-station-smap-l4-and-ssurgo-drift-fixtures-only`
 
-          This job runs only the accepted deterministic standard-library suite in
-          `tests/domains/soil/test_soil_smoke.py` and
-          `tests/domains/soil/test_soil_moisture_qc.py`, and the bounded SSURGO
-          comparator proof in `tests/ingest/ssurgo_watch/test_ssurgo_watch.py`.
-          The suites read only
+          This job runs only the three bounded deterministic standard-library suites in
+          `tests/domains/soil/test_soil_smoke.py`,
+          `tests/domains/soil/test_soil_moisture_qc.py`, and
+          `tests/domains/soil/test_smap_l4_anti_collapse.py`, plus the bounded
+          SSURGO comparator proof in
+          `tests/ingest/ssurgo_watch/test_ssurgo_watch.py`. The suites read only
           small synthetic positive and fail-closed fixtures, exercise the repository
           validator at `tools/validators/domains/soil/validate_public_safe_fixture.py`,
           the bounded station profile at
           `tools/validators/domains/soil/moisture/validate_soil_moisture.py`, and
-          the fixture-only comparator at
-          `tools/ingest/ssurgo_watch/ssurgo_watch.py`; block
+          the profile-local SMAP L4 anti-collapse validator at
+          `tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py`, and the
+          fixture-only comparator at `tools/ingest/ssurgo_watch/ssurgo_watch.py`; block
           network calls in the test boundary, and check explicit support
           type, source and evidence references, generalized spatial support,
-          depth ordering, canonical UTC, preserved source timezone, QC flags,
-          deterministic reading deduplication, units, bounded measurement values, fixture-only rights
+          depth ordering, surface/root-zone and NRT/standard-quality separation,
+          grid/model/raw/station/field/in-situ anti-collapse, canonical UTC,
+          preserved source timezone, QA/QC and uncertainty, deterministic reading
+          deduplication, units, bounded measurement values, fixture-only rights
           and sensitivity, non-release state, non-promotion eligibility, rollback
           posture, and rejection of precise-location aliases or undeclared fields.
 
           A green result does not establish Soil truth, MUKEY/COKEY/CHKEY
           lineage, live SSURGO package or rights verification, source admission,
-          survey authority, station freshness,
-          satellite or model fitness, EvidenceBundle closure, policy approval,
+          survey authority, station or satellite freshness, production SMAP
+          identity, canonical support vocabulary,
+          satellite or model scientific fitness, EvidenceBundle closure, policy approval,
           agronomic or engineering suitability, proof closure, release readiness,
           or safe public use. The proof and release-dry-run jobs remain held.
           EOF

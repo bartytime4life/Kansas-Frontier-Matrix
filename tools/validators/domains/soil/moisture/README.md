@@ -9,7 +9,7 @@ created: 2026-07-08
 updated: 2026-08-02
 policy_label: repository-facing; per-domain-validator; soil; soil-moisture-observation; station-soil-moisture; satellite-grid-soil-moisture; unit-depth-qc; stale-state; support-type-separation; release-gated; non-authoritative
 owning_root: tools/
-responsibility: bounded synthetic station soil-moisture fixture validation plus proposed broader SoilMoistureObservation checks, while deferring Soil meaning, source registry authority, evidence records, policy decisions, proof records, and release authority to their owning roots
+responsibility: bounded synthetic station soil-moisture validation and a separate frozen synthetic SMAP L4 anti-collapse profile, while deferring Soil meaning, canonical vocabulary, source registry authority, schemas, evidence records, policy decisions, proof records, and release authority to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
@@ -22,6 +22,10 @@ related:
   - ../lineage/README.md
   - ../../../catalog_closure/README.md
   - ../../../cross-domain-joins/README.md
+  - validate_smap_l4_fixture.py
+  - ../../../../../fixtures/domains/soil/soil_moisture/smap_l4/README.md
+  - ../../../../../tests/domains/soil/test_smap_l4_anti_collapse.py
+  - ../../../../../pipelines/domains/soil/smap_ingest/README.md
   - ../../../../../contracts/domains/soil/soil_moisture_observation.md
   - ../../../../../contracts/domains/soil/domain_observation.md
   - ../../../../../contracts/domains/soil/domain_validation_report.md
@@ -41,6 +45,7 @@ related:
   - ../../../../../release/
 notes:
   - "The standard-library validate_soil_moisture.py executable and its closed synthetic fixture inventory are confirmed by focused no-network tests."
+  - "The separate validate_smap_l4_fixture.py executable freezes a profile-local, noncanonical SMAP L4 anti-collapse contract for synthetic surface and root-zone grid candidates; it does not admit or fetch a source, define a production schema, decide policy, or publish."
   - "A SoilMoistureObservation semantic contract is confirmed, but its paired schema was not found in that contract-authoring task. Field realization and machine validation remain PROPOSED / NEEDS VERIFICATION."
   - "Soil moisture support types must not collapse: station readings, satellite/grid observations, survey map units, gridded derivatives, private operational sensors, and interpreted/public products are different support classes."
   - "This validator lane checks moisture observation posture only. It must not define Soil meaning, create SourceDescriptors, create EvidenceBundles, approve release, publish layers, certify agronomic suitability, or provide operational/private sensor disclosure."
@@ -57,7 +62,7 @@ notes:
 ![support](https://img.shields.io/badge/support--type-separate-critical)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/domains/soil/moisture/` validates one frozen synthetic station soil-moisture fixture profile and documents the still-proposed broader `SoilMoistureObservation` validator lane.
+> **One-line purpose.** `tools/validators/domains/soil/moisture/` validates separate frozen synthetic station and profile-local SMAP L4 anti-collapse fixtures while documenting the still-proposed broader `SoilMoistureObservation` lane.
 
 ---
 
@@ -80,30 +85,39 @@ The answer should be a deterministic validation result. This folder should not c
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/domains/soil/moisture/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Parent `tools/validators/domains/soil/README.md` | **CONFIRMED stub** | Parent file currently says only `# validators :: soil`; this README keeps its own boundary explicit. |
+| Parent `tools/validators/domains/soil/README.md` | **CONFIRMED index** | The parent README documents the bounded Soil validator lanes and keeps domain-level boundaries explicit. |
 | SoilMoistureObservation contract | **CONFIRMED in repo evidence / draft** | `contracts/domains/soil/soil_moisture_observation.md` defines a source-scoped time-series moisture observation with source, support type, unit, depth, cadence, QC, time scope, evidence, policy, release, and rollback posture. |
 | Paired moisture schema | **NOT FOUND in contract evidence / NEEDS VERIFICATION** | The contract states that `schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json` was not found in that task; field-level machine shape remains proposed. |
 | Soil proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/soil/README.md` says support-type separation is mandatory and that station reading, satellite grid, static survey, gridded derivative, pedon evidence, and interpretation cannot masquerade as one surface. |
 | Moisture source families | **CONFIRMED in repo evidence / draft** | Current Soil evidence names station soil-moisture, satellite-grid, Kansas Mesonet, SCAN, USCRN, and SMAP as Soil source/support families. |
 | `validate_soil_moisture.py` | **CONFIRMED bounded executable** | Validates the frozen synthetic station profile with no network or reference resolution. |
-| Moisture fixtures and tests | **CONFIRMED bounded coverage** | Two positive fixtures and six exact negative fixtures exercise unit, depth, UTC, source-timezone, QC, dedupe, public-safe geometry, identity, bounds, CLI, and no-network behavior. |
+| `validate_smap_l4_fixture.py` | **CONFIRMED bounded executable** | Validates a separate profile-local SMAP L4 fixture envelope: modeled grid support, surface/root-zone separation, cadence posture, QA/uncertainty, anti-collapse flags, parser bounds, and non-release governance. |
+| Moisture fixtures and tests | **CONFIRMED bounded coverage** | The station suite retains two positive and six exact negative fixtures. The SMAP L4 suite adds two positive and eight exact negative fixtures plus parser, no-network, deterministic-output, non-echoing CLI, and anti-collapse mutations. |
 | Broader schemas, policy bundles, source mappings, runtime, proof, and release wiring | **PROPOSED / NEEDS VERIFICATION** | The executable does not close the full observation contract or establish source, policy, scientific, runtime, proof, or release behavior. |
 
 [Back to top](#top)
 
 ---
 
-## Frozen executable profile and proposed broader focus
+## Frozen executable profiles and proposed broader focus
 
-The confirmed executable accepts only synthetic `station_observation` fixtures
+The station executable accepts only synthetic `station_observation` fixtures
 with the repository-native `fixture_only` source role. It checks bounded JSON,
 closed fields, source/evidence/receipt references, a non-placeholder SHA-256
 shape, generalized county support, VWC in `m3/m3`, non-negative depth,
 canonical UTC timestamps with the source timezone preserved, source QC flags,
 and the `(station_id, measure, depth_cm, timestamp_iso)` deduplication tuple.
 
+The separate SMAP L4 executable accepts only the profile-local
+`model_assimilated_reference` and `satellite_grid_soil_moisture` fixture
+vocabulary. It keeps surface and root-zone candidates distinct, requires grid,
+QA, uncertainty, cadence, assimilation, evidence and receipt posture, and
+denies raw-observation, station, field-truth, in-situ-merge, promotion, and
+release collapse. Its vocabulary is noncanonical and does not widen the station
+profile or activate a live source.
+
 Until a Soil schema/source profile confirms broader field names, the following
-remain proposed concepts outside the frozen executable:
+remain proposed concepts outside these frozen executables:
 
 | Concept | Proposed meaning | Notes |
 |---|---|---|
@@ -135,17 +149,17 @@ remain proposed concepts outside the frozen executable:
 | Soil schemas | `schemas/contracts/v1/domains/soil/`, `schemas/contracts/v1/soil/`, or ADR-selected schema home |
 | Soil policy rules | `policy/domains/soil/` or accepted policy homes |
 | Soil source descriptors and source registry | `data/registry/sources/soil/` or accepted source registry home |
-| Soil catalog records | `data/catalog/domain/soil/` or accepted catalog home |
+| Soil catalog projections | `data/catalog/domains/soil/` after governed migration; the current singular lane is a migration candidate, not an independent writer |
 | EvidenceBundle and proof support | `data/proofs/soil/`, `data/proofs/` |
 | Receipts and run memory | `data/receipts/` |
 | Release decisions, manifests, rollback, corrections | `release/` |
-| Tests and fixtures | `tests/validators/domains/soil/moisture/`, `tests/domains/soil/`, `fixtures/domains/soil/soil_moisture_observation/`, or accepted conventions |
+| Tests and fixtures | `tests/domains/soil/` and `fixtures/domains/soil/soil_moisture/` for the confirmed bounded profiles |
 
 Safe interpretation:
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live here when it checks declared Soil moisture, support-type, unit, depth, QC, cadence, evidence, policy, and release-reference rules.
-- **NEEDS VERIFICATION:** exact executable names, field names, schema homes, source mappings, fixture shape, policy bundles, report destinations, receipts, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** this README, `validate_soil_moisture.py`, `validate_smap_l4_fixture.py`, their closed synthetic fixture profiles, focused tests, and `domain-soil` validation commands exist in this bounded slice.
+- **PROPOSED:** additional validator code may live here when it checks declared Soil moisture, support-type, unit, depth, QC, cadence, evidence, policy, and release-reference rules.
+- **NEEDS VERIFICATION:** the broader contract's field realization, production schema homes, source mappings, policy bundles, report destinations, broader receipt/release integration, and runtime behavior.
 - **DENY:** using this folder as Soil doctrine, moisture contract, schema home, policy home, source registry, catalog storage, proof storage, receipt storage, lifecycle data store, release record store, published artifact store, public runtime surface, operational sensor disclosure surface, or agronomic recommendation authority.
 
 [Back to top](#top)
@@ -247,11 +261,14 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Accepted deterministic command:
+Accepted deterministic commands:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/soil/test_soil_moisture_qc.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
 ```
 
 Direct fixture validation:
@@ -259,12 +276,15 @@ Direct fixture validation:
 ```bash
 python tools/validators/domains/soil/moisture/validate_soil_moisture.py \
   fixtures/domains/soil/soil_moisture/valid/station_series.json
+
+python tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py \
+  fixtures/domains/soil/soil_moisture/smap_l4/valid/surface_nrt.json
 ```
 
-A pass proves only the frozen synthetic station profile. It does not validate
-source claims, scientific fitness, staleness, station health, source consent,
-schemas, policy, evidence closure, proof, runtime answers, release, or
-publication.
+A pass proves only the frozen synthetic station and SMAP L4 anti-collapse
+profiles. It does not validate live source claims, scientific fitness,
+staleness, station health, source admission, canonical vocabulary, schemas,
+policy, evidence closure, proof, runtime answers, release, or publication.
 
 [Back to top](#top)
 
@@ -292,5 +312,5 @@ publication.
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-08-02 |
-| Review state | Bounded synthetic station fixture validator implemented; broader lane remains draft. |
-| Next smallest safe change | Reconcile the three existing moisture schema scaffolds and the missing `soil_moisture_observation.schema.json` with the semantic contract before expanding beyond the frozen station fixture profile. |
+| Review state | Bounded synthetic station validator and separate SMAP L4 anti-collapse fixture profile implemented; broader lane remains draft. |
+| Next smallest safe change | Reconcile the three existing moisture schema scaffolds, canonical support vocabulary, and the missing `soil_moisture_observation.schema.json` with the semantic contract before expanding either frozen profile or activating a live source. |

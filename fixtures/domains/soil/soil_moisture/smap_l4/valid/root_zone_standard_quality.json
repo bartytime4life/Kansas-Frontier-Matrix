@@ -1,0 +1,65 @@
+{
+  "fixture_id": "fixture://soil/smap_l4/root-zone-standard-quality",
+  "profile_id": "kfm-smap-l4-anti-collapse-fixture-v1",
+  "fixture_only": true,
+  "domain": "soil",
+  "object_family": "SoilMoistureObservation",
+  "source_descriptor_ref": "fixture://source/nasa-smap-l4",
+  "source_role": "model_assimilated_reference",
+  "support_type": "satellite_grid_soil_moisture",
+  "product": {
+    "product_family": "SMAP",
+    "processing_level": "L4",
+    "dataset_version": "synthetic-v1",
+    "cadence_class": "standard_quality"
+  },
+  "observation": {
+    "moisture_layer": "root_zone",
+    "measurement_type": "modeled_estimate",
+    "measure": "volumetric_water_content",
+    "value": 0.31,
+    "unit": "m3/m3",
+    "observed_time": "2026-04-21T10:00:00Z",
+    "qa_flags": ["synthetic", "profile_checked"],
+    "uncertainty": 0.04,
+    "uncertainty_unit": "m3/m3",
+    "preliminary": false
+  },
+  "spatial_support": {
+    "kind": "satellite_grid_cell",
+    "native_grid": "EASE-Grid fixture",
+    "grid_cell_id": "fixture://grid/cell/root-zone-001",
+    "source_resolution_m": 9000
+  },
+  "assimilation": {
+    "kind": "model_assimilated",
+    "model": "synthetic-assimilation-model"
+  },
+  "anti_collapse": {
+    "raw_observation_truth": false,
+    "station_observation": false,
+    "field_truth": false,
+    "surface_is_root_zone": false,
+    "merged_with_in_situ": false
+  },
+  "time": {
+    "source_updated_at": "2026-04-21T11:00:00Z",
+    "retrieved_at": "2026-04-21T12:00:00Z"
+  },
+  "evidence_refs": ["fixture://evidence/smap-l4-root-zone"],
+  "run_receipt_ref": "fixture://receipt/smap-l4-root-zone",
+  "spec_hash": "sha256:d0545d945f8f425bbce408002273b71725da27595e6a89831ab5cab7ebf82cd9",
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "model_assimilated_not_raw_observation",
+    "satellite_grid_not_station_or_field_truth",
+    "synthetic_fixture_only"
+  ]
+}
