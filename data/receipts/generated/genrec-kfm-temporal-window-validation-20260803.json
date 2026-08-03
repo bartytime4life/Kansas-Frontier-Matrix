@@ -44,7 +44,7 @@
     "fixtures/contracts/v1/common/temporal_window/semantic_invalid/invalid_1_reversed_interval.expected_error.txt": "sha256:26d6c73f699d7119cdb5dc5a39562eda801e113ac53694189c214132a70b0e8b",
     "fixtures/contracts/v1/common/temporal_window/semantic_invalid/invalid_2_naive_datetime.json": "sha256:86279a5a40465f0652f6aecddf2b28280bf1e8592e214b0dec99f84a1616077c",
     "fixtures/contracts/v1/common/temporal_window/semantic_invalid/invalid_2_naive_datetime.expected_error.txt": "sha256:ff6486a6700e6473773d5b8fb1cabd4036e489aae3064c9d62b2f7ba091f7b5f",
-    "tools/validators/validate_temporal_window.py": "sha256:21159a9cb5f3caf1c02ce618ad9fd067795f6bc5dfacff484dae2dec0914240b",
+    "tools/validators/validate_temporal_window.py": "sha256:944a83f2710dc8d91e2948ac792fc98579426dfd65aed59f8c48d42ff54540f2",
     "tests/validators/test_validate_temporal_window.py": "sha256:01d0a6dda51b925208c69d8d0bd1acfe79a73ccbe11e4b7a7ea189c68e430242"
   },
   "model_identity": {

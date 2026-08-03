@@ -24,6 +24,7 @@ from typing import Mapping, Sequence
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/common/temporal_window.schema.json"
 FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/common/temporal_window"
@@ -274,33 +275,48 @@ def _schema_findings(
     return findings
 
 
-def _parse_aware_datetime(value: object) -> datetime | None:
+def _parse_aware_datetime(value: object) -> tuple[datetime | None, bool]:
+    """Return a UTC datetime and whether a parseable timestamp lacked a zone."""
+
     if not isinstance(value, str):
-        return None
+        return None, False
     normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
     try:
         parsed = datetime.fromisoformat(normalized)
     except ValueError:
-        return None
+        return None, False
     if parsed.tzinfo is None or parsed.utcoffset() is None:
-        return None
-    return parsed.astimezone(timezone.utc)
+        return None, True
+    return parsed.astimezone(timezone.utc), False
 
 
 def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
-    start = _parse_aware_datetime(candidate.get("start"))
-    end = _parse_aware_datetime(candidate.get("end"))
-    if start is None or end is None:
-        return []
-    if start > end:
-        return [
-            Finding(
-                "TEMPORAL_ORDER_INVALID",
-                "/end",
-                "end must not precede start after timezone normalization",
+    findings: list[Finding] = []
+    parsed: dict[str, datetime] = {}
+
+    for field in ("start", "end"):
+        timestamp, timezone_missing = _parse_aware_datetime(candidate.get(field))
+        if timezone_missing:
+            findings.append(
+                Finding(
+                    "TEMPORAL_TIMEZONE_REQUIRED",
+                    f"/{field}",
+                    "date-time must include a timezone offset",
+                )
             )
-        ]
-    return []
+        elif timestamp is not None:
+            parsed[field] = timestamp
+
+    if parsed.get("start") is not None and parsed.get("end") is not None:
+        if parsed["start"] > parsed["end"]:
+            findings.append(
+                Finding(
+                    "TEMPORAL_ORDER_INVALID",
+                    "/end",
+                    "end must not precede start after timezone normalization",
+                )
+            )
+    return findings
 
 
 def validate_candidate(candidate: Mapping[str, object]) -> ValidationResult:
