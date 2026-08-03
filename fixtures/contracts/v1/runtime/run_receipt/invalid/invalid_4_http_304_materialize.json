@@ -1,0 +1,40 @@
+{
+  "run_id": "run:smart-sync:synthetic-304",
+  "stage": "smart_sync",
+  "inputs": [
+    "source-descriptor:synthetic-http"
+  ],
+  "outputs": [],
+  "code_ref": "git:smart-sync-validator",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "source_descriptor_refs": [
+    "source:synthetic-http"
+  ],
+  "validation_refs": [
+    "validation:synthetic-http"
+  ],
+  "smart_sync": {
+    "transport": "http_conditional",
+    "fetch_time": "2026-08-03T12:00:00Z",
+    "source_url": "https://example.invalid/data",
+    "http_status": 304,
+    "http_validators": {
+      "request": {
+        "etag": "\"synthetic-v1\"",
+        "last_modified": "Mon, 03 Aug 2026 11:00:00 GMT",
+        "content_length": 128
+      },
+      "response": {
+        "etag": "W/\"synthetic-v1\"",
+        "last_modified": "Monday, 03-Aug-26 11:00:00 GMT",
+        "content_length": 128
+      }
+    },
+    "decision": "materialize",
+    "reason": "not_modified",
+    "prior_run_receipt_ref": "run:smart-sync:synthetic-prior",
+    "prior_content_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "validator_drift": false
+  },
+  "outcome": "SUCCESS"
+}
