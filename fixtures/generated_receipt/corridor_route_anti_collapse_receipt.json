@@ -1,0 +1,115 @@
+{
+  "receipt_id": "kfm://receipt/corridor-route-anti-collapse/2026-08-03",
+  "receipt_type": "implementation_slice_receipt",
+  "contract_version": "1.0.0",
+  "slice_name": "corridor-route-anti-collapse",
+  "source_packet": "New Ideas 3-31-26.pdf",
+  "base_ref": "main",
+  "base_commit": "53c3d0cea9c650041efed6b8d8297f7b6c83016f",
+  "artifact_paths": [
+    "schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json",
+    "tools/validators/domains/roads-rail-trade/validate_corridor_route.py",
+    "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_historic_candidate.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_unresolved_evidence.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_authoritative_derived_geocode.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_bound_evidence_empty.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_embedded_segment_truth.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_live_routing_authority.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_missing_temporal_uncertainty.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_public_sensitive_geometry.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_released_without_closure.json",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_spec_hash_mismatch.json",
+    "tests/schemas/test_corridor_route_contract.py",
+    "docs/domains/roads-rail-trade/CORRIDOR_ROUTE_SCHEMA_PROFILE.md",
+    "fixtures/generated_receipt/corridor_route_anti_collapse_receipt.json"
+  ],
+  "truth_labels": {
+    "schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json": "PROPOSED",
+    "tools/validators/domains/roads-rail-trade/validate_corridor_route.py": "PROPOSED",
+    "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_historic_candidate.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_unresolved_evidence.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_authoritative_derived_geocode.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_bound_evidence_empty.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_embedded_segment_truth.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_live_routing_authority.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_missing_temporal_uncertainty.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_public_sensitive_geometry.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_released_without_closure.json": "SYNTHETIC",
+    "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_spec_hash_mismatch.json": "SYNTHETIC",
+    "tests/schemas/test_corridor_route_contract.py": "PROPOSED",
+    "docs/domains/roads-rail-trade/CORRIDOR_ROUTE_SCHEMA_PROFILE.md": "PROPOSED",
+    "fixtures/generated_receipt/corridor_route_anti_collapse_receipt.json": "PROPOSED"
+  },
+  "anti_collapse_invariants": [
+    "CorridorRoute is not RoadSegment, RailSegment, RouteMembership, embedded geometry, or graph truth.",
+    "Historical route uncertainty and geometry accuracy remain explicit.",
+    "Every bound route carries at least one evidence reference; unresolved support abstains.",
+    "Authoritative versus derived representation is explicit and source-role constrained.",
+    "No live routing, legal designation, policy approval, release, or publication state is emitted."
+  ],
+  "validation_gates": [
+    {
+      "gate": "schema-profile",
+      "outcome": "PASS",
+      "notes": "Draft 2020-12 schema with additionalProperties=false and anti-collapse constraints."
+    },
+    {
+      "gate": "positive-fixture",
+      "outcome": "PASS",
+      "notes": "Synthetic bound historic candidate passes."
+    },
+    {
+      "gate": "bounded-abstention",
+      "outcome": "PASS",
+      "notes": "Synthetic unresolved candidate is schema-valid and returns ABSTAIN."
+    },
+    {
+      "gate": "negative-fixtures",
+      "outcome": "PASS",
+      "notes": "Eight exact-negative fixtures return DENY."
+    },
+    {
+      "gate": "deterministic-spec-hash",
+      "outcome": "PASS",
+      "notes": "Canonical SHA-256 recomputation is tested."
+    },
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "notes": "Fourteen no-network tests passed in tests/schemas/test_corridor_route_contract.py."
+    },
+    {
+      "gate": "no-network",
+      "outcome": "PASS",
+      "notes": "Validator does not fetch source URIs and fixtures declare no_network_required."
+    },
+    {
+      "gate": "source-activation",
+      "outcome": "ABSTAIN",
+      "notes": "No source or connector is activated."
+    },
+    {
+      "gate": "policy-approval",
+      "outcome": "ABSTAIN",
+      "notes": "No policy decision is produced."
+    },
+    {
+      "gate": "release",
+      "outcome": "ABSTAIN",
+      "notes": "No release object or lifecycle promotion is produced."
+    },
+    {
+      "gate": "publication",
+      "outcome": "ABSTAIN",
+      "notes": "No public artifact or map layer is produced."
+    }
+  ],
+  "prohibited_claims": [
+    "Synthetic fixtures are not historical-route evidence.",
+    "PASS does not mean source admission, policy approval, review, release, publication, or current routing authority.",
+    "The schema does not establish a live Kansas route, legal designation, exact alignment, or public access right."
+  ],
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "created_at": "2026-08-03T00:00:00Z",
+  "notes": "Draft-PR implementation receipt. No merge, release, deployment, source activation, or publication authority."
+}
