@@ -1,0 +1,3 @@
+EVIDENCE_REFS_INVALID	$.evidence_refs
+SOURCE_DESCRIPTOR_REF_INVALID	$.source_descriptor_ref
+TAXON_REF_INVALID	$.taxon_ref
