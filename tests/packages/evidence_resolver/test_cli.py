@@ -38,7 +38,7 @@ class EvidenceResolutionCandidateCLITests(unittest.TestCase):
         self.assertIn("RESOLVED=2", completed.stdout)
         self.assertIn("UNRESOLVED=13", completed.stdout)
         self.assertIn("DENIED=1", completed.stdout)
-        self.assertIn("ERROR=4", completed.stdout)
+        self.assertIn("ERROR=5", completed.stdout)
 
     def test_negative_only_suite_excludes_resolved_case(self) -> None:
         completed = self._run(

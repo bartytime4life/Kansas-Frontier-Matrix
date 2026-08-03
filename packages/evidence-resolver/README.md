@@ -59,7 +59,7 @@ make evidence-resolver
 make evidence-resolver-deny
 ```
 
-The first command runs 20 synthetic profile fixtures and 19 standard-library
+The first command runs 21 synthetic profile fixtures and 19 standard-library
 tests. The second requires every negative fixture to remain non-`RESOLVED`.
 Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
 

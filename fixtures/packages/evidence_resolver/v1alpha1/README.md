@@ -23,5 +23,5 @@ row, location, person, credential, endpoint, or production evidence.
 
 The inventory contains two positive fixtures (initially active and active
 after re-verification) plus exact negatives for all prior resolver outcomes and
-for corrected, superseded, revoked, unknown, temporally inconsistent, and
-subject-mismatched verification history.
+for corrected, superseded, revoked, unknown, per-event temporal inconsistency,
+effective-order inversion, and subject-mismatched verification history.

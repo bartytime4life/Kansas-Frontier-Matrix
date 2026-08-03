@@ -258,6 +258,14 @@ def validate_history_semantics(
             findings.add(
                 HistoryFinding("VERIFICATION_HISTORY_EVENT_ORDER_INVALID", "$.events")
             )
+        for index in range(1, len(parsed_times)):
+            if parsed_times[index][0] < parsed_times[index - 1][0]:
+                findings.add(
+                    HistoryFinding(
+                        "VERIFICATION_HISTORY_EFFECTIVE_ORDER_INVALID",
+                        f"$.events[{index}].effective_at",
+                    )
+                )
 
     first = events[0]
     if first["event_type"] != "VERIFIED":
@@ -324,6 +332,11 @@ def replay_state(
         if parse_timestamp(event["effective_at"]) <= effective_query
         and parse_timestamp(event["recorded_at"]) <= recorded_query
     ]
+    eligible_ids = {event["event_id"] for event in eligible}
+    for event in eligible[1:]:
+        parent_id = event.get("relates_to_event_id")
+        if parent_id not in eligible_ids:
+            raise ValueError("verification history replay dependency is ineligible")
     if not eligible:
         return ReplayResult(
             state="UNKNOWN",
