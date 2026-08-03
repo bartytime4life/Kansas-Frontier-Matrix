@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-29
+updated: 2026-08-03
 policy_label: public
 related:
   - ../README.md
@@ -29,6 +29,7 @@ notes:
   - "ADR-0005 marks apps/explorer-web as the proposed canonical map-first shell; implementation maturity remains NEEDS VERIFICATION unless verified by current repo evidence."
   - "Explorer Web must read through governed-api only and must not directly read lifecycle data or canonical/internal stores."
   - "v0.3 adds a fixture-only Evidence Drawer projection parser, finite view-state resolver, shell-rendered abstention landmark, and synthetic positive/negative/no-leak tests."
+  - "v0.4 adds a native keyboard-operable drawer controller plus fixture-driven Playwright checks for focus entry/return, labeled landmarks, and denied/error DOM no-leak behavior."
   - "It does not claim live API integration, map-click resolution, canonical payload-schema adoption, policy execution, complete accessibility, map rendering, or deployment."
 [/KFM_META_BLOCK_V2] -->
 
@@ -59,7 +60,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED bounded static shell, fixture-only Evidence Drawer projection parser/resolver, default abstention landmark, exact build tooling, and app-local tests / PROPOSED canonical map-first shell per ADR-0005 / UNKNOWN live routes, governed API transport, canonical payload schema, renderer behavior, complete accessibility, and deployment state
+> **Truth posture:** CONFIRMED bounded static shell, fixture-only Evidence Drawer projection parser/resolver, keyboard open/close with focus entry/return, labeled landmarks, exact build tooling, and app-local unit/browser tests / PROPOSED canonical map-first shell per ADR-0005 / UNKNOWN live routes, governed API transport, canonical payload schema, renderer behavior, complete accessibility, and deployment state
 
 > [!CAUTION]
 > `apps/explorer-web/` must not directly read `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/`, canonical stores, model runtime outputs, or local source files. Normal public and semi-public UI behavior must use governed API envelopes, released artifacts, layer manifests, tiles, evidence payloads, and safe finite outcomes.
@@ -75,8 +76,10 @@ The implemented baseline is intentionally smaller than the proposed Explorer:
 - any supplied input returns fixed `ERROR / UNSUPPORTED_BASELINE_INPUT`, does not echo the input, and has no evidence references;
 - the Evidence Drawer adapter validates a closed fixture-only projection profile and never performs network or lifecycle-store reads;
 - the Evidence Drawer resolver exposes `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, fails malformed projections to fixed `ERROR`, and does not reflect denied or upstream-error text;
-- the default shell renders a text-labeled `ABSTAIN` Evidence Drawer landmark because no governed response is wired;
+- the default shell exposes a native button that opens a text-labeled `ABSTAIN` Evidence Drawer landmark because no governed response is wired;
+- keyboard activation enters the drawer close control, Escape closes it, and focus returns to the opener;
 - Vitest covers the shell plus accepted, rejected, boundary, no-leak, and direct-store/network-denial cases;
+- Playwright renders the synthetic fixtures in Chrome and checks the keyboard path, labeled main/complementary landmarks, safe `ANSWER` details, and denied/error DOM no-leak behavior;
 - no API, network, storage, model, renderer, claim, release, promotion, or publication behavior is present.
 
 This is an executable fail-closed UI projection slice, not a live governed API flow, functional map, canonical payload contract, or deployable production claim surface.
