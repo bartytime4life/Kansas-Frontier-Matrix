@@ -11,12 +11,24 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Callable
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_DIR = REPO_ROOT / "tools/validators/pmtiles"
 sys.path.insert(0, str(VALIDATOR_DIR))
 
-from validate_attestation_bundle import HOLDS, render_result, validate_bundle
+from validate_attestation_bundle import (
+    HOLDS,
+    MAX_JSON_BYTES,
+    TILE_MANIFEST_CHECK,
+    TILE_MANIFEST_FINDING_CODES,
+    TILE_MANIFEST_HOLDS,
+    TILE_MANIFEST_PARSER_FINDING_CODES,
+    TILE_MANIFEST_PROFILE,
+    _load_json,
+    render_result,
+    validate_bundle,
+)
 from validate_header import HeaderValidationError, inspect_archive
 from verify_merkle import MerkleValidationError, inspect_index, merkle_root
 
@@ -24,6 +36,49 @@ FIXTURE_ROOT = REPO_ROOT / "fixtures/pmtiles/attestation"
 SPEC_HASH = "sha256:" + hashlib.sha256(b"kfm-test-build-spec").hexdigest()
 OTHER_HASH = "sha256:" + hashlib.sha256(b"different-value").hexdigest()
 ROOT_DIRECTORY = b"\x01\x00\x01\x01\x01"
+
+EXPECTED_TILE_MANIFEST_DESCRIPTOR_CODES = {
+    "manifest_artifact_name_invalid.json": "TILE_MANIFEST_ARTIFACT_NAME_INVALID",
+    "manifest_artifact_name_mismatch.json": "TILE_MANIFEST_ARTIFACT_NAME_MISMATCH",
+    "manifest_artifact_ref_control_character.json": "TILE_MANIFEST_ARTIFACT_REF_NOT_DIGEST_BOUND",
+    "manifest_artifact_ref_digest_mismatch.json": "TILE_MANIFEST_ARTIFACT_REF_DIGEST_MISMATCH",
+    "manifest_artifact_ref_mutable.json": "TILE_MANIFEST_ARTIFACT_REF_NOT_DIGEST_BOUND",
+    "manifest_artifact_ref_not_digest_bound.json": "TILE_MANIFEST_ARTIFACT_REF_NOT_DIGEST_BOUND",
+    "manifest_bounds_degenerate.json": "TILE_MANIFEST_BOUNDS_ORDER_INVALID",
+    "manifest_bounds_header_mismatch.json": "TILE_MANIFEST_BOUNDS_HEADER_MISMATCH",
+    "manifest_bounds_mercator_cutoff.json": "TILE_MANIFEST_BOUNDS_ORDER_INVALID",
+    "manifest_bounds_order_invalid.json": "TILE_MANIFEST_BOUNDS_ORDER_INVALID",
+    "manifest_bounds_value_invalid.json": "TILE_MANIFEST_BOUNDS_INVALID",
+    "manifest_byte_size_invalid.json": "TILE_MANIFEST_BYTE_SIZE_INVALID",
+    "manifest_byte_size_mismatch.json": "TILE_MANIFEST_BYTE_SIZE_MISMATCH",
+    "manifest_complexity_limit.json": "TILE_MANIFEST_COMPLEXITY_LIMIT",
+    "manifest_digest_mismatch.json": "TILE_MANIFEST_DIGEST_MISMATCH",
+    "manifest_digest_placeholder.json": "TILE_MANIFEST_DIGEST_INVALID",
+    "manifest_embedded_payload.json": "TILE_MANIFEST_EMBEDDED_PAYLOAD_DENIED",
+    "manifest_generation_tool_missing.json": "TILE_MANIFEST_GENERATION_TOOL_INVALID",
+    "manifest_maxzoom_invalid.json": "TILE_MANIFEST_MAXZOOM_INVALID",
+    "manifest_media_type_unsupported.json": "TILE_MANIFEST_MEDIA_TYPE_UNSUPPORTED",
+    "manifest_minzoom_invalid.json": "TILE_MANIFEST_MINZOOM_INVALID",
+    "manifest_pmtiles_profile_invalid.json": "TILE_MANIFEST_PMTILES_PROFILE_INVALID",
+    "manifest_profile_invalid.json": "TILE_MANIFEST_PROFILE_INVALID",
+    "manifest_source_ref_unversioned.json": "TILE_MANIFEST_SOURCE_REFS_INVALID",
+    "manifest_source_ref_control_character.json": "TILE_MANIFEST_SOURCE_REFS_INVALID",
+    "manifest_source_refs_missing.json": "TILE_MANIFEST_SOURCE_REFS_INVALID",
+    "manifest_spec_hash_invalid.json": "TILE_MANIFEST_SPEC_HASH_INVALID",
+    "manifest_spec_hash_mismatch.json": "TILE_MANIFEST_SPEC_HASH_MISMATCH",
+    "manifest_tile_format_header_mismatch.json": "TILE_MANIFEST_TILE_FORMAT_MISMATCH",
+    "manifest_tile_format_unsupported.json": "TILE_MANIFEST_TILE_FORMAT_UNSUPPORTED",
+    "manifest_tiling_scheme_metadata_mismatch.json": "TILE_MANIFEST_TILING_SCHEME_METADATA_MISMATCH",
+    "manifest_tiling_scheme_unsupported.json": "TILE_MANIFEST_TILING_SCHEME_UNSUPPORTED",
+    "manifest_undeclared_field.json": "TILE_MANIFEST_UNDECLARED_FIELD",
+    "manifest_vector_layer_duplicate.json": "TILE_MANIFEST_VECTOR_LAYER_ID_DUPLICATE",
+    "manifest_vector_layer_fields_mismatch.json": "TILE_MANIFEST_VECTOR_LAYERS_MISMATCH",
+    "manifest_vector_layers_invalid.json": "TILE_MANIFEST_VECTOR_LAYERS_INVALID",
+    "manifest_vector_layers_mismatch.json": "TILE_MANIFEST_VECTOR_LAYERS_MISMATCH",
+    "manifest_version_unsupported.json": "TILE_MANIFEST_PMTILES_VERSION_UNSUPPORTED",
+    "manifest_zoom_header_mismatch.json": "TILE_MANIFEST_ZOOM_HEADER_MISMATCH",
+    "manifest_zoom_order_invalid.json": "TILE_MANIFEST_ZOOM_ORDER_INVALID",
+}
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -51,7 +106,13 @@ def _archive_payload(
     tile_bytes: bytes = b"\x01",
 ) -> bytes:
     metadata_bytes = metadata_bytes or json.dumps(
-        {"name": "synthetic-kfm-fixture", "spec_hash": SPEC_HASH},
+        {
+            "name": "synthetic-kfm-fixture",
+            "spec_hash": SPEC_HASH,
+            "vector_layers": [
+                {"id": "synthetic", "fields": {"value": "String"}}
+            ],
+        },
         separators=(",", ":"),
         sort_keys=True,
     ).encode("utf-8")
@@ -79,7 +140,7 @@ def _archive_payload(
         1,
         1,
     )
-    header[96:102] = bytes((1, internal_compression, 1, 0, 0, 0))
+    header[96:102] = bytes((1, internal_compression, 1, 1, 0, 0))
     struct.pack_into("<i", header, 102, -1_020_000_000)
     struct.pack_into("<i", header, 106, 370_000_000)
     struct.pack_into("<i", header, 110, -940_000_000)
@@ -148,6 +209,203 @@ def _build_bundle(directory: Path, *, chunk_bytes: int = 64) -> dict[str, object
         "pmsig": pmsig,
         "receipt": receipt,
     }
+
+
+def _build_tile_manifest(bundle: dict[str, object]) -> Path:
+    archive = bundle["archive"]
+    index = bundle["index"]
+    assert isinstance(archive, Path) and isinstance(index, dict)
+    archive_digest = index["pmtiles_sha256"]
+    assert isinstance(archive_digest, str)
+    manifest = {
+        "profile": TILE_MANIFEST_PROFILE,
+        "artifact_name": archive.name,
+        "artifact_ref": (
+            "kfm://artifact/pmtiles/synthetic-fixture@" + archive_digest
+        ),
+        "media_type": "application/vnd.pmtiles",
+        "digest": archive_digest,
+        "byte_size": archive.stat().st_size,
+        "spec_hash": SPEC_HASH,
+        "source_manifest_refs": ["kfm://manifest/source/synthetic-fixture@v1"],
+        "generation_tool": "kfm-test-builder@1.0.0",
+        "pmtiles": {
+            "pmtiles_version": "v3",
+            "tile_format": "mvt",
+            "tiling_scheme": "xyz",
+            "minzoom": 0,
+            "maxzoom": 0,
+            "bounds": [-102.0, 37.0, -94.0, 40.0],
+            "vector_layers": [
+                {"id": "synthetic", "fields": {"value": "String"}}
+            ],
+        },
+    }
+    path = archive.parent / "tile-artifact-manifest.compat.json"
+    _write_json(path, manifest)
+    bundle["tile_manifest"] = manifest
+    return path
+
+
+def _apply_tile_manifest_mutation(bundle: dict[str, object], mutation: str) -> None:
+    archive = bundle["archive"]
+    manifest = bundle["tile_manifest"]
+    assert isinstance(archive, Path) and isinstance(manifest, dict)
+    pmtiles = manifest["pmtiles"]
+    assert isinstance(pmtiles, dict)
+
+    if mutation == "manifest_none":
+        return
+    if mutation == "manifest_profile_invalid":
+        manifest["profile"] = "kfm.pmtiles.tile-artifact-manifest.future"
+    elif mutation == "manifest_artifact_name_invalid":
+        manifest["artifact_name"] = "../tiles.pmtiles"
+    elif mutation == "manifest_artifact_name_mismatch":
+        manifest["artifact_name"] = "different.pmtiles"
+    elif mutation == "manifest_artifact_ref_not_digest_bound":
+        manifest["artifact_ref"] = "kfm://artifact/pmtiles/latest"
+    elif mutation == "manifest_artifact_ref_control_character":
+        manifest["artifact_ref"] = (
+            "kfm://artifact/pmtiles/\u202eevil@" + manifest["digest"]
+        )
+    elif mutation == "manifest_artifact_ref_digest_mismatch":
+        manifest["artifact_ref"] = (
+            "kfm://artifact/pmtiles/synthetic-fixture@" + OTHER_HASH
+        )
+    elif mutation == "manifest_media_type_unsupported":
+        manifest["media_type"] = "application/octet-stream"
+    elif mutation == "manifest_digest_placeholder":
+        manifest["digest"] = "sha256:" + ("0" * 64)
+    elif mutation == "manifest_digest_mismatch":
+        manifest["digest"] = OTHER_HASH
+        manifest["artifact_ref"] = (
+            "kfm://artifact/pmtiles/synthetic-fixture@" + OTHER_HASH
+        )
+    elif mutation == "manifest_byte_size_invalid":
+        manifest["byte_size"] = 126
+    elif mutation == "manifest_byte_size_mismatch":
+        manifest["byte_size"] = archive.stat().st_size + 1
+    elif mutation == "manifest_spec_hash_mismatch":
+        manifest["spec_hash"] = OTHER_HASH
+    elif mutation == "manifest_spec_hash_invalid":
+        manifest["spec_hash"] = "sha256:" + ("0" * 64)
+    elif mutation == "manifest_source_refs_missing":
+        manifest["source_manifest_refs"] = []
+    elif mutation == "manifest_source_ref_unversioned":
+        manifest["source_manifest_refs"] = ["kfm://manifest/source/latest"]
+    elif mutation == "manifest_source_ref_control_character":
+        manifest["source_manifest_refs"] = [
+            "kfm://manifest/source/\u0085evil@v1"
+        ]
+    elif mutation == "manifest_generation_tool_missing":
+        manifest["generation_tool"] = ""
+    elif mutation == "manifest_version_unsupported":
+        pmtiles["pmtiles_version"] = "v4"
+    elif mutation == "manifest_pmtiles_profile_invalid":
+        del pmtiles["tiling_scheme"]
+    elif mutation == "manifest_tile_format_unsupported":
+        pmtiles["tile_format"] = "mlt"
+    elif mutation == "manifest_tile_format_header_mismatch":
+        payload = bytearray(bundle["archive_bytes"])
+        payload[99] = 6
+        _rewrite_archive_and_rebind(bundle, bytes(payload))
+    elif mutation == "manifest_tiling_scheme_unsupported":
+        pmtiles["tiling_scheme"] = "tms"
+    elif mutation == "manifest_tiling_scheme_metadata_mismatch":
+        metadata = {
+            "name": "synthetic-kfm-fixture",
+            "scheme": "tms",
+            "spec_hash": SPEC_HASH,
+            "vector_layers": [
+                {"id": "synthetic", "fields": {"value": "String"}}
+            ],
+        }
+        _rewrite_archive_and_rebind(
+            bundle,
+            _archive_payload(
+                metadata_bytes=json.dumps(
+                    metadata, separators=(",", ":"), sort_keys=True
+                ).encode("utf-8"),
+                tile_bytes=b"synthetic-tile-content",
+            ),
+        )
+    elif mutation == "manifest_minzoom_invalid":
+        pmtiles["minzoom"] = -1
+    elif mutation == "manifest_maxzoom_invalid":
+        pmtiles["maxzoom"] = 256
+    elif mutation == "manifest_zoom_order_invalid":
+        pmtiles["minzoom"], pmtiles["maxzoom"] = 1, 0
+    elif mutation == "manifest_zoom_header_mismatch":
+        payload = bytearray(bundle["archive_bytes"])
+        payload[100], payload[101] = 1, 1
+        _rewrite_archive_and_rebind(bundle, bytes(payload))
+    elif mutation == "manifest_bounds_value_invalid":
+        pmtiles["bounds"][0] = 10**400
+    elif mutation == "manifest_bounds_order_invalid":
+        pmtiles["bounds"] = [-94.0, 37.0, -102.0, 40.0]
+    elif mutation == "manifest_bounds_degenerate":
+        pmtiles["bounds"] = [-102.0, 37.0, -102.0, 40.0]
+    elif mutation == "manifest_bounds_mercator_cutoff":
+        pmtiles["bounds"] = [-102.0, -85.05113, -94.0, 40.0]
+    elif mutation == "manifest_bounds_header_mismatch":
+        payload = bytearray(bundle["archive_bytes"])
+        struct.pack_into("<i", payload, 102, -1_010_000_000)
+        _rewrite_archive_and_rebind(bundle, bytes(payload))
+    elif mutation == "manifest_vector_layer_duplicate":
+        pmtiles["vector_layers"].append(dict(pmtiles["vector_layers"][0]))
+    elif mutation == "manifest_vector_layers_mismatch":
+        pmtiles["vector_layers"][0]["id"] = "different"
+    elif mutation == "manifest_vector_layer_fields_mismatch":
+        pmtiles["vector_layers"][0]["fields"]["value"] = "Number"
+    elif mutation == "manifest_vector_layers_invalid":
+        pmtiles["vector_layers"][0]["fields"] = []
+    elif mutation == "manifest_undeclared_field":
+        manifest["future_field"] = True
+    elif mutation == "manifest_complexity_limit":
+        manifest["future_field"] = [0] * 100_001
+    elif mutation == "manifest_embedded_payload":
+        manifest["payload"] = "synthetic-but-still-denied"
+    else:
+        raise AssertionError(f"unknown tile-manifest mutation: {mutation}")
+
+    path = archive.parent / "tile-artifact-manifest.compat.json"
+    _write_json(path, manifest)
+
+
+def _rewrite_archive_and_rebind(bundle: dict[str, object], payload: bytes) -> None:
+    archive = bundle["archive"]
+    index = bundle["index"]
+    pmsig = bundle["pmsig"]
+    receipt = bundle["receipt"]
+    assert isinstance(archive, Path)
+    assert isinstance(index, dict) and isinstance(pmsig, dict) and isinstance(receipt, dict)
+
+    archive.write_bytes(payload)
+    archive_bytes = archive.read_bytes()
+    chunk_bytes = index["merkle"]["chunk_bytes"]
+    leaves = [
+        "sha256:" + hashlib.sha256(archive_bytes[start:start + chunk_bytes]).hexdigest()
+        for start in range(0, len(archive_bytes), chunk_bytes)
+    ]
+    digest = "sha256:" + hashlib.sha256(archive_bytes).hexdigest()
+    index["pmtiles_sha256"] = digest
+    index["merkle"]["leaves"] = leaves
+    index["merkle"]["root"] = _independent_merkle_root(leaves, index["merkle"]["arity"])
+    _write_json(Path(str(archive) + ".pmidx"), index)
+    pmsig["subject"]["pmtiles_sha256"] = digest
+    pmsig["subject"]["pmidx_merkle_root"] = index["merkle"]["root"]
+    _write_json(Path(str(archive) + ".pmsig"), pmsig)
+    receipt["subject"][0]["digest"]["sha256"] = digest.removeprefix("sha256:")
+    _write_json(Path(str(archive) + ".runreceipt.json"), receipt)
+    bundle["archive_bytes"] = archive_bytes
+    manifest = bundle.get("tile_manifest")
+    if isinstance(manifest, dict):
+        manifest["artifact_ref"] = (
+            "kfm://artifact/pmtiles/synthetic-fixture@" + digest
+        )
+        manifest["byte_size"] = archive.stat().st_size
+        manifest["digest"] = digest
+        _write_json(archive.parent / "tile-artifact-manifest.compat.json", manifest)
 
 
 def _apply_mutation(bundle: dict[str, object], mutation: str) -> None:
@@ -233,13 +491,205 @@ class PMTilesAttestationBundleTests(unittest.TestCase):
                 self.assertIn(primary_code, case["expected"]["issue_codes"])
             with self.subTest(case=case["case_id"]), tempfile.TemporaryDirectory() as raw:
                 bundle = _build_bundle(Path(raw))
-                _apply_mutation(bundle, case["mutation"])
-                result = validate_bundle(bundle["archive"])
+                if case.get("fixture_profile") == TILE_MANIFEST_PROFILE:
+                    manifest_path = _build_tile_manifest(bundle)
+                    _apply_tile_manifest_mutation(bundle, case["mutation"])
+                    result = validate_bundle(bundle["archive"], manifest_path)
+                else:
+                    _apply_mutation(bundle, case["mutation"])
+                    result = validate_bundle(bundle["archive"])
                 self.assertEqual(case["expected"]["status"], result.status)
                 self.assertEqual(
                     case["expected"]["issue_codes"],
                     [finding.code for finding in result.findings],
                 )
+
+    def test_tile_manifest_fixture_inventory_and_sidecars_are_exact(self) -> None:
+        valid = sorted((FIXTURE_ROOT / "valid").glob("manifest_*.json"))
+        invalid = sorted((FIXTURE_ROOT / "invalid").glob("manifest_*.json"))
+        sidecars = sorted((FIXTURE_ROOT / "invalid").glob("manifest_*.expected_error.txt"))
+        self.assertEqual(["manifest_profile_complete.json"], [path.name for path in valid])
+        self.assertEqual(
+            set(EXPECTED_TILE_MANIFEST_DESCRIPTOR_CODES),
+            {path.name for path in invalid},
+        )
+        self.assertEqual(
+            [path.with_suffix(".expected_error.txt").name for path in invalid],
+            [path.name for path in sidecars],
+        )
+        for path in invalid:
+            self.assertEqual(
+                EXPECTED_TILE_MANIFEST_DESCRIPTOR_CODES[path.name],
+                path.with_suffix(".expected_error.txt")
+                .read_text(encoding="utf-8")
+                .strip(),
+            )
+        self.assertEqual(
+            TILE_MANIFEST_FINDING_CODES,
+            frozenset(EXPECTED_TILE_MANIFEST_DESCRIPTOR_CODES.values())
+            | {"TILE_MANIFEST_METADATA_VECTOR_LAYERS_INVALID"},
+        )
+
+    def test_tile_manifest_profile_is_opt_in_and_keeps_authority_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            default_payload = json.loads(render_result(validate_bundle(bundle["archive"])))
+            manifest_path = _build_tile_manifest(bundle)
+            profile_payload = json.loads(
+                render_result(validate_bundle(bundle["archive"], manifest_path))
+            )
+        self.assertNotIn(TILE_MANIFEST_CHECK, default_payload["checks"])
+        self.assertNotIn(TILE_MANIFEST_HOLDS[0], default_payload["holds"])
+        self.assertIn(TILE_MANIFEST_CHECK, profile_payload["checks"])
+        self.assertEqual(list(HOLDS) + list(TILE_MANIFEST_HOLDS), profile_payload["holds"])
+        self.assertEqual("NONE", profile_payload["authority"])
+        self.assertEqual("STRUCTURAL_PASS", profile_payload["status"])
+
+    def test_tile_manifest_cli_flag_is_explicit_and_offline(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            manifest_path = _build_tile_manifest(bundle)
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(VALIDATOR_DIR / "validate_attestation_bundle.py"),
+                    str(bundle["archive"]),
+                    "--tile-manifest",
+                    str(manifest_path),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        payload = json.loads(completed.stdout)
+        self.assertEqual("STRUCTURAL_PASS", payload["status"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertIn(TILE_MANIFEST_CHECK, payload["checks"])
+
+    def test_tile_manifest_metadata_vector_layers_are_required_for_mvt(self) -> None:
+        metadata_cases = (
+            {"name": "synthetic-kfm-fixture", "spec_hash": SPEC_HASH},
+            {
+                "name": "synthetic-kfm-fixture",
+                "spec_hash": SPEC_HASH,
+                "vector_layers": [{"id": "synthetic"}],
+            },
+        )
+        for metadata in metadata_cases:
+            with self.subTest(metadata=metadata), tempfile.TemporaryDirectory() as raw:
+                bundle = _build_bundle(Path(raw))
+                archive = bundle["archive"]
+                _rewrite_archive_and_rebind(
+                    bundle,
+                    _archive_payload(
+                        metadata_bytes=json.dumps(
+                            metadata, separators=(",", ":"), sort_keys=True
+                        ).encode("utf-8")
+                    ),
+                )
+                manifest_path = _build_tile_manifest(bundle)
+                result = validate_bundle(archive, manifest_path)
+            self.assertEqual(
+                ["TILE_MANIFEST_METADATA_VECTOR_LAYERS_INVALID"],
+                [finding.code for finding in result.findings],
+            )
+
+    def test_tile_manifest_vector_layer_order_is_not_semantic(self) -> None:
+        metadata = {
+            "name": "synthetic-kfm-fixture",
+            "spec_hash": SPEC_HASH,
+            "vector_layers": [
+                {"id": "alpha", "fields": {"tiles": "String"}},
+                {"id": "beta", "fields": {"b": "Number"}},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            archive = bundle["archive"]
+            _rewrite_archive_and_rebind(
+                bundle,
+                _archive_payload(
+                    metadata_bytes=json.dumps(
+                        metadata, separators=(",", ":"), sort_keys=True
+                    ).encode("utf-8")
+                ),
+            )
+            manifest_path = _build_tile_manifest(bundle)
+            manifest = bundle["tile_manifest"]
+            manifest["pmtiles"]["vector_layers"] = [
+                {"id": "beta", "fields": {"b": "Number"}},
+                {"id": "alpha", "fields": {"tiles": "String"}},
+            ]
+            _write_json(manifest_path, manifest)
+            result = validate_bundle(archive, manifest_path)
+        self.assertTrue(result.ok)
+
+    def test_tile_manifest_bounds_e7_rounding_is_header_exact(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            manifest_path = _build_tile_manifest(bundle)
+            manifest = bundle["tile_manifest"]
+            manifest["pmtiles"]["bounds"] = [
+                -102.00000001,
+                37.00000001,
+                -94.00000001,
+                40.00000001,
+            ]
+            _write_json(manifest_path, manifest)
+            result = validate_bundle(bundle["archive"], manifest_path)
+        self.assertTrue(result.ok)
+
+    def test_manifest_parser_reason_code_registry_is_exact(self) -> None:
+        observed: set[str] = set()
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+
+            missing = root / "missing.json"
+            observed.update(f.code for f in _load_json(missing, "TILE_MANIFEST")[1])
+
+            target = root / "target.json"
+            target.write_text("{}\n", encoding="utf-8")
+            symlink = root / "link.json"
+            symlink.symlink_to(target)
+            observed.update(f.code for f in _load_json(symlink, "TILE_MANIFEST")[1])
+
+            cases = {
+                "duplicate.json": '{"x":1,"x":2}\n',
+                "nonfinite.json": '{"x":NaN}\n',
+                "invalid.json": '{"x":\n',
+                "root.json": '[]\n',
+            }
+            for name, content in cases.items():
+                path = root / name
+                path.write_text(content, encoding="utf-8")
+                observed.update(f.code for f in _load_json(path, "TILE_MANIFEST")[1])
+
+            oversized = root / "oversized.json"
+            oversized.write_bytes(b" " * (MAX_JSON_BYTES + 1))
+            observed.update(
+                f.code for f in _load_json(oversized, "TILE_MANIFEST")[1]
+            )
+
+            unreadable = root / "unreadable.json"
+            unreadable.write_text("{}\n", encoding="utf-8")
+            with mock.patch.object(Path, "read_text", side_effect=OSError):
+                observed.update(
+                    f.code for f in _load_json(unreadable, "TILE_MANIFEST")[1]
+                )
+
+        self.assertEqual(TILE_MANIFEST_PARSER_FINDING_CODES, frozenset(observed))
+
+    def test_brotli_metadata_is_an_explicit_compatibility_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            payload = bytearray(bundle["archive_bytes"])
+            payload[97] = 3
+            _rewrite_archive_and_rebind(bundle, bytes(payload))
+            result = validate_bundle(bundle["archive"])
+        self.assertEqual(
+            ["METADATA_COMPRESSION_UNSUPPORTED"],
+            [finding.code for finding in result.findings],
+        )
 
     def test_success_is_structural_and_keeps_all_holds(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
