@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-undeclared-field",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_UNDECLARED_FIELD"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_undeclared_field"
+}

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/standards/pmtiles
 title: PMTiles — KFM Standards Profile
 type: standard
-version: v1
-status: draft
-owners: <docs steward + map/tiles subsystem owner — TODO assign>
+version: v1.1
+status: draft; partial-structural-implementation
+owner: TODO-pmtiles-standards-steward
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-03
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -18,12 +18,15 @@ related:
   - docs/standards/COG.md
   - contracts/release/tile_artifact_manifest.md
   - contracts/release/release_manifest.md
-  - schemas/contracts/v1/release/tile_artifact_manifest.schema.json
+  - schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md
+  - tools/validators/pmtiles/validate_attestation_bundle.py
   - policy/release/
 tags: [kfm, standards, tiles, pmtiles, maplibre, release, publication]
 notes:
-  - PMTiles is CONFIRMED doctrine / PROPOSED implementation
-  - All repo paths below are PROPOSED until verified against mounted repo evidence
+  - PMTiles is CONFIRMED doctrine / partial structural compatibility implementation / PROPOSED publication profile
+  - This standard has one PMTiles-standards authority-owner role; assignment NEEDS VERIFICATION. Schema, security, policy, release, MapLibre, and docs stewards are review roles. CODEOWNERS routes review to @bartytime4life
+  - Canonical TileArtifactManifest schema family remains unresolved; the implemented declared-manifest check is opt-in and non-canonical
   - External PMTiles v3 spec facts inline-cited; KFM profile rules sourced to project doctrine
 [/KFM_META_BLOCK_V2] -->
 
@@ -37,10 +40,10 @@ notes:
 ![PMTiles Spec](https://img.shields.io/badge/PMTiles-v3-success)
 ![Trust Posture](https://img.shields.io/badge/posture-cite--or--abstain-critical)
 ![Doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-brightgreen)
-![Implementation](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![Updated](https://img.shields.io/badge/updated-2026--05--14-lightgrey)
+![Implementation](https://img.shields.io/badge/implementation-partial%20structural-orange)
+![Updated](https://img.shields.io/badge/updated-2026--08--03-lightgrey)
 
-**Status:** Draft · **Owners:** _TODO — docs steward + map/tiles subsystem owner_ · **Last updated:** 2026-05-14
+**Status:** Draft · partial structural compatibility implementation · publication profile proposed · **Owner:** _TODO — PMTiles standards steward_ · **Last updated:** 2026-08-03
 
 ---
 
@@ -78,7 +81,12 @@ This profile is the **KFM-binding interpretation** of the upstream PMTiles v3 sp
 | When PMTiles **must not** be used | Tile authoring tooling (covered in pipeline docs) |
 
 > [!IMPORTANT]
-> PMTiles is **CONFIRMED doctrine** in KFM and **PROPOSED implementation** in the current repo. All path-shaped claims below are PROPOSED until verified against mounted-repo evidence. This document defines what KFM *requires* of any PMTiles release, regardless of whether the implementing code currently exists.
+> PMTiles is **CONFIRMED doctrine** in KFM. The current repository has a
+> **partial structural compatibility implementation** for an offline split
+> bundle and an opt-in declared-manifest profile; the broader production,
+> runtime, canonical-schema, cryptographic, policy, release, and publication
+> profile remains **PROPOSED**. Path-shaped claims outside the confirmed slice
+> remain PROPOSED until verified against mounted-repo evidence.
 
 ---
 
@@ -220,6 +228,18 @@ RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED ← 
 
 The sidecar is the **public verification envelope** for the tile artifact. It carries integrity metadata, provenance linkage, the signing proof, publication metadata, and optional delta manifests. **Without the sidecar, the tile is not a KFM release.**
 
+> [!NOTE]
+> **Current repository evidence is narrower than this proposed release shape.**
+> The implemented offline lane reconciles a split SHA-256 PMIDX + PMSIG +
+> RunReceipt compatibility bundle. When explicitly requested, it also checks
+> `kfm.pmtiles.tile-artifact-manifest.compat.v1`, a non-canonical PMTiles
+> v3/MVT declaration, against archive header/metadata and bundle digests. It
+> does not implement the BLAKE3, DSSE/cosign, Rekor, delta, policy, runtime, or
+> release behavior proposed below, and it retains
+> `TILE_ARTIFACT_MANIFEST_SCHEMA_AUTHORITY_UNRESOLVED`,
+> `TILE_MANIFEST_DECLARED_PROVENANCE_UNATTESTED`, and
+> `TILE_MANIFEST_ARTIFACT_REF_REGISTRY_UNRESOLVED`.
+
 ### 7.1 Placement
 
 ```
@@ -339,7 +359,7 @@ Every PMTiles release **MUST** pass the following gates before promotion to PUBL
 |---|---|---|
 | Canonical `SourceDescriptor` stable | YES | `spec_hash` reproducible across runs |
 | `spec_hash` deterministic | YES | Cross-run hash equality test |
-| Sidecar present and well-formed | YES | Schema validation against `tile_artifact_manifest.schema.json` (PROPOSED home: `schemas/contracts/v1/release/`) |
+| Sidecar present and well-formed | YES | Canonical schema family is unresolved; current opt-in PMTiles v3/MVT compatibility evidence is structural only and cannot satisfy this publication gate. |
 | Sidecar signed (DSSE / cosign) | YES | `cosign verify-blob` passes |
 | Transparency log entry present | YES | `rekor_index_or_proof` resolves |
 | HTTP Range + CORS support verified on host | YES | HEAD + Range probe |
@@ -474,7 +494,7 @@ flowchart LR
 | Object family | Role for PMTiles | Status |
 |---|---|---|
 | `SourceDescriptor` | Upstream identity; basis for `spec_hash` | CONFIRMED family / PROPOSED home |
-| `TileArtifactManifest` | Tile-level integrity contract (sidecar fields + extras) | CONFIRMED family / PROPOSED schema home |
+| `TileArtifactManifest` | Tile-level integrity contract (sidecar fields + extras) | CONFIRMED family / schema family unresolved / non-canonical PMTiles compatibility evidence implemented |
 | `MapReleaseManifest` | Release decision that references the tile asset | CONFIRMED family / PROPOSED home |
 | `LayerManifest` | Layer-level binding to released tile asset | CONFIRMED family / PROPOSED home |
 | `StyleManifest` | Style binding; `tileProtocol` enum includes `pmtiles` | CONFIRMED family / PROPOSED home |
@@ -531,7 +551,7 @@ data/
 
 These items are explicitly **not resolved** by this profile and SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
 
-- **NEEDS VERIFICATION** — Whether `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` exists in the current mounted repo or whether the schema is currently authored elsewhere.
+- **CONFIRMED CONFLICT / NEEDS DECISION** — The proposed `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` is absent while a permissive map-family placeholder exists at `schemas/contracts/v1/map/tile_artifact_manifest.schema.json`; an ADR or equivalent governed decision must select the canonical family before schema claims.
 - **NEEDS VERIFICATION** — Pinned tool versions for the build chain: `tippecanoe`, `go-pmtiles` (`pmtiles` CLI), `pmtiles-js`, `pmtiles-rs`, MapLibre GL JS, GDAL, cosign, BLAKE3 implementation.
 - **NEEDS VERIFICATION** — Whether KFM's signing path is DSSE-over-cosign, plain cosign keyless, KMS-backed, or hybrid. The sidecar template above is doctrine-consistent but does not pre-decide.
 - **NEEDS VERIFICATION** — Whether MLT (MapLibre Tile) inside PMTiles is on the roadmap or remains pilot-only. Project doctrine currently labels MLT as **NEEDS VERIFICATION** until toolchain and renderer support are proven.
@@ -556,7 +576,7 @@ These items are explicitly **not resolved** by this profile and SHOULD be tracke
 - `docs/standards/MVT.md` — vector tile internal encoding
 - `docs/standards/COG.md` — raster carrier alternative
 - `contracts/release/` — `TileArtifactManifest`, `MapReleaseManifest` semantics
-- `schemas/contracts/v1/release/` — machine-checkable shapes
+- `schemas/contracts/v1/` — machine-checkable shapes; the `TileArtifactManifest` family decision remains unresolved
 - `policy/release/`, `policy/sensitivity/` — admissibility and sensitivity gates
 
 ### External standards and tooling
@@ -583,4 +603,4 @@ These items are explicitly **not resolved** by this profile and SHOULD be tracke
 - [Map Shell architecture](../architecture/map-shell.md) · _TODO verify path_
 - [TileArtifactManifest contract](../../contracts/release/tile_artifact_manifest.md) · _TODO verify path_
 
-**Last reviewed:** 2026-05-14 · **Next review:** flag if older than 6 months · [Back to top](#pmtiles--kfm-standards-profile)
+**Last reviewed:** 2026-08-03 · **Next review:** flag if older than 6 months · [Back to top](#pmtiles--kfm-standards-profile)

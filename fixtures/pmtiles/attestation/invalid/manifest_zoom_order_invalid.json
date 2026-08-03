@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-zoom-order-invalid",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_ZOOM_ORDER_INVALID"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_zoom_order_invalid"
+}

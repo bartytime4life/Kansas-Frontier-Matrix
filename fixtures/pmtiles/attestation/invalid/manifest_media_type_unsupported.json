@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-media-type-unsupported",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_MEDIA_TYPE_UNSUPPORTED"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_media_type_unsupported"
+}

@@ -4,13 +4,13 @@ title: New Ideas Register
 type: standard
 version: v0.9
 status: draft; repository-grounded; intake-only
-owners: OWNER_TBD
+owner: OWNER_TBD
 created: 2026-05-16
 updated: 2026-08-03
 policy_label: public
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-12-20-25-source-map.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified through remote main 99e73d87e0aed536b25f2f282f88a386f35654b5; New Ideas 12-20-25 is identity-pinned and triaged alongside the existing packet set; register rows remain intake records and not implementation, promotion, release, or publication authority.]
+notes: [Repository path and sibling intake surfaces verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint are triaged exploratory packets; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -21,7 +21,7 @@ A governed intake ledger for exploratory KFM idea packets so useful proposals st
 > **Status:** draft / repository-grounded / intake-only
 > **Owner:** OWNER_TBD  
 > **Path:** `docs/intake/new-ideas-register.md`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@99e73d87e0aed536b25f2f282f88a386f35654b5` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
 > **Rule:** packet pressure is not implementation proof.
 
 ## Quick jumps
@@ -196,9 +196,9 @@ Each row should carry enough information for a maintainer to decide whether to p
 
 | Packet ID | Source title | Source date | Source class | Intake status | Category | Destination candidate | Next action |
 |---|---|---:|---|---|---|---|---|
-| `NI-2025-12-20-data-trust-controls` | `New Ideas 12-20-25.docx.pdf` | 2025-12-20 | `EXPLORATORY`; bounded fixture slice implemented | `triaged` | `multi-cluster exploratory intake / validation implementation` | [`exploratory/new-ideas-12-20-25-source-map.md`](exploratory/new-ideas-12-20-25-source-map.md); existing Atmosphere validator, fixture, test, documentation, and workflow homes; other destinations candidate-only | Review the frozen fixture profile and keep live sensors, scientific correction, Rego, source admission, evidence resolution, release, and publication separately gated. |
 | `NI-2026-05-08-ecology-watchers` | `New Ideas 5-8-26` | 2026-05-08 | `EXPLORATORY` | `captured` | `policy-gate-proposal` | `policy/ecology/tiles/v1.rego`; `tools/ci/probes/`; `docs/domains/ecology/gating-spec.md` — all `PROPOSED` | Verify source rights, cadence, thresholds, and fail-closed policy shape before drafting fixtures. |
 | `NI-2026-05-10-pmtiles-attestation` | `New Ideas 5-10-26` | 2026-05-10 | `EXPLORATORY` | `captured` | `schema-contract-proposal` | `schemas/contracts/v1/...`; `tools/attest/`; `tools/validators/`; `.github/workflows/pmtiles-attestation.yml` — all `PROPOSED` | Convert sidecar concept into schema + valid/invalid fixture + validator plan after repo path inspection. |
+| `NI-2026-05-15-pmtiles-declared-manifest` | `New Ideas 5-15-26.pdf` | 2026-05-15 | `EXPLORATORY`; bounded slice implemented | `triaged` | `artifact-validation compatibility profile` | [`exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md`](exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md); existing PMTiles validator, fixture, test, contract, and standard homes | Preserve the opt-in offline proof and its holds; require a separate governed decision before canonical schema, registry, provenance, cryptographic, policy, release, runtime, or publication work. |
 | `NI-2026-04-13-promotion-proof` | `New Ideas 4-13-26.pdf` | 2026-04-13 | `EXPLORATORY`; bounded slice implemented | `triaged` | `policy-gate / validation implementation` | [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md); existing promotion validator, release fixture/test, Make, and workflow homes | Preserve the offline `APPROVE_READY` proof; require separate authority before evidence resolution, accountable review, signing, candidate assembly, release, or publication. |
 | `NI-2026-04-14-verification-conflict` | `New Ideas 4-14-26.pdf` | 2026-04-14 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-14-source-map.md`](exploratory/new-ideas-4-14-source-map.md); five contributed atlas triads, three shared with the April 15 packet; downstream homes remain candidate-only | Review a contract-only bitemporal verification-state record with synthetic replay fixtures before any live source, key, policy, or release integration. |
 | `NI-2026-04-15-quality-proof-interface` | `New Ideas 4-15-26.pdf` | 2026-04-15 | `EXPLORATORY / PASS-23-LINEAGE` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/new-ideas-4-15-source-map.md`](exploratory/new-ideas-4-15-source-map.md); five contributed atlas triads, three shared with the April 14 packet; downstream homes remain candidate-only | Review a contract-only generated runtime-proof artifact lifecycle with synthetic states before source activation, route work, golden promotion, or publication. |
@@ -210,23 +210,6 @@ Each row should carry enough information for a maintainer to decide whether to p
 | `NI-2026-07-30-spatiotemporal-modernization` | `Architectural Modernization and Governance Blueprint for the Kansas Frontier Matrix` | `NEEDS VERIFICATION` (captured 2026-07-30) | `EXPLORATORY` | `triaged` | `multi-cluster exploratory intake` | [`exploratory/spatiotemporal-modernization-blueprint-source-map.md`](exploratory/spatiotemporal-modernization-blueprint-source-map.md); downstream homes remain candidate-only | Review a decision-only GeoParquet version-readiness issue before any standard, dependency, data, catalog, hosting, runtime, release, deployment, or publication change. |
 
 ### Register detail cards
-
-#### `NI-2025-12-20-data-trust-controls`
-
-| Field | Value |
-|---|---|
-| Source identity | `New Ideas 12-20-25.docx.pdf`; SHA-256 `89b0231a26c34e8a383d5bbfcafa7e84b5e1072b26859ce8b2dcc0aaf2d9add2`; 37 pages; 717,542 bytes |
-| Source date | `2025-12-20`, supported by filename and PDF title metadata |
-| Primary category | `multi-cluster exploratory intake` |
-| Secondary tags | `atmosphere-calibration`, `pm25`, `stac`, `zarr`, `graph-migration`, `incident-fusion`, `deterministic-replay`, `rollback` |
-| Detailed source map | [`exploratory/new-ideas-12-20-25-source-map.md`](exploratory/new-ideas-12-20-25-source-map.md) |
-| Repository evidence basis | Current Atmosphere caveat and knowledge-character lanes; permissive catalog-matrix schema and placeholder validator; documented but unexecuted graph-migration lane; WZDx source terms needing verification; deterministic, receipt-aware pipeline doctrine. |
-| Durable contribution | Explicit calibration pedigree and transfer limits; discoverable array access metadata; declared migration blast radius; source-preserving incident deltas; replay and rollback pressure. |
-| Promotion blockers | Incomplete external citations; unverified standards and versions; scientific and hardware-specific evidence; catalog and graph profile ownership; source identity, rights, authority, and access; incident conflict policy; dependency integrity; human review. |
-| Unsafe direct transfers | Trust-as-truth, fixed scientific thresholds, corrected-as-raw collapse, provisional STAC fields, generic graph/Cypher paths, source-tier promotion, missing-as-cleared, unpinned downloads, hard-coded attestation success, and publication automation. |
-| Implemented boundary | Frozen fixture-only Atmosphere profile with two positive states, sixteen exact-negative pairs, exact fixture-local correction/training/specification identities and identity-string digests, raw/corrected separation, synthetic reference-collocation, held-out-evaluation metadata, meteorology inputs, transferability/drift state, caveat, confidence, limitations, fictional county sentinel, deterministic no-network checks, and `promotion_eligible: false`. |
-| Smallest next action | Independently review the frozen profile against accepted scientific and policy authority; keep rights, source admission, Rego obligations, carriers, live records, evidence resolution, correction choice, and release outside the fixture validator. |
-| Decision note | Triaged and partially implemented because the existing Atmosphere lane had an exact one-line validator/test gap. The packet remains exploratory: no packet code, standard, live source, scientific threshold, dependency, canonical schema, Rego policy, model, migration, pipeline, release, or publication behavior is promoted. |
 
 #### `NI-2026-04-13-promotion-proof`
 
@@ -295,6 +278,20 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Evidence threshold | Directory Rules placement check, schema-home check, tool license review, fixture pair, validator exit behavior, signature/proof verification plan. |
 | Promotion blocker | Tooling, path homes, PMTiles sidecar schema home, and CI workflow names remain `NEEDS VERIFICATION`. |
 | Decision note | Captured as a strong artifact-integrity proposal; do not promote until it is reduced from packet prose into a reviewed schema/validator/fixture bundle. |
+
+#### `NI-2026-05-15-pmtiles-declared-manifest`
+
+| Field | Value |
+|---|---|
+| Source identity | `New Ideas 5-15-26.pdf`; SHA-256 `64dc1c8793ba64a641b12a092201d1cc4e5ac90ce8cdc4a1d7bd54eaf548cc95` |
+| Source date | `2026-05-15`, supported by filename |
+| Primary category | `artifact-validation compatibility profile` |
+| Secondary tags | `PMTiles`, `TileArtifactManifest`, `SHA-256`, `spec_hash`, `fixture-first`, `no-network`, `provenance`, `negative-cases` |
+| Detailed source map | [`exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md`](exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md) |
+| Evidence threshold | Current repository path/authority review; pinned upstream format facts; generated synthetic bundle; exact finite reason-code registry; default no-flag parity; no-network execution. |
+| Promotion blockers | Canonical schema family; artifact-registry resolution; source/generator attestation; Brotli/Zstandard and client/runtime compatibility; cryptography, policy, release, rollback, and publication authority. |
+| Smallest next action | Review a schema-family decision record; do not create or rename canonical schemas in this slice. |
+| Decision note | A bounded opt-in local profile is implemented under existing homes with `authority: NONE`. Remote change detection, artifact emission, signing, promotion, runtime loading, and publication remain excluded. |
 
 #### `NI-2026-04-16-governed-baselines`
 
