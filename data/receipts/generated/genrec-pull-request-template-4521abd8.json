@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-pull-request-template-4521abd8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "artifact_hashes": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "sha256:4521abd8ba544aaf268d126d949071271a32a2002ac4586fcd3ef6ab1d32fe3c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-03"
+  },
+  "prompt_or_contract": "sha256:26a0016d528014cc26f84e862ca098511fa12d34ce615ee1200dc05a72ce4caa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "static Markdown validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "User request — update .github/PULL_REQUEST_TEMPLATE.md",
+      "Repository Structure Guiding Document.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/de1cb18e688e3f81a0fc12d7f5d09a2f27921177",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/policy/ai_builder/operating_contract.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/data/receipts/generated/genrec-pull-request-template-c6f730a6.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the repository, exact base, existing template, .github responsibility boundary, CODEOWNERS boundary, Rego PR-token contract, prior template receipt, and current overlap posture before mutation."
+    },
+    {
+      "gate": "coordination-and-overlap-contract",
+      "outcome": "PASS",
+      "reason": "Added current-search, exact-ref/head-SHA, path-and-behavior overlap, survivor/supersession/consolidation, intentional-parallelism, and pre-push recheck prompts without granting authority to close, ready, merge, retarget, or overwrite another PR."
+    },
+    {
+      "gate": "repository-control-and-exact-head-contract",
+      "outcome": "PASS",
+      "reason": "Added explicit evidence fields for current PR head, hosted checks, rulesets, branch protection, required checks and approvals, bypass actors, merge methods, and mergeability; stale or unavailable controls must remain UNKNOWN or NEEDS VERIFICATION."
+    },
+    {
+      "gate": "rego-token-compatibility",
+      "outcome": "PASS",
+      "reason": "Preserved the exact visible Goal:, Status labels:, Directory Rules basis:, Validation:, Rollback:, and Cross-cutting: tokens used by the current proposed Rego contract."
+    },
+    {
+      "gate": "no-loss-and-boundary-preservation",
+      "outcome": "PASS",
+      "reason": "Preserved every v1.2 intake section and the distinction between repository intake, evidence, policy, approval, merge, release, promotion, and publication."
+    },
+    {
+      "gate": "markdown-structure-and-content-hash",
+      "outcome": "PASS",
+      "reason": "Verified one coordination section, one repository-control section, balanced HTML comments (46 opening and 46 closing), final newline, and SHA-256 sha256:4521abd8ba544aaf268d126d949071271a32a2002ac4586fcd3ef6ab1d32fe3c for the final template bytes."
+    },
+    {
+      "gate": "workflow-settings-and-enforcement",
+      "outcome": "SKIPPED",
+      "reason": "The change updates the PR intake template and provenance only. It does not modify workflows, policy execution, repository settings, rulesets, branch protection, runtime behavior, release state, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-pull-request-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "github-governance-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/.github/README.md"
+    },
+    {
+      "id": "rego-required-pr-tokens",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/policy/ai_builder/operating_contract.rego"
+    },
+    {
+      "id": "prior-template-provenance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de1cb18e688e3f81a0fc12d7f5d09a2f27921177/data/receipts/generated/genrec-pull-request-template-c6f730a6.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T15:36:59.213Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored v1.3 pull-request-template update on a scoped review branch. The template now requires current overlap disposition and exact-head repository-control evidence while preserving the existing intake, trust, lifecycle, review, rollback, and publication boundaries. Human review remains pending. This receipt is provenance evidence, not approval or proof of platform enforcement."
+}
