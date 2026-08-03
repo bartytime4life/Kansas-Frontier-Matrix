@@ -40,8 +40,21 @@ EXPECTED_ROOT_HOLDS = {
 EXPECTED_EXPLORER_SCRIPTS = {
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
-    "test": "vitest run",
+    "test": "pnpm run test:unit && pnpm run test:browser",
+    "test:unit": "vitest run tests/*.test.ts",
+    "test:browser": "playwright test --config=playwright.config.ts",
 }
+
+# Playwright config files that have been deliberately accepted at the named
+# repository-relative paths.  Any other playwright.config.* file discovered
+# under the scanned app/package directories still triggers
+# E2E_IMPLEMENTATION_SURFACED so that new configurations require explicit
+# acceptance rather than silently inheriting prior approvals.
+ACCEPTED_PLAYWRIGHT_CONFIGS: frozenset[str] = frozenset(
+    {
+        "apps/explorer-web/playwright.config.ts",
+    }
+)
 
 EXPECTED_E2E_INVENTORY = {
     "tests/e2e/README.md",
@@ -478,7 +491,10 @@ def _check_surfaced_e2e_files(
                 if (
                     "e2e" in parts
                     or "e2e" in lower_name
-                    or lower_name.startswith("playwright.config.")
+                    or (
+                        lower_name.startswith("playwright.config.")
+                        and relative not in ACCEPTED_PLAYWRIGHT_CONFIGS
+                    )
                 ):
                     surfaced.append(relative)
                     inspected.add(relative)
