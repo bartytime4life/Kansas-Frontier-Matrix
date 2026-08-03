@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/drought_declaration.schema.json",
+  "title": "DroughtDeclaration",
+  "type": "object",
+  "description": "A legal or administrative drought declaration or proclamation event. Preserves issuing authority, legal instrument reference, effective time, county membership, and declaration-stage vocabulary. Must never carry a physical observation severity or be derived from USDM D0-D4 polygon categories. This object cannot be substituted for DroughtObservation.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "anti_collapse_rule": "DroughtDeclaration and DroughtObservation are separate object families. Kansas watch/warning/emergency stages must not be derived from USDM D0-D4 polygon categories. Missing or unresolved legal instrument evidence must abstain/hold rather than infer a stage.",
+    "contract_doc": "contracts/domains/hazards/drought_declaration.md",
+    "fixtures_root": "fixtures/domains/hazards/drought_declaration/",
+    "validator": "tools/validators/hazards/validate_drought_families.py",
+    "policy": "policy/domains/hazards/",
+    "not_for_life_safety": true
+  },
+  "properties": {
+    "_fixture_meta": {
+      "type": "object",
+      "description": "Optional fixture-only metadata. Not present in production records.",
+      "additionalProperties": true
+    },
+    "object_type": {
+      "type": "string",
+      "const": "DroughtDeclaration",
+      "description": "Discriminator field. Must be exactly 'DroughtDeclaration' to prevent substitution with DroughtObservation."
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["v1"],
+      "description": "Schema version for this object."
+    },
+    "declaration_id": {
+      "type": "string",
+      "pattern": "^decl:[a-z0-9_:-]+$",
+      "description": "Stable identifier for this declaration record."
+    },
+    "issuing_authority": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the issuing authority (e.g. 'Kansas Water Office', 'Governor of Kansas')."
+    },
+    "legal_instrument_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the legal instrument (proclamation, order, notice). Null means the instrument has not been resolved. Missing or unresolved evidence must abstain rather than infer a stage."
+    },
+    "legal_instrument_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved", "abstain"],
+      "description": "Resolution state of legal_instrument_ref. Must be 'bound' before a stage is asserted. 'abstain' means evidence is insufficient to determine stage."
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Legal effective time of the declaration. Distinct from observation_time, publication_time, retrieval_time, and supersession_time."
+    },
+    "rescinded_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Time at which the declaration was rescinded or revised, or null if still in effect. A newer physical observation does not rescind a legal declaration."
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Time at which this declaration record was retrieved or ingested. Distinct from effective_at and rescinded_at."
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the governed source descriptor for this declaration."
+    },
+    "source_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"],
+      "description": "Resolution state of source_ref. Must be 'bound' before any downstream use."
+    },
+    "county_scope": {
+      "type": "object",
+      "description": "County or governed-area membership. Geometry overlap is evidence of relationship only — not identity or authority equivalence.",
+      "properties": {
+        "all_105_counties": {
+          "type": "boolean",
+          "description": "True if this declaration applies to all 105 Kansas counties."
+        },
+        "county_refs": {
+          "type": ["array", "null"],
+          "items": {"type": "string", "minLength": 1},
+          "description": "List of county references, or null if all_105_counties is true."
+        },
+        "county_scope_resolution_status": {
+          "type": "string",
+          "enum": ["bound", "unresolved"],
+          "description": "Resolution state of county membership."
+        }
+      },
+      "required": ["all_105_counties", "county_refs", "county_scope_resolution_status"],
+      "additionalProperties": false
+    },
+    "declaration_stage_vocabulary": {
+      "type": "string",
+      "enum": ["kansas_kwo_2016", "custom"],
+      "description": "Vocabulary governing the stage values used in this declaration."
+    },
+    "declaration_stage": {
+      "type": "string",
+      "enum": ["watch", "warning", "emergency", "unknown"],
+      "description": "Legal or administrative stage as declared by the issuing authority. 'unknown' is the required value when evidence is insufficient or the stage cannot be determined from an unsuperseded official declaration source."
+    },
+    "predecessor_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to a prior DroughtDeclaration this record supersedes or corrects, or null for initial declarations."
+    },
+    "successor_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the DroughtDeclaration that supersedes this record, or null if current. Silent supersession is forbidden — this field must be set when known."
+    },
+    "correction_of": {
+      "type": ["string", "null"],
+      "description": "Reference to the declaration_id this record corrects, if applicable."
+    },
+    "review_state": {
+      "type": "string",
+      "enum": ["needs_review", "under_review", "reviewed"],
+      "description": "Review posture for this declaration record."
+    },
+    "release_posture": {
+      "type": "string",
+      "enum": ["not_released", "candidate", "released"],
+      "description": "Release state. Does not grant publication authority."
+    },
+    "usdm_derived": {
+      "not": {},
+      "description": "DroughtDeclaration stage must never be derived from USDM D0-D4 categories. This field must not be present."
+    },
+    "observation_stage": {
+      "not": {},
+      "description": "DroughtDeclaration must not carry a physical observation severity. This field must not be present."
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "declaration_id",
+    "issuing_authority",
+    "legal_instrument_ref",
+    "legal_instrument_resolution_status",
+    "effective_at",
+    "rescinded_at",
+    "retrieved_at",
+    "source_ref",
+    "source_resolution_status",
+    "county_scope",
+    "declaration_stage_vocabulary",
+    "declaration_stage",
+    "review_state",
+    "release_posture"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "legal_instrument_resolution_status": {"const": "bound"}
+        },
+        "required": ["legal_instrument_resolution_status"]
+      },
+      "then": {
+        "properties": {
+          "legal_instrument_ref": {"type": "string", "minLength": 1}
+        },
+        "required": ["legal_instrument_ref"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "legal_instrument_resolution_status": {"enum": ["unresolved", "abstain"]}
+        },
+        "required": ["legal_instrument_resolution_status"]
+      },
+      "then": {
+        "properties": {
+          "declaration_stage": {"const": "unknown"}
+        },
+        "required": ["declaration_stage"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_derivation_claimed_true",
+    "fault": "derivation_claimed_must_be_false",
+    "notes": "derivation_claimed must always be false. A relationship record may not assert that a declaration was derived from an observation category."
+  },
+  "object_type": "DroughtObsDeclarationRelationship",
+  "schema_version": "v1",
+  "relationship_id": "rel:usdm-kansas-2026-07-29:kwo-2026-04-30",
+  "observation_ref": "obs:usdm:kansas:2026-07-29",
+  "declaration_ref": "decl:kwo:2026-04-30:emergency",
+  "relationship_kind": "cited_as_evidence",
+  "derivation_claimed": true,
+  "notes": null
+}

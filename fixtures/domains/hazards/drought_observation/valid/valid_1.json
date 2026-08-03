@@ -1,0 +1,30 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_usdm_kansas_drought_observation",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "source_id": "src:usdm-weekly",
+    "notes": "Synthetic fixture only. No live source data. Anti-collapse rule: D0-D4 severity is preserved exactly; no mapping to Kansas watch/warning/emergency stages."
+  },
+  "object_type": "DroughtObservation",
+  "schema_version": "v1",
+  "observation_id": "obs:usdm:kansas:2026-07-29",
+  "profile_version": "0.1.0",
+  "source_ref": "src:usdm-weekly",
+  "source_resolution_status": "bound",
+  "observed_at": "2026-07-29T08:00:00Z",
+  "observed_interval_end": "2026-08-05T07:59:59Z",
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "publication_time": "2026-07-31T13:30:00Z",
+  "geometry_ref": "kfm://geometry/usdm/kansas/2026-07-29",
+  "geometry_resolution_status": "bound",
+  "geometry_version": "usdm-release-2026-07-31",
+  "classification_vocabulary": "usdm_d0_d4",
+  "source_native_severity": "D2",
+  "method_ref": "kfm://method/usdm-weekly-expert-synthesis",
+  "superseded_by": null,
+  "correction_of": null,
+  "rights_status": "unknown",
+  "sensitivity": "public",
+  "release_posture": "not_released"
+}

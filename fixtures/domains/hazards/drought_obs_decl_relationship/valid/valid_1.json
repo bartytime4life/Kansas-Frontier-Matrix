@@ -1,0 +1,16 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_obs_decl_relationship_temporal_overlap",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "notes": "Synthetic fixture. Relationship links a USDM observation to a KWO declaration as temporal_overlap. derivation_claimed must always be false."
+  },
+  "object_type": "DroughtObsDeclarationRelationship",
+  "schema_version": "v1",
+  "relationship_id": "rel:usdm-kansas-2026-07-29:kwo-2026-04-30",
+  "observation_ref": "obs:usdm:kansas:2026-07-29",
+  "declaration_ref": "decl:kwo:2026-04-30:emergency",
+  "relationship_kind": "temporal_overlap",
+  "derivation_claimed": false,
+  "notes": "Both the USDM observation and the KWO declaration were active during the week of 2026-07-29. Geometry overlap and temporal proximity are evidence of relationship only — not identity or authority equivalence."
+}

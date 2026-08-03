@@ -1,0 +1,31 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_declaration_derived_from_usdm_category",
+    "fault": "usdm_derived_field_present",
+    "notes": "DroughtDeclaration stage must never be derived from USDM D0-D4 polygon categories. The 'usdm_derived' field is forbidden."
+  },
+  "object_type": "DroughtDeclaration",
+  "schema_version": "v1",
+  "declaration_id": "decl:kwo:2026-04-30:emergency",
+  "issuing_authority": "Kansas Water Office",
+  "legal_instrument_ref": "kfm://instrument/kwo/drought-proclamation-2026-04-30",
+  "legal_instrument_resolution_status": "bound",
+  "effective_at": "2026-04-30T00:00:00Z",
+  "rescinded_at": null,
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "source_ref": "src:kwo-drought-proclamation",
+  "source_resolution_status": "bound",
+  "county_scope": {
+    "all_105_counties": true,
+    "county_refs": null,
+    "county_scope_resolution_status": "bound"
+  },
+  "declaration_stage_vocabulary": "kansas_kwo_2016",
+  "declaration_stage": "emergency",
+  "predecessor_ref": null,
+  "successor_ref": null,
+  "correction_of": null,
+  "review_state": "needs_review",
+  "release_posture": "not_released",
+  "usdm_derived": "D3"
+}
