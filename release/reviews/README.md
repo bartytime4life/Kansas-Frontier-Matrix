@@ -14,6 +14,13 @@ A release review records whether a candidate, manifest, correction, notice, or r
 
 A review is not a release. Review prose does not make an output public. Release requires governed records, validation support, steward decision, manifest readiness, correction path, and reversal posture where applicable.
 
+The fixture-only validator at `tools/validators/validate_review_record.py` checks
+synthetic Gate G projections for separation of duties, declared actor authority,
+freshness, supersession, scope, subject, and hash binding. It does not create a
+record in this lane, authenticate a reviewer, grant authority, or change release
+state. This lane still contains guidance only; no parent-level governed release
+ReviewRecord is established by the fixture proof.
+
 ## Status & authority
 
 | Field | Value |

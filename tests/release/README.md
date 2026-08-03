@@ -84,11 +84,11 @@ notes:
 ## Status and evidence boundary
 
 > [!IMPORTANT]
-> **CONFIRMED direct lane:** `tests/release/test_promotion_gate.py` executes the bounded promotion-readiness profile, and `test_promotion_decision_schema.py` preserves the separate PromotionDecision shape check.
+> **CONFIRMED direct lane:** `tests/release/test_review_record.py` proves the fixture-only ReviewRecord projection, `test_promotion_gate.py` executes the bounded A-G profile, and `test_promotion_decision_schema.py` preserves the separate PromotionDecision shape check.
 >
 > **CONFIRMED adjacent execution:** the repository configures pytest, and `tests/schemas/test_common_contracts.py` can include the `release` schema family when a matching fixture directory exists.
 >
-> **PARTIAL:** the promotion-gate thin slice is implemented; full ReleaseManifest, policy-engine, evidence-resolution, signature, reviewer-authority, rollback-execution, correction-cascade, publication, and required-check closure remain outside this proof.
+> **PARTIAL:** the promotion-gate thin slice and synthetic reviewer-authority declaration checks are implemented; live identity/authority authentication, full ReleaseManifest, policy-engine, evidence-resolution, signature, rollback-execution, correction-cascade, publication, and required-check closure remain outside this proof.
 
 ### Safe conclusion
 
@@ -101,6 +101,7 @@ notes:
 - `fixtures/release/promotion_gate/` contains an exact finite-outcome packet matrix consumed by the validator and focused suite.
 - `policy/release/README.md` and `policy/promotion/README.md` are greenfield stubs.
 - `tools/validators/promotion_gate/validate_promotion_gate.py` is implemented; broader release helpers and validators remain mixed-maturity.
+- `tools/validators/validate_review_record.py` validates only repository-owned synthetic projections and creates no governed ReviewRecord.
 - `schemas/contracts/v1/release/README.md` records a mixed-maturity schema family: one concrete PromotionDecision schema, several permissive stubs, and several empty scaffolds.
 
 ### Truth labels used here
@@ -185,7 +186,8 @@ Do not use this lane as:
 | Surface | Status | Evidence-bounded conclusion |
 |---|---:|---|
 | `tests/release/README.md` | `CONFIRMED` | Existing v0.1 planning README; this revision replaces it. |
-| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Ten standard-library-compatible tests cover the bounded A-G promotion profile. |
+| `tests/release/test_review_record.py` | `CONFIRMED` | Four standard-library tests cover exact positive/negative ReviewRecord fixtures, no-network behavior, value-free output, non-emission, and deterministic CLI polarity. |
+| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Twelve standard-library-compatible tests cover the bounded A-G promotion profile and outcome precedence. |
 | `tests/release/test_promotion_decision_schema.py` | `CONFIRMED` | Preserves the separate proposed PromotionDecision shape-fixture boundary. |
 | Direct test-local fixtures | `NOT ESTABLISHED` | No test-local fixture inventory was established for this lane. |
 | Dedicated command | `CONFIRMED` | `make publish-check` runs fixture polarity plus the focused direct suite with no network. |
@@ -201,7 +203,7 @@ The bounded search limit matters: absence from search results is not proof of pe
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Direct `tests/release/` coverage is excluded. |
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
 | `make release-dry-run` | Emits a TODO message. | No release dry-run implementation is established. |
-| `make publish-check` | Runs the nine-file finite-outcome matrix and ten focused tests. | Proves bounded declared-closure behavior only; never promotion or publication. |
+| `make publish-check` | Runs the sixteen-file promotion matrix, nine-case ReviewRecord subset, and sixteen focused tests. | Proves bounded fixture behavior only; never review approval, promotion, release, or publication. |
 | `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
 
 ### Adjacent schema coverage
@@ -994,7 +996,7 @@ Rolling back this README does not roll back a KFM release, workflow, policy bund
 | Review state | Implemented bounded promotion-gate thin slice; human review pending |
 | Direct lane maturity | Two executable modules; broader release suite partial |
 | Executable release suite | Promotion-gate proof confirmed; no full release/publish proof |
-| Next smallest safe change | Resolve one existing ReviewRecord or rollback-card prerequisite without widening this validator into release authority. |
+| Next smallest safe change | Authenticate one accepted actor-assignment source or resolve one rollback-card prerequisite without widening this fixture validator into authority. |
 
 ---
 

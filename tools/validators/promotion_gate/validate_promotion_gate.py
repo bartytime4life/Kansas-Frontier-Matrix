@@ -28,6 +28,10 @@ from tools.validators._common.public_safe_fixture import (
     is_nonempty_string,
     validate_fixture_file,
 )
+from tools.validators.validate_review_record import (
+    review_context_from_packet,
+    validate_review,
+)
 
 
 FIXTURES_ROOT = REPO_ROOT / "fixtures/release/promotion_gate"
@@ -42,6 +46,7 @@ TOP_LEVEL_FIELDS = frozenset(
         "candidate_id",
         "candidate_author",
         "spec_hash",
+        "gate_evaluated_at",
         "lifecycle",
         "release_manifest",
         "run_receipt",
@@ -85,6 +90,7 @@ CODE_META: dict[str, tuple[str, str]] = {
     "PG_D_UNDECLARED_FIELD": ("D", "DENY"),
     "PG_D_TEMPORAL_INVALID": ("D", "DENY"),
     "PG_D_TEMPORAL_ORDER_INVALID": ("D", "DENY"),
+    "PG_D_GATE_EVALUATED_AT_INVALID": ("D", "DENY"),
     "PG_E_UNDECLARED_FIELD": ("E", "DENY"),
     "PG_E_POLICY_CONTEXT_INVALID": ("E", "DENY"),
     "PG_E_POLICY_PROFILE_UNKNOWN": ("E", "DENY"),
@@ -100,10 +106,40 @@ CODE_META: dict[str, tuple[str, str]] = {
     "PG_G_UNDECLARED_FIELD": ("G", "DENY"),
     "PG_G_REVIEW_INVALID": ("G", "DENY"),
     "PG_G_REVIEW_NOT_APPROVED": ("G", "DENY"),
+    "PG_G_REVIEW_AUTHORITY_MISSING": ("G", "ABSTAIN"),
+    "PG_G_REVIEW_AUTHORITY_INVALID": ("G", "DENY"),
+    "PG_G_REVIEW_STALE": ("G", "DENY"),
+    "PG_G_REVIEW_SUPERSEDED": ("G", "DENY"),
+    "PG_G_REVIEW_SCOPE_MISMATCH": ("G", "DENY"),
+    "PG_G_REVIEW_SUBJECT_MISMATCH": ("G", "DENY"),
+    "PG_G_REVIEW_SPEC_HASH_UNBOUND": ("G", "DENY"),
+    "PG_G_REVIEW_ARTIFACT_HASH_UNBOUND": ("G", "DENY"),
+    "PG_G_REVIEW_VALIDATION_ERROR": ("G", "ERROR"),
     "PG_G_SEPARATION_OF_DUTIES_INVALID": ("G", "DENY"),
     "PG_G_ROLLBACK_INVALID": ("G", "DENY"),
     "PG_G_ROLLBACK_TARGET_INVALID": ("G", "DENY"),
     "PG_G_CORRECTION_LINK_MISSING": ("G", "ABSTAIN"),
+}
+
+REVIEW_CODE_MAP = {
+    "FIXTURE_JSON_INVALID": "PG_G_REVIEW_VALIDATION_ERROR",
+    "FIXTURE_TOO_LARGE": "PG_G_REVIEW_VALIDATION_ERROR",
+    "RR_INPUT_DOCUMENT_INVALID": "PG_G_REVIEW_VALIDATION_ERROR",
+    "RR_CONTEXT_INVALID": "PG_G_REVIEW_VALIDATION_ERROR",
+    "RR_UNDECLARED_FIELD": "PG_G_UNDECLARED_FIELD",
+    "RR_RECORD_INVALID": "PG_G_REVIEW_INVALID",
+    "RR_DECISION_NOT_APPROVED": "PG_G_REVIEW_NOT_APPROVED",
+    "RR_IDENTITY_INVALID": "PG_G_REVIEW_INVALID",
+    "RR_SELF_REVIEW": "PG_G_SEPARATION_OF_DUTIES_INVALID",
+    "RR_AUTHORITY_MISSING": "PG_G_REVIEW_AUTHORITY_MISSING",
+    "RR_AUTHORITY_INVALID": "PG_G_REVIEW_AUTHORITY_INVALID",
+    "RR_TEMPORAL_INVALID": "PG_G_REVIEW_INVALID",
+    "RR_REVIEW_STALE": "PG_G_REVIEW_STALE",
+    "RR_REVIEW_SUPERSEDED": "PG_G_REVIEW_SUPERSEDED",
+    "RR_SCOPE_MISMATCH": "PG_G_REVIEW_SCOPE_MISMATCH",
+    "RR_SUBJECT_MISMATCH": "PG_G_REVIEW_SUBJECT_MISMATCH",
+    "RR_SPEC_HASH_UNBOUND": "PG_G_REVIEW_SPEC_HASH_UNBOUND",
+    "RR_ARTIFACT_HASH_UNBOUND": "PG_G_REVIEW_ARTIFACT_HASH_UNBOUND",
 }
 
 
@@ -285,6 +321,12 @@ def _validate_geometry(candidate: dict[str, object], findings: set[Finding]) -> 
 
 
 def _validate_temporal(candidate: dict[str, object], findings: set[Finding]) -> None:
+    if _strict_utc_timestamp(candidate.get("gate_evaluated_at")) is None:
+        _add(
+            findings,
+            "PG_D_GATE_EVALUATED_AT_INVALID",
+            "$.gate_evaluated_at",
+        )
     temporal = candidate.get("temporal")
     if not isinstance(temporal, dict):
         _add(findings, "PG_D_TEMPORAL_INVALID", "$.temporal")
@@ -384,27 +426,16 @@ def _validate_proof_closure(candidate: dict[str, object], findings: set[Finding]
 def _validate_review_and_rollback(
     candidate: dict[str, object], findings: set[Finding]
 ) -> None:
-    review = candidate.get("review")
-    if not isinstance(review, dict):
-        _add(findings, "PG_G_REVIEW_INVALID", "$.review")
-    else:
-        _unknown_fields(
-            findings,
-            review,
-            frozenset({"status", "reviewer", "ticket"}),
-            path="$.review",
-            code="PG_G_UNDECLARED_FIELD",
-        )
-        if review.get("status") != "APPROVED":
-            _add(findings, "PG_G_REVIEW_NOT_APPROVED", "$.review.status")
-        if not is_nonempty_string(review.get("reviewer")) or not is_nonempty_string(
-            review.get("ticket")
+    review_context = review_context_from_packet(candidate)
+    if review_context is not None:
+        for review_finding in validate_review(
+            candidate.get("review"), **review_context  # type: ignore[arg-type]
         ):
-            _add(findings, "PG_G_REVIEW_INVALID", "$.review")
-        if is_nonempty_string(candidate.get("candidate_author")) and review.get(
-            "reviewer"
-        ) == candidate.get("candidate_author"):
-            _add(findings, "PG_G_SEPARATION_OF_DUTIES_INVALID", "$.review.reviewer")
+            _add(
+                findings,
+                REVIEW_CODE_MAP[review_finding.code],
+                review_finding.path,
+            )
 
     rollback = candidate.get("rollback")
     if not isinstance(rollback, dict):

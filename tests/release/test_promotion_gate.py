@@ -42,13 +42,19 @@ class PromotionGateTests(unittest.TestCase):
             payload["gates"],
             [{"gate": gate, "status": "PASS"} for gate in "ABCDEFG"],
         )
-        self.assertNotIn("PROMOTED", json.dumps(payload))
+        payload_text = json.dumps(payload)
+        for forbidden in ("APPROVED", "PROMOTED", "RELEASED", "PUBLISHED"):
+            self.assertNotIn(forbidden, payload_text)
 
     def test_repository_fixture_matrix_has_exact_outcomes(self) -> None:
         expected = {
             "abstain__missing_evidence_ref.json": (
                 "ABSTAIN",
                 {"PG_F_EVIDENCE_REF_MISSING"},
+            ),
+            "abstain__review_authority_missing.json": (
+                "ABSTAIN",
+                {"PG_G_REVIEW_AUTHORITY_MISSING"},
             ),
             "deny__artifact_set_mismatch.json": (
                 "DENY",
@@ -65,6 +71,30 @@ class PromotionGateTests(unittest.TestCase):
             "deny__review_missing.json": (
                 "DENY",
                 {"PG_G_REVIEW_NOT_APPROVED"},
+            ),
+            "deny__review_artifact_hash_unbound.json": (
+                "DENY",
+                {"PG_G_REVIEW_ARTIFACT_HASH_UNBOUND"},
+            ),
+            "deny__review_scope_mismatch.json": (
+                "DENY",
+                {"PG_G_REVIEW_SCOPE_MISMATCH"},
+            ),
+            "deny__review_self.json": (
+                "DENY",
+                {"PG_G_SEPARATION_OF_DUTIES_INVALID"},
+            ),
+            "deny__review_spec_hash_unbound.json": (
+                "DENY",
+                {"PG_G_REVIEW_SPEC_HASH_UNBOUND"},
+            ),
+            "deny__review_stale.json": (
+                "DENY",
+                {"PG_G_REVIEW_STALE"},
+            ),
+            "deny__review_superseded.json": (
+                "DENY",
+                {"PG_G_REVIEW_SUPERSEDED"},
             ),
             "deny__unknown_policy_label.json": (
                 "DENY",
@@ -110,11 +140,40 @@ class PromotionGateTests(unittest.TestCase):
         candidate = load_valid()
         review = copy.deepcopy(candidate["review"])
         assert isinstance(review, dict)
-        review["reviewer"] = candidate["candidate_author"]
+        reviewer_identity = review["reviewer_identity"]
+        authority = review["authority"]
+        assert isinstance(reviewer_identity, dict)
+        assert isinstance(authority, dict)
+        reviewer_identity["id"] = candidate["candidate_author"]
+        authority["assigned_to"] = candidate["candidate_author"]
         candidate["review"] = review
         self.assertEqual(
             finding_codes(candidate), {"PG_G_SEPARATION_OF_DUTIES_INVALID"}
         )
+
+    def test_outcome_precedence_remains_error_deny_abstain_pass(self) -> None:
+        candidate = load_valid()
+        candidate["evidence_refs"] = []
+        review = copy.deepcopy(candidate["review"])
+        assert isinstance(review, dict)
+        review["authority"] = None
+        candidate["review"] = review
+        findings = validate_document(candidate)
+        self.assertEqual(result_payload("candidate.json", findings)["status"], "ABSTAIN")
+
+        reviewer_identity = review["reviewer_identity"]
+        assert isinstance(reviewer_identity, dict)
+        reviewer_identity["id"] = candidate["candidate_author"]
+        candidate["review"] = review
+        findings = validate_document(candidate)
+        self.assertEqual(result_payload("candidate.json", findings)["status"], "DENY")
+
+        policy_context = copy.deepcopy(candidate["policy_context"])
+        assert isinstance(policy_context, dict)
+        policy_context["evaluation"] = "ERROR"
+        candidate["policy_context"] = policy_context
+        findings = validate_document(candidate)
+        self.assertEqual(result_payload("candidate.json", findings)["status"], "ERROR")
 
     def test_equal_temporal_boundary_is_valid(self) -> None:
         candidate = load_valid()

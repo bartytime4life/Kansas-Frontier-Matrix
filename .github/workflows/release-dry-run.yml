@@ -246,7 +246,8 @@ jobs:
             echo
             echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
             echo "- PASS means only APPROVE_READY over declared synthetic closure; it never assembles or promotes a release candidate."
-            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, evaluate promotion policy, verify attestations, enforce reviewer authority, execute rollback, or bind another workflow result."
+            echo "- Gate G checks synthetic ReviewRecord identity/authority, freshness, supersession, scope, and hash declarations."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, evaluate promotion policy, verify attestations, authenticate live actors or assignments, execute rollback, or bind another workflow result."
             echo "- Result: ${{ job.status }}. No PromotionDecision, release transition, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
