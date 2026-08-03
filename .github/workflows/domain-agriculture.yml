@@ -1,10 +1,11 @@
 # KFM Agriculture domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Agriculture validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# Status: one bounded fixture-only CDL watcher proof is executable; Agriculture
+# domain validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
-# - This workflow inspects repository state and reports whether Agriculture CI
-#   lanes are ready to graduate from documentation-backed scaffolds.
+# - This workflow proves one synthetic ingest-adjacent review-signal helper and
+#   reports whether broader Agriculture CI lanes are ready to graduate from
+#   documentation-backed scaffolds.
 # - It does not validate Agriculture truth, build an EvidenceBundle or ProofPack,
 #   admit sources, apply policy, promote lifecycle artifacts, approve release,
 #   write published data, deploy, or publish.
@@ -54,6 +55,10 @@ jobs:
             "fixtures/domains/agriculture/README.md"
             "policy/domains/agriculture/README.md"
             "tests/domains/agriculture/README.md"
+            "tests/ingest/cdl_watch/test_cdl_watch.py"
+            "tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json"
+            "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json"
+            "tools/ingest/cdl_watch/cdl_watch.py"
             "tools/validators/agriculture/README.md"
             "tools/validators/domains/agriculture/README.md"
             "release/agriculture/README.md"
@@ -75,6 +80,12 @@ jobs:
           echo "WORKFLOW_SKIPPED_EXPLICIT: validate-agriculture"
           echo "WORKFLOW_HOLD: Agriculture executable validation is not established"
 
+      - name: Run bounded CDL material-change watcher proof
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m unittest tests.ingest.cdl_watch.test_cdl_watch --verbose
+
       - name: Record Agriculture validation hold
         if: always()
         shell: bash
@@ -86,13 +97,18 @@ jobs:
 
           `WORKFLOW_HOLD: Agriculture executable validation is not established`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          Recognized placeholder inventory is not domain validation. This job
+          separately executes the synthetic, fixture-only CDL material-change
+          watcher proof; that helper is ingest-adjacent and review-signal-only.
 
           Current repository evidence is documentation-heavy: the inspected
           Agriculture test lane contains placeholders rather than an accepted
           pytest suite. The direct validator lane is README-only, while the
           canonical domain lane contains recognized greenfield validator stubs.
+
+          The CDL helper compares bounded local sidecars with networking denied.
+          It cannot admit a source, decide canonical materiality policy, create
+          a receipt or proof, promote lifecycle state, release, or publish.
 
           This result confirms only that the known boundaries still match that
           maturity posture. It does not validate Agriculture contracts, schemas,
