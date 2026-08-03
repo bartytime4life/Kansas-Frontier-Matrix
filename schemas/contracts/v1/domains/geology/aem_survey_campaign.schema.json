@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/geology/aem_survey_campaign.schema.json",
+  "title": "AEM Survey Campaign",
+  "description": "PROPOSED closed shape for a KFM geology airborne electromagnetic (AEM) survey campaign packet. Governs identity, spatial reference, acquisition state, processing/inversion versioning, units, uncertainty, lineage, EvidenceRef bindings, and governance posture. All stage identities (campaign, flight-line, raw observation, processing run, inversion model, resistivity product, hydrostratigraphic product) are kept separate — a processed or interpreted product must not rewrite the raw acquisition identity.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/geology/AemSurveyCampaign.md",
+    "fixtures_root": "fixtures/domains/geology/aem_survey_campaign/",
+    "source_descriptor": "src:kgs-gmd3-aem-2026",
+    "governance_issue": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1944",
+    "activation_state": "disabled"
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^kfm:geology:aem-campaign:[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "object_type": {
+      "const": "AemSurveyCampaign"
+    },
+    "product_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable product identity for this campaign packet. Must differ from source_descriptor_ref — no identity collapse between product and source authority."
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^src:",
+      "description": "Reference to the canonical SourceDescriptor. Must use 'src:' prefix."
+    },
+    "campaign_state": {
+      "enum": ["planned", "in_flight", "completed", "abandoned"],
+      "description": "State of the survey campaign."
+    },
+    "acquisition_state": {
+      "enum": ["planned", "actual", "partial", "unknown"],
+      "description": "Whether acquisition is planned vs. actually executed."
+    },
+    "horizontal_crs": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Horizontal coordinate reference system (e.g., 'EPSG:4326')."
+    },
+    "vertical_datum": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Vertical datum for elevation and depth references (e.g., 'NAVD88'). Must not be absent or empty — fail closed on missing or unknown vertical datum."
+    },
+    "depth_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Depth reference benchmark (e.g., 'land_surface', 'mean_sea_level')."
+    },
+    "depth_positive_direction": {
+      "enum": ["down", "up"],
+      "description": "Convention for positive depth direction. Must be 'down' or 'up' — no ambiguity permitted."
+    },
+    "processing_software_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Processing software and version string. Must be non-empty — unversioned processing fails closed."
+    },
+    "inversion_software_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Inversion software and version string. Must be non-empty — unversioned inversion fails closed."
+    },
+    "raw_source_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to the raw acquisition record establishing lineage. Must be present — a raw/processed lineage break fails closed."
+    },
+    "resistivity_units": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Units for resistivity values (e.g., 'ohm\u00b7m'). Must be non-empty — missing units fail closed."
+    },
+    "no_data_value": {
+      "type": "number",
+      "description": "Sentinel value used when no data is present."
+    },
+    "uncertainty": {
+      "type": "object",
+      "description": "Uncertainty and QC characterization block. Must not be omitted — uncertainty omission fails closed.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Description of the uncertainty or QC method."
+        },
+        "qc_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "known_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": ["method"],
+      "additionalProperties": false
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "EvidenceRef-to-EvidenceBundle bindings. Must have at least one entry — an unbound EvidenceRef (empty array) fails closed."
+    },
+    "release_state": {
+      "enum": ["not_released", "under_review", "released"],
+      "description": "Release governance state. Proposed/disabled records must carry 'not_released'."
+    },
+    "correction": {
+      "type": "object",
+      "description": "Correction or supersession record. If present, supersedes_ref is required — silent supersession (correction without supersedes_ref) fails closed.",
+      "properties": {
+        "supersedes_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Reference to the record being superseded."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable reason for the correction."
+        },
+        "correction_time": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        }
+      },
+      "required": ["supersedes_ref", "reason"],
+      "additionalProperties": false
+    },
+    "survey_counties": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Kansas counties covered by the survey footprint."
+    },
+    "target_depth_ft_bls": {
+      "type": "number",
+      "description": "Approximate survey target depth in feet below land surface."
+    },
+    "frequency_system_ref": {
+      "type": "string",
+      "description": "Reference to the AEM system frequency/configuration specification."
+    },
+    "footprint_geometry_ref": {
+      "type": "string",
+      "description": "Reference to the line or footprint geometry identity."
+    }
+  },
+  "required": [
+    "id",
+    "object_type",
+    "product_id",
+    "source_descriptor_ref",
+    "campaign_state",
+    "acquisition_state",
+    "horizontal_crs",
+    "vertical_datum",
+    "depth_reference",
+    "depth_positive_direction",
+    "processing_software_version",
+    "inversion_software_version",
+    "raw_source_ref",
+    "resistivity_units",
+    "uncertainty",
+    "evidence_refs",
+    "release_state"
+  ],
+  "additionalProperties": false
+}
