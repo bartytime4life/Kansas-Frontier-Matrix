@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-pmtiles-readme
 title: tools/validators/pmtiles README
 type: README
-version: v0.3
+version: v0.4
 status: draft
-owner: TODO-tooling-qa-owner-plus-pmtiles-steward-plus-publication-steward-plus-schema-steward-plus-fixture-steward-plus-policy-steward-plus-release-steward-plus-evidence-steward
+owner: TODO-tooling-qa-owner
 created: 2026-07-08
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: repository-facing; pmtiles-validator-index; fail-closed; attestation; spec-hash; pmidx; pmsig; runreceipt; derived-artifacts-only; release-gated; public-surface-deny-by-default; non-authoritative
 owning_root: tools/
-responsibility: parent PMTiles validator routing README under tools/validators; indexes fail-closed validation helpers, schema routing, fixture routing, PMTiles metadata/header checks, spec_hash reconciliation, PMIDX sidecar and Merkle checks, PMSIG/signature posture, RunReceipt reconciliation, policy/review posture, release/correction/rollback references, MapLibre/public-surface denial, and verification gaps while deferring artifact bytes, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, tests, and release authority to their owning roots
+responsibility: parent PMTiles validator routing README under tools/validators; indexes fail-closed validation helpers, fixture routing, PMTiles metadata/header checks, spec_hash reconciliation, PMIDX sidecar and Merkle checks, PMSIG/signature posture, RunReceipt reconciliation, opt-in declared-manifest compatibility checks, and verification gaps while deferring artifact bytes, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, tests, and release authority to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
@@ -40,10 +40,12 @@ related:
   - ../../../tests/
 notes:
   - "The PMTiles v3 header, PMIDX archive binding, and split-bundle reconciliation scripts are confirmed by the focused synthetic unittest matrix; their success remains structural only."
+  - "This lane has one tooling/QA authority-owner role; assignment NEEDS VERIFICATION. PMTiles, schema, fixture, policy, release, publication, and evidence stewards are review roles. CODEOWNERS routes review to @bartytime4life."
+  - "The opt-in declared-manifest check is a non-canonical compatibility profile and retains an explicit unresolved-schema-authority hold."
   - "PMTiles archives are derived publication artifacts, not canonical truth. Public clients may consume only released artifacts and governed APIs."
   - "A PMTiles artifact is not trusted merely because it exists; the archive, metadata, build specification, PMIDX sidecar, PMSIG signature bundle, RunReceipt, policy posture, and release/rollback references must reconcile before publication eligibility."
   - "The tool-local fixture sublanes remain README-only. Executable mutation descriptors live under the root-owned fixtures/ lane and generate PMTiles bytes only in temporary test directories."
-  - "Validators enforce declared contracts, schemas, evidence posture, policy references, release readiness, correction paths, rollback targets, and public-surface limits. They do not define tile truth, approve release, publish public outputs, or authorize AI/map claims."
+  - "The current scripts enforce bounded archive, companion, and explicitly requested declaration-shape checks. They do not enforce canonical schema conformance, evidence closure, policy, release readiness, correction, rollback, public safety, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -57,7 +59,7 @@ notes:
 ![artifact](https://img.shields.io/badge/artifact-derived--not--truth-blueviolet)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/pmtiles/` is the PMTiles validator routing index for fail-closed attestation checks over PMTiles archives, PMIDX sidecars, PMSIG signatures, RunReceipts, `spec_hash` reconciliation, fixtures, schema bindings, release references, correction/rollback posture, and public-surface denial.
+> **One-line purpose.** `tools/validators/pmtiles/` is the PMTiles validator routing index for fail-closed attestation checks over PMTiles archives, PMIDX sidecars, PMSIG signatures, RunReceipts, `spec_hash` reconciliation, and an opt-in non-canonical declared-manifest profile.
 
 ---
 
@@ -82,7 +84,7 @@ The answer should be a deterministic validation result or routing decision. This
 | `tools/validators/pmtiles/README.md` | **CONFIRMED README** | This README replaces the prior short validator note. |
 | `validate_header.py` | **CONFIRMED / STRUCTURAL ONLY** | Decodes the exact 127-byte PMTiles v3 header, bounds non-overlapping regions, parses bounded metadata, and requires a SHA-256 `spec_hash`. |
 | `verify_merkle.py` | **CONFIRMED / STRUCTURAL ONLY** | Recomputes the archive digest, every chunk leaf, the PMIDX root, and single-chunk range bindings under a bounded no-network envelope. |
-| `validate_attestation_bundle.py` | **CONFIRMED / COMPATIBILITY PROFILE ONLY** | Reconciles PMTiles metadata, PMIDX, PMSIG, and exactly one RunReceipt subject while emitting explicit crypto, unauthenticated-range-metadata, policy, and release holds. |
+| `validate_attestation_bundle.py` | **CONFIRMED / COMPATIBILITY PROFILE ONLY** | Reconciles PMTiles metadata, PMIDX, PMSIG, and exactly one RunReceipt subject. With `--tile-manifest`, it also binds a declared PMTiles v3/MVT profile to the inspected archive while retaining explicit schema-authority, crypto, unauthenticated-range-metadata, policy, and release holds. |
 | `fixtures/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Parent fixture index for valid and invalid PMTiles fixture lanes. |
 | `fixtures/valid/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Positive fixture guidance; validator-positive fixture status is not publication approval. |
 | `fixtures/invalid/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Negative fixture guidance for fail-closed cases. |
@@ -99,6 +101,38 @@ The answer should be a deterministic validation result or routing decision. This
 ## Implemented compatibility boundary
 
 The executable slice is deliberately limited to the split SHA-256 bundle already wired by the repository. A successful bundle result is `STRUCTURAL_PASS` with `authority: NONE` and the holds `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`, `POLICY_EVALUATION_NOT_RUN`, `RANGE_METADATA_NOT_AUTHENTICATED`, and `RELEASE_AUTHORIZATION_NOT_EVALUATED`.
+
+Passing `--tile-manifest <path>` opts into
+`kfm.pmtiles.tile-artifact-manifest.compat.v1`. The descriptor must declare a
+digest-bound artifact-ref shape, PMTiles media type and v3/MVT/XYZ profile,
+byte size, SHA-256 digest, build `spec_hash`, ASCII versioned source-ref syntax,
+generation-tool identifier syntax, ordered bounds and zooms, and unique
+vector-layer ids plus field maps. Archive name, digest, size, `spec_hash`,
+version, tile type, zoom, bounds, scheme, and vector-layer metadata are
+reconciled with local bundle evidence. Artifact and source refs are ASCII-only;
+media type is a fixed profile literal;
+source refs and generation tool are syntax-only declarations. Success adds the
+holds `TILE_ARTIFACT_MANIFEST_SCHEMA_AUTHORITY_UNRESOLVED`,
+`TILE_MANIFEST_DECLARED_PROVENANCE_UNATTESTED`, and
+`TILE_MANIFEST_ARTIFACT_REF_REGISTRY_UNRESOLVED`; it is not conformance to a
+canonical `TileArtifactManifest` schema.
+
+The archive reader supports uncompressed and gzip-compressed metadata in this
+compatibility lane. PMTiles v3 Brotli and Zstandard metadata remain an explicit
+compatibility hold; this validator does not claim generic coverage of every v3
+compression enum.
+
+Profile bounds are WGS 84 header coordinates with the intentional KFM envelope
+`-180 <= west < east <= 180` and
+`-85.051129 <= south < north <= 85.051129`. This is stricter than generic
+TileJSON: point/degenerate bounds and latitude outside the Web-Mercator envelope
+fail closed in this compatibility profile.
+
+```bash
+python tools/validators/pmtiles/validate_attestation_bundle.py \
+  tiles.pmtiles \
+  --tile-manifest tile-artifact-manifest.compat.json
+```
 
 The repository also contains draft monolithic BLAKE3 and proposed GeoManifest/DSSE directions. This validator does not select among them, rename schema authority, or migrate production artifacts.
 
@@ -205,7 +239,7 @@ A PMTiles candidate should fail closed, deny, abstain, or route to steward revie
 
 Safe interpretation:
 
-- **CONFIRMED:** this README, the three structural validator scripts, the root-owned synthetic descriptor lanes, the focused unittest module, and partial workflow wiring exist and pass the bounded checks recorded by this change.
+- **CONFIRMED:** this README, the three structural validator scripts, the root-owned synthetic descriptor lanes, the opt-in declared-manifest profile, the focused unittest module, and partial workflow wiring exist and pass the bounded checks recorded by this change.
 - **PROPOSED:** the split SHA-256 bundle remains a compatibility profile; this implementation does not select it over the repository's monolithic BLAKE3 or proposed GeoManifest/DSSE directions.
 - **NEEDS VERIFICATION:** validator registry coverage, canonical schema homes and ids, schema digests, policy bundles, cryptographic key/signature verification, report destinations, receipt emission, release/correction/rollback integration, production-scale runtime behavior, and publication wiring.
 - **DENY:** using this folder as PMTiles artifact store, release artifact store, source payload store, lifecycle data store, proof store, receipt store, policy home, canonical schema home, public runtime surface, map tile service, AI answer source, or publication authority.
@@ -221,7 +255,7 @@ Good fits for `tools/validators/pmtiles/` include:
 - this parent README;
 - small PMTiles validator scripts or adapters, if verified and kept fail-closed;
 - references to fixture and schema-routing lanes;
-- deterministic checks for PMTiles metadata, `spec_hash`, PMIDX, PMSIG, RunReceipt, policy references, release references, correction/rollback references, and public-surface denial;
+- deterministic checks for PMTiles metadata, `spec_hash`, PMIDX, PMSIG, RunReceipt, and explicitly requested declared-manifest compatibility;
 - finite validation outcome vocabulary and routing notes;
 - test planning notes that route generated reports to accepted report/proof/receipt/artifact roots.
 
@@ -248,7 +282,19 @@ Good fits for `tools/validators/pmtiles/` include:
 
 ---
 
-## Standard outcomes
+## Runtime and proposed outcomes
+
+The current scripts emit these top-level statuses:
+
+| Status | Meaning |
+|---|---|
+| `STRUCTURAL_PASS` | Every executed bounded structural check passed; `authority` remains `NONE` and holds remain. |
+| `DENY` | One or more finite structural finding codes were emitted. |
+| `ERROR` | The CLI failed closed on an unexpected validator-system error. |
+
+The vocabulary below is **PROPOSED / NOT EMITTED** by the current scripts. It
+records future routing pressure and must not be presented as current runtime
+behavior.
 
 | Outcome | Meaning |
 |---|---|
@@ -289,7 +335,7 @@ tools/validators/pmtiles/
 ├── README.md
 ├── validate_header.py                   # CONFIRMED structural PMTiles v3 check
 ├── verify_merkle.py                     # CONFIRMED archive-derived PMIDX check
-├── validate_attestation_bundle.py       # CONFIRMED split-bundle reconciliation
+├── validate_attestation_bundle.py       # CONFIRMED bundle + opt-in manifest profile
 ├── fixtures/
 │   ├── README.md
 │   ├── valid/
@@ -316,6 +362,7 @@ This README is complete for documentation purposes when:
 - [x] It preserves PMTiles attestation posture for PMTiles metadata/header, `spec_hash`, PMIDX, PMSIG, RunReceipt, policy, release, correction, rollback, stale-state, and MapLibre/public-surface cases.
 - [x] It distinguishes validator success, schema validity, fixture pass status, digest match, and signature validity from truth, evidence closure, policy approval, release approval, and public safety.
 - [x] It distinguishes confirmed structural scripts, generated fixtures, focused tests, and partial CI wiring from registry breadth, canonical schema authority, cryptographic verification, policy execution, production runtime behavior, release integration, and publication readiness that remain **NEEDS VERIFICATION**.
+- [x] It records the opt-in declared-manifest check as compatibility evidence while keeping canonical schema placement unresolved.
 
 Future implementation is not complete until:
 
@@ -335,5 +382,6 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-03 | Added the opt-in PMTiles v3/MVT declared-manifest compatibility profile, synthetic mutation matrix, and explicit unresolved-schema-authority hold. | **CONFIRMED STRUCTURAL IMPLEMENTATION / NON-CANONICAL / NO PUBLICATION AUTHORITY** |
 | 2026-08-02 | Added bounded split-bundle reconciliation, root-owned generated fixtures, focused tests, and CI wiring while retaining crypto/policy/release holds. | **CONFIRMED STRUCTURAL IMPLEMENTATION / NO PUBLICATION AUTHORITY** |
 | 2026-07-08 | Expanded short PMTiles validator README into governed parent validator index. | **CONFIRMED README / implementation NEEDS VERIFICATION AT THAT REVISION** |

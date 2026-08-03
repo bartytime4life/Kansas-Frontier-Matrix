@@ -1,0 +1,50 @@
+{
+  "record_id": "fixture:flora:public-safe:001",
+  "record_type": "flora_public_safe_validation_candidate",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:flora:synthetic-common-001",
+  "taxon_concept_state": "synthetic_resolved",
+  "source_descriptor_ref": "fixture:source:flora:synthetic-001",
+  "source_role": "synthetic_occurrence",
+  "rights_state": "fixture_only",
+  "evidence_refs": [
+    "fixture:evidence:flora:synthetic-001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_fixture_area",
+    "area_ref": "fixture:area:flora:synthetic-public-safe-001",
+    "precision_state": "generalized_fixture"
+  },
+  "sensitivity": {
+    "state": "public_safe_fixture",
+    "exact_location_present": false,
+    "reverse_engineerable_location": false,
+    "private_land_join": false,
+    "cultural_knowledge_present": false,
+    "stewardship_review_state": "fixture_only",
+    "generalization_threshold": 250
+  },
+  "public_representation": {
+    "geometry_state": "generalized_fixture",
+    "redaction_receipt_ref": "fixture:receipt:redaction:flora:synthetic-001",
+    "review_record_ref": "fixture:review:flora:synthetic-001",
+    "release_surface": "not_released",
+    "source_url": "https://example.invalid/flora"
+  },
+  "governance": {
+    "evidence_state": "fixture_only",
+    "policy_state": "not_evaluated_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "correction_state": "fixture_only",
+    "rollback_state": "fixture_only"
+  },
+  "public_caveats": [
+    "synthetic fixture only",
+    "not a botanical occurrence claim",
+    "not released"
+  ],
+  "generated_claim": "synthetic but undeclared"
+}

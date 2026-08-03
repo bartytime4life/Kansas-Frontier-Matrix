@@ -56,6 +56,10 @@ class PromotionGateTests(unittest.TestCase):
                 "ABSTAIN",
                 {"PG_G_REVIEW_AUTHORITY_MISSING"},
             ),
+            "abstain__review_obligations_open.json": (
+                "ABSTAIN",
+                {"PG_G_REVIEW_OBLIGATIONS_OPEN"},
+            ),
             "deny__artifact_set_mismatch.json": (
                 "DENY",
                 {"PG_B_ARTIFACT_SET_MISMATCH"},
@@ -66,7 +70,10 @@ class PromotionGateTests(unittest.TestCase):
             ),
             "deny__missing_candidate_id.json": (
                 "DENY",
-                {"PG_A_CANDIDATE_ID_MISSING"},
+                {
+                    "PG_A_CANDIDATE_ID_MISSING",
+                    "PG_G_REVIEW_CONTEXT_INVALID",
+                },
             ),
             "deny__review_missing.json": (
                 "DENY",
@@ -75,6 +82,10 @@ class PromotionGateTests(unittest.TestCase):
             "deny__review_artifact_hash_unbound.json": (
                 "DENY",
                 {"PG_G_REVIEW_ARTIFACT_HASH_UNBOUND"},
+            ),
+            "deny__review_authority_expired.json": (
+                "DENY",
+                {"PG_G_REVIEW_AUTHORITY_NOT_CURRENT"},
             ),
             "deny__review_scope_mismatch.json": (
                 "DENY",
@@ -151,6 +162,34 @@ class PromotionGateTests(unittest.TestCase):
             finding_codes(candidate), {"PG_G_SEPARATION_OF_DUTIES_INVALID"}
         )
 
+    def test_actor_padding_cannot_bypass_separation(self) -> None:
+        candidate = load_valid()
+        review = copy.deepcopy(candidate["review"])
+        assert isinstance(review, dict)
+        reviewer_identity = review["reviewer_identity"]
+        authority = review["authority"]
+        assert isinstance(reviewer_identity, dict)
+        assert isinstance(authority, dict)
+        reviewer_identity["id"] = " actor:synthetic-author"
+        authority["assigned_to"] = " actor:synthetic-author"
+        candidate["review"] = review
+        self.assertEqual(
+            finding_codes(candidate),
+            {"PG_G_REVIEW_AUTHORITY_INVALID", "PG_G_REVIEW_INVALID"},
+        )
+
+    def test_identity_issued_after_review_is_denied(self) -> None:
+        candidate = load_valid()
+        review = copy.deepcopy(candidate["review"])
+        assert isinstance(review, dict)
+        reviewer_identity = review["reviewer_identity"]
+        assert isinstance(reviewer_identity, dict)
+        reviewer_identity["issued_at"] = "2026-04-14T00:00:00Z"
+        candidate["review"] = review
+        self.assertEqual(
+            finding_codes(candidate), {"PG_G_REVIEW_IDENTITY_NOT_CURRENT"}
+        )
+
     def test_outcome_precedence_remains_error_deny_abstain_pass(self) -> None:
         candidate = load_valid()
         candidate["evidence_refs"] = []
@@ -190,6 +229,82 @@ class PromotionGateTests(unittest.TestCase):
             "end": "2026-04-13T00:00:00Z",
         }
         self.assertEqual(finding_codes(candidate), {"PG_D_TEMPORAL_INVALID"})
+
+    def test_timestamp_spelling_must_be_canonical_utc_seconds(self) -> None:
+        for value in (
+            "2026-4-13T01:00:00Z",
+            "2026-04-13t01:00:00Z",
+            "2026-04-13T01:00:00z",
+        ):
+            candidate = load_valid()
+            candidate["gate_evaluated_at"] = value
+            with self.subTest(value=value):
+                self.assertEqual(
+                    finding_codes(candidate),
+                    {
+                        "PG_D_GATE_EVALUATED_AT_INVALID",
+                        "PG_G_REVIEW_CONTEXT_INVALID",
+                    },
+                )
+
+    def test_gate_g_cannot_pass_when_review_context_is_unavailable(self) -> None:
+        candidate = load_valid()
+        candidate["candidate_id"] = ""
+        findings = validate_document(candidate)
+        payload = result_payload("candidate.json", findings)
+        self.assertEqual(
+            {finding.code for finding in findings},
+            {"PG_A_CANDIDATE_ID_MISSING", "PG_G_REVIEW_CONTEXT_INVALID"},
+        )
+        self.assertEqual(payload["gates"][-1], {"gate": "G", "status": "DENY"})
+
+    def test_result_does_not_echo_caller_controlled_path(self) -> None:
+        payload = result_payload(
+            Path("DO-NOT-ECHO") / "DO-NOT-ECHO.json",
+            [],
+        )
+        self.assertEqual(payload["file"], "external-input")
+        self.assertNotIn("DO-NOT-ECHO", json.dumps(payload))
+
+    def test_gate_g_declared_expiry_instants_are_exclusive(self) -> None:
+        cases = (
+            ("authority", "expires_at", "PG_G_REVIEW_AUTHORITY_NOT_CURRENT"),
+            ("review", "valid_until", "PG_G_REVIEW_STALE"),
+        )
+        for target, field, expected_code in cases:
+            candidate = load_valid()
+            review = copy.deepcopy(candidate["review"])
+            assert isinstance(review, dict)
+            if target == "authority":
+                authority = review["authority"]
+                assert isinstance(authority, dict)
+                authority[field] = candidate["gate_evaluated_at"]
+            else:
+                review[field] = candidate["gate_evaluated_at"]
+            candidate["review"] = review
+            with self.subTest(target=target):
+                self.assertIn(expected_code, finding_codes(candidate))
+
+    def test_symlink_loop_is_finite_error_with_redacted_path(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "DO-NOT-ECHO.json"
+            path.symlink_to(path.name)
+            result = subprocess.run(
+                [sys.executable, str(ROOT_CLI), str(path)],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 2, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["file"], "external-input")
+        self.assertEqual(payload["status"], "ERROR")
+        self.assertEqual(
+            {finding["code"] for finding in payload["findings"]},
+            {"FIXTURE_JSON_INVALID"},
+        )
+        self.assertNotIn("DO-NOT-ECHO", result.stdout)
 
     def test_duplicate_json_keys_fail_as_error_without_echoing_values(self) -> None:
         sentinel = "DO-NOT-ECHO-SYNTHETIC-SENTINEL"

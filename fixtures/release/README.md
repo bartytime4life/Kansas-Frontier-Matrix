@@ -2,11 +2,11 @@
 doc_id: kfm://doc/fixtures-release-readme
 title: fixtures/release/README.md — Release Fixture Families
 class: README
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; nested-fixture-parent; mixed-maturity; synthetic; no-network-default; non-authoritative
 owner: NEEDS VERIFICATION — no path-specific CODEOWNERS rule or accepted release-fixture steward was inspected for this update
 created: NEEDS VERIFICATION — file predates this versioned documentation contract
-updated: 2026-08-02
+updated: 2026-08-03
 supersedes: prior documentation at the same path; no fixture payload, contract, schema, policy, validator, release object, or runtime behavior is superseded
 policy_label: repository-facing; fixtures; release; synthetic; public-safe; no-network-default; correction-aware; rollback-aware; non-publisher
 owning_root: fixtures/
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; a release fixture result proves only the declare
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d38b2886d1786eeaf0e8ec1f1ab83da5f0c93b3a
+  base_commit: 68069dce9e292649697f63f96fa57edd07181a27
   prior_blob: 94b19cc0a5945947a2c1df9b2db8aba973531d86
   directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
   fixtures_root_readme_blob: 911c20c86d9322f38b1f59db66b922a94fd027eb
@@ -43,7 +43,7 @@ related:
   - ../../data/receipts/
   - ../../docs/architecture/directory-rules.md
 notes:
-  - "This is a same-path Markdown modernization. It creates no sibling README, fixture payload, schema, contract, policy, validator, release object, or publication state."
+  - "v0.4 reconciles the parent inventory with two additional synthetic ReviewRecord hardening fixtures; it creates no schema, contract, policy, governed review, release object, or publication state."
   - "PromotionDecision remains the schema-shape family; promotion_gate is now a separate implemented readiness-profile family with deterministic finite outcomes."
   - "A promotion-gate PASS means APPROVE_READY for review only and cannot create promotion, release, or publication authority."
   - "Other release object families remain PROPOSED or NEEDS VERIFICATION until their contracts, schemas, consumers, fixtures, and expected outcomes are inspected together."
@@ -553,13 +553,13 @@ A new child family under this existing parent does not automatically require an 
 | PromotionDecision schema | **CONFIRMED** at blob `a2d087a46772cf60e4b9dfb394892690e8a88b31`; schema status remains `PROPOSED` |
 | PromotionDecision validator binding | **CONFIRMED** at blob `ead33d6c5c073f319627ee42d99c5933c0e370d1` |
 | Shared runner behavior | **CONFIRMED by source inspection** at blob `ce05ae25d0cb6fc29a2ea41db6c65a99ca5e13e6` |
-| Promotion-gate fixture family | **CONFIRMED in current update** — one `PASS`, five `DENY`, one `ABSTAIN`, and two `ERROR` fixtures |
+| Promotion-gate fixture family | **CONFIRMED in current update** — one `PASS`, twelve `DENY`, three `ABSTAIN`, and two `ERROR` fixtures |
 | Promotion-gate executable and focused tests | **CONFIRMED in current update** — repository-owned no-network command and direct release test module |
 | Other release fixture families beyond PromotionDecision and promotion gate | **UNKNOWN / not verified** |
 | Exact recursive fixture inventory beyond the selected family | **UNKNOWN / not performed** |
 | Python promotion-gate execution | **CONFIRMED in current update**; full repository and hosted validation recorded in the paired change receipt/PR |
 | Markdown lint, docs build, and link checker | **NOT RUN locally** |
-| Policy/evidence/review/rollback/release tests | **NOT RUN / not established by the confirmed consumer** |
+| Policy/evidence-resolution/rollback/governed-review/release tests | **PARTIAL / held** — the fixture-only ReviewRecord subset is confirmed; live authentication, policy, rollback, governed review, and release execution remain unestablished |
 | CI required-check enforcement | **NEEDS VERIFICATION** |
 | Release or publication | **NOT CLAIMED** |
 

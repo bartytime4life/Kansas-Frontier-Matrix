@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-bounds-header-mismatch",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_BOUNDS_HEADER_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_bounds_header_mismatch"
+}

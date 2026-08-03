@@ -36,6 +36,8 @@ SCOPE = "release.review_record.fixture_profile"
 EXPECTED_REVIEW_SCOPE = "release.promotion_gate"
 STATUS_PRECEDENCE = {"PASS": 0, "ABSTAIN": 1, "DENY": 2, "ERROR": 3}
 HASH_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+IDENTIFIER_PATTERN = re.compile(r"^[a-z][a-z0-9_:.-]*$")
+TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 REVIEW_FIELDS = frozenset(
     {
@@ -83,10 +85,13 @@ CODE_STATUS: dict[str, str] = {
     "RR_UNDECLARED_FIELD": "DENY",
     "RR_RECORD_INVALID": "DENY",
     "RR_DECISION_NOT_APPROVED": "DENY",
+    "RR_OBLIGATIONS_OPEN": "ABSTAIN",
     "RR_IDENTITY_INVALID": "DENY",
+    "RR_IDENTITY_NOT_CURRENT": "DENY",
     "RR_SELF_REVIEW": "DENY",
     "RR_AUTHORITY_MISSING": "ABSTAIN",
     "RR_AUTHORITY_INVALID": "DENY",
+    "RR_AUTHORITY_NOT_CURRENT": "DENY",
     "RR_TEMPORAL_INVALID": "DENY",
     "RR_REVIEW_STALE": "DENY",
     "RR_REVIEW_SUPERSEDED": "DENY",
@@ -116,7 +121,7 @@ def _unknown_fields(
 
 
 def _strict_utc_timestamp(value: object) -> datetime | None:
-    if not isinstance(value, str):
+    if not isinstance(value, str) or TIMESTAMP_PATTERN.fullmatch(value) is None:
         return None
     try:
         parsed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
@@ -129,8 +134,29 @@ def _valid_hash(value: object) -> bool:
     return isinstance(value, str) and HASH_PATTERN.fullmatch(value) is not None
 
 
+def _canonical_identifier(value: object) -> bool:
+    return isinstance(value, str) and IDENTIFIER_PATTERN.fullmatch(value) is not None
+
+
+def _safe_file_label(path: Path | str) -> str:
+    """Expose repository fixture names but redact caller-controlled paths."""
+
+    try:
+        relative = Path(path).resolve().relative_to(FIXTURES_ROOT.resolve())
+    except (OSError, RuntimeError, ValueError):
+        return "external-input"
+    if len(relative.parts) == 2 and relative.parts[0] in {"valid", "invalid"}:
+        return relative.name
+    return "external-input"
+
+
 def _string_list(value: object, *, allow_empty: bool = False) -> list[str] | None:
-    if not isinstance(value, list) or not all(is_nonempty_string(item) for item in value):
+    if not isinstance(value, list) or not all(
+        is_nonempty_string(item)
+        and isinstance(item, str)
+        and item == item.strip()
+        for item in value
+    ):
         return None
     items = [item for item in value if isinstance(item, str)]
     return items if allow_empty or items else None
@@ -141,20 +167,31 @@ def _validate_identity(
     findings: set[Finding],
     *,
     path: str,
+    not_after: datetime | None,
 ) -> str | None:
     if not isinstance(value, dict):
         _add(findings, "RR_IDENTITY_INVALID", path)
         return None
     _unknown_fields(findings, value, IDENTITY_FIELDS, path=path)
     actor_id = value.get("id")
+    issued_at = _strict_utc_timestamp(value.get("issued_at"))
     if (
-        not is_nonempty_string(actor_id)
+        not _canonical_identifier(actor_id)
         or value.get("kind") != "actor"
-        or _strict_utc_timestamp(value.get("issued_at")) is None
-        or ("issuer" in value and not is_nonempty_string(value.get("issuer")))
+        or issued_at is None
+        or (
+            "issuer" in value
+            and (
+                not is_nonempty_string(value.get("issuer"))
+                or not isinstance(value.get("issuer"), str)
+                or value.get("issuer") != value.get("issuer").strip()
+            )
+        )
     ):
         _add(findings, "RR_IDENTITY_INVALID", path)
         return None
+    if not_after is not None and issued_at is not None and issued_at > not_after:
+        _add(findings, "RR_IDENTITY_NOT_CURRENT", path)
     return actor_id if isinstance(actor_id, str) else None
 
 
@@ -172,8 +209,10 @@ def _validate_record(
     obligations = _string_list(value.get("obligations"), allow_empty=True)
     reviewed_at = _strict_utc_timestamp(value.get("reviewed_at"))
     if (
-        not is_nonempty_string(value.get("review_id"))
+        not _canonical_identifier(value.get("review_id"))
         or not is_nonempty_string(value.get("subject_ref"))
+        or not isinstance(value.get("subject_ref"), str)
+        or value.get("subject_ref") != value.get("subject_ref").strip()
         or value.get("reviewer_role") not in {"steward", "reviewer", "auditor"}
         or reasons is None
         or obligations is None
@@ -182,6 +221,8 @@ def _validate_record(
         _add(findings, "RR_RECORD_INVALID", path)
     if value.get("decision") != "approve":
         _add(findings, "RR_DECISION_NOT_APPROVED", f"{path}.decision")
+    elif obligations:
+        _add(findings, "RR_OBLIGATIONS_OPEN", f"{path}.obligations")
     return value, reviewed_at
 
 
@@ -193,6 +234,7 @@ def _validate_authority(
     reviewer_role: object,
     expected_scope: str,
     reviewed_at: datetime | None,
+    evaluated_at: datetime,
     path: str,
 ) -> None:
     if value is None:
@@ -206,7 +248,7 @@ def _validate_authority(
     expires_at = _strict_utc_timestamp(value.get("expires_at"))
     basis_refs = _string_list(value.get("authority_basis_refs"))
     if (
-        not is_nonempty_string(value.get("assignment_id"))
+        not _canonical_identifier(value.get("assignment_id"))
         or value.get("assigned_to") != reviewer_id
         or value.get("role") != reviewer_role
         or value.get("scope") != expected_scope
@@ -220,9 +262,11 @@ def _validate_authority(
         starts_at is None
         or expires_at is None
         or reviewed_at is None
-        or not starts_at <= reviewed_at <= expires_at
+        or not starts_at <= reviewed_at < expires_at
     ):
         _add(findings, "RR_TEMPORAL_INVALID", path)
+    elif not starts_at <= evaluated_at < expires_at:
+        _add(findings, "RR_AUTHORITY_NOT_CURRENT", path)
 
 
 def validate_review(
@@ -247,10 +291,16 @@ def validate_review(
         review.get("record"), findings, path="$.review.record"
     )
     author_id = _validate_identity(
-        review.get("author_identity"), findings, path="$.review.author_identity"
+        review.get("author_identity"),
+        findings,
+        path="$.review.author_identity",
+        not_after=reviewed_at,
     )
     reviewer_id = _validate_identity(
-        review.get("reviewer_identity"), findings, path="$.review.reviewer_identity"
+        review.get("reviewer_identity"),
+        findings,
+        path="$.review.reviewer_identity",
+        not_after=reviewed_at,
     )
 
     reviewer_role = record.get("reviewer_role") if record is not None else None
@@ -261,6 +311,7 @@ def validate_review(
         reviewer_role=reviewer_role,
         expected_scope=expected_scope,
         reviewed_at=reviewed_at,
+        evaluated_at=evaluated_at,
         path="$.review.authority",
     )
 
@@ -277,12 +328,14 @@ def validate_review(
     valid_until = _strict_utc_timestamp(review.get("valid_until"))
     if reviewed_at is None or valid_until is None or reviewed_at > evaluated_at:
         _add(findings, "RR_TEMPORAL_INVALID", "$.review.valid_until")
-    elif evaluated_at > valid_until:
+    elif reviewed_at >= valid_until or evaluated_at >= valid_until:
         _add(findings, "RR_REVIEW_STALE", "$.review.valid_until")
 
+    if "superseded_by_review_id" not in review:
+        _add(findings, "RR_RECORD_INVALID", "$.review.superseded_by_review_id")
     superseded_by = review.get("superseded_by_review_id")
     if superseded_by is not None:
-        if not is_nonempty_string(superseded_by):
+        if not _canonical_identifier(superseded_by):
             _add(findings, "RR_RECORD_INVALID", "$.review.superseded_by_review_id")
         else:
             _add(findings, "RR_REVIEW_SUPERSEDED", "$.review.superseded_by_review_id")
@@ -357,7 +410,8 @@ def status_for(findings: Iterable[Finding]) -> str:
 
 def result_payload(path: Path | str, findings: Sequence[Finding]) -> dict[str, object]:
     return {
-        "file": str(path),
+        "authoritative": False,
+        "file": _safe_file_label(path),
         "findings": [
             {
                 "code": finding.code,

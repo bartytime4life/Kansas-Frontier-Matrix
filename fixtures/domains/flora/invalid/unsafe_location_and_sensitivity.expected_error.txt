@@ -1,0 +1,6 @@
+COORDINATE_LIKE_VALUE_FORBIDDEN	$.spatial_support.coordinates
+SENSITIVE_LOCATION_FIELD_FORBIDDEN	$.spatial_support.coordinates
+SENSITIVITY_STATE_INVALID	$.sensitivity.exact_location_present
+SENSITIVITY_STATE_INVALID	$.sensitivity.private_land_join
+SENSITIVITY_STATE_INVALID	$.sensitivity.reverse_engineerable_location
+UNDECLARED_SPATIAL_SUPPORT_FIELD	$.spatial_support.coordinates

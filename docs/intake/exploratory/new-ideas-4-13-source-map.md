@@ -2,11 +2,11 @@
 doc_id: kfm://doc/intake/new-ideas-4-13-source-map
 title: New Ideas 4-13-26 - Governed Source Map and Promotion-Proof Disposition
 type: exploratory-intake-source-map
-version: v0.1.0
+version: v0.2.0
 status: triaged; exploratory; non-authoritative; repository-grounded
 owners: OWNER_TBD - Intake steward; release steward; validator steward; docs steward
 created: 2026-08-02
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: public; intake; exploratory; cite-or-abstain
 owning_root: docs/
 responsibility: Preserve a reviewable map from the New Ideas 4-13-26 packet to current KFM repository evidence and the bounded promotion-readiness proof implemented from it without promoting packet prose, code, paths, credentials, policy, review, release, or publication claims into authority.
@@ -21,10 +21,21 @@ source_evidence:
   extracted_text_lines: 19726
   extracted_text_words: 49944
   extracted_text_bytes: 530087
+follow_on_source_evidence:
+  - captured_filename: Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf
+    sha256: b28b0cba512b95c8c106a143acb65c89d384843ff313420b2429daa51f8fcf78
+    byte_count: 63565
+    page_count: 28
+    cited_pages: [5, 10, 18]
+  - captured_filename: Unified Implementation Architecture Build Manual.md
+    sha256: e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1
+    byte_count: 84595
+    line_count: 1769
+    cited_lines: [346, 355, 356, 357, 358, 359, 360, 361, 362, 363, 428, 429, 430, 431, 432, 433, 434, 435]
 repository_evidence:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  remote_main_snapshot: 83cca9c66a1eb218f010a75b862d417d429c3c85
-  remote_state_verified_at: 2026-08-02
+  remote_main_snapshot: 68069dce9e292649697f63f96fa57edd07181a27
+  remote_state_verified_at: 2026-08-03
   open_pull_requests_at_verification: 0
 related:
   - ../README.md
@@ -35,8 +46,10 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../tools/validators/promotion_gate/README.md
+  - ../../../tools/validators/validate_review_record.py
   - ../../../fixtures/release/promotion_gate/README.md
   - ../../../tests/release/test_promotion_gate.py
+  - ../../../tests/release/test_review_record.py
   - ../../../.github/workflows/promotion-gate.yml
   - ../../../.github/workflows/release-dry-run.yml
 tags: [kfm, intake, new-ideas, source-map, promotion-gate, release-readiness, finite-outcomes, fail-closed, rollback, evidence-closure]
@@ -44,6 +57,7 @@ notes:
   - "The PDF is not committed by this change. Its filename and digest preserve attachment identity for later reconciliation."
   - "Page references identify proposal locations in the supplied packet; they do not make its paths, code, external-service claims, policy, review, or release behavior current or accepted."
   - "This batch adapts only a bounded offline proof. It does not sign, promote, release, deploy, publish, activate a source, write a decision, or change repository settings."
+  - "v0.2 records a follow-on hardening slice derived from the supplied Greenfield plan and unified implementation manual: Gate G now fails closed on noncanonical identities, identities issued after review, supplied authority intervals that do not cover evaluation, and a nonempty approving-review obligations list."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -69,10 +83,12 @@ notes:
 | Byte and page counts | `4,444,054` bytes; `462` pages |
 | Extracted text | `19,726` lines; `49,944` words; `530,087` bytes |
 | PDF posture | tagged; unencrypted; no JavaScript; no form |
-| Repository comparison | `bartytime4life/Kansas-Frontier-Matrix` at `main@83cca9c66a1eb218f010a75b862d417d429c3c85` |
+| Repository comparison | `bartytime4life/Kansas-Frontier-Matrix` at `main@68069dce9e292649697f63f96fa57edd07181a27` |
 | Open pull requests at comparison | `0` |
 
 This pass extracted the full PDF, visually inspected representative promotion-proof pages, compared the proposals with current release, policy, validator, fixture, test, workflow, receipt, proof, and directory-governance surfaces, and treated all packet code and paths as untrusted proposal material.
+
+The follow-on hardening pass also inspected pages 5, 10, and 18 of the supplied Greenfield plan and lines 346, 355–363, and 428–435 of the supplied unified implementation manual. Those sources require validation, policy, accountable review, proof/manifest binding, rollback, and superseding receipts to remain distinct. They support stricter Gate G input checks; they do not prove a reviewer identity, authority assignment, governed ReviewRecord, or release decision.
 
 [Back to top](#top)
 
@@ -136,10 +152,10 @@ The implementation evaluates a strict, bounded JSON candidate profile with seven
 | A | Candidate identity, lifecycle posture, release-manifest identity, and stable digest shape. |
 | B | Receipt/spec agreement and exact artifact-set digest closure. |
 | C | Declared validity, deterministic processing, `EPSG:4326`, and an ordered finite world bbox. |
-| D | Parseable UTC effective/recorded intervals and non-inverted boundaries. |
+| D | Canonical UTC start/end interval, non-inverted boundaries, and a declared gate-evaluation instant. |
 | E | Declared policy profile, known labels, evaluation state, and policy-bundle reference. |
 | F | Non-empty evidence, attestation, and STAC/DCAT/PROV references; conditional AI receipt. |
-| G | Review presence and author/reviewer separation, rollback target, and correction linkage for supersession. |
+| G | Review presence, canonical identity, identity issuance no later than review, author/reviewer separation, a supplied authority interval covering review and evaluation, an empty approving-review obligations list, a declared valid-until interval, an explicit self-declared supersession marker, rollback target, and correction linkage for candidate supersession. |
 
 The output is deterministic and finite:
 
@@ -181,8 +197,9 @@ The dependency-closed batch must prove:
 6. supersession requires correction lineage;
 7. duplicate JSON keys and impossible UTC timestamps fail closed;
 8. author and reviewer differ;
-9. the CLI is deterministic, bounded, and no-network; and
-10. both existing release workflows invoke the repository-owned command without gaining write permissions.
+9. padded identity strings cannot bypass separation, identities cannot post-date review, supplied authority and review-validity intervals use exclusive expiry, a nonempty approving-review obligations list abstains, and unavailable Gate G context cannot report `PASS`;
+10. external caller paths are redacted, including finite symlink-loop errors, and the CLI is deterministic, bounded, and no-network; and
+11. both existing release workflows invoke the repository-owned command without gaining write permissions.
 
 Passing these checks is implementation proof for this bounded validator only. It is not source admission, evidence resolution, cryptographic verification, policy approval, human review, release authorization, rollback execution, deployment, publication, or public truth.
 
@@ -193,7 +210,7 @@ Passing these checks is implementation proof for this bounded validator only. It
 | Item | Status | Required authority before continuation |
 |---|---|---|
 | Resolve and authenticate EvidenceRefs, attestations, catalog records, and policy bundles | `PROPOSED` | Accepted contracts, resolvers, source/evidence ownership, and negative fixtures. |
-| Implement accountable ReviewRecord validation | `PROPOSED / NEEDS VERIFICATION` | Review owner, actor identity, separation-of-duties policy, fixtures, and tests. |
+| Produce accountable ReviewRecords and authenticate identity/authority/current-head state | `PROPOSED / NEEDS VERIFICATION` | Review owner, accepted actor/authority and current-review registry, release-authority role policy, governed records, and release integration. The repository now has only a fixture-scoped candidate validator over caller declarations. |
 | Assemble a real release candidate | `PROPOSED` | ReleaseManifest contract maturity, candidate builder, immutable receipt/proof bindings, rollback, and authorization. |
 | Verify signatures or transparency-log inclusion | `DEFERRED` | Dependency/license/security review, key and identity policy, deterministic offline fixtures, and exact authorization. |
 | Promote, sign, release, deploy, or publish | `NOT AUTHORIZED` | Separate explicit authority and all governing dependencies. |

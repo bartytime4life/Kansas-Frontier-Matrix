@@ -2,250 +2,97 @@
 doc_id: kfm://doc/tests-domains-flora-readme
 title: Tests — Flora Domain
 class: test-readme
-status: draft
-truth_posture: CONFIRMED path and one bounded executable / PROPOSED broader coverage map
-owner: <flora-domain-steward> + <test-steward> + <data-lifecycle-steward>
+version: v0.2.0
+status: repository-grounded draft; one bounded executable slice established
+truth_posture: CONFIRMED focused synthetic fixture suite / PROPOSED broader Flora coverage / UNKNOWN operational completeness
+owner: NEEDS VERIFICATION — Flora steward, test steward, sensitivity/geoprivacy reviewer
 created: 2026-07-05
 updated: 2026-08-03
-policy_label: public
+policy_label: public; no-network; fixture-only; fail-closed
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/flora/README.md
-  - docs/domains/flora/FILE_SYSTEM_PLAN.md
-  - docs/domains/flora/DATA_LIFECYCLE.md
-  - docs/domains/flora/SENSITIVITY.md
-  - docs/domains/flora/SOURCE_REGISTRY.md
-  - fixtures/domains/flora/README.md
-  - tests/domains/flora/source_descriptor/README.md
-  - tests/domains/flora/sensitivity/README.md
-  - tests/domains/flora/temporal/README.md
-tags:
-  - kfm
-  - tests
-  - flora
-  - validation
-  - fixtures
-  - no-network
-  - evidence-closure
-  - sensitivity
-  - source-descriptor
-  - temporal
-  - release
+  - ../../../fixtures/domains/flora/README.md
+  - ../../../tools/validators/domains/flora/README.md
+  - ../../../.github/workflows/domain-flora.yml
+  - ../../../docs/domains/flora/README.md
 notes:
-  - "This README is the index and contract for the Flora domain test lane under tests/domains/flora/."
-  - "One bounded fixture-safety suite and CI command are executable; broader coverage completeness remains UNKNOWN until separately implemented and verified."
-  - "All Flora tests must preserve the trust membrane and lifecycle invariant; tests prove gates, not botanical truth by prose."
+  - "The focused smoke module validates synthetic public-safe fixture conformance only."
+  - "Proof and release readiness remain separate explicit holds."
 [/KFM_META_BLOCK_V2] -->
 
-# Tests — Flora Domain
+<a id="top"></a>
 
-![status](https://img.shields.io/badge/status-draft-yellow?style=flat-square)
-![root](https://img.shields.io/badge/root-tests%2Fdomains%2Fflora-blue?style=flat-square)
-![coverage](https://img.shields.io/badge/coverage-one--bounded--profile-yellow?style=flat-square)
-![network](https://img.shields.io/badge/network-no--network-success?style=flat-square)
-![posture](https://img.shields.io/badge/posture-fail--closed-critical?style=flat-square)
-![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange?style=flat-square)
-![truth](https://img.shields.io/badge/truth-one--bounded--executable-informational?style=flat-square)
+# `tests/domains/flora/` — Flora Tests
 
-> **Purpose.** This directory is the Flora-domain test root. It proves that Flora sources, objects, policy decisions, evidence closure, temporal support, sensitivity handling, release manifests, and rollback drills are enforceable before any Flora material reaches a public surface.
+[![Status: bounded executable](https://img.shields.io/badge/status-bounded%20executable-1a7f37?style=flat-square)](#implemented-slice)
+[![Network: blocked](https://img.shields.io/badge/network-blocked-b42318?style=flat-square)](#no-network-contract)
+[![Data: synthetic only](https://img.shields.io/badge/data-synthetic%20only-0969da?style=flat-square)](#fixture-contract)
+[![Authority: conformance only](https://img.shields.io/badge/authority-conformance%20only-6e7781?style=flat-square)](#limits)
 
----
+> **Purpose.** Provide deterministic executable checks for Flora behavior without accessing live sources or treating tests as botanical, policy, proof, release, or publication authority.
 
-## 1. Placement and authority
+## Implemented slice
 
-`tests/domains/flora/` is the canonical domain-specific test lane for Flora. Tests live here because their primary responsibility is **enforceability proof**. Fixtures live under `fixtures/domains/flora/` and must remain no-network by default.
+`test_flora_smoke.py` exercises the bounded validator at:
 
-| Question | Answer |
-|---|---|
-| Owning root | `tests/` |
-| Domain segment | `domains/flora/` |
-| Fixture counterpart | `fixtures/domains/flora/` |
-| Primary placement doc | `docs/domains/flora/FILE_SYSTEM_PLAN.md` |
-| Lifecycle doc | `docs/domains/flora/DATA_LIFECYCLE.md` |
-| Sensitivity doc | `docs/domains/flora/SENSITIVITY.md` |
-| Source registry doc | `docs/domains/flora/SOURCE_REGISTRY.md` |
-| Status | One bounded synthetic fixture-safety suite is executable; the broader coverage map remains PROPOSED. |
+```text
+tools/validators/domains/flora/validate_public_safe_fixture.py
+```
 
-**Directory basis.** Directory Rules place enforceability proofs under `tests/` and domain-specific proof lanes under `tests/domains/<domain>/`. The Flora file-system plan lists this root and its expected test sublanes.
+The suite proves:
 
----
+- one explicit positive fixture inventory;
+- six explicit negative fixtures and exact error sidecars;
+- closed object shapes and stable sorted findings;
+- strict source-role, taxon-state, rights, sensitivity, review, release, and promotion posture;
+- case-insensitive rejection of exact-location aliases and transform-secret fields;
+- rejection of URLs, coordinate-like strings, WKT-like strings, and numeric values;
+- bounded UTF-8 JSON parsing with duplicate-key, size, depth, node, integer, and non-finite-number rejection;
+- regular-file-only input handling;
+- machine-readable CLI output and exit codes `0`, `1`, and `2`;
+- no candidate-value echoing;
+- no socket, DNS, HTTP, or other live-network use by the validator path.
 
-## 2. What this root proves
+## Fixture contract
 
-The Flora test root should prove KFM's Flora lane can move from source admission to public-safe release without bypassing evidence, policy, sensitivity, time, or rollback gates.
+The focused suite consumes only:
 
-| Proof surface | Required behavior | Failure posture |
-|---|---|---|
-| Source admission | Flora source descriptors fix identity, role, rights, sensitivity, cadence, access, and citation before activation. | Source not admitted or held for review. |
-| Schema and contracts | Flora objects match canonical schema shape and contract meaning. | Schema/contract validation failure. |
-| Rights | Unknown, stale, restricted, or incompatible source terms block public derivatives. | `RIGHTS_UNKNOWN`, `TERMS_STALE`, or equivalent. |
-| Sensitivity | Rare, protected, culturally sensitive, or join-sensitive material fails closed without review and redaction/generalization. | `SENSITIVITY_UNRESOLVED`, `MISSING_RECEIPT`, or equivalent. |
-| Evidence closure | Claims resolve `EvidenceRef -> EvidenceBundle` before public release. | `MISSING_EVIDENCE` or hold at prior state. |
-| Temporal support | Source, observed, valid, retrieval, release, and correction times remain distinct where material. | Temporal validation failure or stale state. |
-| Geometry and geoprivacy | Generalized/redacted geometry is deterministic, receipt-backed, and policy-approved. | Deny public geometry or hold for review. |
-| Citation | Public claims carry source role and citation qualifiers. | Citation validation failure or abstention. |
-| Release manifest | Public artifacts have release decision, review state, correction path, and rollback target. | No public edge. |
-| Rollback drill | Failed releases can revert to a prior release with visible correction lineage. | Held until rollback is validated. |
-| No-network operation | Domain tests run deterministically from fixtures. | Test failure; live dependency rejected. |
+```text
+fixtures/domains/flora/valid/public_safe_occurrence.json
+fixtures/domains/flora/invalid/*.json
+fixtures/domains/flora/invalid/*.expected_error.txt
+```
 
----
+All examples are synthetic. They contain no real taxa, occurrence coordinates, private-land records, access directions, collection clues, credentials, restricted source payloads, URLs, or geoprivacy transform parameters.
 
-## 3. Test-lane map
+## No-network contract
 
-### Current executable slice
+The unit suite patches common socket and `urllib.request.urlopen` entry points. The validator itself uses only standard-library file, JSON, path, and CLI functionality. CI also sets `KFM_NO_NETWORK=1` and `PYTHONDONTWRITEBYTECODE=1`.
 
-`test_flora_smoke.py` runs the accepted `synthetic-public-safe-fixture-only` profile against one positive withheld-location fixture and five exact negative fixtures. It actively blocks socket and URL access and checks closed shapes, exact synthetic string tokens, sanitized diagnostic paths, source-role separation, recursive and Darwin Core location aliases, coordinate/address/geohash/base64/full-width-URL string channels, parser bounds, deterministic non-echoing findings, held release/promotion state, and CLI exit codes.
+Run from repository root:
 
 ```bash
-KFM_NO_NETWORK=1 python tests/domains/flora/test_flora_smoke.py --verbose
+python -m unittest discover \
+  --start-directory tests/domains/flora \
+  --pattern 'test_flora_smoke.py' \
+  --verbose
 ```
 
-This suite proves fixture hygiene only. It does not exercise the proposed schema, a policy bundle, a geoprivacy transformer, real occurrence data, evidence closure, stewardship review, or release.
+## Limits
 
-The planned Flora test tree is intentionally split by proof responsibility.
+Passing this slice does **not** prove:
 
-```text
-tests/domains/flora/
-├── README.md                                # this file
-├── schema/                                  # schema validation tests
-├── source_descriptor/                       # admission gate tests
-├── rights/                                  # rights validator tests
-├── sensitivity/                             # rare-plant + join-induced deny tests
-├── evidence_closure/                        # EvidenceBundle resolution tests
-├── temporal/                                # observed/valid/retrieval/release distinct
-├── geometry/                                # generalization + redaction transforms
-├── policy_deny/                             # exact sensitive geometry deny
-├── citation/                                # citation-validation cases
-├── release_manifest/                        # ReleaseManifest checks
-├── rollback_drill/                          # rollback test harness
-└── no_network/                              # no-live-network fixture pipeline
-```
+- botanical identity or occurrence truth;
+- accepted Flora contracts or schemas;
+- source admission, rights clearance, or source freshness;
+- policy, sensitivity, stewardship, or sovereignty approval;
+- execution of a public-safe geoprivacy transform;
+- EvidenceBundle or proof construction;
+- release readiness, deployment, publication, or public serving.
 
-Current README coverage in this lane:
+The `domain-flora` proof and release jobs remain explicit holds.
 
-| Lane | README status | Primary concern |
-|---|---|---|
-| [`source_descriptor/`](./source_descriptor/) | Present | Source admission, source role, rights, sensitivity, cadence, access, citation, descriptor provenance. |
-| [`sensitivity/`](./sensitivity/) | Present | Rare-plant geoprivacy, exact-geometry denial, redaction receipts, tier transitions, join-induced sensitivity. |
-| [`temporal/`](./temporal/) | Present | Source, observed, valid, retrieval, release, correction time; staleness; temporal joins. |
-| `schema/` | PROPOSED | Flora object schema validation. |
-| `rights/` | PROPOSED | Rights and terms gate behavior. |
-| `evidence_closure/` | PROPOSED | `EvidenceRef -> EvidenceBundle` resolution. |
-| `geometry/` | PROPOSED | Geometry validation, generalization, redaction transforms, precision constraints. |
-| `policy_deny/` | PROPOSED | Deny-by-policy checks, especially exact sensitive public geometry. |
-| `citation/` | PROPOSED | Role-aware citation and public-surface qualifier enforcement. |
-| `release_manifest/` | PROPOSED | ReleaseManifest, review state, public-safe artifact checks. |
-| `rollback_drill/` | PROPOSED | CorrectionNotice, RollbackCard, derivative invalidation tests. |
-| `no_network/` | PROPOSED | Ensures domain tests do not reach live services. |
+## Broader coverage
 
----
+Existing Flora test modules and sublane READMEs remain useful planning and compatibility surfaces. Their presence must not be interpreted as complete domain enforcement. Future slices should be admitted independently with exact fixtures, finite outcomes, no-network tests, documentation, provenance, and rollback.
 
-## 4. Fixture discipline
-
-All Flora tests should use fixture data instead of live network calls. The fixture counterpart is:
-
-```text
-fixtures/domains/flora/
-├── README.md                                # PROPOSED / expected
-├── valid/                                   # green-path inputs
-├── invalid/                                 # negative cases, one per validator where practical
-├── golden/                                  # canonical reference inputs
-├── synthetic/                               # synthetic rare-plant and edge-case records
-└── plants_drift/                            # PLANTS / taxonomy-drift fixtures
-```
-
-Fixture rules:
-
-- Use synthetic or public-safe examples by default.
-- Do not include real precise rare-plant coordinates.
-- Do not include unpublished steward knowledge, private contacts, credentials, API keys, or restricted source payloads.
-- Invalid fixtures should fail for exactly one primary reason where practical.
-- Golden fixtures should be stable, small, and reviewable.
-
----
-
-## 5. Lifecycle gates under test
-
-Flora tests should mirror the governed lifecycle rather than testing public artifacts as loose files.
-
-| Lifecycle transition | Test expectation |
-|---|---|
-| Admission `— -> RAW` | SourceDescriptor exists and resolves; source role, rights, sensitivity, cadence, citation, and hash are present. |
-| Normalization `RAW -> WORK / QUARANTINE` | Transform receipts, working validation, policy decisions, and quarantine reasons are emitted. |
-| Validation `WORK -> PROCESSED` | Validators are deterministic and tied to fixtures; redaction/aggregation receipts exist when needed. |
-| Catalog closure `PROCESSED -> CATALOG / TRIPLET` | EvidenceRefs resolve; EvidenceBundles and graph/catalog projections close. |
-| Release `CATALOG / TRIPLET -> PUBLISHED` | ReleaseManifest, review state, correction path, and rollback target are present. |
-| Correction / rollback | CorrectionNotice, RollbackCard, invalidation list, and supersession path are inspectable. |
-
-A test that writes or assumes public exposure without those gates is testing the wrong system behavior.
-
----
-
-## 6. Minimal acceptance matrix
-
-A first useful implementation of the Flora test root should include at least these executable scenarios:
-
-| ID | Scenario | Owning lane |
-|---|---|---|
-| `FLORA-TEST-001` | Valid source descriptor passes generic and Flora-specific admission checks. | `source_descriptor/` |
-| `FLORA-TEST-002` | Candidate or rights-unknown source cannot publish. | `source_descriptor/`, `rights/` |
-| `FLORA-TEST-003` | Exact rare-plant geometry is denied on public surfaces. | `sensitivity/`, `policy_deny/` |
-| `FLORA-TEST-004` | Public-safe rare-plant derivative requires RedactionReceipt and ReviewRecord. | `sensitivity/`, `geometry/` |
-| `FLORA-TEST-005` | Observed time, retrieval time, release time, and correction time remain distinct. | `temporal/` |
-| `FLORA-TEST-006` | EvidenceRef fails closed when EvidenceBundle is missing. | `evidence_closure/` |
-| `FLORA-TEST-007` | Public claim citation includes source role qualifier where needed. | `citation/` |
-| `FLORA-TEST-008` | ReleaseManifest blocks release without rollback target. | `release_manifest/` |
-| `FLORA-TEST-009` | Rollback drill reverts a failed release and records correction lineage. | `rollback_drill/` |
-| `FLORA-TEST-010` | No-network guard catches live source/API access. | `no_network/` |
-
----
-
-## 7. Non-goals
-
-This test root must not:
-
-- call live external source APIs;
-- store source data, credentials, API keys, or private steward contacts;
-- publish or normalize real exact rare-plant coordinates as fixtures;
-- treat test prose as proof that enforcement exists;
-- bypass the governed lifecycle to assert public exposure;
-- create parallel schema, policy, source-registry, fixture, receipt, or release homes;
-- infer source role, sensitivity tier, or rights posture using AI output; or
-- silently convert `DENY`, `HOLD`, `ABSTAIN`, or `ERROR` into a passing empty result.
-
----
-
-## 8. Review checklist
-
-Before adding or changing Flora tests, confirm:
-
-- [ ] The test belongs under the correct sublane.
-- [ ] The fixture is synthetic, public-safe, or intentionally invalid.
-- [ ] The test is deterministic and no-network.
-- [ ] The expected result is fail-closed when evidence, policy, rights, sensitivity, temporal support, receipt, or review state is missing.
-- [ ] The test preserves the RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED lifecycle.
-- [ ] The test uses governed interfaces or validators rather than reading internal stores as public truth.
-- [ ] The test records finite, inspectable outcomes and reason codes.
-- [ ] Any path conflict is filed as drift or verification backlog, not silently normalized.
-
----
-
-## 9. Current implementation note
-
-This root now has one executable standard-library suite, a six-file synthetic fixture corpus, a bounded validator, and CI wiring for the exact fixture-only profile. README coverage also exists for `source_descriptor/`, `sensitivity/`, and `temporal/`; all broader executable coverage remains `UNKNOWN` or `PROPOSED` until separately implemented and verified.
-
----
-
-## 10. Definition of done
-
-This Flora test root becomes implementation-backed when:
-
-- every sublane listed in the test-lane map has either executable tests or a README explaining why it is deferred;
-- fixtures exist under the approved Flora fixture home and contain no sensitive real coordinates;
-- source descriptor, sensitivity, temporal, evidence, citation, release, rollback, and no-network tests run in CI;
-- failures emit finite, inspectable outcomes rather than silent skips;
-- every public-surface test goes through governed release or API behavior; and
-- the test root is linked from Flora domain docs and the repository validation index.
+[Back to top](#top)
