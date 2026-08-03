@@ -1,0 +1,1 @@
+{"case_id":"pmsig-schema-version-invalid","expected":{"issue_codes":["PMSIG_SCHEMA_VERSION_INVALID"],"status":"DENY"},"mutation":"pmsig_schema_version_invalid"}

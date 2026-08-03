@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-pmtiles-readme
 title: tools/validators/pmtiles README
 type: README
-version: v0.2
+version: v0.3
 status: draft
 owner: TODO-tooling-qa-owner-plus-pmtiles-steward-plus-publication-steward-plus-schema-steward-plus-fixture-steward-plus-policy-steward-plus-release-steward-plus-evidence-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-02
 policy_label: repository-facing; pmtiles-validator-index; fail-closed; attestation; spec-hash; pmidx; pmsig; runreceipt; derived-artifacts-only; release-gated; public-surface-deny-by-default; non-authoritative
 owning_root: tools/
 responsibility: parent PMTiles validator routing README under tools/validators; indexes fail-closed validation helpers, schema routing, fixture routing, PMTiles metadata/header checks, spec_hash reconciliation, PMIDX sidecar and Merkle checks, PMSIG/signature posture, RunReceipt reconciliation, policy/review posture, release/correction/rollback references, MapLibre/public-surface denial, and verification gaps while deferring artifact bytes, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, tests, and release authority to their owning roots
@@ -18,10 +18,13 @@ related:
   - ../lifecycle/README.md
   - ../evidence/README.md
   - ../geo_manifest/README.md
+  - validate_attestation_bundle.py
   - fixtures/README.md
   - fixtures/valid/README.md
   - fixtures/invalid/README.md
   - schemas/README.md
+  - ../../../fixtures/pmtiles/attestation/README.md
+  - ../../../tests/validators/test_pmtiles_attestation_bundle.py
   - ../../../docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md
   - ../../../docs/standards/pmtiles/PMIDX_SPEC_V1.md
   - ../../../docs/architecture/publication/GEO_MANIFEST.md
@@ -36,10 +39,10 @@ related:
   - ../../../fixtures/
   - ../../../tests/
 notes:
-  - "This README replaces a short parent README that listed validate_header.py and verify_merkle.py. It does not confirm those scripts currently exist or run."
+  - "The PMTiles v3 header, PMIDX archive binding, and split-bundle reconciliation scripts are confirmed by the focused synthetic unittest matrix; their success remains structural only."
   - "PMTiles archives are derived publication artifacts, not canonical truth. Public clients may consume only released artifacts and governed APIs."
   - "A PMTiles artifact is not trusted merely because it exists; the archive, metadata, build specification, PMIDX sidecar, PMSIG signature bundle, RunReceipt, policy posture, and release/rollback references must reconcile before publication eligibility."
-  - "The fixture and schema sublanes are documentation/routing lanes; they do not confirm fixture files, local schema files, tests, CI wiring, release artifacts, or publication readiness."
+  - "The tool-local fixture sublanes remain README-only. Executable mutation descriptors live under the root-owned fixtures/ lane and generate PMTiles bytes only in temporary test directories."
   - "Validators enforce declared contracts, schemas, evidence posture, policy references, release readiness, correction paths, rollback targets, and public-surface limits. They do not define tile truth, approve release, publish public outputs, or authorize AI/map claims."
 [/KFM_META_BLOCK_V2] -->
 
@@ -77,14 +80,27 @@ The answer should be a deterministic validation result or routing decision. This
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/pmtiles/README.md` | **CONFIRMED README** | This README replaces the prior short validator note. |
-| `validate_header.py` | **NEEDS VERIFICATION** | Prior README listed this helper for PMTiles header/metadata and required `spec_hash`; this edit does not confirm the script file exists or runs. |
-| `verify_merkle.py` | **NEEDS VERIFICATION** | Prior README listed this helper for PMIDX schema, PMTiles digest, and Merkle root checks; this edit does not confirm the script file exists or runs. |
+| `validate_header.py` | **CONFIRMED / STRUCTURAL ONLY** | Decodes the exact 127-byte PMTiles v3 header, bounds non-overlapping regions, parses bounded metadata, and requires a SHA-256 `spec_hash`. |
+| `verify_merkle.py` | **CONFIRMED / STRUCTURAL ONLY** | Recomputes the archive digest, every chunk leaf, the PMIDX root, and single-chunk range bindings under a bounded no-network envelope. |
+| `validate_attestation_bundle.py` | **CONFIRMED / COMPATIBILITY PROFILE ONLY** | Reconciles PMTiles metadata, PMIDX, PMSIG, and exactly one RunReceipt subject while emitting explicit crypto, unauthenticated-range-metadata, policy, and release holds. |
 | `fixtures/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Parent fixture index for valid and invalid PMTiles fixture lanes. |
 | `fixtures/valid/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Positive fixture guidance; validator-positive fixture status is not publication approval. |
 | `fixtures/invalid/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Negative fixture guidance for fail-closed cases. |
 | `schemas/README.md` | **CONFIRMED README / schema files NEEDS VERIFICATION** | Schema-routing guidance; local schema files are not confirmed and canonical schema homes remain NEEDS VERIFICATION. |
 | `docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md` | **CONFIRMED standard / implementation NEEDS VERIFICATION** | Defines required artifact set, `spec_hash` reconciliation, publication gate, fail-closed conditions, and no-public-publication-before-promotion posture. |
-| Executable tests, validator registry wiring, schema bindings, policy bundles, report destinations, receipt emission, release integration, and CI wiring | **NEEDS VERIFICATION** | This README is documentation only. |
+| Root-owned synthetic fixtures and focused unit tests | **CONFIRMED** | `fixtures/pmtiles/attestation/` drives generated valid/invalid bundles without committing PMTiles binaries. |
+| PMTiles workflow wiring | **CONFIRMED PARTIAL GATE** | CI runs the focused suite and bundle reconciler, then preserves the existing fail-closed signature/publication denial. |
+| Cryptographic verification, policy execution, release/correction/rollback closure, report destinations, receipt emission, and publication integration | **NEEDS VERIFICATION / HOLD** | Structural success grants no release or publication authority. |
+
+[Back to top](#top)
+
+---
+
+## Implemented compatibility boundary
+
+The executable slice is deliberately limited to the split SHA-256 bundle already wired by the repository. A successful bundle result is `STRUCTURAL_PASS` with `authority: NONE` and the holds `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`, `POLICY_EVALUATION_NOT_RUN`, `RANGE_METADATA_NOT_AUTHENTICATED`, and `RELEASE_AUTHORIZATION_NOT_EVALUATED`.
+
+The repository also contains draft monolithic BLAKE3 and proposed GeoManifest/DSSE directions. This validator does not select among them, rename schema authority, or migrate production artifacts.
 
 [Back to top](#top)
 
@@ -185,13 +201,13 @@ A PMTiles candidate should fail closed, deny, abstain, or route to steward revie
 | Evidence/proof support | `data/proofs/` |
 | Receipts | `data/receipts/` |
 | Release decisions, correction, rollback, withdrawal | `release/` |
-| Canonical fixtures and tests, if later promoted | `fixtures/`, `tests/`, or an accepted ADR-selected fixture/test home |
+| Synthetic compatibility fixtures and focused tests | `fixtures/pmtiles/attestation/`, `tests/validators/test_pmtiles_attestation_bundle.py` |
 
 Safe interpretation:
 
-- **CONFIRMED:** this README exists, and child README lanes exist for `fixtures/`, `fixtures/valid/`, `fixtures/invalid/`, and `schemas/`.
-- **PROPOSED:** validator code may live here when it checks declared PMTiles attestation invariants and delegates meaning, schemas, policy, evidence, receipts, lifecycle data, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable files, registry entries, schemas, schema ids, schema digests, fixture files, policy bundles, test paths, report destinations, receipt emission, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** this README, the three structural validator scripts, the root-owned synthetic descriptor lanes, the focused unittest module, and partial workflow wiring exist and pass the bounded checks recorded by this change.
+- **PROPOSED:** the split SHA-256 bundle remains a compatibility profile; this implementation does not select it over the repository's monolithic BLAKE3 or proposed GeoManifest/DSSE directions.
+- **NEEDS VERIFICATION:** validator registry coverage, canonical schema homes and ids, schema digests, policy bundles, cryptographic key/signature verification, report destinations, receipt emission, release/correction/rollback integration, production-scale runtime behavior, and publication wiring.
 - **DENY:** using this folder as PMTiles artifact store, release artifact store, source payload store, lifecycle data store, proof store, receipt store, policy home, canonical schema home, public runtime surface, map tile service, AI answer source, or publication authority.
 
 [Back to top](#top)
@@ -264,15 +280,16 @@ Good fits for `tools/validators/pmtiles/` include:
 
 ---
 
-## Minimal future layout
+## Current bounded layout and deferred work
 
-Future implementation should remain small and reversible:
+The implemented tool-local surface remains small and reversible:
 
 ```text
 tools/validators/pmtiles/
 ├── README.md
-├── validate_header.py                   # NEEDS VERIFICATION; listed by prior README
-├── verify_merkle.py                     # NEEDS VERIFICATION; listed by prior README
+├── validate_header.py                   # CONFIRMED structural PMTiles v3 check
+├── verify_merkle.py                     # CONFIRMED archive-derived PMIDX check
+├── validate_attestation_bundle.py       # CONFIRMED split-bundle reconciliation
 ├── fixtures/
 │   ├── README.md
 │   ├── valid/
@@ -283,7 +300,7 @@ tools/validators/pmtiles/
     └── README.md
 ```
 
-Do not add executable validators, fixture payloads, or local schema files unless the placement decision is documented, the canonical authority relationship is explicit, and tests prove fail-closed behavior without granting publication authority.
+Executable mutation descriptors are root-owned under `fixtures/pmtiles/attestation/`, and the focused test is root-owned under `tests/validators/`. Do not add further validators, production-derived fixture payloads, or schema copies unless the placement decision is documented, the canonical authority relationship is explicit, and tests prove fail-closed behavior without granting publication authority.
 
 [Back to top](#top)
 
@@ -298,16 +315,16 @@ This README is complete for documentation purposes when:
 - [x] It indexes `fixtures/`, `fixtures/valid/`, `fixtures/invalid/`, and `schemas/`.
 - [x] It preserves PMTiles attestation posture for PMTiles metadata/header, `spec_hash`, PMIDX, PMSIG, RunReceipt, policy, release, correction, rollback, stale-state, and MapLibre/public-surface cases.
 - [x] It distinguishes validator success, schema validity, fixture pass status, digest match, and signature validity from truth, evidence closure, policy approval, release approval, and public safety.
-- [x] It marks executable scripts, registry wiring, schema files, schema ids, fixtures, tests, policy bundles, receipt emission, release integration, runtime behavior, and CI wiring as **NEEDS VERIFICATION**.
+- [x] It distinguishes confirmed structural scripts, generated fixtures, focused tests, and partial CI wiring from registry breadth, canonical schema authority, cryptographic verification, policy execution, production runtime behavior, release integration, and publication readiness that remain **NEEDS VERIFICATION**.
 
 Future implementation is not complete until:
 
 - [ ] Validator registry or CLI references to PMTiles validators are searched and classified.
-- [ ] `validate_header.py`, `verify_merkle.py`, and any additional validator scripts are verified or corrected.
+- [x] `validate_header.py`, `verify_merkle.py`, and the split-bundle reconciler are corrected and covered by focused synthetic tests.
 - [ ] Canonical schema homes for PMTiles metadata, PMIDX, PMSIG, RunReceipt, fixture index, and PMTiles build spec are verified.
-- [ ] Fixture files are added only as synthetic/minimized public-safe payloads with documented expected outcomes.
-- [ ] Tests prove positive and negative PMTiles cases pass/fail for the intended reason.
-- [ ] CI invokes the relevant PMTiles validators in deterministic order.
+- [x] Root-owned fixture descriptors are synthetic/minimized and pin expected finite outcomes; PMTiles bytes are generated only in temporary directories.
+- [x] Focused tests prove positive and negative PMTiles cases pass/fail for the intended reason.
+- [x] The PMTiles workflow invokes the focused suite and validators in deterministic order while retaining the final fail-closed denial.
 - [ ] Any generated validation outputs write only to accepted report, proof, receipt, or artifact roots.
 
 [Back to top](#top)
@@ -318,4 +335,5 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
-| 2026-07-08 | Expanded short PMTiles validator README into governed parent validator index. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
+| 2026-08-02 | Added bounded split-bundle reconciliation, root-owned generated fixtures, focused tests, and CI wiring while retaining crypto/policy/release holds. | **CONFIRMED STRUCTURAL IMPLEMENTATION / NO PUBLICATION AUTHORITY** |
+| 2026-07-08 | Expanded short PMTiles validator README into governed parent validator index. | **CONFIRMED README / implementation NEEDS VERIFICATION AT THAT REVISION** |

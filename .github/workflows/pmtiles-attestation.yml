@@ -20,18 +20,21 @@
 # Commands:
 # - tools/validators/pmtiles/validate_header.py
 # - tools/validators/pmtiles/verify_merkle.py
+# - tools/validators/pmtiles/validate_attestation_bundle.py
+# - tests/validators/test_pmtiles_attestation_bundle.py
 # - tools/attest/verify_cose.py --shape-only
 # Inputs:
 # - Candidate artifacts under the compatibility `artifacts/` lane and governed
 #   `data/published/pmtiles/` lane, plus the repository-owned PMTiles tools,
-#   schemas, policy, standard, and lifecycle documentation.
+#   schemas, root-owned synthetic fixture descriptors, tests, policy, standard,
+#   and lifecycle documentation.
 # Outputs:
 # - GitHub job conclusion, logs, annotations, and step summary only. No signing,
 #   receipt, proof, release record, promotion, deployment, or publication occurs.
 # Outcome:
 # - No candidate inputs: WORKFLOW_SKIPPED_EXPLICIT + WORKFLOW_HOLD.
 # - Malformed, incomplete, orphaned, or mismatched candidates: WORKFLOW_FAIL.
-# - Structurally valid candidate with shape-only PMSIG: WORKFLOW_DENY because
+# - Structurally reconciled candidate with shape-only PMSIG: WORKFLOW_DENY because
 #   cryptographic verification and the remaining governed chain are unavailable.
 # Compatibility:
 # - Workflow name `PMTiles Attestation` and job id
@@ -58,6 +61,9 @@ name: PMTiles Attestation
       - "data/published/pmtiles/**/*.pmsig"
       - "data/published/pmtiles/**/*.runreceipt.json"
       - "tools/validators/pmtiles/**"
+      - "tests/validators/test_pmtiles_attestation_bundle.py"
+      - "fixtures/pmtiles/attestation/**"
+      - "docs/standards/pmtiles/**"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   push:
@@ -73,6 +79,9 @@ name: PMTiles Attestation
       - "data/published/pmtiles/**/*.pmsig"
       - "data/published/pmtiles/**/*.runreceipt.json"
       - "tools/validators/pmtiles/**"
+      - "tests/validators/test_pmtiles_attestation_bundle.py"
+      - "fixtures/pmtiles/attestation/**"
+      - "docs/standards/pmtiles/**"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   workflow_dispatch:
@@ -120,6 +129,11 @@ jobs:
             "tools/attest/verify_cose.py"
             "tools/validators/pmtiles/validate_header.py"
             "tools/validators/pmtiles/verify_merkle.py"
+            "tools/validators/pmtiles/validate_attestation_bundle.py"
+            "tests/validators/test_pmtiles_attestation_bundle.py"
+            "fixtures/pmtiles/attestation/README.md"
+            "fixtures/pmtiles/attestation/valid/complete.json"
+            "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.json"
             "tools/validators/pmtiles/fixtures/valid/README.md"
             "tools/validators/pmtiles/fixtures/invalid/README.md"
             "tools/validators/pmtiles/schemas/pmidx.schema.json"
@@ -134,6 +148,14 @@ jobs:
             fi
           done
 
+          if find artifacts data/published/pmtiles -type l \
+            \( -name '*.pmtiles' -o -name '*.pmidx' -o -name '*.pmsig' \
+               -o -name '*.runreceipt.json' \) -print -quit | grep -q .
+          then
+            echo "::error::PMTILES_CANDIDATE_SYMLINK_DENIED"
+            exit 1
+          fi
+
           python - <<'PY'
           import ast
           import json
@@ -142,6 +164,8 @@ jobs:
           scripts = (
               Path("tools/validators/pmtiles/validate_header.py"),
               Path("tools/validators/pmtiles/verify_merkle.py"),
+              Path("tools/validators/pmtiles/validate_attestation_bundle.py"),
+              Path("tests/validators/test_pmtiles_attestation_bundle.py"),
               Path("tools/attest/verify_cose.py"),
           )
           for path in scripts:
@@ -207,10 +231,17 @@ jobs:
 
           print("PMTiles validator and attestation scripts parse as Python.")
           print("PMIDX, PMSIG, and RunReceipt schemas parse as JSON.")
-          print("The validator fixture lanes remain README-only.")
+          print("Tool-local fixture lanes remain README-only; root fixtures are generated mutation descriptors.")
           print("COSE verification remains explicitly shape-only and non-cryptographic.")
           print("Publication policy remains deny-by-default and requires signature plus rollback closure.")
           PY
+
+      - name: Exercise generated compatibility bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python -m unittest -v tests.validators.test_pmtiles_attestation_bundle
 
       - name: Validate PMTiles headers and candidate completeness
         shell: bash
@@ -304,6 +335,27 @@ jobs:
               --pmtiles "$archive"
           done
 
+      - name: Reconcile complete split attestation bundles
+        shell: bash
+        run: |
+          set -eo pipefail
+
+          candidate_roots=("artifacts" "data/published/pmtiles")
+          archives=()
+          while IFS= read -r -d '' path; do archives+=("$path"); done < <(
+            find "${candidate_roots[@]}" -type f -name '*.pmtiles' -print0
+          )
+
+          if (( ${#archives[@]} == 0 )); then
+            echo "WORKFLOW_SKIPPED_EXPLICIT: no split attestation bundles evaluated"
+            echo "WORKFLOW_HOLD: range metadata is unauthenticated; cryptographic, policy, and release authority were not evaluated"
+            exit 0
+          fi
+
+          for archive in "${archives[@]}"; do
+            python tools/validators/pmtiles/validate_attestation_bundle.py "$archive"
+          done
+
       - name: Validate PMSIG shape and fail closed without cryptographic verification
         shell: bash
         run: |
@@ -340,8 +392,16 @@ jobs:
           candidate_count="$({
             find artifacts data/published/pmtiles -type f -name '*.pmtiles' -print
           } | wc -l | tr -d ' ')"
+          candidate_symlink_count="$({
+            find artifacts data/published/pmtiles -type l \
+              \( -name '*.pmtiles' -o -name '*.pmidx' -o -name '*.pmsig' \
+                 -o -name '*.runreceipt.json' \) -print
+          } | wc -l | tr -d ' ')"
 
-          if [[ "$candidate_count" == "0" ]]; then
+          if [[ "$candidate_symlink_count" != "0" ]]; then
+            outcome='`WORKFLOW_FAIL` — `PMTILES_CANDIDATE_SYMLINK_DENIED`'
+            readiness='Candidate discovery failed closed before bundle evaluation'
+          elif [[ "$candidate_count" == "0" ]]; then
             outcome='`WORKFLOW_SKIPPED_EXPLICIT`'
             readiness='`WORKFLOW_HOLD` — no PMTiles candidate chain was evaluated'
           else
@@ -353,17 +413,19 @@ jobs:
             echo "## PMTiles partial-attestation gate"
             echo
             echo "- Candidate archives discovered: ${candidate_count}"
+            echo "- Candidate symlinks denied: ${candidate_symlink_count}"
             echo "- Outcome posture: ${outcome}"
             echo "- Readiness posture: ${readiness}"
             echo
-            echo "Available commands check PMTiles v3 header/metadata, required"
-            echo "companion presence, PMTiles digest, PMIDX Merkle commitments, and"
-            echo "PMSIG JSON shape. The workflow deliberately denies a candidate after"
+            echo "Available commands check exact PMTiles v3 header/metadata fields,"
+            echo "companion presence, archive-derived PMIDX leaves/ranges/root, and"
+            echo "PMSIG plus RunReceipt cross-artifact reconciliation. The workflow"
+            echo "deliberately denies a candidate after"
             echo "shape-only PMSIG validation because cryptographic COSE verification"
             echo "and approved key-registry validation are not wired."
             echo
-            echo "This workflow does not validate RunReceipt semantics, reconcile every"
-            echo "spec_hash across the chain, execute publication policy, prove evidence"
-            echo "closure, confirm rights/sensitivity/review/release/correction/rollback,"
+            echo "This workflow does not cryptographically verify PMSIG, execute"
+            echo "publication policy, prove evidence closure, confirm signer trust or"
+            echo "rights/sensitivity/review/release/correction/rollback,"
             echo "sign artifacts, promote lifecycle state, deploy, or publish."
           } >> "$GITHUB_STEP_SUMMARY"

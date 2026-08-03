@@ -1,0 +1,1 @@
+{"case_id":"runreceipt-spec-hash-mismatch","expected":{"issue_codes":["RUNRECEIPT_SPEC_HASH_MISMATCH"],"status":"DENY"},"mutation":"runreceipt_spec_hash_mismatch"}
