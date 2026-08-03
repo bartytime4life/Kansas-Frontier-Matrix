@@ -2,15 +2,15 @@
 doc_id: kfm://doc/domains/atmosphere/readme
 title: Atmosphere · Domain Lane README
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: TBD (domain steward: Atmosphere/Air); TBD (governance reviewer)
 created: 2026-05-15
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: public
 related: [docs/domains/README.md, docs/doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/domains/atmosphere/VERIFICATION_BACKLOG.md, control_plane/domain_lane_register.yaml, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, weather]
-notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains Atlas v1.1 §11 and Encyclopedia §7 # all lane filesystem paths PROPOSED until repo verification # source rights NEEDS VERIFICATION # schema/contract slug drift air vs atmosphere is CONFLICTED → ATM-OQ-09]
+notes: [CONTRACT_VERSION pinned 3.0.0 # domain doctrine CONFIRMED via Domains Atlas v1.1 §11 and Encyclopedia §7 # three bounded synthetic fixture profiles executable # broader live-record, source, policy, evidence, proof, and release behavior NEEDS VERIFICATION # schema/contract slug drift air vs atmosphere is CONFLICTED → ATM-OQ-09]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -429,7 +429,10 @@ flowchart LR
 
 ## 14. Validation
 
-The validators below are **PROPOSED** (per atlas §11.K) and live in `tests/domains/atmosphere/` once implemented. They enforce the doctrinal denials in [§2.2](#22-what-this-lane-explicitly-does-not-own-confirmed-boundary) and the source-role discipline in [§9](#9-key-source-families-and-source-roles).
+The table distinguishes bounded synthetic fixture checks already implemented in
+`tests/domains/atmosphere/` from broader **PROPOSED** validation. Passing a
+fixture profile does not establish source admission, scientific validity,
+canonical schema maturity, Rego enforcement, evidence closure, or release.
 
 | # | Validator | What it proves | Status |
 |---|---|---|---|
@@ -438,8 +441,8 @@ The validators below are **PROPOSED** (per atlas §11.K) and live in `tests/doma
 | 3 | **AQI-as-concentration denial** | An AQI value cannot be promoted as a concentration measurement. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
 | 4 | **AOD-as-PM2.5 denial** | `AODRaster` cannot be promoted as `PM25Observation`. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
 | 5 | **Model-as-observed denial** | `ForecastContext` / `WindField` model fields cannot be promoted as observations. | CONFIRMED fixture profile / policy and runtime NEEDS VERIFICATION |
-| 6 | Low-cost sensor caveat tests | Low-cost sensor public release requires correction, caveats, confidence, limitations; Barkjohn correction-version pinned; FILTER-style QA label present. | PROPOSED |
-| 7 | Dry-run / no-network fixture tests | The bounded precipitation and knowledge-character validators run reproducibly against fixtures without external network; pipelines remain unverified. | CONFIRMED fixture profiles / pipelines NEEDS VERIFICATION |
+| 6 | Low-cost sensor caveat tests | The frozen synthetic profile requires low-cost observation character, caveat, confidence, limitations, separate raw/corrected identity, exact fixture-local correction/training/specification identities and identity-string digests, reference-collocation, held-out-evaluation and meteorology metadata for corrected fixtures, fictional county support, bounded transferability/drift posture, and release denials. | CONFIRMED fixture profile / scientific validity, Rego policy, live records, and release NEEDS VERIFICATION |
+| 7 | Dry-run / no-network fixture tests | The bounded precipitation, knowledge-character, and low-cost-sensor calibration validators run reproducibly against fixtures without external network; pipelines remain unverified. | CONFIRMED fixture profiles / pipelines NEEDS VERIFICATION |
 | 8 | Source-role mismatch denial | Authority / observation / context / model roles cannot be silently swapped. | PROPOSED |
 | 9 | Public-safe redaction & generalization tests | Sensitive joins fail closed; redaction emits receipts. | PROPOSED |
 | 10 | Citation validation | Public claims resolve to `EvidenceBundle`; uncited claims fail. | PROPOSED |

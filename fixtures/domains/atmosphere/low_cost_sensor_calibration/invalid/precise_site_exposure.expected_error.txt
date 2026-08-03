@@ -1,0 +1,3 @@
+PRECISE_SITE_EXPOSURE_DENIED	$.spatial_support.kind
+SPATIAL_SUPPORT_NOT_PUBLIC_SAFE	$.spatial_support.kind
+

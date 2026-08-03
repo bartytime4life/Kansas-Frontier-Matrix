@@ -1,0 +1,4 @@
+CALIBRATION_IDENTITY_DIGEST_INVALID	$.calibration.model_sha256
+CALIBRATION_IDENTITY_DIGEST_INVALID	$.calibration.specification_sha256
+CALIBRATION_IDENTITY_DIGEST_INVALID	$.calibration.training_data_sha256
+CORRECTION_METHOD_VERSION_INVALID	$.calibration.method_version

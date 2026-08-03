@@ -2,7 +2,7 @@
 
 `fixtures/domains/atmosphere/`
 
-Status: draft / fixture index / bounded synthetic precipitation and knowledge-character profiles executable.
+Status: draft / fixture index / bounded synthetic precipitation, knowledge-character, and low-cost-sensor calibration profiles executable.
 
 This directory groups Atmosphere-domain fixture lanes used by bounded tests, validators, no-network checks, helpers, renderer checks, release dry-runs, and documentation examples. Files here are examples only. They are not authoritative project records, source records, evidence, policy decisions, source admissions, rights approvals, release state, live advisory output, health guidance, emergency guidance, public API material, public map material, or published artifacts.
 
@@ -21,6 +21,7 @@ Atmosphere fixtures are for offline, deterministic checks. They may exercise sch
 | `invalid/air-station/` | Negative `AirStation` examples. | README present; payload inventory NEEDS VERIFICATION. |
 | `objects/` | Object-shaped examples across the Atmosphere roster. | README present; payload inventory NEEDS VERIFICATION. |
 | `knowledge_character/` | Frozen synthetic anti-collapse profile with six positive characters and five exact-negative fixture cases. | CONFIRMED bounded executable input; missing/unknown/multiple states are exercised in memory, and exact pairings remain PROPOSED rather than the canonical enum or registry. |
+| `low_cost_sensor_calibration/` | Frozen synthetic profile for a caveated context-only low-cost PM2.5 state and a corrected-with-lineage state. | CONFIRMED bounded executable input with two positive and sixteen exact-negative cases; not source admission, scientific correction selection, Rego policy, regulatory equivalence, or release authority. |
 | `public_safe_precipitation/` | Frozen synthetic precipitation profile with one positive fixture and one exact fail-closed fixture/sidecar pair. | CONFIRMED bounded executable input; not source or observation truth. |
 | `sources/` | Source-shaped examples for source-role, rights, sensitivity, freshness, and admission behavior. | README present; payload inventory NEEDS VERIFICATION. |
 | `valid/` | Positive examples for bounded checks. | README present; payload inventory NEEDS VERIFICATION. |
@@ -96,5 +97,5 @@ Do not use this fixture root for:
 
 - Parent README: updated from a greenfield stub.
 - Child README coverage: PARTIAL; based on current fetches and recent updates.
-- Payload inventory: the bounded `public_safe_precipitation/` pair and `knowledge_character/` anti-collapse corpus are CONFIRMED; broader payload inventory remains NEEDS VERIFICATION.
-- Tests and validators: the standard-library precipitation and knowledge-character fixture suites are CONFIRMED executable; broader Atmosphere behavior remains NEEDS VERIFICATION.
+- Payload inventory: the bounded `public_safe_precipitation/` pair, `knowledge_character/` anti-collapse corpus, and `low_cost_sensor_calibration/` corpus are CONFIRMED; broader payload inventory remains NEEDS VERIFICATION.
+- Tests and validators: the standard-library precipitation, knowledge-character, and low-cost-sensor calibration fixture suites are CONFIRMED executable; broader Atmosphere behavior remains NEEDS VERIFICATION.
