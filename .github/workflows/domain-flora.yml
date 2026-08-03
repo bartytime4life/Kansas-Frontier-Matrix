@@ -1,10 +1,9 @@
-# KFM Flora domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Flora validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Flora domain CI workflow.
+# Status: one bounded synthetic public-safe fixture validation slice is
+# executable; Flora proof and release producers remain explicit holds.
 #
 # Authority boundary:
-# - This workflow inspects repository maturity without opening restricted Flora
-#   payloads or exposing exact or reverse-engineerable rare-plant locations.
+# - This workflow uses synthetic fixtures only and performs no live source access.
 # - It does not validate botanical truth, make stewardship decisions, execute a
 #   geoprivacy transform, build an EvidenceBundle or ProofPack, admit sources,
 #   apply policy, promote lifecycle artifacts, approve release, write published
@@ -27,6 +26,8 @@ concurrency:
 env:
   TZ: UTC
   PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  KFM_NO_NETWORK: "1"
 
 jobs:
   validate-flora:
@@ -34,7 +35,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check out Flora boundaries
+      - name: Check out Flora validation slice
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -44,77 +45,58 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Flora validation readiness
+      - name: Validate bounded synthetic Flora fixtures
         shell: bash
         run: |
           set -euo pipefail
 
           required_paths=(
-            "docs/domains/flora/README.md"
-            "contracts/domains/flora/README.md"
-            "schemas/contracts/v1/domains/flora/README.md"
-            "fixtures/domains/flora/README.md"
-            "policy/domains/flora/README.md"
-            "policy/sensitivity/flora/README.md"
-            "tests/domains/flora/README.md"
-            "tools/validators/domains/flora/README.md"
-            "packages/domains/flora/geoprivacy_transformer/README.md"
-            "data/registry/sources/flora/README.md"
-            "release/candidates/flora/README.md"
+            "tools/validators/_common/public_safe_fixture.py"
+            "tools/validators/domains/flora/validate_public_safe_fixture.py"
+            "tests/domains/flora/test_flora_smoke.py"
+            "fixtures/domains/flora/valid/public_safe_occurrence.json"
+            "fixtures/domains/flora/invalid/candidate_not_object.json"
+            "fixtures/domains/flora/invalid/missing_public_controls.json"
+            "fixtures/domains/flora/invalid/missing_references.json"
+            "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.json"
+            "fixtures/domains/flora/invalid/undeclared_external_transform.json"
+            "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.json"
           )
 
           for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required Flora boundary is missing: $required_path"
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required Flora validation artifact is missing: $required_path"
               exit 1
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Flora" \
-            --test-root tests/domains/flora \
-            --validator-root tools/validators/domains/flora \
-            --validator-root tools/validators/geoprivacy \
-            --validator-root tools/validators/geoprivacy_transform
+          python -m unittest discover \
+            --start-directory tests/domains/flora \
+            --pattern 'test_flora_smoke.py' \
+            --verbose
 
-          transformer_file="$(find packages/domains/flora/geoprivacy_transformer -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
-          if [[ -n "$transformer_file" ]]; then
-            echo "::error::Flora geoprivacy implementation surfaced at $transformer_file. Wire its accepted contract, fixtures, receipts, policy, tests, and rollback path deliberately."
-            exit 1
-          fi
-
-          if grep -Eq '^(flora-validate|validate-flora):' Makefile; then
-            echo "::error::A Flora validation target now exists. Wire and verify it deliberately instead of retaining this hold."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-flora"
-          echo "WORKFLOW_HOLD: executable Flora validation is not established"
-
-      - name: Record Flora validation hold
+      - name: Record bounded Flora validation scope
         if: always()
         shell: bash
         run: |
-          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF_SUMMARY'
           ### Flora validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          Job status: `${{ job.status }}`
 
-          `WORKFLOW_HOLD: executable Flora validation is not established`
+          `SUBSTANTIVE_SCOPE: flora-public-safe-fixture`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          The job executes one deterministic, standard-library, no-network suite
+          over an explicit synthetic positive fixture and exact negative fixtures.
+          Findings contain stable reason codes and JSON paths without candidate
+          values.
 
-          Current repository evidence is documentation-heavy: sampled Flora tests
-          are placeholders, the domain validator is an index without accepted
-          executables, and the geoprivacy transformer is a proposed package
-          contract rather than verified implementation.
-
-          This check does not establish botanical identity, occurrence validity,
-          rights, rare-plant sensitivity, geoprivacy, public-safe geometry,
-          EvidenceBundle closure, policy approval, stewardship approval, release
-          readiness, or safe public use.
-          EOF
+          A successful job proves fixture-profile conformance only. It does not
+          establish botanical identity, occurrence truth, source admission,
+          rights, rare-plant sensitivity approval, stewardship approval,
+          geoprivacy transformation, EvidenceBundle closure, proof construction,
+          release readiness, deployment, publication, or safe public use.
+          EOF_SUMMARY
 
   build-proof-flora:
     runs-on: ubuntu-latest
