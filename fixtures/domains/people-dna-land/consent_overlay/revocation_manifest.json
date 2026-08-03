@@ -1,0 +1,10 @@
+{
+  "profile_id": "kfm-people-dna-land-genealogy-overlay-revocation-manifest-v1",
+  "manifest_id": "fixture://people-dna-land/consent-overlay/revocation-manifest/current",
+  "spec_hash": "sha256:3b46d97d18c0b54ff864895ba9b3804df499f0e8ce93e07c0f0a5f73a96e68d7",
+  "revocation_root": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "generated_at": "2026-03-31T00:00:00Z",
+  "revoked_overlay_ids": [],
+  "source_posture": "fixture_only",
+  "release_state": "not_released"
+}

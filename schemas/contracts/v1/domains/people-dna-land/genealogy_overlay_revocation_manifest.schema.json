@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/people-dna-land/genealogy_overlay_revocation_manifest.schema.json",
+  "title": "Genealogy Overlay Revocation Manifest - Synthetic Fixture Profile",
+  "description": "A closed, fixture-only revocation-manifest shape used by the bounded consent-safe genealogy-overlay validator. It does not execute revocation, withdraw a release, invalidate caches, or authorize publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "manifest_id",
+    "spec_hash",
+    "revocation_root",
+    "generated_at",
+    "revoked_overlay_ids",
+    "source_posture",
+    "release_state"
+  ],
+  "properties": {
+    "profile_id": {
+      "const": "kfm-people-dna-land-genealogy-overlay-revocation-manifest-v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^fixture://[a-z0-9][a-z0-9._~:/-]*$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "revocation_root": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+    },
+    "revoked_overlay_ids": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    "source_posture": {
+      "const": "fixture_only"
+    },
+    "release_state": {
+      "const": "not_released"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "profile_id": "kfm-people-dna-land-genealogy-overlay-revocation-manifest-v1",
+    "contract_doc": "contracts/domains/people-dna-land/consented_genealogy_overlay.md",
+    "fixtures_root": "fixtures/domains/people-dna-land/consent_overlay/",
+    "validator": "tools/validators/domains/people-dna-land/validate_consent_overlay.py",
+    "execution_posture": "fixture-only; no revocation side effects"
+  }
+}
