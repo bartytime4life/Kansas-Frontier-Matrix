@@ -15,136 +15,331 @@ owners:
   - <validation-steward>
   - <docs-steward>
 updated: 2026-08-03
-tags: [kfm, schemas, contracts, v1, domains, roads-rail-trade, transport, routes, corridor-route, json-schema]
+tags: [kfm, schemas, contracts, v1, domains, roads-rail-trade, transport, roads, rail, trade-routes, routes, network, json-schema]
 notes:
-  - "v1.1 records the bounded CorridorRoute schema profile, validator, synthetic fixtures, and focused tests added from New Ideas 3-31-26.pdf."
-  - "The profile is PROPOSED and fixture-only. It does not settle the roads-rail-trade versus transport slug conflict, activate sources, execute policy, approve review, release, publish, or provide routing authority."
+  - "v1.1 records one bounded CorridorRoute schema profile, validator, synthetic fixture family, and focused tests."
+  - "The profile remains PROPOSED and fixture-only; it does not settle the roads-rail-trade versus transport path conflict or create source, policy, review, release, publication, legal-designation, or live-routing authority."
 [/KFM_META_BLOCK_V2] -->
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![root](https://img.shields.io/badge/root-schemas%2F-blue)
 ![domain](https://img.shields.io/badge/domain-roads--rail--trade-slategray)
-![inventory](https://img.shields.io/badge/inventory-one__bounded__profile-orange)
+![posture](https://img.shields.io/badge/posture-domain--schema--index-orange)
 ![slug](https://img.shields.io/badge/slug-PROPOSED%20%2F%20CONFLICTED-red)
 ![truth](https://img.shields.io/badge/truth-evidence--first-blue)
 
 ## Purpose
 
-This directory is the draft machine-shape lane for Roads / Rail / Trade domain contracts. It may contain JSON Schema files, schema-family indexes, compatibility notes, and links to paired contracts, fixtures, validators, tests, registry records, policy references, corrections, rollback records, and release records.
+`schemas/contracts/v1/domains/roads-rail-trade/` is the draft Roads / Rail / Trade domain schema lane.
 
-It must not contain semantic contract prose, policy rules, validator implementation, source registry records, lifecycle data, receipts, proofs, release decisions, public map/API artifacts, routing advice, legal-status advice, or emergency access instructions.
+This path is for machine-checkable Roads / Rail / Trade schema shapes: JSON Schema files, schema-family README files, schema index notes, migration notes, and links to paired contracts, fixtures, validators, registry records, tests, policy references, source-registry references, correction references, rollback references, and release references.
 
-## Authority and placement
+This path is not a home for Roads / Rail / Trade contract prose, policy rules, validator code, packages, pipelines, lifecycle data, source registry records, emitted receipts, proof outputs, catalog records, release records, review records, public map/API artifacts, routing advice, legal road-status advice, or emergency access instructions.
 
-| Question | Controlling surface |
+This README is documentation only. It is not itself a schema file, contract prose, policy, validator code, pipeline code, lifecycle data, registry data, proof output, receipt instance, source descriptor instance, route authority, network authority, or release authority.
+
+## Status & authority
+
+| Field | Value |
 |---|---|
-| What does a Roads / Rail / Trade object mean? | `contracts/domains/roads-rail-trade/` or an ADR-selected semantic-contract home |
-| What fields and constraints exist? | This `schemas/` lane |
-| May a candidate be used or exposed? | `policy/`, source/evidence/review state, and release governance |
-| How is behavior proved? | `fixtures/`, `tests/`, and `tools/validators/` |
-| Where are lifecycle objects stored? | Established `data/` lifecycle and accountability roots |
-| What authorizes public release? | `release/` plus proof, review, correction, and rollback closure |
+| Document type | Roads / Rail / Trade domain schema README |
+| Owning root | `schemas/` |
+| Requested path | `schemas/contracts/v1/domains/roads-rail-trade/` |
+| Status | Draft / PROPOSED / slug-CONFLICTED |
+| Authority level | Domain schema index guidance. Schema files, paired contracts, registry records, validators, fixtures, tests, ADRs, policy records, release records, and steward decisions outrank this README. |
+| Path posture | Current-session evidence confirms this README existed as a greenfield scaffold before this update. |
+| Canonical posture | PROPOSED under Directory Rules and ADR-0001; slug/path conflict remains visible because Roads/Rail/Trade docs record unresolved `roads-rail-trade` vs `transport` and `domains/` vs flat-path drift. |
+| Concrete schema inventory | One bounded `CorridorRoute` Draft 2020-12 profile is confirmed in this slice; broader lane coverage remains NEEDS VERIFICATION. |
+| Known child lanes | None confirmed during this edit. |
+| Default public posture | Public-safe for many historical/contextual transport features after evidence, rights, source-role, validation, policy, release, correction, and rollback support; not live routing or legal-status authority. |
+| Required reviewers | Schema steward, Roads/Rail/Trade steward, roads steward, rail steward, trade-routes steward, validation steward, policy/release stewards where applicable, and docs steward. |
 
-Directory Rules basis: schemas are machine-checkable shape artifacts under `schemas/`. The domain remains a segment inside that responsibility root. This index creates no new root and no parallel contract, policy, source, registry, proof, release, or publication authority.
+## Placement basis
 
-## Path posture
+Current-session evidence confirms `schemas/README.md` defines `schemas/` as the machine-checkable shape root and says schemas pair one-to-one with `contracts/`.
 
-The repository still carries an unresolved `roads-rail-trade` versus `transport` and domain-nested versus flat-path naming conflict. The bounded profile below uses the current domain-nested lane because it pairs directly with the existing semantic contract. That placement remains **PROPOSED** until the accepted ADR/Directory Rules projection settles the conflict.
+Current-session evidence confirms ADR-0001 says domain-specific schemas nest under `schemas/contracts/v1/domains/<domain>/...`, while `contracts/` retains object meaning and `schemas/` owns machine-checkable shape.
+
+Current-session Directory Rules evidence confirms field-level shape belongs under `schemas/`, while lifecycle data, registries, proofs, receipts, policy decisions, and release materials are separate responsibility roots and parallel homes require ADR review.
+
+Current-session evidence confirms this README previously claimed broadly that docs, contracts, schemas, policies, fixtures, tests, packages, pipelines, registries, and data lifecycle artifacts could belong here. This update corrects that boundary: this path is schema-shape only.
+
+Current-session Roads/Rail/Trade file-system evidence names `schemas/contracts/v1/domains/roads-rail-trade/` as the schema responsibility lane while keeping the `roads-rail-trade` vs `transport` naming conflict visible and ADR-bound.
+
+Current-session Roads/Rail/Trade canonical-paths evidence records a two-dimensional conflict: Directory Rules uses `schemas/contracts/v1/domains/<domain>/` with the `roads-rail-trade` slug, while older Atlas crosswalk material used flat `schemas/contracts/v1/transport/` style paths. This README does not resolve that conflict.
+
+Current-session Roads/Rail/Trade contract-root evidence confirms `contracts/domains/roads-rail-trade/` is a human-readable semantic contract lane, not a schema, policy, data, fixture, release, API, map, graph, or runtime authority.
+
+Current-session search found Roads/Rail/Trade semantic contract surfaces such as `corridor_route.md`, `rail_segment.md`, `route_membership.md`, `bridge.md`, `access_restriction.md`, `restriction_event.md`, `operator_assignment.md`, `status_event.md`, `siding.md`, `depot.md`, `yard.md`, `operator_status.md`, `domain_observation.md`, and `transport_facility.md`.
+
+This slice confirms one concrete Roads/Rail/Trade schema under this path: `corridor_route.schema.json`. It remains a PROPOSED bounded profile paired to synthetic fixtures and a no-network validator; no other concrete schema is claimed by this edit.
+
+## Repo fit
+
+```text
+schemas/
+├── README.md
+└── contracts/
+    └── v1/
+        └── domains/
+            └── roads-rail-trade/
+                ├── README.md                  # you are here
+                └── corridor_route.schema.json # bounded PROPOSED profile
+
+contracts/
+└── domains/
+    └── roads-rail-trade/                       # semantic meaning; not schema shape
+        ├── corridor_route.md
+        ├── rail_segment.md
+        ├── route_membership.md
+        ├── bridge.md
+        ├── access_restriction.md
+        ├── restriction_event.md
+        ├── operator_assignment.md
+        ├── status_event.md
+        ├── siding.md
+        ├── depot.md
+        └── yard.md
+
+docs/
+└── domains/
+    └── roads-rail-trade/                       # human-facing doctrine and placement docs
+
+policy/
+└── domains/roads-rail-trade/                   # policy; not schema shape
+
+fixtures/
+└── domains/roads-rail-trade/
+    └── corridor_route/                         # synthetic bounded fixtures
+
+tools/validators/domains/roads-rail-trade/
+└── validate_corridor_route.py                  # no-network bounded validator
+
+tests/schemas/
+└── test_corridor_route_contract.py             # focused behavior proof
+
+data/                                           # lifecycle, registry, proof, receipt roots; not schema home
+
+release/                                        # release decisions and release records; not schema home
+```
+
+## Current-session related evidence
+
+| Evidence | Status |
+|---|---|
+| `schemas/contracts/v1/domains/roads-rail-trade/README.md` | Greenfield scaffold before this update; now indexes the bounded CorridorRoute profile. |
+| `schemas/README.md` | Confirms `schemas/` owns machine-checkable shape and pairs with `contracts/`. |
+| ADR-0001 | Confirms domain schemas nest under `schemas/contracts/v1/domains/<domain>/...`. |
+| Directory Rules | Confirms machine shape belongs under `schemas/`; parallel homes require ADR review. |
+| `docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md` | Names this schema lane and records lane placement plus slug drift. |
+| `docs/domains/roads-rail-trade/CANONICAL_PATHS.md` | Records the `roads-rail-trade` vs `transport` and `domains/` vs flat-path conflict. |
+| `contracts/domains/roads-rail-trade/README.md` | Confirms contracts own meaning and that the folder is not schema, policy, data, release, public API, map, graph, or runtime authority. |
+| `contracts/domains/roads-rail-trade/corridor_route.md` | Provides paired route/corridor semantics and route-versus-segment/membership boundaries. |
+| `corridor_route.schema.json` plus focused fixtures/validator/tests | Confirms one bounded fixture-only machine profile with deterministic PASS/ABSTAIN/DENY behavior. |
+
+This README does not verify complete Roads/Rail/Trade schema coverage, schema registry entries, live source roles, policy execution, broad CI wiring, release integration, runtime behavior, public API behavior, graph materialization, routing behavior, or map rendering behavior.
 
 ## Current schema inventory
 
-| Schema | Paired contract | Status | Validation surface | Authority limit |
-|---|---|---|---|---|
-| [`corridor_route.schema.json`](./corridor_route.schema.json) | [`contracts/domains/roads-rail-trade/corridor_route.md`](../../../../../contracts/domains/roads-rail-trade/corridor_route.md) | **DRAFT_SCHEMA / PROPOSED bounded profile** | [`validate_corridor_route.py`](../../../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py), [`fixtures/domains/roads-rail-trade/corridor_route/`](../../../../../fixtures/domains/roads-rail-trade/corridor_route/), [`tests/schemas/test_corridor_route_contract.py`](../../../../../tests/schemas/test_corridor_route_contract.py) | Fixture-only; no source admission, real-route truth, policy approval, review, release, publication, legal designation, or live routing authority. |
+| Schema file | Paired contract | Status | Notes |
+|---|---|---|---|
+| `corridor_route.schema.json` | `contracts/domains/roads-rail-trade/corridor_route.md` | DRAFT_SCHEMA / PROPOSED bounded profile | Draft 2020-12; fixture-only; paired to no-network validator and focused schema tests; no source/policy/review/release/publication authority. |
 
-No other concrete Roads / Rail / Trade `.schema.json` file is claimed by this index without current repository evidence.
+## Current child lanes
 
-## CorridorRoute profile
+| Child path | Status | Responsibility |
+|---|---|---|
+| No child schema lane confirmed in this edit | NEEDS VERIFICATION | Add child lanes only after schema-home, slug, and object-family review confirm a need. |
 
-The profile machine-requires the historical-route fields proposed by the source packet:
+## Candidate schema inventory
 
-- stable route identity and name;
-- `feature_class=route`;
-- approximate dates and explicit date uncertainty;
-- geometry accuracy;
-- source URI and license;
-- evidence references and evidence-resolution posture;
-- bounded confidence;
-- explicit authoritative-versus-derived representation;
-- change state.
+Roads/Rail/Trade schema candidates below come from current contract/docs evidence. They require steward review, schema files, paired contracts, fixtures, validators, registry records, source-role semantics, and CI support before promotion.
 
-It also enforces KFM anti-collapse boundaries:
+| Candidate schema | Status | Notes |
+|---|---|---|
+| `road_segment.schema.json` | NEEDS VERIFICATION | Candidate road segment shape. |
+| `rail_segment.schema.json` | NEEDS VERIFICATION | Candidate rail segment shape. |
+| `corridor_route.schema.json` | DRAFT_SCHEMA / PROPOSED | Bounded fixture-only corridor/route profile now exists; admission, registry, policy, review, release, and path authority remain open. |
+| `route_membership.schema.json` | NEEDS VERIFICATION | Candidate segment-to-route/corridor membership shape. |
+| `bridge.schema.json` | NEEDS VERIFICATION | Candidate transport-side bridge/crossing shape; must not replace infrastructure or hydrology truth. |
+| `river_crossing.schema.json` | NEEDS VERIFICATION | Candidate transport-side river crossing shape; hydrology owns water evidence. |
+| `ferry.schema.json` | NEEDS VERIFICATION | Candidate ferry crossing/service shape. |
+| `depot.schema.json` | NEEDS VERIFICATION | Candidate depot/facility shape. |
+| `siding.schema.json` | NEEDS VERIFICATION | Candidate rail siding shape. |
+| `yard.schema.json` | NEEDS VERIFICATION | Candidate rail yard shape. |
+| `transport_facility.schema.json` | NEEDS VERIFICATION | Candidate shared transport facility shape. |
+| `operator_assignment.schema.json` | NEEDS VERIFICATION | Candidate operator/time assignment shape. |
+| `operator_status.schema.json` | NEEDS VERIFICATION | Candidate operator/status shape. |
+| `status_event.schema.json` | NEEDS VERIFICATION | Candidate time-bound status event shape. |
+| `restriction_event.schema.json` | NEEDS VERIFICATION | Candidate restriction event shape. |
+| `access_restriction.schema.json` | NEEDS VERIFICATION | Candidate access restriction shape; not legal routing authority by itself. |
+| `domain_observation.schema.json` | NEEDS VERIFICATION | Candidate domain observation envelope. |
+| `domain_validation_report.schema.json` | NEEDS VERIFICATION | Candidate validation-report shape; not proof or release authority. |
+| `network_edge.schema.json` | NEEDS VERIFICATION | Candidate derived graph projection shape; not canonical route/segment truth. |
+| `public_safe_route_summary.schema.json` | NEEDS VERIFICATION | Candidate release-facing derivative descriptor with evidence, policy, correction, and rollback references. |
 
-- route identity is not RoadSegment, RailSegment, RouteMembership, embedded geometry, or graph truth;
-- bound evidence requires at least one EvidenceRef;
-- unresolved source/evidence/geometry/rights cannot claim released posture;
-- authoritative representation requires authority/official source role and cannot rely on derived geocoding;
-- sensitive or rights-restricted geometry cannot be marked for generalized public use;
-- released posture requires policy, review, release-manifest, and rollback references;
-- live-routing, legal-designation, and publication-approval fields are forbidden.
+## Schema-lane responsibilities
 
-## Candidate backlog
-
-The names below remain **NEEDS VERIFICATION** and do not imply files exist:
-
-| Candidate schema | Main boundary |
+| Responsibility | Expectation |
 |---|---|
-| `road_segment.schema.json` | Road alignment evidence; not route identity or live/legal routing status. |
-| `rail_segment.schema.json` | Rail alignment and temporal/operator context; not service authority. |
-| `route_membership.schema.json` | Source- and time-scoped segment-to-route relation. |
-| `bridge.schema.json` / `river_crossing.schema.json` / `ferry.schema.json` | Transport-side crossing semantics without replacing Infrastructure or Hydrology truth. |
-| `depot.schema.json` / `siding.schema.json` / `yard.schema.json` | Transport facilities with source role and temporal status. |
-| `operator_assignment.schema.json` / `operator_status.schema.json` | Operator relationships and status without legal or operational authority. |
-| `status_event.schema.json` / `restriction_event.schema.json` / `access_restriction.schema.json` | Time-bounded events and constraints; not live routing advice by default. |
-| `network_edge.schema.json` | Derived graph projection; never canonical route/segment truth. |
-| `public_safe_route_summary.schema.json` | Released derivative requiring evidence, policy, correction, and rollback references. |
+| Domain schema index | List Roads/Rail/Trade schema files and child schema lanes as they are verified. |
+| Contract pairing | Link each schema to paired semantic contracts under `contracts/domains/roads-rail-trade/` or another verified contract lane. |
+| Slug-drift discipline | Keep `roads-rail-trade` vs `transport` and `domains/` vs flat schema-home drift visible until ADR/steward resolution confirms final homes. |
+| Source-role discipline | Preserve differences among observed source records, administrative context, historic interpretations, modeled/candidate routes, derived graph projections, and released summaries. |
+| Boundary preservation | Keep policy, fixtures, validators, pipelines, lifecycle data, source registry records, receipt instances, proofs, catalog records, and release records in their own responsibility roots. |
+| Adjacent-domain discipline | Roads/Rail/Trade may reference Hydrology, Settlements/Infrastructure, Hazards, Archaeology, Agriculture, People/Land, and Map/UI context, but must not replace their owned truth. |
+| Graph discipline | Derived network edges and graph projections must not replace canonical source-bound route, segment, membership, or facility records. |
+| Review status | Mark unverified implementation claims as NEEDS VERIFICATION. |
 
-## Status vocabulary
+## What belongs here
+
+- This README.
+- Machine-checkable Roads/Rail/Trade JSON Schema files once placement is confirmed.
+- Roads/Rail/Trade schema-family and child-lane README files.
+- Schema index notes.
+- Migration notes for Roads/Rail/Trade schema placement.
+- Drift notes about duplicate or stale Roads/Rail/Trade vs `transport` schema paths.
+- Links to paired contracts, fixtures, validators, schema registry records, source-registry records, policy references, release references, correction references, rollback references, and tests.
+
+## What does not belong here
+
+- Contract prose.
+- Policy rules or sensitivity decisions.
+- Validator implementation code.
+- Runtime code.
+- Packages or pipeline implementation.
+- Lifecycle data payloads.
+- Source registry records or SourceDescriptor instances.
+- Emitted receipt instances.
+- Proof outputs or EvidenceBundles.
+- Catalog records.
+- Release records, release manifests, or release decisions.
+- Public tiles, map/UI behavior, dashboards, screenshots, or generated summaries.
+- Live routing, emergency access instructions, road-closure advice, or legal road/rail status determinations.
+- Canonical Hydrology, Settlements/Infrastructure, Hazards, Archaeology, Agriculture, People/Land, or Map/UI truth.
+- Cross-domain schemas that belong under `schemas/contracts/v1/cross/` or another lowest-common responsibility root.
+- Generic reusable schemas that belong under `schemas/contracts/v1/common/`.
+- Claims that a schema is complete without fixtures, validators, registry records, and steward review support.
+
+## Schema status values
+
+Use finite status values where possible:
 
 | Status | Meaning |
 |---|---|
-| `STUB` | File exists but is not field-complete. |
-| `DRAFT_SCHEMA` | Meaningful shape exists with bounded fixtures/tests; admission remains pending. |
-| `ACTIVE_SCHEMA` | Accepted contract pairing, registry record, fixtures, validator support, review, and CI are established. |
-| `PATH_CONFLICT` | Placement is blocked by unresolved schema-home or slug authority. |
-| `PROFILE` | Shape profiles a shared object or source without creating duplicate authority. |
-| `MIRROR` | Compatibility mirror of an accepted canonical schema. |
-| `TRANSITIONAL` | Awaiting governed migration. |
-| `DEPRECATED` | Must not receive new consumers. |
-| `NEEDS_VERIFICATION` | Required implementation or authority evidence has not been checked. |
+| `STUB` | Schema exists but is not field-complete. |
+| `DRAFT_SCHEMA` | Schema has meaningful fields but still needs review and test support. |
+| `ACTIVE_SCHEMA` | Schema has accepted contract pairing, fixtures, validator support, registry record, and review status. |
+| `PATH_CONFLICT` | Schema placement is blocked by unresolved `roads-rail-trade` vs `transport` or `domains/` vs flat path drift. |
+| `PROFILE` | Schema profiles a shared source, spatial, time, network, or common schema without creating duplicate authority. |
+| `MIRROR` | Schema mirrors another accepted schema location. |
+| `TRANSITIONAL` | Schema is awaiting migration to the accepted home. |
+| `DEPRECATED` | Schema should no longer receive new consumers. |
+| `NEEDS_VERIFICATION` | Pairing, fixture, validator, registry, review, or CI support has not been verified. |
+
+## Minimal schema note
+
+```markdown
+# <roads-rail-trade-schema-note-id>
+
+## Status
+STUB / DRAFT_SCHEMA / ACTIVE_SCHEMA / PATH_CONFLICT / PROFILE / MIRROR / TRANSITIONAL / DEPRECATED / NEEDS_VERIFICATION
+
+## Schema path
+<schemas/contracts/v1/domains/roads-rail-trade/... or alternate path under review>
+
+## Paired contract
+<contracts/domains/roads-rail-trade/... or N/A>
+
+## Source role
+<observed / administrative / modeled / candidate / derived / released-summary / NEEDS VERIFICATION>
+
+## Fixtures
+<fixtures path or N/A>
+
+## Validator
+<tools/validators path or N/A>
+
+## Policy and release references
+<policy/release path or N/A>
+
+## Notes
+<short note grounded in repo evidence>
+
+## Follow-up
+<open items or none>
+```
 
 ## Review checklist
 
 - [x] CorridorRoute schema has a stable `$id`.
-- [x] CorridorRoute schema declares JSON Schema draft 2020-12.
-- [x] Paired semantic contract is linked.
-- [x] Synthetic valid, abstention, and exact-negative fixtures are linked.
-- [x] No-network validator and focused schema tests are linked.
-- [x] Route/segment/membership/geometry/live-routing/publication anti-collapse boundaries are tested.
-- [ ] Resolve the `roads-rail-trade` versus `transport` and domain-nested versus flat-path conflict.
-- [ ] Add or confirm the schema-registry entry.
-- [ ] Bind admitted SourceDescriptor/source-role vocabulary.
-- [ ] Confirm policy bundle and policy-test references.
-- [ ] Confirm CODEOWNERS and steward review.
-- [ ] Confirm broader CI integration and repository-wide regression status.
-- [ ] Confirm release, correction, and rollback object-family integration before any public use.
+- [x] CorridorRoute schema has `$schema` set to JSON Schema draft 2020-12.
+- [x] Paired CorridorRoute contract path is linked.
+- [ ] Roads/Rail/Trade slug/path drift is resolved or explicitly marked PROPOSED / CONFLICTED.
+- [ ] Schema registry entry is linked or marked NEEDS VERIFICATION.
+- [x] Valid fixtures are linked.
+- [x] Invalid fixtures are linked.
+- [x] Source-role and temporal-basis behavior has focused fixture coverage.
+- [x] Validator path is linked.
+- [ ] CI/schema-test support beyond focused local validation is linked or marked NEEDS VERIFICATION.
+- [x] Pipeline, policy, data, registry, proof, receipt, catalog, and release records remain outside `schemas/`.
+- [x] Adjacent-domain boundaries are preserved by the bounded profile.
+- [x] Graph projections remain derived and evidence-subordinate.
+- [ ] Any migration or compatibility claim cites an ADR, migration note, or verified repo evidence.
 
-## Validation
+## Naming guidance
 
-```bash
-KFM_NO_NETWORK=1 PYTHONHASHSEED=0 TZ=UTC \
-  python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
+Recommended schema filename pattern:
 
-KFM_NO_NETWORK=1 PYTHONHASHSEED=0 TZ=UTC \
-  python -m pytest -q tests/schemas/test_corridor_route_contract.py
+```text
+<object_name>.schema.json
 ```
 
-`PASS` proves only the bounded schema, deterministic hash, temporal, source-role, and public-safety checks implemented by this profile. It does not grant truth, source admission, policy approval, review, release, publication, legal designation, or routing authority.
+Examples:
+
+```text
+road_segment.schema.json
+rail_segment.schema.json
+corridor_route.schema.json
+route_membership.schema.json
+bridge.schema.json
+river_crossing.schema.json
+ferry.schema.json
+depot.schema.json
+siding.schema.json
+yard.schema.json
+transport_facility.schema.json
+operator_assignment.schema.json
+operator_status.schema.json
+status_event.schema.json
+restriction_event.schema.json
+access_restriction.schema.json
+domain_observation.schema.json
+domain_validation_report.schema.json
+network_edge.schema.json
+public_safe_route_summary.schema.json
+```
+
+Use lowercase snake_case for schema filenames unless the schema registry or ADR specifies otherwise. Do not silently create duplicate schemas across `schemas/contracts/v1/domains/roads-rail-trade/`, older `schemas/contracts/v1/transport/` references, cross-domain lanes, or common schema paths.
+
+## Open verification
+
+- [ ] Confirm CODEOWNERS for `schemas/contracts/v1/domains/roads-rail-trade/`.
+- [ ] Resolve the Roads/Rail/Trade schema-home and slug drift against older `transport` references.
+- [ ] Confirm complete Roads/Rail/Trade schema inventory beyond CorridorRoute.
+- [ ] Confirm whether additional concrete schema files exist under alternate casing or alternate paths.
+- [ ] Confirm paired contract paths for all accepted schemas.
+- [ ] Confirm schema registry records.
+- [ ] Confirm source-role and temporal-basis fixture coverage for future schemas.
+- [ ] Confirm validator paths for future schemas.
+- [ ] Confirm broad CI schema-test coverage for CorridorRoute and future schemas.
+- [ ] Confirm policy, source-registry, release, correction, and rollback references for Roads/Rail/Trade schemas.
+- [ ] Confirm whether `schemas/README.md` should index this Roads/Rail/Trade domain schema lane.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-08-03 |
-| Review status | Draft index updated for the CorridorRoute bounded profile |
-| Next trigger | ADR/path resolution, schema-registry admission, source onboarding, policy integration, CI wiring, release integration, correction/rollback drill, or another concrete Roads / Rail / Trade schema |
+| Review status | Draft index with one bounded CorridorRoute profile; source/policy/release admission remains open |
+| Next review trigger | Roads/Rail/Trade slug/schema-home resolution, schema-registry admission, new schema, validator or fixture update, broad CI wiring, source/policy/release integration, ADR update, or compatibility-lane decision |
