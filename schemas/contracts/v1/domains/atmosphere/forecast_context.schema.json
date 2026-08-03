@@ -1,17 +1,203 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json",
-  "title": "Forecast Context",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/atmosphere/forecast_context.schema.json",
+  "title": "ForecastContext",
+  "description": "Bounded Atmosphere profile for a modeled atmospheric field with explicit model-run identity, uncertainty, valid time, and DERIVED_FROM lineage. It is context, not an observation or life-safety forecast.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
   "x-kfm": {
-    "status": "PROPOSED",
-    "path": "schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json",
-    "source_docs": [
-      "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md"
-    ],
-    "contract_doc": "contracts/domains/atmosphere/forecast_context.md"
-  }
+    "status": "DRAFT_SCHEMA",
+    "anti_collapse_rule": "ForecastContext is ATMOSPHERIC_MODEL_FIELD knowledge and must never be rendered or substituted as an observed sensor value.",
+    "contract_doc": "contracts/domains/atmosphere/ForecastContext.md",
+    "profile_doc": "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
+    "fixtures_root": "fixtures/domains/atmosphere/observed_modeled_separation/",
+    "validator": "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py",
+    "not_for_life_safety": true
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "fixtureMeta": {
+      "type": "object",
+      "description": "Optional fixture-only metadata; not part of a production record.",
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "_fixture_meta": {"$ref": "#/$defs/fixtureMeta"},
+    "object_type": {"const": "ForecastContext"},
+    "schema_version": {"const": "1.0.0"},
+    "model_context_id": {
+      "type": "string",
+      "pattern": "^forecast-context:[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "knowledge_character": {"const": "ATMOSPHERIC_MODEL_FIELD"},
+    "source_role": {"const": "modeled"},
+    "source_descriptor_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonEmptyString"},
+        {"type": "null"}
+      ]
+    },
+    "source_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"]
+    },
+    "model_run_ref": {"$ref": "#/$defs/nonEmptyString"},
+    "model_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "version": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "temporal_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generated_at", "valid_at"],
+      "properties": {
+        "generated_at": {"type": "string", "format": "date-time"},
+        "valid_at": {"type": "string", "format": "date-time"},
+        "valid_until": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "spatial_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "support_ref"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["generalized_county", "statewide", "governed_grid_cell"]
+        },
+        "support_ref": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter", "value", "unit"],
+      "properties": {
+        "parameter": {"$ref": "#/$defs/nonEmptyString"},
+        "value": {"type": "number"},
+        "unit": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationship", "derived_from_refs"],
+      "properties": {
+        "relationship": {"const": "DERIVED_FROM"},
+        "derived_from_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "statement"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["quantified", "qualitative", "unknown"]
+        },
+        "statement": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "evidence_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"]
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": ["cleared_open", "public_domain", "restricted", "unknown"]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "restricted", "sensitive"]
+    },
+    "release_posture": {
+      "type": "string",
+      "enum": ["not_released", "candidate"]
+    },
+    "not_for_life_safety": {"const": true},
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "contains": {"const": "not_an_observation"},
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "air_station_ref": {"not": {}},
+    "observed_at": {"not": {}},
+    "qa_state": {"not": {}},
+    "observed_value": {"not": {}}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "model_context_id",
+    "knowledge_character",
+    "source_role",
+    "source_descriptor_ref",
+    "source_resolution_status",
+    "model_run_ref",
+    "model_identity",
+    "temporal_scope",
+    "spatial_support",
+    "measurement",
+    "lineage",
+    "uncertainty",
+    "evidence_refs",
+    "evidence_resolution_status",
+    "rights_status",
+    "sensitivity",
+    "release_posture",
+    "not_for_life_safety",
+    "limitations"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {"source_resolution_status": {"const": "bound"}},
+        "required": ["source_resolution_status"]
+      },
+      "then": {
+        "properties": {"source_descriptor_ref": {"$ref": "#/$defs/nonEmptyString"}}
+      },
+      "else": {
+        "properties": {"source_descriptor_ref": {"type": "null"}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"evidence_resolution_status": {"const": "bound"}},
+        "required": ["evidence_resolution_status"]
+      },
+      "then": {
+        "properties": {"evidence_refs": {"type": "array", "minItems": 1}}
+      },
+      "else": {
+        "properties": {"evidence_refs": {"type": "array", "maxItems": 0}}
+      }
+    }
+  ],
+  "additionalProperties": false
 }

@@ -1,14 +1,178 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/atmosphere/air_observation.schema.json",
-  "title": "Air Observation",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/atmosphere/air_observation.schema.json",
+  "title": "AirObservation",
+  "description": "Bounded Atmosphere profile for a station-linked observed air-quality value. The object remains distinct from modeled fields, AQI reports, remote-sensing masks, advisories, evidence, policy, and release records.",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/atmosphere/air_observation.schema.json. Fields are to be defined by the owning domain steward.",
   "x-kfm": {
-    "status": "PROPOSED",
-    "source_doc": "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md",
-    "contract_doc": "contracts/domains/atmosphere/air_observation.md"
+    "status": "DRAFT_SCHEMA",
+    "anti_collapse_rule": "AirObservation is OBSERVED_SENSOR knowledge and must never carry model-run identity or be presented as an atmospheric model field.",
+    "contract_doc": "contracts/domains/atmosphere/AirObservation.md",
+    "profile_doc": "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
+    "fixtures_root": "fixtures/domains/atmosphere/observed_modeled_separation/",
+    "validator": "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py",
+    "not_for_life_safety": true
   },
-  "properties": {},
-  "additionalProperties": true
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "fixtureMeta": {
+      "type": "object",
+      "description": "Optional fixture-only metadata; not part of a production record.",
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "_fixture_meta": {"$ref": "#/$defs/fixtureMeta"},
+    "object_type": {"const": "AirObservation"},
+    "schema_version": {"const": "1.0.0"},
+    "observation_id": {
+      "type": "string",
+      "pattern": "^air-observation:[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "knowledge_character": {"const": "OBSERVED_SENSOR"},
+    "source_role": {
+      "type": "string",
+      "enum": ["observed", "low_cost_sensor"]
+    },
+    "source_descriptor_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonEmptyString"},
+        {"type": "null"}
+      ]
+    },
+    "source_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"]
+    },
+    "air_station_ref": {"$ref": "#/$defs/nonEmptyString"},
+    "temporal_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_at", "retrieved_at"],
+      "properties": {
+        "observed_at": {"type": "string", "format": "date-time"},
+        "retrieved_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter", "value", "unit", "averaging_period_minutes"],
+      "properties": {
+        "parameter": {"$ref": "#/$defs/nonEmptyString"},
+        "value": {"type": "number"},
+        "unit": {"$ref": "#/$defs/nonEmptyString"},
+        "averaging_period_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10080
+        }
+      }
+    },
+    "qa_state": {
+      "type": "string",
+      "enum": ["reviewed", "provisional", "unknown", "rejected"]
+    },
+    "low_cost_sensor_caveat": {"$ref": "#/$defs/nonEmptyString"},
+    "confidence_statement": {"$ref": "#/$defs/nonEmptyString"},
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "evidence_resolution_status": {
+      "type": "string",
+      "enum": ["bound", "unresolved"]
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": ["cleared_open", "public_domain", "restricted", "unknown"]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "restricted", "sensitive"]
+    },
+    "release_posture": {
+      "type": "string",
+      "enum": ["not_released", "candidate"]
+    },
+    "not_for_life_safety": {"const": true},
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "model_run_ref": {"not": {}},
+    "model_identity": {"not": {}},
+    "generated_at": {"not": {}},
+    "valid_at": {"not": {}},
+    "derived_from_refs": {"not": {}}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "observation_id",
+    "knowledge_character",
+    "source_role",
+    "source_descriptor_ref",
+    "source_resolution_status",
+    "air_station_ref",
+    "temporal_scope",
+    "measurement",
+    "qa_state",
+    "evidence_refs",
+    "evidence_resolution_status",
+    "rights_status",
+    "sensitivity",
+    "release_posture",
+    "not_for_life_safety",
+    "limitations"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {"source_resolution_status": {"const": "bound"}},
+        "required": ["source_resolution_status"]
+      },
+      "then": {
+        "properties": {"source_descriptor_ref": {"$ref": "#/$defs/nonEmptyString"}}
+      },
+      "else": {
+        "properties": {"source_descriptor_ref": {"type": "null"}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"evidence_resolution_status": {"const": "bound"}},
+        "required": ["evidence_resolution_status"]
+      },
+      "then": {
+        "properties": {"evidence_refs": {"type": "array", "minItems": 1}}
+      },
+      "else": {
+        "properties": {"evidence_refs": {"type": "array", "maxItems": 0}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"source_role": {"const": "low_cost_sensor"}},
+        "required": ["source_role"]
+      },
+      "then": {
+        "properties": {
+          "low_cost_sensor_caveat": {"$ref": "#/$defs/nonEmptyString"},
+          "confidence_statement": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "required": ["low_cost_sensor_caveat", "confidence_statement"]
+      }
+    }
+  ],
+  "additionalProperties": false
 }
