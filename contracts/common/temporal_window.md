@@ -27,6 +27,26 @@ notes:
 
 <a id="top"></a>
 
+<!-- Legacy v0.2 fragment anchors retained for inbound compatibility. -->
+<a id="status"></a>
+<a id="meaning"></a>
+<a id="repo-fit"></a>
+<a id="schema-pairing"></a>
+<a id="accepted-uses"></a>
+<a id="exclusions"></a>
+<a id="fields"></a>
+<a id="invariants"></a>
+<a id="allowed-time-kinds"></a>
+<a id="temporal-semantics"></a>
+<a id="examples"></a>
+<a id="compatibility-and-versioning"></a>
+<a id="lifecycle"></a>
+<a id="validation"></a>
+<a id="no-loss-preservation"></a>
+<a id="evidence-basis"></a>
+<a id="rollback"></a>
+<a id="definition-of-done"></a>
+
 # TemporalWindow Contract
 
 > `TemporalWindow` is a small shared value object that binds an interval to an explicit time kind. It prevents an observation, source publication, ingest, effective period, correction, or supersession interval from becoming an unlabeled generic timestamp.

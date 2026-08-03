@@ -16,6 +16,21 @@ notes:
 
 <a id="top"></a>
 
+<!-- Legacy v0.2 fragment anchors retained for inbound compatibility. -->
+<a id="status-and-evidence-boundary"></a>
+<a id="scope-and-audience"></a>
+<a id="placement-and-authority"></a>
+<a id="current-coverage-matrix"></a>
+<a id="executable-harness-and-coverage-boundary"></a>
+<a id="fixture-family-layout"></a>
+<a id="fixture-outcome-language"></a>
+<a id="no-network-rights-and-sensitivity-posture"></a>
+<a id="validation"></a>
+<a id="maintenance-and-change-discipline"></a>
+<a id="open-verification-register"></a>
+<a id="evidence-ledger"></a>
+<a id="correction-and-rollback"></a>
+
 # Common Contract Fixture Family Index
 
 `fixtures/contracts/v1/common/`

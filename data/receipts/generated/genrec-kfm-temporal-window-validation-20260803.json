@@ -26,8 +26,8 @@
   ],
   "artifact_hashes": {
     ".github/workflows/temporal-window-validation.yml": "sha256:b6e54a076e6f8ff5c1ba1e69bd6143ad3230dacb8ce5b5ebf7f5c637d4d74fcf",
-    "contracts/common/temporal_window.md": "sha256:82911eaf43659d0be2efb9bf585654ad8ce72f0d46f149c0245bb725b18a78d7",
-    "fixtures/contracts/v1/common/README.md": "sha256:734393dd608a810e87544869a4e0ab50cbf11f3658c92eb23c261f3c1121abfb",
+    "contracts/common/temporal_window.md": "sha256:f9625ab788315b4e9b307659c9b4c75c344eb645dc39f9499ad850e378cf968e",
+    "fixtures/contracts/v1/common/README.md": "sha256:8983d4398e3045d2d74e1d5dfebfd1e46f59668b9227b836055bf923cce5f500",
     "fixtures/contracts/v1/common/temporal_window/README.md": "sha256:c77ec08d298d37f058fe2ba3063d1cab8decccebf21bd0754c6fbd92284b47c0",
     "fixtures/contracts/v1/common/temporal_window/valid/README.md": "sha256:564a83d3a86d6eb8bd59eec362c57d4f5db4d4ce09498e5193d74721d2e8b2fd",
     "fixtures/contracts/v1/common/temporal_window/valid/valid_1.json": "sha256:e2732d8e5a34af3871a519a7523e72605af0481e91d6adfd5cf47d42a2699228",
