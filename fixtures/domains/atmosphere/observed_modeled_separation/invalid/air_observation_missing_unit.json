@@ -1,0 +1,21 @@
+{
+  "_fixture_meta": {"fixture_label": "invalid_air_observation_missing_unit", "network_status": "no_network_required", "sensitive_data": false, "expected_outcome": "DENY", "fault": "missing_measurement_unit"},
+  "object_type": "AirObservation",
+  "schema_version": "1.0.0",
+  "observation_id": "air-observation:synthetic:missing-unit",
+  "knowledge_character": "OBSERVED_SENSOR",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://source/atmosphere/observed-network",
+  "source_resolution_status": "bound",
+  "air_station_ref": "fixture://station/atmosphere/generalized-alpha",
+  "temporal_scope": {"observed_at": "2026-08-03T12:00:00Z", "retrieved_at": "2026-08-03T12:05:00Z"},
+  "measurement": {"parameter": "synthetic_air_parameter", "value": 12.5, "averaging_period_minutes": 60},
+  "qa_state": "reviewed",
+  "evidence_refs": ["fixture://evidence/atmosphere/observed-alpha"],
+  "evidence_resolution_status": "bound",
+  "rights_status": "cleared_open",
+  "sensitivity": "public",
+  "release_posture": "not_released",
+  "not_for_life_safety": true,
+  "limitations": ["not_life_safety_guidance", "synthetic_fixture_only"]
+}
