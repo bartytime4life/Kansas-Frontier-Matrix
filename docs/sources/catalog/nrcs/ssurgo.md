@@ -2,27 +2,29 @@
 doc_id: kfm://doc/docs-sources-catalog-nrcs-ssurgo
 title: SSURGO (Soil Survey Geographic Database)
 type: product-page
-version: v0.2
+version: v0.3
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for `nrcs`>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-08-02
 policy_label: public
 related:
   - docs/sources/catalog/nrcs/README.md
-  - docs/sources/catalog/nrcs/SOIL-DATA-ACCESS.md
-  - docs/sources/catalog/nrcs/GSSURGO.md
+  - docs/sources/catalog/nrcs/soil-data-access.md
+  - docs/sources/catalog/nrcs/gssurgo.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/doctrine/directory-rules.md
   - data/registry/sources/
   - policy/sensitivity/
+  - tools/ingest/ssurgo_watch/README.md
+  - tests/ingest/ssurgo_watch/README.md
 tags: [kfm, docs, sources, catalog, nrcs, soil, ssurgo, mukey, asr]
 notes:
-  - "PROPOSED product-page scaffold; sibling-link presence verified in a Claude Code session, not in a mounted repo."
-  - "Path `docs/sources/catalog/nrcs/SSURGO.md` is PROPOSED; Directory Rules treat `docs/sources/` as a documentation lane and `data/registry/sources/` as the authoritative SourceDescriptor home."
-  - "SSURGO is the canonical static vector source; the sibling SOIL-DATA-ACCESS.md page covers the SDA API surface."
+  - "The existing lowercase product-page path was verified at main@b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb."
+  - "Directory Rules treat this page as human guidance and `data/registry/sources/` as the authoritative SourceDescriptor home; no live SSURGO descriptor was admitted by the fixture helper change."
+  - "SSURGO is the canonical static vector source; the sibling soil-data-access.md page covers the SDA API surface."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -42,10 +44,10 @@ notes:
 
 **Status:** PROPOSED — scaffold only ·
 **Family:** [`nrcs`](./README.md) ·
-**Sibling products:** [`SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md) (API surface) · [`GSSURGO.md`](./GSSURGO.md) *(gridded derivative — PROPOSED sibling)* ·
+**Sibling products:** [`soil-data-access.md`](./soil-data-access.md) (API surface) · [`gssurgo.md`](./gssurgo.md) *(gridded derivative — PROPOSED sibling)* ·
 **Domain segment:** `soil` (per Directory Rules §4 Step 3) ·
 **Owners:** *PLACEHOLDER — Docs steward + Source steward for `nrcs`* ·
-**Last reviewed:** 2026-05-22
+**Last reviewed:** 2026-08-02 *(bounded helper reconciliation only; the broader product scaffold retains its prior evidence posture)*
 
 ---
 
@@ -84,10 +86,30 @@ SSURGO is **distinct** from two closely related siblings — keep them un-collap
 | Product | Surface / form | KFM lane | This page |
 |---|---|---|---|
 | **SSURGO** *(this page)* | Static vector polygons + relational tabular attributes; county-scale (~1:24,000 mapping scale) | `authoritative_static_soil` | **Yes** |
-| **SDA (Soil Data Access)** | Programmatic SQL / REST API surface over SSURGO + STATSGO2 | API surface over `authoritative_static_soil` | See [`SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md) |
-| **gSSURGO** | Gridded raster derivative of SSURGO | `gridded_derivative_soil` | See [`GSSURGO.md`](./GSSURGO.md) *(PROPOSED sibling)* |
+| **SDA (Soil Data Access)** | Programmatic SQL / REST API surface over SSURGO + STATSGO2 | API surface over `authoritative_static_soil` | See [`soil-data-access.md`](./soil-data-access.md) |
+| **gSSURGO** | Gridded raster derivative of SSURGO | `gridded_derivative_soil` | See [`gssurgo.md`](./gssurgo.md) *(PROPOSED sibling)* |
 
 <sup>Lane labels `authoritative_static_soil` and `gridded_derivative_soil` are CONFIRMED terms in `[DOM-SOIL]` §C; the API-versus-snapshot split is enforced per `KFM-P14-PROG-0034`.</sup>
+
+### Bounded repository helper (fixture-only)
+
+The repository includes a deterministic comparator at
+[`tools/ingest/ssurgo_watch/`](../../../../tools/ingest/ssurgo_watch/README.md)
+with a no-network synthetic proof at
+[`tests/ingest/ssurgo_watch/`](../../../../tests/ingest/ssurgo_watch/README.md).
+Its 27-test proof covers 11 synthetic cases, 22 prior/current sidecars, and four
+separately bound mapunit-label disagreement artifacts. The non-real survey-area
+symbol `ZZ999`, `fixture://source/nrcs-ssurgo` reference, 5,000 ppm threshold,
+schemas, hashes, and package identifiers are test data only. The threshold is
+design evidence, not accepted live policy. The comparator assumes one fixed
+synthetic survey-area extent and does not assume a survey area equals a county.
+
+This confirms bounded repository behavior, not live SSURGO identity, rights,
+endpoint selection, package cadence, survey-area completeness, MUKEY/COKEY/CHKEY
+lineage, geometry fitness, source admission, policy approval, promotion, release,
+or publication. It performs no live fetch or network request and emits no work,
+receipt, lifecycle, proof, or release record. Those surfaces remain
+**PROPOSED / NEEDS VERIFICATION** here.
 
 [↑ Back to top](#top)
 
@@ -95,14 +117,14 @@ SSURGO is **distinct** from two closely related siblings — keep them un-collap
 
 ## 2. Repo fit and sibling map
 
-**Proposed home:** `docs/sources/catalog/nrcs/SSURGO.md` — a **PROPOSED** documentation lane.
+**Current home:** `docs/sources/catalog/nrcs/ssurgo.md` — a **CONFIRMED** human-guidance path; product claims retain their individual truth labels.
 
 > [!IMPORTANT]
 > Per **Directory Rules** §4 Steps 1–5, the *human-facing description* of this product belongs under `docs/`; the *machine-actionable `SourceDescriptor`* belongs under `data/registry/sources/`; the *connector* belongs under `connectors/`; the *pipeline logic* belongs under `pipelines/`. **Do not duplicate descriptor fields here.** When the descriptor and this page disagree, the descriptor wins and this page MUST be updated. <sup>CONFIRMED doctrine per `docs/doctrine/directory-rules.md` §4, §5, §7.</sup>
 
 | Upstream / authority | This page | Downstream consumers |
 |---|---|---|
-| `data/registry/sources/` — authoritative `SourceDescriptor` for SSURGO (CONFIRMED rule / PROPOSED path) | `docs/sources/catalog/nrcs/SSURGO.md` — reader-oriented product page | `connectors/nrcs/`, `pipelines/ingest/`, `pipelines/catalog/`, `data/catalog/{stac,dcat,prov}/`, `data/published/layers/soil/` (PROPOSED paths) |
+| `data/registry/sources/` — authoritative `SourceDescriptor` for SSURGO (CONFIRMED rule / PROPOSED path) | `docs/sources/catalog/nrcs/ssurgo.md` — reader-oriented product page | `connectors/nrcs/`, `pipelines/ingest/`, `pipelines/catalog/`, `data/catalog/{stac,dcat,prov}/`, `data/published/layers/soil/` (PROPOSED paths) |
 
 **What belongs on this page**
 
@@ -387,7 +409,8 @@ See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SE
 | Validate pipeline (MUKEY integrity, component weighting) | `pipelines/validate/` | PROPOSED |
 | Catalog pipeline (STAC + DCAT + PROV closure) | `pipelines/catalog/` | PROPOSED |
 | Declarative pipeline spec | `pipeline_specs/soil/` | PROPOSED |
-| Soil watcher (canonical entry) | `tools/ingest/watchers/http_stac_watcher.py` *(illustrative)* | PROPOSED per Pass-10 `C3-01` expansion |
+| Fixture-only SSURGO drift comparator | `tools/ingest/ssurgo_watch/` | CONFIRMED bounded repository helper; not a connector or live watcher |
+| Live SSURGO acquisition or watcher | Connector-owned path to be ratified | HOLD / NEEDS VERIFICATION; no endpoint, cadence, rights, or descriptor is selected here |
 
 [↑ Back to top](#top)
 
@@ -511,7 +534,7 @@ elif status == 200:
 # Runs in October aligned to NRCS Oct-1 SSURGO cycle.
 ```
 
-<sup>Pseudocode; not a runnable recipe. Real implementation lives in `connectors/nrcs/` and `tools/ingest/watchers/` (PROPOSED).</sup>
+<sup>Pseudocode; not a runnable recipe and not implemented by the fixture comparator. Any real implementation belongs in a ratified connector-owned path (HOLD / NEEDS VERIFICATION).</sup>
 
 </details>
 
@@ -537,23 +560,25 @@ elif status == 200:
 ## 18. Related docs
 
 - [`./README.md`](./README.md) — `nrcs` family README *(sibling)*
-- [`./SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md) — SDA product page *(API surface over SSURGO + STATSGO2)*
-- [`./GSSURGO.md`](./GSSURGO.md) — gSSURGO product page *(PROPOSED sibling; gridded raster derivative)*
+- [`./soil-data-access.md`](./soil-data-access.md) — SDA product page *(API surface over SSURGO + STATSGO2)*
+- [`./gssurgo.md`](./gssurgo.md) — gSSURGO product page *(PROPOSED sibling; gridded raster derivative)*
 - [`../README.md`](../README.md) — `docs/sources/catalog/README.md` parent
 - [`../IDENTITY.md`](../IDENTITY.md) — catalog-wide identity contract *(PROPOSED)*
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — catalog-wide rights map *(PROPOSED)*
 - [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json) — canonical STAC + `kfm:provenance` example *(PROPOSED)*
+- [`../../../../tools/ingest/ssurgo_watch/README.md`](../../../../tools/ingest/ssurgo_watch/README.md) — fixture-only SSURGO package drift comparator
+- [`../../../../tests/ingest/ssurgo_watch/README.md`](../../../../tests/ingest/ssurgo_watch/README.md) — synthetic no-network proof matrix
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules v1.2
 - [`../../../domains/soil/README.md`](../../../domains/soil/README.md) — Soil domain doctrine *(NEEDS VERIFICATION of path)*
 - [`../../../standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(NEEDS VERIFICATION of path)*
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — KFM provenance profile *(NEEDS VERIFICATION of path; PROV.md vs PROVENANCE.md naming under ADR review per Directory Rules §13.5 v1.1)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
+- [`../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home ADR
 
 > [!NOTE]
 > All sibling paths in this section are **PROPOSED** until verified against mounted-repo evidence. Anchor breakage risk is **moderate** if `docs/sources/catalog/` is restructured by ADR before this draft is published.
 
 ---
 
-**Last reviewed:** 2026-05-22 *(Claude Code product-page revision session; full-polish pass against KFM doctrine and Atlas v1.1 + Pass 23/32).*
+**Last reviewed:** 2026-08-02 *(bounded repository-helper reconciliation only; other product claims retain the prior 2026-05-22 evidence posture).*
 
 [↑ Back to top](#top)

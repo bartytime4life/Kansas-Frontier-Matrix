@@ -4,7 +4,11 @@ title: tools/ingest README
 type: README
 version: v0.2
 status: draft
-owner: TODO-tooling-qa-owner-plus-domain-source-stewards
+owners:
+  - OWNER_TBD - tooling QA (responsible owner; identity NEEDS VERIFICATION)
+required_review_roles:
+  - Applicable domain steward
+  - Applicable source steward
 created: 2026-07-07
 updated: 2026-08-02
 policy_label: public; tooling-index; watcher-and-preflight-boundary; no-publication
@@ -14,9 +18,12 @@ truth_posture: cite-or-abstain; implementation claims require current repo evide
 related:
   - ../README.md
   - ./cdl_watch/README.md
+  - ./ssurgo_watch/README.md
   - ../../docs/doctrine/directory-rules.md
   - ../../tests/ingest/README.md
   - ../../.github/workflows/domain-agriculture.yml
+  - ../../.github/workflows/domain-soil.yml
+  - ../../docs/sources/catalog/nrcs/ssurgo.md
   - ../../docs/domains/hazards/SOURCE_ROLE_MATRIX.md
   - ../../docs/domains/hazards/SOURCE_REGISTRY.md
   - ../../docs/domains/hydrology/README.md
@@ -101,7 +108,7 @@ The answer should be a bounded report. It should never be a source capture of re
 | `tools/` root authority | **CONFIRMED in repo evidence** | `tools/` owns repo-wide validators, generators, builders, and trust tooling; it does not own policy, contract, schema, or release authority. |
 | `tools/ingest/` parent lane | **CONFIRMED bounded support lane** | Directory placement is adopted; the parent remains non-authoritative and non-publishing. |
 | Child watcher READMEs | **CONFIRMED where current-session fetched or recently updated** | Child lanes are documented as review-signal, preflight, or watcher-only. |
-| Child executables | **PARTIAL** | The CDL fixture comparator is executable; all other child implementations remain `PROPOSED / NEEDS VERIFICATION`. |
+| Child executables | **PARTIAL** | The CDL and SSURGO fixture comparators are executable; all other child implementations remain `PROPOSED / NEEDS VERIFICATION`. |
 | Source descriptors | **Owned elsewhere** | Source identity, role, rights, cadence, and activation belong under `data/registry/sources/`. |
 | Connectors | **Owned elsewhere** | Source acquisition and raw/quarantine handoff belong under `connectors/` or ratified connector homes. |
 | Pipelines | **Owned elsewhere** | Executable lifecycle normalization belongs under `pipelines/` or accepted pipeline homes. |
@@ -129,7 +136,7 @@ The answer should be a bounded report. It should never be a source capture of re
 Safe interpretation for this path:
 
 - **CONFIRMED:** the parent README exists at `tools/ingest/README.md`.
-- **CONFIRMED for the bounded CDL fixture profile:** helper code may live here when it is deterministic, dry-run friendly, report-oriented, and unable to publish.
+- **CONFIRMED for the bounded CDL and SSURGO fixture profiles:** helper code may live here when it is deterministic, dry-run friendly, report-oriented, and unable to publish.
 - **NEEDS VERIFICATION:** whether every child folder has executable code, tests, CI wiring, source descriptors, and fixtures.
 - **DENY:** any use of this folder as connector authority, source registry, lifecycle data store, processed truth store, catalog/proof/release authority, public API, or policy authority.
 
@@ -144,6 +151,7 @@ Known child README lanes in this folder are listed below. Status is intentionall
 | Child lane | Type | Primary review signal | Status |
 |---|---|---|---|
 | `cdl_watch/` | watcher | Synthetic USDA NASS Cropland Data Layer sidecar changes. | Bounded fixture comparator and tests confirmed; live watcher proposed. |
+| `ssurgo_watch/` | watcher-shaped review signal | Synthetic SSURGO package, schema, geometry, chronology, table-content, and mapunit-label disagreement drift. | Bounded fixture comparator and tests confirmed; live watcher held. |
 | `drought_watch/` | watcher | U.S. Drought Monitor source changes. | README confirmed; executable proposed. |
 | `fema_decl_watch/` | watcher | OpenFEMA disaster declaration administrative-record changes. | README confirmed; executable proposed. |
 | `firms_hms_watch/` | watcher | NASA FIRMS and NOAA HMS fire/smoke source-surface changes. | README confirmed; executable proposed. |
@@ -352,7 +360,8 @@ Before adding or changing anything under `tools/ingest/`, reviewers should confi
 | Reconcile child README links after path audit | **PROPOSED** | Ensure all related links point to existing doctrine, connector, registry, and pipeline files. |
 | Add `tests/ingest/README.md` | **DONE** | Defines synthetic fixture rules and deterministic output expectations. |
 | Add bounded CDL proof to Agriculture CI | **DONE** | Executes local fixture comparisons with networking denied while broader Agriculture validation remains held. |
-| Add shared report schema or fixture convention | **PROPOSED / NEEDS VERIFICATION** | The CDL fixture profile is deliberately local and does not claim a canonical cross-watcher envelope. |
+| Add bounded SSURGO proof to Soil CI | **DONE in this change** | Executes synthetic package and partition comparisons with networking denied while live SSURGO admission remains held. |
+| Add shared report schema or fixture convention | **PROPOSED / NEEDS VERIFICATION** | The CDL and SSURGO fixture profiles are deliberately local and do not claim a canonical cross-watcher envelope. |
 | Add CI non-blocking review summary | **PROPOSED / later** | A live drift summary still depends on source admission, cadence, policy, and steward review. |
 | Promote stable helpers into guarded workflows | **PROPOSED / later** | Only after fixtures, tests, descriptor activation, and steward review are in place. |
 
@@ -365,5 +374,5 @@ Before adding or changing anything under `tools/ingest/`, reviewers should confi
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-08-02 |
-| Review state | Parent boundary reconciled to the first bounded fixture-only child implementation. |
-| Next smallest safe change | Review a shared watcher report contract without turning the CDL fixture profile into source, policy, receipt, or publication authority. |
+| Review state | Parent boundary reconciled to the bounded CDL and SSURGO fixture-only child implementations. |
+| Next smallest safe change | Review a shared watcher report contract without turning either fixture profile into source, policy, receipt, or publication authority. |
