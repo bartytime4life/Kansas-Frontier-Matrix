@@ -365,9 +365,9 @@ These jobs expose missing executables, fixtures, proof closure, or runtime readi
 
 The current E2E inspection calls the repository-owned standard-library
 `e2e_readiness.py` checker. It confirms the root manifest's exact fail-closed
-`WORKFLOW_HOLD` scripts, the implemented Explorer Web build/unit-test baseline,
-the adjacent UI/API orchestration markers, and the exact bounded placeholder
-inventory while still running no composed browser/API journey. The Focus mock
+`WORKFLOW_HOLD` scripts, the implemented Explorer Web build/app-local-test
+baseline, the adjacent UI/API orchestration markers, and the exact bounded
+placeholder inventory while still running no composed browser/API journey. The Focus mock
 inspection relies on structured synthetic, non-authoritative, do-not-publish,
 expected-`ABSTAIN` markers and still produces no runtime response. Its sibling
 finite-envelope job executes shape-only tests for all four outcomes and does

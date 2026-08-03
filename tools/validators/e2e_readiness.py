@@ -40,7 +40,16 @@ EXPECTED_ROOT_HOLDS = {
 EXPECTED_EXPLORER_SCRIPTS = {
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
-    "test": "vitest run",
+    "test": "pnpm run test:unit && pnpm run test:browser",
+    "test:unit": "vitest run tests/*.test.ts",
+    "test:browser": "playwright test --config=playwright.config.ts",
+}
+
+LOCKED_EXPLORER_BROWSER_BASELINE = {
+    "apps/explorer-web/playwright.config.ts",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/evidence-drawer.html",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts",
 }
 
 EXPECTED_E2E_INVENTORY = {
@@ -58,8 +67,10 @@ REQUIRED_TEXT_PATHS = {
     "Makefile",
     "apps/explorer-web/README.md",
     "apps/explorer-web/index.html",
+    "apps/explorer-web/playwright.config.ts",
     "apps/explorer-web/src/features/shell/index.tsx",
     "apps/explorer-web/src/main.ts",
+    *LOCKED_EXPLORER_BROWSER_BASELINE,
     "apps/explorer-web/tests/shell-baseline.test.ts",
     "apps/governed-api/README.md",
     "package.json",
@@ -478,7 +489,10 @@ def _check_surfaced_e2e_files(
                 if (
                     "e2e" in parts
                     or "e2e" in lower_name
-                    or lower_name.startswith("playwright.config.")
+                    or (
+                        lower_name.startswith("playwright.config.")
+                        and relative not in LOCKED_EXPLORER_BROWSER_BASELINE
+                    )
                 ):
                     surfaced.append(relative)
                     inspected.add(relative)

@@ -178,7 +178,7 @@ test:
 	python -m pytest tests/schemas tests/contracts -q
 ```
 
-A green readiness hold is not E2E proof. Explorer Web build and unit-test
+A green readiness hold is not E2E proof. Explorer Web build and app-local test
 commands are implemented and separately exercised by `ui-build`; this does not
 establish a composed Governed API/browser journey.
 

@@ -188,8 +188,9 @@ jobs:
 
           The Governed API has a separate repository-owned smoke workflow. Root
           lint/test/build remain exact fail-closed `WORKFLOW_HOLD` commands.
-          Explorer Web has implemented build and unit-test commands validated
-          separately by `ui-build`; the composed E2E surface remains absent.
+          Explorer Web has implemented build and app-local test commands
+          validated separately by `ui-build`; the composed E2E surface remains
+          absent.
           This job verifies that boundary and fails closed on newly surfaced E2E
           commands, files, or changes to the locked readiness inputs.
 

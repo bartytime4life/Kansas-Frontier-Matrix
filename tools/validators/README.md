@@ -166,11 +166,11 @@ workspace holds and the absence of a repository-owned composed E2E command.
 The checker fails closed when a required file is missing, unsafe, unreadable,
 too large, or malformed; when the locked package/workflow markers drift; when
 the placeholder inventory changes; or when an E2E script, Make target,
-Playwright configuration, or E2E-named implementation file surfaces. Its
-diagnostics contain bounded paths and reason codes, never input contents. It
-does not install packages, import application code, start services, request the
-network, inspect secrets, execute a browser journey, or grant evidence, policy,
-release, deployment, or publication status.
+unreviewed Playwright configuration, or E2E-named implementation file
+surfaces. Its diagnostics contain bounded paths and reason codes, never input
+contents. It does not install packages, import application code, start
+services, request the network, inspect secrets, execute a browser journey, or
+grant evidence, policy, release, deployment, or publication status.
 
 ```bash
 python tools/validators/e2e_readiness.py

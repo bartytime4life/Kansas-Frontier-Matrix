@@ -52,8 +52,12 @@ def _build_repository(root: Path) -> None:
     for relative in (
         "apps/explorer-web/README.md",
         "apps/explorer-web/index.html",
+        "apps/explorer-web/playwright.config.ts",
         "apps/explorer-web/src/features/shell/index.tsx",
         "apps/explorer-web/src/main.ts",
+        "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts",
+        "apps/explorer-web/tests/browser/evidence-drawer.html",
+        "apps/explorer-web/tests/browser/evidence-drawer.spec.ts",
         "apps/explorer-web/tests/shell-baseline.test.ts",
         "apps/governed-api/README.md",
         "tests/e2e/README.md",
@@ -150,6 +154,11 @@ class E2EReadinessTests(unittest.TestCase):
 
         self.assertIn("E2E_IMPLEMENTATION_SURFACED", {item.code for item in report.findings})
         self.assertNotIn("protected body", "\n".join(render_report(report)))
+
+    def test_unreviewed_playwright_configuration_requires_deliberate_wiring(self) -> None:
+        _write(self.root / "packages/ui/playwright.config.ts", "export default {};\n")
+
+        self.assertIn("E2E_IMPLEMENTATION_SURFACED", self._codes())
 
     def test_changed_hydrology_placeholder_fails_closed(self) -> None:
         _write(
