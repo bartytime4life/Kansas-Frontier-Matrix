@@ -9,9 +9,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
-    "test": "vitest run"
+    "test": "pnpm run test:unit && pnpm run test:browser",
+    "test:unit": "vitest run tests/*.test.ts",
+    "test:browser": "playwright test --config=playwright.config.ts"
   },
   "devDependencies": {
+    "playwright": "1.62.0",
     "typescript": "6.0.3",
     "vite": "8.1.5",
     "vitest": "4.1.10"
