@@ -2,33 +2,34 @@
 doc_id: kfm://data/proofs/review/readme
 title: data/proofs/review/ — Review-Proof Support Lane
 type: directory-readme; proof-support-child-lane; review-audit-boundary
-version: v0.2.0
-status: repository-grounded draft; review-proof schema, payload, producer, validator, and release use not established
+version: v0.3.0
+status: repository-grounded draft; fixture-only ReviewRecord candidate validation implemented; review-proof schema, payload, producer, validator, and release use not established
 owners:
   - "@bartytime4life — verified CODEOWNERS routing for /data/proofs/; routing is not accountable review or approval"
   - "NEEDS VERIFICATION — proof, governance, policy, sensitivity, release, correction, and rollback steward assignments"
 created: 2026-06-25
-updated: 2026-07-26
+updated: 2026-08-03
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 policy_label: "restricted-review; proof-support; no-direct-public-path; release-gated; cite-or-abstain"
 path: data/proofs/review/README.md
 truth_posture: >
   CONFIRMED exact target path and prior blob, canonical proofs-root boundary, README-only
   target inventory, draft ReviewRecord semantic contract, proposed governance schema,
-  paired governance fixtures, generic schema-test wiring, placeholder dedicated validator,
-  promotion-gate hold, release-review guidance-only inventory, and CODEOWNERS routing /
+  paired governance fixtures, generic schema-test wiring, bounded fixture-only ReviewRecord
+  candidate validator, promotion-gate Gate G integration, release-review guidance-only
+  inventory, and CODEOWNERS routing /
   PROPOSED review-proof profile and identity, closure, condition, expiry, correction,
   invalidation, and finite-outcome requirements / CONFLICTED governance-versus-review
   ReviewRecord schema relationship and schema-to-contract path casing / UNKNOWN active
   review-proof writers, consumers, access controls, external stores, platform enforcement,
   public effects, and operational correction or rollback / NEEDS VERIFICATION accepted
-  review-proof contract and schema, accountable owners, deterministic producer and validator,
+  review-proof contract and schema, accountable owners, deterministic proof producer and validator,
   public-safe fixtures, policy and separation-of-duties enforcement, governed review records,
   release linkage, retention, correction propagation, withdrawal, and rollback drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: ce8968cc8f86e4bbce48f5e714dfededa74bebfa
+  base_commit: 68069dce9e292649697f63f96fa57edd07181a27
   prior_blob: 3a7a4eaca11148ba92b26fea2344c85059e32d11
   proofs_root_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
   review_record_contract_blob: 9641345d1e5d939dc59687a900e60a563d92c4f0
@@ -64,7 +65,7 @@ related:
   - ../../../.github/workflows/promotion-gate.yml
   - ../../../.github/CODEOWNERS
 notes:
-  - "Same-path Markdown modernization only; no proof payload, contract, schema, fixture, validator, policy, workflow, review record, release object, public route, access control, or publication state changed."
+  - "v0.3 reconciles this lane with the bounded fixture-only ReviewRecord validator and Gate G integration; it does not establish a review-proof payload, governed ReviewRecord, policy, release object, public route, access control, or publication state."
   - "This lane supports audit of review posture. It is not the ReviewRecord semantic or machine authority, the release-review instance authority, a PolicyDecision, a PromotionDecision, a ReleaseManifest, or platform approval."
   - "The current directory contains only this README at the evidence snapshot."
   - "The documentation rollback target for v0.2.0 is prior blob 3a7a4eaca11148ba92b26fea2344c85059e32d11."
@@ -130,7 +131,7 @@ The gathering of references is not an authority transfer.
 
 | Surface | Repository-grounded result |
 |---|---|
-| Exact target | **CONFIRMED** at `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`; prior blob `3a7a4eaca11148ba92b26fea2344c85059e32d11` |
+| Exact target | **CONFIRMED** at `main@68069dce9e292649697f63f96fa57edd07181a27`; prior v0.2 blob remains in Git history |
 | Directory inventory | **CONFIRMED** README only |
 | Parent proof boundary | **CONFIRMED** repository-grounded draft at [`data/proofs/README.md`](../README.md) |
 | ReviewRecord meaning | **CONFIRMED authored draft** at [`contracts/governance/ReviewRecord.md`](../../../contracts/governance/ReviewRecord.md) |
@@ -139,12 +140,12 @@ The gathering of references is not an authority transfer.
 | Schema-to-contract link | **CONFLICTED:** governance schema metadata names lowercase `contracts/governance/review_record.md`; the tracked semantic contract is case-sensitive `ReviewRecord.md` |
 | ReviewRecord fixtures | **CONFIRMED** one minimal valid and one required-field-invalid governance fixture |
 | Generic schema test | **CONFIRMED source wiring** for governance schemas with matching fixtures; observed execution is reported in the PR, not promoted to review authority |
-| Dedicated ReviewRecord validator | **CONFIRMED placeholder** raising `NotImplementedError("Greenfield placeholder")` |
-| Promotion workflow | **CONFIRMED read-only readiness hold** that asserts the validator remains a placeholder and that no governed release ReviewRecord is present |
+| Dedicated ReviewRecord validator | **CONFIRMED bounded candidate implementation** over repository-owned promotion fixtures; finite results, no network, no writes, and no authority |
+| Promotion workflow | **CONFIRMED read-only bounded execution plus hold**; Gate G runs the candidate validator while no governed release ReviewRecord or publication authority is created |
 | CODEOWNERS | **CONFIRMED** `@bartytime4life` routes `/data/proofs/`; routing is not independent review or approval evidence |
 | Review-proof contract, schema, payload, producer, validator, or public consumer | **Not established** |
 
-The repository has more ReviewRecord shape evidence than the prior README reported, but it does not yet have an operational review-proof system.
+The repository now has executable fixture-scoped ReviewRecord checks, but it does not yet have an operational review-proof system or governed review-record producer.
 
 ## What belongs here
 
@@ -207,8 +208,8 @@ Validation must remain layered.
 |---|---|---|
 | ReviewRecord semantic review | Draft contract exists | Accepted vocabulary, accountable review, or platform enforcement |
 | Governance schema fixture test | Generic test discovers the governance schema and paired fixtures | Review-proof schema, dedicated validator, policy, release, or publication readiness |
-| Dedicated validator | Placeholder only | Nothing operational; `NotImplementedError` is an explicit hold |
-| Promotion workflow | Read-only readiness inventory and hold | Review approval, separation of duties, promotion, release, rollback readiness, or publication |
+| Dedicated candidate validator | Executes only synthetic promotion-fixture projections with finite outcomes | Governed identity/authority resolution, a ReviewRecord, review proof, policy, approval, release, or publication |
+| Promotion workflow | Read-only Gate G candidate execution and explicit authority hold | Review approval, governed separation of duties, promotion, release, rollback readiness, or publication |
 | Markdown/link validation | Required for this README change | Runtime, policy, evidence, review, release, or public behavior |
 
 The repository-grounded schema-fixture command is:
@@ -217,9 +218,16 @@ The repository-grounded schema-fixture command is:
 python -m pytest -q tests/schemas/test_common_contracts.py -k review_record
 ```
 
-This command exercises the proposed governance ReviewRecord schema against its current fixture pair. It does not inspect this README as a review-proof payload and does not graduate the dedicated validator.
+This command exercises the proposed governance ReviewRecord schema against its current fixture pair. It does not inspect this README as a review-proof payload and does not graduate the fixture-only candidate validator into an authority.
 
-Do not cite `python tools/validators/validate_review_record.py` as a passing command while the file intentionally raises `NotImplementedError`.
+The repository-owned bounded commands are:
+
+```bash
+python tools/validators/validate_review_record.py --fixtures
+make publish-check
+```
+
+They prove only deterministic behavior over synthetic promotion packets. Neither command authenticates a live identity or authority assignment, creates a governed ReviewRecord, or performs review, promotion, release, or publication.
 
 ## Review burden
 
@@ -235,7 +243,7 @@ This README-only change does not create a `ReviewRecord` or satisfy the review b
 - Process, catalog, and public carriers: [`data/receipts/`](../../receipts/README.md) · [`data/catalog/`](../../catalog/README.md) · [`data/published/`](../../published/README.md)
 - Review meaning and orientation: [`ReviewRecord`](../../../contracts/governance/ReviewRecord.md) · [`contracts/review/`](../../../contracts/review/README.md)
 - Machine shape and fixtures: [governance schema](../../../schemas/contracts/v1/governance/review_record.schema.json) · [alternate review scaffold](../../../schemas/contracts/v1/review/review_record.schema.json) · [fixture family](../../../fixtures/contracts/v1/governance/review_record/README.md) · [generic schema test](../../../tests/schemas/test_common_contracts.py)
-- Enforcement evidence: [placeholder validator](../../../tools/validators/validate_review_record.py) · [promotion-gate workflow](../../../.github/workflows/promotion-gate.yml) · [CODEOWNERS](../../../.github/CODEOWNERS)
+- Enforcement evidence: [fixture-only candidate validator](../../../tools/validators/validate_review_record.py) · [promotion-gate workflow](../../../.github/workflows/promotion-gate.yml) · [CODEOWNERS](../../../.github/CODEOWNERS)
 - Release governance: [`release/reviews/`](../../../release/reviews/README.md) · [`release/`](../../../release/README.md)
 - Doctrine and guidance: [Directory Rules](../../../docs/doctrine/directory-rules.md) · [Separation of Duties](../../../docs/governance/SEPARATION_OF_DUTIES.md) · [Review Duties](../../../docs/governance/REVIEW_DUTIES.md) · [Release Gates](../../../docs/architecture/publication/RELEASE_GATES.md)
 
@@ -247,11 +255,11 @@ Directory Rules §9.1 places proof support under `data/proofs/`; §13.2 prohibit
 
 ## Last reviewed
 
-- **Date:** 2026-07-26
-- **Evidence boundary:** `main@ce8968cc8f86e4bbce48f5e714dfededa74bebfa`
+- **Date:** 2026-08-03
+- **Evidence boundary:** `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped fixture-only hardening diff
 - **Review type:** complete target, recursive target inventory, parent/sibling proof lanes, ReviewRecord contract and schemas, fixture/test wiring, dedicated validator, promotion workflow, release-review inventory, CODEOWNERS, Directory Rules, governance/release guidance, and overlap preflight
 - **Payload/runtime/public-operation inspection:** no review-proof payload or active consumer exists in the tracked target; external or untracked systems remain unknown
-- **Re-review trigger:** accepted review-proof contract/schema, schema-home reconciliation, validator implementation, new payload, owner assignment, policy or separation-of-duties enforcement, release linkage, public consumer, correction/withdrawal path, or rollback drill
+- **Re-review trigger:** accepted review-proof contract/schema, schema-home reconciliation, candidate-validator graduation or governed integration, new payload, owner assignment, policy or separation-of-duties enforcement, release linkage, public consumer, correction/withdrawal path, or rollback drill
 
 ## Operating model
 
@@ -350,8 +358,8 @@ A review or schema pass cannot override sensitivity policy.
 | [Alternate review schema](../../../schemas/contracts/v1/review/review_record.schema.json) | Proposed scaffold allows arbitrary properties and declares no contract | Creates unresolved schema-family drift; generic common-contract test does not scan the `review` family |
 | [Governance fixtures](../../../fixtures/contracts/v1/governance/review_record/README.md) | One valid fixture and one fixture missing required `review_id` | Narrow shape examples only |
 | [Generic schema test](../../../tests/schemas/test_common_contracts.py) | Discovers governance schemas with matching fixtures and checks valid/invalid behavior | Not the dedicated ReviewRecord validator and not review-proof validation |
-| [Dedicated validator](../../../tools/validators/validate_review_record.py) | Raises `NotImplementedError("Greenfield placeholder")` | No accepted CLI, finite outcomes, diagnostics, or review-proof coverage |
-| [Promotion workflow](../../../.github/workflows/promotion-gate.yml) | Uses read-only permissions and explicitly holds review/promotion readiness while validator scaffolds remain | Workflow green means the hold assumptions remain true; it is not approval |
+| [Dedicated validator](../../../tools/validators/validate_review_record.py) | Validates the repository-owned synthetic Gate G projection with finite `PASS / ABSTAIN / DENY / ERROR` outcomes and stable codes | No live registry lookup, policy decision, governed record, review-proof payload, or authority |
+| [Promotion workflow](../../../.github/workflows/promotion-gate.yml) | Uses read-only permissions, runs the bounded fixture profile, and explicitly holds governed review/promotion readiness | Workflow green proves only the synthetic checks; it is not approval |
 | [`release/reviews/`](../../../release/reviews/README.md) | Contains parent and Atmosphere guidance plus `.gitkeep` | No governed release ReviewRecord is present at the snapshot |
 | This target | Contains only this README | No proof payload, producer, validator, active writer, consumer, or public route is established |
 
@@ -396,7 +404,8 @@ This lane becomes operational only after all applicable criteria are independent
 - [ ] reconcile the two ReviewRecord schema paths and the case-mismatched contract reference;
 - [ ] define stable identity, versioning, finite outcomes, reason codes, compatibility, retention, and supersession;
 - [ ] implement a deterministic no-network producer or assembler;
-- [ ] implement the dedicated fail-closed validator with stable diagnostics;
+- [x] implement a bounded fixture-only ReviewRecord candidate validator with stable diagnostics;
+- [ ] accept and implement any general review-proof producer/validator profile;
 - [ ] add public-safe valid, invalid, denied, held, stale, expired, superseded, and sensitive-leak fixtures;
 - [ ] test subject binding, reference resolution, role authority, separation of duties, condition closure, freshness, sensitivity, and release dependencies;
 - [ ] wire CI without converting a green check into review or release authority;
@@ -413,7 +422,7 @@ This lane becomes operational only after all applicable criteria are independent
 | [`contracts/governance/ReviewRecord.md`](../../../contracts/governance/ReviewRecord.md) | **CONFIRMED authored draft** | Review-event meaning and semantic anti-collapse rules | Acceptance and enforcement remain unproved |
 | Two ReviewRecord schema paths | **CONFIRMED / CONFLICTED** | Fielded governance proposal plus separate review scaffold | Canonical relationship and casing mismatch unresolved |
 | Governance fixtures and generic schema test | **CONFIRMED source evidence** | Narrow positive/negative schema-shape path | Does not establish review-proof behavior or dedicated validation |
-| Placeholder validator and promotion workflow | **CONFIRMED hold evidence** | Explicitly prevents overclaiming operational review and promotion maturity | Does not implement review proof |
+| Fixture-only validator and promotion workflow | **CONFIRMED bounded implementation and hold evidence** | Exercises synthetic Gate G review projections and prevents overclaiming operational review or promotion maturity | Does not implement review proof or create a governed ReviewRecord |
 | [`release/reviews/`](../../../release/reviews/README.md) | **CONFIRMED guidance-only inventory** | Release-review responsibility is separate | No governed release ReviewRecord at snapshot |
 | [`CODEOWNERS`](../../../.github/CODEOWNERS) | **CONFIRMED routing** | `@bartytime4life` is the executable GitHub route for this path | Routing is not independent approval or steward assignment |
 | Directory Rules §9.1 and §13.2 | **CONFIRMED placement doctrine** | Proof support belongs under `data/proofs/`; proofs, receipts, build outputs, and release decisions remain distinct | Does not define review-proof fields or accept implementation |
@@ -425,7 +434,7 @@ This lane becomes operational only after all applicable criteria are independent
 | Canonical review-proof semantic contract and schema | `UNKNOWN` | Accepted contract, schema, ADR/migration decision, compatibility policy |
 | ReviewRecord schema reconciliation | `CONFLICTED` | Canonical-family decision, case-correct contract ref, migration and parity tests |
 | Review-proof identity and outcome vocabulary | `UNKNOWN` | Registry/generator rule, finite enum, reason codes, versioning and supersession |
-| Dedicated producer and validator | `UNKNOWN` | Executable no-network implementation, CLI, fixtures, diagnostics, deterministic tests |
+| Review-proof producer and validator | `PARTIAL` | A fixture-only ReviewRecord candidate CLI exists; an accepted proof profile, producer, payload fixtures, and governed consumers remain absent |
 | Accountable roles and separation enforcement | `NEEDS VERIFICATION` | Approved assignments, platform/policy controls, representative ReviewRecords |
 | Rights, sensitivity, privacy, sovereignty, and geoprivacy enforcement | `UNKNOWN` | Policy bundles/decisions, restricted-ref handling, negative fixtures, review evidence |
 | Active writers, consumers, external stores, and access controls | `UNKNOWN` | Pipeline/tool/release/API/UI inventory, permissions, audit evidence |
@@ -444,13 +453,19 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Sensitive-data and no-direct-public-path posture | Preserved and strengthened |
 | Proposed review-proof subfolders, filename pattern, ID format, fields, and outcome enum | Repaired into a clearly proposed profile because no accepted schema/registry/validator supports them |
 | Lifecycle diagram | Preserved as a grounded authority relationship with review and release families separated |
-| Validation checklist, failure modes, and definition of done | Preserved and reconciled with actual schema, fixtures, placeholder validator, and workflow hold |
+| Validation checklist, failure modes, and definition of done | Preserved and reconciled with actual schema, fixtures, bounded candidate validator, and workflow hold |
 | Broken `../integrity/README.md` link | Removed; no tracked file existed at the pinned base |
 | Placeholder owner labels | Replaced with verified CODEOWNERS routing plus explicit unassigned steward roles |
 | Proof payload, contract, schema, fixture, validator, policy, workflow, release, route, or publication change | None |
 | Documentation rollback target | Prior blob recorded |
 
 ### Change history
+
+#### v0.3.0 — 2026-08-03
+
+- reconciled the lane with the bounded fixture-only ReviewRecord validator and its Gate G workflow integration;
+- recorded canonical identity/time, issuance by review time, supplied authority/validity intervals, empty approving-review obligations, explicit self-declared supersession marking, finite outcomes, and no-authority limits;
+- preserved the schema-family and contract-path conflicts, guidance-only release-review inventory, and absence of a governed ReviewRecord or review-proof payload.
 
 #### v0.2.0 — 2026-07-26
 

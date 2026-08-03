@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tests-release-readme
 title: tests/release/ — Release Governance Enforceability and Promotion-Safety Boundary
 type: readme; directory-readme; release-test-boundary; promotion-safety; correction-and-rollback
-version: v1.0
+version: v1.1
 status: implemented-promotion-gate-thin-slice; repository-grounded; unittest-and-pytest-compatible; no-network; fail-closed; non-authoritative; broader-release-suite-partial
 owners: OWNER_TBD — QA steward · Release steward · Promotion steward · Contract steward · Schema steward · Fixture steward · Validator steward · Evidence steward · Policy steward · Correction steward · Rollback steward · CI steward · Security reviewer · Docs steward
 created: 2026-07-06
-updated: 2026-08-02
+updated: 2026-08-03
 supersedes: v0.1 planning-oriented release-test README
 policy_label: public-doc; tests; release; promotion; correction; rollback; withdrawal; supersession; synthetic-only; no-network; evidence-aware; policy-aware; review-aware; fail-closed; no-release-authority
 current_path: tests/release/README.md
@@ -17,12 +17,13 @@ evidence_snapshot:
   visibility: public
   base_ref: main
   base_commit: 04e9cbac69305a5d708509ceef62c6f43ca1f41c
-  implementation_base_commit: 83cca9c66a1eb218f010a75b862d417d429c3c85
+  implementation_base_commit: 68069dce9e292649697f63f96fa57edd07181a27
   target_prior_blob: 011984d8e32031d07d1e4590d8ced348b1ab206f
   direct_lane_files_confirmed:
     - tests/release/README.md
     - tests/release/test_promotion_decision_schema.py
     - tests/release/test_promotion_gate.py
+    - tests/release/test_review_record.py
   bounded_inventory_note: the v0.2 snapshot was README-oriented; v1.0 records the implemented promotion-gate thin slice without claiming complete release-governance coverage
 related:
   - ../README.md
@@ -53,9 +54,9 @@ related:
 tags: [kfm, tests, release, promotion, ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, WithdrawalNotice, fixtures, pytest, no-network, fail-closed, correction, rollback, CI, trust-spine]
 notes:
   - "v1.0 adds an implemented bounded promotion-gate thin slice while preserving the broader release maturity gaps documented by v0.2."
-  - "The direct lane now includes a 10-test promotion-gate suite plus the existing PromotionDecision schema-fixture test."
+  - "The direct bounded gate lane now includes 19 promotion-gate tests and 11 ReviewRecord tests, plus the separate PromotionDecision schema-fixture test."
   - "The generic schema fixture harness names the release family but only creates a case when fixtures/contracts/v1/release/<schema_name>/ exists; the fixture parent records release schema-fixture coverage as unresolved."
-  - "fixtures/release/promotion_gate contains one PASS, five DENY, one ABSTAIN, and two ERROR packets with exact consumer bindings."
+  - "fixtures/release/promotion_gate contains one PASS, twelve DENY, three ABSTAIN, and two ERROR packets with exact consumer bindings."
   - "make test executes tests/schemas and tests/contracts only; it does not directly execute tests/release."
   - "policy/release and policy/promotion remain separate greenfield/stub surfaces; the validator checks only declared policy evaluation and never executes policy."
   - "No test or validator creates a release record, receipt, proof, lifecycle artifact, or public output."
@@ -186,8 +187,8 @@ Do not use this lane as:
 | Surface | Status | Evidence-bounded conclusion |
 |---|---:|---|
 | `tests/release/README.md` | `CONFIRMED` | Existing v0.1 planning README; this revision replaces it. |
-| `tests/release/test_review_record.py` | `CONFIRMED` | Four standard-library tests cover exact positive/negative ReviewRecord fixtures, no-network behavior, value-free output, non-emission, and deterministic CLI polarity. |
-| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Twelve standard-library-compatible tests cover the bounded A-G promotion profile and outcome precedence. |
+| `tests/release/test_review_record.py` | `CONFIRMED` | Eleven standard-library tests cover exact positive/negative ReviewRecord fixtures, canonical identities and timestamps, identity issuance, exclusive declared expiry boundaries, explicit supersession marking, redacted external and symlink-loop paths, no-network behavior, non-emission, and deterministic CLI polarity. |
+| `tests/release/test_promotion_gate.py` | `CONFIRMED` | Nineteen standard-library-compatible tests cover the bounded A-G promotion profile, unavailable Gate G context, supplied authority intervals, exclusive declared expiry boundaries, nonempty obligations, canonical identity/time behavior, redacted external and symlink-loop paths, and outcome precedence. |
 | `tests/release/test_promotion_decision_schema.py` | `CONFIRMED` | Preserves the separate proposed PromotionDecision shape-fixture boundary. |
 | Direct test-local fixtures | `NOT ESTABLISHED` | No test-local fixture inventory was established for this lane. |
 | Dedicated command | `CONFIRMED` | `make publish-check` runs fixture polarity plus the focused direct suite with no network. |
@@ -203,7 +204,7 @@ The bounded search limit matters: absence from search results is not proof of pe
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Direct `tests/release/` coverage is excluded. |
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
 | `make release-dry-run` | Emits a TODO message. | No release dry-run implementation is established. |
-| `make publish-check` | Runs the sixteen-file promotion matrix, nine-case ReviewRecord subset, and sixteen focused tests. | Proves bounded fixture behavior only; never review approval, promotion, release, or publication. |
+| `make publish-check` | Runs the eighteen-file promotion matrix, eleven-case ReviewRecord subset, and thirty focused tests. | Proves bounded fixture behavior only; never review approval, promotion, release, or publication. |
 | `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
 
 ### Adjacent schema coverage
@@ -887,7 +888,7 @@ Each step should be independently reviewable and reversible. Do not create empty
 
 | ID | Question | Evidence needed | Current status |
 |---|---|---|---|
-| RELTEST-001 | What files actually exist under `tests/release/` beyond the README? | Mounted checkout inventory. | `CONFIRMED` for two direct modules; exhaustive history remains out of scope |
+| RELTEST-001 | What files actually exist under `tests/release/` beyond the README? | Mounted checkout inventory. | `CONFIRMED` for three direct modules; exhaustive history remains out of scope |
 | RELTEST-002 | Are any release tests dynamically generated or located under another cross-cutting lane? | Pytest collection report and full test inventory. | `UNKNOWN` |
 | RELTEST-003 | What release fixture payload files exist under `fixtures/release/`? | Recursive fixture tree, hashes, and consumer map. | `CONFIRMED` for selected promotion-gate matrix; broader inventory partial |
 | RELTEST-004 | Does `fixtures/contracts/v1/release/` contain schema fixtures despite the parent README gap? | Direct tree and test collection. | `NEEDS VERIFICATION` |
@@ -992,12 +993,12 @@ Rolling back this README does not roll back a KFM release, workflow, policy bund
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-02 |
-| Review state | Implemented bounded promotion-gate thin slice; human review pending |
-| Direct lane maturity | Two executable modules; broader release suite partial |
+| Last reviewed | 2026-08-03 |
+| Review state | Implemented bounded promotion-gate and fixture-only ReviewRecord hardening; human review pending |
+| Direct lane maturity | Three executable modules; broader release suite partial |
 | Executable release suite | Promotion-gate proof confirmed; no full release/publish proof |
 | Next smallest safe change | Authenticate one accepted actor-assignment source or resolve one rollback-card prerequisite without widening this fixture validator into authority. |
 
 ---
 
-*Last updated: 2026-08-02 · Version: v1.0 · Authority: bounded enforceability only · [Back to top](#top)*
+*Last updated: 2026-08-03 · Version: v1.1 · Authority: bounded enforceability only · [Back to top](#top)*

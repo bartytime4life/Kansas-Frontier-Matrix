@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0018-promotion-gate-sequence
 title: ADR-0018 — Promotion Gate Sequence
 type: adr
 adr_id: ADR-0018
-version: v1.3
+version: v1.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Validation and CI stewards
   - Docs steward
 created: 2026-05-09
-updated: 2026-07-29
+updated: 2026-08-03
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -31,8 +31,8 @@ supersedes: []
 superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: copilot/adr-0018-promotion-gate-sequence
-  base_commit: 6d6010f6cbedf1e096e3d8da3d660b6350e106e8
+  base_ref: main
+  base_commit: 68069dce9e292649697f63f96fa57edd07181a27
   target_prior_blob: 6cde5af9a7c8ef03df3fb22816074c900df659b7
   adr_index_blob: 919ec44d8eb0fab2e558cbc54c90b0d37e56a201
   adr_readme_blob: bde5a950197a9d3e989abd12feda3d19b31dd2b9
@@ -95,6 +95,7 @@ related:
   - Makefile
 tags: [kfm, adr, promotion, release, gates, workflow-hold, fail-closed, evidence, policy, review, rollback, publication]
 notes:
+  - "v1.4 reconciles current evidence with the bounded no-network A-G candidate validator and fixture-only ReviewRecord profile; it preserves effective status proposed and every live authority hold."
   - "v1.3 re-pins the evidence snapshot to current checkout `6d6010f6cbedf1e096e3d8da3d660b6350e106e8`, records an explicit REVISE checkpoint, and preserves effective status proposed."
   - "The current promotion-gate workflow is a four-job read-only readiness and hold workflow, not an implementation of the proposed seven-gate sequence."
   - "The current PromotionDecision schema exercises shape only and uses APPROVE, DENY, ABSTAIN; the DecisionEnvelope schema uses ANSWER, ABSTAIN, DENY, ERROR. These vocabularies must remain separate."
@@ -113,7 +114,7 @@ notes:
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0018-confirmed-0969da?style=flat-square)](#current-repository-evidence)
 [![Workflow: hold](https://img.shields.io/badge/workflow-WORKFLOW__HOLD-b42318?style=flat-square)](#current-implementation-maturity)
 [![PromotionDecision: shape only](https://img.shields.io/badge/PromotionDecision-shape%20only-f59e0b?style=flat-square)](#current-repository-evidence)
-[![Gate runtime: not established](https://img.shields.io/badge/gate%20runtime-not%20established-6e7781?style=flat-square)](#current-implementation-maturity)
+[![Gate runtime: bounded candidate](https://img.shields.io/badge/gate%20runtime-bounded%20candidate-f59e0b?style=flat-square)](#current-implementation-maturity)
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 [![Governance checkpoint: revise](https://img.shields.io/badge/checkpoint-REVISE-bc4c00?style=flat-square)](#governance-checkpoint)
 
@@ -121,7 +122,7 @@ notes:
 > **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0018` to this exact file and records both source metadata and effective decision status as `proposed`. Editing this record, merging a pull request, or passing the ADR index validator does not accept the decision.
 
 > [!CAUTION]
-> **The current repository does not run seven promotion gates.** The tracked [`promotion-gate` workflow](../../.github/workflows/promotion-gate.yml) has four read-only readiness jobs. It validates selected doctrine and `PromotionDecision` shape fixtures, then confirms that review and promotion implementation remain held. It emits no release decision, receipt, proof, manifest, rollback card, or public artifact.
+> **The current repository does not run seven authoritative promotion gates.** The tracked [`promotion-gate` workflow](../../.github/workflows/promotion-gate.yml) has four read-only readiness jobs and executes a bounded synthetic A-G candidate profile plus fixture-only ReviewRecord checks. It authenticates no live support or reviewer and emits no release decision, receipt, proof, manifest, rollback card, or public artifact.
 
 > [!WARNING]
 > **A schema-valid `APPROVE` object is not approval.** The tracked hydrology promoter is a stub that writes an automation-approved smoke decision whose evidence and rollback paths are unresolved. Current CI deliberately does not execute it.
@@ -141,8 +142,8 @@ notes:
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Repository-wide promotion-evaluation ordering and vocabulary boundary |
-| **Current repository maturity** | PromotionDecision shape checks and explicit readiness holds; no accepted gate runtime |
-| **Implementation effect of this revision** | Documentation only |
+| **Current repository maturity** | PromotionDecision shape checks, bounded synthetic A-G and ReviewRecord candidate validators, and explicit authority holds; no accepted gate runtime |
+| **Implementation effect of this revision** | Reconciles this proposed ADR with a companion fixture-only hardening slice; does not accept the decision |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 
@@ -165,9 +166,9 @@ An accepted ADR without those implementation gates would be doctrine, not proof 
 | **Governance outcome** | `REVISE` |
 | **Recorded on** | `2026-07-29` |
 | **Effective ADR status after this checkpoint** | Remains `proposed` |
-| **Why not `ACCEPT`** | The runbook still uses a different A–G lifecycle sequence, the policy-side `promotion_decision` scaffold still conflicts by name, the generic promotion and review validators remain placeholders, `control_plane/policy_gate_register.yaml` is empty, and no governed review/rollback/release packet is implemented. |
+| **Why not `ACCEPT`** | The runbook still uses a different A–G lifecycle sequence, the policy-side `promotion_decision` scaffold still conflicts by name, the implemented validators are bounded synthetic candidates rather than accepted gate/review authorities, `control_plane/policy_gate_register.yaml` is empty, and no governed review/rollback/release packet is implemented. |
 | **Why not `REJECT`** | The candidate A–G ordering, fail-closed vocabulary split, and no-public-write release boundary remain viable once the unresolved contract and authority conflicts are explicitly repaired. |
-| **Current authority effect** | Documentation only. No validator, workflow, fixture, receipt, proof, manifest, release, or publication authority changes. |
+| **Current authority effect** | This proposed ADR grants none. Companion candidate validator/workflow/fixture changes remain non-authoritative and create no receipt, proof, manifest, governed review, release, or publication authority. |
 
 ### Decision questions resolved by this revision
 
@@ -176,11 +177,11 @@ An accepted ADR without those implementation gates would be doctrine, not proof 
 | Is the proposed A–G sequence the accepted promotion-evaluation order? | **No.** It remains the candidate acceptance target and implementation decomposition baseline, not an accepted runtime order. |
 | Which contracts and schemas are authoritative for each gate? | Semantic authority stays in `contracts/`; machine shape stays in `schemas/contracts/v1/`. The current authoritative release decision shape is `contracts/release/promotion_decision.md` with `schemas/contracts/v1/release/promotion_decision.schema.json`. Runtime/policy decision envelopes remain `contracts/runtime/decision_envelope.md` with `schemas/contracts/v1/runtime/decision_envelope.schema.json`. Missing gate-record, gate-set, and governed ReviewRecord contracts keep the later gates held. |
 | How are PromotionDecision, DecisionEnvelope, gate outcomes, ReviewRecord, receipts, proofs, manifests, rollback cards, and publication authority kept distinct? | `PromotionDecision` remains the release-family decision, `DecisionEnvelope` remains the runtime/policy envelope, future per-gate outcomes remain `PASS / FAIL / HOLD / ERROR`, review outcomes stay with governed review records, receipts/proofs/manifests/rollback cards stay in their owning roots, and publication authority remains a separate authorized release action. |
-| What finite result vocabulary and exit-code contract must the validator expose? | The future generic promotion-gate validator must emit `PASS`, `FAIL`, `HOLD`, or `ERROR` and map them to process exit codes `0`, `10`, `20`, and `30` respectively so held, blocking, and evaluator-failure outcomes remain distinguishable. Until the gate contracts and fixtures land, the current placeholder CLI stays unwired. |
+| What finite result vocabulary and exit-code contract must the validator expose? | This proposed ADR still targets `PASS`, `FAIL`, `HOLD`, or `ERROR` with distinct exits for an accepted gate-record profile. The current non-authoritative candidate instead emits `PASS`, `DENY`, `ABSTAIN`, or `ERROR` with bounded CLI polarity. That implementation evidence does not silently accept or rewrite this proposed vocabulary. |
 | Which references must resolve before `APPROVE` is structurally eligible? | At minimum: exact `PromotionDecision.id`, candidate `run_id`, pinned schema/version/digest inputs, resolved `EvidenceRef` and `EvidenceBundle` support, policy bundle identity/digest plus any emitted `DecisionEnvelope.decision_id`, accountable review record reference(s), rollback-card reference, correction-path reference where required, and the release-manifest relation/target. Missing or unresolved references make `APPROVE` structurally ineligible. |
 | What separation-of-duties rule applies during Model B single-owner bootstrap and after an independent reviewer exists? | The current single-owner bootstrap may record documentation-level governance outcomes only; it does **not** authorize self-approval of release readiness or publication. Until independent reviewer capacity exists, Gate G remains `HOLD`. After an independent reviewer exists, the candidate author/assembler and release authority must resolve to distinct human actors under ADR-0024, and automation still cannot substitute for required human review. |
 | Which workflow check names must remain stable for repository rules? | Preserve workflow name `promotion-gate` and job/check names `doctrine-artifact-prereq`, `doctrine-artifact-schema`, `promotion-prerequisites`, and `review-records-present` until a reviewed ruleset migration explicitly changes them. |
-| What migration and rollback path applies to the current hold workflow and placeholder commands? | Use a four-slice path: (1) contract/schema disposition and runbook reconciliation, (2) fixture/test coverage, (3) validator implementation in dry-run mode, and only then (4) CI integration that preserves the stable check names or migrates them deliberately. Roll back by reverting the newest slice and restoring the current hold workflow; do not execute the hydrology smoke promoter or infer release/publication authority from any intermediate slice. |
+| What migration and rollback path applies to the current hold workflow and candidate commands? | The repository has completed a bounded fixture/test, candidate-validator, and read-only CI slice without accepting the full gate contracts. Continue with contract/schema disposition and governed integrations only through separate reviewed changes. Roll back by reverting the newest slice; do not execute the hydrology smoke promoter or infer release/publication authority from any intermediate slice. |
 
 ### Follow-up issue decomposition
 
@@ -199,7 +200,7 @@ Each slice still requires fresh bounded authorization before any repository-cont
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `copilot/adr-0018-promotion-gate-sequence@6d6010f6cbedf1e096e3d8da3d660b6350e106e8`.
+This revision is grounded in repository bytes at `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped follow-on hardening diff.
 
 ### Truth labels
 
@@ -222,7 +223,7 @@ This revision is grounded in repository bytes at `copilot/adr-0018-promotion-gat
 - `PromotionDecision` contract, release schema, fixtures, validator, and test;
 - runtime `DecisionEnvelope` schema;
 - the empty policy-side `promotion_decision` schema scaffold;
-- generic promotion and review validator stubs;
+- bounded generic promotion and fixture-only ReviewRecord candidate validators;
 - promotion validator routing README;
 - promotion policy stubs;
 - release-review guidance;
@@ -556,17 +557,23 @@ Its home follows its responsibility. The name `PromotionReceipt` is not accepted
 | Runtime DecisionEnvelope schema | **CONFIRMED / PROPOSED** | Defines `ANSWER / ABSTAIN / DENY / ERROR` policy/runtime shape |
 | Policy-side Promotion Decision schema | **CONFIRMED permissive scaffold** | Empty shape; must not compete with release schema |
 | Policy gate register | **CONFIRMED PROPOSED empty** | `entries: []`; no current policy-gate authority is registered |
-| Generic promotion validator | **CONFIRMED placeholder** | Raises `NotImplementedError` |
-| Review validator | **CONFIRMED placeholder** | Raises `NotImplementedError` |
-| Promotion validator directory | **CONFIRMED documentation-only** | README and `.gitkeep`; workflow guards this state |
+| Generic promotion validator | **CONFIRMED bounded candidate** | Executes a strict no-network synthetic A-G profile and emits finite readiness results without promotion authority |
+| Review validator | **CONFIRMED fixture-only candidate** | Checks synthetic Gate G declarations; it does not authenticate live identity/authority or create a ReviewRecord |
+| Promotion validator directory | **CONFIRMED executable bounded lane** | README, package entrypoint, fixtures, and focused tests are wired |
 | Promotion policy modules | **CONFIRMED greenfield stubs** | No meaningful prerequisite or rollback policy |
-| Make `publish-check` | **CONFIRMED TODO-only** | Zero exit would not prove promotion |
+| Make `publish-check` | **CONFIRMED executable bounded target** | Runs the synthetic promotion and ReviewRecord profiles; zero exit does not prove promotion |
 | Release review lane | **CONFIRMED guidance-only at parent** | No governed review record established by inspected inventory |
 | Hydrology promoter | **CONFIRMED stub** | Emits automation-smoke `APPROVE` without resolving support |
 | Tracked hydrology decision | **CONFIRMED smoke artifact** | Schema-shaped object; not admissible release evidence |
 | Proposed DecisionGate schema | **NOT FOUND** | No per-gate machine contract at prior path |
 | Proposed PromotionReceipt schema | **NOT FOUND** | No accepted seven-gate receipt contract |
 | End-to-end release closure | **NOT ESTABLISHED** | No evidence, policy, review, rollback, manifest, or public transition proof |
+
+### Material corrections in v1.4
+
+- Reconciles the current tree with the implemented bounded A-G and fixture-only ReviewRecord candidate validators.
+- Records canonical identity syntax, issuance by review time, declared authority interval, empty approving-review obligations, and no-live-authentication boundaries without treating them as governed review.
+- Preserves the proposed ADR status, the unresolved candidate-vocabulary difference, the empty policy register, the hydrology smoke hold, and the absence of a governed review/release packet.
 
 ### Material corrections in v1.3
 
@@ -603,8 +610,8 @@ read-only readiness workflow
         v
 WORKFLOW_HOLD
         |
-        +--> no accepted generic promotion validator
-        +--> no review validator
+        +--> no accepted promotion-gate authority
+        +--> no governed ReviewRecord validator/registry
         +--> no meaningful promotion policy
         +--> no gate-record schema
         +--> no gate-report/receipt schema
@@ -619,8 +626,8 @@ WORKFLOW_HOLD
 |---|---|---|
 | `doctrine-artifact-prereq` | Proves missing required doctrine artifacts remain visible and fail closed | Prerequisite outside the proposed sequence |
 | `doctrine-artifact-schema` | Checks non-vacuous DoctrineArtifactDescriptor fixtures and selected shape behavior | Prerequisite outside the proposed sequence |
-| `promotion-prerequisites` | Checks non-empty PromotionDecision fixture sets, pinned schema metadata, enum, and closed shape | Partial Gate A evidence only |
-| `review-records-present` | Confirms review/promotion scaffolds remain placeholders and the smoke promoter is not executed | Explicit implementation hold; not Gate G pass |
+| `promotion-prerequisites` | Checks non-empty PromotionDecision fixtures and runs the bounded synthetic A-G candidate profile | Candidate A-G implementation evidence only; no authoritative gate run |
+| `review-records-present` | Runs the fixture-only ReviewRecord profile, confirms no governed review record exists, and does not execute the smoke promoter | Bounded Gate G candidate evidence plus explicit live-authority hold |
 
 The workflow’s green result means the repository remains safely held and drift-sensitive. It does not mean promotion prerequisites are satisfied.
 
@@ -805,7 +812,7 @@ This ADR prefers visible incompleteness and a safe hold over a persuasive but un
 | `ADR18-R2` | **OPEN** | Gate-set index is called `PromotionReceipt`, report, proof index, or release packet | ADR-0011-aligned semantic contract |
 | `ADR18-R3` | **OPEN** | How gate records bind PromotionDecision and DecisionEnvelope identities | Contract, schema, deterministic identity tests |
 | `ADR18-R4` | **OPEN** | Whether held review appends under one promotion ID or creates a superseding ID | Review and correction contract |
-| `ADR18-R5` | **HELD** | Promotion/review validators are placeholders | Implemented CLIs, fixtures, tests, finite exits |
+| `ADR18-R5` | **PARTIAL / HELD** | Bounded promotion/review candidate validators exist, but accepted gate contracts, governed records, and live authority resolution do not | Accepted profiles, registry/policy integration, governed fixtures/records, and observed finite behavior |
 | `ADR18-R6` | **HELD** | Policy files contain no real promotion rules | Accepted bundle, reason codes, obligations, policy tests |
 | `ADR18-R7` | **HELD** | Hydrology smoke decision auto-approves unresolved references | Remove/replace scaffold; governed thin-slice test |
 | `ADR18-R8` | **NEEDS VERIFICATION** | Release review record schema and actual accountable records | Review contract/schema, subject binding, SoD tests |
@@ -878,8 +885,8 @@ Any future gate implementation must preserve:
 | Runtime DecisionEnvelope schema | **CONFIRMED / PROPOSED** |
 | Policy-side Promotion Decision schema | **CONFIRMED permissive scaffold** |
 | Policy gate register | **CONFIRMED PROPOSED empty** |
-| Generic promotion validator | **CONFIRMED placeholder** |
-| Review validator | **CONFIRMED placeholder** |
+| Generic promotion validator | **CONFIRMED bounded synthetic candidate** |
+| Review validator | **CONFIRMED fixture-only candidate** |
 | Promotion policy | **CONFIRMED greenfield stubs** |
 | Review records | **NOT ESTABLISHED beyond guidance inventory** |
 | Hydrology promoter and smoke decision | **CONFIRMED unsafe scaffold / held** |
@@ -925,8 +932,8 @@ Remote repository reads establish exact bytes and source relationships. They do 
 - [`PromotionDecision` fixture validator](../../tools/validators/release/validate_promotion_decision.py)
 - [`PromotionDecision` shape test](../../tests/release/test_promotion_decision_schema.py)
 - [`Promotion gate` validator index](../../tools/validators/promotion_gate/README.md)
-- [`Generic promotion validator` placeholder](../../tools/validators/validate_promotion_gate.py)
-- [`Review validator` placeholder](../../tools/validators/validate_review_record.py)
+- [`Generic promotion validator` candidate](../../tools/validators/validate_promotion_gate.py)
+- [`Review validator` fixture-only candidate](../../tools/validators/validate_review_record.py)
 - [`Promotion prerequisites` policy stub](../../policy/promotion/promotion_prerequisites.rego)
 - [`Rollback card required` policy stub](../../policy/promotion/rollback_card_required.rego)
 - [`Release review lane`](../../release/reviews/README.md)
@@ -939,13 +946,13 @@ Remote repository reads establish exact bytes and source relationships. They do 
 
 ## Last reviewed
 
-**2026-07-29** — repository-grounded review against `copilot/adr-0018-promotion-gate-sequence@6d6010f6cbedf1e096e3d8da3d660b6350e106e8`.
+**2026-08-03** — repository-grounded review against `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped bounded-candidate hardening diff.
 
 Review again when:
 
 - this ADR changes status;
 - the promotion workflow changes its jobs or authority;
-- a generic promotion or review validator becomes executable;
+- a bounded promotion/review candidate graduates, changes profile, or gains governed integrations;
 - meaningful promotion policy lands;
 - a gate-record or gate-set schema is proposed;
 - PromotionDecision schema authority is reconciled;
