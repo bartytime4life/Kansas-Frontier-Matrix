@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-geology-readme
 title: tools/validators/domains/geology README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-geology-steward-plus-natural-resources-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-03
 policy_label: repository-facing; per-domain-validator-index; geology; natural-resources; subsurface; resource-sensitivity; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Geology validator index for geologic maps, stratigraphy, lithology, structures, subsurface observations, boreholes, well logs, cores, geophysics, geochemistry, mineral occurrence/deposit/estimate/permit/production/reserve anti-collapse, hydrostratigraphy joins, sensitivity, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Geology meaning, policy decisions, proof records, and release authority to their owning roots
@@ -33,7 +33,7 @@ related:
   - ../../../../../data/receipts/
   - ../../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "Two bounded fixture validators are confirmed: resource-class anti-collapse and the sparse announcement-bound GMD 3 AEM campaign-candidate profile."
   - "No broad tools/validators/geology/README.md was found during this task, so this path currently serves as the inspected per-domain Geology validator index."
   - "Geology validators must preserve the distinction between occurrence, deposit, estimate, permit, production, and reserve claims, and must not treat generalized map polygons or AI summaries as sourced observations."
   - "Exact borehole, core, well-log, private-well, sample, and extraction-targetable resource locations are sensitive by default and require public-safe transforms, review, evidence, policy, release, correction, and rollback support before public exposure."
@@ -79,7 +79,8 @@ The answer should be a navigable validator index and deterministic validation ou
 | Geology domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/README.md` defines scope, anti-collapse posture, lifecycle, public trust path, deny-by-default exact subsurface/private-well posture, and responsibility-root split. |
 | Geology policy posture | **CONFIRMED in repo evidence / draft** | `docs/domains/geology/POLICY.md` states mixed-tier posture, exact borehole/well/resource sensitivity, claim-distinction rules, and fail-closed public promotion conditions. |
 | Resource-class lane | **CONFIRMED bounded fixture implementation** | `validate_resource_class_distinction.py` checks a frozen synthetic occurrence/deposit/estimate profile; `tools/validators/geology/resource_class/README.md` records its limits. |
-| Broader executables, schemas, policy bundles, proof, and release wiring | **NEEDS VERIFICATION** | Other validator scripts remain placeholders; this profile does not establish schema, policy, evidence, proof, source, or release authority. |
+| GMD 3 AEM campaign lane | **CONFIRMED bounded fixture implementation** | `validate_aem_campaign.py` binds one document-specific 2026-05-11 announcement, keeps current campaign state unknown, binds no acquisition evidence, denies unscoped planning/downstream stages and malformed correction lineage, and pins the exact citation-only/candidate-only descriptor bytes against prose, endpoint, credential, connector, source-head, claim-role, and release drift. It is not source-registry authority or evidence closure and performs no activation or publication. |
+| Broader executables, schemas, policy bundles, proof, and release wiring | **NEEDS VERIFICATION** | Other validator scripts remain placeholders; these profiles do not establish schema, policy, evidence, proof, source, or release authority. |
 
 [Back to top](#top)
 
@@ -90,7 +91,9 @@ The answer should be a navigable validator index and deterministic validation ou
 The resource-class specialization is documented at
 `tools/validators/geology/resource_class/README.md`; its executable is retained
 in this per-domain lane to follow the repository's current validator inventory.
-Other child lanes remain proposed.
+The fixture-bound AEM campaign specialization is documented at
+`fixtures/domains/geology/aem_survey_campaign/README.md`; its executable is
+`validate_aem_campaign.py`. Other child lanes remain proposed.
 
 Future child lanes should be added only when they represent a distinct Geology validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
 
@@ -118,7 +121,7 @@ Possible future children remain **PROPOSED** until verified:
 | Natural Resources sublane doctrine | `docs/domains/geology/sublanes/natural_resources.md` |
 | Geology schemas | `schemas/contracts/v1/domains/geology/` or ADR-selected homes |
 | Geology policy rules | `policy/domains/geology/`, `policy/sensitivity/geology/`, or accepted policy homes |
-| Source descriptors | `data/registry/sources/geology/`, `data/registry/geology/sources/`, or accepted source registry home |
+| Source descriptors | `data/registry/sources/` | Canonical machine-descriptor authority per Directory Rules; domain-first compatibility/generated views are not independent write authority. |
 | Evidence/proof support | `data/proofs/` |
 | Receipts | `data/receipts/` |
 | Release decisions, manifests, rollback, corrections | `release/` |
@@ -128,7 +131,7 @@ Safe interpretation:
 
 - **CONFIRMED:** this README exists.
 - **PROPOSED:** validator code may live below this folder when it checks declared Geology invariants and delegates meaning, sensitivity, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
+- **NEEDS VERIFICATION:** broader executable names, schema homes, policy bundle digests, canonical source-descriptor placement for this candidate, report destinations, runtime behavior, and wider CI wiring.
 - **DENY:** using this folder as geology doctrine, resource authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, extraction guidance surface, or domain-meaning authority.
 
 [Back to top](#top)
@@ -257,6 +260,16 @@ python tools/validators/domains/geology/run_geology_domain_validators.py --repo-
 
 > [!NOTE]
 > This is a proposed interface, not proof that `run_geology_domain_validators.py` or the test path exists.
+
+Current bounded commands:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/geology/test_source_role_anti_collapse.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/geology/test_aem_campaign.py --verbose
+```
 
 [Back to top](#top)
 

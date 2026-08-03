@@ -1,26 +1,30 @@
 {
-  "id": "kfm:geology:aem-campaign:kgs-gmd3-sw-ks-2026",
+  "profile_id": "kfm-geology-gmd3-aem-campaign-candidate-fixture-v1",
+  "id": "kfm:geology:aem-campaign-candidate:ku-news-gmd3-announcement-2026-05-11",
   "object_type": "AemSurveyCampaign",
-  "product_id": "kfm:geology:aem-campaign:kgs-gmd3-sw-ks-2026:v0.2",
-  "source_descriptor_ref": "src:kgs-gmd3-aem-2026",
-  "campaign_state": "planned",
-  "acquisition_state": "planned",
-  "horizontal_crs": "EPSG:4326",
-  "vertical_datum": "NAVD88",
-  "depth_reference": "land_surface",
-  "depth_positive_direction": "down",
-  "processing_software_version": "ArehemAGF-v2024.1",
-  "inversion_software_version": "SCI-v1.3",
-  "raw_source_ref": "kfm://data/raw/geology/kgs-gmd3-aem-2026/acquisition-segment-001",
-  "resistivity_units": "ohm\u00b7m",
-  "uncertainty": {
-    "method": "bootstrap-sensitivity-analysis"
-  },
-  "evidence_refs": [
-    "kfm://evidence/geology/kgs-gmd3-aem-2026/campaign-announcement-2026-08-03"
+  "source_descriptor_ref": "src:ku-news-gmd3-aem-announcement-2026-05-11",
+  "announcement_reported_state": "planned",
+  "announcement_published_on": "2026-05-11",
+  "current_campaign_state": "unknown",
+  "acquisition_evidence_state": "not_bound_to_profile",
+  "survey_method": "airborne_electromagnetic",
+  "claim_scope": "campaign_announcement",
+  "supporting_reference_candidates": [
+    "fixture://reference-candidate/geology/gmd3-aem/ku-news-announcement-2026-05-11"
   ],
+  "review_state": "needs_review",
   "release_state": "not_released",
+  "limitations": [
+    "fixture_profile_only",
+    "announcement_context_only",
+    "current_campaign_state_unknown",
+    "no_acquisition_evidence_bound",
+    "no_processing_or_inversion_product_evidence_bound",
+    "not_a_groundwater_level_observation",
+    "not_a_water_right_title_or_legal_record",
+    "not_released"
+  ],
   "correction": {
-    "reason": "Corrected acquisition state flag."
+    "reason": "fixture correction"
   }
 }

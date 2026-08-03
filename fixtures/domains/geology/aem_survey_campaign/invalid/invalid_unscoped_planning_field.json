@@ -13,7 +13,7 @@
     "fixture://reference-candidate/geology/gmd3-aem/ku-news-announcement-2026-05-11"
   ],
   "review_state": "needs_review",
-  "release_state": "released",
+  "release_state": "not_released",
   "limitations": [
     "fixture_profile_only",
     "announcement_context_only",
@@ -23,5 +23,9 @@
     "not_a_groundwater_level_observation",
     "not_a_water_right_title_or_legal_record",
     "not_released"
-  ]
+  ],
+  "planned_target_depth": {
+    "value": 1600,
+    "unit": "ft"
+  }
 }

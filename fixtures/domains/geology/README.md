@@ -24,6 +24,7 @@ The root fixture README states that `fixtures/` is for operational rendering inp
 | `units/` | Synthetic `GeologicUnit` and map-unit examples. | Populated. |
 | `cross_sections/` | Synthetic `CrossSection` semantic and pipeline dry-run examples. | Populated. |
 | `map-ui/` | Synthetic map/UI envelope, renderer, Evidence Drawer, Focus Mode, and view-state examples. | Populated. |
+| `aem_survey_campaign/` | Sparse, document-specific 2026-05-11 announcement-bound GMD 3 AEM campaign candidate: current state unknown, no acquisition evidence bound, exact negative sidecars, and a pinned citation-only/candidate-only SourceDescriptor fixture. | Executable bounded profile. |
 | `resource_class/` | Frozen synthetic occurrence/deposit/estimate anti-collapse profile with exact negative sidecars. | Executable bounded profile. |
 | `source_role/` | Synthetic source-role anti-collapse and source-admission examples. | Populated. |
 | `tier-transitions/` | Synthetic sensitivity, redaction, generalization, review, release-tier, correction, and withdrawal examples. | Populated. |
@@ -41,6 +42,7 @@ Future child lanes may be added for other Geology object families only when they
 - `units/README.md`
 - `cross_sections/README.md`
 - `map-ui/README.md`
+- `aem_survey_campaign/README.md`
 - `resource_class/README.md`
 - `source_role/README.md`
 - `tier-transitions/README.md`
@@ -99,6 +101,7 @@ Do not use this fixture root for real geology records, real source exports, live
 | Geologic unit example | `units/` | Unit fixtures do not become public layer authority. |
 | Cross-section example | `cross_sections/` | Cross-section fixtures remain interpretive and evidence-bound. |
 | Map/UI envelope example | `map-ui/` | UI/runtime state remains downstream of governed evidence. |
+| AEM campaign candidate | `aem_survey_campaign/` | Fixture-bound campaign validation does not establish source authority, product existence, activation, scientific fitness, release, or publication. |
 | Resource-class example | `resource_class/` | Fixture-only occurrence/deposit/estimate distinctions do not define the canonical classification scheme. |
 | Source-role example | `source_role/` | Source role remains fixed at admission and not upgraded by wording. |
 | Sensitivity or release-tier transition | `tier-transitions/` | Transform/review/release posture remains auditable. |
@@ -117,10 +120,10 @@ Do not use this fixture root for real geology records, real source exports, live
 
 - Target README: replaced greenfield stub content.
 - Child README inventory: PARTIALLY VERIFIED against the populated child README files available during this documentation pass.
-- Fixture payload inventory: the bounded `resource_class/` profile is executable; other child payloads retain their documented posture.
+- Fixture payload inventory: the bounded `resource_class/` and `aem_survey_campaign/` profiles are executable; other child payloads retain their documented posture.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology file-system plan.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Sublane convention alignment: NEEDS VERIFICATION / ADR-sensitive where `sublanes/` is used.
 - Contract/schema alignment: NEEDS VERIFICATION per child lane because several paired schemas and validators remain unconfirmed or explicitly bounded as draft/proposed.
-- Consumer alignment: CONFIRMED only for `validate_resource_class_distinction.py` and its focused test; other validators, UI surfaces, pipelines, schemas, and policy checks remain NEEDS VERIFICATION.
-- Tests and validators: the resource-class fixture profile is wired into `domain-geology.yml`; broader Geology validation remains held.
+- Consumer alignment: CONFIRMED for `validate_resource_class_distinction.py`, `validate_aem_campaign.py`, and their focused tests; other validators, UI surfaces, pipelines, schemas, and policy checks remain NEEDS VERIFICATION.
+- Tests and validators: the resource-class and fixture-bound AEM campaign profiles are wired into `domain-geology.yml`; broader Geology validation remains held.

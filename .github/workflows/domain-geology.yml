@@ -1,5 +1,6 @@
 # KFM Geology domain CI readiness workflow.
-# Status: one bounded synthetic resource-class fixture profile is executable;
+# Status: two bounded no-network fixture profiles are executable (resource class
+# and a sparse, announcement-bound GMD 3 AEM campaign candidate);
 # broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -57,11 +58,19 @@ jobs:
             "policy/domains/geology/README.md"
             "tests/domains/geology/README.md"
             "tests/domains/geology/test_source_role_anti_collapse.py"
+            "tests/domains/geology/test_aem_campaign.py"
             "tools/validators/domains/geology/README.md"
             "tools/validators/domains/geology/validate_resource_class_distinction.py"
+            "tools/validators/domains/geology/validate_aem_campaign.py"
             "tools/validators/geology/README.md"
             "tools/validators/geology/resource_class/README.md"
             "fixtures/domains/geology/resource_class/README.md"
+            "fixtures/domains/geology/aem_survey_campaign/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/valid/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json"
+            "contracts/domains/geology/AemSurveyCampaign.md"
+            "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -87,11 +96,16 @@ jobs:
                   "tests/domains/geology/"
                   "test_source_role_anti_collapse.py"
               ),
+              Path("tests/domains/geology/test_aem_campaign.py"),
           }
           accepted_validators = {
               Path(
                   "tools/validators/domains/geology/"
                   "validate_resource_class_distinction.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_aem_campaign.py"
               ),
           }
 
@@ -157,6 +171,28 @@ jobs:
           echo "EXPECTED_REJECTION: invalid Geology resource-class fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture"
 
+      - name: Run bounded Geology AEM campaign fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/geology/test_aem_campaign.py --verbose
+
+          python tools/validators/domains/geology/validate_aem_campaign.py \
+            fixtures/domains/geology/aem_survey_campaign/valid/*.json
+
+          if python tools/validators/domains/geology/validate_aem_campaign.py \
+            fixtures/domains/geology/aem_survey_campaign/invalid/*.json; then
+            echo "::error::Known-invalid Geology AEM campaign fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Geology AEM campaign fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture"
+
       - name: Record Geology validation result and broader hold
         if: always()
         shell: bash
@@ -165,6 +201,8 @@ jobs:
           ### Geology validation status
 
           `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture`
 
           `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
 
@@ -177,11 +215,24 @@ jobs:
           bounded JSON input, deterministic CLI behavior, and explicit network
           denial.
 
+          The AEM fixture profile keeps one 2026-05-11 announcement-bound
+          campaign candidate sparse and time-scoped. It preserves the
+          document-reported planned posture while keeping current campaign
+          state unknown and binding no acquisition evidence. It denies unscoped
+          planning, downstream raw/processing/inversion/datum/geometry/product/
+          uncertainty fields, false release, and malformed correction lineage.
+          It also pins the exact document-specific SourceDescriptor so endpoint,
+          credential, connector, source-head, prose, claim-role, and release
+          posture drift fails closed. Neither fixture is source-registry
+          authority, evidence closure, or current campaign truth.
+
           The profile is not a canonical resource-classification vocabulary and
           does not evaluate live Geology records, source rights, EvidenceBundles,
           policy, economic viability, title, reserves, or regulatory state.
           Other Geology test and validator modules remain explicit placeholders
-          or documentation-only lanes and are checked as such.
+          or documentation-only lanes and are checked as such. Neither bounded
+          profile activates a source, observes official AEM product bytes,
+          resolves rights or evidence, applies policy, releases, or publishes.
 
           This check does not establish geologic interpretation, resource class,
           reserve or estimate validity, permit or production status, mineral or

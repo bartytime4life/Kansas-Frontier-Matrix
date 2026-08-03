@@ -2,14 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/source/source-descriptor/valid/readme
 title: source_descriptor valid fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): source steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): rights steward; TODO(owner): sensitivity steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-07-01 expansion
-updated: 2026-07-01
+updated: 2026-08-03
 policy_label: public-review
 related:
   - valid_1.json
+  - valid_ku_news_gmd3_aem_announcement_2026_05_11.json
   - ../invalid/README.md
   - ../invalid/invalid_1.json
   - ../invalid/invalid_1.expected_error.txt
@@ -27,9 +28,10 @@ tags: [kfm, fixtures, contracts, v1, source, source-descriptor, valid-fixtures, 
 notes:
   - "This README replaces a blank file at `fixtures/contracts/v1/source/source_descriptor/valid/README.md`."
   - "Valid fixtures are positive schema examples for the `source_descriptor` schema."
-  - "Current valid fixture coverage is one passing SourceDescriptor example: `valid_1.json`."
+  - "Current valid fixture coverage includes `valid_1.json` and the document-specific candidate-only KU News GMD 3 AEM announcement fixture."
+  - "The announcement fixture is restricted, connector-disabled, review-pending, and not released; schema validity is not source admission or campaign/product authority."
   - "The paired schema currently declares `fixtures_root` as `tests/fixtures/sources/source_descriptor/`; this README documents the observed contract fixture path requested here, so fixture-root reconciliation remains NEEDS VERIFICATION."
-  - "No tests, validators, source admission workflows, source registry checks, rights/sensitivity policy checks, release checks, or CI jobs were run during this documentation update."
+  - "The new announcement candidate passed its paired SourceDescriptor schema and bounded AEM semantic validator; repository-wide pytest/common-fixture, source-admission, source-registry, rights/sensitivity, release, and hosted CI checks remain unrun locally."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,6 +72,7 @@ Use this lane to prove that a well-shaped `SourceDescriptor` example can pass sc
 | File | Role | Expected result | Status |
 |---|---|---|---|
 | [`valid_1.json`](valid_1.json) | Positive SourceDescriptor fixture for a USGS NWIS hydrology source. | Schema validation should pass. | CONFIRMED |
+| [`valid_ku_news_gmd3_aem_announcement_2026_05_11.json`](valid_ku_news_gmd3_aem_announcement_2026_05_11.json) | Document-specific candidate-only citation fixture for the 2026-05-11 KU News GMD 3 AEM announcement. | Schema validation should pass; no source/campaign/product authority is established. | CONFIRMED bounded fixture |
 
 Current valid fixture highlights:
 
@@ -130,7 +133,8 @@ Confirmed schema facts:
 
 ## Why this fixture passes
 
-`valid_1.json` includes every required top-level field currently required by the paired schema, including the stable source identifier:
+Both positive files include every required top-level field currently required
+by the paired schema. `valid_1.json` uses the stable source identifier:
 
 ```text
 source_id: src:usgs-nwis-hydrology
@@ -139,6 +143,12 @@ source_id: src:usgs-nwis-hydrology
 It also uses schema-compatible values for object type, schema version, descriptor version, source type, source role, authority rank, rights posture, sensitivity, cadence, access, citation, source-head identity, admissibility limits, public release, review state, release state, and lifecycle state.
 
 This positive fixture is intentionally reviewable. It proves the schema accepts a complete descriptor-shaped example, not that the source is currently available, not that all rights and sensitivity checks have been re-run, and not that any downstream release has been approved by this fixture.
+
+The KU News announcement fixture uses a document-specific `source_id` and
+exercises citation-only/candidate-only, unknown-rights, restricted,
+manual-documentation, disabled-connector, review-pending, and not-released
+posture. Its paired AEM validator pins the exact fixture bytes; that does not
+promote it into a source registry or make campaign or product claims true.
 
 > [!WARNING]
 > `SourceDescriptor` records source admission and treatment posture. It does not make source claims true, authorize release by itself, replace evidence, or let connectors, pipelines, UI, maps, or AI bypass review and policy gates.
@@ -207,14 +217,14 @@ Before changing this valid fixture lane:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Valid fixture | CONFIRMED | `valid_1.json` exists and includes required `source_id: "src:usgs-nwis-hydrology"`. |
+| Valid fixtures | CONFIRMED | `valid_1.json` and `valid_ku_news_gmd3_aem_announcement_2026_05_11.json` exist and include schema-compatible source identities and governance posture. |
 | Invalid lane README | CONFIRMED | `../invalid/README.md` exists and documents the missing-required-field case. |
 | Invalid fixture | CONFIRMED | `../invalid/invalid_1.json` exists and omits required `source_id`. |
 | Expected-error file | CONFIRMED | `../invalid/invalid_1.expected_error.txt` exists and contains `required`. |
 | Schema | CONFIRMED | `source_descriptor.schema.json` defines the rich required field surface, source-id pattern, controlled vocabularies, conditional rules, registry/policy/validator metadata, and closed additional-property posture. |
 | Contract | CONFIRMED | `contracts/source/source_descriptor.md` defines semantic meaning and distinguishes SourceDescriptor from source truth, evidence sufficiency, policy approval, release approval, and bypass authority. |
 | Fixture-root convention | NEEDS VERIFICATION | Schema `x-kfm.fixtures_root` points to `tests/fixtures/sources/source_descriptor/`, while the observed/requested path is under `fixtures/contracts/v1/source/source_descriptor/`. |
-| Test execution | NOT RUN | No validators, pytest, source registry checks, rights/sensitivity policy checks, source admission checks, release checks, or CI were run during this README update. |
+| Test execution | PARTIAL | The announcement candidate passed the paired schema and bounded AEM semantic suite. The repository-wide pytest/common fixture harness, source registry checks, rights/sensitivity policy checks, source admission checks, release checks, and hosted CI remain unrun locally. |
 
 ---
 
@@ -223,7 +233,8 @@ Before changing this valid fixture lane:
 | Source | Status | Supports | Limits |
 |---|---|---|---|
 | Previous target file | CONFIRMED | Target existed as a blank file. | Did not define valid-fixture guidance. |
-| [`valid_1.json`](valid_1.json) | CONFIRMED | Current positive fixture includes required `source_id` and the broader descriptor field surface. | Only one valid case is currently documented here. |
+| [`valid_1.json`](valid_1.json) | CONFIRMED | Existing positive fixture includes required `source_id` and the broader descriptor field surface. | Released/authoritative example only. |
+| [`valid_ku_news_gmd3_aem_announcement_2026_05_11.json`](valid_ku_news_gmd3_aem_announcement_2026_05_11.json) | CONFIRMED bounded fixture | Exercises document-specific candidate-only and not-released posture. | Shape and bounded semantics only; not source admission, campaign/product truth, or release authority. |
 | [`../invalid/README.md`](../invalid/README.md) | CONFIRMED | Documents the negative fixture lane. | Does not prove tests were run. |
 | [`../invalid/invalid_1.json`](../invalid/invalid_1.json) | CONFIRMED | Paired negative fixture omits required `source_id`. | Only one invalid case is currently documented there. |
 | [`../invalid/invalid_1.expected_error.txt`](../invalid/invalid_1.expected_error.txt) | CONFIRMED | Expected matcher is `required`. | Broad matcher; may be tightened later. |

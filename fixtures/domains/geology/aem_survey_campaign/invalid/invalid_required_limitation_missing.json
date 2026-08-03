@@ -13,12 +13,11 @@
     "fixture://reference-candidate/geology/gmd3-aem/ku-news-announcement-2026-05-11"
   ],
   "review_state": "needs_review",
-  "release_state": "released",
+  "release_state": "not_released",
   "limitations": [
     "fixture_profile_only",
     "announcement_context_only",
     "current_campaign_state_unknown",
-    "no_acquisition_evidence_bound",
     "no_processing_or_inversion_product_evidence_bound",
     "not_a_groundwater_level_observation",
     "not_a_water_right_title_or_legal_record",

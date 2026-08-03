@@ -1,154 +1,147 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-domains-geology-aem-survey-campaign
-title: AemSurveyCampaign Contract — Geology / Hydrology (GMD 3 AEM 2026)
-type: semantic-contract
-version: v0.1
-status: draft; PROPOSED; DISABLED; NEEDS VERIFICATION before promotion
+title: GMD 3 AEM Announcement-Bound Campaign Candidate Fixture Contract
+type: semantic-contract; fixture-profile; non-authoritative
+version: v0.4
+status: draft; PROPOSED; DISABLED; NOT_RELEASED; NEEDS VERIFICATION before promotion
+updated: 2026-08-03
 owners:
   - OWNER_TBD — Geology domain steward
   - OWNER_TBD — Hydrology domain steward
   - OWNER_TBD — Geophysics steward
-  - OWNER_TBD — Spatial/CRS steward
   - OWNER_TBD — Contract steward
   - OWNER_TBD — Source steward
   - OWNER_TBD — Schema steward
-  - OWNER_TBD — Sensitivity reviewer
+  - OWNER_TBD — Validation steward
 linked_schema: schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json
-linked_source_descriptor: fixtures/contracts/v1/source/source_descriptor/valid/valid_gmd3_aem_2026.json
+linked_source_descriptor_fixture: fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json
+linked_validator: tools/validators/domains/geology/validate_aem_campaign.py
 fixtures_root: fixtures/domains/geology/aem_survey_campaign/
 governance_issue: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1944
 [/KFM_META_BLOCK_V2] -->
 
-# `AemSurveyCampaign` Contract — Geology / Hydrology
+# GMD 3 AEM announcement-bound campaign candidate fixture contract
 
-> **Status**: PROPOSED — disabled, noncanonical candidate. No connector activation,
-> schedule, credential, live payload, release, or publication is authorized by this
-> contract. No product is asserted to exist until official bytes and source metadata
-> are formally observed.
-
----
+> **Status:** PROPOSED, connector-disabled, review-pending, and not released.
+> This contract describes one frozen repository fixture profile for one source
+> document. It does not prove current campaign state, acquisition, or product
+> existence.
 
 ## Purpose
 
-`AemSurveyCampaign` is the canonical source-family packet for an airborne
-electromagnetic (AEM) survey campaign admitted into the KFM geology domain.
-This contract governs the **2026 Southwest Kansas GMD 3 AEM survey** conducted by
-the Kansas Geological Survey (KGS), Groundwater Management District No. 3 (GMD 3),
-and Aqua Geo Frameworks.
+The profile represents historical announcement context from a University of
+Kansas news document published 2026-05-11 about a proposed Southwest Kansas
+GMD 3 airborne-electromagnetic campaign. Its machine object type remains
+`AemSurveyCampaign` for compatibility with the draft seed packet, but its claim
+scope is only `campaign_announcement`.
 
-Cross-domain consumers (geology *and* hydrology) **must** reference one campaign
-identity rather than creating duplicate source authorities.
+The prior seed packet required a campaign object to carry raw acquisition,
+processing, inversion, resistivity, datum, county-coverage, target-depth, and
+product-uncertainty facts. Those values were not established as current or
+observed product metadata. Version v0.4 removes that stage and time collapse:
+the document's reported posture is historical, current campaign state is
+unknown, and no acquisition or downstream product evidence is bound.
 
----
+## Frozen fixture profile
 
-## Required Stage Separation
+Profile ID:
 
-The following stages are **distinct** and must **never** be interchanged or
-collapsed into each other:
+    kfm-geology-gmd3-aem-campaign-candidate-fixture-v1
 
-| Stage | Object type | Description |
-|-------|------------|-------------|
-| 1 | `AemSurveyCampaign` | Survey campaign and planned/actual footprint |
-| 2 | `AemFlightLine` | Flight line and acquisition segment |
-| 3 | `AemRawObservation` | Raw instrument observation |
-| 4 | `AemNavigationRecord` | Navigation/positioning and altitude observation |
-| 5 | `AemProcessingRun` | Processing run and software/configuration version |
-| 6 | `AemInversionModel` | Inversion model/version |
-| 7 | `AemResistivityProduct` | Resistivity section or voxel product |
-| 8 | `AemHydrostratigraphicProduct` | Interpreted hydrostratigraphic unit/product |
-| 9 | `AemUncertaintyRecord` | Uncertainty/quality-control result |
-| 10 | `AemRecommendation` | Recommendation, plan, or management decision |
-| 11 | `AemReleaseCarrier` | Released carrier and release decision |
+| Field | Required posture |
+|---|---|
+| `id` | Exact document-bound campaign-candidate fixture identity. |
+| `object_type` | `AemSurveyCampaign`. |
+| `source_descriptor_ref` | Document-specific `src:ku-news-gmd3-aem-announcement-2026-05-11`; not the broader campaign/product source ID. |
+| `announcement_reported_state` | `planned`; historical posture reported by the document. |
+| `announcement_published_on` | `2026-05-11`. |
+| `current_campaign_state` | `unknown`. |
+| `acquisition_evidence_state` | `not_bound_to_profile`; not a claim that acquisition did or did not occur. |
+| `survey_method` | `airborne_electromagnetic`, as announcement context only. |
+| `claim_scope` | `campaign_announcement`. |
+| `supporting_reference_candidates` | One exact typed `fixture://reference-candidate/...` string awaiting governed evidence resolution. |
+| `review_state` | `needs_review`. |
+| `release_state` | `not_released`. |
+| `limitations` | Exact fixture-only, historical-context, current-state-unknown, no-evidence-bound, non-legal, and non-release disclaimers. |
 
-A processed or interpreted product must not rewrite the raw acquisition identity.
-A resistivity map or voxel is **not** a groundwater-level observation, water-right
-record, legal finding, recommendation, or release authority.
+The reference candidate is syntactic fixture identity only. The validator does
+not resolve it to an `EvidenceRef` or `EvidenceBundle`, so its presence is not
+evidence binding or closure.
 
----
+## Denied fields and future stages
 
-## Minimum Contract Fields
+The candidate denies unscoped `campaign_state`, `acquisition_state`,
+`survey_counties`, and `planned_target_depth` fields. The source document may
+contain contextual language about a district or equipment design, but this
+profile does not turn it into surveyed coverage, achieved depth, current plan,
+or product truth.
 
-### Identity
+The following concepts remain future, separately observed and governed stages:
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `id` | yes | Stable campaign identity (`kfm:geology:aem-campaign:<slug>`) |
-| `object_type` | yes | Must be `"AemSurveyCampaign"` |
-| `product_id` | yes | Must differ from `source_descriptor_ref` (no identity collapse) |
-| `source_descriptor_ref` | yes | Reference to the canonical SourceDescriptor (`src:kgs-gmd3-aem-2026`) |
+- flight or acquisition segment;
+- raw instrument and navigation observation;
+- processing run and configuration;
+- inversion/model run;
+- resistivity section, grid, or voxel;
+- hydrostratigraphic interpretation;
+- uncertainty/QC result;
+- recommendation or management decision;
+- released carrier and release decision.
 
-### Spatial Reference
+The campaign candidate must not carry product identity, raw-source,
+processing/inversion version, CRS/datum/depth-axis, resistivity-unit, no-data,
+uncertainty, frequency-system, or footprint-geometry fields.
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `horizontal_crs` | yes | Horizontal CRS (e.g., `"EPSG:4326"`) |
-| `vertical_datum` | yes | Vertical datum — must not be absent or unknown |
-| `depth_reference` | yes | Depth reference benchmark (e.g., `"land_surface"`) |
-| `depth_positive_direction` | yes | Must be `"down"` or `"up"` — no ambiguity |
+## Source posture
 
-### Acquisition State
+The linked `SourceDescriptor` is document-specific and fixture-only. It must
+remain citation-only, candidate-only, rights-unresolved, restricted,
+documentation/manual-review only, connector-disabled, review-required,
+proposed, and not released. Its exact bytes are pinned by the validator so
+consumer-visible prose, endpoint, connector, credential, source-head, release
+condition, or claim-role drift fails closed.
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `campaign_state` | yes | `planned`, `in_flight`, `completed`, or `abandoned` |
-| `acquisition_state` | yes | `planned`, `actual`, `partial`, or `unknown` |
+The existing domain-first compatibility YAML uses the broader
+`src:kgs-gmd3-aem-2026` identity. This profile does not read, endorse, change,
+or bind that record. Reconciliation of that compatibility view is a separate
+reviewed change.
 
-### Processing and Inversion
+## Fail-closed rules
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `processing_software_version` | yes | Non-empty processing software version string |
-| `inversion_software_version` | yes | Non-empty inversion software version string |
-| `raw_source_ref` | yes | Reference to the raw acquisition record (lineage must not break) |
+The fixture profile fails when:
 
-### Product Units
+1. profile, campaign-candidate, source-document, or reference-candidate identity changes;
+2. the source-reported state or publication date changes;
+3. current campaign state is represented as known;
+4. acquisition evidence is represented as bound or observed;
+5. an unscoped planning field or downstream-stage field appears;
+6. a required limitation is absent or reordered;
+7. correction lineage is missing, outside the typed campaign-candidate namespace, malformed, or self-referential;
+8. review or release posture is strengthened;
+9. the document descriptor's exact content changes;
+10. the descriptor gains stronger role, authority, rights, access, endpoint, connector, source-head, activation, review, or release posture.
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `resistivity_units` | yes | Resistivity units (e.g., `"ohm·m"`) — must not be absent |
+Validator findings contain stable codes and JSON paths only. They do not echo
+candidate values.
 
-### Uncertainty
+## Not established
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `uncertainty` | yes | Uncertainty/QC block — must not be omitted |
-| `uncertainty.method` | yes | Description of the uncertainty method |
+- No current campaign status, completed flight, actual footprint, raw record,
+  or product bytes.
+- No surveyed county coverage, achieved depth of investigation, processing or
+  inversion software, CRS, vertical datum, depth axis, resistivity units,
+  uncertainty method, or scientific fitness.
+- No canonical source admission, data endpoint, connector, schedule,
+  credential, or live fetch.
+- No resolved evidence, rights clearance, policy decision, proof, cultural or
+  steward approval, lifecycle promotion, release, deployment, or publication.
+- No groundwater-level observation, water-right/title/legal finding,
+  recommendation, operational decision, or life-safety use.
 
-### Governance
+## Run and rollback
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `evidence_refs` | yes | At least one EvidenceRef binding — must not be empty |
-| `release_state` | yes | `not_released` for all proposed/disabled records |
-| `correction` | conditional | If present, must carry `supersedes_ref` (no silent supersession) |
+    PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+      python tests/domains/geology/test_aem_campaign.py --verbose
 
----
-
-## Fail-Closed Rules
-
-The following conditions **must** cause validation to fail:
-
-1. **Missing/unknown vertical datum** — `vertical_datum` absent or empty.
-2. **Ambiguous depth convention** — `depth_positive_direction` not `"down"` or `"up"`.
-3. **Unversioned processing or inversion** — `processing_software_version` or
-   `inversion_software_version` absent or empty.
-4. **Missing units** — `resistivity_units` absent or empty.
-5. **Product/source identity collapse** — `product_id` equals `source_descriptor_ref`.
-6. **Raw/processed lineage break** — `raw_source_ref` absent.
-7. **Uncertainty omission** — `uncertainty` block absent.
-8. **Silent supersession** — `correction` block present but `supersedes_ref` absent.
-9. **Unbound EvidenceRef** — `evidence_refs` empty or absent.
-10. **False release/publication state** — proposed/disabled record with `release_state`
-    other than `not_released`.
-
----
-
-## Not Established by This Contract
-
-- No endpoint, connector activation, schedule, credential, or live payload.
-- No geology/resource assertion, policy decision, proof, release, deployment, or
-  publication state.
-- No groundwater-level observation, water-right record, legal finding, or
-  recommendation.
-- No product existence assertion until official bytes and source metadata are
-  formally observed.
+Rollback is a normal revert of the bounded fixture-profile change. It creates
+no live source, lifecycle, proof, release, or published state.

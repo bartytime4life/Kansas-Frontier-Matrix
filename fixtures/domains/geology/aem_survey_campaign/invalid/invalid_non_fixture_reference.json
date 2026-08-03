@@ -10,10 +10,10 @@
   "survey_method": "airborne_electromagnetic",
   "claim_scope": "campaign_announcement",
   "supporting_reference_candidates": [
-    "fixture://reference-candidate/geology/gmd3-aem/ku-news-announcement-2026-05-11"
+    "https://example.invalid/aem"
   ],
   "review_state": "needs_review",
-  "release_state": "released",
+  "release_state": "not_released",
   "limitations": [
     "fixture_profile_only",
     "announcement_context_only",
