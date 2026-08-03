@@ -2,18 +2,21 @@
 doc_id: kfm://doc/tools-ingest-readme
 title: tools/ingest README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-domain-source-stewards
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-02
 policy_label: public; tooling-index; watcher-and-preflight-boundary; no-publication
 owning_root: tools/
 responsibility: parent boundary and index for ingest-adjacent watcher, preflight, and review-signal helpers under tools/
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
+  - ./cdl_watch/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../tests/ingest/README.md
+  - ../../.github/workflows/domain-agriculture.yml
   - ../../docs/domains/hazards/SOURCE_ROLE_MATRIX.md
   - ../../docs/domains/hazards/SOURCE_REGISTRY.md
   - ../../docs/domains/hydrology/README.md
@@ -96,9 +99,9 @@ The answer should be a bounded report. It should never be a source capture of re
 |---|---|---|
 | `tools/ingest/README.md` | **CONFIRMED** | This parent README replaces the previous empty file. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | `tools/` owns repo-wide validators, generators, builders, and trust tooling; it does not own policy, contract, schema, or release authority. |
-| `tools/ingest/` parent lane | **PROPOSED / draft** | The folder now has a parent contract, but executable layout and CI wiring remain unverified. |
+| `tools/ingest/` parent lane | **CONFIRMED bounded support lane** | Directory placement is adopted; the parent remains non-authoritative and non-publishing. |
 | Child watcher READMEs | **CONFIRMED where current-session fetched or recently updated** | Child lanes are documented as review-signal, preflight, or watcher-only. |
-| Child executables | **PROPOSED-to-create / NEEDS VERIFICATION** | This README does not claim scripts exist unless current repo evidence proves them. |
+| Child executables | **PARTIAL** | The CDL fixture comparator is executable; all other child implementations remain `PROPOSED / NEEDS VERIFICATION`. |
 | Source descriptors | **Owned elsewhere** | Source identity, role, rights, cadence, and activation belong under `data/registry/sources/`. |
 | Connectors | **Owned elsewhere** | Source acquisition and raw/quarantine handoff belong under `connectors/` or ratified connector homes. |
 | Pipelines | **Owned elsewhere** | Executable lifecycle normalization belongs under `pipelines/` or accepted pipeline homes. |
@@ -126,7 +129,7 @@ The answer should be a bounded report. It should never be a source capture of re
 Safe interpretation for this path:
 
 - **CONFIRMED:** the parent README exists at `tools/ingest/README.md`.
-- **PROPOSED:** helper code may live here when it is deterministic, dry-run friendly, report-oriented, and unable to publish.
+- **CONFIRMED for the bounded CDL fixture profile:** helper code may live here when it is deterministic, dry-run friendly, report-oriented, and unable to publish.
 - **NEEDS VERIFICATION:** whether every child folder has executable code, tests, CI wiring, source descriptors, and fixtures.
 - **DENY:** any use of this folder as connector authority, source registry, lifecycle data store, processed truth store, catalog/proof/release authority, public API, or policy authority.
 
@@ -140,7 +143,7 @@ Known child README lanes in this folder are listed below. Status is intentionall
 
 | Child lane | Type | Primary review signal | Status |
 |---|---|---|---|
-| `cdl_watch/` | watcher | USDA NASS Cropland Data Layer source changes. | README confirmed; executable proposed. |
+| `cdl_watch/` | watcher | Synthetic USDA NASS Cropland Data Layer sidecar changes. | Bounded fixture comparator and tests confirmed; live watcher proposed. |
 | `drought_watch/` | watcher | U.S. Drought Monitor source changes. | README confirmed; executable proposed. |
 | `fema_decl_watch/` | watcher | OpenFEMA disaster declaration administrative-record changes. | README confirmed; executable proposed. |
 | `firms_hms_watch/` | watcher | NASA FIRMS and NOAA HMS fire/smoke source-surface changes. | README confirmed; executable proposed. |
@@ -347,9 +350,10 @@ Before adding or changing anything under `tools/ingest/`, reviewers should confi
 |---|---|---|
 | Replace empty parent README with governed `tools/ingest/` contract | **DONE in this README** | Establishes the parent boundary and child-lane index. |
 | Reconcile child README links after path audit | **PROPOSED** | Ensure all related links point to existing doctrine, connector, registry, and pipeline files. |
-| Add shared report schema or fixture convention | **PROPOSED / NEEDS VERIFICATION** | Prevent each watcher from inventing incompatible report envelopes. |
-| Add `tests/ingest/README.md` | **PROPOSED** | Defines public-safe fixture rules and deterministic output expectations. |
-| Add CI non-blocking review summary | **PROPOSED / later** | Surfaces watcher/preflight drift without promotion or release side effects. |
+| Add `tests/ingest/README.md` | **DONE** | Defines synthetic fixture rules and deterministic output expectations. |
+| Add bounded CDL proof to Agriculture CI | **DONE** | Executes local fixture comparisons with networking denied while broader Agriculture validation remains held. |
+| Add shared report schema or fixture convention | **PROPOSED / NEEDS VERIFICATION** | The CDL fixture profile is deliberately local and does not claim a canonical cross-watcher envelope. |
+| Add CI non-blocking review summary | **PROPOSED / later** | A live drift summary still depends on source admission, cadence, policy, and steward review. |
 | Promote stable helpers into guarded workflows | **PROPOSED / later** | Only after fixtures, tests, descriptor activation, and steward review are in place. |
 
 [Back to top](#top)
@@ -360,6 +364,6 @@ Before adding or changing anything under `tools/ingest/`, reviewers should confi
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft parent README replacement for existing empty file. |
-| Next smallest safe change | Add or verify `tests/ingest/README.md`, then add shared fixture/report conventions for watcher lanes. |
+| Last reviewed | 2026-08-02 |
+| Review state | Parent boundary reconciled to the first bounded fixture-only child implementation. |
+| Next smallest safe change | Review a shared watcher report contract without turning the CDL fixture profile into source, policy, receipt, or publication authority. |

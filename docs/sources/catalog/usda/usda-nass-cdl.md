@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-usda-usda-nass-cdl
 title: USDA NASS Cropland Data Layer
 type: product-page
-version: v0.2
+version: v0.3
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for usda>
 created: 2026-05-21
-updated: 2026-05-22
+updated: 2026-08-02
 policy_label: public
 related:
   - docs/sources/catalog/usda/README.md
@@ -16,9 +16,11 @@ related:
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
+  - docs/intake/exploratory/cdl-material-change-watcher-source-map.md
 tags: [kfm, docs, sources, catalog, usda, landcover, raster]
 notes:
   - "v0.2 polish revision: navigation, diagrams, watcher governance section, and atlas-card pointers added; underlying evidence basis unchanged."
+  - "v0.3 repository reconciliation: one bounded synthetic sidecar comparator is executable; live CDL source access, cadence, rights, descriptor, canonical thresholds, receipts, and publication remain PROPOSED or NEEDS VERIFICATION."
   - "PROPOSED product-page scaffold; description grounded in docs/domains SOURCE_REGISTRY files and the consolidated atlas (KFM-P2-IDEA-0028, KFM-P1-PROG-0063, ML-067-001..042)."
   - "Out-of-spine relative to directory-rules.md §7.3 — see family README for OPEN-DSC-14 context."
 [/KFM_META_BLOCK_V2] -->
@@ -34,9 +36,9 @@ notes:
 [![family: usda](https://img.shields.io/badge/family-usda-blueviolet)](./README.md)
 [![source-role: observation/model (PROPOSED)](https://img.shields.io/badge/source--role-observation%2Fmodel%20(PROPOSED)-yellow)](#source-authority)
 [![rights: NEEDS VERIFICATION](https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-red)](#rights-and-sensitivity)
-[![last reviewed: 2026-05-22](https://img.shields.io/badge/last%20reviewed-2026--05--22-informational)](#last-reviewed)
+[![last reviewed: 2026-08-02](https://img.shields.io/badge/last%20reviewed-2026--08--02-informational)](#last-reviewed)
 
-**Status:** PROPOSED — scaffold · **Family:** [`usda`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for usda>` · **Last reviewed:** 2026-05-22
+**Status:** PROPOSED product scaffold / CONFIRMED bounded fixture comparator · **Family:** [`usda`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for usda>` · **Last reviewed:** 2026-08-02
 
 ---
 
@@ -80,7 +82,7 @@ notes:
 | **Endpoint URL** | — | NEEDS VERIFICATION |
 | **Rights** | U.S. federal product (likely public domain); attribution terms unconfirmed | NEEDS VERIFICATION |
 | **Atlas role posture** | `observation / model` (raster classification) | PROPOSED |
-| **Watcher pattern** | `ML-067-001` family (weekly HEAD + county histogram drift + PROPOSED work record) | PROPOSED implementation |
+| **Watcher pattern** | Synthetic sidecar comparison is executable; weekly HEAD and live source behavior remain proposed | PARTIAL — fixture proof only |
 | **Public posture** | County/generalized products first; material-change watchers propose work only | CONFIRMED doctrine (`Build Manual §10.7`) |
 
 [↑ Back to top](#top)
@@ -91,7 +93,7 @@ notes:
 
 The USDA NASS **Cropland Data Layer (CDL)** is identified in the KFM atlas (`KFM-P2-IDEA-0028`) as one of four land-cover authorities — alongside NLCD, LANDFIRE, and GAP — that KFM ingests with **native classification preserved** and **cross-walked to a common vocabulary where possible**. CDL is **annual and crop-focused**, in contrast to NLCD (multi-year, broad), LANDFIRE (fire-focused), and GAP (biodiversity-focused).
 
-CDL flows through the canonical KFM lifecycle. Material change is detected via a **county-bounded class-histogram drift** trigger (`KFM-P1-PROG-0063`, watcher pattern `ML-067-001..015`); only material changes emit `PROPOSED_WORK_RECORD` entries. The watcher emits receipts; **it MUST NOT publish**.
+The CDL design flows through the canonical KFM lifecycle. A bounded synthetic comparator now exercises a **county-bounded class-histogram drift** trigger (`KFM-P1-PROG-0063`, watcher pattern `ML-067-001..015`) and emits review-only outcomes. It does not emit receipts or access a live source. Any future operational watcher **MUST NOT publish**.
 
 > [!IMPORTANT]
 > **Classification crosswalks are inherently lossy.** The atlas directs that CDL crosswalks be **advisory rather than authoritative**. Any joined land-cover product is derived; the per-source primary remains the authority for CDL claims.
@@ -191,7 +193,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The diagram is structural. `PROPOSED_WORK_RECORD` is a candidate signal, not a publication. Watcher and gate IDs (`ML-067-*`) are atlas references for the **watcher design family**, not confirmed implementation in the mounted repository.
+> The diagram is structural. `PROPOSED_WORK_RECORD` is a candidate signal, not a publication. Watcher and gate IDs (`ML-067-*`) describe the broader live-watcher design; only the bounded synthetic comparator is confirmed in current repository evidence.
 
 [↑ Back to top](#top)
 
@@ -204,7 +206,7 @@ flowchart LR
 | **STAC** with `kfm:provenance` | [`data/catalog/stac/`](../../../../data/catalog/stac/) | **PROPOSED — Yes** (raster spatiotemporal asset; matches C4-01 use case) | `C4-01` |
 | **DCAT** distribution | [`data/catalog/dcat/`](../../../../data/catalog/dcat/) | PROPOSED — confirm whether CDL also publishes a DCAT distribution per `C4-05` | `C4-05` |
 | **PROV-O** | [`data/catalog/prov/`](../../../../data/catalog/prov/) | PROPOSED — yes, per `KFM-P7-PROG-0001` STAC attestation hook (`rel: attestation` → EvidenceBundle) | `KFM-P7-PROG-0001` |
-| **Domain projection** | [`data/catalog/domain/landcover/`](../../../../data/catalog/domain/landcover/) | PROPOSED — confirm landcover domain projection presence | atlas §F |
+| **Domain projection** | [`data/catalog/domain/agriculture/`](../../../../data/catalog/domain/agriculture/) | PROPOSED — existing Agriculture home; a CDL/landcover projection is not established | atlas §F |
 
 CDL is a spatiotemporal raster — **STAC is the primary catalog profile**, per `C4-01` (STAC Item with `kfm:provenance` namespace).
 
@@ -312,6 +314,15 @@ CDL is governed by the **CDL/PLANTS material-change watcher family** (`ML-067-00
 
 Thresholds (`ML-067-004` defaults) are versioned **policy inputs**, not hard-coded map logic. Homes are PROPOSED under `policy/observations/` or `policy/sensitivity/agriculture/` per OPEN-DR-09 / OPEN-DR-10.
 
+Current repository evidence includes
+[`tools/ingest/cdl_watch/cdl_watch.py`](../../../../tools/ingest/cdl_watch/cdl_watch.py)
+and its [synthetic no-network proof](../../../../tests/ingest/cdl_watch/README.md).
+That frozen profile accepts caller-supplied integer thresholds, a non-real
+county sentinel, and a fixture-only source reference. Its local `profile_hash`
+is not canonical KFM `spec_hash` authority. No live endpoint, source descriptor,
+rights decision, cadence, receipt, source admission, or release behavior is
+implemented by that proof.
+
 [↑ Back to top](#top)
 
 ---
@@ -324,10 +335,10 @@ Thresholds (`ML-067-004` defaults) are versioned **policy inputs**, not hard-cod
 | STAC Projection lint | STAC items conform to the Projection extension (CRS, geometry, bbox) | `KFM-P27-FEAT-0003` | PROPOSED |
 | STAC checksum closure | STAC `file:checksum` matches `ReleaseManifest` digest | `KFM-P22-PROG-0037` | PROPOSED |
 | STAC attestation hook | `rel: attestation` link from STAC Item → EvidenceBundle whose `spec_hash` certifies the item | `KFM-P7-PROG-0001` | PROPOSED |
-| Source-authenticity gate (Gate D) | Persist `sha256`, `etag`, `last_modified`, `content_length` | `ML-067-013` | PROPOSED |
-| Classmap drift fixtures | Fixtures for changed class meaning and missing remap | `ML-067-014` | PROPOSED |
-| County geometry drift fixtures | Geometry hash change and denominator drift | `ML-067-015` | PROPOSED |
-| Materiality boundary fixtures | At-threshold, below-threshold, and county-size scaling | `ML-067-004` | PROPOSED |
+| Source-metadata comparison | Compare `sha256`, `etag`, `last_modified`, and `content_length` | `ML-067-013` | CONFIRMED in synthetic fixture profile; live gate PROPOSED |
+| Classmap drift fixtures | Fail closed before histogram interpretation when the version changes | `ML-067-014` | CONFIRMED in synthetic fixture profile; remap authority PROPOSED |
+| County geometry drift fixtures | Geometry hash change blocks crop-change interpretation | `ML-067-015` | CONFIRMED in synthetic fixture profile |
+| Materiality boundary fixtures | Below-threshold and inclusive relative/absolute boundaries | `ML-067-004` | CONFIRMED mechanics; canonical policy PROPOSED |
 | PMTiles render verification | `RenderReceipt` required for PMTiles assets before promotion | `ATLAS-09` | PROPOSED |
 | Spec-hash match gate | Recomputed `spec_hash` matches claimed `spec_hash` | `C5-04` | CONFIRMED doctrine |
 
@@ -350,7 +361,7 @@ Thresholds (`ML-067-004` defaults) are versioned **policy inputs**, not hard-cod
 - [`connectors/usda-nass/`](../../../../connectors/usda-nass/) — v0.1 of the family README reports this as **currently an empty stub**; re-verify before authoring connector code.
 - Connectors write to [`data/raw/<domain>/<source_id>/<run_id>/`](../../../../data/raw/) or [`data/quarantine/`](../../../../data/quarantine/) only (`directory-rules.md` §7.3).
 - Pipeline lanes: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
-- Pipeline specs: [`pipeline_specs/landcover/`](../../../../pipeline_specs/landcover/) (PROPOSED home; verify per `directory-rules.md` §7.4).
+- Pipeline specs: [`pipeline_specs/agriculture/`](../../../../pipeline_specs/agriculture/) exists, but no CDL-specific accepted spec is established there.
 
 [↑ Back to top](#top)
 
@@ -440,7 +451,7 @@ Thresholds (`ML-067-004` defaults) are versioned **policy inputs**, not hard-cod
 | Endpoint URL | Current CDL endpoint URL(s) | NEEDS VERIFICATION |
 | Rights & attribution | Exact attribution string and public-domain confirmation | NEEDS VERIFICATION |
 | Collection scope | Does CDL warrant its own STAC Collection, or share one with sibling landcover products (NLCD, LANDFIRE, GAP)? | OPEN |
-| First fixture | What CDL year/version and county geometry dataset is the first fixture source? | NEEDS VERIFICATION (`KFM-P1-PROG-0063`) |
+| First live fixture | What real CDL year/version and reviewed county geometry dataset should replace the non-real `99999` fixture sentinel? | NEEDS VERIFICATION (`KFM-P1-PROG-0063`) |
 | Classmap home | Where do `classmap_version` and remapping tables live in the repo? | NEEDS VERIFICATION |
 | Threshold home | Where do materiality thresholds live (PROPOSED `policy/observations/` or `policy/sensitivity/agriculture/`)? | OPEN-DR-09 / OPEN-DR-10 |
 
@@ -565,12 +576,18 @@ All `ML-067-*` items carry **NEW / CONFIRMED source evidence / PROPOSED implemen
 - [`docs/sources/catalog/OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) — lane-wide `OPEN-DSC-*` index
 - [`docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — product-page template
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority
+- [`docs/intake/exploratory/cdl-material-change-watcher-source-map.md`](../../../intake/exploratory/cdl-material-change-watcher-source-map.md) — supplied-document identity and bounded implementation disposition
 - [`data/registry/sources/`](../../../../data/registry/sources/) — authoritative `SourceDescriptors`
 - [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — schema home (ADR-0001)
 
 ---
 
 ## Last reviewed
+
+**2026-08-02** — v0.3 repository reconciliation. Confirmed only the bounded,
+synthetic, no-network sidecar comparator and its tests. Live source identity,
+rights, endpoint, cadence, threshold policy, receipt production, admission,
+promotion, release, and publication remain `PROPOSED / NEEDS VERIFICATION`.
 
 **2026-05-22** — v0.2 polish revision (Claude Code session). No new repo-state claims introduced; v0.1 evidence basis preserved and extended with atlas-grounded CDL specifics (`KFM-P2-IDEA-0028`, `KFM-P1-PROG-0063`, `ML-067-001..015`, `Build Manual §10.7`, `C4-01`). Pipeline-flow diagram, watcher governance table, expanded validation table, FAQ, and atlas-card appendix added.
 
