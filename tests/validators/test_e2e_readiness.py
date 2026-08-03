@@ -8,6 +8,7 @@ import tempfile
 import unittest
 
 from tools.validators.e2e_readiness import (
+    ACCEPTED_PLAYWRIGHT_CONFIGS,
     EXPECTED_EXPLORER_SCRIPTS,
     EXPECTED_ROOT_HOLDS,
     inspect_readiness,
@@ -150,6 +151,20 @@ class E2EReadinessTests(unittest.TestCase):
 
         self.assertIn("E2E_IMPLEMENTATION_SURFACED", {item.code for item in report.findings})
         self.assertNotIn("protected body", "\n".join(render_report(report)))
+
+    def test_accepted_playwright_config_does_not_trigger_surfaced_finding(self) -> None:
+        for relative in ACCEPTED_PLAYWRIGHT_CONFIGS:
+            _write(self.root / relative, "// accepted playwright config\n")
+
+        self.assertNotIn("E2E_IMPLEMENTATION_SURFACED", self._codes())
+
+    def test_unaccepted_playwright_config_fails_closed(self) -> None:
+        _write(
+            self.root / "apps/explorer-web/playwright.config.extra.ts",
+            "// unaccepted playwright config\n",
+        )
+
+        self.assertIn("E2E_IMPLEMENTATION_SURFACED", self._codes())
 
     def test_changed_hydrology_placeholder_fails_closed(self) -> None:
         _write(
