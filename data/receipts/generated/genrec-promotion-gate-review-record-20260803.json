@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-promotion-gate-review-record-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-gate.yml",
+    ".github/workflows/release-dry-run.yml",
+    "Makefile",
+    "fixtures/release/promotion_gate/README.md",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json",
+    "fixtures/release/promotion_gate/invalid/abstain__review_authority_missing.json",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_artifact_hash_unbound.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_scope_mismatch.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_self.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_spec_hash_unbound.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_stale.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_superseded.json",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json",
+    "release/reviews/README.md",
+    "tests/release/README.md",
+    "tests/release/test_promotion_gate.py",
+    "tests/release/test_review_record.py",
+    "tools/validators/promotion_gate/README.md",
+    "tools/validators/promotion_gate/validate_promotion_gate.py",
+    "tools/validators/validate_review_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-gate.yml": "sha256:f13e4173b715a89be1a358ced58de02109bac397a6fadca26479a3307de1a6b2",
+    ".github/workflows/release-dry-run.yml": "sha256:044b3404ed8c247aa8764b101bad784646b447c83c71601d3ffdce0a326a99d6",
+    "Makefile": "sha256:a94ca311ae28fa43b548db7117b4912fb07868066b83ae6d902f23330d7750d4",
+    "fixtures/release/promotion_gate/README.md": "sha256:ff7e99c032e2c525376573c514732628988a948b1f457062729fb79dae49e3f3",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json": "sha256:680d42b18725893fe8dce9e82d4248df7abd5b717ea5f6fcdf479be4dd4bb096",
+    "fixtures/release/promotion_gate/invalid/abstain__review_authority_missing.json": "sha256:995c010a80fa9bba2443604143e6c4b6f4c639408bda5bff10680d3b8ffd72b3",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json": "sha256:836db30f03b83c0aeba48b6987c6d06b5d1a7b491567d54eb8026ba1c16be3f6",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json": "sha256:0eed291734bb77be74fce7896109bef2b2bc37d83c32cb114458c173132904f5",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json": "sha256:82599e0d3cc1d1452bbad09ad4613ef98bd90a3d00d38073049380f626536814",
+    "fixtures/release/promotion_gate/invalid/deny__review_artifact_hash_unbound.json": "sha256:cab38ee085380a8c0b770faf965cd0f11232ae5226f9b7b775b069df11f9f96a",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json": "sha256:9bdcfa22fbca63d24ba2e1b236f464759c78b406e72adcdc290a94b02e0adf57",
+    "fixtures/release/promotion_gate/invalid/deny__review_scope_mismatch.json": "sha256:19846032a2198b6678e66b163311898468b29c1682e23a06ec409d698962cc6e",
+    "fixtures/release/promotion_gate/invalid/deny__review_self.json": "sha256:84bd81984fedb16afc1ff70c92a47e9b9792b5cc8ecf1abf213a2e47064604aa",
+    "fixtures/release/promotion_gate/invalid/deny__review_spec_hash_unbound.json": "sha256:294d1f483f0411bcc0341fc8622f51b5874d5ae3e1481db05f460995f3856a7d",
+    "fixtures/release/promotion_gate/invalid/deny__review_stale.json": "sha256:2d4f2deaaed27c065387eb06916ca9e8f8bcc9bb47bd4835a07cfd0a98ee19b3",
+    "fixtures/release/promotion_gate/invalid/deny__review_superseded.json": "sha256:735aa48854ee1f7a7229ffa8353ea51a0459392c3c6c1419c477693cd5a73c3f",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json": "sha256:b942245d2cec047a8f1e13b8038475dbf17b5af3f35ad89151d13632006ad0ac",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json": "sha256:83fde42a2a350483885d066a1f5a0c2c1590d000f8c4a44ee23e96cff2ce660c",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json": "sha256:bd5b2a09368088d64ff7df6d1f8d32b5e67b941c9db74ab39f98566aebae77b1",
+    "release/reviews/README.md": "sha256:1516f31b50328168128f3a7d985332d6e09e99d43487824a2240ccf329b8fb65",
+    "tests/release/README.md": "sha256:5f77ad42397f72e7d0baaf779177ba1b449bd0f0738d9c1e9b53adfa0420ef35",
+    "tests/release/test_promotion_gate.py": "sha256:a6997d5b1ebab10ea3ac93a2336c8768c65a35a365ef2afa5c3b80b4b0129828",
+    "tests/release/test_review_record.py": "sha256:3d0672180c3b6c9abcba8db321836407179bb341a73f0aa218a4b14ea3b4e4b8",
+    "tools/validators/promotion_gate/README.md": "sha256:7f0fc77e55217188772b2ad61f5148802745e4cc0d77fceef2720053fca2502f",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "sha256:f20437628eb5001f39b3707c5efc2bc7989f283321740e5b18b07d37a314fc5f",
+    "tools/validators/validate_review_record.py": "sha256:81c12799753d000d8b433b2b5b0937ed22b6f38baa9645a8b0f23a13f48d49dd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:5fe27bfe55ca186fe7dad7d73f5cad3499b1167be8be25730e098f4ac342061e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "isolated repository-declared Python test environment",
+      "deterministic no-network validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d1a13a3c852944d8fd8754a887f0b35d3ea9a971",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1925",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/governance/ReviewRecord.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/common/identity_token.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/governance/steward_assignment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-gate.yml": "CONFIRMED",
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "fixtures/release/promotion_gate/README.md": "PROPOSED",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/abstain__review_authority_missing.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_artifact_hash_unbound.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_scope_mismatch.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_self.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_spec_hash_unbound.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_stale.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_superseded.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json": "CONFIRMED",
+    "release/reviews/README.md": "PROPOSED",
+    "tests/release/README.md": "PROPOSED",
+    "tests/release/test_promotion_gate.py": "CONFIRMED",
+    "tests/release/test_review_record.py": "CONFIRMED",
+    "tools/validators/promotion_gate/README.md": "PROPOSED",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "CONFIRMED",
+    "tools/validators/validate_review_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main at d1a13a3c852944d8fd8754a887f0b35d3ea9a971, merged PR 1925, the A-G implementation, contracts, schemas, identity and authority records, validators, workflows, fixtures, generated-receipt rules, and existing release boundaries were inspected before mutation."
+    },
+    {
+      "gate": "fixture-only-review-record-validation",
+      "outcome": "PASS",
+      "reason": "The exact synthetic subset produced one PASS, six DENY, one ABSTAIN, and one ERROR outcome with no socket access; self-review, stale or superseded review, scope mismatch, and unbound specification or artifact hashes fail closed, while missing authority abstains."
+    },
+    {
+      "gate": "promotion-precedence-and-non-emission",
+      "outcome": "PASS",
+      "reason": "The full sixteen-fixture promotion matrix and twelve focused tests preserved ERROR over DENY over ABSTAIN over PASS precedence and asserted that validator output never contains approval, promotion, release, or publication lifecycle states."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make validate passed in the isolated repository-declared test environment, including 149 tests and 24 subtests across aggregate schema, contract, validator, and release lanes."
+    },
+    {
+      "gate": "workflow-document-and-syntax-integrity",
+      "outcome": "PASS",
+      "reason": "Both changed workflows parsed as YAML; all fifteen well-formed promotion fixtures parsed as duplicate-key-free JSON; eighteen documentation-link tests and forty local targets across four changed documents passed; Python compilation, secret scan, and git diff --check passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator checked the final twenty-six-artifact path, digest, and truth-label binding with human review explicitly pending."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. Hosted success will not be treated as review, approval, promotion, release, deployment, or publication authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored, authenticated, or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/d1a13a3c852944d8fd8754a887f0b35d3ea9a971"
+    },
+    {
+      "id": "merged-promotion-gate-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1925"
+    },
+    {
+      "id": "review-record-contract-at-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/governance/ReviewRecord.md"
+    },
+    {
+      "id": "identity-and-authority-contracts-at-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/governance/steward_assignment.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T05:44:37Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change implements a fixture-only, no-network ReviewRecord validation slice inside Gate G. PASS remains readiness evidence only. The validator does not authenticate live identities or authority records, dereference external records, write a ReviewRecord or PromotionDecision, approve, promote, merge, release, deploy, publish, or mutate lifecycle state. Missing live authentication remains a documented hold. Rollback is a clean revert of the feature commit; no stored data or public lifecycle state requires migration."
+}

@@ -1,8 +1,9 @@
 {
   "profile_version": "v1",
   "candidate_id": "overlay:synthetic-policy-error",
-  "candidate_author": "synthetic-author",
+  "candidate_author": "actor:synthetic-author",
   "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411",
+  "gate_evaluated_at": "2026-04-13T01:00:00Z",
   "lifecycle": {"from": "CATALOG", "to": "PUBLISHED"},
   "release_manifest": {"id": "release:synthetic:v1", "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411", "artifact_digests": ["sha256:4214a9deea39c870e605b7fd9719f1abd873a6df5ba0bd4fd43b7448569238aa"]},
   "run_receipt": {"id": "receipt:synthetic:v1", "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411", "output_digests": ["sha256:4214a9deea39c870e605b7fd9719f1abd873a6df5ba0bd4fd43b7448569238aa"]},
@@ -12,7 +13,7 @@
   "evidence_refs": ["evidence:synthetic:v1"],
   "attestation_refs": ["proof:synthetic:v1"],
   "catalog_refs": {"stac": ["catalog:synthetic:stac:v1"], "dcat": ["catalog:synthetic:dcat:v1"], "prov": ["catalog:synthetic:prov:v1"]},
-  "review": {"status": "APPROVED", "reviewer": "synthetic-reviewer", "ticket": "SYNTHETIC-REVIEW-1"},
+  "review": {"record": {"review_id": "review:synthetic:policy-error:v1", "subject_ref": "overlay:synthetic-policy-error", "reviewer_role": "reviewer", "decision": "approve", "reasons": ["synthetic fixture review"], "obligations": [], "reviewed_at": "2026-04-13T00:30:00Z"}, "author_identity": {"id": "actor:synthetic-author", "kind": "actor", "issued_at": "2026-04-13T00:00:00Z", "issuer": "fixture:promotion-gate"}, "reviewer_identity": {"id": "actor:synthetic-reviewer", "kind": "actor", "issued_at": "2026-04-13T00:00:00Z", "issuer": "fixture:promotion-gate"}, "authority": {"assignment_id": "stewardassign:synthetic:promotion-reviewer:v1", "assigned_to": "actor:synthetic-reviewer", "role": "reviewer", "scope": "release.promotion_gate", "status": "ACTIVE", "starts_at": "2026-04-13T00:00:00Z", "expires_at": "2026-04-15T00:00:00Z", "authority_basis_refs": ["governance:synthetic:fixture-only"]}, "scope": "release.promotion_gate", "valid_until": "2026-04-14T00:00:00Z", "superseded_by_review_id": null, "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411", "artifact_digests": ["sha256:4214a9deea39c870e605b7fd9719f1abd873a6df5ba0bd4fd43b7448569238aa"]},
   "rollback": {"card_ref": "rollback:synthetic:v1", "target_spec_hash": "sha256:e6508ac2cf9399dbb793eb5694dee1dcb500bed64d5c53004046bb2c6ce0d7c8"},
   "ai_mediation": {"used": false, "receipt_ref": null},
   "correction": {"supersedes_prior": false, "notice_ref": null}

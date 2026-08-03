@@ -1,6 +1,6 @@
 {
   "profile_version": "v1",
-  "candidate_id": "overlay:synthetic-kansas-promotion-proof",
+  "candidate_id": "overlay:synthetic-review-artifact-unbound",
   "candidate_author": "actor:synthetic-author",
   "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411",
   "gate_evaluated_at": "2026-04-13T01:00:00Z",
@@ -26,7 +26,12 @@
     "valid": true,
     "deterministic": true,
     "crs": "EPSG:4326",
-    "bbox": [-102.0, 37.0, -94.6, 40.0]
+    "bbox": [
+      -102,
+      37,
+      -94.6,
+      40
+    ]
   },
   "temporal": {
     "start": "2026-04-13T00:00:00Z",
@@ -34,24 +39,38 @@
   },
   "policy_context": {
     "profile": "public-safe",
-    "labels": ["public"],
+    "labels": [
+      "public"
+    ],
     "evaluation": "PASS",
     "policy_bundle": "policy:promotion:synthetic@sha256:446da8512c8dce5d542777b36d04420952c444a358965a4874e24298075d750a"
   },
-  "evidence_refs": ["evidence:synthetic:promotion-proof:v1"],
-  "attestation_refs": ["proof:synthetic:promotion-proof:dsse:v1"],
+  "evidence_refs": [
+    "evidence:synthetic:promotion-proof:v1"
+  ],
+  "attestation_refs": [
+    "proof:synthetic:promotion-proof:dsse:v1"
+  ],
   "catalog_refs": {
-    "stac": ["catalog:synthetic:promotion-proof:stac:v1"],
-    "dcat": ["catalog:synthetic:promotion-proof:dcat:v1"],
-    "prov": ["catalog:synthetic:promotion-proof:prov:v1"]
+    "stac": [
+      "catalog:synthetic:promotion-proof:stac:v1"
+    ],
+    "dcat": [
+      "catalog:synthetic:promotion-proof:dcat:v1"
+    ],
+    "prov": [
+      "catalog:synthetic:promotion-proof:prov:v1"
+    ]
   },
   "review": {
     "record": {
-      "review_id": "review:synthetic:promotion-proof:v1",
-      "subject_ref": "overlay:synthetic-kansas-promotion-proof",
+      "review_id": "review:synthetic:artifact-unbound:v1",
+      "subject_ref": "overlay:synthetic-review-artifact-unbound",
       "reviewer_role": "reviewer",
       "decision": "approve",
-      "reasons": ["synthetic fixture review"],
+      "reasons": [
+        "synthetic fixture review"
+      ],
       "obligations": [],
       "reviewed_at": "2026-04-13T00:30:00Z"
     },
@@ -75,14 +94,16 @@
       "status": "ACTIVE",
       "starts_at": "2026-04-13T00:00:00Z",
       "expires_at": "2026-04-15T00:00:00Z",
-      "authority_basis_refs": ["governance:synthetic:fixture-only"]
+      "authority_basis_refs": [
+        "governance:synthetic:fixture-only"
+      ]
     },
     "scope": "release.promotion_gate",
     "valid_until": "2026-04-14T00:00:00Z",
     "superseded_by_review_id": null,
     "spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411",
     "artifact_digests": [
-      "sha256:4214a9deea39c870e605b7fd9719f1abd873a6df5ba0bd4fd43b7448569238aa"
+      "sha256:446da8512c8dce5d542777b36d04420952c444a358965a4874e24298075d750a"
     ]
   },
   "rollback": {

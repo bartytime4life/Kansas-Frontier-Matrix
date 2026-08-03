@@ -16,8 +16,8 @@
 # Inputs:
 #   Doctrine registry/checker/tests, DoctrineArtifactDescriptor schema fixtures,
 #   PromotionDecision contract/schema/fixtures/validator/test, promotion policy
-#   source inventory, bounded promotion-gate fixtures/validator/tests, review
-#   validator scaffold, and the tracked hydrology automation-smoke decision.
+#   source inventory, bounded promotion-gate and fixture-only ReviewRecord
+#   validators/fixtures/tests, and the tracked hydrology automation-smoke decision.
 #
 # Outputs and outcomes:
 #   Test output and job summaries only. Shape checks may pass while promotion
@@ -241,7 +241,8 @@ jobs:
             echo
             echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
             echo "- A promotion-gate PASS means only APPROVE_READY for review. The PROPOSED PromotionDecision schema and every external support reference remain separately governed."
-            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, execute promotion policy, verify DSSE/cosign, authenticate reviewers, resolve catalog records, execute rollback, or authorize a lifecycle transition."
+            echo "- Gate G rejects missing declared actor authority, self-review, stale/superseded review, scope mismatch, and unbound spec/artifact hashes in synthetic fixtures."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, execute promotion policy, verify DSSE/cosign, authenticate live identities or authority assignments, resolve catalog records, execute rollback, or authorize a lifecycle transition."
             echo "- Result: ${{ job.status }}. No PromotionDecision, receipt, proof, manifest, release, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -281,6 +282,7 @@ jobs:
               Path("tools/validators/promotion_gate/README.md"),
               Path("fixtures/release/promotion_gate/README.md"),
               Path("tests/release/test_promotion_gate.py"),
+              Path("tests/release/test_review_record.py"),
               Path("policy/promotion/promotion_prerequisites.rego"),
               Path("policy/promotion/rollback_card_required.rego"),
               Path("Makefile"),
@@ -333,10 +335,23 @@ jobs:
                   f"fail-closed tests before executing it in CI: missing marker {marker}"
               )
 
-          review_validator = Path("tools/validators/validate_review_record.py")
-          assert 'raise NotImplementedError("Greenfield placeholder")' in (
-              review_validator.read_text(encoding="utf-8")
-          ), "ReviewRecord validator changed; wire accountable fixtures and tests deliberately"
+          review_validator = Path("tools/validators/validate_review_record.py").read_text(
+              encoding="utf-8"
+          )
+          for marker in (
+              "validate_packet_document",
+              "RR_AUTHORITY_MISSING",
+              "RR_SELF_REVIEW",
+              "RR_REVIEW_STALE",
+              "RR_REVIEW_SUPERSEDED",
+              "RR_SCOPE_MISMATCH",
+              "RR_SPEC_HASH_UNBOUND",
+              "RR_ARTIFACT_HASH_UNBOUND",
+          ):
+              assert marker in review_validator, (
+                  "fixture-only ReviewRecord implementation drifted; "
+                  f"missing marker {marker}"
+              )
 
           promotion_wrapper = Path(
               "tools/validators/validate_promotion_gate.py"
@@ -356,11 +371,14 @@ jobs:
           target = re.search(r"(?m)^publish-check:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile publish-check target is missing"
           target_body = target.group("body")
+          assert "validate_review_record.py --fixtures" in target_body
           assert "validate_promotion_gate.py --fixtures" in target_body
+          assert "tests.release.test_review_record" in target_body
           assert "tests.release.test_promotion_gate" in target_body
 
           print("CONFIRMED: release/reviews contains guidance only, not review records.")
-          print("CONFIRMED: bounded promotion-gate validator is wired; ReviewRecord remains a placeholder.")
+          print("CONFIRMED: bounded promotion gate and fixture-only ReviewRecord validator are wired.")
+          print("CONFIRMED: the fixture projection creates no governed ReviewRecord or actor authority.")
           print("WORKFLOW_SKIPPED_EXPLICIT: the hydrology promoter was not executed.")
           print("WORKFLOW_HOLD: its automation-approved smoke decision has unresolved support refs.")
           print("No review, promotion, release, or publication authority was created.")
@@ -379,9 +397,9 @@ jobs:
           {
             echo "### Review records"
             echo
-            echo "- The bounded promotion gate is implemented and re-ran here; its PASS is only APPROVE_READY and does not authenticate references or actors."
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and the ReviewRecord validator remains a NotImplementedError scaffold."
+            echo "- The bounded promotion gate and fixture-only ReviewRecord profile re-ran here; PASS is only APPROVE_READY over synthetic declarations."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and no live actor identity or authority assignment was authenticated."
             echo "- The hydrology promoter was intentionally not run: it writes a timestamped automation-approved smoke decision whose EvidenceBundle and rollback-card paths are unresolved."
             echo "- Result: ${{ job.status }}. This readiness inventory is not reviewer approval, separation-of-duties proof, promotion, release, rollback readiness, or publication authority."
-            echo "- **NEEDS VERIFICATION:** accountable review, support resolution, and the held hydrology promoter remain separate future work."
+            echo "- **NEEDS VERIFICATION:** governed review records, authority resolution, support resolution, and the held hydrology promoter remain separate future work."
           } >> "$GITHUB_STEP_SUMMARY"

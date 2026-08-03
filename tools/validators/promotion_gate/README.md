@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-promotion-gate-readme
 title: tools/validators/promotion_gate README
 type: README
-version: v1.0.0
+version: v1.1.0
 status: implemented; bounded-readiness-validator; no-network; non-publisher
 owners: OWNER_TBD - Tooling/QA owner; promotion steward; release steward; policy steward; evidence steward; review steward; rollback steward
 created: 2026-07-08
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: repository-facing; promotion-gate; fail-closed; public-safe-fixtures; non-authoritative
 owning_root: tools/
 responsibility: Own the bounded executable that checks declared promotion-packet closure and emits deterministic readiness findings while deferring contracts, schemas, policy, evidence, receipts, proofs, review authority, release records, rollback execution, lifecycle state, and publication to their owning roots.
@@ -19,13 +19,15 @@ related:
   - ../../../contracts/release/promotion_decision.md
   - ../../../policy/promotion/README.md
   - ../../../fixtures/release/promotion_gate/README.md
+  - ../validate_review_record.py
+  - ../../../tests/release/test_review_record.py
   - ../../../tests/release/test_promotion_gate.py
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/architecture/publication/promotion-gates.md
   - ../../../.github/workflows/promotion-gate.yml
 notes:
   - "PASS means APPROVE_READY for accountable release review only; it is not a PromotionDecision, release, publication, or public-surface permission."
-  - "The validator checks declared closure and consistency. It does not resolve or authenticate evidence, attestations, policy bundles, reviewers, catalog records, rollback cards, or correction notices."
+  - "Gate G now composes a fixture-only ReviewRecord projection with synthetic actor identity and authority declarations; it does not authenticate live identities, assignments, or review records."
   - "The implementation uses only the Python standard library and the repository bounded-JSON helper; it performs no network access and writes no artifact."
 [/KFM_META_BLOCK_V2] -->
 
@@ -41,10 +43,11 @@ notes:
 |---|---|---|
 | `validate_promotion_gate.py` | **CONFIRMED executable** | Emits finite JSON findings and exit codes; no writes or network. |
 | `../validate_promotion_gate.py` | **CONFIRMED compatibility entry point** | Preserves the pre-existing flat command path. |
-| `fixtures/release/promotion_gate/` | **CONFIRMED synthetic matrix** | One `PASS`, five `DENY`, one `ABSTAIN`, and two `ERROR` files. |
-| `tests/release/test_promotion_gate.py` | **CONFIRMED focused tests** | Positive, negative, boundary, parser, CLI, deterministic-output, and no-network behavior. |
+| `../validate_review_record.py` | **CONFIRMED fixture-only validator** | Checks ReviewRecord shape, actor identity/authority binding, freshness, supersession, scope, subject, and hash binding without resolving live records. |
+| `fixtures/release/promotion_gate/` | **CONFIRMED synthetic matrix** | One `PASS`, eleven `DENY`, two `ABSTAIN`, and two `ERROR` files. |
+| `tests/release/test_review_record.py` and `test_promotion_gate.py` | **CONFIRMED focused tests** | Exact ReviewRecord and A-G outcomes, precedence, parser, CLI, deterministic-output, non-emission, and no-network behavior. |
 | `make publish-check` | **CONFIRMED executable target** | Runs the fixture matrix and focused standard-library suite. |
-| `.github/workflows/promotion-gate.yml` | **CONFIRMED orchestration** | Runs the bounded gate while retaining the separate ReviewRecord and hydrology-promoter holds. |
+| `.github/workflows/promotion-gate.yml` | **CONFIRMED orchestration** | Runs the bounded fixture-only review and A-G gates while retaining the governed-record and hydrology-promoter holds. |
 | Policy Rego stubs | **NEEDS VERIFICATION / not executed here** | Declared `policy_context.evaluation` is checked; actual policy evaluation remains policy-owned. |
 | Evidence, attestation, catalog, review, rollback, and correction resolution | **NEEDS VERIFICATION** | References are syntactically present and cross-field declarations agree; authenticity and authority are not established. |
 
@@ -76,6 +79,7 @@ validator input, not a new release record type.
 | Field | Gate | Declared meaning |
 |---|:---:|---|
 | `profile_version`, `candidate_id`, `candidate_author`, `spec_hash` | A | Stable candidate identity for this evaluation. |
+| `gate_evaluated_at` | D/G | Fixed UTC instant for deterministic review-freshness evaluation; never wall-clock time. |
 | `lifecycle` | A | Exact declared boundary: `CATALOG` or `TRIPLET` to `PUBLISHED`. |
 | `release_manifest` | A/B | Minimal manifest identity, spec hash, and declared artifact digests. |
 | `run_receipt` | B/F | Minimal process-memory identity, spec hash, and output digests. |
@@ -83,7 +87,7 @@ validator input, not a new release record type.
 | `temporal` | D | Real UTC-second start/end interval. |
 | `policy_context` | E | Profile, labels, policy result, and bundle reference supplied by the policy lane. |
 | `evidence_refs`, `attestation_refs`, `catalog_refs` | F | Declared proof and STAC/DCAT/PROV closure references. |
-| `review` | G | Approval state, reviewer, ticket, and author/reviewer separation. |
+| `review` | G | Fixture-only ReviewRecord shape plus author/reviewer IdentityToken projections, StewardshipAssignment projection, freshness/supersession, scope/subject, and spec/artifact bindings. |
 | `rollback`, `correction` | G | Prior target and correction linkage. |
 | `ai_mediation` | F | Conditional AI receipt when model mediation affected the candidate. |
 
@@ -98,13 +102,13 @@ echoed. An undeclared nested field is attributed to its owning A-G gate.
 | A | Identity and closure | Profile, candidate, author, hash, lifecycle boundary, manifest identity. | `DENY` on missing or contradictory identity. |
 | B | Asset integrity | Candidate/manifest/receipt hash agreement; non-empty unique digest-set equality. | `DENY` on mismatch or invalid digest. |
 | C | Geometry and CRS | Declared validity, deterministic processing, `EPSG:4326`, ordered finite world bbox. | `DENY` on invalid or nondeterministic geometry. |
-| D | Temporal semantics | Strict real UTC seconds and `start <= end`. | `DENY` on malformed or inverted time. |
+| D | Temporal semantics | Strict real UTC seconds, `start <= end`, and a declared gate-evaluation instant. | `DENY` on malformed or inverted time. |
 | E | Rights/sensitivity policy context | Known profile/labels, public-safe label discipline, finite policy evaluation. | `DENY` on policy rejection; `ERROR` on evaluator failure. |
 | F | Proof and catalog support | Evidence, attestation, STAC/DCAT/PROV, run receipt, conditional AI receipt. | `ABSTAIN` for unresolved evidence; `DENY` for mandatory integrity/catalog gaps. |
-| G | Review and rollback | Accountable approval, separation of duties, rollback target, correction linkage. | `DENY` on unsafe review/rollback; `ABSTAIN` on missing correction lineage. |
+| G | Review and rollback | Fixture-only ReviewRecord shape; actor identity and authority; separation, freshness, supersession, scope, subject, hash binding; rollback and correction linkage. | `DENY` on unsafe or contradictory declarations; `ABSTAIN` on missing authority or correction lineage. |
 
 The validator checks what the packet declares. It does not dereference a URI,
-authenticate a reviewer, verify DSSE/cosign, evaluate Rego, prove rights or
+authenticate an actor or authority assignment, verify DSSE/cosign, evaluate Rego, prove rights or
 sensitivity clearance, resolve an EvidenceBundle, or inspect a public surface.
 
 ## Finite results and exit codes
@@ -132,6 +136,7 @@ Run only the repository matrix:
 
 ```bash
 python tools/validators/validate_promotion_gate.py --fixtures
+python tools/validators/validate_review_record.py --fixtures
 ```
 
 Evaluate explicit packets:
@@ -154,12 +159,17 @@ The checked-in matrix covers:
 - invalid geometry;
 - unknown policy label;
 - missing approval;
+- missing actor authority;
+- self-review;
+- stale or superseded review;
+- review scope mismatch;
+- unbound specification or artifact hashes;
 - missing evidence support;
 - policy-evaluator error; and
 - malformed JSON.
 
 Focused unit tests additionally cover conditional AI receipts, correction
-lineage, separation of duties, equal temporal boundaries, impossible calendar
+lineage, finite-outcome precedence, equal temporal boundaries, impossible calendar
 timestamps, duplicate keys, non-echoing diagnostics, deterministic CLI output,
 gate-local unknown-field handling, exit-code polarity, and network denial.
 
@@ -194,3 +204,4 @@ publication state.
 |---|---|---|
 | 2026-07-08 | Replaced an empty placeholder with validator-routing documentation. | README-only; implementation unverified. |
 | 2026-08-02 | Added bounded A-G readiness implementation, fixture matrix, focused tests, Make target, and CI wiring. | Executable no-network proof; non-publisher. |
+| 2026-08-03 | Added fixture-only ReviewRecord, actor-authority, freshness, supersession, scope, and hash-binding checks to Gate G. | Review declarations fail closed without creating review or release authority. |
