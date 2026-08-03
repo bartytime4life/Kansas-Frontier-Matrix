@@ -50,6 +50,94 @@
         "type": "string"
       }
     },
+    "smart_sync": {
+      "type": "object",
+      "description": "Optional no-network-reviewable profile for one HTTP conditional polling decision. The profile records declared transport observations and prior-content binding; it does not authenticate or replay a request, fetch, admit, promote, release, or publish source material.",
+      "additionalProperties": false,
+      "required": [
+        "transport",
+        "fetch_time",
+        "source_url",
+        "http_status",
+        "http_validators",
+        "decision",
+        "reason",
+        "prior_run_receipt_ref",
+        "prior_content_digest",
+        "validator_drift"
+      ],
+      "properties": {
+        "transport": {
+          "const": "http_conditional"
+        },
+        "fetch_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://[^\\s]+$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          },
+          "maxLength": 2048
+        },
+        "http_status": {
+          "type": "integer",
+          "enum": [
+            200,
+            304
+          ]
+        },
+        "http_validators": {
+          "type": "object",
+          "description": "Validators sent with the request and, when returned, validators observed on the response.",
+          "additionalProperties": false,
+          "required": [
+            "request"
+          ],
+          "properties": {
+            "request": {
+              "$ref": "#/$defs/http_validator_set"
+            },
+            "response": {
+              "$ref": "#/$defs/http_validator_set"
+            }
+          }
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "materialize",
+            "no_op"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "content_changed",
+            "not_modified",
+            "validator_drift"
+          ]
+        },
+        "prior_run_receipt_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "maxLength": 512
+        },
+        "prior_content_digest": {
+          "$ref": "#/$defs/sha256_digest"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/sha256_digest"
+        },
+        "validator_drift": {
+          "type": "boolean"
+        }
+      }
+    },
     "outcome": {
       "type": "string",
       "enum": [
@@ -70,5 +158,260 @@
     "validation_refs",
     "outcome"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "sha256_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "http_validator_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "etag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "last_modified": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "content_length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "etag"
+          ]
+        },
+        {
+          "required": [
+            "last_modified"
+          ]
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "stage"
+        ],
+        "properties": {
+          "stage": {
+            "const": "smart_sync"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "smart_sync"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "smart_sync"
+        ]
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "const": "smart_sync"
+          },
+          "code_ref": {
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "inputs": {
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "outputs": {
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "source_descriptor_refs": {
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "validation_refs": {
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "outcome": {
+            "const": "SUCCESS"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "smart_sync"
+        ],
+        "properties": {
+          "smart_sync": {
+            "required": [
+              "http_status"
+            ],
+            "properties": {
+              "http_status": {
+                "const": 304
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "maxItems": 0
+          },
+          "smart_sync": {
+            "properties": {
+              "decision": {
+                "const": "no_op"
+              },
+              "reason": {
+                "const": "not_modified"
+              },
+              "validator_drift": {
+                "const": false
+              }
+            },
+            "not": {
+              "required": [
+                "content_digest"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "smart_sync"
+        ],
+        "properties": {
+          "smart_sync": {
+            "required": [
+              "http_status",
+              "decision"
+            ],
+            "properties": {
+              "http_status": {
+                "const": 200
+              },
+              "decision": {
+                "const": "materialize"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "smart_sync": {
+            "required": [
+              "content_digest"
+            ],
+            "properties": {
+              "reason": {
+                "const": "content_changed"
+              },
+              "validator_drift": {
+                "const": false
+              },
+              "http_validators": {
+                "required": [
+                  "response"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "smart_sync"
+        ],
+        "properties": {
+          "smart_sync": {
+            "required": [
+              "http_status",
+              "decision"
+            ],
+            "properties": {
+              "http_status": {
+                "const": 200
+              },
+              "decision": {
+                "const": "no_op"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "outputs": {
+            "maxItems": 0
+          },
+          "smart_sync": {
+            "required": [
+              "content_digest"
+            ],
+            "properties": {
+              "reason": {
+                "const": "validator_drift"
+              },
+              "validator_drift": {
+                "const": true
+              },
+              "http_validators": {
+                "required": [
+                  "response"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
