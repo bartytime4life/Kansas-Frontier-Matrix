@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: Exploratory Intake README
 type: readme
-version: v0.3
+version: v0.4
 status: draft; repository-grounded
 owners: Docs steward / OWNER_TBD
 created: 2026-05-16
 updated: 2026-08-02
 policy_label: public
-related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ./geology-natural-resources-architecture-source-map.md, ./cdl-material-change-watcher-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
+related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ./geology-natural-resources-architecture-source-map.md, ./cdl-material-change-watcher-source-map.md, ./evidence-resolution-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
 tags: [kfm, intake, exploratory, governance, documentation]
-notes: [Path and active source-map convention confirmed through remote main 658bd477e769646cd70131ca824af0780b6812b4; owners and policy labels remain NEEDS VERIFICATION; records remain non-authoritative intake.]
+notes: [Path and active source-map convention confirmed through remote main 09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab; owners and policy labels remain NEEDS VERIFICATION; records remain non-authoritative intake.]
 [/KFM_META_BLOCK_V2] -->
 
 # Exploratory intake
@@ -228,6 +228,7 @@ descriptive; it does not make every dated packet present or complete.
 docs/intake/exploratory/
 ├── README.md
 ├── cdl-material-change-watcher-source-map.md
+├── evidence-resolution-source-map.md
 └── *-source-map.md   # identity-pinned, non-authoritative packet maps
 ```
 

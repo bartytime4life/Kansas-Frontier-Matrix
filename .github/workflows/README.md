@@ -356,7 +356,6 @@ runtime, UI, policy, proof, release, or publication readiness.
 
 - [`docs-build.yml`](docs-build.yml)
 - [`e2e-smoke.yml`](e2e-smoke.yml)
-- [`evidence-resolver.yml`](evidence-resolver.yml)
 - [`focus-mock-test.yml`](focus-mock-test.yml)
 - [`hydrology-proof-slice.yml`](hydrology-proof-slice.yml)
 
@@ -387,6 +386,7 @@ from composed E2E, runtime, evidence, policy, release, or publication readiness.
 - [`deny-test.yml`](deny-test.yml)
 - [`dependency-scan.yml`](dependency-scan.yml)
 - [`docs-control-plane.yml`](docs-control-plane.yml)
+- [`evidence-resolver.yml`](evidence-resolver.yml)
 - [`infra-compose-smoke.yml`](infra-compose-smoke.yml)
 - [`link-check.yml`](link-check.yml)
 - [`maplibre-perf-governance.yml`](maplibre-perf-governance.yml)
@@ -403,6 +403,11 @@ from composed E2E, runtime, evidence, policy, release, or publication readiness.
 - [`validator-suite.yml`](validator-suite.yml)
 
 Read the exact steps and job summaries before relying on any workflow as a merge gate. “Command-bearing” does not mean complete, current, or production-ready.
+
+`evidence-resolver.yml` runs only the internal v1alpha1 candidate profile and
+its exact synthetic negative suite. It performs no live lookup and cannot
+establish evidence truth, policy clearance, review, release, public outcome,
+or publication authority.
 
 `link-check.yml` preserves the stable workflow and `docs-link-check` job names
 while replacing the prior readiness hold with a standard-library, local-only

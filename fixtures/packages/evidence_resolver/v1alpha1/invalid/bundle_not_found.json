@@ -1,0 +1,20 @@
+{
+  "request": {
+    "profile": "kfm/evidence-ref-bundle-candidate/v1alpha1",
+    "evidence_ref": {
+      "ref": "measurement:synthetic:rainfall-001",
+      "kind": "measurement",
+      "bundle_ref": "bundle:synthetic:closure-001"
+    },
+    "bundle_candidate": null,
+    "lookup_context": {
+      "bundle_id": "bundle:synthetic:closure-001",
+      "current_head": true,
+      "policy_outcome": "ANSWER",
+      "policy_decision_ref": "policy:synthetic:answer-001",
+      "correction_state": "ACTIVE",
+      "correction_ref": null
+    }
+  },
+  "expected": {"status": "UNRESOLVED", "issue_codes": ["lookup/not-found"]}
+}

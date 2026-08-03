@@ -1,0 +1,48 @@
+{
+  "request": {
+    "profile": "kfm/evidence-ref-bundle-candidate/v1alpha1",
+    "evidence_ref": {
+      "ref": "measurement:synthetic:rainfall-001",
+      "kind": "measurement",
+      "bundle_ref": "bundle:synthetic:closure-001"
+    },
+    "bundle_candidate": {
+      "bundle_id": "bundle:synthetic:closure-001",
+      "claim_scope": "Synthetic candidate-closure fixture only",
+      "evidence_refs": [
+        {
+          "ref": "measurement:synthetic:rainfall-001",
+          "kind": "measurement",
+          "bundle_ref": "bundle:synthetic:closure-other"
+        }
+      ],
+      "source_records": ["source:synthetic:record-001"],
+      "citations": ["Synthetic fixture citation; not a real source"],
+      "rights": {"license": "CC0-1.0"},
+      "sensitivity": {
+        "level": "public",
+        "reason": "Synthetic fixture",
+        "applied_at": "2026-08-02T00:00:00Z"
+      },
+      "transforms": [],
+      "checksums": {
+        "bundle": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "spec_hash": {
+        "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    },
+    "lookup_context": {
+      "bundle_id": "bundle:synthetic:closure-001",
+      "current_head": true,
+      "policy_outcome": "ANSWER",
+      "policy_decision_ref": "policy:synthetic:answer-001",
+      "correction_state": "ACTIVE",
+      "correction_ref": null
+    }
+  },
+  "expected": {
+    "status": "UNRESOLVED",
+    "issue_codes": ["closure/member-bundle-ref-mismatch"]
+  }
+}

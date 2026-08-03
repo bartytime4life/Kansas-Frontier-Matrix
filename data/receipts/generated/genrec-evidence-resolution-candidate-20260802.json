@@ -1,0 +1,291 @@
+{
+  "receipt_id": "genrec-evidence-resolution-candidate-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/evidence-resolver.yml",
+    "Makefile",
+    "docs/intake/exploratory/README.md",
+    "docs/intake/exploratory/evidence-resolution-source-map.md",
+    "fixtures/README.md",
+    "fixtures/packages/README.md",
+    "fixtures/packages/evidence_resolver/README.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json",
+    "packages/README.md",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/core.py",
+    "tests/README.md",
+    "tests/packages/README.md",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_cli.py",
+    "tests/packages/evidence_resolver/test_core.py",
+    "tools/validators/README.md",
+    "tools/validators/evidence_resolver/README.md",
+    "tools/validators/evidence_resolver/validate_candidate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:2ecf67bb9ab313b630669f85759a241d85c6e5ceff0bff36b8615aac29e7b61f",
+    ".github/workflows/evidence-resolver.yml": "sha256:41c7a7e75f5f36e867fb56ce7d23246f3ea0391e95bdb3056e822a69656c5c19",
+    "Makefile": "sha256:123e701e8a19a2cc2bdd0745d11f6e1bee46b1ca05c1ecf4ee83a801595b0cfc",
+    "docs/intake/exploratory/README.md": "sha256:801e885cff14b96f564274ee31a73eed1cd6a44c981c0adcfffdf73d24b760e4",
+    "docs/intake/exploratory/evidence-resolution-source-map.md": "sha256:593d35c36392196284f75dabd3ec7edef2b77b342e96b15c46f924801b2b34bc",
+    "fixtures/README.md": "sha256:a2a6d178c1a2cb53db6b8ba3a75009a9e38a8829a430967c8cc5a67d917fe841",
+    "fixtures/packages/README.md": "sha256:d33d18905f7c532c142bb19c7457108247876beaf6dfde7cd0dc5ae52b4befca",
+    "fixtures/packages/evidence_resolver/README.md": "sha256:2a9d47ce90fa0092bb01da9d2e2bb6dc1e152a857e2f0d0d32d42d086ee67b50",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "sha256:230cd73be0a2f56f931207f8c5ef83e7c9e78fd14e7ee89ec56f438655a24bdb",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json": "sha256:fb3f2e76176a26e8098437bc5207ab69b5093d9a0751d93c4fca8f3f5ef4c3d2",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json": "sha256:92da71a5c5a74a361af5be7444ab5d1ed8b4b272bb208cda01ece9fa2b7bc4fe",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json": "sha256:701f2b2d25cb9b6e79a1818d0abf1cbc8dade3ddf86e553eda856fbcf4c99104",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json": "sha256:80ef5d832386a699017e594ab5df89e768deb20c53aecfed4021f2f0cb9b6a31",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json": "sha256:238a8244b82025a164e1461bba143df45cdbba37537c0b017f9fb50d3852dbf9",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json": "sha256:112e4681ab90240729562c0bf03ac52859c3d6dd2a136ea3626563abf68deda9",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json": "sha256:8177c18bbf4f6ec9fbb4ae938015312ba5c9f20fb0376ab083755031d873784d",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json": "sha256:fd1882f097b27a8d515758f270c9ec760f50543a25c231148aa17ac72617e99f",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json": "sha256:424372ae2eb2701e7df606c77cf980a1809d12e22e891a4a2e61c6d45d8939b4",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json": "sha256:810385a4725a022df9230190ee4c2910381abf53327db82241b535e480e8ae59",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json": "sha256:5d6ce6763e9ef9d4bb9d7901ff7f71a8862cd50cc831ef67d1c3380a2b63bb07",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json": "sha256:c858cd5ddbb70d90ddc4a10e4f4a96cf24d7796625d3b7f4abcb16ab880b6fd1",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json": "sha256:258f025027d7d9ec9a850262c5e1dde0314f40cac3221d5a7973bfa0b2531a76",
+    "packages/README.md": "sha256:123091fb6dd42d41325ab1e0d600c059ef18e965e56731dde1c1d98355d60742",
+    "packages/evidence-resolver/README.md": "sha256:0b139c72a8ba43ec5e50d695d21be022a03276c4f4069c77f5c855a92c0e9393",
+    "packages/evidence-resolver/src/README.md": "sha256:aa3da6cc3e8cbfc2c5e9cf89dfc943a108b3811a5c8b9181571d2e3644637900",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:21ef8fc15bb1dfcbb415455cb8287b8161cc4e3255679046d867bd0e8c48e55b",
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "sha256:d413d22103516e70604764163a3d12c5c96fa23ec2bbb017683e8db337ff06bf",
+    "tests/README.md": "sha256:175ed53f504e7dc988f9f4b9810f59db228dc42dc8f93e0f7f1aec6fbfa3085e",
+    "tests/packages/README.md": "sha256:70d15710b6db1b37d3003c6cd44e8f3c1439945935faec36be9313ad8477d58c",
+    "tests/packages/evidence_resolver/README.md": "sha256:e54b6d5e323f985caa701f0526bb11b7e2e3ba97b5e74f6fb8f51608a2e1bb84",
+    "tests/packages/evidence_resolver/test_cli.py": "sha256:682cad3368eda586a8a6ce40d105f59e706fb88fe0eacd9b460db6cf5c3343d5",
+    "tests/packages/evidence_resolver/test_core.py": "sha256:a27e0e7c5beb88e22fcd4840c776f490a2781a74bc42d2650cd9c168140ea29c",
+    "tools/validators/README.md": "sha256:61ff6e4215a3e8514891d97b938cfbfa93f59da5a674d6768255a33bfa5535db",
+    "tools/validators/evidence_resolver/README.md": "sha256:ce9bcd96dc38748de95aa1f108b9708b6d57690044a4837309e0aed9dc231b3c",
+    "tools/validators/evidence_resolver/validate_candidate.py": "sha256:dd23cf51c4b34e0cf1c9524861df696d6c606733b698e086f8c4f69be4291c49"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:68c4a6b97eb9dc870ac948de331e02606c9d299c8e84c19cdc3b12d3f107dd76",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local supplied-document and repository inspection",
+      "visual PDF verification",
+      "read-only parallel source and repository assays",
+      "Git",
+      "GitHub connector read operations",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a",
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:327edfe2ed42cd8a43cb811386fbb3a08361ac1621590184ec1d08acd7834557",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2"
+    ],
+    "attached_docs": [
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "Unified Implementation Architecture Build Manual",
+      "Repository Structure Guiding Document",
+      "KFM Full Atlas seed cards",
+      "KFM encyclopedia",
+      "KFM MapLibre Operating Architecture Manual",
+      "Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3",
+      "Kansas Frontier Matrix Implementation Reference"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab/packages/evidence-resolver/README.md",
+      "attachment://KFM-Directory-Governance-Standard:sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a",
+      "attachment://KFM-Full-Atlas-seed-cards:sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "attachment://KFM-encyclopedia:sha256:327edfe2ed42cd8a43cb811386fbb3a08361ac1621590184ec1d08acd7834557",
+      "attachment://KFM-MapLibre-Operating-Architecture-Manual:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "attachment://KFM-Pipeline-Living-Implementation-Manual-v0.3:sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "attachment://KFM-Implementation-Reference:sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/evidence-resolver.yml": "PROPOSED",
+    "Makefile": "CONFIRMED",
+    "docs/intake/exploratory/README.md": "PROPOSED",
+    "docs/intake/exploratory/evidence-resolution-source-map.md": "PROPOSED",
+    "fixtures/README.md": "PROPOSED",
+    "fixtures/packages/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_id_mismatch.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/bundle_not_found.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/invalid_timestamp.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/member_bundle_ref_mismatch.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/missing_bundle_ref.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/not_current_head.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_abstained.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_denied.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/policy_error.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/ref_not_member.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/superseded.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/unsupported_profile.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/valid/resolved.json": "CONFIRMED",
+    "packages/README.md": "PROPOSED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "CONFIRMED",
+    "tests/README.md": "PROPOSED",
+    "tests/packages/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_cli.py": "CONFIRMED",
+    "tests/packages/evidence_resolver/test_core.py": "CONFIRMED",
+    "tools/validators/README.md": "PROPOSED",
+    "tools/validators/evidence_resolver/README.md": "PROPOSED",
+    "tools/validators/evidence_resolver/validate_candidate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, accepted Directory Rules, exact base 09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab, and active branch state were inspected. The newly merged Agriculture watcher overlapped only the exploratory source-map index; both entries were preserved during rebase. No live-source, merge, release, deployment, publication, or repository-setting authority is inferred."
+    },
+    {
+      "gate": "document-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied architecture, pipeline, atlas, encyclopedia, MapLibre, directory-governance, and implementation documents were reconciled with current repository truth. Only the bounded evidence-reference-to-bundle candidate behavior was retained under the existing packages/evidence-resolver lane; no parallel authority root was created."
+    },
+    {
+      "gate": "focused-evidence-resolution-suite",
+      "outcome": "PASS",
+      "reason": "The standard-library unit and CLI suites passed deterministic RESOLVED, UNRESOLVED, DENIED, and ERROR behavior; strict identity, membership, correction-head, timestamp, policy-projection, input-bound, no-leak, polarity, symlink, and network-denial cases; and the exact one-valid/twelve-invalid fixture inventory."
+    },
+    {
+      "gate": "evidence-resolver-workflow-boundary",
+      "outcome": "PASS",
+      "reason": "The existing workflow name, job identities, and contents-read permission are preserved. Both focused commands run with KFM_NO_NETWORK=1 and no dependency-install or post-setup network step."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "In an isolated environment using repository-declared test dependencies, make validate completed the configured aggregate validators and repository schema/contract suite with intended invalid-fixture polarity."
+    },
+    {
+      "gate": "schema-metaschema-and-documentation-links",
+      "outcome": "PASS",
+      "reason": "Repository schema metaschema checks, the no-network documentation checker, changed-document local targets, workflow YAML parsing, JSON parsing, and Python compilation passed."
+    },
+    {
+      "gate": "generated-receipt-validator",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt validator passed and this receipt binds all 35 non-receipt authored artifacts with SHA-256 while leaving human review explicitly pending."
+    },
+    {
+      "gate": "canonical-authority-roots-and-sensitive-data",
+      "outcome": "PASS",
+      "reason": "No schema, contract, policy, source registry, connector, store, public UI, release, or published path is changed. The synthetic fixtures contain no real source rows, locations, people, credentials, or live endpoints, and secret, symlink, sensitive-field, and diff-hygiene checks passed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "No remote branch or pull request exists for this local feature head at receipt emission, so hosted exact-head checks have not yet been observed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is neither authored nor inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "prior-evidence-resolver-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/09d63a51fc8c0ccbd6ac59dd9df5b1b30c293bab/packages/evidence-resolver/README.md"
+    },
+    {
+      "id": "directory-governance-source",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Directory-Governance-Standard:sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    },
+    {
+      "id": "unified-build-evidence-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    },
+    {
+      "id": "repository-structure-placement",
+      "validated": true,
+      "evidence_ref": "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    },
+    {
+      "id": "atlas-cite-or-abstain",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Full-Atlas-seed-cards:sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445"
+    },
+    {
+      "id": "encyclopedia-evidence-resolution-sequence",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-encyclopedia:sha256:327edfe2ed42cd8a43cb811386fbb3a08361ac1621590184ec1d08acd7834557"
+    },
+    {
+      "id": "maplibre-downstream-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-MapLibre-Operating-Architecture-Manual:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36"
+    },
+    {
+      "id": "pipeline-resolver-ordering",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Pipeline-Living-Implementation-Manual-v0.3:sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf"
+    },
+    {
+      "id": "implementation-reference-fail-closed-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Implementation-Reference:sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T02:50:10Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts evidence-resolution ordering and cite-or-abstain ideas from the supplied documents into a repository-native bounded candidate profile; no third-party code, source rows, or assets were copied. The helper is pure and performs no network, registry, store, claim-scope inference, evidence creation, policy evaluation, review, release, public projection, or publication. RESOLVED means only that caller-supplied synthetic references, bundle membership, current correction head, and canonical PolicyDecision projection agree. All other states fail closed, and non-resolved result objects retain no bundle identifier. Rollback is a normal revert of the feature commit; no live source, lifecycle, release, or published state is created."
+}
