@@ -2,8 +2,8 @@
 doc_id: kfm://doc/contracts-domains-roads-rail-trade-corridor-route
 title: Corridor Route Contract — Roads / Rail / Trade Routes
 type: semantic-contract
-version: v0.2
-status: draft; PROPOSED; schema-missing; slug-CONFLICTED; NEEDS VERIFICATION before promotion
+version: v0.3
+status: draft; PROPOSED; bounded-schema-profile; slug-CONFLICTED; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Roads/Rail/Trade Routes domain steward
   - OWNER_TBD — Roads steward
@@ -17,7 +17,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — scaffold existed before v0.2 expansion
-updated: 2026-06-23
+updated: 2026-08-03
 policy_label: public; contracts; roads-rail-trade; corridor-route; route-entity; source-role-aware; temporal-scope-aware; evidence-bound; route-segment-membership-separated; graph-projection-aware; release-gated; rollback-aware; not-segment; not-route-membership; not-live-routing; not-legal-designation-authority; not-publication-authority
 tags: [kfm, contracts, roads-rail-trade, corridor-route, route, route-membership, road-segment, rail-segment, historic-route, trade-route-corridor, network-edge, movement-story-node, source-role, valid-time, EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard]
 related:
@@ -34,6 +34,7 @@ related:
   - ../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md
   - ../../../docs/domains/roads-rail-trade/IDENTITY_MODEL.md
   - ../../../docs/domains/roads-rail-trade/SOURCES.md
+  - ../../../docs/domains/roads-rail-trade/CORRIDOR_ROUTE_SCHEMA_PROFILE.md
   - ../../../docs/domains/roads-rail-trade/sublanes/roads.md
   - ../../../docs/domains/roads-rail-trade/sublanes/rail.md
   - ../../../docs/domains/roads-rail-trade/sublanes/trade-routes.md
@@ -42,14 +43,15 @@ related:
   - ../../../docs/runbooks/roads-rail-trade/PROMOTION_RUNBOOK.md
   - ../../../docs/runbooks/roads-rail-trade/ROLLBACK_RUNBOOK.md
   - ../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json
-  - ../../../policy/domains/roads-rail-trade/
+  - ../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py
   - ../../../fixtures/domains/roads-rail-trade/corridor_route/
-  - ../../../tests/domains/roads-rail-trade/
+  - ../../../tests/schemas/test_corridor_route_contract.py
+  - ../../../policy/domains/roads-rail-trade/
   - ../../../release/candidates/roads-rail-trade/
 notes:
   - "Expanded from a PROPOSED scaffold at contracts/domains/roads-rail-trade/corridor_route.md."
-  - "A paired schema at schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json was not found in this task. Field realization remains PROPOSED."
-  - "CorridorRoute is treated as the route/designation/corridor entity itself. RouteMembership attaches segments to that route under a source role and temporal scope. RoadSegment and RailSegment remain separate evidence objects."
+  - "v0.3 binds this semantic contract to a bounded Draft 2020-12 schema, synthetic fixtures, a no-network validator, and focused tests. The profile remains PROPOSED and creates no source, policy, review, release, routing, or publication authority."
+  - "CorridorRoute is the route/designation/corridor entity itself. RouteMembership attaches segments to that route under a source role and temporal scope. RoadSegment and RailSegment remain separate evidence objects."
   - "Corridor routes are evidence-bound, source-role-aware, and time-scoped. They are not live routing, legal route-designation authority, graph truth, map publication, or release approval."
 [/KFM_META_BLOCK_V2] -->
 
@@ -63,7 +65,7 @@ notes:
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
   <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts%2F-0a7ea4">
   <img alt="Domain: roads-rail-trade" src="https://img.shields.io/badge/domain-roads--rail--trade-slategray">
-  <img alt="Schema: missing" src="https://img.shields.io/badge/schema-missing-red">
+  <img alt="Schema: bounded profile" src="https://img.shields.io/badge/schema-bounded__profile-orange">
   <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence--first-blue">
   <img alt="Boundary: route not segment" src="https://img.shields.io/badge/boundary-route__not__segment-orange">
   <img alt="Publication: release gated" src="https://img.shields.io/badge/publication-release--gated-orange">
@@ -80,11 +82,12 @@ notes:
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / semantic contract  
+> **Status:** `draft` / semantic contract with bounded schema profile  
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/domains/roads-rail-trade/corridor_route.md`  
-> **Schema path:** `schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json` — **not found in this task**  
-> **Truth posture:** target path and scaffold are confirmed from current repo evidence. `CorridorRoute` is confirmed as a Roads / Rail / Trade Routes object-family term, but exact schema fields, validator behavior, fixture coverage, policy behavior, source registry behavior, release manifests, public API behavior, map rendering, graph behavior, and runtime behavior remain **NEEDS VERIFICATION**.
+> **Schema path:** `schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json` — **PROPOSED bounded profile**  
+> **Validator path:** `tools/validators/domains/roads-rail-trade/validate_corridor_route.py` — **CONFIRMED fixture-only executable in this slice**  
+> **Truth posture:** the contract, paired schema, validator, synthetic fixtures, and focused tests are repository artifacts. Source admission, real-route identity, source registry resolution, policy behavior, review, release manifests, public API behavior, map rendering, graph materialization, and runtime behavior remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > This contract defines corridor-route meaning only. It does **not** certify legal route designation, public accessibility, current routing suitability, emergency detour status, map/API behavior, graph truth, or publication approval.
@@ -118,10 +121,12 @@ A corridor route is not the same thing as a segment. A route is the thing a desi
 | Road compatibility slice | `../roads/README.md` | Road-specific orientation; not canonical authority by itself. |
 | Parent doctrine | `../../../docs/domains/roads-rail-trade/README.md` | Domain scope and object roster. |
 | Object families | `../../../docs/domains/roads-rail-trade/OBJECT_FAMILIES.md` | `CorridorRoute`, `RouteMembership`, `Road Segment`, `Rail Segment` vocabulary and identity posture. |
+| Profile documentation | `../../../docs/domains/roads-rail-trade/CORRIDOR_ROUTE_SCHEMA_PROFILE.md` | Bounded fixture-only realization and deliberate holds. |
 | Road sublane | `../../../docs/domains/roads-rail-trade/sublanes/roads.md` | Route/segment/membership separation for road routes. |
-| Schemas | `../../../schemas/contracts/v1/domains/roads-rail-trade/` or ADR-selected alternate | Machine shape; paired schema missing in this task. |
+| Schema | `../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json` | Bounded machine shape; path slug conflict remains ADR-bound. |
+| Validator | `../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py` | No-network PASS/ABSTAIN/DENY/ERROR profile; not policy or release authority. |
+| Fixtures/tests | `../../../fixtures/domains/roads-rail-trade/corridor_route/`, `../../../tests/schemas/test_corridor_route_contract.py` | Synthetic behavior proof; not route evidence. |
 | Policy | `../../../policy/domains/roads-rail-trade/` or ADR-selected alternate | Allow/deny/restrict/abstain decisions. |
-| Fixtures/tests | `../../../fixtures/domains/roads-rail-trade/`, `../../../tests/domains/roads-rail-trade/` | Behavior proof; not contract prose. |
 | Source registry | `../../../data/registry/sources/roads-rail-trade/` | Source authority, cadence, rights, and caveats. |
 | Release/rollback | `../../../release/candidates/roads-rail-trade/` and release roots | Promotion, release, correction, and rollback. |
 
@@ -129,16 +134,15 @@ A corridor route is not the same thing as a segment. A route is the thing a desi
 
 ## Schema posture
 
-A direct paired schema was checked at:
+The paired profile is:
 
 ```text
 schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json
 ```
 
-That file was **not found** in this task.
+It is a **PROPOSED bounded profile**, not a fully admitted domain schema. It makes the source-packet minimum fields machine-required, separates route identity from segment/membership/geometry truth, checks deterministic content identity, and requires release closure when a candidate claims released posture.
 
-> [!WARNING]
-> Because no paired schema was confirmed, every field below is **PROPOSED** semantic guidance. Do not treat it as machine-enforced until schema, fixtures, validator, policy tests, source registry records, release checks, and runtime behavior are verified.
+The companion validator and fixtures prove only deterministic shape and anti-collapse behavior. They do not prove source rights, current source status, source-role acceptance, policy execution, reviewer authority, release readiness, historical accuracy, exact alignment, public access, or live routing suitability.
 
 ---
 
@@ -176,7 +180,7 @@ That file was **not found** in this task.
 
 ## Recommended fields
 
-The following fields are **PROPOSED** until a schema is added and validated.
+The paired schema now realizes these fields as a **PROPOSED fixture-only profile**. Their semantic meaning remains governed by this contract, while source, policy, review, release, and runtime admission remain separate.
 
 | Field | Meaning |
 |---|---|
@@ -187,17 +191,21 @@ The following fields are **PROPOSED** until a schema is added and validated.
 | `route_name` | Source-stated name or label. |
 | `route_designation` | Designation such as route number, line name, trail name, historic route name, or corridor label. |
 | `route_type` | Road, rail, freight, historic, trade, military, emigrant, mail, cattle, scenic, detour, generalized, or other controlled type. |
+| `approximate_dates` | Source-supported approximate date range or bounded date statement. |
+| `date_uncertainty` | Explicit uncertainty attached to approximate dates. |
+| `geometry_accuracy` | Surveyed, authoritative alignment, approximate, derived geocode, or unknown. |
 | `source_ref` | SourceDescriptor/source registry reference. |
-| `source_role` | Authority/administrative/observed/context/candidate/modeled/aggregate/synthetic/restricted role, as accepted by the lane. |
+| `source_role` | Authority/official/administrative/observed/context/candidate/modeled/aggregate/synthetic/restricted role. |
 | `source_native_id` | Source-native route identifier if present and safe. |
-| `temporal_scope` | Source, observed, valid, retrieval, release, and correction time posture. |
 | `valid_time` | Interval during which the route/designation/corridor claim is asserted to apply. |
 | `membership_refs` | RouteMembership refs, not embedded segment truth. |
-| `segment_summary_ref` | Optional released/generalized summary of member segments. |
 | `geometry_ref` | Generalized or released route geometry, if any; not canonical membership by itself. |
 | `network_projection_refs` | Downstream NetworkEdge/graph refs, if any. |
 | `historic_claim_refs` | Historic RouteClaim or TradeRouteCorridor refs, if applicable. |
 | `evidence_refs` | EvidenceRefs or EvidenceBundle refs. |
+| `confidence` | Bounded confidence on the candidate representation, never a replacement for evidence. |
+| `representation_layer` | Explicit authoritative-versus-derived classification. |
+| `changed` | Changed, unchanged, or unknown comparison posture. |
 | `policy_decision_ref` | PolicyDecision governing use or publication. |
 | `review_ref` | ReviewRecord or steward review ref. |
 | `release_manifest_ref` | ReleaseManifest for public/semi-public exposure. |
@@ -272,26 +280,26 @@ flowchart TD
 
 Minimum validation expectations before promotion:
 
-- [ ] paired schema exists or schema gap remains explicit;
+- [x] paired bounded schema exists;
+- [x] deterministic no-network fixtures cover PASS, ABSTAIN, and exact DENY boundaries;
+- [x] CorridorRoute, Road/Rail Segment, RouteMembership, embedded geometry, live routing, and publication approval are not collapsed;
+- [x] approximate dates, date uncertainty, geometry accuracy, source role, evidence posture, confidence, representation layer, and change state are machine-required;
 - [ ] source role resolves to an admitted source registry record;
-- [ ] CorridorRoute, Road/Rail Segment, RouteMembership, NetworkEdge, StatusEvent, and AccessRestriction are not collapsed;
-- [ ] route designation/name/source-native ID preserve source context;
-- [ ] valid/source/retrieval/release/correction times are separate;
-- [ ] route geometry is labeled derivative/generalized/released and not membership truth;
-- [ ] public layer/API/export requires EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, and RollbackCard;
-- [ ] graph projection uses route only as derived traversal/grouping evidence and cites source records;
-- [ ] live routing, legal designation, permit, detour, and emergency advice are denied by default.
+- [ ] route designation/name/source-native ID preserve accepted source context;
+- [ ] public layer/API/export resolves EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, and RollbackCard;
+- [ ] graph projection cites accepted route/segment/membership evidence;
+- [ ] live routing, legal designation, permit, detour, and emergency advice remain denied by the governed runtime.
 
-Negative fixtures should include:
+Current negative fixtures cover:
 
-- route name treated as legal designation without authority;
-- geometry line treated as membership proof;
-- RouteMembership embedded directly into CorridorRoute with no source/time;
-- Road Segment identity collapsed into route identity;
-- historic route corridor shown as modern road route;
-- graph path emitted as canonical corridor truth;
-- public layer missing ReleaseManifest or RollbackCard;
-- stale detour/current route rendered as live routing advice.
+- authoritative representation from derived geocoding;
+- bound evidence with no EvidenceRef;
+- embedded segment truth;
+- a live-routing-authority claim;
+- missing temporal uncertainty;
+- sensitive geometry marked for public generalization;
+- released posture without policy/review/release/rollback closure;
+- mismatched deterministic `spec_hash`.
 
 ---
 
@@ -315,11 +323,11 @@ Rollback must identify affected route refs, membership refs, segment refs, graph
 
 | Evidence | Supports | Limit |
 |---|---|---|
-| `contracts/domains/roads-rail-trade/corridor_route.md` scaffold | Target file existed and was a planned PROPOSED scaffold. | Scaffold contained no semantic contract. |
-| Missing direct schema check | A direct paired schema at `schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json` was not found in this task. | Does not rule out alternate `transport` schema path; slug conflict remains. |
+| Existing semantic contract and domain docs | Confirm the CorridorRoute/RouteMembership/Segment separation and domain boundaries. | Draft; slug conflict remains. |
+| `New Ideas 3-31-26.pdf` historical-route packet | Supports the minimum route entity fields and four fail-closed gate categories used by the profile. | Design source; not route evidence or implementation proof. |
+| Paired schema, validator, fixtures, and focused tests | Confirm bounded machine shape, deterministic hash, PASS/ABSTAIN/DENY behavior, and anti-collapse enforcement. | Fixture-only; no source admission, policy execution, review, release, or publication. |
 | `docs/domains/roads-rail-trade/OBJECT_FAMILIES.md` | Confirms `CorridorRoute` and `RouteMembership`, with route as grouping and membership as associative object. | Field realization remains PROPOSED. |
 | `docs/domains/roads-rail-trade/sublanes/roads.md` | Confirms modern roads include RouteMembership and CorridorRoute, and states route is an entity distinct from a segment. | Sublane convention remains PROPOSED / NEEDS VERIFICATION. |
-| `contracts/domains/roads-rail-trade/README.md` | Contract-lane boundary and separation from schemas, policy, data, release, APIs, and map/runtime behavior. | Draft; slug conflict unresolved. |
 
 ---
 
