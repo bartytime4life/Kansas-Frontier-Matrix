@@ -1,6 +1,7 @@
-# Validate non-authoritative briefing integration and the water-planning
-# semantic, authority-reference, and canonical registry boundaries. This
-# workflow is read-only and emits no KFM release or publication authority.
+# Validate non-authoritative briefing integration, the proposed shared temporal-
+# authority metadata profile, and water-planning semantic, authority-reference,
+# and canonical registry boundaries. This workflow is read-only and emits no
+# KFM release or publication authority.
 
 name: briefing-integration
 
@@ -8,12 +9,18 @@ name: briefing-integration
   pull_request:
     paths:
       - ".github/workflows/briefing-integration.yml"
+      - "docs/architecture/briefing-integration.md"
       - "contracts/governance/briefing_signal.md"
       - "schemas/contracts/v1/governance/briefing_signal.schema.json"
       - "fixtures/contracts/v1/governance/briefing_signal/**"
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
+      - "contracts/common/temporal_authority_envelope.md"
+      - "schemas/contracts/v1/common/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
+      - "tools/validators/validate_temporal_authority_envelope.py"
+      - "tests/validators/test_validate_temporal_authority_envelope.py"
       - "contracts/domains/water_planning/**"
       - "schemas/contracts/v1/domains/water_planning/**"
       - "fixtures/domains/water_planning/**"
@@ -28,12 +35,18 @@ name: briefing-integration
       - main
     paths:
       - ".github/workflows/briefing-integration.yml"
+      - "docs/architecture/briefing-integration.md"
       - "contracts/governance/briefing_signal.md"
       - "schemas/contracts/v1/governance/briefing_signal.schema.json"
       - "fixtures/contracts/v1/governance/briefing_signal/**"
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
+      - "contracts/common/temporal_authority_envelope.md"
+      - "schemas/contracts/v1/common/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
+      - "tools/validators/validate_temporal_authority_envelope.py"
+      - "tests/validators/test_validate_temporal_authority_envelope.py"
       - "contracts/domains/water_planning/**"
       - "schemas/contracts/v1/domains/water_planning/**"
       - "fixtures/domains/water_planning/**"
@@ -94,6 +107,17 @@ jobs:
           python tools/validators/governance/validate_briefing_signal.py \
             examples/briefing_integration/*.json
 
+      - name: Run TemporalAuthorityEnvelope tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_temporal_authority_envelope.py' \
+            --verbose
+
+      - name: Validate TemporalAuthorityEnvelope fixtures
+        run: |
+          python tools/validators/validate_temporal_authority_envelope.py --fixtures
+
       - name: Record briefing boundary
         if: always()
         run: |
@@ -101,8 +125,9 @@ jobs:
             echo "### Briefing integration"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: non-authoritative BriefingSignal shape, examples, deterministic routing guardrails, and no-network behavior."
-            echo "- A green result is not evidence, source admission, repository authorization, policy approval, proof closure, release, deployment, publication, or public truth."
+            echo "- Scope: non-authoritative BriefingSignal shape, examples, deterministic routing guardrails, and the proposed shared TemporalAuthorityEnvelope schema/semantic fixture profile."
+            echo "- The temporal-authority profile does not accept ADR-0014, replace TemporalWindow, select a global temporal vocabulary, or replace a domain contract."
+            echo "- A green result is not evidence, source admission, repository authorization, policy approval, review approval, proof closure, release, deployment, publication, or public truth."
           } >> "$GITHUB_STEP_SUMMARY"
 
   preserve-water-planning-anti-collapse:
