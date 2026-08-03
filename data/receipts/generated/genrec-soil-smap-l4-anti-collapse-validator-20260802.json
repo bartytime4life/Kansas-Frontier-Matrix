@@ -1,0 +1,241 @@
+{
+  "receipt_id": "genrec-soil-smap-l4-anti-collapse-validator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-soil.yml",
+    "docs/domains/soil/README.md",
+    "fixtures/domains/soil/README.md",
+    "fixtures/domains/soil/soil_moisture/README.md",
+    "fixtures/domains/soil/soil_moisture/smap_l4/README.md",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.expected_error.txt",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/root_zone_standard_quality.json",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/surface_nrt.json",
+    "tests/domains/soil/README.md",
+    "tests/domains/soil/test_smap_l4_anti_collapse.py",
+    "tools/validators/domains/soil/README.md",
+    "tools/validators/domains/soil/moisture/README.md",
+    "tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-soil.yml": "sha256:3a1008d0762fc39f6db89615be03f350d356c08ce3aa4d149f49ae3e26a09be9",
+    "docs/domains/soil/README.md": "sha256:e9fbc5066d1a73a08642a214c1ef8bf171a01181e7718f808e92e5e9889c819c",
+    "fixtures/domains/soil/README.md": "sha256:3982ac8d147117311d1b321d66c14f0a0425537dd9a48957e3ecbc08f8a13647",
+    "fixtures/domains/soil/soil_moisture/README.md": "sha256:83896040ba54469cf9be89a286cd270234307bd8a77d2b9ae972411c0aa45051",
+    "fixtures/domains/soil/soil_moisture/smap_l4/README.md": "sha256:49fc7c08eb97f2103f90c2648470235b4705269a819fa9b1c18a152e0e72335c",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.expected_error.txt": "sha256:ba6458f1a29460ae17d55dceedeb3d08af8467c10a5a4f267ea33e40c38eb049",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.json": "sha256:00eac3558b5e5f91da8fd85e6476bd9d974db2eafca702047b0eff509274c0d5",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.expected_error.txt": "sha256:fda95f18cde7812764adf91b9c781a2870e278cfe3f0b28010955ddf8d1afad1",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.json": "sha256:fab2a587f0ab39c0f9e9b83c18b12e59d9a015ac0114dadca7d48db1256f5b96",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.expected_error.txt": "sha256:11fa39ead3ff3d639cc825f33bf88b71baf69a52b9aaff71553b5ff66ceec103",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.json": "sha256:b5da287fb578bea0198d7141cb4b7e273968b7e8c607ef2774bbf183a689a363",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.expected_error.txt": "sha256:14e33efacec3efeaacea6a34702a99c974c2983ada422ba7c23fd3b38b8113a3",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.json": "sha256:e588a131ecb13ca4df656438e02ac5c24f995479e6b83315da1c89ff2d8578bc",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.expected_error.txt": "sha256:78ed6956c9c4426a475dc3639309779ba49d3319feaa441156fe9c12e331bc16",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.json": "sha256:2a7e4279505cdc5c8330b801fe239daace72a5c55c6dd57addd381d9a72e6e96",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.expected_error.txt": "sha256:8df6a8d5daceefbda6d3280dd3d09a44df6189f6283aa0c4a60373da6e7554aa",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.json": "sha256:34ccd13d669390a37f11e4f82da7d40d232294945dc48a8c3fc447a468144f9e",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.expected_error.txt": "sha256:eae43809fda58b3684b8aaea160e521847d12096455921cd84910db9c88e0b89",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.json": "sha256:e64014e9c62a2d442771047b19314210438fd79883060bd172022ff904c9fdd5",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.expected_error.txt": "sha256:d19baa7d9168659a9a3490c36a05bd9c7dc7de185b3f064f3ed0869a257a0b43",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.json": "sha256:a446ec4b1b86416d6981c815d2859a745ccf75e7ff9291177cbef1c3289e32dc",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/root_zone_standard_quality.json": "sha256:c0754d2ecef584ce9a10c41cc9d163520c2fe553e8057be0ac9a34c8a65b5edf",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/surface_nrt.json": "sha256:5537ed7c0685ab7c99c6bdcfe1fde6a9f8eb209e8ab1fc0a26e4ec22fc94d9f2",
+    "tests/domains/soil/README.md": "sha256:3ea4cea85eb7e9264f7e36fbf21a0810f8aa4bbd1b7d5d9087c382c53e4cf52a",
+    "tests/domains/soil/test_smap_l4_anti_collapse.py": "sha256:6299e7cf3f44b4e083f68be1bc4aca7ebd4b11d88303d775f03cd726a669f470",
+    "tools/validators/domains/soil/README.md": "sha256:5799ba9e4e395ca36c45d2028986e86d4d5ab224d3174188c758d91242958f30",
+    "tools/validators/domains/soil/moisture/README.md": "sha256:c69c4fd1e6dc400d08fc4eace9216d0dd3fddf92281c708a8c72b71cda50ac16",
+    "tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py": "sha256:d9873f6487499f3ecfb336ab862477fda8505e130fbe043174523b1ecd8b40be"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:b901218463e3e62c4e1020f11cf08ea1e0ad7d41dfc9932120e6e4d45b1cf9de",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local supplied-document inspection",
+      "read-only parallel source and repository assays",
+      "GitHub connector read and write operations",
+      "deterministic standard-library Python validation",
+      "local YAML and generated-receipt schema validation"
+    ],
+    "base_ref": "main",
+    "base_commit": "d1a13a3c852944d8fd8754a887f0b35d3ea9a971",
+    "profile_id": "kfm-smap-l4-anti-collapse-fixture-v1",
+    "validator_runtime_network_access": false,
+    "generation_connector_network_access": true,
+    "publication": false
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d817dbe6be400c6b8f62c69bb4c20f9f4a0c91bf913fa54dfc7417b9c93fd070",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "New Ideas 5-8-26.pdf",
+      "Repository Structure Guiding Document.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d1a13a3c852944d8fd8754a887f0b35d3ea9a971",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/domains/soil/soil_moisture_observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/pipelines/domains/soil/smap_ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/tools/validators/domains/soil/moisture/validate_soil_moisture.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/.github/workflows/domain-soil.yml",
+      "attachment://New-Ideas-5-8-26:sha256:d817dbe6be400c6b8f62c69bb4c20f9f4a0c91bf913fa54dfc7417b9c93fd070",
+      "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a",
+      "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-soil.yml": "PROPOSED",
+    "docs/domains/soil/README.md": "PROPOSED",
+    "fixtures/domains/soil/README.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture/README.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/README.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/in_situ_merge.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_grid_resolution.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/missing_uncertainty.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/nrt_cadence_collapse.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/raw_observation.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/released_candidate.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/station_support.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/invalid/surface_root_zone_collapse.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/root_zone_standard_quality.json": "CONFIRMED",
+    "fixtures/domains/soil/soil_moisture/smap_l4/valid/surface_nrt.json": "CONFIRMED",
+    "tests/domains/soil/README.md": "PROPOSED",
+    "tests/domains/soil/test_smap_l4_anti_collapse.py": "CONFIRMED",
+    "tools/validators/domains/soil/README.md": "PROPOSED",
+    "tools/validators/domains/soil/moisture/README.md": "PROPOSED",
+    "tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The GitHub connector confirmed main at d1a13a3c852944d8fd8754a887f0b35d3ea9a971, verified merged PRs #1929 and #1930 were disjoint, and reconciled PR #1931's overlapping domain-soil workflow by preserving its SSURGO comparator step alongside the new SMAP suite. No equivalent open pull request or implementation existed, and the feature branch agent/soil-smap-l4-anti-collapse-validator-20260803 was unused."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied ideas and architecture documents were identity-pinned and reconciled with the existing Soil moisture validator, SMAP ingest design boundary, fixture roots, test roots, and Soil workflow. The slice stays inside existing responsibility roots and creates no canonical source, schema, policy, pipeline, proof, release, or publication authority."
+    },
+    {
+      "gate": "focused-smap-l4-anti-collapse-suite",
+      "outcome": "PASS",
+      "reason": "Fourteen standard-library tests passed for two positive and eight exact negative fixtures, surface/root-zone and NRT/standard-quality separation, model/grid/raw/station/field/in-situ anti-collapse, exact deterministic profile identity, exact and nonempty fixture references, QA and uncertainty, numeric and temporal bounds, duplicate keys, nonfinite and oversized input, deterministic findings, no network, non-echoing output, and CLI exits 0/1/2."
+    },
+    {
+      "gate": "soil-workflow-boundary-and-command",
+      "outcome": "PASS",
+      "reason": "The merged workflow YAML parses; the stable domain-soil name, job IDs, triggers, and contents-read permission are preserved. The public-safe, station-moisture, and new SMAP L4 suites passed 16, 12, and 14 tests respectively (42 total) against the exact main-base helper. PR #1931's separate no-network SSURGO comparator step, required paths, and summary language are preserved; its exact-head rerun is delegated to hosted checks. Proof and release-dry-run jobs remain unchanged and held."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This receipt excludes its own bytes and SHA-256 binds all 28 other authored or substantively modified artifacts."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt Draft 2020-12 schema accepted this receipt; its ISO-8601 created_at value and all 28 artifact path, truth-label, and SHA-256 map identities were also checked."
+    },
+    {
+      "gate": "canonical-authority-roots-unchanged",
+      "outcome": "PASS",
+      "reason": "No schema, contract, policy, source registry, connector, pipeline implementation, lifecycle data, proof, release, or published path is changed. The profile cannot fetch or admit SMAP, resolve production identifiers, establish scientific fitness, promote lifecycle state, release, or publish."
+    },
+    {
+      "gate": "full-repository-aggregate-suite",
+      "outcome": "SKIPPED",
+      "reason": "The connector-only workflow did not materialize a full local repository checkout. The focused suite, Python compilation, JSON fixture parsing, and workflow YAML parsing passed; aggregate repository coverage is delegated to hosted pull-request checks."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The draft pull request had not been created at receipt emission time, so hosted exact-head checks were not yet observable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "soil-moisture-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/contracts/domains/soil/soil_moisture_observation.md"
+    },
+    {
+      "id": "smap-ingest-anti-collapse-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/pipelines/domains/soil/smap_ingest/README.md"
+    },
+    {
+      "id": "new-ideas-smap-l4-design-evidence",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-5-8-26:sha256:d817dbe6be400c6b8f62c69bb4c20f9f4a0c91bf913fa54dfc7417b9c93fd070"
+    },
+    {
+      "id": "repository-structure-guidance",
+      "validated": true,
+      "evidence_ref": "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    },
+    {
+      "id": "unified-build-manual",
+      "validated": true,
+      "evidence_ref": "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T05:30:33Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts SMAP L4 grid/model anti-collapse ideas from the supplied documents into a repository-native bounded fixture profile. No third-party code, live source rows, measurements, credentials, or assets were copied. All fixture values and references are synthetic. The profile is explicitly noncanonical, no-network, fixture-only, not released, and ineligible for promotion; beyond this required generation-provenance receipt, it creates no SourceDescriptor, schema, PolicyDecision, EvidenceBundle, source/run receipt, proof, release record, or published artifact. Rollback is a focused revert of the authored feature-branch commit; no live source, lifecycle, release, or published state is created."
+}

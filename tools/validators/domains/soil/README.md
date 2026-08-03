@@ -3,7 +3,7 @@ doc_id: kfm://doc/tools-validators-domains-soil-readme
 title: tools/validators/domains/soil README
 type: README
 version: v0.2
-status: draft; bounded-public-safe-fixture-validator-confirmed
+status: draft; bounded-soil-fixture-validators-confirmed
 owner: TODO-tooling-qa-owner-plus-soil-steward-plus-source-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
 updated: 2026-08-02
@@ -23,6 +23,7 @@ related:
   - horizon_depth/README.md
   - lineage/README.md
   - moisture/README.md
+  - moisture/validate_smap_l4_fixture.py
   - support_type/README.md
   - validate_public_safe_fixture.py
   - ../../../../fixtures/domains/soil/README.md
@@ -40,8 +41,8 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "v0.2 records one confirmed executable: the standard-library synthetic public-safe fixture validator exercised by the Soil smoke suite."
-  - "Confirmed child README lanes remain documentation-only: catalog_closure, dual_hash, horizon_depth, lineage, moisture, and support_type. Their executable behavior remains NEEDS VERIFICATION."
+  - "v0.2 records three confirmed bounded executables: the public-safe fixture validator plus separate station and profile-local SMAP L4 moisture validators."
+  - "Confirmed documentation-only child lanes are catalog_closure, dual_hash, horizon_depth, lineage, and support_type. The moisture lane contains separate bounded station and profile-local SMAP L4 executables."
   - "Soil validators enforce declared contracts, schemas, source-role rules, support-type separation, evidence closure, policy posture, release references, correction paths, and rollback targets. They do not define Soil meaning, create SourceDescriptors, create EvidenceBundles, decide policy, approve release, or publish public outputs."
   - "Static survey, gridded derivative, station observation, satellite grid, pedon/profile, and interpretation support types must not collapse."
 [/KFM_META_BLOCK_V2] -->
@@ -86,6 +87,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | `validate_public_safe_fixture.py` | **CONFIRMED bounded executable** | Standard-library, no-network validation of one synthetic fixture-only profile using the shared bounded fixture runtime; it creates no Soil, source, schema, policy, evidence, proof, release, or publication authority. |
 | Public-safe fixtures and Soil smoke suite | **CONFIRMED bounded coverage** | Positive and exact negative fixture polarity is exercised by `tests/domains/soil/test_soil_smoke.py` and the existing `domain-soil` validation job. |
 | `moisture/validate_soil_moisture.py` | **CONFIRMED bounded executable** | Standard-library validation of the closed synthetic station soil-moisture profile, including UTC/unit/depth/QC, dedupe, public-safe geometry, parser bounds, and non-echoing CLI behavior. |
+| `moisture/validate_smap_l4_fixture.py` | **CONFIRMED bounded executable** | Standard-library validation of a separate frozen, profile-local SMAP L4 anti-collapse fixture envelope; no source admission, canonical vocabulary, network access, policy decision, lifecycle promotion, or publication. |
 | Other executables, schemas, policy bundles, source mappings, and runtime wiring | **NEEDS VERIFICATION** | Other child lanes, field-level schema enforcement, source admission, policy evaluation, reports, receipts, runtime behavior, proof, and release remain outside these executable slices. |
 
 [Back to top](#top)
@@ -100,7 +102,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | [`dual_hash/`](dual_hash/README.md) | Soil-specific paired content/provenance hash posture using accepted canonicalization while delegating generic hashing to `tools/spec_hash/`. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 | [`horizon_depth/`](horizon_depth/README.md) | Horizon top/bottom depth ordering, units, non-overlap, gap/continuity posture, component-horizon join consistency, and pedon/profile depth checks. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 | [`lineage/`](lineage/README.md) | Source descriptor linkage, source-family separation, support-type separation, source vintage, transform lineage, MUKEY/COKEY/CHKEY continuity, and release/correction/rollback lineage. | **CONFIRMED README / executable NEEDS VERIFICATION** |
-| [`moisture/`](moisture/README.md) | Frozen synthetic station unit/depth/UTC/QC/dedupe profile plus broader proposed SoilMoistureObservation posture. | **CONFIRMED bounded executable / broader lane draft** |
+| [`moisture/`](moisture/README.md) | Separate frozen synthetic station and profile-local SMAP L4 grid anti-collapse profiles plus broader proposed SoilMoistureObservation posture. | **CONFIRMED bounded executables / broader lane draft** |
 | [`support_type/`](support_type/README.md) | Static survey, gridded derivative, station observation, satellite grid, pedon/profile, interpretation, and public-safe derivative anti-collapse checks. | **CONFIRMED README / executable NEEDS VERIFICATION** |
 
 Possible future child lanes remain **PROPOSED** until created and verified:
@@ -129,7 +131,7 @@ Possible future child lanes remain **PROPOSED** until created and verified:
 | Soil schemas | `schemas/contracts/v1/domains/soil/`, `schemas/contracts/v1/soil/`, or ADR-selected schema home |
 | Soil policy rules | `policy/domains/soil/` or accepted policy homes |
 | Soil source descriptors and source registry | `data/registry/sources/soil/` or accepted source registry home |
-| Soil catalog records | `data/catalog/domain/soil/` or accepted catalog home |
+| Soil catalog projections | `data/catalog/domains/soil/` after governed migration; the current singular lane is a migration candidate, not an independent writer |
 | Soil EvidenceBundle/proof support | `data/proofs/soil/`, `data/proofs/` |
 | Receipts and run memory | `data/receipts/` |
 | Release decisions, manifests, rollback, corrections | `release/` |
@@ -138,8 +140,9 @@ Possible future child lanes remain **PROPOSED** until created and verified:
 Safe interpretation:
 
 - **CONFIRMED:** this README exists and the listed child README lanes exist.
-- **PROPOSED:** validator code may live in this folder tree when it checks declared Soil validation invariants and delegates meaning, source roles, policy, evidence, proof, receipt, and release authority to owning roots.
-- **NEEDS VERIFICATION:** parent runner name, child executable names, exact schemas, source mappings, source descriptor shapes, fixture shape, policy bundles, report destinations, receipts, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** the Soil smoke, station-moisture, and profile-local SMAP L4 executables, their closed synthetic fixtures, focused tests, and `domain-soil` validation commands exist in this bounded slice.
+- **PROPOSED:** additional validator code may live in this folder tree when it checks declared Soil validation invariants and delegates meaning, source roles, policy, evidence, proof, receipt, and release authority to owning roots.
+- **NEEDS VERIFICATION:** a parent runner, executables for the other child lanes, exact production schemas, source mappings, source descriptor shapes, policy bundles, report destinations, broader receipt/release integration, and runtime behavior.
 - **DENY:** using this folder as Soil doctrine, support-type vocabulary authority, source registry, source payload storage, contract home, schema home, policy home, catalog storage, proof storage, receipt storage, lifecycle data store, release record store, published artifact store, public runtime surface, operational advice surface, or agronomic/engineering/legal/hazard recommendation authority.
 
 [Back to top](#top)
@@ -235,19 +238,25 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Accepted bounded command:
+Bounded deterministic commands:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tests/domains/soil/test_soil_smoke.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_moisture_qc.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
 ```
 
-The suite exercises the file-backed valid and invalid fixture inventory, exact
-finding polarity, parser and input bounds, deterministic output, CLI exit
-semantics, and explicit socket/URL-opening denial. A pass proves only this
-synthetic fixture profile.
+The three suites exercise their closed file-backed valid and invalid fixture
+inventories, exact finding polarity, parser and input bounds, deterministic
+output, CLI exit semantics, and explicit socket/URL-opening denial. A pass
+proves only these bounded synthetic fixture profiles.
 
-Suggested future test surface beyond the accepted profile:
+Suggested future test surface beyond the three bounded profiles:
 
 ```text
 tests/validators/domains/soil/
@@ -310,6 +319,6 @@ python tools/validators/domains/soil/run_soil_domain_validators.py --repo-root .
 | Field | Value |
 |---|---|
 | Last reviewed | 2026-08-02 |
-| Review state | Bounded synthetic fixture validator and standard-library smoke suite validated locally; human review and exact-head hosted checks pending. |
-| Current accepted scope | One fixture-only public-safe candidate profile, deterministic positive/negative fixture polarity, no-network tests, and no production Soil authority. |
+| Review state | Three bounded synthetic fixture validators and standard-library suites validated locally; human review and exact-head hosted checks pending. |
+| Current locally confirmed scope | Three bounded fixture-only profiles—public-safe candidate, station soil moisture, and profile-local SMAP L4 anti-collapse—with deterministic positive/negative polarity, no-network tests, and no production Soil authority. |
 | Next smallest safe change | Resolve the conflicting Soil support-type vocabularies before tightening object schemas or implementing source/pipeline behavior. |

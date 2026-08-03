@@ -1,0 +1,1 @@
+SUPPORT_TYPE_COLLAPSE	$.support_type
