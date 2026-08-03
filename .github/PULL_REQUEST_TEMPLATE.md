@@ -1,8 +1,8 @@
 <!--
 KFM Pull Request Template
-Template version: v1.2
+Template version: v1.3
 Pinned contract: CONTRACT_VERSION = "3.0.0"
-Evidence snapshot used for this revision: main@a1570d5bb316d2a55edc95ff3f51413118ddb5ee
+Evidence snapshot used for this revision: main@de1cb18e688e3f81a0fc12d7f5d09a2f27921177
 
 This is a governed work-intake and review surface. It asks for evidence,
 scope, validation, risk, review, and rollback. It is not evidence authority,
@@ -20,6 +20,11 @@ The visible headings `Goal:`, `Status labels:`, `Directory Rules basis:`,
 
 When a PR touches three or more top-level roots, retain and complete the exact
 visible `Cross-cutting:` field because the current Rego stub checks that token.
+
+Before substantive authoring and again before the final remote mutation, inspect
+current open PRs, active branches, linked issues or campaign cursors, and recent
+merges for overlapping paths or behavior. Record exact refs and head SHAs rather
+than inferring independence from titles or branch names.
 -->
 
 ## Goal:
@@ -66,6 +71,7 @@ changes, keep the fields and use a truthful value rather than deleting them.
 | Field | Value |
 |---|---|
 | `task_id` | |
+| `related_issue_or_campaign` | |
 | `goal` | |
 | `repository` | `bartytime4life/Kansas-Frontier-Matrix` |
 | `base_ref` | <!-- branch/tag plus immutable starting SHA --> |
@@ -75,6 +81,7 @@ changes, keep the fields and use a truthful value rather than deleting them.
 | `delivery_route` | <!-- review-branch / existing-branch-or-pr / explicit-ref / direct-default-branch --> |
 | `execution_profile` | <!-- API_ONLY_STRICT / CONNECTOR_FIRST_HYBRID / local-human / N/A --> |
 | `source_inputs` | |
+| `coordination_scope` | <!-- paths, object families, validators, fixtures, workflows, generated outputs, and release effects searched for overlap --> |
 | `untrusted_input_boundary` | <!-- issues, comments, logs, source payloads, attachments, generated files, external text --> |
 | `in_scope` | |
 | `non_goals` | |
@@ -82,6 +89,33 @@ changes, keep the fields and use a truthful value rather than deleting them.
 | `validation_required` | |
 | `stop_conditions` | |
 | `change_budget` | <!-- maximum files, lines, roots, generated outputs, or authority boundaries --> |
+
+## Work coordination and overlap:
+
+<!--
+Before substantive authoring and again immediately before the final remote
+mutation, inspect current open PRs, active branches, linked issues or campaign
+cursors, and recently merged work for overlap in target paths, object families,
+validator behavior, fixtures, workflows, generated outputs, and release
+effects. Record exact refs and head SHAs. An issue title or branch name alone is
+not proof that work is independent.
+-->
+
+| Coordination item | Evidence or decision | Status |
+|---|---|---|
+| Search time and repository snapshot | <!-- UTC timestamp plus base SHA --> | |
+| Related issue / campaign / cursor | | |
+| Overlapping PRs or branches | <!-- number/ref, draft state, base, exact head SHA --> | |
+| Path and behavior overlap | <!-- exact shared paths plus semantic overlap --> | |
+| Survivor / supersession / consolidation | <!-- name the survivor or explain why parallel work remains safe --> | |
+| Coordination record | <!-- linked comment, issue update, or N/A with reason --> | |
+
+- [ ] No overlapping work found after a current search; evidence is recorded above.
+- [ ] Overlap found; every candidate and its exact head SHA is recorded above.
+- [ ] A survivor, supersession, or minimal-consolidation decision is explicit and preserves unique validated work.
+- [ ] Intentionally parallel work has disjoint ownership, acceptance criteria, and rollback.
+- [ ] No PR was closed, marked ready, merged, retargeted, or overwritten solely because this template was completed.
+- [ ] Coordination was rechecked after base drift and immediately before the final push.
 
 ## Status labels:
 
@@ -386,6 +420,32 @@ NOT APPLICABLE, UNKNOWN.
 
 **Base-drift notes:**
 
+## Repository controls and exact-head verification:
+
+<!--
+Repository rulesets, branch protection, required approvals, bypass actors,
+merge-capable apps, and default token settings live outside the Git tree.
+Record current platform evidence when available. Otherwise use UNKNOWN or NEEDS
+VERIFICATION. File-based CODEOWNERS and workflow definitions do not prove that
+their controls are effective.
+-->
+
+| Control or signal | Effective state | Evidence and observed-at time | Status |
+|---|---|---|---|
+| PR head | <!-- exact head SHA and branch --> | | |
+| Hosted checks | <!-- run/check IDs, event, conclusion, and tested SHA --> | | |
+| Rulesets / branch protection | | | |
+| Required checks and strict/up-to-date behavior | | | |
+| Required approvals / code-owner review | | | |
+| Bypass actors / merge-capable apps / merge methods | | | |
+| Mergeability and base relationship | | | |
+
+- [ ] Every hosted result claimed for this PR belongs to the current exact head SHA and the relevant event.
+- [ ] Stale-head, base-only, scheduled, manual, or unrelated workflow results are not reported as exact-head PR validation.
+- [ ] File-based CODEOWNERS, workflow names, and green checks are not treated as proof of settings enforcement or approval.
+- [ ] Unobservable or stale repository controls remain `UNKNOWN` or `NEEDS VERIFICATION`; no effective setting is guessed.
+- [ ] Merge approval remains separate from readiness, release, deployment, promotion, and publication authority.
+
 ## Open `UNKNOWN` / `NEEDS VERIFICATION`:
 
 <!-- List what this PR explicitly does not resolve. -->
@@ -529,7 +589,6 @@ at `policy/ai_builder/operating_contract.rego`.
 
 That Rego file remains a PROPOSED policy stub. CI invocation, input assembly,
 branch-protection enforcement, required template completion, and merge gating
-remain NEEDS VERIFICATION unless this PR supplies current evidence. A completed
-template, green workflow, approved receipt, merge, and release are separate
-states.
+remain NEEDS VERIFICATION unless this PR supplies current evidence. A completed template, green workflow, approved receipt, repository-control
+setting, merge, release, and publication are separate states.
 </sub>
