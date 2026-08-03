@@ -2,281 +2,147 @@
 doc_id: kfm://doc/tools-validators-domains-flora-readme
 title: tools/validators/domains/flora README
 type: README
-version: v0.1
-status: draft
-owner: TODO-tooling-qa-owner-plus-flora-steward-plus-rare-plant-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
+version: v0.2.0
+status: repository-grounded draft; one bounded executable profile established
+owner: NEEDS VERIFICATION — tooling/QA owner, Flora steward, sensitivity/geoprivacy reviewer, policy steward, evidence steward
 created: 2026-07-07
-updated: 2026-07-07
-policy_label: repository-facing; per-domain-validator-index; flora; rare-plants; geoprivacy; fail-closed; non-authoritative
+updated: 2026-08-03
+policy_label: repository-facing; flora; synthetic-fixtures; fail-closed; non-authoritative
 owning_root: tools/
-responsibility: proposed per-domain Flora validator index for plant taxon identity, occurrence/specimen evidence, rare/protected/culturally sensitive flora controls, geoprivacy, vegetation/community products, invasive plants, phenology, restoration plantings, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Flora meaning, policy decisions, proof records, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: bounded Flora validator implementations that check declared synthetic fixture profiles without creating botanical, policy, proof, release, or publication authority
+truth_posture: cite-or-abstain; executable claims are limited to the named profile and tests below
 related:
-  - ../../README.md
-  - ../../_common/README.md
-  - ../README.md
-  - ../../biodiversity/README.md
-  - ../../cross-domain-joins/README.md
-  - ../../cross-lane/README.md
+  - ../../_common/public_safe_fixture.py
+  - ../../../../../tests/domains/flora/README.md
+  - ../../../../../fixtures/domains/flora/README.md
   - ../../../../../docs/domains/flora/README.md
-  - ../../../../../docs/domains/flora/CANONICAL_PATHS.md
-  - ../../../../../docs/domains/flora/CONTINUITY_INVENTORY.md
-  - ../../../../../docs/domains/flora/PUBLICATION_AND_ROLLBACK.md
-  - ../../../../../docs/domains/flora/EXPANSION_PLAN.md
-  - ../../../../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
-  - ../../../../../contracts/domains/flora/
-  - ../../../../../schemas/contracts/v1/domains/flora/
-  - ../../../../../policy/domains/flora/
-  - ../../../../../policy/sensitivity/flora/
-  - ../../../../../data/registry/sources/flora/
-  - ../../../../../data/proofs/
-  - ../../../../../data/receipts/
-  - ../../../../../release/
+  - ../../../../../policy/domains/flora/README.md
+  - ../../../../../policy/sensitivity/flora/README.md
+  - ../../../../../data/proofs/flora/README.md
+  - ../../../../../release/candidates/flora/README.md
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
-  - "Flora rare, protected, culturally sensitive, steward-reviewed, and exact-location plant records are fail-closed unless a public-safe geoprivacy transform, review, policy, evidence, release, correction, and rollback path authorizes disclosure."
-  - "Flora may reference Habitat, Fauna, Soil, Hydrology, Agriculture, Hazards, and other domains through governed joins, but it does not own their truth. Validators must preserve ownership, source role, sensitivity, and EvidenceBundle support."
-  - "Validators enforce declared contracts, schemas, and policy. They do not define Flora meaning, create EvidenceBundles, make stewardship decisions, approve release, or publish public outputs."
+  - "The executable profile validates synthetic public-safe candidates only."
+  - "A PASS is fixture conformance, not botanical truth, source admission, rights clearance, stewardship approval, proof, release, or publication."
+  - "Exact or reverse-engineerable sensitive Flora locations and geoprivacy transform parameters fail closed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# tools/validators/domains/flora
+# `tools/validators/domains/flora/` — Flora Validators
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-flora--validators-informational)
-![sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-red)
-![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
+[![Status: bounded executable](https://img.shields.io/badge/status-bounded%20executable-1a7f37?style=flat-square)](#current-implementation)
+[![Network: forbidden](https://img.shields.io/badge/network-forbidden-b42318?style=flat-square)](#execution)
+[![Sensitivity: fail closed](https://img.shields.io/badge/sensitivity-fail%20closed-b42318?style=flat-square)](#profile-boundary)
+[![Authority: validation only](https://img.shields.io/badge/authority-validation%20only-6e7781?style=flat-square)](#authority-boundary)
 
-> **One-line purpose.** `tools/validators/domains/flora/` is the proposed per-domain Flora validator index for plant taxon identity, occurrence/specimen evidence, rare/protected/culturally sensitive plant controls, geoprivacy, vegetation/community products, invasive plants, phenology, restoration plantings, evidence, policy, release, correction, rollback, and public-surface denial checks.
+> **Purpose.** Hold deterministic Flora validators under the `tools/` responsibility root. The current implementation is intentionally narrow: it validates one closed, synthetic, public-safe fixture profile and emits stable machine findings without echoing candidate values.
 
----
+> [!IMPORTANT]
+> A successful run proves only conformance to the frozen synthetic fixture profile. It does not establish a real occurrence, accepted taxonomy, source authority, rights, sensitivity approval, stewardship review, EvidenceBundle closure, release readiness, or public safety.
 
-## Purpose
+## Current implementation
 
-`tools/validators/domains/flora/` exists to organize Flora validators under the durable `tools/validators/` surface.
+| Surface | State |
+|---|---|
+| `validate_public_safe_fixture.py` | **Implemented** — standard-library, deterministic, no-network validator |
+| Shared mechanics | `tools/validators/_common/public_safe_fixture.py` |
+| Positive fixture | `fixtures/domains/flora/valid/public_safe_occurrence.json` |
+| Exact negative fixtures | `fixtures/domains/flora/invalid/*.json` with `*.expected_error.txt` sidecars |
+| Tests | `tests/domains/flora/test_flora_smoke.py` |
+| CI | `domain-flora / validate-flora` executes the focused test module |
+| Flora proof producer | **Not established; held** |
+| Flora release dry run | **Not established; held** |
 
-The durable KFM question for this index is:
+## Profile boundary
 
-> Do Flora candidates preserve plant taxonomic identity, occurrence/specimen source-role posture, rare/protected/culturally sensitive location controls, geoprivacy, evidence closure, review state, policy decisions, release readiness, correction paths, rollback support, and public-surface denial boundaries before they reach any governed output?
+The validator accepts only a synthetic candidate that declares:
 
-The answer should be a navigable validator index and deterministic validation outputs from configured child lanes. This folder should not create Flora truth, botanical authority, stewardship decisions, EvidenceBundles, geoprivacy transforms, PolicyDecisions, release decisions, public map layers, API payloads, or AI answers.
+- fixture-only identity and network-forbidden posture;
+- synthetic taxon and source references;
+- the frozen `synthetic_occurrence` source role;
+- fixture-only rights and evidence references;
+- generalized fixture-area support rather than coordinates or geometry;
+- no exact, reverse-engineerable, private-land, or culturally sensitive location state;
+- a fixture redaction-receipt reference and fixture review-record reference;
+- `not_released` and `promotion_eligible: false` governance;
+- explicit caveats stating the record is synthetic, is not a botanical occurrence claim, and is not released.
 
-[Back to top](#top)
+The profile rejects:
 
----
+- undeclared fields at every owned object level;
+- exact-location aliases, coordinates, WKT-like values, parcel/access/collection clues;
+- URLs and external references;
+- redaction offsets, generalization thresholds, jitter seeds, precision values, or other transform secrets;
+- missing or malformed taxon, source, evidence, review, or redaction references;
+- occurrence/model/range role collapse;
+- unresolved taxonomy or rights state;
+- release or promotion claims;
+- malformed, duplicate-key, non-finite, oversized, overly deep, overly large, or non-regular JSON inputs.
 
-## Status
+## Execution
 
-| Surface | Status | Notes |
-|---|---|---|
-| `tools/validators/domains/flora/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
-| Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
-| Flora domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/flora/README.md` defines scope, lifecycle, fail-closed rare-plant sensitivity posture, responsibility-root split, and cross-lane ownership constraints. |
-| Deny-by-default sensitivity ADR | **CONFIRMED in repo evidence / draft** | ADR-0010 draft states rare-species exact locations default to deny and public products require public-safe transform, review, receipt, policy, and rollback support. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Flora validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+From repository root:
 
-[Back to top](#top)
+```bash
+python tools/validators/domains/flora/validate_public_safe_fixture.py \
+  fixtures/domains/flora/valid/public_safe_occurrence.json
+```
 
----
+Expected exit codes:
 
-## Child lanes
+| Code | Meaning |
+|---:|---|
+| `0` | Every supplied fixture conforms to the bounded profile |
+| `1` | At least one supplied fixture has findings |
+| `2` | CLI usage error, such as no fixture path |
 
-No child README lanes were confirmed during this edit.
+Each input produces one compact JSON line:
 
-Future child lanes should be added only when they represent a distinct Flora validator specialty, fixture family, edge, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics.
+```json
+{"file":"<path>","findings":[],"scope":"flora-public-safe-fixture","status":"PASS"}
+```
 
-Possible future children remain **PROPOSED** until verified:
-
-- `occurrence/` for flora occurrence evidence, specimen support, and public-safe occurrence derivatives;
-- `geoprivacy/` for redaction/generalization/buffering/gridding/aggregation checks;
-- `rare-plant/` for rare, protected, culturally sensitive, steward-reviewed, or restricted plant records;
-- `taxon-status/` for plant taxon identity, synonym/crosswalk, conservation/legal status, and source-role posture;
-- `vegetation-community/` for vegetation/community surfaces, habitat associations, and ownership-preserving joins;
-- `invasive-phenology/` for invasive plant and phenology observations without operational or regulatory overclaim.
-
-[Back to top](#top)
-
----
+Findings contain only stable `code` and `path` values. Candidate values are never echoed.
 
 ## Authority boundary
 
-| Responsibility | Home |
+This lane owns validator implementation only. It does not own:
+
+- Flora object meaning or taxonomy;
+- source admission or source-role authority;
+- rights, sensitivity, stewardship, or sovereignty decisions;
+- geoprivacy transform implementation;
+- canonical EvidenceBundle or proof records;
+- receipts, policy decisions, release manifests, corrections, withdrawals, or rollback cards;
+- public API, map, tile, search, Focus Mode, or AI output.
+
+Those responsibilities remain in their governing roots. The validator may check references to them only within the declared synthetic profile.
+
+## Stable findings
+
+| Finding family | Examples |
 |---|---|
-| Per-domain Flora validator index | `tools/validators/domains/flora/` |
-| Shared validator plumbing | `tools/validators/_common/` |
-| Cross-domain ecology/biodiversity validator context | `tools/validators/biodiversity/`, `tools/validators/cross-domain-joins/` |
-| Flora domain meaning | `docs/domains/flora/`, `contracts/domains/flora/` |
-| Flora schemas | `schemas/contracts/v1/domains/flora/` or ADR-selected homes |
-| Flora policy rules | `policy/domains/flora/`, `policy/sensitivity/flora/`, or accepted policy homes |
-| Source descriptors | `data/registry/sources/flora/` or accepted source registry home |
-| Evidence/proof support | `data/proofs/` |
-| Receipts | `data/receipts/` |
-| Release decisions, manifests, rollback, corrections | `release/` |
-| Tests and fixtures | `tests/validators/domains/flora/`, `tests/domains/flora/`, `fixtures/domains/flora/`, or accepted conventions |
+| Shape | `CANDIDATE_NOT_OBJECT`, `UNDECLARED_*`, `FIXTURE_JSON_INVALID` |
+| Identity/support | `RECORD_ID_INVALID`, `TAXON_REF_INVALID`, `SOURCE_DESCRIPTOR_REF_INVALID`, `EVIDENCE_REFS_INVALID` |
+| Role/rights | `SOURCE_ROLE_INVALID`, `TAXON_CONCEPT_STATE_INVALID`, `RIGHTS_STATE_INVALID` |
+| Spatial/sensitivity | `SPATIAL_SUPPORT_INVALID`, `SENSITIVE_LOCATION_FIELD_FORBIDDEN`, `COORDINATE_LIKE_VALUE_FORBIDDEN`, `SENSITIVITY_STATE_INVALID` |
+| Public controls | `PUBLIC_REPRESENTATION_INVALID`, `PUBLIC_CAVEATS_INVALID`, `GOVERNANCE_STATE_INVALID` |
+| Exfiltration/secret resistance | `EXTERNAL_REFERENCE_FORBIDDEN`, `TRANSFORM_SECRET_FIELD_FORBIDDEN`, `NUMERIC_VALUE_FORBIDDEN` |
+| Loader bounds | `FIXTURE_TOO_LARGE`, `FIXTURE_JSON_INVALID` |
 
-Safe interpretation:
-
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** validator code may live below this folder when it checks declared Flora invariants and delegates meaning, sensitivity, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
-- **DENY:** using this folder as botanical authority, stewardship authority, Flora contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public occurrence surface, public map product surface, or domain-meaning authority.
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-Good fits for `tools/validators/domains/flora/` include:
-
-- this parent/index README;
-- child README lanes for narrow Flora validator families;
-- optional parent runner code that delegates to child validators without redefining their rules;
-- validators that check occurrence/specimen source-role separation, plant taxon/status posture, rare-plant geoprivacy, public-safe derivatives, evidence closure, review state, policy decisions, release references, correction cascade, and rollback support;
-- validators that check cross-lane joins preserve Habitat, Fauna, Soil, Hydrology, Agriculture, Hazards, Archaeology, and People/Land ownership boundaries;
-- synthetic fixture references and test-surface guidance;
-- docs or reports that explain validator scope without becoming authoritative Flora doctrine.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-| Do not put in `tools/validators/domains/flora/` | Correct home |
-|---|---|
-| Shared validator plumbing | `tools/validators/_common/` |
-| Flora domain docs | `docs/domains/flora/` |
-| Flora contracts | `contracts/domains/flora/` |
-| Schemas | `schemas/contracts/v1/...` |
-| Policy and sensitivity rules | `policy/...` |
-| Source descriptors | `data/registry/sources/...` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | dedicated `data/` lifecycle roots |
-| EvidenceBundles, proofs, receipts, RedactionReceipts, AggregationReceipts | `data/proofs/`, `data/receipts/` |
-| Release manifests, decisions, rollback, corrections | `release/` |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
-| Public API, UI, map, tile, export, search, graph, Focus Mode, or AI runtime code | governed application/runtime roots |
-
-[Back to top](#top)
-
----
-
-## Flora validator posture
-
-Flora validators must fail closed, deny, abstain, or route to steward review when a candidate:
-
-- lacks EvidenceRef, EvidenceBundle, source descriptor, source-role, taxon/status, or specimen/occurrence support;
-- collapses occurrence evidence, specimen evidence, restricted occurrence, public occurrence derivative, rare-plant location, vegetation-community surface, invasive-plant record, phenology observation, or restoration planting record;
-- exposes rare, protected, culturally sensitive, steward-reviewed, exact occurrence geometry, or reverse-engineerable derivatives;
-- lacks a named geoprivacy transform, RedactionReceipt, AggregationReceipt, ReviewRecord, PolicyDecision, ReleaseManifest, correction path, or rollback target where required;
-- maps, tiles, exports, searches, embeds, graphs, summarizes, or answers with Flora content beyond the approved public-safe derivative;
-- imports another domain's truth into a Flora artifact without preserving ownership, source role, sensitivity, and EvidenceBundle support;
-- offers collection, disturbance, regulatory, legal, emergency, or operational botanical guidance outside an accepted governed authority path;
-- bypasses lifecycle gates or treats validator output as release approval.
-
-The validator lane must preserve the KFM lifecycle invariant:
-
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-[Back to top](#top)
-
----
-
-## Standard parent outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `FLORA_DOMAIN_VALIDATORS_PASS` | Configured Flora validators passed. |
-| `FLORA_DOMAIN_VALIDATORS_FAIL` | One or more configured validators failed. |
-| `CHILD_VALIDATOR_MISSING` | Expected Flora child validator lane or runner is absent. |
-| `CHILD_VALIDATOR_FAILED` | Child validator reported one or more findings. |
-| `EVIDENCE_REF_MISSING` | Required EvidenceRef or EvidenceBundle pointer is absent. |
-| `SOURCE_ROLE_COLLAPSE` | Candidate collapses occurrence/specimen/source-role/object-family posture. |
-| `TAXON_STATUS_UNVERIFIED` | Plant taxon identity, synonym/crosswalk, or conservation/legal status lacks support. |
-| `SENSITIVE_FLORA_LOCATION_DENIED` | Exact or identifying sensitive flora location is unsafe for public output. |
-| `GEOPRIVACY_TRANSFORM_MISSING` | Required public-safe transform or profile is absent. |
-| `REDACTION_OR_AGGREGATION_RECEIPT_MISSING` | Required transform receipt is absent. |
-| `REVIEW_OR_POLICY_GAP` | Required review state or PolicyDecision is absent. |
-| `RELEASE_REFERENCE_MISSING` | Required ReleaseManifest, correction path, or rollback target is absent. |
-| `CROSS_DOMAIN_AUTHORITY_COLLAPSE` | Candidate absorbs another domain's truth into Flora without preserving boundaries. |
-| `PUBLIC_SURFACE_LEAK_RISK` | Candidate is unsafe for public/governed output as shaped. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `IGNORED_WITH_REASON` | Finding was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Suggested future test surface:
-
-```text
-tests/validators/domains/flora/
-├── README.md
-├── test_flora_domain_validator_parent.py
-└── fixtures/
-    ├── valid_public_safe_occurrence_derivative/
-    ├── missing_evidence_ref/
-    ├── source_role_collapse/
-    ├── taxon_status_unverified/
-    ├── sensitive_flora_location_denied/
-    ├── geoprivacy_transform_missing/
-    ├── redaction_receipt_missing/
-    ├── review_or_policy_gap/
-    ├── cross_domain_authority_collapse/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+## Validation command
 
 ```bash
-pytest -q tests/validators/domains/flora
+python -m unittest discover \
+  --start-directory tests/domains/flora \
+  --pattern 'test_flora_smoke.py' \
+  --verbose
 ```
 
-```bash
-python tools/validators/domains/flora/run_flora_domain_validators.py --repo-root . --format json
-```
+The suite blocks common socket and `urllib` entry points, exercises exact fixture inventories and sidecars, tests parser bounds and CLI contracts, and verifies that sensitive candidate values are not emitted.
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_flora_domain_validators.py` or the test path exists.
+## Deferred work
 
-[Back to top](#top)
-
----
-
-## Review checklist
-
-- [ ] Parent runner delegates to child validators instead of redefining their rules.
-- [ ] Validator reads declared Flora contracts, schemas, and policy rather than defining meaning locally.
-- [ ] Sensitive Flora details fail closed unless approved public-safe transform support exists.
-- [ ] Occurrence, specimen, restricted occurrence, public derivative, rare-location, vegetation-community, invasive, phenology, and restoration object families remain distinct.
-- [ ] EvidenceBundle, geoprivacy transform, review, policy, release, rollback, and correction support are checked where required.
-- [ ] Cross-domain joins preserve ownership, source role, sensitivity, and EvidenceBundle support.
-- [ ] Map, tile, search, graph, export, Focus Mode, and AI surfaces do not reveal restricted details or reverse-engineerable derivatives.
-- [ ] Reports and receipts are written only to accepted roots.
-- [ ] Validator output is not described as truth, policy, release, publication, or Directory Rules approval.
-- [ ] Tests use public-safe or synthetic fixtures.
-- [ ] Executable claims are backed by current repo evidence.
+Broader Flora validation remains **PROPOSED** or **NEEDS VERIFICATION**, including real contract/schema validation, accepted source and taxon vocabularies, rights and sensitivity policy execution, deterministic geoprivacy transforms, EvidenceBundle resolution, release candidates, corrections, and rollback drills.
 
 [Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Flora validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, geoprivacy behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
