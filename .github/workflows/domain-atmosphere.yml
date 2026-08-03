@@ -1,6 +1,6 @@
 # KFM Atmosphere domain CI workflow.
-# Status: bounded synthetic precipitation and knowledge-character fixture
-# profiles are executable; broader validation, proof, and release-dry-run
+# Status: bounded synthetic precipitation, knowledge-character, and low-cost
+# sensor calibration fixture profiles are executable; broader validation, proof, and release-dry-run
 # producers remain held.
 #
 # Authority boundary:
@@ -58,11 +58,14 @@ jobs:
             "tests/domains/atmosphere/README.md"
             "tests/domains/atmosphere/test_atmosphere_smoke.py"
             "tests/domains/atmosphere/test_knowledge_character_registry.py"
+            "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
             "tools/validators/domains/atmosphere/validate_knowledge_character.py"
+            "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
             "fixtures/domains/atmosphere/knowledge_character/README.md"
+            "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md"
             "data/registry/sources/atmosphere/README.md"
             "release/candidates/atmosphere/README.md"
           )
@@ -88,11 +91,19 @@ jobs:
                   "tests/domains/atmosphere/"
                   "test_knowledge_character_registry.py"
               ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_low_cost_sensor_caveat_required.py"
+              ),
           }
           accepted_validators = {
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_knowledge_character.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_low_cost_sensor_caveats.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
@@ -154,6 +165,7 @@ jobs:
 
           python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
           python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+          python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
 
           python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
@@ -176,8 +188,19 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Atmosphere knowledge-character fixtures"
+          python tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py \
+            fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/*.json
+
+          if python tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py \
+            fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/*.json; then
+            echo "::error::Known-invalid Atmosphere low-cost-sensor calibration fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Atmosphere low-cost-sensor calibration fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()
@@ -189,6 +212,8 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture`
 
           `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
 
@@ -206,6 +231,20 @@ jobs:
           AOD-as-ground-PM2.5, advisory-as-life-safety, and precise-site
           exposure. The profile is not the canonical enum or registry and
           does not evaluate live Atmosphere records or Rego policy.
+
+          The synthetic low-cost-sensor calibration profile checks a caveated
+          context-only state and a corrected-with-lineage state. It requires
+          explicit low-cost character and observation role, fixed caveat,
+          confidence and limitations; keeps raw and corrected identities
+          separate; pins exact fixture-local correction, training, specification,
+          and evidence identities plus identity-string digests; requires bounded
+          reference-collocation, held-out-evaluation metadata, declared validity,
+          and relative-humidity/temperature inputs; denies peer consensus as a
+          reference, modeled-as-raw, unbounded transfer, metric-driven promotion,
+          reference-grade, regulatory, public-release, real-county, and
+          precise-site claims; and rejects unknown transferability or drift. It is fixture-only,
+          uses synthetic evidence references, and does not evaluate live records,
+          choose a scientific correction, admit a source, or execute Rego policy.
 
           Other Atmosphere test and validator modules remain explicit
           placeholders or documentation-only lanes and are checked as such.

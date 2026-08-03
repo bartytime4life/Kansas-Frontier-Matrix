@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-atmosphere-readme
 title: tools/validators/domains/atmosphere README
 type: README
-version: v0.2
-status: draft; bounded synthetic precipitation and knowledge-character fixture validators executable; broader validators held
+version: v0.3
+status: draft; bounded synthetic precipitation, knowledge-character, and low-cost-sensor calibration fixture validators executable; broader validators held
 owner: TODO-tooling-qa-owner-plus-atmosphere-steward-plus-cross-domain-steward-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: repository-facing; per-domain-validator-index; atmosphere; cross-lane; source-role-aware; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Atmosphere validator index for edge-specific and specialty Atmosphere validators under tools/validators/domains/atmosphere while deferring domain meaning to docs/contracts and broader cross-domain invariants to their existing validator lanes
@@ -36,6 +36,7 @@ related:
   - ../../../../../data/receipts/
   - ../../../../../release/
 notes:
+  - "v0.3 adds a standard-library, fixture-only low-cost-sensor calibration validator. It checks synthetic qualification pedigree and denials without selecting a scientific model, evaluating live records, applying Rego policy, or granting release authority."
   - "v0.2 confirms standard-library synthetic public-safe precipitation and knowledge-character fixture validators; they do not establish Atmosphere source, schema, registry, evidence, policy, proof, release, or publication authority."
   - "Existing cross-domain Atmosphere validator lanes include atmosphere_hydrology, atmosphere_agriculture, atmosphere_biodiversity, atmosphere_hazards, and air-hazards. This subtree is for narrower per-domain child or specialty validators, not a competing Atmosphere authority."
   - "Child README lanes currently confirmed here include smoke/. Broader executable behavior remains NEEDS VERIFICATION."
@@ -80,6 +81,7 @@ The answer should be a navigable validator index and deterministic validation ou
 | Atmosphere smoke lane | **CONFIRMED in repo evidence / draft** | `smoke/README.md` defines `SmokeContext`, `AODRaster`, source-role, freshness, Hazards seam, sensitive-join, release, and public-surface checks. |
 | `validate_public_safe_precipitation_fixture.py` | **CONFIRMED bounded executable** | Validates only the frozen synthetic precipitation fixture profile with no source resolution, policy decision, evidence closure, release, or publication effect. |
 | `validate_knowledge_character.py` | **CONFIRMED bounded executable** | Validates only the frozen synthetic anti-collapse fixture profile; the canonical enum, registry, Rego policy, evidence, alerting, release, and publication boundaries remain open or held. |
+| `validate_low_cost_sensor_caveats.py` | **CONFIRMED bounded executable** | Validates only the frozen synthetic low-cost PM2.5 calibration profile: caveated context-only or corrected-with-lineage. It does not validate measurement accuracy, select a correction, resolve evidence, admit sources, execute Rego, or authorize release. |
 | Broader executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | Other script/test paths, schema maturity, policy bundles, receipts, runtime behavior, and release behavior remain unverified. |
 
 [Back to top](#top)
@@ -113,6 +115,7 @@ This README does not move or rename any existing Atmosphere cross-domain validat
 | `smoke/` | Does an Atmosphere smoke candidate preserve source role, product type, time/freshness, uncertainty, rights, sensitivity, Hazards seam boundaries, evidence support, policy posture, release readiness, correction paths, and rollback support before it reaches a governed surface? | README confirmed; executable proposed. |
 | Parent precipitation profile | Does a synthetic PrecipitationObservation preserve observed-sensor character, generalized location, observed/retrieval time, millimetre units, accumulation window, fixture-only governance, and no-alert limitations? | `validate_public_safe_precipitation_fixture.py` confirmed executable with file-backed positive/negative tests. |
 | Parent knowledge-character profile | Do six synthetic character pairings remain distinct, with exact denial for model/observation, AQI/concentration, AOD/ground-PM2.5, advisory/life-safety, and precise-site collapse? | `validate_knowledge_character.py` confirmed executable with six positive and five exact-negative fixtures plus in-memory missing/unknown/multiple cases; pairings remain PROPOSED and non-canonical. |
+| Parent low-cost-sensor calibration profile | Does a synthetic low-cost PM2.5 fixture preserve role, caveat, confidence, limitations, raw/corrected identity, correction/training identity, reference collocation, held-out-evaluation metadata, meteorology inputs, fictional county sentinel, transferability, drift, and fixture-only governance? | `validate_low_cost_sensor_caveats.py` confirmed executable with two positive and sixteen exact-negative cases; scientific validity, live data, Rego policy, source admission, and release remain outside scope. |
 
 Future child lanes should be added only when they represent a distinct Atmosphere specialty, edge, fixture family, or public-surface invariant with accepted contracts, schemas, policy posture, fixtures, receipts, and report semantics. Avoid creating a child lane for every object family unless the validator has distinct boundary rules.
 
@@ -236,6 +239,24 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
+Current bounded low-cost-sensor calibration check:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
+```
+
+Direct fixture polarity can also be inspected with:
+
+```bash
+python tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py \
+  fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/*.json
+```
+
+Known-invalid files must be rejected and their sorted code/path findings must
+match the adjacent `*.expected_error.txt` sidecars. These commands are not
+source, evidence, policy, proof, or release validation.
+
 Suggested future test surface:
 
 ```text
@@ -294,6 +315,6 @@ python tools/validators/domains/atmosphere/run_atmosphere_domain_validators.py -
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and parent index for Atmosphere child validators. |
-| Next smallest safe change | Verify parent runner, child validator scripts, accepted specialty profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, freshness thresholds, sensitive-join behavior, and CI wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-03 |
+| Review state | Draft parent index with three bounded synthetic fixture validators executable. |
+| Next smallest safe change | Independently review the low-cost-sensor fixture contract against accepted scientific and policy authority before considering any live-record or release-path binding; broader parent runners, schemas, sources, evidence, and policy remain held. |

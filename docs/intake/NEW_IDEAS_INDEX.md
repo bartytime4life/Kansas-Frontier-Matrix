@@ -2,15 +2,15 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.8
+version: v1.9
 status: draft; repository-grounded; intake-only
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-12-20-25-source-map.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified through remote main 99e73d87e0aed536b25f2f282f88a386f35654b5; New Ideas 12-20-25 is identity-pinned and triaged alongside the existing April/May packets and spatiotemporal modernization blueprint; source packets remain EXPLORATORY until separately promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -21,7 +21,7 @@ A governed intake index for dated KFM “New Ideas” packets, preserving useful
 > **Status:** draft / repository-grounded / intake-only
 > **Path:** `docs/intake/NEW_IDEAS_INDEX.md`  
 > **Owner:** `OWNER_TBD`  
-> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@83cca9c66a1eb218f010a75b862d417d429c3c85` / EXPLORATORY packet content / no promotion authority
+> **Truth posture:** CONFIRMED repository path and sibling intake surfaces through remote `main@99e73d87e0aed536b25f2f282f88a386f35654b5` / EXPLORATORY packet content / no promotion authority
 
 > [!NOTE]
 > This file is an intake control surface. It records packet presence, themes, routing pressure, blockers, and next verification moves. It does **not** prove that proposed paths, tools, schemas, policies, workflows, or services exist in the repository.
@@ -164,6 +164,7 @@ This table records only the packet sources visible or directly retrieved in this
 
 | Intake ID | Source packet | Date signal | Current status | Main themes | Candidate destinations | Blocking checks |
 | --- | --- | --- | --- | --- | --- | --- |
+| `NIP-2025-12-20-data-trust-controls` | `New Ideas 12-20-25.docx.pdf` | Source date confirmed by filename and PDF title metadata | TRIAGED / EXPLORATORY; bounded fixture slice implemented | Low-cost PM2.5 calibration pedigree; STAC/Zarr array discovery; governed graph migrations; WZDx/ArcGIS/GTFS incident fusion; deterministic replay and rollback. | Detailed routing in [`exploratory/new-ideas-12-20-25-source-map.md`](exploratory/new-ideas-12-20-25-source-map.md); bounded Atmosphere fixture behavior implemented under existing validator, fixture, test, documentation, and workflow homes; other destinations remain candidate-only. | Independently review the frozen profile. Verify research, standards, source rights, scientific validity, Rego policy, live applicability, evidence, carriers, and release authority before expanding it. |
 | `NIP-2026-05-08` | `New Ideas 5-8-26.pdf` | Filename date | CAPTURED / EXPLORATORY | Ecology tile gating; MAIAC AOD, FIRMS, SMAP, AirNow, Mesonet; watcher `DecisionEnvelope`; `RunReceipt`; PMTiles sidecars; MapLibre/Cesium verification; no-network proof slice; DSSE/cosign; policy hooks. | `docs/domains/ecology/`, `docs/sources/`, `policy/ecology/`, `schemas/contracts/v1/governance/`, `tools/ci/probes/`, `tools/smoke/`, `release/` after verification. | Verify source rights, API/key requirements, external product facts, Mesonet consent posture, thresholds as policy not science absolutes, and repo path conventions. |
 | `NIP-2026-05-10` | `New Ideas 5-10-26.pdf` | Filename date | CAPTURED / EXPLORATORY | PMTiles operational hardening; versioned artifacts; sidecar + Bao/BLAKE3 proofs; DSSE/cosign/Rekor; OCI/ORAS publication; fail-closed CI gate; MapLibre performance testing; automation starter pack; promotion/rollback rehearsal. | `tools/attest/`, `tools/validators/`, `schemas/contracts/v1/artifacts/`, `.github/workflows/`, `release/`, `docs/architecture/map/`, `docs/runbooks/` after repo verification. | Verify current tool versions and licenses, package availability, OCI/referrer support, schema-home authority, workflow conventions, public-safe artifact exposure, and rollback evidence. |
 | `NIP-2026-04-13-promotion-proof` | `New Ideas 4-13-26.pdf` | Source date confirmed by filename and PDF title | TRIAGED / EXPLORATORY; bounded slice implemented | Promotion proof; receipt/manifest integrity; A-G gate grammar; finite outcomes; review separation; correction and rollback; signing/publishing proposals. | Detailed routing in [`exploratory/new-ideas-4-13-source-map.md`](exploratory/new-ideas-4-13-source-map.md); bounded offline behavior implemented under existing validator, fixture, test, and workflow homes. | Keep `PASS` review-ready only. Authenticate evidence, policy, attestations, catalogs, actors, and rollback separately; do not carry over packet network installs, write permissions, paths, or publication automation. |
@@ -313,6 +314,45 @@ Explain why the disposition is safe, reversible, and bounded.
 ```
 
 ## Appendix: packet cards
+
+<details>
+<summary><strong>NIP-2025-12-20-data-trust-controls - calibration, array discovery, change control, fusion, and replay</strong></summary>
+
+### Source
+
+`New Ideas 12-20-25.docx.pdf`
+
+- SHA-256: `89b0231a26c34e8a383d5bbfcafa7e84b5e1072b26859ce8b2dcc0aaf2d9add2`
+- Pages: `37`
+- Bytes: `717,542`
+- Source date: `2025-12-20`
+- Capture and triage date: `2026-08-03`
+- Detailed review: [`exploratory/new-ideas-12-20-25-source-map.md`](exploratory/new-ideas-12-20-25-source-map.md)
+
+### Captured themes
+
+- Adaptive, reference-anchored, meteorology-aware PM2.5 calibration with drift and transfer limits.
+- STAC/Zarr array metadata, multiscale discovery, and hierarchical asset navigation.
+- Declared graph migration intent, invariants, blast radius, provenance, and recovery evidence.
+- Source-preserving WZDx, ArcGIS, and GTFS-Realtime incident observations and deltas.
+- Deterministic pipeline replay, policy gates, attestations, receipts, and rollback.
+
+### Triage notes
+
+The packet contains valuable trust and reproducibility pressure but mixes incomplete research citations, evolving standards, live-source assumptions, universal thresholds, generic paths, external toolchains, automatic promotion rules, and implementation-looking code. Current repository evidence makes the Atmosphere calibration-caveat lane the strongest bounded fit; catalog, graph, incident, and external-toolchain proposals carry greater unresolved authority and dependency burden.
+
+Trust scores, source tiers, schema-valid objects, receipts, signatures, source agreement, and green workflows are not evidence closure, review, promotion, release, or publication authority.
+
+### Bounded extraction
+
+Implemented in this change: a fixture-only Atmosphere calibration-pedigree
+profile with synthetic reference anchoring, correction/training/specification
+identity, declared transferability, confidence, drift, caveats, limitations,
+generalized location, exact denials, and `promotion_eligible: false`. It does not
+train a model, correct a real observation, activate a source, execute Rego, or
+publish a value.
+
+</details>
 
 <details>
 <summary><strong>NIP-2026-04-13-promotion-proof - bounded A-G promotion readiness</strong></summary>
