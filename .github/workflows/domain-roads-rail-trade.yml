@@ -1,7 +1,7 @@
 # KFM Roads/Rail/Trade domain CI readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
-# executable semantic validation, proof, and release-dry-run producers are not
-# established in current repository evidence.
+# Status: PROPOSED bounded static readiness checks plus one accepted synthetic,
+# no-network CorridorRoute semantic validation slice. Proof and release-dry-run
+# producers are not established in current repository evidence.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not provide routing,
@@ -27,6 +27,9 @@ concurrency:
 env:
   TZ: UTC
   PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  KFM_NO_NETWORK: "1"
 
 jobs:
   validate-roads-rail-trade:
@@ -54,13 +57,20 @@ jobs:
             "docs/domains/roads-rail-trade/CANONICAL_PATHS.md"
             "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md"
             "contracts/domains/roads-rail-trade/README.md"
+            "contracts/domains/roads-rail-trade/corridor_route.md"
             "contracts/transport/README.md"
             "schemas/contracts/v1/domains/roads-rail-trade/README.md"
+            "schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json"
             "fixtures/domains/roads-rail-trade/README.md"
+            "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_historic_candidate.json"
+            "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_unresolved_evidence.json"
+            "fixtures/domains/roads-rail-trade/corridor_route/invalid/invalid_spec_hash_mismatch.json"
             "policy/domains/roads-rail-trade/README.md"
             "tests/domains/roads-rail-trade/README.md"
             "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py"
+            "tests/schemas/test_corridor_route_contract.py"
             "tools/validators/domains/roads-rail-trade/README.md"
+            "tools/validators/domains/roads-rail-trade/validate_corridor_route.py"
             "tools/validators/crossings/README.md"
             "tools/validators/bridge_river_crossing/README.md"
             "data/registry/sources/roads-rail-trade/README.md"
@@ -116,14 +126,19 @@ jobs:
           print(f"Parsed {len(fixtures)} Roads/Rail/Trade fixtures; statuses={dict(fixture_statuses)}")
           PY
 
+          # Keep placeholder-only inventory checks on roots that remain scaffolds.
+          # The substantive CorridorRoute validator is deliberately excluded and
+          # executed below with its focused positive and negative fixture suite.
           python tools/validators/ci_readiness.py \
-            --label "Roads/Rail/Trade" \
+            --label "Roads/Rail/Trade remaining scaffolds" \
             --test-root tests/domains/roads-rail-trade \
-            --validator-root tools/validators/domains/roads-rail-trade \
             --validator-root tools/validators/crossings \
             --validator-root tools/validators/bridge_river_crossing \
             --validator-root tools/validators/transport-facility-topology \
             --validator-root tools/validators/facilities
+
+          python -m pytest -q tests/schemas/test_corridor_route_contract.py
+          python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
 
           if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/roads-rail-trade/README.md"; then
             echo "::error::The Roads/Rail/Trade policy posture changed. Verify executable rules, fixtures, tests, ownership, and activation before accepting this workflow."
@@ -131,12 +146,13 @@ jobs:
           fi
 
           if grep -Eq '^(roads-rail-trade-validate|validate-roads-rail-trade):' Makefile; then
-            echo "::error::A Roads/Rail/Trade validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            echo "::error::A Roads/Rail/Trade validation target now exists. Wire and verify it deliberately instead of retaining this workflow command."
             exit 1
           fi
 
           echo "WORKFLOW_CHECK_EXECUTED: roads-rail-trade-readiness"
-          echo "WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established"
+          echo "WORKFLOW_CHECK_EXECUTED: corridor-route-semantic-validation"
+          echo "WORKFLOW_HOLD: broader Roads/Rail/Trade semantic validation is not established"
 
       - name: Record Roads Rail Trade validation hold
         if: always()
@@ -147,19 +163,19 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: roads-rail-trade-readiness`
 
-          `WORKFLOW_HOLD: semantic Roads/Rail/Trade validation is not established`
+          `WORKFLOW_CHECK_EXECUTED: corridor-route-semantic-validation`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          `WORKFLOW_HOLD: broader Roads/Rail/Trade semantic validation is not established`
 
-          This job verifies required responsibility boundaries, recognizes the
-          known assert-True smoke scaffold, parses current JSON Schemas and
-          fixtures for structural integrity, and detects substantive tests or
-          validator bodies that require deliberate graduation.
+          The job executes the accepted synthetic, no-network CorridorRoute
+          schema and validator tests, including deterministic PASS, ABSTAIN, and
+          DENY coverage. Placeholder inventory checks remain limited to roots
+          that have not graduated substantive validators.
 
-          It does not establish route, segment, crossing, facility, operator,
-          restriction, legal-access, live-closure, bridge-condition, rail-status,
-          graph, EvidenceBundle, policy, public-safety, or release truth.
+          This bounded validation does not establish route, segment, crossing,
+          facility, operator, restriction, legal-access, live-closure,
+          bridge-condition, rail-status, graph, EvidenceBundle, policy,
+          public-safety, proof, release, or publication truth.
           EOF
 
   build-proof-roads-rail-trade:
