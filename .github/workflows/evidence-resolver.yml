@@ -1,47 +1,15 @@
-# KFM evidence-resolver CI readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; an
-# accepted executable EvidenceRef-to-EvidenceBundle resolver and deterministic
-# denied-resolution suite are not established in current repository evidence.
+# KFM bounded evidence-resolver candidate checks.
 #
-# Responsibility:
-# - Preserve the existing evidence-resolution check surfaces while detecting
-#   when the package, contracts, schemas, fixtures, validators, or tests become
-#   ready for deliberate command wiring.
-# Trigger:
-# - Existing pull-request and push-to-main triggers are preserved because
-#   required-check and branch-protection dependencies remain unverified.
-# - workflow_dispatch supports explicit maintainer inspection.
-# Untrusted-code posture:
-# - Pull requests execute submitted repository code with read-only contents
-#   permission and no secrets, write scopes, OIDC, deployment, or publication.
-# Runner and network:
-# - GitHub-hosted Ubuntu and pinned major action versions are used. Checks are
-#   no-network after checkout and Python action setup; no packages are installed.
-# Command:
-# - No resolver command exists. Inline standard-library checks distinguish the
-#   executable EvidenceRef schema-shape validator from unresolved cross-record
-#   resolver behavior, and stop succeeding when a resolver, consumer, or
-#   repository-native resolver command appears.
-# Inputs:
-# - The resolver package scaffold, evidence contracts/schemas, deterministic
-#   schema fixtures, validator inventory, Makefile, and test boundaries.
-# Outputs:
-# - GitHub job conclusions, logs, and step summaries only. No EvidenceBundle,
-#   receipt, proof, policy result, release record, or published artifact.
-# Outcome:
-# - The current scaffold reports WORKFLOW_HOLD and WORKFLOW_SKIPPED_EXPLICIT.
-# - Missing boundaries or newly surfaced resolver implementation fail the
-#   readiness check until owners wire reviewed commands and deterministic
-#   valid/denied fixtures.
-# Compatibility:
-# - Workflow name `evidence-resolver` and job ids `resolve-bundles` and
-#   `denied-bundles-fail-closed` are preserved.
-# Rollback / disable:
-# - Revert this workflow revision. Do not restore TODO-success jobs or disable a
-#   required check without branch-protection and evidence-governance review.
-# Authority boundary:
-# - This workflow does not resolve evidence, establish EvidenceBundle closure,
-#   decide rights/sensitivity/policy/release state, or authorize publication.
+# Responsibility: execute the internal v1alpha1 candidate profile over
+# synthetic fixtures. A green job proves only those local checks. It does not
+# resolve a live registry record, establish evidence truth or claim scope,
+# evaluate policy, approve review/release, emit a public ANSWER, or publish.
+#
+# Security: pull-request code runs with contents:read, no secrets, no write
+# permission, no package installation, and no network-dependent test command.
+# Compatibility: workflow name, triggers, and job IDs are preserved from the
+# prior readiness audit. Revert this file and the bounded implementation slice
+# to restore the prior hold.
 name: evidence-resolver
 
 "on":
@@ -62,6 +30,7 @@ env:
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONUNBUFFERED: "1"
   TZ: UTC
+  KFM_NO_NETWORK: "1"
 
 jobs:
   resolve-bundles:
@@ -69,7 +38,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check out evidence-resolution boundaries
+      - name: Check out bounded candidate inputs
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -79,267 +48,23 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate resolver implementation readiness
-        shell: bash
-        run: |
-          set -euo pipefail
+      - name: Run bounded candidate profile
+        run: make evidence-resolver
 
-          required_paths=(
-            "packages/evidence-resolver/README.md"
-            "packages/evidence-resolver/pyproject.toml"
-            "packages/evidence-resolver/src/README.md"
-            "packages/evidence-resolver/src/evidence_resolver/README.md"
-            "packages/evidence-resolver/src/evidence_resolver/__init__.py"
-            "packages/evidence-resolver/src/evidence_resolver/core.py"
-            "contracts/evidence/evidence_ref.md"
-            "contracts/evidence/evidence_bundle.md"
-            "schemas/contracts/v1/evidence/evidence_ref.schema.json"
-            "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
-            "fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"
-            "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"
-            "tools/validators/_common/run_all.py"
-            "tools/validators/validate_evidence_ref.py"
-            "tools/validators/validate_evidence_bundle.py"
-            "tests/schemas/test_common_contracts.py"
-            "tests/schemas/test_evidence_ref_validator.py"
-            "Makefile"
-          )
-
-          for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required evidence-resolution boundary is missing: $required_path"
-              exit 1
-            fi
-          done
-
-          python - <<'PY'
-          import ast
-          import json
-          import re
-          import tomllib
-          from pathlib import Path
-
-          package_root = Path("packages/evidence-resolver")
-          module_root = package_root / "src/evidence_resolver"
-
-          project = tomllib.loads(
-              (package_root / "pyproject.toml").read_text(encoding="utf-8")
-          )
-          metadata = project.get("project", {})
-          if metadata.get("name") != "kfm-evidence-resolver":
-              raise SystemExit(
-                  "Resolver distribution identity changed. Reconcile ownership and "
-                  "workflow wiring deliberately."
-              )
-
-          implementation_metadata = []
-          if metadata.get("version") != "0.0.0":
-              implementation_metadata.append("non-placeholder version")
-          if project.get("build-system"):
-              implementation_metadata.append("build-system")
-          for key in ("dependencies", "optional-dependencies", "scripts", "entry-points"):
-              if metadata.get(key):
-                  implementation_metadata.append(f"project.{key}")
-          if implementation_metadata:
-              raise SystemExit(
-                  "Resolver packaging behavior surfaced. Establish its accepted API, "
-                  "tests, fixtures, consumers, and command before wiring CI: "
-                  + ", ".join(implementation_metadata)
-              )
-
-          initializer = module_root / "__init__.py"
-          if initializer.read_text(encoding="utf-8").strip():
-              raise SystemExit(
-                  "The evidence_resolver initializer is no longer empty. Inspect exports "
-                  "and wire the accepted resolver suite deliberately."
-              )
-
-          core = module_root / "core.py"
-          expected_core = "# evidence-resolver core — greenfield placeholder"
-          if core.read_text(encoding="utf-8").strip() != expected_core:
-              raise SystemExit(
-                  "The resolver core placeholder changed. Inspect the implementation, "
-                  "profiles, result contract, tests, and consumers before wiring CI."
-              )
-
-          expected_module_files = {
-              module_root / "README.md",
-              initializer,
-              core,
-          }
-          observed_module_files = {
-              path for path in module_root.rglob("*") if path.is_file()
-          }
-          if observed_module_files != expected_module_files:
-              additions = sorted(observed_module_files - expected_module_files)
-              removals = sorted(expected_module_files - observed_module_files)
-              detail = [f"added: {path}" for path in additions]
-              detail.extend(f"removed: {path}" for path in removals)
-              raise SystemExit(
-                  "The bounded resolver module inventory changed. Establish supported "
-                  "exports, no-hidden-I/O posture, tests, and an accepted command:\n"
-                  + "\n".join(detail)
-              )
-
-          schemas = {}
-          for name in ("evidence_ref", "evidence_bundle"):
-              path = Path(f"schemas/contracts/v1/evidence/{name}.schema.json")
-              schemas[name] = json.loads(path.read_text(encoding="utf-8"))
-              if schemas[name].get("x-kfm", {}).get("status") != "PROPOSED":
-                  raise SystemExit(
-                      f"{path} changed maturity status. Reconcile the accepted profile "
-                      "and resolver command deliberately."
-                  )
-
-          if schemas["evidence_ref"].get("required") != ["ref", "kind"]:
-              raise SystemExit(
-                  "EvidenceRef required fields changed. Reconcile profiles and tests "
-                  "before wiring resolver CI."
-              )
-          if "bundle_id" not in schemas["evidence_bundle"].get("required", []):
-              raise SystemExit(
-                  "EvidenceBundle identity requirements changed. Reconcile closure "
-                  "semantics and tests before wiring resolver CI."
-              )
-
-          ref_validator_path = Path("tools/validators/validate_evidence_ref.py")
-          ref_validator_text = ref_validator_path.read_text(encoding="utf-8")
-          ast.parse(ref_validator_text, filename=str(ref_validator_path))
-          for marker in (
-              "tools.validators._common.jsonschema_runner import run",
-              "schemas/contracts/v1/evidence/evidence_ref.schema.json",
-              "fixtures/contracts/v1/evidence/evidence_ref",
-          ):
-              if marker not in ref_validator_text:
-                  raise SystemExit(
-                      "The EvidenceRef validator no longer delegates to the reviewed "
-                      f"schema/fixture boundary; missing marker: {marker}"
-                  )
-
-          aggregate_runner_path = Path("tools/validators/_common/run_all.py")
-          aggregate_runner = aggregate_runner_path.read_text(encoding="utf-8")
-          ast.parse(aggregate_runner, filename=str(aggregate_runner_path))
-          if '"validate_evidence_ref.py"' not in aggregate_runner:
-              raise SystemExit(
-                  "The EvidenceRef validator is not wired into the aggregate "
-                  "schema-fixture runner."
-              )
-
-          validator_test_path = Path("tests/schemas/test_evidence_ref_validator.py")
-          validator_test = validator_test_path.read_text(encoding="utf-8")
-          ast.parse(validator_test, filename=str(validator_test_path))
-          for marker in (
-              "test_evidence_ref_validator_accepts_valid_fixture",
-              "test_evidence_ref_validator_rejects_missing_ref",
-          ):
-              if marker not in validator_test:
-                  raise SystemExit(
-                      "The focused EvidenceRef validator polarity test changed; "
-                      f"missing marker: {marker}"
-                  )
-
-          for fixture in (
-              Path("fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"),
-              Path("fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"),
-          ):
-              json.loads(fixture.read_text(encoding="utf-8"))
-
-          surfaced_contracts = [
-              path
-              for path in (
-                  Path("contracts/evidence/evidence_resolution.md"),
-                  Path("schemas/contracts/v1/evidence/evidence_resolution.schema.json"),
-              )
-              if path.exists()
-          ]
-          if surfaced_contracts:
-              raise SystemExit(
-                  "Resolver result contract/schema surfaced. Review outcome semantics and "
-                  "wire the accepted command deliberately:\n"
-                  + "\n".join(str(path) for path in surfaced_contracts)
-              )
-
-          test_roots = (
-              Path("tests/packages/evidence_resolver"),
-              Path("tests/packages/evidence-resolver"),
-          )
-          surfaced_tests = [
-              path
-              for root in test_roots
-              if root.exists()
-              for path in root.rglob("*")
-              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
-          ]
-          if surfaced_tests:
-              raise SystemExit(
-                  "Resolver tests surfaced. Confirm deterministic valid/invalid coverage "
-                  "and wire their repository-native command deliberately:\n"
-                  + "\n".join(str(path) for path in sorted(surfaced_tests))
-              )
-
-          consumers = []
-          import_pattern = re.compile(
-              r"^\s*(?:from\s+evidence_resolver(?:\.|\s)|import\s+evidence_resolver(?:\.|\s|$))",
-              re.MULTILINE,
-          )
-          for path in Path(".").rglob("*.py"):
-              if package_root in path.parents:
-                  continue
-              text = path.read_text(encoding="utf-8", errors="replace")
-              if import_pattern.search(text):
-                  ast.parse(text, filename=str(path))
-                  consumers.append(path)
-          if consumers:
-              raise SystemExit(
-                  "Resolver consumers surfaced. Establish the supported API and governed "
-                  "adapter boundary before wiring CI:\n"
-                  + "\n".join(str(path) for path in sorted(consumers))
-              )
-
-          makefile = Path("Makefile").read_text(encoding="utf-8")
-          if re.search(
-              r"^(?:evidence-resolver|evidence-resolve|resolve-evidence):",
-              makefile,
-              re.MULTILINE,
-          ):
-              raise SystemExit(
-                  "A repository-native resolver target surfaced. Verify its profiles, "
-                  "fixtures, finite outcomes, and no-network posture before wiring it."
-              )
-
-          print("Resolver package metadata remains a 0.0.0 placeholder.")
-          print("The initializer is empty and the exact core placeholder is unchanged.")
-          print("The EvidenceRef shape validator is aggregate-wired with focused CLI polarity tests.")
-          print("EvidenceRef/EvidenceBundle schemas and positive fixtures parse as data.")
-          print("No result contract, resolver tests, consumer import, or Make target surfaced.")
-          PY
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: resolve-bundles"
-          echo "WORKFLOW_HOLD: no accepted executable EvidenceRef-to-EvidenceBundle resolver command"
-
-      - name: Record resolver readiness hold
+      - name: Record bounded authority
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
-          ## Evidence resolver readiness
+          ## Evidence resolver candidate profile
 
-          `WORKFLOW_SKIPPED_EXPLICIT: resolve-bundles`
+          This job executes the internal
+          `kfm/evidence-ref-bundle-candidate/v1alpha1` profile over synthetic
+          fixtures. `RESOLVED` is a non-authoritative candidate result only.
 
-          `WORKFLOW_HOLD: no accepted executable EvidenceRef-to-EvidenceBundle resolver command`
-
-          This job inspects the documented package, contract, schema, fixture,
-          validator, test, consumer, and command boundaries. The dedicated
-          EvidenceRef validator proves only JSON Schema shape and fixture
-          polarity. This job is designed to stop succeeding when resolver
-          implementation surfaces so maintainers must wire that implementation
-          deliberately.
-
-          No evidence was resolved. Parsing schemas and fixtures does not prove
-          EvidenceBundle existence, membership, scope, integrity, freshness,
-          current-head status, rights, sensitivity, correction lineage, policy,
-          review, release, or public safety. A green held result is readiness
-          evidence only; it is not evidence closure or publication authority.
+          No registry was queried, no evidence or policy was created, no claim
+          scope was inferred, and no review, release, public response, or
+          publication action occurred.
           EOF
 
   denied-bundles-fail-closed:
@@ -347,7 +72,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check out denied-resolution boundaries
+      - name: Check out bounded negative inputs
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -357,177 +82,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate denied-resolution test readiness
-        shell: bash
-        run: |
-          set -euo pipefail
+      - name: Run fail-closed negative profile
+        run: make evidence-resolver-deny
 
-          required_paths=(
-            "schemas/contracts/v1/evidence/evidence_ref.schema.json"
-            "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
-            "fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"
-            "fixtures/contracts/v1/evidence/evidence_ref/invalid/invalid_1.json"
-            "fixtures/contracts/v1/evidence/evidence_ref/invalid/invalid_1.expected_error.txt"
-            "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"
-            "fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json"
-            "fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.expected_error.txt"
-            "tests/schemas/test_common_contracts.py"
-            "tests/schemas/test_evidence_ref_validator.py"
-            "tools/validators/validate_evidence_ref.py"
-            "tools/validators/validate_evidence_bundle.py"
-          )
-
-          for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required negative-path boundary is missing: $required_path"
-              exit 1
-            fi
-          done
-
-          python - <<'PY'
-          import ast
-          import json
-          from pathlib import Path
-
-          ref_valid_path = Path(
-              "fixtures/contracts/v1/evidence/evidence_ref/valid/valid_1.json"
-          )
-          ref_invalid_path = Path(
-              "fixtures/contracts/v1/evidence/evidence_ref/invalid/invalid_1.json"
-          )
-          bundle_valid_path = Path(
-              "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_1.json"
-          )
-          bundle_invalid_path = Path(
-              "fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.json"
-          )
-
-          ref_valid = json.loads(ref_valid_path.read_text(encoding="utf-8"))
-          ref_invalid = json.loads(ref_invalid_path.read_text(encoding="utf-8"))
-          bundle_valid = json.loads(bundle_valid_path.read_text(encoding="utf-8"))
-          bundle_invalid = json.loads(bundle_invalid_path.read_text(encoding="utf-8"))
-
-          if ref_valid != {"ref": "obs:1", "kind": "measurement"}:
-              raise SystemExit(
-                  "The bounded valid EvidenceRef fixture changed. Review fixture and "
-                  "resolver profiles before wiring negative-path tests."
-              )
-          if ref_invalid != {"kind": "measurement"}:
-              raise SystemExit(
-                  "The bounded invalid EvidenceRef fixture changed. Review expected "
-                  "outcome semantics before wiring negative-path tests."
-              )
-          if set(bundle_valid) - set(bundle_invalid) != {"bundle_id"}:
-              raise SystemExit(
-                  "The bounded invalid EvidenceBundle fixture is no longer the valid "
-                  "fixture with only bundle_id omitted. Inspect and wire deliberately."
-              )
-          if any(bundle_valid[key] != bundle_invalid[key] for key in bundle_invalid):
-              raise SystemExit(
-                  "The valid and invalid EvidenceBundle fixtures differ beyond the "
-                  "documented missing bundle_id case. Inspect before wiring CI."
-              )
-
-          for path in (
-              Path("fixtures/contracts/v1/evidence/evidence_ref/invalid/invalid_1.expected_error.txt"),
-              Path("fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_1.expected_error.txt"),
-          ):
-              if path.read_text(encoding="utf-8").strip().lower() != "required":
-                  raise SystemExit(
-                      f"{path} changed from the bounded required-field matcher. "
-                      "Review negative expectations before wiring resolver CI."
-                  )
-
-          harness_path = Path("tests/schemas/test_common_contracts.py")
-          harness_text = harness_path.read_text(encoding="utf-8")
-          ast.parse(harness_text, filename=str(harness_path))
-          if 'FAMILIES = ["evidence"' not in harness_text:
-              raise SystemExit(
-                  "The generic schema harness no longer includes the evidence family. "
-                  "Reconcile validation ownership before resolver graduation."
-              )
-
-          for validator_path, expected_schema in (
-              (
-                  Path("tools/validators/validate_evidence_ref.py"),
-                  "evidence_ref.schema.json",
-              ),
-              (
-                  Path("tools/validators/validate_evidence_bundle.py"),
-                  "evidence_bundle.schema.json",
-              ),
-          ):
-              validator_text = validator_path.read_text(encoding="utf-8")
-              ast.parse(validator_text, filename=str(validator_path))
-              if expected_schema not in validator_text:
-                  raise SystemExit(
-                      f"{validator_path} target changed. Reconcile its profile "
-                      "before wiring negative resolver tests."
-                  )
-
-          focused_test_path = Path("tests/schemas/test_evidence_ref_validator.py")
-          focused_test = focused_test_path.read_text(encoding="utf-8")
-          ast.parse(focused_test, filename=str(focused_test_path))
-          if "test_evidence_ref_validator_rejects_missing_ref" not in focused_test:
-              raise SystemExit(
-                  "The EvidenceRef missing-ref CLI polarity test is absent."
-              )
-
-          candidate_fixture_roots = (
-              Path("fixtures/packages/evidence_resolver"),
-              Path("fixtures/packages/evidence-resolver"),
-          )
-          surfaced_resolver_fixtures = [
-              path
-              for root in candidate_fixture_roots
-              if root.exists()
-              for path in root.rglob("*")
-              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
-          ]
-          if surfaced_resolver_fixtures:
-              raise SystemExit(
-                  "Resolver-specific fixtures surfaced. Review denied/unresolved/error "
-                  "outcomes and wire the accepted suite deliberately:\n"
-                  + "\n".join(str(path) for path in sorted(surfaced_resolver_fixtures))
-              )
-
-          print("The selected valid/invalid schema fixture pairs remain unchanged.")
-          print("Both selected invalid fixtures remain single missing-required-field examples.")
-          print("The generic harness and both dedicated validators target schema shape only.")
-          print("The focused EvidenceRef CLI test checks valid and missing-ref exit polarity.")
-          print("No resolver-specific denied-resolution fixture lane surfaced.")
-          PY
-
-          if grep -Eq '^(evidence-resolver-deny|deny-evidence-resolution|test-evidence-resolver):' Makefile; then
-            echo "::error::A denied-resolution target surfaced. Verify finite outcomes, sensitive diagnostics, no hidden I/O, and deterministic fixtures before wiring it."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: denied-bundles-fail-closed"
-          echo "WORKFLOW_HOLD: no accepted resolver-specific denied-resolution suite or finite result contract"
-
-      - name: Record denied-resolution hold
+      - name: Record negative-boundary result
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
-          ## Denied-resolution readiness
+          ## Evidence resolver negative boundary
 
-          `WORKFLOW_SKIPPED_EXPLICIT: denied-bundles-fail-closed`
-
-          `WORKFLOW_HOLD: no accepted resolver-specific denied-resolution suite or finite result contract`
-
-          The repository has minimal valid/invalid EvidenceRef and EvidenceBundle
-          schema fixtures, dedicated schema-shape validators, and a focused
-          EvidenceRef CLI polarity test. Those checks prove neither cross-record
-          resolution nor fail-closed resolver behavior.
-
-          No denied bundle was executed. Graduate this hold only with accepted
-          resolver input/result contracts and deterministic cases for missing,
-          malformed, mismatched, stale, superseded, corrected, restricted,
-          policy-blocked, unknown-profile, integrity-failed, and internal-error
-          outcomes, including sensitive-diagnostic and no-hidden-I/O tests.
-
-          A green held result is not DENY, ABSTAIN, HOLD, ERROR, policy approval,
-          EvidenceBundle closure, release approval, or publication authority.
+          This job requires every synthetic negative fixture to remain
+          non-`RESOLVED` with its exact expected status and issue codes. A green
+          result is bounded rejection evidence, not evidence closure or release
+          authority.
           EOF

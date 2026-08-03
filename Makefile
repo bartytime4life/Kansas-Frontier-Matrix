@@ -8,7 +8,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -27,6 +27,8 @@ help:
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
 	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
+	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
+	@echo "  evidence-resolver-deny Run its fail-closed negative fixture suite"
 	@echo
 	@echo "Implemented local runtime targets:"
 	@echo "  api-run               Start the governed API locally (alias of governed-api-dev)"
@@ -71,6 +73,14 @@ release-dry-run:
 publish-check:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/validate_promotion_gate.py --fixtures
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest -q tests.release.test_promotion_gate
+
+evidence-resolver:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/evidence_resolver/validate_candidate.py --fixtures fixtures/packages/evidence_resolver/v1alpha1
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover -s tests/packages/evidence_resolver -p 'test_*.py' -q
+
+evidence-resolver-deny:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/evidence_resolver/validate_candidate.py --fixtures fixtures/packages/evidence_resolver/v1alpha1 --negative-only
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover -s tests/packages/evidence_resolver -p 'test_*.py' -q
 
 deny-test:
 	PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers apps/governed-api/tests/test_boundary_guards.py

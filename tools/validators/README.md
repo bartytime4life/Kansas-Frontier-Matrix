@@ -218,6 +218,7 @@ The folders below are routing lanes, indexes, or validator-local documentation. 
 | [`sensitive_geometry/`](sensitive_geometry/README.md) | Exact-location denial, public-safe geometry, reconstruction risk, redaction/aggregation receipt checks. | Does not store sensitive geometry or define hidden thresholds. |
 | [`sensitive_location_allow/`](sensitive_location_allow/README.md) | Allow-exception packet checks after deny-by-default sensitive-location posture. | Does not make policy decisions or publish sensitive locations. |
 | [`evidence/`](evidence/README.md) | EvidenceRef/EvidenceBundle/proof closure and citation checks. | Evidence/proof authority remains in `data/proofs/` and accepted evidence homes. |
+| [`evidence_resolver/`](evidence_resolver/README.md) | Internal v1alpha1 EvidenceRef-to-bundle candidate checks over explicit synthetic inputs. | A local `RESOLVED` result is not live evidence closure, policy, review, release, or public authority. |
 | [`lifecycle/`](lifecycle/README.md) | Lifecycle boundary, transition, quarantine, promotion, correction, and rollback checks. | Does not move files or decide promotion. |
 | [`promotion_gate/`](promotion_gate/README.md) | Implemented bounded declared-closure checks at governed publication transitions. | A pass is only `APPROVE_READY`; promotion decisions remain governed records. |
 | [`release/`](release/README.md) | ReleaseManifest, PromotionDecision, rollback/correction/withdrawal, artifact-integrity, and public-surface readiness checks. | Release records and publication authority remain in `release/`. |
@@ -368,6 +369,7 @@ tools/validators/
 ├── source/                          # source-admission validation routing
 ├── sensitivity/                     # sensitivity posture validation routing
 ├── evidence/                         # evidence/proof reference validation routing
+├── evidence_resolver/                # bounded internal candidate-profile CLI
 ├── lifecycle/                        # lifecycle transition validation routing
 ├── promotion_gate/                   # confirmed bounded promotion-readiness validator
 ├── release/                          # release-readiness validation routing

@@ -218,6 +218,7 @@ The lanes below are carried forward from the prior root README, with `contracts/
 | `fauna/` | Fauna compatibility/staging examples | Public-safe synthetic fauna; domain lane preferred when ownership is clear |
 | `generated_receipt/` | Generated-receipt shape and validator examples | Fixture representations only; not canonical receipt storage |
 | `domains/` | Domain-owned fixture roots | Preferred home when object ownership, policy context, or sensitivity context is clear |
+| `packages/` | Reusable synthetic inputs mirroring an owning package responsibility | Test-only package cases; production packages must not import them |
 
 ### Shared fixture design contract
 
@@ -473,6 +474,7 @@ Documentation rollback is a same-path revert of the README commit. Fixture-conte
 ### Verified child documentation
 
 - [`contracts/v1/`](contracts/v1/README.md) — versioned contract fixture-family index.
+- [`packages/`](packages/README.md) — reusable synthetic package-fixture index.
 - [`slim/`](slim/README.md) — compact runtime fixture lane.
 
 Other lanes in the navigation inventory are retained as repository routes from the prior README and targeted search. Their complete payload and child-README coverage remain **NEEDS VERIFICATION** until recursively inventoried.

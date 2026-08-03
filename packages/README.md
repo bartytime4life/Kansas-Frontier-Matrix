@@ -20,8 +20,9 @@ truth_posture: >
   proposed locked high-threshold pnpm audit; ui-build Explorer Web build/test baseline;
   CODEOWNERS /packages routing; bounded current index of at least twenty-one direct
   package README lanes; README-only api, evidence, and taxonomy boundaries at checked paths;
-  private 0.0.0 MapLibre and UI npm scaffolds with placeholder exports; sampled 0.0.0 Python
-  scaffolds with comment-only core modules; apps/packages dormant drift guard; and current
+  private 0.0.0 MapLibre and UI npm scaffolds with placeholder exports; mostly comment-only
+  sampled Python scaffolds plus one bounded internal evidence-resolver alpha candidate;
+  apps/packages dormant drift guard; and current
   absence at checked paths of packages/cesium and packages/maplibre-runtime /
   PROPOSED package admission, maturity, dependency-direction, package-contract, test,
   compatibility, deprecation, correction, distribution, and rollback requirements /
@@ -258,10 +259,10 @@ A package should not import an application, pipeline runner, connector executabl
 | Root Python build | [`pyproject.toml`](../pyproject.toml) uses Hatchling and builds only `src/kfm`; child package manifests are separate. | The root Python distribution does not establish a child-package workspace or build. |
 | Repository Makefile | [`Makefile`](../Makefile) runs schema/contract validation and selected app/boundary checks, not a package-wide suite. | A root package test command is not established. |
 | Direct package README lanes | Bounded current-commit reads and index results establish at least twenty-one immediate package README lanes. | The root has a substantial documented package surface; the count is not an exhaustive recursive manifest. |
-| Sampled Python packages | Evidence resolver, policy runtime, schema/source registries, hashing, and identity have `0.0.0`-style scaffolds and comment-only `core.py` bodies; additional package READMEs describe similar scaffold maturity. | Package metadata and source paths exist, but sampled capability bodies are placeholders. |
+| Sampled Python packages | Policy runtime, schema/source registries, hashing, and identity retain `0.0.0`-style comment-only cores. Evidence resolver now has one internal v1alpha1 candidate check while its initializer, distribution version, public API, and consumers remain held. | Package maturity is mixed and must be established per lane; the evidence candidate is not production or public resolution. |
 | Sampled Node packages | `packages/maplibre` and `packages/ui` are private `0.0.0` packages whose inspected entry points export placeholder values. | Workspace package scaffolds exist; supported APIs, dependencies, builds, and consumers are not established. |
 | README-only lanes | Exact checked paths leave `packages/api`, `packages/evidence`, and `packages/taxonomy` as documentation-only boundaries. | Do not treat these lanes as executable packages. |
-| Package tests | `tests/packages/README.md` was not found at the checked path; package-specific READMEs report uneven or absent package-local tests. | No package-wide test home, collection contract, pass rate, or coverage is established. |
+| Package tests | `tests/packages/README.md` and the bounded evidence-resolver suite now exist; other package-specific coverage remains uneven or absent. | One package lane is directly tested; no package-wide collection contract, pass rate, or coverage is established. |
 | Dependency audit | [`dependency-scan`](../.github/workflows/dependency-scan.yml) audits the unlocked root Python resolution and proposes a high-threshold audit of the committed pnpm workspace lockfile after a repository-owned readiness check. | Python resolution remains unlocked; the Node result is point-in-time and exact-head execution remains **NEEDS VERIFICATION**. |
 | UI workflow | [`ui-build`](../.github/workflows/ui-build.yml) runs the Explorer Web build and test with the exact pnpm pin and frozen lockfile. | It is a bounded app baseline, not a package-root build or test suite. |
 | Review routing | [CODEOWNERS](../.github/CODEOWNERS) routes `/packages/` to `@bartytime4life`. | Review routing exists; it is not independent approval or proof that review occurred. |
@@ -643,7 +644,7 @@ This is a **bounded orientation index**, not an exhaustive recursive manifest. I
 | [`domains/`](domains/README.md) | Umbrella README exists with numerous domain sublanes; exhaustive child maturity was not established. | Mixed-maturity umbrella |
 | [`envelopes/`](envelopes/README.md) | Current README records a Python scaffold and unresolved contract/schema vocabulary. | Python scaffold / non-authoritative |
 | [`evidence/`](evidence/README.md) | README-only at checked package paths; responsibility overlaps sibling evidence packages. | Documentation-only / purpose conflicted |
-| [`evidence-resolver/`](evidence-resolver/README.md) | `0.0.0` Python metadata and comment-only core sampled; resolver/API/consumer unverified. | Python scaffold / placeholder |
+| [`evidence-resolver/`](evidence-resolver/README.md) | `0.0.0` metadata, empty initializer, and no consumer remain; one pure internal v1alpha1 candidate check now has synthetic fixtures, exact negative tests, CLI, Make, and CI wiring. | Bounded internal candidate / non-authoritative / public API and production behavior held |
 | [`geo/`](geo/README.md) | Package README reports a repository-grounded Python scaffold; current capability requires child evidence. | Scaffold / package-specific verification |
 | [`hashing/`](hashing/README.md) | Comment-only core sampled; canonicalization/profile/API unresolved. | Python scaffold / placeholder |
 | [`identity/`](identity/README.md) | Comment-only core sampled; identity grammar and consumer adoption unresolved. | Python scaffold / placeholder |
@@ -1028,7 +1029,7 @@ Documentation rollback for this README is ordinary Git rollback. It changes no p
 | [CODEOWNERS](../.github/CODEOWNERS) | `/packages/` routes to `@bartytime4life`; enforcement/independence unverified. | `CONFIRMED routing` |
 | [`apps/packages/`](../apps/packages/README.md) | README-only in bounded evidence and frozen as a dormant workspace-risk drift guard. | `CONFIRMED bounded finding` |
 | Direct package README index | At least twenty-one immediate package lanes surfaced at the current commit. | `CONFIRMED bounded result` |
-| Sampled Python cores | Evidence resolver, policy runtime, schema/source registries, hashing, and identity are comment-only placeholders. | `CONFIRMED sampled result` |
+| Sampled Python cores | Policy runtime, schema/source registries, hashing, and identity remain comment-only placeholders; evidence resolver is a bounded internal alpha candidate with no public export or consumer. | `CONFIRMED sampled result plus bounded implementation delta` |
 | Sampled Node package entries | MapLibre and UI are private `0.0.0` scaffolds with placeholder exports. | `CONFIRMED sampled result` |
 | Exact path checks | `packages/cesium/README.md`, `packages/cesium/package.json`, and `packages/maplibre-runtime/README.md` were not found. | `CONFIRMED checked-path absence` |
 | Package-specific READMEs | Carry deeper, package-local evidence and unresolved conflicts. | `CONFIRMED documents / behavior package-specific` |
