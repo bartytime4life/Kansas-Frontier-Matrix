@@ -1,0 +1,29 @@
+{
+  "record_type": "flora_public_safe_validation_candidate",
+  "fixture_id": "fixture:flora:invalid:missing-source-descriptor",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "source_role": "synthetic",
+  "rights_state": "fixture-only",
+  "taxon_ref": "fixture:taxon:flora:synthetic-alpha",
+  "taxonomy_state": "synthetic-resolved",
+  "sensitivity_state": "public-safe-synthetic",
+  "spatial_support": {
+    "kind": "withheld",
+    "label": "synthetic-area-alpha"
+  },
+  "evidence_refs": [
+    "fixture:evidence:flora:synthetic-missing-source"
+  ],
+  "governance": {
+    "evidence_state": "fixture-only",
+    "policy_state": "not-evaluated-fixture",
+    "geoprivacy_state": "not-applicable-no-location",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "promotion_state": "not-eligible",
+    "correction_state": "fixture-only",
+    "rollback_state": "fixture-only"
+  }
+}

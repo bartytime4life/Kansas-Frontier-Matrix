@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: TODO (flora domain steward + governance steward)
 created: 2026-05-16
-updated: 2026-06-03
+updated: 2026-08-03
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
@@ -20,7 +20,7 @@ related:
 tags: [kfm, domain, flora, biodiversity, governance]
 notes:
   - "Doctrine-adjacent; pins CONTRACT_VERSION = 3.0.0 in notes per the operating contract."
-  - "All implementation, schema, route, and registry claims are PROPOSED until verified against a mounted repo."
+  - "One fixture-only withheld-location validator slice is VERIFIED; all broader implementation, schema, route, registry, policy, transform, proof, and release claims remain PROPOSED until verified."
   - "Sensitivity posture is fail-closed for exact rare-plant geometry by default."
   - "v2: corrected source-rights claims, upgraded source-role enum to CONFIRMED classes, grounded the flora watcher in KFM-P2-PROG-0002, reconciled the references appendix to the actual corpus."
 [/KFM_META_BLOCK_V2] -->
@@ -39,10 +39,10 @@ notes:
 [![Contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](../../doctrine/ai-build-operating-contract.md)
 [![Build](https://img.shields.io/badge/build-TODO-lightgrey)](#13-verification-backlog--open-questions)
 
-**Status:** `draft` · **Owners:** _TODO — flora domain steward; governance steward_ · **Last updated:** 2026-06-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
+**Status:** `draft` · **Owners:** _TODO — flora domain steward; governance steward_ · **Last updated:** 2026-08-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
-> All paths, schemas, registries, validators, routes, and CI/workflow references in this document are **PROPOSED** until verified against a mounted KFM repository. This README states doctrine confidently where supported by attached project sources; it does **not** assert current implementation maturity. See [§13 Verification Backlog](#13-verification-backlog--open-questions).
+> One bounded fixture-only validator, focused test, six synthetic fixtures, and its `validate-flora` CI command are **VERIFIED** in §12. All broader paths, schemas, registries, validators, routes, policy, geoprivacy, proof, release, and workflow claims remain **PROPOSED** until verified against a mounted KFM repository. See [§13 Verification Backlog](#13-verification-backlog--open-questions).
 
 ---
 
@@ -485,9 +485,17 @@ A tier **upgrade** toward more-public always needs **both** a transform receipt 
 
 ## 12. Validators, Tests & Thin-Slice Plan
 
-### Validators and tests (PROPOSED)
+### One bounded executable and broader proposed validators
 
-The following validator/test classes are **PROPOSED** for the Flora lane (Atlas, Flora §K, augmented by `KFM-P2-PROG-0002`):
+**VERIFIED bounded slice.** The repository executes one standard-library, no-network fixture-safety profile at `tools/validators/domains/flora/validate_public_safe_fixture.py`, with the focused suite at `tests/domains/flora/test_flora_smoke.py`. It accepts only an exact synthetic token vocabulary, a synthetic source role, withheld/no-location spatial support, fixture-only governance, and held promotion/release state; it sanitizes unknown diagnostic paths and rejects recursive location aliases or unrecognized string channels without echoing candidate values.
+
+This is not a Flora occurrence schema validator, PolicyDecision, geoprivacy transform, public projection, botanical-truth check, or release gate. It introduces no county/grid/generalization threshold and does not accept exact geometry. Proof and release workflow jobs remain explicit holds.
+
+```bash
+KFM_NO_NETWORK=1 python tests/domains/flora/test_flora_smoke.py --verbose
+```
+
+The following broader validator/test classes remain **PROPOSED** for the Flora lane (Atlas, Flora §K, augmented by `KFM-P2-PROG-0002`):
 
 - Taxonomy reconciliation tests (USDA PLANTS as name authority; GBIF Backbone and ITIS as comparison; disagreement cases).
 - DwC-A validator that **rejects** archives lacking `scientificName`, `decimalLatitude`/`decimalLongitude`, `eventDate`, `license`, `rightsHolder`, or `datasetID` *(per `KFM-P2-PROG-0002`; PROPOSED home `tools/validators/flora_dwca_validator`)*.
@@ -726,6 +734,6 @@ This README is grounded in the following project-knowledge sources:
 
 **Related:** [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Publication & Rollback](./PUBLICATION_AND_ROLLBACK.md) · [Habitat lane](../habitat/README.md) · [Fauna lane](../fauna/README.md)
 
-**Last updated:** 2026-06-03 · **Status:** draft · **Owners:** TODO · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-03 · **Status:** draft · **Owners:** TODO · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)

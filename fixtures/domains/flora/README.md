@@ -12,7 +12,7 @@ These files are examples only. They are not authoritative project records, sourc
 
 This lane belongs under `fixtures/` because it contains runtime/example fixture corpora. It is not a `data/`, `policy/`, `schemas/`, `contracts/`, `connectors/`, `release/`, proof, source-registry, catalog, triplet, or publication root.
 
-The root fixture README states that `fixtures/` is for operational rendering inputs rather than validator-only test data. It also states that fixture corpora must not contain RAW, WORK, or QUARANTINE data, must not contain sensitive exact geometry, and must not be treated as canonical truth.
+The root fixture README assigns reusable, deterministic fixture corpora shared by tests, validators, pipelines, runtime components, and documentation to `fixtures/`. It also states that fixture corpora must not contain RAW, WORK, or QUARANTINE data, sensitive exact geometry, or canonical truth.
 
 The Flora missing/planned-files register identifies this path as the per-root README for `fixtures/domains/flora/` and describes the lane as golden, valid, and invalid sample data backing Flora tests, with no live data and no live network.
 
@@ -21,8 +21,8 @@ The Flora missing/planned-files register identifies this path as the per-root RE
 | Lane | Purpose | Current README posture |
 |---|---|---|
 | `golden/` | Expected-output fixtures for stable synthetic inputs. | Populated. |
-| `valid/` | Positive-path synthetic inputs. | Populated. |
-| `invalid/` | Intentionally rejected or bounded non-answer examples. | Populated. |
+| `valid/` | Positive-path synthetic inputs. | One bounded withheld-location fixture is executable. |
+| `invalid/` | Intentionally rejected or bounded non-answer examples. | Five bounded fixture-safety rejections are executable. |
 | `synthetic/` | Exploratory toy examples before a specific lane is chosen. | Populated. |
 | `source_descriptors/` | Synthetic `SourceDescriptor` examples for Flora source families. | Populated. |
 | `sources/` | Parent for source-family fixture lanes. | Populated. |
@@ -102,6 +102,8 @@ Do not use this fixture root for real source data, real upstream payloads, crede
 
 ## Expected fixture patterns
 
+The accepted `synthetic-public-safe-fixture-only` corpus currently consists of `valid/non_sensitive_occurrence.json` and the five JSON cases under `invalid/`. `tests/domains/flora/test_flora_smoke.py` owns the exact inventory and findings. These files contain no real occurrence, taxon, source, cultural, steward, or location material and are never release candidates.
+
 | Pattern | Preferred lane | Notes |
 |---|---|---|
 | Stable positive input | `valid/` or object-specific lane | Pair with `golden/` when practical. |
@@ -125,9 +127,9 @@ Do not use this fixture root for real source data, real upstream payloads, crede
 
 - Target README: replaced greenfield stub content.
 - Child README inventory: PARTIALLY VERIFIED by repository search and recent child README updates; not all possible child directories were exhaustively listed as payload-bearing directories.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: one accepted positive and five accepted negative JSON fixtures, all synthetic and no-network.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Contract/schema alignment: NEEDS VERIFICATION per child lane because several paired schemas remain permissive `PROPOSED` scaffolds.
-- Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, source-admission checks, watcher dry-runs, and policy checks.
-- Tests and validators: NOT RUN.
+- Consumer alignment: VERIFIED only for `validate_public_safe_fixture.py`, `test_flora_smoke.py`, and the bounded CI step; all other consumers remain unverified.
+- Tests and validators: the bounded fixture profile is executable; broader Flora validation remains held.

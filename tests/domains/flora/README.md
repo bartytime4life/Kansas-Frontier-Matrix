@@ -3,10 +3,10 @@ doc_id: kfm://doc/tests-domains-flora-readme
 title: Tests — Flora Domain
 class: test-readme
 status: draft
-truth_posture: CONFIRMED path / PROPOSED coverage map / UNKNOWN enforcement completeness
+truth_posture: CONFIRMED path and one bounded executable / PROPOSED broader coverage map
 owner: <flora-domain-steward> + <test-steward> + <data-lifecycle-steward>
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-08-03
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -36,7 +36,7 @@ tags:
   - release
 notes:
   - "This README is the index and contract for the Flora domain test lane under tests/domains/flora/."
-  - "It records intended coverage and test boundaries; executable test coverage remains UNKNOWN until test files and CI runs prove it."
+  - "One bounded fixture-safety suite and CI command are executable; broader coverage completeness remains UNKNOWN until separately implemented and verified."
   - "All Flora tests must preserve the trust membrane and lifecycle invariant; tests prove gates, not botanical truth by prose."
 [/KFM_META_BLOCK_V2] -->
 
@@ -44,11 +44,11 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-yellow?style=flat-square)
 ![root](https://img.shields.io/badge/root-tests%2Fdomains%2Fflora-blue?style=flat-square)
-![coverage](https://img.shields.io/badge/coverage-PROPOSED-orange?style=flat-square)
+![coverage](https://img.shields.io/badge/coverage-one--bounded--profile-yellow?style=flat-square)
 ![network](https://img.shields.io/badge/network-no--network-success?style=flat-square)
 ![posture](https://img.shields.io/badge/posture-fail--closed-critical?style=flat-square)
 ![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange?style=flat-square)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20path%20%2F%20UNKNOWN%20CI-lightgrey?style=flat-square)
+![truth](https://img.shields.io/badge/truth-one--bounded--executable-informational?style=flat-square)
 
 > **Purpose.** This directory is the Flora-domain test root. It proves that Flora sources, objects, policy decisions, evidence closure, temporal support, sensitivity handling, release manifests, and rollback drills are enforceable before any Flora material reaches a public surface.
 
@@ -67,7 +67,7 @@ notes:
 | Lifecycle doc | `docs/domains/flora/DATA_LIFECYCLE.md` |
 | Sensitivity doc | `docs/domains/flora/SENSITIVITY.md` |
 | Source registry doc | `docs/domains/flora/SOURCE_REGISTRY.md` |
-| Status | Path confirmed by repository presence; coverage map remains PROPOSED until executable tests and CI runs exist. |
+| Status | One bounded synthetic fixture-safety suite is executable; the broader coverage map remains PROPOSED. |
 
 **Directory basis.** Directory Rules place enforceability proofs under `tests/` and domain-specific proof lanes under `tests/domains/<domain>/`. The Flora file-system plan lists this root and its expected test sublanes.
 
@@ -94,6 +94,16 @@ The Flora test root should prove KFM's Flora lane can move from source admission
 ---
 
 ## 3. Test-lane map
+
+### Current executable slice
+
+`test_flora_smoke.py` runs the accepted `synthetic-public-safe-fixture-only` profile against one positive withheld-location fixture and five exact negative fixtures. It actively blocks socket and URL access and checks closed shapes, exact synthetic string tokens, sanitized diagnostic paths, source-role separation, recursive and Darwin Core location aliases, coordinate/address/geohash/base64/full-width-URL string channels, parser bounds, deterministic non-echoing findings, held release/promotion state, and CLI exit codes.
+
+```bash
+KFM_NO_NETWORK=1 python tests/domains/flora/test_flora_smoke.py --verbose
+```
+
+This suite proves fixture hygiene only. It does not exercise the proposed schema, a policy bundle, a geoprivacy transformer, real occurrence data, evidence closure, stewardship review, or release.
 
 The planned Flora test tree is intentionally split by proof responsibility.
 
@@ -225,7 +235,7 @@ Before adding or changing Flora tests, confirm:
 
 ## 9. Current implementation note
 
-This root README is documentation-first. The repository now has README coverage for `source_descriptor/`, `sensitivity/`, and `temporal/`, but executable test coverage, fixtures, validator implementation, and CI wiring remain `UNKNOWN` until verified by actual files and validation runs.
+This root now has one executable standard-library suite, a six-file synthetic fixture corpus, a bounded validator, and CI wiring for the exact fixture-only profile. README coverage also exists for `source_descriptor/`, `sensitivity/`, and `temporal/`; all broader executable coverage remains `UNKNOWN` or `PROPOSED` until separately implemented and verified.
 
 ---
 

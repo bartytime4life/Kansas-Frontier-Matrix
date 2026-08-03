@@ -2,7 +2,7 @@
 
 `fixtures/domains/flora/invalid/`
 
-Status: draft / fixture lane.
+Status: five accepted bounded validation rejections / broader fixture lane remains draft.
 
 This directory is for small synthetic Flora examples that are intentionally not accepted by a bounded check. It supports review of schema behavior, semantic-contract behavior, renderer behavior, governed API behavior, Evidence Drawer behavior, Focus Mode behavior, and documentation examples.
 
@@ -51,6 +51,8 @@ Do not use this lane for real source data, lifecycle data, release artifacts, pr
 
 ## Expected invalid fixture examples
 
+The current executable profile fixes the JSON inventory to `missing_source_descriptor.json`, `over_precise_sensitive.json`, `encoded_location_clue.json`, `unresolved_taxonomy.json`, and `unresolved_governance.json`. The focused test owns each file's exact finding set. Location-like cases use synthetic markers only and contain no real coordinates or cultural/steward knowledge.
+
 | Scenario | Expected posture |
 |---|---|
 | Missing required identity | Validation failure |
@@ -62,7 +64,7 @@ Do not use this lane for real source data, lifecycle data, release artifacts, pr
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: five exact negative JSON fixtures are verified for the bounded fixture-safety profile.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register.
-- Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.
-- Tests and validators: NOT RUN.
+- Consumer alignment: VERIFIED only for `tools/validators/domains/flora/validate_public_safe_fixture.py` and `tests/domains/flora/test_flora_smoke.py`; broader consumers remain unverified.
+- Tests and validators: bounded profile executable; negative fixtures are not PolicyDecisions or release denials.

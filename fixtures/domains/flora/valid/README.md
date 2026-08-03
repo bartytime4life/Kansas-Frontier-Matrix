@@ -2,7 +2,7 @@
 
 `fixtures/domains/flora/valid/`
 
-Status: draft / fixture lane / positive-path support.
+Status: one accepted bounded fixture / broader positive-path support remains draft.
 
 This directory is for small synthetic Flora examples that are expected to pass bounded checks or produce governed positive-path outputs. Valid fixtures support review of schema behavior, semantic-contract behavior, renderer behavior, governed API behavior, Evidence Drawer behavior, Focus Mode behavior, source-admission dry-runs, watcher dry-runs, and documentation examples.
 
@@ -83,6 +83,8 @@ Do not use this lane for real source data, real upstream payloads, credentials, 
 
 ## Expected valid fixture examples
 
+`non_sensitive_occurrence.json` is the sole accepted positive input for the current fixture-safety profile. Despite its filename, it makes no real taxon or sensitivity claim: every identifier is synthetic, spatial support is withheld, policy is not evaluated, geoprivacy is not applied, and promotion and release remain held.
+
 | Scenario | Expected posture | Notes |
 |---|---|---|
 | Toy public-safe Flora record with complete synthetic support | Positive fixture input | Pair expected output in `../golden/`. |
@@ -103,8 +105,8 @@ Do not use this lane for real source data, real upstream payloads, credentials, 
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `non_sensitive_occurrence.json` is verified for the bounded synthetic fixture-safety profile.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register and sibling fixture READMEs.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
-- Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.
-- Tests and validators: NOT RUN.
+- Consumer alignment: VERIFIED only for `tools/validators/domains/flora/validate_public_safe_fixture.py` and `tests/domains/flora/test_flora_smoke.py`; broader consumers remain unverified.
+- Tests and validators: bounded profile executable; no schema, policy, transform, proof, or release claim follows.

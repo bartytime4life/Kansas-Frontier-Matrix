@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-flora-steward-plus-rare-plant-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-03
 policy_label: repository-facing; per-domain-validator-index; flora; rare-plants; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: proposed per-domain Flora validator index for plant taxon identity, occurrence/specimen evidence, rare/protected/culturally sensitive flora controls, geoprivacy, vegetation/community products, invasive plants, phenology, restoration plantings, evidence, policy, release, correction, rollback, and public-surface denial checks while deferring Flora meaning, policy decisions, proof records, and release authority to their owning roots
@@ -33,7 +33,7 @@ related:
   - ../../../../../data/receipts/
   - ../../../../../release/
 notes:
-  - "This README replaces a greenfield stub. It does not confirm executable files."
+  - "This index confirms one bounded synthetic fixture-safety executable; broader Flora validation remains unverified."
   - "Flora rare, protected, culturally sensitive, steward-reviewed, and exact-location plant records are fail-closed unless a public-safe geoprivacy transform, review, policy, evidence, release, correction, and rollback path authorizes disclosure."
   - "Flora may reference Habitat, Fauna, Soil, Hydrology, Agriculture, Hazards, and other domains through governed joins, but it does not own their truth. Validators must preserve ownership, source role, sensitivity, and EvidenceBundle support."
   - "Validators enforce declared contracts, schemas, and policy. They do not define Flora meaning, create EvidenceBundles, make stewardship decisions, approve release, or publish public outputs."
@@ -47,7 +47,7 @@ notes:
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
 ![scope](https://img.shields.io/badge/scope-flora--validators-informational)
 ![sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-red)
-![authority](https://img.shields.io/badge/authority-index--only-lightgrey)
+![authority](https://img.shields.io/badge/authority-bounded--fixture--validation-lightgrey)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
 > **One-line purpose.** `tools/validators/domains/flora/` is the proposed per-domain Flora validator index for plant taxon identity, occurrence/specimen evidence, rare/protected/culturally sensitive plant controls, geoprivacy, vegetation/community products, invasive plants, phenology, restoration plantings, evidence, policy, release, correction, rollback, and public-surface denial checks.
@@ -76,8 +76,34 @@ The answer should be a navigable validator index and deterministic validation ou
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
 | Flora domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/flora/README.md` defines scope, lifecycle, fail-closed rare-plant sensitivity posture, responsibility-root split, and cross-lane ownership constraints. |
 | Deny-by-default sensitivity ADR | **CONFIRMED in repo evidence / draft** | ADR-0010 draft states rare-species exact locations default to deny and public products require public-safe transform, review, receipt, policy, and rollback support. |
-| Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Flora validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Bounded executable profile | **CONFIRMED** | `validate_public_safe_fixture.py` checks only the closed synthetic, fixture-only, withheld-location profile documented below. |
+| Executable test and CI wiring | **CONFIRMED for one profile** | `tests/domains/flora/test_flora_smoke.py` and `.github/workflows/domain-flora.yml` execute the bounded profile without network access. |
+| Schemas, policy bundles, geoprivacy transforms, proof, and release | **NEEDS VERIFICATION** | The fixture profile does not validate Flora schemas, accept policy, perform transformation, close evidence, or approve release. |
+
+[Back to top](#top)
+
+---
+
+## Accepted bounded executable
+
+`validate_public_safe_fixture.py` validates one repository-local safety envelope:
+
+- every accepted string, including identifiers, labels, evidence references, and caveats, must match the exact synthetic profile vocabulary;
+- `source_role` must remain `synthetic` and the reality boundary must remain explicit;
+- spatial support must be `withheld`; coordinate/location fields, numeric location values, URL-shaped clues, and coordinate-shaped text fail closed;
+- rights, evidence, review, correction, and rollback state remain fixture-only;
+- policy is not evaluated, geoprivacy is not applied because no location is present, release is held, and promotion is ineligible;
+- unknown key paths are sanitized, and the bounded, duplicate-free parser and CLI are deterministic, offline, and non-echoing.
+
+Run the accepted profile from the repository root:
+
+```bash
+KFM_NO_NETWORK=1 python tests/domains/flora/test_flora_smoke.py --verbose
+python tools/validators/domains/flora/validate_public_safe_fixture.py \
+  fixtures/domains/flora/valid/non_sensitive_occurrence.json
+```
+
+A pass proves conformance only to this synthetic fixture profile. It does not establish occurrence truth, taxonomic identity, source admission, rights or sensitivity clearance, policy approval, a geoprivacy transform, an EvidenceBundle, public safety, or release readiness. County, grid, generalized-area, and exact-geometry rules remain outside this executable.
 
 [Back to top](#top)
 
@@ -122,7 +148,8 @@ Safe interpretation:
 
 - **CONFIRMED:** this README exists.
 - **PROPOSED:** validator code may live below this folder when it checks declared Flora invariants and delegates meaning, sensitivity, policy, evidence, and release authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable names, schema homes, policy bundle digests, source descriptors, fixtures, report destinations, receipts, runtime behavior, and CI wiring.
+- **CONFIRMED:** the one bounded executable, fixture corpus, focused test, and CI command named above.
+- **NEEDS VERIFICATION:** every broader executable, schema home, policy bundle digest, production source descriptor, report destination, geoprivacy transform, proof path, and release path.
 - **DENY:** using this folder as botanical authority, stewardship authority, Flora contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public occurrence surface, public map product surface, or domain-meaning authority.
 
 [Back to top](#top)
@@ -219,6 +246,14 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
+Current accepted command:
+
+```bash
+KFM_NO_NETWORK=1 python tests/domains/flora/test_flora_smoke.py --verbose
+```
+
+All broader test and parent-runner surfaces below remain suggested future work.
+
 Suggested future test surface:
 
 ```text
@@ -277,6 +312,6 @@ python tools/validators/domains/flora/run_flora_domain_validators.py --repo-root
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for greenfield stub and current parent index for Flora validators. |
-| Next smallest safe change | Verify child validator scripts, accepted profiles, schemas, source descriptors, policy bundles, fixtures, report destinations, receipts, geoprivacy behavior, release linkage, cross-domain join behavior, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-03 |
+| Review state | One fixture-only, no-location safety profile is executable; broader Flora validation remains draft. |
+| Next smallest safe change | Review the bounded profile and its receipt, then separately resolve schema, policy, geoprivacy-transform, proof, and release authority before widening it. |

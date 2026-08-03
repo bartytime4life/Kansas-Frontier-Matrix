@@ -1,6 +1,6 @@
-# KFM Flora domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Flora validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Flora domain CI workflow.
+# Status: one bounded synthetic fixture-safety profile is executable; broader
+# validation, proof, and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without opening restricted Flora
@@ -44,7 +44,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Evaluate Flora validation readiness
+      - name: Inspect Flora validation boundaries
         shell: bash
         run: |
           set -euo pipefail
@@ -57,7 +57,9 @@ jobs:
             "policy/domains/flora/README.md"
             "policy/sensitivity/flora/README.md"
             "tests/domains/flora/README.md"
+            "tests/domains/flora/test_flora_smoke.py"
             "tools/validators/domains/flora/README.md"
+            "tools/validators/domains/flora/validate_public_safe_fixture.py"
             "packages/domains/flora/geoprivacy_transformer/README.md"
             "data/registry/sources/flora/README.md"
             "release/candidates/flora/README.md"
@@ -70,12 +72,50 @@ jobs:
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Flora" \
-            --test-root tests/domains/flora \
-            --validator-root tools/validators/domains/flora \
-            --validator-root tools/validators/geoprivacy \
-            --validator-root tools/validators/geoprivacy_transform
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_tests = {
+              Path("tests/domains/flora/test_flora_smoke.py"),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/flora/"
+                  "validate_public_safe_fixture.py"
+              ),
+          }
+
+          for path in sorted(Path("tests/domains/flora").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(f"Accepted Flora test regressed: {path}")
+              elif not classification.placeholder:
+                  raise SystemExit(f"Unwired Flora test became substantive: {path}")
+
+          for path in sorted(
+              Path("tools/validators/domains/flora").rglob("*.py")
+          ):
+              classification = classify_validator_source(
+                  path.read_text(encoding="utf-8")
+              )
+              if path in accepted_validators:
+                  if classification.placeholder:
+                      raise SystemExit(
+                          f"Accepted Flora validator regressed: {path}"
+                      )
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Flora validator became substantive: {path}"
+                  )
+
+          print("Flora executable and placeholder inventories are explicit.")
+          PY
 
           transformer_file="$(find packages/domains/flora/geoprivacy_transformer -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
           if [[ -n "$transformer_file" ]]; then
@@ -88,32 +128,63 @@ jobs:
             exit 1
           fi
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-flora"
-          echo "WORKFLOW_HOLD: executable Flora validation is not established"
+          echo "WORKFLOW_CHECK_EXECUTED: flora-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader Flora validation is not established"
 
-      - name: Record Flora validation hold
+      - name: Run bounded Flora public-safe fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/flora/test_flora_smoke.py --verbose
+
+          python tools/validators/domains/flora/validate_public_safe_fixture.py \
+            fixtures/domains/flora/valid/*.json
+
+          set +e
+          python tools/validators/domains/flora/validate_public_safe_fixture.py \
+            fixtures/domains/flora/invalid/*.json
+          invalid_status="$?"
+          set -e
+
+          if [[ "$invalid_status" -ne 1 ]]; then
+            echo "::error::Invalid Flora fixtures must exit 1; got $invalid_status."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Flora fixture-safety cases"
+          echo "WORKFLOW_CHECK_EXECUTED: flora-public-safe-fixture"
+
+      - name: Record Flora validation result and broader hold
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Flora validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          `WORKFLOW_CHECK_EXECUTED: flora-public-safe-fixture`
 
-          `WORKFLOW_HOLD: executable Flora validation is not established`
+          `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          `WORKFLOW_HOLD: broader Flora validation, proof, and release remain unestablished`
 
-          Current repository evidence is documentation-heavy: sampled Flora tests
-          are placeholders, the domain validator is an index without accepted
-          executables, and the geoprivacy transformer is a proposed package
-          contract rather than verified implementation.
+          This job runs only `tests/domains/flora/test_flora_smoke.py` against
+          one passing and five fail-closed synthetic JSON fixtures. It blocks
+          network calls, requires a synthetic source role and withheld spatial
+          support, rejects recursive location aliases and any string outside the
+          exact synthetic profile vocabulary,
+          and keeps policy unevaluated, geoprivacy inapplicable, release held,
+          and promotion ineligible.
 
-          This check does not establish botanical identity, occurrence validity,
-          rights, rare-plant sensitivity, geoprivacy, public-safe geometry,
-          EvidenceBundle closure, policy approval, stewardship approval, release
-          readiness, or safe public use.
+          A green result proves conformance only to the closed fixture profile.
+          It does not establish botanical identity, occurrence validity, schema
+          conformance, source admission, rights or sensitivity clearance,
+          geoprivacy transformation, EvidenceBundle closure, policy approval,
+          stewardship approval, public safety, or release readiness. The proof
+          and release-dry-run jobs remain held.
           EOF
 
   build-proof-flora:
