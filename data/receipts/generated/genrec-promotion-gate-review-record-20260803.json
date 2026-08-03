@@ -124,7 +124,7 @@
     {
       "gate": "fixture-only-review-record-validation",
       "outcome": "PASS",
-      "reason": "The exact synthetic subset produced one PASS, six DENY, one ABSTAIN, and one ERROR outcome with no socket access; self-review, stale or superseded review, scope mismatch, and unbound specification or artifact hashes fail closed, while missing authority abstains."
+      "reason": "The exact nine-fixture synthetic subset produced one PASS, seven DENY, and one ABSTAIN outcome with no socket access; self-review, missing or change-requesting review, stale or superseded review, scope mismatch, and unbound specification or artifact hashes fail closed, while missing authority abstains. Parser ERROR behavior is covered separately by deterministic tests."
     },
     {
       "gate": "promotion-precedence-and-non-emission",
