@@ -1,0 +1,20 @@
+{
+  "id": "kfm:geology:aem-campaign:kgs-gmd3-sw-ks-2026",
+  "object_type": "AemSurveyCampaign",
+  "product_id": "kfm:geology:aem-campaign:kgs-gmd3-sw-ks-2026:v0.1",
+  "source_descriptor_ref": "src:kgs-gmd3-aem-2026",
+  "campaign_state": "planned",
+  "acquisition_state": "planned",
+  "horizontal_crs": "EPSG:4326",
+  "vertical_datum": "NAVD88",
+  "depth_reference": "land_surface",
+  "depth_positive_direction": "down",
+  "processing_software_version": "ArehemAGF-v2024.1",
+  "inversion_software_version": "SCI-v1.3",
+  "raw_source_ref": "kfm://data/raw/geology/kgs-gmd3-aem-2026/acquisition-segment-001",
+  "resistivity_units": "ohm\u00b7m",
+  "evidence_refs": [
+    "kfm://evidence/geology/kgs-gmd3-aem-2026/campaign-announcement-2026-08-03"
+  ],
+  "release_state": "not_released"
+}
