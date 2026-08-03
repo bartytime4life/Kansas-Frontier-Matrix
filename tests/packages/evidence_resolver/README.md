@@ -32,4 +32,6 @@ make evidence-resolver-deny
 
 The suite checks exact fixture outcomes, deterministic serialization,
 non-authority, safe diagnostics, duplicate/non-finite/size/depth rejection,
-standard-library-only imports, and active denial of DNS/socket access.
+standard-library-only imports, history-shape pinning, bitemporal replay,
+subject binding, finite-outcome precedence, and active denial of DNS/socket
+access.

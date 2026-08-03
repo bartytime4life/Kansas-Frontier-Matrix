@@ -16,6 +16,8 @@ import math
 import re
 from typing import Mapping
 
+from .verification_history import replay_state, validate_history
+
 
 PROFILE = "kfm/evidence-ref-bundle-candidate/v1alpha1"
 MAX_INPUT_BYTES = 131_072
@@ -40,6 +42,7 @@ _LIMITATIONS = (
     "claim_scope_not_machine_checked",
     "citations_rights_and_sensitivity_not_decided",
     "policy_is_caller_supplied_not_evaluated",
+    "active_verification_history_is_necessary_not_sufficient",
     "no_review_release_runtime_or_publication_authority",
 )
 
@@ -407,6 +410,25 @@ def _validate_lookup_context(value: object) -> dict[str, object]:
     }
 
 
+def _validate_verification_as_of(value: object) -> dict[str, str]:
+    query = _closed(
+        value,
+        allowed=frozenset({"effective_as_of", "recorded_as_of"}),
+        required=frozenset({"effective_as_of", "recorded_as_of"}),
+        field="verification_as_of",
+    )
+    return {
+        "effective_as_of": _string(
+            query["effective_as_of"], field="verification_as_of"
+        )
+        or "",
+        "recorded_as_of": _string(
+            query["recorded_as_of"], field="verification_as_of"
+        )
+        or "",
+    }
+
+
 def _error_result(issue: CandidateInputError) -> ResolutionCandidate:
     return ResolutionCandidate(
         profile=PROFILE,
@@ -440,10 +462,24 @@ def evaluate_resolution_candidate(value: object) -> ResolutionCandidate:
         request = _closed(
             value,
             allowed=frozenset(
-                {"profile", "evidence_ref", "bundle_candidate", "lookup_context"}
+                {
+                    "profile",
+                    "evidence_ref",
+                    "bundle_candidate",
+                    "lookup_context",
+                    "verification_history",
+                    "verification_as_of",
+                }
             ),
             required=frozenset(
-                {"profile", "evidence_ref", "bundle_candidate", "lookup_context"}
+                {
+                    "profile",
+                    "evidence_ref",
+                    "bundle_candidate",
+                    "lookup_context",
+                    "verification_history",
+                    "verification_as_of",
+                }
             ),
             field="request",
         )
@@ -457,6 +493,26 @@ def evaluate_resolution_candidate(value: object) -> ResolutionCandidate:
             if request["bundle_candidate"] is None
             else _validate_evidence_bundle(request["bundle_candidate"])
         )
+        verification_history = _mapping(
+            request["verification_history"], field="verification_history"
+        )
+        if validate_history(verification_history):
+            raise CandidateInputError(
+                "verification/history-invalid", "verification_history"
+            )
+        verification_as_of = _validate_verification_as_of(
+            request["verification_as_of"]
+        )
+        try:
+            verification_replay = replay_state(
+                verification_history,
+                effective_as_of=verification_as_of["effective_as_of"],
+                recorded_as_of=verification_as_of["recorded_as_of"],
+            )
+        except ValueError as exc:
+            raise CandidateInputError(
+                "verification/query-invalid", "verification_as_of"
+            ) from exc
     except BoundedJSONError as exc:
         return _bounded_error_result(exc)
     except CandidateInputError as exc:
@@ -467,6 +523,9 @@ def evaluate_resolution_candidate(value: object) -> ResolutionCandidate:
         "profile_shape",
         "evidence_ref_shape",
         "lookup_context_shape",
+        "verification_history_shape",
+        "verification_history_semantics",
+        "verification_history_replay",
     ]
     if bundle is not None:
         checks.append("evidence_bundle_shape")
@@ -520,6 +579,30 @@ def evaluate_resolution_candidate(value: object) -> ResolutionCandidate:
                     "closure/evidence-ref-not-member", "bundle_candidate"
                 )
             )
+
+    checks.append("verification_subject_binding")
+    if verification_history["subject_ref"] != evidence_ref["ref"]:
+        issues.append(
+            ResolutionIssue("verification/subject-mismatch", "verification_history")
+        )
+
+    replay_state_value = verification_replay.state
+    if replay_state_value == "CORRECTED":
+        issues.append(
+            ResolutionIssue("verification/corrected", "verification_history")
+        )
+    elif replay_state_value == "SUPERSEDED":
+        issues.append(
+            ResolutionIssue("verification/superseded", "verification_history")
+        )
+    elif replay_state_value == "REVOKED":
+        issues.append(
+            ResolutionIssue("verification/revoked", "verification_history")
+        )
+    elif replay_state_value == "UNKNOWN":
+        issues.append(
+            ResolutionIssue("verification/unknown", "verification_history")
+        )
 
     checks.append("lookup_current_head")
     if lookup["current_head"] is not True:

@@ -9,12 +9,12 @@ is the internal, non-authoritative
 
 | Field | Current boundary |
 |---|---|
-| Purpose | Evaluate one explicit `EvidenceRef`, one caller-supplied `EvidenceBundle` candidate, and one caller-supplied lookup context deterministically. |
+| Purpose | Evaluate one explicit `EvidenceRef`, one caller-supplied `EvidenceBundle` candidate, one lookup snapshot, and one validated `VerificationStateHistory` replay deterministically. |
 | Scope ID | `kfm/evidence-ref-bundle-candidate/v1alpha1` |
 | Local owner | Evidence/proof and package stewards — `OWNER_TBD`; human review pending. |
 | Belongs | Pure standard-library checks, bounded parsing, stable internal issue codes, and non-authoritative result carriers. |
 | Prohibited | Network/store access, registry lookup, claim-scope inference, source admission, evidence creation, policy evaluation, review/release decisions, public outcomes, or publication. |
-| Inputs | Current proposed `EvidenceRef` and `EvidenceBundle` shapes plus an explicit lookup snapshot. |
+| Inputs | Current proposed `EvidenceRef`, `EvidenceBundle`, and `VerificationStateHistory` shapes plus explicit lookup and bitemporal as-of snapshots. |
 | Policy projection | Caller supplies `policy_outcome` using the current proposed `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` vocabulary plus a decision reference; the package does not evaluate policy. |
 | Output | Internal `RESOLVED`, `UNRESOLVED`, `DENIED`, or `ERROR` candidate result with `authoritative: false`. |
 | Exposure | Internal alpha only; `__init__.py` remains empty and no public package API or production consumer is declared. |
@@ -33,8 +33,9 @@ Status precedence is fail-closed:
 
 1. `ERROR` for unsupported/malformed profile input or caller policy error;
 2. `DENIED` when the caller supplies a bound `DENY` policy context;
-3. `UNRESOLVED` for absent, inconsistent, stale, superseded, withdrawn, or
-   otherwise incomplete closure context;
+3. `UNRESOLVED` for absent, inconsistent, stale, superseded, withdrawn,
+   corrected, revoked, unknown, subject-mismatched, or otherwise incomplete
+   closure context;
 4. `RESOLVED` only when the bounded checks have no issue.
 
 These names are package-local discussion vocabulary. Mapping them to governed
@@ -58,7 +59,7 @@ make evidence-resolver
 make evidence-resolver-deny
 ```
 
-The first command runs all synthetic profile fixtures and 18 standard-library
+The first command runs 20 synthetic profile fixtures and 19 standard-library
 tests. The second requires every negative fixture to remain non-`RESOLVED`.
 Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
 
@@ -66,10 +67,12 @@ Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
 
 - implementation: [`src/`](src/README.md)
 - semantic inputs: [`EvidenceRef`](../../contracts/evidence/evidence_ref.md),
-  [`EvidenceBundle`](../../contracts/evidence/evidence_bundle.md)
+  [`EvidenceBundle`](../../contracts/evidence/evidence_bundle.md), and
+  [`VerificationStateHistory`](../../contracts/evidence/verification_state_history.md)
 - proposed machine shapes:
   [`evidence_ref.schema.json`](../../schemas/contracts/v1/evidence/evidence_ref.schema.json),
-  [`evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
+  [`evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json),
+  [`verification_state_history.schema.json`](../../schemas/contracts/v1/evidence/verification_state_history.schema.json)
 - fixtures: [`fixtures/packages/evidence_resolver/`](../../fixtures/packages/evidence_resolver/README.md)
 - validator: [`tools/validators/evidence_resolver/`](../../tools/validators/evidence_resolver/README.md)
 - tests: [`tests/packages/evidence_resolver/`](../../tests/packages/evidence_resolver/README.md)
@@ -82,6 +85,6 @@ Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
 
 The following remain held: named ownership; accepted resolver input/result
 contracts; a stable public outcome vocabulary; canonical claim-scope
-representation; authoritative registry and correction snapshots; rights and
+representation; authoritative registry, correction, and verification-history snapshots; rights and
 sensitivity semantics; hashing/canonicalization; governed consumers; package
 build/export/version policy; release integration; and production behavior.

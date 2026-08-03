@@ -79,8 +79,8 @@ The answer should be a deterministic validation result. This folder should not c
 | EvidenceBundle proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/evidence_bundle/README.md` supports EvidenceRef → EvidenceBundle closure, claim support, digest closure, finite negative outcomes, and governed-answer readiness. |
 | Citation validation proof lane | **CONFIRMED in repo evidence / draft** | `data/proofs/citation_validation/README.md` supports EvidenceRef resolution checks, citation closure, finite negative outcomes, and governed answer readiness. |
 | AI evidence-before-model lane | **CONFIRMED README / executable NEEDS VERIFICATION** | `tools/validators/ai/evidence_before_model/README.md` checks that evidence and policy gates happen before model interpretation. |
-| VerificationStateHistory validator | **CONFIRMED bounded executable** | `tools/validators/validate_verification_state_history.py` checks closed shape, canonical hash, append order, time axes, transition chain, and replay semantics against synthetic fixtures. |
-| Broader executables, policy bundles, report destinations, receipt emission, runtime behavior, and release wiring | **NEEDS VERIFICATION** | The bounded history validator does not establish a general evidence resolver, policy runtime, report lane, receipt emitter, release gate, or public route. |
+| VerificationStateHistory validator | **CONFIRMED bounded executable** | `tools/validators/validate_verification_state_history.py` checks closed shape and delegates canonical hash, append order, time axes, transition chain, and replay semantics to the standard-library helper shared with `packages/evidence-resolver/`. |
+| Broader executables, policy bundles, report destinations, receipt emission, runtime behavior, and release wiring | **NEEDS VERIFICATION** | The bounded history validator and internal resolver consumer do not establish a general evidence resolver, policy runtime, report lane, receipt emitter, release gate, or public route. |
 
 [Back to top](#top)
 

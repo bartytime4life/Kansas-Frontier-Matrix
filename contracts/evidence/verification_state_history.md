@@ -120,6 +120,12 @@ This rule preserves the distinction between current corrected knowledge and the 
 
 The replay helper exposes `answer_blocked`; it never emits a runtime envelope or upgrades an event into evidence, policy, review, release, or publication authority.
 
+The internal `packages/evidence-resolver/` alpha candidate now consumes this
+replay directly. It requires the history subject to equal the candidate
+`EvidenceRef` and returns a non-authoritative `UNRESOLVED` result for every
+non-`ACTIVE` replay. This is a bounded repository consumer, not a production or
+public runtime.
+
 ## Determinism and failure behavior
 
 - Event IDs must be unique.
@@ -152,6 +158,11 @@ Expected coverage includes active, corrected, reverified, superseded, revoked, l
 
 ## Compatibility and rollback
 
-This is additive and has no current production consumer or stored data migration. Rollback is a normal revert of the feature change, removing the contract, schema, fixtures, validator, tests, index updates, and generated receipt. Historical evidence, release, correction, and published state are unaffected.
+This remains additive and has no production consumer or stored data migration.
+Its one bounded internal resolver consumer shares the standard-library replay
+implementation with this validator. Rollback is a normal revert of the
+resolver integration and shared helper; the contract, schema, and original
+history fixtures may remain independently. Historical evidence, release,
+correction, and published state are unaffected.
 
 [Back to top](#top)

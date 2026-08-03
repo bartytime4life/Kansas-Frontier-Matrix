@@ -17,6 +17,7 @@ from tools.validators.validate_verification_state_history import (
     validate_document,
     validate_history_file,
 )
+from evidence_resolver.verification_history import validate_history
 
 
 class VerificationStateHistoryTests(unittest.TestCase):
@@ -63,6 +64,18 @@ class VerificationStateHistoryTests(unittest.TestCase):
             with self.subTest(path=path.name):
                 codes = {finding.code for finding in validate_history_file(path)}
                 self.assertEqual(codes, expected_codes[path.name])
+
+    def test_standard_library_consumer_matches_canonical_fixture_polarity(self) -> None:
+        for path in self.valid_files + self.invalid_files:
+            with self.subTest(path=path.name):
+                document = json.loads(path.read_text(encoding="utf-8"))
+                canonical_codes = {
+                    finding.code for finding in validate_history_file(path)
+                }
+                consumer_codes = {
+                    finding.code for finding in validate_history(document)
+                }
+                self.assertEqual(consumer_codes, canonical_codes)
 
     def test_late_recorded_correction_replays_both_time_axes(self) -> None:
         history = self._load_valid("valid_late_recorded_correction.json")

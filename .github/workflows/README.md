@@ -405,7 +405,8 @@ from composed E2E, runtime, evidence, policy, release, or publication readiness.
 Read the exact steps and job summaries before relying on any workflow as a merge gate. “Command-bearing” does not mean complete, current, or production-ready.
 
 `evidence-resolver.yml` runs only the internal v1alpha1 candidate profile and
-its exact synthetic negative suite. It performs no live lookup and cannot
+its exact synthetic negative suite, including bounded bitemporal verification
+history replay. It performs no live lookup and cannot
 establish evidence truth, policy clearance, review, release, public outcome,
 or publication authority.
 

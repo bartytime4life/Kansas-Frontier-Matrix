@@ -1,7 +1,11 @@
 {
   "request": {
     "profile": "kfm/evidence-ref-bundle-candidate/v2",
-    "evidence_ref": {"ref": "measurement:synthetic:rainfall-001", "kind": "measurement", "bundle_ref": "bundle:synthetic:closure-001"},
+    "evidence_ref": {
+      "ref": "kfm://synthetic/evidence/item-001",
+      "kind": "measurement",
+      "bundle_ref": "bundle:synthetic:closure-001"
+    },
     "bundle_candidate": null,
     "lookup_context": {
       "bundle_id": "bundle:synthetic:closure-001",
@@ -10,7 +14,36 @@
       "policy_decision_ref": "policy:synthetic:answer-001",
       "correction_state": "ACTIVE",
       "correction_ref": null
+    },
+    "verification_history": {
+      "schema_version": "1.0.0",
+      "history_id": "kfm:verification-history:synthetic:resolver-001",
+      "subject_ref": "kfm://synthetic/evidence/item-001",
+      "profile_id": "kfm://profile/verification-state-replay/v1",
+      "events": [
+        {
+          "event_id": "evt:001",
+          "event_type": "VERIFIED",
+          "state": "ACTIVE",
+          "effective_at": "2026-01-01T00:00:00Z",
+          "recorded_at": "2026-01-01T00:00:00Z",
+          "reason_code": "INITIAL_VERIFICATION",
+          "basis_refs": [
+            "kfm://synthetic/receipt/verify-001"
+          ]
+        }
+      ],
+      "spec_hash": "sha256:6fce2045205fd797f76f9f4b8a84004fd33032fe0a7f23c66ac05b9fa1084e25"
+    },
+    "verification_as_of": {
+      "effective_as_of": "2026-01-02T00:00:00Z",
+      "recorded_as_of": "2026-01-02T00:00:00Z"
     }
   },
-  "expected": {"status": "ERROR", "issue_codes": ["profile/unsupported"]}
+  "expected": {
+    "status": "ERROR",
+    "issue_codes": [
+      "profile/unsupported"
+    ]
+  }
 }

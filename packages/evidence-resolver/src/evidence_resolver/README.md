@@ -10,7 +10,8 @@ authority limits from the [package README](../../README.md).
 packages/evidence-resolver/src/evidence_resolver/
 ├── README.md
 ├── __init__.py   # intentionally empty; no supported public exports
-└── core.py       # pure bounded candidate evaluation
+├── core.py       # pure bounded candidate evaluation
+└── verification_history.py # shared standard-library validation and replay
 ```
 
 ## Implemented checks
@@ -22,12 +23,16 @@ packages/evidence-resolver/src/evidence_resolver/
 - closed validation of the current proposed `EvidenceRef` and
   `EvidenceBundle` field shapes used by this profile;
 - exact bundle-reference, lookup-ID, and member-reference comparisons;
+- closed `VerificationStateHistory` shape and semantic validation shared with
+  its repository validator;
+- bitemporal replay, exact EvidenceRef-subject binding, and fail-closed
+  corrected, superseded, revoked, unknown, and inconsistent-history outcomes;
 - explicit caller-supplied current-head, canonical policy-outcome projection,
   and correction context;
 - deterministic issue ordering and serialization; and
 - fixed diagnostics that never echo candidate values.
 
-It does not fetch, cache, infer, canonicalize, sign, persist, review, release,
+It does not fetch, cache, infer, sign, persist, review, release,
 or publish anything. It does not evaluate claim scope, citations, rights,
 sensitivity, policy, or evidence truth. Shape checks for those fields prevent
 accidental omission but do not establish their semantics.
@@ -35,7 +40,9 @@ accidental omission but do not establish their semantics.
 ## Input and output posture
 
 The caller supplies one closed object containing `profile`, `evidence_ref`,
-`bundle_candidate`, and `lookup_context`. Results always include
+`bundle_candidate`, `lookup_context`, `verification_history`, and
+`verification_as_of`. The history subject must equal the EvidenceRef value,
+and the replayed state must be `ACTIVE`. Results always include
 `authoritative: false`, stable `checks_performed`, fixed issue codes, and
 explicit limitations. `bundle_id` is exposed only for a `RESOLVED` candidate.
 

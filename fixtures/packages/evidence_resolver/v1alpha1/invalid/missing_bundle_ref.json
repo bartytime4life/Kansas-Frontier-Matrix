@@ -2,20 +2,39 @@
   "request": {
     "profile": "kfm/evidence-ref-bundle-candidate/v1alpha1",
     "evidence_ref": {
-      "ref": "measurement:synthetic:rainfall-001",
+      "ref": "kfm://synthetic/evidence/item-001",
       "kind": "measurement"
     },
     "bundle_candidate": {
       "bundle_id": "bundle:synthetic:closure-001",
       "claim_scope": "Synthetic candidate-closure fixture only",
-      "evidence_refs": [{"ref": "measurement:synthetic:rainfall-001", "kind": "measurement"}],
-      "source_records": ["source:synthetic:record-001"],
-      "citations": ["Synthetic fixture citation; not a real source"],
-      "rights": {"license": "CC0-1.0"},
-      "sensitivity": {"level": "public", "reason": "Synthetic fixture", "applied_at": "2026-08-02T00:00:00Z"},
+      "evidence_refs": [
+        {
+          "ref": "kfm://synthetic/evidence/item-001",
+          "kind": "measurement"
+        }
+      ],
+      "source_records": [
+        "source:synthetic:record-001"
+      ],
+      "citations": [
+        "Synthetic fixture citation; not a real source"
+      ],
+      "rights": {
+        "license": "CC0-1.0"
+      },
+      "sensitivity": {
+        "level": "public",
+        "reason": "Synthetic fixture",
+        "applied_at": "2026-08-02T00:00:00Z"
+      },
       "transforms": [],
-      "checksums": {"bundle": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
-      "spec_hash": {"value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      "checksums": {
+        "bundle": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "spec_hash": {
+        "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
     },
     "lookup_context": {
       "bundle_id": "bundle:synthetic:closure-001",
@@ -24,7 +43,36 @@
       "policy_decision_ref": "policy:synthetic:answer-001",
       "correction_state": "ACTIVE",
       "correction_ref": null
+    },
+    "verification_history": {
+      "schema_version": "1.0.0",
+      "history_id": "kfm:verification-history:synthetic:resolver-001",
+      "subject_ref": "kfm://synthetic/evidence/item-001",
+      "profile_id": "kfm://profile/verification-state-replay/v1",
+      "events": [
+        {
+          "event_id": "evt:001",
+          "event_type": "VERIFIED",
+          "state": "ACTIVE",
+          "effective_at": "2026-01-01T00:00:00Z",
+          "recorded_at": "2026-01-01T00:00:00Z",
+          "reason_code": "INITIAL_VERIFICATION",
+          "basis_refs": [
+            "kfm://synthetic/receipt/verify-001"
+          ]
+        }
+      ],
+      "spec_hash": "sha256:6fce2045205fd797f76f9f4b8a84004fd33032fe0a7f23c66ac05b9fa1084e25"
+    },
+    "verification_as_of": {
+      "effective_as_of": "2026-01-02T00:00:00Z",
+      "recorded_as_of": "2026-01-02T00:00:00Z"
     }
   },
-  "expected": {"status": "UNRESOLVED", "issue_codes": ["closure/bundle-ref-missing"]}
+  "expected": {
+    "status": "UNRESOLVED",
+    "issue_codes": [
+      "closure/bundle-ref-missing"
+    ]
+  }
 }

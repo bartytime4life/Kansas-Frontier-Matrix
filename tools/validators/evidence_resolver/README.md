@@ -6,7 +6,8 @@ check. It inherits validator authority limits from
 
 ## Boundary contract
 
-- Purpose: run one explicit input or the synthetic fixture suite.
+- Purpose: run one explicit input or the synthetic fixture suite, including
+  the shared `VerificationStateHistory` validation and replay gate.
 - Owner: evidence/proof and validation stewards — `OWNER_TBD`.
 - Input: bounded JSON matching the internal candidate profile.
 - Output: deterministic JSON for one input, or pass/fail fixture summaries.
@@ -25,4 +26,6 @@ tools/validators/evidence_resolver/
 ```
 
 Run through `make evidence-resolver` or `make evidence-resolver-deny`. A pass
-means only that the declared internal fixture expectations matched.
+means only that the declared internal fixture expectations matched. The
+validator performs no filesystem history lookup: the bounded history and both
+as-of instants must be supplied in the input.
