@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.13
+version: v0.14
 status: draft; repository-grounded workflow governance reference
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-08-02
+updated: 2026-08-03
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
@@ -14,8 +14,8 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: 248aabf0dc038670560e570230bdc86cc7a1cb6a
-  workflow_inventory_snapshot: 248aabf0dc038670560e570230bdc86cc7a1cb6a
+  read_commit: 68069dce9e292649697f63f96fa57edd07181a27
+  workflow_inventory_snapshot: 68069dce9e292649697f63f96fa57edd07181a27
   current_workflow_files: 44
   documented_workflow_files: 44
   inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
@@ -57,6 +57,7 @@ related:
   - ../../fixtures/
   - ../../release/
 notes:
+  - "v0.14 reconciles the promotion workflow description with the bounded fixture-only ReviewRecord candidate while preserving live identity, authority, governed-record, rollback, release, and publication holds."
   - "v0.13 graduates only focus-mock-test/finite-envelope-shape from static hold detection to a deterministic standard-library shape proof while preserving the mock-focus and composed-E2E holds, workflow/job identities, permissions, and non-publisher posture."
   - "v0.12 adds the focused no-network GENERATED_RECEIPT unittest suite and exact fixture-failure command to validator-suite before the unchanged seven-entry aggregate; workflow/job identities, triggers, permissions, actions, runners, artifact posture, and publication boundaries are unchanged."
   - "v0.11 pins every external GitHub Action reference to the immutable commit currently resolved by its existing tag; triggers, permissions, runners, workflow and job identities, inputs, commands, no-network semantics, artifact behavior, and publication boundaries are unchanged."
@@ -140,8 +141,9 @@ bounded, synthetic A-G readiness profile and its exact failure matrix. A
 `PASS` result means only `APPROVE_READY` for review; it does not assemble a
 release candidate, authenticate supporting references, record human approval,
 evaluate production policy, execute rollback, change lifecycle state, or
-publish. Candidate assembly, the ReviewRecord validator, and rollback-card
-execution remain separately held.
+publish. Governed ReviewRecord production, live identity and authority
+resolution, candidate assembly, and rollback-card execution remain separately
+held; the wired validator covers only repository-owned synthetic projections.
 
 ## Status
 
@@ -594,6 +596,7 @@ Before merge, the normal rollback is to revert or close the unmerged workflow ch
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-08-03 | v0.14 | Reconciled promotion workflow documentation with the bounded fixture-only ReviewRecord candidate and retained every live-governance and non-publisher boundary. |
 | 2026-08-02 | v0.13 | Replaced the finite-envelope assert-true/TODO hold with a deterministic standard-library four-outcome shape proof, preserved the mock-runtime and composed-E2E holds, and kept workflow/job identities and non-publisher boundaries unchanged. |
 | 2026-08-02 | v0.12 | Added focused GENERATED_RECEIPT validation and exact positive/negative fixture behavior to `validator-suite/run-validators` without changing workflow identities, triggers, permissions, actions, runners, artifacts, aggregate membership, or publication authority. |
 | 2026-08-01 | v0.11 | Replaced all 160 floating external-action references with the exact full commits resolved by their existing official tags, preserving all workflow behavior and leaving weekly Dependabot review as the update path. |

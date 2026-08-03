@@ -39,6 +39,7 @@ SCOPE = "release.promotion_gate"
 GATE_ORDER = ("A", "B", "C", "D", "E", "F", "G")
 STATUS_PRECEDENCE = {"PASS": 0, "ABSTAIN": 1, "DENY": 2, "ERROR": 3}
 HASH_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 TOP_LEVEL_FIELDS = frozenset(
     {
@@ -104,10 +105,14 @@ CODE_META: dict[str, tuple[str, str]] = {
     "PG_F_CATALOG_CLOSURE_MISSING": ("F", "DENY"),
     "PG_F_AI_RECEIPT_MISSING": ("F", "DENY"),
     "PG_G_UNDECLARED_FIELD": ("G", "DENY"),
+    "PG_G_REVIEW_CONTEXT_INVALID": ("G", "DENY"),
     "PG_G_REVIEW_INVALID": ("G", "DENY"),
     "PG_G_REVIEW_NOT_APPROVED": ("G", "DENY"),
+    "PG_G_REVIEW_OBLIGATIONS_OPEN": ("G", "ABSTAIN"),
     "PG_G_REVIEW_AUTHORITY_MISSING": ("G", "ABSTAIN"),
     "PG_G_REVIEW_AUTHORITY_INVALID": ("G", "DENY"),
+    "PG_G_REVIEW_AUTHORITY_NOT_CURRENT": ("G", "DENY"),
+    "PG_G_REVIEW_IDENTITY_NOT_CURRENT": ("G", "DENY"),
     "PG_G_REVIEW_STALE": ("G", "DENY"),
     "PG_G_REVIEW_SUPERSEDED": ("G", "DENY"),
     "PG_G_REVIEW_SCOPE_MISMATCH": ("G", "DENY"),
@@ -129,10 +134,13 @@ REVIEW_CODE_MAP = {
     "RR_UNDECLARED_FIELD": "PG_G_UNDECLARED_FIELD",
     "RR_RECORD_INVALID": "PG_G_REVIEW_INVALID",
     "RR_DECISION_NOT_APPROVED": "PG_G_REVIEW_NOT_APPROVED",
+    "RR_OBLIGATIONS_OPEN": "PG_G_REVIEW_OBLIGATIONS_OPEN",
     "RR_IDENTITY_INVALID": "PG_G_REVIEW_INVALID",
+    "RR_IDENTITY_NOT_CURRENT": "PG_G_REVIEW_IDENTITY_NOT_CURRENT",
     "RR_SELF_REVIEW": "PG_G_SEPARATION_OF_DUTIES_INVALID",
     "RR_AUTHORITY_MISSING": "PG_G_REVIEW_AUTHORITY_MISSING",
     "RR_AUTHORITY_INVALID": "PG_G_REVIEW_AUTHORITY_INVALID",
+    "RR_AUTHORITY_NOT_CURRENT": "PG_G_REVIEW_AUTHORITY_NOT_CURRENT",
     "RR_TEMPORAL_INVALID": "PG_G_REVIEW_INVALID",
     "RR_REVIEW_STALE": "PG_G_REVIEW_STALE",
     "RR_REVIEW_SUPERSEDED": "PG_G_REVIEW_SUPERSEDED",
@@ -165,7 +173,7 @@ def _unknown_fields(
 
 
 def _strict_utc_timestamp(value: object) -> datetime | None:
-    if not isinstance(value, str):
+    if not isinstance(value, str) or TIMESTAMP_PATTERN.fullmatch(value) is None:
         return None
     try:
         parsed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
@@ -176,6 +184,18 @@ def _strict_utc_timestamp(value: object) -> datetime | None:
 
 def _valid_hash(value: object) -> bool:
     return isinstance(value, str) and HASH_PATTERN.fullmatch(value) is not None
+
+
+def _safe_file_label(path: Path | str) -> str:
+    """Expose repository fixture names but redact caller-controlled paths."""
+
+    try:
+        relative = Path(path).resolve().relative_to(FIXTURES_ROOT.resolve())
+    except (OSError, RuntimeError, ValueError):
+        return "external-input"
+    if len(relative.parts) == 2 and relative.parts[0] in {"valid", "invalid"}:
+        return relative.name
+    return "external-input"
 
 
 def _string_list(value: object) -> list[str] | None:
@@ -427,7 +447,9 @@ def _validate_review_and_rollback(
     candidate: dict[str, object], findings: set[Finding]
 ) -> None:
     review_context = review_context_from_packet(candidate)
-    if review_context is not None:
+    if review_context is None:
+        _add(findings, "PG_G_REVIEW_CONTEXT_INVALID", "$.review")
+    else:
         for review_finding in validate_review(
             candidate.get("review"), **review_context  # type: ignore[arg-type]
         ):
@@ -519,7 +541,7 @@ def result_payload(path: Path | str, findings: list[Finding]) -> dict[str, objec
         gate_status = "NOT_EVALUATED" if input_error else _status_for(gate_findings[gate])
         gates.append({"gate": gate, "status": gate_status})
     return {
-        "file": str(path),
+        "file": _safe_file_label(path),
         "findings": [
             {
                 "code": finding.code,

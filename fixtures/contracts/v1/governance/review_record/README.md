@@ -2,15 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/governance/review-record/readme
 title: review_record fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): schema steward; TODO(owner): governance contracts steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-08-03
 policy_label: public-review
 related: [valid/README.md, valid/valid_1.json, invalid/README.md, invalid/invalid_1.json, invalid/invalid_1.expected_error.txt, ../../../../../schemas/contracts/v1/governance/review_record.schema.json, ../../../../../contracts/governance/review_record.md, ../../../../../tools/validators/validate_review_record.py, ../../../../../tests/schemas/test_common_contracts.py, ../../../../../docs/doctrine/directory-rules.md]
 tags: [kfm, fixtures, contracts, v1, governance, review-record, json-schema, valid-fixtures, invalid-fixtures, expected-error, non-authoritative]
-notes: ["This README replaces a blank file at `fixtures/contracts/v1/governance/review_record/README.md`.", "This directory is the schema-declared fixture root for `review_record`.", "Fixtures are schema test inputs only; schema shape, contract meaning, validator implementation, and policy rules stay in their owning roots.", "The current fixture family has one valid case and one invalid case.", "The schema metadata declares `contracts/governance/review_record.md`, but that file was not found during the paired lane checks.", "The dedicated validator file exists but is a greenfield placeholder and was not executed during this update."]
+notes: ["This README replaces a blank file at `fixtures/contracts/v1/governance/review_record/README.md`.", "This directory is the schema-declared fixture root for `review_record`.", "Fixtures here are schema-shape inputs only; the separate promotion-gate fixture lane exercises the bounded ReviewRecord candidate validator.", "The current schema fixture family has one valid case and one invalid case.", "The schema metadata declares lowercase `contracts/governance/review_record.md`, while the tracked semantic contract uses `ReviewRecord.md`; that casing conflict remains unresolved.", "The dedicated validator is implemented only for repository-owned synthetic promotion packets and is not review authority."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -120,8 +120,8 @@ Confirmed schema facts:
 |---|---|---|
 | Fixture examples | `fixtures/contracts/v1/governance/review_record/` | CONFIRMED |
 | Machine-checkable shape | `schemas/contracts/v1/governance/review_record.schema.json` | CONFIRMED |
-| Semantic contract | `contracts/governance/review_record.md` | NOT FOUND |
-| Validator implementation | `tools/validators/validate_review_record.py` | CONFIRMED PLACEHOLDER / NOT RUN |
+| Semantic contract | Schema declares `contracts/governance/review_record.md`; tracked file is `contracts/governance/ReviewRecord.md` | CONFLICTED CASING |
+| Validator implementation | `tools/validators/validate_review_record.py` | CONFIRMED BOUNDED FIXTURE-ONLY CANDIDATE; separate promotion fixture lane |
 | Schema test harness | `tests/schemas/test_common_contracts.py` | CONFIRMED / NOT RUN |
 | Governance policy | `policy/governance/` | DECLARED BY SCHEMA / NOT VERIFIED IN THIS UPDATE |
 
@@ -143,7 +143,7 @@ Observed harness expectations:
 | `invalid/invalid_*.json` | at least one JSON Schema error |
 | `invalid/invalid_*.expected_error.txt` | expected text appears in combined error messages |
 
-This README documents expected fixture behavior only. It does not claim that pytest, CI, or the dedicated review-record validator was run during this update.
+This README documents expected schema-fixture behavior only. The dedicated validator consumes the separate `fixtures/release/promotion_gate/` profile; its passing result does not graduate this schema or create a governed ReviewRecord.
 
 ---
 
@@ -169,9 +169,9 @@ Before changing this fixture family:
 | Valid lane | CONFIRMED | `valid/README.md` and `valid/valid_1.json` exist. |
 | Invalid lane | CONFIRMED | `invalid/README.md`, `invalid/invalid_1.json`, and `invalid/invalid_1.expected_error.txt` exist. |
 | Schema | CONFIRMED | `review_record.schema.json` defines required fields, enums, date-time format, fixture root, and additional-property behavior. |
-| Contract doc | NOT FOUND | `contracts/governance/review_record.md` is declared in schema metadata but was not found during paired lane checks. |
-| Validator file | CONFIRMED PLACEHOLDER / NOT RUN | `tools/validators/validate_review_record.py` exists but raises `NotImplementedError`. |
-| Test execution | NOT RUN | No validators, pytest, or CI were run during this README update. |
+| Contract doc | CONFLICTED | Schema metadata uses lowercase `review_record.md`; the tracked semantic draft is case-sensitive `ReviewRecord.md`. |
+| Validator file | CONFIRMED BOUNDED CANDIDATE | `tools/validators/validate_review_record.py` evaluates only synthetic promotion-packet projections with no network or write authority. |
+| Test execution | CONFIRMED LOCAL REPLAY 2026-08-03 | Repository schema/contract gate: 150 tests and 26 subtests; separate bounded candidate suite: 30 tests and 45 subtests. |
 
 ---
 
@@ -186,9 +186,9 @@ Before changing this fixture family:
 | [`invalid/invalid_1.json`](invalid/invalid_1.json) | CONFIRMED | Current negative fixture omits required `review_id`. | Only one invalid fixture is currently verified. |
 | [`invalid/invalid_1.expected_error.txt`](invalid/invalid_1.expected_error.txt) | CONFIRMED | Current expected-error matcher is `required`. | Broad matcher; may be tightened later. |
 | [`../../../../../schemas/contracts/v1/governance/review_record.schema.json`](../../../../../schemas/contracts/v1/governance/review_record.schema.json) | CONFIRMED | Schema shape, required fields, enum values, date-time format, fixture root, and declared validator path. | Schema status is `PROPOSED`. |
-| `../../../../../contracts/governance/review_record.md` | NOT FOUND | Schema metadata declares this contract path. | No contract file was found during the paired lane checks. |
-| [`../../../../../tools/validators/validate_review_record.py`](../../../../../tools/validators/validate_review_record.py) | CONFIRMED PLACEHOLDER | Validator file exists. | It is a greenfield placeholder and was not executed. |
-| [`../../../../../tests/schemas/test_common_contracts.py`](../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED | Fixture discovery and valid/invalid fixture behavior. | Tests were not run during this update. |
+| Schema-declared lowercase `contracts/governance/review_record.md` and tracked [`ReviewRecord.md`](../../../../../contracts/governance/ReviewRecord.md) | CONFLICTED | A semantic draft exists at the case-sensitive uppercase path. | Schema metadata casing remains unresolved. |
+| [`../../../../../tools/validators/validate_review_record.py`](../../../../../tools/validators/validate_review_record.py) | CONFIRMED BOUNDED CANDIDATE | Fixture-only Gate G projection is executable with finite outcomes. | It consumes the separate promotion fixture lane and creates no governed ReviewRecord or authority. |
+| [`../../../../../tests/schemas/test_common_contracts.py`](../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED LOCAL REPLAY | Fixture discovery and valid/invalid fixture behavior passed within the 150-test schema/contract gate. | A shape pass is not governed review or candidate authority. |
 | [`../../../../../docs/doctrine/directory-rules.md`](../../../../../docs/doctrine/directory-rules.md) | CONFIRMED | `fixtures/` is a canonical root for valid/invalid test inputs. | Specific fixture coverage still requires tests or inventory. |
 
 [Back to top](#top)

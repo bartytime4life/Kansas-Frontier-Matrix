@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0024-steward-separation-of-duties-for-release
 title: ADR-0024 — Steward Separation of Duties for Release
 type: adr
 adr_id: ADR-0024
-version: v1.1
+version: v1.2
 status: draft
 effective_decision_status: proposed
 owners:
@@ -25,7 +25,7 @@ reviewers_required:
   - Validation and CI steward
   - Security reviewer for actor identity, signatures, or trust-root changes
 created: 2026-05-15
-updated: 2026-07-24
+updated: 2026-08-03
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,7 +35,7 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 9e9d2a6ad1d3a776f0cf699930942c5fef2ee30b
+  base_commit: 68069dce9e292649697f63f96fa57edd07181a27
   target_prior_blob: 517493105f8464457782dee1ada5bf1e6db43c79
   adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
@@ -95,11 +95,12 @@ related:
   - .github/workflows/promotion-gate.yml
 tags: [kfm, adr, governance, release, separation-of-duties, two-person-rule, review, actor-identity, sensitivity, rights, correction, rollback]
 notes:
+  - "v1.2 reconciles current evidence with a bounded fixture-only ReviewRecord candidate validator; it preserves effective decision status proposed, overall M0/HOLD, and every live identity, policy, governed-record, and release dependency."
   - "v1.1 is a same-path repository-grounded modernization. It preserves source metadata draft and effective decision status proposed; it does not accept ADR-0024 or implement separation of duties."
   - "The canonical ADR index uniquely assigns ADR-0024 to this exact path."
   - "The supplied Atlas and Encyclopedia support a proposed reviewer-role/SoD design and ADR backlog item; they do not prove accepted repository policy or current enforcement."
   - "Current CODEOWNERS routes all relevant paths to one verified GitHub account and explicitly disclaims stewardship, required review, independent approval, or separation-of-duties proof."
-  - "The current promotion workflow confirms release/reviews contains guidance only, ReviewRecord and promotion-gate validators are placeholders, and no governed ReviewRecord or release authority is created."
+  - "The current promotion workflow runs bounded synthetic promotion and ReviewRecord candidates while confirming release/reviews remains guidance-only and creates no governed ReviewRecord or release authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -111,7 +112,7 @@ notes:
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0024-confirmed-0969da?style=flat-square)](#current-repository-evidence)
 [![Review records: none](https://img.shields.io/badge/governed%20ReviewRecords-none-b42318?style=flat-square)](#current-enforcement-maturity)
-[![Validator: placeholder](https://img.shields.io/badge/review%20validator-placeholder-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Validator: bounded candidate](https://img.shields.io/badge/review%20validator-bounded%20candidate-f59e0b?style=flat-square)](#current-enforcement-maturity)
 [![CODEOWNERS: single route](https://img.shields.io/badge/CODEOWNERS-single%20route-f59e0b?style=flat-square)](#current-repository-evidence)
 [![Enforcement: hold](https://img.shields.io/badge/enforcement-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
 [![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
@@ -120,10 +121,13 @@ notes:
 > **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0024` to this exact file. Its source metadata is `draft`, which the index normalizes conservatively to effective status `proposed`. Editing, merging, or validating this Markdown does not accept the decision.
 
 > [!CAUTION]
-> **The repository does not currently enforce release separation of duties.** `PromotionDecision` records a reviewer string and ticket but no proposer/approver identity split. `ReviewRecord` has no actor identity. `ReleaseManifest`, `CorrectionNotice`, and `RollbackCard` are thin proposed schemas. The release policy root is a stub, the SoD policy file is absent, and the review validator raises `NotImplementedError`.
+> **The repository does not currently enforce governed release separation of duties.** `PromotionDecision` records a reviewer string and ticket but no proposer/approver identity split. The proposed `ReviewRecord` schema has no actor identity; a bounded validator composes only synthetic identity and authority declarations. `ReleaseManifest`, `CorrectionNotice`, and `RollbackCard` remain thin proposed schemas, the release policy root is a stub, and the SoD policy file is absent.
 
 > [!WARNING]
 > **Different labels do not prove different people.** A person may hold multiple roles, use multiple accounts, or trigger automation. SoD cannot be proven by `author_id != approver_id` string comparison alone. The validator must resolve aliases to a governed actor identity, verify current role/authority assignments, bind each review to the exact subject and version, and reject bots or generated text as accountable approvers.
+
+> [!NOTE]
+> The current fixture-only candidate compares canonical synthetic actor IDs and packet-supplied intervals. It does not resolve aliases, query a current-review head, authenticate authority, or determine which proposed schema role is qualified as release authority. Those omissions keep this ADR at `proposed` and enforcement at `M0 / HOLD`.
 
 **Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#proposed-decision) · [Terms](#proposed-role-and-identity-model) · [Matrix](#proposed-separation-matrix) · [Maturity](#proposed-control-maturity) · [Authority](#authority-and-publication-boundary) · [Evidence packet](#proposed-review-and-release-evidence-packet) · [Outcomes](#proposed-validation-and-finite-outcomes) · [Current evidence](#current-repository-evidence) · [Enforcement](#current-enforcement-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Emergency](#emergency-containment-exception) · [Rollback](#rollback-and-supersession) · [Checklist](#verification-checklist) · [References](#references) · [History](#revision-history)
 
@@ -140,8 +144,8 @@ notes:
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Release review, actor identity, authority assignment, sensitive release, correction, rollback, and public-access control |
-| **Current repository posture** | Guidance/scaffolds and explicit workflow holds; no governed release ReviewRecord or executable SoD validator |
-| **Implementation effect of this revision** | Documentation only |
+| **Current repository posture** | Bounded fixture-only ReviewRecord/SoD candidate checks plus explicit workflow holds; no governed release ReviewRecord, live identity/authority resolution, or accepted SoD policy |
+| **Implementation effect of this revision** | Reconciles this proposed ADR with a companion candidate hardening slice; does not accept or implement the full decision |
 | **Release/publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 | **Atlas backlog relationship** | Addresses ADR-S-09; does not close it until accepted and tracked accordingly |
@@ -163,7 +167,7 @@ An accepted ADR without enforcement is doctrine. Multiple comments, labels, GitH
 
 ## Evidence boundary
 
-This revision uses repository bytes at `main@9e9d2a6ad1d3a776f0cf699930942c5fef2ee30b` plus the supplied KFM Atlas and Encyclopedia as design lineage.
+This revision uses repository bytes at `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped bounded-candidate hardening diff and the supplied KFM Atlas and Encyclopedia as design lineage.
 
 | Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
@@ -171,14 +175,14 @@ This revision uses repository bytes at `main@9e9d2a6ad1d3a776f0cf699930942c5fef2
 | Atlas/Encyclopedia | Reviewer/SoD matrix and distinct action roles are proposed design lineage | Repository policy, actor assignments, or enforcement |
 | CODEOWNERS | All affected roots route to `@bartytime4life`; file disclaims stewardship and SoD proof | Required review, branch rules, independent approver, quorum |
 | `PromotionDecision` | Closed schema with reviewer string/ticket and `APPROVE|DENY|ABSTAIN` | Proposer identity, role assignment, independent approval |
-| `ReviewRecord` | Closed proposed schema and one valid/invalid fixture pair | Semantic contract, actor identity, subject version binding, SoD policy |
+| `ReviewRecord` | Closed proposed schema, semantic draft at case-conflicted path, minimal schema fixtures, and a separate synthetic Gate G profile | Accepted contract path, governed actor identity, subject-version authority, current-head resolution, SoD policy |
 | Release/correction/rollback schemas | ReleaseManifest and RollbackCard are thin stubs; CorrectionNotice is empty/open scaffold | Operational release, correction, or rollback review |
 | AIReceipt | Closed runtime shape with no release-review actor fields | AI-surface change approval or human SoD |
 | Release review lanes | README guidance exists; promotion workflow asserts no governed review record exists | Accountable review instances or release authority |
 | Release signatures | Reviewer-signoff packet lane exists | Cryptographic artifact-signature profile or artifact binding |
 | Release-state register | Empty proposed register describing reviewers and rollback targets | Lane maturity declarations or accepted state machine |
 | Release policy | `policy/release/README.md` is a greenfield stub; `policy/release/sod.rego` absent | Executable SoD policy |
-| Promotion workflow | Read-only readiness and hold checks exist | Promotion, signing, review, release, rollback, publication |
+| Promotion workflow | Read-only bounded synthetic checks and authority holds exist | Promotion, signing, governed review, release, rollback, publication |
 
 ### Truth labels
 
@@ -413,7 +417,7 @@ Do not duplicate every actor field into every object. Prefer explicit references
 - `CorrectionNotice` and `RollbackCard` reference independent review/decision records.
 - `AIReceipt` remains runtime process memory; public AI-surface governance needs a separate review/decision reference rather than turning an AI receipt into approval.
 
-Exact field names and homes remain contract/schema decisions. The current ReviewRecord semantic contract path is missing and must be resolved before schema expansion.
+Exact field names and homes remain contract/schema decisions. A semantic draft is tracked at case-sensitive `contracts/governance/ReviewRecord.md`, while schema metadata names lowercase `review_record.md`; that path conflict must be resolved before schema expansion.
 
 [Back to top](#top)
 
@@ -489,9 +493,9 @@ At minimum:
 | CODEOWNERS | One account owns all relevant roots; comments explicitly disclaim SoD proof | No independent reviewer route established |
 | PromotionDecision schema | Has reviewer string/ticket; no proposer/approver actor model | Shape cannot prove SoD |
 | ReviewRecord schema | Requires review ID, subject ref, coarse role, decision, reasons, obligations, time | No actor identity, authority assignment, version/digest binding, recusal, or signature |
-| ReviewRecord fixtures | One minimal valid and one missing-ID invalid case | No SoD fixture coverage |
-| ReviewRecord contract | Declared path not found | Semantic authority missing |
-| ReviewRecord validator | Raises `NotImplementedError` | No executable review/SoD validation |
+| ReviewRecord fixtures | One minimal schema pair plus a separate synthetic promotion Gate G subset | Broader governed SoD, alias, role-policy, current-head, recusal, signature, and release-record coverage remains absent |
+| ReviewRecord contract | Authored draft exists as `contracts/governance/ReviewRecord.md`; schema declares lowercase `review_record.md` | Case/path relationship and acceptance remain conflicted |
+| ReviewRecord validator | Bounded fixture-only candidate with finite outcomes, canonical syntax, review-time issuance, declared authority interval, explicit supersession marker, separation, and binding checks | No live alias/registry resolution, accepted role policy, current review-head lookup, governed record, or release authority |
 | ReleaseManifest schema | Requires only `id`; extra properties allowed | No release-grade review fields |
 | CorrectionNotice schema | Empty open scaffold | No correction-review enforcement |
 | RollbackCard schema | Requires only `id`; extra properties allowed | No rollback-review enforcement |
@@ -501,7 +505,7 @@ At minimum:
 | release/signatures | Reviewer signoff guidance and one draft packet | Not final approval or independent actor proof |
 | release-state register | `entries: []`; no maturity field | No declared lane maturity |
 | policy/release | README stub; SoD policy absent | No executable release SoD policy |
-| promotion workflow | Read-only checks, placeholder validators, unresolved smoke refs, explicit hold | No promotion/release/publication authority |
+| promotion workflow | Read-only bounded candidate checks, unresolved smoke refs, and explicit authority hold | No governed review, promotion, release, or publication authority |
 
 [Back to top](#top)
 
@@ -517,10 +521,10 @@ At minimum:
 | Role vocabulary | Doctrine/design lineage; not accepted repository contract |
 | Actor identity/alias resolution | `UNKNOWN` |
 | Stewardship/authority assignment | `UNKNOWN` |
-| ReviewRecord semantic contract | Missing at declared path |
+| ReviewRecord semantic contract | Draft exists at case-conflicted path; not accepted |
 | ReviewRecord schema | Proposed shape only |
-| ReviewRecord fixtures | Minimal schema cases only |
-| ReviewRecord validator | Placeholder |
+| ReviewRecord fixtures | Minimal schema cases plus bounded synthetic Gate G cases |
+| ReviewRecord validator | Fixture-only candidate; no live identity/authority or governed-record resolution |
 | SoD policy | Absent at checked path |
 | Lane maturity registry | Empty proposed register; no accepted profile |
 | Independent CODEOWNERS route | Not established |
@@ -547,7 +551,7 @@ Implement in small, dependency-ordered, reversible slices:
 2. **Define actor identity and authority assignment.** Include aliases, actor class, scope, effective time, revocation, and issuer.
 3. **Create/fix the ReviewRecord semantic contract.** Align the declared contract path or migrate through an ADR-backed path decision.
 4. **Version the ReviewRecord schema and fixtures.** Add actor/role/subject/version/authority references and negative cases.
-5. **Implement the ReviewRecord/SoD validator.** Local/offline-capable core checks, stable outcomes/reason codes, no release side effects.
+5. **Graduate beyond the fixture-only ReviewRecord candidate.** Accept the actor/role/current-review profile, add registry and policy resolution, governed fixtures/records, stable outcomes/reason codes, and retain no release side effects.
 6. **Define release-review policy.** Select the accepted policy home; begin observe-only only when reports are auditable, then deny mode through reviewed change.
 7. **Reconcile release objects.** PromotionDecision, ReleaseManifest, correction, rollback, AI-surface review, and signature packets reference the governed review graph without duplicating authority.
 8. **Establish independent reviewer capacity.** At least two qualified human actors for each required action class; otherwise release remains held.
@@ -579,7 +583,7 @@ When behavior changes, update this ADR or an accepted successor, the ADR index i
 - [ ] Sensitive and rights-constrained public release requires at least M2.
 - [ ] Emergency containment cannot authorize restoration/re-release.
 - [ ] Current single-account CODEOWNERS posture is recorded as insufficient for independent approval.
-- [ ] The missing ReviewRecord contract and absent policy/validator are explicit implementation dependencies.
+- [x] The fixture-only validator is distinguished from governed identity, authority, policy, review-record, and release enforcement.
 - [ ] No statement claims current release, review, SoD, rollback, or publication capability.
 
 Implementation graduation additionally requires:
@@ -660,7 +664,7 @@ Implementation graduation additionally requires:
 | Actor identity contract/home | `OPEN` | Directory Rules review, semantic contract, schema, alias resolution |
 | Role/authority assignment contract | `OPEN` | Scope, issuer, effective time, expiry/revocation, evidence |
 | Atlas role names vs repository terms | `NEEDS VERIFICATION` | Accepted vocabulary/crosswalk |
-| ReviewRecord semantic contract missing | `CONFIRMED GAP` | Create at declared home or governed migration |
+| ReviewRecord contract path/casing | `CONFLICTED` | Reconcile schema-declared lowercase path with tracked `ReviewRecord.md` through governed migration |
 | ReviewRecord actor/subject fields | `PROPOSED` | Versioned schema/fixtures/migration |
 | SoD policy home | `OPEN` | `policy/release/`, `policy/governance/`, or accepted composition |
 | Release manifest singular/plural paths | `CONFLICTED` | Separate ADR/accepted path decision |
@@ -750,7 +754,7 @@ Disabling or weakening an implemented SoD control requires independent review at
 - [x] ADR ID, filename, H1, and index row verified.
 - [x] Source `draft` and effective `proposed` status preserved.
 - [x] Directory Rules and supplied Atlas/Encyclopedia lineage reviewed.
-- [x] Current schemas, fixtures, validator, release lanes, policy root, register, CODEOWNERS, and promotion workflow inspected.
+- [x] Current schemas, fixtures, bounded candidate validator, release lanes, policy root, register, CODEOWNERS, and promotion workflow inspected.
 - [x] Current gaps and workflow holds made explicit.
 - [x] String inequality replaced by actor identity, authority, and subject-binding requirements.
 - [x] M0 corrected to candidate-only; no maturity level authorizes unreviewed sensitive release.
@@ -798,7 +802,7 @@ Disabling or weakening an implemented SoD control requires independent review at
 | [PromotionDecision schema](../../schemas/contracts/v1/release/promotion_decision.schema.json) | Current reviewer string/ticket shape |
 | [ReviewRecord schema](../../schemas/contracts/v1/governance/review_record.schema.json) | Proposed closed shape without actor identity |
 | [ReviewRecord fixtures](../../fixtures/contracts/v1/governance/review_record/README.md) | Minimal shape fixtures; no SoD coverage |
-| [ReviewRecord validator](../../tools/validators/validate_review_record.py) | Confirmed placeholder |
+| [ReviewRecord validator](../../tools/validators/validate_review_record.py) | Bounded fixture-only candidate; no live identity/authority, current-head, governed-record, or release authority |
 | [ReleaseManifest schema](../../schemas/contracts/v1/release/release_manifest.schema.json) | Confirmed thin stub |
 | [CorrectionNotice schema](../../schemas/contracts/v1/release/correction_notice.schema.json) | Confirmed empty/open scaffold |
 | [RollbackCard schema](../../schemas/contracts/v1/release/rollback_card.schema.json) | Confirmed thin stub |
