@@ -42,6 +42,7 @@ EXPECTED_INVALID_FIXTURES = (
     "invalid/superseded.json",
     "invalid/unsupported_profile.json",
     "invalid/verification_corrected.json",
+    "invalid/verification_effective_order_invalid.json",
     "invalid/verification_revoked.json",
     "invalid/verification_subject_mismatch.json",
     "invalid/verification_superseded.json",

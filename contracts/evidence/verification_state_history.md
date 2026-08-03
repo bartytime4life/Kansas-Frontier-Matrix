@@ -51,7 +51,7 @@ Those two time axes must remain separate:
 - `effective_at` is when an event applies to the subject.
 - `recorded_at` is when KFM recorded the event.
 
-A correction can therefore apply to an earlier effective time while remaining invisible to a historical query made before the correction was recorded.
+A correction can therefore be effective before it is recorded while remaining invisible to a historical query made before that recording time. Within one transition chain, effective times remain nondecreasing so a successor can never become eligible before the event it replaces.
 
 ## Object shape
 
@@ -97,6 +97,8 @@ The first event must be `VERIFIED` / `ACTIVE`. Every later event points to the i
 
 `effective_at` may precede `recorded_at`, which represents a late-recorded event. It may not follow `recorded_at`; scheduled future transitions are outside this profile.
 
+Effective time is also nondecreasing along the chain. A later recorded transition may describe an earlier point than its own recording time, but it may not become effective before its parent transition. This dependency-closure rule prevents replay from selecting a re-verification while the correction or revocation it claims to remediate is still ineligible.
+
 ## Replay rule
 
 For query `(effective_as_of, recorded_as_of)`:
@@ -130,6 +132,7 @@ public runtime.
 
 - Event IDs must be unique.
 - Events must be ordered by `(recorded_at, event_id)`.
+- Effective times must be nondecreasing along the transition chain.
 - Every non-initial event must point to the immediately preceding event.
 - Event type and state must agree.
 - The document is capped at 128 events and the shared bounded JSON parser limits bytes, depth, nodes, duplicate keys, and non-finite numbers.

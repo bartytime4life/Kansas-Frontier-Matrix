@@ -46,6 +46,9 @@ class VerificationStateHistoryTests(unittest.TestCase):
             "semantic_effective_after_recorded.json": {
                 "VERIFICATION_HISTORY_EFFECTIVE_AFTER_RECORDED"
             },
+            "semantic_effective_order.json": {
+                "VERIFICATION_HISTORY_EFFECTIVE_ORDER_INVALID"
+            },
             "semantic_hash_mismatch.json": {
                 "VERIFICATION_HISTORY_HASH_MISMATCH"
             },
@@ -111,6 +114,23 @@ class VerificationStateHistoryTests(unittest.TestCase):
         )
         self.assertEqual((revoked.state, revoked.answer_blocked), ("REVOKED", True))
         self.assertEqual((restored.state, restored.answer_blocked), ("ACTIVE", False))
+
+    def test_successor_cannot_be_effective_before_its_parent(self) -> None:
+        history = self._load_valid("valid_revocation_reverification.json")
+        events = history["events"]
+        assert isinstance(events, list)
+        events[2]["effective_at"] = "2026-01-15T00:00:00Z"
+        history["spec_hash"] = canonical_spec_hash(history)
+        codes = {finding.code for finding in validate_document(history)}
+        self.assertEqual(
+            {"VERIFICATION_HISTORY_EFFECTIVE_ORDER_INVALID"}, codes
+        )
+        with self.assertRaisesRegex(ValueError, "invalid verification history"):
+            replay_state(
+                history,
+                effective_as_of="2026-01-20T00:00:00Z",
+                recorded_as_of="2026-03-01T00:00:00Z",
+            )
 
     def test_hash_order_and_duplicate_identity_are_deterministic(self) -> None:
         history = self._load_valid("valid_late_recorded_correction.json")
