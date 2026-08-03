@@ -1,5 +1,5 @@
 # KFM Soil domain CI workflow.
-# Status: validate-soil runs one accepted synthetic no-network fixture profile;
+# Status: validate-soil runs two accepted synthetic no-network fixture profiles;
 # proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -65,6 +65,10 @@ jobs:
             "fixtures/domains/soil/soil_moisture/README.md"
             "data/registry/sources/soil/README.md"
             "release/candidates/soil/README.md"
+            "tools/ingest/ssurgo_watch/README.md"
+            "tools/ingest/ssurgo_watch/ssurgo_watch.py"
+            "tests/ingest/ssurgo_watch/README.md"
+            "tests/ingest/ssurgo_watch/test_ssurgo_watch.py"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -77,6 +81,15 @@ jobs:
           python tests/domains/soil/test_soil_smoke.py --verbose
           python tests/domains/soil/test_soil_moisture_qc.py --verbose
 
+      - name: Run bounded SSURGO package-drift fixture proof
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch --verbose
+
       - name: Record Soil validation scope
         if: always()
         shell: bash
@@ -84,15 +97,19 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Soil validation status
 
-          `VALIDATION_SCOPE: synthetic-public-safe-and-station-moisture-fixtures-only`
+          `VALIDATION_SCOPE: synthetic-public-safe-station-moisture-and-ssurgo-drift-fixtures-only`
 
           This job runs only the accepted deterministic standard-library suite in
           `tests/domains/soil/test_soil_smoke.py` and
-          `tests/domains/soil/test_soil_moisture_qc.py`. The suites read only
+          `tests/domains/soil/test_soil_moisture_qc.py`, and the bounded SSURGO
+          comparator proof in `tests/ingest/ssurgo_watch/test_ssurgo_watch.py`.
+          The suites read only
           small synthetic positive and fail-closed fixtures, exercise the repository
           validator at `tools/validators/domains/soil/validate_public_safe_fixture.py`,
           the bounded station profile at
-          `tools/validators/domains/soil/moisture/validate_soil_moisture.py`, block
+          `tools/validators/domains/soil/moisture/validate_soil_moisture.py`, and
+          the fixture-only comparator at
+          `tools/ingest/ssurgo_watch/ssurgo_watch.py`; block
           network calls in the test boundary, and check explicit support
           type, source and evidence references, generalized spatial support,
           depth ordering, canonical UTC, preserved source timezone, QC flags,
@@ -101,7 +118,8 @@ jobs:
           posture, and rejection of precise-location aliases or undeclared fields.
 
           A green result does not establish Soil truth, MUKEY/COKEY/CHKEY
-          lineage, source admission, survey authority, station freshness,
+          lineage, live SSURGO package or rights verification, source admission,
+          survey authority, station freshness,
           satellite or model fitness, EvidenceBundle closure, policy approval,
           agronomic or engineering suitability, proof closure, release readiness,
           or safe public use. The proof and release-dry-run jobs remain held.
