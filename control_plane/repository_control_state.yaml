@@ -5,8 +5,8 @@
   "projection_status": "CONFIRMED",
   "base": {
     "default_branch": "main",
-    "current_main_sha": "0b7257653abd355a041a80e6f4e5f83da3f80720",
-    "observed_at": "2026-07-29T18:10:20Z",
+    "current_main_sha": "c0a6449c377e839e5b03c67f726829dc625a8c3a",
+    "observed_at": "2026-08-03T16:39:56Z",
     "open_pull_requests": []
   },
   "claim": {
@@ -79,5 +79,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "f871db0fa5ab77762bab72d0b5ac72e414ce918d96205dfe3288fadd9eb89278"
+  "state_digest": "2ea8e4bcce48c7d82a6768233380f29b5c5df426eaf2cefe7c1c38ebeaef55f2"
 }
