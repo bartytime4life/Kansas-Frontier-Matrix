@@ -1,0 +1,43 @@
+{
+  "run_id": "run:smart-sync:synthetic-200-materialize",
+  "stage": "smart_sync",
+  "inputs": [
+    "source-descriptor:synthetic-http"
+  ],
+  "outputs": [
+    "artifact:synthetic-http:v2"
+  ],
+  "code_ref": "git:smart-sync-validator",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "source_descriptor_refs": [
+    "source:synthetic-http"
+  ],
+  "validation_refs": [
+    "validation:synthetic-http-200-materialize"
+  ],
+  "smart_sync": {
+    "transport": "http_conditional",
+    "fetch_time": "2026-08-03T12:00:00Z",
+    "source_url": "https://example.invalid/data",
+    "http_status": 200,
+    "http_validators": {
+      "request": {
+        "etag": "\"synthetic-v1\"",
+        "last_modified": "Mon, 03 Aug 2026 11:00:00 GMT",
+        "content_length": 128
+      },
+      "response": {
+        "etag": "\"synthetic-v2\"",
+        "last_modified": "Mon, 03 Aug 2026 12:00:00 GMT",
+        "content_length": 256
+      }
+    },
+    "decision": "materialize",
+    "reason": "content_changed",
+    "prior_run_receipt_ref": "run:smart-sync:synthetic-prior",
+    "prior_content_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "validator_drift": false,
+    "content_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "outcome": "SUCCESS"
+}
