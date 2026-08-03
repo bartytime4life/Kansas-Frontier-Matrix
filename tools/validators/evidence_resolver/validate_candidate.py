@@ -24,7 +24,10 @@ from evidence_resolver.core import (  # noqa: E402
 
 
 EXIT_CODES = {"RESOLVED": 0, "UNRESOLVED": 2, "DENIED": 3, "ERROR": 4}
-EXPECTED_VALID_FIXTURES = ("valid/resolved.json",)
+EXPECTED_VALID_FIXTURES = (
+    "valid/resolved.json",
+    "valid/resolved_reverified.json",
+)
 EXPECTED_INVALID_FIXTURES = (
     "invalid/bundle_id_mismatch.json",
     "invalid/bundle_not_found.json",
@@ -38,6 +41,12 @@ EXPECTED_INVALID_FIXTURES = (
     "invalid/ref_not_member.json",
     "invalid/superseded.json",
     "invalid/unsupported_profile.json",
+    "invalid/verification_corrected.json",
+    "invalid/verification_revoked.json",
+    "invalid/verification_subject_mismatch.json",
+    "invalid/verification_superseded.json",
+    "invalid/verification_temporally_inconsistent.json",
+    "invalid/verification_unknown.json",
 )
 EXPECTED_FIXTURES = frozenset(
     (*EXPECTED_VALID_FIXTURES, *EXPECTED_INVALID_FIXTURES)

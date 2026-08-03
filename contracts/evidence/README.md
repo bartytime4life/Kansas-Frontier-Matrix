@@ -120,7 +120,7 @@ The root purpose is to make KFM cite-or-abstain behavior inspectable.
 | `EvidenceDrawerPayload` | `contracts/evidence/evidence_drawer_payload.md` | Evidence-facing UI/API payload semantics, if present and reviewed. | Observed by repo search; details NEED VERIFICATION. |
 | `CitationValidationReport` | `contracts/evidence/citation_validation_report.md` | Citation-checking report semantics, if present and reviewed. | Observed by repo search; details NEED VERIFICATION. |
 | `KFM Geo Manifest` | `contracts/evidence/kfm_geo_manifest.md` | Geo artifact/evidence manifest semantics, if present and reviewed. | Referenced by sibling contracts; current details NEED VERIFICATION. |
-| `VerificationStateHistory` | `contracts/evidence/verification_state_history.md` | Bitemporal, append-ordered replay of active, corrected, superseded, and revoked verification state. | PROPOSED bounded profile; schema, synthetic fixtures, validator, and no-network tests are executable. |
+| `VerificationStateHistory` | `contracts/evidence/verification_state_history.md` | Bitemporal, append-ordered replay of active, corrected, superseded, and revoked verification state. | PROPOSED bounded profile; schema, synthetic fixtures, validator, no-network tests, and one internal evidence-resolver consumer are executable. |
 
 This table is a root guide, not a complete manifest. Use generated inventory or repo search for full coverage.
 
@@ -178,7 +178,7 @@ The bounded `VerificationStateHistory` profile points to:
 schemas/contracts/v1/evidence/verification_state_history.schema.json
 ```
 
-Its validator proves deterministic synthetic shape, hash, append order, transition-chain, and bitemporal replay behavior. It does not resolve evidence references or create policy, review, release, correction, or publication authority.
+Its validator proves deterministic synthetic shape, hash, append order, transition-chain, and bitemporal replay behavior. The internal evidence-resolver candidate consumes the same replay helper and fails closed for every non-active state; neither surface creates evidence, policy, review, release, correction, or publication authority.
 
 > [!CAUTION]
 > Schema confirmation does not prove resolver behavior, fixture coverage, CI enforcement, policy enforcement, source rights, release state, or runtime behavior. Mark those `NEEDS VERIFICATION` unless checked in the current session.

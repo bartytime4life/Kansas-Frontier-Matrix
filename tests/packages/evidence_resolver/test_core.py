@@ -64,8 +64,28 @@ class EvidenceResolutionCandidateTests(unittest.TestCase):
         self.assertIn("lookup/not-found", {issue.code for issue in result.issues})
         self.assertIsNone(result.bundle_id)
 
+        history_case = json.loads(
+            (FIXTURES / "invalid/verification_revoked.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        history_case["request"]["lookup_context"]["policy_outcome"] = "DENY"
+        history_case["request"]["lookup_context"]["policy_decision_ref"] = (
+            "policy:synthetic:deny-002"
+        )
+        history_result = evaluate_resolution_candidate(history_case["request"])
+        self.assertEqual("DENIED", history_result.status)
+        self.assertIn(
+            "verification/revoked", {issue.code for issue in history_result.issues}
+        )
+
     def test_non_resolved_objects_do_not_retain_bundle_identity(self) -> None:
-        for filename in ("not_current_head.json", "policy_abstained.json"):
+        for filename in (
+            "not_current_head.json",
+            "policy_abstained.json",
+            "verification_corrected.json",
+            "verification_revoked.json",
+        ):
             with self.subTest(filename=filename):
                 case = json.loads(
                     (FIXTURES / "invalid" / filename).read_text(encoding="utf-8")
@@ -129,21 +149,62 @@ class EvidenceResolutionCandidateTests(unittest.TestCase):
                 evaluate_resolution_candidate(case["request"]).status,
             )
 
-    def test_core_imports_only_standard_library_modules(self) -> None:
+    def test_core_imports_only_standard_library_and_local_history_modules(self) -> None:
+        def import_roots(path: Path) -> set[str]:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            roots: set[str] = set()
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    roots.update(alias.name.split(".", 1)[0] for alias in node.names)
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    roots.add(node.module.split(".", 1)[0])
+            return roots
+
         core_path = PACKAGE_SRC / "evidence_resolver/core.py"
-        tree = ast.parse(core_path.read_text(encoding="utf-8"), filename=str(core_path))
-        roots = set()
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                roots.update(alias.name.split(".", 1)[0] for alias in node.names)
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                roots.add(node.module.split(".", 1)[0])
+        history_path = PACKAGE_SRC / "evidence_resolver/verification_history.py"
+        roots = import_roots(core_path)
         self.assertLessEqual(
             roots,
-            {"__future__", "dataclasses", "datetime", "json", "math", "re", "typing"},
+            {
+                "__future__",
+                "dataclasses",
+                "datetime",
+                "json",
+                "math",
+                "re",
+                "typing",
+                "verification_history",
+            },
+        )
+        self.assertLessEqual(
+            import_roots(history_path),
+            {
+                "__future__",
+                "dataclasses",
+                "datetime",
+                "hashlib",
+                "json",
+                "re",
+                "typing",
+            },
         )
 
+    def test_verification_history_is_required_and_fails_closed(self) -> None:
+        case = json.loads(
+            (FIXTURES / "valid/resolved.json").read_text(encoding="utf-8")
+        )
+        del case["request"]["verification_history"]
+        result = evaluate_resolution_candidate(case["request"])
+        self.assertEqual("ERROR", result.status)
+        self.assertEqual(["input/missing-field"], [issue.code for issue in result.issues])
+
     def test_profile_is_pinned_to_current_proposed_schema_surfaces(self) -> None:
+        history_schema = json.loads(
+            (
+                REPO_ROOT
+                / "schemas/contracts/v1/evidence/verification_state_history.schema.json"
+            ).read_text(encoding="utf-8")
+        )
         ref_schema = json.loads(
             (
                 REPO_ROOT
@@ -178,6 +239,7 @@ class EvidenceResolutionCandidateTests(unittest.TestCase):
         self.assertEqual("PROPOSED", bundle_schema["x-kfm"]["status"])
         self.assertEqual("PROPOSED", policy_schema["x-kfm"]["status"])
         self.assertEqual("PROPOSED", sensitivity_schema["x-kfm"]["status"])
+        self.assertEqual("PROPOSED", history_schema["x-kfm"]["status"])
         self.assertFalse(ref_schema["additionalProperties"])
         self.assertFalse(bundle_schema["additionalProperties"])
         self.assertEqual(["ref", "kind"], ref_schema["required"])
@@ -269,6 +331,19 @@ class EvidenceResolutionCandidateTests(unittest.TestCase):
             {"ANSWER", "ABSTAIN", "DENY", "ERROR"},
             set(policy_schema["properties"]["outcome"]["enum"]),
         )
+        self.assertFalse(history_schema["additionalProperties"])
+        self.assertEqual(
+            {
+                "schema_version",
+                "history_id",
+                "subject_ref",
+                "profile_id",
+                "spec_hash",
+                "events",
+            },
+            set(history_schema["required"]),
+        )
+        self.assertEqual(128, history_schema["properties"]["events"]["maxItems"])
 
 
 if __name__ == "__main__":

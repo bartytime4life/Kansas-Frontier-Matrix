@@ -988,7 +988,7 @@ The workflow root records 41 tracked `.yml` files at its 2026-07-22 snapshot. Wo
 | `source-descriptor-validate` | Requires nonempty SourceDescriptor polarity, runs validator and targeted schema test, surfaces schema-path drift |
 | `promotion-gate` | Runs doctrine-prerequisite, doctrine descriptor, and PromotionDecision shape checks; keeps promotion held |
 | `release-dry-run` | Inspects candidate readiness and runs PromotionDecision shape test; emits no release |
-| `evidence-resolver` | Executes the internal v1alpha1 EvidenceRef-to-bundle candidate fixture profile and fail-closed package tests; no live registry, public outcome, or release action |
+| `evidence-resolver` | Executes the internal v1alpha1 EvidenceRef-to-bundle candidate and VerificationStateHistory replay fixture profile plus fail-closed package tests; no live registry, public outcome, or release action |
 | `MapLibre Perf Governance` | Parses scripts/validators, invokes three negative functions, holds browser/proof/release claims |
 | `contracts-validate`, `docs-control-plane`, `contract-drift`, `connector-gate`, `pmtiles-attestation`, `telemetry-policy`, `dependency-scan`, `codeql` | Command-bearing or partial checks with their own bounded authority |
 
