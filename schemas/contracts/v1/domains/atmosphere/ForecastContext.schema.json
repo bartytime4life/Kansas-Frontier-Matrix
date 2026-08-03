@@ -1,12 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json",
-  "title": "ForecastContext compatibility mirror",
-  "description": "Compatibility mirror for the lowercase canonical ForecastContext profile. Do not evolve this path independently.",
+  "title": "Forecastcontext",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json. Fields are to be defined by the owning domain steward.",
   "x-kfm": {
-    "status": "MIRROR",
-    "canonical_schema": "schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json",
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/atmosphere/CANONICAL_PATHS.md",
     "contract_doc": "contracts/domains/atmosphere/ForecastContext.md"
   },
-  "$ref": "./forecast_context.schema.json"
+  "properties": {},
+  "additionalProperties": true
 }
