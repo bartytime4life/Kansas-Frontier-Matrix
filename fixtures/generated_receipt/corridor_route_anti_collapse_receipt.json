@@ -7,7 +7,10 @@
   "base_ref": "main",
   "base_commit": "53c3d0cea9c650041efed6b8d8297f7b6c83016f",
   "artifact_paths": [
+    "contracts/domains/roads-rail-trade/corridor_route.md",
+    "schemas/contracts/v1/domains/roads-rail-trade/README.md",
     "schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json",
+    "tools/validators/domains/roads-rail-trade/README.md",
     "tools/validators/domains/roads-rail-trade/validate_corridor_route.py",
     "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_historic_candidate.json",
     "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_unresolved_evidence.json",
@@ -24,7 +27,10 @@
     "fixtures/generated_receipt/corridor_route_anti_collapse_receipt.json"
   ],
   "truth_labels": {
+    "contracts/domains/roads-rail-trade/corridor_route.md": "PROPOSED",
+    "schemas/contracts/v1/domains/roads-rail-trade/README.md": "PROPOSED",
     "schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json": "PROPOSED",
+    "tools/validators/domains/roads-rail-trade/README.md": "PROPOSED",
     "tools/validators/domains/roads-rail-trade/validate_corridor_route.py": "PROPOSED",
     "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_historic_candidate.json": "SYNTHETIC",
     "fixtures/domains/roads-rail-trade/corridor_route/valid/valid_unresolved_evidence.json": "SYNTHETIC",
@@ -48,6 +54,11 @@
     "No live routing, legal designation, policy approval, release, or publication state is emitted."
   ],
   "validation_gates": [
+    {
+      "gate": "contract-schema-pairing",
+      "outcome": "PASS",
+      "notes": "The semantic contract and schema/validator indexes now link the bounded profile without claiming admission."
+    },
     {
       "gate": "schema-profile",
       "outcome": "PASS",
