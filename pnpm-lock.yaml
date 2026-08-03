@@ -20,6 +20,9 @@ importers:
 
   apps/explorer-web:
     devDependencies:
+      playwright:
+        specifier: 1.62.0
+        version: 1.62.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
