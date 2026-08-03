@@ -224,7 +224,7 @@ class SmapL4AntiCollapseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             secret = "SENTINEL_DO_NOT_ECHO"
             candidate = load_surface()
-            candidate["private_note"] = secret
+            candidate["private_note"] = "NON_SENSITIVE_TEST_VALUE"
             invalid_path = Path(tmp) / "invalid.json"
             invalid_path.write_text(json.dumps(candidate), encoding="utf-8")
             stdout = io.StringIO()
