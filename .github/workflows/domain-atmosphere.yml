@@ -1,8 +1,7 @@
 # KFM Atmosphere domain CI workflow.
-# Status: bounded synthetic precipitation, knowledge-character, low-cost
-# sensor calibration, and observed-versus-modeled fixture profiles are
-# executable; broader validation, proof, and release-dry-run producers remain
-# held.
+# Status: bounded synthetic precipitation, knowledge-character, and low-cost
+# sensor calibration fixture profiles are executable; broader validation, proof, and release-dry-run
+# producers remain held.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without performing live source
@@ -52,32 +51,20 @@ jobs:
 
           required_paths=(
             "docs/domains/atmosphere/README.md"
-            "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md"
             "contracts/domains/atmosphere/README.md"
             "schemas/contracts/v1/domains/atmosphere/README.md"
-            "schemas/contracts/v1/domains/atmosphere/air_observation.schema.json"
-            "schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json"
-            "schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json"
-            "schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json"
             "fixtures/domains/atmosphere/README.md"
             "policy/domains/atmosphere/README.md"
             "tests/domains/atmosphere/README.md"
             "tests/domains/atmosphere/test_atmosphere_smoke.py"
             "tests/domains/atmosphere/test_knowledge_character_registry.py"
             "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
-            "tests/domains/atmosphere/test_observed_modeled_separation.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
             "tools/validators/domains/atmosphere/validate_knowledge_character.py"
             "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
-            "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py"
             "fixtures/domains/atmosphere/knowledge_character/README.md"
-            "fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_bound.json"
-            "fixtures/domains/atmosphere/observed_modeled_separation/valid/forecast_context_bound.json"
-            "fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_unresolved.json"
-            "fixtures/domains/atmosphere/observed_modeled_separation/invalid/air_observation_model_run_ref.json"
-            "fixtures/domains/atmosphere/observed_modeled_separation/invalid/forecast_context_missing_lineage.json"
             "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md"
             "data/registry/sources/atmosphere/README.md"
             "release/candidates/atmosphere/README.md"
@@ -108,10 +95,6 @@ jobs:
                   "tests/domains/atmosphere/"
                   "test_low_cost_sensor_caveat_required.py"
               ),
-              Path(
-                  "tests/domains/atmosphere/"
-                  "test_observed_modeled_separation.py"
-              ),
           }
           accepted_validators = {
               Path(
@@ -125,10 +108,6 @@ jobs:
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_public_safe_precipitation_fixture.py"
-              ),
-              Path(
-                  "tools/validators/domains/atmosphere/"
-                  "validate_observed_modeled_separation.py"
               ),
           }
 
@@ -181,14 +160,12 @@ jobs:
         env:
           KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
-          PYTHONHASHSEED: "0"
         run: |
           set -euo pipefail
 
           python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
           python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
           python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
-          python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
 
           python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
@@ -221,24 +198,9 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Atmosphere low-cost-sensor calibration fixtures"
-
-          python tools/validators/domains/atmosphere/validate_observed_modeled_separation.py \
-            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_bound.json \
-            fixtures/domains/atmosphere/observed_modeled_separation/valid/forecast_context_bound.json \
-            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_unresolved.json
-
-          if python tools/validators/domains/atmosphere/validate_observed_modeled_separation.py \
-            fixtures/domains/atmosphere/observed_modeled_separation/invalid/air_observation_model_run_ref.json \
-            fixtures/domains/atmosphere/observed_modeled_separation/invalid/forecast_context_missing_lineage.json; then
-            echo "::error::Known-invalid Atmosphere observed-versus-modeled fixtures were accepted."
-            exit 1
-          fi
-
-          echo "EXPECTED_REJECTION: invalid Atmosphere observed-versus-modeled fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture"
-          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()
@@ -252,8 +214,6 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture`
-
-          `WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation`
 
           `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
 
@@ -285,14 +245,6 @@ jobs:
           precise-site claims; and rejects unknown transferability or drift. It is fixture-only,
           uses synthetic evidence references, and does not evaluate live records,
           choose a scientific correction, admit a source, or execute Rego policy.
-
-          The observed-versus-modeled profile checks closed AirObservation and
-          ForecastContext shapes, object and knowledge-character discrimination,
-          source and evidence resolution, station versus model-run identity,
-          observed/generated/valid time separation, measurement units,
-          DERIVED_FROM lineage, uncertainty, exact ABSTAIN behavior, false
-          release denial, and the not-for-life-safety boundary. CamelCase schema
-          paths are compatibility mirrors and cannot evolve independently.
 
           Other Atmosphere test and validator modules remain explicit
           placeholders or documentation-only lanes and are checked as such.

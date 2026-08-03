@@ -3,7 +3,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-domains-atmosphere-readme
 title: schemas/contracts/v1/domains/atmosphere/ — Atmosphere Domain Schema Index
-version: v1.1
+version: v1
 status: draft
 policy_label: public
 owners:
@@ -13,7 +13,7 @@ owners:
   - <contract-steward>
   - <validation-steward>
   - <docs-steward>
-updated: 2026-08-03
+updated: 2026-07-03
 tags: [kfm, schemas, contracts, v1, domains, atmosphere, air, climate, smoke, receipts, registry, json-schema]
 [/KFM_META_BLOCK_V2] -->
 
@@ -46,7 +46,7 @@ This README is documentation only. It is not itself a schema file, contract pros
 | Canonical posture | PROPOSED Atmosphere domain schema lane under ADR-0001. Implementation completeness remains NEEDS VERIFICATION. |
 | Shorter alias lane | `schemas/contracts/v1/atmosphere/` exists as a compatibility/index lane pointing toward this domain path. |
 | Known child lanes | `receipts/` and `registry/` READMEs exist and are draft indexes. |
-| Known schema files | The decision-envelope scaffold remains; strict lowercase AirObservation and ForecastContext profile schemas plus CamelCase compatibility mirrors are now indexed. |
+| Known schema file | `atmosphere_air_decision_envelope.schema.json` exists as a PROPOSED scaffold. |
 | Required reviewers | Schema steward, Atmosphere domain steward, air-quality steward where applicable, contract steward, validation steward, policy steward where applicable, release steward where applicable, and docs steward. |
 
 ## Placement basis
@@ -77,10 +77,6 @@ schemas/
             └── atmosphere/
                 ├── README.md                   # you are here
                 ├── atmosphere_air_decision_envelope.schema.json
-                ├── air_observation.schema.json
-                ├── forecast_context.schema.json
-                ├── AirObservation.schema.json       # one-way compatibility mirror
-                ├── ForecastContext.schema.json      # one-way compatibility mirror
                 ├── receipts/
                 │   └── README.md
                 └── registry/
@@ -122,10 +118,6 @@ This README does not verify complete Atmosphere schema coverage, schema registry
 | Schema file | Paired contract | Status | Notes |
 |---|---|---|---|
 | `atmosphere_air_decision_envelope.schema.json` | `contracts/domains/atmosphere/atmosphere_air_decision_envelope.md` in schema metadata; current contract file casing/path alignment remains NEEDS VERIFICATION | PROPOSED / scaffold | Schema has `$schema`, `$id`, title, description, empty `properties`, `additionalProperties: true`, and `x-kfm.status: PROPOSED`. |
-| `air_observation.schema.json` | `contracts/domains/atmosphere/AirObservation.md` | DRAFT_SCHEMA / bounded profile | Closed observed-sensor shape with station, time, unit, QA, evidence, non-release, and model-field denial rules. |
-| `forecast_context.schema.json` | `contracts/domains/atmosphere/ForecastContext.md` | DRAFT_SCHEMA / bounded profile | Closed model-field shape with model-run identity, valid time, spatial support, DERIVED_FROM lineage, uncertainty, evidence, and observation denial rules. |
-| `AirObservation.schema.json` | same semantic contract | MIRROR | One-way `$ref` compatibility mirror; must not evolve independently. |
-| `ForecastContext.schema.json` | same semantic contract | MIRROR | One-way `$ref` compatibility mirror; must not evolve independently. |
 
 ## Current child lanes
 
@@ -142,11 +134,11 @@ Current-session and prior adjacent evidence indicate these Atmosphere semantic c
 |---|---|---|
 | `contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md` | Observed in current-session related evidence | Paired scaffold schema exists, but path/casing alignment remains NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/AirStation.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/AirObservation.md` | CONFIRMED semantic contract | Paired lowercase DRAFT_SCHEMA profile and CamelCase mirror are present; broader policy/release adoption remains NEEDS VERIFICATION. |
+| `contracts/domains/atmosphere/AirObservation.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/PM25Observation.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/OzoneObservation.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/AODRaster.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
-| `contracts/domains/atmosphere/ForecastContext.md` | CONFIRMED semantic contract | Paired lowercase DRAFT_SCHEMA profile and CamelCase mirror are present; live model/evidence/release behavior remains NEEDS VERIFICATION. |
+| `contracts/domains/atmosphere/ForecastContext.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/AdvisoryContext.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/SmokeContext.md` | Observed in prior Atmosphere evidence | Paired schema NEEDS VERIFICATION. |
 | `contracts/domains/atmosphere/WindField.md` | Observed in search results | Paired schema NEEDS VERIFICATION. |
@@ -314,6 +306,6 @@ Use lowercase snake_case for schema filenames unless the schema registry or ADR 
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-03 |
+| Last reviewed | 2026-07-03 |
 | Review status | Draft README replacing greenfield scaffold |
 | Next review trigger | New Atmosphere schema, child-lane decision, schema-home migration, validator update, fixture update, schema registry update, ADR update, Atmosphere contract update, policy update, receipt/registry reference update, release reference update, or compatibility-lane decision |
