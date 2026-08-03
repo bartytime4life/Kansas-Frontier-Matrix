@@ -1,0 +1,1 @@
+{"case_id":"runreceipt-archive-digest-mismatch","expected":{"issue_codes":["RUNRECEIPT_ARCHIVE_DIGEST_MISMATCH"],"status":"DENY"},"mutation":"runreceipt_archive_digest_mismatch"}

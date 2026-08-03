@@ -1,0 +1,278 @@
+{
+  "receipt_id": "genrec:pmtiles-attestation-integrity:cec48c448aca",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pmtiles-attestation.yml",
+    "docs/intake/exploratory/pmtiles-attestation-integrity-source-map.md",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md",
+    "docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md",
+    "fixtures/pmtiles/attestation/README.md",
+    "fixtures/pmtiles/attestation/invalid/README.md",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.json",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.json",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.json",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.json",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.json",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.json",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.json",
+    "fixtures/pmtiles/attestation/valid/README.md",
+    "fixtures/pmtiles/attestation/valid/complete.json",
+    "tests/validators/test_pmtiles_attestation_bundle.py",
+    "tools/validators/pmtiles/README.md",
+    "tools/validators/pmtiles/validate_attestation_bundle.py",
+    "tools/validators/pmtiles/validate_header.py",
+    "tools/validators/pmtiles/verify_merkle.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-attestation.yml": "sha256:c1f22c0ba8e788718940862f6fa22f690085731219f77b72440d8757fb14a8c4",
+    "docs/intake/exploratory/pmtiles-attestation-integrity-source-map.md": "sha256:9a1aeafdf30a55717b642edfec7e4d1e62d059ed51db80e9d8d0267354f491fd",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "sha256:d7e8331e2c4c95c5e83066f4b4c3beda2ae006a87b47e4a76fab89f56ff28691",
+    "docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md": "sha256:c148a9c091e7886b1438c29828f136f68e568752ba89e0c70197fe4925e65c62",
+    "fixtures/pmtiles/attestation/README.md": "sha256:28530944ee93ee83ba1a0c02a7c4f98fbb60ff3027f1976987f834bd0f3a44bb",
+    "fixtures/pmtiles/attestation/invalid/README.md": "sha256:656e85b161977cfe5f1dbd2fe341bd16382d57b212bad5059fd9d86df0cc188a",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.expected_error.txt": "sha256:4907ca6f90ef3687450be460994ba3d6bffc66bd15f91bc44698d37f37e727b1",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.json": "sha256:5fa9e6561f54a3fb2b723e6544439072930d38b26153f9032b7a85ba18f7ba93",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.expected_error.txt": "sha256:090fc681f364f67f832a4c906227391027218df585bff78235194ca9f18c1ee0",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.json": "sha256:206e7cf82428d1b0217d765b785e74b25e1985e2af526ab6923a07b551c892d1",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.expected_error.txt": "sha256:e2be9f18824388b3ddf8196c69e4f79a2f680980682d183bec616aeb8cadabc6",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.json": "sha256:2d89b0b947876cba266bee999a1ef3e7068fd6238b174898c04143e0fc22ccf4",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.expected_error.txt": "sha256:eada95f615217678e2424bff4f6067477da502e258314788a5279717b8a820fc",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.json": "sha256:d66772a439acea86d613ddb26a59276b5e6dbf983f1b4df1d55909c0bcd02f1b",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.expected_error.txt": "sha256:754169f1053d2995a4a7843dfcb52c29ffbdc967b1b3c70863013ebf7e50b3c0",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.json": "sha256:33b94ff93e551f2be0c906740afa1af8502534c235836c9dce99229597613dee",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.expected_error.txt": "sha256:7549f2f531922e88ba14957989bd5842b769a7627594272339209eaa5cf73e16",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.json": "sha256:e13d8a4051e082db74d7a7377601cfbdd2a194a42ae2007e048ce1ee8f7790fc",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.expected_error.txt": "sha256:3af930e8c86f136de082a8c850d93110ad3dac10a31437ea1859b43e0931611b",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.json": "sha256:4acf7bc99273d4e7798dd03510c4136e0dc54948982294a1e0a792822b57d542",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.expected_error.txt": "sha256:bd685d06f124b1041b9a64253619727d5b56d38bbf256f274874e43833b39d82",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.json": "sha256:9267be1429d151419bdb84f0ee4a45a343e8a12fefb008b30749eed74fe7d714",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.expected_error.txt": "sha256:8f4b7ecc36e781251c24dcb9a15f4bb0e45823b1f8a72acaa9b879745fdf14c9",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.json": "sha256:d96ea4d76e9d92441b9ea642535af184991259e9061efe329c6113177625e0bb",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.expected_error.txt": "sha256:3a0e42bc248c5ebda1c4aa44f3f597fe7a0a7bf0ea45cb7af0d37182f5db8d42",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.json": "sha256:b3e37eda8468cef04f8e7158f7403cbc9a8305ef307dba399d4add74fc4f2ab6",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.expected_error.txt": "sha256:10963b921e883f8083a88ffb8cb96fe0b9ccdca3f1a1dd050e9d55ee8a65cefe",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.json": "sha256:096d1f8b5d3341cab603e9e1fd1429fa0e79470b46c70bb0c73f71eeb717a055",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.expected_error.txt": "sha256:669f0a1e7a03b9f9b8a34f2b11caaab68ada5d0ac4e9796068fbf1fc5c99a485",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.json": "sha256:3d1858bcadf57ac48df5a4da52d7a707fb67a8452ffeb7c2e4eb23d9b3d334c0",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.expected_error.txt": "sha256:1ee8c2248634f87ac563e7dbe72a5b2de31e13bb1e9e67e06afb5e8458a4c82f",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.json": "sha256:cb0f17df1a9e3a66e6a37ef2df065a8da7eedf51c925ce50a02010dba224ffa2",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.expected_error.txt": "sha256:3bed0f6b4bb9528ccc549bcbd9b09385a146085553ee5634a7fd593a11a28cbb",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.json": "sha256:6431dcc3566dfa25445c5fefde29f44e82f9d4890ce7db7c462c8fee99f97cb9",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.expected_error.txt": "sha256:17ae48f4d6c2036993b948ba968c8ab6a7b8e105e93c1e52af6d680ab52f5001",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.json": "sha256:4a883cd0864cfeac6fb406faa30233d782ef5e47b2c6c0f66d185afa42894c0e",
+    "fixtures/pmtiles/attestation/valid/README.md": "sha256:486378e4e960d4e589ed418a388391d4aa78f94e5f0f9a179d18acb88beb13e9",
+    "fixtures/pmtiles/attestation/valid/complete.json": "sha256:b8f5f70559ec5ce0d8b81dbb80909f01e9e2a63c0abe1a3512b390e122fc115d",
+    "tests/validators/test_pmtiles_attestation_bundle.py": "sha256:9844ee7b3606253ad1a8ec0c679dc157adca860ed44ebf651e2146e03172414a",
+    "tools/validators/pmtiles/README.md": "sha256:c8edb6e936a24b64fed3e7c349de76e17758b2a3789b3e9eefe3cb9557400d75",
+    "tools/validators/pmtiles/validate_attestation_bundle.py": "sha256:08355fa77acd5b92a16063faff7d526c7421f9810864e17e91d6ee4e4c2186e2",
+    "tools/validators/pmtiles/validate_header.py": "sha256:54159eee030344f38635cc1da06853c2a099a9bdf80ae1516e5e7d19a3005e9a",
+    "tools/validators/pmtiles/verify_merkle.py": "sha256:82c85724cd52a997bc2256892afe3beb947e4f26477394bcf2675642659290a7"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "codex",
+    "version": "gpt-5"
+  },
+  "prompt_or_contract": "sha256:cec48c448acab6de31a98e575b902b35ddabdc72c9e54536c3693d492fcbc1ce",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "github-connector",
+      "apply_patch",
+      "exec_command",
+      "pdf-extraction",
+      "collaboration-read-only-review",
+      "official-web-reference-check"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:cee602df9dee8a7baf3c94c25431a706c6eb683977a175b83273a78277bbe201"
+    ],
+    "attached_docs": [
+      "New Ideas 5-10-26.pdf"
+    ],
+    "evidence_refs": [
+      "git:main@5ce95ca390e766945f587d694be046c070b11fc1",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/standards/PMTILES.md",
+      "docs/standards/pmtiles/PMIDX_SPEC_V1.md",
+      "docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md",
+      "https://github.com/protomaps/PMTiles/blob/8b8ddea4dbff1b0104cf2bebf2f7ff35c91b41d5/spec/v3/spec.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pmtiles-attestation.yml": "PROPOSED",
+    "docs/intake/exploratory/pmtiles-attestation-integrity-source-map.md": "PROPOSED",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "PROPOSED",
+    "docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/README.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/README.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/missing_runreceipt.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_count_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_leaf_digest_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_merkle_root_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_range_out_of_bounds.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmidx_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_archive_digest_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_duplicate_key.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_merkle_root_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_schema_version_invalid.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/pmsig_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_archive_digest_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_count_invalid.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.expected_error.txt": "PROPOSED",
+    "fixtures/pmtiles/attestation/invalid/runreceipt_subject_name_mismatch.json": "PROPOSED",
+    "fixtures/pmtiles/attestation/valid/README.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/valid/complete.json": "PROPOSED",
+    "tests/validators/test_pmtiles_attestation_bundle.py": "PROPOSED",
+    "tools/validators/pmtiles/README.md": "PROPOSED",
+    "tools/validators/pmtiles/validate_attestation_bundle.py": "PROPOSED",
+    "tools/validators/pmtiles/validate_header.py": "PROPOSED",
+    "tools/validators/pmtiles/verify_merkle.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pmtiles-unittest-14",
+      "outcome": "PASS",
+      "reason": "Observed with Python 3.12-compatible standard-library execution after final audit fixes."
+    },
+    {
+      "gate": "generated-fixture-matrix-16",
+      "outcome": "PASS",
+      "reason": "One positive and fifteen one-mutation negative descriptors matched complete sorted issue sets; invalid primary-code sidecars were consumed."
+    },
+    {
+      "gate": "python-compileall",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-bash-syntax",
+      "outcome": "PASS",
+      "reason": "YAML parsed and every run block passed bash -n; workflow name, job id, permissions, action pins, timeout, and no-secret/no-OIDC posture were asserted."
+    },
+    {
+      "gate": "meta-block-shape",
+      "outcome": "PASS",
+      "reason": "Six changed Markdown responsibility documents contain bounded KFM_META_BLOCK_V2 required fields."
+    },
+    {
+      "gate": "independent-implementation-audit",
+      "outcome": "PASS",
+      "reason": "Read-only audit reported no remaining implementation blockers after header, alias, nonfinite, range-authentication, documentation, and symlink fixes."
+    },
+    {
+      "gate": "generated-receipt-bounded-self-check",
+      "outcome": "PASS",
+      "reason": "Standard-library checks covered the schema fields used here, required/allowed keys, formats, enums, artifact-map parity, and SHA-256 bindings. The repository jsonschema validator is deferred to hosted CI because its dependency is unavailable locally."
+    },
+    {
+      "gate": "repository-wide-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "No repository checkout was used; the request required connector-backed GitHub work rather than CLI repository operations. Hosted repository checks remain authoritative."
+    },
+    {
+      "gate": "cryptographic-signature-verification",
+      "outcome": "SKIPPED",
+      "reason": "Current PMSIG verifier is shape-only; CRYPTOGRAPHIC_VERIFICATION_UNWIRED remains a hold."
+    },
+    {
+      "gate": "range-metadata-authentication",
+      "outcome": "SKIPPED",
+      "reason": "The PMIDX root commits archive chunks, not the range table or tile_id; RANGE_METADATA_NOT_AUTHENTICATED remains a hold."
+    },
+    {
+      "gate": "policy-and-release-authorization",
+      "outcome": "SKIPPED",
+      "reason": "Policy execution, release, correction, rollback, deployment, and publication were outside this structural slice and remain holds."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending connector-backed draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "NEW_IDEAS_5_10_26_PM_TILES_PAGES",
+      "validated": true,
+      "evidence_ref": "New Ideas 5-10-26.pdf pp. 2-5, 7, 11, 14, 16; sha256:cee602df9dee8a7baf3c94c25431a706c6eb683977a175b83273a78277bbe201"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "git:main@5ce95ca390e766945f587d694be046c070b11fc1:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM_AI_BUILD_OPERATING_CONTRACT",
+      "validated": true,
+      "evidence_ref": "git:main@5ce95ca390e766945f587d694be046c070b11fc1:docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "KFM_PM_TILES_PROFILE_EVIDENCE",
+      "validated": true,
+      "evidence_ref": "git:main@5ce95ca390e766945f587d694be046c070b11fc1:docs/standards/PMTILES.md; docs/standards/pmtiles/PMIDX_SPEC_V1.md; docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md"
+    },
+    {
+      "id": "UPSTREAM_PM_TILES_V3_SPEC",
+      "validated": true,
+      "evidence_ref": "https://github.com/protomaps/PMTiles/blob/8b8ddea4dbff1b0104cf2bebf2f7ff35c91b41d5/spec/v3/spec.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T04:03:12Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded connector-backed draft-PR implementation. It hardens only the repository's existing split SHA-256 PMTiles compatibility bundle and does not select a canonical profile. Structural success has authority NONE and retains CRYPTOGRAPHIC_VERIFICATION_UNWIRED, RANGE_METADATA_NOT_AUTHENTICATED, POLICY_EVALUATION_NOT_RUN, and RELEASE_AUTHORIZATION_NOT_EVALUATED. No merge, release, deployment, publication, production signing, key-registry change, schema migration, or artifact promotion is authorized."
+}

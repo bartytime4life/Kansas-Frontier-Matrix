@@ -1,0 +1,1 @@
+{"case_id":"pmsig-archive-digest-mismatch","expected":{"issue_codes":["PMSIG_ARCHIVE_DIGEST_MISMATCH"],"status":"DENY"},"mutation":"pmsig_archive_digest_mismatch"}

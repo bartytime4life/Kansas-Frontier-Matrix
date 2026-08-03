@@ -1,0 +1,1 @@
+{"case_id":"pmsig-duplicate-key","expected":{"issue_codes":["PMSIG_JSON_DUPLICATE_KEY"],"status":"DENY"},"mutation":"pmsig_duplicate_key"}

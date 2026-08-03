@@ -1,59 +1,112 @@
-<!--
-doc_id: NEEDS_VERIFICATION
- title: PMIDX Sidecar Specification V1
- type: standard
- version: v1
- status: draft
- owners: [NEEDS_VERIFICATION]
- created: NEEDS_VERIFICATION
- updated: NEEDS_VERIFICATION
- policy_label: public
- related: [docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md, tools/validators/pmtiles/schemas/pmidx.schema.json]
- tags: [kfm, pmtiles, pmidx, merkle, sidecar]
- notes: [Draft specification; validate against repository conventions before publishing.]
--->
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/docs-standards-pmtiles-pmidx-spec-v1
+title: PMIDX Sidecar Specification V1
+type: standard
+version: v1.1-draft
+status: draft; PROPOSED; compatibility-profile-only
+owner: TODO-pmtiles-steward-plus-schema-steward-plus-security-steward
+created: NEEDS_VERIFICATION
+updated: 2026-08-02
+policy_label: internal-governance; integrity-sidecar; non-authoritative
+owning_root: docs/
+responsibility: documents the implemented bounded PMIDX v1 compatibility algorithm without selecting a canonical PMTiles profile or granting cryptographic, policy, release, or publication authority
+truth_posture: test-or-abstain; implementation claims require current repository evidence
+related:
+  - PMTILES_ATTESTATION_STANDARD.md
+  - ../../../tools/validators/pmtiles/verify_merkle.py
+  - ../../../tools/validators/pmtiles/validate_attestation_bundle.py
+  - ../../../fixtures/pmtiles/attestation/README.md
+  - ../../../tests/validators/test_pmtiles_attestation_bundle.py
+notes:
+  - "This draft documents the split SHA-256 compatibility profile already wired by the repository. It does not resolve competing PMTiles profile proposals."
+  - "STRUCTURAL_PASS is not signature validity, policy approval, release authorization, or publication eligibility."
+[/KFM_META_BLOCK_V2] -->
 
 # PMIDX Sidecar Specification V1
 
-`*.pmidx` is the KFM sidecar commitment file for a PMTiles archive. It binds tile/range byte windows to a Merkle root and shared `spec_hash`.
+`*.pmidx` is the SHA-256 compatibility sidecar already used by the repository's
+split PMTiles attestation workflow. It binds ordered chunks of one PMTiles
+archive to a Merkle root and carries the shared build `spec_hash`.
 
-## Required Fields
+This draft documents the implemented compatibility profile. It does not select
+it as the canonical long-term PMTiles profile, accept a proposed ADR, establish
+source truth, verify a signature, approve policy, authorize release, or permit
+publication.
 
-| Field | Type | Meaning |
-|---|---|---|
-| `schema_version` | string | Must be `kfm.pmidx.v1`. |
-| `spec_hash` | string | SHA-256 digest with `sha256:` prefix. |
-| `pmtiles_sha256` | string | SHA-256 digest of the PMTiles archive. |
-| `merkle.arity` | integer | Tree arity. Default/recommended: `4`. |
-| `merkle.chunk_bytes` | integer | Chunk size used for leaves. |
-| `merkle.root` | string | Merkle root with `sha256:` prefix. |
-| `merkle.leaves` | array | Ordered leaf hashes. |
-| `ranges` | array | Optional range/tile commitments. |
+## Required fields
 
-## Minimal Example
+| Field | Constraint |
+|---|---|
+| `schema_version` | Exactly `kfm.pmidx.v1`. |
+| `spec_hash` | `sha256:` plus 64 hexadecimal characters. |
+| `pmtiles_sha256` | SHA-256 digest of the complete PMTiles archive. |
+| `merkle.arity` | Integer from 2 through 64; booleans are not integers. |
+| `merkle.chunk_bytes` | Integer from 1 byte through 64 MiB. |
+| `merkle.root` | Root produced by the algorithm below. |
+| `merkle.leaves` | Ordered digest of every archive chunk. |
+| `ranges` | Optional ordered, non-overlapping single-chunk commitments. |
 
-```json
-{
-  "schema_version": "kfm.pmidx.v1",
-  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-  "pmtiles_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-  "merkle": {
-    "arity": 4,
-    "chunk_bytes": 1048576,
-    "root": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-    "leaves": []
-  },
-  "ranges": []
-}
-```
+The validator accepts PMIDX JSON up to 16 MiB and at most 100,000 leaves or
+ranges. Those limits are an implemented validation envelope, not a claim that
+every production archive fits it.
 
-## Verification Rule
+## Chunk and tree algorithm
 
-A verifier must reject the sidecar when:
+1. Split the archive into half-open chunks
+   `[i * chunk_bytes, min(file_size, (i + 1) * chunk_bytes))`.
+2. Store `sha256:<hex>` of each chunk in archive order. The leaf count must equal
+   `ceil(file_size / chunk_bytes)`.
+3. Decode the leaf digests to 32-byte values.
+4. At each level, group values in order by `arity`, concatenate the raw digest
+   bytes, and SHA-256 the concatenation. The final short group is not padded or
+   duplicated.
+5. Continue until one digest remains. A single leaf is its own root.
 
-- required fields are absent;
-- any hash is malformed;
-- Merkle root recomputation differs from `merkle.root`;
-- `spec_hash` does not match PMTiles metadata and signed payload;
-- `pmtiles_sha256` does not match the archive digest.
+The algorithm preserves current PMIDX v1 behavior. It has no domain-separation
+prefix and must not be silently changed under the same profile identifier.
 
+## Range binding
+
+Each range object uses the existing fields `offset`, `length`, and `leaf`, with
+optional `tile_id` metadata.
+
+- Bytes are the half-open interval `[offset, offset + length)`.
+- `length` must be positive and the interval must remain inside the archive.
+- Ranges must be deterministically ordered and non-overlapping.
+- A range must fit wholly inside one chunk.
+- `leaf` must equal `offset // chunk_bytes` and identify an existing leaf.
+
+PMIDX v1 does not claim that declared ranges cover every tile or every byte.
+Coverage policy remains outside this structural validator. The Merkle root
+commits archive chunk digests, not the PMIDX JSON document. A locally consistent
+`ranges` entry and its optional `tile_id` can therefore be rewritten without
+changing the root. PMIDX v1 range metadata is not authenticated and does not
+prove tile identity.
+
+## Verification outcome
+
+`verify_merkle.py` returns `STRUCTURAL_PASS` only after recomputing the whole-file
+digest, every chunk leaf, the Merkle root, and each declared range-to-leaf
+binding. Failures return a finite non-echoing code.
+
+`validate_attestation_bundle.py` additionally reconciles the PMIDX digest, root,
+and `spec_hash` with PMTiles metadata, PMSIG, and exactly one RunReceipt subject.
+Its success still carries four holds:
+
+- `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`
+- `POLICY_EVALUATION_NOT_RUN`
+- `RANGE_METADATA_NOT_AUTHENTICATED`
+- `RELEASE_AUTHORIZATION_NOT_EVALUATED`
+
+The repository-owned synthetic matrix is under
+`fixtures/pmtiles/attestation/`; actual PMTiles bytes are generated only in a
+temporary test directory.
+
+## Unresolved profile decision
+
+Repository evidence currently describes more than one PMTiles attestation
+shape: a monolithic BLAKE3 sidecar, this split SHA-256 compatibility bundle, and
+a proposed GeoManifest/DSSE route. This edit does not collapse those profiles or
+declare one canonical. A governed profile decision and migration plan remain
+required before changing digest families, filenames, schema authority, or
+publication gates.

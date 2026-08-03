@@ -1,0 +1,1 @@
+{"case_id":"missing-runreceipt","expected":{"issue_codes":["RUNRECEIPT_NOT_FILE"],"status":"DENY"},"mutation":"missing_runreceipt"}

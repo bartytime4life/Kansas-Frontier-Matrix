@@ -1,0 +1,1 @@
+{"case_id":"pmidx-spec-hash-mismatch","expected":{"issue_codes":["PMSIG_SPEC_HASH_MISMATCH","PMTILES_PMIDX_SPEC_HASH_MISMATCH","RUNRECEIPT_SPEC_HASH_MISMATCH"],"status":"DENY"},"mutation":"pmidx_spec_hash_mismatch"}
