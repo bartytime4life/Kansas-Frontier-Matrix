@@ -1,14 +1,34 @@
 {
-  "schema_version": "1.0.0",
-  "signal_id": "kfm-briefing-2026-07-29-001",
+  "schema_version": "1.1.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-07-29:fe0568d78922cec6e2213a63",
+  "event_cluster_id": "kfm:event-cluster:governance_event:13344f220ac25e94a5a62abb",
   "briefing_date": "2026-07-29",
-  "status": "ACCEPTED_FOR_MODELING",
+  "status": "DUPLICATE",
   "headline": "Hays water local consult meeting is a source-announced governance event",
   "story_type": "governance_event",
   "domains": [
     "water_planning",
     "hydrology"
   ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "authority:kansas-office-of-the-governor",
+    "native_id_or_identity_key": "meeting:hays-local-consult:2026-07-29",
+    "geography_identity": "municipality:hays-kansas",
+    "durable_subject_key": "water-local-consult:hays:2026-07-29",
+    "signal_digest": "sha256:fe0568d78922cec6e2213a630ab4212ac02ebacd6b8350480ab85f6ae5ba65ed"
+  },
+  "deduplication": {
+    "status": "DUPLICATE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [
+      1647
+    ],
+    "reason_codes": [
+      "EXISTING_KFM_LINK_MATCH"
+    ]
+  },
   "materiality": {
     "priority": "P1",
     "safety": 0,
@@ -63,6 +83,7 @@
     "issues": [
       1647
     ],
+    "pull_requests": [],
     "paths": [
       "contracts/domains/water_planning/public_meeting.md",
       "schemas/contracts/v1/domains/water_planning/public_meeting.schema.json",
@@ -77,6 +98,7 @@
   "next_action": {
     "disposition": "UPDATE_EXISTING_ISSUE",
     "scope": "Attach the source-announced candidate to issue #1647; preserve STATUS_UNCONFIRMED until authoritative post-event evidence is captured. Do not infer attendance, input, recommendation, decision, funding, or project state.",
+    "idempotency_key": "sha256:b1d8df8dea020905761337db69a6b69d63adfa884864c5502a300249ccf6a07c",
     "repository_mutation_allowed": false
   },
   "permissions": {
@@ -87,6 +109,7 @@
     "publication": false
   },
   "public_use_allowed": false,
+  "generation_receipt_ref": "example:receipt:briefing:2026-07-29:hays",
   "candidate_payload": {
     "object_family": "PublicMeeting",
     "candidate_state": "STATUS_UNCONFIRMED",
