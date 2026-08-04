@@ -244,7 +244,7 @@ def _semantic_findings(candidate: dict[str, Any]) -> list[Finding]:
     if assessment_id and lineage.get("supersedes") == assessment_id:
         findings.append(Finding("SELF_SUPERSESSION", "/lineage/supersedes"))
     if assessment_id and lineage.get("superseded_by") == assessment_id:
-        findings.append(Finding("SELF_SUPERSESSION", "/lineage/supersed_by"))
+        findings.append(Finding("SELF_SUPERSESSION", "/lineage/superseded_by"))
 
     if any(governance.get(field) is not False for field in (
         "authority_created", "policy_evaluated", "promotion_authorized", "public_use_allowed"
@@ -306,7 +306,7 @@ def run_fixture_profile() -> int:
         expected = sorted(manifest.get(path.name, []))
         if result.ok or not expected or actual != expected:
             passed = False
-            print(json.dumps({"actual": actual, "expected": expected, "file": path.as_posix(), "outcome": "FIXTURE_POLARITY_ERROR"}, sort_keys=True, separators=(",", ":"))
+            print(json.dumps({"actual": actual, "expected": expected, "file": path.as_posix(), "outcome": "FIXTURE_POLARITY_ERROR"}, sort_keys=True, separators=(",", ":")))
     return 0 if passed else 1
 
 
