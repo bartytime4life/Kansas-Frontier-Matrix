@@ -50,6 +50,7 @@ INVALID_FIXTURES = {
         ("INLINE_GEOMETRY_FORBIDDEN", "$.candidate_payload.attributes.coordinates"),
     },
     FIXTURE_ROOT / "invalid/invalid_duplicate_issue_create.json": {
+        ("BRIEFING_SIGNAL_SCHEMA_INVALID", "$.next_action.disposition"),
         ("DUPLICATE_CANNOT_OPEN_ISSUE", "$.next_action.disposition"),
     },
 }
