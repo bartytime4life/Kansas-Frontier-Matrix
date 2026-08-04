@@ -11,6 +11,7 @@ RUNNER_VALIDATORS = [
     "validate_evidence_bundle.py",
     "validate_runtime_response_envelope.py",
     "validate_decision_envelope.py",
+    "validate_material_change_assessment.py",
     "validate_run_receipt.py",
     "validate_ingest_receipt.py",
 ]
