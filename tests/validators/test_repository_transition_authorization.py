@@ -217,6 +217,16 @@ def test_workflow_keeps_event_metadata_out_of_shell_source() -> None:
     assert '--default-branch "${{ github.' not in workflow
 
 
+def test_workflow_treats_expected_readiness_hold_as_nonfailing() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert 'id: transition-authorization' in workflow
+    assert 'status=$?' in workflow
+    assert 'if [ "$status" -eq 3 ]; then' in workflow
+    assert 'Expected readiness hold; repository transition is not yet authorized.' in workflow
+    assert 'exit 0' in workflow
+    assert 'exit "$status"' in workflow
+
+
 def test_non_default_target_is_not_applicable() -> None:
     event = load(EVENT_PATH)
     event["pull_request"]["base"]["ref"] = "maintenance"

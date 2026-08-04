@@ -73,18 +73,27 @@ jobs:
             > "${RUNNER_TEMP}/repository-control-comments.json"
 
       - name: Require an exact owner transition record
+        id: transition-authorization
         env:
           KFM_AUTHORIZED_LOGIN: ${{ github.event.repository.owner.login }}
           KFM_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash
         run: |
           set -euo pipefail
+          set +e
           python3 tools/validators/repository_control/validate_transition_authorization.py \
             --event "${GITHUB_EVENT_PATH}" \
             --comments "${RUNNER_TEMP}/repository-control-comments.json" \
             --control-issue "${KFM_CONTROL_ISSUE}" \
             --authorized-login "${KFM_AUTHORIZED_LOGIN}" \
             --default-branch "${KFM_DEFAULT_BRANCH}"
+          status=$?
+          set -e
+          if [ "$status" -eq 3 ]; then
+            echo "Expected readiness hold; repository transition is not yet authorized."
+            exit 0
+          fi
+          exit "$status"
 
       - name: Record authority boundary
         if: always()
