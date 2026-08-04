@@ -1,0 +1,52 @@
+{
+  "object_type": "SourceActivationDecision",
+  "schema_version": "1.0.0",
+  "activation_decision_id": "activation:synthetic-fixture-source:20260803",
+  "source_id": "src:synthetic:fixture-source",
+  "source_descriptor_ref": "source-descriptor:src:synthetic:fixture-source:1.0.0",
+  "descriptor_version": "1.0.0",
+  "source_role_ref": "source-descriptor:src:synthetic:fixture-source:1.0.0#/source_role",
+  "operation": "initial_activation",
+  "context": {
+    "rights_status": "verified_open",
+    "sensitivity_class": "public",
+    "access_posture": "open",
+    "descriptor_review_state": "reviewed",
+    "registry_state": "proposed"
+  },
+  "decision": {
+    "route": "ADMIT_TO_RAW",
+    "activation_state": "fixture_only",
+    "activation_scope": "fixture_only",
+    "reason_codes": [
+      "INTAKE_ADMITTED"
+    ],
+    "obligations": [
+      "require_source_descriptor",
+      "preserve_candidate_source_role",
+      "use_no_network_processing"
+    ],
+    "policy_decision_refs": [
+      "policy:synthetic:intake"
+    ],
+    "review_state": "not_required",
+    "review_refs": [],
+    "decision_authority_ref": "authority:synthetic:source-steward"
+  },
+  "timing": {
+    "created_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-08-03T12:00:00Z",
+    "expires_at": null,
+    "hold_expires_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "authority_created": false
+  }
+}
