@@ -1,0 +1,70 @@
+# Focused no-network validation for the proposed RepresentationReceipt profile.
+name: representation-receipt
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/receipts/**"
+      - "schemas/contracts/v1/receipts/representation_receipt.schema.json"
+      - "fixtures/contracts/v1/receipts/representation_receipt/**"
+      - "tools/validators/validate_representation_receipt.py"
+      - "tests/validators/test_validate_representation_receipt.py"
+      - ".github/workflows/representation-receipt.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: representation-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-representation-receipt
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused tests and fixture polarity
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_representation_receipt.py' \
+            --verbose
+          python tools/validators/validate_representation_receipt.py --fixtures
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### RepresentationReceipt validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- No network source, policy engine, release system, or public endpoint was invoked."
+            echo "- A green result proves bounded shape, fixture polarity, and local consistency only."
+            echo "- It does not resolve evidence, approve policy or review, authorize release, or publish a representation."
+          } >> "$GITHUB_STEP_SUMMARY"

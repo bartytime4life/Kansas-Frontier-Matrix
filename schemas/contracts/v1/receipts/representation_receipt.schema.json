@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/receipts/representation_receipt.schema.json",
+  "title": "RepresentationReceipt",
+  "description": "Fixture-first KFM process-memory profile for evidence-bound downstream representations. Shape and local consistency only; no policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "receipt_id",
+    "subject_ref",
+    "representation_type",
+    "evidence_bundle_refs",
+    "inputs",
+    "outputs",
+    "method",
+    "fidelity",
+    "reality_boundary_note_ref",
+    "timing",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "RepresentationReceipt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^representation-receipt:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "representation_type": {
+      "type": "string",
+      "enum": [
+        "MAP_TILE",
+        "RASTER_OVERVIEW",
+        "VECTOR_GENERALIZATION",
+        "THREE_D_SCENE",
+        "SYNTHETIC_SURFACE",
+        "EXPORT_SNAPSHOT"
+      ]
+    },
+    "evidence_bundle_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/output_artifact"
+      }
+    },
+    "method": {
+      "$ref": "#/$defs/method"
+    },
+    "fidelity": {
+      "$ref": "#/$defs/fidelity"
+    },
+    "reality_boundary_note_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timing": {
+      "$ref": "#/$defs/timing"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "digest"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "output_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "digest",
+        "media_type"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$"
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_id",
+        "method_version",
+        "spec_hash",
+        "parameters_hash"
+      ],
+      "properties": {
+        "method_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "method_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "parameters_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "fidelity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_fidelity",
+        "representation_fidelity",
+        "information_loss",
+        "loss_notes"
+      ],
+      "properties": {
+        "evidence_fidelity": {
+          "type": "string",
+          "enum": [
+            "EXACT",
+            "GENERALIZED",
+            "AGGREGATED",
+            "MODELED",
+            "SYNTHETIC"
+          ]
+        },
+        "representation_fidelity": {
+          "type": "string",
+          "enum": [
+            "EXACT",
+            "GENERALIZED",
+            "AGGREGATED",
+            "MODELED",
+            "SYNTHETIC"
+          ]
+        },
+        "information_loss": {
+          "type": "boolean"
+        },
+        "loss_notes": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "represented_at",
+        "input_as_of"
+      ],
+      "properties": {
+        "represented_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "input_as_of": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/aware_datetime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes",
+        "superseded_by"
+      ],
+      "properties": {
+        "supersedes": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "superseded_by": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "policy_evaluated",
+        "review_completed",
+        "release_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/receipts/representation_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/receipts/representation_receipt/",
+    "validator": "tools/validators/validate_representation_receipt.py",
+    "authority": "shape_and_local_consistency_only",
+    "non_effects": [
+      "does_not_resolve_evidence",
+      "does_not_evaluate_policy",
+      "does_not_complete_review",
+      "does_not_authorize_release",
+      "does_not_publish"
+    ]
+  }
+}
