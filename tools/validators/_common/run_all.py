@@ -1,3 +1,4 @@
+import hashlib
 import subprocess
 import sys
 from pathlib import Path
@@ -19,6 +20,8 @@ RUNNER_VALIDATORS = [
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
+    probe = root / "validate_material_change_assessment.py"
+    print(f"MCA_SHA256={hashlib.sha256(probe.read_bytes()).hexdigest()}", flush=True)
     for filename in RUNNER_VALIDATORS:
         script = root / filename
         cmd = [sys.executable, str(script), "--fixtures"]
