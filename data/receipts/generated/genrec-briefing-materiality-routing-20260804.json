@@ -5,6 +5,7 @@
     "schemas/contracts/v1/governance/briefing_signal.schema.json",
     "tools/validators/governance/validate_briefing_signal.py",
     "tests/governance/test_briefing_signal.py",
+    "tests/governance/test_briefing_signal_dedup.py",
     "examples/briefing_integration/hays_water_local_consult_2026_07_29.json",
     "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json",
     "examples/briefing_integration/README.md"
@@ -13,6 +14,7 @@
     "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:602aa886ffb08948fa00a57543622e272ac40535a844d0c8ea76453f6e83d249",
     "tools/validators/governance/validate_briefing_signal.py": "sha256:c495201a25f7207e25af783fa1e71d68f35c7f1765c318841672aec8caf6ea1a",
     "tests/governance/test_briefing_signal.py": "sha256:9fa1ca67e054d9bf31b056703db0a3136eace155ca140e37fff697d7480f3aac",
+    "tests/governance/test_briefing_signal_dedup.py": "sha256:7ffc365b85bcec48bbe9f25f85550925eb9ae45b5ff7e6d3838371c29e4ffd07",
     "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "sha256:f1bf479b7e2ce1994598a814863b8d65b2514b28c8d7a09f52f53b2f7035f031",
     "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json": "sha256:242db0a16e6620e0daf85bb4c1ba6646bb06bf28201758a0cd9d0d093085fc7f",
     "examples/briefing_integration/README.md": "sha256:b917181f90d5c5c9adf451cc3b6297d4c4d06e2d3bf35b1a1796181ee196d1ba"
@@ -43,13 +45,15 @@
       "repo:bartytime4life/Kansas-Frontier-Matrix@d94b69f136028f1b8770bb57d93a8a7a395b3c30",
       "repo:agent/briefing-materiality-routing-20260804@46a2d5086f4b4672bbadfdb850aa3601b0adb3b4",
       "repo:contracts/governance/briefing_signal.md@agent/briefing-materiality-routing-20260804",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main",
+      "github:pull/1977/run/30931164491"
     ]
   },
   "truth_labels": {
     "schemas/contracts/v1/governance/briefing_signal.schema.json": "PROPOSED",
     "tools/validators/governance/validate_briefing_signal.py": "PROPOSED",
     "tests/governance/test_briefing_signal.py": "PROPOSED",
+    "tests/governance/test_briefing_signal_dedup.py": "PROPOSED",
     "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "PROPOSED",
     "examples/briefing_integration/gmd_action_plan_inventory_2026_07_29.json": "PROPOSED",
     "examples/briefing_integration/README.md": "PROPOSED"
@@ -81,9 +85,14 @@
       "reason": "Python compilation passed; Hays and GMD examples validated; score, priority, reason, override, disposition, routing-reason, idempotency, and no-authority checks reproduced deterministically."
     },
     {
+      "gate": "hosted-first-attempt-feedback",
+      "outcome": "PASS",
+      "reason": "PR #1977 run 30931164491 exposed one stale dedup-test mutation: the candidate changed duplicate classification without updating its 1.2 routing reason. The fixture mutation now remains valid at the single-file boundary so the intended multi-file cluster negative is exercised."
+    },
+    {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The final feature head and draft pull request had not yet been created when this receipt was emitted."
+      "reason": "The corrected final feature head had not yet completed hosted workflows when this receipt was emitted."
     },
     {
       "gate": "human-review",
@@ -110,6 +119,11 @@
       "id": "repo:partial-branch-gap",
       "validated": true,
       "evidence_ref": "repo:agent/briefing-materiality-routing-20260804@46a2d5086f4b4672bbadfdb850aa3601b0adb3b4"
+    },
+    {
+      "id": "github:first-hosted-feedback",
+      "validated": true,
+      "evidence_ref": "github:pull/1977/run/30931164491"
     }
   ],
   "human_review": {
@@ -121,9 +135,9 @@
   "created_at": "2026-08-04T16:45:11Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 1977,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Completes the dependency closure of the existing BriefingSignal materiality-routing branch. The profile remains internal, deterministic, no-network, and non-authoritative. It does not mutate GitHub issues, activate or fetch sources, construct evidence, evaluate policy, promote lifecycle state, release, deploy, or publish."
+  "notes": "Completes the dependency closure of the existing BriefingSignal materiality-routing branch and records the exact hosted-test correction. The profile remains internal, deterministic, no-network, and non-authoritative. It does not mutate GitHub issues, activate or fetch sources, construct evidence, evaluate policy, promote lifecycle state, release, deploy, or publish."
 }
