@@ -20,6 +20,7 @@ name: source-activation-decision-validate
       - "schemas/contracts/v1/source/source_activation_decision.schema.json"
       - "fixtures/contracts/v1/source/source_activation_decision/**"
       - "tools/validators/validate_source_activation_decision.py"
+      - "tools/validators/_source_activation/**"
       - "tests/validators/test_validate_source_activation_decision.py"
       - "data/receipts/generated/genrec-source-activation-decision-*.json"
   push:
@@ -31,6 +32,7 @@ name: source-activation-decision-validate
       - "schemas/contracts/v1/source/source_activation_decision.schema.json"
       - "fixtures/contracts/v1/source/source_activation_decision/**"
       - "tools/validators/validate_source_activation_decision.py"
+      - "tools/validators/_source_activation/**"
       - "tests/validators/test_validate_source_activation_decision.py"
       - "data/receipts/generated/genrec-source-activation-decision-*.json"
   workflow_dispatch:
