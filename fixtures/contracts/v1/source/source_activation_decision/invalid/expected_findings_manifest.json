@@ -1,0 +1,14 @@
+{
+  "invalid_1_public_use_enabled.json": [
+    "SCHEMA"
+  ],
+  "invalid_3_missing_descriptor_digest.json": [
+    "SCHEMA"
+  ],
+  "invalid_4_unknown_route.json": [
+    "SCHEMA"
+  ],
+  "invalid_7_extra_property.json": [
+    "SCHEMA"
+  ]
+}
