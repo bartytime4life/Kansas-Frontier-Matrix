@@ -1,0 +1,105 @@
+# Validate the proposed fixture-first SourceActivationDecision profile.
+#
+# This workflow is read-only. It exercises shape, finite routing, descriptor
+# binding, rights/sensitivity/review posture, timing, lineage, unsafe-file
+# rejection, deterministic diagnostics, and no-network behavior. It does not
+# accept ADR-0017, resolve policy or review references, activate a source,
+# mutate a source registry, write PRE_RAW/RAW/QUARANTINE state, emit a receipt,
+# release, deploy, or publish.
+#
+# Compatibility: this is a new workflow and does not rename or weaken
+# source-descriptor-validate or any existing job/check identity.
+
+name: source-activation-decision-validate
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-activation-decision-validate.yml"
+      - "contracts/source/source_activation_decision.md"
+      - "schemas/contracts/v1/source/source_activation_decision.schema.json"
+      - "fixtures/contracts/v1/source/source_activation_decision/**"
+      - "tools/validators/validate_source_activation_decision.py"
+      - "tests/validators/test_validate_source_activation_decision.py"
+      - "data/receipts/generated/genrec-source-activation-decision-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/source-activation-decision-validate.yml"
+      - "contracts/source/source_activation_decision.md"
+      - "schemas/contracts/v1/source/source_activation_decision.schema.json"
+      - "fixtures/contracts/v1/source/source_activation_decision/**"
+      - "tools/validators/validate_source_activation_decision.py"
+      - "tests/validators/test_validate_source_activation_decision.py"
+      - "data/receipts/generated/genrec-source-activation-decision-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-activation-decision-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-activation-decisions:
+    name: validate-activation-decisions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network activation-decision tests
+        shell: bash
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_source_activation_decision.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity
+        shell: bash
+        run: |
+          python tools/validators/validate_source_activation_decision.py --fixtures
+
+      - name: Run repository common-contract schema coverage
+        shell: bash
+        run: |
+          python -m pytest -q tests/schemas/test_common_contracts.py \
+            -k source_activation_decision
+
+      - name: Record source-activation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SourceActivationDecision fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: proposed schema, exact synthetic fixture polarity, descriptor/source-role binding, finite routing, rights/sensitivity/review posture, timing, lineage, bounded unsafe-input handling, deterministic diagnostics, and no-network behavior."
+            echo "- The profile does not accept ADR-0017, authenticate decision authority, resolve policy or review references, activate a source, mutate a registry, write PRE_RAW/RAW/QUARANTINE state, emit an IngestReceipt, release, deploy, publish, or allow public use."
+          } >> "$GITHUB_STEP_SUMMARY"
