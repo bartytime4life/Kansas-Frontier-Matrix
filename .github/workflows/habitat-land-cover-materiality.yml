@@ -1,0 +1,72 @@
+# Focused no-network validation for the inactive Habitat land-cover materiality profile.
+name: habitat-land-cover-materiality
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/domains/habitat/land_cover/materiality_profile.md"
+      - "schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json"
+      - "pipeline_specs/habitat/land_cover/materiality_profile.v1.json"
+      - "fixtures/domains/habitat/land_cover/materiality/**"
+      - "tools/validators/domains/habitat/validate_land_cover_materiality.py"
+      - "tests/validators/domains/habitat/test_land_cover_materiality.py"
+      - ".github/workflows/habitat-land-cover-materiality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: habitat-land-cover-materiality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-habitat-land-cover-materiality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused adapter and shared-contract tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/domains/habitat \
+            --pattern 'test_land_cover_materiality.py' \
+            --verbose
+          python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Habitat land-cover materiality"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- The profile remains PROPOSED_INACTIVE and uses synthetic no-network fixtures."
+            echo "- Every emitted object must pass the shared MaterialChangeAssessment validator."
+            echo "- A PROMOTION_CANDIDATE is not promotion, release, or publication authority."
+            echo "- No live land-cover source, policy engine, release system, or public layer was invoked."
+          } >> "$GITHUB_STEP_SUMMARY"
