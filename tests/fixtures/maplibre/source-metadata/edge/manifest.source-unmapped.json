@@ -1,0 +1,6 @@
+{
+  "manifest_id": "fixture:maplibre-source-meta:unmapped",
+  "source_digests": {
+    "different_source": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

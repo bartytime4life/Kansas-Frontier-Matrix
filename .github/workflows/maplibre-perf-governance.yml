@@ -309,16 +309,60 @@ jobs:
               )
 
           fixture_root = Path("tests/fixtures/maplibre")
-          fixture_payloads = sorted(
+          source_metadata_root = fixture_root / "source-metadata"
+          source_metadata_payloads = sorted(
               path
-              for path in fixture_root.rglob("*")
+              for path in source_metadata_root.rglob("*")
               if path.is_file() and path.name not in {"README.md", ".gitkeep"}
           )
-          if fixture_payloads:
+          if source_metadata_root.exists():
+              source_metadata_companions = (
+                  Path(".github/workflows/maplibre-source-metadata.yml"),
+                  Path("tests/maplibre/test_source_metadata.py"),
+                  Path("tools/validators/maplibre/validate_source_metadata.py"),
+              )
+              missing_source_metadata_companions = [
+                  path for path in source_metadata_companions if not path.is_file()
+              ]
+              if missing_source_metadata_companions:
+                  raise SystemExit(
+                      "MapLibre source-metadata fixtures surfaced without their dedicated "
+                      "workflow, test, and validator boundaries:\n"
+                      + "\n".join(
+                          str(path) for path in missing_source_metadata_companions
+                      )
+                  )
+              unsupported_source_metadata_payloads = [
+                  path for path in source_metadata_payloads if path.suffix != ".json"
+              ]
+              if unsupported_source_metadata_payloads:
+                  raise SystemExit(
+                      "MapLibre source-metadata fixture payloads must remain JSON-only:\n"
+                      + "\n".join(
+                          str(path) for path in unsupported_source_metadata_payloads
+                      )
+                  )
+              if not source_metadata_payloads:
+                  raise SystemExit(
+                      "The MapLibre source-metadata fixture root exists but contains no "
+                      "JSON fixture payloads."
+                  )
+
+          unclassified_fixture_payloads = sorted(
+              path
+              for path in fixture_root.rglob("*")
+              if (
+                  path.is_file()
+                  and path.name not in {"README.md", ".gitkeep"}
+                  and source_metadata_root not in path.parents
+              )
+          )
+          if unclassified_fixture_payloads:
               raise SystemExit(
-                  "Executable MapLibre fixture payloads surfaced. Wire deterministic valid, "
-                  "invalid, baseline, and bad-baseline expectations deliberately:\n"
-                  + "\n".join(str(path) for path in fixture_payloads)
+                  "Unclassified MapLibre performance fixture payloads surfaced. Wire "
+                  "deterministic valid, invalid, baseline, and bad-baseline expectations "
+                  "deliberately:\n"
+                  + "\n".join(str(path) for path in unclassified_fixture_payloads)
               )
 
           missing_runtime_fixtures = (
@@ -393,12 +437,24 @@ jobs:
               "verify_perf_thresholds.py",
               "verify_render_diff_coverage.py",
           }
+          separately_governed_validators = (
+              {"validate_source_metadata.py"}
+              if source_metadata_root.exists()
+              else set()
+          )
           validator_root = Path("tools/validators/maplibre")
           actual_validators = {path.name for path in validator_root.glob("*.py")}
-          if actual_validators != schema_wrappers | placeholder_validators:
+          expected_validators = (
+              schema_wrappers
+              | placeholder_validators
+              | separately_governed_validators
+          )
+          if actual_validators != expected_validators:
               raise SystemExit(
-                  "MapLibre validator inventory changed. Review the accepted aggregate command, "
-                  "inputs, fixtures, and exit outcomes before changing CI."
+                  "MapLibre validator inventory changed outside the accepted perf "
+                  "wrappers/placeholders and separately governed source-metadata lane. "
+                  "Review the aggregate command, inputs, fixtures, and exit outcomes before "
+                  "changing CI."
               )
           for name in schema_wrappers:
               text = (validator_root / name).read_text(encoding="utf-8")
@@ -503,7 +559,12 @@ jobs:
 
           print("The reviewed pnpm workspace lockfile is present and no alternative lockfile exists.")
           print("The @kfm/maplibre importer and package remain dependency-free.")
-          print("No executable MapLibre fixture payloads exist.")
+          if source_metadata_payloads:
+              print(
+                  f"Classified {len(source_metadata_payloads)} source-metadata JSON payloads "
+                  "under the dedicated no-network validator lane."
+              )
+          print("No unclassified MapLibre performance fixture payloads exist.")
           print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
           print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
           print("Browser smoke remains live-CDN-dependent and lacks its referenced local style fixtures.")
@@ -520,6 +581,7 @@ jobs:
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
+            echo "- Fixture boundary: source-metadata JSON fixtures are governed by their dedicated no-network workflow and are not runtime/performance baselines."
             echo "- Blockers: dependency-free MapLibre package; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
