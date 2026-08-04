@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.2.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-08-02:8ce864f56bec3ebafcc5ba83",
+  "event_cluster_id": "kfm:event-cluster:geospatial_source:60456d312328d95dcd0455f5",
+  "briefing_date": "2026-08-02",
+  "status": "NEEDS_VERIFICATION",
+  "headline": "Synthetic reusable geospatial source candidate",
+  "story_type": "geospatial_source",
+  "domains": [
+    "spatial_foundation"
+  ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "fixture:authority:source-alpha",
+    "native_id_or_identity_key": "fixture:dataset:source-alpha",
+    "geography_identity": "state:kansas",
+    "durable_subject_key": "reusable-geospatial-source-alpha",
+    "signal_digest": "sha256:8ce864f56bec3ebafcc5ba8359e157013853e9bf67b843e2784ad1efb7f2c3d4"
+  },
+  "deduplication": {
+    "status": "UNIQUE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [],
+    "reason_codes": [
+      "NEW_CLUSTER"
+    ]
+  },
+  "materiality": {
+    "algorithm": "kfm-briefing-materiality-v1",
+    "threshold_profile": "kfm-briefing-thresholds-v1",
+    "dimensions": {
+      "public_safety": 0,
+      "repository_integrity": 0,
+      "geospatial_relevance": 4,
+      "recurrence": 3,
+      "reuse_value": 5,
+      "authority_quality": 4,
+      "time_sensitivity": 2,
+      "rights_sensitivity_risk": 0,
+      "identity_uncertainty": 1,
+      "implementation_readiness": 5
+    },
+    "raw_score": 35,
+    "priority": "P1",
+    "reason_codes": [
+      "GEOSPATIAL_RELEVANCE",
+      "RECURRENCE",
+      "REUSE_VALUE",
+      "AUTHORITY_QUALITY",
+      "TIME_SENSITIVITY",
+      "IDENTITY_UNCERTAINTY",
+      "IMPLEMENTATION_READINESS"
+    ],
+    "mandatory_override": {
+      "applied": false,
+      "reason_code": null
+    },
+    "rationale": "The synthetic source is reusable, Kansas-wide, authoritative enough for bounded discovery, and scores exactly P1."
+  },
+  "routing": {
+    "algorithm": "kfm-briefing-routing-v1",
+    "official_support": "UNRESOLVED",
+    "modeling_ready": true,
+    "dependency_state": "CLEAR",
+    "safety_state": "SAFE",
+    "issue_kind": "SOURCE_DISCOVERY",
+    "reason_codes": [
+      "SOURCE_DISCOVERY_READY"
+    ]
+  },
+  "geographic_scope": {
+    "kind": "statewide",
+    "identifiers": [
+      "state:Kansas"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "A synthetic source candidate may support a reusable Kansas layer.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "other",
+      "authority_name": "Synthetic source authority",
+      "locator": "fixture:source:geospatial-alpha",
+      "observed_at": "2026-08-02T12:00:00Z",
+      "snapshot_status": "LOCATOR_ONLY"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [],
+    "pull_requests": [],
+    "paths": [],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "SourceDescriptor"
+  ],
+  "next_action": {
+    "disposition": "OPEN_SOURCE_DISCOVERY_ISSUE",
+    "scope": "Propose one source-discovery issue for fixture review only.",
+    "idempotency_key": "sha256:f7d91e99ccd09f5a133de5e36a2ef4fffe324e381065f63ccfc60792784dd682",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "generation_receipt_ref": "fixture:receipt:briefing:p1-source-discovery",
+  "candidate_payload": {
+    "object_family": "SourceDescriptor",
+    "candidate_state": "NEEDS_VERIFICATION",
+    "authority_boundary": "Synthetic source-discovery fixture; no source activation or rights decision.",
+    "attributes": {
+      "source_candidate_id": "fixture:source:geospatial-alpha",
+      "activation_state": "not_requested"
+    }
+  },
+  "expires_at": "2026-08-03T12:00:00Z"
+}

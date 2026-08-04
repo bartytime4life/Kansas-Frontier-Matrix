@@ -1,6 +1,6 @@
 # Validate non-authoritative briefing integration, deterministic BriefingSignal
-# identity/deduplication, the proposed shared temporal-authority profile, and
-# water-planning semantic, authority-reference, and canonical registry boundaries.
+# identity/dedup/materiality/routing, the proposed shared temporal-authority
+# profile, and water-planning semantic and canonical registry boundaries.
 # This workflow is read-only and emits no KFM release or publication authority.
 name: briefing-integration
 
@@ -94,7 +94,7 @@ jobs:
       - name: Install declared validation dependencies
         run: python -m pip install -e .
 
-      - name: Run BriefingSignal identity, validation, and dedup tests
+      - name: Run BriefingSignal identity, validation, dedup, materiality, and routing tests
         run: |
           python -m unittest discover \
             --start-directory tests/governance \
@@ -112,14 +112,29 @@ jobs:
           python tools/validators/governance/deduplicate_briefing_signals.py \
             fixtures/contracts/v1/governance/briefing_signal/valid/*.json
 
-      - name: Confirm known-invalid BriefingSignal fixtures fail closed
+      - name: Run explainable materiality and routing dry run
+        run: |
+          python tools/validators/governance/route_briefing_signals.py \
+            fixtures/contracts/v1/governance/briefing_signal/valid/*.json \
+            examples/briefing_integration/*.json
+
+      - name: Confirm structurally invalid BriefingSignal fixtures fail closed
         run: |
           if python tools/validators/governance/validate_briefing_signal.py \
             fixtures/contracts/v1/governance/briefing_signal/invalid/*.json; then
             echo "::error::Known-invalid BriefingSignal fixtures were accepted."
             exit 1
           fi
-          echo "EXPECTED_REJECTION: invalid BriefingSignal fixtures"
+          echo "EXPECTED_REJECTION: structurally invalid BriefingSignal fixtures"
+
+      - name: Confirm schema-valid semantic negatives fail closed
+        run: |
+          if python tools/validators/governance/validate_briefing_signal.py \
+            fixtures/contracts/v1/governance/briefing_signal/semantic_invalid/*.json; then
+            echo "::error::Known semantic-invalid BriefingSignal fixtures were accepted."
+            exit 1
+          fi
+          echo "EXPECTED_REJECTION: schema-valid semantic-invalid BriefingSignal fixtures"
 
       - name: Run TemporalAuthorityEnvelope tests
         run: |
@@ -139,8 +154,9 @@ jobs:
             echo "### Briefing integration"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: non-authoritative BriefingSignal shape, deterministic daily identity, durable event clustering, replay/collision checks, dry-run issue-routing guardrails, examples, and the proposed shared TemporalAuthorityEnvelope schema/semantic fixture profile."
-            echo "- The clustering tool reads local validated files only and emits authority_created=false plus repository_mutation_allowed=false."
+            echo "- Scope: non-authoritative BriefingSignal shape, deterministic identity, durable event clustering, replay/collision checks, explainable materiality, mandatory overrides, and finite issue-routing dry runs plus the proposed shared TemporalAuthorityEnvelope profile."
+            echo "- Both dry-run tools read local validated files only and emit authority_created=false plus repository_mutation_allowed=false."
+            echo "- A materiality priority is a review-order recommendation, not evidence, policy, repository authorization, issue mutation, or release authority."
             echo "- The temporal-authority profile does not accept ADR-0014, replace TemporalWindow, select a global temporal vocabulary, or replace a domain contract."
             echo "- A green result is not evidence, source admission, repository authorization, issue mutation, policy approval, review approval, proof closure, release, deployment, publication, or public truth."
           } >> "$GITHUB_STEP_SUMMARY"

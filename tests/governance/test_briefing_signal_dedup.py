@@ -100,6 +100,7 @@ class BriefingSignalDedupTests(unittest.TestCase):
             "matched_issue_ids": [],
             "reason_codes": ["NO_MATCH_EVIDENCE"],
         }
+        followup["routing"]["reason_codes"] = ["LOW_PRIORITY_NO_ACTION"]
         followup["next_action"]["idempotency_key"] = compute_issue_idempotency_key(followup)
         with tempfile.TemporaryDirectory() as directory:
             p1 = Path(directory) / "primary.json"

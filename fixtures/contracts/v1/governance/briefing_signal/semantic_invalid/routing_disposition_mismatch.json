@@ -112,19 +112,19 @@
     "PublicMeeting"
   ],
   "next_action": {
-    "disposition": "NO_ACTION",
+    "disposition": "OPEN_SOURCE_DISCOVERY_ISSUE",
     "scope": "Validate the fixture shape, deterministic identity, materiality, and routing only.",
-    "idempotency_key": "sha256:675aa86d77da1c9dec6429dc34f27f2737fab0b5766660ec1d4217c7cb414745",
-    "repository_mutation_allowed": true
+    "idempotency_key": "sha256:0297e3555f92b74280227455070578063b124c71f50f42ba8a8c7c8c624b043c",
+    "repository_mutation_allowed": false
   },
   "permissions": {
     "source_activation": false,
     "proof_construction": false,
     "release": false,
     "deployment": false,
-    "publication": true
+    "publication": false
   },
-  "public_use_allowed": true,
+  "public_use_allowed": false,
   "generation_receipt_ref": "fixture:receipt:briefing:synthetic-alpha",
   "candidate_payload": {
     "object_family": "PublicMeeting",

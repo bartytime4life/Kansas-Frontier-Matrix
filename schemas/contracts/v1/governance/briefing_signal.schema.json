@@ -18,6 +18,7 @@
     "identity",
     "deduplication",
     "materiality",
+    "routing",
     "geographic_scope",
     "claims",
     "official_source_candidates",
@@ -31,7 +32,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.1.0"
+      "const": "1.2.0"
     },
     "signal_version": {
       "type": "integer",
@@ -177,14 +178,95 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "algorithm",
+        "threshold_profile",
+        "dimensions",
+        "raw_score",
         "priority",
-        "safety",
-        "operational_impact",
-        "geospatial_relevance",
-        "reuse_value",
+        "reason_codes",
+        "mandatory_override",
         "rationale"
       ],
       "properties": {
+        "algorithm": {
+          "const": "kfm-briefing-materiality-v1"
+        },
+        "threshold_profile": {
+          "const": "kfm-briefing-thresholds-v1"
+        },
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "public_safety",
+            "repository_integrity",
+            "geospatial_relevance",
+            "recurrence",
+            "reuse_value",
+            "authority_quality",
+            "time_sensitivity",
+            "rights_sensitivity_risk",
+            "identity_uncertainty",
+            "implementation_readiness"
+          ],
+          "properties": {
+            "public_safety": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "repository_integrity": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "geospatial_relevance": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "recurrence": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "reuse_value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "authority_quality": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "time_sensitivity": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "rights_sensitivity_risk": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "identity_uncertainty": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "implementation_readiness": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          }
+        },
+        "raw_score": {
+          "type": "integer",
+          "minimum": -20,
+          "maximum": 80
+        },
         "priority": {
           "enum": [
             "P0",
@@ -194,30 +276,161 @@
             "IGNORE"
           ]
         },
-        "safety": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "PUBLIC_SAFETY",
+              "REPOSITORY_INTEGRITY",
+              "GEOSPATIAL_RELEVANCE",
+              "RECURRENCE",
+              "REUSE_VALUE",
+              "AUTHORITY_QUALITY",
+              "TIME_SENSITIVITY",
+              "RIGHTS_SENSITIVITY_RISK",
+              "IDENTITY_UNCERTAINTY",
+              "IMPLEMENTATION_READINESS",
+              "ACTIVE_PUBLIC_SAFETY_CONFLICT",
+              "UNEXPECTED_REPOSITORY_MERGE",
+              "PUBLIC_INTERNAL_STORE_BYPASS",
+              "LOW_MATERIALITY"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 11,
+          "uniqueItems": true
         },
-        "operational_impact": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 3
-        },
-        "geospatial_relevance": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 3
-        },
-        "reuse_value": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+        "mandatory_override": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "applied",
+            "reason_code"
+          ],
+          "properties": {
+            "applied": {
+              "type": "boolean"
+            },
+            "reason_code": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                "ACTIVE_PUBLIC_SAFETY_CONFLICT",
+                "UNEXPECTED_REPOSITORY_MERGE",
+                "PUBLIC_INTERNAL_STORE_BYPASS",
+                null
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "applied": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "applied"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason_code": {
+                    "enum": [
+                      "ACTIVE_PUBLIC_SAFETY_CONFLICT",
+                      "UNEXPECTED_REPOSITORY_MERGE",
+                      "PUBLIC_INTERNAL_STORE_BYPASS"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "reason_code": {
+                    "const": null
+                  }
+                }
+              }
+            }
+          ]
         },
         "rationale": {
           "type": "string",
           "minLength": 1,
           "maxLength": 1024
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "official_support",
+        "modeling_ready",
+        "dependency_state",
+        "safety_state",
+        "issue_kind",
+        "reason_codes"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "kfm-briefing-routing-v1"
+        },
+        "official_support": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "CONFLICTED",
+            "NOT_REQUIRED"
+          ]
+        },
+        "modeling_ready": {
+          "type": "boolean"
+        },
+        "dependency_state": {
+          "enum": [
+            "CLEAR",
+            "BLOCKED"
+          ]
+        },
+        "safety_state": {
+          "enum": [
+            "SAFE",
+            "UNSAFE"
+          ]
+        },
+        "issue_kind": {
+          "enum": [
+            "NONE",
+            "SOURCE_DISCOVERY",
+            "OBJECT_MODEL",
+            "CORRECTIVE"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "EXISTING_ISSUE_MATCH",
+              "DUPLICATE_CLUSTER_NO_ISSUE",
+              "UNSAFE_FOR_ROUTING",
+              "DEPENDENCY_BLOCKED",
+              "P0_CORRECTIVE_READY",
+              "SOURCE_DISCOVERY_READY",
+              "OBJECT_MODEL_READY",
+              "OFFICIAL_SUPPORT_UNRESOLVED",
+              "MODELING_NOT_READY",
+              "NO_ROUTABLE_ISSUE_KIND",
+              "LOW_PRIORITY_NO_ACTION"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true
         }
       }
     },
@@ -362,7 +575,11 @@
             "UPDATE_EXISTING_ISSUE",
             "OPEN_SOURCE_DISCOVERY_ISSUE",
             "OPEN_OBJECT_MODEL_ISSUE",
-            "NO_ACTION"
+            "OPEN_CORRECTIVE_ISSUE",
+            "HOLD_FOR_DEPENDENCY",
+            "REJECT_UNSAFE",
+            "NO_ACTION",
+            "ERROR"
           ]
         },
         "scope": {
@@ -602,12 +819,13 @@
   },
   "x-kfm": {
     "status": "PROPOSED",
-    "profile_version": "1.1.0",
+    "profile_version": "1.2.0",
     "contract_doc": "contracts/governance/briefing_signal.md",
     "fixtures_root": "fixtures/contracts/v1/governance/briefing_signal/",
     "validator": "tools/validators/governance/validate_briefing_signal.py",
     "dedup_dry_run": "tools/validators/governance/deduplicate_briefing_signals.py",
-    "tests": "tests/governance/test_briefing_signal.py; tests/governance/test_briefing_signal_dedup.py",
+    "materiality_routing_dry_run": "tools/validators/governance/route_briefing_signals.py",
+    "tests": "tests/governance/test_briefing_signal.py; tests/governance/test_briefing_signal_dedup.py; tests/governance/test_briefing_signal_materiality.py",
     "authority": "non_authoritative_discovery_only"
   },
   "allOf": [
