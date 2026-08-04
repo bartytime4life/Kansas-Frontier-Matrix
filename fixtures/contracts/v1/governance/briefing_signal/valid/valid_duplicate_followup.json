@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.1.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-07-30:b37a0154a1d02c3b6e4b3905",
+  "event_cluster_id": "kfm:event-cluster:governance_event:5c1ad27137565f1bc3fbc1f0",
+  "briefing_date": "2026-07-30",
+  "status": "DUPLICATE",
+  "headline": "Synthetic governance event signal — follow-up wording",
+  "story_type": "governance_event",
+  "domains": [
+    "water_planning"
+  ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "fixture:authority:synthetic-alpha",
+    "native_id_or_identity_key": "fixture:event:synthetic-alpha",
+    "geography_identity": "fixture:place:synthetic-alpha",
+    "durable_subject_key": "fixture:subject:synthetic-alpha",
+    "signal_digest": "sha256:b37a0154a1d02c3b6e4b3905c6334feb70afc43940dafd13da5e3ad9f66ce90a"
+  },
+  "deduplication": {
+    "status": "DUPLICATE",
+    "matched_signal_ids": [
+      "kfm:briefing-signal:2026-07-29:72bd95bb5e24dc5f778902fb"
+    ],
+    "matched_issue_ids": [],
+    "reason_codes": [
+      "EVENT_CLUSTER_ID_MATCH"
+    ]
+  },
+  "materiality": {
+    "priority": "P2",
+    "safety": 0,
+    "operational_impact": 1,
+    "geospatial_relevance": 2,
+    "reuse_value": 3,
+    "rationale": "Synthetic fixture for deterministic non-authoritative briefing intake."
+  },
+  "geographic_scope": {
+    "kind": "point",
+    "identifiers": [
+      "fixture:venue:synthetic-alpha"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "A synthetic event was announced for fixture validation.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "fixture:evidence:briefing:synthetic-alpha"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "text": "A follow-up briefing still does not establish that the synthetic event occurred.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "other",
+      "authority_name": "Synthetic fixture authority",
+      "locator": "fixture:source:briefing:synthetic-alpha",
+      "observed_at": "2026-07-30T10:00:00Z",
+      "snapshot_status": "SNAPSHOT_CAPTURED"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [],
+    "pull_requests": [],
+    "paths": [],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "PublicMeeting"
+  ],
+  "next_action": {
+    "disposition": "NO_ACTION",
+    "scope": "Retain the existing event cluster; do not open duplicate work.",
+    "idempotency_key": "sha256:2174c092142dd8acae6e23755e776bc173c923b07debffe627b75481e8199fb1",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "generation_receipt_ref": "fixture:receipt:briefing:synthetic-alpha-followup",
+  "candidate_payload": {
+    "object_family": "PublicMeeting",
+    "candidate_state": "STATUS_UNCONFIRMED",
+    "authority_boundary": "Synthetic fixture only; not a real meeting or public record.",
+    "attributes": {
+      "meeting_id": "fixture:meeting:synthetic-alpha",
+      "source_announced_state": "scheduled",
+      "observed_event_state": "status_unconfirmed",
+      "geometry_ref": null
+    }
+  },
+  "expires_at": "2026-07-31T12:00:00Z"
+}
