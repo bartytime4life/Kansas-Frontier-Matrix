@@ -94,6 +94,15 @@ jobs:
           Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
           PY
 
+      - name: Record authoring artifact hashes
+        shell: bash
+        run: |
+          sha256sum \
+            contracts/evidence/kfm_geo_manifest.md \
+            fixtures/evidence/kfm_geo_manifest/README.md \
+            tools/validators/evidence/validate_kfm_geo_manifest.py \
+            .github/workflows/kfm-geo-manifest-validation.yml
+
       - name: Verify generated authoring receipt integrity
         shell: bash
         run: |
