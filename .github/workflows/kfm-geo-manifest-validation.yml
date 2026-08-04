@@ -1,0 +1,123 @@
+# Validate the proposed fixture-first KFMGeoManifest profile.
+#
+# This workflow is read-only and no-network at test time. It proves bounded
+# schema shape, profile-local deterministic hashing, spatial and transform
+# consistency, fail-closed candidate posture, exact synthetic byte binding,
+# and generated-receipt integrity. It does not accept ADR-0023, sign or verify
+# signatures, resolve evidence, evaluate policy or review, release, deploy, or
+# publish.
+name: kfm-geo-manifest-validation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/kfm-geo-manifest-validation.yml"
+      - "contracts/evidence/kfm_geo_manifest.md"
+      - "schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json"
+      - "fixtures/evidence/kfm_geo_manifest/**"
+      - "tools/validators/evidence/_kfm_geo_manifest.py"
+      - "tools/validators/evidence/validate_kfm_geo_manifest.py"
+      - "tests/validators/test_validate_kfm_geo_manifest.py"
+      - "data/receipts/generated/genrec-kfm-geo-manifest-validation-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/kfm-geo-manifest-validation.yml"
+      - "contracts/evidence/kfm_geo_manifest.md"
+      - "schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json"
+      - "fixtures/evidence/kfm_geo_manifest/**"
+      - "tools/validators/evidence/_kfm_geo_manifest.py"
+      - "tools/validators/evidence/validate_kfm_geo_manifest.py"
+      - "tests/validators/test_validate_kfm_geo_manifest.py"
+      - "data/receipts/generated/genrec-kfm-geo-manifest-validation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kfm-geo-manifest-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-kfm-geo-manifests:
+    name: validate-kfm-geo-manifests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network KFMGeoManifest tests
+        shell: bash
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_kfm_geo_manifest.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity and byte binding
+        shell: bash
+        run: python tools/validators/evidence/validate_kfm_geo_manifest.py --fixtures
+
+      - name: Validate schema against Draft 2020-12 meta-schema
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          path = Path("schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json")
+          Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
+          PY
+
+      - name: Record authoring artifact hashes
+        shell: bash
+        run: |
+          sha256sum \
+            contracts/evidence/kfm_geo_manifest.md \
+            fixtures/evidence/kfm_geo_manifest/README.md \
+            tools/validators/evidence/validate_kfm_geo_manifest.py \
+            .github/workflows/kfm-geo-manifest-validation.yml
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-kfm-geo-manifest-validation-20260804.json \
+            --repo-root .
+
+      - name: Record KFMGeoManifest boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### KFMGeoManifest fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed proposed schema, profile-local deterministic hash, artifact/media and spatial checks, transform-chain and sensitivity-transform receipts, fail-closed candidate posture, exact synthetic byte binding, and generated-receipt integrity."
+            echo "- Non-effects: ADR-0023 remains proposed; no signature, evidence resolution, policy or review authentication, promotion-gate change, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
