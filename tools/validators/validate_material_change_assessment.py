@@ -177,111 +177,157 @@ def _semantic_findings(candidate: dict[str, Any]) -> list[Finding]:
 
     for field in ("validation_report_refs", "source_refs"):
         refs = _array(evidence.get(field))
-        if not _sorteYÝ[š\]YWÜÝš[™ÜÊ™YœÊN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘Q”×Ó“ÕÐÐS“Ó’PÐS‹ˆ‹Ù]šY[˜ÙKÞÙšY[HŠJBˆ™X\ÛÛœÈHØ\œ˜^JÛ\ÜÚYšXØ][Û‹™Ù]
-œ™X\ÛÛ—ØÛÙ\ÈŠBˆYˆ›ÝÜÛÜYÝ[š\]YWÜÝš[™ÜÊ™X\ÛÛœÊN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ”×Ó“ÕÐÐS“Ó’PÐS‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJB‚ˆÚ[™ÙWØÛ\ÜÈHÛ\ÜÚYšXØ][Û‹™Ù]
-˜Ú[™ÙWØÛ\ÜÈŠBˆX]\šX[HÛ\ÜÚYšXØ][Û‹™Ù]
-›X]\šX[ŠBˆÝ]ÛÛYHHÛ\ÜÚYšXØ][Û‹™Ù]
-›Ý]ÛÛYHŠBˆ™\]Z\™YÜ™\Ý[ÈHÚ][K™Ù]
-œ™\Ý[ŠH›Üˆ][H[ˆÜš]\šXHYˆ\Ú[œÝ[˜ÙJ][KXÝ
-H[™][K™Ù]
-œ™\]Z\™YŠH\ÈYWBˆ[Ü™\Ý[ÈHÚ][K™Ù]
-œ™\Ý[ŠH›Üˆ][H[ˆÜš]\šXHYˆ\Ú[œÝ[˜ÙJ][KXÝ
-WB‚ˆ^XÝYHÂˆ•SÒS‘ÑQŽˆ
-˜[ÙK““Ó—ÑU‘S•‹˜[ÙJKˆ–UWÓÓ“HŽˆ
-˜[ÙK““Ó—ÑU‘S•‹˜[ÙJKˆ”ÑSPS•P×Ó“Ó—ÓPUT’PSŽˆ
-˜[ÙK““Ó—ÑU‘S•‹YJKˆ“PUT’PSŽˆ
-YK”“ÓSÕSÓ—ÐÐS‘QUH‹YJKˆ•S‘UT“RS‘QŽˆ
-›Û™K’Ó‹›Û™JKˆ‘T”“ÔˆŽˆ
-›Û™K‘T”“Ôˆ‹›Û™JKˆBˆYˆÚ[™ÙWØÛ\ÜÈ[ˆ^XÝY‚ˆ^XÝYÛX]\šX[^XÝYÛÝ]ÛÛYK^XÝYÜÙ[X[XÈH^XÝYØÚ[™ÙWØÛ\Ü×BˆYˆX]\šX[\È›Ý^XÝYÛX]\šX[‚ˆš[™[™ÜË˜\[™
-š[™[™Ê“PUT’PSÔÕUWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹ÛX]\šX[ŠJBˆYˆÝ]ÛÛYHOH^XÝYÛÝ]ÛÛYN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê“ÕUÓÓQWÐÓTÔ×ÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹ÛÝ]ÛÛYHŠJBˆYˆ^XÝYÜÙ[X[XÈ\È›Ý›Û™H[™Ù[X[X×ØÚ[™ÙY\È›Ý^XÝYÜÙ[X[XÎ‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”ÑSPS•P×ÔÕUWÓRTÓPUÒ‹‹ØÛÛ\\š\ÛÛ‹ÜÙ[X[X×ØÚ[™ÙYŠJB‚ˆYˆÚ[™ÙWØÛ\ÜÈOH•SÒS‘ÑQŽ‚ˆYˆž]WØÚ[™ÙY\È›Ý˜[ÙN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê•SÒS‘ÑQÐ–UT×ÓRTÓPUÒ‹‹ØÛÛ\\š\ÛÛ‹Øž]WØÚ[™ÙYŠJBˆYˆ““×Ð–UWÐÒS‘ÑHˆ›Ý[ˆ™X\ÛÛœÎ‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJBˆ[YˆÚ[™ÙWØÛ\ÜÈOH–UWÓÓ“HŽ‚ˆYˆž]WØÚ[™ÙY\È›ÝYN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê–UWÓÓ“WÐ–UT×ÓRTÓPUÒ‹‹ØÛÛ\\š\ÛÛ‹Øž]WØÚ[™ÙYŠJBˆYˆ›Ý
-È–UWÓÓ“WÐÒS‘ÑH‹ÐS“Ó’PÐSÑTURUSS•ŸH	ˆÙ]
-™X\ÛÛœÊJN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJBˆ[YˆÚ[™ÙWØÛ\ÜÈOH”ÑSPS•P×Ó“Ó—ÓPUT’PSŽ‚ˆYˆž]WØÚ[™ÙY\È›ÝYHÜˆ‘RSˆ›Ý[ˆ[Ü™\Ý[Î‚ˆš[™[™ÜË˜\[™
-š[™[™Ê““Ó—ÓPUT’PSÐÔ’UT’PWÓRTÓPUÒ‹‹ØÜš]\šXHŠJBˆYˆ‘SÕ×ÓPUT’PSUWÕ‘TÒÓˆ›Ý[ˆ™X\ÛÛœÎ‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJBˆ[YˆÚ[™ÙWØÛ\ÜÈOH“PUT’PSŽ‚ˆYˆž]WØÚ[™ÙY\È›ÝYHÜˆ›ÝÜš]\šXHÜˆ›Ý™\]Z\™YÜ™\Ý[ÈÜˆ[žJ™\Ý[OH”TÔÈˆ›Üˆ™\Ý[[ˆ™\]Z\™YÜ™\Ý[ÊN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê“PUT’PSÐÔ’UT’PWÓ“ÕÔÐUTÑ’QQ‹‹ØÜš]\šXHŠJBˆYˆ›Ý
-È“PUT’PSUWÕ‘TÒÓÓQU‹‘ÓPRS—ÔÕUT×ÐÒS‘ÑHŸH	ˆÙ]
-™X\ÛÛœÊJN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJBˆ[YˆÚ[™ÙWØÛ\ÜÈOH•S‘UT“RS‘QŽ‚ˆYˆ›Ý
-È“RTÔÒS‘×ÐTÑSS‘H‹”“Ñ’SWÕS”‘TÓÓ‘Q‹“QU’P×ÕSURSP“H‹’S”ÕQ‘’PÒQS•ÑU’QSÑHŸH	ˆÙ]
-™X\ÛÛœÊJN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJBˆ[YˆÚ[™ÙWØÛ\ÜÈOH‘T”“ÔˆŽ‚ˆYˆ›Ý
-È’S”UÒS•SQ‹”“Ñ’SWÒS•SQ‹‘USPUSÓ—ÑT”“ÔˆŸH	ˆÙ]
-™X\ÛÛœÊJN‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”‘PTÓÓ—ÑSRSWÓRTÓPUÒ‹‹ØÛ\ÜÚYšXØ][Û‹Ü™X\ÛÛ—ØÛÙ\ÈŠJB‚ˆ˜\Ù[[™WÝ[YHHÜ\œÙWÝ[YJ[Z[™Ë™Ù]
-˜˜\Ù[[™WØ\×ÛÙˆŠJBˆØ[™Y]WÝ[YHHÜ\œÙWÝ[YJ[Z[™Ë™Ù]
-˜Ø[™Y]WØ\×ÛÙˆŠJBˆ\ÜÙ\ÜÙYÝ[YHHÜ\œÙWÝ[YJ[Z[™Ë™Ù]
-˜\ÜÙ\ÜÙYØ]ŠJBˆYˆ˜\Ù[[™WÝ[YH[™Ø[™Y]WÝ[YH[™˜\Ù[[™WÝ[YHˆØ[™Y]WÝ[YN‚ˆš[™[™ÜË˜\[™
-š[™[™ÊTÑSS‘WÐQ•T—ÐÐS‘QUH‹‹Ý[Z[™ËØ˜\Ù[[™WØ\×ÛÙˆŠJBˆYˆØ[™Y]WÝ[YH[™\ÜÙ\ÜÙYÝ[YH[™Ø[™Y]WÝ[YHˆ\ÜÙ\ÜÙYÝ[YN‚ˆš[™[™ÜË˜\[™
-š[™[™ÊÐS‘QUWÐQ•T—ÐTÔÑTÔÓQS•‹‹Ý[Z[™ËØØ[™Y]WØ\×ÛÙˆŠJB‚ˆYˆ\ÜÙ\ÜÛY[ÚY[™[™XYÙK™Ù]
-œÝ\\œÙY\ÈŠHOH\ÜÙ\ÜÛY[ÚY‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”ÑS—ÔÕTT”ÑTÔÒSÓˆ‹‹Û[™XYÙKÜÝ\\œÙY\ÈŠJBˆYˆ\ÜÙ\ÜÛY[ÚY[™[™XYÙK™Ù]
-œÝ\\œÙYYØžHŠHOH\ÜÙ\ÜÛY[ÚY‚ˆš[™[™ÜË˜\[™
-š[™[™Ê”ÑS—ÔÕTT”ÑTÔÒSÓˆ‹‹Û[™XYÙKÜÝ\\œÙYØžHŠJB‚ˆYˆ[žJÛÝ™\›˜[˜ÙK™Ù]
-šY[
-H\È›Ý˜[ÙH›ÜˆšY[[ˆ
-ˆ˜]]Üš]WØÜ™X]Y‹œÛXÞWÙ]˜[X]Y‹œ›Û[Ý[Û—Ø]]Üš^™Y‹œX›X×Ý\ÙWØ[ÝÙY‚ˆ
-JHÜˆÛÝ™\›˜[˜ÙK™Ù]
-œ™[X\ÙWÜ™YˆŠH\È›Ý›Û™N‚ˆš[™[™ÜË˜\[™
-š[™[™Ê‘ÓÕ‘T“SÑWÐ“ÕS‘T–WÕ’SÓUSÓˆ‹‹ÙÛÝ™\›˜[˜ÙHŠJB‚ˆ™]\›ˆš[™[™ÜÂ‚‚™Yˆ˜[Y]WØ\ÜÙ\ÜÛY[
-]ˆ]
-HOˆ˜[Y][Û”™\Ý[‚ˆØ[™Y]Kš[™[™ÜÈHÜ™XYÛØš™XÝ
-]
-BˆYˆØ[™Y]H\È›Û™N‚ˆ™]\›ˆ˜[Y][Û”™\Ý[
-\JÛÜY
-Ù]
-š[™[™ÜÊJJJBˆš[™[™ÜË™^[™
-ÜØÚ[XWÙš[™[™ÜÊØ[™Y]JJBˆš[™[™ÜË™^[™
-ÜÙ[X[X×Ùš[™[™ÜÊØ[™Y]JJBˆ™]\›ˆ˜[Y][Û”™\Ý[
-\JÛÜY
-Ù]
-š[™[™ÜÊJJJB‚‚™YˆÜÙ\šX[^™J]ˆ]™\Ý[ˆ˜[Y][Û”™\Ý[
-HOˆÝŽ‚ˆ™]\›ˆœÛÛ‹™[\ÊˆÂˆ™š[HŽˆ]˜\×ÜÜÚ^
+        if not _sorted_unique_strings(refs):
+            findings.append(Finding("REFS_NOT_CANONICAL", f"/evidence/{field}"))
+    reasons = _array(classification.get("reason_codes"))
+    if not _sorted_unique_strings(reasons):
+        findings.append(Finding("REASONS_NOT_CANONICAL", "/classification/reason_codes"))
 
-Kˆ™š[™[™ÜÈŽˆÞÈ˜ÛÙHŽˆ][K˜ÛÙK™šY[Žˆ][K™šY[H›Üˆ][H[ˆ™\Ý[™š[™[™Ü×Kˆ›Ý]ÛÛYHŽˆ”TÔÈˆYˆ™\Ý[›ÚÈ[ÙH‘RS‹ˆœØÛÜHŽˆÐÓÔKˆKˆÛÜÚÙ^\ÏUYKˆÙ\\˜]ÜœÏJ‹‹ŽˆŠKˆ
-B‚‚™YˆÙš^\™WÙš[\Ê\™XÝÜžNˆ]™Yš^ˆÝŠHOˆ\ÝÔ]N‚ˆ™]\›ˆÛÜY
-\™XÝÜžK™ÛØŠˆžÜ™Yš^J‹šœÛÛˆŠKÙ^O[[X™H]ˆ]˜\×ÜÜÚ^
+    change_class = classification.get("change_class")
+    material = classification.get("material")
+    outcome = classification.get("outcome")
+    required_results = [item.get("result") for item in criteria if isinstance(item, dict) and item.get("required") is True]
+    all_results = [item.get("result") for item in criteria if isinstance(item, dict)]
 
-JB‚‚™YˆÙ^XÝYÛX[šY™\Ý
-\™XÝÜžNˆ]
-HOˆXÝÜÝ‹\ÝÜÝ—WN‚ˆžN‚ˆ˜[YHHœÛÛ‹›ØYÊ
-\™XÝÜžHÈ™^XÝYÙš[™[™Ü×ÛX[šY™\ÝšœÛÛˆŠKœ™XYÝ^
-[˜ÛÙ[™ÏH]‹NŠJBˆ^Ù\
-ÔÑ\œ›Ü‹[šXÛÙQ\œ›Ü‹œÛÛ‹’”ÓÓ‘XÛÙQ\œ›ÜŠN‚ˆ™]\›ˆßBˆ™]\›ˆ˜[YHYˆ\Ú[œÝ[˜ÙJ˜[YKXÝ
-H[ÙHßB‚‚™Yˆ[—Ùš^\™WÜ›Ùš[J
-HOˆ[‚ˆ˜[YÙš[\ÈHÙš^\™WÙš[\Ê’VT‘WÔ“ÓÕÈ˜[Y‹˜[YÈŠBˆ[˜[YÙš[\ÈHÙš^\™WÙš[\Ê’VT‘WÔ“ÓÕÈš[˜[Y‹š[˜[YÈŠBˆX[šY™\ÝHÙ^XÝYÛX[šY™\Ý
-’VT‘WÔ“ÓÕÈš[˜[YŠBˆYˆ›Ý˜[YÙš[\ÈÜˆ›Ý[˜[YÙš[\Î‚ˆ™]\›ˆBˆ\ÜÙYHYBˆ›Üˆ][ˆ˜[YÙš[\Î‚ˆ™\Ý[H˜[Y]WØ\ÜÙ\ÜÛY[
-]
-Bˆš[
-ÜÙ\šX[^™J]™\Ý[
-JBˆ\ÜÙYH\ÜÙY[™™\Ý[›ÚÂˆ›Üˆ][ˆ[˜[YÙš[\Î‚ˆ™\Ý[H˜[Y]WØ\ÜÙ\ÜÛY[
-]
-Bˆš[
-ÜÙ\šX[^™J]™\Ý[
-JBˆXÝX[HÛÜY
-Ùš[™[™Ë˜ÛÙH›Üˆš[™[™È[ˆ™\Ý[™š[™[™ÜßJBˆ^XÝYHÛÜY
-X[šY™\Ý™Ù]
-]›˜[YK×JJBˆYˆ™\Ý[›ÚÈÜˆ›Ý^XÝYÜˆXÝX[OH^XÝY‚ˆ\ÜÙYH˜[ÙBˆš[
-œÛÛ‹™[\ÊÈ˜XÝX[ŽˆXÝX[™^XÝYŽˆ^XÝY™š[HŽˆ]˜\×ÜÜÚ^
+    expected = {
+        "UNCHANGED": (False, "NON_EVENT", False),
+        "BYTE_ONLY": (False, "NON_EVENT", False),
+        "SEMANTIC_NON_MATERIAL": (False, "NON_EVENT", True),
+        "MATERIAL": (True, "PROMOTION_CANDIDATE", True),
+        "UNDETERMINED": (None, "HOLD", None),
+        "ERROR": (None, "ERROR", None),
+    }
+    if change_class in expected:
+        expected_material, expected_outcome, expected_semantic = expected[change_class]
+        if material is not expected_material:
+            findings.append(Finding("MATERIAL_STATE_MISMATCH", "/classification/material"))
+        if outcome != expected_outcome:
+            findings.append(Finding("OUTCOME_CLASS_MISMATCH", "/classification/outcome"))
+        if expected_semantic is not None and semantic_changed is not expected_semantic:
+            findings.append(Finding("SEMANTIC_STATE_MISMATCH", "/comparison/semantic_changed"))
 
-K›Ý]ÛÛYHŽˆ‘’VT‘WÔÓT’UWÑT”“ÔˆŸKÛÜÚÙ^\ÏUYKÙ\\˜]ÜœÏJ‹‹ŽˆŠJBˆ™]\›ˆYˆ\ÜÙY[ÙHB‚‚™YˆXZ[Š\™ÝŽˆÙ\]Y[˜ÙVÜÝ—H›Û™HH›Û™JHOˆ[‚ˆ\œÙ\ˆH\™Ü\œÙK\™Ý[Y[\œÙ\Š\ØÜš\[ÛH•˜[Y]H›ÜÜÙYÑ“HX]\šX[Ú[™ÙP\ÜÙ\ÜÛY[™XÛÜ™ËˆŠBˆ\œÙ\‹˜YØ\™Ý[Y[
-™š[\È‹˜\™ÜÏHŠˆ‹\OT]
-Bˆ\œÙ\‹˜YØ\™Ý[Y[
-‹KYš^\™\È‹XÝ[ÛHœÝÜ™WÝYHŠBˆ\™ÜÈH\œÙ\‹œ\œÙWØ\™ÜÊ\™ÝŠBˆYˆ\™ÜË™š^\™\Î‚ˆYˆ\™ÜË™š[\Î‚ˆ\œÙ\‹™\œ›ÜŠ‹KYš^\™\ÈØ[››Ý™HÛÛXš[™YÚ]^XÚ]š[\ÈŠBˆ™]\›ˆ[—Ùš^\™WÜ›Ùš[J
-BˆYˆ›Ý\™ÜË™š[\Î‚ˆ\œÙ\‹™\œ›ÜŠœ›ÝšYHÛ™HÜˆ[Ü™Hš[\ÈÜˆ\ÙHKYš^\™\ÈŠBˆ˜Z[YH˜[ÙBˆ›Üˆ][ˆÛÜY
-\™ÜË™š[\ËÙ^O[[X™H][Nˆ][K˜\×ÜÜÚ^
+    if change_class == "UNCHANGED":
+        if byte_changed is not False:
+            findings.append(Finding("UNCHANGED_BYTES_MISMATCH", "/comparison/byte_changed"))
+        if "NO_BYTE_CHANGE" not in reasons:
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
+    elif change_class == "BYTE_ONLY":
+        if byte_changed is not True:
+            findings.append(Finding("BYTE_ONLY_BYTES_MISMATCH", "/comparison/byte_changed"))
+        if not ({"BYTE_ONLY_CHANGE", "CANONICAL_EQUIVALENT"} & set(reasons)):
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
+    elif change_class == "SEMANTIC_NON_MATERIAL":
+        if byte_changed is not True or "FAIL" not in all_results:
+            findings.append(Finding("NON_MATERIAL_CRITERIA_MISMATCH", "/criteria"))
+        if "BELOW_MATERIALITY_THRESHOLD" not in reasons:
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
+    elif change_class == "MATERIAL":
+        if byte_changed is not True or not criteria or not required_results or any(result != "PASS" for result in required_results):
+            findings.append(Finding("MATERIAL_CRITERIA_NOT_SATISFIED", "/criteria"))
+        if not ({"MATERIALITY_THRESHOLD_MET", "DOMAIN_STATUS_CHANGE"} & set(reasons)):
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
+    elif change_class == "UNDETERMINED":
+        if not ({"MISSING_BASELINE", "PROFILE_UNRESOLVED", "METRIC_UNAVAILABLE", "INSUFFICIENT_EVIDENCE"} & set(reasons)):
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
+    elif change_class == "ERROR":
+        if not ({"INPUT_INVALID", "PROFILE_INVALID", "EVALUATION_ERROR"} & set(reasons)):
+            findings.append(Finding("REASON_FAMILY_MISMATCH", "/classification/reason_codes"))
 
-JN‚ˆ™\Ý[H˜[Y]WØ\ÜÙ\ÜÛY[
-]
-Bˆš[
-ÜÙ\šX[^™J]™\Ý[
-JBˆ˜Z[YH˜Z[YÜˆ›Ý™\Ý[›ÚÂˆ™]\›ˆHYˆ˜Z[Y[ÙH‚‚šYˆ×Û˜[YW×ÈOH—×ÛXZ[—×ÈŽ‚ˆ˜Z\ÙHÞ\Ý[Q^]
-XZ[Š
-JB
+    baseline_time = _parse_time(timing.get("baseline_as_of"))
+    candidate_time = _parse_time(timing.get("candidate_as_of"))
+    assessed_time = _parse_time(timing.get("assessed_at"))
+    if baseline_time and candidate_time and baseline_time > candidate_time:
+        findings.append(Finding("BASELINE_AFTER_CANDIDATE", "/timing/baseline_as_of"))
+    if candidate_time and assessed_time and candidate_time > assessed_time:
+        findings.append(Finding("CANDIDATE_AFTER_ASSESSMENT", "/timing/candidate_as_of"))
+
+    if assessment_id and lineage.get("supersedes") == assessment_id:
+        findings.append(Finding("SELF_SUPERSESSION", "/lineage/supersedes"))
+    if assessment_id and lineage.get("superseded_by") == assessment_id:
+        findings.append(Finding("SELF_SUPERSESSION", "/lineage/supersed_by"))
+
+    if any(governance.get(field) is not False for field in (
+        "authority_created", "policy_evaluated", "promotion_authorized", "public_use_allowed"
+    )) or governance.get("release_ref") is not None:
+        findings.append(Finding("GOVERNANCE_BOUNDARY_VIOLATION", "/governance"))
+
+    return findings
+
+
+def validate_assessment(path: Path) -> ValidationResult:
+    candidate, findings = _read_object(path)
+    if candidate is None:
+        return ValidationResult(tuple(sorted(set(findings))))
+    findings.extend(_schema_findings(candidate))
+    findings.extend(_semantic_findings(candidate))
+    return ValidationResult(tuple(sorted(set(findings))))
+
+
+def _serialize(path: Path, result: ValidationResult) -> str:
+    return json.dumps(
+        {
+            "file": path.as_posix(),
+            "findings": [{"code": item.code, "field": item.field} for item in result.findings],
+            "outcome": "PASS" if result.ok else "FAIL",
+            "scope": SCOPE,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _fixture_files(directory: Path, prefix: str) -> list[Path]:
+    return sorted(directory.glob(f"{prefix}*.json"), key=lambda path: path.as_posix())
+
+
+def _expected_manifest(directory: Path) -> dict[str, list[str]]:
+    try:
+        value = json.loads((directory / "expected_findings_manifest.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def run_fixture_profile() -> int:
+    valid_files = _fixture_files(FIXTURE_ROOT / "valid", "valid_")
+    invalid_files = _fixture_files(FIXTURE_ROOT / "invalid", "invalid_")
+    manifest = _expected_manifest(FIXTURE_ROOT / "invalid")
+    if not valid_files or not invalid_files:
+        return 1
+    passed = True
+    for path in valid_files:
+        result = validate_assessment(path)
+        print(_serialize(path, result))
+        passed = passed and result.ok
+    for path in invalid_files:
+        result = validate_assessment(path)
+        print(_serialize(path, result))
+        actual = sorted({finding.code for finding in result.findings})
+        expected = sorted(manifest.get(path.name, []))
+        if result.ok or not expected or actual != expected:
+            passed = False
+            print(json.dumps({"actual": actual, "expected": expected, "file": path.as_posix(), "outcome": "FIXTURE_POLARITY_ERROR"}, sort_keys=True, separators=(",", ":"))
+    return 0 if passed else 1
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate proposed KFM MaterialChangeAssessment records.")
+    parser.add_argument("files", nargs="*", type=Path)
+    parser.add_argument("--fixtures", action="store_true")
+    args = parser.parse_args(argv)
+    if args.fixtures:
+        if args.files:
+            parser.error("--fixtures cannot be combined with explicit files")
+        return run_fixture_profile()
+    if not args.files:
+        parser.error("provide one or more files or use --fixtures")
+    failed = False
+    for path in sorted(args.files, key=lambda item: item.as_posix()):
+        result = validate_assessment(path)
+        print(_serialize(path, result))
+        failed = failed or not result.ok
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
