@@ -3,8 +3,8 @@
 
 A passing signal is discovery and routing metadata only. It cannot admit a source,
 mutate the repository, construct proof, release, deploy, publish, or serve public
-truth. Parsing, identity reproduction, routing checks, and output are deterministic
-and no-network.
+truth. Parsing, identity reproduction, materiality, routing checks, and output are
+deterministic and no-network.
 """
 from __future__ import annotations
 
@@ -32,8 +32,16 @@ from tools.validators._common.public_safe_fixture import (  # noqa: E402
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/governance/briefing_signal.schema.json"
 SCOPE = "briefing-signal-discovery-only"
 IDENTITY_ALGORITHM = "kfm-briefing-identity-v1"
+MATERIALITY_ALGORITHM = "kfm-briefing-materiality-v1"
+MATERIALITY_THRESHOLD_PROFILE = "kfm-briefing-thresholds-v1"
+ROUTING_ALGORITHM = "kfm-briefing-routing-v1"
+
 OPEN_ISSUE_DISPOSITIONS = frozenset(
-    {"OPEN_SOURCE_DISCOVERY_ISSUE", "OPEN_OBJECT_MODEL_ISSUE"}
+    {
+        "OPEN_SOURCE_DISCOVERY_ISSUE",
+        "OPEN_OBJECT_MODEL_ISSUE",
+        "OPEN_CORRECTIVE_ISSUE",
+    }
 )
 MATCH_REASON_CODES = frozenset(
     {
@@ -44,6 +52,47 @@ MATCH_REASON_CODES = frozenset(
         "IDEMPOTENT_REPLAY",
     }
 )
+MATERIALITY_DIMENSIONS = (
+    "public_safety",
+    "repository_integrity",
+    "geospatial_relevance",
+    "recurrence",
+    "reuse_value",
+    "authority_quality",
+    "time_sensitivity",
+    "rights_sensitivity_risk",
+    "identity_uncertainty",
+    "implementation_readiness",
+)
+MATERIALITY_WEIGHTS = {
+    "public_safety": 3,
+    "repository_integrity": 3,
+    "geospatial_relevance": 2,
+    "recurrence": 2,
+    "reuse_value": 2,
+    "authority_quality": 1,
+    "time_sensitivity": 2,
+    "rights_sensitivity_risk": -2,
+    "identity_uncertainty": -2,
+    "implementation_readiness": 1,
+}
+MATERIALITY_REASON_BY_DIMENSION = {
+    "public_safety": "PUBLIC_SAFETY",
+    "repository_integrity": "REPOSITORY_INTEGRITY",
+    "geospatial_relevance": "GEOSPATIAL_RELEVANCE",
+    "recurrence": "RECURRENCE",
+    "reuse_value": "REUSE_VALUE",
+    "authority_quality": "AUTHORITY_QUALITY",
+    "time_sensitivity": "TIME_SENSITIVITY",
+    "rights_sensitivity_risk": "RIGHTS_SENSITIVITY_RISK",
+    "identity_uncertainty": "IDENTITY_UNCERTAINTY",
+    "implementation_readiness": "IMPLEMENTATION_READINESS",
+}
+MANDATORY_OVERRIDE_CONTEXT = {
+    "ACTIVE_PUBLIC_SAFETY_CONFLICT": "public_safety",
+    "UNEXPECTED_REPOSITORY_MERGE": "repository_integrity",
+    "PUBLIC_INTERNAL_STORE_BYPASS": "repository_integrity",
+}
 INLINE_GEOMETRY_KEYS = frozenset(
     {
         "geometry",
@@ -251,6 +300,145 @@ def compute_issue_idempotency_key(candidate: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(_canonical_bytes(projection)).hexdigest()
 
 
+def _materiality(candidate: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    value = candidate.get("materiality")
+    return value if isinstance(value, Mapping) else None
+
+
+def _materiality_dimensions(
+    candidate: Mapping[str, Any],
+) -> Mapping[str, Any] | None:
+    materiality = _materiality(candidate)
+    if materiality is None:
+        return None
+    dimensions = materiality.get("dimensions")
+    return dimensions if isinstance(dimensions, Mapping) else None
+
+
+def compute_materiality_score(candidate: Mapping[str, Any]) -> int | None:
+    """Reproduce the v1 score from explicit dimensions only."""
+
+    dimensions = _materiality_dimensions(candidate)
+    if dimensions is None:
+        return None
+    score = 0
+    for name in MATERIALITY_DIMENSIONS:
+        value = dimensions.get(name)
+        if type(value) is not int:  # bool is not an admitted score.
+            return None
+        score += MATERIALITY_WEIGHTS[name] * value
+    return score
+
+
+def compute_materiality_priority(candidate: Mapping[str, Any]) -> str | None:
+    """Return the finite priority from score and a structurally valid override."""
+
+    materiality = _materiality(candidate)
+    if materiality is None:
+        return None
+    override = materiality.get("mandatory_override")
+    if isinstance(override, Mapping) and override.get("applied") is True:
+        reason = override.get("reason_code")
+        if reason in MANDATORY_OVERRIDE_CONTEXT:
+            return "P0"
+
+    score = compute_materiality_score(candidate)
+    if score is None:
+        return None
+    if score >= 55:
+        return "P0"
+    if score >= 35:
+        return "P1"
+    if score >= 20:
+        return "P2"
+    if score >= 1:
+        return "P3"
+    return "IGNORE"
+
+
+def compute_materiality_reason_codes(
+    candidate: Mapping[str, Any],
+) -> tuple[str, ...] | None:
+    """Derive the exact ordered materiality explanation."""
+
+    dimensions = _materiality_dimensions(candidate)
+    materiality = _materiality(candidate)
+    if dimensions is None or materiality is None:
+        return None
+
+    reasons: list[str] = []
+    for name in MATERIALITY_DIMENSIONS:
+        value = dimensions.get(name)
+        if type(value) is not int:
+            return None
+        if value > 0:
+            reasons.append(MATERIALITY_REASON_BY_DIMENSION[name])
+
+    override = materiality.get("mandatory_override")
+    if isinstance(override, Mapping) and override.get("applied") is True:
+        reason = override.get("reason_code")
+        if isinstance(reason, str):
+            reasons.append(reason)
+
+    if not reasons:
+        reasons.append("LOW_MATERIALITY")
+    return tuple(reasons)
+
+
+def compute_routing_disposition(
+    candidate: Mapping[str, Any],
+) -> tuple[str, tuple[str, ...]] | None:
+    """Reproduce the v1 issue-routing proposal without performing it."""
+
+    dedup = candidate.get("deduplication")
+    routing = candidate.get("routing")
+    if not isinstance(dedup, Mapping) or not isinstance(routing, Mapping):
+        return None
+
+    matched_issues = dedup.get("matched_issue_ids")
+    if dedup.get("status") == "DUPLICATE":
+        if isinstance(matched_issues, list) and matched_issues:
+            return "UPDATE_EXISTING_ISSUE", ("EXISTING_ISSUE_MATCH",)
+        return "NO_ACTION", ("DUPLICATE_CLUSTER_NO_ISSUE",)
+
+    if routing.get("safety_state") == "UNSAFE":
+        return "REJECT_UNSAFE", ("UNSAFE_FOR_ROUTING",)
+
+    if routing.get("dependency_state") == "BLOCKED":
+        return "HOLD_FOR_DEPENDENCY", ("DEPENDENCY_BLOCKED",)
+
+    priority = compute_materiality_priority(candidate)
+    if priority is None:
+        return None
+    if priority not in {"P0", "P1"}:
+        return "NO_ACTION", ("LOW_PRIORITY_NO_ACTION",)
+
+    issue_kind = routing.get("issue_kind")
+    if issue_kind == "NONE":
+        return "NO_ACTION", ("NO_ROUTABLE_ISSUE_KIND",)
+
+    if routing.get("modeling_ready") is not True:
+        return "NO_ACTION", ("MODELING_NOT_READY",)
+
+    official_support = routing.get("official_support")
+    if issue_kind == "CORRECTIVE":
+        if priority != "P0":
+            return "NO_ACTION", ("NO_ROUTABLE_ISSUE_KIND",)
+        if official_support != "RESOLVED":
+            return "NO_ACTION", ("OFFICIAL_SUPPORT_UNRESOLVED",)
+        return "OPEN_CORRECTIVE_ISSUE", ("P0_CORRECTIVE_READY",)
+
+    if issue_kind == "SOURCE_DISCOVERY":
+        return "OPEN_SOURCE_DISCOVERY_ISSUE", ("SOURCE_DISCOVERY_READY",)
+
+    if issue_kind == "OBJECT_MODEL":
+        if official_support != "RESOLVED":
+            return "NO_ACTION", ("OFFICIAL_SUPPORT_UNRESOLVED",)
+        return "OPEN_OBJECT_MODEL_ISSUE", ("OBJECT_MODEL_READY",)
+
+    return "NO_ACTION", ("NO_ROUTABLE_ISSUE_KIND",)
+
+
 def _load_schema() -> Mapping[str, object]:
     payload = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(payload)
@@ -318,23 +506,43 @@ def _validate_deduplication(candidate: Mapping[str, Any], findings: set[Finding]
     disposition = next_action.get("disposition")
 
     if isinstance(matched_signals, list) and candidate.get("signal_id") in matched_signals:
-        _add(findings, "SELF_DUPLICATE_REFERENCE_FORBIDDEN", "$.deduplication.matched_signal_ids")
+        _add(
+            findings,
+            "SELF_DUPLICATE_REFERENCE_FORBIDDEN",
+            "$.deduplication.matched_signal_ids",
+        )
 
     if status == "UNIQUE":
         if matched_signals or matched_issues:
             _add(findings, "UNIQUE_SIGNAL_HAS_MATCHES", "$.deduplication")
         if not isinstance(reasons, list) or "NEW_CLUSTER" not in reasons:
-            _add(findings, "UNIQUE_SIGNAL_REASON_INVALID", "$.deduplication.reason_codes")
+            _add(
+                findings,
+                "UNIQUE_SIGNAL_REASON_INVALID",
+                "$.deduplication.reason_codes",
+            )
     elif status == "DUPLICATE":
         if not matched_signals and not matched_issues:
             _add(findings, "DUPLICATE_MATCH_REQUIRED", "$.deduplication")
         if not isinstance(reasons, list) or not (set(reasons) & MATCH_REASON_CODES):
-            _add(findings, "DUPLICATE_REASON_INVALID", "$.deduplication.reason_codes")
+            _add(
+                findings,
+                "DUPLICATE_REASON_INVALID",
+                "$.deduplication.reason_codes",
+            )
         if disposition in OPEN_ISSUE_DISPOSITIONS:
-            _add(findings, "DUPLICATE_CANNOT_OPEN_ISSUE", "$.next_action.disposition")
+            _add(
+                findings,
+                "DUPLICATE_CANNOT_OPEN_ISSUE",
+                "$.next_action.disposition",
+            )
     elif status == "CONFLICTED":
         if not isinstance(reasons, list) or "IDENTITY_CONFLICT" not in reasons:
-            _add(findings, "CONFLICT_REASON_REQUIRED", "$.deduplication.reason_codes")
+            _add(
+                findings,
+                "CONFLICT_REASON_REQUIRED",
+                "$.deduplication.reason_codes",
+            )
 
     if signal_status == "DUPLICATE" and status != "DUPLICATE":
         _add(findings, "SIGNAL_DEDUP_STATUS_MISMATCH", "$.deduplication.status")
@@ -348,14 +556,131 @@ def _validate_deduplication(candidate: Mapping[str, Any], findings: set[Finding]
     existing_issues = links.get("issues") if isinstance(links, Mapping) else None
     if isinstance(matched_issues, list) and isinstance(existing_issues, list):
         if not set(matched_issues).issubset(existing_issues):
-            _add(findings, "MATCHED_ISSUE_NOT_LINKED", "$.deduplication.matched_issue_ids")
+            _add(
+                findings,
+                "MATCHED_ISSUE_NOT_LINKED",
+                "$.deduplication.matched_issue_ids",
+            )
     if disposition == "UPDATE_EXISTING_ISSUE":
         if not isinstance(matched_issues, list) or not matched_issues:
-            _add(findings, "UPDATE_ISSUE_TARGET_REQUIRED", "$.deduplication.matched_issue_ids")
+            _add(
+                findings,
+                "UPDATE_ISSUE_TARGET_REQUIRED",
+                "$.deduplication.matched_issue_ids",
+            )
 
     expected_key = compute_issue_idempotency_key(candidate)
     if next_action.get("idempotency_key") != expected_key:
-        _add(findings, "ISSUE_IDEMPOTENCY_KEY_MISMATCH", "$.next_action.idempotency_key")
+        _add(
+            findings,
+            "ISSUE_IDEMPOTENCY_KEY_MISMATCH",
+            "$.next_action.idempotency_key",
+        )
+
+
+def _validate_materiality(
+    candidate: Mapping[str, Any],
+    findings: set[Finding],
+) -> bool:
+    """Return whether materiality is complete and semantically reproducible."""
+
+    materiality = _materiality(candidate)
+    dimensions = _materiality_dimensions(candidate)
+    if materiality is None or dimensions is None:
+        return False
+    if materiality.get("algorithm") != MATERIALITY_ALGORITHM:
+        return False
+    if materiality.get("threshold_profile") != MATERIALITY_THRESHOLD_PROFILE:
+        return False
+
+    valid = True
+    expected_score = compute_materiality_score(candidate)
+    if expected_score is None:
+        return False
+    if type(materiality.get("raw_score")) is not int:
+        valid = False
+    elif materiality.get("raw_score") != expected_score:
+        _add(
+            findings,
+            "MATERIALITY_SCORE_MISMATCH",
+            "$.materiality.raw_score",
+        )
+        valid = False
+
+    expected_priority = compute_materiality_priority(candidate)
+    if not isinstance(materiality.get("priority"), str):
+        valid = False
+    elif materiality.get("priority") != expected_priority:
+        _add(
+            findings,
+            "MATERIALITY_PRIORITY_MISMATCH",
+            "$.materiality.priority",
+        )
+        valid = False
+
+    expected_reasons = compute_materiality_reason_codes(candidate)
+    declared_reasons = materiality.get("reason_codes")
+    if not isinstance(declared_reasons, list) or expected_reasons is None:
+        valid = False
+    elif tuple(declared_reasons) != expected_reasons:
+        _add(
+            findings,
+            "MATERIALITY_REASON_CODES_MISMATCH",
+            "$.materiality.reason_codes",
+        )
+        valid = False
+
+    override = materiality.get("mandatory_override")
+    if not isinstance(override, Mapping):
+        return False
+    if override.get("applied") is True:
+        reason = override.get("reason_code")
+        context_dimension = MANDATORY_OVERRIDE_CONTEXT.get(reason)
+        value = dimensions.get(context_dimension) if context_dimension else None
+        if type(value) is not int or value <= 0:
+            _add(
+                findings,
+                "MATERIALITY_OVERRIDE_CONTEXT_MISMATCH",
+                "$.materiality.mandatory_override",
+            )
+            valid = False
+    elif override.get("applied") is False:
+        if override.get("reason_code") is not None:
+            valid = False
+    else:
+        valid = False
+
+    return valid
+
+
+def _validate_routing(
+    candidate: Mapping[str, Any],
+    findings: set[Finding],
+) -> None:
+    routing = candidate.get("routing")
+    next_action = candidate.get("next_action")
+    if not isinstance(routing, Mapping) or not isinstance(next_action, Mapping):
+        return
+    if routing.get("algorithm") != ROUTING_ALGORITHM:
+        return
+
+    result = compute_routing_disposition(candidate)
+    if result is None:
+        return
+    expected_disposition, expected_reasons = result
+    if next_action.get("disposition") != expected_disposition:
+        _add(
+            findings,
+            "ROUTING_DISPOSITION_MISMATCH",
+            "$.next_action.disposition",
+        )
+    reasons = routing.get("reason_codes")
+    if isinstance(reasons, list) and tuple(reasons) != expected_reasons:
+        _add(
+            findings,
+            "ROUTING_REASON_CODES_MISMATCH",
+            "$.routing.reason_codes",
+        )
 
 
 def _validate_time(candidate: Mapping[str, Any], findings: set[Finding]) -> None:
@@ -380,7 +705,9 @@ def _validate_payload(candidate: Mapping[str, Any], findings: set[Finding]) -> N
     if not isinstance(attributes, Mapping):
         return
     for path, key, value in _walk(attributes):
-        dotted = "$.candidate_payload.attributes." + ".".join(str(part) for part in path)
+        dotted = "$.candidate_payload.attributes." + ".".join(
+            str(part) for part in path
+        )
         if isinstance(key, str):
             normalized_key = key.casefold()
             if normalized_key in INLINE_GEOMETRY_KEYS:
@@ -402,14 +729,25 @@ def validate_candidate(candidate: object) -> list[Finding]:
         return [Finding("BRIEFING_SIGNAL_SCHEMA_UNAVAILABLE", "$")]
 
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
-    for error in sorted(validator.iter_errors(candidate), key=lambda item: list(item.path)):
-        _add(findings, "BRIEFING_SIGNAL_SCHEMA_INVALID", _json_path(tuple(error.path)))
+    schema_errors = sorted(
+        validator.iter_errors(candidate),
+        key=lambda item: (list(item.path), item.validator, item.message),
+    )
+    for error in schema_errors:
+        _add(
+            findings,
+            "BRIEFING_SIGNAL_SCHEMA_INVALID",
+            _json_path(tuple(error.path)),
+        )
 
     claims = candidate.get("claims")
     if isinstance(claims, list):
         for index, claim in enumerate(claims):
             if isinstance(claim, Mapping):
-                if claim.get("truth_label") == "CONFIRMED" and not claim.get("evidence_refs"):
+                if (
+                    claim.get("truth_label") == "CONFIRMED"
+                    and not claim.get("evidence_refs")
+                ):
                     _add(
                         findings,
                         "CONFIRMED_CLAIM_WITHOUT_EVIDENCE",
@@ -429,7 +767,11 @@ def validate_candidate(candidate: object) -> list[Finding]:
             "publication",
         ):
             if permissions.get(field) is not False:
-                _add(findings, "CONSEQUENTIAL_PERMISSION_FORBIDDEN", f"$.permissions.{field}")
+                _add(
+                    findings,
+                    "CONSEQUENTIAL_PERMISSION_FORBIDDEN",
+                    f"$.permissions.{field}",
+                )
 
     next_action = candidate.get("next_action")
     if isinstance(next_action, Mapping):
@@ -442,12 +784,17 @@ def validate_candidate(candidate: object) -> list[Finding]:
 
     _validate_identity(candidate, findings)
     _validate_deduplication(candidate, findings)
+    materiality_valid = _validate_materiality(candidate, findings)
+    if not schema_errors and materiality_valid:
+        _validate_routing(candidate, findings)
     _validate_time(candidate, findings)
     _validate_payload(candidate, findings)
     return sorted(findings)
 
 
-def load_candidate(path: Path | str) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
+def load_candidate(
+    path: Path | str,
+) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
     captured: dict[str, object] = {}
 
     def _capture(candidate: object) -> list[Finding]:
@@ -493,7 +840,10 @@ def serialize_result(path: Path, findings: Sequence[Finding]) -> str:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate non-authoritative, deterministically identified KFM BriefingSignals."
+        description=(
+            "Validate non-authoritative, deterministically identified "
+            "KFM BriefingSignals."
+        )
     )
     parser.add_argument("files", nargs="+", type=Path)
     args = parser.parse_args(argv)
