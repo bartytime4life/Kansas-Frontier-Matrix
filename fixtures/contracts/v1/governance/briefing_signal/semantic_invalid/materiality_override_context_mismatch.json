@@ -42,7 +42,7 @@
       "implementation_readiness": 4
     },
     "raw_score": 20,
-    "priority": "P2",
+    "priority": "P0",
     "reason_codes": [
       "GEOSPATIAL_RELEVANCE",
       "RECURRENCE",
@@ -50,11 +50,12 @@
       "AUTHORITY_QUALITY",
       "TIME_SENSITIVITY",
       "IDENTITY_UNCERTAINTY",
-      "IMPLEMENTATION_READINESS"
+      "IMPLEMENTATION_READINESS",
+      "UNEXPECTED_REPOSITORY_MERGE"
     ],
     "mandatory_override": {
-      "applied": false,
-      "reason_code": null
+      "applied": true,
+      "reason_code": "UNEXPECTED_REPOSITORY_MERGE"
     },
     "rationale": "Synthetic fixture for deterministic, explainable, non-authoritative briefing intake."
   },
@@ -66,7 +67,7 @@
     "safety_state": "SAFE",
     "issue_kind": "NONE",
     "reason_codes": [
-      "LOW_PRIORITY_NO_ACTION"
+      "NO_ROUTABLE_ISSUE_KIND"
     ]
   },
   "geographic_scope": {
@@ -115,16 +116,16 @@
     "disposition": "NO_ACTION",
     "scope": "Validate the fixture shape, deterministic identity, materiality, and routing only.",
     "idempotency_key": "sha256:675aa86d77da1c9dec6429dc34f27f2737fab0b5766660ec1d4217c7cb414745",
-    "repository_mutation_allowed": true
+    "repository_mutation_allowed": false
   },
   "permissions": {
     "source_activation": false,
     "proof_construction": false,
     "release": false,
     "deployment": false,
-    "publication": true
+    "publication": false
   },
-  "public_use_allowed": true,
+  "public_use_allowed": false,
   "generation_receipt_ref": "fixture:receipt:briefing:synthetic-alpha",
   "candidate_payload": {
     "object_family": "PublicMeeting",

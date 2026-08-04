@@ -1,36 +1,30 @@
 # Governance validators
 
-`tools/validators/governance/` contains deterministic governance validators and dry-run analysis tools. They check declared shapes and guardrails; they do not create evidence, make policy or review decisions, authorize repository operations, release artifacts, or publish.
+`tools/validators/governance/` contains deterministic governance validators and dry-run analysis tools. They do not create evidence, make policy or review decisions, authorize repository operations, release artifacts, or publish.
 
-## Accepted executables
+## BriefingSignal executables
 
 ### `validate_briefing_signal.py`
 
-Validates the proposed non-authoritative `BriefingSignal` `1.1.0` profile, including:
+Validates the proposed non-authoritative `1.2.0` profile:
 
 - bounded duplicate-key-safe JSON and closed schema shape;
 - evidence references for confirmed claims;
-- reproducible signal digest, daily signal ID, event-cluster ID, and issue idempotency key;
-- normalized identity tokens;
-- unique, duplicate, conflicted, and unresolved routing semantics;
+- reproducible signal digest, daily ID, cluster ID, and issue idempotency key;
+- exact materiality formula, thresholds, reason codes, and override consistency;
+- exact finite routing precedence and reasons;
 - duplicate issue-creation denial and existing-issue target binding;
 - false consequential permissions;
-- no inline geometry, secret-like fields, or true trust-bearing states in candidate payloads;
-- deterministic no-network, value-free output; and
-- discovery-only authority.
+- no inline geometry, secret-like fields, or true trust-bearing states; and
+- deterministic no-network, value-minimized output.
 
 ### `deduplicate_briefing_signals.py`
 
-Performs a multi-file dry run that:
+Groups validated signals by event cluster, counts replay, detects collisions, requires primary references, rejects duplicate issue creation, and emits dry-run operations only.
 
-- groups validated signals by deterministic `event_cluster_id`;
-- treats exact repeated inputs as replay rather than new work;
-- identifies signal-ID collisions;
-- requires later same-cluster signals to reference the primary signal and declare `DUPLICATE`;
-- rejects duplicate signals that propose opening parallel issues; and
-- emits proposed operations with `authority_created=false` and `repository_mutation_allowed=false`.
+### `route_briefing_signals.py`
 
-Neither tool fetches sources, reads GitHub issues, writes repository state, or validates real-world truth.
+Recomputes materiality and routing for multiple local signals and emits only IDs, scores, priorities, finite reasons, proposed dispositions, idempotency keys, and issue targets. It always reports `authority_created=false` and `repository_mutation_allowed=false`.
 
 ## Commands
 
@@ -40,13 +34,9 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   examples/briefing_integration/*.json
 
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
-  python tools/validators/governance/deduplicate_briefing_signals.py \
-  fixtures/contracts/v1/governance/briefing_signal/valid/*.json
+  python tools/validators/governance/route_briefing_signals.py \
+  fixtures/contracts/v1/governance/briefing_signal/valid/*.json \
+  examples/briefing_integration/*.json
 ```
 
-Related:
-
-- `contracts/governance/briefing_signal.md`
-- `schemas/contracts/v1/governance/briefing_signal.schema.json`
-- `tests/governance/test_briefing_signal.py`
-- `tests/governance/test_briefing_signal_dedup.py`
+Neither tool family fetches sources, reads or writes GitHub issues, activates policy, or validates real-world truth.
