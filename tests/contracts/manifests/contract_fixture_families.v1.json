@@ -1,0 +1,23 @@
+{
+  "kind": "ContractFixtureManifest",
+  "manifest_version": "1.0.0",
+  "wave": "wave-01-core",
+  "description": "First manifest-driven contract fixture wave over existing canonical KFM schema and fixture families. The manifest inventories tests; it does not create semantic, policy, evidence, release, or publication authority.",
+  "families": [
+    {
+      "family": "decision-envelope",
+      "schema_path": "schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "fixture_root": "fixtures/contracts/v1/runtime/decision_envelope"
+    },
+    {
+      "family": "evidence-bundle",
+      "schema_path": "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "fixture_root": "fixtures/contracts/v1/evidence/evidence_bundle"
+    },
+    {
+      "family": "runtime-response-envelope",
+      "schema_path": "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "fixture_root": "fixtures/contracts/v1/runtime/runtime_response_envelope"
+    }
+  ]
+}
