@@ -158,6 +158,13 @@ jobs:
                   "validator": "tools/validators/release/validate_rollback_card.py",
                   "policy": "policy/release/",
                   "status": "PROPOSED",
+                  "authority": "candidate_shape_and_local_consistency_only",
+                  "non_effects": [
+                      "does_not_execute_rollback",
+                      "does_not_authorize_release_mutation",
+                      "does_not_erase_history",
+                      "does_not_publish",
+                  ],
               },
               "agriculture": {
                   "contract_doc": "contracts/domains/agriculture/rollback_card.md",

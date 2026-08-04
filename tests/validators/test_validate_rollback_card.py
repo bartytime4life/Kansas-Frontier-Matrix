@@ -22,6 +22,26 @@ class RollbackCardValidatorTests(unittest.TestCase):
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
 
+    def test_schema_metadata_matches_reviewed_release_profile(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {
+                "contract_doc": "contracts/release/rollback_card.md",
+                "fixtures_root": "fixtures/release/rollback_card/",
+                "validator": "tools/validators/release/validate_rollback_card.py",
+                "policy": "policy/release/",
+                "status": "PROPOSED",
+                "authority": "candidate_shape_and_local_consistency_only",
+                "non_effects": [
+                    "does_not_execute_rollback",
+                    "does_not_authorize_release_mutation",
+                    "does_not_erase_history",
+                    "does_not_publish",
+                ],
+            },
+            schema["x-kfm"],
+        )
+
     def test_valid_fixtures_pass(self) -> None:
         files = sorted((FIXTURE_ROOT / "valid").glob("valid_*.json"))
         self.assertGreaterEqual(len(files), 3)
