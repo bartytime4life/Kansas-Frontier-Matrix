@@ -43,6 +43,12 @@ jobs:
       - name: Install repository test dependencies
         run: python -m pip install -e ".[test]"
 
+      - name: Validate manifest-driven contract fixture wave
+        run: |
+          python tools/validators/validate_contract_fixture_manifest.py \
+            tests/contracts/manifests/contract_fixture_families.v1.json \
+            --format text
+
       - name: Validate contract and schema test lane
         run: make test
 
@@ -53,11 +59,13 @@ jobs:
           {
             echo "## Contracts validation"
             echo
+            echo "- Manifest command: python tools/validators/validate_contract_fixture_manifest.py tests/contracts/manifests/contract_fixture_families.v1.json --format text"
             echo "- Repository command: make test"
             echo "- Current Makefile scope: tests/schemas and tests/contracts"
             echo "- Result: ${{ job.status }}"
             echo
-            echo "A green result means the selected repository-owned tests passed for this revision."
-            echo "It does not prove complete semantic equivalence across every Markdown contract, schema, API, fixture, policy, or published projection."
-            echo "It does not authorize release, deployment, lifecycle promotion, source admission, or publication."
+            echo "A green manifest result means only that the declared schema and canonical fixture paths exist, both lanes are nonempty, and valid/invalid JSON Schema polarity matches."
+            echo "A green make test result means the selected repository-owned tests passed for this revision."
+            echo "Neither result proves complete semantic equivalence across every Markdown contract, schema, API, fixture, policy, evidence object, or published projection."
+            echo "Neither result authorizes release, deployment, lifecycle promotion, source admission, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
