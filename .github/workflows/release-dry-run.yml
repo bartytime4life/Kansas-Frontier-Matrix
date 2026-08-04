@@ -268,26 +268,36 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Confirm rollback-card readiness hold
+      - name: Validate rollback-card fixtures and readiness boundary
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           import json
+          import subprocess
+          import sys
 
           schema_path = Path("schemas/contracts/v1/release/rollback_card.schema.json")
           contract_path = Path("contracts/release/rollback_card.md")
           root_validator = Path("tools/validators/validate_rollback_card.py")
+          declared_validator = Path("tools/validators/release/validate_rollback_card.py")
           rollback_helper = Path("tools/release/rollback_apply.py")
+          fixture_root = Path("fixtures/release/rollback_card")
           required = [
               schema_path,
               contract_path,
               root_validator,
+              declared_validator,
               rollback_helper,
               Path("release/rollback_cards/README.md"),
               Path("release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"),
               Path("release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"),
+              fixture_root / "README.md",
+              fixture_root / "valid/valid_prior_release_candidate.json",
+              fixture_root / "valid/valid_withdrawal_candidate.json",
+              fixture_root / "valid/valid_hold.json",
+              fixture_root / "invalid/expected_findings_manifest.json",
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required rollback readiness evidence is missing: {missing}"
@@ -299,24 +309,39 @@ jobs:
               "validator": "tools/validators/release/validate_rollback_card.py",
               "policy": "policy/release/",
               "status": "PROPOSED",
+              "authority": "candidate_shape_and_local_consistency_only",
+              "non_effects": [
+                  "does_not_execute_rollback",
+                  "does_not_authorize_release_mutation",
+                  "does_not_erase_history",
+                  "does_not_publish",
+              ],
           }, "RollbackCard schema metadata changed; reconcile the readiness boundary"
-          assert schema["required"] == ["id"]
-          assert schema["additionalProperties"] is True
-          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
-              "RollbackCard fixtures have appeared; add non-vacuous schema and governance "
-              "tests before retaining this hold"
+          assert "id" in schema["required"]
+          assert schema["additionalProperties"] is False
+          assert Path(schema["x-kfm"]["fixtures_root"]).is_dir(), (
+              "RollbackCard fixtures are missing; fixture-first validation is required"
           )
-          assert not Path(schema["x-kfm"]["validator"]).exists(), (
-              "the schema-declared RollbackCard validator has appeared; wire and test it "
-              "instead of retaining this hold"
+          assert Path(schema["x-kfm"]["validator"]).is_file(), (
+              "the schema-declared RollbackCard validator must exist"
           )
 
           assert 'raise NotImplementedError("Greenfield placeholder")' in (
               root_validator.read_text(encoding="utf-8")
-          ), "the root rollback-card validator is no longer the confirmed placeholder"
+          ), "the root rollback-card entrypoint is no longer the confirmed placeholder shim"
           assert rollback_helper.read_text(encoding="utf-8").strip() == (
               "# Apply a signed rollback_card — greenfield placeholder"
           ), "rollback_apply.py changed; review its authority and tests before execution"
+
+          fixture_result = subprocess.run(
+              [sys.executable, declared_validator.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert fixture_result.returncode == 0, fixture_result.stdout + fixture_result.stderr
+          assert '"outcome":"PASS"' in fixture_result.stdout
+          assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
 
           root_cards = sorted(Path("release/rollback_cards").glob("*.json"))
           assert [path.name for path in root_cards] == [
@@ -341,14 +366,14 @@ jobs:
                   ],
               }, f"rollback-card placeholder changed: {path}"
               assert "id" not in card, (
-                  f"{path} unexpectedly looks schema-admissible; add a governed validator and "
-                  "semantic tests before treating presence as rollback readiness"
+                  f"{path} unexpectedly looks schema-admissible; review whether it has crossed "
+                  "from documentation inventory into governed rollback authority"
               )
 
-          print("CONFIRMED: RollbackCard remains a permissive PROPOSED id-only schema.")
-          print("CONFIRMED: two root JSON cards are explicitly PROPOSED placeholders without id.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback helper or validator was executed.")
-          print("WORKFLOW_HOLD: no rollback-card fixtures or implemented declared validator exist.")
+          print("CONFIRMED: RollbackCard schema remains PROPOSED while pointing to a bounded local validator and fixture lane.")
+          print("CONFIRMED: rollback-card valid/invalid fixtures passed the implemented bounded validator profile.")
+          print("CONFIRMED: two root JSON cards remain PROPOSED documentation placeholders without id.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback helper was executed.")
           print("No rollback, release mutation, or publication authority was created.")
           PY
 
@@ -359,8 +384,9 @@ jobs:
           {
             echo "### Rollback-card presence"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** RollbackCard remains a permissive PROPOSED id-only schema; its declared fixture lane and validator are absent, while the root validator and rollback helper are placeholders."
-            echo "- The two root JSON cards are PROPOSED documentation-inventory placeholders without the schema-required id. File presence is therefore not rollback readiness."
+            echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes without executing rollback."
+            echo "- The root validator entrypoint and rollback helper remain placeholders, so no rollback execution or release mutation authority is created here."
+            echo "- The two root JSON cards remain PROPOSED documentation-inventory placeholders without the schema-required id; they are inventory evidence, not executable rollback authority."
             echo "- Result: ${{ job.status }}. No rollback, mutation, release decision, or publication authority was created."
             echo "- **NEEDS VERIFICATION:** documentation that describes this workflow or release tooling as TODO-only must be reconciled separately."
           } >> "$GITHUB_STEP_SUMMARY"
