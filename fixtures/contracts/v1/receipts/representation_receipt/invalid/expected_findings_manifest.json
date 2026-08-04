@@ -1,0 +1,18 @@
+{
+  "invalid_authority_claim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_missing_evidence.json": [
+    "SCHEMA_INVALID"
+  ],
+  "invalid_self_supersession.json": [
+    "SELF_SUPERSESSION"
+  ],
+  "invalid_synthetic_missing_reality_note.json": [
+    "REALITY_BOUNDARY_REQUIRED"
+  ],
+  "invalid_zero_digest.json": [
+    "DIGEST_PLACEHOLDER"
+  ]
+}
