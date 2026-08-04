@@ -1,15 +1,14 @@
-# KFM Habitat domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Habitat validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Habitat domain CI workflow.
+# Status: one bounded synthetic land-cover materiality validation slice is
+# executable; Habitat proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
-# - This workflow inspects repository maturity without opening restricted or
-#   reverse-engineerable Fauna, Flora, archaeology, stewardship, private-land,
-#   infrastructure, or other sensitive joined payloads.
-# - It does not validate Habitat truth, establish species presence, issue legal
-#   or regulatory interpretations, build an EvidenceBundle or ProofPack, admit
-#   sources, apply policy, perform geoprivacy transforms, promote lifecycle
-#   artifacts, approve release, write published data, deploy, or publish.
+# - This workflow uses synthetic, no-network Habitat land-cover fixtures only.
+# - It does not validate Habitat or land-cover truth, establish species presence,
+#   issue legal or regulatory interpretations, build an EvidenceBundle or
+#   ProofPack, admit sources, apply policy, perform geoprivacy transforms,
+#   promote lifecycle artifacts, approve release, write published data, deploy,
+#   or publish.
 name: domain-habitat
 
 "on":
@@ -26,16 +25,21 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TZ: UTC
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   validate-habitat:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      - name: Check out Habitat boundaries
+      - name: Check out Habitat validation slice
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -44,75 +48,63 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
-      - name: Evaluate Habitat validation readiness
+      - name: Install declared Habitat validator dependencies
+        run: python -m pip install -e .
+
+      - name: Validate bounded synthetic Habitat land-cover materiality fixtures
         shell: bash
         run: |
           set -euo pipefail
 
           required_paths=(
-            "docs/domains/habitat/README.md"
-            "docs/domains/habitat/SENSITIVITY_POLICY.md"
-            "contracts/domains/habitat/README.md"
-            "schemas/contracts/v1/domains/habitat/README.md"
-            "fixtures/domains/habitat/README.md"
-            "policy/domains/habitat/README.md"
-            "tests/domains/habitat/README.md"
-            "tools/validators/domains/habitat/README.md"
-            "tools/validators/habitat/README.md"
-            "data/registry/sources/habitat/README.md"
-            "data/quarantine/habitat/over_precise_geometry/README.md"
-            "release/candidates/habitat/README.md"
+            "contracts/domains/habitat/land_cover/materiality_profile.md"
+            "schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json"
+            "pipeline_specs/habitat/land_cover/materiality_profile.v1.json"
+            "fixtures/domains/habitat/land_cover/materiality/valid/expected_outputs_manifest.json"
+            "fixtures/domains/habitat/land_cover/materiality/invalid/expected_findings_manifest.json"
+            "tools/validators/domains/habitat/validate_land_cover_materiality.py"
+            "tests/validators/domains/habitat/test_land_cover_materiality.py"
+            "schemas/contracts/v1/data/material_change_assessment.schema.json"
+            "tools/validators/validate_material_change_assessment.py"
           )
 
           for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required Habitat boundary is missing: $required_path"
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required Habitat validation artifact is missing: $required_path"
               exit 1
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Habitat" \
-            --test-root tests/domains/habitat \
-            --validator-root tools/validators/domains/habitat \
-            --validator-root tools/validators/habitat \
-            --validator-root tools/validators/habitat_fauna \
-            --validator-root tools/validators/habitat-fauna \
-            --validator-root tools/validators/geoprivacy/habitat-fauna \
-            --validator-root tools/validators/habitat/fauna-geoprivacy
+          python -m unittest discover \
+            --start-directory tests/validators/domains/habitat \
+            --pattern 'test_land_cover_materiality.py' \
+            --verbose
+          python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
 
-          if grep -Eq '^(habitat-validate|validate-habitat):' Makefile; then
-            echo "::error::A Habitat validation target now exists. Wire and verify it deliberately instead of retaining this hold."
-            exit 1
-          fi
-
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-habitat"
-          echo "WORKFLOW_HOLD: executable Habitat validation is not established"
-
-      - name: Record Habitat validation hold
+      - name: Record bounded Habitat validation scope
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Habitat validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          Job status: `${{ job.status }}`
 
-          `WORKFLOW_HOLD: executable Habitat validation is not established`
+          `SUBSTANTIVE_SCOPE: habitat-land-cover-materiality`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          This job executes the accepted deterministic, synthetic, no-network
+          land-cover materiality suite and requires every emitted object to pass
+          the shared MaterialChangeAssessment validator.
 
-          Current repository evidence is documentation-heavy: sampled Habitat
-          test modules are placeholders, and inspected per-domain, broad, and
-          Habitat/Fauna geoprivacy validator lanes are README-backed rather than
-          accepted executable validators.
-
-          This check does not establish Habitat truth, species presence,
-          critical-habitat legal status, model-as-observation validity,
-          public-safe geometry, evidence closure, policy approval, stewardship
-          approval, or release readiness.
+          The profile remains `PROPOSED_INACTIVE`. A successful job proves only
+          fixture-profile conformance. It does not establish Habitat or
+          land-cover truth, source admission, rights, sensitivity, public
+          safety, policy approval, stewardship approval, evidence closure,
+          promotion authority, proof construction, release readiness,
+          deployment, or publication authority.
           EOF
 
   build-proof-habitat:
