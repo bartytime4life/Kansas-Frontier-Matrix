@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "signal_version": 1,
   "signal_id": "kfm:briefing-signal:2026-07-29:c80c0f83d134a98c2dfe376e",
   "event_cluster_id": "kfm:event-cluster:governance_event:81681f1f64ade0906cff0055",
@@ -30,12 +30,36 @@
     ]
   },
   "materiality": {
+    "algorithm": "kfm-briefing-materiality-v1",
+    "threshold_profile": "kfm-briefing-thresholds-v1",
+    "dimensions": {
+      "public_safety": 0,
+      "repository_integrity": 0,
+      "geospatial_relevance": 5,
+      "recurrence": 3,
+      "reuse_value": 5,
+      "authority_quality": 5,
+      "time_sensitivity": 2,
+      "rights_sensitivity_risk": 0,
+      "identity_uncertainty": 1,
+      "implementation_readiness": 4
+    },
+    "raw_score": 37,
     "priority": "P1",
-    "safety": 0,
-    "operational_impact": 3,
-    "geospatial_relevance": 3,
-    "reuse_value": 3,
-    "rationale": "The official index connects statutory deadlines, district identity, priority-area documents, action-plan link presence, and later review or implementation states."
+    "reason_codes": [
+      "GEOSPATIAL_RELEVANCE",
+      "RECURRENCE",
+      "REUSE_VALUE",
+      "AUTHORITY_QUALITY",
+      "TIME_SENSITIVITY",
+      "IDENTITY_UNCERTAINTY",
+      "IMPLEMENTATION_READINESS"
+    ],
+    "mandatory_override": {
+      "applied": false,
+      "reason_code": null
+    },
+    "rationale": "Statewide governance, explicit district identity, recurring reuse, and high-quality authority support make this a P1 candidate while approval and implementation remain unresolved."
   },
   "geographic_scope": {
     "kind": "district",
@@ -216,5 +240,16 @@
       "correction_and_supersession_state": "NEEDS_VERIFICATION"
     }
   },
-  "expires_at": "2026-08-05T17:00:00-05:00"
+  "expires_at": "2026-08-05T17:00:00-05:00",
+  "routing": {
+    "algorithm": "kfm-briefing-routing-v1",
+    "official_support": "UNRESOLVED",
+    "modeling_ready": true,
+    "dependency_state": "CLEAR",
+    "safety_state": "SAFE",
+    "issue_kind": "OBJECT_MODEL",
+    "reason_codes": [
+      "EXISTING_ISSUE_MATCH"
+    ]
+  }
 }
