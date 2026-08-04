@@ -1,6 +1,8 @@
 {
-  "schema_version": "1.0.0",
-  "signal_id": "kfm-briefing-2026-07-29-901",
+  "schema_version": "1.1.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-07-29:72bd95bb5e24dc5f778902fb",
+  "event_cluster_id": "kfm:event-cluster:governance_event:5c1ad27137565f1bc3fbc1f0",
   "briefing_date": "2026-07-29",
   "status": "NEEDS_VERIFICATION",
   "headline": "Synthetic governance event signal",
@@ -8,13 +10,29 @@
   "domains": [
     "water_planning"
   ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "fixture:authority:synthetic-alpha",
+    "native_id_or_identity_key": "fixture:event:synthetic-alpha",
+    "geography_identity": "fixture:place:synthetic-alpha",
+    "durable_subject_key": "fixture:subject:synthetic-alpha",
+    "signal_digest": "sha256:72bd95bb5e24dc5f778902fb9275163046af7e9d0b297a8c47828e50afd50d46"
+  },
+  "deduplication": {
+    "status": "UNIQUE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [],
+    "reason_codes": [
+      "NEW_CLUSTER"
+    ]
+  },
   "materiality": {
     "priority": "P2",
     "safety": 0,
     "operational_impact": 1,
     "geospatial_relevance": 2,
     "reuse_value": 3,
-    "rationale": "Synthetic fixture for the non-authoritative briefing intake boundary."
+    "rationale": "Synthetic fixture for deterministic non-authoritative briefing intake."
   },
   "geographic_scope": {
     "kind": "point",
@@ -51,6 +69,7 @@
   ],
   "existing_kfm_links": {
     "issues": [],
+    "pull_requests": [],
     "paths": [],
     "object_refs": []
   },
@@ -59,7 +78,8 @@
   ],
   "next_action": {
     "disposition": "NO_ACTION",
-    "scope": "Validate the fixture shape only.",
+    "scope": "Validate the fixture shape and deterministic identity only.",
+    "idempotency_key": "sha256:f56dd08b415c5a66d74e05cbe5d882028ce34dd5ec5769138a4393243f1e54c4",
     "repository_mutation_allowed": true
   },
   "permissions": {
@@ -70,6 +90,7 @@
     "publication": true
   },
   "public_use_allowed": true,
+  "generation_receipt_ref": "fixture:receipt:briefing:synthetic-alpha",
   "candidate_payload": {
     "object_family": "PublicMeeting",
     "candidate_state": "STATUS_UNCONFIRMED",

@@ -1,14 +1,34 @@
 {
-  "schema_version": "1.0.0",
-  "signal_id": "kfm-briefing-2026-07-29-002",
+  "schema_version": "1.1.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-07-29:c80c0f83d134a98c2dfe376e",
+  "event_cluster_id": "kfm:event-cluster:governance_event:81681f1f64ade0906cff0055",
   "briefing_date": "2026-07-29",
-  "status": "ACCEPTED_FOR_MODELING",
+  "status": "DUPLICATE",
   "headline": "Kansas GMD priority-area and action-plan index is ready for a versioned candidate inventory",
   "story_type": "governance_event",
   "domains": [
     "water_planning",
     "hydrology"
   ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "authority:kansas-department-of-agriculture",
+    "native_id_or_identity_key": "index:groundwater-management-districts",
+    "geography_identity": "state:kansas",
+    "durable_subject_key": "gmd-action-plan-inventory",
+    "signal_digest": "sha256:c80c0f83d134a98c2dfe376ef068c6c2fdf90b0b8cc820ef5eda80cc0ea8bc99"
+  },
+  "deduplication": {
+    "status": "DUPLICATE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [
+      1647
+    ],
+    "reason_codes": [
+      "EXISTING_KFM_LINK_MATCH"
+    ]
+  },
   "materiality": {
     "priority": "P1",
     "safety": 0,
@@ -82,6 +102,7 @@
     "issues": [
       1647
     ],
+    "pull_requests": [],
     "paths": [
       "contracts/domains/water_planning/planning_region.md",
       "contracts/domains/water_planning/correction_or_withdrawal.md",
@@ -98,6 +119,7 @@
   "next_action": {
     "disposition": "UPDATE_EXISTING_ISSUE",
     "scope": "Attach this versioned link-presence inventory to issue #1647. Resolve exact document locators, publication dates, review orders, and geometries through separately admitted evidence. Keep submission, approval, implementation, and outcome fields UNKNOWN until authoritative records support them.",
+    "idempotency_key": "sha256:b427dcaf6a4bc61276340132758c0ef8d415c526bf47f9dec9d7f3534961ac60",
     "repository_mutation_allowed": false
   },
   "permissions": {
@@ -108,6 +130,7 @@
     "publication": false
   },
   "public_use_allowed": false,
+  "generation_receipt_ref": "example:receipt:briefing:2026-07-29:gmd-inventory",
   "candidate_payload": {
     "object_family": "GroundwaterActionPlanInventory",
     "candidate_state": "LINKED_BY_AUTHORITY_INDEX",
