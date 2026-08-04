@@ -10,7 +10,7 @@
     "examples/briefing_integration/README.md"
   ],
   "artifact_hashes": {
-    "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:1fd3756fba5ba42481b3f0f7d6e8780fb7cd2c2bb9ef04373586b08a2ccd080f",
+    "schemas/contracts/v1/governance/briefing_signal.schema.json": "sha256:602aa886ffb08948fa00a57543622e272ac40535a844d0c8ea76453f6e83d249",
     "tools/validators/governance/validate_briefing_signal.py": "sha256:c495201a25f7207e25af783fa1e71d68f35c7f1765c318841672aec8caf6ea1a",
     "tests/governance/test_briefing_signal.py": "sha256:9fa1ca67e054d9bf31b056703db0a3136eace155ca140e37fff697d7480f3aac",
     "examples/briefing_integration/hays_water_local_consult_2026_07_29.json": "sha256:f1bf479b7e2ce1994598a814863b8d65b2514b28c8d7a09f52f53b2f7035f031",
