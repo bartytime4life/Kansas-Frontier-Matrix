@@ -1,0 +1,54 @@
+{
+  "assessment_id": "material-change:dataset:ks-example:2026-08-04-byte-only",
+  "baseline_ref": "kfm://dataset-version/ks-example/2026-07-01",
+  "candidate_ref": "kfm://dataset-version/ks-example/2026-08-01",
+  "classification": {
+    "change_class": "BYTE_ONLY",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "CANONICAL_EQUIVALENT"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "byte_changed": true,
+    "candidate_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "semantic_changed": false
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": null,
+    "source_refs": [
+      "kfm://source/example"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/example/v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/ks-example",
+  "timing": {
+    "assessed_at": "2026-08-04T12:00:00Z",
+    "baseline_as_of": "2026-07-01T00:00:00Z",
+    "candidate_as_of": "2026-08-01T00:00:00Z"
+  }
+}
