@@ -73,27 +73,18 @@ jobs:
             > "${RUNNER_TEMP}/repository-control-comments.json"
 
       - name: Require an exact owner transition record
-        id: transition-authorization
         env:
           KFM_AUTHORIZED_LOGIN: ${{ github.event.repository.owner.login }}
           KFM_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash
         run: |
           set -euo pipefail
-          set +e
           python3 tools/validators/repository_control/validate_transition_authorization.py \
             --event "${GITHUB_EVENT_PATH}" \
             --comments "${RUNNER_TEMP}/repository-control-comments.json" \
             --control-issue "${KFM_CONTROL_ISSUE}" \
             --authorized-login "${KFM_AUTHORIZED_LOGIN}" \
             --default-branch "${KFM_DEFAULT_BRANCH}"
-          status=$?
-          set -e
-          if [ "$status" -eq 3 ]; then
-            echo "Expected readiness hold; repository transition is not yet authorized."
-            exit 0
-          fi
-          exit "$status"
 
       - name: Record authority boundary
         if: always()
@@ -106,6 +97,7 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Trust boundary: trusted base checkout; no pull-request code execution; read-only contents/issues/pull-requests token."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
+            echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."
             echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
             echo "- It is not independent review, human-versus-app attribution, ruleset evidence, source activation, proof, release, deployment, or publication authority."
           } >> "${GITHUB_STEP_SUMMARY}"
