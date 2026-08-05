@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/source_readiness/materiality_candidate.schema.json",
+  "title": "FloraSourceReadinessMaterialityCandidate",
+  "description": "Synthetic, no-network comparison input for the inactive Flora occurrence-source readiness materiality profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assessment_id",
+    "subject_ref",
+    "baseline_ref",
+    "candidate_ref",
+    "baseline_digest",
+    "candidate_digest",
+    "semantic_changed",
+    "analysis_unit_kind",
+    "metrics",
+    "evidence",
+    "timing"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^material-change:[a-z0-9][a-z0-9_:.-]{7,240}$"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "baseline_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "candidate_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "baseline_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "candidate_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "semantic_changed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "analysis_unit_kind": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "candidate"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/snapshot"
+        },
+        "candidate": {
+          "$ref": "#/$defs/snapshot"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "diff_report_ref",
+        "validation_report_refs",
+        "source_refs",
+        "criterion_evidence_refs"
+      ],
+      "properties": {
+        "diff_report_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "validation_report_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "criterion_evidence_refs": {
+          "$ref": "#/$defs/refs"
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessed_at",
+        "baseline_as_of",
+        "candidate_as_of"
+      ],
+      "properties": {
+        "assessed_at": {
+          "$ref": "#/$defs/time"
+        },
+        "baseline_as_of": {
+          "$ref": "#/$defs/time"
+        },
+        "candidate_as_of": {
+          "$ref": "#/$defs/time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "georeferenced_fraction",
+        "specimen_backed_fraction",
+        "license_resolved_fraction",
+        "coordinate_uncertainty_p95_km",
+        "freshness_age_days",
+        "api_accessible",
+        "sensitivity_posture"
+      ],
+      "properties": {
+        "georeferenced_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "specimen_backed_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "license_resolved_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "coordinate_uncertainty_p95_km": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "freshness_age_days": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "api_accessible": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "sensitivity_posture": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "public",
+            "generalized",
+            "controlled",
+            "restricted",
+            "unknown",
+            null
+          ]
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "profile": "pipeline_specs/flora/source_readiness/materiality_profile.v1.json",
+    "validator": "tools/validators/domains/flora/validate_source_readiness_materiality.py",
+    "non_effects": [
+      "does_not_activate_source",
+      "does_not_resolve_evidence",
+      "does_not_evaluate_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ]
+  }
+}
