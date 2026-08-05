@@ -44,9 +44,9 @@ class ReversibleEntityReconciliationTests(unittest.TestCase):
             [
                 "expected_findings_manifest.json",
                 "invalid_automatic_merge.json",
-                "invalid_cluster_without_match.json",
-                "invalid_spec_hash.json",
-                "invalid_split_partition.json",
+                "semantic_invalid_cluster_without_match.json",
+                "semantic_invalid_spec_hash.json",
+                "semantic_invalid_split_partition.json",
             ],
             sorted(path.name for path in INVALID_ROOT.glob("*.json")),
         )
@@ -69,6 +69,20 @@ class ReversibleEntityReconciliationTests(unittest.TestCase):
                 result = validator.validate_packet(path)
                 actual = sorted({finding.code for finding in result.findings})
                 self.assertEqual(expected[path.name], actual)
+
+    def test_schema_and_semantic_negative_lanes_are_explicit(self) -> None:
+        schema_invalid = INVALID_ROOT / "invalid_automatic_merge.json"
+        self.assertNotEqual([], validator._schema_findings(load_json(schema_invalid)))
+        for name in (
+            "semantic_invalid_cluster_without_match.json",
+            "semantic_invalid_spec_hash.json",
+            "semantic_invalid_split_partition.json",
+        ):
+            with self.subTest(path=name):
+                self.assertEqual(
+                    [],
+                    validator._schema_findings(load_json(INVALID_ROOT / name)),
+                )
 
     def test_fixture_entrypoint_passes(self) -> None:
         stdout = io.StringIO()

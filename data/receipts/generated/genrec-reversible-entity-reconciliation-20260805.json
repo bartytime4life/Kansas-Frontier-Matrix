@@ -6,9 +6,9 @@
     "contracts/common/reversible_entity_reconciliation.md",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/expected_findings_manifest.json",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_automatic_merge.json",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_cluster_without_match.json",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_spec_hash.json",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_split_partition.json",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_cluster_without_match.json",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_spec_hash.json",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_split_partition.json",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/valid/valid_reconciliation_packet.json",
     "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json",
     "tests/validators/test_validate_reversible_entity_reconciliation.py",
@@ -16,15 +16,15 @@
   ],
   "artifact_hashes": {
     ".github/workflows/reversible-entity-reconciliation.yml": "sha256:fb88997732dd9cb153fd4cc5296e4531c95e235f352be278d18ddb1d48c02ff6",
-    "contracts/common/reversible_entity_reconciliation.md": "sha256:72c235bb7c0dc7ccecc00fb392866e045f50128919a3e095ace22c0a8c0308dc",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/expected_findings_manifest.json": "sha256:ffdfbdae124f9dd09bbeff9b634dcb394d0775a7645ea54af8dc9f3269362067",
+    "contracts/common/reversible_entity_reconciliation.md": "sha256:e65fe4498b76b65c427a0748767c8c76614042c0cac59a804194d437de33bdc0",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/expected_findings_manifest.json": "sha256:f3bd32c0b235d8fac191468e31e5cecb42814e8591760c29d28b16a02ebfe968",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_automatic_merge.json": "sha256:01143a9fb987ac11285268e2ab89154904db4a032649b9e187ff89f76df48389",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_cluster_without_match.json": "sha256:0da717e8e559debe77b7b18bcf842805b0a574c3204fadb19b44c8170e3fa73f",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_spec_hash.json": "sha256:caed0ee85d36c20f8b032ff0b67d71df82bd55b564b5397b4530ebdf684f77d1",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_split_partition.json": "sha256:4a9368edf88cf0522007a4535f39803a78cfe6de47128b3c6b377d1d33855148",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_cluster_without_match.json": "sha256:0da717e8e559debe77b7b18bcf842805b0a574c3204fadb19b44c8170e3fa73f",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_spec_hash.json": "sha256:caed0ee85d36c20f8b032ff0b67d71df82bd55b564b5397b4530ebdf684f77d1",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_split_partition.json": "sha256:4a9368edf88cf0522007a4535f39803a78cfe6de47128b3c6b377d1d33855148",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/valid/valid_reconciliation_packet.json": "sha256:97070b86306398fc57575ef561f946403f0048c816d8a38dead234aee9ba15e2",
     "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json": "sha256:24f99e92ad21bcfd059981b75cd3d2b7fcfc20bea0d6ebaec8d7f494e9dda626",
-    "tests/validators/test_validate_reversible_entity_reconciliation.py": "sha256:22a3f8e589b286d2c21ed435a03517aa874f0c612f3ffbc24d39f7f23db89a25",
+    "tests/validators/test_validate_reversible_entity_reconciliation.py": "sha256:0e28e6b7bfce97185e8716c58073d8a88fa0e5623a4347c2bef98856e27dd01f",
     "tools/validators/validate_reversible_entity_reconciliation.py": "sha256:d07a087acf0e35c1d3d8e6db012d52043d56a657f0629df228a3d850d00561c6"
   },
   "model_identity": {
@@ -40,7 +40,7 @@
     "max_tokens": null,
     "tools_enabled": [
       "GitHub connector",
-      "uploaded-file search",
+      "Google Drive connector",
       "local Python validation"
     ]
   },
@@ -59,9 +59,9 @@
     "contracts/common/reversible_entity_reconciliation.md": "PROPOSED",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/expected_findings_manifest.json": "PROPOSED",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_automatic_merge.json": "PROPOSED",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_cluster_without_match.json": "PROPOSED",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_spec_hash.json": "PROPOSED",
-    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/invalid_split_partition.json": "PROPOSED",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_cluster_without_match.json": "PROPOSED",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_spec_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/common/reversible_entity_reconciliation/invalid/semantic_invalid_split_partition.json": "PROPOSED",
     "fixtures/contracts/v1/common/reversible_entity_reconciliation/valid/valid_reconciliation_packet.json": "PROPOSED",
     "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json": "PROPOSED",
     "tests/validators/test_validate_reversible_entity_reconciliation.py": "PROPOSED",
@@ -71,7 +71,7 @@
     {
       "gate": "local-fixture-profile",
       "outcome": "PASS",
-      "reason": "Repository-native deterministic valid and exact-negative synthetic fixtures passed focused no-network validation."
+      "reason": "Repository-native deterministic valid, schema-invalid, and schema-valid semantic-negative synthetic fixtures passed bounded preflight."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -117,5 +117,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Synthetic fixture-first implementation and repository-native fixture closure for KFM-TRIAD-059. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+  "notes": "Synthetic fixture-first implementation and repository-native fixture closure for KFM-TRIAD-059. Schema-invalid and schema-valid semantic-negative lanes remain distinct. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
 }
