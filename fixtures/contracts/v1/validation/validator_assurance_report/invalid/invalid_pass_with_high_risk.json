@@ -1,0 +1,79 @@
+{
+  "object_type": "ValidatorAssuranceReport",
+  "schema_version": "1.0.0",
+  "assurance_id": "validator-assurance:fail-0001",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:de9f2e134932a25b3a3b8140e7c0ff901e0413a52f7c255100f6b3ec5509a9f9",
+  "target": {
+    "validator_ref": "repo://tools/validators/synthetic.py",
+    "target_digest": "sha256:5206da2721ef4af45a41488d09a901dc71cd4d9f753c8419a9374a7bef8ef62f",
+    "test_command_ref": "repo://tests/validators/test_synthetic.py",
+    "profile_id": "assurance-profile:synthetic-validator-v1",
+    "profile_version": "1.0.0",
+    "profile_digest": "sha256:38c5e49babdd19038f81b65d4e6bce3bf0a9c00a57dca6dcde39ea8019acb210"
+  },
+  "campaign": {
+    "campaign_id": "mutation-campaign:synthetic-0001",
+    "seed": 42526,
+    "generated_at": "2026-04-25T09:00:00Z",
+    "mutation_operators": [
+      "BOOLEAN_FLIP",
+      "REFERENCE_CHECK_REMOVAL",
+      "SORTING_REMOVAL",
+      "TIME_COMPARISON_FLIP"
+    ],
+    "mutant_manifest_digest": "sha256:2da993457db2ab14e53fa8f1d400200a93107a2736a2d3ebfc759a53646150bd",
+    "network_used": false
+  },
+  "results": {
+    "total": 4,
+    "killed": 3,
+    "survived": 1,
+    "invalid": 0,
+    "timed_out": 0,
+    "kill_rate_numerator": 3,
+    "kill_rate_denominator": 4
+  },
+  "survivors": [
+    {
+      "mutant_id": "mutant:reference-check-removal-0001",
+      "operator": "REFERENCE_CHECK_REMOVAL",
+      "target_location_ref": "repo://tools/validators/synthetic.py#reference-closure",
+      "semantic_gap_class": "REFERENCE_CLOSURE",
+      "risk_class": "HIGH",
+      "disposition": "FIX_REQUIRED",
+      "reason_codes": [
+        "HIGH_RISK_SURVIVOR"
+      ],
+      "issue_ref": "github://issue/synthetic-high-risk-survivor"
+    }
+  ],
+  "adequacy": {
+    "outcome": "PASS",
+    "reason_codes": [
+      "HIGH_RISK_SURVIVOR_BLOCKS_PASS"
+    ],
+    "review_required": false,
+    "universal_threshold_applied": false,
+    "surviving_high_risk_count": 1,
+    "surviving_unreviewed_count": 0
+  },
+  "provenance": {
+    "recorded_at": "2026-04-25T10:00:00Z",
+    "run_receipt_ref": "kfm://run/validator-assurance-synthetic-0001",
+    "input_refs": [
+      "repo://tests/validators/test_synthetic.py",
+      "repo://tools/validators/synthetic.py"
+    ]
+  },
+  "governance": {
+    "policy_evaluated": false,
+    "validator_approved": false,
+    "merge_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
