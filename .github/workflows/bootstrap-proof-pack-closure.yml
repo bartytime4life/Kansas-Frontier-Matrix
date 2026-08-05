@@ -1,7 +1,9 @@
 # Temporary branch-only assembler for the connector-delivered ProofPack slice.
 # It verifies the staged archive, expands final repository paths, runs focused
-# validation, removes its own bootstrap inputs, and commits only to the named
-# non-default task branch. It grants no release or publication authority.
+# validation, and commits only non-workflow implementation files to the named
+# non-default task branch. Connector cleanup installs the final read-only
+# workflow and removes this bootstrap after assembly. No release or publication
+# authority is granted.
 name: bootstrap-proof-pack-closure
 
 "on":
@@ -9,7 +11,6 @@ name: bootstrap-proof-pack-closure
     branches:
       - agent/proof-pack-closure-20260805
     paths:
-      - ".github/kfm-bootstrap/**"
       - ".github/workflows/bootstrap-proof-pack-closure.yml"
 
 permissions:
@@ -52,7 +53,6 @@ jobs:
           echo "c303ca3278e91a47d000fdd546c34ea50570cf0961664408d6cc0bcf78c8b666  /tmp/proofpack-slice.tar.xz" | sha256sum --check --strict
           tar -xJf /tmp/proofpack-slice.tar.xz
           rm -rf .github/kfm-bootstrap
-          rm -f .github/workflows/bootstrap-proof-pack-closure.yml
 
       - name: Install declared test dependencies
         shell: bash
@@ -75,10 +75,11 @@ jobs:
             data/receipts/generated/genrec-proof-pack-closure-20260805.json \
             --repo-root .
 
-      - name: Commit the assembled implementation
+      - name: Commit the assembled non-workflow implementation
         shell: bash
         run: |
           set -euo pipefail
+          rm -f .github/workflows/proof-pack-closure.yml
           git config user.name "kfm-implementation-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
