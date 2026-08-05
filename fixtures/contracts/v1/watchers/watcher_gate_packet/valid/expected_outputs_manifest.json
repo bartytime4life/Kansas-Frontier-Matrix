@@ -1,0 +1,14 @@
+{
+  "valid_amber.json": {
+    "decision": "AMBER",
+    "exit_code": 0
+  },
+  "valid_deny.json": {
+    "decision": "DENY",
+    "exit_code": 2
+  },
+  "valid_green.json": {
+    "decision": "GREEN",
+    "exit_code": 0
+  }
+}
