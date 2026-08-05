@@ -18,8 +18,14 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROFILE_PATH = REPO_ROOT / "pipeline_specs/soil/support_type_profile.v1.json"
-PROFILE_SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/soil/support_type_profile.schema.json"
-CANDIDATE_SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/soil/support_type_candidate.schema.json"
+PROFILE_SCHEMA_PATH = (
+    REPO_ROOT
+    / "schemas/contracts/v1/domains/soil/support_type_profile.schema.json"
+)
+CANDIDATE_SCHEMA_PATH = (
+    REPO_ROOT
+    / "schemas/contracts/v1/domains/soil/support_type_candidate.schema.json"
+)
 FIXTURE_ROOT = REPO_ROOT / "fixtures/domains/soil/support_type"
 MAX_JSON_BYTES = 1_048_576
 SCOPE = "soil-support-type-profile-fixture-only"
@@ -120,7 +126,9 @@ def _read_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
 
 
 def _pointer(parts: Iterable[Any]) -> str:
-    encoded = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    encoded = [
+        str(part).replace("~", "~0").replace("/", "~1") for part in parts
+    ]
     return "/" + "/".join(encoded) if encoded else "/"
 
 
@@ -157,10 +165,16 @@ def _sorted_unique_strings(value: Any) -> bool:
     )
 
 
-def _schema_findings(value: dict[str, Any], schema_path: Path, code: str) -> list[Finding]:
+def _schema_findings(
+    value: dict[str, Any],
+    schema_path: Path,
+    code: str,
+) -> list[Finding]:
     try:
         schema = _load_schema(schema_path)
-        validator = Draft202012Validator(schema, format_checker=FormatChecker())
+        validator = Draft202012Validator(
+            schema, format_checker=FormatChecker()
+        )
         return [
             Finding(code, _pointer(error.absolute_path))
             for error in validator.iter_errors(value)
@@ -170,7 +184,9 @@ def _schema_findings(value: dict[str, Any], schema_path: Path, code: str) -> lis
 
 
 def _profile_findings(profile: dict[str, Any]) -> list[Finding]:
-    findings = _schema_findings(profile, PROFILE_SCHEMA_PATH, "PROFILE_SCHEMA_INVALID")
+    findings = _schema_findings(
+        profile, PROFILE_SCHEMA_PATH, "PROFILE_SCHEMA_INVALID"
+    )
     if findings:
         return findings
 
@@ -182,9 +198,15 @@ def _profile_findings(profile: dict[str, Any]) -> list[Finding]:
 
     rules = profile.get("support_types")
     if isinstance(rules, list):
-        names = [rule.get("support_type") for rule in rules if isinstance(rule, dict)]
+        names = [
+            rule.get("support_type")
+            for rule in rules
+            if isinstance(rule, dict)
+        ]
         if names != sorted(names) or len(names) != len(set(names)):
-            findings.append(Finding("SUPPORT_TYPES_NOT_CANONICAL", "/support_types"))
+            findings.append(
+                Finding("SUPPORT_TYPES_NOT_CANONICAL", "/support_types")
+            )
         for index, rule in enumerate(rules):
             if not isinstance(rule, dict):
                 continue
@@ -197,18 +219,28 @@ def _profile_findings(profile: dict[str, Any]) -> list[Finding]:
             ):
                 if not _sorted_unique_strings(rule.get(field)):
                     findings.append(
-                        Finding("PROFILE_ARRAY_NOT_CANONICAL", f"/support_types/{index}/{field}")
+                        Finding(
+                            "PROFILE_ARRAY_NOT_CANONICAL",
+                            f"/support_types/{index}/{field}",
+                        )
                     )
     return findings
 
 
-def validate_candidate(candidate: dict[str, Any], profile: dict[str, Any]) -> ValidationResult:
+def validate_candidate(
+    candidate: dict[str, Any],
+    profile: dict[str, Any],
+) -> ValidationResult:
     findings = _profile_findings(profile)
     if findings:
         return ValidationResult(tuple(sorted(set(findings))))
 
     findings.extend(
-        _schema_findings(candidate, CANDIDATE_SCHEMA_PATH, "CANDIDATE_SCHEMA_INVALID")
+        _schema_findings(
+            candidate,
+            CANDIDATE_SCHEMA_PATH,
+            "CANDIDATE_SCHEMA_INVALID",
+        )
     )
     if any(finding.code == "SCHEMA_UNAVAILABLE" for finding in findings):
         return ValidationResult(tuple(sorted(set(findings))))
@@ -219,42 +251,71 @@ def validate_candidate(candidate: dict[str, Any], profile: dict[str, Any]) -> Va
 
     for field in ("source_refs", "evidence_refs"):
         if not _sorted_unique_strings(candidate.get(field)):
-            findings.append(Finding("REFS_NOT_CANONICAL", f"/{field}"))
+            findings.append(
+                Finding("REFS_NOT_CANONICAL", f"/{field}")
+            )
 
     if candidate.get("profile_id") != profile.get("profile_id"):
         findings.append(Finding("PROFILE_ID_MISMATCH", "/profile_id"))
     if candidate.get("profile_version") != profile.get("profile_version"):
-        findings.append(Finding("PROFILE_VERSION_MISMATCH", "/profile_version"))
+        findings.append(
+            Finding("PROFILE_VERSION_MISMATCH", "/profile_version")
+        )
     if candidate.get("profile_spec_hash") != profile.get("spec_hash"):
-        findings.append(Finding("PROFILE_HASH_BINDING_MISMATCH", "/profile_spec_hash"))
+        findings.append(
+            Finding(
+                "PROFILE_HASH_BINDING_MISMATCH", "/profile_spec_hash"
+            )
+        )
 
     rules = profile.get("support_types")
     support_type = candidate.get("support_type")
     rule = None
     if isinstance(rules, list):
         for item in rules:
-            if isinstance(item, dict) and item.get("support_type") == support_type:
+            if (
+                isinstance(item, dict)
+                and item.get("support_type") == support_type
+            ):
                 rule = item
                 break
     if rule is None:
         findings.append(Finding("SUPPORT_TYPE_UNKNOWN", "/support_type"))
     else:
         checks = (
-            ("source_family", "source_families", "SOURCE_FAMILY_NOT_ALLOWED"),
+            (
+                "source_family",
+                "source_families",
+                "SOURCE_FAMILY_NOT_ALLOWED",
+            ),
             ("source_role", "source_roles", "SOURCE_ROLE_NOT_ALLOWED"),
-            ("spatial_support", "spatial_support", "SPATIAL_SUPPORT_NOT_ALLOWED"),
+            (
+                "spatial_support",
+                "spatial_support",
+                "SPATIAL_SUPPORT_NOT_ALLOWED",
+            ),
             ("claim_kind", "claim_kinds", "CLAIM_KIND_NOT_ALLOWED"),
         )
         for candidate_field, rule_field, code in checks:
             allowed = rule.get(rule_field)
-            if not isinstance(allowed, list) or candidate.get(candidate_field) not in allowed:
+            if (
+                not isinstance(allowed, list)
+                or candidate.get(candidate_field) not in allowed
+            ):
                 findings.append(Finding(code, f"/{candidate_field}"))
         forbidden = rule.get("forbidden_claim_kinds")
-        if isinstance(forbidden, list) and candidate.get("claim_kind") in forbidden:
-            findings.append(Finding("FORBIDDEN_CLAIM_KIND", "/claim_kind"))
+        if (
+            isinstance(forbidden, list)
+            and candidate.get("claim_kind") in forbidden
+        ):
+            findings.append(
+                Finding("FORBIDDEN_CLAIM_KIND", "/claim_kind")
+            )
 
     if candidate.get("public_use_requested") is not False:
-        findings.append(Finding("PUBLIC_USE_DENIED", "/public_use_requested"))
+        findings.append(
+            Finding("PUBLIC_USE_DENIED", "/public_use_requested")
+        )
 
     governance = candidate.get("governance")
     if isinstance(governance, dict):
@@ -269,25 +330,39 @@ def validate_candidate(candidate: dict[str, Any], profile: dict[str, Any]) -> Va
                 "publication_authorized",
             )
         ) or governance.get("release_ref") is not None:
-            findings.append(Finding("CANDIDATE_GOVERNANCE_VIOLATION", "/governance"))
+            findings.append(
+                Finding(
+                    "CANDIDATE_GOVERNANCE_VIOLATION", "/governance"
+                )
+            )
 
     return ValidationResult(tuple(sorted(set(findings))))
 
 
-def validate_file(candidate_path: Path, *, profile_path: Path = PROFILE_PATH) -> ValidationResult:
+def validate_file(
+    candidate_path: Path,
+    *,
+    profile_path: Path = PROFILE_PATH,
+) -> ValidationResult:
     profile, profile_load_findings = _read_object(profile_path)
     if profile_load_findings or profile is None:
-        findings = profile_load_findings or [Finding("PROFILE_INVALID", "/")]
+        findings = profile_load_findings or [
+            Finding("PROFILE_INVALID", "/")
+        ]
         return ValidationResult(tuple(sorted(set(findings))))
 
     candidate, candidate_load_findings = _read_object(candidate_path)
     if candidate_load_findings or candidate is None:
-        findings = candidate_load_findings or [Finding("ROOT_NOT_OBJECT", "/")]
+        findings = candidate_load_findings or [
+            Finding("ROOT_NOT_OBJECT", "/")
+        ]
         return ValidationResult(tuple(sorted(set(findings))))
     return validate_candidate(candidate, profile)
 
 
-def validate_fixture_tree(fixture_root: Path = FIXTURE_ROOT) -> tuple[Finding, ...]:
+def validate_fixture_tree(
+    fixture_root: Path = FIXTURE_ROOT,
+) -> tuple[Finding, ...]:
     findings: list[Finding] = []
     valid_paths = sorted((fixture_root / "valid").glob("*.json"))
     invalid_paths = sorted((fixture_root / "invalid").glob("*.json"))
@@ -299,11 +374,19 @@ def validate_fixture_tree(fixture_root: Path = FIXTURE_ROOT) -> tuple[Finding, .
     for path in valid_paths:
         result = validate_file(path)
         if not result.ok:
-            findings.append(Finding("VALID_FIXTURE_REJECTED", f"/valid/{path.name}"))
+            findings.append(
+                Finding(
+                    "VALID_FIXTURE_REJECTED", f"/valid/{path.name}"
+                )
+            )
     for path in invalid_paths:
         result = validate_file(path)
         if result.ok:
-            findings.append(Finding("INVALID_FIXTURE_ACCEPTED", f"/invalid/{path.name}"))
+            findings.append(
+                Finding(
+                    "INVALID_FIXTURE_ACCEPTED", f"/invalid/{path.name}"
+                )
+            )
     return tuple(sorted(set(findings)))
 
 
@@ -336,7 +419,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.fixtures:
-        result = ValidationResult(validate_fixture_tree(args.fixture_root))
+        findings = validate_fixture_tree(args.fixture_root)
+        result = ValidationResult(findings)
     elif args.candidate is not None:
         result = validate_file(args.candidate, profile_path=args.profile)
     else:
