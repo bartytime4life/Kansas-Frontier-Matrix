@@ -1,0 +1,111 @@
+# Focused no-network validation for the inactive Earth-observation asset prefilter report.
+name: eo-asset-prefilter-report
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/source/eo_asset_prefilter_report.md"
+      - "schemas/contracts/v1/source/eo_asset_prefilter_profile.schema.json"
+      - "schemas/contracts/v1/source/eo_asset_prefilter_report.schema.json"
+      - "pipeline_specs/source/eo_asset_prefilter_profile.v1.json"
+      - "fixtures/contracts/v1/source/eo_asset_prefilter_report/**"
+      - "tools/validators/source/validate_eo_asset_prefilter_report.py"
+      - "tests/validators/source/test_eo_asset_prefilter_report.py"
+      - "data/receipts/generated/genrec-eo-asset-prefilter-report-20260805.json"
+      - ".github/workflows/eo-asset-prefilter-report.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eo-asset-prefilter-report-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-eo-asset-prefilter-report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python -m pip install -e .
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/source \
+            --pattern 'test_eo_asset_prefilter_report.py' \
+            --verbose
+          python tools/validators/source/validate_eo_asset_prefilter_report.py \
+            --fixtures
+
+      - name: Validate schemas, profile, JSON inventory, and authoring receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schemas = [
+              Path("schemas/contracts/v1/source/eo_asset_prefilter_profile.schema.json"),
+              Path("schemas/contracts/v1/source/eo_asset_prefilter_report.schema.json"),
+          ]
+          for path in schemas:
+              Draft202012Validator.check_schema(
+                  json.loads(path.read_text(encoding="utf-8"))
+              )
+          fixture_root = Path(
+              "fixtures/contracts/v1/source/eo_asset_prefilter_report"
+          )
+          files = sorted(fixture_root.rglob("*.json"))
+          assert files, "fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(
+              f"CONFIRMED: parsed {len(schemas)} schemas and "
+              f"{len(files)} fixture JSON files."
+          )
+          PY
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-eo-asset-prefilter-report-20260805.json
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### EO asset prefilter report"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- The profile is PROPOSED_INACTIVE and all fixtures are synthetic."
+            echo "- The validator consumes normalized metadata and performs no source or asset network calls."
+            echo "- PASS means prefilter-ready for review only; it does not admit RAW data or resolve evidence."
+            echo "- No source activation, policy approval, promotion, release, map layer, or publication is created."
+          } >> "$GITHUB_STEP_SUMMARY"
