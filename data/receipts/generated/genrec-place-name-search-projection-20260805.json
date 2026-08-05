@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-place-name-search-projection-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/place-name-search-projection.yml",
+    "contracts/runtime/place_name_search_projection.md",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/base_current.json",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/invalid_cases.json",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/valid_cases.json",
+    "schemas/contracts/v1/runtime/place_name_search_projection.schema.json",
+    "tests/validators/test_validate_place_name_search_projection.py",
+    "tools/validators/place_name_search_projection_common.py",
+    "tools/validators/place_name_search_projection_semantics.py",
+    "tools/validators/validate_place_name_search_projection.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/place-name-search-projection.yml": "sha256:f58b9e8a452439ef197371da195ea6651eedca4861822023066382fcefff9741",
+    "contracts/runtime/place_name_search_projection.md": "sha256:8763d9267353427d35c0ee5bde2d313b98bd277b6e5a6e41c552d4d095c79e71",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/base_current.json": "sha256:f17c3e89c1bda297e1f2125654dcd6919b79787b6e0b0799f59cc26c92eb7f04",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/invalid_cases.json": "sha256:c600fb6b1848bbbb93cf0b596360bfe22ea6ece2db00ab26cae5337c14846ef7",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/valid_cases.json": "sha256:8cde78a9ee92a162446af6a4e515c6e7bf8732b34920ed1dc3c5bc02dc202b12",
+    "schemas/contracts/v1/runtime/place_name_search_projection.schema.json": "sha256:4e2281cb95a2dd0334c91ba98bdf287da09f4f1860059d7c2560e73de5612bac",
+    "tests/validators/test_validate_place_name_search_projection.py": "sha256:c7b6e4e5ea660e80e25a83e5b6dd3a256e894350029e307e16870f9c2f9401ab",
+    "tools/validators/place_name_search_projection_common.py": "sha256:ea6906ffff4580322968a2acab5cba357b872de71b6915bc15f7ef3cd5083a28",
+    "tools/validators/place_name_search_projection_semantics.py": "sha256:85b86efcb67bf1491af7a7c538faf1cdfceb1dd7a25a5ae6d3d2dc1c4b973129",
+    "tools/validators/validate_place_name_search_projection.py": "sha256:cadb72d26c36274c388f33ede5f864d79dbb3dc023baca75da2bdd4544faafad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:67ed9d4ea0d4ef3b226c996f7a87534fbb618bfde4a7302cfbd5faeaa398924b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26(2).pdf#place-name-authority-and-temporal-alias-graph",
+      "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md",
+      "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-061",
+      "repo:contracts/domains/settlements-infrastructure/place_name_authority_graph.md",
+      "repo:contracts/runtime/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/place-name-search-projection.yml": "PROPOSED",
+    "contracts/runtime/place_name_search_projection.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/base_current.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/invalid_cases.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/place_name_search_projection/valid_cases.json": "PROPOSED",
+    "schemas/contracts/v1/runtime/place_name_search_projection.schema.json": "PROPOSED",
+    "tests/validators/test_validate_place_name_search_projection.py": "PROPOSED",
+    "tools/validators/place_name_search_projection_common.py": "PROPOSED",
+    "tools/validators/place_name_search_projection_semantics.py": "PROPOSED",
+    "tools/validators/validate_place_name_search_projection.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Nine focused tests passed; six valid and twelve invalid synthetic vectors replayed from split immutable fixture files with exact reviewed finding sets."
+    },
+    {
+      "gate": "generated-receipt-artifact-closure",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 bindings, and truth-label keys were checked against the final local authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head and draft pull request."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26(2).pdf#place-name-authority-and-temporal-alias-graph"
+    },
+    {
+      "id": "repository:new-ideas-4-25-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    },
+    {
+      "id": "repository:kfm-triad-061",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-061"
+    },
+    {
+      "id": "repository:place-name-authority-graph",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/settlements-infrastructure/place_name_authority_graph.md"
+    },
+    {
+      "id": "repository:runtime-contract-lane",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:34:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2010,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first search-projection continuation of KFM-TRIAD-061. This receipt grants no public-search, feature, geometry, legal-status, ownership, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority. Branch: agent/place-name-search-projection-20260805. Initial base: main@02849ce96e6a3234b4a11e29bc3c5fa7c10c32e4."
+}
