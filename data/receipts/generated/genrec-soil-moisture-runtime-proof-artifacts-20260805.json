@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-soil-moisture-runtime-proof-artifacts-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-moisture-runtime-proof.yml",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "sha256:f590b0aa962bba0008144b703ead5e01e8ce88bdf2147207f77c23d266751b69",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "sha256:1c7b24e238032900820ea1643945b88f341c5e6e25aa33ad877e45c8feada92a",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "sha256:5ebfc689c19aca451d774165e47be9e6d8d6a194d05799138d08bbe5d500400d",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "sha256:f1c92c8eabdd0c7d35275081dab1d0c33d7e4bf3c5defe8a5059653553e289cf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:44ec4f74315be70c25f4980bbc69989e7f42bdf30e43a43d903b35b12bd59be1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#actual-response-emission-and-runtime-summary",
+      "repo:tests/runtime_proof/domains/soil/soil_moisture/runtime_mapper.py@57e5a8994f33070b4d3a219b9dafe03695fc88cd",
+      "repo:tools/ci/render_runtime_proof_summary.py@906e72812594c684494d597f271dc9ca0335d019",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@57e5a8994f33070b4d3a219b9dafe03695fc88cd"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The changed GitHub Actions workflow parsed successfully as YAML and retained one validate job."
+    },
+    {
+      "gate": "focused-no-network-tests",
+      "outcome": "PASS",
+      "reason": "Twenty-nine package, runtime-mapper, report-emitter, and renderer tests passed locally."
+    },
+    {
+      "gate": "runtime-review-artifacts",
+      "outcome": "PASS",
+      "reason": "The emitter produced four closed outward envelopes; all four matched expected outcome and reason code, and the renderer produced a deterministic Markdown summary."
+    },
+    {
+      "gate": "external-action-pinning",
+      "outcome": "PASS",
+      "reason": "The added upload-artifact use is pinned to immutable commit 043fb46d1a93c77aae656e7c1c64a875d1fc6a0a."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the stacked draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-runtime-artifacts",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#emit-actual-runtime-responses"
+    },
+    {
+      "id": "repository:merged-soil-runtime-proof",
+      "validated": true,
+      "evidence_ref": "repo:tests/runtime_proof/domains/soil/soil_moisture/runtime_mapper.py@57e5a8994f33070b4d3a219b9dafe03695fc88cd"
+    },
+    {
+      "id": "repository:stacked-summary-renderer",
+      "validated": true,
+      "evidence_ref": "repo:tools/ci/render_runtime_proof_summary.py@906e72812594c684494d597f271dc9ca0335d019"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@57e5a8994f33070b4d3a219b9dafe03695fc88cd"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T22:14:20Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Stacked follow-up to PR #1999. This slice emits machine-readable closed runtime envelopes and a temporary Markdown review summary as 14-day QA artifacts. The artifacts remain subordinate to tests and schemas and grant no evidence, policy, review, promotion, release, deployment, publication, alert, or public-use authority."
+}
