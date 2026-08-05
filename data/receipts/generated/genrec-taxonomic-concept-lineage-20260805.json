@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-taxonomic-concept-lineage-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/taxonomic-concept-lineage.yml",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py",
+    "tools/validators/validate_taxonomic_concept_lineage.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/taxonomic-concept-lineage.yml": "sha256:076b886325c915d721b99f5cb69bcb45cd58b158fd14f79d67e29ee2623f5dc8",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "sha256:892d9e04f2460d54577e7ffd896829f465536d27684e77c642df286e986eede8",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json": "sha256:964611a2a4b710dad4ae6edac36f857ba53d28f35007915c6d6afeaf3cdab02e",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py": "sha256:a3c6ce9a6463097849774033dcbe566389c705b0732f0ded9f8ea8b3e7ae2dfd",
+    "tools/validators/validate_taxonomic_concept_lineage.py": "sha256:68fc3ecca3bad1f6823c922b5335fd880d5b4ac99b811aa159fe92669503cd9a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:755103e3e89af7d4a5d6746b29bbac149830709e357bd8c61b80943aac4e562c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-25-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26.pdf#taxonomic-concept-and-name-usage-lineage",
+      "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md",
+      "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-060"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/taxonomic-concept-lineage.yml": "PROPOSED",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "PROPOSED",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json": "PROPOSED",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py": "PROPOSED",
+    "tools/validators/validate_taxonomic_concept_lineage.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Embedded deterministic valid and exact-negative synthetic test vectors passed focused no-network validation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26.pdf#taxonomic-concept-and-name-usage-lineage"
+    },
+    {
+      "id": "repository:new-ideas-4-25-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    },
+    {
+      "id": "repository:kfm-triad-060",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-060"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T20:25:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-060. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+}
