@@ -1,0 +1,97 @@
+# Validate the fixture-first release-support ProofPack closure profile.
+# This workflow is read-only, no-network at runtime, and non-publishing.
+name: proof-pack-closure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/proof-pack-closure.yml"
+      - "contracts/evidence/proof_pack.md"
+      - "schemas/contracts/v1/evidence/proof_pack.schema.json"
+      - "fixtures/contracts/v1/evidence/proof_pack/**"
+      - "tools/proof_pack/**"
+      - "tests/proof_pack/**"
+      - "data/receipts/generated/genrec-proof-pack-closure-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/proof-pack-closure.yml"
+      - "contracts/evidence/proof_pack.md"
+      - "schemas/contracts/v1/evidence/proof_pack.schema.json"
+      - "fixtures/contracts/v1/evidence/proof_pack/**"
+      - "tools/proof_pack/**"
+      - "tests/proof_pack/**"
+      - "data/receipts/generated/genrec-proof-pack-closure-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: proof-pack-closure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-proof-pack-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate exact fixture polarity and local reference closure
+        run: python tools/proof_pack/proof_pack_check.py --fixtures
+
+      - name: Run focused builder and checker tests
+        run: python -m pytest -q tests/proof_pack
+
+      - name: Run repository schema polarity for the added profile
+        run: python -m pytest -q tests/schemas/test_common_contracts.py -k proof_pack
+
+      - name: Rebuild the golden manifest deterministically
+        run: |
+          python tools/proof_pack/assemble_proof_pack.py \
+            --candidate fixtures/contracts/v1/evidence/proof_pack/candidates/release_support_candidate.json \
+            --repo-root . \
+            --output /tmp/proof-pack.json
+          cmp /tmp/proof-pack.json \
+            fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-proof-pack-closure-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Release-support ProofPack closure"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema, required support families, release/subject/spec bindings, path safety, local SHA-256 integrity, and deterministic assembly."
+            echo "- Boundary: a passing check does not create evidence, policy approval, review, release, signature, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

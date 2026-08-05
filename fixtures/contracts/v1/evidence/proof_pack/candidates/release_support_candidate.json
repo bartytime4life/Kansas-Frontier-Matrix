@@ -1,0 +1,87 @@
+{
+  "assembled_at": "2026-08-05T22:40:00Z",
+  "components": [
+    {
+      "artifact_id": "citation_sample:fixture-08",
+      "kind": "CITATION_SAMPLE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/citation_sample.json",
+      "recorded_at": "2026-08-05T22:08:00Z"
+    },
+    {
+      "artifact_id": "ci_run:fixture-09",
+      "kind": "CI_RUN",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/ci_run.json",
+      "recorded_at": "2026-08-05T22:09:00Z"
+    },
+    {
+      "artifact_id": "evidence_bundle:fixture-01",
+      "kind": "EVIDENCE_BUNDLE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/evidence_bundle.json",
+      "recorded_at": "2026-08-05T22:01:00Z"
+    },
+    {
+      "artifact_id": "integrity_manifest:fixture-03",
+      "kind": "INTEGRITY_MANIFEST",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/integrity_manifest.json",
+      "recorded_at": "2026-08-05T22:03:00Z"
+    },
+    {
+      "artifact_id": "lineage_index:fixture-05",
+      "kind": "LINEAGE_INDEX",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/lineage_index.json",
+      "recorded_at": "2026-08-05T22:05:00Z"
+    },
+    {
+      "artifact_id": "promotion_decision:fixture-06",
+      "kind": "PROMOTION_DECISION",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/promotion_decision.json",
+      "recorded_at": "2026-08-05T22:06:00Z"
+    },
+    {
+      "artifact_id": "prov_export:fixture-04",
+      "kind": "PROV_EXPORT",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/prov_export.json",
+      "recorded_at": "2026-08-05T22:04:00Z"
+    },
+    {
+      "artifact_id": "release_anchor:fixture-10",
+      "kind": "RELEASE_ANCHOR",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/release_anchor.json",
+      "recorded_at": "2026-08-05T22:10:00Z"
+    },
+    {
+      "artifact_id": "rollback_reference:fixture-11",
+      "kind": "ROLLBACK_REFERENCE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/rollback_reference.json",
+      "recorded_at": "2026-08-05T22:11:00Z"
+    },
+    {
+      "artifact_id": "runtime_proof:fixture-07",
+      "kind": "RUNTIME_PROOF",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/runtime_proof.json",
+      "recorded_at": "2026-08-05T22:07:00Z"
+    },
+    {
+      "artifact_id": "validation_report:fixture-02",
+      "kind": "VALIDATION_REPORT",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/validation_report.json",
+      "recorded_at": "2026-08-05T22:02:00Z"
+    }
+  ],
+  "decision": {
+    "authority_created": false,
+    "outcome": "READY_FOR_REVIEW",
+    "publication": false,
+    "reason_codes": [],
+    "release_approved": false
+  },
+  "profile": "kfm.proof-pack.release-support.v1",
+  "proof_pack_id": "proof_pack:fixture-release-support-v1",
+  "release_id": "release:fixture-proof-pack-20260805",
+  "subject": {
+    "correction_state": "NONE",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "subject_id": "dataset:fixture-public-safe-v1",
+    "subject_type": "DATASET_VERSION"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "artifact_id": "correction_history:fixture-12",
+  "artifact_kind": "CORRECTION_HISTORY",
+  "fixture_only": true,
+  "release_id": "release:fixture-proof-pack-20260805",
+  "states": [
+    "SUPERSEDED",
+    "ACTIVE_CORRECTION"
+  ],
+  "subject_id": "dataset:fixture-public-safe-v1",
+  "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+}

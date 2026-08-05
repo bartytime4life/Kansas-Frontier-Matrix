@@ -1,0 +1,8 @@
+{
+  "artifact_id": "citation_sample:fixture-08",
+  "artifact_kind": "CITATION_SAMPLE",
+  "fixture_only": true,
+  "release_id": "release:fixture-proof-pack-20260805",
+  "subject_id": "dataset:fixture-public-safe-v1",
+  "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+}

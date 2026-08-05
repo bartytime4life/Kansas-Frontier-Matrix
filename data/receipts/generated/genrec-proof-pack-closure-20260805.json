@@ -1,0 +1,226 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/proof-pack-closure.yml": "sha256:41b835d12aafdd9e07e65ed271ead52e35ed61eb9b892d89b995c074ab93c26e",
+    "contracts/evidence/proof_pack.md": "sha256:5210c54aca5a03b457f1bad6616320bd9415ef4c80128ec95417d28dd4eb3fb6",
+    "fixtures/contracts/v1/evidence/proof_pack/README.md": "sha256:d87e1b95bc61eeb4c26890db0cfe500e34891cdab99550e5e15b10128c5b1214",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/ci_run.json": "sha256:dfa8d8985da0d257117070b81712fd2984a78e47a74ee97bfb72f732be27291a",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/citation_sample.json": "sha256:479bf345c8c6c0ab7d73db57193ceaaebdc1d8d8bde1d7567d55f3d408cf794a",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/correction_history.json": "sha256:16cb2a7a4a92360ad10467aaac0f55c74003a41ff8a7bf6d8171d532cfbd0164",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/evidence_bundle.json": "sha256:bf4b395ab729951c57106bb82b4ec19dd3b6313b6b590fc3df8683fba9aeef45",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/integrity_manifest.json": "sha256:3786a26c9cf8fb7254fdd5238807f42ded321a2ded2a792f1ccb7364d1bdaae2",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/lineage_index.json": "sha256:02a05600ee93ea184f464f881409e4c0dedb5e19ee50448999f722b1d7a7957c",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/promotion_decision.json": "sha256:d38a4e317c8f4655a6e8ecdeaec4b6c458bafbe33af7f7a831ac137b8048e51d",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/prov_export.json": "sha256:473b019f30ff553153ea73444cb2945361c6e7b9644ea24d8c4f4cff4aea817d",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/release_anchor.json": "sha256:4b3fd2ca3913614d73eb1719f35b24ac4c9059f5d80fd4c624b2df4bcd592d47",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/rollback_reference.json": "sha256:eff96af9be47b96b25f167adcaec452b03dbc9c716403d00646d7994593b4421",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/runtime_proof.json": "sha256:d77cfdbcb4608ae2ecd277d1a1dbef70b22d0889bce30ee2e774c635c8a1ffde",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/validation_report.json": "sha256:b216abf13891fd8f93c0bdff0dfce6f42c62ea2a8dfe185617661d4084dbc43e",
+    "fixtures/contracts/v1/evidence/proof_pack/candidates/release_support_candidate.json": "sha256:1c29098db49f022468469f281d4081209e51808e77e5e3a8244aab1381fccd47",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_code.txt": "sha256:8dfbba570e780c7bbc60387c5f9e98bad0d059a241d6c108d8f7063d1a993c8d",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_error.txt": "sha256:6c1a01411e5d0de6ad4c322e56f9631a967286ce7f208da1fca7dab74edd2c15",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.json": "sha256:86653ca619315634504d80bc7258b32dab3644315f78239d9d3b74c7fb21e3ff",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.expected_code.txt": "sha256:734c30198b4021342485e8078e0f82111538cfc4e74ce36caf1aa0eb0a5746d5",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.json": "sha256:25906969c947ee49a793fde91b60f463696bad5fac49efd96fe44dee9db337b5",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.expected_code.txt": "sha256:67c12f01184849b4cb4930d7510ff993e8d7e4226c4ba07bc04b0bfd3d393d95",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.json": "sha256:7f9c4643eb683fed41ab92e311ae8ad9ca62dba992688b4bbb07e58ad7ffc7b7",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.expected_code.txt": "sha256:b0633605a2e6c9789072dd88e67e306cd46451ada013e2e627d4fc07bedc8229",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.json": "sha256:e44fe48f9577d6b6356059aabd274c4b81c73e7f9a28f29142d39f0453897db3",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.expected_code.txt": "sha256:118db529a5fee4c09619c89783b39df778cc9e4fecddd14f8f35163c7fd40e95",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.json": "sha256:c4ec21e2784eab9ba4fb4ed787670d50fc9640c710923c25fe11f312f3b4883f",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.expected_code.txt": "sha256:52897cef3224cc55d38e90c341132142467cb4f932f041ace0e04e1040b9b4f1",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.json": "sha256:f5879218fb518c4d77b333d122bd85e69d2f8bf7077149d7bc593f2d2e3f66dc",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.expected_code.txt": "sha256:c9fb7be0db29ef0016f93367fdbe82dfb816581a6e471caa5cd40688279913ef",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.json": "sha256:13ed8181d8f7fe81eb22078676bbfec764e23a0757c8b088ac6727691ae641fa",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.expected_code.txt": "sha256:086d8407c9fd3bdabc0758ec94340b9c8dcff677934e83c6150d315b8f8373fb",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.json": "sha256:b22aedcb2b3e7d5faf530fc46f6780d7a903ed899a2d24afa6c98f375b7fa783",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_corrected_release_support.json": "sha256:fdb3b1d25d5936f12d0a53cb46f45375d616090b89986c5862b413494e10423b",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json": "sha256:4cf413189bfbe6cdd793f53c210062e9c525635607ae83ada1cd34f0cd4d2a45",
+    "schemas/contracts/v1/evidence/proof_pack.schema.json": "sha256:ae56b3be167bd8949e5e26f1850be540f25cfdeb785544c60c531c4277f13da0",
+    "tests/proof_pack/test_assemble_proof_pack.py": "sha256:0c483e7c449f16d7fcb481622efa42b25c93cf15f565cbe8312d6426b2a9b853",
+    "tests/proof_pack/test_proof_pack_check.py": "sha256:46f9d227706582e5e58274585d2816c0595985ea28b457817dd13a57f032f532",
+    "tools/proof_pack/_common.py": "sha256:1b5d41dae3033f1db3c47d3bb28b01d6ae82abf42eec9e9d30a4f526418549f0",
+    "tools/proof_pack/assemble_proof_pack.py": "sha256:37eab03a9ece9bf98f7ba99bc4ec1466850f144ccd51596434edbb11a5d8698a",
+    "tools/proof_pack/proof_pack_check.py": "sha256:cb0f25040641e6ca4509913aa3baab0da94e40440602369a90b3078bb9b2b04d"
+  },
+  "artifact_paths": [
+    ".github/workflows/proof-pack-closure.yml",
+    "contracts/evidence/proof_pack.md",
+    "fixtures/contracts/v1/evidence/proof_pack/README.md",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/ci_run.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/citation_sample.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/correction_history.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/evidence_bundle.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/integrity_manifest.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/lineage_index.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/promotion_decision.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/prov_export.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/release_anchor.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/rollback_reference.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/runtime_proof.json",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/validation_report.json",
+    "fixtures/contracts/v1/evidence/proof_pack/candidates/release_support_candidate.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_error.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.json",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.expected_code.txt",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.json",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_corrected_release_support.json",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json",
+    "schemas/contracts/v1/evidence/proof_pack.schema.json",
+    "tests/proof_pack/test_assemble_proof_pack.py",
+    "tests/proof_pack/test_proof_pack_check.py",
+    "tools/proof_pack/_common.py",
+    "tools/proof_pack/assemble_proof_pack.py",
+    "tools/proof_pack/proof_pack_check.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:New Ideas 4-23-26(2).pdf#commit-10-release-proof-pack",
+      "id": "source:new-ideas-4-23-26-proof-pack",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/directory-rules.md#schema-home-and-responsibility-roots",
+      "id": "repo:directory-rules-v1.3.1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/proofs/proof_pack/README.md#authority-level",
+      "id": "repo:proof-pack-lane-boundary",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-05T22:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-23-26(2).pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-23-26(2).pdf#release-proof-pack-checklist",
+      "repo:tools/proof_pack/README.md",
+      "repo:data/proofs/proof_pack/README.md",
+      "repo:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-05"
+  },
+  "notes": "Fixture-first release-support closure only. The pack remains non-authoritative and does not approve release, sign artifacts, mutate lifecycle state, deploy, or publish.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+    "docs/architecture/directory-rules.md"
+  ],
+  "prompt_or_contract": "sha256:15c8e220a657277f0bd6f3d980ff80d7ae78476161c2f257805b85442d2957b3",
+  "receipt_id": "genrec-proof-pack-closure-20260805",
+  "truth_labels": {
+    ".github/workflows/proof-pack-closure.yml": "PROPOSED",
+    "contracts/evidence/proof_pack.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/ci_run.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/citation_sample.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/correction_history.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/evidence_bundle.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/integrity_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/lineage_index.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/promotion_decision.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/prov_export.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/release_anchor.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/rollback_reference.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/runtime_proof.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/artifacts/validation_report.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/candidates/release_support_candidate.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.expected_error.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/invalid_self_authority.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_correction_history_required.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_digest_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_duplicate_component_id.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_file.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_missing_rollback.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_release_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/invalid/semantic_invalid_subject_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_corrected_release_support.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/proof_pack.schema.json": "PROPOSED",
+    "tests/proof_pack/test_assemble_proof_pack.py": "PROPOSED",
+    "tests/proof_pack/test_proof_pack_check.py": "PROPOSED",
+    "tools/proof_pack/_common.py": "PROPOSED",
+    "tools/proof_pack/assemble_proof_pack.py": "PROPOSED",
+    "tools/proof_pack/proof_pack_check.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-and-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Two valid fixtures and eight invalid fixtures exercise schema and semantic closure."
+    },
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Builder and checker tests pass locally without network access."
+    },
+    {
+      "gate": "deterministic-rebuild",
+      "outcome": "PASS",
+      "reason": "Assembler output matches the committed golden manifest byte-for-byte."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted workflows must run against the final pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ]
+}
