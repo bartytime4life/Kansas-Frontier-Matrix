@@ -1,0 +1,83 @@
+# Temporary branch-only assembler for the connector-delivered evidence-custody slice.
+# It verifies one staged archive, expands the final non-workflow repository paths,
+# runs deterministic no-network validation, removes the archive, and commits only
+# to the named non-default branch. It grants no evidence, policy, release, or
+# publication authority.
+name: bootstrap-evidence-custody-handoff
+
+"on":
+  push:
+    branches:
+      - agent/evidence-custody-handoff-20260805
+    paths:
+      - ".github/kfm-bootstrap/**"
+      - ".github/workflows/bootstrap-evidence-custody-handoff.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bootstrap-evidence-custody-handoff-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the task branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: agent/evidence-custody-handoff-20260805
+          fetch-depth: 0
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Verify and expand the staged bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .github/kfm-bootstrap/evidence-custody-slice.tar.xz
+          echo "5ffc907429044e5aa1bb4ea30ba29bf7fe2445d1a9d9583c2548cb69c40212e6  .github/kfm-bootstrap/evidence-custody-slice.tar.xz" | sha256sum --check --strict
+          tar -xJf .github/kfm-bootstrap/evidence-custody-slice.tar.xz
+          rm -rf .github/kfm-bootstrap
+
+      - name: Install declared test dependencies
+        shell: bash
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused validation before committing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/test_validate_evidence_custody_handoff.py
+          python tools/validators/validate_evidence_custody_handoff.py --fixtures
+          python -m pytest -q -p no:cacheprovider \
+            tests/schemas/test_common_contracts.py -k evidence_custody_handoff
+          python -m py_compile \
+            tools/validators/validate_evidence_custody_handoff.py \
+            tests/validators/test_validate_evidence_custody_handoff.py
+
+      - name: Commit the assembled non-workflow implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "kfm-implementation-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "No assembled change found" >&2; exit 1; }
+          git commit -m "feat(evidence): add custody handoff reconciliation"
+          git push origin HEAD:agent/evidence-custody-handoff-20260805
