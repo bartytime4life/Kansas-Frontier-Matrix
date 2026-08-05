@@ -1,0 +1,582 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/reversible_entity_reconciliation.schema.json",
+  "title": "ReversibleEntityReconciliationPacket",
+  "description": "Fixture-first packet for reversible, evidence-bound entity reconciliation. Schema validity grants no merge, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "packet_id",
+    "hash_profile",
+    "spec_hash",
+    "source_assertions",
+    "match_proposals",
+    "reconciliation_decisions",
+    "entity_clusters",
+    "split_decisions",
+    "separation",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "ReversibleEntityReconciliationPacket"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "packet_id": {
+      "type": "string",
+      "pattern": "^reconciliation-packet:[a-z0-9][a-z0-9_.:-]{0,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_assertions": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/source_assertion"
+      }
+    },
+    "match_proposals": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/match_proposal"
+      }
+    },
+    "reconciliation_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/reconciliation_decision"
+      }
+    },
+    "entity_clusters": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/entity_cluster"
+      }
+    },
+    "split_decisions": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/split_decision"
+      }
+    },
+    "separation": {
+      "$ref": "#/$defs/separation"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "nonempty_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+      },
+      "uniqueItems": true
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "source_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_id",
+        "source_descriptor_ref",
+        "source_role",
+        "subject_ref",
+        "asserted_identity_keys",
+        "attribute_digests",
+        "evidence_refs",
+        "valid_from",
+        "valid_to"
+      ],
+      "properties": {
+        "assertion_id": {
+          "type": "string",
+          "pattern": "^source-assertion:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "asserted_identity_keys": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 16,
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "attribute_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "valid_from": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/aware_datetime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/aware_datetime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "feature_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_id",
+        "left_digest",
+        "right_digest",
+        "comparison",
+        "weight"
+      ],
+      "properties": {
+        "feature_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,96}$"
+        },
+        "left_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "right_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "comparison": {
+          "enum": [
+            "SAME",
+            "DIFFERENT",
+            "UNKNOWN"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "match_proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposal_id",
+        "candidate_assertion_refs",
+        "blocking_keys",
+        "feature_evidence",
+        "confidence",
+        "confidence_limit",
+        "transitivity_scope",
+        "automatic_merge",
+        "decision_required",
+        "evidence_refs"
+      ],
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^match-proposal:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "candidate_assertion_refs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "uniqueItems": true
+        },
+        "blocking_keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "uniqueItems": true
+        },
+        "feature_evidence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/feature_evidence"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "confidence_limit": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "transitivity_scope": {
+          "enum": [
+            "DIRECT_ONLY",
+            "BOUNDED_CLUSTER"
+          ]
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "decision_required": {
+          "const": true
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        }
+      }
+    },
+    "reconciliation_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "proposal_ref",
+        "outcome",
+        "authority_role",
+        "rationale_codes",
+        "evidence_refs",
+        "reversible",
+        "recorded_at",
+        "supersedes_decision_ref"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "pattern": "^reconciliation-decision:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "proposal_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "outcome": {
+          "enum": [
+            "MATCH",
+            "NO_MATCH",
+            "HOLD",
+            "ABSTAIN"
+          ]
+        },
+        "authority_role": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+        },
+        "rationale_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "reversible": {
+          "const": true
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "supersedes_decision_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "entity_cluster": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cluster_id",
+        "member_assertion_refs",
+        "decision_refs",
+        "derived_view_ref",
+        "source_assertions_preserved",
+        "transitive_closure_applied"
+      ],
+      "properties": {
+        "cluster_id": {
+          "type": "string",
+          "pattern": "^entity-cluster:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "member_assertion_refs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "uniqueItems": true
+        },
+        "decision_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "derived_view_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_assertions_preserved": {
+          "const": true
+        },
+        "transitive_closure_applied": {
+          "const": false
+        }
+      }
+    },
+    "member_set": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "split_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_id",
+        "prior_cluster_ref",
+        "reason_codes",
+        "evidence_refs",
+        "resulting_member_sets",
+        "reversible",
+        "recorded_at"
+      ],
+      "properties": {
+        "split_id": {
+          "type": "string",
+          "pattern": "^split-decision:[a-z0-9][a-z0-9_.:-]{0,240}$"
+        },
+        "prior_cluster_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "resulting_member_sets": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/member_set"
+          }
+        },
+        "reversible": {
+          "const": true
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        }
+      }
+    },
+    "separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_assertions_preserved",
+        "winner_takes_all_denied",
+        "destructive_merge_denied",
+        "confidence_is_not_authority",
+        "unresolved_is_first_class"
+      ],
+      "properties": {
+        "source_assertions_preserved": {
+          "const": true
+        },
+        "winner_takes_all_denied": {
+          "const": true
+        },
+        "destructive_merge_denied": {
+          "const": true
+        },
+        "confidence_is_not_authority": {
+          "const": true
+        },
+        "unresolved_is_first_class": {
+          "const": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "run_receipt_ref",
+        "reconciler_id",
+        "reconciler_version",
+        "input_refs"
+      ],
+      "properties": {
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "reconciler_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "reconciler_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
+        },
+        "input_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "canonical_entity_created",
+        "source_assertions_mutated",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "release_ref"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "canonical_entity_created": {
+          "const": false
+        },
+        "source_assertions_mutated": {
+          "const": false
+        },
+        "evidence_closure_claimed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/common/reversible_entity_reconciliation.md",
+    "fixtures_root": "fixtures/contracts/v1/common/reversible_entity_reconciliation/",
+    "validator": "tools/validators/validate_reversible_entity_reconciliation.py",
+    "tests": "tests/validators/test_validate_reversible_entity_reconciliation.py",
+    "authority": "reconciliation_proposal_and_reversible_decision_only",
+    "non_effects": [
+      "does_not_create_canonical_entity_truth",
+      "does_not_mutate_source_assertions",
+      "does_not_authorize_merge_policy_release_or_publication"
+    ]
+  }
+}

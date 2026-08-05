@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-reversible-entity-reconciliation-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/reversible-entity-reconciliation.yml",
+    "contracts/common/reversible_entity_reconciliation.md",
+    "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json",
+    "tests/validators/test_validate_reversible_entity_reconciliation.py",
+    "tools/validators/validate_reversible_entity_reconciliation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/reversible-entity-reconciliation.yml": "sha256:7fb8fdd96567250a6fb7db78305dc22a0a3b9b03888c0c4d931ba6d45078cd53",
+    "contracts/common/reversible_entity_reconciliation.md": "sha256:72c235bb7c0dc7ccecc00fb392866e045f50128919a3e095ace22c0a8c0308dc",
+    "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json": "sha256:24f99e92ad21bcfd059981b75cd3d2b7fcfc20bea0d6ebaec8d7f494e9dda626",
+    "tests/validators/test_validate_reversible_entity_reconciliation.py": "sha256:a175f48997a26c1423251de0d294f8f90f09ce4275c7705a403113337d3f0a79",
+    "tools/validators/validate_reversible_entity_reconciliation.py": "sha256:d07a087acf0e35c1d3d8e6db012d52043d56a657f0629df228a3d850d00561c6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:1d78c430e54941689b2925b20512ae8e487be1fc4eeb9b711276c6de8aa25b7a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-25-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26.pdf#reversible-entity-reconciliation-and-conflict-preserving-dedupe",
+      "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md",
+      "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-059"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/reversible-entity-reconciliation.yml": "PROPOSED",
+    "contracts/common/reversible_entity_reconciliation.md": "PROPOSED",
+    "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json": "PROPOSED",
+    "tests/validators/test_validate_reversible_entity_reconciliation.py": "PROPOSED",
+    "tools/validators/validate_reversible_entity_reconciliation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Embedded deterministic valid and exact-negative synthetic test vectors passed focused no-network validation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26.pdf#reversible-entity-reconciliation-and-conflict-preserving-dedupe"
+    },
+    {
+      "id": "repository:new-ideas-4-25-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    },
+    {
+      "id": "repository:kfm-triad-059",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-059"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T20:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-059. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+}
