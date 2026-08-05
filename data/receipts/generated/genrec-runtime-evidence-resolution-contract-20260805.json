@@ -2,6 +2,7 @@
   "receipt_id": "genrec-runtime-evidence-resolution-contract-20260805",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    ".github/workflows/evidence-resolver.yml",
     ".github/workflows/runtime-evidence-resolution.yml",
     "contracts/evidence/runtime_evidence_resolution.md",
     "fixtures/contracts/v1/evidence/runtime_evidence_resolution/README.md",
@@ -18,6 +19,7 @@
     "tests/packages/evidence_resolver/test_result_schema.py"
   ],
   "artifact_hashes": {
+    ".github/workflows/evidence-resolver.yml": "sha256:c6b57c92c249ebdebae66d9ac4faf43fec3e83803fa6ac7197745e3868de7af6",
     ".github/workflows/runtime-evidence-resolution.yml": "sha256:ace1ca00586c82cd1e779e3fadc57d71717e4616475755bc05dd7cae92ff5e2f",
     "contracts/evidence/runtime_evidence_resolution.md": "sha256:9d1a8d7161cbbc405a60ef3ec20257ae1727baa2dbbde9400b70f9f0623ac00f",
     "fixtures/contracts/v1/evidence/runtime_evidence_resolution/README.md": "sha256:7c78975b715925b8790b9ec559ab7017b845f8c265fdefd3ef18000cc45c8952",
@@ -62,6 +64,7 @@
     ]
   },
   "truth_labels": {
+    ".github/workflows/evidence-resolver.yml": "PROPOSED",
     ".github/workflows/runtime-evidence-resolution.yml": "PROPOSED",
     "contracts/evidence/runtime_evidence_resolution.md": "PROPOSED",
     "fixtures/contracts/v1/evidence/runtime_evidence_resolution/README.md": "PROPOSED",
@@ -86,7 +89,7 @@
     {
       "gate": "repo-integrated-resolver-conformance",
       "outcome": "SKIPPED",
-      "reason": "Exact-head existing resolver, result-contract, and receipt-integrity checks are wired in runtime-evidence-resolution.yml for hosted CI."
+      "reason": "The first hosted attempt exposed a causally related missing dependency install in evidence-resolver.yml; the exact-head repair now installs repository-declared test dependencies and must rerun."
     },
     {
       "gate": "human-review",
