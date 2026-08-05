@@ -116,8 +116,8 @@ class SourceNativeQualityTranslationValidatorTests(unittest.TestCase):
                 / "valid/valid_mapped_online_valid.json"
             ).read_text(encoding="utf-8")
         )
-        secret = "SECRET_NATIVE_CODE_DO_NOT_ECHO"
-        candidate["source"]["native_code"] = secret
+        untrusted_value = "UNTRUSTED_NATIVE_CODE_DO_NOT_ECHO"
+        candidate["source"]["native_code"] = untrusted_value
         candidate["schema_negative_canary"] = True
         candidate["spec_hash"] = MODULE._canonical_spec_hash(candidate)
         with tempfile.TemporaryDirectory() as directory:
@@ -125,7 +125,7 @@ class SourceNativeQualityTranslationValidatorTests(unittest.TestCase):
             path.write_text(json.dumps(candidate), encoding="utf-8")
             result = MODULE.validate_translation(path)
             report = MODULE._serialize(path, result)
-        self.assertNotIn(secret, report)
+        self.assertNotIn(untrusted_value, report)
         self.assertIn("SCHEMA_INVALID", report)
 
     def test_replay_is_deterministic(self) -> None:
