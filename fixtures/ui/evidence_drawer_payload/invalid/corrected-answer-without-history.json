@@ -5,7 +5,9 @@
   "reason_code": "SUPPORTED",
   "title": "Synthetic streamflow observation",
   "summary": "A synthetic, generalized flow observation is supported by the cited fixture evidence.",
-  "evidence_refs": ["kfm:evidence:synthetic:flow-001"],
+  "evidence_refs": [
+    "kfm:evidence:synthetic:flow-001"
+  ],
   "citations": [
     {
       "label": "Synthetic fixture evidence",

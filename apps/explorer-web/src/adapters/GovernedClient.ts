@@ -4,7 +4,8 @@
  * This module performs no network or lifecycle-store access. It validates one
  * deliberately small browser projection profile so feature code can fail
  * closed while the canonical EvidenceDrawerPayload schema-home decision
- * remains unresolved.
+ * remains unresolved. Negative and correction history is audit-visible but can
+ * never be resolved as current claim support.
  */
 
 export const EVIDENCE_DRAWER_PROJECTION_PROFILE =
@@ -20,7 +21,11 @@ export type EvidenceDrawerReasonCode =
   | "POLICY_DENIED"
   | "RIGHTS_UNRESOLVED"
   | "SENSITIVE_DETAIL_RESTRICTED"
-  | "UPSTREAM_ERROR";
+  | "UPSTREAM_ERROR"
+  | "HELD_EVIDENCE"
+  | "SUPERSEDED_EVIDENCE"
+  | "WITHDRAWN_EVIDENCE"
+  | "REVOKED_EVIDENCE";
 
 export type EvidenceDrawerCitation = Readonly<{
   label: string;
@@ -36,6 +41,34 @@ export type EvidenceDrawerTrustState = Readonly<{
   correction: "NONE" | "CURRENT" | "CORRECTED" | "SUPERSEDED";
 }>;
 
+export type EvidenceDrawerNegativeState =
+  | "HELD"
+  | "DENIED"
+  | "SUPERSEDED"
+  | "REVOKED"
+  | "WITHDRAWN";
+
+export type EvidenceDrawerNegativeOutcome = Readonly<{
+  evidenceRef: string;
+  state: EvidenceDrawerNegativeState;
+  reasonCode: Exclude<EvidenceDrawerReasonCode, "SUPPORTED" | "MISSING_EVIDENCE" | "STALE_EVIDENCE" | "CITATION_UNRESOLVED" | "UPSTREAM_ERROR">;
+  recordedAt: string;
+  visibleInRuntime: true;
+  resolvableAsCurrent: false;
+}>;
+
+export type EvidenceDrawerCorrection = Readonly<{
+  priorEvidenceRef: string;
+  activeEvidenceRef: string;
+  status: "ACTIVE_CORRECTION";
+  recordedAt: string;
+}>;
+
+export type EvidenceDrawerHistory = Readonly<{
+  negativeOutcomes: readonly EvidenceDrawerNegativeOutcome[];
+  corrections: readonly EvidenceDrawerCorrection[];
+}>;
+
 export type GovernedEvidenceDrawerProjection = Readonly<{
   profile: typeof EVIDENCE_DRAWER_PROJECTION_PROFILE;
   id: string;
@@ -47,6 +80,7 @@ export type GovernedEvidenceDrawerProjection = Readonly<{
   citations: readonly EvidenceDrawerCitation[];
   limitations: readonly string[];
   trustState: EvidenceDrawerTrustState;
+  history: EvidenceDrawerHistory;
 }>;
 
 export type GovernedProjectionResult =
@@ -64,6 +98,7 @@ const TOP_LEVEL_FIELDS = new Set([
   "citations",
   "limitations",
   "trust_state",
+  "history",
 ]);
 
 const CITATION_FIELDS = new Set(["label", "href"]);
@@ -74,6 +109,21 @@ const TRUST_STATE_FIELDS = new Set([
   "release",
   "freshness",
   "correction",
+]);
+const HISTORY_FIELDS = new Set(["negative_outcomes", "corrections"]);
+const NEGATIVE_OUTCOME_FIELDS = new Set([
+  "evidence_ref",
+  "state",
+  "reason_code",
+  "recorded_at",
+  "visible_in_runtime",
+  "resolvable_as_current",
+]);
+const CORRECTION_FIELDS = new Set([
+  "prior_evidence_ref",
+  "active_evidence_ref",
+  "status",
+  "recorded_at",
 ]);
 
 const OUTCOMES = new Set<EvidenceDrawerOutcome>([
@@ -91,7 +141,39 @@ const REASON_CODES = new Set<EvidenceDrawerReasonCode>([
   "RIGHTS_UNRESOLVED",
   "SENSITIVE_DETAIL_RESTRICTED",
   "UPSTREAM_ERROR",
+  "HELD_EVIDENCE",
+  "SUPERSEDED_EVIDENCE",
+  "WITHDRAWN_EVIDENCE",
+  "REVOKED_EVIDENCE",
 ]);
+const NEGATIVE_REASON_CODES = new Set([
+  "HELD_EVIDENCE",
+  "POLICY_DENIED",
+  "RIGHTS_UNRESOLVED",
+  "SENSITIVE_DETAIL_RESTRICTED",
+  "SUPERSEDED_EVIDENCE",
+  "WITHDRAWN_EVIDENCE",
+  "REVOKED_EVIDENCE",
+]);
+const NEGATIVE_STATES = new Set<EvidenceDrawerNegativeState>([
+  "HELD",
+  "DENIED",
+  "SUPERSEDED",
+  "REVOKED",
+  "WITHDRAWN",
+]);
+const NEGATIVE_STATE_REASONS: Readonly<Record<EvidenceDrawerNegativeState, ReadonlySet<string>>> =
+  Object.freeze({
+    HELD: new Set(["HELD_EVIDENCE"]),
+    DENIED: new Set([
+      "POLICY_DENIED",
+      "RIGHTS_UNRESOLVED",
+      "SENSITIVE_DETAIL_RESTRICTED",
+    ]),
+    SUPERSEDED: new Set(["SUPERSEDED_EVIDENCE"]),
+    REVOKED: new Set(["REVOKED_EVIDENCE"]),
+    WITHDRAWN: new Set(["WITHDRAWN_EVIDENCE"]),
+  });
 const SOURCE_ROLES = new Set([
   "authoritative",
   "official",
@@ -114,7 +196,15 @@ const MAX_SUMMARY_LENGTH = 500;
 const MAX_ITEM_LENGTH = 240;
 const MAX_ARRAY_ITEMS = 16;
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$/;
+const CANONICAL_UTC_SECOND = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const CONTROL_CHARACTER = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
+
+const EMPTY_NEGATIVE_OUTCOMES = Object.freeze([]) as readonly EvidenceDrawerNegativeOutcome[];
+const EMPTY_CORRECTIONS = Object.freeze([]) as readonly EvidenceDrawerCorrection[];
+const EMPTY_HISTORY: EvidenceDrawerHistory = Object.freeze({
+  negativeOutcomes: EMPTY_NEGATIVE_OUTCOMES,
+  corrections: EMPTY_CORRECTIONS,
+});
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -139,6 +229,12 @@ function isBoundedString(value: unknown, maximum: number): value is string {
 
 function isSafeId(value: unknown): value is string {
   return typeof value === "string" && SAFE_ID.test(value);
+}
+
+function isCanonicalUtcSecond(value: unknown): value is string {
+  if (typeof value !== "string" || !CANONICAL_UTC_SECOND.test(value)) return false;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString() === value.replace("Z", ".000Z");
 }
 
 function isStringArray(value: unknown): value is string[] {
@@ -200,12 +296,165 @@ function parseTrustState(value: unknown): EvidenceDrawerTrustState | null {
   });
 }
 
+function parseNegativeOutcome(value: unknown): EvidenceDrawerNegativeOutcome | null {
+  if (!isRecord(value) || !hasExactFields(value, NEGATIVE_OUTCOME_FIELDS)) return null;
+  if (!isSafeId(value.evidence_ref)) return null;
+  if (typeof value.state !== "string" || !NEGATIVE_STATES.has(value.state as EvidenceDrawerNegativeState)) {
+    return null;
+  }
+  if (typeof value.reason_code !== "string" || !NEGATIVE_REASON_CODES.has(value.reason_code)) {
+    return null;
+  }
+  const state = value.state as EvidenceDrawerNegativeState;
+  if (!NEGATIVE_STATE_REASONS[state].has(value.reason_code)) return null;
+  if (!isCanonicalUtcSecond(value.recorded_at)) return null;
+  if (value.visible_in_runtime !== true || value.resolvable_as_current !== false) return null;
+
+  return Object.freeze({
+    evidenceRef: value.evidence_ref,
+    state: value.state as EvidenceDrawerNegativeState,
+    reasonCode: value.reason_code as EvidenceDrawerNegativeOutcome["reasonCode"],
+    recordedAt: value.recorded_at,
+    visibleInRuntime: true,
+    resolvableAsCurrent: false,
+  });
+}
+
+function parseCorrection(value: unknown): EvidenceDrawerCorrection | null {
+  if (!isRecord(value) || !hasExactFields(value, CORRECTION_FIELDS)) return null;
+  if (!isSafeId(value.prior_evidence_ref) || !isSafeId(value.active_evidence_ref)) return null;
+  if (value.prior_evidence_ref === value.active_evidence_ref) return null;
+  if (value.status !== "ACTIVE_CORRECTION") return null;
+  if (!isCanonicalUtcSecond(value.recorded_at)) return null;
+
+  return Object.freeze({
+    priorEvidenceRef: value.prior_evidence_ref,
+    activeEvidenceRef: value.active_evidence_ref,
+    status: "ACTIVE_CORRECTION",
+    recordedAt: value.recorded_at,
+  });
+}
+
+function correctionsContainCycle(corrections: readonly EvidenceDrawerCorrection[]): boolean {
+  const edges = new Map<string, string>();
+  for (const correction of corrections) {
+    if (edges.has(correction.priorEvidenceRef)) return true;
+    edges.set(correction.priorEvidenceRef, correction.activeEvidenceRef);
+  }
+  for (const start of edges.keys()) {
+    const seen = new Set<string>();
+    let cursor: string | undefined = start;
+    while (cursor !== undefined) {
+      if (seen.has(cursor)) return true;
+      seen.add(cursor);
+      cursor = edges.get(cursor);
+    }
+  }
+  return false;
+}
+
+function parseHistory(value: unknown): EvidenceDrawerHistory | null {
+  if (value === undefined) return EMPTY_HISTORY;
+  if (!isRecord(value) || !hasExactFields(value, HISTORY_FIELDS)) return null;
+  if (!Array.isArray(value.negative_outcomes) || value.negative_outcomes.length > MAX_ARRAY_ITEMS) {
+    return null;
+  }
+  if (!Array.isArray(value.corrections) || value.corrections.length > MAX_ARRAY_ITEMS) {
+    return null;
+  }
+
+  const negativeOutcomes = value.negative_outcomes.map(parseNegativeOutcome);
+  const corrections = value.corrections.map(parseCorrection);
+  if (negativeOutcomes.some((item) => item === null) || corrections.some((item) => item === null)) {
+    return null;
+  }
+
+  const normalizedNegative = negativeOutcomes as EvidenceDrawerNegativeOutcome[];
+  const normalizedCorrections = corrections as EvidenceDrawerCorrection[];
+  if (new Set(normalizedNegative.map((item) => item.evidenceRef)).size !== normalizedNegative.length) {
+    return null;
+  }
+  if (correctionsContainCycle(normalizedCorrections)) return null;
+
+  return Object.freeze({
+    negativeOutcomes: Object.freeze(normalizedNegative),
+    corrections: Object.freeze(normalizedCorrections),
+  });
+}
+
+function historyCombinationIsValid(
+  outcome: EvidenceDrawerOutcome,
+  reasonCode: EvidenceDrawerReasonCode,
+  evidenceRefs: readonly string[],
+  trustState: EvidenceDrawerTrustState,
+  history: EvidenceDrawerHistory,
+): boolean {
+  const currentRefs = new Set(evidenceRefs);
+  if (history.negativeOutcomes.some((item) => currentRefs.has(item.evidenceRef))) return false;
+
+  if (outcome === "DENY" || outcome === "ERROR") {
+    return history.negativeOutcomes.length === 0 && history.corrections.length === 0;
+  }
+
+  if (outcome === "ANSWER") {
+    if (trustState.correction === "SUPERSEDED") return false;
+    if (history.corrections.length > 0 && trustState.correction !== "CORRECTED") {
+      return false;
+    }
+    if (trustState.correction === "CORRECTED") {
+      if (history.corrections.length === 0) return false;
+      const priorRefs = new Set(history.corrections.map((item) => item.priorEvidenceRef));
+      const supersededRefs = new Set(
+        history.negativeOutcomes
+          .filter((item) => item.state === "SUPERSEDED")
+          .map((item) => item.evidenceRef),
+      );
+      if (
+        priorRefs.size !== supersededRefs.size ||
+        [...priorRefs].some((ref) => !supersededRefs.has(ref))
+      ) {
+        return false;
+      }
+      if (history.negativeOutcomes.some((item) => item.state !== "SUPERSEDED")) {
+        return false;
+      }
+      const terminalRefs = history.corrections
+        .map((item) => item.activeEvidenceRef)
+        .filter((ref) => !priorRefs.has(ref));
+      if (terminalRefs.length === 0 || terminalRefs.some((ref) => !currentRefs.has(ref))) {
+        return false;
+      }
+    } else if (history.negativeOutcomes.length > 0) {
+      return false;
+    }
+  }
+
+  if (outcome === "ABSTAIN" && reasonCode === "SUPERSEDED_EVIDENCE") {
+    return (
+      trustState.correction === "SUPERSEDED" &&
+      history.negativeOutcomes.some((item) => item.state === "SUPERSEDED")
+    );
+  }
+  if (outcome === "ABSTAIN" && reasonCode === "HELD_EVIDENCE") {
+    return history.negativeOutcomes.some((item) => item.state === "HELD");
+  }
+  if (outcome === "ABSTAIN" && reasonCode === "WITHDRAWN_EVIDENCE") {
+    return history.negativeOutcomes.some((item) => item.state === "WITHDRAWN");
+  }
+  if (outcome === "ABSTAIN" && reasonCode === "REVOKED_EVIDENCE") {
+    return history.negativeOutcomes.some((item) => item.state === "REVOKED");
+  }
+
+  return true;
+}
+
 function outcomeCombinationIsValid(
   outcome: EvidenceDrawerOutcome,
   reasonCode: EvidenceDrawerReasonCode,
   evidenceRefs: readonly string[],
   citations: readonly EvidenceDrawerCitation[],
   trustState: EvidenceDrawerTrustState,
+  history: EvidenceDrawerHistory,
 ): boolean {
   if (outcome === "ANSWER") {
     return (
@@ -215,12 +464,17 @@ function outcomeCombinationIsValid(
       trustState.policy === "ALLOW" &&
       trustState.review === "REVIEWED" &&
       trustState.release === "RELEASED" &&
-      trustState.freshness === "CURRENT"
+      trustState.freshness === "CURRENT" &&
+      historyCombinationIsValid(outcome, reasonCode, evidenceRefs, trustState, history)
     );
   }
 
   if (outcome === "ABSTAIN") {
-    return reasonCode !== "SUPPORTED" && trustState.policy === "ABSTAIN";
+    return (
+      reasonCode !== "SUPPORTED" &&
+      trustState.policy === "ABSTAIN" &&
+      historyCombinationIsValid(outcome, reasonCode, evidenceRefs, trustState, history)
+    );
   }
 
   if (outcome === "DENY") {
@@ -228,7 +482,8 @@ function outcomeCombinationIsValid(
       reasonCode !== "SUPPORTED" &&
       evidenceRefs.length === 0 &&
       citations.length === 0 &&
-      trustState.policy === "DENY"
+      trustState.policy === "DENY" &&
+      historyCombinationIsValid(outcome, reasonCode, evidenceRefs, trustState, history)
     );
   }
 
@@ -236,7 +491,8 @@ function outcomeCombinationIsValid(
     reasonCode === "UPSTREAM_ERROR" &&
     evidenceRefs.length === 0 &&
     citations.length === 0 &&
-    trustState.policy === "ERROR"
+    trustState.policy === "ERROR" &&
+    historyCombinationIsValid(outcome, reasonCode, evidenceRefs, trustState, history)
   );
 }
 
@@ -270,7 +526,8 @@ export function parseEvidenceDrawerProjection(
 
   const citations = parseCitations(value.citations);
   const trustState = parseTrustState(value.trust_state);
-  if (citations === null || trustState === null) return malformed;
+  const history = parseHistory(value.history);
+  if (citations === null || trustState === null || history === null) return malformed;
 
   const outcome = value.outcome as EvidenceDrawerOutcome;
   const reasonCode = value.reason_code as EvidenceDrawerReasonCode;
@@ -281,6 +538,7 @@ export function parseEvidenceDrawerProjection(
       value.evidence_refs,
       citations,
       trustState,
+      history,
     )
   ) {
     return malformed;
@@ -297,6 +555,7 @@ export function parseEvidenceDrawerProjection(
     citations,
     limitations: Object.freeze([...value.limitations]),
     trustState,
+    history,
   });
 
   return Object.freeze({ ok: true, payload });

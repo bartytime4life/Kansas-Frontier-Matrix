@@ -7,11 +7,13 @@
   "summary": "INTERNAL_ERROR_CANARY_e6f1af",
   "evidence_refs": [],
   "citations": [],
-  "limitations": [],
+  "limitations": [
+    "INTERNAL_ERROR_CANARY_e6f1af"
+  ],
   "trust_state": {
     "source_role": "context",
     "policy": "ERROR",
-    "review": "NOT_APPLICABLE",
+    "review": "PENDING",
     "release": "UNRELEASED",
     "freshness": "UNKNOWN",
     "correction": "NONE"

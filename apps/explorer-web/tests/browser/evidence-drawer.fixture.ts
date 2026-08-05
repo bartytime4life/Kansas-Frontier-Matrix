@@ -1,7 +1,7 @@
-import abstainFixture from "../../../../tests/fixtures/ui/evidence_drawer/abstain-stale.json";
-import answerFixture from "../../../../tests/fixtures/ui/evidence_drawer/answer.json";
-import denyFixture from "../../../../tests/fixtures/ui/evidence_drawer/deny-sensitive.json";
-import errorFixture from "../../../../tests/fixtures/ui/evidence_drawer/error-upstream.json";
+import abstainFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
+import answerFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import denyFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
+import errorFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/error-upstream.json";
 import { mountEvidenceDrawer } from "../../src/features/evidence_drawer";
 
 const fixtures: Readonly<Record<string, unknown>> = Object.freeze({
