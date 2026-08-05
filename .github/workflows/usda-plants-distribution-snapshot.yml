@@ -1,0 +1,128 @@
+# Validate the fixture-only USDA PLANTS Kansas distribution snapshot profile.
+#
+# Authority boundary:
+# - This workflow reads synthetic repository fixtures only.
+# - It performs no USDA request, source activation, source admission, evidence
+#   resolution, rare-plant sensitivity decision, lifecycle promotion, release,
+#   deployment, publication, or write to governed data stores.
+name: usda-plants-distribution-snapshot
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/usda-plants-distribution-snapshot.yml"
+      - "contracts/domains/flora/usda_plants_distribution_snapshot.md"
+      - "schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json"
+      - "fixtures/domains/flora/usda_plants_distribution_snapshot/**"
+      - "tools/ingest/usda_plants/**"
+      - "tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py"
+      - "tests/domains/flora/test_usda_plants_distribution_snapshot.py"
+      - "data/receipts/generated/genrec-usda-plants-distribution-snapshot-20260805.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/usda-plants-distribution-snapshot.yml"
+      - "contracts/domains/flora/usda_plants_distribution_snapshot.md"
+      - "schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json"
+      - "fixtures/domains/flora/usda_plants_distribution_snapshot/**"
+      - "tools/ingest/usda_plants/**"
+      - "tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py"
+      - "tests/domains/flora/test_usda_plants_distribution_snapshot.py"
+      - "data/receipts/generated/genrec-usda-plants-distribution-snapshot-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: usda-plants-distribution-snapshot-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: usda-plants-distribution-snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out bounded fixture profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused semantic tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/domains/flora/test_usda_plants_distribution_snapshot.py
+
+      - name: Replay fixture polarity and deterministic normalization
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          root="fixtures/domains/flora/usda_plants_distribution_snapshot"
+          validator="tools/validators/domains/flora/validate_usda_plants_distribution_snapshot.py"
+          normalizer="tools/ingest/usda_plants/normalize_distribution_snapshot.py"
+
+          python "$validator" --fixtures
+
+          output="$(mktemp)"
+          trap 'rm -f "$output"' EXIT
+          python "$normalizer" \
+            --taxa "$root/input/taxa.csv" \
+            --counties "$root/input/counties.csv" \
+            --distribution "$root/input/distribution.csv" \
+            --snapshot-date "2026-04-30" \
+            --evidence-ref "kfm://evidence/flora/usda-plants/synthetic-2026-04-30@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" \
+            --out "$output"
+
+          cmp --silent "$output" "$root/valid/valid_snapshot.json"
+          python "$validator" "$output"
+
+          echo "WORKFLOW_CHECK_EXECUTED: usda-plants-distribution-snapshot-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: missing-row-no-claim-semantics"
+          echo "WORKFLOW_HOLD: live source terms, rights, sensitivity, evidence resolution, and release are not evaluated"
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-usda-plants-distribution-snapshot-20260805.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### USDA PLANTS distribution snapshot status
+
+          This job validates a closed, synthetic Kansas distribution snapshot
+          candidate and deterministically rebuilds its golden fixture from local
+          CSV inputs.
+
+          The accepted semantics distinguish an explicit source row reporting
+          absence from a missing source row. A missing row remains
+          `not_reported` / `no_claim`; it is never converted into absence.
+
+          A green result does not establish current USDA endpoint behavior,
+          source rights, taxonomy, Kansas presence or absence, rare-plant public
+          safety, EvidenceBundle closure, policy approval, release, deployment,
+          or publication.
+          EOF
