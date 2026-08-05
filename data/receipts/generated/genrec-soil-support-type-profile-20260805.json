@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-soil-support-type-profile-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-support-type-profile.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-support-type-profile.yml": "sha256:c4f69dbb1cafe58de72718bdffe336e79fc076fd073fc40b6db1dd1f4b4de212"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:8c331bf23d7bd1c85de2f05978dda1950b2323172f08b93656a8da8d3af529a9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#soil-support-type-separation",
+      "repo:.github/workflows/soil-support-type-profile.yml@cf7ad3270bf8f33fcf45c33b1f26391d95d81070",
+      "repo:contracts/domains/soil/support_type_profile.md@cf7ad3270bf8f33fcf45c33b1f26391d95d81070",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-support-type-profile.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 binds the exact workflow bytes already merged on main."
+    },
+    {
+      "gate": "receipt-schema-shape",
+      "outcome": "PASS",
+      "reason": "The receipt follows GENERATED_RECEIPT contract version 3.0.0."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-soil-support-type",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#soil-support-type-separation"
+    },
+    {
+      "id": "repository:soil-support-type-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/soil-support-type-profile.yml@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Post-merge provenance closure for the inactive Soil support-type profile. The existing workflow already requires this path; this receipt binds that workflow's exact current bytes and grants no source, evidence, policy, promotion, release, publication, or public-use authority."
+}
