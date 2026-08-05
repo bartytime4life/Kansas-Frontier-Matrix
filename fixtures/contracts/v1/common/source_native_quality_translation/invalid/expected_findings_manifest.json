@@ -1,0 +1,50 @@
+{
+  "invalid_ambiguous_semantic_loss_none.json": [
+    "SCHEMA_INVALID",
+    "SEMANTIC_LOSS_INCONSISTENT"
+  ],
+  "invalid_ambiguous_without_review.json": [
+    "AMBIGUOUS_MAPPING_REVIEW_MISSING",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_assessed_without_observation_ref.json": [
+    "OBSERVATION_SUPPORT_MISSING",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_health_drives_validity.json": [
+    "HEALTH_VALIDITY_CAUSAL_COLLAPSE",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_health_state_used_as_validity.json": [
+    "HEALTH_VALIDITY_VOCABULARY_COLLAPSE",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_missing_vocabulary_version.json": [
+    "NATIVE_VOCABULARY_IDENTITY_INCOMPLETE",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_noncanonical_references.json": [
+    "REFS_OR_REASONS_NOT_CANONICAL",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_offline_availability_false.json": [
+    "HEALTH_AVAILABILITY_INCONSISTENT",
+    "SCHEMA_INVALID"
+  ],
+  "invalid_spec_hash_mismatch.json": [
+    "SCHEMA_INVALID",
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_timing_order.json": [
+    "SCHEMA_INVALID",
+    "TIMING_ORDER_INVALID"
+  ],
+  "invalid_unmapped_marked_accepted.json": [
+    "SCHEMA_INVALID",
+    "UNMAPPED_NORMALIZATION_COLLAPSE"
+  ]
+}
