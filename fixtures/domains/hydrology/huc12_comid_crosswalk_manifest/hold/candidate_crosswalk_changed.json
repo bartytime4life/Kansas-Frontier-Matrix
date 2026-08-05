@@ -1,0 +1,23 @@
+{
+  "comid_count": 10,
+  "crosswalk_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "crosswalk_media_type": "text/csv",
+  "crosswalk_ref": "kfm://artifact/hydrology/huc12-comid/102600150101/may@sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "evidence_bundle_ref": "kfm://evidence/hydrology/huc12-comid/may@sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "huc12": "102600150101",
+  "layer_type": "huc12",
+  "manifest_id": "kfm://manifest/hydrology/huc12-comid/102600150101/wbd-2026-04-26/2026-05-01",
+  "nhd_snapshot_id": "nhdhr-2026-04-20",
+  "object_type": "HUC12COMIDCrosswalkManifest",
+  "row_count": 12,
+  "run_receipt_ref": "kfm://receipt/run/hydrology/huc12-comid/may@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "schema_version": "kfm.hydrology.huc12-comid-crosswalk-manifest.v1",
+  "source_refs": [
+    "kfm://source/hydrology/wbd@wbd-2026-04-26",
+    "kfm://source/hydrology/nhdplus-hr@nhdhr-2026-04-20"
+  ],
+  "spec_hash": "sha256:75d984a82608837e8aea70d853ad85cd321e3a8cbe33d2be12950321ce6c8c95",
+  "valid_from": "2026-05-01T00:00:00Z",
+  "valid_to": "2026-05-31T23:59:59Z",
+  "wbd_snapshot_id": "wbd-2026-04-26"
+}
