@@ -1,0 +1,112 @@
+# Focused no-network validation for the inactive Flora source-readiness materiality profile.
+name: flora-source-readiness-materiality
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/domains/flora/source_readiness/materiality_profile.md"
+      - "schemas/contracts/v1/domains/flora/source_readiness/materiality_profile.schema.json"
+      - "schemas/contracts/v1/domains/flora/source_readiness/materiality_candidate.schema.json"
+      - "pipeline_specs/flora/source_readiness/materiality_profile.v1.json"
+      - "fixtures/domains/flora/source_readiness/materiality/**"
+      - "tools/validators/domains/flora/validate_source_readiness_materiality.py"
+      - "tests/validators/domains/flora/test_source_readiness_materiality.py"
+      - ".github/workflows/flora-source-readiness-materiality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flora-source-readiness-materiality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-flora-source-readiness-materiality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python -m pip install -e .
+
+      - name: Run focused adapter and shared-contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/domains/flora \
+            --pattern 'test_source_readiness_materiality.py' \
+            --verbose
+          python tools/validators/domains/flora/validate_source_readiness_materiality.py \
+            --fixtures
+
+      - name: Validate profile schema and fixture JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_paths = [
+              Path(
+                  "schemas/contracts/v1/domains/flora/source_readiness/"
+                  "materiality_profile.schema.json"
+              ),
+              Path(
+                  "schemas/contracts/v1/domains/flora/source_readiness/"
+                  "materiality_candidate.schema.json"
+              ),
+          ]
+          for schema_path in schema_paths:
+              Draft202012Validator.check_schema(
+                  json.loads(schema_path.read_text(encoding="utf-8"))
+              )
+          fixture_root = Path(
+              "fixtures/domains/flora/source_readiness/materiality"
+          )
+          files = sorted(fixture_root.rglob("*.json"))
+          assert files, "Flora source-readiness fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed {len(schema_paths)} schemas and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Flora source-readiness materiality"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- The profile remains PROPOSED_INACTIVE and uses synthetic no-network fixtures."
+            echo "- Readiness dimensions remain disaggregated; no opaque score creates authority."
+            echo "- Every emitted object must pass the shared MaterialChangeAssessment schema."
+            echo "- PROMOTION_CANDIDATE means review candidate only, not source admission, policy, promotion, release, or publication."
+            echo "- No live biodiversity source, policy engine, evidence resolver, release system, notification, or public layer was invoked."
+          } >> "$GITHUB_STEP_SUMMARY"
