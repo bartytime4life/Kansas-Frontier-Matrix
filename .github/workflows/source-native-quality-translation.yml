@@ -1,0 +1,131 @@
+# Validate the proposed SourceNativeQualityTranslation shared profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network after
+# installing repository-declared test dependencies. It proves bounded schema
+# shape, native-vocabulary preservation, mapping/unmapped/semantic-loss rules,
+# operational-health and observation-validity separation, exact fixture
+# polarity, and authoring-receipt integrity. It does not admit a source, resolve
+# evidence, evaluate policy, authorize promotion, release, deploy, or publish.
+name: source-native-quality-translation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-native-quality-translation.yml"
+      - "contracts/common/source_native_quality_translation.md"
+      - "schemas/contracts/v1/common/source_native_quality_translation.schema.json"
+      - "fixtures/contracts/v1/common/source_native_quality_translation/**"
+      - "tools/validators/validate_source_native_quality_translation.py"
+      - "tests/validators/test_validate_source_native_quality_translation.py"
+      - "data/receipts/generated/genrec-source-native-quality-translation-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/source-native-quality-translation.yml"
+      - "contracts/common/source_native_quality_translation.md"
+      - "schemas/contracts/v1/common/source_native_quality_translation.schema.json"
+      - "fixtures/contracts/v1/common/source_native_quality_translation/**"
+      - "tools/validators/validate_source_native_quality_translation.py"
+      - "tests/validators/test_validate_source_native_quality_translation.py"
+      - "data/receipts/generated/genrec-source-native-quality-translation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-native-quality-translation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-source-native-quality-translation:
+    name: validate-source-native-quality-translation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network translation tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_source_native_quality_translation.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity and reviewed finding codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_source_native_quality_translation.py --fixtures
+
+      - name: Validate schema and JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_path = Path(
+              "schemas/contracts/v1/common/source_native_quality_translation.schema.json"
+          )
+          Draft202012Validator.check_schema(
+              json.loads(schema_path.read_text(encoding="utf-8"))
+          )
+          fixture_root = Path(
+              "fixtures/contracts/v1/common/source_native_quality_translation"
+          )
+          files = sorted(fixture_root.rglob("*.json"))
+          assert files, "source-native quality fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-source-native-quality-translation-20260805.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Source-native quality translation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: native vocabulary identity/version/digest, finite mapping outcomes, semantic loss, unmapped preservation, operational health, observation validity, deterministic fixture hash, and anti-collapse declarations."
+            echo "- Network posture: no live source, station, sensor, adapter, artifact, evidence, policy, review, release, deployment, or publication access."
+            echo "- Boundary: a green result does not prove source authority, scientific correctness, evidence closure, rights, policy approval, review, promotion, release, deployment, publication, or public use."
+          } >> "$GITHUB_STEP_SUMMARY"
