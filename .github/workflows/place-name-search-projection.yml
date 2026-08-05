@@ -1,0 +1,133 @@
+# Validate the proposed internal place-name search projection profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network after
+# installing repository-declared test dependencies. A green result proves only
+# the bounded schema/fixture/validator invariants named below. It grants no
+# public-search, feature, geometry, legal-status, ownership, source, evidence,
+# policy, review, promotion, release, deployment, or publication authority.
+name: place-name-search-projection
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/place-name-search-projection.yml"
+      - "contracts/runtime/place_name_search_projection.md"
+      - "schemas/contracts/v1/runtime/place_name_search_projection.schema.json"
+      - "fixtures/contracts/v1/runtime/place_name_search_projection/**"
+      - "tools/validators/validate_place_name_search_projection.py"
+      - "tools/validators/place_name_search_projection_*.py"
+      - "tests/validators/test_validate_place_name_search_projection.py"
+      - "data/receipts/generated/genrec-place-name-search-projection-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/place-name-search-projection.yml"
+      - "contracts/runtime/place_name_search_projection.md"
+      - "schemas/contracts/v1/runtime/place_name_search_projection.schema.json"
+      - "fixtures/contracts/v1/runtime/place_name_search_projection/**"
+      - "tools/validators/validate_place_name_search_projection.py"
+      - "tools/validators/place_name_search_projection_*.py"
+      - "tests/validators/test_validate_place_name_search_projection.py"
+      - "data/receipts/generated/genrec-place-name-search-projection-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: place-name-search-projection-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-place-name-search-projection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_place_name_search_projection.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity and reviewed finding codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_place_name_search_projection.py --fixtures
+
+      - name: Validate schema and fixture JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_path = Path(
+              "schemas/contracts/v1/runtime/place_name_search_projection.schema.json"
+          )
+          Draft202012Validator.check_schema(
+              json.loads(schema_path.read_text(encoding="utf-8"))
+          )
+          files = sorted(
+              Path(
+                  "fixtures/contracts/v1/runtime/place_name_search_projection"
+              ).rglob("*.json")
+          )
+          assert files, "fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-place-name-search-projection-20260805.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Place-name search projection"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: time-aware internal candidate projection, source-role visibility, query normalization, homonym/dispute/unbound handling, finite outcomes, and explicit non-authority separation."
+            echo "- Network posture: no live source, graph store, evidence resolver, policy engine, search index, API route, release system, or public endpoint."
+            echo "- Boundary: a green result does not prove feature identity, geometry, legal status, ownership, source admission, evidence closure, policy approval, public-search fitness, release, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"

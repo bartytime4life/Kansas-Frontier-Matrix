@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/place_name_search_projection.schema.json",
+  "title": "PlaceNameSearchProjection",
+  "description": "Internal time-aware place-name search candidate projection. Validation grants no public-search, feature, geometry, legal-status, ownership, source, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "projection_id",
+    "hash_profile",
+    "spec_hash",
+    "input",
+    "query",
+    "outcome",
+    "reason_codes",
+    "candidates",
+    "summary",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "PlaceNameSearchProjection"},
+    "schema_version": {"const": "1.0.0"},
+    "projection_id": {
+      "type": "string",
+      "pattern": "^place-name-search-projection:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "hash_profile": {"const": "kfm-fixture-json-v1"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "input": {"$ref": "#/$defs/input"},
+    "query": {"$ref": "#/$defs/query"},
+    "outcome": {"enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]},
+    "reason_codes": {"$ref": "#/$defs/reason_codes"},
+    "candidates": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "summary": {"$ref": "#/$defs/summary"},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [{"$ref": "#/$defs/aware_datetime"}, {"type": "null"}]
+    },
+    "language_tag": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"},
+        {"type": "null"}
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "graph_packet_ref",
+        "graph_packet_digest",
+        "graph_schema_version",
+        "authority_profile_ref",
+        "authority_decision_refs"
+      ],
+      "properties": {
+        "graph_packet_ref": {"$ref": "#/$defs/ref"},
+        "graph_packet_digest": {"$ref": "#/$defs/sha256"},
+        "graph_schema_version": {"const": "1.0.0"},
+        "authority_profile_ref": {"$ref": "#/$defs/ref"},
+        "authority_decision_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_text",
+        "normalized_query_key",
+        "as_of_time",
+        "language_preferences",
+        "audience",
+        "search_mode",
+        "requested_at"
+      ],
+      "properties": {
+        "query_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "normalized_query_key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,240}$"
+        },
+        "as_of_time": {"$ref": "#/$defs/aware_datetime"},
+        "language_preferences": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$"
+          }
+        },
+        "audience": {"enum": ["STEWARD", "PUBLIC"]},
+        "search_mode": {"enum": ["EXACT", "PREFIX", "HISTORICAL_AS_OF"]},
+        "requested_at": {"$ref": "#/$defs/aware_datetime"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rank",
+        "assertion_ref",
+        "binding_ref",
+        "feature_ref",
+        "display_name",
+        "normalized_name_key",
+        "name_type",
+        "source_role",
+        "valid_from",
+        "valid_to",
+        "language_tag",
+        "community_context_ref",
+        "ambiguity",
+        "sensitivity",
+        "binding_confidence",
+        "authority_decision_ref",
+        "evidence_refs",
+        "evidence_resolution"
+      ],
+      "properties": {
+        "rank": {"type": "integer", "minimum": 1, "maximum": 64},
+        "assertion_ref": {"$ref": "#/$defs/ref"},
+        "binding_ref": {"$ref": "#/$defs/ref"},
+        "feature_ref": {"$ref": "#/$defs/nullable_ref"},
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        "normalized_name_key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,240}$"
+        },
+        "name_type": {
+          "enum": ["OFFICIAL", "VARIANT", "HISTORICAL", "TRANSLATED", "COMMUNITY", "DISPUTED"]
+        },
+        "source_role": {
+          "enum": ["NAMING_AUTHORITY", "HISTORICAL_RECORD", "COMMUNITY_USAGE", "TRANSLATION_AUTHORITY", "CONTEXT"]
+        },
+        "valid_from": {"$ref": "#/$defs/nullable_datetime"},
+        "valid_to": {"$ref": "#/$defs/nullable_datetime"},
+        "language_tag": {"$ref": "#/$defs/language_tag"},
+        "community_context_ref": {"$ref": "#/$defs/nullable_ref"},
+        "ambiguity": {"enum": ["NONE", "HOMONYM", "DISPUTED", "UNRESOLVED"]},
+        "sensitivity": {"enum": ["PUBLIC", "GENERALIZED", "WITHHELD", "REVIEW_ONLY"]},
+        "binding_confidence": {"enum": ["CONFIRMED", "PROVISIONAL", "DISPUTED", "UNRESOLVED"]},
+        "authority_decision_ref": {"$ref": "#/$defs/ref"},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "evidence_resolution": {"enum": ["RESOLVED", "UNRESOLVED", "DENIED", "ERROR"]}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_count",
+        "ambiguity_count",
+        "withheld_count",
+        "time_filter_applied",
+        "source_roles_exposed",
+        "valid_time_exposed",
+        "sensitive_name_text_emitted"
+      ],
+      "properties": {
+        "candidate_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "ambiguity_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "withheld_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "time_filter_applied": {"const": true},
+        "source_roles_exposed": {"const": true},
+        "valid_time_exposed": {"const": true},
+        "sensitive_name_text_emitted": {"const": false}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recorded_at", "run_receipt_ref", "resolver_id", "resolver_version", "input_refs"],
+      "properties": {
+        "recorded_at": {"$ref": "#/$defs/aware_datetime"},
+        "run_receipt_ref": {"$ref": "#/$defs/ref"},
+        "resolver_id": {"$ref": "#/$defs/ref"},
+        "resolver_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
+        },
+        "input_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "feature_identity_created",
+        "geometry_authority_created",
+        "legal_status_created",
+        "ownership_authority_created",
+        "public_search_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "release_ref"
+      ],
+      "properties": {
+        "source_admitted": {"const": false},
+        "evidence_closure_claimed": {"const": false},
+        "policy_evaluated": {"const": false},
+        "feature_identity_created": {"const": false},
+        "geometry_authority_created": {"const": false},
+        "legal_status_created": {"const": false},
+        "ownership_authority_created": {"const": false},
+        "public_search_authorized": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "release_ref": {"type": "null"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/runtime/place_name_search_projection.md",
+    "fixtures_root": "fixtures/contracts/v1/runtime/place_name_search_projection/",
+    "validator": "tools/validators/validate_place_name_search_projection.py",
+    "tests": "tests/validators/test_validate_place_name_search_projection.py",
+    "authority": "internal_place_name_search_candidate_projection_only",
+    "non_effects": [
+      "does_not_authorize_a_public_search_endpoint",
+      "does_not_create_feature_geometry_legal_status_or_ownership_authority",
+      "does_not_admit_sources_resolve_evidence_evaluate_policy_or_authorize_release"
+    ]
+  }
+}
