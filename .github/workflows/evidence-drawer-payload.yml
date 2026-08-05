@@ -1,0 +1,94 @@
+# Validate the proposed EvidenceDrawerPayload public-safe projection profile.
+# The workflow is read-only, fixture-only, and non-publishing. The existing
+# ui-build workflow separately exercises Explorer build, unit, and browser paths.
+name: evidence-drawer-payload
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/evidence-drawer-payload.yml"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json"
+      - "fixtures/ui/evidence_drawer_payload/**"
+      - "tools/validators/ui/**"
+      - "tests/validators/test_validate_evidence_drawer_payload.py"
+      - "apps/explorer-web/src/adapters/GovernedClient.ts"
+      - "apps/explorer-web/src/features/evidence_drawer/**"
+      - "apps/explorer-web/tests/evidence-drawer.test.ts"
+      - "apps/explorer-web/tests/browser/evidence-drawer.*"
+      - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/evidence-drawer-payload.yml"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json"
+      - "fixtures/ui/evidence_drawer_payload/**"
+      - "tools/validators/ui/**"
+      - "tests/validators/test_validate_evidence_drawer_payload.py"
+      - "apps/explorer-web/src/adapters/GovernedClient.ts"
+      - "apps/explorer-web/src/features/evidence_drawer/**"
+      - "apps/explorer-web/tests/evidence-drawer.test.ts"
+      - "apps/explorer-web/tests/browser/evidence-drawer.*"
+      - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-drawer-payload-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-evidence-drawer-payload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate schema and exact fixture polarity
+        run: python tools/validators/ui/validate_evidence_drawer_payload.py --fixtures
+
+      - name: Run focused validator tests
+        run: python -m unittest -q tests.validators.test_validate_evidence_drawer_payload
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-evidence-drawer-payload-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### EvidenceDrawerPayload projection"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed schema, finite outcomes, correction-chain acyclicity, negative-history preservation, and public no-leak rules."
+            echo "- Boundary: validation does not resolve evidence, execute policy, authenticate review, authorize release, or publish a claim."
+          } >> "$GITHUB_STEP_SUMMARY"
