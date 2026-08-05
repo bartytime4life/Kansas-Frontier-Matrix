@@ -1,0 +1,36 @@
+{
+  "semantic_invalid_accepted_digest_mismatch.json": [
+    "CUSTODY_ACCEPTED_DIGEST_MISMATCH"
+  ],
+  "semantic_invalid_closure_status.json": [
+    "CUSTODY_CLOSURE_STATUS_MISMATCH"
+  ],
+  "semantic_invalid_duplicate_disposition.json": [
+    "CUSTODY_DISPOSITION_DUPLICATE",
+    "CUSTODY_DISPOSITION_ORDER_INVALID"
+  ],
+  "semantic_invalid_duplicate_without_existing_ref.json": [
+    "CUSTODY_DUPLICATE_EXISTING_REF_REQUIRED"
+  ],
+  "semantic_invalid_item_order.json": [
+    "CUSTODY_ITEM_ORDER_INVALID"
+  ],
+  "semantic_invalid_manifest_digest.json": [
+    "CUSTODY_MANIFEST_DIGEST_MISMATCH"
+  ],
+  "semantic_invalid_missing_disposition.json": [
+    "CUSTODY_ITEM_UNACCOUNTED"
+  ],
+  "semantic_invalid_spec_hash.json": [
+    "CUSTODY_SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_stage_escalation.json": [
+    "CUSTODY_STAGE_ESCALATION_DENIED"
+  ],
+  "semantic_invalid_summary_counts.json": [
+    "CUSTODY_SUMMARY_MISMATCH"
+  ],
+  "semantic_invalid_unknown_rights_accepted.json": [
+    "CUSTODY_UNKNOWN_POSTURE_NOT_QUARANTINED"
+  ]
+}
