@@ -217,14 +217,12 @@ def test_workflow_keeps_event_metadata_out_of_shell_source() -> None:
     assert '--default-branch "${{ github.' not in workflow
 
 
-def test_workflow_treats_expected_readiness_hold_as_nonfailing() -> None:
+def test_workflow_keeps_expected_readiness_hold_blocking() -> None:
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
-    assert 'id: transition-authorization' in workflow
-    assert 'status=$?' in workflow
-    assert 'if [ "$status" -eq 3 ]; then' in workflow
-    assert 'Expected readiness hold; repository transition is not yet authorized.' in workflow
-    assert 'exit 0' in workflow
-    assert 'exit "$status"' in workflow
+    assert 'status=$?' not in workflow
+    assert 'if [ "$status" -eq 3 ]; then' not in workflow
+    assert 'Expected readiness hold; repository transition is not yet authorized.' not in workflow
+    assert 'An expected readiness hold remains nonzero and merge-blocking' in workflow
 
 
 def test_non_default_target_is_not_applicable() -> None:
@@ -266,6 +264,37 @@ def test_cli_exit_and_output_are_bounded(tmp_path: Path) -> None:
     assert output["outcome_class"] == "PASS"
     assert output["head_sha"] == "2" * 40
     assert "Synthetic exact-head transition fixture" not in completed.stdout
+
+
+def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
+    comments_path = tmp_path / "comments.json"
+    comments_path.write_text("[]\n", encoding="utf-8")
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(VALIDATOR_PATH),
+            "--event",
+            str(EVENT_PATH),
+            "--comments",
+            str(comments_path),
+            "--control-issue",
+            "1675",
+            "--authorized-login",
+            "bartytime4life",
+            "--default-branch",
+            "main",
+            "--now",
+            "2026-07-30T21:00:00Z",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 3
+    output = json.loads(completed.stdout)
+    assert output["outcome_class"] == "EXPECTED_READINESS_HOLD"
+    assert output["reason_code"] == "TRANSITION_AUTHORIZATION_MISSING"
 
 
 def test_pr_1869_without_transition_record_would_hold() -> None:
