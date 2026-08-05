@@ -1,0 +1,102 @@
+# Validate the proposed RuntimeEvidenceResolution result contract against the
+# existing bounded evidence resolver. This workflow is read-only, synthetic,
+# deterministic, and no-network after installing repository-declared test
+# dependencies. It does not resolve live evidence, evaluate policy, authenticate
+# reviews, promote, release, deploy, publish, or write any trust artifact.
+name: runtime-evidence-resolution
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/runtime-evidence-resolution.yml"
+      - "contracts/evidence/runtime_evidence_resolution.md"
+      - "schemas/contracts/v1/evidence/runtime_evidence_resolution.schema.json"
+      - "fixtures/contracts/v1/evidence/runtime_evidence_resolution/**"
+      - "tests/packages/evidence_resolver/test_result_schema.py"
+      - "packages/evidence-resolver/**"
+      - "tools/validators/evidence_resolver/**"
+      - "data/receipts/generated/genrec-runtime-evidence-resolution-contract-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/runtime-evidence-resolution.yml"
+      - "contracts/evidence/runtime_evidence_resolution.md"
+      - "schemas/contracts/v1/evidence/runtime_evidence_resolution.schema.json"
+      - "fixtures/contracts/v1/evidence/runtime_evidence_resolution/**"
+      - "tests/packages/evidence_resolver/test_result_schema.py"
+      - "packages/evidence-resolver/**"
+      - "tools/validators/evidence_resolver/**"
+      - "data/receipts/generated/genrec-runtime-evidence-resolution-contract-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-evidence-resolution-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-runtime-evidence-resolution:
+    name: validate-runtime-evidence-resolution
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run the existing bounded evidence resolver proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          make evidence-resolver
+
+      - name: Validate result-contract schema and fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -q tests.packages.evidence_resolver.test_result_schema
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-runtime-evidence-resolution-contract-20260805.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Runtime evidence resolution contract"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic output shape and exact conformance of the existing internal evidence-resolver candidate profile."
+            echo "- Network posture: no live evidence store, policy engine, review system, release store, or public runtime access."
+            echo "- Boundary: RESOLVED remains non-authoritative and does not mean ANSWER, policy clearance, review, promotion, release, deployment, publication, or public use."
+          } >> "$GITHUB_STEP_SUMMARY"

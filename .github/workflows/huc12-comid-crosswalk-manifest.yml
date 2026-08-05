@@ -1,0 +1,107 @@
+# Fixture-only validation for the proposed HUC12-COMID crosswalk manifest.
+# This workflow performs no source fetch, source admission, evidence resolution,
+# promotion, release, deployment, or publication.
+name: huc12-comid-crosswalk-manifest
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: huc12-comid-crosswalk-manifest-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out bounded fixture profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install repository test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused unit tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/validators/test_huc12_comid_crosswalk_manifest.py
+
+      - name: Replay valid, invalid, and material-change fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          validator="tools/validators/validate_huc12_comid_crosswalk_manifest.py"
+          fixture_root="fixtures/domains/hydrology/huc12_comid_crosswalk_manifest"
+
+          python "$validator" --fixtures
+
+          python "$validator" \
+            "$fixture_root/valid/valid_continuation_same_inputs.json" \
+            --previous "$fixture_root/hold/previous.json"
+
+          set +e
+          python "$validator" \
+            "$fixture_root/hold/candidate_nhd_changed.json" \
+            --previous "$fixture_root/hold/previous.json"
+          hold_rc=$?
+          set -e
+          if [[ "$hold_rc" -ne 3 ]]; then
+            echo "::error::A valid material NHD snapshot change must return HOLD exit code 3; observed $hold_rc."
+            exit 1
+          fi
+
+          set +e
+          python "$validator" \
+            "$fixture_root/invalid/invalid_hash_mismatch.json" \
+            --previous "$fixture_root/hold/previous.json"
+          deny_rc=$?
+          set -e
+          if [[ "$deny_rc" -ne 1 ]]; then
+            echo "::error::An invalid candidate must return DENY exit code 1; observed $deny_rc."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: huc12-comid-crosswalk-manifest-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: huc12-comid-crosswalk-manifest-material-change-hold"
+          echo "WORKFLOW_HOLD: receipt verification, evidence resolution, source admission, policy, release, and publication are not evaluated"
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### HUC12-COMID crosswalk manifest status
+
+          This job validates a closed, synthetic manifest profile, canonical
+          `spec_hash`, digest-bound references, UTC validity windows, append-only
+          transition rules, and separate `PASS`, `HOLD`, and `DENY` outcomes.
+
+          Exit code `3` is accepted only for a structurally valid material-change
+          hold. Invalid input remains exit code `1`, so a hold cannot mask a bad
+          candidate.
+
+          A green result does not verify a real WBD/NHD snapshot, crosswalk file,
+          run receipt, EvidenceBundle, source rights, policy result, steward
+          review, promotion, release, deployment, or publication.
+          EOF
