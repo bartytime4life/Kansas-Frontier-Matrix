@@ -1,0 +1,31 @@
+{
+  "object_type": "EOAssetPrefilterProfile",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "profile_id": "kfm://prefilter-profile/eo/county-vegetation-v1",
+  "profile_version": "1.0.0",
+  "spec_hash": "sha256:cac1458f1bae272e8b30ea753cbef7e1bf622508c861ecf112f96df10b371b89",
+  "hash_profile": "kfm-canonical-json-v1",
+  "analysis_unit_kind": "county",
+  "requirements": {
+    "minimum_items_found": 6,
+    "minimum_assets_per_item": 1,
+    "minimum_assets_found": 6,
+    "minimum_valid_pixel_fraction": 0.6,
+    "maximum_cloud_cover_percent": 30.0,
+    "replay_validator_rule": "strong_etag_or_last_modified"
+  },
+  "decision_precedence": [
+    "DENY",
+    "HOLD",
+    "PASS"
+  ],
+  "governance": {
+    "source_activated": false,
+    "network_performed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
