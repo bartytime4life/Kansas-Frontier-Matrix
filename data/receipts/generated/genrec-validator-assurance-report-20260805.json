@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-validator-assurance-report-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-assurance-report.yml",
+    "contracts/validation/README.md",
+    "contracts/validation/validator_assurance_report.md",
+    "fixtures/contracts/v1/validation/validator_assurance_report/README.md",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_high_risk_count.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_hold_without_review.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_kill_rate_denominator.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_operators_not_canonical.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_pass_with_high_risk.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_survivor_inventory.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_universal_threshold.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_error_timeout.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_fail_high_risk_survivor.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_hold_medium_survivor.json",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_pass_all_killed.json",
+    "schemas/contracts/v1/validation/README.md",
+    "schemas/contracts/v1/validation/validator_assurance_report.schema.json",
+    "tests/validators/test_validate_validator_assurance_report.py",
+    "tools/validators/validate_validator_assurance_report.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-assurance-report.yml": "sha256:82985b48ceaabe23102e86761c819e52adaf65483228cc4cb2ef9307a4269186",
+    "contracts/validation/README.md": "sha256:4838b71dc020c5cbca4b71de0134a38e24f285b8b95df52a617f3102f74cad4f",
+    "contracts/validation/validator_assurance_report.md": "sha256:9969330a5b0d9a29f6209eddbbaa875bf30ae50dbfd20498161a1bf1e6236fd4",
+    "fixtures/contracts/v1/validation/validator_assurance_report/README.md": "sha256:053447decf36f1cc3e475a14d7011a7add3ada000d2140d679dffb2b7955fc2f",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/expected_findings_manifest.json": "sha256:3cccdccda1fa3fdaf42593e5923f4c3c2d3217df7be82536fd41f25b3e09c97e",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_governance_overclaim.json": "sha256:20e79c3ebc8ef3001f96f9a8e4f99803a3d295e9d21d840cba9b495c386eec00",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_high_risk_count.json": "sha256:8b57e3b6be0a82874f891e518a7a193341a6852c77be649d327ce971c9ad57da",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_hold_without_review.json": "sha256:12dc060189583ae05c3d371ffb3f21ae424fe49ca8c6c5d5b070c2d9c9ac4c0d",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_kill_rate_denominator.json": "sha256:3204d8ea0c0da91f07874f52aab89c022a0c50ebdfd6e16314e1d4bf639bdb94",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_operators_not_canonical.json": "sha256:23a1cfb52e543a61bc096dddb61f6dd7f09b44aecba660892266027a72b968b9",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_pass_with_high_risk.json": "sha256:9f5ae62b605afa56819fc3dace7f58b759c1b6419738af098aebf6b26f1615c7",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_spec_hash_mismatch.json": "sha256:8005ec89b8d95e2e3965a84622706751b55f69321644b42e14c55c1f9c821247",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_survivor_inventory.json": "sha256:dc1ef15de852c6a296ced4be19e47929d1ea085b10084aedd982d5a7a33a573f",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_universal_threshold.json": "sha256:4e5acac02534479baea664b18181ee370239bcab400923a6845b9a9ddcbadb7f",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_error_timeout.json": "sha256:5144ed25316ccfbbe29b96a6c8d76d4278ac29d4b4889b72a26cb48434f27b0a",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_fail_high_risk_survivor.json": "sha256:3e1312fbe4fe46bad942780eeaf38e42a359564ce78be76de530e2bd83d0066f",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_hold_medium_survivor.json": "sha256:8b16e05e3657bd2b85ec1355d9b25857195a2b23717245220bbc85376284905d",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_pass_all_killed.json": "sha256:1d0c76244956fef8e71b9d5c4135a83d4ecdf1ece345c218b79c34794601f59c",
+    "schemas/contracts/v1/validation/README.md": "sha256:15a8d4fa94de8e5944f2a9a90d9b8cb4773a803fde6c6f3604dee8fa42f90c7d",
+    "schemas/contracts/v1/validation/validator_assurance_report.schema.json": "sha256:fae267b0c8377b1542243eca2f2a11281d5fe85b12e1a99a6c090c88d51db97c",
+    "tests/validators/test_validate_validator_assurance_report.py": "sha256:1c005145dd45636c0c0cdb6d1150fa83e21f32783193c3d9ef3babc611a53e68",
+    "tools/validators/validate_validator_assurance_report.py": "sha256:f3e0cbd5ebb94b8f2d015c1237407e5fae9bb4be9c473f880a44ad6609f1388e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:429e58f73859e74c7706cb9b1037df8c0377b4d420bfbbe7ac12ec9927d1fc72",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26(2).pdf#adversarial-validator-assurance-and-mutation-adequacy",
+      "github:9cc9342942afdcbdb917bd787b13aa088725a781",
+      "github:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-assurance-report.yml": "PROPOSED",
+    "contracts/validation/README.md": "PROPOSED",
+    "contracts/validation/validator_assurance_report.md": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/README.md": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_high_risk_count.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_hold_without_review.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_kill_rate_denominator.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_operators_not_canonical.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_pass_with_high_risk.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_survivor_inventory.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_universal_threshold.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_error_timeout.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_fail_high_risk_survivor.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_hold_medium_survivor.json": "PROPOSED",
+    "fixtures/contracts/v1/validation/validator_assurance_report/valid/valid_pass_all_killed.json": "PROPOSED",
+    "schemas/contracts/v1/validation/README.md": "PROPOSED",
+    "schemas/contracts/v1/validation/validator_assurance_report.schema.json": "PROPOSED",
+    "tests/validators/test_validate_validator_assurance_report.py": "PROPOSED",
+    "tools/validators/validate_validator_assurance_report.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "Nine focused tests passed; four valid and nine invalid synthetic fixtures replayed with exact reviewed finding sets."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 bindings, truth-label keys, and receipt shape were verified against the final local bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions results are available only after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26(2).pdf#adversarial-validator-assurance-and-mutation-adequacy"
+    },
+    {
+      "id": "repository:intake-source-map",
+      "validated": true,
+      "evidence_ref": "github:docs/intake/exploratory/new-ideas-4-25-source-map.md"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T21:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-063. The slice records bounded adversarial/mutation assurance evidence and surviving semantic gaps without selecting a mutation engine, establishing a universal threshold, approving a validator, or authorizing merge, policy, promotion, release, or publication. Proposed branch: agent/validator-assurance-report-20260805. Base: 9cc9342942afdcbdb917bd787b13aa088725a781."
+}
