@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/source/eo_asset_prefilter_profile.schema.json",
+  "title": "EOAssetPrefilterProfile",
+  "description": "Inactive, no-network acceptance profile for normalized Earth-observation asset metadata. It creates no source, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "status",
+    "profile_id",
+    "profile_version",
+    "spec_hash",
+    "hash_profile",
+    "analysis_unit_kind",
+    "requirements",
+    "decision_precedence",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "EOAssetPrefilterProfile"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^kfm://prefilter-profile/eo/[a-z0-9_.:-]+$"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hash_profile": {
+      "const": "kfm-canonical-json-v1"
+    },
+    "analysis_unit_kind": {
+      "const": "county"
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_items_found",
+        "minimum_assets_per_item",
+        "minimum_assets_found",
+        "minimum_valid_pixel_fraction",
+        "maximum_cloud_cover_percent",
+        "replay_validator_rule"
+      ],
+      "properties": {
+        "minimum_items_found": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "minimum_assets_per_item": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "minimum_assets_found": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32000
+        },
+        "minimum_valid_pixel_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "maximum_cloud_cover_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "replay_validator_rule": {
+          "const": "strong_etag_or_last_modified"
+        }
+      }
+    },
+    "decision_precedence": {
+      "const": [
+        "DENY",
+        "HOLD",
+        "PASS"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "network_performed",
+        "policy_evaluated",
+        "promotion_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "network_performed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/eo_asset_prefilter_report.md",
+    "profile_instance": "pipeline_specs/source/eo_asset_prefilter_profile.v1.json",
+    "validator": "tools/validators/source/validate_eo_asset_prefilter_report.py",
+    "non_effects": [
+      "does_not_fetch_or_activate_sources",
+      "does_not_admit_raw_data",
+      "does_not_resolve_evidence",
+      "does_not_define_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ]
+  }
+}
