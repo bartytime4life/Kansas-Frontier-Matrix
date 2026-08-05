@@ -1,0 +1,85 @@
+# Fixture-only validation for the proposed PMTiles delta-manifest profile.
+# This workflow does not fetch archives, verify signatures, approve release,
+# deploy, or publish.
+name: pmtiles-delta-manifest
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pmtiles-delta-manifest-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out bounded fixture profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install repository test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused unit tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/validators/test_pmtiles_delta_manifest.py
+
+      - name: Replay valid and expected-invalid fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          validator="tools/validators/validate_pmtiles_delta_manifest.py"
+          fixture_root="fixtures/pmtiles/delta_manifest"
+
+          python "$validator" --fixtures
+          python "$validator" "$fixture_root/valid/valid_mixed_delta.json"
+
+          if python "$validator" "$fixture_root/invalid/invalid_schema.json"; then
+            echo "::error::A malformed manifest was accepted."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-manifest-shape"
+          echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-per-tile-lineage"
+          echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-qc-reconciliation"
+          echo "WORKFLOW_HOLD: archive bytes, range hosting, signatures, policy, release, deployment, and publication are not evaluated"
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### PMTiles delta-manifest status
+
+          This job validates a closed synthetic profile, canonical `spec_hash`,
+          base/delta digest binding, ordered per-tile lineage, coordinate and
+          quadkey identity, count reconciliation, and computed `PASS`, `REVIEW`,
+          or `REJECT` QC semantics.
+
+          A green result does not inspect an archive, authenticate byte ranges,
+          verify a PMSIG/DSSE signature, resolve evidence, evaluate policy,
+          authorize release, deploy an artifact, or publish a map layer.
+          EOF
