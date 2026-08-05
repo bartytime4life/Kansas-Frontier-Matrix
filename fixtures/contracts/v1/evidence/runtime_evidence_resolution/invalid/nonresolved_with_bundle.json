@@ -1,0 +1,22 @@
+{
+  "profile": "kfm/evidence-ref-bundle-candidate/v1alpha1",
+  "authoritative": false,
+  "checks_performed": [
+    "input_structure_bounds",
+    "profile_shape"
+  ],
+  "limitations": [
+    "claim_scope_not_machine_checked",
+    "citations_rights_and_sensitivity_not_decided",
+    "policy_is_caller_supplied_not_evaluated",
+    "active_verification_history_is_necessary_not_sufficient",
+    "no_review_release_runtime_or_publication_authority"
+  ],
+  "status": "UNRESOLVED",
+  "bundle_id": "bundle:synthetic:001",
+  "issues": [
+    {
+      "code": "lookup/not-found"
+    }
+  ]
+}
