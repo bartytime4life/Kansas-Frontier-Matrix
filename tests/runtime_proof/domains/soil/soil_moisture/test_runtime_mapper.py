@@ -9,6 +9,10 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
+from .emit_runtime_proof_report import (
+    build_runtime_proof_report,
+    write_runtime_proof_report,
+)
 from .runtime_mapper import build_soil_moisture_runtime_response
 
 
@@ -131,3 +135,26 @@ def test_mapping_is_replay_deterministic_and_never_answers_fixture_data() -> Non
     assert candidate == snapshot
     assert first["outcome"] != "ANSWER"
     assert FORBIDDEN_KEYS.isdisjoint(first)
+
+
+def test_runtime_proof_report_is_deterministic_and_review_safe() -> None:
+    first = build_runtime_proof_report(REPOSITORY_ROOT, issued_at=FIXED_TIME)
+    second = build_runtime_proof_report(REPOSITORY_ROOT, issued_at=FIXED_TIME)
+
+    assert first == second
+    assert len(first["cases"]) == 4
+    assert all(case["matched"] for case in first["cases"])
+    encoded = json.dumps(first, sort_keys=True)
+    for forbidden in ("readings", "station_id", "run_receipt_ref", "proof_bundle"):
+        assert forbidden not in encoded
+
+
+def test_runtime_proof_report_writes_machine_readable_artifact(tmp_path: Path) -> None:
+    output_path = tmp_path / "runtime-proof-report.json"
+
+    report = write_runtime_proof_report(
+        REPOSITORY_ROOT, output_path, issued_at=FIXED_TIME
+    )
+
+    assert json.loads(output_path.read_text(encoding="utf-8")) == report
+    assert output_path.read_text(encoding="utf-8").endswith("\n")

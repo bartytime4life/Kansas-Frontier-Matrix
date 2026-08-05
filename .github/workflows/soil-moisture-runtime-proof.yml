@@ -12,7 +12,9 @@ name: soil-moisture-runtime-proof
       - "fixtures/domains/soil/soil_moisture/**"
       - "tests/packages/README.md"
       - "tests/packages/envelopes/**"
+      - "tests/ci/**"
       - "tests/runtime_proof/domains/soil/soil_moisture/**"
+      - "tools/ci/**"
       - "data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json"
   push:
     branches: [main]
@@ -25,7 +27,9 @@ name: soil-moisture-runtime-proof
       - "fixtures/domains/soil/soil_moisture/**"
       - "tests/packages/README.md"
       - "tests/packages/envelopes/**"
+      - "tests/ci/**"
       - "tests/runtime_proof/domains/soil/soil_moisture/**"
+      - "tools/ci/**"
       - "data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json"
   workflow_dispatch:
 
@@ -72,13 +76,43 @@ jobs:
           python -m pytest \
             tests/packages/envelopes/test_runtime_response_candidate.py \
             tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py \
+            tests/ci/test_render_runtime_proof_summary.py \
             -q --strict-config --strict-markers
+
+      - name: Emit machine-readable runtime responses
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/qa/soil-moisture-runtime-proof
+          PYTHONPATH=packages/envelopes/src python -m \
+            tests.runtime_proof.domains.soil.soil_moisture.emit_runtime_proof_report \
+            --repo-root . \
+            --issued-at 2026-08-05T22:00:00Z \
+            --output artifacts/qa/soil-moisture-runtime-proof/actual-responses.json
+
+      - name: Render reviewer runtime-proof summary
+        run: |
+          set -euo pipefail
+          python tools/ci/render_runtime_proof_summary.py \
+            --report artifacts/qa/soil-moisture-runtime-proof/actual-responses.json \
+            --output artifacts/qa/soil-moisture-runtime-proof/summary.md
+          cat artifacts/qa/soil-moisture-runtime-proof/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload runtime-proof review artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: soil-moisture-runtime-proof-review
+          path: artifacts/qa/soil-moisture-runtime-proof/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Verify generated authoring receipt integrity
         run: |
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-soil-moisture-runtime-proof-20260805.json \
-            --repo-root .
+          set -euo pipefail
+          for receipt in data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json; do
+            python tools/validators/validate_generated_receipt.py \
+              "$receipt" --repo-root .
+          done
 
       - name: Record trust boundary
         if: always()

@@ -22,8 +22,27 @@ Run the focused proof with:
 python -m pytest \
   tests/packages/envelopes/test_runtime_response_candidate.py \
   tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py \
+  tests/ci/test_render_runtime_proof_summary.py \
   -q --strict-config --strict-markers
 ```
+
+Emit and render the reviewer-only QA artifacts with:
+
+```bash
+mkdir -p artifacts/qa/soil-moisture-runtime-proof
+PYTHONPATH=packages/envelopes/src python -m \
+  tests.runtime_proof.domains.soil.soil_moisture.emit_runtime_proof_report \
+  --repo-root . \
+  --issued-at 2026-08-05T22:00:00Z \
+  --output artifacts/qa/soil-moisture-runtime-proof/actual-responses.json
+python tools/ci/render_runtime_proof_summary.py \
+  --report artifacts/qa/soil-moisture-runtime-proof/actual-responses.json \
+  --output artifacts/qa/soil-moisture-runtime-proof/summary.md
+```
+
+The JSON report and Markdown summary are temporary review aids. They are not
+canonical evidence, receipts, proofs, policy decisions, promotion decisions,
+release manifests, publication records, or public API responses.
 
 A green result proves only deterministic mapping of synthetic fixtures under
 this proposed test profile. It does not activate a source, resolve an
