@@ -1,0 +1,54 @@
+{
+  "object_type": "EOAssetPrefilterReport",
+  "schema_version": "1.0.0",
+  "report_id": "eo-prefilter:ks-county-demo-202605",
+  "hash_profile": "kfm-canonical-json-v1",
+  "spec_hash": "sha256:60cf4f71ddd660630796653f94dc1e28b43c9da49ba35ca2b395aacc32cb4fe3",
+  "profile": {
+    "profile_ref": "kfm://prefilter-profile/eo/county-vegetation-v1",
+    "profile_version": "1.0.0",
+    "profile_spec_hash": "sha256:cac1458f1bae272e8b30ea753cbef7e1bf622508c861ecf112f96df10b371b89"
+  },
+  "scope": {
+    "analysis_unit_kind": "county",
+    "geography_ref": "kfm://geography/us/ks/county/20053",
+    "query_ref": "fixture://stac/query/ks-county-20053-202605",
+    "query_digest": "sha256:a25bb983f7e96a9f51a594a6dd9a74b9854b631348b8762ec905e43dda3078a0",
+    "collections": [
+      "hls",
+      "sentinel-2-l2a"
+    ],
+    "datetime": {
+      "start": "2026-05-01T00:00:00Z",
+      "end": "2026-05-31T23:59:59Z"
+    },
+    "cloud_cover_lte_percent": 30.0,
+    "limit": 500
+  },
+  "items": [],
+  "summary": {
+    "items_checked": 0,
+    "items_found": 0,
+    "assets_checked": 0,
+    "assets_found": 0,
+    "items_meeting_valid_pixel_fraction": 0,
+    "items_meeting_cloud_cover": 0,
+    "items_usable": 0,
+    "assets_missing": 0,
+    "assets_without_replay_validator": 0,
+    "decision": "DENY",
+    "reason_codes": [
+      "NO_ITEMS_FOUND"
+    ]
+  },
+  "governance": {
+    "source_activated": false,
+    "network_performed": false,
+    "raw_admitted": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
