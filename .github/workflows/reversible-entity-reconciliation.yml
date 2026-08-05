@@ -6,6 +6,7 @@ name: reversible-entity-reconciliation
     paths:
       - ".github/workflows/reversible-entity-reconciliation.yml"
       - "contracts/common/reversible_entity_reconciliation.md"
+      - "fixtures/contracts/v1/common/reversible_entity_reconciliation/**"
       - "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json"
       - "tools/validators/validate_reversible_entity_reconciliation.py"
       - "tests/validators/test_validate_reversible_entity_reconciliation.py"
@@ -15,6 +16,7 @@ name: reversible-entity-reconciliation
     paths:
       - ".github/workflows/reversible-entity-reconciliation.yml"
       - "contracts/common/reversible_entity_reconciliation.md"
+      - "fixtures/contracts/v1/common/reversible_entity_reconciliation/**"
       - "schemas/contracts/v1/common/reversible_entity_reconciliation.schema.json"
       - "tools/validators/validate_reversible_entity_reconciliation.py"
       - "tests/validators/test_validate_reversible_entity_reconciliation.py"
@@ -55,13 +57,14 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install declared schema and test dependencies
         run: python -m pip install -e ".[test]"
-      - name: Run deterministic no-network test vectors
+      - name: Run deterministic no-network fixture validation
         run: |
           set -euo pipefail
           python -m unittest discover \
             --start-directory tests/validators \
             --pattern 'test_validate_reversible_entity_reconciliation.py' \
             --verbose
+          python tools/validators/validate_reversible_entity_reconciliation.py --fixtures
       - name: Verify generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
