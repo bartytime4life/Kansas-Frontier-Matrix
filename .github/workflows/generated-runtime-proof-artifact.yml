@@ -1,0 +1,131 @@
+# Validate the proposed GeneratedRuntimeProofArtifact lifecycle profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network after
+# installing repository-declared test dependencies. It proves bounded schema
+# shape, local lifecycle transitions, golden-fixture review/digest binding,
+# invalidation/deletion support, exact fixture polarity, and authoring-receipt
+# integrity. It does not authenticate reviewers, create EvidenceBundles,
+# evaluate policy, authorize KFM promotion, release, deploy, or publish.
+name: generated-runtime-proof-artifact
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/generated-runtime-proof-artifact.yml"
+      - "contracts/runtime/generated_runtime_proof_artifact.md"
+      - "schemas/contracts/v1/runtime/generated_runtime_proof_artifact.schema.json"
+      - "fixtures/contracts/v1/runtime/generated_runtime_proof_artifact/**"
+      - "tools/validators/validate_generated_runtime_proof_artifact.py"
+      - "tests/validators/test_validate_generated_runtime_proof_artifact.py"
+      - "data/receipts/generated/genrec-generated-runtime-proof-artifact-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/generated-runtime-proof-artifact.yml"
+      - "contracts/runtime/generated_runtime_proof_artifact.md"
+      - "schemas/contracts/v1/runtime/generated_runtime_proof_artifact.schema.json"
+      - "fixtures/contracts/v1/runtime/generated_runtime_proof_artifact/**"
+      - "tools/validators/validate_generated_runtime_proof_artifact.py"
+      - "tests/validators/test_validate_generated_runtime_proof_artifact.py"
+      - "data/receipts/generated/genrec-generated-runtime-proof-artifact-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generated-runtime-proof-artifact-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-generated-runtime-proof-artifact:
+    name: validate-generated-runtime-proof-artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network lifecycle tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_generated_runtime_proof_artifact.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity and reviewed finding codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_runtime_proof_artifact.py --fixtures
+
+      - name: Validate schema and JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_path = Path(
+              "schemas/contracts/v1/runtime/generated_runtime_proof_artifact.schema.json"
+          )
+          Draft202012Validator.check_schema(
+              json.loads(schema_path.read_text(encoding="utf-8"))
+          )
+          fixture_root = Path(
+              "fixtures/contracts/v1/runtime/generated_runtime_proof_artifact"
+          )
+          files = sorted(fixture_root.rglob("*.json"))
+          assert files, "generated runtime-proof fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-generated-runtime-proof-artifact-20260805.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Generated runtime-proof artifact lifecycle"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: EPHEMERAL, RETAINED, REVIEWED, PROMOTED_GOLDEN, STALE, INVALIDATED, and DELETED lifecycle records; digest-bound artifact references; explicit golden-fixture decision; expiry; correction/supersession; deletion receipt; and non-authority declarations."
+            echo "- Network posture: no live source, runtime, artifact, evidence, policy, review, release, deployment, or publication access."
+            echo "- Boundary: a green result does not authenticate a reviewer, prove runtime correctness, create EvidenceBundle closure, evaluate policy, authorize KFM promotion, release, deploy, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

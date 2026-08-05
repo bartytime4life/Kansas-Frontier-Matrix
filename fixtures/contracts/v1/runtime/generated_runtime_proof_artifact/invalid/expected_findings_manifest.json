@@ -1,0 +1,32 @@
+{
+  "invalid_artifact_ref_digest_mismatch.json": [
+    "ARTIFACT_REF_DIGEST_MISMATCH"
+  ],
+  "invalid_deleted_without_receipt.json": [
+    "DELETION_RECEIPT_MISSING"
+  ],
+  "invalid_golden_digest_mismatch.json": [
+    "GOLDEN_PROMOTION_BINDING_MISMATCH"
+  ],
+  "invalid_golden_without_review.json": [
+    "GOLDEN_PROMOTION_REVIEW_MISSING"
+  ],
+  "invalid_governance_claim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "invalid_illegal_transition.json": [
+    "LIFECYCLE_TRANSITION_INVALID"
+  ],
+  "invalid_invalidated_without_lineage.json": [
+    "INVALIDATION_SUPPORT_MISSING"
+  ],
+  "invalid_timing_order.json": [
+    "TIMING_ORDER_INVALID"
+  ],
+  "invalid_unsafe_golden.json": [
+    "GOLDEN_PROMOTION_SAFETY_DENIED"
+  ],
+  "invalid_unsorted_refs.json": [
+    "REFS_OR_REASONS_NOT_CANONICAL"
+  ]
+}
