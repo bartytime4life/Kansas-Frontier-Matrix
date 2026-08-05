@@ -1,0 +1,183 @@
+{
+  "object_type": "ReversibleEntityReconciliationPacket",
+  "schema_version": "1.0.0",
+  "packet_id": "reconciliation-packet:demo",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:d65e4186f1c74d066db3bd86f9cda62718158c08d54a52ca1ac6e4bc0a1c7296",
+  "source_assertions": [
+    {
+      "assertion_id": "source-assertion:a",
+      "source_descriptor_ref": "kfm://source/demo/a",
+      "source_role": "OBSERVATION_SYSTEM",
+      "subject_ref": "kfm://source-record/a",
+      "asserted_identity_keys": {
+        "catalog_number": "A-100",
+        "normalized_name": "alpha"
+      },
+      "attribute_digests": [
+        "sha256:1357841585bf2f972f1db6e564b514e70d615b26aa5dc565580311c99b8a2db5"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/demo/a"
+      ],
+      "valid_from": "2025-01-01T00:00:00Z",
+      "valid_to": null
+    },
+    {
+      "assertion_id": "source-assertion:b",
+      "source_descriptor_ref": "kfm://source/demo/b",
+      "source_role": "OBSERVATION_SYSTEM",
+      "subject_ref": "kfm://source-record/b",
+      "asserted_identity_keys": {
+        "catalog_number": "B-200",
+        "normalized_name": "alpha"
+      },
+      "attribute_digests": [
+        "sha256:c6d9bcc852d01187dbf9ead62caab51b72e2ea1f1cf0c77274995b3dd9340c53"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/demo/b"
+      ],
+      "valid_from": "2025-01-02T00:00:00Z",
+      "valid_to": null
+    },
+    {
+      "assertion_id": "source-assertion:c",
+      "source_descriptor_ref": "kfm://source/demo/c",
+      "source_role": "CONTEXT_SOURCE",
+      "subject_ref": "kfm://source-record/c",
+      "asserted_identity_keys": {
+        "catalog_number": "C-300",
+        "normalized_name": "alpha"
+      },
+      "attribute_digests": [
+        "sha256:f00e7e6b045043617ff6e5ebe39746be7fa3cd6827b764e2044a11a33592b0ea"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/demo/c"
+      ],
+      "valid_from": "2025-01-03T00:00:00Z",
+      "valid_to": null
+    }
+  ],
+  "match_proposals": [
+    {
+      "proposal_id": "match-proposal:ab",
+      "candidate_assertion_refs": [
+        "source-assertion:a",
+        "source-assertion:b"
+      ],
+      "blocking_keys": [
+        "normalized_name"
+      ],
+      "feature_evidence": [
+        {
+          "feature_id": "normalized_name",
+          "left_digest": "sha256:8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "right_digest": "sha256:8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "comparison": "SAME",
+          "weight": 0.6
+        },
+        {
+          "feature_id": "source_identifier",
+          "left_digest": "sha256:424e5c70d76e009683fa5777b60015f6a33df8c79d1b3993d3abf097478ff5ac",
+          "right_digest": "sha256:655c55184a01e52faeab1a077fc8bfc75da9d328f84c0875d0f415dff13ee248",
+          "comparison": "DIFFERENT",
+          "weight": 0.4
+        }
+      ],
+      "confidence": 0.72,
+      "confidence_limit": 0.85,
+      "transitivity_scope": "DIRECT_ONLY",
+      "automatic_merge": false,
+      "decision_required": true,
+      "evidence_refs": [
+        "kfm://evidence/reconciliation/ab"
+      ]
+    }
+  ],
+  "reconciliation_decisions": [
+    {
+      "decision_id": "reconciliation-decision:ab",
+      "proposal_ref": "match-proposal:ab",
+      "outcome": "NO_MATCH",
+      "authority_role": "IDENTITY_STEWARD",
+      "rationale_codes": [
+        "EVIDENCE_REVIEWED",
+        "SOURCE_ASSERTIONS_PRESERVED"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/reconciliation/ab"
+      ],
+      "reversible": true,
+      "recorded_at": "2026-08-05T12:00:00Z",
+      "supersedes_decision_ref": null
+    }
+  ],
+  "entity_clusters": [
+    {
+      "cluster_id": "entity-cluster:ab",
+      "member_assertion_refs": [
+        "source-assertion:a",
+        "source-assertion:b"
+      ],
+      "decision_refs": [
+        "reconciliation-decision:ab"
+      ],
+      "derived_view_ref": "kfm://work/reconciliation/ab",
+      "source_assertions_preserved": true,
+      "transitive_closure_applied": false
+    }
+  ],
+  "split_decisions": [
+    {
+      "split_id": "split-decision:ab",
+      "prior_cluster_ref": "entity-cluster:ab",
+      "reason_codes": [
+        "FALSE_MERGE_CORRECTED"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/reconciliation/split-ab"
+      ],
+      "resulting_member_sets": [
+        [
+          "source-assertion:a"
+        ],
+        [
+          "source-assertion:b"
+        ]
+      ],
+      "reversible": true,
+      "recorded_at": "2026-08-05T13:00:00Z"
+    }
+  ],
+  "separation": {
+    "source_assertions_preserved": true,
+    "winner_takes_all_denied": true,
+    "destructive_merge_denied": true,
+    "confidence_is_not_authority": true,
+    "unresolved_is_first_class": true
+  },
+  "provenance": {
+    "recorded_at": "2026-08-05T14:00:00Z",
+    "run_receipt_ref": "kfm://receipt/reconciliation/demo",
+    "reconciler_id": "kfm://tool/reconciliation-validator",
+    "reconciler_version": "0.1.0",
+    "input_refs": [
+      "kfm://source-record/a",
+      "kfm://source-record/b",
+      "kfm://source-record/c"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "canonical_entity_created": false,
+    "source_assertions_mutated": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "release_ref": null
+  }
+}

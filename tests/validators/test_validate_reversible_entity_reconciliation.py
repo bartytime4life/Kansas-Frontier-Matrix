@@ -1,76 +1,126 @@
 from __future__ import annotations
 
-import base64
+import contextlib
 import importlib.util
+import io
 import json
 import subprocess
 import sys
 import tempfile
 import unittest
-import zlib
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-MODULE_PATH = REPO_ROOT / 'tools/validators/validate_reversible_entity_reconciliation.py'
-SPEC = importlib.util.spec_from_file_location('validate_reversible_entity_reconciliation', MODULE_PATH)
+MODULE_PATH = REPO_ROOT / "tools/validators/validate_reversible_entity_reconciliation.py"
+FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/common/reversible_entity_reconciliation"
+VALID_ROOT = FIXTURE_ROOT / "valid"
+INVALID_ROOT = FIXTURE_ROOT / "invalid"
+MANIFEST_PATH = INVALID_ROOT / "expected_findings_manifest.json"
+
+SPEC = importlib.util.spec_from_file_location(
+    "validate_reversible_entity_reconciliation",
+    MODULE_PATH,
+)
 assert SPEC and SPEC.loader
 validator = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = validator
 SPEC.loader.exec_module(validator)
 
-VALID_VECTOR = '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'
-INVALID_VECTORS = {'invalid_automatic_merge.json': {'payload': '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', 'codes': ['AUTO_MERGE_DENIED', 'SCHEMA_INVALID']}, 'invalid_cluster_without_match.json': {'payload': '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', 'codes': ['CLUSTER_WITHOUT_MATCH_DECISION']}, 'invalid_split_partition.json': {'payload': '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', 'codes': ['SPLIT_MEMBER_DUPLICATED', 'SPLIT_PARTITION_MISMATCH']}, 'invalid_spec_hash.json': {'payload': 'eNq1V1tv2kgUfs+viHgOyfhu85Y2RIvUJhWhu8pWlTWeOROmsT3seEybVvnve3zBGHBT1KgIIfC5zDnffOfCj5PT05FKvgAzsXlawWhyOprDGnQhkxSmuZHmaQ5M5Uymkhqp8g+UPYIZnVWGBVtCRuNaXeWVrXVOzkkjXNWKseTVc73jY9zIJgnl4yUtlo1B9S1eaSVkWsfxKLKxkN9MqWH8pUCrtdUeuwIW13aoVSyp7fkT8cpX61mVmkFMiwJ0FWiBJ3xCwenpj/oTVTpZm1ljMu4eT2jtqtZt3XEomJYro3SsQbSpTS4uGvEFh0xdHFpp1cBw++ZuOv/7cjG7vYnv7u8W0/c91bK5ugG34wpyzfuOmxiBY+RQ32z8CE9VipvkUIdRQ1P1EOdlloCunF6OLUI6J6iSK53RVH5HRznN6hhpulrSUavyvD3QGC2T0iAE8gEKs4Wzib65OsvxgtC1vNBLhC2iwBYWT3zwfDfxLBcCwn3LS2yfUo8zz/e8kDiWxaIoCanNE29z7ufuXFhXGVYYgtg7s4Foo7DB/sDDGhPksdAqq9Kzie2NiYXvBSGT+v3vaE/XKNTMyzQ96WFwPGuS32JN8qdYk7yWNW/G9p9lDfN5lDAWejYnlhUGPBERUO7bjFLkTRLYYAO1hMUEYUFgB24UeYnDeeS4hHnOq1mTHM0a+2jWnLTeRhk1rG6GK1XQdKANbUQtn2r98ebhhPbuj9GcS05Nr60NZPhCGzsdpOtB8kmq2KPMHzb0+PTzuz+wFUCrNh9vEN4x3/Ksp9mkve/4rK+agjAthXqDIgTuCB+Jgu0m8irKBMS2PSsEi4rAZzy0fBFCCCxgjHNqAXcJSkNh27Yjwt0ztHxY/vFDmMpWVMuiGbF3l++nu/KvUEWBMnLud8+fz44BsO0aTWkLibV7BISu7YLHsC8HPhAS+aEjqBcEQeITYnmYt+NwEbIg4lbiRJHDHZoIEgVuEArhUXYUhNjnmYeIuZRY4NmCAk0sSoJAsDARLPA4jbhjhyJ0GQnxJxE4Q7gQlgNguy9CeDW7vp7OpzeLn+LobnE8ICtuMqKjKTkP7AFJnMpMNq5Cr5MbTfNCGrmuumjBVLNvXc3m07eL+Pbm3X2v65ZGYVFLFmegHyo9gX0AOjkHJoumlP8rpYbqNo0u4Te62e5udkG3tb3XlHYV400IA92pi25w+9tIJ0uV8m3KXUtr59ILPU2VBm+0Ru+v23dXO7Atla7g3QzC2RXe82xxH+MM/Ody3tPVdTQ0hZgpHLa7GM1u7j5eX8/eztA6vvv44cPtfPGakbEHcp35gTvdbd77t9mMZWxz1LSjxR+TcEy8hWUfjJaiXKEbwJziHk3E8KRpZzpLy8KgVZXE53bLTqXZveRWAFhKdRrdEnC4OOPsAvy+3iPm6KvMc9CxoY8YHU1TPCCX+0oYOf5iWCjQ0H9Qq1dtsohzZeLu9ncVyxxjUem62mGKWEhdGMwXY23VTtpuWTFwDTltKrvN7AXk3V3kR7qscGaAS9vubtU+HCTB2faYSoTYNDXTWBql0j2zcb05UNwLB2x7f8XIuXW+2cBGMl+VZp+lv/q/8IvFcEjMGlJ/7iB9QET1HqTbImUap1F9r73uVm0sKpcMO8GGnINqh5zLSjOg1xUpS1VRjT68e5kdqK1UKtkTriA0LQe8IDcyVfe9NvzvByoaUqAF/FxhVSZ4Bj3Oy07FPp88n/wPu8eO4Q==', 'codes': ['SPEC_HASH_MISMATCH']}}
 
-
-def decode_vector(encoded: str) -> str:
-    return zlib.decompress(base64.b64decode(encoded)).decode("utf-8")
+def load_json(path: Path) -> dict[str, object]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise AssertionError(f"{path.name} must contain a JSON object")
+    return value
 
 
 class ReversibleEntityReconciliationTests(unittest.TestCase):
-    def write_vector(self, directory: str, name: str, encoded: str) -> Path:
-        path = Path(directory) / name
-        path.write_text(decode_vector(encoded), encoding="utf-8")
-        return path
+    def test_fixture_inventory_is_exact(self) -> None:
+        self.assertEqual(
+            ["valid_reconciliation_packet.json"],
+            sorted(path.name for path in VALID_ROOT.glob("*.json")),
+        )
+        self.assertEqual(
+            [
+                "expected_findings_manifest.json",
+                "invalid_automatic_merge.json",
+                "invalid_cluster_without_match.json",
+                "invalid_spec_hash.json",
+                "invalid_split_partition.json",
+            ],
+            sorted(path.name for path in INVALID_ROOT.glob("*.json")),
+        )
 
-    def test_valid_vector_passes(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            path = self.write_vector(directory, "valid.json", VALID_VECTOR)
-            self.assertTrue(validator.validate_packet(path).ok)
+    def test_valid_fixtures_pass(self) -> None:
+        for path in sorted(VALID_ROOT.glob("*.json")):
+            with self.subTest(path=path.name):
+                self.assertTrue(validator.validate_packet(path).ok)
 
-    def test_invalid_vectors_match_reviewed_codes(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            for name, item in INVALID_VECTORS.items():
-                with self.subTest(path=name):
-                    path = self.write_vector(directory, name, item["payload"])
-                    result = validator.validate_packet(path)
-                    self.assertEqual(sorted({finding.code for finding in result.findings}), item["codes"])
+    def test_invalid_fixtures_match_reviewed_codes(self) -> None:
+        expected = load_json(MANIFEST_PATH)
+        invalid_paths = sorted(
+            path
+            for path in INVALID_ROOT.glob("*.json")
+            if path.name != MANIFEST_PATH.name
+        )
+        self.assertEqual(sorted(expected), [path.name for path in invalid_paths])
+        for path in invalid_paths:
+            with self.subTest(path=path.name):
+                result = validator.validate_packet(path)
+                actual = sorted({finding.code for finding in result.findings})
+                self.assertEqual(expected[path.name], actual)
+
+    def test_fixture_entrypoint_passes(self) -> None:
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            self.assertEqual(0, validator.validate_fixtures())
+        self.assertIn(
+            "CONFIRMED: 1 valid and 4 invalid reconciliation fixtures passed exact polarity.",
+            stdout.getvalue(),
+        )
 
     def test_duplicate_keys_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "duplicate.json"
-            path.write_text('{"object_type":"x","object_type":"y"}', encoding="utf-8")
+            path.write_text(
+                '{"object_type":"x","object_type":"y"}',
+                encoding="utf-8",
+            )
             result = validator.validate_packet(path)
-            self.assertIn("JSON_DUPLICATE_KEY", {finding.code for finding in result.findings})
+            self.assertIn(
+                "JSON_DUPLICATE_KEY",
+                {finding.code for finding in result.findings},
+            )
             self.assertTrue(result.error)
 
     def test_cli_does_not_echo_candidate_values(self) -> None:
-        marker = 'UNIQUE_ENTITY_ECHO_SENTINEL'
+        marker = "UNIQUE_ENTITY_ECHO_SENTINEL"
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bad.json"
             path.write_text(json.dumps({"marker": marker}), encoding="utf-8")
-            run = subprocess.run([sys.executable, str(MODULE_PATH), str(path)], cwd=REPO_ROOT, capture_output=True, text=True, check=False)
-            self.assertNotEqual(run.returncode, 0)
+            run = subprocess.run(
+                [sys.executable, str(MODULE_PATH), str(path)],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(0, run.returncode)
             self.assertNotIn(marker, run.stdout)
             self.assertNotIn(marker, run.stderr)
 
     def test_hash_is_deterministic(self) -> None:
-        candidate = json.loads(decode_vector(VALID_VECTOR))
-        expected = validator.canonical_spec_hash(candidate)
-        self.assertEqual(candidate["spec_hash"], expected)
-        self.assertEqual(expected, validator.canonical_spec_hash(candidate))
+        for path in sorted(VALID_ROOT.glob("*.json")):
+            with self.subTest(path=path.name):
+                candidate = load_json(path)
+                expected = validator.canonical_spec_hash(candidate)
+                self.assertEqual(candidate["spec_hash"], expected)
+                self.assertEqual(expected, validator.canonical_spec_hash(candidate))
 
-    def test_schema_is_valid(self) -> None:
-        validator._schema_findings(json.loads(decode_vector(VALID_VECTOR)))
+    def test_valid_fixtures_are_schema_valid(self) -> None:
+        for path in sorted(VALID_ROOT.glob("*.json")):
+            with self.subTest(path=path.name):
+                self.assertEqual([], validator._schema_findings(load_json(path)))
 
 
 if __name__ == "__main__":
