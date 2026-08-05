@@ -1,84 +1,62 @@
-# `schemas/contracts/v1/spatial-foundation/` — Spatial Foundation Schema Guardrail
+# `schemas/contracts/v1/spatial-foundation/` — Spatial Foundation Schemas
 
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-spatial-foundation-readme
 title: schemas/contracts/v1/spatial-foundation/ README
-type: readme; schema-family-index; compatibility-index
-version: v0.1
-status: draft; empty-schema-family; NEEDS VERIFICATION
-updated: 2026-07-04
-policy_label: public
-tags: [kfm, schemas, contracts-v1, spatial-foundation, spatial, geometry, map, layers, common]
+type: readme; schema-family-index; spatial-foundation; machine-shape
+version: v0.2.0
+status: draft; PROPOSED; fixture-first; mixed-maturity
+updated: 2026-08-05
+policy_label: public; schemas; contracts-v1; spatial-foundation; non-authoritative
+tags: [kfm, schemas, spatial-foundation, survey-control, boundary-derivation, provenance]
+related:
+  - ../../../../contracts/spatial-foundation/README.md
+  - ../../../../contracts/spatial-foundation/boundary_derivation_record.md
+  - ../../../../fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/
+  - ../../../../tools/validators/validate_boundary_derivation_record.py
+  - ../../../../tests/validators/test_validate_boundary_derivation_record.py
+notes:
+  - "v0.2.0 replaces the former README-only guardrail with one bounded proposed schema profile."
+  - "Schema validity grants no title, ownership, parcel, survey certification, legal-boundary, source, evidence, policy, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 ## Purpose
 
-`schemas/contracts/v1/spatial-foundation/` is a draft placeholder for possible shared spatial foundation schema shapes.
+This lane owns machine-checkable shape for cross-domain Spatial Foundation objects whose primary responsibility is coordinate/reference grammar, geometry lineage, representation, control, uncertainty, and fitness-for-use rather than the truth of one consuming domain.
 
-This README is a placement guardrail only. It does not make this path canonical.
+It remains a schema responsibility lane only. Semantic meaning belongs under `contracts/spatial-foundation/`; fixtures, validator code, tests, lifecycle records, policy, release decisions, and public behavior remain in their own roots.
 
-## Status
+## Current proposed schema
 
-| Item | Status |
-|---|---|
-| README | present |
-| Direct schema files | not found in current search |
-| Current role | README-only guardrail |
-| Placement | NEEDS VERIFICATION |
+| Schema | Contract | Status | Scope |
+|---|---|---|---|
+| [`boundary_derivation_record.schema.json`](./boundary_derivation_record.schema.json) | [`BoundaryDerivationRecord`](../../../../contracts/spatial-foundation/boundary_derivation_record.md) | `PROPOSED` / fixture-first | Source-role-aware survey-control, adjustment/residual, review, lineage, and analytic-use shape. |
 
-## Adjacent schema lanes
+## Authority boundary
 
-| Path | Role |
-|---|---|
-| `schemas/contracts/v1/common/` | Shared reusable schema families. |
-| `schemas/contracts/v1/map/` | Map-facing object shapes. |
-| `schemas/contracts/v1/layers/` | Layer object shapes. |
-| `schemas/contracts/v1/domains/<domain>/` | Domain-specific object shapes and profiles. |
+A conforming `BoundaryDerivationRecord` is an analytic provenance record. It is not:
 
-## Boundary
+- title or ownership evidence;
+- parcel authority;
+- a certified cadastral or legal boundary;
+- source admission or EvidenceBundle closure;
+- a PolicyDecision, review approval, PromotionDecision, ReleaseManifest, or publication permission.
 
-This folder is under `schemas/`, so it may only contain machine-checkable shape material if accepted later.
-
-It is not a data root, code root, fixture root, map runtime root, or domain authority root.
-
-## What belongs here
-
-- This README.
-- Future shared spatial schema files only after placement review.
-- Notes that prevent duplicate spatial definitions across common, map, layers, and domain schema lanes.
-
-## What does not belong here
-
-- Domain-specific schema definitions owned by a domain lane.
-- Map or layer schema definitions owned by map or layer lanes.
-- Geometry payloads, feature data, fixtures, validator code, runtime code, or generated outputs.
-
-## Candidate shapes
-
-These are only candidates, not confirmed files:
-
-| Candidate | Status |
-|---|---|
-| `geometry_ref.schema.json` | NEEDS VERIFICATION |
-| `spatial_extent.schema.json` | NEEDS VERIFICATION |
-| `crs_ref.schema.json` | NEEDS VERIFICATION |
-| `spatial_identity_key.schema.json` | NEEDS VERIFICATION |
-| `location_precision.schema.json` | NEEDS VERIFICATION |
+Fixtures contain synthetic references and no real survey coordinates.
 
 ## Validation
 
 ```bash
-find schemas/contracts/v1/spatial-foundation -maxdepth 3 -type f | sort
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_boundary_derivation_record.py' \
+  --verbose
 
-find schemas/contracts/v1/spatial-foundation -name '*.json' -print0 \
-  | xargs -0 -r -I{} python -m json.tool {} >/dev/null
+python tools/validators/validate_boundary_derivation_record.py --fixtures
 ```
 
-## Open questions
+A green result proves only the bounded machine shape and local semantic invariants exercised by the proposed fixture profile.
 
-| Question | Status |
-|---|---|
-| Should this folder remain README-only? | NEEDS VERIFICATION |
-| Should shared spatial primitives live here or under `common/`? | NEEDS VERIFICATION |
-| Should map/layer-facing shapes remain under `map/` and `layers/`? | NEEDS VERIFICATION |
-| Which contracts, fixtures, validators, and tests would support any future schema here? | NEEDS VERIFICATION |
+## Rollback
+
+Before merge, close the draft pull request and abandon its branch. After an authorized merge, revert the dependency-closed contract/schema/fixture/validator/test/workflow/receipt change. No source geometry, lifecycle record, legal record, release, or published artifact requires restoration.
