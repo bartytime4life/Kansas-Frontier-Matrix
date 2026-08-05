@@ -1,0 +1,140 @@
+{
+  "object_type": "BiodiversityOccurrenceRetrievalPlanCandidate",
+  "schema_version": "1.0.0",
+  "plan_id": "retrieval-plan:biodiversity:gbif-sql-kansas-aggregate-2025",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:4e6297c62b944801aef1acb9debae0539c00b62272ca67fdf4570b764aec0ea8",
+  "domain_scope": [
+    "fauna",
+    "flora",
+    "habitat"
+  ],
+  "source_profile": {
+    "source_family": "GBIF",
+    "product": "GBIF_OCCURRENCE_SQL",
+    "source_descriptor_ref": "kfm://source/biodiversity/gbif-synthetic",
+    "source_role": "AGGREGATED_OCCURRENCE",
+    "rights_status": "NEEDS_VERIFICATION",
+    "sensitivity_status": "NEEDS_VERIFICATION",
+    "live_source_activated": false
+  },
+  "retrieval_intent": {
+    "purpose": "AGGREGATE_SUMMARY",
+    "requested_claim_role": "CANDIDATE_AGGREGATE_SUPPORT",
+    "geography": {
+      "kind": "STATE",
+      "identifier": "KS",
+      "geometry_ref": null
+    },
+    "time_window": {
+      "start": "2015-01-01T00:00:00Z",
+      "end": "2025-12-31T23:59:59Z"
+    },
+    "result_granularity": "AGGREGATE",
+    "non_detection_inference_requested": false,
+    "absence_claim_requested": false,
+    "public_output_requested": false,
+    "exact_coordinate_output_requested": false
+  },
+  "query_snapshot": {
+    "query_language": "GBIF_SQL",
+    "query_version": "synthetic-1.0.0",
+    "query_text": "SELECT datasetKey, countryCode, COUNT(*) AS n FROM occurrence WHERE countryCode='US' AND stateProvince='Kansas' AND year>=2015 GROUP BY datasetKey, countryCode",
+    "query_digest": "sha256:918b8794270095861e9b7fde5efdc24a3d10b6638d75bf337707cc4febecd545",
+    "parameters": [
+      {
+        "name": "COUNTRY",
+        "value": "US"
+      },
+      {
+        "name": "START_YEAR",
+        "value": 2015
+      },
+      {
+        "name": "STATE_PROVINCE",
+        "value": "Kansas"
+      }
+    ],
+    "credentials_excluded": true,
+    "notification_addresses_excluded": true,
+    "volatile_values_excluded": true
+  },
+  "sampling_support": {
+    "mode": "AGGREGATE_ONLY",
+    "support_units": [
+      "DATASET_AGGREGATE"
+    ],
+    "complete_checklists_required": false,
+    "paired_product_required": false,
+    "paired_product": null,
+    "zero_fill_allowed": false,
+    "non_detection_inference_allowed": false,
+    "absence_claim_allowed": false,
+    "observer_effort_fields": [],
+    "source_role_preserved": true,
+    "specimen_equivalence_claimed": false,
+    "no_detection_is_not_absence": true,
+    "missing_row_is_not_absence": true
+  },
+  "transfer": {
+    "mode": "ASYNCHRONOUS_JOB",
+    "state": "SUCCEEDED",
+    "transfer_id": "gbif-download:synthetic-sql-001",
+    "submitted_at": "2026-08-05T19:50:00Z",
+    "updated_at": "2026-08-05T20:02:00Z",
+    "terminal_at": "2026-08-05T20:02:00Z",
+    "artifact_ref": null,
+    "artifact_digest": null,
+    "citation_ref": "https://doi.org/10.15468/dl.synthetic",
+    "retry_count": 0,
+    "reason_codes": [
+      "SOURCE_REPORTED_SUCCEEDED"
+    ],
+    "state_history": [
+      {
+        "state": "PLANNED",
+        "at": "2026-08-05T19:49:00Z"
+      },
+      {
+        "state": "SUBMITTED",
+        "at": "2026-08-05T19:50:00Z"
+      },
+      {
+        "state": "RUNNING",
+        "at": "2026-08-05T19:55:00Z"
+      },
+      {
+        "state": "SUCCEEDED",
+        "at": "2026-08-05T20:02:00Z"
+      }
+    ],
+    "terminal_success_confirmed": true,
+    "bytes_available": true,
+    "status_unknown_preserved": true,
+    "failed_state_not_promoted": true
+  },
+  "provenance": {
+    "recorded_at": "2026-08-05T20:05:00Z",
+    "planner_id": "kfm://tool/source-retrieval-plan/synthetic",
+    "planner_version": "1.0.0",
+    "run_receipt_ref": "kfm://receipt/source-retrieval-plan/gbif-sql-synthetic",
+    "input_refs": [
+      "kfm://doc/source/gbif-async-download"
+    ]
+  },
+  "governance": {
+    "rights_cleared": false,
+    "sensitivity_cleared": false,
+    "source_admitted": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "review_complete": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_state": "HOLD",
+    "release_ref": null
+  },
+  "schema_negative_canary": true
+}
