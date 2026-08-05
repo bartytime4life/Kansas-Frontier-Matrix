@@ -1,0 +1,35 @@
+{
+  "valid_pass.json": {
+    "decision": "PASS",
+    "reason_codes": [
+      "PREFILTER_REQUIREMENTS_MET"
+    ]
+  },
+  "valid_hold_insufficient_items.json": {
+    "decision": "HOLD",
+    "reason_codes": [
+      "INSUFFICIENT_ASSETS",
+      "INSUFFICIENT_ITEMS",
+      "INSUFFICIENT_USABLE_ITEMS"
+    ]
+  },
+  "valid_hold_missing_validator.json": {
+    "decision": "HOLD",
+    "reason_codes": [
+      "INSUFFICIENT_USABLE_ITEMS",
+      "REPLAY_VALIDATOR_MISSING"
+    ]
+  },
+  "valid_deny_missing_asset.json": {
+    "decision": "DENY",
+    "reason_codes": [
+      "ASSET_MISSING"
+    ]
+  },
+  "valid_deny_no_items.json": {
+    "decision": "DENY",
+    "reason_codes": [
+      "NO_ITEMS_FOUND"
+    ]
+  }
+}
