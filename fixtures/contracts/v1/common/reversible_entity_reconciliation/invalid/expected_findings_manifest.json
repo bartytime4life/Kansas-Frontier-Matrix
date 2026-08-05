@@ -3,13 +3,13 @@
     "AUTO_MERGE_DENIED",
     "SCHEMA_INVALID"
   ],
-  "invalid_cluster_without_match.json": [
+  "semantic_invalid_cluster_without_match.json": [
     "CLUSTER_WITHOUT_MATCH_DECISION"
   ],
-  "invalid_spec_hash.json": [
+  "semantic_invalid_spec_hash.json": [
     "SPEC_HASH_MISMATCH"
   ],
-  "invalid_split_partition.json": [
+  "semantic_invalid_split_partition.json": [
     "SPLIT_MEMBER_DUPLICATED",
     "SPLIT_PARTITION_MISMATCH"
   ]
