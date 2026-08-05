@@ -106,13 +106,14 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current authoring receipt integrity
         run: |
           set -euo pipefail
-          for receipt in data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json; do
-            python tools/validators/validate_generated_receipt.py \
-              "$receipt" --repo-root .
-          done
+          # Historical receipts bind earlier byte sets and are not revalidated
+          # against files intentionally modified by this follow-up.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20260805.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
