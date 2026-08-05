@@ -1,0 +1,27 @@
+{
+  "invalid_count_mismatch.json": [
+    "SUMMARY_COUNT_MISMATCH"
+  ],
+  "invalid_spec_hash.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_decision_mismatch.json": [
+    "DECISION_MISMATCH"
+  ],
+  "invalid_noncanonical_refs.json": [
+    "REFS_NOT_CANONICAL"
+  ],
+  "invalid_public_use.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "invalid_http_locator.json": [
+    "LOCATOR_NOT_GOVERNED"
+  ],
+  "invalid_profile_hash.json": [
+    "PROFILE_BINDING_MISMATCH"
+  ],
+  "invalid_etag_not_normalized.json": [
+    "ETAG_NOT_NORMALIZED",
+    "SCHEMA_INVALID"
+  ]
+}
