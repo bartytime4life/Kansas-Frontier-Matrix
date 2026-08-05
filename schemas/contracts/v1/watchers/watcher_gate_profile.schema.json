@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/watchers/watcher_gate_profile.schema.json",
+  "title": "WatcherGateProfile",
+  "description": "Inactive deterministic threshold profile for fixture-only watcher gate packets. It grants no source, policy, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "status",
+    "profile_id",
+    "profile_version",
+    "spec_hash",
+    "canonicalization_profile",
+    "thresholds",
+    "exit_codes",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "WatcherGateProfile"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^kfm://watcher-gate-profile/[a-z0-9_.:-]+$"
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "canonicalization_profile": {
+      "const": "kfm-canonical-json-v1"
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "green_score_min",
+        "deny_score_below",
+        "median_cloud_deny_above_percent",
+        "missing_etag_is_amber"
+      ],
+      "properties": {
+        "green_score_min": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "deny_score_below": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "median_cloud_deny_above_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "missing_etag_is_amber": {
+          "const": true
+        }
+      }
+    },
+    "exit_codes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "GREEN",
+        "AMBER",
+        "DENY"
+      ],
+      "properties": {
+        "GREEN": {
+          "const": 0
+        },
+        "AMBER": {
+          "const": 0
+        },
+        "DENY": {
+          "const": 2
+        }
+      }
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "policy_evaluated",
+        "promotion_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/watchers/watcher_gate_packet.md",
+    "profile_instance": "pipeline_specs/watchers/watcher_gate_profile.v1.json",
+    "validator": "tools/validators/watchers/validate_watcher_gate_packet.py",
+    "non_effects": [
+      "does_not_fetch_or_activate_sources",
+      "does_not_evaluate_adopted_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ]
+  }
+}
