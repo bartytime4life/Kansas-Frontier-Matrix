@@ -1,0 +1,123 @@
+{
+  "object_type": "EOAssetPrefilterReport",
+  "schema_version": "1.0.0",
+  "report_id": "eo-prefilter:ks-county-demo-202605",
+  "hash_profile": "kfm-canonical-json-v1",
+  "spec_hash": "sha256:dcecf447fb40b99cdf9df06270d4a49074935249c776598eb9cc2380ec64dced",
+  "profile": {
+    "profile_ref": "kfm://prefilter-profile/eo/county-vegetation-v1",
+    "profile_version": "1.0.0",
+    "profile_spec_hash": "sha256:cac1458f1bae272e8b30ea753cbef7e1bf622508c861ecf112f96df10b371b89"
+  },
+  "scope": {
+    "analysis_unit_kind": "county",
+    "geography_ref": "kfm://geography/us/ks/county/20053",
+    "query_ref": "fixture://stac/query/ks-county-20053-202605",
+    "query_digest": "sha256:a25bb983f7e96a9f51a594a6dd9a74b9854b631348b8762ec905e43dda3078a0",
+    "collections": [
+      "hls",
+      "sentinel-2-l2a"
+    ],
+    "datetime": {
+      "start": "2026-05-01T00:00:00Z",
+      "end": "2026-05-31T23:59:59Z"
+    },
+    "cloud_cover_lte_percent": 30.0,
+    "limit": 500
+  },
+  "items": [
+    {
+      "item_ref": "fixture://stac/item/hls-01",
+      "collection": "hls",
+      "observed_at": "2026-05-01T00:00:00Z",
+      "cloud_cover_percent": 10.0,
+      "valid_pixel_fraction": 0.8,
+      "mask_role": "HLS_FMASK",
+      "asset_count": 1,
+      "assets": [
+        {
+          "asset_ref": "fixture://asset/hls-01/surface-reflectance",
+          "status_code": 200,
+          "etag": "f71d82e01687993339fa5d61ad767f29",
+          "etag_strength": "strong",
+          "last_modified": "2026-05-01T00:00:00Z",
+          "content_length": 100000,
+          "response_ms": 100,
+          "missing": false,
+          "evidence_ref": "kfm://evidence/fixture/eo-asset-01"
+        }
+      ]
+    },
+    {
+      "item_ref": "fixture://stac/item/hls-03",
+      "collection": "hls",
+      "observed_at": "2026-05-07T00:00:00Z",
+      "cloud_cover_percent": 12.0,
+      "valid_pixel_fraction": 0.82,
+      "mask_role": "HLS_FMASK",
+      "asset_count": 1,
+      "assets": [
+        {
+          "asset_ref": "fixture://asset/hls-03/surface-reflectance",
+          "status_code": 200,
+          "etag": "ed24127af698269e2dbf61e209edf22e",
+          "etag_strength": "strong",
+          "last_modified": "2026-05-07T00:00:00Z",
+          "content_length": 100200,
+          "response_ms": 102,
+          "missing": false,
+          "evidence_ref": "kfm://evidence/fixture/eo-asset-03"
+        }
+      ]
+    },
+    {
+      "item_ref": "fixture://stac/item/sentinel-2-l2a-02",
+      "collection": "sentinel-2-l2a",
+      "observed_at": "2026-05-04T00:00:00Z",
+      "cloud_cover_percent": 11.0,
+      "valid_pixel_fraction": 0.81,
+      "mask_role": "SENTINEL2_SCL",
+      "asset_count": 1,
+      "assets": [
+        {
+          "asset_ref": "fixture://asset/sentinel-2-l2a-02/surface-reflectance",
+          "status_code": 200,
+          "etag": "8323ea433ff6e0e4cfd05b92e8226c90",
+          "etag_strength": "strong",
+          "last_modified": "2026-05-04T00:00:00Z",
+          "content_length": 100100,
+          "response_ms": 101,
+          "missing": false,
+          "evidence_ref": "kfm://evidence/fixture/eo-asset-02"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "items_checked": 3,
+    "items_found": 3,
+    "assets_checked": 3,
+    "assets_found": 3,
+    "items_meeting_valid_pixel_fraction": 3,
+    "items_meeting_cloud_cover": 3,
+    "items_usable": 3,
+    "assets_missing": 0,
+    "assets_without_replay_validator": 0,
+    "decision": "HOLD",
+    "reason_codes": [
+      "INSUFFICIENT_ASSETS",
+      "INSUFFICIENT_ITEMS",
+      "INSUFFICIENT_USABLE_ITEMS"
+    ]
+  },
+  "governance": {
+    "source_activated": false,
+    "network_performed": false,
+    "raw_admitted": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
