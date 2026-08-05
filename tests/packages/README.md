@@ -7,6 +7,7 @@ tree.
 ```text
 tests/packages/
 ├── README.md
+├── envelopes/           # deterministic finite-outcome candidate helpers
 └── evidence_resolver/   # bounded evidence candidate checks
 ```
 

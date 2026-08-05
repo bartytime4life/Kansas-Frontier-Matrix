@@ -1,0 +1,93 @@
+# Validate the proposed fixture-only soil-moisture runtime-proof profile.
+name: soil-moisture-runtime-proof
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-moisture-runtime-proof.yml"
+      - "packages/envelopes/src/envelopes/**"
+      - "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "tools/validators/domains/soil/moisture/**"
+      - "fixtures/domains/soil/soil_moisture/**"
+      - "tests/packages/README.md"
+      - "tests/packages/envelopes/**"
+      - "tests/runtime_proof/domains/soil/soil_moisture/**"
+      - "data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-moisture-runtime-proof.yml"
+      - "packages/envelopes/src/envelopes/**"
+      - "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "tools/validators/domains/soil/moisture/**"
+      - "fixtures/domains/soil/soil_moisture/**"
+      - "tests/packages/README.md"
+      - "tests/packages/envelopes/**"
+      - "tests/runtime_proof/domains/soil/soil_moisture/**"
+      - "data/receipts/generated/genrec-soil-moisture-runtime-proof-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-moisture-runtime-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-soil-moisture-runtime-proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic no-network runtime proof
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/packages/envelopes/test_runtime_response_candidate.py \
+            tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py \
+            -q --strict-config --strict-markers
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-moisture-runtime-proof-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Soil-moisture runtime proof"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic candidate construction and fixture-only ANSWER/ABSTAIN/DENY/ERROR mapping."
+            echo "- Fail-closed rule: fixture-only, not-released support never produces ANSWER."
+            echo "- Boundary: a green result does not grant source, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
