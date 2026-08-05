@@ -26,6 +26,8 @@ concurrency:
 
 env:
   TZ: UTC
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
   PYTHONUNBUFFERED: "1"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
@@ -34,7 +36,7 @@ env:
 jobs:
   validate-roads-rail-trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out Roads Rail Trade boundaries
@@ -46,6 +48,11 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
 
       - name: Evaluate Roads Rail Trade validation readiness
         shell: bash
@@ -73,6 +80,8 @@ jobs:
             "tools/validators/domains/roads-rail-trade/validate_corridor_route.py"
             "tools/validators/crossings/README.md"
             "tools/validators/bridge_river_crossing/README.md"
+            "tools/validators/transport-facility-topology/README.md"
+            "tools/validators/facilities/README.md"
             "data/registry/sources/roads-rail-trade/README.md"
             "release/candidates/roads-rail-trade/README.md"
           )
@@ -126,16 +135,44 @@ jobs:
           print(f"Parsed {len(fixtures)} Roads/Rail/Trade fixtures; statuses={dict(fixture_statuses)}")
           PY
 
-          # Keep placeholder-only inventory checks on roots that remain scaffolds.
-          # The substantive CorridorRoute validator is deliberately excluded and
-          # executed below with its focused positive and negative fixture suite.
-          python tools/validators/ci_readiness.py \
-            --label "Roads/Rail/Trade remaining scaffolds" \
-            --test-root tests/domains/roads-rail-trade \
-            --validator-root tools/validators/crossings \
-            --validator-root tools/validators/bridge_river_crossing \
-            --validator-root tools/validators/transport-facility-topology \
-            --validator-root tools/validators/facilities
+          # The remaining validator roots are documented scaffolds. Verify that
+          # inventory directly instead of asking ci_readiness to require Python
+          # implementations that are intentionally absent. If implementation
+          # material appears, fail so it can be wired and tested deliberately.
+          python - <<'PY'
+          from pathlib import Path
+
+          scaffold_roots = (
+              Path("tools/validators/crossings"),
+              Path("tools/validators/bridge_river_crossing"),
+              Path("tools/validators/transport-facility-topology"),
+              Path("tools/validators/facilities"),
+          )
+          unexpected = []
+          for root in scaffold_roots:
+              if not root.is_dir():
+                  raise SystemExit(
+                      f"Missing Roads/Rail/Trade validator scaffold root: {root}"
+                  )
+              payloads = sorted(
+                  path
+                  for path in root.rglob("*")
+                  if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+              )
+              unexpected.extend(path.as_posix() for path in payloads)
+
+          if unexpected:
+              raise SystemExit(
+                  "Roads/Rail/Trade scaffold roots now contain implementation "
+                  "material; wire accepted interfaces, fixtures, and tests deliberately: "
+                  + ", ".join(unexpected)
+              )
+
+          print(
+              "CONFIRMED: remaining Roads/Rail/Trade validator roots contain "
+              "documentation placeholders only."
+          )
+          PY
 
           python -m pytest -q tests/schemas/test_corridor_route_contract.py
           python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
@@ -169,8 +206,10 @@ jobs:
 
           The job executes the accepted synthetic, no-network CorridorRoute
           schema and validator tests, including deterministic PASS, ABSTAIN, and
-          DENY coverage. Placeholder inventory checks remain limited to roots
-          that have not graduated substantive validators.
+          DENY coverage. The remaining crossing, bridge/river-crossing,
+          transport-facility-topology, and facilities validator roots are
+          checked as documentation-only scaffolds rather than misclassified as
+          missing executable validators.
 
           This bounded validation does not establish route, segment, crossing,
           facility, operator, restriction, legal-access, live-closure,
