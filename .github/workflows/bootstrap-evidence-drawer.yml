@@ -1,7 +1,8 @@
 # Temporary branch-only assembler for the connector-delivered implementation bundle.
-# The job verifies the staged archive, expands the final repository paths, removes
-# its own bootstrap inputs, runs focused validation, and commits only to the
-# named non-default task branch. It grants no release or publication authority.
+# The job verifies the staged archive, expands and validates the final repository
+# paths, and commits only non-workflow implementation bytes to the named task
+# branch. Workflow-file installation and bootstrap cleanup are performed through
+# the authenticated connector after this run. It grants no release authority.
 name: bootstrap-evidence-drawer
 
 "on":
@@ -52,8 +53,6 @@ jobs:
           echo "9a67dfad0bd8adfc87c0e59be496b185ba53155356aabe3f4d252ec1ff693eea  /tmp/evidence-drawer.tar.xz" | sha256sum --check --strict
           tar -xJf /tmp/evidence-drawer.tar.xz
           rm -rf tests/fixtures/ui/evidence_drawer
-          rm -rf .github/kfm-bootstrap
-          rm -f .github/workflows/bootstrap-evidence-drawer.yml
 
       - name: Install declared test dependencies
         shell: bash
@@ -69,10 +68,13 @@ jobs:
             data/receipts/generated/genrec-evidence-drawer-payload-20260805.json \
             --repo-root .
 
-      - name: Commit the assembled implementation
+      - name: Commit the assembled non-workflow implementation
         shell: bash
         run: |
           set -euo pipefail
+          # GitHub's workflow token cannot create or replace workflow definitions.
+          # The connector installs this already-validated file after the push.
+          rm -f .github/workflows/evidence-drawer-payload.yml
           git config user.name "kfm-implementation-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
