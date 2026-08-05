@@ -73,5 +73,6 @@
     "data_class": "SYNTHETIC_PUBLIC_SAFE",
     "public_use_allowed": false
   },
+  "schema_negative_canary": true,
   "schema_version": "1.0.0"
 }

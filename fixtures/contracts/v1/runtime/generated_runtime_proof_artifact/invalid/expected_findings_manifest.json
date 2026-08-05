@@ -1,32 +1,42 @@
 {
   "invalid_artifact_ref_digest_mismatch.json": [
-    "ARTIFACT_REF_DIGEST_MISMATCH"
+    "ARTIFACT_REF_DIGEST_MISMATCH",
+    "SCHEMA_INVALID"
   ],
   "invalid_deleted_without_receipt.json": [
-    "DELETION_RECEIPT_MISSING"
+    "DELETION_RECEIPT_MISSING",
+    "SCHEMA_INVALID"
   ],
   "invalid_golden_digest_mismatch.json": [
-    "GOLDEN_PROMOTION_BINDING_MISMATCH"
+    "GOLDEN_PROMOTION_BINDING_MISMATCH",
+    "SCHEMA_INVALID"
   ],
   "invalid_golden_without_review.json": [
-    "GOLDEN_PROMOTION_REVIEW_MISSING"
+    "GOLDEN_PROMOTION_REVIEW_MISSING",
+    "SCHEMA_INVALID"
   ],
   "invalid_governance_claim.json": [
-    "GOVERNANCE_BOUNDARY_VIOLATION"
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
   ],
   "invalid_illegal_transition.json": [
-    "LIFECYCLE_TRANSITION_INVALID"
+    "LIFECYCLE_TRANSITION_INVALID",
+    "SCHEMA_INVALID"
   ],
   "invalid_invalidated_without_lineage.json": [
-    "INVALIDATION_SUPPORT_MISSING"
+    "INVALIDATION_SUPPORT_MISSING",
+    "SCHEMA_INVALID"
   ],
   "invalid_timing_order.json": [
+    "SCHEMA_INVALID",
     "TIMING_ORDER_INVALID"
   ],
   "invalid_unsafe_golden.json": [
-    "GOLDEN_PROMOTION_SAFETY_DENIED"
+    "GOLDEN_PROMOTION_SAFETY_DENIED",
+    "SCHEMA_INVALID"
   ],
   "invalid_unsorted_refs.json": [
-    "REFS_OR_REASONS_NOT_CANONICAL"
+    "REFS_OR_REASONS_NOT_CANONICAL",
+    "SCHEMA_INVALID"
   ]
 }
