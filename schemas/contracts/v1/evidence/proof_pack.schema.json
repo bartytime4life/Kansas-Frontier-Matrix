@@ -1,0 +1,224 @@
+{
+  "$defs": {
+    "component": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "pattern": "^[a-z][a-z0-9._:-]{2,159}$",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "EVIDENCE_BUNDLE",
+            "VALIDATION_REPORT",
+            "INTEGRITY_MANIFEST",
+            "PROV_EXPORT",
+            "LINEAGE_INDEX",
+            "PROMOTION_DECISION",
+            "RUNTIME_PROOF",
+            "CITATION_SAMPLE",
+            "CI_RUN",
+            "RELEASE_ANCHOR",
+            "ROLLBACK_REFERENCE",
+            "CORRECTION_HISTORY"
+          ],
+          "type": "string"
+        },
+        "path": {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "release_id": {
+          "pattern": "^release:[a-z0-9][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "subject_id": {
+          "pattern": "^[a-z][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        "subject_spec_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "kind",
+        "artifact_id",
+        "path",
+        "sha256",
+        "release_id",
+        "subject_id",
+        "subject_spec_hash",
+        "recorded_at"
+      ],
+      "type": "object"
+    },
+    "decision": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "else": {
+            "properties": {
+              "reason_codes": {
+                "minItems": 1
+              }
+            }
+          },
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "READY_FOR_REVIEW"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_codes": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "outcome": {
+          "enum": [
+            "READY_FOR_REVIEW",
+            "HOLD",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ],
+          "type": "string"
+        },
+        "publication": {
+          "const": false
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "release_approved": {
+          "const": false
+        }
+      },
+      "required": [
+        "outcome",
+        "reason_codes",
+        "release_approved",
+        "publication",
+        "authority_created"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "correction_state": {
+          "enum": [
+            "NONE",
+            "CORRECTED",
+            "SUPERSEDED",
+            "WITHDRAWN",
+            "REVOKED"
+          ],
+          "type": "string"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "subject_id": {
+          "pattern": "^[a-z][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        "subject_type": {
+          "enum": [
+            "DATASET_VERSION",
+            "LAYER",
+            "API_PAYLOAD",
+            "REPORT",
+            "STORY",
+            "TILE_ARCHIVE",
+            "GRAPH_PROJECTION",
+            "FOCUS_MODE_SLICE",
+            "CORRECTION",
+            "ROLLBACK"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_id",
+        "subject_type",
+        "spec_hash",
+        "correction_state"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/proof_pack.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Closed fixture-first profile for a non-authoritative release-support ProofPack manifest.",
+  "properties": {
+    "assembled_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/component"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array"
+    },
+    "decision": {
+      "$ref": "#/$defs/decision"
+    },
+    "profile": {
+      "const": "kfm.proof-pack.release-support.v1"
+    },
+    "proof_pack_id": {
+      "pattern": "^proof_pack:[a-z0-9][a-z0-9._:-]{2,127}$",
+      "type": "string"
+    },
+    "release_id": {
+      "pattern": "^release:[a-z0-9][a-z0-9._:-]{2,127}$",
+      "type": "string"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    }
+  },
+  "required": [
+    "profile",
+    "proof_pack_id",
+    "release_id",
+    "subject",
+    "assembled_at",
+    "components",
+    "decision"
+  ],
+  "title": "KFM Release-Support ProofPack",
+  "type": "object"
+}
