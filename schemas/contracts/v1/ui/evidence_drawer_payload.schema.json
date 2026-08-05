@@ -1,32 +1,291 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/ui/evidence_drawer_payload.schema.json",
-  "title": "evidence_drawer_payload",
+  "title": "EvidenceDrawerPayload public-safe UI projection",
+  "description": "Closed, fixture-first public-safe projection consumed by the Explorer Evidence Drawer. It carries finite outcome, trust state, citations, and bounded correction/negative history; it is not EvidenceBundle closure, policy, review, release, or publication authority.",
   "type": "object",
-  "description": "KFM v1 contract schema stub for evidence_drawer_payload. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "additionalProperties": false,
   "x-kfm": {
     "contract_doc": "contracts/ui/evidence_drawer_payload.md",
     "fixtures_root": "fixtures/ui/evidence_drawer_payload/",
     "validator": "tools/validators/ui/validate_evidence_drawer_payload.py",
     "policy": "policy/ui/",
-    "status": "PROPOSED"
+    "status": "PROPOSED",
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "authority": "public-safe-ui-projection-only"
   },
+  "required": [
+    "profile",
+    "id",
+    "outcome",
+    "reason_code",
+    "title",
+    "summary",
+    "evidence_refs",
+    "citations",
+    "limitations",
+    "trust_state"
+  ],
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "profile": {
+      "const": "kfm.explorer.evidence-drawer.public-safe.v1"
     },
     "id": {
       "type": "string",
-      "description": "Canonical identifier."
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$"
     },
-    "version": {
+    "outcome": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "MISSING_EVIDENCE",
+        "STALE_EVIDENCE",
+        "CITATION_UNRESOLVED",
+        "POLICY_DENIED",
+        "RIGHTS_UNRESOLVED",
+        "SENSITIVE_DETAIL_RESTRICTED",
+        "UPSTREAM_ERROR",
+        "HELD_EVIDENCE",
+        "SUPERSEDED_EVIDENCE",
+        "WITHDRAWN_EVIDENCE",
+        "REVOKED_EVIDENCE"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/safe_id"
+      }
+    },
+    "citations": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/citation"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/bounded_text"
+      }
+    },
+    "trust_state": {
+      "$ref": "#/$defs/trust_state"
+    },
+    "history": {
+      "$ref": "#/$defs/history"
     }
   },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+  "$defs": {
+    "safe_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$"
+    },
+    "bounded_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]+$"
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "href": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "trust_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_role",
+        "policy",
+        "review",
+        "release",
+        "freshness",
+        "correction"
+      ],
+      "properties": {
+        "source_role": {
+          "enum": [
+            "authoritative",
+            "official",
+            "derived",
+            "context"
+          ]
+        },
+        "policy": {
+          "enum": [
+            "ALLOW",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "review": {
+          "enum": [
+            "REVIEWED",
+            "PENDING",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "release": {
+          "enum": [
+            "RELEASED",
+            "UNRELEASED",
+            "WITHDRAWN"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "CURRENT",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "correction": {
+          "enum": [
+            "NONE",
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED"
+          ]
+        }
+      }
+    },
+    "negative_outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_ref",
+        "state",
+        "reason_code",
+        "recorded_at",
+        "visible_in_runtime",
+        "resolvable_as_current"
+      ],
+      "properties": {
+        "evidence_ref": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "state": {
+          "enum": [
+            "HELD",
+            "DENIED",
+            "SUPERSEDED",
+            "REVOKED",
+            "WITHDRAWN"
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "HELD_EVIDENCE",
+            "POLICY_DENIED",
+            "RIGHTS_UNRESOLVED",
+            "SENSITIVE_DETAIL_RESTRICTED",
+            "SUPERSEDED_EVIDENCE",
+            "REVOKED_EVIDENCE",
+            "WITHDRAWN_EVIDENCE"
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "visible_in_runtime": {
+          "const": true
+        },
+        "resolvable_as_current": {
+          "const": false
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prior_evidence_ref",
+        "active_evidence_ref",
+        "status",
+        "recorded_at"
+      ],
+      "properties": {
+        "prior_evidence_ref": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "active_evidence_ref": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "status": {
+          "const": "ACTIVE_CORRECTION"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "negative_outcomes",
+        "corrections"
+      ],
+      "properties": {
+        "negative_outcomes": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/negative_outcome"
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/correction"
+          }
+        }
+      }
+    }
+  }
 }

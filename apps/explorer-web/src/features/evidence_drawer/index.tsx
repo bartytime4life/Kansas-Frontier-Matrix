@@ -1,5 +1,6 @@
 import {
   type EvidenceDrawerCitation,
+  type EvidenceDrawerHistory,
   type EvidenceDrawerOutcome,
   type EvidenceDrawerReasonCode,
   type EvidenceDrawerTrustState,
@@ -15,6 +16,7 @@ export type EvidenceDrawerViewModel = Readonly<{
   citations: readonly EvidenceDrawerCitation[];
   limitations: readonly string[];
   trustLabels: readonly string[];
+  historyLabels: readonly string[];
   landmarkRole: "complementary";
   accessibilityLabel: string;
   ariaLive: "polite" | "assertive";
@@ -40,7 +42,19 @@ const SAFE_NEGATIVE_MESSAGES: Readonly<Record<EvidenceDrawerReasonCode, string>>
     RIGHTS_UNRESOLVED: "Source rights are not resolved for this evidence detail.",
     SENSITIVE_DETAIL_RESTRICTED: "Sensitive detail is restricted.",
     UPSTREAM_ERROR: "The governed evidence service could not complete the request.",
+    HELD_EVIDENCE: "Evidence is held for review and is not current claim support.",
+    SUPERSEDED_EVIDENCE: "The available evidence is superseded and is shown only as history.",
+    WITHDRAWN_EVIDENCE: "The available evidence was withdrawn and is not current claim support.",
+    REVOKED_EVIDENCE: "The available evidence was revoked and is not current claim support.",
   });
+
+const HISTORY_STATE_LABELS = Object.freeze({
+  HELD: "Held evidence",
+  DENIED: "Denied evidence",
+  SUPERSEDED: "Superseded evidence",
+  REVOKED: "Revoked evidence",
+  WITHDRAWN: "Withdrawn evidence",
+});
 
 function trustLabels(trustState: EvidenceDrawerTrustState): readonly string[] {
   return Object.freeze([
@@ -53,11 +67,25 @@ function trustLabels(trustState: EvidenceDrawerTrustState): readonly string[] {
   ]);
 }
 
+function historyLabels(history: EvidenceDrawerHistory): readonly string[] {
+  return Object.freeze([
+    ...history.negativeOutcomes.map(
+      (item) =>
+        `${HISTORY_STATE_LABELS[item.state]}: ${item.evidenceRef} — ${SAFE_NEGATIVE_MESSAGES[item.reasonCode]}`,
+    ),
+    ...history.corrections.map(
+      (item) =>
+        `Correction lineage: ${item.priorEvidenceRef} → ${item.activeEvidenceRef} (${item.recordedAt})`,
+    ),
+  ]);
+}
+
 function fixedNegativeView(
   outcome: "ABSTAIN" | "DENY" | "ERROR",
   code: EvidenceDrawerReasonCode,
   evidenceRefs: readonly string[],
   labels: readonly string[],
+  history: readonly string[],
 ): EvidenceDrawerViewModel {
   const title =
     outcome === "ABSTAIN"
@@ -75,6 +103,7 @@ function fixedNegativeView(
     citations: EMPTY_CITATIONS,
     limitations: Object.freeze(["No unsupported claim is shown."]),
     trustLabels: labels,
+    historyLabels: history,
     landmarkRole: "complementary",
     accessibilityLabel: `Evidence Drawer: ${outcome.toLowerCase()}`,
     ariaLive: outcome === "ERROR" ? "assertive" : "polite",
@@ -95,6 +124,7 @@ export function resolveEvidenceDrawer(
       citations: EMPTY_CITATIONS,
       limitations: Object.freeze(["No unsupported claim is shown."]),
       trustLabels: Object.freeze(["Evidence state: unavailable"]),
+      historyLabels: EMPTY_STRINGS,
       landmarkRole: "complementary",
       accessibilityLabel: "Evidence Drawer: no governed response",
       ariaLive: "polite",
@@ -112,6 +142,7 @@ export function resolveEvidenceDrawer(
       citations: EMPTY_CITATIONS,
       limitations: Object.freeze(["No partial or unsupported claim is shown."]),
       trustLabels: Object.freeze(["Evidence state: invalid payload"]),
+      historyLabels: EMPTY_STRINGS,
       landmarkRole: "complementary",
       accessibilityLabel: "Evidence Drawer: invalid governed response",
       ariaLive: "assertive",
@@ -120,12 +151,14 @@ export function resolveEvidenceDrawer(
 
   const { payload } = parsed;
   const labels = trustLabels(payload.trustState);
+  const history = historyLabels(payload.history);
   if (payload.outcome !== "ANSWER") {
     return fixedNegativeView(
       payload.outcome,
       payload.reasonCode,
       payload.evidenceRefs,
       labels,
+      history,
     );
   }
 
@@ -138,6 +171,7 @@ export function resolveEvidenceDrawer(
     citations: payload.citations,
     limitations: payload.limitations,
     trustLabels: labels,
+    historyLabels: history,
     landmarkRole: "complementary",
     accessibilityLabel: "Evidence Drawer: supported evidence",
     ariaLive: "polite",
@@ -168,6 +202,7 @@ export function mountEvidenceDrawer(
   const trustList = document.createElement("ul");
   const evidenceList = document.createElement("ul");
   const citationList = document.createElement("ul");
+  const historyList = document.createElement("ul");
   const limitationList = document.createElement("ul");
   let returnFocus: HTMLElement | null = null;
 
@@ -213,6 +248,13 @@ export function mountEvidenceDrawer(
     citationList.append(item);
   }
 
+  historyList.setAttribute("aria-label", "Evidence history");
+  for (const label of state.historyLabels) {
+    const item = document.createElement("li");
+    item.textContent = label;
+    historyList.append(item);
+  }
+
   limitationList.setAttribute("aria-label", "Evidence limitations");
   for (const limitation of state.limitations) {
     const item = document.createElement("li");
@@ -238,6 +280,7 @@ export function mountEvidenceDrawer(
     trustList,
     evidenceList,
     citationList,
+    historyList,
     limitationList,
     closeButton,
   );

@@ -1,0 +1,34 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:deny-sensitive-001",
+  "outcome": "DENY",
+  "reason_code": "SENSITIVE_DETAIL_RESTRICTED",
+  "title": "SENSITIVE_DENIAL_CANARY_4d7ec2",
+  "summary": "SENSITIVE_DENIAL_CANARY_4d7ec2",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "SENSITIVE_DENIAL_CANARY_4d7ec2"
+  ],
+  "trust_state": {
+    "source_role": "context",
+    "policy": "DENY",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [
+      {
+        "evidence_ref": "kfm:evidence:synthetic:denied-001",
+        "state": "DENIED",
+        "reason_code": "POLICY_DENIED",
+        "recorded_at": "2026-08-03T00:00:00Z",
+        "visible_in_runtime": true,
+        "resolvable_as_current": false
+      }
+    ],
+    "corrections": []
+  }
+}

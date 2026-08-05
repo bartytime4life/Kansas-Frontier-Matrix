@@ -7,11 +7,13 @@
   "summary": "SENSITIVE_DENIAL_CANARY_4d7ec2",
   "evidence_refs": [],
   "citations": [],
-  "limitations": [],
+  "limitations": [
+    "SENSITIVE_DENIAL_CANARY_4d7ec2"
+  ],
   "trust_state": {
-    "source_role": "authoritative",
+    "source_role": "context",
     "policy": "DENY",
-    "review": "REVIEWED",
+    "review": "PENDING",
     "release": "UNRELEASED",
     "freshness": "UNKNOWN",
     "correction": "NONE"

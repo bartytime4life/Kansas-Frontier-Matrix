@@ -31,7 +31,7 @@ test("keyboard opening enters the drawer and Escape restores focus", async ({
   await expect(trigger).toBeFocused();
 });
 
-test("fixture-driven ANSWER rendering preserves safe evidence and citations", async ({
+test("fixture-driven ANSWER rendering preserves evidence, citations, and correction history", async ({
   page,
 }) => {
   await page.goto("/tests/browser/evidence-drawer.html?fixture=answer");
@@ -43,6 +43,9 @@ test("fixture-driven ANSWER rendering preserves safe evidence and citations", as
   await expect(drawer).toContainText("ANSWER / SUPPORTED");
   await expect(drawer).toContainText("Synthetic streamflow observation");
   await expect(drawer).toContainText("Policy: ALLOW");
+  await expect(drawer.getByRole("list", { name: "Evidence history" })).toContainText(
+    "Correction lineage",
+  );
   await expect(
     drawer.getByRole("link", { name: "Synthetic fixture evidence" }),
   ).toHaveAttribute(
@@ -76,5 +79,6 @@ for (const negative of [
     await expect(drawer).toContainText(negative.safeMessage);
     await expect(drawer).not.toContainText(negative.canary);
     await expect(drawer.getByRole("link")).toHaveCount(0);
+    await expect(drawer.getByRole("list", { name: "Evidence history" })).toBeEmpty();
   });
 }
