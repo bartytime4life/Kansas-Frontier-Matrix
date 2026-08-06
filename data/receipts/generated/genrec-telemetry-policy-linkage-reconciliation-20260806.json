@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-telemetry-policy-linkage-reconciliation-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/telemetry-policy.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/telemetry-policy.yml": "sha256:78999e33829670182f0237d3b357439adc98482db233de94b3ccd4c8fd824b0b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06-session"
+  },
+  "prompt_or_contract": "sha256:a6d6153a05247f9d0d369d24a753a843377ac9bbb376736c36aebeb86876284c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub Actions job-log inspection",
+      "Python YAML/JSON/static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:257cbf5769cf211be2bdb09d46efff76ed0742a73291ab7aefdabc6b09874b0d"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github-actions:run:31070381471/job:92516932816",
+      "github-actions:run:31070636509/job:92517661714",
+      "github:pull-request:2037",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@121f39bc86dd49a927ae36f63e2ee1030e2d2feb:.github/workflows/telemetry-policy.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@121f39bc86dd49a927ae36f63e2ee1030e2d2feb:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/telemetry-policy.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "telemetry_policy_yaml_parse",
+      "outcome": "PASS",
+      "reason": "The exact proposed workflow parsed as YAML with the three existing job identifiers preserved."
+    },
+    {
+      "gate": "telemetry_policy_embedded_python_parse",
+      "outcome": "PASS",
+      "reason": "All three embedded Python readiness checks parsed successfully."
+    },
+    {
+      "gate": "telemetry_linkage_profile_inventory",
+      "outcome": "PASS",
+      "reason": "Current main contains only the README and TraceReceiptLink schema in the telemetry schema lane and only the trace_receipt_link fixture subtree."
+    },
+    {
+      "gate": "generated_receipt_artifact_hash_replay",
+      "outcome": "PASS",
+      "reason": "The workflow SHA-256 value was computed from the exact final UTF-8 bytes submitted."
+    },
+    {
+      "gate": "hosted_exact_head_workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions results belong to the draft pull request after the branch is pushed."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "PR2035-TELEMETRY-POLICY-FAILURE",
+      "validated": true,
+      "evidence_ref": "github-actions:run:31070381471/job:92516932816"
+    },
+    {
+      "id": "PR2035-REPOSITORY-CONTROL-HOLD",
+      "validated": true,
+      "evidence_ref": "github-actions:run:31070636509/job:92517661714"
+    },
+    {
+      "id": "PR2037-TRACE-RECEIPT-CORRECTION",
+      "validated": true,
+      "evidence_ref": "github:pull-request:2037"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@121f39bc86dd49a927ae36f63e2ee1030e2d2feb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T04:29:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded repair of the telemetry-policy absence sentinel after the fixture-first TraceReceiptLink profile landed. Merged PR #2037 already corrected the separate generated-receipt truth-label typo. The repository-control result remains an intentional nonzero readiness hold when no exact owner transition record exists; this change does not weaken or bypass that guard. This receipt does not bind its own bytes because self-reference is denied."
+}
