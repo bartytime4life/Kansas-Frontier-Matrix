@@ -1,9 +1,168 @@
-meta:
-  status: PROPOSED
-  owner: docs steward
-  description: Lists every contract object family and its homes (contract/schema/policy/fixture/test/emit).
-  last_reviewed: 2026-05-14
-  related_doctrine:
-    - docs/doctrine/directory-rules.md
-
-entries: []
+{
+  "version": "v1",
+  "registry": "object_family_register",
+  "status": "PROPOSED",
+  "authority": "navigational_index_only",
+  "updated_at": "2026-08-06",
+  "base_ref": "5f6b6209b38e86da550827475c6c4587ba07a48e",
+  "coverage_scope": "runtime_core_initial_slice",
+  "completeness": "partial",
+  "owner_role": "control_plane_steward",
+  "description": "Initial machine-readable projection of six observed runtime object families. Meaning remains in contracts, shape in schemas, admissibility in policy, and runtime truth in evidence and release objects.",
+  "non_effects": [
+    "does_not_add_rename_or_remove_object_family_authority",
+    "does_not_define_contract_meaning",
+    "does_not_define_schema_shape",
+    "does_not_evaluate_policy",
+    "does_not_create_evidence_release_or_publication_authority"
+  ],
+  "entries": [
+    {
+      "family_id": "ai_receipt",
+      "display_name": "AIReceipt",
+      "family_kind": "runtime",
+      "maturity": "partial",
+      "owner_role": "governed_ai_steward",
+      "contract_paths": [
+        "contracts/runtime/ai_receipt.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/ai_receipt.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/ai_receipt"
+      ],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "Structural coverage only; this entry does not claim a deployed AI runtime or policy approval."
+    },
+    {
+      "family_id": "decision_envelope",
+      "display_name": "DecisionEnvelope",
+      "family_kind": "runtime",
+      "maturity": "partial",
+      "owner_role": "runtime_steward",
+      "contract_paths": [
+        "contracts/runtime/decision_envelope.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/decision_envelope.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/decision_envelope"
+      ],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "Structural coverage only; finite decision semantics remain subordinate to policy and evidence authorities."
+    },
+    {
+      "family_id": "generated_runtime_proof_artifact",
+      "display_name": "GeneratedRuntimeProofArtifact",
+      "family_kind": "runtime",
+      "maturity": "hardened",
+      "owner_role": "runtime_validation_steward",
+      "contract_paths": [
+        "contracts/runtime/generated_runtime_proof_artifact.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/generated_runtime_proof_artifact.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/generated_runtime_proof_artifact"
+      ],
+      "validator_paths": [
+        "tools/validators/validate_generated_runtime_proof_artifact.py"
+      ],
+      "test_paths": [
+        "tests/validators/test_validate_generated_runtime_proof_artifact.py"
+      ],
+      "workflow_paths": [
+        ".github/workflows/generated-runtime-proof-artifact.yml"
+      ],
+      "emitter_paths": [],
+      "notes": "Hardened means the declared structural validation surfaces exist; it does not create evidence, release, or publication authority."
+    },
+    {
+      "family_id": "run_receipt",
+      "display_name": "RunReceipt",
+      "family_kind": "runtime",
+      "maturity": "partial",
+      "owner_role": "runtime_steward",
+      "contract_paths": [
+        "contracts/runtime/run_receipt.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/run_receipt.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/run_receipt"
+      ],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "Receipts remain process memory and do not substitute for proof, policy, review, release, or publication records."
+    },
+    {
+      "family_id": "runtime_response_envelope",
+      "display_name": "RuntimeResponseEnvelope",
+      "family_kind": "runtime",
+      "maturity": "partial",
+      "owner_role": "runtime_api_steward",
+      "contract_paths": [
+        "contracts/runtime/runtime_response_envelope.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/runtime_response_envelope"
+      ],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "The register records repository surfaces only; it does not prove a public route, deployed API, or released response."
+    },
+    {
+      "family_id": "runtime_verification",
+      "display_name": "RuntimeVerificationReceiptAndProof",
+      "family_kind": "runtime",
+      "maturity": "hardened",
+      "owner_role": "runtime_validation_steward",
+      "contract_paths": [
+        "contracts/runtime/runtime_verification.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/runtime/runtime_verification/digest.schema.json",
+        "schemas/contracts/v1/runtime/runtime_verification/outcome.schema.json",
+        "schemas/contracts/v1/runtime/runtime_verification/proof.schema.json",
+        "schemas/contracts/v1/runtime/runtime_verification/receipt.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [
+        "fixtures/contracts/v1/runtime/runtime_verification"
+      ],
+      "validator_paths": [
+        "tools/validators/runtime_verification/validate_runtime_verification.py"
+      ],
+      "test_paths": [
+        "tests/validators/test_validate_runtime_verification.py"
+      ],
+      "workflow_paths": [
+        ".github/workflows/runtime-verification-contract.yml"
+      ],
+      "emitter_paths": [],
+      "notes": "Hardened structural coverage does not prove live byte verification or authorize evidence closure, promotion, release, deployment, or publication."
+    }
+  ]
+}

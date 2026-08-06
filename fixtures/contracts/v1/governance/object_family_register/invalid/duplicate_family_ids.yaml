@@ -1,0 +1,61 @@
+{
+  "version": "v1",
+  "registry": "object_family_register",
+  "status": "PROPOSED",
+  "authority": "navigational_index_only",
+  "updated_at": "2026-08-06",
+  "base_ref": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "coverage_scope": "synthetic_fixture_slice",
+  "completeness": "partial",
+  "owner_role": "control_plane_steward",
+  "description": "Synthetic navigational object-family index.",
+  "non_effects": [
+    "does_not_add_rename_or_remove_object_family_authority",
+    "does_not_define_contract_meaning",
+    "does_not_define_schema_shape",
+    "does_not_evaluate_policy",
+    "does_not_create_evidence_release_or_publication_authority"
+  ],
+  "entries": [
+    {
+      "family_id": "example_family",
+      "display_name": "ExampleFamily",
+      "family_kind": "registry",
+      "maturity": "seed",
+      "owner_role": "example_steward",
+      "contract_paths": [
+        "contracts/example.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/example.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "Synthetic example only."
+    },
+    {
+      "family_id": "example_family",
+      "display_name": "Other",
+      "family_kind": "registry",
+      "maturity": "seed",
+      "owner_role": "example_steward",
+      "contract_paths": [
+        "contracts/example.md"
+      ],
+      "schema_paths": [
+        "schemas/contracts/v1/example.schema.json"
+      ],
+      "policy_paths": [],
+      "fixture_paths": [],
+      "validator_paths": [],
+      "test_paths": [],
+      "workflow_paths": [],
+      "emitter_paths": [],
+      "notes": "Synthetic example only."
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+# Validate the proposed machine-readable object-family register.
+#
+# This workflow is deterministic and no-network after installing declared test
+# dependencies. A green result proves navigational index consistency only; it
+# does not add object-family authority or authorize policy, evidence, release,
+# deployment, promotion, or publication.
+name: object-family-register
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/object-family-register.yml"
+      - "control_plane/object_family_register.yaml"
+      - "schemas/contracts/v1/governance/object_family_register.schema.json"
+      - "fixtures/contracts/v1/governance/object_family_register/**"
+      - "tools/validators/control_plane/**"
+      - "tests/validators/test_validate_object_family_register.py"
+      - "data/receipts/generated/genrec-object-family-register-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/object-family-register.yml"
+      - "control_plane/object_family_register.yaml"
+      - "schemas/contracts/v1/governance/object_family_register.schema.json"
+      - "fixtures/contracts/v1/governance/object_family_register/**"
+      - "tools/validators/control_plane/**"
+      - "tests/validators/test_validate_object_family_register.py"
+      - "data/receipts/generated/genrec-object-family-register-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: object-family-register-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-object-family-register:
+    name: validate-object-family-register
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_object_family_register.py' \
+            --verbose
+
+      - name: Validate fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/control_plane/validate_object_family_register.py --fixtures
+
+      - name: Validate current register and declared paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/control_plane/validate_object_family_register.py
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-object-family-register-20260806.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Object family register"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema shape, canonical ordering, responsibility-root placement, path existence, and structural maturity classification."
+            echo "- Boundary: the register is a navigational index. It cannot add, rename, remove, approve, release, deploy, promote, or publish an object family."
+          } >> "$GITHUB_STEP_SUMMARY"
