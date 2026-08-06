@@ -1,0 +1,447 @@
+{
+  "profile": "kfm.iiif.historic-overlay-readiness.v1",
+  "network_access": "forbidden",
+  "fixture_only": true,
+  "base_candidate": {
+    "object_type": "IIIFHistoricOverlayReadinessAssessment",
+    "schema_version": "1.0.0",
+    "profile": "kfm.iiif.historic-overlay-readiness.v1",
+    "fixture_only": true,
+    "network_access": "forbidden",
+    "assessed_at": "2026-08-06T22:37:00Z",
+    "source": {
+      "source_descriptor_ref": "kfm:source-descriptor:fixture-iiif-001",
+      "manifest_url": "https://example.org/iiif/manifest/001",
+      "info_json_url": "https://example.org/iiif/image/001/info.json",
+      "presentation_api_version": "3.0",
+      "image_api_version": "3.0",
+      "legacy_normalization_ref": null,
+      "freshness": "CURRENT"
+    },
+    "raw_capture": {
+      "manifest_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "info_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "annotation_digest": "sha256:9ddb816776814e4061e62ba00f47b2bcdc9c437d769bc440db3838ede6232787",
+      "annotation_payload_utf8": "{\"body\":{\"features\":[],\"type\":\"FeatureCollection\"},\"motivation\":\"georeferencing\",\"target\":{\"source\":\"https://example.org/iiif/image/abc\"},\"type\":\"Annotation\"}",
+      "bytes_preserved": true,
+      "capture_metadata_present": true
+    },
+    "overlay": {
+      "georeference_present": true,
+      "gcp_count": 3,
+      "gcps": [
+        {
+          "resource": [
+            0,
+            0
+          ],
+          "geo": [
+            -98.0,
+            38.0
+          ]
+        },
+        {
+          "resource": [
+            1000,
+            0
+          ],
+          "geo": [
+            -97.0,
+            38.0
+          ]
+        },
+        {
+          "resource": [
+            0,
+            1000
+          ],
+          "geo": [
+            -98.0,
+            37.0
+          ]
+        }
+      ],
+      "resource_mask": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          1000
+        ],
+        [
+          0,
+          1000
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "transform_method": "polynomial-1",
+      "original_crs": "UNKNOWN",
+      "transform_rms": 12.5,
+      "overlay_uncertainty": "interpretive historic-map alignment; RMS 12.5 source units"
+    },
+    "rights": {
+      "rights_uri": "https://rightsstatements.org/vocab/NoC-US/1.0/",
+      "required_statement_present": true,
+      "rights_propagated": true,
+      "kfm_rights_state": "RESOLVED"
+    },
+    "care": {
+      "state": "CLEARED",
+      "authority_to_control": [],
+      "consent_grant_ref": null
+    },
+    "renderer": {
+      "plugin_required": true,
+      "plugin_name": "allmaps-warped-map-layer",
+      "plugin_version": "1.0.0",
+      "allowlisted": true
+    },
+    "public_boundary": {
+      "raw_route_exposed": false,
+      "unreleased_fetch_allowed": false,
+      "evidence_bundle_ref": "kfm:evidence-bundle:fixture-iiif-001",
+      "map_release_manifest_ref": null,
+      "rollback_target_ref": "kfm:rollback-target:unreleased"
+    },
+    "decision": {
+      "outcome": "READY",
+      "reasons": [
+        "IIIF_HISTORIC_OVERLAY_READY"
+      ]
+    },
+    "governance": {
+      "authority_created": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "release_ref": null
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ready_iiif3_georef",
+      "mutations": [],
+      "expected": {
+        "outcome": "READY",
+        "reasons": [
+          "IIIF_HISTORIC_OVERLAY_READY"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_legacy_without_normalization",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "HOLD"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "LEGACY_NORMALIZATION_REQUIRED"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/source/image_api_version",
+          "value": "2.1.1"
+        },
+        {
+          "op": "set",
+          "path": "/source/presentation_api_version",
+          "value": "2.1.1"
+        }
+      ],
+      "expected": {
+        "outcome": "HOLD",
+        "reasons": [
+          "LEGACY_NORMALIZATION_REQUIRED"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_unknown_rights",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "HOLD"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "RIGHTS_UNKNOWN"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/rights/kfm_rights_state",
+          "value": "UNKNOWN"
+        },
+        {
+          "op": "set",
+          "path": "/rights/rights_uri",
+          "value": null
+        }
+      ],
+      "expected": {
+        "outcome": "HOLD",
+        "reasons": [
+          "RIGHTS_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_stale_source",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "HOLD"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "SOURCE_STALE"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/source/freshness",
+          "value": "STALE"
+        }
+      ],
+      "expected": {
+        "outcome": "HOLD",
+        "reasons": [
+          "SOURCE_STALE"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_raw_route_exposed",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "DENY"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "RAW_ROUTE_EXPOSED"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/public_boundary/raw_route_exposed",
+          "value": true
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "reasons": [
+          "RAW_ROUTE_EXPOSED"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_missing_care_consent",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/care/authority_to_control",
+          "value": [
+            "tribal-cultural-authority"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "DENY"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "CARE_CONSENT_MISSING"
+          ]
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "reasons": [
+          "CARE_CONSENT_MISSING"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_unallowlisted_plugin",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "DENY"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "PLUGIN_NOT_ALLOWLISTED"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/renderer/allowlisted",
+          "value": false
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "reasons": [
+          "PLUGIN_NOT_ALLOWLISTED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_annotation_digest_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "ERROR"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "ANNOTATION_DIGEST_MISMATCH"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/raw_capture/annotation_digest",
+          "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "ANNOTATION_DIGEST_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "error_gcp_count_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "ERROR"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "GCP_COUNT_MISMATCH"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/overlay/gcp_count",
+          "value": 4
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "GCP_COUNT_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "error_open_resource_mask",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "ERROR"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "RESOURCE_MASK_INVALID"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/overlay/resource_mask",
+          "value": [
+            [
+              0,
+              0
+            ],
+            [
+              1000,
+              0
+            ],
+            [
+              1000,
+              1000
+            ],
+            [
+              0,
+              1000
+            ]
+          ]
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "RESOURCE_MASK_INVALID"
+        ]
+      }
+    },
+    {
+      "case_id": "error_decision_mismatch",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/decision/outcome",
+          "value": "HOLD"
+        },
+        {
+          "op": "set",
+          "path": "/decision/reasons",
+          "value": [
+            "RIGHTS_UNKNOWN"
+          ]
+        }
+      ],
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DECISION_MISMATCH"
+        ]
+      }
+    }
+  ]
+}
