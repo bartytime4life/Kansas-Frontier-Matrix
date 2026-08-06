@@ -1,0 +1,95 @@
+# Validate the fixture-only deterministic AIChangeProposal governance profile.
+name: ai-change-proposal
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/ai-change-proposal.yml"
+      - "contracts/governance/ai_change_proposal.md"
+      - "schemas/contracts/v1/governance/ai_change_proposal.schema.json"
+      - "fixtures/contracts/v1/governance/ai_change_proposal/**"
+      - "tools/validators/governance/validate_ai_change_proposal.py"
+      - "tests/validators/governance/test_ai_change_proposal.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-ai-change-proposal-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ai-change-proposal.yml"
+      - "contracts/governance/ai_change_proposal.md"
+      - "schemas/contracts/v1/governance/ai_change_proposal.schema.json"
+      - "fixtures/contracts/v1/governance/ai_change_proposal/**"
+      - "tools/validators/governance/validate_ai_change_proposal.py"
+      - "tests/validators/governance/test_ai_change_proposal.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-ai-change-proposal-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-change-proposal-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-ai-change-proposal
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]" -e "./packages/hashing[test]"
+
+      - name: Run deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_ai_change_proposal.py' \
+            --verbose
+          python tools/validators/governance/validate_ai_change_proposal.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-ai-change-proposal-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### AIChangeProposal validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed fixture profile, RFC 8785 identities, compare-and-set patch simulation, exact fixture polarity, and authoring-receipt integrity."
+            echo "- Boundary: a green result does not call a model or policy engine, authenticate a reviewer, apply a patch, mutate a repository, resolve evidence, promote, release, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
