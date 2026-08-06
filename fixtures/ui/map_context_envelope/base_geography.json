@@ -1,0 +1,48 @@
+{
+  "area_scope": {
+    "geography_ref": "geography:county:20169",
+    "scope_type": "GEOGRAPHY"
+  },
+  "assembled_at": "2026-08-06T21:00:00Z",
+  "caller_role": "SYSTEM_TEST",
+  "envelope_id": "map-context-envelope:b02391e76b25f0c49dd5d2e3",
+  "evidence_refs": [
+    "evidence:soil:ssurgo"
+  ],
+  "expires_at": "2026-08-06T21:10:00Z",
+  "filters": [],
+  "governance": {
+    "canonical_store_accessed": false,
+    "evidence_closure_created": false,
+    "policy_authority_created": false,
+    "public_use_authorized": false,
+    "raw_work_quarantine_accessed": false,
+    "release_authority_created": false,
+    "renderer_specific_state_included": false,
+    "repository_mutated": false
+  },
+  "layers": [
+    {
+      "evidence_refs": [
+        "evidence:soil:ssurgo"
+      ],
+      "layer_id": "soil-static",
+      "layer_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "release_ref": "release:soil-static:2026-08-01",
+      "release_state": "PUBLISHED"
+    }
+  ],
+  "object_type": "MapContextEnvelope",
+  "profile": "kfm.ui.map-context-envelope.v1",
+  "release_refs": [
+    "release:soil-static:2026-08-01"
+  ],
+  "request_id": "request:fixture:geography-001",
+  "schema_version": "1.0.0",
+  "selections": [],
+  "spec_hash": "sha256:b02391e76b25f0c49dd5d2e32113ead5cff4361c6d263ff57e084b3b02c60c5f",
+  "time_window": {
+    "end": "2026-08-06T20:59:59Z",
+    "start": "2026-08-01T00:00:00Z"
+  }
+}

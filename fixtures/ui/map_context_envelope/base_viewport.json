@@ -1,0 +1,81 @@
+{
+  "area_scope": {
+    "bbox": [
+      -102,
+      36,
+      -94,
+      40
+    ],
+    "scope_type": "VIEWPORT"
+  },
+  "assembled_at": "2026-08-06T21:00:00Z",
+  "caller_role": "SYSTEM_TEST",
+  "envelope_id": "map-context-envelope:89a254671bc488b073e8fc07",
+  "evidence_refs": [
+    "evidence:soil:mukey:123",
+    "evidence:soil:ssurgo",
+    "evidence:water:wbd"
+  ],
+  "expires_at": "2026-08-06T21:10:00Z",
+  "filters": [
+    {
+      "field": "support_type",
+      "operator": "EQ",
+      "values": [
+        "authoritative_static_soil"
+      ]
+    }
+  ],
+  "governance": {
+    "canonical_store_accessed": false,
+    "evidence_closure_created": false,
+    "policy_authority_created": false,
+    "public_use_authorized": false,
+    "raw_work_quarantine_accessed": false,
+    "release_authority_created": false,
+    "renderer_specific_state_included": false,
+    "repository_mutated": false
+  },
+  "layers": [
+    {
+      "evidence_refs": [
+        "evidence:soil:ssurgo"
+      ],
+      "layer_id": "soil-static",
+      "layer_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "release_ref": "release:soil-static:2026-08-01",
+      "release_state": "PUBLISHED"
+    },
+    {
+      "evidence_refs": [
+        "evidence:water:wbd"
+      ],
+      "layer_id": "water-huc12",
+      "layer_spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "release_ref": "release:water-huc12:2026-08-01",
+      "release_state": "PUBLISHED"
+    }
+  ],
+  "object_type": "MapContextEnvelope",
+  "profile": "kfm.ui.map-context-envelope.v1",
+  "release_refs": [
+    "release:soil-static:2026-08-01",
+    "release:water-huc12:2026-08-01"
+  ],
+  "request_id": "request:fixture:viewport-001",
+  "schema_version": "1.0.0",
+  "selections": [
+    {
+      "evidence_refs": [
+        "evidence:soil:mukey:123"
+      ],
+      "feature_id": "mukey:123",
+      "layer_id": "soil-static"
+    }
+  ],
+  "spec_hash": "sha256:89a254671bc488b073e8fc07be2d457d19ce460e0b7ed7f121501cc5f53409a1",
+  "time_window": {
+    "end": "2026-08-06T20:59:59Z",
+    "start": "2026-08-01T00:00:00Z"
+  }
+}
