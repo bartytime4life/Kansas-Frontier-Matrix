@@ -44,11 +44,14 @@ def context() -> ArtifactHandoffContext:
     raw = json.loads(FIXTURE.read_text(encoding="utf-8"))
     rights = raw.pop("rights_snapshot")
     parser = raw.pop("parser")
+    parameter_names = tuple(raw.pop("parameter_names"))
+    header_names = tuple(raw.pop("header_names"))
+    correction_refs = tuple(raw.pop("correction_refs"))
     return ArtifactHandoffContext(
         **raw,
-        parameter_names=tuple(raw["parameter_names"]),
-        header_names=tuple(raw["header_names"]),
-        correction_refs=tuple(raw["correction_refs"]),
+        parameter_names=parameter_names,
+        header_names=header_names,
+        correction_refs=correction_refs,
         rights_snapshot=RightsSnapshot(captured_at=_time(rights.pop("captured_at")), **rights),
         parser=ParserIdentity(**parser),
     )
