@@ -1,0 +1,88 @@
+# Validate the fixture-only NHDPlus HR network revision watcher profile.
+name: hydrology-nhdplus-network-revision
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/hydrology-nhdplus-network-revision.yml"
+      - "contracts/domains/hydrology/nhdplus_network_revision.md"
+      - "schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json"
+      - "tools/ingest/hydrology_watch/nhdplus_network_revision.py"
+      - "tools/ingest/hydrology_watch/nhdplus_network_revision/**"
+      - "tests/ingest/hydrology_watch/test_nhdplus_network_revision.py"
+      - "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/**"
+      - "data/receipts/generated/genrec-hydrology-nhdplus-network-revision-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/hydrology-nhdplus-network-revision.yml"
+      - "contracts/domains/hydrology/nhdplus_network_revision.md"
+      - "schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json"
+      - "tools/ingest/hydrology_watch/nhdplus_network_revision.py"
+      - "tools/ingest/hydrology_watch/nhdplus_network_revision/**"
+      - "tests/ingest/hydrology_watch/test_nhdplus_network_revision.py"
+      - "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/**"
+      - "data/receipts/generated/genrec-hydrology-nhdplus-network-revision-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hydrology-nhdplus-network-revision-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-nhdplus-network-revision
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic NHDPlus network revision tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/ingest/hydrology_watch/test_nhdplus_network_revision.py \
+            -q --strict-config --strict-markers
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-hydrology-nhdplus-network-revision-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Synthetic NHDPlus HR network revision"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only COMID inventory, linear-reference, HUC12-assignment, and geometry-summary change classification."
+            echo "- Boundary: no live USGS access, source admission, lifecycle write, crosswalk recomputation, evidence resolution, hydrologic guidance, promotion, release, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
