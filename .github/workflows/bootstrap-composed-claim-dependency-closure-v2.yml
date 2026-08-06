@@ -90,8 +90,12 @@ jobs:
           git status --short
           git commit -m "feat(evidence): add composed-claim dependency closure"
 
-      - name: Push the assembled implementation
+      - name: Expose commit and attempt push
         shell: bash
         run: |
           set -euo pipefail
+          assembled_sha="$(git rev-parse HEAD)"
+          echo "### Assembled commit" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`$assembled_sha\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice file=.github/workflows/bootstrap-composed-claim-dependency-closure-v2.yml,line=1,title=ASSEMBLED_COMMIT_SHA::$assembled_sha"
           git push origin "HEAD:${GITHUB_REF_NAME}"
