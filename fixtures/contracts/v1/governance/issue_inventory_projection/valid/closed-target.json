@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.briefing.issue-inventory.fixture.v1",
+  "schema_version": "1.0.0",
+  "projection_id": "kfm:issue-inventory:d724c082b3ef1252",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "source_ref": "fixture:briefing-issue-inventory:closed-target",
+  "generated_at": "2026-08-06T17:40:00Z",
+  "issue_count": 2,
+  "issues": [
+    {
+      "number": 1647,
+      "state": "CLOSED",
+      "updated_at": "2026-08-05T12:00:00Z"
+    },
+    {
+      "number": 1675,
+      "state": "OPEN",
+      "updated_at": "2026-08-06T16:00:00Z"
+    }
+  ],
+  "projection_digest": "sha256:d724c082b3ef125224104c4c8e0a737cf52f0ff111863ade5da236818943ca3e",
+  "live_state_verified": false,
+  "authority_created": false,
+  "repository_mutation_allowed": false
+}

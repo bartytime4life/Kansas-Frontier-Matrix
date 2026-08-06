@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-soil-mesonet-station-health-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-mesonet-station-health.yml",
+    "contracts/domains/soil/mesonet_station_health.md",
+    "fixtures/domains/soil/mesonet_station_health/valid/healthy_batch.json",
+    "pipelines/domains/soil/mesonet_station_health/README.md",
+    "pipelines/domains/soil/mesonet_station_health/evaluate_fixture.py",
+    "schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json",
+    "tests/pipelines/domains/soil/mesonet_station_health/test_evaluate_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-mesonet-station-health.yml": "sha256:aa44da75521937875bb0cb9a01e845d86e8cbbde61285c4d9c31e6bdfd37cc74",
+    "contracts/domains/soil/mesonet_station_health.md": "sha256:adebac768f43d86c778fcfa3ffe44ab47d6ffeb73b81d035580d94a27e9a3f3a",
+    "fixtures/domains/soil/mesonet_station_health/valid/healthy_batch.json": "sha256:74ab65fb2f6fae24e847fa36cd886660b6f195ac39c4483e53edb5165151c45c",
+    "pipelines/domains/soil/mesonet_station_health/README.md": "sha256:779337eb29951d5232c228aaef9df3f71702dbbf75c087651dff855202967bb7",
+    "pipelines/domains/soil/mesonet_station_health/evaluate_fixture.py": "sha256:026ecd014b1ab954ddf98e7078d181bbd601da022cf383bcc4df0c1a65bf109d",
+    "schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json": "sha256:141341087421593e4dad270243b84581c2fffce21c1489392527fb1d1baea215",
+    "tests/pipelines/domains/soil/mesonet_station_health/test_evaluate_fixture.py": "sha256:80fbd3b17e3d13b79863128083b8975cd0b5c6fbd0ed8927ffd03b4a3187e799"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:84ebe8c5d5c7024547b6ceb6e091de45e4b4d814f93582ddbcc3082cf9d3dfcf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26(1).pdf#mesonet-station-health-and-anomaly-controls",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:tests/pipelines/domains/soil/mesonet_normalizer/test_fixture_normalizer.py@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-mesonet-station-health.yml": "PROPOSED",
+    "contracts/domains/soil/mesonet_station_health.md": "PROPOSED",
+    "fixtures/domains/soil/mesonet_station_health/valid/healthy_batch.json": "PROPOSED",
+    "pipelines/domains/soil/mesonet_station_health/README.md": "PROPOSED",
+    "pipelines/domains/soil/mesonet_station_health/evaluate_fixture.py": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json": "PROPOSED",
+    "tests/pipelines/domains/soil/mesonet_station_health/test_evaluate_fixture.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "5 deterministic Mesonet station-health tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Changed Python implementation and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow parses as YAML."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 map binds every authored artifact except the receipt itself."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:mesonet-station-health-and-anomaly-controls",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26(1).pdf#mesonet-station-health-and-anomaly-controls"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only Mesonet station-health assessment for freshness, 10% roster degradation, and caller-supplied z-score/relative-jump anomaly diagnostics. It does not activate Mesonet, issue alerts, write lifecycle data, resolve evidence, approve policy, release, or publish."
+}
