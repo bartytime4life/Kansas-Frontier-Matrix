@@ -61,9 +61,9 @@
     ],
     "evidence_refs": [
       "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#section=artifact-delta-receipts",
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9962304fd1238bd431ba61fd3bd8d97dc1bed386",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9962304fd1238bd431ba61fd3bd8d97dc1bed386/contracts/receipts/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9962304fd1238bd431ba61fd3bd8d97dc1bed386/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/contracts/receipts/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     ]
   },
   "truth_labels": {
@@ -120,9 +120,9 @@
       "evidence_ref": "attachment://New-Ideas-3-11-26#section=artifact-delta-receipts"
     },
     {
-      "id": "ADR-0029@9962304fd1238bd431ba61fd3bd8d97dc1bed386",
+      "id": "ADR-0029@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9962304fd1238bd431ba61fd3bd8d97dc1bed386/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     }
   ],
   "human_review": {
@@ -131,12 +131,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-06T03:53:00Z",
+  "created_at": "2026-08-06T03:34:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
     "pr_number": null,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Provenance only. The slice is synthetic, fixture-only, no-network, and does not perform or claim cryptographic verification, OCI publication, promotion, release, rollback execution, or publication. Base drift through merged PR #2032 was incorporated before final exact-head validation."
+  "notes": "Provenance only. The slice is synthetic, fixture-only, no-network, and does not perform or claim cryptographic verification, OCI publication, promotion, release, rollback execution, or publication."
 }
