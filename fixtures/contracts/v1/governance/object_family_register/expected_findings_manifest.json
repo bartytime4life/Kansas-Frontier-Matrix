@@ -1,0 +1,20 @@
+{
+  "bad_root.yaml": [
+    "PATH_ROOT_MISMATCH"
+  ],
+  "duplicate_family_ids.yaml": [
+    "FAMILY_ID_DUPLICATE"
+  ],
+  "maturity_mismatch.yaml": [
+    "MATURITY_MISMATCH"
+  ],
+  "unknown_field.yaml": [
+    "SCHEMA_INVALID"
+  ],
+  "unsorted_entries.yaml": [
+    "ENTRIES_NOT_CANONICAL"
+  ],
+  "unsorted_paths.yaml": [
+    "PATHS_NOT_CANONICAL"
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/object_family_register.schema.json",
+  "title": "KFM Object Family Register",
+  "description": "Machine-readable navigational index of object-family repository surfaces. JSON-compatible YAML is used for deterministic dependency-free parsing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "registry",
+    "status",
+    "authority",
+    "updated_at",
+    "base_ref",
+    "coverage_scope",
+    "completeness",
+    "owner_role",
+    "description",
+    "non_effects",
+    "entries"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "registry": {
+      "const": "object_family_register"
+    },
+    "status": {
+      "const": "PROPOSED"
+    },
+    "authority": {
+      "const": "navigational_index_only"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "base_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "coverage_scope": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{4,96}$"
+    },
+    "completeness": {
+      "type": "string",
+      "enum": [
+        "partial",
+        "complete"
+      ]
+    },
+    "owner_role": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,96}$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{4,160}$"
+      },
+      "uniqueItems": true
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\\\/][^\\\\]*$"
+    },
+    "paths": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/path"
+      },
+      "uniqueItems": true
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "display_name",
+        "family_kind",
+        "maturity",
+        "owner_role",
+        "contract_paths",
+        "schema_paths",
+        "policy_paths",
+        "fixture_paths",
+        "validator_paths",
+        "test_paths",
+        "workflow_paths",
+        "emitter_paths",
+        "notes"
+      ],
+      "properties": {
+        "family_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,96}$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "family_kind": {
+          "type": "string",
+          "enum": [
+            "shared_kernel",
+            "runtime",
+            "governance",
+            "evidence",
+            "release",
+            "domain_extension",
+            "registry"
+          ]
+        },
+        "maturity": {
+          "type": "string",
+          "enum": [
+            "seed",
+            "partial",
+            "covered",
+            "hardened"
+          ]
+        },
+        "owner_role": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,96}$"
+        },
+        "contract_paths": {
+          "$ref": "#/$defs/paths",
+          "minItems": 1
+        },
+        "schema_paths": {
+          "$ref": "#/$defs/paths",
+          "minItems": 1
+        },
+        "policy_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "fixture_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "validator_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "test_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "workflow_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "emitter_paths": {
+          "$ref": "#/$defs/paths"
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "docs/registers/OBJECT_FAMILY.md",
+    "instance": "control_plane/object_family_register.yaml",
+    "validator": "tools/validators/control_plane/validate_object_family_register.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/object_family_register/",
+    "tests": "tests/validators/test_validate_object_family_register.py",
+    "authority": "navigational_index_shape_only",
+    "non_effects": [
+      "does_not_create_object_family_authority",
+      "does_not_override_contract_schema_policy_evidence_or_release"
+    ]
+  }
+}
