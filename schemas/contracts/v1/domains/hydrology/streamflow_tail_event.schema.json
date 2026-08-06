@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/streamflow_tail_event.schema.json",
+  "title": "StreamflowTailEventAssessment",
+  "description": "Fixture-only seasonal streamflow tail assessment; not an operational alert.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "evaluated_at",
+    "site",
+    "source_descriptor_ref",
+    "run_receipt_ref",
+    "evidence_refs",
+    "thresholds",
+    "summary",
+    "decision",
+    "rights",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "StreamflowTailEventAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 160
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "site_id",
+        "spatial_support",
+        "regulation_context"
+      ],
+      "properties": {
+        "site_id": {
+          "type": "string",
+          "pattern": "^[0-9]{8,15}$"
+        },
+        "spatial_support": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "huc12"
+          ],
+          "properties": {
+            "kind": {
+              "const": "generalized_huc12"
+            },
+            "huc12": {
+              "type": "string",
+              "pattern": "^[0-9]{12}$"
+            }
+          }
+        },
+        "regulation_context": {
+          "enum": [
+            "unregulated_fixture",
+            "regulated_context_limited"
+          ]
+        }
+      }
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recency_limit_hours",
+        "persistence_count",
+        "persistence_window_hours"
+      ],
+      "properties": {
+        "recency_limit_hours": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "persistence_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "persistence_window_hours": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latest_discharge_cfs",
+        "latest_age_hours",
+        "p05_cfs",
+        "p95_cfs",
+        "candidate_state",
+        "consecutive_tail_readings"
+      ],
+      "properties": {
+        "latest_discharge_cfs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "latest_age_hours": {
+          "type": "number",
+          "minimum": 0
+        },
+        "p05_cfs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "p95_cfs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "candidate_state": {
+          "enum": [
+            "NONE",
+            "LOW_FLOW",
+            "HIGH_FLOW",
+            "UNKNOWN"
+          ]
+        },
+        "consecutive_tail_readings": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_code"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "NO_EVENT",
+            "HOLD",
+            "ANSWER_CANDIDATE",
+            "ABSTAIN",
+            "DENY"
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "WITHIN_SEASONAL_RANGE",
+            "PERSISTENCE_NOT_MET",
+            "PERSISTENT_LOW_FLOW",
+            "PERSISTENT_HIGH_FLOW",
+            "PERCENTILES_MISSING",
+            "PERCENTILES_NOT_APPROVED",
+            "DATA_STALE",
+            "SENSOR_QUALIFIER_PRESENT",
+            "REGULATED_CONTEXT_LIMITED"
+          ]
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_state"
+      ],
+      "properties": {
+        "rights_state": {
+          "const": "fixture_only"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_eligible",
+        "public_use_allowed",
+        "release_state",
+        "review_state",
+        "operational_alert_authority"
+      ],
+      "properties": {
+        "promotion_eligible": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "review_state": {
+          "const": "fixture_only"
+        },
+        "operational_alert_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

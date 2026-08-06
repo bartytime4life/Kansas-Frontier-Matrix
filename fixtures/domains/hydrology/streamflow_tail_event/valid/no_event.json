@@ -1,0 +1,59 @@
+{
+  "object_type": "SyntheticStreamflowTailBatch",
+  "schema_version": "1.0.0",
+  "assessment_id": "streamflow-tail-fixture-06914000-20260402",
+  "evaluated_at": "2026-04-02T12:00:00Z",
+  "site": {
+    "site_id": "06914000",
+    "spatial_support": {
+      "kind": "generalized_huc12",
+      "huc12": "102901030101"
+    },
+    "regulation_context": "unregulated_fixture"
+  },
+  "source_descriptor_ref": "source:usgs-iv-fixture",
+  "run_receipt_ref": "receipt:usgs-tail-fixture-20260402",
+  "evidence_refs": [
+    "evidence:approved-seasonal-percentiles-fixture",
+    "fixture:usgs-iv-readings-06914000"
+  ],
+  "thresholds": {
+    "recency_limit_hours": 96,
+    "persistence_count": 3,
+    "persistence_window_hours": 12
+  },
+  "baseline": {
+    "status": "approved_fixture",
+    "day_of_year": 92,
+    "p05_cfs": 10.0,
+    "p95_cfs": 100.0,
+    "evidence_ref": "evidence:approved-seasonal-percentiles-fixture"
+  },
+  "readings": [
+    {
+      "observed_at": "2026-04-02T09:00:00Z",
+      "discharge_cfs": 50.0,
+      "qualifiers": []
+    },
+    {
+      "observed_at": "2026-04-02T10:00:00Z",
+      "discharge_cfs": 55.0,
+      "qualifiers": []
+    },
+    {
+      "observed_at": "2026-04-02T11:00:00Z",
+      "discharge_cfs": 60.0,
+      "qualifiers": []
+    }
+  ],
+  "rights": {
+    "rights_state": "fixture_only"
+  },
+  "governance": {
+    "promotion_eligible": false,
+    "public_use_allowed": false,
+    "release_state": "not_released",
+    "review_state": "fixture_only",
+    "operational_alert_authority": false
+  }
+}

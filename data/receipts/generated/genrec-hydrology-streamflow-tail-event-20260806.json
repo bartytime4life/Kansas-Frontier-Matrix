@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-hydrology-streamflow-tail-event-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-streamflow-tail-event.yml",
+    "contracts/domains/hydrology/streamflow_tail_event.md",
+    "fixtures/domains/hydrology/streamflow_tail_event/valid/no_event.json",
+    "pipelines/domains/hydrology/streamflow_tail_event/README.md",
+    "pipelines/domains/hydrology/streamflow_tail_event/evaluate_fixture.py",
+    "schemas/contracts/v1/domains/hydrology/streamflow_tail_event.schema.json",
+    "tests/pipelines/domains/hydrology/streamflow_tail_event/test_evaluate_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-streamflow-tail-event.yml": "sha256:df24c49bfdcd46e2cfc5fb39ec814679c9bbe7debec53c030a80b8bb44751e8e",
+    "contracts/domains/hydrology/streamflow_tail_event.md": "sha256:238f0c03b619862688e937f839970bed7c05d7900d4319a26a33e2b7bf644e73",
+    "fixtures/domains/hydrology/streamflow_tail_event/valid/no_event.json": "sha256:ba6d9dfd896c1f87dbddb1aa19add2414539a3fb818fe37f08c72925479c6f44",
+    "pipelines/domains/hydrology/streamflow_tail_event/README.md": "sha256:21da1bfd103e7f27350d52a057b3106ef2aa377e0116dba4f28eb82ae8416f7c",
+    "pipelines/domains/hydrology/streamflow_tail_event/evaluate_fixture.py": "sha256:6c2d6019ef77c02c4b8baf90f7f23a18b377b1ed6e3b2b91098369ff556a6d53",
+    "schemas/contracts/v1/domains/hydrology/streamflow_tail_event.schema.json": "sha256:d7f15ebd2bd62e9ac5b088fe749cd22f2b0bc43710fc052b40f85918144f5e02",
+    "tests/pipelines/domains/hydrology/streamflow_tail_event/test_evaluate_fixture.py": "sha256:f2ec1a2402593dac42cc3fe8fb0040c148cc7850b5261ef0457dafb3e82c3bba"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:84ebe8c5d5c7024547b6ceb6e091de45e4b4d814f93582ddbcc3082cf9d3dfcf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26(1).pdf#usgs-seasonal-streamflow-tail-persistence",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:docs/sources/catalog/usgs/nhdplus-hr.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554",
+      "repo:data/raw/hydrology/README.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-streamflow-tail-event.yml": "PROPOSED",
+    "contracts/domains/hydrology/streamflow_tail_event.md": "PROPOSED",
+    "fixtures/domains/hydrology/streamflow_tail_event/valid/no_event.json": "PROPOSED",
+    "pipelines/domains/hydrology/streamflow_tail_event/README.md": "PROPOSED",
+    "pipelines/domains/hydrology/streamflow_tail_event/evaluate_fixture.py": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/streamflow_tail_event.schema.json": "PROPOSED",
+    "tests/pipelines/domains/hydrology/streamflow_tail_event/test_evaluate_fixture.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "10 deterministic seasonal streamflow tail tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Changed Python implementation and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow parses as YAML."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 map binds every authored artifact except the receipt itself."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:usgs-seasonal-streamflow-tail-persistence",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26(1).pdf#usgs-seasonal-streamflow-tail-persistence"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91079035dbc2f66e87fe00e0ecbdc49cb79c4554"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T17:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only seasonal streamflow tail evaluator with approved-percentile, recency, qualifier, regulation-context, and persistence gates. ANSWER_CANDIDATE is not an operational alert. No USGS/NWS access, emergency advice, release, or publication occurs."
+}
