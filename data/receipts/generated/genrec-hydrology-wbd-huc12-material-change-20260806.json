@@ -62,7 +62,7 @@
     "fixtures/domains/hydrology/wbd_huc12_material_change/invalid/decision_mismatch.json": "PROPOSED",
     "fixtures/domains/hydrology/wbd_huc12_material_change/valid/add.json": "PROPOSED",
     "fixtures/domains/hydrology/wbd_huc12_material_change/valid/area_change.json": "PROPOSED",
-    "fixtures/domaiins/hydrology/wbd_huc12_material_change/valid/geometry_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/geometry_change.json": "PROPOSED",
     "fixtures/domains/hydrology/wbd_huc12_material_change/valid/metadata_churn_no_change.json": "PROPOSED",
     "fixtures/domains/hydrology/wbd_huc12_material_change/valid/remove.json": "PROPOSED",
     "schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json": "PROPOSED",
@@ -111,7 +111,7 @@
     "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   ],
   "citations": [
-   {
+    {
       "id": "attachment:wbd-huc12-change-detection",
       "validated": true,
       "evidence_ref": "attachment:New Ideas 4-10-26.pdf#wbd-huc12-change-detection"
@@ -136,9 +136,9 @@
   "created_at": "2026-08-06T21:30:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2069,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a fixture-only WBD HUC12 material change contract, schema, pure-Python geometry canonicalizer/fingerprint validator, fixtures, tests, and read-only CI. It does not call or activate the WBD source."
+  "notes": "Adds a fixture-only WBD HUC12 material-change contract, schema, pure-Python geometry canonicalizer/fingerprint validator, fixtures, tests, and read-only CI. It does not call or activate the WBD source."
 }
