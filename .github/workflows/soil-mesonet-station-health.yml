@@ -1,0 +1,86 @@
+# Exercise the synthetic, no-network Kansas Mesonet station-health boundary.
+name: soil-mesonet-station-health
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-mesonet-station-health.yml"
+      - "contracts/domains/soil/mesonet_station_health.md"
+      - "schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json"
+      - "pipelines/domains/soil/mesonet_station_health/**"
+      - "fixtures/domains/soil/mesonet_station_health/**"
+      - "tests/pipelines/domains/soil/mesonet_station_health/**"
+      - "data/receipts/generated/genrec-soil-mesonet-station-health-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-mesonet-station-health.yml"
+      - "contracts/domains/soil/mesonet_station_health.md"
+      - "schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json"
+      - "pipelines/domains/soil/mesonet_station_health/**"
+      - "fixtures/domains/soil/mesonet_station_health/**"
+      - "tests/pipelines/domains/soil/mesonet_station_health/**"
+      - "data/receipts/generated/genrec-soil-mesonet-station-health-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-mesonet-station-health-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-mesonet-station-health
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic station-health tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/pipelines/domains/soil/mesonet_station_health/test_evaluate_fixture.py \
+            -q --strict-config --strict-markers
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-mesonet-station-health-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Synthetic Kansas Mesonet station health"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic freshness, coverage, roster-loss, and caller-supplied anomaly diagnostics over fixture-only station records."
+            echo "- Boundary: no source activation, network access, lifecycle write, evidence resolution, policy decision, promotion, release, publication, alert, or agronomic advice."
+          } >> "$GITHUB_STEP_SUMMARY"
