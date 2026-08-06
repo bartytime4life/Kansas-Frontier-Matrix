@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json",
+  "title": "HistoricalPlaceResolutionCandidate",
+  "description": "Fixture-only, no-network candidate set for resolving a historical Kansas place name against synthetic name, county-slice, post-office-lifespan, and period-corroboration support. It is not a live gazetteer, legal-place adjudication, boundary proof, source activation, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "profile_id",
+    "object_family",
+    "schema_version",
+    "query",
+    "candidates",
+    "evidence_refs",
+    "derived",
+    "governance",
+    "limitations",
+    "spec_hash"
+  ],
+  "properties": {
+    "fixture_id": {
+      "type": "string",
+      "pattern": "^fixture://[a-z0-9][a-z0-9._~:/-]*$"
+    },
+    "profile_id": {
+      "const": "kfm-settlements-infrastructure-historical-place-resolution-v1"
+    },
+    "object_family": {
+      "const": "HistoricalPlaceResolutionCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "year",
+        "state_code",
+        "county_hint"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "state_code": {
+          "const": "KS"
+        },
+        "county_hint": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_ref",
+          "canonical_name",
+          "variants",
+          "feature_type",
+          "authority_ids",
+          "valid_time",
+          "county_at_query_time",
+          "source_support"
+        ],
+        "properties": {
+          "candidate_ref": {
+            "type": "string",
+            "pattern": "^fixture://place-candidate/[a-z0-9._~-]+$"
+          },
+          "canonical_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "variants": {
+            "type": "array",
+            "maxItems": 24,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          "feature_type": {
+            "type": "string",
+            "enum": [
+              "populated_place",
+              "rail_stop",
+              "post_office",
+              "locale"
+            ]
+          },
+          "authority_ids": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gnis",
+              "bgn_decision",
+              "kshs_po",
+              "ahcb_slice"
+            ],
+            "properties": {
+              "gnis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^fixture://authority/gnis/[a-z0-9._~-]+$"
+              },
+              "bgn_decision": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^fixture://authority/bgn/[a-z0-9._~-]+$"
+              },
+              "kshs_po": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^fixture://authority/kshs-po/[a-z0-9._~-]+$"
+              },
+              "ahcb_slice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^fixture://authority/ahcb/[a-z0-9._~/-]+$"
+              }
+            }
+          },
+          "valid_time": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start_year",
+              "end_year"
+            ],
+            "properties": {
+              "start_year": {
+                "type": "integer",
+                "minimum": 1800,
+                "maximum": 2100
+              },
+              "end_year": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1800,
+                "maximum": 2100
+              }
+            }
+          },
+          "county_at_query_time": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "source_support": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_role",
+                "source_ref",
+                "rights_spdx",
+                "supports",
+                "scan_ids"
+              ],
+              "properties": {
+                "source_role": {
+                  "type": "string",
+                  "enum": [
+                    "federal_name_authority",
+                    "historical_county_authority",
+                    "post_office_lifespan",
+                    "period_map",
+                    "contemporary_newspaper",
+                    "local_history"
+                  ]
+                },
+                "source_ref": {
+                  "type": "string",
+                  "pattern": "^fixture://source/[a-z0-9][a-z0-9._~:/-]*$"
+                },
+                "rights_spdx": {
+                  "const": "LicenseRef-KFM-Synthetic-Fixture"
+                },
+                "supports": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "canonical_name",
+                      "variant_name",
+                      "county_at_query_time",
+                      "valid_time",
+                      "feature_type"
+                    ]
+                  }
+                },
+                "scan_ids": {
+                  "type": "object",
+                  "minProperties": 1,
+                  "maxProperties": 8,
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^fixture://evidence/[a-z0-9][a-z0-9._~:/-]*$"
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resolution_id",
+        "resolved_candidate_ref",
+        "place_id",
+        "primary_authority",
+        "confidence",
+        "disposition",
+        "reason_codes"
+      ],
+      "properties": {
+        "resolution_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "resolved_candidate_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^fixture://place-candidate/[a-z0-9._~-]+$"
+        },
+        "place_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^urn:kfm:place:sha256:[0-9a-f]{64}$"
+        },
+        "primary_authority": {
+          "type": "string",
+          "enum": [
+            "bgn_decision",
+            "gnis",
+            "none"
+          ]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "candidate_review",
+            "hold_for_review",
+            "abstain"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "historical_only",
+        "network_accessed",
+        "live_source_activation",
+        "review_state",
+        "release_state",
+        "promotion_eligible",
+        "public_exposure"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "historical_only": {
+          "const": true
+        },
+        "network_accessed": {
+          "const": false
+        },
+        "live_source_activation": {
+          "const": false
+        },
+        "review_state": {
+          "type": "string",
+          "enum": [
+            "candidate_review",
+            "hold_for_review",
+            "abstain"
+          ]
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "promotion_eligible": {
+          "const": false
+        },
+        "public_exposure": {
+          "const": false
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "synthetic_fixture_only",
+          "no_live_source_access",
+          "no_current_legal_status_claim",
+          "no_boundary_or_title_claim",
+          "no_public_release",
+          "no_policy_approval",
+          "no_source_rights_determination"
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "synthetic_fixture_only"
+          }
+        },
+        {
+          "contains": {
+            "const": "no_live_source_access"
+          }
+        },
+        {
+          "contains": {
+            "const": "no_current_legal_status_claim"
+          }
+        },
+        {
+          "contains": {
+            "const": "no_boundary_or_title_claim"
+          }
+        },
+        {
+          "contains": {
+            "const": "no_public_release"
+          }
+        },
+        {
+          "contains": {
+            "const": "no_policy_approval"
+          }
+        }
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

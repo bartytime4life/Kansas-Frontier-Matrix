@@ -1,0 +1,99 @@
+# Validate one bounded, synthetic historical place-name resolution profile.
+#
+# Authority boundary:
+# - This workflow reads repository-owned synthetic fixtures only.
+# - It performs no live GNIS, BGN, AHCB/Newberry, KSHS/Baughman, map, or newspaper access.
+# - It establishes no real place identity, legal status, boundary, rights, policy,
+#   release, deployment, publication, or public-use authority.
+name: historical-place-resolution
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/historical-place-resolution.yml"
+      - "contracts/domains/settlements-infrastructure/historical_place_resolution.md"
+      - "docs/intake/exploratory/new-ideas-3-11-26-historical-place-resolution-source-map.md"
+      - "schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json"
+      - "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/**"
+      - "tools/validators/validate_historical_place_resolution.py"
+      - "tests/validators/test_validate_historical_place_resolution.py"
+      - "data/receipts/generated/genrec-historical-place-resolution-20260806.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/historical-place-resolution.yml"
+      - "contracts/domains/settlements-infrastructure/historical_place_resolution.md"
+      - "docs/intake/exploratory/new-ideas-3-11-26-historical-place-resolution-source-map.md"
+      - "schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json"
+      - "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/**"
+      - "tools/validators/validate_historical_place_resolution.py"
+      - "tests/validators/test_validate_historical_place_resolution.py"
+      - "data/receipts/generated/genrec-historical-place-resolution-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: historical-place-resolution-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: historical-place-resolution
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out bounded synthetic profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused semantic tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/validators/test_validate_historical_place_resolution.py
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/validate_historical_place_resolution.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-historical-place-resolution-20260806.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Historical place resolution status
+
+          This job validates only synthetic name normalization, time-scoped candidate
+          matching, source-role separation, rail-stop review holds, ambiguous-name
+          holds, deterministic place IDs, and fail-closed publication boundaries.
+
+          A green result does not establish a real place identity, municipal or census
+          status, historical boundary, source rights, EvidenceBundle sufficiency,
+          policy approval, review approval, release, deployment, publication, or
+          public-use authority.
+          EOF
