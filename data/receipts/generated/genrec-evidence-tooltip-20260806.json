@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-evidence-tooltip-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/evidence_tooltip/index.ts",
+    "apps/explorer-web/src/features/evidence_tooltip/README.md",
+    "apps/explorer-web/tests/evidence-tooltip.test.ts",
+    "apps/explorer-web/tests/browser/evidence-tooltip.fixture.ts",
+    "apps/explorer-web/tests/browser/evidence-tooltip.html",
+    "apps/explorer-web/tests/browser/evidence-tooltip.spec.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/evidence_tooltip/index.ts": "sha256:2b3f98c145c75afba04e7f70538001f708e44ffacafcc39f6feca9b627c5373b",
+    "apps/explorer-web/src/features/evidence_tooltip/README.md": "sha256:45e6cb34f5375b9427a31527850c3751c331e9b38ec0070bd4e8b88f8787c821",
+    "apps/explorer-web/tests/evidence-tooltip.test.ts": "sha256:211a8f30849cf0d054b31110747c9126d7ffe1a65f3632b71513f462c8ebadaf",
+    "apps/explorer-web/tests/browser/evidence-tooltip.fixture.ts": "sha256:4b27046f13c3590c33ce3f4dc681ff31db7da101facd4beaaef5910159d6a57e",
+    "apps/explorer-web/tests/browser/evidence-tooltip.html": "sha256:252bbdff2fe234c1d4573b418bbe219f451b26afc89cf505cab0fc5375d181f8",
+    "apps/explorer-web/tests/browser/evidence-tooltip.spec.ts": "sha256:31f8109513b06eb0b658f6c790ed20ac0b03ba8cd10909d3d832e26839df55a9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05-session"
+  },
+  "prompt_or_contract": "sha256:7bc35fff271d4882cdd19b8ed5ca2823f7b455842b347b1a559aeff4cb637293",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "file_search",
+      "GitHub connector",
+      "container",
+      "TypeScript compiler"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:15e0fa586518e6e6987fcb45a7b0981a60b3cd75de364c7c2164c98697d640c7"
+    ],
+    "attached_docs": [
+      "New Ideas 3-27-26.pdf"
+    ],
+    "evidence_refs": [
+      "file:New Ideas 3-27-26.pdf#pages=313-344",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d:apps/explorer-web/src/adapters/GovernedClient.ts",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d:.github/workflows/ui-build.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/evidence_tooltip/index.ts": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_tooltip/README.md": "PROPOSED",
+    "apps/explorer-web/tests/evidence-tooltip.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/evidence-tooltip.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/evidence-tooltip.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/evidence-tooltip.spec.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript_no_emit_isolated",
+      "outcome": "PASS",
+      "reason": "Production module compiled under strict TypeScript against a type-compatible current adapter surface."
+    },
+    {
+      "gate": "local_logic_and_no_network_harness",
+      "outcome": "PASS",
+      "reason": "Static logic harness verified finite trust checks, no transport, no lifecycle-store paths, and browser/unit test coverage markers."
+    },
+    {
+      "gate": "repo_native_vitest",
+      "outcome": "SKIPPED",
+      "reason": "Repository dependencies were not installed in the local artifact workspace; hosted ui-build owns npm ci and Vitest."
+    },
+    {
+      "gate": "repo_native_playwright",
+      "outcome": "SKIPPED",
+      "reason": "Repository dependencies and browser binaries were not installed locally; hosted ui-build owns Playwright execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "SRC-NEW-IDEAS-3-27-26-EVIDENCE-TOOLTIP",
+      "validated": true,
+      "evidence_ref": "file:New Ideas 3-27-26.pdf#pages=313-344"
+    },
+    {
+      "id": "REPO-GOVERNED-EVIDENCE-PROJECTION",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d"
+    },
+    {
+      "id": "REPO-EVIDENCE-DRAWER",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T02:57:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored additive UI slice based on current main@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d. The receipt records local authoring validation only; exact-head hosted checks remain separate PR evidence. No live source, release, deployment, promotion, or publication action is represented."
+}

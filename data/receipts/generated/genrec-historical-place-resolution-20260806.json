@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-historical-place-resolution-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/historical-place-resolution.yml",
+    "contracts/domains/settlements-infrastructure/historical_place_resolution.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-place-resolution-source-map.md",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/README.md",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.expected_error.txt",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.expected_error.txt",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.expected_error.txt",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.expected_error.txt",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/ambiguous_hold.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/out_of_time_abstain.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/post_office_resolved.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/rail_stop_hold.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/variant_resolved.json",
+    "schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json",
+    "tests/validators/test_validate_historical_place_resolution.py",
+    "tools/validators/validate_historical_place_resolution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/historical-place-resolution.yml": "sha256:eba9687fa087a8607fbd2afdd3ccbae5847ee7d17da2b4a721a1506f5f80dfae",
+    "contracts/domains/settlements-infrastructure/historical_place_resolution.md": "sha256:0f254d6d91633876d1295f337dd961746f4b6744cabe9b34807dc75dc73a1714",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-place-resolution-source-map.md": "sha256:7ae25ab5b3081951acd3a23c4b5784f3ce446347b6b90f5dec1d9f0febf5a75f",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/README.md": "sha256:1174a1b45da9e07dd73ec97f2d97fedfd2ffa88762f689e1e2212b741de26633",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.expected_error.txt": "sha256:8d03ed7c19186c14d62d6dc533d61364535f8ffea636cc51c812c38a91f8814d",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.json": "sha256:a24a039de9ced67cc20545eb927d67e60b5ed24915bec6d42468a1e1b02ccbc8",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.expected_error.txt": "sha256:d94ac0d1f86fb474c3c4ea67507f1bfadc5b61d82f9db11ce52a8eb09b84c164",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.json": "sha256:2310628d2b8a79f9e7dff3d3967bf6be724d67798fe6e14569d78ba41bfcf123",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.expected_error.txt": "sha256:a2b2449ce63bf57203e0fc9d02cca1c9b4eb7ddd8b96fa9872ab880a6f0fc9f9",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.json": "sha256:de57cec8cdb9e105f383b5e67da364bd32f9c6962c9939f9a95d6e37b3bfeb40",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.expected_error.txt": "sha256:b7a25ac6e400b77159088cfb2da2d41b4a208293ca22cb1cd0b9e17aab899c40",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.json": "sha256:9b9aff01c3d8e7ef158937bcb014493f294fc1634e235adfc2951e542fa04a4f",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/ambiguous_hold.json": "sha256:c0f5dbf724413e50abe953f7aa4cc715605a505c2418648e9cfda9274c9b87aa",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/out_of_time_abstain.json": "sha256:d9b397ffacc18a38a8de0c030c5bf02c201836575dc6d27bcf28e91b40ede80b",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/post_office_resolved.json": "sha256:ab36b2570b0398e90a0fc1444812ffb215b674d4c1362c9cdb926c769edbbdae",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/rail_stop_hold.json": "sha256:1f15c33d26135cb1bc68b8b8e5c807fc16b337a901fbc7d3fa2fc871941261e6",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/variant_resolved.json": "sha256:23c1b772c05bf82f03d6c1057f98daee2c3fbe47ffe04424040a3dba888b0256",
+    "schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json": "sha256:d97d054ede77e7e5d671fccb27f9d87f4d1cb5639306d63715c600426d339166",
+    "tests/validators/test_validate_historical_place_resolution.py": "sha256:3f57a6aebf1771221aa74609933a5fd99c6d2d64cae1bc80fe7dce1b86bd9ef9",
+    "tools/validators/validate_historical_place_resolution.py": "sha256:22ab29504da139c85d187a966cfd87087d2d89684e8d9ec94f0cd0b55c686e99"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:96eb440c2240f1aff3bdfe3b3840773996a29a8f2bc5f5dc7da614264ec5fb7c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded source inspection",
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#pages=146-148",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d/contracts/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d/data/registry/sources/settlements-infrastructure/historical_gazetteer.yaml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/historical-place-resolution.yml": "CONFIRMED",
+    "contracts/domains/settlements-infrastructure/historical_place_resolution.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-place-resolution-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/place_id_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/public_release_denied.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/rail_stop_overclaimed.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/invalid/source_ref_reuse.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/ambiguous_hold.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/out_of_time_abstain.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/post_office_resolved.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/rail_stop_hold.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/historical_place_resolution/valid/variant_resolved.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/settlements-infrastructure/historical_place_resolution.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_historical_place_resolution.py": "CONFIRMED",
+    "tools/validators/validate_historical_place_resolution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-json-and-draft-2020-12",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-standard-library-and-pytest-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "pending until the draft pull request runs on GitHub"
+    }
+  ],
+  "policy_decisions": [
+    "fixture-policy://settlements-infrastructure/historical-place-resolution/synthetic-only-not-released"
+  ],
+  "citations": [
+    {
+      "id": "New Ideas 3-11-26.pdf pp.146-148",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-3-11-26#pages=146-148"
+    },
+    {
+      "id": "ADR-0029@cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb4e9c24efeb4ff1d8ea94764e111edcdab8b85d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T02:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only. The profile is synthetic, fixture-only, no-network, and not released. No source activation, legal-place adjudication, reviewer, policy steward, release steward, or publication authority is implied."
+}
