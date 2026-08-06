@@ -1,0 +1,122 @@
+# Validate the proposed Flora occurrence intake-classification profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network after
+# installing repository-declared test dependencies. It creates no policy,
+# review, lifecycle, release, publication, or public-use authority.
+name: flora-occurrence-intake-governance
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/flora-occurrence-intake-governance.yml"
+      - "contracts/domains/flora/flora_occurrence_intake_decision.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json"
+      - "packages/domains/flora/normalizers/intake_governance.py"
+      - "fixtures/domains/flora/flora_occurrence_intake_decision/**"
+      - "tests/packages/domains/flora/normalizers/test_intake_governance.py"
+      - "data/receipts/generated/genrec-flora-occurrence-intake-governance-20260805.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/flora-occurrence-intake-governance.yml"
+      - "contracts/domains/flora/flora_occurrence_intake_decision.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json"
+      - "packages/domains/flora/normalizers/intake_governance.py"
+      - "fixtures/domains/flora/flora_occurrence_intake_decision/**"
+      - "tests/packages/domains/flora/normalizers/test_intake_governance.py"
+      - "data/receipts/generated/genrec-flora-occurrence-intake-governance-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flora-occurrence-intake-governance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-flora-occurrence-intake-governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused stacked no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/packages/domains/flora/normalizers \
+            --pattern 'test_intake_governance.py' \
+            --verbose
+
+      - name: Replay exact finite outcomes and decisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python packages/domains/flora/normalizers/intake_governance.py \
+            --fixtures fixtures/domains/flora/flora_occurrence_intake_decision
+
+      - name: Validate decision schema and fixture syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema = Path("schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json")
+          Draft202012Validator.check_schema(json.loads(schema.read_text(encoding="utf-8")))
+          files = sorted(Path("fixtures/domains/flora/flora_occurrence_intake_decision").rglob("*.json"))
+          assert files, "fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} decision fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-flora-occurrence-intake-governance-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Flora occurrence intake governance"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: bounded deterministic duplicate keys, conservative license-profile classification, source sensitivity hints, finite handling outcomes, exact fixture replay."
+            echo "- Boundary: results propose handling only; they are not legal advice, policy, review, source admission, lifecycle execution, geoprivacy transformation, release, publication, or public use."
+            echo "- Network posture: no live source, connector, credential, legal service, policy engine, or external endpoint is used."
+          } >> "$GITHUB_STEP_SUMMARY"
