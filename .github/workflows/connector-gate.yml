@@ -2,8 +2,8 @@
 # Status: PARTIAL enforcement. A bounded connector repository-target canary,
 # legacy connector/pipeline publication-literal canary, repository-owned
 # IngestReceipt validator prerequisite, and source-agnostic connectors-core
-# pure-primitives suite are executable. Connector-run receipt presence remains
-# a visible readiness hold.
+# primitive, injected-transport, and artifact-handoff suites are executable.
+# Connector-run receipt presence remains a visible readiness hold.
 #
 # Authority boundary:
 # - This workflow may test repository code and report CI evidence.
@@ -60,7 +60,7 @@ jobs:
       - name: Compile and import connectors-core without runtime effects
         run: |
           python -m compileall -q packages/connectors-core/src/connectors_core
-          python -c "import connectors_core.core"
+          python -c "import connectors_core.core; import connectors_core.transport; import connectors_core.artifact_handoff"
 
       - name: Run connectors-core deterministic no-network tests
         run: >-
@@ -105,12 +105,13 @@ jobs:
             echo "- Configured test: tests/policy/test_pipeline_connector_non_publisher.py"
             echo "- IngestReceipt tests: tests/validators/test_validate_ingest_receipt.py"
             echo "- IngestReceipt fixtures: tools/validators/validate_ingest_receipt.py --fixtures"
-            echo "- Connectors-core scope: internal source-agnostic pure primitives for ETag/source-head distinctions, bounded retry decisions, exact streaming SHA-256, allowlisted response metadata, integrity mismatch, and secret-safe diagnostics."
-            echo "- Connectors-core limits: no connector is run; no source endpoint, credentials, source admission, lifecycle write, evidence closure, policy decision, authoritative receipt, release, or publication is exercised."
+            echo "- Connectors-core scope: internal source-agnostic ETag/source-head, bounded retry, exact streaming SHA-256, response metadata, secret-safe diagnostics, caller-injected transport, exact captured-byte validation, and retrieval-to-SourceArtifact candidate handoff behavior."
+            echo "- Artifact-handoff scope: successful injected GET bytes plus source-head metadata are bound to the existing SourceArtifact profile and validator; HEAD, NOT_MODIFIED, failure, mismatch, conflict, and supersession cases fail closed."
+            echo "- Connectors-core limits: no live connector or concrete HTTP client is run; no source endpoint, credentials, source admission, storage, lifecycle write, evidence closure, policy decision, authoritative receipt, release, or publication is exercised."
             echo "- Connector static scope: selected Python sink calls, shell commands and redirections, and YAML command/output keys under connectors/, excluding path components named test, tests, fixture, fixtures, example, or examples."
             echo "- Connector target check: targets recognized and statically resolved as repository-relative are compared with the data/raw, data/quarantine, and data/receipts allowlist."
             echo "- Legacy compatibility check: selected lexical write contexts under connectors/ and pipelines/ are checked for data/catalog, data/published, and release/."
-            echo "- Limits: a passing test is bounded static-canary and pure-function evidence; it does not establish complete sink, language, dynamic-path, external-target, URI, or home-relative coverage; runtime confinement; symlink safety; receipt correspondence; connector correctness; rights or sensitivity clearance; promotion readiness; release approval; or publication safety."
+            echo "- Limits: a passing test is bounded static-canary and injected-boundary evidence; it does not establish complete sink, language, dynamic-path, external-target, URI, or home-relative coverage; runtime confinement; symlink safety; SourceDescriptor/IngestReceipt correspondence; connector correctness; rights or sensitivity clearance; promotion readiness; release approval; or publication safety."
           } >> "$GITHUB_STEP_SUMMARY"
 
   ingest-receipt-presence:
@@ -135,8 +136,8 @@ jobs:
             echo
             echo "- Prerequisite job result: $PREREQUISITE_RESULT"
             echo "- Outcome: $outcome"
-            echo "- The prerequisite job runs connectors-core pure-function tests, the repository-owned IngestReceipt validator, deterministic contract fixtures, source-head binding, local artifact binding, and fail-closed receipt polarity."
-            echo "- No connector was run and no connector-emitted receipt instance, persistence route, source-specific profile, replay, or correction path was validated."
+            echo "- The prerequisite job runs connectors-core primitives, injected transport and artifact-handoff tests, the repository-owned IngestReceipt validator, deterministic contract fixtures, source-head binding, local artifact binding, and fail-closed receipt polarity."
+            echo "- No live connector was run and no connector-emitted receipt instance, persistence route, source-specific profile, replay, or correction path was validated."
             echo "- No source was fetched, admitted, promoted, released, or published."
             echo "- No authoritative receipt, proof, review, correction, or rollback object was produced."
             echo
@@ -152,4 +153,4 @@ jobs:
             echo "::error title=VALIDATOR_PREREQUISITE_FAILED::The connector-output and IngestReceipt prerequisite job did not pass."
             exit 1
           fi
-          echo "::notice title=WORKFLOW_HOLD::The connector primitives and IngestReceipt validator prerequisites passed; connector-run receipt presence is not yet validated."
+          echo "::notice title=WORKFLOW_HOLD::The connector primitives, injected transport, artifact handoff, and IngestReceipt validator prerequisites passed; connector-run receipt presence is not yet validated."
