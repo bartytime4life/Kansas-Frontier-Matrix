@@ -1,0 +1,59 @@
+{
+  "object_type": "MapManifestIntegrityAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "map-integrity:kfm-2026-04-11-r1",
+  "assessed_at": "2026-04-11T18:05:00Z",
+  "manifest": {
+    "release_id": "kfm-2026-04-11-r1",
+    "created_at": "2026-04-11T18:00:00Z",
+    "bundle_ref": "sigstore://bundle/kfm-2026-04-11-r1",
+    "proof_ref": "kfm://proof-pack/kfm-2026-04-11-r1",
+    "publisher": {
+      "identity": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/.github/workflows/release-trust.yml@refs/heads/main",
+      "issuer": "https://token.actions.githubusercontent.com"
+    },
+    "assets": [
+      {
+        "asset_id": "kansas-rivers-pmtiles",
+        "uri": "/tiles/kansas-rivers.pmtiles",
+        "sha256": "sha256:5032c3c14f6a4e7c87b0032f9ba2e6a77694d1233f5322ab1165a9d2dbee3f36",
+        "bytes": 21,
+        "media_type": "application/vnd.pmtiles",
+        "role": "overlay"
+      }
+    ],
+    "spec_hash": "sha256:fdaf6d795adf5b037465ee96e58130735ee963d66d2b219be27684bbcc27a9b4"
+  },
+  "expected_manifest_spec_hash": "sha256:fdaf6d795adf5b037465ee96e58130735ee963d66d2b219be27684bbcc27a9b4",
+  "signature_verdict": {
+    "state": "VERIFIED",
+    "signer_identity": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/.github/workflows/release-trust.yml@refs/heads/main",
+    "verdict_ref": "/release/kfm-release-manifest.sigstore-verdict.json"
+  },
+  "evidence_resolution": {
+    "bundle_state": "RESOLVED",
+    "proof_state": "RESOLVED"
+  },
+  "selected_asset_id": "kansas-rivers-pmtiles",
+  "deep_verify_required": true,
+  "asset_verification": {
+    "state": "VERIFIED",
+    "observed_sha256": "sha256:5032c3c14f6a4e7c87b0032f9ba2e6a77694d1233f5322ab1165a9d2dbee3f36",
+    "observed_bytes": 21
+  },
+  "decision": {
+    "outcome": "ANSWER",
+    "reasons": [
+      "SIGNATURE_UNVERIFIED"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_fetch": false,
+    "crypto_verification": false,
+    "promotion_allowed": false,
+    "release_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:4bd777650f4c73e014fde162bc2347c8e5a9cdbbeb75ceba1a086302eb30fa06"
+}

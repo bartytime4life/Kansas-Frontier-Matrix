@@ -1,0 +1,41 @@
+{
+  "receipts/invalid/receipt_missing_bytes.json": [
+    "RECEIPT_MISSING_BYTES",
+    "SCHEMA_INVALID"
+  ],
+  "receipts/invalid/receipt_has_outcome.json": [
+    "RECEIPT_HAS_OUTCOME",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_verified_missing_digest.json": [
+    "PROOF_MISSING_DIGEST",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_unknown_outcome.json": [
+    "INVALID_OUTCOME",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_bad_digest.json": [
+    "DIGEST_INVALID",
+    "PROOF_MISSING_DIGEST",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_mismatch_equal.json": [
+    "DIGEST_EQUAL_WHEN_MISMATCH"
+  ],
+  "proofs/invalid/proof_fabricated_expected.json": [
+    "FABRICATED_EXPECTED_DIGEST",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_interrupted_observed.json": [
+    "AMBIGUOUS_INTERRUPTED_PROOF"
+  ],
+  "proofs/invalid/proof_has_progress.json": [
+    "PROOF_HAS_PROGRESS_FIELD",
+    "SCHEMA_INVALID"
+  ],
+  "proofs/invalid/proof_has_receipt_id.json": [
+    "PROOF_HAS_RECEIPT_ID",
+    "SCHEMA_INVALID"
+  ]
+}

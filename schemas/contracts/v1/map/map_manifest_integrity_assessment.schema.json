@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/map/map_manifest_integrity_assessment.schema.json",
+  "title": "MapManifestIntegrityAssessment",
+  "description": "Fixture-only trust assessment for a map release manifest; not signature verification or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "assessed_at",
+    "manifest",
+    "expected_manifest_spec_hash",
+    "signature_verdict",
+    "evidence_resolution",
+    "deep_verify_required",
+    "asset_verification",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "MapManifestIntegrityAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 180
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_id",
+        "created_at",
+        "spec_hash",
+        "publisher",
+        "assets"
+      ],
+      "properties": {
+        "release_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "bundle_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "proof_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "publisher": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identity",
+            "issuer"
+          ],
+          "properties": {
+            "identity": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        },
+        "assets": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "asset_id",
+              "uri",
+              "sha256",
+              "bytes",
+              "media_type",
+              "role"
+            ],
+            "properties": {
+              "asset_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "uri": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "media_type": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "role": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          }
+        }
+      }
+    },
+    "expected_manifest_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "signature_verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "VERIFIED",
+            "UNVERIFIED",
+            "FAILED",
+            "NOT_CONFIGURED",
+            "ERROR"
+          ]
+        },
+        "signer_identity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "verdict_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "evidence_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_state",
+        "proof_state"
+      ],
+      "properties": {
+        "bundle_state": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "MISSING",
+            "DENIED"
+          ]
+        },
+        "proof_state": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "MISSING",
+            "DENIED"
+          ]
+        }
+      }
+    },
+    "selected_asset_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "deep_verify_required": {
+      "type": "boolean"
+    },
+    "asset_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "VERIFIED",
+            "SKIPPED",
+            "FAILED",
+            "ERROR"
+          ]
+        },
+        "observed_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ANSWER",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ASSET_DEEP_VERIFY_SKIPPED",
+              "ASSET_HASH_MISMATCH",
+              "ASSET_SIZE_MISMATCH",
+              "ASSET_VERIFY_ERROR",
+              "EVIDENCE_BUNDLE_DENIED",
+              "EVIDENCE_BUNDLE_MISSING",
+              "EVIDENCE_BUNDLE_UNRESOLVED",
+              "EXPECTED_SPEC_HASH_MISMATCH",
+              "MANIFEST_SPEC_HASH_MISMATCH",
+              "PROOF_DENIED",
+              "PROOF_REF_MISSING",
+              "PROOF_UNRESOLVED",
+              "SELECTED_ASSET_MISSING",
+              "SIGNATURE_FAILED",
+              "SIGNATURE_UNVERIFIED",
+              "SIGNATURE_VERIFY_ERROR",
+              "SIGNER_IDENTITY_MISMATCH"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_fetch",
+        "crypto_verification",
+        "promotion_allowed",
+        "release_allowed",
+        "publication_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_fetch": {
+          "const": false
+        },
+        "crypto_verification": {
+          "const": false
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "release_allowed": {
+          "const": false
+        },
+        "publication_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
