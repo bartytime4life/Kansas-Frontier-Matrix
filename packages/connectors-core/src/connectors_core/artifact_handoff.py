@@ -14,7 +14,7 @@ import re
 from types import MappingProxyType
 from typing import Mapping, Sequence
 
-from .core import TransportCategory, validate_sha256_digest
+from .core import TransportCategory, redact_url, validate_sha256_digest
 from ._transport_request import TransportMethod
 from ._transport_result import RetrievalResult
 
@@ -152,7 +152,8 @@ class SourceArtifactHandoff:
         if not isinstance(frozen, Mapping):
             raise TypeError("metadata must be a mapping")
         chunks = tuple(bytes(chunk) for chunk in self.payload_chunks)
-        if not chunks or sum(len(chunk) for chunk in chunks) <= 0:
+        payload_bytes = b"".join(chunks)
+        if not chunks or not payload_bytes:
             raise ArtifactHandoffError("handoff requires non-empty captured bytes")
         if (
             self.authority_created
@@ -161,6 +162,7 @@ class SourceArtifactHandoff:
             or self.repository_mutation_allowed
         ):
             raise ArtifactHandoffError("handoff cannot create authority, receipts, or repository writes")
+        _validate_handoff_metadata(frozen, payload_bytes)
         object.__setattr__(self, "metadata", frozen)
         object.__setattr__(self, "payload_chunks", chunks)
 
@@ -291,6 +293,75 @@ def build_source_artifact_handoff(
         },
     }
     return SourceArtifactHandoff(metadata=metadata, payload_chunks=payload.chunks)
+
+
+def _validate_handoff_metadata(metadata: Mapping[str, object], payload_bytes: bytes) -> None:
+    """Enforce trust-critical bindings even for direct value-object construction.
+
+    Full SourceArtifact schema and semantic validation remain caller obligations.
+    This check prevents a handoff object itself from carrying bytes that disagree
+    with its deterministic identity or metadata that grants authority or public use.
+    """
+
+    if metadata.get("object_type") != "SourceArtifact":
+        raise ArtifactHandoffError("metadata object_type is not SourceArtifact")
+    if metadata.get("schema_version") != "1.0.0":
+        raise ArtifactHandoffError("metadata schema_version is unsupported")
+
+    observed_digest = _sha256(payload_bytes)
+    content_digest = metadata.get("content_digest")
+    if not isinstance(content_digest, str) or _SHA256_RE.fullmatch(content_digest) is None:
+        raise ArtifactHandoffError("metadata content_digest is invalid")
+    if content_digest != observed_digest:
+        raise ArtifactHandoffError("metadata content_digest does not match payload bytes")
+
+    byte_length = metadata.get("byte_length")
+    if isinstance(byte_length, bool) or not isinstance(byte_length, int):
+        raise ArtifactHandoffError("metadata byte_length is invalid")
+    if byte_length != len(payload_bytes):
+        raise ArtifactHandoffError("metadata byte_length does not match payload bytes")
+    if metadata.get("artifact_id") != f"source-artifact:{observed_digest}":
+        raise ArtifactHandoffError("metadata artifact_id does not match payload digest")
+    if metadata.get("immutable_storage_ref") != f"cas:{observed_digest}":
+        raise ArtifactHandoffError("metadata immutable_storage_ref does not match payload digest")
+
+    source_locator = metadata.get("source_locator")
+    if not isinstance(source_locator, Mapping):
+        raise ArtifactHandoffError("metadata source_locator is missing")
+    locator_kind = source_locator.get("kind")
+    locator_value = source_locator.get("value")
+    if locator_kind not in _LOCATOR_KINDS or not isinstance(locator_value, str):
+        raise ArtifactHandoffError("metadata source_locator is invalid")
+    try:
+        safe_locator = redact_url(locator_value)
+    except (TypeError, ValueError) as exc:
+        raise ArtifactHandoffError("metadata source_locator is invalid") from exc
+    if locator_value != safe_locator:
+        raise ArtifactHandoffError("metadata source_locator is not redacted")
+    expected_locator_digest = _sha256(f"{locator_kind}\n{locator_value}".encode("utf-8"))
+    if source_locator.get("locator_digest") != expected_locator_digest:
+        raise ArtifactHandoffError("metadata locator_digest does not match source_locator")
+
+    request_context = metadata.get("request_context")
+    if not isinstance(request_context, Mapping):
+        raise ArtifactHandoffError("metadata request_context is missing")
+    if request_context.get("secrets_embedded") is not False:
+        raise ArtifactHandoffError("handoff metadata cannot embed secrets")
+
+    governance = metadata.get("governance")
+    if not isinstance(governance, Mapping):
+        raise ArtifactHandoffError("metadata governance is missing")
+    if governance.get("public_use_allowed") is not False:
+        raise ArtifactHandoffError("handoff metadata cannot allow public use")
+    if governance.get("authority_created") is not False:
+        raise ArtifactHandoffError("handoff metadata cannot create authority")
+    if governance.get("release_ref") is not None:
+        raise ArtifactHandoffError("handoff metadata cannot carry a release reference")
+    spec_hash = governance.get("spec_hash")
+    if not isinstance(spec_hash, str) or _SHA256_RE.fullmatch(spec_hash) is None:
+        raise ArtifactHandoffError("metadata governance spec_hash is invalid")
+    if spec_hash == _zero_digest():
+        raise ArtifactHandoffError("metadata governance spec_hash cannot be an all-zero placeholder")
 
 
 def _zero_digest() -> str:
