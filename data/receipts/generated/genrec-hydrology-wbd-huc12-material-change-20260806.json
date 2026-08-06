@@ -99,7 +99,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "No hosted run was associated with the original PR head because this workflow first became active on the default branch after PR #2069 merged; a follow-up pull request is required to obtain hosted evidence."
+      "reason": "No hosted run was associated with the original PR head because this workflow first became active on the default branch after PR #2069 merged; hosted validation is tracked in follow-up PR #2072."
     },
     {
       "gate": "human-review",
@@ -140,5 +140,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a fixture-only WBD HUC12 material change contract, schema, pure-Python geometry canonicalizer/fingerprint validator, fixtures, tests, and read-only CI. It does not call or activate the WBD source. Post-merge reconciliation: PR #2069 merged as e2d446ed8c9db20a066109f4214b29ba214524c2, and GitHub registered the workflow on main at 2026-08-06T21:37:32-05:00 after the merge event, so the original push produced no workflow run. This correction changes receipt narrative only; it does not alter implementation bytes or claim hosted success."
+  "notes": "Adds a fixture-only WBD HUC12 material change contract, schema, pure-Python geometry canonicalizer/fingerprint validator, fixtures, tests, and read-only CI. It does not call or activate the WBD source. Post-merge reconciliation: PR #2069 merged as e2d446ed8c9db20a066109f4214b29ba214524c2, and GitHub registered the workflow on main at 2026-08-06T21:37:32-05:00 after the merge event, so the original push produced no workflow run. Follow-up validation is tracked in PR #2072. This correction changes receipt narrative only; it does not alter implementation bytes or claim hosted success."
 }
