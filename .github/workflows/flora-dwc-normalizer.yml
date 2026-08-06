@@ -1,0 +1,124 @@
+# Validate the proposed no-network Flora Darwin Core normalizer.
+#
+# A green result proves only bounded source-profile mapping, deterministic WORK
+# candidates, schema conformance, fixture polarity, and fixed non-authority
+# fields. It does not activate a source or authorize release/public use.
+name: flora-dwc-normalizer
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/flora-dwc-normalizer.yml"
+      - "contracts/domains/flora/flora_occurrence_candidate.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json"
+      - "packages/domains/flora/normalizers/__init__.py"
+      - "packages/domains/flora/normalizers/dwc_occurrence.py"
+      - "fixtures/domains/flora/flora_occurrence_candidate/**"
+      - "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py"
+      - "data/receipts/generated/genrec-flora-dwc-normalizer-20260805.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/flora-dwc-normalizer.yml"
+      - "contracts/domains/flora/flora_occurrence_candidate.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json"
+      - "packages/domains/flora/normalizers/__init__.py"
+      - "packages/domains/flora/normalizers/dwc_occurrence.py"
+      - "fixtures/domains/flora/flora_occurrence_candidate/**"
+      - "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py"
+      - "data/receipts/generated/genrec-flora-dwc-normalizer-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flora-dwc-normalizer-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-flora-dwc-normalizer
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/packages/domains/flora/normalizers \
+            --pattern 'test_dwc_occurrence.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes and candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python packages/domains/flora/normalizers/dwc_occurrence.py \
+            --fixtures fixtures/domains/flora/flora_occurrence_candidate
+
+      - name: Validate schema and fixture JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_path = Path("schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json")
+          Draft202012Validator.check_schema(json.loads(schema_path.read_text(encoding="utf-8")))
+          files = sorted(Path("fixtures/domains/flora/flora_occurrence_candidate").rglob("*.json"))
+          assert files, "fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-flora-dwc-normalizer-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Flora Darwin Core normalizer"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: bounded GBIF/iDigBio Darwin Core aliases, deterministic identity and hashes, WORK-stage candidate shape, coordinate safety, exact fixture replay."
+            echo "- Boundary: normalization is not source admission, occurrence truth, evidence closure, policy, review, geoprivacy transformation, release, publication, or public use."
+            echo "- Network posture: no live connector, source endpoint, credential, or external service is used."
+          } >> "$GITHUB_STEP_SUMMARY"
