@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-flora-occurrence-intake-governance-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/flora-occurrence-intake-governance.yml",
+    "contracts/domains/flora/flora_occurrence_intake_decision.md",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/README.md",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/conditional_license.candidate.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/missing_license.candidate.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_no_coordinate.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_open.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_fallback.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_primary.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/hold_sensitive_exact.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_conditional_license.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_missing_license.decision.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected_outcomes.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_governance_overclaim.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_spec_hash_mismatch.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/empty_peers.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/fallback_duplicate_peers.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/primary_duplicate_peers.json",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/self_peer.json",
+    "packages/domains/flora/normalizers/intake_governance.py",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json",
+    "tests/packages/domains/flora/normalizers/test_intake_governance.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/flora-occurrence-intake-governance.yml": "sha256:4d56b63b93add24f5c55f26da83531f9e94f0545c45c0e60eb56dec12f712a9a",
+    "contracts/domains/flora/flora_occurrence_intake_decision.md": "sha256:e4c1155720d6d22ba211beb9cb3d9b38752ceaf223c0e4bccce731cf43ae2d8c",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/README.md": "sha256:a026c2e3ece2465655be3d960aedbaab9efe7c8fcf1a032106c09190a1c938fc",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/conditional_license.candidate.json": "sha256:eb01801acc5bb00e0dd93bbc740a90c0d4cb314001562535f25fea90cd20628c",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/missing_license.candidate.json": "sha256:b7ae7ee7ebb94e1fdcd3b397cef3eab2a488e74ca50baade4f30e837ae20000a",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_no_coordinate.decision.json": "sha256:c8d6e7c0fd62899c9ac1bbfc83a8af028415e83471418967768f7314ac7a9586",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_open.decision.json": "sha256:0070749877f8ef0685ca04246209f0ace8680ce2af0753158fc9cdbb27f51c9a",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_fallback.decision.json": "sha256:d185212c073d846f6622445c4b937c75c4d9527298188391826fc5d63d7def1b",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_primary.decision.json": "sha256:e5f4fd20a369807b413dda0877cbdbb0fdd0ab8b8c3f041f014d20113638c20f",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/hold_sensitive_exact.decision.json": "sha256:2de0d439e7064cebbc969eb35782821f4ce070e8d89fe7fa9d9db31cecd54185",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_conditional_license.decision.json": "sha256:12d626ce381636704b02f7f917130722b2959edb4f2c5fd6050962aa6efcd9a2",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_missing_license.decision.json": "sha256:31079b818b970968018640acfd4bb29cb93a27c752c94c2c4807e2ec7c633564",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected_outcomes.json": "sha256:2f56e527c5e4b3134c05aff1fa9a31f0acce3473b1a9870ff8fe5f5b25879320",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_governance_overclaim.json": "sha256:68360f5889d65f138d7e85b651e60bcd0c6aad41581d666ec9e022c46deb1911",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_spec_hash_mismatch.json": "sha256:556c85fa6f85872ffe8d9833a6828fe4217270db3c4e52c93021e8db37a4b4a9",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/empty_peers.json": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/fallback_duplicate_peers.json": "sha256:b02b1cf2b557852755117542af10d5a1f7c64412e0fe0507499f6dc3b45dd613",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/primary_duplicate_peers.json": "sha256:01ea375c5f55c5ba042ef1f5502e68771affd9cdaffff79d2bfcadb9de29937c",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/self_peer.json": "sha256:5c18911a55c47360c4c52ad81c906ceef57d3b470ce5606e6ea31b63dc611e35",
+    "packages/domains/flora/normalizers/intake_governance.py": "sha256:8543d76ecd4729c2f0597e441f45356370c11987cd96d8b9b7f8262096ef72c9",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json": "sha256:ef5aa19a9014d5fc9a7cecc499419c8076beeeee8cd6eec44902427ca52ab909",
+    "tests/packages/domains/flora/normalizers/test_intake_governance.py": "sha256:ad8f039de4375d91fe2b3765221b97a5b9dde2fd18c29d6c3a1574c31b47e7f0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:063b6e59c1693a4854152c4dcb31b34805c5937d9d85ce0074a6122f3eccf49f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector readback",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26.pdf",
+      "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:pull/2007"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/flora-occurrence-intake-governance.yml": "PROPOSED",
+    "contracts/domains/flora/flora_occurrence_intake_decision.md": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/README.md": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/conditional_license.candidate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/candidates/missing_license.candidate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_no_coordinate.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/accept_open.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_fallback.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/dedupe_primary.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/hold_sensitive_exact.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_conditional_license.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected/quarantine_missing_license.decision.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/expected_outcomes.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_governance_overclaim.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/invalid/candidate_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/empty_peers.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/fallback_duplicate_peers.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/primary_duplicate_peers.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_intake_decision/peers/self_peer.json": "PROPOSED",
+    "packages/domains/flora/normalizers/intake_governance.py": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json": "PROPOSED",
+    "tests/packages/domains/flora/normalizers/test_intake_governance.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Eleven focused intake-governance tests passed."
+    },
+    {
+      "gate": "stacked-regression",
+      "outcome": "PASS",
+      "reason": "Combined normalizer and intake-governance suite passed twenty-one tests."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "Seven exact finite decisions and three exact ERROR cases replayed."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema self-check passed."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "Workflow YAML parsed successfully."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact-path, SHA-256, and truth-label closure validated after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No remote branch or draft pull request could be created because the connected GitHub mutation surface was unavailable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26.pdf"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf"
+    },
+    {
+      "id": "repository:occurrence-retrieval-coordination",
+      "validated": true,
+      "evidence_ref": "github:pull/2007"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Stacked fixture-first Flora occurrence intake classifier. Outcomes propose handling only; they do not execute lifecycle transitions, make legal or policy decisions, generalize geometry, release, publish, or permit public use. Prepared against current-main snapshot ac0f43afbd23557bbfb7389fbbf97bad120315bf."
+}
