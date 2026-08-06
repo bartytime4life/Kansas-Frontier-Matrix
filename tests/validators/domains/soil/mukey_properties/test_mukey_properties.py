@@ -106,7 +106,7 @@ class MukeyPropertiesTests(unittest.TestCase):
         result = validate_candidate(candidate)
         codes = {finding.code for finding in result.findings}
         self.assertEqual(result.outcome, "ABSTAIN")
-        self.assertIn("ROOT_ZONE_INCOMPLEDE", codes)
+        self.assertIn("ROOT_ZONE_INCOMPLETE", codes)
         self.assertIn("CRITICAL_PROPERTY_MISSING", codes)
 
     def test_source_family_role_pair_is_enforced(self) -> None:
