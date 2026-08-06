@@ -1,0 +1,92 @@
+{
+  "entries": [
+    {
+      "assessment_content_hash": "sha256:80458c072e8d37bbd8615d766565218d4b5640e731f76d34e5e51496a2857f4e",
+      "assessment_id": "material-change:natural-systems:atmosphere:2026-03-20:non_event",
+      "assessment_outcome": "NON_EVENT",
+      "assessment_ref": "fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/assessment_atmosphere_non_event.json",
+      "assessment_spec_hash": "sha256:a99fd1279a4703e27226fc1b5f385b006e057e1276e064fed012d0c2ff11da8d",
+      "domain": "atmosphere",
+      "recommended_action": "NONE"
+    },
+    {
+      "assessment_content_hash": "sha256:f5fae0fff3843178d8f14228cdafd07731deacbaf970464aa8862c789fcf1686",
+      "assessment_id": "material-change:natural-systems:fauna_habitat:2026-03-20:non_event",
+      "assessment_outcome": "NON_EVENT",
+      "assessment_ref": "fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/assessment_fauna_habitat_non_event.json",
+      "assessment_spec_hash": "sha256:2b4891efc9dbaa1e19a724dacd1358cd975ba31be39cb020e1db6c672e63a5af",
+      "domain": "fauna_habitat",
+      "recommended_action": "NONE"
+    },
+    {
+      "assessment_content_hash": "sha256:81bc679d1d9c3393ccbbeaf3d232b2b7921c27b9c344cb68f9f00d3237855c63",
+      "assessment_id": "material-change:natural-systems:hydrology:2026-03-20:non_event",
+      "assessment_outcome": "NON_EVENT",
+      "assessment_ref": "fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/assessment_hydrology_non_event.json",
+      "assessment_spec_hash": "sha256:e2554b4ceda5e6809e23dce7edb6da1452f86f1cb63ac963423a221455b108b2",
+      "domain": "hydrology",
+      "recommended_action": "NONE"
+    },
+    {
+      "assessment_content_hash": "sha256:f8539547e4f935367407f5773e72c5acdfdf325fa5dc7be8f41a92deede1e2ab",
+      "assessment_id": "material-change:natural-systems:soil:2026-03-20:non_event",
+      "assessment_outcome": "NON_EVENT",
+      "assessment_ref": "fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/assessment_soil_non_event.json",
+      "assessment_spec_hash": "sha256:229661ec35a76ccce6895055698fd173f8f0926301cb80cafc1b289722b84688",
+      "domain": "soil",
+      "recommended_action": "NONE"
+    },
+    {
+      "assessment_content_hash": "sha256:7a31fcb0a7116f139ab73dbe66081756f7663e97af5b9f4e8fcf4459ba9eac39",
+      "assessment_id": "material-change:natural-systems:vegetation:2026-03-20:non_event",
+      "assessment_outcome": "NON_EVENT",
+      "assessment_ref": "fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/assessment_vegetation_non_event.json",
+      "assessment_spec_hash": "sha256:09b97828c540404290c4dd40eff49713513d6dee56304ded43dcade899fafe56",
+      "domain": "vegetation",
+      "recommended_action": "NONE"
+    }
+  ],
+  "governance": {
+    "authority_created": false,
+    "fixture_only": true,
+    "issue_or_pr_creation_allowed": false,
+    "network_access_allowed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "publication_allowed": false,
+    "rebuild_execution_allowed": false,
+    "release_state": "HOLD",
+    "review_authenticated": false,
+    "source_activation_allowed": false
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "FridayNaturalSystemsPulseCandidate",
+  "profile_id": "kfm://material-change-pulse/natural-systems/friday/v1",
+  "profile_version": "1.0.0",
+  "pulse_id": "natural-systems-pulse:2026-03-20:9cd0a93f9be7bed710bad33d",
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "summary": {
+    "emit_candidate": false,
+    "entry_count": 5,
+    "error_count": 0,
+    "hold_count": 0,
+    "material_count": 0,
+    "non_event_count": 5,
+    "outcome": "NO_EVENT",
+    "reason_codes": [
+      "ALL_DOMAINS_NON_EVENT",
+      "DOMAIN_COVERAGE_COMPLETE",
+      "NO_AUTOMATED_EMISSION"
+    ]
+  },
+  "window": {
+    "assessed_at": "2026-03-21T00:10:00Z",
+    "end": "2026-03-20T23:59:59Z",
+    "start": "2026-03-16T00:00:00Z"
+  }
+}

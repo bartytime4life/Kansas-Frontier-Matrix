@@ -1,0 +1,67 @@
+{
+  "assessment_id": "material-change:natural-systems:vegetation:2026-03-20:material",
+  "baseline_ref": "kfm://dataset-version/natural-systems/vegetation/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/vegetation/2026-03-20",
+  "classification": {
+    "change_class": "MATERIAL",
+    "material": true,
+    "outcome": "PROMOTION_CANDIDATE",
+    "reason_codes": [
+      "MATERIALITY_THRESHOLD_MET"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:1310bd7fe7e61f91565292bcd3f3501a15454e4ff42471d1c73c650b9c86550c",
+    "byte_changed": true,
+    "candidate_digest": "sha256:99a65e7f74b3b34adeab896e386622ca72b855fb25a815c07efb458a4164354e",
+    "semantic_changed": true
+  },
+  "criteria": [
+    {
+      "criterion_id": "domain-materiality-threshold",
+      "evidence_refs": [
+        "kfm://validation/natural-systems/vegetation/materiality"
+      ],
+      "metric": "synthetic_domain_change_fraction",
+      "observed_value": 0.75,
+      "required": true,
+      "result": "PASS",
+      "threshold": 0.5,
+      "unit": "fraction"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://diff/natural-systems/vegetation/2026-03-20",
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/vegetation"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:e5e4f7d359b8f3e44a6a2877306d21ca8d02f4ab1975898b7cea8d7e08ee4616"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/vegetation/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:be6f3810b6b649778a5122a2dd69e083e52c3881022f80e3294ac3c2d50eb1de"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/vegetation",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}
