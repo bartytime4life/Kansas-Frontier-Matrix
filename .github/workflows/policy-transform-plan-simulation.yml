@@ -1,0 +1,124 @@
+# Validate fixture-only transform-plan dominance over policy obligations.
+name: policy-transform-plan-simulation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/policy-transform-plan-simulation.yml"
+      - "contracts/policy/policy_transform_plan_simulation.md"
+      - "contracts/policy/policy_obligation_reduction.md"
+      - "schemas/contracts/v1/policy/policy_transform_plan_simulation.schema.json"
+      - "schemas/contracts/v1/policy/policy_obligation_reduction.schema.json"
+      - "fixtures/contracts/v1/policy/policy_obligation_reduction/valid/**"
+      - "fixtures/contracts/v1/policy/policy_transform_plan_simulation/**"
+      - "tools/validators/policy/validate_policy_obligation_reduction.py"
+      - "tools/validators/policy/validate_policy_transform_plan_simulation.py"
+      - "tests/validators/test_validate_policy_obligation_reduction.py"
+      - "tests/validators/test_validate_policy_transform_plan_simulation.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-policy-transform-plan-simulation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-transform-plan-simulation.yml"
+      - "contracts/policy/policy_transform_plan_simulation.md"
+      - "contracts/policy/policy_obligation_reduction.md"
+      - "schemas/contracts/v1/policy/policy_transform_plan_simulation.schema.json"
+      - "schemas/contracts/v1/policy/policy_obligation_reduction.schema.json"
+      - "fixtures/contracts/v1/policy/policy_obligation_reduction/valid/**"
+      - "fixtures/contracts/v1/policy/policy_transform_plan_simulation/**"
+      - "tools/validators/policy/validate_policy_obligation_reduction.py"
+      - "tools/validators/policy/validate_policy_transform_plan_simulation.py"
+      - "tests/validators/test_validate_policy_obligation_reduction.py"
+      - "tests/validators/test_validate_policy_transform_plan_simulation.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-policy-transform-plan-simulation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-transform-plan-simulation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-policy-transform-plan-simulation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Revalidate the pinned source reduction profile
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_policy_obligation_reduction.py' \
+            --verbose
+          python tools/validators/policy/validate_policy_obligation_reduction.py \
+            --fixtures
+
+      - name: Run focused deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_policy_transform_plan_simulation.py' \
+            --verbose
+          python tools/validators/policy/validate_policy_transform_plan_simulation.py \
+            --fixtures
+          python tools/validators/policy/validate_policy_transform_plan_simulation.py \
+            --assess \
+            fixtures/contracts/v1/policy/policy_transform_plan_simulation/valid/valid_insufficient_multi.json
+
+      - name: Verify repository-wide schema fixture naming boundary
+        run: |
+          set -euo pipefail
+          python -m pytest tests/schemas/test_common_contracts.py \
+            -q -k policy_transform_plan_simulation
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-policy-transform-plan-simulation-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Policy transform-plan simulation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: revalidated source reductions, source ID/hash/result binding, closed fixture profile, RFC 8785 identity, transform-plan dominance, exact synthetic assessment polarity, schema-negative naming, and authoring-receipt integrity."
+            echo "- Assessment: SATISFIES and INSUFFICIENT are record states; validator PASS means the stored assessment is deterministic and self-consistent."
+            echo "- Gate vocabulary: PROCESS_TO_CATALOG_SIMULATION is explicit and does not accept or bind a promotion gate letter."
+            echo "- Boundary: a green result does not evaluate policy, authenticate obligations, apply a transform, verify output bytes, mutate data, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
