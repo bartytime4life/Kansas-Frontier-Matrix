@@ -1,0 +1,130 @@
+{
+  "assessment_id": "material-change:soil:timestamp-only",
+  "baseline_ref": "kfm://soil/fixture/baseline",
+  "candidate_ref": "kfm://soil/fixture/timestamp-only",
+  "classification": {
+    "change_class": "BYTE_ONLY",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "BYTE_ONLY_CHANGE",
+      "CANONICAL_EQUIVALENT"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:6e520e9e74fdd4b79dbd46de1eea4479a2864909e07428e8556f49f4679a3082",
+    "byte_changed": true,
+    "candidate_digest": "sha256:a4911baaef70a8b890bac619462af5473e9e848729ad0fb6dff9b9400b265979",
+    "semantic_changed": false
+  },
+  "criteria": [
+    {
+      "criterion_id": "soil.hash.content_spec_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "content_spec_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.policy_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "policy_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.schema_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "schema_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.source_descriptor_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "source_descriptor_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.hash.validator_hash",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "validator_hash",
+      "observed_value": false,
+      "required": false,
+      "result": "FAIL",
+      "threshold": true,
+      "unit": null
+    },
+    {
+      "criterion_id": "soil.materiality.any_substantive_hash_changed",
+      "evidence_refs": [
+        "kfm://validation/soil/timestamp-only/diff"
+      ],
+      "metric": "substantive_hash_change_count",
+      "observed_value": 0,
+      "required": true,
+      "result": "FAIL",
+      "threshold": 1,
+      "unit": "dimension_count"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://validation/soil/timestamp-only/diff",
+    "source_refs": [
+      "kfm://source/nrcs-ssurgo"
+    ],
+    "validation_report_refs": [
+      "kfm://validation/soil/timestamp-only/integrity"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:2685509b110885550e680826639e825b332f6af096e1b2da91a4c133ae6be2f7"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:f09f5db9fbe536de0eecbf051c6a38fc21ef18519a0e8a6610be707782be6682"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://soil/fixture/kansas-static-survey",
+  "timing": {
+    "assessed_at": "2026-08-03T00:00:00Z",
+    "baseline_as_of": "2026-08-01T00:00:00Z",
+    "candidate_as_of": "2026-08-02T00:00:00Z"
+  }
+}
