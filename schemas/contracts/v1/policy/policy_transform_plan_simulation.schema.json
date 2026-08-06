@@ -1,0 +1,603 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/policy/policy_transform_plan_simulation.schema.json",
+  "title": "PolicyTransformPlanSimulation",
+  "description": "Closed fixture-only record proving whether a proposed transform plan is at least as restrictive as a separately validated PolicyObligationReduction snapshot. The record performs no transform and grants no policy, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "profile_status",
+    "execution_mode",
+    "algorithm",
+    "lifecycle_phase",
+    "simulation_id",
+    "subject_ref",
+    "created_at",
+    "source_reduction",
+    "plan",
+    "assessment",
+    "provenance",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "PolicyTransformPlanSimulation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm.policy.policy-transform-plan-simulation.v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "algorithm": {
+      "const": "kfm-policy-transform-plan-dominance-v1"
+    },
+    "lifecycle_phase": {
+      "const": "PROCESS_TO_CATALOG_SIMULATION"
+    },
+    "simulation_id": {
+      "type": "string",
+      "pattern": "^policy-transform-plan-simulation:[0-9a-f]{24}$"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/reference"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_reduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reduction_id",
+        "spec_hash",
+        "result_spec_hash",
+        "validator_profile",
+        "validation_outcome",
+        "required"
+      ],
+      "properties": {
+        "reduction_id": {
+          "type": "string",
+          "pattern": "^policy-obligation-reduction:[0-9a-f]{24}$"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/specHash"
+        },
+        "validator_profile": {
+          "const": "kfm.policy.policy-obligation-reduction.v1"
+        },
+        "validation_outcome": {
+          "const": "PASS"
+        },
+        "required": {
+          "$ref": "#/$defs/reductionResult"
+        },
+        "result_spec_hash": {
+          "$ref": "#/$defs/specHash"
+        }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_artifact_ref",
+        "planned_output_ref",
+        "record_action",
+        "geometry_action",
+        "generalize_distance_m",
+        "date_action",
+        "date_fuzz_days",
+        "embargo_until",
+        "covered_obligation_ids",
+        "source_policy_refs",
+        "reason_codes",
+        "preconditions"
+      ],
+      "properties": {
+        "input_artifact_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "planned_output_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "record_action": {
+          "enum": [
+            "RETAIN",
+            "SUPPRESS"
+          ]
+        },
+        "geometry_action": {
+          "enum": [
+            "UNCHANGED",
+            "GENERALIZE",
+            "SUPPRESS"
+          ]
+        },
+        "generalize_distance_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "date_action": {
+          "enum": [
+            "UNCHANGED",
+            "FUZZ"
+          ]
+        },
+        "date_fuzz_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365250
+        },
+        "embargo_until": {
+          "$ref": "#/$defs/dateOrNull"
+        },
+        "covered_obligation_ids": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "source_policy_refs": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reasonCodeArray"
+        },
+        "preconditions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "input_spec_hash_verified",
+            "output_spec_hash_required",
+            "transform_receipt_required",
+            "policy_recheck_required",
+            "review_required",
+            "rollback_target_required"
+          ],
+          "properties": {
+            "input_spec_hash_verified": {
+              "const": true
+            },
+            "output_spec_hash_required": {
+              "const": true
+            },
+            "transform_receipt_required": {
+              "const": true
+            },
+            "policy_recheck_required": {
+              "const": true
+            },
+            "review_required": {
+              "const": true
+            },
+            "rollback_target_required": {
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "finding_codes",
+        "unmet_dimensions"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "SATISFIES",
+            "INSUFFICIENT"
+          ]
+        },
+        "finding_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "TRANSFORM_TOO_WEAK",
+              "GENERALIZE_DISTANCE_TOO_SMALL",
+              "DATE_FUZZ_TOO_SMALL",
+              "GEOMETRY_SUPPRESSION_REQUIRED",
+              "EMBARGO_TOO_EARLY",
+              "CONTRIBUTOR_SET_MISMATCH",
+              "POLICY_REF_SET_MISMATCH",
+              "REASON_CODE_SET_MISMATCH"
+            ]
+          },
+          "uniqueItems": true,
+          "maxItems": 8
+        },
+        "unmet_dimensions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "TRANSFORM",
+              "GENERALIZATION_DISTANCE",
+              "DATE_FUZZ",
+              "GEOMETRY_SUPPRESSION",
+              "EMBARGO",
+              "CONTRIBUTORS",
+              "POLICY_REFS",
+              "REASON_CODES"
+            ]
+          },
+          "uniqueItems": true,
+          "maxItems": 8
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_reduction_ref",
+        "source_reduction_spec_hash",
+        "simulation_profile",
+        "input_refs"
+      ],
+      "properties": {
+        "source_reduction_ref": {
+          "type": "string",
+          "pattern": "^policy-obligation-reduction:[0-9a-f]{24}$"
+        },
+        "source_reduction_spec_hash": {
+          "$ref": "#/$defs/specHash"
+        },
+        "simulation_profile": {
+          "const": "kfm.policy.policy-transform-plan-simulation.v1"
+        },
+        "input_refs": {
+          "$ref": "#/$defs/referenceArray"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_evaluated",
+        "transform_applied",
+        "repository_mutated",
+        "canonical_state_mutated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_authorized",
+        "network_accessed"
+      ],
+      "properties": {
+        "policy_evaluated": {
+          "const": false
+        },
+        "transform_applied": {
+          "const": false
+        },
+        "repository_mutated": {
+          "const": false
+        },
+        "canonical_state_mutated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        },
+        "network_accessed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/specHash"
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._~:/#?=&%+@-]*$"
+    },
+    "specHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "dateOrNull": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "referenceArray": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "uniqueItems": true
+    },
+    "reasonCodeArray": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+      },
+      "uniqueItems": true
+    },
+    "reductionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transform",
+        "generalize_distance_m",
+        "date_fuzz_days",
+        "suppress_geometry",
+        "embargo_until",
+        "contributing_obligation_ids",
+        "source_policy_refs",
+        "reason_codes"
+      ],
+      "properties": {
+        "transform": {
+          "enum": [
+            "NONE",
+            "FUZZ_DATE",
+            "GENERALIZE",
+            "SUPPRESS"
+          ]
+        },
+        "generalize_distance_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "date_fuzz_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365250
+        },
+        "suppress_geometry": {
+          "type": "boolean"
+        },
+        "embargo_until": {
+          "$ref": "#/$defs/dateOrNull"
+        },
+        "contributing_obligation_ids": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "source_policy_refs": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reasonCodeArray"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "geometry_action": {
+                "const": "UNCHANGED"
+              }
+            },
+            "required": [
+              "geometry_action"
+            ]
+          }
+        },
+        "required": [
+          "plan"
+        ]
+      },
+      "then": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "generalize_distance_m": {
+                "const": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "geometry_action": {
+                "const": "GENERALIZE"
+              }
+            },
+            "required": [
+              "geometry_action"
+            ]
+          }
+        },
+        "required": [
+          "plan"
+        ]
+      },
+      "then": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "generalize_distance_m": {
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "date_action": {
+                "const": "UNCHANGED"
+              }
+            },
+            "required": [
+              "date_action"
+            ]
+          }
+        },
+        "required": [
+          "plan"
+        ]
+      },
+      "then": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "date_fuzz_days": {
+                "const": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "date_action": {
+                "const": "FUZZ"
+              }
+            },
+            "required": [
+              "date_action"
+            ]
+          }
+        },
+        "required": [
+          "plan"
+        ]
+      },
+      "then": {
+        "properties": {
+          "plan": {
+            "properties": {
+              "date_fuzz_days": {
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "outcome": {
+                "const": "SATISFIES"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          }
+        },
+        "required": [
+          "assessment"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "finding_codes": {
+                "maxItems": 0
+              },
+              "unmet_dimensions": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "outcome": {
+                "const": "INSUFFICIENT"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          }
+        },
+        "required": [
+          "assessment"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "finding_codes": {
+                "minItems": 1
+              },
+              "unmet_dimensions": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "algorithm": "kfm-policy-transform-plan-dominance-v1",
+    "lifecycle_phase": "PROCESS_TO_CATALOG_SIMULATION",
+    "authority": "NONE",
+    "network": "DENIED",
+    "effects": "NONE"
+  }
+}
