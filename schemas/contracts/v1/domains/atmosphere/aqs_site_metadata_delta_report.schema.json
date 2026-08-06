@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json",
+  "title": "AqsSiteMetadataDeltaReport",
+  "description": "Fixture-only semantic delta report for EPA AQS site metadata; review signal only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "report_id",
+    "profile_id",
+    "fixture_only",
+    "prior_snapshot",
+    "current_snapshot",
+    "summary",
+    "changes",
+    "decision",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AqsSiteMetadataDeltaReport"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^aqs-site-delta:[a-f0-9]{64}$"
+    },
+    "profile_id": {
+      "const": "kfm.aqs-site-metadata.synthetic.v1"
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "prior_snapshot": {
+      "$ref": "#/$defs/snapshot_ref"
+    },
+    "current_snapshot": {
+      "$ref": "#/$defs/snapshot_ref"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sites_prior",
+        "sites_current",
+        "changes_total",
+        "high_impact_changes",
+        "medium_impact_changes",
+        "low_impact_changes",
+        "changes_by_type"
+      ],
+      "properties": {
+        "sites_prior": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sites_current": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "changes_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high_impact_changes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "medium_impact_changes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low_impact_changes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "changes_by_type": {
+          "type": "object",
+          "propertyNames": {
+            "enum": [
+              "SITE_ADDED",
+              "SITE_REMOVED",
+              "SITE_LIFECYCLE",
+              "LOCATION_SHIFT",
+              "LOCATION_CORRECTION",
+              "METHOD_CHANGE",
+              "PARAMETER_CHANGE",
+              "POC_REASSIGNMENT",
+              "METADATA_CORRECTION"
+            ]
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "site_id",
+          "change_type",
+          "impact",
+          "changed_fields"
+        ],
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "pattern": "^20-[0-9]{3}-[0-9]{4}$"
+          },
+          "change_type": {
+            "enum": [
+              "SITE_ADDED",
+              "SITE_REMOVED",
+              "SITE_LIFECYCLE",
+              "LOCATION_SHIFT",
+              "LOCATION_CORRECTION",
+              "METHOD_CHANGE",
+              "PARAMETER_CHANGE",
+              "POC_REASSIGNMENT",
+              "METADATA_CORRECTION"
+            ]
+          },
+          "impact": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ]
+          },
+          "changed_fields": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "site",
+                "status",
+                "latitude",
+                "longitude",
+                "method_code",
+                "method_name",
+                "parameter_code",
+                "poc",
+                "site_name"
+              ]
+            }
+          },
+          "distance_m": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "NO_MATERIAL_CHANGE",
+            "PROPOSED_WORK_RECORD",
+            "ABSTAIN"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "SOURCE_SURFACE_CHANGED",
+              "HIGH_IMPACT_CHANGE_REQUIRES_REVIEW"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steward_review_required",
+        "promotion_allowed",
+        "publication"
+      ],
+      "properties": {
+        "steward_review_required": {
+          "type": "boolean"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "publication": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "snapshot_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_hash",
+        "retrieval_hash",
+        "captured_at",
+        "source_revision"
+      ],
+      "properties": {
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "retrieval_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    }
+  }
+}
