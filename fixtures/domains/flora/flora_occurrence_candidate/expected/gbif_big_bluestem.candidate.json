@@ -1,0 +1,61 @@
+{
+  "object_type": "FloraOccurrenceCandidate",
+  "schema_version": "1.0.0",
+  "candidate_id": "flora-occurrence-candidate:4260070178a21861e33200850d9b4a6e",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:70e5a26fc638dc2838e584497ef42bdec0f274abf7cc733511dadc6a42290710",
+  "source_context": {
+    "source_id": "gbif",
+    "source_profile": "GBIF_DWC",
+    "source_record_id": "123456789",
+    "institution_code": "SYNTH",
+    "collection_code": "OBS",
+    "catalog_number": "SYNTH-0001",
+    "license": "CC-BY-4.0",
+    "rights_holder": "Synthetic Prairie Observer",
+    "source_role": "OBSERVATION_CANDIDATE"
+  },
+  "taxon": {
+    "scientific_name": "Andropogon gerardii",
+    "taxon_id": "2703851",
+    "rank": "SPECIES"
+  },
+  "occurrence": {
+    "basis_of_record": "HUMAN_OBSERVATION",
+    "event_date": "2024-06-15",
+    "occurrence_status": "PRESENT"
+  },
+  "spatial": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        -98.123456,
+        38.123456
+      ]
+    },
+    "crs": "EPSG:4326",
+    "uncertainty_meters": 50.0,
+    "coordinate_exposure": "INTERNAL_EXACT"
+  },
+  "temporal": {
+    "event_date_precision": "DAY"
+  },
+  "sensitivity_hints": [],
+  "provenance": {
+    "input_digest": "sha256:2872d28f033647a2a88c4e4c18e01266e8ade4929b7b85d73a4e30d85145cb22",
+    "normalizer_id": "flora-dwc-occurrence-normalizer",
+    "normalizer_version": "1.0.0"
+  },
+  "governance": {
+    "lifecycle_state": "WORK",
+    "source_admitted": false,
+    "evidence_bundle_resolved": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

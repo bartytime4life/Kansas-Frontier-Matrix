@@ -1,0 +1,174 @@
+{
+  "receipt_id": "genrec-flora-dwc-normalizer-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/flora-dwc-normalizer.yml",
+    "contracts/domains/flora/flora_occurrence_candidate.md",
+    "fixtures/domains/flora/flora_occurrence_candidate/README.md",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_no_coordinate.candidate.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/idigbio_milkweed.candidate.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected_outcomes.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_big_bluestem.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_no_coordinate.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/idigbio_milkweed.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_scientific_name.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_source_record_id.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/negative_uncertainty.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/out_of_range_coordinate.json",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/partial_coordinate.json",
+    "packages/domains/flora/normalizers/__init__.py",
+    "packages/domains/flora/normalizers/dwc_occurrence.py",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json",
+    "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/flora-dwc-normalizer.yml": "sha256:d18d9777316b22d3494f94b11d74340d9c988fe87c3cc9030e2aa4a3d3471b49",
+    "contracts/domains/flora/flora_occurrence_candidate.md": "sha256:57965f9b5df987a76986884ae01f2675737dac8ab7fc15ac8c0173476ab603ec",
+    "fixtures/domains/flora/flora_occurrence_candidate/README.md": "sha256:af2661d6770cb3ac3f4f1452474d13e0bd796289a5f4010c4e5fb0eb0c65ab7e",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json": "sha256:ec8ff33973c29cba6eda0271cb982d642d1c5140670c34f6ef165af9b3987c93",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_no_coordinate.candidate.json": "sha256:5577e56e0a5e6ee512993707cf3dd92450a3ee2e1e4dfc76d991db84432be17f",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/idigbio_milkweed.candidate.json": "sha256:5e9219ad9954d93fbaf0036e89c0fc39b6f16d1fda6c5fce755583ab5b81e9ea",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected_outcomes.json": "sha256:f3e02816fafc584ef025095c1a8c9eadc435c7b67ad29bea975495629eecd403",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_big_bluestem.json": "sha256:55e283daa6331cbb9c0d29a7ecc5172fc0b0a86805480820486725c54d9d0590",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_no_coordinate.json": "sha256:8d87c6fd88125c1fd9fc5405567fdffb1f596a95791d27704506a5ea8bed1abe",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/idigbio_milkweed.json": "sha256:0cb0bff3fe0ad94145d2be1c978e4dde30aa31ccfc55286e3ba53a18b615b2c6",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_scientific_name.json": "sha256:e1eb73110620bb862ea7be2e60ff4f3c14417ba5fb96439faeccfb1bc5acc643",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_source_record_id.json": "sha256:dc877c4c6c9de299fc338e46e9a6e9ef8807da2f94866d7bb84275755566baf2",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/negative_uncertainty.json": "sha256:bf33cb9413041083f66a6007f286ac33764bb6e0886081d6bfff5b7a5d52c633",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/out_of_range_coordinate.json": "sha256:dc136db727d7e6706f0c8680d8b375f2f219735ef9d665b64e6a73cb5ec8422c",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/partial_coordinate.json": "sha256:126acded36ee8ecdaa8cee27c8c522a3d6d3d45e4b2b532232c9861be4e17b8c",
+    "packages/domains/flora/normalizers/__init__.py": "sha256:77e1ff98555c3e3f8c3f717cf58ce3fe58ed4da6568c26fdf43f9c62251037b1",
+    "packages/domains/flora/normalizers/dwc_occurrence.py": "sha256:6343f7fc4af553ea780e5ae710fd5b6fd3c79b6ae545ebb855328c1eadbb14b1",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json": "sha256:4b9fd7ba921aed07dcd4134bec5ba8393cc6124aff84929e346566e8509691e3",
+    "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py": "sha256:8d99385ff55d4b120317415d08209a484abce40451dcc150a926f8764524f1a3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:2b5d15d09d57a96a7756c0d0e4e5a4b766963699fb07f7ab53d037efcb414690",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector readback",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26.pdf",
+      "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:pull/2007"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/flora-dwc-normalizer.yml": "PROPOSED",
+    "contracts/domains/flora/flora_occurrence_candidate.md": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/README.md": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/gbif_no_coordinate.candidate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected/idigbio_milkweed.candidate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/expected_outcomes.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_big_bluestem.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/gbif_no_coordinate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/input/idigbio_milkweed.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_scientific_name.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/missing_source_record_id.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/negative_uncertainty.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/out_of_range_coordinate.json": "PROPOSED",
+    "fixtures/domains/flora/flora_occurrence_candidate/invalid/partial_coordinate.json": "PROPOSED",
+    "packages/domains/flora/normalizers/__init__.py": "PROPOSED",
+    "packages/domains/flora/normalizers/dwc_occurrence.py": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json": "PROPOSED",
+    "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused deterministic tests passed."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "Three exact candidate replays plus two ABSTAIN and three ERROR cases passed."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema self-check passed."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "Workflow YAML parsed successfully."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact-path, SHA-256, and truth-label closure validated after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No remote branch or draft pull request could be created because the connected GitHub mutation surface was unavailable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26.pdf"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf"
+    },
+    {
+      "id": "repository:occurrence-retrieval-coordination",
+      "validated": true,
+      "evidence_ref": "github:pull/2007"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first Flora Darwin Core normalizer for deterministic WORK-stage candidates. It activates no source and grants no evidence, policy, review, geoprivacy, release, publication, or public-use authority. Prepared against current-main snapshot ac0f43afbd23557bbfb7389fbbf97bad120315bf."
+}

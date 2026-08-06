@@ -1,0 +1,104 @@
+# Validate the proposed CatalogClosurePacket readiness profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network after
+# installing repository-declared test dependencies. A green result proves only
+# bounded packet shape and internal catalog-readiness relationships.
+name: catalog-closure-packet
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/catalog-closure-packet.yml"
+      - "contracts/data/catalog_closure_packet.md"
+      - "schemas/contracts/v1/data/catalog_closure_packet.schema.json"
+      - "fixtures/data/catalog_closure_packet/**"
+      - "tools/validators/catalog_closure/validate_catalog_closure.py"
+      - "tests/validators/test_validate_catalog_closure.py"
+      - "data/receipts/generated/genrec-catalog-closure-packet-20260805.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/catalog-closure-packet.yml"
+      - "contracts/data/catalog_closure_packet.md"
+      - "schemas/contracts/v1/data/catalog_closure_packet.schema.json"
+      - "fixtures/data/catalog_closure_packet/**"
+      - "tools/validators/catalog_closure/validate_catalog_closure.py"
+      - "tests/validators/test_validate_catalog_closure.py"
+      - "data/receipts/generated/genrec-catalog-closure-packet-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-closure-packet-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-catalog-closure-packet
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_catalog_closure.py' \
+            --verbose
+
+      - name: Replay finite fixture outcomes and exact findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/catalog_closure/validate_catalog_closure.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-catalog-closure-packet-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Catalog closure packet"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: STAC/DCAT/PROV identity, digest and release-candidate agreement; canonical references; policy/review consistency; rollback readiness; finite outcomes."
+            echo "- Boundary: PASS is readiness evidence for the next review gate only."
+            echo "- Non-effects: no catalog record, CatalogMatrix, EvidenceBundle, proof, policy decision, review approval, release, publication, or public-use authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"
