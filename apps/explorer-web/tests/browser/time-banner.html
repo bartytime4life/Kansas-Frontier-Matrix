@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessible Time Scrubber browser fixture</title>
+  </head>
+  <body>
+    <main aria-labelledby="fixture-title">
+      <h1 id="fixture-title">Accessible Time Scrubber browser fixture</h1>
+      <p id="event-status" aria-live="polite">scrub:none</p>
+      <p id="copied-status" aria-live="polite">copied:none</p>
+      <div id="fixture-root"></div>
+    </main>
+    <script type="module" src="./time-banner.fixture.ts"></script>
+  </body>
+</html>
