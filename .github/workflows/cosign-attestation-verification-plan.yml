@@ -1,0 +1,132 @@
+# Validate the fixture-only Cosign attestation-verification plan profile.
+#
+# This workflow does not install or run Cosign. It validates an explicit future
+# invocation plan, patched-version floor, subject/predicate/bundle bindings,
+# transparency requirements, fixture polarity, and generated authoring provenance.
+name: cosign-attestation-verification-plan
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/cosign-attestation-verification-plan.yml"
+      - "contracts/release/cosign_attestation_verification_plan.md"
+      - "schemas/contracts/v1/release/cosign_attestation_verification_plan.schema.json"
+      - "fixtures/contracts/v1/release/cosign_attestation_verification_plan/**"
+      - "tools/validators/release/validate_cosign_attestation_verification_plan.py"
+      - "tests/release/test_cosign_attestation_verification_plan.py"
+      - "docs/intake/exploratory/new-ideas-4-12-26-cosign-attestation-verification-source-map.md"
+      - "data/receipts/generated/genrec-cosign-attestation-verification-plan-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/cosign-attestation-verification-plan.yml"
+      - "contracts/release/cosign_attestation_verification_plan.md"
+      - "schemas/contracts/v1/release/cosign_attestation_verification_plan.schema.json"
+      - "fixtures/contracts/v1/release/cosign_attestation_verification_plan/**"
+      - "tools/validators/release/validate_cosign_attestation_verification_plan.py"
+      - "tests/release/test_cosign_attestation_verification_plan.py"
+      - "docs/intake/exploratory/new-ideas-4-12-26-cosign-attestation-verification-source-map.md"
+      - "data/receipts/generated/genrec-cosign-attestation-verification-plan-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cosign-attestation-verification-plan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-cosign-attestation-verification-plan:
+    name: validate-cosign-attestation-verification-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/release \
+            --pattern 'test_cosign_attestation_verification_plan.py' \
+            --verbose
+
+      - name: Validate exact fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/release/validate_cosign_attestation_verification_plan.py \
+            --fixtures
+
+      - name: Validate schema and JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema_path = Path(
+              "schemas/contracts/v1/release/"
+              "cosign_attestation_verification_plan.schema.json"
+          )
+          Draft202012Validator.check_schema(
+              json.loads(schema_path.read_text(encoding="utf-8"))
+          )
+          fixture_root = Path(
+              "fixtures/contracts/v1/release/"
+              "cosign_attestation_verification_plan"
+          )
+          files = sorted(fixture_root.rglob("*.json"))
+          assert files, "Cosign verification-plan fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed schema and {len(files)} fixture JSON files.")
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-cosign-attestation-verification-plan-20260806.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Cosign attestation verification plan"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: patched-version floor, explicit subject/predicate/bundle binding, trust-mode exclusivity, transparency/offline requirements, no-network posture, and non-authority declarations."
+            echo "- Non-effect: this workflow does not install or execute Cosign and does not verify a signature, attestation, certificate, key, Rekor entry, EvidenceBundle, policy result, release, or publication state."
+          } >> "$GITHUB_STEP_SUMMARY"
