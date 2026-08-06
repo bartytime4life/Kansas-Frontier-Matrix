@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/review/review_share_link.schema.json",
+  "title": "ReviewShareLink",
+  "description": "Fixture-only, time-bounded review share-link record with a hashed bearer token; not a live access grant.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "share_link_id",
+    "token_hash",
+    "created_at",
+    "evaluated_at",
+    "audience",
+    "context",
+    "state",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "ReviewShareLink"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "share_link_id": {
+      "type": "string",
+      "pattern": "^review-share:[a-z0-9][a-z0-9._:-]{7,151}$"
+    },
+    "token_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "audience": {
+      "enum": [
+        "reviewer",
+        "steward",
+        "admin"
+      ]
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "decision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "decision_envelope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "manifest_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "receipts_summary_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "release_id"
+          ]
+        },
+        {
+          "required": [
+            "decision_envelope_ref"
+          ]
+        },
+        {
+          "required": [
+            "manifest_ref"
+          ]
+        }
+      ]
+    },
+    "state": {
+      "enum": [
+        "ACTIVE",
+        "EXPIRED",
+        "REVOKED"
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ALLOW",
+            "DENY"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "LINK_EXPIRED",
+              "LINK_REVOKED",
+              "UNSAFE_CONTEXT_REF"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "plaintext_token_stored",
+        "public_access",
+        "lifecycle_write",
+        "release_authority"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "plaintext_token_stored": {
+          "const": false
+        },
+        "public_access": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
