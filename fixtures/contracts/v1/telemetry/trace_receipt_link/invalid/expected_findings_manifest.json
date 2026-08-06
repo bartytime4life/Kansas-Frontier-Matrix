@@ -1,0 +1,43 @@
+{
+  "schema_invalid_empty_attestations.json": [
+    "SCHEMA_INVALID"
+  ],
+  "schema_invalid_missing_evidence_digest.json": [
+    "SCHEMA_INVALID"
+  ],
+  "semantic_invalid_attestation_subject.json": [
+    "ATTESTATION_SUBJECT_MISMATCH"
+  ],
+  "semantic_invalid_delay_exceeded.json": [
+    "LINKAGE_DELAY_EXCEEDED"
+  ],
+  "semantic_invalid_delay_value.json": [
+    "EVIDENCE_DELAY_MISMATCH",
+    "RECEIPT_DELAY_MISMATCH"
+  ],
+  "semantic_invalid_governance_overreach.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "semantic_invalid_link_id.json": [
+    "LINK_ID_MISMATCH"
+  ],
+  "semantic_invalid_oci_digest.json": [
+    "EVIDENCE_REF_DIGEST_MISMATCH"
+  ],
+  "semantic_invalid_reason_codes.json": [
+    "LINKAGE_REASON_INVALID"
+  ],
+  "semantic_invalid_run_spec_mismatch.json": [
+    "RUN_ID_MISMATCH",
+    "SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_timestamp_order.json": [
+    "TIMESTAMP_ORDER_INVALID"
+  ],
+  "semantic_invalid_trace_mismatch.json": [
+    "TRACE_ID_MISMATCH"
+  ],
+  "semantic_invalid_zero_trace.json": [
+    "TRACE_ID_ZERO_DENIED"
+  ]
+}
