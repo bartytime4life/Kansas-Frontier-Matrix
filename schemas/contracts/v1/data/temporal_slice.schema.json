@@ -1,0 +1,395 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/temporal_slice.schema.json",
+  "title": "TemporalSlice",
+  "description": "Fixture-first metadata record for one time-bounded, spatially supported derived view. A valid slice binds evidence, run provenance, deterministic identity, change lineage, and materialized artifact references but does not authorize policy, release, publication, or public use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "slice_id",
+    "identity_profile",
+    "dataset_version_ref",
+    "temporal_window",
+    "cadence_hint",
+    "spatial",
+    "provenance",
+    "verification",
+    "change",
+    "materialization",
+    "lifecycle_stage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TemporalSlice"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "slice_id": {
+      "type": "string",
+      "pattern": "^kfm:temporal-slice:sha256:[a-f0-9]{64}$"
+    },
+    "identity_profile": {
+      "const": "kfm-temporal-slice-id-v1"
+    },
+    "dataset_version_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "temporal_window": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/common/temporal_window.schema.json"
+    },
+    "cadence_hint": {
+      "$ref": "#/$defs/nullable_duration"
+    },
+    "spatial": {
+      "$ref": "#/$defs/spatial"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "verification": {
+      "$ref": "#/$defs/verification"
+    },
+    "change": {
+      "$ref": "#/$defs/change"
+    },
+    "materialization": {
+      "$ref": "#/$defs/materialization"
+    },
+    "lifecycle_stage": {
+      "type": "string",
+      "enum": [
+        "PROCESSED",
+        "CATALOG"
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "^\\S(?:.*\\S)?$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_duration": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^P(?=.+)(?:[0-9]+D)?(?:T(?=.+)(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\\.[0-9]+)?S)?)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "spatial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "footprint_hash",
+        "support_type",
+        "grid_system",
+        "grid_key",
+        "geometry_ref"
+      ],
+      "properties": {
+        "footprint_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "support_type": {
+          "type": "string",
+          "enum": [
+            "tile",
+            "cell",
+            "feature_set",
+            "footprint",
+            "story_section"
+          ]
+        },
+        "grid_system": {
+          "type": "string",
+          "enum": [
+            "slippy",
+            "h3",
+            "s2",
+            "native",
+            "custom"
+          ]
+        },
+        "grid_key": {
+          "$ref": "#/$defs/ref"
+        },
+        "geometry_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_bundle_refs",
+        "run_receipt_ref",
+        "spec_hash",
+        "processing_level",
+        "input_refs"
+      ],
+      "properties": {
+        "evidence_bundle_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "uniqueItems": true
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "processing_level": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "input_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_gate_ref",
+        "check_refs",
+        "policy_decision_refs",
+        "policy_labels",
+        "obligations"
+      ],
+      "properties": {
+        "promotion_gate_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "check_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_labels": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "obligations": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "previous_slice_ref",
+        "material_change_assessment_ref",
+        "delta_proof_ref",
+        "delta_magnitude",
+        "change_flags"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "BASELINE",
+            "UNCHANGED",
+            "CHANGED",
+            "UNKNOWN",
+            "ERROR"
+          ]
+        },
+        "previous_slice_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "material_change_assessment_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "delta_proof_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "delta_magnitude": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "change_flags": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "artifact_kind",
+        "media_type",
+        "digest"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "artifact_kind": {
+          "type": "string",
+          "enum": [
+            "tile",
+            "raster",
+            "vector",
+            "feature_set",
+            "coverage_cell",
+            "story_section",
+            "tabular",
+            "other"
+          ]
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256,
+          "pattern": "^[^\\s/]+/[^\\s]+$"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "materialization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surfaces",
+        "artifacts"
+      ],
+      "properties": {
+        "surfaces": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "enum": [
+              "api",
+              "export",
+              "focus",
+              "map",
+              "story"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "evidence_closure_claimed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/data/temporal_slice.md",
+    "fixtures_root": "fixtures/contracts/v1/data/temporal_slice/",
+    "validator": "tools/validators/validate_temporal_slice.py",
+    "tests": "tests/validators/test_validate_temporal_slice.py",
+    "authority": "shape_identity_time_and_change_lineage_only",
+    "non_effects": [
+      "does_not_resolve_evidence_or_receipts",
+      "does_not_evaluate_policy",
+      "does_not_authorize_promotion_or_release",
+      "does_not_publish_or_create_public_use"
+    ]
+  }
+}

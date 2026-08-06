@@ -1,0 +1,83 @@
+# Validate the proposed TemporalSlice metadata profile.
+name: temporal-slice
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/temporal-slice.yml"
+      - "contracts/data/temporal_slice.md"
+      - "schemas/contracts/v1/data/temporal_slice.schema.json"
+      - "fixtures/contracts/v1/data/temporal_slice/**"
+      - "tools/validators/validate_temporal_slice.py"
+      - "tests/validators/test_validate_temporal_slice.py"
+      - "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md"
+      - "data/receipts/generated/genrec-temporal-slice-20260806.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/temporal-slice.yml"
+      - "contracts/data/temporal_slice.md"
+      - "schemas/contracts/v1/data/temporal_slice.schema.json"
+      - "fixtures/contracts/v1/data/temporal_slice/**"
+      - "tools/validators/validate_temporal_slice.py"
+      - "tests/validators/test_validate_temporal_slice.py"
+      - "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md"
+      - "data/receipts/generated/genrec-temporal-slice-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temporal-slice-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-temporal-slice
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run deterministic no-network unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover             --start-directory tests/validators             --pattern 'test_validate_temporal_slice.py'             --verbose
+      - name: Run exact fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_temporal_slice.py --fixtures
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-temporal-slice-20260806.json             --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### TemporalSlice"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema shape, deterministic slice identity, temporal ordering, canonical references, synthetic change lineage, and generated-receipt integrity."
+            echo "- Boundary: a green result does not resolve evidence or receipts, evaluate policy, create database indexes, authorize promotion/release/publication, or permit public use."
+          } >> "$GITHUB_STEP_SUMMARY"

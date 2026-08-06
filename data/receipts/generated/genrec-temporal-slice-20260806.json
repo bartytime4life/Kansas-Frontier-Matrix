@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-temporal-slice-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-slice.yml",
+    "contracts/data/temporal_slice.md",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/invalid_missing_evidence_bundle.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_catalog_without_gate.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_change_without_previous.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_changed_without_support.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_refs_not_canonical.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_self_previous.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_slice_id.json",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_temporal_order.json",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_baseline_slice.json",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_changed_slice.json",
+    "schemas/contracts/v1/data/temporal_slice.schema.json",
+    "tests/validators/test_validate_temporal_slice.py",
+    "tools/validators/validate_temporal_slice.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-slice.yml": "sha256:ef7a4da4deaa76cea4df3a8deb90608c7517fffa993b70e6f52b2dc72847891f",
+    "contracts/data/temporal_slice.md": "sha256:4fc7bb8991c6c2fe4629f1cb4b5099260548eeb7c81f62d6a4e5677ec3e9ab03",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md": "sha256:27680facbb7da9bfb177e59451b04899682ec261570cf310001f98eab34289e7",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/expected_findings_manifest.json": "sha256:b4dfbf38ee7b2ca4a50f9c9f78a6cab1927074a432b399507fa2e6c87dc6e5b0",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/invalid_missing_evidence_bundle.json": "sha256:4398b6aa246f233d7d7355008854f95c3b433e82011baf646f192c82fd250f74",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_catalog_without_gate.json": "sha256:7495807346afbb3355b01f3e25967dbda093faaa974a5f2f80bdc6f5ba18c741",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_change_without_previous.json": "sha256:abac0fba5f36cde3d19c59c42713a2901831aace3df41ae986c5f8dd80d30dc4",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_changed_without_support.json": "sha256:55cc9c4a134fdc91765cd1110e9c710331e6f8ceeb62987053f32efc5735f8cf",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_refs_not_canonical.json": "sha256:857cc8511934ddb835cdca6d30fae106e041d42eaf99083badc9aadd800acafc",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_self_previous.json": "sha256:30e57ac2c9f009594a9a5fcc54460c575e6a696fece73e9f531eac51c1d0c78c",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_slice_id.json": "sha256:193716891a1118d90bbb811823adcb282031aa8ad2b22fa6d3e1ca429663a83b",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_temporal_order.json": "sha256:c4fd64da8547536c086c26f4e9ee265b8019ed0205f05105e3afc977be11b4bf",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_baseline_slice.json": "sha256:2ab3fde96b05e38fd5346b9c3d4c232e1e48ace2a43f297aa4b3d85f22c81c8b",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_changed_slice.json": "sha256:5786648a47d6ff4917fdc5f5cf0d3c5cad77a9dbbe2f1d72ec6be6f4d94f8619",
+    "schemas/contracts/v1/data/temporal_slice.schema.json": "sha256:3bc49d50c9e2496b3a44f1647ef66a976b64c71310c3cbda7000f405e8868bcd",
+    "tests/validators/test_validate_temporal_slice.py": "sha256:6cdbf501f2e99bc580751d59067823b603b431ae8d4d7ea1e797c27f1874851e",
+    "tools/validators/validate_temporal_slice.py": "sha256:aace48e1b4e67d971978d794be39ab2c1d65d9b68954b7d3a26ee2733cbde515"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:7391f03aed879ee0f91583fb6fbd33aca3cd79b90f1621c0c1020985591b1e11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-16-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-16-26.pdf#temporal-slice-metablock",
+      "repo:contracts/common/temporal_window.md",
+      "repo:contracts/data/dataset_version.md",
+      "repo:contracts/data/material_change_assessment.md",
+      "repo:contracts/release/tile_artifact_manifest.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-slice.yml": "PROPOSED",
+    "contracts/data/temporal_slice.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-16-26-temporal-slice-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/invalid_missing_evidence_bundle.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_catalog_without_gate.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_change_without_previous.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_changed_without_support.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_refs_not_canonical.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_self_previous.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_slice_id.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/invalid/semantic_invalid_temporal_order.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_baseline_slice.json": "PROPOSED",
+    "fixtures/contracts/v1/data/temporal_slice/valid/valid_changed_slice.json": "PROPOSED",
+    "schemas/contracts/v1/data/temporal_slice.schema.json": "PROPOSED",
+    "tests/validators/test_validate_temporal_slice.py": "PROPOSED",
+    "tools/validators/validate_temporal_slice.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-temporal-slice-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Two valid and eight exact-negative synthetic fixtures passed deterministic no-network validation; ten focused unit tests passed."
+    },
+    {
+      "gate": "local-schema-workflow-and-receipt-closure",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schemas, fixture shapes, Python compilation, workflow parsing, and artifact path/hash/truth-label closure were checked against the authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-3-16-26-temporal-slice",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-16-26.pdf#temporal-slice-metablock"
+    },
+    {
+      "id": "repository:temporal-window",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/temporal_window.md"
+    },
+    {
+      "id": "repository:dataset-version",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/dataset_version.md"
+    },
+    {
+      "id": "repository:material-change-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/material_change_assessment.md"
+    },
+    {
+      "id": "repository:directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T03:44:41Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture-first implementation of the Temporal Slice MetaBlock pattern. This receipt grants no evidence, source, policy, review, promotion, release, publication, database, runtime, or public-use authority."
+}
