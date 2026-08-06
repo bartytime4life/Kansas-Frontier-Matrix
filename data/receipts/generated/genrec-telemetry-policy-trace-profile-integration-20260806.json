@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-telemetry-policy-trace-profile-integration-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/telemetry-policy.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/telemetry-policy.yml": "sha256:40134c484a10f3ee0cfe9599a567961dd3f4eec843bd3633126c769acd46d196"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06-session"
+  },
+  "prompt_or_contract": "sha256:85f29aeecb624de6f8d7b8a1250cb4cc8ef118e570d781ccb0e6d0f138db0a8a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container",
+      "Python",
+      "PyYAML"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "New ideas 2-22-26.pdf"
+    ],
+    "evidence_refs": [
+      "file:New ideas 2-22-26.pdf#pages=7-12",
+      "github:pull/2035",
+      "github:actions/run/31070814434/job/92518197816",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@121f39bc86dd49a927ae36f63e2ee1030e2d2feb:.github/workflows/telemetry-policy.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@121f39bc86dd49a927ae36f63e2ee1030e2d2feb:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/telemetry-policy.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "workflow_yaml_parse",
+      "outcome": "PASS",
+      "reason": "PyYAML parsed the workflow and confirmed the preserved workflow and job identifiers."
+    },
+    {
+      "gate": "fixture_profile_inventory_logic",
+      "outcome": "PASS",
+      "reason": "Local static review confirmed the workflow admits only the trace_receipt_link telemetry schema/fixture profile and preserves operational holds."
+    },
+    {
+      "gate": "hosted_exact_head_workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions had not run when this repair receipt was emitted; exact-head results belong in the pull request record."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "SRC-NEW-IDEAS-2-22-26-TRACE-LINK",
+      "validated": true,
+      "evidence_ref": "file:New ideas 2-22-26.pdf#pages=7-12"
+    },
+    {
+      "id": "CI-TELEMETRY-POLICY-ABSENCE-HOLD",
+      "validated": true,
+      "evidence_ref": "github:actions/run/31070814434/job/92518197816"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@121f39bc86dd49a927ae36f63e2ee1030e2d2feb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T04:27:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored workflow integration repair. It validates the fixture-only TraceReceiptLink profile while preserving explicit holds for operational raw-evidence, prompt, coordinate, emitter, receipt, sink, policy, promotion, release, deployment, and publication controls."
+}
