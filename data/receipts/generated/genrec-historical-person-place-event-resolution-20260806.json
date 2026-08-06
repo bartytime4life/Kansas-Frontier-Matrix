@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-historical-person-place-event-resolution-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/historical-person-place-event-resolution.yml",
+    "contracts/domains/people-dna-land/historical_person_place_event_resolution.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-person-place-event-resolution-source-map.md",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.expected_error.txt",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.expected_error.txt",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.expected_error.txt",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.expected_error.txt",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/conflict_hold.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/high_anchor.json",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/weak_abstain.json",
+    "schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json",
+    "tests/validators/test_validate_historical_person_place_event_resolution.py",
+    "tools/validators/validate_historical_person_place_event_resolution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/historical-person-place-event-resolution.yml": "sha256:42205b0af21425e72ce8d85b544375acf40acadc1a0a3d8fd29d5925f56ad7d0",
+    "contracts/domains/people-dna-land/historical_person_place_event_resolution.md": "sha256:1d6363c05b96db9321d7fc94fc91be3328caf39afdde04118ee4828cd7ca2f26",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-person-place-event-resolution-source-map.md": "sha256:406a82d776cdd20b023de8eefd42d01f5baa4a004719bdce637e1607e0353a70",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md": "sha256:8c1d754116f4b205ed4f761316d31bb64fa0592dad7004ed6af2da17c065fadc",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.expected_error.txt": "sha256:7b8c58d5bfa69991200090652c21a48964cfae10a249172f242d870c5da1fd70",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.json": "sha256:a75cb734f2146694c4581e9ede3d17bdfc0d69de0a63c981b949ca42e2c632c4",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.expected_error.txt": "sha256:a31c7790d5f60a8bad3d8c149b4f72760dcd63235160e8e54e9741a73c562a93",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.json": "sha256:ca03fd02e468881a59c15790bb4aae87fdbdeb98a6db4227c4cc67d306e79b67",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.expected_error.txt": "sha256:d94ac0d1f86fb474c3c4ea67507f1bfadc5b61d82f9db11ce52a8eb09b84c164",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.json": "sha256:0a87064167027b997771f0fd560360e142a3eaf64bd2ff7e330173640f640538",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.expected_error.txt": "sha256:b62d2655d44a8b63839ca89984660a4c8bf1ea638bfe9006f3c79d10e2bfb317",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.json": "sha256:e86c33cd44cd75f1d588059989569b9eee2b3f38642d15c0d432447897399c83",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/conflict_hold.json": "sha256:1842dc2d624589a4c213814083d717c260050477b084c3deda35701735f3f756",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/high_anchor.json": "sha256:88c1142ba69dcdd2cfc235ccd73c18995d22d190f8fc337e4311d6ed81a3db74",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/weak_abstain.json": "sha256:07ccc53dd676ba96a60952bc983d7a29fe9776e91b633878fd9decd5d005b3f6",
+    "schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json": "sha256:4c2bca7c98898576b6642e269e78ee008369e06eb7ebefa76d89099dcc670b8a",
+    "tests/validators/test_validate_historical_person_place_event_resolution.py": "sha256:9c8fb994fb3ed898bcbf96e87c42d394a3e01752979076716f6e4ec811b964fa",
+    "tools/validators/validate_historical_person_place_event_resolution.py": "sha256:63225d0bd324b4ed07f14d8c9071a515af69d6199899d67b7e0dd0a30f29086c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:d6bfd7f9d3ac71205cf04d53a8d6dc4d8626410656b803e20c07229c351bdbc4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded source inspection",
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-3-11-26:sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b#pages=25-28",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/eeaafb0877c7739d8be26b85ac6fc141c1c4fde1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/eeaafb0877c7739d8be26b85ac6fc141c1c4fde1/docs/architecture/people-place-joins.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/historical-person-place-event-resolution.yml": "CONFIRMED",
+    "contracts/domains/people-dna-land/historical_person_place_event_resolution.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-historical-person-place-event-resolution-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/living_person_denied.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/private_parcel_denied.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/public_release_denied.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/invalid/score_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/conflict_hold.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/high_anchor.json": "CONFIRMED",
+    "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/weak_abstain.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_historical_person_place_event_resolution.py": "CONFIRMED",
+    "tools/validators/validate_historical_person_place_event_resolution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-json-and-draft-2020-12",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-standard-library-and-pytest-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "pending until the draft pull request runs on GitHub"
+    }
+  ],
+  "policy_decisions": [
+    "fixture-policy://people-dna-land/historical-resolution/synthetic-only-not-released"
+  ],
+  "citations": [
+    {
+      "id": "New Ideas 3-11-26.pdf pp.25-28",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-3-11-26#pages=25-28"
+    },
+    {
+      "id": "docs/architecture/people-place-joins.md@eeaafb0877c7739d8be26b85ac6fc141c1c4fde1",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/eeaafb0877c7739d8be26b85ac6fc141c1c4fde1/docs/architecture/people-place-joins.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T02:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only. The profile is synthetic, fixture-only, no-network, and not released. No reviewer, policy steward, release steward, or publication authority is implied."
+}
