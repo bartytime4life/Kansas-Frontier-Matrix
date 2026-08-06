@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-csv-geojson-preflight-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/csv-geojson-preflight.yml",
+    "contracts/source/csv_geojson_normalization_candidate.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md",
+    "fixtures/ingest/csv_geojson_preflight/README.md",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv",
+    "fixtures/ingest/csv_geojson_preflight/profile.json",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py",
+    "tools/ingest/csv_geojson_preflight/README.md",
+    "tools/ingest/csv_geojson_preflight/preflight.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/csv-geojson-preflight.yml": "sha256:b3300ade9efdf82424c92a927cb87f7cae73b50e55588877182b7d9501ae0096",
+    "contracts/source/csv_geojson_normalization_candidate.md": "sha256:55405cdcb496063c8ad072aec1f345a25a22cfd5be01b17ba706804c7cc9f4da",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md": "sha256:f63cf8779ecda358536196810fa1647c87c84b7581252182b262e28a102917d6",
+    "fixtures/ingest/csv_geojson_preflight/README.md": "sha256:9d024a97928c37cd7d438a095e7556d7f16178db6be1ad887c5f7952fd3a8422",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv": "sha256:bb87112f532d2870d72dad0e9d438ee0a86002dd222d2ceb9ceab20619478589",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv": "sha256:742c94cedbeb3a9571ce8c12d62f82f18b574be490835ed8e38d586eeff43be1",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv": "sha256:d7dec8812cb0cf9b8bcee290648e06d72a5482b3a1c2e4cbad88d2ad5e7bde2c",
+    "fixtures/ingest/csv_geojson_preflight/profile.json": "sha256:c6a985a1073087a5006250176f61beff3e0b94da235def96b8f109fff942c766",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv": "sha256:029c737f673c0f0a88970dfd75797bad57dd2f178a37cc2b48080c8353e1a807",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json": "sha256:65776e6faaf6b02d26415a5a8355cb04160c41647cefac33ab5c5c27752e1bd5",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py": "sha256:5a462804186fba6f42c58149d62ed73c7de3512e58f49c6179d382978cf2d473",
+    "tools/ingest/csv_geojson_preflight/README.md": "sha256:8e2e007619bc246df9846c1fd52f9f73e3ca4430aa596c683bc3c96b1cd125ef",
+    "tools/ingest/csv_geojson_preflight/preflight.py": "sha256:9863c277b2a3016a98188aa7dd667b21334bb846f3cdf493010e8d666d6a0dff"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:a57a872286c653af72913ea9ae978733394410f5ae94756a9b10b39084cbe4bb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md@3ef64eca521d18f8df04014d768219e8dba36150",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ef64eca521d18f8df04014d768219e8dba36150",
+      "repo:docs/doctrine/directory-rules.md@3ef64eca521d18f8df04014d768219e8dba36150",
+      "repo:tools/ingest/README.md@3ef64eca521d18f8df04014d768219e8dba36150",
+      "repo:packages/hashing/src/hashing/core.py@3ef64eca521d18f8df04014d768219e8dba36150"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/csv-geojson-preflight.yml": "CONFIRMED",
+    "contracts/source/csv_geojson_normalization_candidate.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md": "PROPOSED",
+    "fixtures/ingest/csv_geojson_preflight/README.md": "PROPOSED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/profile.json": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv": "CONFIRMED",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json": "CONFIRMED",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py": "CONFIRMED",
+    "tools/ingest/csv_geojson_preflight/README.md": "PROPOSED",
+    "tools/ingest/csv_geojson_preflight/preflight.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-pytest-suite-12-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "valid-candidate-schema-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-valid-duplicate-coordinate-formula",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository-next-cursor",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md@3ef64eca521d18f8df04014d768219e8dba36150"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ef64eca521d18f8df04014d768219e8dba36150"
+    },
+    {
+      "id": "tools-ingest-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/README.md@3ef64eca521d18f8df04014d768219e8dba36150"
+    },
+    {
+      "id": "deterministic-hashing",
+      "validated": true,
+      "evidence_ref": "repo:packages/hashing/src/hashing/core.py@3ef64eca521d18f8df04014d768219e8dba36150"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T21:00:21Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only deterministic CSV-to-GeoJSON review-candidate preflight. No source activation, lifecycle write, SourceArtifact, IngestReceipt, evidence, policy, release, deployment, publication, or public-use authority is created."
+}
