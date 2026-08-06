@@ -1,0 +1,100 @@
+{
+  "fixture_id": "fixture://historical-resolution/weak-abstain",
+  "profile_id": "kfm-people-dna-land-historical-person-place-event-resolution-v1",
+  "object_family": "HistoricalPersonPlaceEventResolutionCandidate",
+  "schema_version": "1.0.0",
+  "resolution_id": "sha256:e9eb49920409f7b28bb3020ec9ecd149bcafb35f19ff2723dc83384ea4dd814a",
+  "candidate_scope": {
+    "synthetic_fixture": true,
+    "historical_only": true,
+    "living_person": false,
+    "public_release": false
+  },
+  "person": {
+    "person_ref": "fixture://person/weak",
+    "primary_authority": "local",
+    "authority_matches": [
+      {
+        "authority": "snac",
+        "identifier": "fixture-snac-weak",
+        "exact_match": true,
+        "source_refs": [
+          "fixture://archive/weak"
+        ],
+        "rights_spdx": "LicenseRef-Synthetic-Fixture",
+        "scan_ids": {
+          "record": "synthetic-snac-weak"
+        }
+      }
+    ]
+  },
+  "event": {
+    "event_type": "land_patent",
+    "date_iso": "1873-04-11",
+    "time_slice": "1872-1875"
+  },
+  "place": {
+    "county_fips": "99999",
+    "county_label": "Synthetic County",
+    "state_code": "KS",
+    "time_slice": "1872-1875",
+    "legal_description": {
+      "township": "T00S",
+      "range": "R00W",
+      "section": "00",
+      "synthetic_sentinel": true
+    }
+  },
+  "glo_anchor": {
+    "present": true,
+    "exact_place_block": false,
+    "patent_ref": "fixture://glo/patent-near",
+    "source_ref": "fixture://glo/source-near",
+    "rights_spdx": "LicenseRef-Synthetic-Fixture",
+    "scan_ids": {
+      "patent_id": "synthetic-patent-near"
+    },
+    "legal_description": {
+      "township": "T00S",
+      "range": "R00W",
+      "section": null
+    }
+  },
+  "co_mentions": [
+    {
+      "source_family": "newspaper",
+      "source_ref": "fixture://newspaper/alpha-page",
+      "county_fips": "99999",
+      "time_slice": "1872-1875",
+      "rights_spdx": "LicenseRef-Synthetic-Fixture",
+      "scan_ids": {
+        "page": "synthetic-newspaper-page"
+      }
+    }
+  ],
+  "negative_evidence": [],
+  "evidence_refs": [
+    "fixture://evidence/weak-alpha"
+  ],
+  "score": 0,
+  "confidence": "low",
+  "disposition": "abstain",
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "historical_synthetic_fixture",
+    "review_state": "abstain",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_exposure": false
+  },
+  "limitations": [
+    "synthetic_fixture_only",
+    "no_identity_adjudication",
+    "no_living_person_claim",
+    "no_title_or_boundary_claim",
+    "no_public_release",
+    "no_raw_dna",
+    "no_policy_approval"
+  ],
+  "spec_hash": "sha256:afbe9c52d16c262ac5e2e9f188621199ed1984f2c00a1514361f9f9dd152068b"
+}
