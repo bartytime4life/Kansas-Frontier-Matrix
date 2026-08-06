@@ -219,6 +219,7 @@ def test_workflow_keeps_event_metadata_out_of_shell_source() -> None:
 
 def test_workflow_keeps_expected_readiness_hold_blocking() -> None:
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "if: ${{ !github.event.pull_request.draft }}" in workflow
     assert 'status=$?' not in workflow
     assert 'if [ "$status" -eq 3 ]; then' not in workflow
     assert 'Expected readiness hold; repository transition is not yet authorized.' not in workflow
