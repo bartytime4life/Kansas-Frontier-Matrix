@@ -1,0 +1,91 @@
+# Validate the inactive fixture-only Soil time-caveat profile.
+name: soil-time-caveat-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-time-caveat-profile.yml"
+      - "contracts/domains/soil/time_caveat_profile.md"
+      - "schemas/contracts/v1/domains/soil/time_caveat_*.schema.json"
+      - "pipeline_specs/soil/time_caveat_profile.v1.json"
+      - "tools/validators/domains/soil/time_caveat/**"
+      - "fixtures/domains/soil/time_caveat/**"
+      - "tests/validators/domains/soil/time_caveat/**"
+      - "data/receipts/generated/genrec-soil-time-caveat-profile-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-time-caveat-profile.yml"
+      - "contracts/domains/soil/time_caveat_profile.md"
+      - "schemas/contracts/v1/domains/soil/time_caveat_*.schema.json"
+      - "pipeline_specs/soil/time_caveat_profile.v1.json"
+      - "tools/validators/domains/soil/time_caveat/**"
+      - "fixtures/domains/soil/time_caveat/**"
+      - "tests/validators/domains/soil/time_caveat/**"
+      - "data/receipts/generated/genrec-soil-time-caveat-profile-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-time-caveat-profile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-soil-time-caveat-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic no-network profile tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/validators/domains/soil/time_caveat/test_time_caveat_profile.py \
+            -q --strict-config --strict-markers
+          python tools/validators/domains/soil/time_caveat/validate_time_caveat_profile.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-time-caveat-profile-20260805.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Soil time-caveat profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: inactive synthetic temporal anti-collapse profile only."
+            echo "- Outcomes: PASS, HOLD, DENY, and ERROR are local validation states."
+            echo "- Boundary: a green result creates no source, evidence, policy, promotion, release, publication, current-condition, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
