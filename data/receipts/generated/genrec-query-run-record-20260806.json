@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-query-run-record-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/query-run-record.yml",
+    "contracts/governance/query_run_record.md",
+    "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md",
+    "fixtures/contracts/v1/governance/query_run_record/schema_invalid_cases.json",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_identity_cases.json",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_resolution_cases.json",
+    "fixtures/contracts/v1/governance/query_run_record/valid_cases.json",
+    "schemas/contracts/v1/governance/query_run_record.schema.json",
+    "tests/validators/governance/test_query_run_record.py",
+    "tools/validators/governance/validate_query_run_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/query-run-record.yml": "sha256:705a4d86e21c41bf57efffae6836161c315773504e032a491627562da00dd042",
+    "contracts/governance/query_run_record.md": "sha256:e723aecc576a052a3cd000537755265135a7ea9df4f4e878977101fa59d9414d",
+    "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md": "sha256:d295581a88011d88ddac2ec00decf86dc8fd48e51ae5e7b3af13540fb5e946c5",
+    "fixtures/contracts/v1/governance/query_run_record/schema_invalid_cases.json": "sha256:f2b5816a204669a15885823facabfc1f50e41486c5d8c161386d58eee7e78f4d",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_identity_cases.json": "sha256:b7187a2adbf5b3f5b0a31eee0de712a226577c12eede97244e88d18e6ec11308",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_resolution_cases.json": "sha256:f91e249cd7c1e181e05ec6bc7008aba0d784a09001d9a26cb0a0eaf31dab8cb7",
+    "fixtures/contracts/v1/governance/query_run_record/valid_cases.json": "sha256:7f8fdc44402fad26f68ccce25478830e90083a421d12defab3053e99604fcda6",
+    "schemas/contracts/v1/governance/query_run_record.schema.json": "sha256:b644e37a8a6d8c0394d7492ed01edf6746ca0a07f90802cd2d66cbbd1d5544f5",
+    "tests/validators/governance/test_query_run_record.py": "sha256:2202f3a7a65a3ad870b9c4d497f5f1fbfeea4d2605ab873618c6b45e84865ebd",
+    "tools/validators/governance/validate_query_run_record.py": "sha256:b3c03ee6c30d6716853b02792eb5aee5ef7c381d8270f6039a6babb873092c3d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:d535e9999cc9cd030e82cba2446a8b56fa1e25f633e06e7e6ad9d1ea81208960",
+  "parameters": {},
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@ead1250f2923d1532257ec50cb44729be6f6c751/contracts/governance/ai_change_proposal.md",
+      "repo:main@ead1250f2923d1532257ec50cb44729be6f6c751/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/query-run-record.yml": "PROPOSED",
+    "contracts/governance/query_run_record.md": "PROPOSED",
+    "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/query_run_record/schema_invalid_cases.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_identity_cases.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/query_run_record/semantic_resolution_cases.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/query_run_record/valid_cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/query_run_record.schema.json": "PROPOSED",
+    "tests/validators/governance/test_query_run_record.py": "PROPOSED",
+    "tools/validators/governance/validate_query_run_record.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "10 focused no-network tests passed against the authored fixture profile."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "11 fixture cases matched exact finite outcomes and finding-code sets."
+    },
+    {
+      "gate": "schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed meta-validation."
+    },
+    {
+      "gate": "generated-receipt-local-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 replay closed over all 10 non-self authored artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending GitHub pull-request workflow scheduling on the final branch head."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-06T22:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "notes": "Fixture-only QueryRunRecord authoring receipt. It binds the complete non-self implementation set and creates no evidence, policy, review, mutation, promotion, release, deployment, publication, or public-use authority."
+}

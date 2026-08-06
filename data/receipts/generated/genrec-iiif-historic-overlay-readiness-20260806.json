@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec:iiif-historic-overlay-readiness:20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-iiif-historic-overlay-readiness.yml",
+    "contracts/map/iiif_historic_overlay_readiness.md",
+    "docs/intake/exploratory/iiif-historic-overlay-readiness-source-map.md",
+    "fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json",
+    "schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json",
+    "tests/map/test_iiif_historic_overlay_readiness.py",
+    "tools/validators/map/validate_iiif_historic_overlay_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-iiif-historic-overlay-readiness.yml": "sha256:09b3d70027bc92a3970f618b8943c69fd00a4cefe556d70e5210c59c22e8e94a",
+    "contracts/map/iiif_historic_overlay_readiness.md": "sha256:a9f59621939cd2313183c98c80a17ab6cf1dfb40d9a680daf6f724e40b17e934",
+    "docs/intake/exploratory/iiif-historic-overlay-readiness-source-map.md": "sha256:761a2623b10a1303f8647ab257165f8aee2230669abb87034f87376a1a3dc2c5",
+    "fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json": "sha256:c9763744dc62c82c79dfd4ff042757103bbd52879445af2bfcb46d5ad12c1d45",
+    "schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json": "sha256:0c0a4d565b3659afb053df2eda92b3360bcaca9166710fe006318f86b7d8600f",
+    "tests/map/test_iiif_historic_overlay_readiness.py": "sha256:fbf8f698c587dd254d258c8345a04f5cf439714147ac981ef90db17b95852bb2",
+    "tools/validators/map/validate_iiif_historic_overlay_readiness.py": "sha256:add75bd315a17e1cba0683074db412bc9c8ca1dda9e82a0c861e9c19bbcd02bf"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5.6-thinking",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:9ce5a2b0bc7fd72d7bdc9fea9abb96476ea507fd377b6ad9218a097de1ed5965",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "container",
+      "github",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9ce5a2b0bc7fd72d7bdc9fea9abb96476ea507fd377b6ad9218a097de1ed5965"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:main@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "docs/standards/IIIF.md",
+      "docs/doctrine/directory-rules.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-iiif-historic-overlay-readiness.yml": "PROPOSED",
+    "contracts/map/iiif_historic_overlay_readiness.md": "PROPOSED",
+    "docs/intake/exploratory/iiif-historic-overlay-readiness-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json": "PROPOSED",
+    "schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json": "PROPOSED",
+    "tests/map/test_iiif_historic_overlay_readiness.py": "PROPOSED",
+    "tools/validators/map/validate_iiif_historic_overlay_readiness.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-11",
+      "outcome": "PASS",
+      "reason": "11 deterministic no-network tests passed against the final authored bytes."
+    },
+    {
+      "gate": "fixture-exact-polarity-11",
+      "outcome": "PASS",
+      "reason": "11 mutation-derived cases covered READY, HOLD, DENY, and ERROR with exact reason sets."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-local-parity",
+      "outcome": "PASS",
+      "reason": "Path, SHA-256 hash, and truth-label keys exactly match the seven non-self artifacts."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    }
+  ],
+  "policy_decisions": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+  ],
+  "citations": [
+    {
+      "id": "IIIF_STANDARD_PROFILE",
+      "validated": true,
+      "evidence_ref": "docs/standards/IIIF.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T22:37:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only IIIF historic-overlay readiness with one canonical base candidate plus explicit JSON-pointer mutations. Receipt records AI authorship and artifact integrity only; it does not authenticate source bytes, rights/CARE state, evidence, reviewer authority, or authorize merge, release, deployment, publication, or public use."
+}
