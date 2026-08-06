@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-soil-time-caveat-profile-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-time-caveat-profile.yml",
+    "contracts/domains/soil/time_caveat_profile.md",
+    "fixtures/domains/soil/time_caveat/README.md",
+    "fixtures/domains/soil/time_caveat/deny/satellite_as_station.json",
+    "fixtures/domains/soil/time_caveat/deny/static_as_current.json",
+    "fixtures/domains/soil/time_caveat/error/missing_evaluated_at.json",
+    "fixtures/domains/soil/time_caveat/hold/stale_station.json",
+    "fixtures/domains/soil/time_caveat/pass/fresh_station.json",
+    "fixtures/domains/soil/time_caveat/pass/static_survey.json",
+    "pipeline_specs/soil/time_caveat_profile.v1.json",
+    "schemas/contracts/v1/domains/soil/time_caveat_candidate.schema.json",
+    "schemas/contracts/v1/domains/soil/time_caveat_profile.schema.json",
+    "tests/validators/domains/soil/time_caveat/test_time_caveat_profile.py",
+    "tools/validators/domains/soil/time_caveat/validate_time_caveat_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-time-caveat-profile.yml": "sha256:a2f301f56de674a95890d3e7c0175cb9027f8ee3cf7efcca0f942049b8b375c8",
+    "contracts/domains/soil/time_caveat_profile.md": "sha256:4c5163392dadcf02975d2888f6c468016fcd16e8eaf3ddbb13b016f4cf9a9de5",
+    "fixtures/domains/soil/time_caveat/README.md": "sha256:14d447e2f1b877407a782f01de71c8550c7eb3c180d1359a61d8ceed7d7f41a0",
+    "fixtures/domains/soil/time_caveat/deny/satellite_as_station.json": "sha256:deca00a8f4a4ea4f7f976288891975f9309b913ba458758187ac3eb6d1ac8f4c",
+    "fixtures/domains/soil/time_caveat/deny/static_as_current.json": "sha256:82482a9112a30cee7d750972811dc709c01905cd74cb6f9fdd99221c61c27dad",
+    "fixtures/domains/soil/time_caveat/error/missing_evaluated_at.json": "sha256:f8493a548b69b56853f7715acacf5426ca75eabedd60f4d7ec4bf262c1d5f6df",
+    "fixtures/domains/soil/time_caveat/hold/stale_station.json": "sha256:e9562c52d53825738b8aedd32d9bafac5c32406c78f0fc8fae1b00de74112c95",
+    "fixtures/domains/soil/time_caveat/pass/fresh_station.json": "sha256:b38e5cf63af954a006fab2d5d3e8ff80b6c05d31fb303bedf900338073970b24",
+    "fixtures/domains/soil/time_caveat/pass/static_survey.json": "sha256:c58de1847f3e504669d2e2a1051ea018872ba666de3dcce0851fbb6bbbb86170",
+    "pipeline_specs/soil/time_caveat_profile.v1.json": "sha256:569da49ac9ff253f9ebe16206b60f32552f1cae0fbeecd736e569fb26645b81f",
+    "schemas/contracts/v1/domains/soil/time_caveat_candidate.schema.json": "sha256:531015857acd59326319958aee8e20b3897e21a2df0388cbc5e2fdcd1498185f",
+    "schemas/contracts/v1/domains/soil/time_caveat_profile.schema.json": "sha256:09e47b1791c1bf0c882701d0f0c8f71c2ce66422d6087fcb5d21f10ec8eb2f88",
+    "tests/validators/domains/soil/time_caveat/test_time_caveat_profile.py": "sha256:1737bdc7645981053c0ea9a25dea7c6baa3c9d1f371a98a6d4ed208c9d274ac7",
+    "tools/validators/domains/soil/time_caveat/validate_time_caveat_profile.py": "sha256:d61e0b0ec19c742020cc0c7ce423844ebec702958e9276489714a1102a0e50e7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:49694615d3178aba28a984cd2ab249cab2f9bf0e24aee52cc5f30ca93819183a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf",
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#time-normalization-and-support-separation",
+      "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf#SoilTimeCaveat",
+      "repo:contracts/domains/soil/soil_time_caveat.md@f86ae3fddc93fba439965fc491b4d4e6fd0a2c83",
+      "repo:tools/validators/domains/soil/support_type/validate_support_type_profile.py@f86ae3fddc93fba439965fc491b4d4e6fd0a2c83",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f86ae3fddc93fba439965fc491b4d4e6fd0a2c83"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-time-caveat-profile.yml": "PROPOSED",
+    "contracts/domains/soil/time_caveat_profile.md": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/README.md": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/deny/satellite_as_station.json": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/deny/static_as_current.json": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/error/missing_evaluated_at.json": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/hold/stale_station.json": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/pass/fresh_station.json": "PROPOSED",
+    "fixtures/domains/soil/time_caveat/pass/static_survey.json": "PROPOSED",
+    "pipeline_specs/soil/time_caveat_profile.v1.json": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/time_caveat_candidate.schema.json": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/time_caveat_profile.schema.json": "PROPOSED",
+    "tests/validators/domains/soil/time_caveat/test_time_caveat_profile.py": "PROPOSED",
+    "tools/validators/domains/soil/time_caveat/validate_time_caveat_profile.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-no-network-tests",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-outcome-matrix",
+      "outcome": "PASS",
+      "reason": "Six fixtures produced exact counts: two PASS, one HOLD, two DENY, and one ERROR."
+    },
+    {
+      "gate": "profile-spec-hash",
+      "outcome": "PASS",
+      "reason": "The profile SHA-256 recomputed from canonical JSON without spec_hash."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The path-scoped workflow parses as YAML and retains one read-only job."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-soil-time",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#time-normalization-and-support-separation"
+    },
+    {
+      "id": "attachment:soil-architecture-time-caveat",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf#SoilTimeCaveat"
+    },
+    {
+      "id": "repository:soil-time-caveat-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/soil/soil_time_caveat.md@f86ae3fddc93fba439965fc491b4d4e6fd0a2c83"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f86ae3fddc93fba439965fc491b4d4e6fd0a2c83"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T00:04:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inactive, fixture-only Soil time-caveat adapter. It preserves time-axis and support-role distinctions and grants no source, evidence, policy, review, promotion, release, publication, current-condition, or public-use authority."
+}
