@@ -1,0 +1,65 @@
+{
+  "assessment_id": "material-change:natural-systems:fauna_habitat:2026-03-20:hold",
+  "baseline_ref": "kfm://dataset-version/natural-systems/fauna_habitat/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/fauna_habitat/2026-03-20",
+  "classification": {
+    "change_class": "UNDETERMINED",
+    "material": null,
+    "outcome": "HOLD",
+    "reason_codes": [
+      "INSUFFICIENT_EVIDENCE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:fce29ad2e4b097d9213d4c955b898e2819b7adf667d3b0a82c811cc359401491",
+    "byte_changed": true,
+    "candidate_digest": "sha256:9d72a0528e4ca9c6eaef6e8139b0b7cd434d3370d3590b6c4ae60051a78124cd",
+    "semantic_changed": null
+  },
+  "criteria": [
+    {
+      "criterion_id": "domain-evidence-completeness",
+      "evidence_refs": [],
+      "metric": "evidence_completeness",
+      "observed_value": null,
+      "required": true,
+      "result": "UNKNOWN",
+      "threshold": 1,
+      "unit": "boolean"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://diff/natural-systems/fauna_habitat/2026-03-20",
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/fauna_habitat"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:14bd6dd61b63330440f918637aebad81d1c1f0c487239500ddd45aac0068caef"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/fauna_habitat/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:348838e899dd232e7c0c08af2dbdefb92b8ca879ff4ec82e9c0007ea23916c36"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/fauna_habitat",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}
