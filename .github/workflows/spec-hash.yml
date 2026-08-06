@@ -1,0 +1,98 @@
+# Validate the common deterministic spec-hash implementation and fixture profile.
+name: spec-hash
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/spec-hash.yml"
+      - "pyproject.toml"
+      - "packages/hashing/**"
+      - "tools/spec_hash/**"
+      - "tools/validators/validate_spec_hash.py"
+      - "contracts/common/spec_hash.md"
+      - "schemas/contracts/v1/common/spec_hash.schema.json"
+      - "fixtures/contracts/v1/common/spec_hash/**"
+      - "tests/validators/test_validate_spec_hash.py"
+      - "data/receipts/generated/genrec-spec-hash-validator-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/spec-hash.yml"
+      - "pyproject.toml"
+      - "packages/hashing/**"
+      - "tools/spec_hash/**"
+      - "tools/validators/validate_spec_hash.py"
+      - "contracts/common/spec_hash.md"
+      - "schemas/contracts/v1/common/spec_hash.schema.json"
+      - "fixtures/contracts/v1/common/spec_hash/**"
+      - "tests/validators/test_validate_spec_hash.py"
+      - "data/receipts/generated/genrec-spec-hash-validator-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spec-hash-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-common-spec-hash
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]" -e "./packages/hashing[test]"
+
+      - name: Run deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_spec_hash.py' \
+            --verbose
+          python tools/validators/validate_spec_hash.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-spec-hash-validator-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Common spec-hash validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: bounded RFC 8785 JCS + SHA-256 computation, current sha256:<hex> shape, fixture polarity, and authoring-receipt integrity."
+            echo "- Boundary: a green result creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
