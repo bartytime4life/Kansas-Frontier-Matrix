@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/issue_inventory_projection.schema.json",
+  "title": "issue_inventory_projection",
+  "description": "Read-only, fixture-backed issue state projection used to bind a BriefingSignal UPDATE_EXISTING_ISSUE dry run before any live GitHub read. The projection cannot create repository authority or permit mutation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "projection_id",
+    "repository",
+    "source_ref",
+    "generated_at",
+    "issue_count",
+    "issues",
+    "projection_digest",
+    "live_state_verified",
+    "authority_created",
+    "repository_mutation_allowed"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.briefing.issue-inventory.fixture.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "projection_id": {
+      "type": "string",
+      "pattern": "^kfm:issue-inventory:[0-9a-f]{16}$"
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 9,
+      "maxLength": 240,
+      "pattern": "^fixture:[A-Za-z0-9][A-Za-z0-9:._/-]*$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issue_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 256
+    },
+    "issues": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/issue"
+      }
+    },
+    "projection_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "live_state_verified": {
+      "const": false
+    },
+    "authority_created": {
+      "const": false
+    },
+    "repository_mutation_allowed": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "number",
+        "state",
+        "updated_at"
+      ],
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "state": {
+          "enum": [
+            "OPEN",
+            "CLOSED"
+          ]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

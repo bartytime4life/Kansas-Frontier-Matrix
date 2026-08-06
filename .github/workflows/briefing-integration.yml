@@ -1,6 +1,7 @@
 # Validate non-authoritative briefing integration, deterministic BriefingSignal
-# identity/dedup/materiality/routing, the proposed shared temporal-authority
-# profile, and water-planning semantic and canonical registry boundaries.
+# identity/dedup/materiality/routing, read-only issue-inventory binding, the
+# proposed shared temporal-authority profile, and water-planning semantic and
+# canonical registry boundaries.
 # This workflow is read-only and emits no KFM release or publication authority.
 name: briefing-integration
 
@@ -10,8 +11,11 @@ name: briefing-integration
       - ".github/workflows/briefing-integration.yml"
       - "docs/architecture/briefing-integration.md"
       - "contracts/governance/briefing_signal.md"
+      - "contracts/governance/issue_inventory_projection.md"
       - "schemas/contracts/v1/governance/briefing_signal.schema.json"
+      - "schemas/contracts/v1/governance/issue_inventory_projection.schema.json"
       - "fixtures/contracts/v1/governance/briefing_signal/**"
+      - "fixtures/contracts/v1/governance/issue_inventory_projection/**"
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
@@ -36,8 +40,11 @@ name: briefing-integration
       - ".github/workflows/briefing-integration.yml"
       - "docs/architecture/briefing-integration.md"
       - "contracts/governance/briefing_signal.md"
+      - "contracts/governance/issue_inventory_projection.md"
       - "schemas/contracts/v1/governance/briefing_signal.schema.json"
+      - "schemas/contracts/v1/governance/issue_inventory_projection.schema.json"
       - "fixtures/contracts/v1/governance/briefing_signal/**"
+      - "fixtures/contracts/v1/governance/issue_inventory_projection/**"
       - "tools/validators/governance/**"
       - "tests/governance/**"
       - "examples/briefing_integration/**"
@@ -94,7 +101,7 @@ jobs:
       - name: Install declared validation dependencies
         run: python -m pip install -e .
 
-      - name: Run BriefingSignal identity, validation, dedup, materiality, and routing tests
+      - name: Run BriefingSignal identity, validation, routing, and issue-inventory tests
         run: |
           python -m unittest discover \
             --start-directory tests/governance \
@@ -112,9 +119,25 @@ jobs:
           python tools/validators/governance/deduplicate_briefing_signals.py \
             fixtures/contracts/v1/governance/briefing_signal/valid/*.json
 
-      - name: Run explainable materiality and routing dry run
+      - name: Validate fixture-backed issue inventory projections
+        run: |
+          python tools/validators/governance/validate_issue_inventory_projection.py \
+            fixtures/contracts/v1/governance/issue_inventory_projection/valid/*.json
+
+      - name: Confirm invalid issue inventory projections fail closed
+        run: |
+          if python tools/validators/governance/validate_issue_inventory_projection.py \
+            fixtures/contracts/v1/governance/issue_inventory_projection/invalid/*.json; then
+            echo "::error::Known-invalid IssueInventoryProjection fixtures were accepted."
+            exit 1
+          fi
+          echo "EXPECTED_REJECTION: invalid IssueInventoryProjection fixtures"
+
+      - name: Run explainable materiality and projection-bound routing dry run
         run: |
           python tools/validators/governance/route_briefing_signals.py \
+            --issue-inventory \
+            fixtures/contracts/v1/governance/issue_inventory_projection/valid/open-target.json \
             fixtures/contracts/v1/governance/briefing_signal/valid/*.json \
             examples/briefing_integration/*.json
 
@@ -154,9 +177,11 @@ jobs:
             echo "### Briefing integration"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: non-authoritative BriefingSignal shape, deterministic identity, durable event clustering, replay/collision checks, explainable materiality, mandatory overrides, and finite issue-routing dry runs plus the proposed shared TemporalAuthorityEnvelope profile."
-            echo "- Both dry-run tools read local validated files only and emit authority_created=false plus repository_mutation_allowed=false."
-            echo "- A materiality priority is a review-order recommendation, not evidence, policy, repository authorization, issue mutation, or release authority."
+            echo "- Scope: non-authoritative BriefingSignal shape, deterministic identity, durable event clustering, replay/collision checks, explainable materiality, mandatory overrides, finite declared issue routing, and a validated read-only fixture-backed issue inventory projection plus the proposed shared TemporalAuthorityEnvelope profile."
+            echo "- Existing-issue routes retain UPDATE_EXISTING_ISSUE only when exactly one declared target is projected OPEN and none is missing; absent, closed, missing, or ambiguous targets hold."
+            echo "- The projection contains no title, body, comment, label, assignee, permission, ruleset, merge state, or mutation capability and explicitly reports live_state_verified=false."
+            echo "- All dry-run tools read local validated files only and emit authority_created=false plus repository_mutation_allowed=false."
+            echo "- A materiality priority or projected issue state is a review-order input, not evidence, live GitHub state, policy, repository authorization, issue mutation, or release authority."
             echo "- The temporal-authority profile does not accept ADR-0014, replace TemporalWindow, select a global temporal vocabulary, or replace a domain contract."
             echo "- A green result is not evidence, source admission, repository authorization, issue mutation, policy approval, review approval, proof closure, release, deployment, publication, or public truth."
           } >> "$GITHUB_STEP_SUMMARY"

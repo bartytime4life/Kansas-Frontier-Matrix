@@ -2,9 +2,10 @@
 """Dry-run explainable BriefingSignal materiality and issue routing.
 
 This command reads local validated signals, recomputes declared scores, priorities,
-reason codes, and finite issue dispositions, then emits a value-minimized report.
-It never calls the network or mutates GitHub, repository, lifecycle, evidence,
-policy, review, proof, release, deployment, publication, or public state.
+reason codes, and finite issue dispositions, then optionally binds an existing-issue
+route to one validated, read-only fixture-backed issue inventory projection. It
+never calls the network or mutates GitHub, repository, lifecycle, evidence, policy,
+review, proof, release, deployment, publication, or public state.
 """
 from __future__ import annotations
 
@@ -25,11 +26,55 @@ from tools.validators.governance.validate_briefing_signal import (  # noqa: E402
     compute_routing_disposition,
     load_candidate,
 )
+from tools.validators.governance.validate_issue_inventory_projection import (  # noqa: E402
+    bind_issue_inventory,
+    projection_summary,
+    validate_projection,
+)
 
 SCOPE = "briefing-materiality-routing-dry-run"
 
 
-def evaluate(paths: Sequence[Path]) -> dict[str, object]:
+def _inventory_input(
+    path: Path | None,
+) -> tuple[Mapping[str, object] | None, list[dict[str, str]], dict[str, object] | None]:
+    if path is None:
+        return None, [], None
+
+    result = validate_projection(path)
+    if not result.ok or result.payload is None:
+        findings = [
+            {
+                "code": f"ISSUE_INVENTORY_{finding.code}",
+                "path": f"{path.as_posix()}::{finding.path}",
+            }
+            for finding in result.findings
+        ]
+        return None, findings, None
+    return result.payload, [], projection_summary(result.payload)
+
+
+def evaluate(
+    paths: Sequence[Path],
+    issue_inventory_path: Path | None = None,
+) -> dict[str, object]:
+    projection, inventory_findings, inventory_summary = _inventory_input(
+        issue_inventory_path
+    )
+    if inventory_findings:
+        inventory_findings.sort(
+            key=lambda item: (item["code"], item["path"])
+        )
+        return {
+            "authority_created": False,
+            "findings": inventory_findings,
+            "issue_inventory": None,
+            "repository_mutation_allowed": False,
+            "scope": SCOPE,
+            "signals": [],
+            "status": "FAIL",
+        }
+
     findings: list[dict[str, str]] = []
     signals: list[dict[str, object]] = []
     for path in sorted(paths, key=lambda item: item.as_posix()):
@@ -50,13 +95,38 @@ def evaluate(paths: Sequence[Path]) -> dict[str, object]:
         routing = candidate.get("routing")
         dedup = candidate.get("deduplication")
         next_action = candidate.get("next_action")
-        if not all(isinstance(item, Mapping) for item in (materiality, routing, dedup, next_action)):
-            findings.append({"code": "INPUT_PROFILE_INCOMPLETE", "path": path.as_posix()})
+        if not all(
+            isinstance(item, Mapping)
+            for item in (materiality, routing, dedup, next_action)
+        ):
+            findings.append(
+                {
+                    "code": "INPUT_PROFILE_INCOMPLETE",
+                    "path": path.as_posix(),
+                }
+            )
             continue
         if routing_result is None:
-            findings.append({"code": "INPUT_ROUTING_UNAVAILABLE", "path": path.as_posix()})
+            findings.append(
+                {
+                    "code": "INPUT_ROUTING_UNAVAILABLE",
+                    "path": path.as_posix(),
+                }
+            )
             continue
+
         disposition, routing_reasons = routing_result
+        matched_issue_ids = (
+            dedup.get("matched_issue_ids", [])
+            if isinstance(dedup.get("matched_issue_ids"), list)
+            else []
+        )
+        binding = bind_issue_inventory(
+            declared_disposition=disposition,
+            declared_reason_codes=routing_reasons,
+            matched_issue_ids=matched_issue_ids,
+            projection=projection,
+        )
         override = materiality.get("mandatory_override")
         signals.append(
             {
@@ -65,27 +135,35 @@ def evaluate(paths: Sequence[Path]) -> dict[str, object]:
                 "materiality": {
                     "raw_score": compute_materiality_score(candidate),
                     "priority": compute_materiality_priority(candidate),
-                    "reason_codes": list(compute_materiality_reason_codes(candidate) or ()),
+                    "reason_codes": list(
+                        compute_materiality_reason_codes(candidate) or ()
+                    ),
                     "mandatory_override": {
-                        "applied": override.get("applied") if isinstance(override, Mapping) else None,
-                        "reason_code": override.get("reason_code") if isinstance(override, Mapping) else None,
+                        "applied": (
+                            override.get("applied")
+                            if isinstance(override, Mapping)
+                            else None
+                        ),
+                        "reason_code": (
+                            override.get("reason_code")
+                            if isinstance(override, Mapping)
+                            else None
+                        ),
                     },
                 },
                 "routing": {
-                    "disposition": disposition,
-                    "reason_codes": list(routing_reasons),
+                    **binding,
                     "idempotency_key": next_action.get("idempotency_key"),
-                    "target_issue_ids": sorted(dedup.get("matched_issue_ids", []))
-                    if isinstance(dedup.get("matched_issue_ids"), list)
-                    else [],
                 },
             }
         )
+
     findings.sort(key=lambda item: (item["code"], item["path"]))
     signals.sort(key=lambda item: str(item["signal_id"]))
     return {
         "authority_created": False,
         "findings": findings,
+        "issue_inventory": inventory_summary,
         "repository_mutation_allowed": False,
         "scope": SCOPE,
         "signals": signals,
@@ -94,16 +172,34 @@ def evaluate(paths: Sequence[Path]) -> dict[str, object]:
 
 
 def serialize_report(report: Mapping[str, object]) -> str:
-    return json.dumps(report, sort_keys=True, separators=(",", ":"))
+    return json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Dry-run explainable BriefingSignal materiality and issue routing."
+        description=(
+            "Dry-run explainable BriefingSignal materiality and issue routing "
+            "with optional read-only issue-inventory binding."
+        )
+    )
+    parser.add_argument(
+        "--issue-inventory",
+        type=Path,
+        default=None,
+        help=(
+            "Validated local IssueInventoryProjection fixture. No live GitHub "
+            "read or mutation is performed."
+        ),
     )
     parser.add_argument("files", nargs="+", type=Path)
     args = parser.parse_args(argv)
-    report = evaluate(args.files)
+    report = evaluate(args.files, args.issue_inventory)
     print(serialize_report(report))
     return 1 if report["status"] == "FAIL" else 0
 
