@@ -49,7 +49,7 @@
     "schemas/contracts/v1/telemetry/README.md": "sha256:ac995a545822df97cb85d1781262485b486ce6598357f1144384c26071335715",
     "schemas/contracts/v1/telemetry/trace_receipt_link.schema.json": "sha256:74c800c9faa9aa8f8301f97c6470042b978c3ff0c9118a7dd6c408fb142253fb",
     "tests/validators/test_validate_trace_receipt_link.py": "sha256:85eb27a2c6ee222967efd1704c042ed985856e640b67815a6bfd4bb726f685c4",
-    "tools/validators/validate_trace_receipt_link.py": "sha255:9e3e6a0b03e209f02e6aa1d409849eaec3a6f0f5e89697093d967bff5d87ba30"
+    "tools/validators/validate_trace_receipt_link.py": "sha256:9e3e6a0b03e209f02e6aa1d409849eaec3a6f0f5e89697093d967bff5d87ba30"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -86,7 +86,7 @@
   "truth_labels": {
     ".github/workflows/trace-receipt-link.yml": "PROPOSED",
     "contracts/telemetry/trace_receipt_link.md": "PROPOSED",
-    "docs/intake/exploratory/new-ideas-2-22-26-trace-receipt-link-source-map.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-2-22-26-trace-receipt-link-source-map.md": "PROPOSEED",
     "fixtures/contracts/v1/telemetry/trace_receipt_link/invalid/expected_findings_manifest.json": "PROPOSED",
     "fixtures/contracts/v1/telemetry/trace_receipt_link/invalid/schema_invalid_empty_attestations.json": "PROPOSED",
     "fixtures/contracts/v1/telemetry/trace_receipt_link/invalid/schema_invalid_missing_evidence_digest.json": "PROPOSED",
