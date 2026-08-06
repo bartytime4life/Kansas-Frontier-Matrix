@@ -1,0 +1,86 @@
+# Validate the fixture-only AirNow-to-AQS authority reconciliation profile.
+name: atmosphere-airnow-aqs-reconciliation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml"
+      - "contracts/domains/atmosphere/airnow_aqs_reconciliation.md"
+      - "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_*.schema.json"
+      - "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "fixtures/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "data/receipts/generated/genrec-atmosphere-airnow-aqs-reconciliation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml"
+      - "contracts/domains/atmosphere/airnow_aqs_reconciliation.md"
+      - "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_*.schema.json"
+      - "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "fixtures/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/**"
+      - "data/receipts/generated/genrec-atmosphere-airnow-aqs-reconciliation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atmosphere-airnow-aqs-reconciliation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-airnow-aqs-reconciliation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic reconciliation tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
+            -q --strict-config --strict-markers
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-atmosphere-airnow-aqs-reconciliation-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Synthetic AirNow-to-AQS reconciliation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only monitor-key, source-role, QA/certification, and supersession consistency."
+            echo "- Boundary: no live EPA/KDHE access, source admission, concentration certification, alerting, lifecycle write, promotion, release, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
