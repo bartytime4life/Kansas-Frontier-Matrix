@@ -47,6 +47,18 @@ The handoff carries exact immutable payload chunks and deep-frozen metadata shap
 
 The caller must still validate metadata and payload, prove `SourceDescriptor` and `IngestReceipt` correspondence, decide storage, and perform any lifecycle transition through the accepted owning boundary.
 
+## Construction integrity
+
+`SourceArtifactHandoff` is a validated value object even when constructed directly rather than through `build_source_artifact_handoff(...)`. Construction recomputes the payload SHA-256 and rejects metadata when any trust-critical binding drifts:
+
+- `content_digest`, `byte_length`, `artifact_id`, or `immutable_storage_ref` disagrees with the exact payload;
+- the source locator is unredacted, has an unsupported kind, or has a mismatched locator digest;
+- request context claims that secrets are embedded;
+- governance allows public use, creates authority, carries a release reference, or uses an invalid/placeholder spec hash; or
+- object type or schema version no longer identifies the admitted SourceArtifact profile.
+
+This is a minimum internal integrity boundary, not a replacement for the repository-owned SourceArtifact JSON Schema and semantic validator. The governed caller must still run both and verify referenced-object correspondence.
+
 ## Directory Rules basis
 
 The owning responsibility is reusable source-agnostic implementation, so code remains in `packages/connectors-core/src/connectors_core/`. The semantic contract, tests, fixtures, workflow, and provenance remain in their own established responsibility roots. No source-specific adapter or lifecycle lane is created.
@@ -59,6 +71,8 @@ PYTHONPATH=packages/connectors-core/src \
   python -m pytest tests/packages/connectors_core/test_artifact_handoff.py \
   -q --strict-config --strict-markers
 ```
+
+The focused suite includes direct-construction mutation cases for payload identity, locator identity/redaction, secret posture, governance authority, release reference, and spec-hash polarity.
 
 A green result proves only the internal exact-byte and metadata-candidate boundary. It does not prove a live source, source admission, receipt correspondence, storage, lifecycle promotion, evidence, policy, release, or publication.
 

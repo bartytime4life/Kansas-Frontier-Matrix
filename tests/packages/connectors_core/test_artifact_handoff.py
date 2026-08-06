@@ -27,6 +27,7 @@ from connectors_core.artifact_handoff import (  # noqa: E402
     ArtifactHandoffError,
     ParserIdentity,
     RightsSnapshot,
+    SourceArtifactHandoff,
     build_source_artifact_handoff,
 )
 from tools.validators.validate_source_artifact import validate_artifact  # noqa: E402
@@ -87,6 +88,10 @@ def successful_result(body: tuple[bytes, ...] = (b'{"ok":', b"true}")) -> transp
         payload=payload,
         source_head=source_head,
     )
+
+
+def valid_handoff() -> SourceArtifactHandoff:
+    return build_source_artifact_handoff(successful_result(), context())
 
 
 def test_success_preserves_exact_bytes_and_validates_existing_source_artifact_profile(tmp_path):
@@ -151,7 +156,7 @@ def test_locator_request_context_and_governance_are_deterministic_and_secret_saf
 
 
 def test_metadata_is_deeply_immutable_but_plain_copy_is_editable():
-    handoff = build_source_artifact_handoff(successful_result(), context())
+    handoff = valid_handoff()
     with pytest.raises(TypeError):
         handoff.metadata["object_type"] = "Other"  # type: ignore[index]
     with pytest.raises(TypeError):
@@ -159,6 +164,92 @@ def test_metadata_is_deeply_immutable_but_plain_copy_is_editable():
     copy = handoff.metadata_dict()
     copy["object_type"] = "Other"
     assert handoff.metadata["object_type"] == "SourceArtifact"
+
+
+def test_direct_constructor_accepts_only_metadata_bound_to_the_same_payload():
+    original = valid_handoff()
+    reconstructed = SourceArtifactHandoff(
+        metadata=original.metadata_dict(),
+        payload_chunks=original.payload_chunks,
+    )
+    assert reconstructed.metadata_dict() == original.metadata_dict()
+    assert reconstructed.payload_chunks == original.payload_chunks
+
+    with pytest.raises(ArtifactHandoffError, match="content_digest"):
+        SourceArtifactHandoff(
+            metadata=original.metadata_dict(),
+            payload_chunks=(b"different payload",),
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("object_type", "Other", "object_type"),
+        ("schema_version", "2.0.0", "schema_version"),
+        ("content_digest", "not-a-digest", "content_digest"),
+        ("content_digest", "sha256:" + ("d" * 64), "content_digest"),
+        ("byte_length", True, "byte_length"),
+        ("byte_length", 999, "byte_length"),
+        ("artifact_id", "source-artifact:sha256:" + ("e" * 64), "artifact_id"),
+        ("immutable_storage_ref", "cas:sha256:" + ("f" * 64), "immutable_storage_ref"),
+    ],
+)
+def test_direct_constructor_rejects_top_level_identity_drift(field, value, message):
+    original = valid_handoff()
+    metadata = original.metadata_dict()
+    metadata[field] = value
+    with pytest.raises(ArtifactHandoffError, match=message):
+        SourceArtifactHandoff(metadata=metadata, payload_chunks=original.payload_chunks)
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "value", "message"),
+    [
+        ("source_locator", "kind", "unsupported", "source_locator"),
+        (
+            "source_locator",
+            "value",
+            "https://source.example.test/data?token=secret",
+            "source_locator",
+        ),
+        ("source_locator", "locator_digest", "sha256:" + ("a" * 64), "locator_digest"),
+        ("request_context", "secrets_embedded", True, "embed secrets"),
+        ("governance", "public_use_allowed", True, "allow public use"),
+        ("governance", "authority_created", True, "create authority"),
+        ("governance", "release_ref", "release:fixture", "release reference"),
+        ("governance", "spec_hash", "not-a-digest", "spec_hash"),
+        ("governance", "spec_hash", "sha256:" + ("0" * 64), "all-zero"),
+    ],
+)
+def test_direct_constructor_rejects_nested_trust_boundary_drift(
+    section, field, value, message
+):
+    original = valid_handoff()
+    metadata = original.metadata_dict()
+    metadata[section][field] = value
+    with pytest.raises(ArtifactHandoffError, match=message):
+        SourceArtifactHandoff(metadata=metadata, payload_chunks=original.payload_chunks)
+
+
+@pytest.mark.parametrize(
+    "flag",
+    [
+        "authority_created",
+        "lifecycle_write_allowed",
+        "receipt_created",
+        "repository_mutation_allowed",
+    ],
+)
+def test_direct_constructor_rejects_authority_bearing_object_flags(flag):
+    original = valid_handoff()
+    kwargs = {flag: True}
+    with pytest.raises(ArtifactHandoffError, match="cannot create authority"):
+        SourceArtifactHandoff(
+            metadata=original.metadata_dict(),
+            payload_chunks=original.payload_chunks,
+            **kwargs,
+        )
 
 
 def test_head_not_modified_and_failure_results_never_create_artifact_handoff():

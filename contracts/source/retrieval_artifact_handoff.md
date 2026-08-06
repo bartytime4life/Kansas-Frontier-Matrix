@@ -2,7 +2,7 @@
 doc_id: kfm://contract/source/retrieval-artifact-handoff
 title: Retrieval-to-SourceArtifact Handoff Contract
 type: semantic-contract; source-agnostic-internal-handoff
-version: v0.1.0
+version: v0.1.1
 status: proposed; fixture-first; no-network
 owners: OWNER_TBD — Connector steward · SourceArtifact steward · Ingest receipt steward · Validation steward
 created: 2026-08-06
@@ -76,6 +76,20 @@ The output carries:
 
 The handoff object can produce a plain metadata dictionary for the existing validator, but it never validates itself into authority or writes the bytes.
 
+## Value-object integrity
+
+The handoff value object must remain fail-closed even when directly constructed from a metadata mapping and byte chunks. Its constructor therefore recomputes and enforces the minimum trust-critical bindings that define the handoff itself:
+
+- exact payload SHA-256 and byte length;
+- `artifact_id` and content-addressed storage reference derived from that digest;
+- redacted locator, admitted locator kind, and locator digest;
+- `secrets_embedded=false` in request context;
+- `public_use_allowed=false`, `authority_created=false`, and `release_ref=null` in governance;
+- a non-placeholder SHA-256 governance spec hash; and
+- the admitted SourceArtifact object type and schema version.
+
+Direct construction with mismatched payload identity or authority-bearing metadata must fail before the object exists. These checks do not replace full JSON Schema validation, semantic validation, or referenced-object correspondence checks.
+
 ## Caller obligations
 
 A governed caller must separately:
@@ -95,12 +109,15 @@ No new root, schema authority, source registry, lifecycle lane, receipt authorit
 
 ## Validation
 
-The first implementation must prove:
+The implementation must prove:
 
 - exact payload chunk, digest, and length preservation;
 - deterministic artifact and locator identity;
 - successful validation by the current SourceArtifact schema and semantic validator;
 - rejection of no-byte, `HEAD`, `NOT_MODIFIED`, failed, mismatched-head, and self-superseding inputs;
+- direct-construction rejection for payload/digest/length/identity drift;
+- direct-construction rejection for unredacted or mismatched locator metadata;
+- direct-construction rejection for secret-bearing, authority-bearing, public-use, release-bound, or placeholder-governance metadata;
 - conflict and correction lineage polarity;
 - immutable metadata and secret-safe representation;
 - package import without network or filesystem effects; and
