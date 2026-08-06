@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-citation-pill-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/citation_pill/index.ts",
+    "apps/explorer-web/src/features/citation_pill/README.md",
+    "apps/explorer-web/tests/citation-pill.test.ts",
+    "apps/explorer-web/tests/browser/citation-pill.fixture.ts",
+    "apps/explorer-web/tests/browser/citation-pill.html",
+    "apps/explorer-web/tests/browser/citation-pill.spec.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/citation_pill/index.ts": "sha256:b27d83af6d89c29f7ae29b247c40d291a5c6aee2351b0714f963321b1974a87e",
+    "apps/explorer-web/src/features/citation_pill/README.md": "sha256:fdf84e105a8eb00165fb0636017e10d9b1d0aa9bf45fa9fe5f24bb4203aa1bb2",
+    "apps/explorer-web/tests/citation-pill.test.ts": "sha256:cdd9eac38f183068c62f2919f91da6e062cf485db5f92012be6a969b29336b99",
+    "apps/explorer-web/tests/browser/citation-pill.fixture.ts": "sha256:5bbe80b8fa4c4f9cedd13c0060db932cb6eb86a8c9d356f6e5d4196bd932f166",
+    "apps/explorer-web/tests/browser/citation-pill.html": "sha256:e68b39ad461b372f5a5ff55356669baf638932696142d9fd20cdb4fa2b4e4099",
+    "apps/explorer-web/tests/browser/citation-pill.spec.ts": "sha256:7edee4ef7a460832719b7b210ca7ab85ec55d8599911366df4801e346676ec89"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06-session"
+  },
+  "prompt_or_contract": "sha256:0f27cde725aa81ab13e6a588a39c75f0a28aab9d6e23d40f2e2b56e4c30c1802",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "file_search",
+      "GitHub connector",
+      "container",
+      "TypeScript compiler"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:17b2f51d90306a75b118bdf5826fc1c30c1550d44f8c1347bb603d3080e23b3c"
+    ],
+    "attached_docs": [
+      "New Ideas 3-4-26.pdf"
+    ],
+    "evidence_refs": [
+      "file:New Ideas 3-4-26.pdf#page=87",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@d07e1e4adeec2009101ef571fe23d9aa2202449b:apps/explorer-web/src/adapters/GovernedClient.ts",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@d07e1e4adeec2009101ef571fe23d9aa2202449b:apps/explorer-web/src/features/evidence_tooltip/index.ts",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@d07e1e4adeec2009101ef571fe23d9aa2202449b:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@d07e1e4adeec2009101ef571fe23d9aa2202449b:.github/workflows/ui-build.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@d07e1e4adeec2009101ef571fe23d9aa2202449b:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/citation_pill/index.ts": "PROPOSED",
+    "apps/explorer-web/src/features/citation_pill/README.md": "PROPOSED",
+    "apps/explorer-web/tests/citation-pill.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/citation-pill.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/citation-pill.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/citation-pill.spec.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript_no_emit_isolated",
+      "outcome": "PASS",
+      "reason": "Production module compiled under strict ES2022 and DOM TypeScript settings against a type-compatible current governed projection surface."
+    },
+    {
+      "gate": "resolver_harness",
+      "outcome": "PASS",
+      "reason": "Compiled deterministic harness covered visible, missing-time, ambiguous-ref, deny, stale, and superseded outcomes."
+    },
+    {
+      "gate": "static_trust_boundary_scan",
+      "outcome": "PASS",
+      "reason": "Source scan found no browser transport, persistence, lifecycle-store path, model-runtime access, navigation mutation, or HTML interpolation."
+    },
+    {
+      "gate": "test_source_typecheck",
+      "outcome": "PASS",
+      "reason": "Production, Vitest, fixture, and Playwright sources passed strict syntax/type compilation with temporary local module declarations."
+    },
+    {
+      "gate": "repo_native_vitest",
+      "outcome": "SKIPPED",
+      "reason": "The local artifact workspace did not contain the repository dependency install or pnpm; exact-head hosted ui-build owns repository-native Vitest execution."
+    },
+    {
+      "gate": "repo_native_playwright",
+      "outcome": "SKIPPED",
+      "reason": "The local artifact workspace did not contain repository dependencies or managed browser binaries; exact-head hosted ui-build owns Playwright execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "SRC-NEW-IDEAS-3-4-26-CITATION-PILL",
+      "validated": true,
+      "evidence_ref": "file:New Ideas 3-4-26.pdf#page=87"
+    },
+    {
+      "id": "REPO-GOVERNED-EVIDENCE-PROJECTION",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts@d07e1e4adeec2009101ef571fe23d9aa2202449b"
+    },
+    {
+      "id": "REPO-GOVERNED-EVIDENCE-TOOLTIP",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_tooltip/index.ts@d07e1e4adeec2009101ef571fe23d9aa2202449b"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d07e1e4adeec2009101ef571fe23d9aa2202449b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T04:06:32Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored additive Explorer citation-pill slice based on current main@d07e1e4adeec2009101ef571fe23d9aa2202449b. The source packet's inline EvidenceRef and copy-link interaction was narrowed to VERIFIED-only, copy-only behavior because current repository evidence does not establish a canonical three-state citation vocabulary or deep-link route. Exact-head hosted checks remain separate pull-request evidence. No live source, release, deployment, promotion, publication, or public-route activation is represented."
+}
