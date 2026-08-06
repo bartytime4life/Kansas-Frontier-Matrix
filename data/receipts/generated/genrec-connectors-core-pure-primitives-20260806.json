@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-connectors-core-pure-primitives-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/connector-gate.yml",
+    "packages/connectors-core/pyproject.toml",
+    "packages/connectors-core/src/connectors_core/core.py",
+    "packages/connectors-core/src/connectors_core/PRIMITIVES.md",
+    "tests/packages/connectors_core/README.md",
+    "tests/packages/connectors_core/test_core.py",
+    "fixtures/packages/connectors_core/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/connector-gate.yml": "sha256:ba2406c3cbc3a5f9b0d6801df5c7be2bf91a0ee1e5de85566befb5b9afafea58",
+    "packages/connectors-core/pyproject.toml": "sha256:3f19fb4168ecf34118c22270c0f7443e2650777346ecf711f6af20a6bb5b583a",
+    "packages/connectors-core/src/connectors_core/core.py": "sha256:3b991f9218604ede056c7a0588f1cf442e90fcf67a939502ce96c5570bdad8f6",
+    "packages/connectors-core/src/connectors_core/PRIMITIVES.md": "sha256:54d3c785f444a45db2b10968674ced06dcb3dc62b2d23e7fc74ba1e59266ed70",
+    "tests/packages/connectors_core/README.md": "sha256:fde916297ba40b3027e82dff799f94479aa565710b81f31ef8a4675369ac71f5",
+    "tests/packages/connectors_core/test_core.py": "sha256:77e124710803751da9ec223ef77304a4b9e0d2db148222ce0731648a47289be7",
+    "fixtures/packages/connectors_core/README.md": "sha256:7005e2a6720859f7bdbbfc1d861fef1ad65d399891308568c9557a60f40f0000"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:d89a0a68cdfe750ef4c1fec9991630b14410e56a91ca58160c933f2183212910",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local Python 3.13 validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-4-26.pdf"
+    ],
+    "evidence_refs": [
+      "repo:contracts/source/source_adapter.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:contracts/source/source_artifact.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:packages/connectors-core/src/connectors_core/README.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:.github/workflows/connector-gate.yml@16a07f666dbaffbac98f7b9e4402ac55e69f99c3",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/connector-gate.yml": "PROPOSED",
+    "packages/connectors-core/pyproject.toml": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/core.py": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/PRIMITIVES.md": "PROPOSED",
+    "tests/packages/connectors_core/README.md": "PROPOSED",
+    "tests/packages/connectors_core/test_core.py": "PROPOSED",
+    "fixtures/packages/connectors_core/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-python-compile-and-import",
+      "outcome": "PASS",
+      "reason": "core.py compiled and connectors_core.core imported without network or lifecycle effects."
+    },
+    {
+      "gate": "local-focused-pytest",
+      "outcome": "PASS",
+      "reason": "11 deterministic no-network tests passed under Python 3.13.5."
+    },
+    {
+      "gate": "local-pyproject-parse",
+      "outcome": "PASS",
+      "reason": "tomllib parsed package metadata and verified hatchling/src-layout fields."
+    },
+    {
+      "gate": "local-workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The modified connector-gate workflow parsed and retained the expected job structure."
+    },
+    {
+      "gate": "local-package-install",
+      "outcome": "SKIPPED",
+      "reason": "The isolated no-network environment does not have hatchling installed; exact-head hosted CI installs the repository and package."
+    },
+    {
+      "gate": "local-static-trust-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests and source inspection found no network client, source endpoint, lifecycle path, receipt emitter, policy decision, release, or publication dependency."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending until the draft pull request is opened."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "source:new-ideas-event-driven-governed-pipeline",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-4-26.pdf"
+    },
+    {
+      "id": "repository:source-adapter-graduation-path",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_adapter.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    },
+    {
+      "id": "repository:connector-core-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:packages/connectors-core/src/connectors_core/core.py@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    },
+    {
+      "id": "repository:directory-governance-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@16a07f666dbaffbac98f7b9e4402ac55e69f99c3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T18:39:56Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Internal source-agnostic pure-primitives slice. This receipt grants no source admission, network access, lifecycle mutation, evidence, policy, review, authoritative receipt, release, promotion, deployment, publication, or public-use authority."
+}

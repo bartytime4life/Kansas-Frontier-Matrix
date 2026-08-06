@@ -1,4 +1,37 @@
-# packages/connectors-core pyproject — greenfield placeholder
+# Internal source-agnostic connector primitives for Kansas Frontier Matrix.
+# This package performs no source admission, lifecycle writes, evidence closure,
+# policy decisions, release, publication, or public-runtime work.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-connectors-core"
-version = "0.0.0"
+version = "0.0.1"
+description = "Pure, source-agnostic connector primitives for governed KFM callers."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.11"
+license = { text = "TBD" }
+authors = [{ name = "KFM Maintainers" }]
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+  "pytest>=9.1.1,<10",
+]
+
+[project.urls]
+Repository = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+Documentation = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/packages/connectors-core"
+Issues = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/connectors_core"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/README.md",
+  "/pyproject.toml",
+  "/src/connectors_core",
+]
