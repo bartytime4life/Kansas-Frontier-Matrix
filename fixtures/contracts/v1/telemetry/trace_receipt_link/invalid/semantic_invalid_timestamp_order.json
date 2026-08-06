@@ -1,0 +1,63 @@
+{
+  "object_type": "TraceReceiptLink",
+  "schema_version": "1.0.0",
+  "link_id": "urn:kfm:trace-receipt-link:sha256:162107fa9fdc027374e818900a166e8d15622a19cef1c26179ca5f8d3600898d",
+  "hash_profile": "kfm-trace-link-id-v1",
+  "run_anchor": {
+    "run_id": "run:2026-08-06T03:30:00Z:trace-link-001",
+    "spec_hash": "jcs:sha256:f647c6cd322c500b6f7a31add69023134a9938cb173d3337b5d3159d3dd9f847",
+    "trace_id": "367d9aa66e70b105ba7c0bc857a0dceb",
+    "root_span_id": "dcfda105072c6278",
+    "started_at": "2026-08-06T03:30:00Z",
+    "ended_at": "2026-08-06T03:30:20Z",
+    "service_name": "kfm-pipeline-fixture",
+    "git_sha": "4008a5ad3b76e809f1b979e00b25df50eca130a0",
+    "dataset_id": "dataset:kfm/synthetic/trace-link-001",
+    "sensitivity": "public_default"
+  },
+  "run_receipt": {
+    "receipt_ref": "kfm:receipt:run:trace-link-001",
+    "digest": "sha256:0d0c6594dc01742802e5f5b447ba828a013fea78e7362528553da0db9c4b0118",
+    "run_id": "run:2026-08-06T03:30:00Z:trace-link-001",
+    "spec_hash": "jcs:sha256:f647c6cd322c500b6f7a31add69023134a9938cb173d3337b5d3159d3dd9f847",
+    "trace_id": "367d9aa66e70b105ba7c0bc857a0dceb",
+    "emitted_at": "2026-08-06T03:30:30Z"
+  },
+  "evidence_bundle": {
+    "bundle_ref": "kfm:evidence-bundle:trace-link-001",
+    "oci_ref": "oci://ghcr.io/bartytime4life/kfm-evidence@sha256:c1ac56831f01bb0a051aa78b99993331feabfc477937bc275fca9a2236303cb8",
+    "digest": "sha256:c1ac56831f01bb0a051aa78b99993331feabfc477937bc275fca9a2236303cb8",
+    "run_id": "run:2026-08-06T03:30:00Z:trace-link-001",
+    "spec_hash": "jcs:sha256:f647c6cd322c500b6f7a31add69023134a9938cb173d3337b5d3159d3dd9f847",
+    "trace_id": "367d9aa66e70b105ba7c0bc857a0dceb",
+    "recorded_at": "2026-08-06T03:31:20Z",
+    "attestations": [
+      {
+        "kind": "COSIGN",
+        "digest": "sha256:245f5e2a9920a95c586c26dba874c067b71142a356d321e74eed9cdf0916c0dc",
+        "ref": "oci://ghcr.io/bartytime4life/kfm-evidence-attestations@sha256:245f5e2a9920a95c586c26dba874c067b71142a356d321e74eed9cdf0916c0dc",
+        "subject_digest": "sha256:c1ac56831f01bb0a051aa78b99993331feabfc477937bc275fca9a2236303cb8"
+      }
+    ]
+  },
+  "assessment": {
+    "evaluated_at": "2026-08-06T03:31:00Z",
+    "max_link_delay_seconds": 300,
+    "receipt_delay_seconds": 30,
+    "evidence_delay_seconds": 80,
+    "status": "LINKED",
+    "gate_disposition": "PASS",
+    "reason_codes": [
+      "TRACE_RECEIPT_EVIDENCE_LINKED"
+    ]
+  },
+  "governance": {
+    "telemetry_truth_authority_created": false,
+    "evidence_truth_authority_created": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_route_created": false,
+    "sensitive_payload_included": false
+  }
+}
