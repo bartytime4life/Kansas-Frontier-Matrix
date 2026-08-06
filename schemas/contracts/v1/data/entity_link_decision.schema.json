@@ -1,0 +1,340 @@
+{
+  "$defs": {
+    "endpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+          "type": "string"
+        },
+        "entity_ref": {
+          "pattern": "^kfm://record/[a-z0-9._/-]+$",
+          "type": "string"
+        },
+        "entity_type": {
+          "enum": [
+            "PERSON",
+            "PLACE",
+            "FACILITY",
+            "PARCEL",
+            "WATER_GAGE",
+            "EVENT",
+            "ORGANIZATION",
+            "OTHER"
+          ]
+        },
+        "spec_hash": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_ref",
+        "entity_type",
+        "domain",
+        "spec_hash"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/data/entity_link_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Fixture-only cross-domain candidate link decision. It cannot merge canonical entities or authorize release.",
+  "properties": {
+    "decision": {
+      "additionalProperties": false,
+      "properties": {
+        "auto_merge_performed": {
+          "const": false
+        },
+        "canonical_mutation_performed": {
+          "const": false
+        },
+        "proposed_action": {
+          "enum": [
+            "PROPOSE_MERGE",
+            "REVIEW",
+            "REJECT",
+            "HOLD"
+          ]
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{2,80}$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "proposed_action",
+        "reason_codes",
+        "auto_merge_performed",
+        "canonical_mutation_performed"
+      ],
+      "type": "object"
+    },
+    "decision_id": {
+      "pattern": "^kfm://candidate/entity-link/[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "deterministic_checks": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "check_id": {
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "type": "string"
+          },
+          "required_for_merge": {
+            "type": "boolean"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "check_id",
+          "result",
+          "required_for_merge"
+        ],
+        "type": "object"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "pattern": "^kfm://evidence/[a-z0-9._/-]+@sha256:[a-f0-9]{64}$",
+        "type": "string"
+      },
+      "maxItems": 64,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "flags": {
+      "additionalProperties": false,
+      "properties": {
+        "identity_conflict": {
+          "type": "boolean"
+        },
+        "licensing_conflict": {
+          "type": "boolean"
+        },
+        "sensitivity_conflict": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "licensing_conflict",
+        "sensitivity_conflict",
+        "identity_conflict"
+      ],
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_created": {
+          "type": "boolean"
+        },
+        "human_review_completed": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        },
+        "release_state": {
+          "const": "HOLD"
+        }
+      },
+      "required": [
+        "authority_created",
+        "policy_evaluated",
+        "human_review_completed",
+        "promotion_authorized",
+        "release_state",
+        "public_use_allowed"
+      ],
+      "type": "object"
+    },
+    "matcher": {
+      "additionalProperties": false,
+      "properties": {
+        "features": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "direction": {
+                "enum": [
+                  "SUPPORTS_LINK",
+                  "OPPOSES_LINK",
+                  "NEUTRAL"
+                ]
+              },
+              "explanation_code": {
+                "pattern": "^[A-Z][A-Z0-9_]{2,80}$",
+                "type": "string"
+              },
+              "feature_id": {
+                "pattern": "^[a-z][a-z0-9_]{1,63}$",
+                "type": "string"
+              },
+              "normalized": {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              "value": {
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "maxLength": 160,
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "feature_id",
+              "value",
+              "normalized",
+              "direction",
+              "explanation_code"
+            ],
+            "type": "object"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "link_score": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "model_family": {
+          "enum": [
+            "RULES_ONLY",
+            "PROBABILISTIC_WITH_RULES"
+          ]
+        },
+        "model_version": {
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "profile_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "profile_id": {
+          "pattern": "^kfm\\.entity-resolution\\.[a-z0-9._-]+\\.v[0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "profile_digest",
+        "model_family",
+        "model_version",
+        "link_score",
+        "features"
+      ],
+      "type": "object"
+    },
+    "object_type": {
+      "const": "EntityLinkDecisionCandidate"
+    },
+    "pair": {
+      "additionalProperties": false,
+      "properties": {
+        "left": {
+          "$ref": "#/$defs/endpoint"
+        },
+        "right": {
+          "$ref": "#/$defs/endpoint"
+        }
+      },
+      "required": [
+        "left",
+        "right"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "kfm.data.entity-link-decision.v1"
+    },
+    "spec_hash": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "thresholds": {
+      "additionalProperties": false,
+      "properties": {
+        "merge_candidate_min": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "review_min": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "merge_candidate_min",
+        "review_min"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "object_type",
+    "fixture_only",
+    "decision_id",
+    "pair",
+    "matcher",
+    "thresholds",
+    "deterministic_checks",
+    "evidence_refs",
+    "flags",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "title": "Entity Link Decision Candidate",
+  "type": "object",
+  "x-kfm": {
+    "fixture_only": true,
+    "non_effects": [
+      "no canonical merge or mutation",
+      "no source admission, evidence resolution, policy approval, promotion, release, publication, or public use"
+    ]
+  }
+}

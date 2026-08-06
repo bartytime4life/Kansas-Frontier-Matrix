@@ -1,0 +1,95 @@
+# Validate the fixture-only entity link-decision profile.
+#
+# This workflow is read-only and performs no entity merge, graph mutation,
+# source admission, evidence resolution, policy approval, promotion, release,
+# deployment, publication, or repository mutation.
+name: entity-link-decision
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/entity-link-decision.yml"
+      - "contracts/data/entity_link_decision.md"
+      - "schemas/contracts/v1/data/entity_link_decision.schema.json"
+      - "fixtures/contracts/v1/data/entity_link_decision/**"
+      - "tools/validators/validate_entity_link_decision.py"
+      - "tests/validators/test_validate_entity_link_decision.py"
+      - "data/receipts/generated/genrec-entity-link-decision-20260805.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/entity-link-decision.yml"
+      - "contracts/data/entity_link_decision.md"
+      - "schemas/contracts/v1/data/entity_link_decision.schema.json"
+      - "fixtures/contracts/v1/data/entity_link_decision/**"
+      - "tools/validators/validate_entity_link_decision.py"
+      - "tests/validators/test_validate_entity_link_decision.py"
+      - "data/receipts/generated/genrec-entity-link-decision-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: entity-link-decision-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: entity-link-decision
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused no-network tests
+        run: >-
+          python -m unittest discover
+          --start-directory tests/validators
+          --pattern 'test_validate_entity_link_decision.py'
+          --verbose
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/validate_entity_link_decision.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-entity-link-decision-20260805.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Entity link-decision status
+
+          This job validates synthetic pair identity, explain features, thresholds,
+          deterministic checks, evidence-reference presence, routing action, and
+          fixed no-mutation governance posture.
+
+          Green does not prove real-world identity, resolve evidence, evaluate
+          policy, complete human review, merge entities, mutate a graph, promote,
+          release, deploy, publish, or permit public use.
+          EOF

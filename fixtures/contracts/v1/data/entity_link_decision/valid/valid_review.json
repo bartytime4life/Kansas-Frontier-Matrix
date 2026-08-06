@@ -1,0 +1,93 @@
+{
+  "decision": {
+    "auto_merge_performed": false,
+    "canonical_mutation_performed": false,
+    "proposed_action": "REVIEW",
+    "reason_codes": [
+      "LINK_SCORE_IN_REVIEW_BAND",
+      "REQUIRED_CHECK_UNRESOLVED"
+    ]
+  },
+  "decision_id": "kfm://candidate/entity-link/5fd5f807a70c035378f800c3af72aef6d00d6453f1ef3115743cf64b76c08082",
+  "deterministic_checks": [
+    {
+      "check_id": "authoritative_id_compatible",
+      "required_for_merge": true,
+      "result": "PASS"
+    },
+    {
+      "check_id": "geometry_within_epsilon",
+      "required_for_merge": true,
+      "result": "UNKNOWN"
+    }
+  ],
+  "evidence_refs": [
+    "kfm://evidence/hydrology/gage-a@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "kfm://evidence/hydrology/gage-b@sha256:5555555555555555555555555555555555555555555555555555555555555555"
+  ],
+  "fixture_only": true,
+  "flags": {
+    "identity_conflict": false,
+    "licensing_conflict": false,
+    "sensitivity_conflict": false
+  },
+  "governance": {
+    "authority_created": false,
+    "human_review_completed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_state": "HOLD"
+  },
+  "matcher": {
+    "features": [
+      {
+        "direction": "SUPPORTS_LINK",
+        "explanation_code": "AUTHORITATIVE_ID_COMPATIBLE",
+        "feature_id": "authority_id_similarity",
+        "normalized": 1.0,
+        "value": true
+      },
+      {
+        "direction": "SUPPORTS_LINK",
+        "explanation_code": "GEOMETRY_WITHIN_REVIEW_EPSILON",
+        "feature_id": "geometry_distance_m",
+        "normalized": 0.92,
+        "value": 48.2
+      },
+      {
+        "direction": "SUPPORTS_LINK",
+        "explanation_code": "NAME_SIMILARITY_HIGH",
+        "feature_id": "name_similarity",
+        "normalized": 0.93,
+        "value": 0.93
+      }
+    ],
+    "link_score": 0.78,
+    "model_family": "PROBABILISTIC_WITH_RULES",
+    "model_version": "synthetic-v1",
+    "profile_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "profile_id": "kfm.entity-resolution.synthetic.v1"
+  },
+  "object_type": "EntityLinkDecisionCandidate",
+  "pair": {
+    "left": {
+      "domain": "hydrology",
+      "entity_ref": "kfm://record/hydrology/gage-06866500",
+      "entity_type": "WATER_GAGE",
+      "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "right": {
+      "domain": "hydrology",
+      "entity_ref": "kfm://record/hydrology/gage-06866500-alt",
+      "entity_type": "WATER_GAGE",
+      "spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "schema_version": "kfm.data.entity-link-decision.v1",
+  "spec_hash": "sha256:5fd5f807a70c035378f800c3af72aef6d00d6453f1ef3115743cf64b76c08082",
+  "thresholds": {
+    "merge_candidate_min": 0.9,
+    "review_min": 0.6
+  }
+}

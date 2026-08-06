@@ -1,0 +1,143 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/entity-link-decision.yml": "sha256:c6eb95f349bb5d79d79aa15abbdb13233f7ae8c45d4ee3e112711056239fa0ef",
+    "contracts/data/entity_link_decision.md": "sha256:7b7dfeb6c25fe3aa04d91781e7ab54a5e6800e5a8c7bd6ea9764c346322df7df",
+    "fixtures/contracts/v1/data/entity_link_decision/README.md": "sha256:df4947e7c17c5e74f25f3613c31a867eb1a28e6e38f330529020fa137baf14fd",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/expected_findings_manifest.json": "sha256:d6a96dfea6540b85e12bdc05f162a09c72f9fa504cf8b3c67785e1de6c2e027b",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_governance_overclaim.json": "sha256:087397d90604b20294527f200a592161577aa8779f6c46cc77353bf0f4f2180d",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_below_threshold.json": "sha256:df43f4f614de7d19842be2efe7dfd4ccbe461bc528fb01a11da5d02bc49421aa",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_required_check_failed.json": "sha256:0f05df5d175aeb6b8c9ebc32d58b6d06c1480cdfb37217ab6d7bc1f75db888e6",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_with_conflict.json": "sha256:f9f51ee50de299b7f5d657bccc90b45e53ae8350065d3fc28cc122e244b38816",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_without_evidence.json": "sha256:7840690754145814fcfceb6d526ef29fa313706eff1ace9b7f705b6b91bd2ac3",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_pair_not_canonical.json": "sha256:75ddcb32d3cc8db5335377511151b80d368bc31d0fe6e41f1332f2e236dcde24",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_self_link.json": "sha256:eb4f8afdc85064a57514202a6cf21200d1681087bf5639f76125f29b24b9f403",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_spec_hash_mismatch.json": "sha256:c922a1acea1a9b0a86b4f0b934e60c45f9ba3078e0470ef216010f5312a6088c",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_hold.json": "sha256:116a05adae7c50ecd2c0895d0ee4311c7585f98a3828c67552a9108ef8bc7d42",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_propose_merge.json": "sha256:c05ec12db4e8c1f8e47aba35d22a847713050e8858050ec235c37cf235d42018",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_reject.json": "sha256:f62c0dff99d01fe49450e5e11510649125dcb87370f17d786cf8c75802bcd37f",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_review.json": "sha256:a0b484d8ed727f009ba22390c7440843897f08543a30ec998e6bcdef27707d71",
+    "schemas/contracts/v1/data/entity_link_decision.schema.json": "sha256:a34057af3385f094f45c86b5749cd17fda4669cf1a5500332dd9e711f9166ebb",
+    "tests/validators/test_validate_entity_link_decision.py": "sha256:b55be3b133bfbeecc3f30458f3934431af8ad95bc9c98bbdd56dfa4cf407cd01",
+    "tools/validators/validate_entity_link_decision.py": "sha256:1708d59bb90d00b6f18f77754eb1e86a5d5dcfc5b10ea16bda857646a7d2182b"
+  },
+  "artifact_paths": [
+    ".github/workflows/entity-link-decision.yml",
+    "contracts/data/entity_link_decision.md",
+    "fixtures/contracts/v1/data/entity_link_decision/README.md",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_below_threshold.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_required_check_failed.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_with_conflict.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_without_evidence.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_pair_not_canonical.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_self_link.json",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_hold.json",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_propose_merge.json",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_reject.json",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_review.json",
+    "schemas/contracts/v1/data/entity_link_decision.schema.json",
+    "tests/validators/test_validate_entity_link_decision.py",
+    "tools/validators/validate_entity_link_decision.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:New Ideas 3-19-26(1).pdf",
+      "id": "attachment:new-ideas-3-19-26",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-05T23:58:55Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-19-26(1).pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:7b27eac7610da57e5235b6d0b67edb6cdcfccef08aa1e33d64bcb2ae2b8d29a4"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-19-26(1).pdf",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-05"
+  },
+  "notes": "Fixture-first implementation derived from New Ideas 3-19-26. It grants no source, evidence, policy, review, promotion, release, deployment, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:897bb6c93f0145ae2f9042935cb1481c438140f823ada94673c117078022da21",
+  "receipt_id": "genrec-entity-link-decision-20260805",
+  "truth_labels": {
+    ".github/workflows/entity-link-decision.yml": "PROPOSED",
+    "contracts/data/entity_link_decision.md": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/README.md": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_below_threshold.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_required_check_failed.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_with_conflict.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_merge_without_evidence.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_pair_not_canonical.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_self_link.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_hold.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_propose_merge.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_reject.json": "PROPOSED",
+    "fixtures/contracts/v1/data/entity_link_decision/valid/valid_review.json": "PROPOSED",
+    "schemas/contracts/v1/data/entity_link_decision.schema.json": "PROPOSED",
+    "tests/validators/test_validate_entity_link_decision.py": "PROPOSED",
+    "tools/validators/validate_entity_link_decision.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Focused deterministic no-network tests and exact fixture polarity passed against authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

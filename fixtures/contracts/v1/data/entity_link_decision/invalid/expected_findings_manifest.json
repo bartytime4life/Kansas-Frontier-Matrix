@@ -1,0 +1,26 @@
+{
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "invalid_merge_below_threshold.json": [
+    "MERGE_SCORE_BELOW_THRESHOLD"
+  ],
+  "invalid_merge_required_check_failed.json": [
+    "MERGE_REQUIRED_CHECK_NOT_PASSED"
+  ],
+  "invalid_merge_with_conflict.json": [
+    "CONFLICT_REQUIRES_HOLD"
+  ],
+  "invalid_merge_without_evidence.json": [
+    "MERGE_EVIDENCE_INSUFFICIENT"
+  ],
+  "invalid_pair_not_canonical.json": [
+    "PAIR_ORDER_NOT_CANONICAL"
+  ],
+  "invalid_self_link.json": [
+    "SELF_LINK_DENIED"
+  ],
+  "invalid_spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ]
+}
