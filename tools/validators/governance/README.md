@@ -54,6 +54,25 @@ value-minimized issue-state metadata.
 It always reports `authority_created=false` and
 `repository_mutation_allowed=false`.
 
+## Implementation-decision review
+
+### `validate_implementation_decision_record.py`
+
+Validates and mechanically renders the proposed non-authoritative
+`ImplementationDecisionRecord` profile:
+
+- closed duplicate-key-safe JSON with exact false permission and non-effect boundaries;
+- stable relative repository paths and canonical ordering of path, object-family, evidence, and validation arrays;
+- a chosen mechanism, rationale, at least one rejected or deferred alternative, and reviewer questions;
+- finite `READY`, `HOLD`, and `ERROR` outcomes with exit codes `0`, `3`, and `2`;
+- ADR escalation for authority-significant records and multi-root closure for cross-component records;
+- deterministic Markdown assembly from declared fields only; and
+- denial of hidden-reasoning or person-profile content.
+
+`READY` means only that the record is internally ready to present to a reviewer.
+The tool does not inspect a diff, infer a decision, authenticate a reference,
+create review approval, or replace the KFM pull-request template.
+
 ## Commands
 
 ```bash
@@ -71,6 +90,10 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   fixtures/contracts/v1/governance/issue_inventory_projection/valid/open-target.json \
   fixtures/contracts/v1/governance/briefing_signal/valid/*.json \
   examples/briefing_integration/*.json
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/governance/validate_implementation_decision_record.py \
+  --cases
 ```
 
 None of these tools fetches sources, reads live GitHub state, writes GitHub

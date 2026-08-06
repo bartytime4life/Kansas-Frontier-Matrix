@@ -1,0 +1,54 @@
+{
+  "assessment_id": "material-change:natural-systems:vegetation:2026-03-20:non_event",
+  "baseline_ref": "kfm://dataset-version/natural-systems/vegetation/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/vegetation/2026-03-20",
+  "classification": {
+    "change_class": "UNCHANGED",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "NO_BYTE_CHANGE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:1310bd7fe7e61f91565292bcd3f3501a15454e4ff42471d1c73c650b9c86550c",
+    "byte_changed": false,
+    "candidate_digest": "sha256:1310bd7fe7e61f91565292bcd3f3501a15454e4ff42471d1c73c650b9c86550c",
+    "semantic_changed": false
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": null,
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/vegetation"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:09b97828c540404290c4dd40eff49713513d6dee56304ded43dcade899fafe56"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/vegetation/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:be6f3810b6b649778a5122a2dd69e083e52c3881022f80e3294ac3c2d50eb1de"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/vegetation",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}

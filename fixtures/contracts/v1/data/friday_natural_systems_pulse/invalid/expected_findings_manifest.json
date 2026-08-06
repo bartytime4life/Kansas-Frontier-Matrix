@@ -1,0 +1,36 @@
+{
+  "invalid_governance_overclaim.json": [
+    "SCHEMA_INVALID"
+  ],
+  "semantic_invalid_assessment_hash.json": [
+    "ASSESSMENT_CONTENT_HASH_MISMATCH"
+  ],
+  "semantic_invalid_assessment_outcome.json": [
+    "ASSESSMENT_OUTCOME_MISMATCH",
+    "ENTRY_ACTION_MISMATCH"
+  ],
+  "semantic_invalid_domain_order.json": [
+    "DOMAINS_NOT_CANONICAL"
+  ],
+  "semantic_invalid_execution_action.json": [
+    "EXECUTION_ACTION_NOT_ADMITTED"
+  ],
+  "semantic_invalid_identity.json": [
+    "IDENTITY_MISMATCH"
+  ],
+  "semantic_invalid_missing_assessment.json": [
+    "ASSESSMENT_FILE_NOT_FOUND"
+  ],
+  "semantic_invalid_missing_domain.json": [
+    "DOMAIN_COVERAGE_INCOMPLETE"
+  ],
+  "semantic_invalid_stale_assessment.json": [
+    "ASSESSMENT_OUTSIDE_WINDOW"
+  ],
+  "semantic_invalid_summary_outcome.json": [
+    "SUMMARY_OUTCOME_MISMATCH"
+  ],
+  "semantic_invalid_window_cadence.json": [
+    "WINDOW_CADENCE_INVALID"
+  ]
+}

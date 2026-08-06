@@ -1,0 +1,120 @@
+# Validate the fixture-only Friday natural-systems pulse profile.
+#
+# This workflow is intentionally not scheduled. It performs no source fetch,
+# watcher execution, rebuild, issue or pull-request creation, lifecycle write,
+# policy decision, promotion, release, deployment, or publication.
+name: friday-natural-systems-pulse
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/friday-natural-systems-pulse.yml"
+      - "contracts/data/friday_natural_systems_pulse.md"
+      - "contracts/data/material_change_assessment.md"
+      - "schemas/contracts/v1/data/friday_natural_systems_pulse.schema.json"
+      - "schemas/contracts/v1/data/material_change_assessment.schema.json"
+      - "fixtures/contracts/v1/data/friday_natural_systems_pulse/**"
+      - "tools/validators/validate_friday_natural_systems_pulse.py"
+      - "tools/validators/validate_material_change_assessment.py"
+      - "tests/validators/test_validate_friday_natural_systems_pulse.py"
+      - "tests/validators/test_validate_material_change_assessment.py"
+      - "docs/intake/exploratory/new-ideas-3-19-friday-natural-systems-pulse.md"
+      - "data/receipts/generated/genrec-friday-natural-systems-pulse-20260806.json"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/validators/validate_generated_receipt.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/friday-natural-systems-pulse.yml"
+      - "contracts/data/friday_natural_systems_pulse.md"
+      - "contracts/data/material_change_assessment.md"
+      - "schemas/contracts/v1/data/friday_natural_systems_pulse.schema.json"
+      - "schemas/contracts/v1/data/material_change_assessment.schema.json"
+      - "fixtures/contracts/v1/data/friday_natural_systems_pulse/**"
+      - "tools/validators/validate_friday_natural_systems_pulse.py"
+      - "tools/validators/validate_material_change_assessment.py"
+      - "tests/validators/test_validate_friday_natural_systems_pulse.py"
+      - "tests/validators/test_validate_material_change_assessment.py"
+      - "docs/intake/exploratory/new-ideas-3-19-friday-natural-systems-pulse.md"
+      - "data/receipts/generated/genrec-friday-natural-systems-pulse-20260806.json"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/validators/validate_generated_receipt.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: friday-natural-systems-pulse-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: friday-natural-systems-pulse
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Revalidate shared material-change profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/test_validate_material_change_assessment.py
+          python tools/validators/validate_material_change_assessment.py --fixtures
+          python tools/validators/validate_material_change_assessment.py \
+            fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/*.json
+
+      - name: Run focused pulse tests and exact fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_friday_natural_systems_pulse.py' \
+            --verbose
+          python tools/validators/validate_friday_natural_systems_pulse.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-friday-natural-systems-pulse-20260806.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Friday natural-systems pulse
+
+          This job validates synthetic weekly aggregation over five already-
+          validated MaterialChangeAssessment records. The profile is review-only
+          and the workflow has no schedule or write permission.
+
+          A green result does not activate or contact a source, execute a rebuild,
+          create an issue or pull request, mutate lifecycle state, evaluate policy,
+          authenticate review, promote, release, deploy, publish, or permit public use.
+          EOF

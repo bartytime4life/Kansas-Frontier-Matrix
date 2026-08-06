@@ -1,21 +1,357 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schemas/contracts/v1/ui/map_context_envelope.schema.json",
-  "title": "Map Context Envelope",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/map_context_envelope.schema.json",
+  "title": "MapContextEnvelope renderer-neutral released request context",
+  "description": "Closed fixture-first UI request-context projection. It carries released layer/feature/time/area/evidence identity without renderer-specific state and grants no evidence, policy, review, release, publication, or public-use authority.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "additionalProperties": false,
   "x-kfm": {
-    "status": "PROPOSED",
-    "path": "schemas/contracts/v1/ui/map_context_envelope.schema.json",
-    "source_docs": [
-      "docs/domains/archaeology/MAP_UI_CONTRACTS.md",
-      "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
-      "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md",
-      "docs/domains/roads-rail-trade/API_CONTRACTS.md",
-      "docs/domains/settlements-infrastructure/MAP_UI_CONTRACTS.md"
-    ],
-    "contract_doc": null
+    "contract_doc": "contracts/ui/map_context_envelope.md",
+    "fixtures_root": "fixtures/ui/map_context_envelope/",
+    "validator": "tools/validators/ui/validate_map_context_envelope.py",
+    "status": "PROPOSED_INACTIVE",
+    "profile": "kfm.ui.map-context-envelope.v1",
+    "authority": "renderer-neutral-request-context-only",
+    "non_effects": [
+      "does_not_resolve_evidence",
+      "does_not_evaluate_policy",
+      "does_not_create_release_authority",
+      "does_not_authorize_public_use"
+    ]
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "envelope_id",
+    "request_id",
+    "caller_role",
+    "assembled_at",
+    "expires_at",
+    "time_window",
+    "area_scope",
+    "layers",
+    "selections",
+    "filters",
+    "evidence_refs",
+    "release_refs",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "MapContextEnvelope"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.ui.map-context-envelope.v1"
+    },
+    "envelope_id": {
+      "type": "string",
+      "pattern": "^map-context-envelope:[0-9a-f]{24}$"
+    },
+    "request_id": {
+      "$ref": "#/$defs/safe_ref"
+    },
+    "caller_role": {
+      "enum": [
+        "PUBLIC_USER",
+        "AUTHENTICATED_USER",
+        "STEWARD",
+        "REVIEWER",
+        "SYSTEM_TEST"
+      ]
+    },
+    "assembled_at": {
+      "$ref": "#/$defs/utc_time"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/utc_time"
+    },
+    "time_window": {
+      "$ref": "#/$defs/time_window"
+    },
+    "area_scope": {
+      "$ref": "#/$defs/area_scope"
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "selections": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/selection"
+      }
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/filter"
+      }
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "release_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "safe_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._~:/#?=&%+@-]*$"
+    },
+    "safe_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "utc_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/safe_ref"
+      }
+    },
+    "time_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/utc_time"
+        },
+        "end": {
+          "$ref": "#/$defs/utc_time"
+        }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_type",
+        "bbox"
+      ],
+      "properties": {
+        "scope_type": {
+          "const": "VIEWPORT"
+        },
+        "bbox": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          ],
+          "items": false,
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "geography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_type",
+        "geography_ref"
+      ],
+      "properties": {
+        "scope_type": {
+          "const": "GEOGRAPHY"
+        },
+        "geography_ref": {
+          "$ref": "#/$defs/safe_ref"
+        }
+      }
+    },
+    "area_scope": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/viewport"
+        },
+        {
+          "$ref": "#/$defs/geography"
+        }
+      ]
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer_id",
+        "release_ref",
+        "layer_spec_hash",
+        "release_state",
+        "evidence_refs"
+      ],
+      "properties": {
+        "layer_id": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "release_ref": {
+          "$ref": "#/$defs/safe_ref"
+        },
+        "layer_spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "release_state": {
+          "const": "PUBLISHED"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_id",
+        "layer_id",
+        "evidence_refs"
+      ],
+      "properties": {
+        "feature_id": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "layer_id": {
+          "$ref": "#/$defs/safe_id"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "scalar": {
+      "type": [
+        "string",
+        "number",
+        "boolean"
+      ]
+    },
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "operator",
+        "values"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_.-]{0,79}$"
+        },
+        "operator": {
+          "enum": [
+            "EQ",
+            "IN",
+            "BETWEEN"
+          ]
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/scalar"
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_store_accessed",
+        "raw_work_quarantine_accessed",
+        "renderer_specific_state_included",
+        "evidence_closure_created",
+        "policy_authority_created",
+        "release_authority_created",
+        "public_use_authorized",
+        "repository_mutated"
+      ],
+      "properties": {
+        "canonical_store_accessed": {
+          "const": false
+        },
+        "raw_work_quarantine_accessed": {
+          "const": false
+        },
+        "renderer_specific_state_included": {
+          "const": false
+        },
+        "evidence_closure_created": {
+          "const": false
+        },
+        "policy_authority_created": {
+          "const": false
+        },
+        "release_authority_created": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        },
+        "repository_mutated": {
+          "const": false
+        }
+      }
+    }
   }
 }

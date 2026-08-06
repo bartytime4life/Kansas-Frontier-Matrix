@@ -1,0 +1,104 @@
+# Validate the fixture-only conditional-write preflight candidate.
+# This workflow emits no request and performs no write, lifecycle mutation,
+# release, deployment, publication, or public-use action.
+name: conditional-write-preflight
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/conditional-write-preflight.yml"
+      - "contracts/release/conditional_write_preflight.md"
+      - "schemas/contracts/v1/release/conditional_write_preflight.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_preflight/**"
+      - "tools/validators/release/validate_conditional_write_preflight.py"
+      - "tools/validators/release/_conditional_write_preflight_*.py"
+      - "tests/validators/release/test_validate_conditional_write_preflight.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md"
+      - "data/receipts/generated/genrec-conditional-write-preflight-20260806.json"
+      - "packages/hashing/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/conditional-write-preflight.yml"
+      - "contracts/release/conditional_write_preflight.md"
+      - "schemas/contracts/v1/release/conditional_write_preflight.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_preflight/**"
+      - "tools/validators/release/validate_conditional_write_preflight.py"
+      - "tools/validators/release/_conditional_write_preflight_*.py"
+      - "tests/validators/release/test_validate_conditional_write_preflight.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md"
+      - "data/receipts/generated/genrec-conditional-write-preflight-20260806.json"
+      - "packages/hashing/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: conditional-write-preflight-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-conditional-write-preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators/release \
+            --pattern 'test_validate_conditional_write_preflight.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes
+        run: |
+          python tools/validators/release/validate_conditional_write_preflight.py --fixtures
+
+      - name: Exercise repository-wide release schema polarity
+        run: |
+          python -m pytest -q tests/schemas/test_common_contracts.py \
+            -k conditional_write_preflight
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-conditional-write-preflight-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### ConditionalWritePreflightCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only create-if-absent and replace-if-match evaluation, idempotent replay suppression, conflict detection, upstream-closure holds, and deterministic identity."
+            echo "- No request is emitted and no target, external state, policy record, review record, promotion record, lifecycle store, release, deployment, publication, or public-use surface is changed."
+            echo "- PROPOSE_WRITE is a non-authoritative candidate for a later governed adapter, not permission to mutate state."
+          } >> "$GITHUB_STEP_SUMMARY"
