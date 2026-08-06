@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-source-record-absence-assessment-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-record-absence-assessment.yml",
+    "tests/validators/test_validate_source_record_absence_assessment.py",
+    "tools/validators/validate_source_record_absence_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-record-absence-assessment.yml": "sha256:24155c24955dfc8708b9d2fac115b7c3d8bcef96427bab2eed53616a8cc6a075",
+    "tests/validators/test_validate_source_record_absence_assessment.py": "sha256:1ce0e05c144da9c9dfe79070ee1643b585584542e7272cc579fbcae4211cffb7",
+    "tools/validators/validate_source_record_absence_assessment.py": "sha256:e7f87e64c4cc92aa5f975821995919221286ed4640233291803565f10432106b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:d461afdc738ae40b7bb30f33a4eefa64955901152832935587761b9344742eef",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "New Ideas 3-16-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-10.4",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-13.3",
+      "attachment:New Ideas 3-16-26.pdf#deterministic-receipt-and-fail-closed-patterns",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:tools/ingest/aqs_watch/aqs_site_delta.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-record-absence-assessment.yml": "PROPOSED",
+    "tests/validators/test_validate_source_record_absence_assessment.py": "PROPOSED",
+    "tools/validators/validate_source_record_absence_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Five valid and ten exact-negative synthetic source-absence vectors passed deterministic no-network validation."
+    },
+    {
+      "gate": "local-unit-tests",
+      "outcome": "PASS",
+      "reason": "Thirteen focused unittest cases passed, including exact polarity, source-mode outcome coverage, deterministic identity, unsafe JSON rejection, non-echoing output, and no-network behavior."
+    },
+    {
+      "gate": "schema-and-workflow-parse",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema validation, Python compilation, and workflow YAML parsing passed locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:briefing-integration-complete-snapshot-vs-incremental-feed",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-10.4"
+    },
+    {
+      "id": "attachment:briefing-integration-false-clear-prevention",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-13.3"
+    },
+    {
+      "id": "attachment:new-ideas-3-16-26-receipt-gating",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-16-26.pdf#deterministic-receipt-and-fail-closed-patterns"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:aqs-current-absence-delta-path",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/aqs_watch/aqs_site_delta.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T22:49:42Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first SourceRecordAbsenceAssessment profile. This generated receipt binds the three executable enforcement surfaces whose exact bytes are checked here: focused workflow, tests, and validator. The semantic contract, schema, source map, and fixtures remain in the pull-request diff and are validated by those surfaces rather than self-asserted by this receipt. It grants no source admission, evidence closure, policy, review, mutation, merge, clearance, promotion, release, deployment, publication, or public-use authority."
+}
