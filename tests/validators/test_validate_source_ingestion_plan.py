@@ -24,6 +24,7 @@ from tools.validators.validate_source_ingestion_plan import (
 class SourceIngestionPlanTests(unittest.TestCase):
     def setUp(self) -> None:
         self.valid = sorted((FIXTURE_ROOT / "valid").glob("valid_*.json"))
+        self.semantic_invalid = sorted((FIXTURE_ROOT / "semantic_invalid").glob("invalid_*.json"))
         self.invalid = sorted((FIXTURE_ROOT / "invalid").glob("invalid_*.json"))
 
     def test_schema_is_valid_draft_2020_12(self) -> None:
@@ -42,6 +43,14 @@ class SourceIngestionPlanTests(unittest.TestCase):
                 self.assertTrue(payload["plan_id"].endswith(_canonical_hash(payload).split(":", 1)[1]))
         self.assertEqual(modes, {"HTTP_CONDITIONAL", "EVENT_CDC", "SCHEDULED_ETL"})
 
+    def test_semantic_invalid_fixtures_match_exact_manifest(self) -> None:
+        expected = json.loads((FIXTURE_ROOT / "semantic_invalid/expected_findings_manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(expected), {path.name for path in self.semantic_invalid})
+        for path in self.semantic_invalid:
+            with self.subTest(path=path.name):
+                actual = sorted({item.code for item in validate_file(path).findings})
+                self.assertEqual(actual, sorted(expected[path.name]))
+
     def test_invalid_fixtures_match_exact_manifest(self) -> None:
         expected = json.loads((FIXTURE_ROOT / "invalid/expected_findings_manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(set(expected), {path.name for path in self.invalid})
@@ -49,6 +58,18 @@ class SourceIngestionPlanTests(unittest.TestCase):
             with self.subTest(path=path.name):
                 actual = sorted({item.code for item in validate_file(path).findings})
                 self.assertEqual(actual, sorted(expected[path.name]))
+
+    def test_schema_invalid_lane_is_distinct(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        validator = Draft202012Validator(schema)
+        for path in self.invalid:
+            with self.subTest(path=path.name):
+                payload = json.loads(path.read_text(encoding="utf-8"))
+                self.assertTrue(list(validator.iter_errors(payload)))
+        for path in self.semantic_invalid:
+            with self.subTest(path=path.name):
+                payload = json.loads(path.read_text(encoding="utf-8"))
+                self.assertEqual(list(validator.iter_errors(payload)), [])
 
     def test_not_modified_is_no_new_artifact(self) -> None:
         payload = json.loads((FIXTURE_ROOT / "valid/valid_http_conditional.json").read_text(encoding="utf-8"))
@@ -94,7 +115,7 @@ class SourceIngestionPlanTests(unittest.TestCase):
             mock.patch.object(socket, "create_connection", side_effect=deny),
             mock.patch.object(socket, "getaddrinfo", side_effect=deny),
         ):
-            for path in [*self.valid, *self.invalid]:
+            for path in [*self.valid, *self.semantic_invalid, *self.invalid]:
                 validate_file(path)
 
 
