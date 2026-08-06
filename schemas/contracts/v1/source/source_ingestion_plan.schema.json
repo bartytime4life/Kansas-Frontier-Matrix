@@ -1,0 +1,439 @@
+{
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_ingestion_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Fixture-only plan selecting one governed ingestion mode. It grants no source activation, network, lifecycle, promotion, release, or publication authority.",
+  "properties": {
+    "determinism": {
+      "additionalProperties": false,
+      "properties": {
+        "canonicalization_profile": {
+          "const": "kfm-jcs-sha256-v1"
+        },
+        "dataset_version_seed": {
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "const": "spec_hash"
+            },
+            {
+              "const": "source_head"
+            },
+            {
+              "const": "partition_key"
+            },
+            {
+              "const": "transform_digest"
+            }
+          ],
+          "type": "array"
+        },
+        "partition_keys": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "spec_hash": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "transform_digest": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "canonicalization_profile",
+        "spec_hash",
+        "transform_digest",
+        "partition_keys",
+        "dataset_version_seed"
+      ],
+      "type": "object"
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_created": {
+          "type": "boolean"
+        },
+        "network_execution_authorized": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        },
+        "release_state": {
+          "const": "HOLD"
+        },
+        "rights_review": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "sensitivity_review": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "source_activation_allowed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "authority_created",
+        "source_activation_allowed",
+        "network_execution_authorized",
+        "promotion_authorized",
+        "release_state",
+        "public_use_allowed",
+        "rights_review",
+        "sensitivity_review"
+      ],
+      "type": "object"
+    },
+    "lane": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "HTTP_CONDITIONAL"
+            },
+            "large_file_resume": {
+              "enum": [
+                "BYTE_RANGE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "not_modified_outcome": {
+              "const": "NOT_MODIFIED"
+            },
+            "not_modified_writes_new_artifact": {
+              "const": false
+            },
+            "request_method": {
+              "const": "GET"
+            },
+            "retry": {
+              "additionalProperties": false,
+              "properties": {
+                "backoff": {
+                  "const": "EXPONENTIAL_JITTER"
+                },
+                "max_attempts": {
+                  "maximum": 8,
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "max_attempts",
+                "backoff"
+              ],
+              "type": "object"
+            },
+            "validators": {
+              "additionalProperties": false,
+              "properties": {
+                "etag": {
+                  "type": "boolean"
+                },
+                "last_modified": {
+                  "type": "boolean"
+                },
+                "persisted_per_locator": {
+                  "const": true
+                }
+              },
+              "required": [
+                "etag",
+                "last_modified",
+                "persisted_per_locator"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "kind",
+            "request_method",
+            "validators",
+            "not_modified_outcome",
+            "not_modified_writes_new_artifact",
+            "large_file_resume",
+            "retry"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint_ref": {
+              "pattern": "^kfm://checkpoint/[a-z0-9._/-]+@sha256:[a-f0-9]{64}$",
+              "type": "string"
+            },
+            "exactly_once_claimed": {
+              "type": "boolean"
+            },
+            "kind": {
+              "const": "EVENT_CDC"
+            },
+            "offset_store": {
+              "enum": [
+                "DURABLE",
+                "EPHEMERAL"
+              ]
+            },
+            "replay_drill_required": {
+              "type": "boolean"
+            },
+            "schema_compatibility": {
+              "enum": [
+                "BACKWARD",
+                "FULL",
+                "NONE"
+              ]
+            },
+            "stream_partitioning": {
+              "const": "TABLE_OR_STREAM"
+            }
+          },
+          "required": [
+            "kind",
+            "offset_store",
+            "schema_compatibility",
+            "stream_partitioning",
+            "replay_drill_required",
+            "exactly_once_claimed",
+            "checkpoint_ref"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "checkpointing": {
+              "type": "boolean"
+            },
+            "cost_guardrail": {
+              "additionalProperties": false,
+              "properties": {
+                "max_units": {
+                  "maximum": 1000000000,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "unit": {
+                  "enum": [
+                    "ROWS",
+                    "BYTES_MIB",
+                    "CPU_MINUTES",
+                    "SYNTHETIC_UNITS"
+                  ]
+                }
+              },
+              "required": [
+                "max_units",
+                "unit"
+              ],
+              "type": "object"
+            },
+            "kind": {
+              "const": "SCHEDULED_ETL"
+            },
+            "partition_plan": {
+              "additionalProperties": false,
+              "properties": {
+                "dimensions": {
+                  "items": {
+                    "enum": [
+                      "date",
+                      "space",
+                      "source_partition",
+                      "entity_range"
+                    ]
+                  },
+                  "maxItems": 8,
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "partial_rerun": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "dimensions",
+                "partial_rerun"
+              ],
+              "type": "object"
+            },
+            "resumable_temp_artifacts": {
+              "type": "boolean"
+            },
+            "schedule": {
+              "enum": [
+                "DAILY",
+                "WEEKLY",
+                "MONTHLY",
+                "QUARTERLY",
+                "AD_HOC"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "schedule",
+            "partition_plan",
+            "checkpointing",
+            "resumable_temp_artifacts",
+            "cost_guardrail"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "object_type": {
+      "const": "SourceIngestionPlanCandidate"
+    },
+    "plan_id": {
+      "pattern": "^kfm://candidate/source-ingestion/[a-z0-9][a-z0-9._-]{2,95}/[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "receipt_requirements": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_attestation_required_before_release": {
+          "const": true
+        },
+        "input_digests_required": {
+          "const": true
+        },
+        "offsets_or_validators_required": {
+          "const": true
+        },
+        "run_receipt_required": {
+          "const": true
+        },
+        "source_head_required": {
+          "const": true
+        }
+      },
+      "required": [
+        "run_receipt_required",
+        "source_head_required",
+        "offsets_or_validators_required",
+        "input_digests_required",
+        "artifact_attestation_required_before_release"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "kfm.source.ingestion-plan.v1"
+    },
+    "selection": {
+      "additionalProperties": false,
+      "properties": {
+        "full_refresh_allowed": {
+          "type": "boolean"
+        },
+        "latency_target": {
+          "enum": [
+            "NEAR_REAL_TIME",
+            "DAILY",
+            "WEEKLY",
+            "MONTHLY",
+            "AD_HOC"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "HTTP_CONDITIONAL",
+            "EVENT_CDC",
+            "SCHEDULED_ETL"
+          ]
+        },
+        "public_output_requested": {
+          "const": false
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{2,80}$",
+            "type": "string"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mode",
+        "reason_codes",
+        "latency_target",
+        "full_refresh_allowed",
+        "public_output_requested"
+      ],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "control_class": {
+          "enum": [
+            "REMOTE_HTTP",
+            "CONTROLLED_TRANSACTIONAL_DATABASE",
+            "BULK_CORPUS"
+          ]
+        },
+        "credentials_embedded": {
+          "const": false
+        },
+        "source_descriptor_ref": {
+          "pattern": "^kfm://source/[a-z0-9._/-]+@synthetic-[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,95}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "source_descriptor_ref",
+        "control_class",
+        "credentials_embedded"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "object_type",
+    "fixture_only",
+    "plan_id",
+    "source",
+    "selection",
+    "determinism",
+    "lane",
+    "receipt_requirements",
+    "governance"
+  ],
+  "title": "Source Ingestion Plan Candidate",
+  "type": "object",
+  "x-kfm": {
+    "fixture_only": true,
+    "non_effects": [
+      "no live source activation or network execution",
+      "no lifecycle mutation",
+      "no promotion, release, deployment, publication, or public use"
+    ]
+  }
+}

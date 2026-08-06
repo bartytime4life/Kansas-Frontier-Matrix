@@ -1,0 +1,94 @@
+# Validate the fixture-only source ingestion-plan profile.
+#
+# This workflow is read-only. It performs no source activation, live request,
+# CDC subscription, scheduler execution, lifecycle write, promotion, release,
+# deployment, publication, or repository mutation.
+name: source-ingestion-plan
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-ingestion-plan.yml"
+      - "contracts/source/source_ingestion_plan.md"
+      - "schemas/contracts/v1/source/source_ingestion_plan.schema.json"
+      - "fixtures/contracts/v1/source/source_ingestion_plan/**"
+      - "tools/validators/validate_source_ingestion_plan.py"
+      - "tests/validators/test_validate_source_ingestion_plan.py"
+      - "data/receipts/generated/genrec-source-ingestion-plan-20260805.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-ingestion-plan.yml"
+      - "contracts/source/source_ingestion_plan.md"
+      - "schemas/contracts/v1/source/source_ingestion_plan.schema.json"
+      - "fixtures/contracts/v1/source/source_ingestion_plan/**"
+      - "tools/validators/validate_source_ingestion_plan.py"
+      - "tests/validators/test_validate_source_ingestion_plan.py"
+      - "data/receipts/generated/genrec-source-ingestion-plan-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-ingestion-plan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: source-ingestion-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused no-network tests
+        run: >-
+          python -m unittest discover
+          --start-directory tests/validators
+          --pattern 'test_validate_source_ingestion_plan.py'
+          --verbose
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/validate_source_ingestion_plan.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-source-ingestion-plan-20260805.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Source ingestion-plan status
+
+          This job validates synthetic lane selection, deterministic identity,
+          replay controls, no-change semantics, and fixed HOLD posture.
+
+          Green does not activate a source, authorize network access, deploy CDC,
+          schedule ETL, mutate lifecycle data, resolve rights or sensitivity,
+          promote, release, deploy, publish, or permit public use.
+          EOF
