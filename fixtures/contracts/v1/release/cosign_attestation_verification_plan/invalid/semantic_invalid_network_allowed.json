@@ -1,0 +1,78 @@
+{
+  "object_type": "CosignAttestationVerificationPlan",
+  "schema_version": "1.0.0",
+  "profile_id": "kfm.release.cosign-attestation-verification.v1",
+  "plan_id": "cosign-attestation-plan:111111111111111111111111",
+  "security_baseline": {
+    "advisory_ids": [
+      "CVE-2026-39395",
+      "GHSA-w6c6-c85g-mmv6"
+    ],
+    "minimum_v2": "2.6.3",
+    "minimum_v3": "3.0.6",
+    "strict_claim_validation_required": true
+  },
+  "tool": {
+    "name": "cosign",
+    "version": "3.0.6",
+    "binary_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "immutable_source_ref": "github-release:sigstore/cosign@v3.0.6#cosign-linux-amd64"
+  },
+  "subject": {
+    "artifact_ref": "kfm://release-artifact/synthetic-manifest@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "media_type": "application/json"
+  },
+  "predicate": {
+    "predicate_type": "https://slsa.dev/provenance/v1",
+    "check_claims": true
+  },
+  "bundle": {
+    "ref": "fixtures/sigstore/synthetic-manifest.bundle.json",
+    "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "format": "sigstore-bundle",
+    "subject_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "rekor_inclusion_required": true,
+    "signed_entry_timestamp_required": true,
+    "offline_verification_material_embedded": true
+  },
+  "trust": {
+    "mode": "KEYLESS",
+    "certificate_identity": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/.github/workflows/release.yml@refs/heads/main",
+    "certificate_oidc_issuer": "https://token.actions.githubusercontent.com",
+    "public_key_ref": null
+  },
+  "invocation": {
+    "command": "verify-blob-attestation",
+    "bundle_ref_argument": "fixtures/sigstore/synthetic-manifest.bundle.json",
+    "subject_digest_argument": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "predicate_type_argument": "https://slsa.dev/provenance/v1",
+    "explicit_inputs_only": true,
+    "implicit_discovery": false,
+    "network_access": "ALLOWED",
+    "allow_http_registry": false,
+    "allow_insecure_registry": false
+  },
+  "expected_runtime": {
+    "finite_outcomes": [
+      "DENIED",
+      "ERROR",
+      "VERIFIED"
+    ],
+    "verified_requires_exit_code_zero": true,
+    "stdout_is_not_authority": true,
+    "stderr_is_not_authority": true
+  },
+  "governance": {
+    "cryptographic_verification_performed": false,
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "review_authenticated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "runtime_result_ref": null
+  },
+  "spec_hash": "sha256:bab929554c364ce803ae57550cb3bff72eaf424a2523c5554aa0a5a1443fafd3"
+}
