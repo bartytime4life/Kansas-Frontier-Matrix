@@ -50,6 +50,7 @@ env:
 jobs:
   authorize-ready-and-merge:
     name: authorize-ready-and-merge
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

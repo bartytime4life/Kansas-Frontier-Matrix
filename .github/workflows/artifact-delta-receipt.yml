@@ -1,0 +1,99 @@
+# Validate one bounded, synthetic artifact-delta receipt profile.
+#
+# Authority boundary:
+# - This workflow reads repository-owned synthetic fixtures only.
+# - It performs no signing, key access, registry request, OCI upload, policy decision,
+#   promotion, release, rollback execution, deployment, publication, or public mutation.
+name: artifact-delta-receipt
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/artifact-delta-receipt.yml"
+      - "contracts/receipts/README.md"
+      - "contracts/receipts/artifact_delta_receipt.md"
+      - "docs/intake/exploratory/new-ideas-3-11-26-artifact-delta-receipt-source-map.md"
+      - "schemas/contracts/v1/receipts/artifact_delta_receipt.schema.json"
+      - "fixtures/contracts/v1/receipts/artifact_delta_receipt/**"
+      - "tools/validators/validate_artifact_delta_receipt.py"
+      - "tests/validators/test_validate_artifact_delta_receipt.py"
+      - "data/receipts/generated/genrec-artifact-delta-receipt-20260806.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/artifact-delta-receipt.yml"
+      - "contracts/receipts/README.md"
+      - "contracts/receipts/artifact_delta_receipt.md"
+      - "docs/intake/exploratory/new-ideas-3-11-26-artifact-delta-receipt-source-map.md"
+      - "schemas/contracts/v1/receipts/artifact_delta_receipt.schema.json"
+      - "fixtures/contracts/v1/receipts/artifact_delta_receipt/**"
+      - "tools/validators/validate_artifact_delta_receipt.py"
+      - "tests/validators/test_validate_artifact_delta_receipt.py"
+      - "data/receipts/generated/genrec-artifact-delta-receipt-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: artifact-delta-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: artifact-delta-receipt
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out bounded synthetic profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused semantic tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/validators/test_validate_artifact_delta_receipt.py
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/validate_artifact_delta_receipt.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-artifact-delta-receipt-20260806.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Artifact delta receipt status
+
+          This job validates only synthetic before/after identity, deterministic payload
+          hashing, review/policy metadata coherence, rollback/correction references, and
+          declared attestation metadata.
+
+          Green does not verify COSE, DSSE, Sigstore, Rekor, OCI registry state, signer
+          identity, policy authority, review authority, promotion, release, rollback execution,
+          deployment, publication, or public use.
+          EOF

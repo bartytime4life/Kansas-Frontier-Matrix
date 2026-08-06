@@ -2,18 +2,19 @@
 doc_id: kfm://contract-family/receipts
 title: contracts/receipts/ — Receipt Semantic Contract Family
 type: README; semantic-contract-family
-version: v0.1.0
+version: v0.2.0
 status: proposed; repository-native; non-authoritative
 owners: OWNER_TBD — Receipt steward · Contract steward · Evidence steward · Release steward
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-06
 policy_label: public; receipts; process-memory; no-release-authority
 related:
   - ../README.md
   - ./representation_receipt.md
+  - ./artifact_delta_receipt.md
   - ../../schemas/contracts/v1/receipts/
   - ../../data/receipts/
-tags: [kfm, contracts, receipts, process-memory, representation]
+tags: [kfm, contracts, receipts, process-memory, representation, artifact-delta]
 [/KFM_META_BLOCK_V2] -->
 
 # `contracts/receipts/` — receipt semantic contract family
@@ -37,6 +38,9 @@ tags: [kfm, contracts, receipts, process-memory, representation]
 
 - [`RepresentationReceipt`](representation_receipt.md) records how evidence was
   converted into a downstream visual, tile, scene, raster overview, or export carrier.
+- [`ArtifactDeltaReceiptCandidate`](artifact_delta_receipt.md) records deterministic
+  before/after artifact identity plus declared policy, review, rollback/correction, and
+  attestation metadata without creating cryptographic, release, or publication authority.
 
 ## Boundary
 

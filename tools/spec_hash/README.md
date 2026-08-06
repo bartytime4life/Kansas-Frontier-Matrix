@@ -2,233 +2,218 @@
 doc_id: kfm://doc/tools-spec-hash-readme
 title: tools/spec_hash README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; implemented-fixture-tested; exact-head-CI-pending
 owner: TODO-tooling-qa-owner-plus-architecture-steward-plus-release-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-06
 policy_label: repository-facing; deterministic-hashing; provenance-support
 owning_root: tools/
-responsibility: deterministic spec_hash helper boundary for canonicalization, digest computation, recomputation, and mismatch reporting
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: deterministic spec_hash CLI boundary for canonicalization, digest computation, recomputation, comparison, and safe reporting
+truth_posture: cite-or-abstain; hash equality is not evidence, policy, review, release, or publication authority
 related:
   - ../README.md
+  - ../../packages/hashing/
   - ../../docs/architecture/identity-and-spec-hash.md
   - ../../docs/standards/CANONICALIZATION.md
   - ../../docs/standards/RUN_RECEIPT.md
-  - ../../docs/standards/RELEASE_MANIFEST.md
-  - ../release/README.md
-  - ../proof_pack/README.md
-  - ../validators/README.md
+  - ../../docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
+  - ../validators/validate_spec_hash.py
+  - ../../schemas/contracts/v1/common/spec_hash.schema.json
+  - ../../fixtures/contracts/v1/common/spec_hash/
+  - ../../tests/validators/test_validate_spec_hash.py
   - ../../data/receipts/
   - ../../data/proofs/
   - ../../release/
-  - ../../contracts/
-  - ../../schemas/
-  - ../../policy/
 notes:
-  - "This README documents the spec_hash helper lane. It does not confirm executable files."
-  - "KFM doctrine defines spec_hash as RFC 8785 JCS canonicalization plus SHA-256, represented as jcs:sha256:<hex>."
-  - "tools/spec_hash may compute, recompute, compare, and report hashes. It does not create receipts, EvidenceBundles, policy decisions, release decisions, or publication authority."
+  - "The reusable implementation lives in packages/hashing/src/hashing; this lane provides a thin repository CLI wrapper."
+  - "RFC 8785 JCS canonicalization plus SHA-256 is implemented without implicit rounding, field selection, projection, or other object-family transforms."
+  - "The current executable schema grammar remains sha256:<64 lowercase hex>. ADR-0013's jcs:sha256 target remains PROPOSED and is not silently adopted here."
+  - "The helper creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# tools/spec_hash
+# `tools/spec_hash`
 
-![status](https://img.shields.io/badge/status-draft-orange)
+![status](https://img.shields.io/badge/status-draft--implemented-orange)
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-spec--hash--helper-informational)
-![hash](https://img.shields.io/badge/hash-jcs%3Asha256-blueviolet)
+![scope](https://img.shields.io/badge/scope-spec--hash--CLI-informational)
+![canonicalization](https://img.shields.io/badge/canonicalization-RFC%208785%20JCS-blueviolet)
+![grammar](https://img.shields.io/badge/current%20grammar-sha256%3A%3Chex%3E-purple)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/spec_hash/` is the proposed helper lane for deterministic `spec_hash` computation and verification. It may canonicalize, hash, recompute, compare, and report, but it is not a receipt store, proof store, policy root, release root, or truth authority.
+> **Purpose.** `tools/spec_hash/spec_hash.py` is a thin repository-facing CLI over the reusable `packages/hashing` implementation. It computes or compares deterministic RFC 8785 JCS + SHA-256 content identifiers and emits a bounded machine-readable report.
 
----
-
-## Purpose
-
-`tools/spec_hash/` exists to make KFM identity reproducible.
-
-KFM architecture defines `spec_hash` as a digest over canonical bytes: RFC 8785 JSON Canonicalization Scheme followed by SHA-256, represented as:
-
-```text
-jcs:sha256:<hex>
-```
-
-A helper in this lane may compute a hash for a JSON record, recompute a stored hash, compare expected vs actual values, and emit a deterministic report. The durable KFM question is:
-
-> Do the checked bytes match the stored `spec_hash` under the accepted canonicalization rule?
-
-The answer is a verification result. It is not, by itself, a receipt, EvidenceBundle, policy decision, release decision, or publication.
-
-[Back to top](#top)
-
----
+> [!IMPORTANT]
+> A matching hash proves only that the same admitted canonical bytes produced the same digest. It does not prove truth, source authority, evidence closure, rights, policy approval, review, promotion, release, publication, or fitness for use.
 
 ## Status
 
-| Surface | Status | Notes |
+| Surface | Current state | Evidence boundary |
 |---|---|---|
-| `tools/spec_hash/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| `spec_hash` helper executable | **PROPOSED / NEEDS VERIFICATION** | No script or module name is claimed here. |
-| Architecture doctrine | **CONFIRMED in repo evidence / draft** | `docs/architecture/identity-and-spec-hash.md` defines the hashing rule and points to this helper home. |
-| Canonicalization algorithm | **CONFIRMED in repo evidence / doctrine** | JCS plus SHA-256, formatted as `jcs:sha256:<hex>`. |
-| Promotion gate use | **CONFIRMED in repo evidence / doctrine; implementation UNKNOWN** | Promotion recomputes and compares stored hash to checked bytes; implementation maturity still requires verification. |
+| `tools/spec_hash/spec_hash.py` | **CONFIRMED in this change** | Thin wrapper; exact-head hosted CI remains pending until pushed. |
+| `packages/hashing/src/hashing/` | **CONFIRMED in this change** | Reusable canonicalization, hashing, file parsing, comparison, and CLI implementation. |
+| `tools/validators/validate_spec_hash.py` | **CONFIRMED in this change** | Replaces the prior `NotImplementedError` stub. |
+| Existing common fixtures | **CONFIRMED reused** | Valid and invalid fixture polarity is exercised without changing fixture meaning. |
+| Current machine grammar | **CONFIRMED preserved** | `sha256:<64 lowercase hex>` from `schemas/contracts/v1/common/spec_hash.schema.json`. |
+| `jcs:sha256:<hex>` grammar | **PROPOSED / ADR-sensitive** | ADR-0013 remains proposed; this change does not migrate schemas or consumers. |
+| Publication authority | **NONE** | No lifecycle transition, source activation, policy decision, release, or publication is performed. |
 
-[Back to top](#top)
+## Directory Rules basis
 
----
+The artifact is split by responsibility:
 
-## Authority boundary
-
-| Responsibility | Home |
+| Responsibility | Owning root / path |
 |---|---|
-| Hash computation and comparison helpers | `tools/spec_hash/` |
-| Canonicalization standard | `docs/standards/CANONICALIZATION.md` and accepted ADR/docs |
-| Receipt instances | `data/receipts/` |
-| EvidenceBundles and proof support | `data/proofs/` |
-| Release manifests and decisions | `release/` |
-| Contracts, schemas, and policy | `contracts/`, `schemas/`, `policy/` |
-| Validators of record | `tools/validators/` or accepted validator home |
-| Tests | `tests/` or accepted test convention |
+| Reusable library implementation | `packages/hashing/src/hashing/` |
+| Thin operator/CI wrapper | `tools/spec_hash/spec_hash.py` |
+| Validator of record | `tools/validators/validate_spec_hash.py` |
+| Machine shape | `schemas/contracts/v1/common/spec_hash.schema.json` |
+| Semantic meaning | `contracts/common/spec_hash.md` |
+| Synthetic examples | `fixtures/contracts/v1/common/spec_hash/` |
+| Enforceability proof | `tests/validators/test_validate_spec_hash.py` |
+| CI orchestration | `.github/workflows/spec-hash.yml` |
+| Receipts, proofs, release decisions | Their existing `data/` and `release/` responsibility roots |
 
-Safe interpretation:
+No parallel contract, schema, policy, registry, receipt, proof, release, or publication home is created.
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** hash helper code may live here when deterministic, fixture-tested, and explicit about canonicalization.
-- **NEEDS VERIFICATION:** exact executable names, fixtures, CI wiring, schema references, and accepted canonicalization edge cases.
-- **DENY:** using this folder as storage for receipts, proofs, manifests, release records, contracts, schemas, or policy rules.
+## Canonicalization contract
 
-[Back to top](#top)
+The implementation performs exactly these generic operations:
 
----
+1. Read bounded UTF-8 JSON from a regular, non-symlink file.
+2. Reject duplicate object keys, non-standard numeric constants, non-finite values, excessive size, and excessive structure.
+3. Canonicalize the parsed JSON value with RFC 8785 JCS.
+4. Hash the canonical UTF-8 bytes with SHA-256.
+5. Format the current executable identifier as `sha256:<64 lowercase hex>`.
+6. Compare stored and recomputed values using constant-time digest-string comparison.
 
-## What belongs here
+The implementation **does not** silently:
 
-- JCS canonicalization helpers.
-- SHA-256 digest helpers.
-- `jcs:sha256:<hex>` formatter and parser helpers.
-- Stored-vs-recomputed hash comparison helpers.
-- Canonicalization fixture runners.
-- Mismatch report emitters.
-- Dry-run CLI wrappers for CI or local review.
-- Small compatibility wrappers that call the accepted implementation.
+- round numeric fields;
+- choose an object-family hash domain;
+- remove volatile fields;
+- normalize strings, dates, CRS, units, geometry, or identifiers;
+- create a receipt, signature, attestation, EvidenceBundle, PolicyDecision, PromotionDecision, or ReleaseManifest.
 
-A helper belongs here only when it is deterministic, no-network by default, explicit about input bytes, and conservative when input is not valid for the accepted canonicalization rule.
+Those operations must be declared and tested by the calling object-family contract before it invokes the generic canonicalizer.
 
-[Back to top](#top)
+## Commands
 
----
+Compute a hash for one JSON subject:
 
-## What does not belong here
+```bash
+python tools/spec_hash/spec_hash.py compute path/to/subject.json
+```
 
-| Do not put in `tools/spec_hash/` | Correct home |
-|---|---|
-| Receipt instances | `data/receipts/` |
-| EvidenceBundles or ProofPacks | `data/proofs/` |
-| Release manifests or release decisions | `release/` |
-| Policy rules | `policy/` |
-| Contracts | `contracts/` |
-| Schemas | `schemas/` |
-| Validators of record | `tools/validators/` |
-| Source fetchers | `connectors/` |
-| Pipeline orchestration | `pipelines/` |
-| Tests | `tests/spec_hash/` or accepted test convention |
+Verify a subject against a common `spec_hash` record:
 
-[Back to top](#top)
+```bash
+python tools/spec_hash/spec_hash.py verify \
+  path/to/subject.json \
+  path/to/spec_hash.json
+```
 
----
+Validate the existing common contract fixture matrix:
 
-## Standard outcomes
+```bash
+python tools/validators/validate_spec_hash.py --fixtures
+```
+
+Validate a hash record's shape:
+
+```bash
+python tools/validators/validate_spec_hash.py \
+  --candidate path/to/spec_hash.json
+```
+
+Validate shape and recompute the referenced subject:
+
+```bash
+python tools/validators/validate_spec_hash.py \
+  --candidate path/to/spec_hash.json \
+  --subject path/to/subject.json
+```
+
+Run focused tests:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_spec_hash.py' \
+  --verbose
+```
+
+## Finite outcomes
 
 | Outcome | Meaning |
 |---|---|
-| `SPEC_HASH_MATCH` | Recomputed hash matches stored value. |
-| `SPEC_HASH_MISMATCH` | Recomputed hash differs from stored value. |
-| `SPEC_HASH_CREATED` | Hash was computed for caller review. |
-| `CANONICALIZATION_ERROR` | Input could not be canonicalized under the accepted rule. |
-| `UNSUPPORTED_INPUT` | Input type or encoding is unsupported. |
-| `MISSING_SPEC_HASH` | Expected stored hash was absent. |
-| `ABSTAIN` | Helper cannot decide with available context. |
-| `ERROR` | Helper could not safely complete. |
+| `SPEC_HASH_CREATED` | Canonical bytes were hashed for caller review. |
+| `SPEC_HASH_MATCH` | Stored and recomputed identifiers match. |
+| `SPEC_HASH_MISMATCH` | Stored and recomputed identifiers differ. |
+| `SPEC_HASH_SCHEMA_INVALID` | The common hash record violates its JSON Schema. |
+| `SPEC_HASH_FORMAT_INVALID` | A CLI hash record does not contain exactly the current grammar. |
+| `CANDIDATE_JSON_INVALID` / `SUBJECT_JSON_INVALID` | Input could not be read or parsed safely. |
+| `CANONICALIZATION_ERROR` | A parsed value is outside the admitted RFC 8785 JSON domain. |
+| `SCHEMA_UNAVAILABLE` | The validator could not load or validate the common schema. |
+| `PASS` / `DENY` / `ERROR` | Bounded validator result; never a source, policy, review, or release decision. |
 
-[Back to top](#top)
+## Report boundary
 
----
-
-## Standard report envelope
+Reports include the canonicalization profile, hash algorithm, finite status/outcome, safe paths, findings, and explicit non-effects. Hashes may be reported because they are integrity identifiers, but candidate field values and sensitive content are not echoed.
 
 ```json
 {
-  "tool": "spec-hash-placeholder",
-  "status": "SPEC_HASH_MATCH",
-  "algorithm": "jcs:sha256",
-  "input_ref": "path/or/object-id-placeholder",
-  "stored_spec_hash": "jcs:sha256:<hex>",
-  "recomputed_spec_hash": "jcs:sha256:<hex>",
-  "decision": {
-    "outcome": "SPEC_HASH_MATCH",
-    "authority_created": false
-  }
+  "authority": "NONE",
+  "canonicalization": "RFC8785-JCS",
+  "hash_algorithm": "SHA-256",
+  "non_effects": [
+    "no_source_admission",
+    "no_evidence_resolution",
+    "no_policy_evaluation",
+    "no_promotion_release_or_publication",
+    "no_public_use_authority"
+  ],
+  "scope": "common.spec_hash",
+  "status": "SPEC_HASH_MATCH"
 }
 ```
 
-[Back to top](#top)
+## Validation coverage
 
----
+Focused tests cover:
 
-## Validation
-
-Suggested future test surface:
-
-```text
-tests/spec_hash/
-├── README.md
-├── test_spec_hash.py
-└── fixtures/
-    ├── valid_json/
-    ├── mismatch/
-    ├── missing_spec_hash/
-    └── canonicalization_error/
-```
-
-Suggested future command pattern:
-
-```bash
-pytest -q tests/spec_hash
-```
-
-```bash
-python tools/spec_hash/spec_hash.py --input tests/spec_hash/fixtures/valid_json/input.json --dry-run
-```
-
-> [!NOTE]
-> This is a proposed interface, not proof that `spec_hash.py` or `tests/spec_hash/` exists.
-
-[Back to top](#top)
-
----
+- known RFC 8785 canonical bytes;
+- key-order invariance;
+- SHA-256 agreement over canonical bytes;
+- existing valid/invalid fixture polarity;
+- stored-vs-recomputed match and mismatch;
+- duplicate JSON key rejection;
+- non-finite input rejection;
+- unsafe-integer canonicalization failure;
+- input immutability;
+- deterministic CLI output;
+- wrapper and validator fixture-suite execution.
 
 ## Review checklist
 
-- [ ] Helper uses the accepted canonicalization algorithm.
-- [ ] Helper is deterministic.
-- [ ] Helper is no-network by default.
-- [ ] Input encoding and JSON validity are handled explicitly.
-- [ ] Hash output uses `jcs:sha256:<hex>` format.
-- [ ] Mismatches fail closed or produce explicit review outcomes.
-- [ ] Output is machine-readable where practical.
-- [ ] Executable claims are backed by current repo evidence.
+- [ ] Exact-head focused workflow passes.
+- [ ] Dependency pin and license/provenance review are acceptable.
+- [ ] Current `sha256:` grammar remains compatible with existing schemas and consumers.
+- [ ] No reviewer mistakes this implementation for adoption of proposed ADR-0013.
+- [ ] Object-family producers declare any rounding, filtering, geometry, or field-selection profile before hashing.
+- [ ] Reports do not leak candidate values or protected content.
+- [ ] Generated authoring receipt binds the final committed implementation bytes.
 
-[Back to top](#top)
+## Rollback
 
----
+Before merge, close the draft pull request and remove its feature branch. After an authorized merge, revert the additive implementation commit(s). No source deactivation, data migration, release withdrawal, cache invalidation, public correction, or published-artifact rollback is required because this slice performs no lifecycle or publication transition.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for empty file. |
-| Next smallest safe change | Add `tests/spec_hash/README.md`, then add canonicalization fixtures and a dry-run hash checker. |
+| Last reviewed | 2026-08-06 |
+| Review state | Draft implementation; human review pending. |
+| Next safe extension | Adopt or reject ADR-0013 separately before any `sha256:` → `jcs:sha256:` grammar migration. |

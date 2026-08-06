@@ -1,4 +1,29 @@
-# packages/hashing pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-hashing"
-version = "0.0.0"
+version = "0.1.0"
+description = "Deterministic RFC 8785 JCS and SHA-256 helpers for KFM content identity."
+requires-python = ">=3.11"
+dependencies = [
+    "rfc8785==0.1.4",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=9.1.1,<10",
+]
+
+[project.scripts]
+kfm-spec-hash = "hashing.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hashing"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/pyproject.toml",
+    "/src/hashing",
+]
