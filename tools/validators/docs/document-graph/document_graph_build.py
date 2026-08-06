@@ -36,7 +36,6 @@ from document_graph_parse import (
     parse_metadata,
 )
 
-
 def build_document_graph(
     *, repo_root: Path, inputs: Sequence[str], entrypoints: Sequence[str],
     registry_path: str | None = None, git_diff: str | None = None,
@@ -258,3 +257,4 @@ def _error_result() -> GraphResult:
         "ERROR", "error", "sha256:" + "0" * 64, (), (), (), (), (finding,),
         counts, ("The document graph could not be computed safely.",),
     )
+
