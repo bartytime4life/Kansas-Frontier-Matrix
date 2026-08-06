@@ -1,0 +1,78 @@
+{
+  "object_type": "NdviReadinessAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "ndvi-readiness-us-ks-20260402",
+  "assessed_at": "2026-04-02T18:00:00Z",
+  "product": "ndvi_delta",
+  "region": "US-KS",
+  "thresholds": {
+    "min_mask_health_emit": 0.75,
+    "min_area_fraction_emit": 0.7,
+    "no_heavy_smoke_in_aois": true
+  },
+  "tile_summary": {
+    "level": 3,
+    "readiness_score": 0.83,
+    "fraction_ready": 0.74,
+    "primary_blocker": null
+  },
+  "critical_aoi_summary": {
+    "heavy_smoke_overlap_count": 0
+  },
+  "county_readiness": [
+    {
+      "fips": "20091",
+      "fraction_ready": 0.88,
+      "primary_blocker": null
+    },
+    {
+      "fips": "20173",
+      "fraction_ready": 0.71,
+      "primary_blocker": null
+    }
+  ],
+  "inputs": [
+    {
+      "source": "ABI-L2-CMIP",
+      "source_role": "observation",
+      "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_ref": "evidence:abi-20260402T16Z",
+      "receipt_state": "RESOLVED"
+    },
+    {
+      "source": "HMS-Smoke",
+      "source_role": "analyst_smoke_mask",
+      "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "evidence_ref": "evidence:hms-20260402",
+      "receipt_state": "RESOLVED"
+    },
+    {
+      "source": "HRRR-Smoke",
+      "source_role": "forecast",
+      "spec_hash": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "evidence_ref": "evidence:hrrr-20260402T12Z",
+      "receipt_state": "RESOLVED"
+    },
+    {
+      "source": "MAIAC-AOD",
+      "source_role": "corroboration",
+      "spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "evidence_ref": "evidence:maiac-20260402",
+      "receipt_state": "RESOLVED"
+    }
+  ],
+  "qc_reason_counts": {
+    "CLOUD": 10,
+    "LIGHT_SMOKE": 2
+  },
+  "emit_decision": {
+    "outcome": "EMIT_CANDIDATE",
+    "reasons": []
+  },
+  "governance": {
+    "promotion_eligible": false,
+    "public_use_allowed": false,
+    "release_state": "not_released",
+    "review_state": "fixture_only"
+  }
+}
