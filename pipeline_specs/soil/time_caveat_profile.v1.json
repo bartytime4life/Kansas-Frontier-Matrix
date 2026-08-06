@@ -1,0 +1,166 @@
+{
+  "object_type": "SoilTimeCaveatProfile",
+  "schema_version": "1.0.0",
+  "profile_id": "soil-time-caveat-profile",
+  "profile_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "spec_hash": "sha256:59f4ec40559e6a41ef922c4af284fb04e8523a87c61205df4076bf24a60399ac",
+  "support_rules": [
+    {
+      "support_type": "authoritative_static_soil",
+      "source_roles": [
+        "official_query",
+        "official_static_survey"
+      ],
+      "claim_kinds": [
+        "static_survey_record"
+      ],
+      "forbidden_claim_kinds": [
+        "current_generalized_condition",
+        "current_station_condition",
+        "observed_measurement"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "retrieved_at",
+        "source_published_at"
+      ],
+      "maximum_age_seconds": null
+    },
+    {
+      "support_type": "gridded_derivative_soil",
+      "source_roles": [
+        "derived_gridded_product"
+      ],
+      "claim_kinds": [
+        "gridded_derivative"
+      ],
+      "forbidden_claim_kinds": [
+        "current_station_condition",
+        "observed_measurement",
+        "static_survey_record"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "retrieved_at",
+        "valid_from",
+        "valid_to"
+      ],
+      "maximum_age_seconds": null
+    },
+    {
+      "support_type": "profile_soil_evidence",
+      "source_roles": [
+        "profile_observation"
+      ],
+      "claim_kinds": [
+        "profile_evidence"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "current_generalized_condition"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "observed_at",
+        "retrieved_at",
+        "source_timezone"
+      ],
+      "maximum_age_seconds": null
+    },
+    {
+      "support_type": "reference_station_soil_climate",
+      "source_roles": [
+        "reference_station_measurement"
+      ],
+      "claim_kinds": [
+        "reference_station_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "management_advice",
+        "static_survey_record"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "observed_at",
+        "retrieved_at",
+        "source_timezone"
+      ],
+      "maximum_age_seconds": 86400
+    },
+    {
+      "support_type": "satellite_soil_moisture_grid",
+      "source_roles": [
+        "satellite_grid_measurement"
+      ],
+      "claim_kinds": [
+        "satellite_grid_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "current_station_condition",
+        "field_verified_condition",
+        "static_survey_record"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "observed_at",
+        "retrieved_at",
+        "source_timezone",
+        "valid_from",
+        "valid_to"
+      ],
+      "maximum_age_seconds": 259200
+    },
+    {
+      "support_type": "soil_interpretation",
+      "source_roles": [
+        "derived_interpretation"
+      ],
+      "claim_kinds": [
+        "interpretation"
+      ],
+      "forbidden_claim_kinds": [
+        "hazard_warning",
+        "legal_determination",
+        "management_advice"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "retrieved_at",
+        "valid_from",
+        "valid_to"
+      ],
+      "maximum_age_seconds": null
+    },
+    {
+      "support_type": "station_soil_moisture",
+      "source_roles": [
+        "direct_observation_measurement"
+      ],
+      "claim_kinds": [
+        "current_station_condition"
+      ],
+      "forbidden_claim_kinds": [
+        "countywide_condition",
+        "satellite_grid_condition",
+        "static_survey_record"
+      ],
+      "required_time_axes": [
+        "evaluated_at",
+        "observed_at",
+        "retrieved_at",
+        "source_timezone"
+      ],
+      "maximum_age_seconds": 3600
+    }
+  ],
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
