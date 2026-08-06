@@ -48,7 +48,6 @@ ROOT_PREFIXES = frozenset(
     }
 )
 
-
 def _read(path: Path) -> str:
     try:
         if path.is_symlink() or not path.is_file():
@@ -338,3 +337,4 @@ def _changed(root: Path, selector: str | None) -> frozenset[str]:
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
         raise DocumentGraphError("changed-file discovery failed") from error
     return frozenset(item.decode("utf-8") for item in run.stdout.split(b"\0") if item)
+
