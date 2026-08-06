@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-hydrology-wbd-huc12-material-change-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-wbd-huc12-material-change.yml",
+    "contracts/domains/hydrology/wbd_huc12_material_change_assessment.md",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/invalid/decision_mismatch.json",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/add.json",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/area_change.json",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/geometry_change.json",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/metadata_churn_no_change.json",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/remove.json",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json",
+    "tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/README.md",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/validate_wbd_huc12_material_change.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-wbd-huc12-material-change.yml": "sha256:1904873c7549f924737e22b343afadec7bec1192c49377fb1b8723b5c1647298",
+    "contracts/domains/hydrology/wbd_huc12_material_change_assessment.md": "sha256:cb98e1ae5e20d7b2f7857c4dae3902fb17d1b39c57899d897cd67208f31a3d96",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/invalid/decision_mismatch.json": "sha256:5c5b808509da4b67418f4a993b6457fcd6ab6a95ef65733765b2e46f5b643599",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/add.json": "sha256:f31e6c572081e7321358c0245bc2ef2662289ac773d2c968a43e456b14501025",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/area_change.json": "sha256:6d87bca1900bf3157361863709e68b54d94f16548cd0be7128b51d6dd51ddaee",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/geometry_change.json": "sha256:016af3a7d851babe373b8a4c2f0081f3e80679d36769557760c29c7bfd0bb808",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/metadata_churn_no_change.json": "sha256:52de21a5abb19c988ad846f336f6892c19120217af19a5faf96867d47001d25b",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/remove.json": "sha256:985c8685f084c82e25d6de84f37dc299237e075982450c7cfd4c6ef6bd00c29e",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json": "sha256:5e7cfe2d1566ec9e675ec45557af387d0ea083421cfa1339093127a9d5a81335",
+    "tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py": "sha256:0b189d6334f357be2cf7713721ca6c5ca527aeab2b82c8c3d6533d132e8500ef",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/README.md": "sha256:32be81cacc7e71ec9f559826281710b3d6675b0107722da02ab2f9550258605b",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/validate_wbd_huc12_material_change.py": "sha256:2c4da9abd6b2214ba78ef9fbd896e4669331c3043493b2b4ca1e97b17f59b9e4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:5d3a387625b021fc12c5d49fdf8b2f01647d30874d1dc4523dc83cb7a33512f6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-10-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-10-26.pdf#wbd-huc12-change-detection",
+      "repo:data/registry/hydrology/sources/wbd_huc12.yaml@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-wbd-huc12-material-change.yml": "PROPOSED",
+    "contracts/domains/hydrology/wbd_huc12_material_change_assessment.md": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/invalid/decision_mismatch.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/add.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/area_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/geometry_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/metadata_churn_no_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_material_change/valid/remove.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json": "PROPOSED",
+    "tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py": "PROPOSED",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/README.md": "PROPOSED",
+    "tools/validators/domains/hydrology/wbd_huc12_material_change/validate_wbd_huc12_material_change.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic WBD HUC12 material-change tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "No-change, material-change, add, and remove fixtures carry deterministic feature and assessment hashes with exact finite decisions."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:wbd-huc12-change-detection",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-10-26.pdf#wbd-huc12-change-detection"
+    },
+    {
+      "id": "repository:wbd-huc12-source-descriptor",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/hydrology/sources/wbd_huc12.yaml@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T21:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2069,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only WBD HUC12 material-change contract, schema, pure-Python geometry canonicalizer/fingerprint validator, fixtures, tests, and read-only CI. It does not call or activate the WBD source."
+}
