@@ -1,0 +1,49 @@
+{
+  "profile_id": "kfm.airnow-aqs-reconciliation.synthetic.v1",
+  "fixture_only": true,
+  "evaluation_id": "fixture://airnow-aqs/pending-certification",
+  "evaluated_at": "2026-04-02T18:00:00Z",
+  "requested_use": "regulatory_replacement",
+  "airnow": {
+    "source_role": "provisional_public_report",
+    "identity": {
+      "state_code": "20",
+      "county_code": "173",
+      "site_number": "0010",
+      "parameter_code": "88101",
+      "poc": 1
+    },
+    "observed_at": "2026-04-01T18:00:00Z",
+    "measurement_kind": "concentration",
+    "unit": "ug/m3",
+    "value": 35.2,
+    "nowcast": false,
+    "payload_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "evidence_ref": "fixture://evidence/airnow-provisional-record"
+  },
+  "aqs": {
+    "source_role": "regulatory_archive",
+    "identity": {
+      "state_code": "20",
+      "county_code": "173",
+      "site_number": "0010",
+      "parameter_code": "88101",
+      "poc": 1
+    },
+    "observed_at": "2026-04-01T18:00:00Z",
+    "measurement_kind": "concentration",
+    "unit": "ug/m3",
+    "value": 34.8,
+    "qa_state": "validated",
+    "certification_state": "pending",
+    "last_change_date": "2026-04-02",
+    "payload_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "evidence_ref": "fixture://evidence/aqs-certified-record"
+  },
+  "governance": {
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_use_allowed": false
+  }
+}
