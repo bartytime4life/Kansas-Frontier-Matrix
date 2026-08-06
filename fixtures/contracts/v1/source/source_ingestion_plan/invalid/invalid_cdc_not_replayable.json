@@ -1,0 +1,62 @@
+{
+  "determinism": {
+    "canonicalization_profile": "kfm-jcs-sha256-v1",
+    "dataset_version_seed": [
+      "spec_hash",
+      "source_head",
+      "partition_key",
+      "transform_digest"
+    ],
+    "partition_keys": [
+      "source_partition"
+    ],
+    "spec_hash": "sha256:c12306e72bd77ba7a16be43c1ac4e664993bfe0cd9ee2b3b2055ba682e786c8f",
+    "transform_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "fixture_only": true,
+  "governance": {
+    "authority_created": false,
+    "network_execution_authorized": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_state": "HOLD",
+    "rights_review": "NEEDS_VERIFICATION",
+    "sensitivity_review": "NEEDS_VERIFICATION",
+    "source_activation_allowed": false
+  },
+  "lane": {
+    "checkpoint_ref": "kfm://checkpoint/synthetic/controlled-db@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "exactly_once_claimed": false,
+    "kind": "EVENT_CDC",
+    "offset_store": "EPHEMERAL",
+    "replay_drill_required": false,
+    "schema_compatibility": "BACKWARD",
+    "stream_partitioning": "TABLE_OR_STREAM"
+  },
+  "object_type": "SourceIngestionPlanCandidate",
+  "plan_id": "kfm://candidate/source-ingestion/synthetic.controlled-db/c12306e72bd77ba7a16be43c1ac4e664993bfe0cd9ee2b3b2055ba682e786c8f",
+  "receipt_requirements": {
+    "artifact_attestation_required_before_release": true,
+    "input_digests_required": true,
+    "offsets_or_validators_required": true,
+    "run_receipt_required": true,
+    "source_head_required": true
+  },
+  "schema_version": "kfm.source.ingestion-plan.v1",
+  "selection": {
+    "full_refresh_allowed": false,
+    "latency_target": "NEAR_REAL_TIME",
+    "mode": "EVENT_CDC",
+    "public_output_requested": false,
+    "reason_codes": [
+      "AUTHORITATIVE_DATABASE_CONTROLLED",
+      "NEAR_REAL_TIME_CHANGE_LOG_REQUIRED"
+    ]
+  },
+  "source": {
+    "control_class": "CONTROLLED_TRANSACTIONAL_DATABASE",
+    "credentials_embedded": false,
+    "source_descriptor_ref": "kfm://source/internal/synthetic-controlled-db@synthetic-2026-03-19",
+    "source_id": "synthetic.controlled-db"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/roads-rail-trade/frontier_route_trust_status.schema.json",
+  "title": "FrontierRouteTrustStatus",
+  "description": "Closed Roads/Rail/Trade trust-status projection keyed by kfm_id. This projection carries already-governed dispositions to admitted UI surfaces and is not policy, evidence, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/roads-rail-trade/frontier_route_trust_status.md",
+    "fixtures_root": "fixtures/domains/roads-rail-trade/frontier_route_trust_status/",
+    "validator": "tools/validators/domains/roads-rail-trade/validate_frontier_route_trust_status.py",
+    "source_basis": "New Ideas 3-31-26.pdf",
+    "authority": "trust-projection-only"
+  },
+  "required": ["profile", "collection_id", "generated_at", "audience", "collection_decision", "features"],
+  "properties": {
+    "profile": {"const": "kfm.roads-rail-trade.frontier-route-trust-status.v1"},
+    "collection_id": {"$ref": "#/$defs/safe_id"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "audience": {"type": "string", "enum": ["public", "steward"]},
+    "collection_decision": {"type": "string", "enum": ["publish", "quarantine-partial", "deny-partial", "deny"]},
+    "features": {"type": "array", "minItems": 1, "maxItems": 10000, "items": {"$ref": "#/$defs/feature_trust"}}
+  },
+  "$defs": {
+    "safe_id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$"},
+    "bounded_text": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]+$"},
+    "feature_trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kfm_id", "name", "decision", "code", "detail", "source_uri", "policy_decision_ref", "evidence_refs", "release_id", "visible_in_public_catalog"],
+      "properties": {
+        "kfm_id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^kfm://feature/[A-Za-z0-9][A-Za-z0-9:._/-]*$"},
+        "name": {"type": "string", "minLength": 1, "maxLength": 200},
+        "decision": {"type": "string", "enum": ["publish", "quarantine", "deny"]},
+        "code": {"type": "string", "minLength": 1, "maxLength": 100, "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "detail": {"$ref": "#/$defs/bounded_text"},
+        "source_uri": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "policy_decision_ref": {"$ref": "#/$defs/safe_id"},
+        "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"$ref": "#/$defs/safe_id"}},
+        "release_id": {"oneOf": [{"$ref": "#/$defs/safe_id"}, {"type": "null"}]},
+        "visible_in_public_catalog": {"type": "boolean"}
+      }
+    }
+  }
+}
