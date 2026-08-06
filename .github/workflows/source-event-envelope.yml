@@ -1,0 +1,94 @@
+# Validate the fixture-only, no-network SourceEventEnvelopeCandidate profile.
+# This workflow creates no source activation, lifecycle write, release, or publication authority.
+name: source-event-envelope
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-event-envelope.yml"
+      - "contracts/source/source_event_envelope.md"
+      - "schemas/contracts/v1/source/source_event_envelope.schema.json"
+      - "fixtures/contracts/v1/source/source_event_envelope/**"
+      - "tools/validators/validate_source_event_envelope.py"
+      - "tests/validators/test_validate_source_event_envelope.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md"
+      - "data/receipts/generated/genrec-source-event-envelope-20260806.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/source-event-envelope.yml"
+      - "contracts/source/source_event_envelope.md"
+      - "schemas/contracts/v1/source/source_event_envelope.schema.json"
+      - "fixtures/contracts/v1/source/source_event_envelope/**"
+      - "tools/validators/validate_source_event_envelope.py"
+      - "tests/validators/test_validate_source_event_envelope.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-source-event-envelope-source-map.md"
+      - "data/receipts/generated/genrec-source-event-envelope-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-event-envelope-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-source-event-envelope:
+    name: validate-source-event-envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_source_event_envelope.py' \
+            --verbose
+
+      - name: Replay exact fixture polarity
+        run: |
+          python tools/validators/validate_source_event_envelope.py --fixtures
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-source-event-envelope-20260806.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### SourceEventEnvelopeCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only source-event shape, deterministic payload/event identity, source-role binding, time/content coherence, finite review routing, and no-authority flags."
+            echo "- The profile carries CloudEvents-shaped core attributes but explicitly claims no CloudEvents conformance."
+            echo "- Tests use synthetic repository fixtures and perform no network, queue, webhook, object-store, orchestrator, policy-engine, signing, registry, or model access."
+            echo "- A green result does not activate a source, write RAW or another lifecycle lane, resolve evidence, evaluate policy, approve review, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
