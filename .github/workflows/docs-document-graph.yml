@@ -1,0 +1,125 @@
+# Build and validate the bounded KFM documentation graph QA projection.
+#
+# This workflow reads repository Markdown and the existing machine document
+# registry. It emits a non-authoritative review summary only. A green result is
+# not doctrine, evidence, source admission, policy, review, release, deployment,
+# publication, or a Directory Rules exception.
+name: docs-document-graph
+
+"on":
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "control_plane/document_registry.yaml"
+      - ".github/workflows/docs-document-graph.yml"
+      - "tools/validators/docs/document-graph/**"
+      - "tests/validators/docs/document-graph/**"
+      - "data/receipts/generated/genrec-docs-document-graph-*.json"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "control_plane/document_registry.yaml"
+      - ".github/workflows/docs-document-graph.yml"
+      - "tools/validators/docs/document-graph/**"
+      - "tests/validators/docs/document-graph/**"
+      - "data/receipts/generated/genrec-docs-document-graph-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-document-graph-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-document-graph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out documentation graph boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run deterministic no-network document-graph tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/docs/document-graph \
+            --pattern 'test_*.py' \
+            --verbose
+
+      - name: Build changed-file documentation graph workbench
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base_sha="$PR_BASE_SHA"
+          elif [[ "$EVENT_NAME" == "push" && ! "$PUSH_BEFORE_SHA" =~ ^0+$ ]]; then
+            base_sha="$PUSH_BEFORE_SHA"
+          else
+            base_sha="$(git rev-parse HEAD^)"
+          fi
+
+          python tools/validators/docs/document-graph/check_document_graph.py \
+            --repo-root . \
+            --entrypoint README.md \
+            --entrypoint docs/README.md \
+            --entrypoint tools/validators/docs/document-graph/README.md \
+            --registry control_plane/document_registry.yaml \
+            --git-diff "${base_sha}...HEAD" \
+            --format markdown \
+            --output "$RUNNER_TEMP/docs-document-graph.md" \
+            README.md docs tools/validators/docs
+
+          cat "$RUNNER_TEMP/docs-document-graph.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-docs-document-graph-20260806.json \
+            --repo-root .
+
+      - name: Record graph trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo
+            echo "### Documentation graph trust boundary"
+            echo "- Scope: explicit Markdown graph, backlinks, generated Maps of Content, entrypoint reachability, and bounded machine document-registry parity."
+            echo "- Ratchet: current changed-path failures remain blocking; unchanged historical failures are review warnings."
+            echo "- Network: graph construction and tests make no external request."
+            echo "- Non-effects: no documentation edit, registry mutation, doctrine decision, release, deployment, publication, or public authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"
