@@ -1,0 +1,33 @@
+{
+  "source_descriptor_ref": "kfm://source/fixture/transport-handoff",
+  "ingest_receipt_ref": "ingest-receipt:fixture:transport-handoff",
+  "locator_kind": "api_record",
+  "first_party_authority": true,
+  "profile_id": "fixture-source-v1",
+  "parameter_names": [
+    "format",
+    "site"
+  ],
+  "header_names": [
+    "accept"
+  ],
+  "rights_snapshot": {
+    "captured_at": "2026-08-06T18:00:00Z",
+    "license_id": "CC0-1.0",
+    "terms_ref": "kfm://terms/fixture-public",
+    "access_class": "public",
+    "redistribution_status": "allowed",
+    "review_state": "reviewed"
+  },
+  "parser": {
+    "parser_id": "kfm://parser/fixture/json-v1",
+    "version": "1.0.0",
+    "spec_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "source_surface_type": "api_record",
+  "governance_spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "retrieval_outcome": "FETCHED",
+  "supersedes_artifact_ref": null,
+  "correction_refs": [],
+  "conflict_group_ref": null
+}
