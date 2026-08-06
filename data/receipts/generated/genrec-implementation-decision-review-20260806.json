@@ -19,7 +19,7 @@
     "tools/validators/governance/validate_implementation_decision_record.py": "sha256:d17c062a80fc348ae9a36b8f165bf953b9ee7a592621cbfd026ef24ff5e8b871",
     "tools/validators/governance/README.md": "sha256:922851f5b540cc4beede202f051488492e0f501e496bf2b37e1eedb257fe8451",
     "tests/validators/governance/test_implementation_decision_record.py": "sha256:7fa735daec9f837a94ba3a8d2a5f8d2271d38d3376106c831d7914ce26ae0f39",
-    "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md": "sha256:a165242c7161ed1bf77032372af876f3c2c401d0384a59e926e0d975abc5847c"
+    "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md": "sha256:65fd8599ccbeb2648a22b0ee09ffc2880334314c4cb26a184e5c966db350ca4d"
   },
   "model_identity": {
     "provider": "openai",
@@ -38,7 +38,7 @@
   },
   "inputs": {
     "evidence_refs": [
-      "git:bartytime4life/Kansas-Frontier-Matrix@8ebd3efffd7c0be8988fc053ad1113c7aec1a51f",
+      "git:bartytime4life/Kansas-Frontier-Matrix@3a90a85499a583de884eb8cd0378313db704f9a5",
       "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e",
       "contracts/governance/ReviewRecord.md",
       "contracts/governance/ai_change_proposal.md",

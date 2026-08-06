@@ -4,7 +4,7 @@ Status: `PROPOSED` / implementation adaptation record.
 Upstream repository: `baokhang83/fluencyloop`  
 Upstream commit inspected: `fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e`  
 Upstream license: Apache-2.0  
-KFM base inspected: `bartytime4life/Kansas-Frontier-Matrix@8ebd3efffd7c0be8988fc053ad1113c7aec1a51f`
+KFM base inspected: `bartytime4life/Kansas-Frontier-Matrix@3a90a85499a583de884eb8cd0378313db704f9a5`
 
 ## Determination
 
