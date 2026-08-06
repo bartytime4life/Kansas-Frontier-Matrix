@@ -6,7 +6,13 @@ from dataclasses import replace
 from .core import RetryPolicy, TRANSIENT_CATEGORIES, TransportCategory
 from ._transport_eval import evaluate_response
 from ._transport_evaluation import Evaluation
-from ._transport_protocols import CancellationToken, Clock, JitterSource, Sleeper, Transport
+from ._transport_protocols import (
+    CancellationToken,
+    Clock,
+    JitterSource,
+    Sleeper,
+    Transport,
+)
 from ._transport_records import (
     attempt_record,
     failed_result,
@@ -24,7 +30,11 @@ from ._transport_request import (
 from ._transport_result import AttemptRecord, RetrievalResult
 
 _EXHAUSTED_REASONS = frozenset(
-    {"attempt_limit_reached", "deadline_reached", "deadline_would_be_exceeded"}
+    {
+        "attempt_limit_reached",
+        "deadline_reached",
+        "deadline_would_be_exceeded",
+    }
 )
 
 
@@ -49,9 +59,16 @@ def execute_retrieval(
     jitter_source: JitterSource | None = None,
     cancellation: CancellationToken | None = None,
 ) -> RetrievalResult:
+    """Execute one bounded retrieval against caller-owned effects.
+
+    The executor supplies no live transport, source discovery, credential
+    provider, storage handoff, receipt emitter, lifecycle writer, or publisher.
+    """
+
     profile.validate_request(request)
     if not isinstance(retry_policy, RetryPolicy):
         raise TypeError("retry_policy must be a RetryPolicy")
+
     jitter = jitter_source or _MidpointJitter()
     cancel = cancellation or _NeverCancelled()
     start = read_monotonic(clock)
@@ -77,7 +94,12 @@ def execute_retrieval(
                     safe_locator=request.safe_locator,
                 )
             )
-            return failed_result(request, TransportCategory.CANCELLED, attempts, failure)
+            return failed_result(
+                request,
+                TransportCategory.CANCELLED,
+                attempts,
+                failure,
+            )
 
         before = read_monotonic(clock)
         remaining = retry_policy.deadline_seconds - max(0.0, before - start)
@@ -85,9 +107,10 @@ def execute_retrieval(
             failure = failure_detail(
                 TransportCategory.RETRY_EXHAUSTED,
                 "RETRY_DEADLINE_REACHED",
-                "The bounded transport deadline was reached before another attempt.",
+                "The bounded transport deadline was reached before another "
+                "attempt.",
                 request,
-                number,
+                max(1, number),
             )
             attempts.append(
                 AttemptRecord(
@@ -100,8 +123,12 @@ def execute_retrieval(
                 )
             )
             return failed_result(
-                request, TransportCategory.RETRY_EXHAUSTED, attempts, failure
+                request,
+                TransportCategory.RETRY_EXHAUSTED,
+                attempts,
+                failure,
             )
+
         try:
             response = transport.send(
                 request,
@@ -110,15 +137,15 @@ def execute_retrieval(
                 allow_redirects=False,
             )
         except TransportCancelledError:
-            evaluation = failed_evaluation(
+            evaluation = _failed_evaluation(
                 TransportCategory.CANCELLED,
                 "TRANSPORT_CANCELLED",
                 "The injected transport reported cancellation.",
                 request,
                 number,
             )
-        except (TimeoutError, ConnectionTimeoutError):
-            evaluation = failed_evaluation(
+        except TimeoutError:
+            evaluation = _failed_evaluation(
                 TransportCategory.TIMEOUT,
                 "TRANSPORT_TIMEOUT",
                 "The injected transport timed out.",
@@ -126,7 +153,7 @@ def execute_retrieval(
                 number,
             )
         except Exception:  # noqa: BLE001 - injected transport is a trust boundary.
-            evaluation = failed_evaluation(
+            evaluation = _failed_evaluation(
                 TransportCategory.TRANSPORT_ERROR,
                 "TRANSPORT_ERROR",
                 "The injected transport failed.",
@@ -135,12 +162,30 @@ def execute_retrieval(
             )
         else:
             if not isinstance(response, TransportResponse):
-                raise TransportInputError("injected transport returned an unsupported response type")
-            evaluation = evaluate_response(request, response, profile, observed_at)
+                raise TransportInputError(
+                    "injected transport returned an unsupported response type"
+                )
+            evaluation = evaluate_response(
+                request,
+                response,
+                profile,
+                observed_at,
+            )
 
         duration = max(0.0, read_monotonic(clock) - before)
-        if evaluation.category in {TransportCategory.SUCCESS, TransportCategory.NOT_MODIFIED}:
-            attempts.append(attempt_record(number, evaluation, observed_at, duration, request))
+        if evaluation.category in {
+            TransportCategory.SUCCESS,
+            TransportCategory.NOT_MODIFIED,
+        }:
+            attempts.append(
+                attempt_record(
+                    number,
+                    evaluation,
+                    observed_at,
+                    duration,
+                    request,
+                )
+            )
             return RetrievalResult(
                 method=request.method,
                 category=evaluation.category,
@@ -160,22 +205,43 @@ def execute_retrieval(
             jitter_unit=jitter.unit(number),
         )
         if not decision.retry:
-            final_category = evaluation.category
-            failure = evaluation.failure
-            if evaluation.category in TRANSIENT_CATEGORIES and decision.reason in _EXHAUSTED_REASONS:
-                final_category = TransportCategory.RETRY_EXHAUSTED
+            final_evaluation = evaluation
+            if (
+                evaluation.category in TRANSIENT_CATEGORIES
+                and decision.reason in _EXHAUSTED_REASONS
+            ):
                 failure = failure_detail(
-                    final_category,
+                    TransportCategory.RETRY_EXHAUSTED,
                     "RETRY_EXHAUSTED",
                     "Bounded transport retries were exhausted.",
                     request,
                     number,
                 )
-            if failure is None:
-                raise TransportInputError("failure evaluation did not carry failure detail")
-            final_evaluation = replace(evaluation, category=final_category, failure=failure)
-            attempts.append(attempt_record(number, final_evaluation, observed_at, duration, request))
-            return failed_result(request, final_category, attempts, failure)
+                final_evaluation = replace(
+                    evaluation,
+                    category=TransportCategory.RETRY_EXHAUSTED,
+                    code="RETRY_EXHAUSTED",
+                    failure=failure,
+                )
+            if final_evaluation.failure is None:
+                raise TransportInputError(
+                    "failure evaluation did not carry failure detail"
+                )
+            attempts.append(
+                attempt_record(
+                    number,
+                    final_evaluation,
+                    observed_at,
+                    duration,
+                    request,
+                )
+            )
+            return failed_result(
+                request,
+                final_evaluation.category,
+                attempts,
+                final_evaluation.failure,
+            )
 
         attempts.append(
             attempt_record(
@@ -192,9 +258,21 @@ def execute_retrieval(
     raise AssertionError("bounded retrieval loop exited without a result")
 
 
-def failed_evaluation(category, code, message, request, attempt_number):
+def _failed_evaluation(
+    category: TransportCategory,
+    code: str,
+    message: str,
+    request: TransportRequest,
+    attempt_number: int,
+) -> Evaluation:
     return Evaluation(
         category,
         code,
-        failure=failure_detail(category, code, message, request, attempt_number),
+        failure=failure_detail(
+            category,
+            code,
+            message,
+            request,
+            attempt_number,
+        ),
     )
