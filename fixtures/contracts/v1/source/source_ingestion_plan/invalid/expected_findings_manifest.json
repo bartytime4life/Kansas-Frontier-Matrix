@@ -1,0 +1,25 @@
+{
+  "invalid_cdc_exactly_once_overclaim.json": [
+    "CDC_EXACTLY_ONCE_OVERCLAIM"
+  ],
+  "invalid_cdc_not_replayable.json": [
+    "CDC_DURABLE_OFFSET_REQUIRED",
+    "CDC_REPLAY_DRILL_REQUIRED"
+  ],
+  "invalid_etl_no_partial_rerun.json": [
+    "ETL_CHECKPOINT_REQUIRED",
+    "ETL_PARTIAL_RERUN_REQUIRED"
+  ],
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "invalid_http_no_validators.json": [
+    "HTTP_VALIDATOR_REQUIRED"
+  ],
+  "invalid_mode_source_mismatch.json": [
+    "MODE_SOURCE_CONTROL_MISMATCH"
+  ],
+  "invalid_spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ]
+}
