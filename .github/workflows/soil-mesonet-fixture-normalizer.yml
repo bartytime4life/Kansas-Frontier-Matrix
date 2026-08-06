@@ -8,6 +8,7 @@ name: soil-mesonet-fixture-normalizer
       - "pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py"
       - "fixtures/domains/soil/mesonet_normalizer/**"
       - "tests/pipelines/domains/soil/mesonet_normalizer/**"
+      - "data/receipts/generated/genrec-soil-mesonet-fixture-normalizer-*.json"
   push:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ name: soil-mesonet-fixture-normalizer
       - "pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py"
       - "fixtures/domains/soil/mesonet_normalizer/**"
       - "tests/pipelines/domains/soil/mesonet_normalizer/**"
+      - "data/receipts/generated/genrec-soil-mesonet-fixture-normalizer-*.json"
   workflow_dispatch:
 
 permissions:
@@ -60,6 +62,13 @@ jobs:
           python -m pytest \
             tests/pipelines/domains/soil/mesonet_normalizer/test_fixture_normalizer.py \
             -q --strict-config --strict-markers
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-mesonet-fixture-normalizer-20260805.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
