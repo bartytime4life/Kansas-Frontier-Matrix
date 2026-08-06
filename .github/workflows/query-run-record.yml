@@ -1,0 +1,96 @@
+# Validate the fixture-only deterministic QueryRunRecord governance profile.
+name: query-run-record
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/query-run-record.yml"
+      - "contracts/governance/query_run_record.md"
+      - "schemas/contracts/v1/governance/query_run_record.schema.json"
+      - "fixtures/contracts/v1/governance/query_run_record/**"
+      - "tools/validators/governance/validate_query_run_record.py"
+      - "tests/validators/governance/test_query_run_record.py"
+      - "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-query-run-record-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/query-run-record.yml"
+      - "contracts/governance/query_run_record.md"
+      - "schemas/contracts/v1/governance/query_run_record.schema.json"
+      - "fixtures/contracts/v1/governance/query_run_record/**"
+      - "tools/validators/governance/validate_query_run_record.py"
+      - "tests/validators/governance/test_query_run_record.py"
+      - "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-query-run-record-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: query-run-record-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-query-run-record
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]" -e "./packages/hashing[test]"
+
+      - name: Run deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_query_run_record.py' \
+            --verbose
+          python tools/validators/governance/validate_query_run_record.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-query-run-record-20260806.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### QueryRunRecord validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed fixture profile, RFC 8785 identities, evidence-resolution declaration consistency, finite outcomes, exact fixture polarity, and authoring-receipt integrity."
+            echo "- Boundary: a green result does not resolve evidence, call a model, evaluate policy, authenticate review, apply a proposal, mutate repository or lifecycle state, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
