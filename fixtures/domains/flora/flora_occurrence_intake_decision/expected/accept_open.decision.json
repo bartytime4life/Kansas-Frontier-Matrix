@@ -1,0 +1,58 @@
+{
+  "object_type": "FloraOccurrenceIntakeDecision",
+  "schema_version": "1.0.0",
+  "decision_id": "flora-occurrence-intake-decision:3ec8a66f52c0eb0bc4abcfd055f9cfcc",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:3dcbaf2675effa0a48f738ef329a5f41bd97dca0d2cb6f4970b9b3ba60ff98af",
+  "candidate_ref": "flora-occurrence-candidate:4260070178a21861e33200850d9b4a6e",
+  "candidate_spec_hash": "sha256:70e5a26fc638dc2838e584497ef42bdec0f274abf7cc733511dadc6a42290710",
+  "duplicate": {
+    "method": "NONE",
+    "duplicate_of_candidate_ref": null,
+    "comparison_count": 0,
+    "fingerprint": null
+  },
+  "rights": {
+    "profile_id": "flora-occurrence-license-map-v1",
+    "input_license": "CC-BY-4.0",
+    "license_class": "OPEN_DECLARED",
+    "disposition": "ALLOW_WORK",
+    "reason_codes": [
+      "LICENSE_OPEN_PROFILE_MATCH"
+    ]
+  },
+  "sensitivity": {
+    "exact_geometry_present": true,
+    "source_hints": [],
+    "disposition": "NO_SPECIAL_HANDLING",
+    "reason_codes": [
+      "NO_SOURCE_SENSITIVITY_HINT"
+    ]
+  },
+  "decision": {
+    "outcome": "ACCEPT_FOR_WORK",
+    "reason_codes": [
+      "BOUNDED_INTAKE_CHECKS_PASSED"
+    ],
+    "canonical_candidate_ref": null,
+    "proposed_target_lifecycle": "WORK"
+  },
+  "provenance": {
+    "candidate_digest": "sha256:70e5a26fc638dc2838e584497ef42bdec0f274abf7cc733511dadc6a42290710",
+    "peer_set_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "engine_id": "flora-occurrence-intake-governance",
+    "engine_version": "1.0.0"
+  },
+  "governance": {
+    "source_admission_decided": false,
+    "legal_rights_decided": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "lifecycle_transition_executed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}
