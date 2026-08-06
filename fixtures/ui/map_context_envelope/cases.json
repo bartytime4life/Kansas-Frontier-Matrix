@@ -1,0 +1,324 @@
+{
+  "cases": [
+    {
+      "base": "viewport",
+      "case_id": "valid-view",
+      "case_kind": "VALID",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "patches": [],
+      "recompute_identity": false
+    },
+    {
+      "base": "geography",
+      "case_id": "valid-geography",
+      "case_kind": "VALID",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "patches": [],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-renderer-specific-field",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "sourceLayer"
+          ],
+          "value": "soil"
+        }
+      ],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-unpublished-layer",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "layers",
+            0,
+            "release_state"
+          ],
+          "value": "UNRELEASED"
+        }
+      ],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-missing-release-ref",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "delete",
+          "path": [
+            "layers",
+            0,
+            "release_ref"
+          ]
+        }
+      ],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-bad-bbox-length",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "area_scope",
+            "bbox"
+          ],
+          "value": [
+            -102,
+            36,
+            -94
+          ]
+        }
+      ],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-expired",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "CONTEXT_TIME_ORDER_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "expires_at"
+          ],
+          "value": "2026-08-06T20:59:59Z"
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-ttl",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "CONTEXT_TTL_EXCEEDED"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "expires_at"
+          ],
+          "value": "2026-08-06T21:20:00Z"
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-dangling-selection",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "SELECTION_LAYER_UNRESOLVED"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "selections",
+            0,
+            "layer_id"
+          ],
+          "value": "missing-layer"
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-evidence-union",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "EVIDENCE_UNION_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "evidence_refs"
+          ],
+          "value": [
+            "evidence:soil:ssurgo",
+            "evidence:water:wbd"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-release-union",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "RELEASE_UNION_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "release_refs"
+          ],
+          "value": [
+            "release:soil-static:2026-08-01"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-unsorted",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "LAYERS_NOT_CANONICAL",
+        "REFS_NOT_CANONICAL",
+        "RELEASE_UNION_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "reverse",
+          "path": [
+            "layers"
+          ]
+        },
+        {
+          "op": "reverse",
+          "path": [
+            "release_refs"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-internal-ref",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "INTERNAL_REFERENCE_DENIED",
+        "RELEASE_UNION_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "layers",
+            0,
+            "release_ref"
+          ],
+          "value": "internal:release:soil"
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-hash",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "ENVELOPE_ID_MISMATCH",
+        "SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "spec_hash"
+          ],
+          "value": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "op": "set",
+          "path": [
+            "envelope_id"
+          ],
+          "value": "map-context-envelope:999999999999999999999999"
+        }
+      ],
+      "recompute_identity": false
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-bbox-order",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "BBOX_ORDER_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "area_scope",
+            "bbox"
+          ],
+          "value": [
+            -94,
+            40,
+            -102,
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "semantic-invalid-filter-arity",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "expected_findings": [
+        "FILTER_ARITY_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "filters",
+            0,
+            "values"
+          ],
+          "value": [
+            "a",
+            "b"
+          ]
+        }
+      ]
+    }
+  ],
+  "profile": "kfm.ui.map-context-envelope.v1"
+}
