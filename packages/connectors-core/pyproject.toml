@@ -8,8 +8,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kfm-connectors-core"
-version = "0.0.1"
-description = "Pure, source-agnostic connector primitives for governed KFM callers."
+version = "0.0.2"
+description = "Injected, source-agnostic connector primitives for governed KFM callers."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 license = { text = "TBD" }
