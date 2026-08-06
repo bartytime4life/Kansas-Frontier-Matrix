@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/friday_natural_systems_pulse.schema.json",
+  "title": "FridayNaturalSystemsPulseCandidate",
+  "description": "Fixture-first weekly natural-systems pulse derived from already-validated MaterialChangeAssessment records. It is review process memory only and does not schedule, rebuild, open pull requests, release, or publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "pulse_id",
+    "spec_hash",
+    "window",
+    "entries",
+    "summary",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "FridayNaturalSystemsPulseCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm://material-change-pulse/natural-systems/friday/v1"
+    },
+    "profile_version": {
+      "const": "1.0.0"
+    },
+    "pulse_id": {
+      "type": "string",
+      "pattern": "^natural-systems-pulse:[0-9]{4}-[0-9]{2}-[0-9]{2}:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "assessed_at"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "assessed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain",
+          "assessment_ref",
+          "assessment_id",
+          "assessment_content_hash",
+          "assessment_spec_hash",
+          "assessment_outcome",
+          "recommended_action"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "enum": [
+              "atmosphere",
+              "fauna_habitat",
+              "hydrology",
+              "soil",
+              "vegetation"
+            ]
+          },
+          "assessment_ref": {
+            "type": "string",
+            "pattern": "^fixtures/contracts/v1/data/friday_natural_systems_pulse/upstream/[a-z0-9_/-]+\\.json$"
+          },
+          "assessment_id": {
+            "type": "string",
+            "pattern": "^material-change:[a-z0-9][a-z0-9_:.-]{7,240}$"
+          },
+          "assessment_content_hash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "assessment_spec_hash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "assessment_outcome": {
+            "type": "string",
+            "enum": [
+              "NON_EVENT",
+              "PROMOTION_CANDIDATE",
+              "HOLD",
+              "ERROR"
+            ]
+          },
+          "recommended_action": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "REVIEW",
+              "REBUILD",
+              "PR"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_count",
+        "non_event_count",
+        "material_count",
+        "hold_count",
+        "error_count",
+        "emit_candidate",
+        "outcome",
+        "reason_codes"
+      ],
+      "properties": {
+        "entry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "non_event_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "material_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "hold_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "emit_candidate": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "NO_EVENT",
+            "PULSE_CANDIDATE",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ALL_DOMAINS_NON_EVENT",
+              "DOMAIN_ASSESSMENT_ERROR",
+              "DOMAIN_ASSESSMENT_HOLD",
+              "DOMAIN_COVERAGE_COMPLETE",
+              "MATERIAL_CHANGE_PRESENT",
+              "NO_AUTOMATED_EMISSION",
+              "WHOLE_BUNDLE_REVIEW_REQUIRED"
+            ]
+          }
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes",
+        "superseded_by"
+      ],
+      "properties": {
+        "supersedes": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "superseded_by": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "source_activation_allowed",
+        "network_access_allowed",
+        "rebuild_execution_allowed",
+        "issue_or_pr_creation_allowed",
+        "authority_created",
+        "policy_evaluated",
+        "review_authenticated",
+        "promotion_authorized",
+        "release_state",
+        "publication_allowed",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "source_activation_allowed": {
+          "const": false
+        },
+        "network_access_allowed": {
+          "const": false
+        },
+        "rebuild_execution_allowed": {
+          "const": false
+        },
+        "issue_or_pr_creation_allowed": {
+          "const": false
+        },
+        "authority_created": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_authenticated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_state": {
+          "const": "HOLD"
+        },
+        "publication_allowed": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/data/friday_natural_systems_pulse.md",
+    "fixtures_root": "fixtures/contracts/v1/data/friday_natural_systems_pulse/",
+    "validator": "tools/validators/validate_friday_natural_systems_pulse.py",
+    "tests": "tests/validators/test_validate_friday_natural_systems_pulse.py",
+    "authority": "fixture_pulse_shape_and_local_consistency_only",
+    "non_effects": [
+      "does_not_schedule_a_watcher",
+      "does_not_fetch_sources",
+      "does_not_execute_rebuilds",
+      "does_not_open_issues_or_pull_requests",
+      "does_not_evaluate_policy",
+      "does_not_release_or_publish"
+    ]
+  }
+}
