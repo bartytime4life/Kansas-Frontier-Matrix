@@ -1,0 +1,112 @@
+{
+  "fixture_id": "fixture://historical-place-resolution/variant-resolved",
+  "profile_id": "kfm-settlements-infrastructure-historical-place-resolution-v1",
+  "object_family": "HistoricalPlaceResolutionCandidate",
+  "schema_version": "1.0.0",
+  "query": {
+    "name": "Cedar Junction",
+    "year": 1880,
+    "state_code": "KS",
+    "county_hint": "Synthetic Western County"
+  },
+  "candidates": [
+    {
+      "candidate_ref": "fixture://place-candidate/cedar-city-1879",
+      "canonical_name": "Cedar City",
+      "variants": [
+        "Cedar Junction",
+        "Cedar"
+      ],
+      "feature_type": "populated_place",
+      "authority_ids": {
+        "gnis": "fixture://authority/gnis/cedar-city",
+        "bgn_decision": "fixture://authority/bgn/cedar-city-decision",
+        "kshs_po": null,
+        "ahcb_slice": "fixture://authority/ahcb/ks/synthetic-western/1870-1889"
+      },
+      "valid_time": {
+        "start_year": 1879,
+        "end_year": null
+      },
+      "county_at_query_time": "Synthetic Western County",
+      "source_support": [
+        {
+          "source_role": "federal_name_authority",
+          "source_ref": "fixture://source/gnis-cedar-city",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "canonical_name",
+            "variant_name",
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "gnis-cedar-city"
+          }
+        },
+        {
+          "source_role": "historical_county_authority",
+          "source_ref": "fixture://source/ahcb-synthetic-western-1870-1889",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "county_at_query_time"
+          ],
+          "scan_ids": {
+            "fixture_record": "ahcb-synthetic-western-1870-1889"
+          }
+        },
+        {
+          "source_role": "period_map",
+          "source_ref": "fixture://source/period-map-cedar-city-1880",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "feature_type",
+            "variant_name"
+          ],
+          "scan_ids": {
+            "fixture_record": "period-map-cedar-city-1880"
+          }
+        }
+      ]
+    }
+  ],
+  "evidence_refs": [
+    "fixture://evidence/variant-resolved/1",
+    "fixture://evidence/variant-resolved/2",
+    "fixture://evidence/variant-resolved/3"
+  ],
+  "derived": {
+    "resolution_id": "sha256:3f98491a88858e799c7883eaca3c8e0271a5522fc0e71b882b076442b5f36126",
+    "resolved_candidate_ref": "fixture://place-candidate/cedar-city-1879",
+    "place_id": "urn:kfm:place:sha256:6f7b33bc0d806981047fb2b75294c3a06f74a8ca56e92ede347f48c2e8c01bc1",
+    "primary_authority": "bgn_decision",
+    "confidence": "high",
+    "disposition": "candidate_review",
+    "reason_codes": [
+      "UNIQUE_TIME_SCOPED_MATCH",
+      "GNIS_AUTHORITY_PRESENT",
+      "AHCB_SLICE_MATCH",
+      "BGN_DECISION_PRESENT",
+      "PERIOD_CORROBORATION_PRESENT"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "historical_only": true,
+    "network_accessed": false,
+    "live_source_activation": false,
+    "review_state": "candidate_review",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_exposure": false
+  },
+  "limitations": [
+    "synthetic_fixture_only",
+    "no_live_source_access",
+    "no_current_legal_status_claim",
+    "no_boundary_or_title_claim",
+    "no_public_release",
+    "no_policy_approval",
+    "no_source_rights_determination"
+  ],
+  "spec_hash": "sha256:e780d6cfc08317572f5bbf57b4a643bdcfca50d66dba8e12a1683047053626ef"
+}
