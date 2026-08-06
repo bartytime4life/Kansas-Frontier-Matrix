@@ -1,0 +1,113 @@
+# Validate the deterministic, fixture-only CSV-to-GeoJSON normalization preflight.
+# This workflow creates no source activation, lifecycle write, release, or publication authority.
+name: csv-geojson-preflight
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/csv-geojson-preflight.yml"
+      - "contracts/source/csv_geojson_normalization_candidate.md"
+      - "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json"
+      - "tools/ingest/csv_geojson_preflight/**"
+      - "fixtures/ingest/csv_geojson_preflight/**"
+      - "tests/ingest/csv_geojson_preflight/**"
+      - "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md"
+      - "data/receipts/generated/genrec-csv-geojson-preflight-20260806.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/csv-geojson-preflight.yml"
+      - "contracts/source/csv_geojson_normalization_candidate.md"
+      - "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json"
+      - "tools/ingest/csv_geojson_preflight/**"
+      - "fixtures/ingest/csv_geojson_preflight/**"
+      - "tests/ingest/csv_geojson_preflight/**"
+      - "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md"
+      - "data/receipts/generated/genrec-csv-geojson-preflight-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: csv-geojson-preflight-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-csv-geojson-preflight:
+    name: validate-csv-geojson-preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]" -e ./packages/hashing
+
+      - name: Compile bounded implementation
+        run: python -m compileall -q tools/ingest/csv_geojson_preflight
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m pytest \
+            tests/ingest/csv_geojson_preflight \
+            -q --strict-config --strict-markers
+
+      - name: Replay fixture-only CLI candidate
+        run: |
+          candidate_path="${RUNNER_TEMP}/csv-geojson-candidate.json"
+          python tools/ingest/csv_geojson_preflight/preflight.py \
+            --profile fixtures/ingest/csv_geojson_preflight/profile.json \
+            --csv fixtures/ingest/csv_geojson_preflight/valid.csv \
+            --output "$candidate_path"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          root = Path(os.environ["GITHUB_WORKSPACE"])
+          candidate = json.loads((Path(os.environ["RUNNER_TEMP"]) / "csv-geojson-candidate.json").read_text())
+          schema = json.loads((root / "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json").read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schema).validate(candidate)
+          assert candidate["result"]["feature_count"] == 3
+          assert candidate["governance"]["publication_allowed"] is False
+          PY
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-csv-geojson-preflight-20260806.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### CSV-to-GeoJSON fixture preflight"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact-profile synthetic CSV parsing, point-coordinate validation, deterministic feature identity/order, input/header/output hashes, and schema-valid review-candidate emission."
+            echo "- Tests perform no network, source activation, lifecycle write, evidence resolution, policy decision, release, deployment, publication, or public map action."
+            echo "- A green result does not make fixture coordinates source truth, a SourceArtifact, an IngestReceipt, an EvidenceBundle, a released layer, or public-safe approval for real geometry."
+          } >> "$GITHUB_STEP_SUMMARY"
