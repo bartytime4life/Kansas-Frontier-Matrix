@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-spec-hash-validator-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/spec-hash.yml",
+    "packages/hashing/pyproject.toml",
+    "packages/hashing/src/hashing/__init__.py",
+    "packages/hashing/src/hashing/cli.py",
+    "packages/hashing/src/hashing/core.py",
+    "pyproject.toml",
+    "tests/validators/test_validate_spec_hash.py",
+    "tools/spec_hash/README.md",
+    "tools/spec_hash/spec_hash.py",
+    "tools/validators/validate_spec_hash.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/spec-hash.yml": "sha256:8642a165b638f926ef8481ab57c5059bcb48e5c528b4210f167c3b6187e2730a",
+    "packages/hashing/pyproject.toml": "sha256:378940ce0f5c00bc406e26c3e29311b7e69aadc0921d3b53ba06a0043d58bfca",
+    "packages/hashing/src/hashing/__init__.py": "sha256:dc2a787e46c4509c8d748b0116fa66da102624b1e61be0af6724303592756420",
+    "packages/hashing/src/hashing/cli.py": "sha256:8222ac6166cb66e988cea00e37a474dee838bda6d5893d149035262f5138481e",
+    "packages/hashing/src/hashing/core.py": "sha256:edbd3ec5a624db19f23de43194eb88c323a78faf94b82b6f5881023de79ad53b",
+    "pyproject.toml": "sha256:de29178eacc4da0988b524d7ac8980fa886222e46cb509f3c2829132692212c3",
+    "tests/validators/test_validate_spec_hash.py": "sha256:035fd3957fa76d31b42d967338e69291a17ca14e13ec17c89df45e85b8b79b50",
+    "tools/spec_hash/README.md": "sha256:a8f69b7b11cf4467a6a8b47ee946f2f3c08196c5343aa50d38d0fcf3a670606d",
+    "tools/spec_hash/spec_hash.py": "sha256:3ed6669f518b1721c67b2d97e19a9ffb54701da5889f0f556f73707df6e9dd49",
+    "tools/validators/validate_spec_hash.py": "sha256:f40270ac03f8f5c97e2e963b6be4fe98e6cf39ddd435bf3886be443abb4bf3e0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:4bc367571cf00c73f75606c8b84f7e4320225fb61b4e1f424f856aca0c861b7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-7-2026.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-7-2026.pdf#jcs-spec-hash-and-idempotent-pipeline-patterns",
+      "repo:contracts/common/spec_hash.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "repo:schemas/contracts/v1/common/spec_hash.schema.json@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "repo:docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/spec-hash.yml": "CONFIRMED",
+    "packages/hashing/pyproject.toml": "CONFIRMED",
+    "packages/hashing/src/hashing/__init__.py": "CONFIRMED",
+    "packages/hashing/src/hashing/cli.py": "CONFIRMED",
+    "packages/hashing/src/hashing/core.py": "CONFIRMED",
+    "pyproject.toml": "CONFIRMED",
+    "tests/validators/test_validate_spec_hash.py": "CONFIRMED",
+    "tools/spec_hash/README.md": "CONFIRMED",
+    "tools/spec_hash/spec_hash.py": "CONFIRMED",
+    "tools/validators/validate_spec_hash.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic no-network unit and CLI tests passed against the prepared artifact set."
+    },
+    {
+      "gate": "existing-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "The existing common spec_hash valid and invalid JSON fixtures retained exact polarity."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every declared authored artifact is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-3-7-jcs",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-7-2026.pdf#jcs-spec-hash-and-idempotent-pipeline-patterns"
+    },
+    {
+      "id": "repository:common-spec-hash-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/spec_hash.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T03:28:28Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the current common spec_hash shape using RFC 8785 JCS plus SHA-256. The executable identifier remains sha256:<hex>; the proposed ADR-0013 jcs:sha256 grammar is not adopted. This receipt grants no source, evidence, policy, review, promotion, release, publication, or public-use authority."
+}
