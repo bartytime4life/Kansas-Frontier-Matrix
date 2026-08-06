@@ -1,0 +1,113 @@
+# Validate the bounded August 6 briefing implementation campaign.
+name: briefing-implementation-campaign
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/briefing-implementation-campaign.yml"
+      - "docs/architecture/briefing-implementation-campaign-20260806.md"
+      - "tools/experiments/temporal_slice_store.py"
+      - "tools/validators/validate_trace_temporal_closure.py"
+      - "tools/validators/maplibre/validate_v6_readiness.py"
+      - "tools/validators/domains/hazards/validate_usdm_materiality.py"
+      - "tests/experiments/test_temporal_slice_store.py"
+      - "tests/validators/test_validate_trace_temporal_closure.py"
+      - "tests/maplibre/test_validate_v6_readiness.py"
+      - "tests/domains/hazards/test_validate_usdm_materiality.py"
+      - "fixtures/contracts/v1/data/trace_temporal_closure/**"
+      - "fixtures/maplibre/v6_readiness/**"
+      - "fixtures/domains/hazards/usdm_materiality/**"
+      - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/briefing-implementation-campaign.yml"
+      - "docs/architecture/briefing-implementation-campaign-20260806.md"
+      - "tools/experiments/temporal_slice_store.py"
+      - "tools/validators/validate_trace_temporal_closure.py"
+      - "tools/validators/maplibre/validate_v6_readiness.py"
+      - "tools/validators/domains/hazards/validate_usdm_materiality.py"
+      - "tests/experiments/test_temporal_slice_store.py"
+      - "tests/validators/test_validate_trace_temporal_closure.py"
+      - "tests/maplibre/test_validate_v6_readiness.py"
+      - "tests/domains/hazards/test_validate_usdm_materiality.py"
+      - "fixtures/contracts/v1/data/trace_temporal_closure/**"
+      - "fixtures/maplibre/v6_readiness/**"
+      - "fixtures/domains/hazards/usdm_materiality/**"
+      - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: briefing-implementation-campaign-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-briefing-implementation-campaign
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validator and test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run deterministic no-network unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/experiments --pattern 'test_temporal_slice_store.py' --verbose
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_trace_temporal_closure.py' --verbose
+          python -m unittest discover --start-directory tests/maplibre --pattern 'test_validate_v6_readiness.py' --verbose
+          python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
+      - name: Run exact synthetic fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/experiments/temporal_slice_store.py --self-test
+          python tools/validators/validate_trace_temporal_closure.py --fixtures
+          python tools/validators/maplibre/validate_v6_readiness.py --fixtures
+          python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
+      - name: Confirm current MapLibre posture remains an explicit hold
+        run: |
+          set -euo pipefail
+          set +e
+          output="$(python tools/validators/maplibre/validate_v6_readiness.py --scan-root .)"
+          code=$?
+          set -e
+          printf '%s\n' "$output"
+          test "$code" -eq 3
+          python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert "MAPLIBRE_DEPENDENCY_UNPINNED" in value["reasons"]; assert "RUNTIME_PROBES_PENDING" in value["reasons"]' "$output"
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Briefing implementation campaign"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic TemporalSlice SQL lookup, trace/receipt/evidence/TemporalSlice closure, MapLibre v6 readiness classification, and USDM material-change semantics."
+            echo "- Boundary: no live source, dependency upgrade, production database, authenticated evidence, policy authority, release, deployment, publication, or public-use path is created."
+          } >> "$GITHUB_STEP_SUMMARY"

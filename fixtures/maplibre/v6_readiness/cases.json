@@ -1,0 +1,149 @@
+{
+  "valid": [
+    {
+      "name": "hold_pending",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-readiness-v1",
+        "selected_version": null,
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "NOT_RUN"
+        },
+        "outcome": "HOLD",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    },
+    {
+      "name": "ready",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-readiness-v1",
+        "selected_version": "6.0.0",
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "PASS"
+        },
+        "outcome": "READY",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "invalid_declared_ready",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-readiness-v1",
+        "selected_version": null,
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "NOT_RUN"
+        },
+        "outcome": "READY",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      },
+      "expected": [
+        "DECLARED_OUTCOME_MISMATCH",
+        "MAPLIBRE_V6_EXACT_VERSION_REQUIRED",
+        "RUNTIME_PROBES_PENDING"
+      ]
+    },
+    {
+      "name": "invalid_governance",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-readiness-v1",
+        "selected_version": "6.0.0",
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "PASS"
+        },
+        "outcome": "READY",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": true,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      },
+      "expected": [
+        "GOVERNANCE_BOUNDARY_VIOLATION"
+      ]
+    },
+    {
+      "name": "invalid_import_boundary",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-readiness-v1",
+        "selected_version": "6.0.0",
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [
+          "apps/explorer-web/src/map.ts"
+        ],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "PASS"
+        },
+        "outcome": "HOLD",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      },
+      "expected": [
+        "MAPLIBRE_IMPORT_BOUNDARY_VIOLATION"
+      ]
+    }
+  ]
+}
