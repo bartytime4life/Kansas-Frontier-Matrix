@@ -1,0 +1,19 @@
+{
+  "uuid": "synthetic-idigbio-0001",
+  "institutioncode": "SYNTH-HERB",
+  "collectioncode": "VOUCHER",
+  "catalognumber": "SYNTH-1001",
+  "scientificname": "Asclepias syriaca",
+  "taxonid": "synthetic-taxon:asclepias-syriaca",
+  "taxonrank": "species",
+  "basisofrecord": "PRESERVED_SPECIMEN",
+  "eventdate": "1984-07",
+  "occurrencestatus": "presence",
+  "decimallongitude": -96.5,
+  "decimallatitude": 39.1,
+  "coordinateuncertaintyinmeters": "1000",
+  "license": "CC0-1.0",
+  "rightsholder": "Synthetic Herbarium",
+  "informationwithheld": "Synthetic locality detail withheld",
+  "datageneralizations": "Coordinates generalized for fixture use"
+}
