@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json",
+  "title": "MesonetStationHealthAssessment",
+  "description": "Fixture-only Kansas Mesonet soil station-health assessment; not a release or alert.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "evaluated_at",
+    "source_descriptor_ref",
+    "run_receipt_ref",
+    "evidence_refs",
+    "thresholds",
+    "summary",
+    "stations",
+    "decision",
+    "rights",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "MesonetStationHealthAssessment"},
+    "schema_version": {"const": "1.0.0"},
+    "assessment_id": {"type": "string", "minLength": 8, "maxLength": 160},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "source_descriptor_ref": {"type": "string", "minLength": 1},
+    "run_receipt_ref": {"type": "string", "minLength": 1},
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_interval_minutes",
+        "degraded_after_multiplier",
+        "minimum_coverage_fraction",
+        "maximum_degraded_fraction",
+        "max_untriaged_anomalies",
+        "z_score_abs_threshold",
+        "relative_jump_fraction_threshold"
+      ],
+      "properties": {
+        "expected_interval_minutes": {"type": "number", "exclusiveMinimum": 0},
+        "degraded_after_multiplier": {"type": "number", "minimum": 1},
+        "minimum_coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "maximum_degraded_fraction": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "max_untriaged_anomalies": {"type": "integer", "minimum": 0},
+        "z_score_abs_threshold": {"type": "number", "exclusiveMinimum": 0},
+        "relative_jump_fraction_threshold": {"type": "number", "minimum": 0}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_stations",
+        "fresh_stations",
+        "degraded_stations",
+        "anomalous_stations",
+        "untriaged_anomalies",
+        "coverage_fraction",
+        "degraded_fraction"
+      ],
+      "properties": {
+        "total_stations": {"type": "integer", "minimum": 1},
+        "fresh_stations": {"type": "integer", "minimum": 0},
+        "degraded_stations": {"type": "integer", "minimum": 0},
+        "anomalous_stations": {"type": "integer", "minimum": 0},
+        "untriaged_anomalies": {"type": "integer", "minimum": 0},
+        "coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "degraded_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "stations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "station_id",
+          "spatial_support",
+          "station_state",
+          "age_minutes",
+          "anomaly_count",
+          "untriaged_anomaly_count",
+          "reason_codes"
+        ],
+        "properties": {
+          "station_id": {"type": "string", "minLength": 1},
+          "spatial_support": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "county_fips"],
+            "properties": {
+              "kind": {"const": "generalized_county"},
+              "county_fips": {"type": "string", "pattern": "^[0-9]{5}$"}
+            }
+          },
+          "station_state": {
+            "enum": ["HEALTHY", "DEGRADED", "ANOMALOUS_TRIAGED", "ANOMALOUS_UNTRIAGED"]
+          },
+          "age_minutes": {"type": "number", "minimum": 0},
+          "anomaly_count": {"type": "integer", "minimum": 0},
+          "untriaged_anomaly_count": {"type": "integer", "minimum": 0},
+          "reason_codes": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": ["STALE_REPORT", "Z_SCORE_OUTLIER", "RELATIVE_JUMP", "UNTRIAGED_ANOMALY"]
+            }
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["HEALTHY_FIXTURE", "HOLD"]},
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["COVERAGE_BELOW_MINIMUM", "ROSTER_DEGRADED_THRESHOLD", "UNTRIAGED_ANOMALIES_PRESENT"]
+          }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rights_state", "operator_consent_state"],
+      "properties": {
+        "rights_state": {"const": "fixture_only"},
+        "operator_consent_state": {"const": "fixture_only"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["promotion_eligible", "public_use_allowed", "release_state", "review_state"],
+      "properties": {
+        "promotion_eligible": {"const": false},
+        "public_use_allowed": {"const": false},
+        "release_state": {"const": "not_released"},
+        "review_state": {"const": "fixture_only"}
+      }
+    }
+  }
+}
