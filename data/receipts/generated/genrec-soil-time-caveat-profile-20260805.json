@@ -19,7 +19,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/soil-time-caveat-profile.yml": "sha256:a2f301f56de674a95890d3e7c0175cb9027f8ee3cf7efcca0f942049b8b375c8",
-    "contracts/domains/soil/time_caveat_profile.md": "sha256:4c5163392dadcf02975d2888f6c468016fcd16e8eaf3ddbb13b016f4cf9a9de5",
+    "contracts/domains/soil/time_caveat_profile.md": "sha256:cfe11e39c53a34b5aba7a96b0eb71095a03bfe5ac95f3b160afdc43ec93e8b01",
     "fixtures/domains/soil/time_caveat/README.md": "sha256:14d447e2f1b877407a782f01de71c8550c7eb3c180d1359a61d8ceed7d7f41a0",
     "fixtures/domains/soil/time_caveat/deny/satellite_as_station.json": "sha256:deca00a8f4a4ea4f7f976288891975f9309b913ba458758187ac3eb6d1ac8f4c",
     "fixtures/domains/soil/time_caveat/deny/static_as_current.json": "sha256:82482a9112a30cee7d750972811dc709c01905cd74cb6f9fdd99221c61c27dad",
@@ -83,12 +83,12 @@
     {
       "gate": "focused-no-network-tests",
       "outcome": "PASS",
-      "reason": "Fourteen deterministic focused tests passed locally."
+      "reason": "Fourteen deterministic focused tests passed locally and in PR #2018 run 31058941252."
     },
     {
       "gate": "fixture-outcome-matrix",
       "outcome": "PASS",
-      "reason": "Six fixtures produced exact counts: two PASS, one HOLD, two DENY, and one ERROR."
+      "reason": "Six fixtures produced exact counts: two PASS, one HOLD, two DENY, and one ERROR locally and in the hosted PR run."
     },
     {
       "gate": "profile-spec-hash",
@@ -101,14 +101,19 @@
       "reason": "The path-scoped workflow parses as YAML and retains one read-only job."
     },
     {
+      "gate": "hosted-receipt-failure-repaired",
+      "outcome": "PASS",
+      "reason": "PR #2018 run 31058941252 isolated one stale contract digest at artifact_paths/1; the receipt now binds the exact merged contract blob eb90c9aff4eed08f7e7773e35aa023dd70417cb9."
+    },
+    {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks require the pushed exact pull-request head."
+      "reason": "A new exact-head hosted conclusion is required after correcting the receipt digest."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
+      "reason": "Human review remains unverified; merge of PR #2018 does not by itself authenticate a review claim."
     }
   ],
   "policy_decisions": [
@@ -145,9 +150,9 @@
   "created_at": "2026-08-06T00:04:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2018,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Inactive, fixture-only Soil time-caveat adapter. It preserves time-axis and support-role distinctions and grants no source, evidence, policy, review, promotion, release, publication, current-condition, or public-use authority."
+  "notes": "Inactive, fixture-only Soil time-caveat adapter. PR #2018's hosted functional tests and fixture replay passed, but receipt validation exposed one stale digest for the contract Markdown. This correction rebinds that exact merged blob without weakening validation. The profile grants no source, evidence, policy, review, promotion, release, publication, current-condition, or public-use authority."
 }
