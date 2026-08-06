@@ -243,9 +243,9 @@ def _serialize(path: Path, result: ValidationResult) -> str:
     }, sort_keys=True, separators=(",", ":"))
 
 
-def _manifest() -> dict[str, list[str]]:
+def _manifest(lane: str) -> dict[str, list[str]]:
     try:
-        value = json.loads((FIXTURE_ROOT / "invalid/expected_findings_manifest.json").read_text(encoding="utf-8"))
+        value = json.loads((FIXTURE_ROOT / lane / "expected_findings_manifest.json").read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError):
         return {}
     return value if isinstance(value, dict) else {}
@@ -253,18 +253,30 @@ def _manifest() -> dict[str, list[str]]:
 
 def run_fixtures() -> int:
     valid = sorted((FIXTURE_ROOT / "valid").glob("valid_*.json"))
+    semantic_invalid = sorted((FIXTURE_ROOT / "semantic_invalid").glob("invalid_*.json"))
     invalid = sorted((FIXTURE_ROOT / "invalid").glob("invalid_*.json"))
-    expected = _manifest()
-    ok = bool(valid and invalid and set(expected) == {path.name for path in invalid})
+    semantic_expected = _manifest("semantic_invalid")
+    invalid_expected = _manifest("invalid")
+    ok = bool(valid and semantic_invalid and invalid)
+    ok = ok and set(semantic_expected) == {path.name for path in semantic_invalid}
+    ok = ok and set(invalid_expected) == {path.name for path in invalid}
     for path in valid:
         result = validate_file(path)
         print(_serialize(path, result))
         ok = ok and result.ok
+    for path in semantic_invalid:
+        result = validate_file(path)
+        print(_serialize(path, result))
+        actual = sorted({item.code for item in result.findings})
+        wanted = sorted(semantic_expected.get(path.name, []))
+        if result.ok or actual != wanted:
+            ok = False
+            print(json.dumps({"actual": actual, "expected": wanted, "file": path.as_posix(), "outcome": "FIXTURE_POLARITY_ERROR"}, sort_keys=True, separators=(",", ":")))
     for path in invalid:
         result = validate_file(path)
         print(_serialize(path, result))
         actual = sorted({item.code for item in result.findings})
-        wanted = sorted(expected.get(path.name, []))
+        wanted = sorted(invalid_expected.get(path.name, []))
         if result.ok or actual != wanted:
             ok = False
             print(json.dumps({"actual": actual, "expected": wanted, "file": path.as_posix(), "outcome": "FIXTURE_POLARITY_ERROR"}, sort_keys=True, separators=(",", ":")))
