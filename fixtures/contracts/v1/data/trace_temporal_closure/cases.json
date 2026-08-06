@@ -1,0 +1,142 @@
+{
+  "base": {
+    "record_type": "TraceTemporalClosure",
+    "schema_version": "1.0.0",
+    "fixture_only": true,
+    "network_access": "forbidden",
+    "run_receipt": {
+      "receipt_ref": "kfm:run-receipt:synthetic-closure-001",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "run_id": "run:synthetic-closure-001",
+      "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "evidence_bundle": {
+      "bundle_ref": "kfm:evidence-bundle:synthetic-closure-001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "run_receipt_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "run_id": "run:synthetic-closure-001",
+      "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "trace_receipt_link": {
+      "run_anchor": {
+        "run_id": "run:synthetic-closure-001",
+        "spec_hash": "jcs:sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "run_receipt": {
+        "receipt_ref": "kfm:run-receipt:synthetic-closure-001",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "run_id": "run:synthetic-closure-001",
+        "spec_hash": "jcs:sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "evidence_bundle": {
+        "bundle_ref": "kfm:evidence-bundle:synthetic-closure-001",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "run_id": "run:synthetic-closure-001",
+        "spec_hash": "jcs:sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    },
+    "temporal_slice": {
+      "slice_id": "kfm:temporal-slice:sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "provenance": {
+        "run_receipt_ref": "kfm:run-receipt:synthetic-closure-001",
+        "evidence_bundle_refs": [
+          "kfm:evidence-bundle:synthetic-closure-001"
+        ],
+        "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "materialization": {
+        "artifacts": [
+          {
+            "artifact_ref": "kfm:artifact:synthetic-map",
+            "artifact_path": "fixtures/contracts/v1/data/trace_temporal_closure/artifacts/synthetic-map.json",
+            "digest": "sha256:80d25a0a78700e2fdfe78db625f1eb68c8f7411997456e2d04f2d220f35b6fc2"
+          }
+        ]
+      },
+      "governance": {
+        "authority_created": false,
+        "evidence_closure_claimed": false,
+        "policy_evaluated": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    },
+    "governance": {
+      "authority_created": false,
+      "evidence_closure_claimed": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    },
+    "closure_id": "urn:kfm:trace-temporal-closure:sha256:8c5024fce7d0357aaa48292abe75bc315840ad5d284a5148e8cdedea8d7e820c"
+  },
+  "invalid": [
+    {
+      "name": "invalid_artifact_digest",
+      "set": {
+        "/closure_id": "urn:kfm:trace-temporal-closure:sha256:546e218df91431b0808db0663f3985e9c494589d0406e7d46db985acb41d1909",
+        "/temporal_slice/materialization/artifacts": [
+          {
+            "artifact_ref": "kfm:artifact:synthetic-map",
+            "artifact_path": "fixtures/contracts/v1/data/trace_temporal_closure/artifacts/synthetic-map.json",
+            "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+          }
+        ]
+      },
+      "expected": [
+        "ARTIFACT_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_evidence_digest",
+      "set": {
+        "/trace_receipt_link/evidence_bundle/digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      },
+      "expected": [
+        "EVIDENCE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_governance",
+      "set": {
+        "/governance/publication_authorized": true
+      },
+      "expected": [
+        "GOVERNANCE_BOUNDARY_VIOLATION"
+      ]
+    },
+    {
+      "name": "invalid_run_receipt_digest",
+      "set": {
+        "/trace_receipt_link/run_receipt/digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      },
+      "expected": [
+        "RUN_RECEIPT_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_spec_hash",
+      "set": {
+        "/temporal_slice/provenance/spec_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      },
+      "expected": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid_temporal_refs",
+      "set": {
+        "/temporal_slice/provenance/evidence_bundle_refs": [
+          "kfm:evidence-bundle:other"
+        ]
+      },
+      "expected": [
+        "TEMPORAL_EVIDENCE_REF_MISMATCH"
+      ]
+    }
+  ]
+}
