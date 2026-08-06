@@ -1,0 +1,16 @@
+meta:
+  status: PROPOSED
+  owner: fixture
+  description: Synthetic registry for metadata validation.
+
+entries:
+  - doc_id: kfm://doc/fixture-alpha
+    path: docs/alpha.md
+    kind: standard
+    authority: fixture
+    status: draft
+  - doc_id: kfm://doc/fixture-beta
+    path: docs/beta.md
+    kind: standard
+    authority: fixture
+    status: review

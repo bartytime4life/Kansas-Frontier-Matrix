@@ -1,0 +1,201 @@
+{
+  "receipt_id": "genrec-docs-meta-block-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/docs-meta-block.yml",
+    "docs/intake/exploratory/meta-block-registry-delta-source-map.md",
+    "tests/validators/docs/meta-block/README.md",
+    "tests/validators/docs/meta-block/_support.py",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/README.md",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/control_plane/document_registry.yaml",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/alpha.md",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/beta.md",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/expected_meta_block_report.json",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py",
+    "tests/validators/docs/meta-block/test_meta_block_structure.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/meta-block/README.md",
+    "tools/validators/docs/meta-block/check_meta_blocks.py",
+    "tools/validators/docs/meta-block/meta_block_build.py",
+    "tools/validators/docs/meta-block/meta_block_core.py",
+    "tools/validators/docs/meta-block/meta_block_parse.py",
+    "tools/validators/docs/meta-block/meta_block_registry.py",
+    "tools/validators/docs/meta-block/meta_block_validate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/docs-meta-block.yml": "sha256:bbfe7fdcf777271281a5d767232b67eccec190f56b843f2c02ad89b76a74b043",
+    "docs/intake/exploratory/meta-block-registry-delta-source-map.md": "sha256:97963fec4ef5512a5ac9988461958334ed8cf5e779aa42118275c5dda9951a45",
+    "tests/validators/docs/meta-block/README.md": "sha256:b7303f74f02b3add2560e754696afb59c2079baa7bec4fc7dba74cd525c797ea",
+    "tests/validators/docs/meta-block/_support.py": "sha256:334b09f3e85df2b4081551f150ab5d9e07e4ea7e5621ac8ea69fb5491110c2ad",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/README.md": "sha256:b0be5586132094e3365afbe4cf0070e604684ca17ff95e1b61c493ae06f87143",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/control_plane/document_registry.yaml": "sha256:87173b3f04dabf4b2bb0158eeb0b3eb42235085e8286ee90e29beb9bc2e21365",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/alpha.md": "sha256:2e8a8ea700928955ad0be1252c0e5d88c63b8705c79657bc5d1c771d07ebb7df",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/beta.md": "sha256:c0039ca36d64c9b4318501da0e2976b9abedf8a71a7b317397aa421507a87b20",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/expected_meta_block_report.json": "sha256:cb0b2a84048eb1b3761afcc4f26db25053508fe2b92f252a5b35c9ced0508a34",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py": "sha256:d879a2154b05be50aa25612a1ed683af12e703e4f38914cd7da6c2912fd46644",
+    "tests/validators/docs/meta-block/test_meta_block_structure.py": "sha256:511cfcf4585edfa8e2b19b8e1e1b141cb46e2c637c30a2f8c60ed95bad8cc991",
+    "tools/validators/docs/README.md": "sha256:6ddb9bfb8aa56adf727f5c16b1ff7f408db61134610d86b01607c5e07ab73a39",
+    "tools/validators/docs/meta-block/README.md": "sha256:25e415b4f4d688e5f8ba1a90b3d7c181cf3eb2ec794425e0cd56ed8be697e465",
+    "tools/validators/docs/meta-block/check_meta_blocks.py": "sha256:3760a2c9aeb686274f02c630acbc37a420c1c1c92aaf9ffdb31eb9d7940b09d1",
+    "tools/validators/docs/meta-block/meta_block_build.py": "sha256:be7415121f14e3e514dfb78aca0c0533bc8d53d078db044cd2a489a30c91a91c",
+    "tools/validators/docs/meta-block/meta_block_core.py": "sha256:728836cdbecfaddb70d7b5aaefc81cf2ef9faf0070b8c62409097f400469985a",
+    "tools/validators/docs/meta-block/meta_block_parse.py": "sha256:255786d6cd0b16fd0de52e587414f97dad5504694c34a40c1deef8e705569f34",
+    "tools/validators/docs/meta-block/meta_block_registry.py": "sha256:4ea744b4631e86f46cad5cd1b53edbb8ca35eab9cd3f86c1d8bbfb22a20cd44c",
+    "tools/validators/docs/meta-block/meta_block_validate.py": "sha256:ce8559595501b01203024d3222acc097f24d078f492b4e4b05646ce294389a10"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:8a068eac89e326440ec7cf28838dda37e4850dc3253f8519b49eaed1ba02fa07",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4",
+      "repo:tools/validators/docs/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4",
+      "repo:tools/validators/docs/meta-block/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4",
+      "repo:docs/registers/DOCUMENT_REGISTRY.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4",
+      "repo:control_plane/document_registry.yaml@eccaae28375b7f997e40f4a4f25e528c15ecf8a4",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "attachment:# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/docs-meta-block.yml": "PROPOSED",
+    "docs/intake/exploratory/meta-block-registry-delta-source-map.md": "PROPOSED",
+    "tests/validators/docs/meta-block/README.md": "PROPOSED",
+    "tests/validators/docs/meta-block/_support.py": "PROPOSED",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/README.md": "PROPOSED",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/control_plane/document_registry.yaml": "PROPOSED",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/alpha.md": "PROPOSED",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/docs/beta.md": "PROPOSED",
+    "tests/validators/docs/meta-block/fixtures/valid_repo/expected_meta_block_report.json": "PROPOSED",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py": "PROPOSED",
+    "tests/validators/docs/meta-block/test_meta_block_structure.py": "PROPOSED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/meta-block/README.md": "PROPOSED",
+    "tools/validators/docs/meta-block/check_meta_blocks.py": "PROPOSED",
+    "tools/validators/docs/meta-block/meta_block_build.py": "PROPOSED",
+    "tools/validators/docs/meta-block/meta_block_core.py": "PROPOSED",
+    "tools/validators/docs/meta-block/meta_block_parse.py": "PROPOSED",
+    "tools/validators/docs/meta-block/meta_block_registry.py": "PROPOSED",
+    "tools/validators/docs/meta-block/meta_block_validate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Twenty-three deterministic metadata-block and registry-delta tests passed locally."
+    },
+    {
+      "gate": "fixture-snapshot-replay",
+      "outcome": "PASS",
+      "reason": "The valid fixture reproduced the reviewed compact JSON report and SHA-256 report digest exactly."
+    },
+    {
+      "gate": "new-metadata-self-check",
+      "outcome": "PASS",
+      "reason": "All four authored Markdown control documents passed the required metadata profile."
+    },
+    {
+      "gate": "changed-file-workflow-simulation",
+      "outcome": "PASS",
+      "reason": "A synthetic two-commit repository emitted three ADD_REVIEW warnings, no failures, and no registry mutation."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "All six validator modules and three focused test/support modules compiled without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only docs-meta-block workflow parsed as YAML."
+    },
+    {
+      "gate": "no-network-static-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network client and the focused suite asserts the static no-network boundary."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind all 19 authored non-receipt artifacts with exact path closure."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+    },
+    {
+      "id": "repository:docs-validator-parent",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/docs/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+    },
+    {
+      "id": "repository:meta-block-gap",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/docs/meta-block/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+    },
+    {
+      "id": "repository:document-registry-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/registers/DOCUMENT_REGISTRY.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+    },
+    {
+      "id": "attachment:directory-governance-standard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "attachment:markdown-engineering-agent",
+      "validated": true,
+      "evidence_ref": "attachment:# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T22:50:56Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a bounded no-network KFM_META_BLOCK_V2 structural validator, split standard-library implementation and test modules, changed-file ratchet, deterministic report digest, review-only machine document-registry delta, synthetic fixtures, twenty-three tests, parent/lane documentation, and read-only CI. It never edits Markdown or the registry and leaves authority unresolved for human review."
+}
