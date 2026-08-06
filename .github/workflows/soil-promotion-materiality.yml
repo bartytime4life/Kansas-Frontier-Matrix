@@ -1,0 +1,100 @@
+# Validate the fixture-only soil promotion materiality adapter.
+name: soil-promotion-materiality
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-promotion-materiality.yml"
+      - "contracts/domains/soil/promotion_materiality_profile.md"
+      - "pipeline_specs/soil/promotion_materiality_profile.v1.json"
+      - "schemas/contracts/v1/domains/soil/promotion_materiality_*.schema.json"
+      - "schemas/contracts/v1/data/material_change_assessment.schema.json"
+      - "fixtures/domains/soil/promotion_materiality/**"
+      - "tools/validators/domains/soil/validate_promotion_materiality.py"
+      - "tools/validators/validate_material_change_assessment.py"
+      - "tests/validators/test_validate_soil_promotion_materiality.py"
+      - "tests/validators/test_validate_material_change_assessment.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-soil-promotion-materiality-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-promotion-materiality.yml"
+      - "contracts/domains/soil/promotion_materiality_profile.md"
+      - "pipeline_specs/soil/promotion_materiality_profile.v1.json"
+      - "schemas/contracts/v1/domains/soil/promotion_materiality_*.schema.json"
+      - "schemas/contracts/v1/data/material_change_assessment.schema.json"
+      - "fixtures/domains/soil/promotion_materiality/**"
+      - "tools/validators/domains/soil/validate_promotion_materiality.py"
+      - "tools/validators/validate_material_change_assessment.py"
+      - "tests/validators/test_validate_soil_promotion_materiality.py"
+      - "tests/validators/test_validate_material_change_assessment.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-soil-promotion-materiality-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-promotion-materiality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Revalidate shared material-change contract
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_material_change_assessment.py' --verbose
+          python tools/validators/validate_material_change_assessment.py --fixtures
+      - name: Run focused soil adapter tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_soil_promotion_materiality.py' --verbose
+          python tools/validators/domains/soil/validate_promotion_materiality.py --fixtures
+      - name: Validate expected shared assessments
+        run: |
+          set -euo pipefail
+          for assessment in fixtures/domains/soil/promotion_materiality/expected/*.json; do
+            python tools/validators/validate_material_change_assessment.py "$assessment"
+          done
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-soil-promotion-materiality-20260806.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Soil promotion materiality"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic five-dimension hash comparison, timestamp-only NON_EVENT behavior, shared MaterialChangeAssessment emission, fixture polarity, and authoring-receipt integrity."
+            echo "- Boundary: PROMOTION_CANDIDATE is not policy, review, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

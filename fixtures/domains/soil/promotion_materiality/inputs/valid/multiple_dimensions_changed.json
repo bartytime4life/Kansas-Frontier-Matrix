@@ -1,0 +1,40 @@
+{
+  "assessment_id": "material-change:soil:multiple-dimensions-changed",
+  "baseline": {
+    "content_spec_hash": "sha256:4d7459b3eb4d7c8f99bbbf2baafb44db2dfdf2843ee16e956385a7dd0718bf16",
+    "policy_hash": "sha256:72993b6cb83904d39a8c73bd0651aa6251288ede5dbc2c7bcbdc54cc5bbf5d77",
+    "retrieved_at": "2026-08-01T00:00:00Z",
+    "schema_hash": "sha256:3d54d3b6376b8f6a85ca302411a588a9632b21fbb1e8898c8c3fb2481eeec7a8",
+    "source_descriptor_hash": "sha256:88850a88f6a356b5eb4e4be1fa2ccc95de2733368c80d5756c24b2853280cdd8",
+    "validator_hash": "sha256:a101a6cf3976e550e9f0f8d3caf406d65b4ce19419a16a7d5366d4c53cd479fc"
+  },
+  "baseline_ref": "kfm://soil/fixture/baseline",
+  "candidate": {
+    "content_spec_hash": "sha256:4d7459b3eb4d7c8f99bbbf2baafb44db2dfdf2843ee16e956385a7dd0718bf16",
+    "policy_hash": "sha256:05d35c3cff576032c2ec020b80090de59407c157e924b1e1140f9d29a4833113",
+    "retrieved_at": "2026-08-02T12:00:00Z",
+    "schema_hash": "sha256:2c1409303017ea93bc0f3b6c7bcf642f5a714f978a2b611d469933033bcf26ac",
+    "source_descriptor_hash": "sha256:ebc0a9b053c0d14e11d89425b47b27f7d1ed71f81b1fad76bdfd408f98464b27",
+    "validator_hash": "sha256:a101a6cf3976e550e9f0f8d3caf406d65b4ce19419a16a7d5366d4c53cd479fc"
+  },
+  "candidate_ref": "kfm://soil/fixture/multiple-dimensions-changed",
+  "evidence": {
+    "criterion_evidence_refs": [
+      "kfm://validation/soil/multiple-dimensions-changed/diff"
+    ],
+    "diff_report_ref": "kfm://validation/soil/multiple-dimensions-changed/diff",
+    "source_refs": [
+      "kfm://source/nrcs-ssurgo"
+    ],
+    "validation_report_refs": [
+      "kfm://validation/soil/multiple-dimensions-changed/integrity"
+    ]
+  },
+  "evidence_complete": true,
+  "subject_ref": "kfm://soil/fixture/kansas-static-survey",
+  "timing": {
+    "assessed_at": "2026-08-03T00:00:00Z",
+    "baseline_as_of": "2026-08-01T00:00:00Z",
+    "candidate_as_of": "2026-08-02T00:00:00Z"
+  }
+}

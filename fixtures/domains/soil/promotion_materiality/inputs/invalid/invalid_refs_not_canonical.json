@@ -1,0 +1,41 @@
+{
+  "assessment_id": "material-change:soil:invalid-refs",
+  "baseline": {
+    "content_spec_hash": "sha256:4d7459b3eb4d7c8f99bbbf2baafb44db2dfdf2843ee16e956385a7dd0718bf16",
+    "policy_hash": "sha256:72993b6cb83904d39a8c73bd0651aa6251288ede5dbc2c7bcbdc54cc5bbf5d77",
+    "retrieved_at": "2026-08-01T00:00:00Z",
+    "schema_hash": "sha256:3d54d3b6376b8f6a85ca302411a588a9632b21fbb1e8898c8c3fb2481eeec7a8",
+    "source_descriptor_hash": "sha256:88850a88f6a356b5eb4e4be1fa2ccc95de2733368c80d5756c24b2853280cdd8",
+    "validator_hash": "sha256:a101a6cf3976e550e9f0f8d3caf406d65b4ce19419a16a7d5366d4c53cd479fc"
+  },
+  "baseline_ref": "kfm://soil/fixture/baseline",
+  "candidate": {
+    "content_spec_hash": "sha256:4d7459b3eb4d7c8f99bbbf2baafb44db2dfdf2843ee16e956385a7dd0718bf16",
+    "policy_hash": "sha256:72993b6cb83904d39a8c73bd0651aa6251288ede5dbc2c7bcbdc54cc5bbf5d77",
+    "retrieved_at": "2026-08-01T00:00:00Z",
+    "schema_hash": "sha256:3d54d3b6376b8f6a85ca302411a588a9632b21fbb1e8898c8c3fb2481eeec7a8",
+    "source_descriptor_hash": "sha256:88850a88f6a356b5eb4e4be1fa2ccc95de2733368c80d5756c24b2853280cdd8",
+    "validator_hash": "sha256:a101a6cf3976e550e9f0f8d3caf406d65b4ce19419a16a7d5366d4c53cd479fc"
+  },
+  "candidate_ref": "kfm://soil/fixture/invalid-refs",
+  "evidence": {
+    "criterion_evidence_refs": [
+      "kfm://validation/soil/invalid-refs/diff"
+    ],
+    "diff_report_ref": "kfm://validation/soil/invalid-refs/diff",
+    "source_refs": [
+      "kfm://source/z",
+      "kfm://source/a"
+    ],
+    "validation_report_refs": [
+      "kfm://validation/soil/invalid-refs/integrity"
+    ]
+  },
+  "evidence_complete": true,
+  "subject_ref": "kfm://soil/fixture/kansas-static-survey",
+  "timing": {
+    "assessed_at": "2026-08-03T00:00:00Z",
+    "baseline_as_of": "2026-08-01T00:00:00Z",
+    "candidate_as_of": "2026-08-02T00:00:00Z"
+  }
+}
