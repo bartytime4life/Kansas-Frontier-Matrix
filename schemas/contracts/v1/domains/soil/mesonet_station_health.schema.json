@@ -21,17 +21,37 @@
     "governance"
   ],
   "properties": {
-    "object_type": {"const": "MesonetStationHealthAssessment"},
-    "schema_version": {"const": "1.0.0"},
-    "assessment_id": {"type": "string", "minLength": 8, "maxLength": 160},
-    "evaluated_at": {"type": "string", "format": "date-time"},
-    "source_descriptor_ref": {"type": "string", "minLength": 1},
-    "run_receipt_ref": {"type": "string", "minLength": 1},
+    "object_type": {
+      "const": "MesonetStationHealthAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 160
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
     "evidence_refs": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "thresholds": {
       "type": "object",
@@ -46,13 +66,36 @@
         "relative_jump_fraction_threshold"
       ],
       "properties": {
-        "expected_interval_minutes": {"type": "number", "exclusiveMinimum": 0},
-        "degraded_after_multiplier": {"type": "number", "minimum": 1},
-        "minimum_coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1},
-        "maximum_degraded_fraction": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
-        "max_untriaged_anomalies": {"type": "integer", "minimum": 0},
-        "z_score_abs_threshold": {"type": "number", "exclusiveMinimum": 0},
-        "relative_jump_fraction_threshold": {"type": "number", "minimum": 0}
+        "expected_interval_minutes": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "degraded_after_multiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "minimum_coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "maximum_degraded_fraction": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "max_untriaged_anomalies": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "z_score_abs_threshold": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "relative_jump_fraction_threshold": {
+          "type": "number",
+          "minimum": 0
+        }
       }
     },
     "summary": {
@@ -68,13 +111,36 @@
         "degraded_fraction"
       ],
       "properties": {
-        "total_stations": {"type": "integer", "minimum": 1},
-        "fresh_stations": {"type": "integer", "minimum": 0},
-        "degraded_stations": {"type": "integer", "minimum": 0},
-        "anomalous_stations": {"type": "integer", "minimum": 0},
-        "untriaged_anomalies": {"type": "integer", "minimum": 0},
-        "coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1},
-        "degraded_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+        "total_stations": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fresh_stations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "degraded_stations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "anomalous_stations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "untriaged_anomalies": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "degraded_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
       }
     },
     "stations": {
@@ -93,27 +159,57 @@
           "reason_codes"
         ],
         "properties": {
-          "station_id": {"type": "string", "minLength": 1},
+          "station_id": {
+            "type": "string",
+            "minLength": 1
+          },
           "spatial_support": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["kind", "county_fips"],
+            "required": [
+              "kind",
+              "county_fips"
+            ],
             "properties": {
-              "kind": {"const": "generalized_county"},
-              "county_fips": {"type": "string", "pattern": "^[0-9]{5}$"}
+              "kind": {
+                "const": "generalized_county"
+              },
+              "county_fips": {
+                "type": "string",
+                "pattern": "^[0-9]{5}$"
+              }
             }
           },
           "station_state": {
-            "enum": ["HEALTHY", "DEGRADED", "ANOMALOUS_TRIAGED", "ANOMALOUS_UNTRIAGED"]
+            "enum": [
+              "HEALTHY",
+              "DEGRADED",
+              "ANOMALOUS_TRIAGED",
+              "ANOMALOUS_UNTRIAGED"
+            ]
           },
-          "age_minutes": {"type": "number", "minimum": 0},
-          "anomaly_count": {"type": "integer", "minimum": 0},
-          "untriaged_anomaly_count": {"type": "integer", "minimum": 0},
+          "age_minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "anomaly_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "untriaged_anomaly_count": {
+            "type": "integer",
+            "minimum": 0
+          },
           "reason_codes": {
             "type": "array",
             "uniqueItems": true,
             "items": {
-              "enum": ["STALE_REPORT", "Z_SCORE_OUTLIER", "RELATIVE_JUMP", "UNTRIAGED_ANOMALY"]
+              "enum": [
+                "STALE_REPORT",
+                "Z_SCORE_OUTLIER",
+                "RELATIVE_JUMP",
+                "UNTRIAGED_ANOMALY"
+              ]
             }
           }
         }
@@ -122,14 +218,26 @@
     "decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["outcome", "reason_codes"],
+      "required": [
+        "outcome",
+        "reason_codes"
+      ],
       "properties": {
-        "outcome": {"enum": ["HEALTHY_FIXTURE", "HOLD"]},
+        "outcome": {
+          "enum": [
+            "HEALTHY_FIXTURE",
+            "HOLD"
+          ]
+        },
         "reason_codes": {
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "enum": ["COVERAGE_BELOW_MINIMUM", "ROSTER_DEGRADED_THRESHOLD", "UNTRIAGED_ANOMALIES_PRESENT"]
+            "enum": [
+              "COVERAGE_BELOW_MINIMUM",
+              "ROSTER_DEGRADED_THRESHOLD",
+              "UNTRIAGED_ANOMALIES_PRESENT"
+            ]
           }
         }
       }
@@ -137,21 +245,41 @@
     "rights": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["rights_state", "operator_consent_state"],
+      "required": [
+        "rights_state",
+        "operator_consent_state"
+      ],
       "properties": {
-        "rights_state": {"const": "fixture_only"},
-        "operator_consent_state": {"const": "fixture_only"}
+        "rights_state": {
+          "const": "fixture_only"
+        },
+        "operator_consent_state": {
+          "const": "fixture_only"
+        }
       }
     },
     "governance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["promotion_eligible", "public_use_allowed", "release_state", "review_state"],
+      "required": [
+        "promotion_eligible",
+        "public_use_allowed",
+        "release_state",
+        "review_state"
+      ],
       "properties": {
-        "promotion_eligible": {"const": false},
-        "public_use_allowed": {"const": false},
-        "release_state": {"const": "not_released"},
-        "review_state": {"const": "fixture_only"}
+        "promotion_eligible": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "review_state": {
+          "const": "fixture_only"
+        }
       }
     }
   }
