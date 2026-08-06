@@ -9,7 +9,7 @@ from pathlib import Path
 import sys
 
 
-REPO_ROOT = Path(__file__).resolve().parents[6]
+REPO_ROOT = Path(__file__).resolve().parents[5]
 MODULE_PATH = REPO_ROOT / (
     "pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py"
 )
@@ -70,6 +70,18 @@ def test_station_health_unknown_holds_without_emitting_candidate() -> None:
     assert result.reason_code == "MESONET_STATION_HEALTH_UNRESOLVED"
     assert result.candidate is None
     assert MODULE.Finding("STATION_HEALTH_HOLD", "/station/station_health") in result.findings
+
+
+def test_deny_precedence_over_station_health_hold() -> None:
+    candidate = _fixture()
+    candidate["station"]["station_health"] = "UNKNOWN"
+    candidate["support_type"] = "satellite_soil_moisture_grid"
+
+    result = normalize_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.reason_code == "MESONET_FIXTURE_NORMALIZATION_DENIED"
+    assert result.candidate is None
 
 
 def test_cadence_collapse_without_receipt_is_denied() -> None:

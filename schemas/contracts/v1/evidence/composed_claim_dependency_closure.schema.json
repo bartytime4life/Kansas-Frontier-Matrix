@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/composed_claim_dependency_closure.schema.json",
+  "title": "ComposedClaimDependencyClosureCandidate",
+  "description": "Fixture-only dependency graph and deterministic closure result for one composed claim. The profile evaluates synthetic dependency states and creates no evidence, policy, review, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "closure_id",
+    "revision",
+    "previous_closure_ref",
+    "claim",
+    "dependencies",
+    "alternative_groups",
+    "exclusion_groups",
+    "dependency_graph_hash",
+    "closure_summary",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "kfm.composed-claim-dependency-closure.v1"
+    },
+    "closure_id": {
+      "type": "string",
+      "pattern": "^kfm://candidate/evidence/composed-claim/[0-9a-f]{64}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000
+    },
+    "previous_closure_ref": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^kfm://candidate/evidence/composed-claim/[0-9a-f]{64}/revision/[1-9][0-9]*$"
+        }
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_key",
+        "statement",
+        "scope"
+      ],
+      "properties": {
+        "claim_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{2,127}$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "spatial_scope_ref",
+            "valid_time"
+          ],
+          "properties": {
+            "spatial_scope_ref": {
+              "type": "string",
+              "pattern": "^kfm://scope/[a-z0-9][a-z0-9/_:.@-]{2,255}$"
+            },
+            "valid_time": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "start",
+                "end"
+              ],
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role_id",
+          "requirement",
+          "evidence_ref",
+          "expected_spec_hash",
+          "resolution"
+        ],
+        "properties": {
+          "role_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "requirement": {
+            "type": "string",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL",
+              "ALTERNATIVE"
+            ]
+          },
+          "evidence_ref": {
+            "type": "string",
+            "pattern": "^kfm://evidence-ref/[a-z0-9][a-z0-9/_:.@-]{2,255}$"
+          },
+          "expected_spec_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "resolution": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "bundle_id",
+              "actual_spec_hash",
+              "promotion_receipt_ref",
+              "reason_code",
+              "evaluated_at"
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "enum": [
+                  "RESOLVED",
+                  "UNRESOLVED",
+                  "DENIED",
+                  "ERROR"
+                ]
+              },
+              "bundle_id": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^kfm://evidence-bundle/[a-z0-9][a-z0-9/_:.@-]{2,255}$"
+                  }
+                ]
+              },
+              "actual_spec_hash": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  }
+                ]
+              },
+              "promotion_receipt_ref": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^kfm://promotion/[a-z0-9][a-z0-9/_:.@-]{2,255}$"
+                  }
+                ]
+              },
+              "reason_code": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+                  }
+                ]
+              },
+              "evaluated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "RESOLVED"
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "bundle_id": {
+                      "type": "string"
+                    },
+                    "actual_spec_hash": {
+                      "type": "string"
+                    },
+                    "promotion_receipt_ref": {
+                      "type": "string"
+                    },
+                    "reason_code": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "bundle_id": {
+                      "type": "null"
+                    },
+                    "actual_spec_hash": {
+                      "type": "null"
+                    },
+                    "promotion_receipt_ref": {
+                      "type": "null"
+                    },
+                    "reason_code": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "alternative_groups": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "group_id",
+          "role_ids",
+          "minimum_resolved",
+          "maximum_resolved"
+        ],
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "role_ids": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 16,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "uniqueItems": true
+          },
+          "minimum_resolved": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          },
+          "maximum_resolved": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          }
+        }
+      }
+    },
+    "exclusion_groups": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "group_id",
+          "role_ids",
+          "maximum_resolved"
+        ],
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "role_ids": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 16,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]{1,63}$"
+            },
+            "uniqueItems": true
+          },
+          "maximum_resolved": {
+            "const": 1
+          }
+        }
+      }
+    },
+    "dependency_graph_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "closure_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "render_allowed",
+        "reason_codes",
+        "resolved_roles",
+        "unresolved_roles",
+        "denied_roles",
+        "error_roles"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "SUPPORTED",
+            "QUALIFIED",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "render_allowed": {
+          "type": "boolean"
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+          },
+          "uniqueItems": true
+        },
+        "resolved_roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "uniqueItems": true
+        },
+        "unresolved_roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "uniqueItems": true
+        },
+        "denied_roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "uniqueItems": true
+        },
+        "error_roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "fail_closed",
+        "live_evidence_resolution_performed",
+        "policy_decision_authority",
+        "review_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "fail_closed": {
+          "const": true
+        },
+        "live_evidence_resolution_performed": {
+          "const": false
+        },
+        "policy_decision_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "invalid_fail_closed.json": [
+    "COMPOSED_CLAIM_SCHEMA_INVALID"
+  ],
+  "invalid_publication_authority.json": [
+    "COMPOSED_CLAIM_SCHEMA_INVALID"
+  ],
+  "invalid_unknown_outcome.json": [
+    "COMPOSED_CLAIM_SCHEMA_INVALID"
+  ]
+}

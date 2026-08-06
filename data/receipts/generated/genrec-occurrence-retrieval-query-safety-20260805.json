@@ -1,0 +1,116 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/occurrence-retrieval-query-safety.yml": "sha256:343fa72ea154c38a0033b80220c6ec82b89e1801ab98cf7368e323d85df69223",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/README.md": "sha256:e8ce9d0458fda341f19ea432ff69985a8b8a78186d263cf33452269601eb6494",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/expected_findings_manifest.json": "sha256:e811c12c13ee8c3cdd9712cf25ae056c5e8065ff962d41a52ba8d2d01355cf99",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_email_value.json": "sha256:ed7b39aa24a2d5dbbd48e47d08b30ecdff585fec3ea850e233d77f325fa37bf7",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_secret_value.json": "sha256:8484a76b4b9850a66394798cb855b4603c1de123e90bc19080f916bb40b85310",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/valid/valid_no_sensitive_query_values.json": "sha256:51105bd24fe317b39802fd34bab6c618a654fe383eb94c4ffab86b4f0b30353a",
+    "tests/validators/test_validate_occurrence_retrieval_query_safety.py": "sha256:ab9f9cafcb0f66e901155c92c3647a0057bb5abbd6975b099dadf9a21a1a8868",
+    "tools/validators/validate_occurrence_retrieval_query_safety.py": "sha256:3f1e587abf1ca7eac46d8b0252543357d57f197ed4541c9b81cb5fb5ce8ee4fe"
+  },
+  "artifact_paths": [
+    ".github/workflows/occurrence-retrieval-query-safety.yml",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/README.md",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_email_value.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_secret_value.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/valid/valid_no_sensitive_query_values.json",
+    "tests/validators/test_validate_occurrence_retrieval_query_safety.py",
+    "tools/validators/validate_occurrence_retrieval_query_safety.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:New Ideas 4-30-26.pdf#ebird-and-gbif-retrieval-query-sampling-transfer",
+      "id": "attachment:biodiversity-retrieval-query-sampling-transfer",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:de447ad99cc1116db41d00d8e9fcf230c4485b07",
+      "id": "repository:canonical-occurrence-retrieval-profile",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-05T23:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-30-26.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:3d7585dd43009c14fa7ae9cec864bb0ecc84340d6fa920b67bc53cd1e7adda0b"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-30-26.pdf#ebird-and-gbif-retrieval-query-sampling-transfer",
+      "github:de447ad99cc1116db41d00d8e9fcf230c4485b07",
+      "github:pull/2005",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 2007
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-05"
+  },
+  "notes": "Additive companion validation for the canonical OccurrenceRetrievalSnapshotCandidate. It denies bounded email-address and secret-marker patterns in synthetic query predicate fields and values. It creates no second source object family and grants no source, credential, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:26335d3fe50ef38285d0f8aa50326035ee449f9c4b0a8e6d2d8330a3f9e9f551",
+  "receipt_id": "genrec-occurrence-retrieval-query-safety-20260805",
+  "truth_labels": {
+    ".github/workflows/occurrence-retrieval-query-safety.yml": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_email_value.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/semantic_invalid/semantic_invalid_secret_value.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/query_safety/valid/valid_no_sensitive_query_values.json": "PROPOSED",
+    "tests/validators/test_validate_occurrence_retrieval_query_safety.py": "PROPOSED",
+    "tools/validators/validate_occurrence_retrieval_query_safety.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-query-safety-profile",
+      "outcome": "PASS",
+      "reason": "Nine focused tests passed; one valid fixture passed and two exact semantic-negative fixtures were denied without echoing sensitive values."
+    },
+    {
+      "gate": "canonical-profile-composition",
+      "outcome": "SKIPPED",
+      "reason": "The hosted workflow will rerun the canonical occurrence-retrieval tests and fixture suite on the exact PR head."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions have not completed at receipt emission."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+# Validate the inactive, fixture-only watcher gate packet profile.
+name: watcher-gate-packet
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/watcher-gate-packet.yml"
+      - "contracts/watchers/watcher_gate_packet.md"
+      - "schemas/contracts/v1/watchers/watcher_gate_*.schema.json"
+      - "pipeline_specs/watchers/watcher_gate_profile.v1.json"
+      - "fixtures/contracts/v1/watchers/watcher_gate_packet/**"
+      - "tools/validators/watchers/validate_watcher_gate_packet.py"
+      - "tests/validators/watchers/test_validate_watcher_gate_packet.py"
+      - "data/receipts/generated/genrec-watcher-gate-packet-20260805.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/watcher-gate-packet.yml"
+      - "contracts/watchers/watcher_gate_packet.md"
+      - "schemas/contracts/v1/watchers/watcher_gate_*.schema.json"
+      - "pipeline_specs/watchers/watcher_gate_profile.v1.json"
+      - "fixtures/contracts/v1/watchers/watcher_gate_packet/**"
+      - "tools/validators/watchers/validate_watcher_gate_packet.py"
+      - "tests/validators/watchers/test_validate_watcher_gate_packet.py"
+      - "data/receipts/generated/genrec-watcher-gate-packet-20260805.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: watcher-gate-packet-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: watcher-gate-packet
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out bounded fixture profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused semantic tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/validators/watchers/test_validate_watcher_gate_packet.py
+
+      - name: Replay exact fixture polarity
+        run: >-
+          python tools/validators/watchers/validate_watcher_gate_packet.py
+          --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-watcher-gate-packet-20260805.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Watcher gate packet status
+
+          This job validates synthetic prefilter facts, scores, routing decisions,
+          exit codes, and stewardship obligations under an inactive local profile.
+
+          A green result does not activate a source, execute adopted policy, create
+          evidence, promote a candidate, notify a steward, release an artifact, or
+          publish anything.
+          EOF

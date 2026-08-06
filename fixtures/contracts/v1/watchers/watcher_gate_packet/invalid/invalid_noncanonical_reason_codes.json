@@ -1,0 +1,46 @@
+{
+  "object_type": "WatcherGatePacket",
+  "schema_version": "1.0.0",
+  "packet_id": "watcher-gate:synthetic-deny-20260805",
+  "watcher_id": "kfm://watcher/synthetic/default",
+  "spec_hash": "sha256:13fbcb455b72c8329c362274a4bf2fdcf19222fce86151653acd578d720b97f6",
+  "profile": {
+    "profile_id": "kfm://watcher-gate-profile/default-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:5425aabbc7fefa74e9535785f80aaf2a378bdefb50bfc11957fc3ae7984b2cf6"
+  },
+  "prefilter": {
+    "items_found": 0,
+    "asset_missing_count": 1,
+    "missing_etag": false,
+    "median_cloud_percent": 51.0
+  },
+  "artifacts": {
+    "prefilter_report_ref": "fixture://watcher-gate/prefilter-report",
+    "feature_vector_ref": "fixture://watcher-gate/feature-vector",
+    "scorecard_ref": "fixture://watcher-gate/scorecard",
+    "policy_report_ref": "fixture://watcher-gate/policy-report",
+    "run_receipt_ref": "fixture://watcher-gate/run-receipt"
+  },
+  "score": 42,
+  "decision": "DENY",
+  "process_exit_code": 2,
+  "reason_codes": [
+    "SCORE_BELOW_DENY",
+    "NO_ITEMS",
+    "MEDIAN_CLOUD_TOO_HIGH",
+    "ASSET_MISSING"
+  ],
+  "obligations": [
+    "BLOCK_PROMOTION",
+    "ROUTE_STEWARD_REVIEW"
+  ],
+  "assessed_at": "2026-08-05T22:00:00Z",
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "object_type": "SoilSupportTypeCandidate",
+  "schema_version": "1.0.0",
+  "candidate_id": "soil-support-candidate:invalid-station-as-grid",
+  "profile_id": "soil-support-type-profile",
+  "profile_version": "1.0.0",
+  "profile_spec_hash": "sha256:57924662c8952aafcc6c5ef007aff78b59357fd1ec7418d5c013fdf848c5bd23",
+  "content_spec_hash": "sha256:cae662172fd450bb0cd710a769079c05bfc5d8e35efa6576edc7d0377afdd4a2",
+  "support_type": "station_soil_moisture",
+  "source_family": "kansas_mesonet",
+  "source_role": "direct_observation_measurement",
+  "spatial_support": "station_point",
+  "claim_kind": "satellite_grid_condition",
+  "source_refs": ["source:kansas-mesonet"],
+  "evidence_refs": ["evidence:synthetic-station-reading"],
+  "policy_state": "not_evaluated",
+  "release_state": "not_released",
+  "public_use_requested": false,
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "release_ref": null
+  }
+}

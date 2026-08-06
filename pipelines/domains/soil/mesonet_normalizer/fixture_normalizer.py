@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Normalize one synthetic Kansas Mesonet soil fixture without source access.
 
-This module is a fixture-only pipeline boundary. It preserves station identity,
-depth, native cadence, station health, source timezone, rights posture, quality
-flags, generalized spatial support, and caller-supplied provenance. It performs
-no network access, lifecycle writes, evidence resolution, policy evaluation,
+This fixture-only boundary preserves station identity, observation depth, native
+cadence, station health, source timezone, quality flags, rights/consent posture,
+generalized spatial support, and caller-supplied provenance. It performs no
+network access, lifecycle writes, evidence resolution, policy evaluation,
 promotion, release, publication, alerting, or agronomic interpretation.
 """
 
@@ -14,24 +14,28 @@ import copy
 import math
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Mapping
+from typing import Any
 
 OUTCOMES = frozenset({"NORMALIZED_FIXTURE", "HOLD", "DENY", "ERROR"})
 PRECISE_LOCATION_FIELDS = frozenset(
     {
-        "lat",
-        "latitude",
-        "lon",
-        "lng",
-        "longitude",
-        "x",
-        "y",
         "bbox",
         "centroid",
         "easting",
+        "lat",
+        "latitude",
+        "lng",
+        "lon",
+        "longitude",
         "northing",
+        "x",
+        "y",
     }
 )
+ERROR_CODES = frozenset(
+    {"CANDIDATE_NOT_OBJECT", "OBSERVATION_INVALID", "RIGHTS_INVALID", "STATION_INVALID"}
+)
+HOLD_CODES = frozenset({"STATION_HEALTH_HOLD"})
 
 
 @dataclass(frozen=True, order=True)
@@ -75,10 +79,11 @@ def _canonical_utc(value: object) -> bool:
         parsed = datetime.fromisoformat(value[:-1] + "+00:00")
     except ValueError:
         return False
-    return parsed.tzinfo is not None and parsed.utcoffset().total_seconds() == 0
+    offset = parsed.utcoffset()
+    return parsed.tzinfo is not None and offset is not None and offset.total_seconds() == 0
 
 
-def _sorted_unique_strings(value: object, *, nonempty: bool = False) -> bool:
+def _canonical_strings(value: object, *, nonempty: bool = False) -> bool:
     return (
         isinstance(value, list)
         and (bool(value) or not nonempty)
@@ -91,13 +96,20 @@ def _add(findings: set[Finding], code: str, path: str) -> None:
     findings.add(Finding(code=code, path=path))
 
 
+def _unknown_fields(candidate: dict[object, object], allowed: set[str]) -> list[object]:
+    return sorted(
+        (field for field in candidate if field not in allowed),
+        key=lambda field: (type(field).__name__, repr(field)),
+    )
+
+
 def _validate_station(findings: set[Finding], station: object) -> None:
-    if not isinstance(station, Mapping):
+    if not isinstance(station, dict):
         _add(findings, "STATION_INVALID", "/station")
         return
 
     allowed = {"station_id", "station_health", "spatial_support"}
-    for field in sorted(set(station) - allowed):
+    for field in _unknown_fields(station, allowed):
         _add(findings, "STATION_FIELD_UNKNOWN", f"/station/{field}")
 
     if not _nonempty_string(station.get("station_id")):
@@ -106,18 +118,22 @@ def _validate_station(findings: set[Finding], station: object) -> None:
         _add(findings, "STATION_HEALTH_HOLD", "/station/station_health")
 
     support = station.get("spatial_support")
-    if not isinstance(support, Mapping):
+    if not isinstance(support, dict):
         _add(findings, "SPATIAL_SUPPORT_INVALID", "/station/spatial_support")
         return
-    for field in sorted(set(support)):
+    for field in support:
         if isinstance(field, str) and field.casefold() in PRECISE_LOCATION_FIELDS:
             _add(
                 findings,
                 "PRECISE_LOCATION_FIELD_FORBIDDEN",
                 f"/station/spatial_support/{field}",
             )
-    if set(support) - {"kind", "county_fips"}:
-        _add(findings, "SPATIAL_SUPPORT_FIELD_UNKNOWN", "/station/spatial_support")
+    for field in _unknown_fields(support, {"kind", "county_fips"}):
+        _add(
+            findings,
+            "SPATIAL_SUPPORT_FIELD_UNKNOWN",
+            f"/station/spatial_support/{field}",
+        )
     if support.get("kind") != "generalized_county":
         _add(findings, "SPATIAL_SUPPORT_NOT_PUBLIC_SAFE", "/station/spatial_support/kind")
     county_fips = support.get("county_fips")
@@ -130,7 +146,7 @@ def _validate_station(findings: set[Finding], station: object) -> None:
 
 
 def _validate_observation(findings: set[Finding], observation: object) -> None:
-    if not isinstance(observation, Mapping):
+    if not isinstance(observation, dict):
         _add(findings, "OBSERVATION_INVALID", "/observation")
         return
 
@@ -146,7 +162,7 @@ def _validate_observation(findings: set[Finding], observation: object) -> None:
         "unit",
         "value",
     }
-    for field in sorted(set(observation) - allowed):
+    for field in _unknown_fields(observation, allowed):
         _add(findings, "OBSERVATION_FIELD_UNKNOWN", f"/observation/{field}")
 
     if observation.get("measure") != "volumetric_water_content":
@@ -164,7 +180,7 @@ def _validate_observation(findings: set[Finding], observation: object) -> None:
         _add(findings, "OBSERVATION_TIME_NOT_UTC", "/observation/observed_at")
     if not _nonempty_string(observation.get("source_timezone")):
         _add(findings, "SOURCE_TIMEZONE_MISSING", "/observation/source_timezone")
-    if not _sorted_unique_strings(observation.get("qc_flags"), nonempty=True):
+    if not _canonical_strings(observation.get("qc_flags"), nonempty=True):
         _add(findings, "QC_FLAGS_NOT_CANONICAL", "/observation/qc_flags")
 
     native = observation.get("native_cadence_minutes")
@@ -189,7 +205,7 @@ def _validate_observation(findings: set[Finding], observation: object) -> None:
 
 
 def _validate_rights(findings: set[Finding], rights: object) -> None:
-    if not isinstance(rights, Mapping):
+    if not isinstance(rights, dict):
         _add(findings, "RIGHTS_INVALID", "/rights")
         return
     if set(rights) != {"operator_consent_state", "rights_state"}:
@@ -211,7 +227,7 @@ def _validate_governance(findings: set[Finding], governance: object) -> None:
         "release_state": "not_released",
         "review_state": "fixture_only",
     }
-    if not isinstance(governance, Mapping):
+    if not isinstance(governance, dict):
         _add(findings, "GOVERNANCE_INVALID", "/governance")
         return
     if set(governance) != set(expected):
@@ -225,14 +241,9 @@ def _classify(findings: tuple[Finding, ...]) -> tuple[str, str]:
     if not findings:
         return "NORMALIZED_FIXTURE", "MESONET_FIXTURE_NORMALIZED"
     codes = {finding.code for finding in findings}
-    if codes & {
-        "CANDIDATE_NOT_OBJECT",
-        "OBSERVATION_INVALID",
-        "RIGHTS_INVALID",
-        "STATION_INVALID",
-    }:
+    if codes & ERROR_CODES:
         return "ERROR", "MESONET_FIXTURE_INPUT_ERROR"
-    if codes & {"STATION_HEALTH_HOLD"}:
+    if codes <= HOLD_CODES:
         return "HOLD", "MESONET_STATION_HEALTH_UNRESOLVED"
     return "DENY", "MESONET_FIXTURE_NORMALIZATION_DENIED"
 
@@ -240,7 +251,7 @@ def _classify(findings: tuple[Finding, ...]) -> tuple[str, str]:
 def normalize_fixture(candidate: object) -> NormalizationResult:
     """Return a deterministic, non-authoritative normalization result."""
 
-    if not isinstance(candidate, Mapping):
+    if not isinstance(candidate, dict):
         findings = (Finding("CANDIDATE_NOT_OBJECT", "/"),)
         return NormalizationResult(
             outcome="ERROR",
@@ -264,7 +275,7 @@ def normalize_fixture(candidate: object) -> NormalizationResult:
         "station",
         "support_type",
     }
-    for field in sorted(set(candidate) - allowed):
+    for field in _unknown_fields(candidate, allowed):
         _add(findings, "TOP_LEVEL_FIELD_UNKNOWN", f"/{field}")
     if candidate.get("object_type") != "SyntheticMesonetSoilObservation":
         _add(findings, "OBJECT_TYPE_INVALID", "/object_type")
@@ -280,7 +291,7 @@ def normalize_fixture(candidate: object) -> NormalizationResult:
         _add(findings, "SOURCE_DESCRIPTOR_REF_MISSING", "/source_descriptor_ref")
     if not _nonempty_string(candidate.get("run_receipt_ref")):
         _add(findings, "RUN_RECEIPT_REF_MISSING", "/run_receipt_ref")
-    if not _sorted_unique_strings(candidate.get("evidence_refs"), nonempty=True):
+    if not _canonical_strings(candidate.get("evidence_refs"), nonempty=True):
         _add(findings, "EVIDENCE_REFS_NOT_CANONICAL", "/evidence_refs")
 
     _validate_station(findings, candidate.get("station"))
@@ -292,7 +303,7 @@ def normalize_fixture(candidate: object) -> NormalizationResult:
     outcome, reason_code = _classify(ordered)
     normalized = None
     if not ordered:
-        normalized = copy.deepcopy(dict(candidate))
+        normalized = copy.deepcopy(candidate)
         normalized["normalization_state"] = "fixture_only_normalized"
     return NormalizationResult(
         outcome=outcome,
