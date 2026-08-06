@@ -18,7 +18,6 @@ FAIL, WARN, INFO = "FAIL", "WARN", "INFO"
 SEVERITY_ORDER = {FAIL: 0, WARN: 1, INFO: 2}
 RELATION_KEYS = ("related", "supersedes", "superseded_by")
 
-
 class DocumentGraphError(RuntimeError):
     """A bounded graph operation could not complete safely."""
 
@@ -255,3 +254,4 @@ def _group(path: str) -> str:
     if len(parts) >= 3 and parts[:3] == ("tools", "validators", "docs"):
         return "/".join(parts[:4]) if len(parts) >= 4 else "/".join(parts)
     return parts[0] if parts else "."
+
