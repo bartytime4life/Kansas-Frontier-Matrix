@@ -21,6 +21,7 @@ from tools.validators.governance.validate_implementation_review_packet import (
     MAX_DECISIONS,
     evaluate_bound_documents,
     evaluate_paths,
+    load_fixture_cases,
     payload,
     render_markdown,
     run_fixture_suite,
@@ -34,8 +35,7 @@ from tools.validators.governance.validate_implementation_decision_record import 
 
 
 def _cases() -> dict[str, dict[str, object]]:
-    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-    return {case["name"]: case for case in manifest["cases"]}
+    return {case["name"]: case for case in load_fixture_cases()}
 
 
 def _write_packet(
