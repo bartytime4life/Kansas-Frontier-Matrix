@@ -1,3 +1,23 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/intake/georeference-control-point-set-source-map
+title: Georeference control-point-set identity — source map
+type: intake/exploratory
+version: v1
+status: draft
+owners: map-steward, docs-steward
+created: 2026-08-06
+updated: 2026-08-06
+policy_label: public
+owning_root: docs/
+responsibility: Exploratory source-to-repository adaptation record for canonical georeference control-point-set identity.
+truth_posture: Proposed implementation source map; does not create source, GCP, evidence, policy, review, release, or publication authority.
+related:
+  - docs/intake/exploratory/georeference-transform-quality-source-map.md
+  - contracts/map/georeference_control_point_set.md
+tags: [georeference, gcp, identity, intake, exploratory]
+notes: Fixture-only source map for deterministic control-point-set identity.
+[/KFM_META_BLOCK_V2] -->
+
 # Georeference control-point-set identity — source map
 
 ## Mined need
