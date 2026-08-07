@@ -1,0 +1,145 @@
+{
+  "base_candidate": {
+    "assessed_at": "2026-08-07T03:12:00Z",
+    "computed": {
+      "centroid_offset_ratio": 0.0,
+      "hull_area_ratio": 0.7875,
+      "hull_vertex_count": 4,
+      "max_extrapolation_ratio": 0.055216,
+      "occupied_quadrants": 4
+    },
+    "decision": {
+      "outcome": "READY",
+      "reasons": [
+        "GCP_SPATIAL_DISTRIBUTION_READY"
+      ]
+    },
+    "fixture_only": true,
+    "gcp_count": 5,
+    "gcps": [
+      {"id": "gcp-01", "resource": [50, 50]},
+      {"id": "gcp-02", "resource": [950, 50]},
+      {"id": "gcp-03", "resource": [950, 750]},
+      {"id": "gcp-04", "resource": [50, 750]},
+      {"id": "gcp-05", "resource": [500, 400]}
+    ],
+    "governance": {
+      "authority_created": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false,
+      "release_authorized": false,
+      "release_ref": null
+    },
+    "network_access": "forbidden",
+    "object_type": "GeoreferenceSpatialDistributionAssessment",
+    "profile": "kfm.georeference.spatial-distribution.v1",
+    "schema_version": "1.0.0",
+    "support": {
+      "resource_height_px": 800,
+      "resource_mask": [[0, 0], [1000, 0], [1000, 800], [0, 800], [0, 0]],
+      "resource_width_px": 1000
+    },
+    "thresholds": {
+      "max_centroid_offset_ratio": 0.15,
+      "max_extrapolation_ratio": 0.2,
+      "min_hull_area_ratio": 0.35,
+      "minimum_gcps": 4,
+      "minimum_occupied_quadrants": 4
+    },
+    "transform_quality_ref": "kfm:map:georeference-transform-quality:synthetic-001"
+  },
+  "cases": [
+    {
+      "case_id": "ready_baseline",
+      "decision": {"outcome": "READY", "reasons": ["GCP_SPATIAL_DISTRIBUTION_READY"]},
+      "expected": {"outcome": "READY", "reasons": ["GCP_SPATIAL_DISTRIBUTION_READY"]}
+    },
+    {
+      "case_id": "hold_clustered_center",
+      "decision": {"outcome": "HOLD", "reasons": ["EXTRAPOLATION_RISK_HIGH", "HULL_COVERAGE_LOW"]},
+      "expected": {"outcome": "HOLD", "reasons": ["EXTRAPOLATION_RISK_HIGH", "HULL_COVERAGE_LOW"]},
+      "mutations": [{"path": "/gcps", "value": [
+        {"id": "gcp-01", "resource": [350, 250]},
+        {"id": "gcp-02", "resource": [650, 250]},
+        {"id": "gcp-03", "resource": [650, 550]},
+        {"id": "gcp-04", "resource": [350, 550]},
+        {"id": "gcp-05", "resource": [500, 400]}
+      ]}],
+      "recompute": true
+    },
+    {
+      "case_id": "hold_asymmetric_right",
+      "decision": {"outcome": "HOLD", "reasons": ["CENTROID_OFFSET_HIGH"]},
+      "expected": {"outcome": "HOLD", "reasons": ["CENTROID_OFFSET_HIGH"]},
+      "mutations": [
+        {"path": "/gcps", "value": [
+          {"id": "gcp-01", "resource": [400, 50]},
+          {"id": "gcp-02", "resource": [950, 50]},
+          {"id": "gcp-03", "resource": [950, 750]},
+          {"id": "gcp-04", "resource": [400, 750]},
+          {"id": "gcp-05", "resource": [700, 400]}
+        ]},
+        {"path": "/thresholds/min_hull_area_ratio", "value": 0.3},
+        {"path": "/thresholds/max_extrapolation_ratio", "value": 0.4},
+        {"path": "/thresholds/max_centroid_offset_ratio", "value": 0.1}
+      ],
+      "recompute": true
+    },
+    {
+      "case_id": "hold_three_gcps",
+      "decision": {"outcome": "HOLD", "reasons": ["EXTRAPOLATION_RISK_HIGH", "INSUFFICIENT_GCPS", "QUADRANT_COVERAGE_LOW"]},
+      "expected": {"outcome": "HOLD", "reasons": ["EXTRAPOLATION_RISK_HIGH", "INSUFFICIENT_GCPS", "QUADRANT_COVERAGE_LOW"]},
+      "mutations": [{"length": 3, "op": "truncate", "path": "/gcps"}],
+      "recompute": true
+    },
+    {
+      "case_id": "error_duplicate_gcp",
+      "decision": {"outcome": "ERROR", "reasons": ["DUPLICATE_RESOURCE_GCP"]},
+      "expected": {"outcome": "ERROR", "reasons": ["DUPLICATE_RESOURCE_GCP"]},
+      "mutations": [{"path": "/gcps/4/resource", "value": [50, 50]}]
+    },
+    {
+      "case_id": "error_outside_mask",
+      "decision": {"outcome": "ERROR", "reasons": ["GCP_OUTSIDE_RESOURCE_MASK"]},
+      "expected": {"outcome": "ERROR", "reasons": ["GCP_OUTSIDE_RESOURCE_MASK"]},
+      "mutations": [{"path": "/gcps/4/resource", "value": [1200, 400]}]
+    },
+    {
+      "case_id": "error_open_mask",
+      "decision": {"outcome": "ERROR", "reasons": ["RESOURCE_MASK_OPEN"]},
+      "expected": {"outcome": "ERROR", "reasons": ["RESOURCE_MASK_OPEN"]},
+      "mutations": [{"path": "/support/resource_mask/4", "value": [0, 100]}]
+    },
+    {
+      "case_id": "error_self_intersecting_mask",
+      "decision": {"outcome": "ERROR", "reasons": ["RESOURCE_MASK_SELF_INTERSECTION"]},
+      "expected": {"outcome": "ERROR", "reasons": ["RESOURCE_MASK_SELF_INTERSECTION"]},
+      "mutations": [{"path": "/support/resource_mask", "value": [[0, 0], [1000, 0], [200, 800], [800, 800], [0, 0]]}]
+    },
+    {
+      "case_id": "error_collinear_gcps",
+      "decision": {"outcome": "ERROR", "reasons": ["GCP_HULL_DEGENERATE"]},
+      "expected": {"outcome": "ERROR", "reasons": ["GCP_HULL_DEGENERATE"]},
+      "mutations": [{"path": "/gcps", "value": [
+        {"id": "gcp-01", "resource": [100, 70]},
+        {"id": "gcp-02", "resource": [300, 210]},
+        {"id": "gcp-03", "resource": [500, 350]},
+        {"id": "gcp-04", "resource": [700, 490]},
+        {"id": "gcp-05", "resource": [900, 630]}
+      ]}]
+    },
+    {
+      "case_id": "error_metric_mismatch",
+      "decision": {"outcome": "ERROR", "reasons": ["METRIC_MISMATCH"]},
+      "expected": {"outcome": "ERROR", "reasons": ["METRIC_MISMATCH"]},
+      "mutations": [{"path": "/computed/hull_area_ratio", "value": 0.999999}]
+    },
+    {
+      "case_id": "error_decision_mismatch",
+      "decision": {"outcome": "HOLD", "reasons": ["HULL_COVERAGE_LOW"]},
+      "expected": {"outcome": "ERROR", "reasons": ["DECISION_MISMATCH"]}
+    }
+  ]
+}
