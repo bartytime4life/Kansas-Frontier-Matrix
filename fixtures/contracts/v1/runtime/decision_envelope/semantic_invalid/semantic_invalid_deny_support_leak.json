@@ -1,0 +1,13 @@
+{
+  "decision_id": "dec-deny",
+  "outcome": "DENY",
+  "policy_family": "sensitivity",
+  "reasons": [
+    "restricted"
+  ],
+  "obligations": [],
+  "evidence_refs": [
+    "evidence:fixture:one"
+  ],
+  "evaluated_at": "2026-08-07T00:00:00Z"
+}

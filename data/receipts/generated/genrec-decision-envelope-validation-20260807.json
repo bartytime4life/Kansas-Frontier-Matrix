@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-decision-envelope-validation-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/decision-envelope.yml",
+    "contracts/runtime/decision_envelope/VALIDATION_NOTES.md",
+    "fixtures/contracts/v1/runtime/decision_envelope/expected_findings_manifest.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/README.md",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_alias_mismatch.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_deny_support_leak.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_duplicate_reasons.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_error_support_leak.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_internal_ref.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_sensitive_text.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_spec_hash.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_time_order.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_unsorted_refs.json",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_version.json",
+    "tests/validators/test_validate_decision_envelope.py",
+    "tools/validators/validate_decision_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/decision-envelope.yml": "sha256:142771e898fdc4c5bf6a394181e402954a785a484a96964ca30f4e0db1cf0037",
+    "contracts/runtime/decision_envelope/VALIDATION_NOTES.md": "sha256:ee496890feba296b6de2f8243d978f7ac80d304f98a0bb0d12ca7dfc148f6a76",
+    "fixtures/contracts/v1/runtime/decision_envelope/expected_findings_manifest.json": "sha256:dd66763b4134bcbe37e0af9d364af5ea5b2c7ebdf60204ef24738a2c9c9e80c8",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/README.md": "sha256:2f47755bb9f1850282070651aca5158b8d5e43dcdee68c3ef3d10f7294648051",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_alias_mismatch.json": "sha256:12a05285580f7b44db94f6a27834d645a79b17782ff877d478cdea5fe5ce16fe",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_deny_support_leak.json": "sha256:f6b2ecc67f4e20355ea4b678cd0e6608271dc0f1c8eda2c0e9520d845b2c6edb",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_duplicate_reasons.json": "sha256:d6f4f44863dd0462f9f6c25435ebfde0e24410f92a4c03d7e7cd49899f587d40",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_error_support_leak.json": "sha256:901684f3d133fde0f0d7d67c811dc3ece484ffead466be50134cdfbbd730db6c",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_internal_ref.json": "sha256:d1d93afb8b06db6f98ee4116f9feb75d75424b3e0eb50550c3a8d2d1fd491d21",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_sensitive_text.json": "sha256:8a2cbac3c99d468f2f8001b61933e279582d5d61861c1e737e39de1d1dd88175",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_spec_hash.json": "sha256:470a83ab3e6fd88c7ee7555b8e73aa5faea59caa8e7e412579d7ae19f7033d02",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_time_order.json": "sha256:97941c75b4be7386b0c8f46387aae27e3240de1717d3187289f25ff7195ebada",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_unsorted_refs.json": "sha256:5dae93cfd09695c6086b514a622780d27aa6d3de4fdf33a5a1275c6a53d20a25",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_version.json": "sha256:0d6a1261023f76938bb94980650aa96da1a4e83ecb66519889d62ea5b2c3cfd8",
+    "tests/validators/test_validate_decision_envelope.py": "sha256:397969d41958ce2967d63366b5f900406eb4bc868bf7c42fe6f1e3f818f72f28",
+    "tools/validators/validate_decision_envelope.py": "sha256:8c0c7975778e7ec83916961699af672d97189703abb8b0abc22efdb02cdd5e45"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:bd9db48845ac5f8b60bf7142e45f68b178c00a923bc2d45058f3e464390f5e3c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+      "sha256:1eb07fe8cceed546a1d26bdca8b542f8d96a197d799e66a3b47c75102f40d76b",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Unified Doctrine Synthesis.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "attachment:KFM Unified Doctrine Synthesis.md",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "github:contracts/runtime/decision_envelope.md",
+      "github:schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "github:tools/validators/_common/run_all.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/decision-envelope.yml": "PROPOSED",
+    "contracts/runtime/decision_envelope/VALIDATION_NOTES.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_alias_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_deny_support_leak.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_duplicate_reasons.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_error_support_leak.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_internal_ref.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_sensitive_text.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_spec_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_time_order.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_unsorted_refs.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/decision_envelope/semantic_invalid/semantic_invalid_version.json": "PROPOSED",
+    "tests/validators/test_validate_decision_envelope.py": "PROPOSED",
+    "tools/validators/validate_decision_envelope.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic unit, parser, schema-boundary, semantic-boundary, replay, and CLI tests passed."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Fifteen exact manifest cases passed: two valid, three schema-negative, and ten schema-valid semantic-negative cases."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The existing DecisionEnvelope Draft 2020-12 schema passed meta-validation without modification."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "The path-scoped read-only decision-envelope workflow parsed as YAML."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused tests compiled under the session Python runtime."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Changed artifact paths, SHA-256 hashes, and truth-label keys were checked after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:ai-build-contract",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md"
+    },
+    {
+      "id": "attachment:unified-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Unified Doctrine Synthesis.md"
+    },
+    {
+      "id": "attachment:directory-governance",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    },
+    {
+      "id": "repository:decision-envelope-contract",
+      "validated": true,
+      "evidence_ref": "github:contracts/runtime/decision_envelope.md"
+    },
+    {
+      "id": "repository:decision-envelope-schema",
+      "validated": true,
+      "evidence_ref": "github:schemas/contracts/v1/runtime/decision_envelope.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T03:47:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Replaces the schema-only DecisionEnvelope validator with bounded no-network semantic validation while preserving the current schema and existing valid fixtures. Prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761 after confirming PR #2089 is path-disjoint. The packet creates no evidence, policy, review, action, release, publication, or public-use authority."
+}
