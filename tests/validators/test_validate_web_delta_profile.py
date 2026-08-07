@@ -72,6 +72,10 @@ class WebDeltaProfileTests(unittest.TestCase):
             {item["case_id"] for item in correction["corrections"]},
             {"valid_http_304_heartbeat", "invalid_heartbeat_carries_new_content"},
         )
+        self.assertEqual(
+            sum(len(item["attribute_corrections"]) for item in correction["corrections"]),
+            3,
+        )
         self.assertIn("no_source_activation", correction["non_effects"])
         self.assertIn("no_publication", correction["non_effects"])
 
@@ -100,7 +104,8 @@ class WebDeltaProfileTests(unittest.TestCase):
         self.assertTrue(ok, payload)
         self.assertEqual(payload["outcome"], "PASS")
         self.assertEqual(payload["cases"], 17)
-        self.assertEqual(payload["corrections_applied"], 2)
+        self.assertEqual(payload["corrected_cases"], 2)
+        self.assertEqual(payload["corrected_attributes"], 3)
         self.assertEqual(payload["authority"], "NONE")
         self.assertIn("no_raw_or_lifecycle_write", payload["non_effects"])
 
