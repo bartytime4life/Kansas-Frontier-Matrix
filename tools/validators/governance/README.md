@@ -94,6 +94,26 @@ reviewer. It is not a policy decision, risk rating, approval, merge gate, or
 claim that a design decision exists. Rationale belongs in a separately authored
 and validated `ImplementationDecisionRecord`.
 
+## Verification backlog records
+
+### `validate_verification_backlog_item.py`
+
+Validates the proposed, inactive `VerificationBacklogItem` profile through small private I/O, semantic-model, and fixture-expansion modules plus one public CLI:
+
+- the Agenda-derived required record for question, bounded scope, evidence, currentness, constraints, impacts, recommendation, acceptance, residue, and next check;
+- exact `EXT`, `REPO`, `DEC`, `STW`, and `TST` research modes without cross-mode substitution;
+- deterministic item identity and full-record spec hash;
+- canonical ordering and duplicate denial;
+- finite `READY`, `HOLD`, and `ERROR` outcomes with exits `0`, `3`, and `2`;
+- fail-closed rights, sensitivity, sovereignty, security, and public-use constraints;
+- resolved and superseded-state coherence; and
+- exact false permissions and non-effects.
+
+`READY` means only that a closed backlog record is internally consistent.
+The validator does not conduct research, authenticate evidence, update the human
+verification register, create a control-plane projection, make a steward or
+architecture decision, activate a source, or authorize public use.
+
 ## Commands
 
 ```bash
@@ -119,8 +139,13 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tools/validators/governance/validate_implementation_change_context.py \
   --cases
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/governance/validate_verification_backlog_item.py \
+  --cases
 ```
 
 None of these tools fetches sources, reads live GitHub state, writes GitHub
-issues, activates policy, or validates real-world truth. The change-context
-builder may read local committed Git metadata only when explicitly invoked.
+issues or control-plane registers, activates policy, or validates real-world truth.
+The change-context builder may read local committed Git metadata only when
+explicitly invoked.

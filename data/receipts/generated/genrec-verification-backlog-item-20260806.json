@@ -1,0 +1,133 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/governance-verification-backlog-item.yml": "sha256:292f1194c92b0040e6f65bb635bc9568862e6105a32e638627a225eccd81223f",
+    "contracts/governance/verification_backlog_item.md": "sha256:556e74e4faeb99a7085e75c848e49a1addb5477406ebfaa85eabb426bc04c1b2",
+    "docs/intake/exploratory/research-verification-backlog-item-source-map.md": "sha256:db17efb647d5de53d76d0475a3116806e668120076f44fd757813fbe5668b436",
+    "fixtures/contracts/v1/governance/verification_backlog_item/base.json": "sha256:0587e0317c0164cf37d3e919e091858af2de45296d959b8fdf175d30c22a2bca",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_error.json": "sha256:9faf7e55797da4cbe3d1a6e688c682264da0432b66efe5778110f7bab2d1c810",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_ready_hold.json": "sha256:c4622bd2c86cb4995b12b38733a2756055f9f2608bc8b8604069fd94c61cb48a",
+    "schemas/contracts/v1/governance/verification_backlog_item.schema.json": "sha256:a71a8df7e20f5344df38ab83eaf3c16ff1b215bd28e401040c60297b4710b30a",
+    "tests/validators/governance/test_verification_backlog_item.py": "sha256:b83acd8b7d053f27dc0a84c30bdd6ab740e3c765acf33afeaa84b83d1cf2dac1",
+    "tools/validators/governance/README.md": "sha256:48dcaa0d3c18e866a46309cec1c5da8c99022122c2022858db3160d7b77468f8",
+    "tools/validators/governance/_verification_backlog_item_fixtures.py": "sha256:b0e8ae7aeb8574c13dcb5f90ba54d71ea8982f4e7722a171a13196dc5e5d6c5f",
+    "tools/validators/governance/_verification_backlog_item_io.py": "sha256:479a2c35855c5b2ac237a00858f0a79a7e0bd9fc81a0cf3bea6e96357e3d3b07",
+    "tools/validators/governance/_verification_backlog_item_model.py": "sha256:6d90a3b4a18e56c76825848c214267491bd8e495f6f387d74147e86724b38af9",
+    "tools/validators/governance/validate_verification_backlog_item.py": "sha256:14bf51fbbe19c0c42694f8fb0ef3ee9d01b5a561b5de5b0383b37aedecb85869"
+  },
+  "artifact_paths": [
+    ".github/workflows/governance-verification-backlog-item.yml",
+    "contracts/governance/verification_backlog_item.md",
+    "docs/intake/exploratory/research-verification-backlog-item-source-map.md",
+    "fixtures/contracts/v1/governance/verification_backlog_item/base.json",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_error.json",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_ready_hold.json",
+    "schemas/contracts/v1/governance/verification_backlog_item.schema.json",
+    "tests/validators/governance/test_verification_backlog_item.py",
+    "tools/validators/governance/README.md",
+    "tools/validators/governance/_verification_backlog_item_fixtures.py",
+    "tools/validators/governance/_verification_backlog_item_io.py",
+    "tools/validators/governance/_verification_backlog_item_model.py",
+    "tools/validators/governance/validate_verification_backlog_item.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "id": "kfm-research-verification-agenda",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "kfm-directory-rules-v2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-07T01:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/registers/VERIFICATION_BACKLOG.md",
+      "contracts/governance/README.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-06"
+  },
+  "notes": "Fixture-only governance record. No live research, source activation, control-plane register mutation, decision, release, or publication authority is created.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:043a96b2782fe34948e8c12e36556356e60fc8edaeca41046518160a8f15315c",
+  "receipt_id": "genrec-verification-backlog-item-20260806",
+  "truth_labels": {
+    ".github/workflows/governance-verification-backlog-item.yml": "PROPOSED",
+    "contracts/governance/verification_backlog_item.md": "PROPOSED",
+    "docs/intake/exploratory/research-verification-backlog-item-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/verification_backlog_item/base.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_error.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verification_backlog_item/cases_ready_hold.json": "PROPOSED",
+    "schemas/contracts/v1/governance/verification_backlog_item.schema.json": "PROPOSED",
+    "tests/validators/governance/test_verification_backlog_item.py": "PROPOSED",
+    "tools/validators/governance/README.md": "PROPOSED",
+    "tools/validators/governance/_verification_backlog_item_fixtures.py": "PROPOSED",
+    "tools/validators/governance/_verification_backlog_item_io.py": "PROPOSED",
+    "tools/validators/governance/_verification_backlog_item_model.py": "PROPOSED",
+    "tools/validators/governance/validate_verification_backlog_item.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-test-suite",
+      "outcome": "PASS",
+      "reason": "15 focused deterministic tests passed against final authored bytes."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "All 11 exact READY/HOLD/ERROR fixture outcomes matched."
+    },
+    {
+      "gate": "schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema passed jsonschema meta-validation."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Fixture suite passed with socket creation denied."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending pull-request creation and hosted workflow execution."
+    }
+  ]
+}
