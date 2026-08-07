@@ -34,7 +34,7 @@
     "tests/validators/docs/meta-block/fixtures/valid_repo/expected_meta_block_report.json": "sha256:cb0b2a84048eb1b3761afcc4f26db25053508fe2b92f252a5b35c9ced0508a34",
     "tests/validators/docs/meta-block/test_meta_block_registry.py": "sha256:d879a2154b05be50aa25612a1ed683af12e703e4f38914cd7da6c2912fd46644",
     "tests/validators/docs/meta-block/test_meta_block_structure.py": "sha256:21afdd857da19ad0cd094ebba2071f536ae61c3595e7f52a40d4869fcde39d3e",
-    "tools/validators/docs/README.md": "sha256:6ddb9bfb8aa56adf727f5c16b1ff7f408db61134610d86b01607c5e07ab73a39",
+    "tools/validators/docs/README.md": "sha256:784065833dad82016d66445429b2a04197d9d4944050fd782de0d3497921e902",
     "tools/validators/docs/meta-block/README.md": "sha256:25e415b4f4d688e5f8ba1a90b3d7c181cf3eb2ec794425e0cd56ed8be697e465",
     "tools/validators/docs/meta-block/check_meta_blocks.py": "sha256:3760a2c9aeb686274f02c630acbc37a420c1c1c92aaf9ffdb31eb9d7940b09d1",
     "tools/validators/docs/meta-block/meta_block_build.py": "sha256:be7415121f14e3e514dfb78aca0c0533bc8d53d078db044cd2a489a30c91a91c",
@@ -167,7 +167,7 @@
     {
       "id": "repository:meta-block-gap",
       "validated": true,
-      "evidence_ref": "repo:tools/validators/docs/meta-block/README.dd@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+      "evidence_ref": "repo:tools/validators/docs/meta-block/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
     },
     {
       "id": "repository:document-registry-boundary",
