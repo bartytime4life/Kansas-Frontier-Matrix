@@ -113,7 +113,7 @@ class DocsMetaBlockStructureTests(DocsMetaBlockTestCase):
             if item.code == "META_BLOCK_UNSUPPORTED_NESTING"
         ]
 
-        self.assertEqual(result.outcome, "DOC_META_BLOCK_PASS")
+        self.assertEqual(result.outcome, "DOC_META_BLOCK_WARN")
         self.assertEqual(len(findings), 1)
         self.assertEqual(findings[0].severity, "WARN")
 
