@@ -10,6 +10,7 @@ promotion, release, deployment, publication, or public-use authority.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import sys
@@ -41,6 +42,8 @@ MAX_DECISIONS = 256
 RECORD_ID_PATTERN = re.compile(
     r"^kfm:implementation-decision:[a-z0-9][a-z0-9-]{2,63}:[0-9]{4}$"
 )
+CONTEXT_ID_PATTERN = re.compile(r"^kfm:implementation-change-context:[0-9a-f]{64}$")
+GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 EXIT_READY = 0
 EXIT_ERROR = 2
 EXIT_HOLD = 3
@@ -232,7 +235,17 @@ def _plain(value: object) -> str:
 
 
 def _code(value: object) -> str:
-    return f"`{_plain(value).replace('`', "'")}`"
+    normalized = _plain(value).replace("`", "'")
+    return f"`{normalized}`"
+
+
+def _safe_match(value: object, pattern: re.Pattern[str]) -> str | None:
+    return value if isinstance(value, str) and pattern.fullmatch(value) else None
+
+
+def _safe_record_id(document: Mapping[str, object], index: int) -> str:
+    record_id = _safe_match(document.get("record_id"), RECORD_ID_PATTERN)
+    return record_id if record_id is not None else f"decision[{index}]"
 
 
 def _table(value: object) -> str:
@@ -274,9 +287,9 @@ def payload(packet: ReviewPacket) -> dict[str, object]:
         "authority": "NONE",
         "outcome": packet.evaluation.outcome,
         "renderable": packet.evaluation.outcome != "ERROR",
-        "context_id": packet.context.get("context_id"),
-        "base_sha": packet.context.get("base_sha"),
-        "head_sha": packet.context.get("head_sha"),
+        "context_id": _safe_match(packet.context.get("context_id"), CONTEXT_ID_PATTERN),
+        "base_sha": _safe_match(packet.context.get("base_sha"), GIT_SHA_PATTERN),
+        "head_sha": _safe_match(packet.context.get("head_sha"), GIT_SHA_PATTERN),
         "context_outcome": packet.context_evaluation.outcome,
         "decision_count": len(packet.decision_rows),
         "covered_path_count": len(covered),
@@ -287,15 +300,15 @@ def payload(packet: ReviewPacket) -> dict[str, object]:
         ],
         "records": [
             {
-                "record_id": document.get("record_id"),
+                "record_id": _safe_record_id(document, index),
                 "outcome": evaluation.outcome,
                 "findings": [
                     {"code": finding.code, "field": finding.field}
                     for finding in evaluation.findings
                 ],
             }
-            for _path, document, evaluation in sorted(
-                packet.decision_rows, key=_decision_order
+            for index, (_path, document, evaluation) in enumerate(
+                sorted(packet.decision_rows, key=_decision_order)
             )
         ],
         "permissions": {
@@ -532,14 +545,107 @@ def render_markdown(packet: ReviewPacket) -> str:
     return "\n".join(lines)
 
 
+def _decode_pointer_part(part: str) -> str:
+    decoded = part.replace("~1", "/").replace("~0", "~")
+    if "~" in decoded and "~" in part.replace("~0", "").replace("~1", ""):
+        raise ValueError("invalid fixture JSON pointer escape")
+    return decoded
+
+
+def _apply_overrides(target: object, overrides: object) -> None:
+    if overrides is None:
+        return
+    if not isinstance(overrides, dict):
+        raise ValueError("fixture overrides must be an object")
+    for pointer in sorted(overrides):
+        if not isinstance(pointer, str) or not pointer.startswith("/"):
+            raise ValueError("fixture override must use an absolute JSON pointer")
+        parts = [_decode_pointer_part(part) for part in pointer[1:].split("/")]
+        current = target
+        for part in parts[:-1]:
+            if isinstance(current, dict):
+                if part not in current:
+                    raise ValueError("fixture override traverses an unknown object key")
+                current = current[part]
+            elif isinstance(current, list):
+                if not part.isdigit() or int(part) >= len(current):
+                    raise ValueError("fixture override traverses an invalid array index")
+                current = current[int(part)]
+            else:
+                raise ValueError("fixture override traverses a scalar")
+        leaf = parts[-1]
+        value = copy.deepcopy(overrides[pointer])
+        if isinstance(current, dict):
+            if leaf not in current:
+                raise ValueError("fixture override targets an unknown object key")
+            current[leaf] = value
+        elif isinstance(current, list):
+            if not leaf.isdigit() or int(leaf) >= len(current):
+                raise ValueError("fixture override targets an invalid array index")
+            current[int(leaf)] = value
+        else:
+            raise ValueError("fixture override targets a scalar")
+
+
+def load_fixture_cases() -> list[dict[str, object]]:
+    """Expand compact base-plus-override fixtures into exact input documents."""
+
+    manifest = load_json(FIXTURE_PATH)
+    if manifest.get("profile") != "kfm.governance.implementation-review-packet.fixture-cases.v1":
+        raise ValueError("unexpected fixture profile")
+    base = manifest.get("base")
+    scenarios = manifest.get("cases")
+    if not isinstance(base, dict) or not isinstance(scenarios, list):
+        raise ValueError("fixture base and cases are required")
+    base_context = base.get("context")
+    base_decisions = base.get("decisions")
+    if not isinstance(base_context, dict) or not isinstance(base_decisions, list):
+        raise ValueError("fixture base inputs are invalid")
+    if len(scenarios) > 64 or len(base_decisions) > 16:
+        raise ValueError("fixture manifest exceeds configured bounds")
+
+    admitted = {
+        "name",
+        "expected_outcome",
+        "expected_findings",
+        "include_decisions",
+        "context_overrides",
+        "decision_overrides",
+    }
+    cases: list[dict[str, object]] = []
+    for scenario in scenarios:
+        if not isinstance(scenario, dict) or set(scenario) - admitted:
+            raise ValueError("fixture scenario is invalid")
+        name = scenario.get("name")
+        expected = scenario.get("expected_outcome")
+        findings = scenario.get("expected_findings")
+        if not isinstance(name, str) or expected not in EXIT or not isinstance(findings, list):
+            raise ValueError("fixture scenario metadata is invalid")
+        context = copy.deepcopy(base_context)
+        decisions = (
+            copy.deepcopy(base_decisions)
+            if scenario.get("include_decisions", True) is True
+            else []
+        )
+        _apply_overrides(context, scenario.get("context_overrides", {}))
+        _apply_overrides(decisions, scenario.get("decision_overrides", {}))
+        cases.append(
+            {
+                "name": name,
+                "expected_outcome": expected,
+                "expected_findings": copy.deepcopy(findings),
+                "context": context,
+                "decisions": decisions,
+            }
+        )
+    return cases
+
+
 def run_cases() -> tuple[bool, dict[str, object]]:
     """Run exact fixture polarity without network access."""
 
     try:
-        manifest = load_json(FIXTURE_PATH)
-        cases = manifest.get("cases")
-        if not isinstance(cases, list):
-            raise ValueError("fixture cases must be an array")
+        cases = load_fixture_cases()
     except Exception:
         return False, {
             "authority": "NONE",
