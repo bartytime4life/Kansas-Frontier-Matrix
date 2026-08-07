@@ -9,6 +9,7 @@ import math
 from .core import (
     FailureDetail,
     SourceHeadObservation,
+    TRANSIENT_CATEGORIES,
     TransportCategory,
     redact_url,
     sha256_stream,
@@ -105,7 +106,13 @@ class RetrievalResult:
         numbers = tuple(v.attempt_number for v in self.attempts)
         if numbers != expected and numbers != (0,):
             raise TransportInputError("attempts must be contiguous and 1-based, except pre-transport cancellation")
-        if self.attempts[-1].category is not self.category:
+        last_category = self.attempts[-1].category
+        if self.category is TransportCategory.RETRY_EXHAUSTED:
+            if last_category not in TRANSIENT_CATEGORIES:
+                raise TransportInputError(
+                    "RETRY_EXHAUSTED requires a transient final attempt"
+                )
+        elif last_category is not self.category:
             raise TransportInputError("final category must match the last attempt")
         success = self.category in {TransportCategory.SUCCESS, TransportCategory.NOT_MODIFIED}
         if success:
