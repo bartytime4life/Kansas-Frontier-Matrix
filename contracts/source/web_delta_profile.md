@@ -12,7 +12,7 @@ related:
   - ./source_event_envelope.md
   - ./source_activation_decision.md
   - ../../schemas/contracts/v1/source/web_delta_profile.schema.json
-  - ../../fixtures/contracts/v1/source/web_delta_profile/cases.json
+  - ../../fixtures/contracts/v1/source/web_delta_profile/cases-*.json
   - ../../tools/validators/validate_web_delta_profile.py
   - ../../tests/validators/test_validate_web_delta_profile.py
   - ../../docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md
@@ -53,7 +53,7 @@ The accepted Directory Governance Standard v2 routes each artifact by responsibi
 |---|---|
 | Human-readable source-profile meaning | `contracts/source/web_delta_profile.md` |
 | Machine shape of profile attributes | `schemas/contracts/v1/source/web_delta_profile.schema.json` |
-| Synthetic conformance records | `fixtures/contracts/v1/source/web_delta_profile/cases.json` |
+| Synthetic conformance records | `fixtures/contracts/v1/source/web_delta_profile/cases-*.json` |
 | Reusable deterministic validation | `tools/validators/validate_web_delta_profile.py` |
 | Enforceability proof | `tests/validators/test_validate_web_delta_profile.py` |
 | Hosted orchestration | `.github/workflows/source-web-delta-profile.yml` |
