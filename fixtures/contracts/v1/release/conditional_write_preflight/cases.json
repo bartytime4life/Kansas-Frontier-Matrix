@@ -13,7 +13,7 @@
       },
       "request": {
         "expected_etag": null,
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
         "proposed_content_length": 128,
         "content_type": "application/json"
       },
@@ -29,7 +29,9 @@
       },
       "expected": {
         "outcome": "PROPOSE_WRITE",
-        "reason_codes": ["CONDITION_SATISFIED"]
+        "reason_codes": [
+          "CONDITION_SATISFIED"
+        ]
       }
     },
     {
@@ -38,12 +40,12 @@
         "target_ref": "kfm://fixture/release/objects/replace-match",
         "operation": "REPLACE_IF_MATCH",
         "observed_state": "PRESENT",
-        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "observed_content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "observed_content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
       },
       "request": {
-        "expected_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expected_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
         "proposed_content_length": 256,
         "content_type": "application/json"
       },
@@ -59,7 +61,9 @@
       },
       "expected": {
         "outcome": "PROPOSE_WRITE",
-        "reason_codes": ["CONDITION_SATISFIED"]
+        "reason_codes": [
+          "CONDITION_SATISFIED"
+        ]
       }
     },
     {
@@ -68,42 +72,8 @@
         "target_ref": "kfm://fixture/release/objects/idempotent",
         "operation": "REPLACE_IF_MATCH",
         "observed_state": "PRESENT",
-        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "observed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-      },
-      "request": {
-        "expected_etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "proposed_content_length": 256,
-        "content_type": "application/json"
-      },
-      "upstream": {
-        "policy_decision_ref": "kfm://fixture/policy/allow",
-        "policy_outcome": "ALLOW",
-        "review_record_ref": "kfm://fixture/review/approved",
-        "review_state": "APPROVED",
-        "promotion_decision_ref": "kfm://fixture/promotion/approved",
-        "promotion_state": "APPROVED",
-        "release_manifest_candidate_ref": "kfm://fixture/release-manifest/idempotent",
-        "rollback_ref": "kfm://fixture/rollback/previous-state"
-      },
-      "expected": {
-        "outcome": "NO_ACTION",
-        "reason_codes": ["CONTENT_ALREADY_PRESENT"]
-      }
-    },
-    {
-      "case_id": "create_target_exists_conflict",
-      "target": {
-        "target_ref": "kfm://fixture/release/objects/create-conflict",
-        "operation": "CREATE_IF_ABSENT",
-        "observed_state": "PRESENT",
-        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "observed_content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-      },
-      "request": {
-        "expected_etag": null,
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "observed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" ¢ÒÀ¢'&WVW7B#¢°¢&W‡V7FVEöWFr#¢'6†#Sc¦FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB"À¢'&÷÷6VEö6öçFVçEöF–vW7B#¢'6†#Sc¦6666666666666666666666666666666666666666666666666666666666666666662"À¢'&÷÷6VEö6öçFVçEöÆVæwF‚#¢#SbÀ¢&6öçFVçE÷G—R#¢&Æ–6F–öâö§6öâ ¢ÒÀ¢'W7G&VÒ#¢°¢'öÆ–7•öFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷öÆ–7’öÆÆ÷r"À¢'öÆ–7•ö÷WF6öÖR#¢$ÄÄõr"À¢'&Wf–Wu÷&V6÷&E÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&Wf–Wrö&÷fVB"À¢'&Wf–Wu÷7FFR#¢$$õdTB"À¢'&öÖ÷F–öåöFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÖ÷F–öâö&÷fVB"À¢'&öÖ÷F–öå÷7FFR#¢$$õdTB"À¢'&VÆV6UöÖæ–fW7Eö6æF–FFU÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6RÖÖæ–fW7Bö–FV×÷FVçB"À¢'&öÆÆ&6µ÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÆÆ&6²÷&Wf–÷W2×7FFR ¢ÒÀ¢&W‡V7FVB#¢°¢&÷WF6öÖR#¢$äõô5D”ôâ"À¢'&V6öåö6öFW2#¢°¢$4ôåDTåEôÅ$TE•õ$U4TåB ¢Ð¢Ð¢ÒÀ¢°¢&66Uö–B#¢&7&VFU÷F&vWEöW†—7G5ö6öæfÆ–7B"À¢'F&vWB#¢°¢'F&vWE÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6Röö&¦V7G2ö7&VFRÖ6öæfÆ–7B"À¢&÷W&F–öâ#¢$5$TDUô”eô%4TåB"À¢&ö'6W'fVE÷7FFR#¢%$U4TåB"À¢&ö'6W'fVEöWFr#¢'6†#Sc¦"À¢&ö'6W'fVEö6öçFVçEöF–vW7B#¢'6†#Sc¦&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" ¢ÒÀ¢'&WVW7B#¢°¢&W‡V7FVEöWFr#¢çVÆÂÀ¢'&÷÷6VEö6öçFVçEöF–vW7B#¢'6†#Sc¦666666666666666666666666666666666666666666666666666666666666666666",
         "proposed_content_length": 128,
         "content_type": "application/json"
       },
@@ -119,7 +89,9 @@
       },
       "expected": {
         "outcome": "CONFLICT",
-        "reason_codes": ["TARGET_EXISTS"]
+        "reason_codes": [
+          "TARGET_EXISTS"
+        ]
       }
     },
     {
@@ -128,12 +100,12 @@
         "target_ref": "kfm://fixture/release/objects/etag-conflict",
         "operation": "REPLACE_IF_MATCH",
         "observed_state": "PRESENT",
-        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "observed_content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        "observed_etag": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "observed_content_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
       },
       "request": {
         "expected_etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
         "proposed_content_length": 256,
         "content_type": "application/json"
       },
@@ -149,7 +121,9 @@
       },
       "expected": {
         "outcome": "CONFLICT",
-        "reason_codes": ["ETAG_MISMATCH"]
+        "reason_codes": [
+          "ETAG_MISMATCH"
+        ]
       }
     },
     {
@@ -163,7 +137,7 @@
       },
       "request": {
         "expected_etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
         "proposed_content_length": 256,
         "content_type": "application/json"
       },
@@ -179,7 +153,9 @@
       },
       "expected": {
         "outcome": "CONFLICT",
-        "reason_codes": ["TARGET_ABSENT"]
+        "reason_codes": [
+          "TARGET_ABSENT"
+        ]
       }
     },
     {
@@ -193,7 +169,7 @@
       },
       "request": {
         "expected_etag": null,
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
         "proposed_content_length": 128,
         "content_type": "application/json"
       },
@@ -209,7 +185,9 @@
       },
       "expected": {
         "outcome": "HOLD",
-        "reason_codes": ["POLICY_NOT_ALLOWED"]
+        "reason_codes": [
+          "POLICY_NOT_ALLOWED"
+        ]
       }
     },
     {
@@ -223,64 +201,4 @@
       },
       "request": {
         "expected_etag": null,
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "proposed_content_length": 128,
-        "content_type": "application/json"
-      },
-      "upstream": {
-        "policy_decision_ref": "kfm://fixture/policy/allow",
-        "policy_outcome": "ALLOW",
-        "review_record_ref": "kfm://fixture/review/pending",
-        "review_state": "PENDING",
-        "promotion_decision_ref": "kfm://fixture/promotion/approved",
-        "promotion_state": "APPROVED",
-        "release_manifest_candidate_ref": "kfm://fixture/release-manifest/review-hold",
-        "rollback_ref": "kfm://fixture/rollback/previous-state"
-      },
-      "expected": {
-        "outcome": "HOLD",
-        "reason_codes": ["REVIEW_NOT_APPROVED"]
-      }
-    },
-    {
-      "case_id": "promotion_held_hold",
-      "target": {
-        "target_ref": "kfm://fixture/release/objects/promotion-hold",
-        "operation": "CREATE_IF_ABSENT",
-        "observed_state": "ABSENT",
-        "observed_etag": null,
-        "observed_content_digest": null
-      },
-      "request": {
-        "expected_etag": null,
-        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "proposed_content_length": 128,
-        "content_type": "application/json"
-      },
-      "upstream": {
-        "policy_decision_ref": "kfm://fixture/policy/allow",
-        "policy_outcome": "ALLOW",
-        "review_record_ref": "kfm://fixture/review/approved",
-        "review_state": "APPROVED",
-        "promotion_decision_ref": "kfm://fixture/promotion/held",
-        "promotion_state": "HELD",
-        "release_manifest_candidate_ref": "kfm://fixture/release-manifest/promotion-hold",
-        "rollback_ref": "kfm://fixture/rollback/previous-state"
-      },
-      "expected": {
-        "outcome": "HOLD",
-        "reason_codes": ["PROMOTION_NOT_APPROVED"]
-      }
-    },
-    {
-      "case_id": "missing_release_and_rollback_hold",
-      "target": {
-        "target_ref": "kfm://fixture/release/objects/missing-closure",
-        "operation": "CREATE_IF_ABSENT",
-        "observed_state": "ABSENT",
-        "observed_etag": null,
-        "observed_content_digest": null
-      },
-      "request": {
-        "expected_etag": null,
-        "proposed_content_digest": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc""À¢'&÷÷6VEö6öçFVçEöÆVæwF‚#¢#‚À¢&6öçFVçE÷G—R#¢&Æ–6F–öâö§6öâ ¢ÒÀ¢'W7G&VÒ#¢°¢'öÆ–7•öFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷öÆ–7’öÆÆ÷r"À¢'öÆ–7•ö÷WF6öÖR#¢$ÄÄõr"À¢'&Wf–Wu÷&V6÷&E÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&Wf–Wrö&÷fVB"À¢'&Wf–Wu÷7FFR#¢$$õdTB"À¢'&öÖ÷F–öåöFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÖ÷F–öâö&÷fVB"À¢'&öÖ÷F–öå÷7FFR#¢$$õdTB"À¢'&VÆV6UöÖæ–fW7Eö6æF–FFU÷&Vb#¢çVÆÂÀ¢'&öÆÆ&6µ÷&Vb#¢çVÆÀ¢ÒÀ¢&W‡V7FVB#¢°¢&÷WF6öÖR#¢$„ôÄB"À¢'&V6öåö6öFW2#¢²%$TÄT4UôÔä”dU5EôÔ•54”är"Â%$ôÄÄ$4µõD$tUEôÔ•54”är%Ð¢Ð¢Ð¢Ð§Ð 
+        "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc""À¢'&÷÷6VEö6öçFVçEöÆVæwF‚#¢#‚À¢&6öçFVçE÷G—R#¢&Æ–6F–öâö§6öâ ¢ÒÀ¢'W7G&VÒ#¢°¢'öÆ–7•öFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷öÆ–7’öÆÆ÷r"À¢'öÆ–7•ö÷WF6öÖR#¢$ÄÄõr"À¢'&Wf–Wu÷&V6÷&E÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&Wf–Wr÷VæF–ær"À¢'&Wf–Wu÷7FFR#¢%TäD”är"À¢'&öÖ÷F–öåöFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÖ÷F–öâö&÷fVB"À¢'&öÖ÷F–öå÷7FFR#¢$$õdTB"À¢'&VÆV6UöÖæ–fW7Eö6æF–FFU÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6RÖÖæ–fW7B÷&Wf–WrÖ†öÆB"À¢'&öÆÆ&6µ÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÆÆ&6²÷&Wf–÷W2×7FFR ¢ÒÀ¢&W‡V7FVB#¢°¢&÷WF6öÖR#¢$„ôÄB"À¢'&V6öåö6öFW2#¢°¢%$Ud”UuôäõEô$õdTB ¢Ð¢Ð¢ÒÀ¢°¢&66Uö–B#¢'&öÖ÷F–öåö†VÆEö†öÆB"À¢'F&vWB#¢°¢'F&vWE÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6Röö&¦V7G2÷&öÖ÷F–öâÖ†öÆB"À¢&÷W&F–öâ#¢$5$TDUô”eô%4TåB"À¢&ö'6W'fVE÷7FFR#¢$%4TåB"À¢&ö'6W'fVEöWFr#¢çVÆÂÀ¢&ö'6W'fVEö6öçFVçEöF–vW7B#¢çVÆÀ¢ÒÀ¢'&WVW7B#¢°¢&W‡V7FVEöWFr#¢çVÆÂÀ¢'&÷÷6VEö6öçFVçEöF–vW7B#¢'6†#Sc¦6666666666666666666666666666666666666666666666666666666666666666662"À¢'&÷÷6VEö6öçFVçEöÆVæwF‚#¢#‚À¢&6öçFVçE÷G—R#¢&Æ–6F–öâö§6öâ ¢ÒÀ¢'W7G&VÒ#¢°¢'öÆ–7•öFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷öÆ–7’öÆÆ÷r"À¢'öÆ–7•ö÷WF6öÖR#¢$ÄÄõr"À¢'&Wf–Wu÷&V6÷&E÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&Wf–Wrö&÷fVB"À¢'&Wf–Wu÷7FFR#¢$$õdTB"À¢'&öÖ÷F–öåöFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÖ÷F–öâö†VÆB"À¢'&öÖ÷F–öå÷7FFR#¢$„TÄB"À¢'&VÆV6UöÖæ–fW7Eö6æF–FFU÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6RÖÖæ–fW7B÷&öÖ÷F–öâÖ†öÆB"À¢'&öÆÆ&6µ÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÆÆ&6²÷&Wf–÷W2×7FFR ¢ÒÀ¢&W‡V7FVB#¢°¢&÷WF6öÖR#¢$„ôÄB"À¢'&V6öåö6öFW2#¢°¢%$ôÔõD”ôåôäõEô$õdTB ¢Ð¢Ð¢ÒÀ¢°¢&66Uö–B#¢&Ö—76–æu÷&VÆV6UöæE÷&öÆÆ&6µö†öÆB"À¢'F&vWB#¢°¢'F&vWE÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&VÆV6Röö&¦V7G2öÖ—76–ærÖ6Æ÷7W&R"À¢&÷W&F–öâ#¢$5$TDUô”eô%4TåB"À¢&ö'6W'fVE÷7FFR#¢$%4TåB"À¢&ö'6W'fVEöWFr#¢çVÆÂÀ¢&ö'6W'fVEö6öçFVçEöF–vW7B#¢çVÆÀ¢ÒÀ¢'&WVW7B#¢°¢&W‡V7FVEöWFr#¢çVÆÂÀ¢'&÷÷6VEö6öçFVçEöF–vW7B#¢'6†#Sc¦6666666666666666666666666666666666666666666666666666666666666666662"À¢'&÷÷6VEö6öçFVçEöÆVæwF‚#¢#‚À¢&6öçFVçE÷G—R#¢&Æ–6F–öâö§6öâ ¢ÒÀ¢'W7G&VÒ#¢°¢'öÆ–7•öFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷öÆ–7’öÆÆ÷r"À¢'öÆ–7•ö÷WF6öÖR#¢$ÄÄõr"À¢'&Wf–Wu÷&V6÷&E÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&Wf–Wrö&÷fVB"À¢'&Wf–Wu÷7FFR#¢$$õdTB"À¢'&öÖ÷F–öåöFV6—6–öå÷&Vb#¢&¶fÓ¢òöf—‡GW&R÷&öÖ÷F–öâö&÷fVB"À¢'&öÖ÷F–öå÷7FFR#¢$$õdTB"À¢'&VÆV6UöÖæ–fW7Eö6æF–FFU÷&Vb#¢çVÆÂÀ¢'&öÆÆ&6µ÷&Vb#¢çVÆÀ¢ÒÀ¢&W‡V7FVB#¢°¢&÷WF6öÖR#¢$„ôÄB"À¢'&V6öåö6öFW2#¢°¢%$TÄT4UôÔä”dU5EôÔ•54”är"À¢%$ôÄÄ$4µõD$tUEôÔ•54”är ¢Ð¢Ð¢Ð¢Ð§Ð
