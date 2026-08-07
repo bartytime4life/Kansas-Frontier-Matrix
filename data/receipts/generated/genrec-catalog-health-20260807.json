@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-catalog-health-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/catalog-health.yml",
+    "contracts/data/catalog_health_report.md",
+    "fixtures/data/catalog_health/README.md",
+    "fixtures/data/catalog_health/assets/sample.bin",
+    "fixtures/data/catalog_health/expected_findings.json",
+    "fixtures/data/catalog_health/expected_outcomes.json",
+    "fixtures/data/catalog_health/hold/hold_remote_unverified.json",
+    "fixtures/data/catalog_health/invalid/invalid_checksum_mismatch.json",
+    "fixtures/data/catalog_health/invalid/invalid_missing_governance.json",
+    "fixtures/data/catalog_health/invalid/invalid_missing_provenance_links.json",
+    "fixtures/data/catalog_health/invalid/invalid_path_escape.json",
+    "fixtures/data/catalog_health/valid/valid_embargoed_item.json",
+    "fixtures/data/catalog_health/valid/valid_local_item.json",
+    "schemas/contracts/v1/data/catalog_health_report.schema.json",
+    "tests/validators/test_validate_catalog_health.py",
+    "tools/validators/catalog/README.md",
+    "tools/validators/catalog/catalog_health_core.py",
+    "tools/validators/catalog/catalog_health_rules.py",
+    "tools/validators/catalog/validate_catalog_health.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/catalog-health.yml": "sha256:9debf324289968ec970d623373d385ad651f4ef75d9f76cf4ebdf1b12f6f8af2",
+    "contracts/data/catalog_health_report.md": "sha256:6c4dc97f17f72ae7fe9e72a27d711547928ec3b7a7dd03750a5949755efeebe3",
+    "fixtures/data/catalog_health/README.md": "sha256:1ae00ae5e87e7c78581f0b81cfa3c35001ef3641feed002d4f6bee96858b61bd",
+    "fixtures/data/catalog_health/assets/sample.bin": "sha256:ab39b02de5828664a6643fc221de0c81f68e1c7e73ab3a347deb8381d8718466",
+    "fixtures/data/catalog_health/expected_findings.json": "sha256:540bec57753149bfa0e28666a66521f4e04babd3dc032a683df44bd96edb03de",
+    "fixtures/data/catalog_health/expected_outcomes.json": "sha256:3cb236b43d4c679e3e7c0403413db1010224ceffc48975905f51a23956e00ff5",
+    "fixtures/data/catalog_health/hold/hold_remote_unverified.json": "sha256:096afa1fb90bee54d27753c8bca8432280658b7555b346b9af878ab5849fe793",
+    "fixtures/data/catalog_health/invalid/invalid_checksum_mismatch.json": "sha256:6797b44ed841068f8874abd2db2dbfefc028bce447c5c14340cad55ef61db9a4",
+    "fixtures/data/catalog_health/invalid/invalid_missing_governance.json": "sha256:2efdca1510ead998759a6c5d08703057c36ebb2104eec93b423dcde640b12ab9",
+    "fixtures/data/catalog_health/invalid/invalid_missing_provenance_links.json": "sha256:f76ea4c1f649923db8b51642c86a749ec04fb833b2d1dbd97e65b1e39c31fd3a",
+    "fixtures/data/catalog_health/invalid/invalid_path_escape.json": "sha256:0297683e874dcaabf202048abd4e06f01ff2aa61314f5048e9acc12684080781",
+    "fixtures/data/catalog_health/valid/valid_embargoed_item.json": "sha256:176b143628425abf8c2e5ed4d381d8c905ac109f8cb51346792fc6bfd445a910",
+    "fixtures/data/catalog_health/valid/valid_local_item.json": "sha256:75b8599797d795536fa7d2eff6590f7717d68127e466f858525fd6a3b3735c29",
+    "schemas/contracts/v1/data/catalog_health_report.schema.json": "sha256:f9e5d7faefa62ece540b9651be17ec35144e5c8ea1d79b182d7aa6ce360aacea",
+    "tests/validators/test_validate_catalog_health.py": "sha256:2242bf017c2997873504d6d1d3a0fe39d7717fc86efd6e5729fac8ba0234669b",
+    "tools/validators/catalog/README.md": "sha256:19e3e7c91437869884a7cf844b54f6ec35c8c5617e43089bec1ad1719b300b8b",
+    "tools/validators/catalog/catalog_health_core.py": "sha256:48c5bd6d16be76290dc0e2a21e6ba50d01c431d61e8df44439118f9452d43453",
+    "tools/validators/catalog/catalog_health_rules.py": "sha256:120ff650a4372db2ca5ae7d022da49d230e1a0a8b7bc50babe063e80ae8e0695",
+    "tools/validators/catalog/validate_catalog_health.py": "sha256:c068e773cd707115eea14d6e35bf7f47f98b12b696e41d557751e683bc173b6f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:9fdd1a8d636c6b9c4bd73a8106a69cf8e2f9dbeff2a146363ce1952742bc490b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44faf7a5ad953d5a5878d49a34a0a342c97b43ed71abd452be227ad97d2c1115"
+    ],
+    "attached_docs": [
+      "New Ideas 2.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 2.pdf",
+      "github:14b9608addcf6cac80adaa0a836182f7a6e47806",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:tools/validators/catalog/README.md",
+      "github:contracts/data/catalog_closure_packet.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/catalog-health.yml": "PROPOSED",
+    "contracts/data/catalog_health_report.md": "PROPOSED",
+    "fixtures/data/catalog_health/README.md": "PROPOSED",
+    "fixtures/data/catalog_health/assets/sample.bin": "PROPOSED",
+    "fixtures/data/catalog_health/expected_findings.json": "PROPOSED",
+    "fixtures/data/catalog_health/expected_outcomes.json": "PROPOSED",
+    "fixtures/data/catalog_health/hold/hold_remote_unverified.json": "PROPOSED",
+    "fixtures/data/catalog_health/invalid/invalid_checksum_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_health/invalid/invalid_missing_governance.json": "PROPOSED",
+    "fixtures/data/catalog_health/invalid/invalid_missing_provenance_links.json": "PROPOSED",
+    "fixtures/data/catalog_health/invalid/invalid_path_escape.json": "PROPOSED",
+    "fixtures/data/catalog_health/valid/valid_embargoed_item.json": "PROPOSED",
+    "fixtures/data/catalog_health/valid/valid_local_item.json": "PROPOSED",
+    "schemas/contracts/v1/data/catalog_health_report.schema.json": "PROPOSED",
+    "tests/validators/test_validate_catalog_health.py": "PROPOSED",
+    "tools/validators/catalog/README.md": "PROPOSED",
+    "tools/validators/catalog/catalog_health_core.py": "PROPOSED",
+    "tools/validators/catalog/catalog_health_rules.py": "PROPOSED",
+    "tools/validators/catalog/validate_catalog_health.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Thirteen focused deterministic unit tests passed in no-network mode across the entrypoint and bounded helper modules."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Two PASS, one HOLD, and four exact-negative fixture cases replayed with reviewed findings."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "CatalogHealthReport Draft 2020-12 schema self-check passed."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "The focused catalog-health workflow parsed as YAML."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact path, SHA-256, truth-label, and receipt-shape closure were checked after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are evaluated after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-2",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 2.pdf"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:14b9608addcf6cac80adaa0a836182f7a6e47806"
+    },
+    {
+      "id": "repository:catalog-validator-boundary",
+      "validated": true,
+      "evidence_ref": "github:tools/validators/catalog/README.md"
+    },
+    {
+      "id": "repository:catalog-closure-packet",
+      "validated": true,
+      "evidence_ref": "github:contracts/data/catalog_closure_packet.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T01:18:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first CatalogHealthReport slice derived from New Ideas 2 catalog-health and provenance-link patterns. The validator is no-network by default, checks record-local STAC metadata and local asset bytes, and returns PASS/HOLD/FAIL/ERROR without creating evidence, policy, review, promotion, release, publication, public-use, or live-source authority. Prepared against main@14b9608addcf6cac80adaa0a836182f7a6e47806."
+}
