@@ -14,7 +14,7 @@
     "packages/hashing/src/hashing/__init__.py": "sha256:288e6783711382dd1a3953f79613b4294eec9907e3716f378b1d10e15f83fc5d",
     "packages/hashing/src/hashing/cli.py": "sha256:155cfac4ff345967cb2cfe9fe6890ef066d04ea6f8f4969efc279b99366ae568",
     "packages/hashing/src/hashing/geojson.py": "sha256:491ed9f7eb84202299e5c174b1c2bd598de4d3883df6095849e5f7e780471eb6",
-    "tests/validators/test_validate_spec_hash_geojson.py": "sha256:c2ddbe8c291c4080bde1153a00726f7ce034e8b51bd5b3c054ca0b0f75511cc6",
+    "tests/validators/test_validate_spec_hash_geojson.py": "sha256:681f02b7e38cb71200a6ef7d09613de898491a2a602d0c4ac784bb475b8f844a",
     "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "sha256:25f4efe988dc613c7545274f5a1b042ae6e9cbd866c609ccd9927a792600d5b0"
   },
   "model_identity": {
@@ -111,10 +111,10 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-07T04:00:31Z",
+  "created_at": "2026-08-07T04:03:38Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2099,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },

@@ -57,11 +57,26 @@ class GeoJSONFeatureDigestTests(unittest.TestCase):
         self.assertEqual(a.geometry_sha256, b.geometry_sha256)
         self.assertNotEqual(a.record_sha256, b.record_sha256)
         right["properties"]["status"] = "open"
-        a = compute_geojson_feature_digests(left, crs="EPSG:4326", excluded_property_keys=["updated_at"])
-        b = compute_geojson_feature_digests(right, crs="EPSG:4326", excluded_property_keys=["updated_at"])
+        a = compute_geojson_feature_digests(
+            left, crs="EPSG:4326", excluded_property_keys=["updated_at"]
+        )
+        b = compute_geojson_feature_digests(
+            right, crs="EPSG:4326", excluded_property_keys=["updated_at"]
+        )
         self.assertEqual(a.record_sha256, b.record_sha256)
-        self.assertNotEqual(a.geometry_sha256, compute_geojson_feature_digests(left, crs="EPSG:3857").geometry_sha256)
-        self.assertNotEqual(a.record_sha256, compute_geojson_feature_digests(left, crs="EPSG:4326", include_feature_id=True, excluded_property_keys=["updated_at"]).record_sha256)
+        self.assertNotEqual(
+            a.geometry_sha256,
+            compute_geojson_feature_digests(left, crs="EPSG:3857").geometry_sha256,
+        )
+        self.assertNotEqual(
+            a.record_sha256,
+            compute_geojson_feature_digests(
+                left,
+                crs="EPSG:4326",
+                include_feature_id=True,
+                excluded_property_keys=["updated_at"],
+            ).record_sha256,
+        )
         self.assertEqual(left, snapshot)
         with self.assertRaises(GeoJSONDigestError):
             compute_geojson_feature_digests({"type": "Feature", "geometry": None}, crs="EPSG:4326")
@@ -69,13 +84,25 @@ class GeoJSONFeatureDigestTests(unittest.TestCase):
     def test_cli_is_deterministic_bounded_and_non_authoritative(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "feature.json"
-            path.write_text(json.dumps(point()) + "\n", encoding="utf-8")
-            command = [sys.executable, str(ROOT / "tools/spec_hash/spec_hash.py"), "geojson-feature", str(path), "--crs", "EPSG:4326", "--exclude-property", "updated_at"]
+            path.write_text(json.dumps( point()) + "\n", encoding="utf-8")
+            command = [
+                sys.executable,
+                str(ROOT / "tools/spec_hash/spec_hash.py"),
+                "geojson-feature",
+                str(path),
+                "--crs",
+                "EPSG:4326",
+                "--exclude-property",
+                "updated_at",
+            ]
             first = subprocess.run(command, check=False, capture_output=True, text=True)
             second = subprocess.run(command, check=False, capture_output=True, text=True)
             self.assertEqual((first.returncode, first.stdout), (0, second.stdout))
             payload = json.loads(first.stdout)
-            self.assertEqual((payload["status"], payload["authority"]), ("GEOJSON_FEATURE_DIGESTS_CREATED", "NONE"))
+            self.assertEqual(
+                (payload["status"], payload["authority"]),
+                ("GEOJSON_FEATURE_DIGESTS_CREATED", "NONE"),
+            )
             path.write_text('{"type":"Point","coordinates":[0,0]}\n', encoding="utf-8")
             failed = subprocess.run(command, check=False, capture_output=True, text=True)
             self.assertEqual(failed.returncode, 2)
