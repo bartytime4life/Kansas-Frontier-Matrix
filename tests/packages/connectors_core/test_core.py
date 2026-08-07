@@ -23,17 +23,36 @@ def _unexpected_network(*_args, **_kwargs):
     raise AssertionError("connectors_core import attempted network access")
 
 
+def _execute_isolated_core_import():
+    module_name = "connectors_core._core_import_probe"
+    source_path = PACKAGE_SRC / "connectors_core/core.py"
+    spec = importlib.util.spec_from_file_location(module_name, source_path)
+    if spec is None or spec.loader is None:
+        raise AssertionError("could not create isolated connectors_core.core import spec")
+    probe = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = probe
+    try:
+        spec.loader.exec_module(probe)
+    finally:
+        sys.modules.pop(module_name, None)
+    return probe
+
+
 def test_import_is_side_effect_free_and_has_no_public_package_exports(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     before = list(tmp_path.iterdir())
+    canonical_retry_policy = core.RetryPolicy
     with (
         patch.object(socket.socket, "connect", side_effect=_unexpected_network),
         patch.object(socket.socket, "connect_ex", side_effect=_unexpected_network),
         patch.object(socket, "create_connection", side_effect=_unexpected_network),
         patch.object(socket, "getaddrinfo", side_effect=_unexpected_network),
     ):
-        importlib.reload(core)
+        probe = _execute_isolated_core_import()
     assert list(tmp_path.iterdir()) == before
+    assert importlib.import_module("connectors_core.core") is core
+    assert core.RetryPolicy is canonical_retry_policy
+    assert probe.RetryPolicy is not canonical_retry_policy
 
     import connectors_core
 
