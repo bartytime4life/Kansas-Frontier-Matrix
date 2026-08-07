@@ -1,0 +1,1 @@
+{"case_id":"invalid-authority-overclaim","expected":{"finding_codes":["SCHEMA_INVALID"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/authority_limits/may_publish","value":true}],"rehash":true}

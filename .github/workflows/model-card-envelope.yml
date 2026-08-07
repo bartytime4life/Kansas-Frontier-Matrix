@@ -1,0 +1,111 @@
+# Validate the proposed KFM governed ModelCardEnvelope profile.
+#
+# The job is read-only, deterministic, synthetic, and no-network after
+# repository-declared dependencies are installed. A green result proves only
+# bounded contract conformance and creates no model, evidence, policy, review,
+# release, deployment, publication, or public-use authority.
+name: model-card-envelope
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/model-card-envelope.yml"
+      - "contracts/governance/model_card_envelope.md"
+      - "docs/intake/exploratory/model-card-envelope-source-map.md"
+      - "schemas/contracts/v1/governance/model_card_envelope.schema.json"
+      - "fixtures/contracts/v1/governance/model_card_envelope/**"
+      - "tools/validators/governance/model_card_envelope_core.py"
+      - "tools/validators/governance/validate_model_card_envelope.py"
+      - "tests/validators/governance/test_validate_model_card_envelope.py"
+      - "data/receipts/generated/genrec-model-card-envelope-20260807.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/model-card-envelope.yml"
+      - "contracts/governance/model_card_envelope.md"
+      - "docs/intake/exploratory/model-card-envelope-source-map.md"
+      - "schemas/contracts/v1/governance/model_card_envelope.schema.json"
+      - "fixtures/contracts/v1/governance/model_card_envelope/**"
+      - "tools/validators/governance/model_card_envelope_core.py"
+      - "tools/validators/governance/validate_model_card_envelope.py"
+      - "tests/validators/governance/test_validate_model_card_envelope.py"
+      - "data/receipts/generated/genrec-model-card-envelope-20260807.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: model-card-envelope-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-model-card-envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_validate_model_card_envelope.py' \
+            --verbose
+
+      - name: Replay reviewed finite fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/validate_model_card_envelope.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-model-card-envelope-20260807.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Governed ModelCardEnvelope"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic identity, digest-pinned bindings, declared rights/review/release state, model-kind use limits, transform permissions/prohibitions, and safe finite outcomes."
+            echo "- Network: no live model, catalog, signature, attestation, source, or telemetry request is made."
+            echo "- Boundary: PASS proves fixture-profile conformance only."
+            echo "- Non-effects: no model existence, quality, evidence, policy, review, release, deployment, publication, or public-use authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"

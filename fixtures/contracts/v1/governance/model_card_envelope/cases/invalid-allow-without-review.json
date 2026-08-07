@@ -1,0 +1,1 @@
+{"case_id":"invalid-allow-without-review","expected":{"finding_codes":["ALLOW_REVIEW_INCOMPLETE","RELEASE_REVIEW_REQUIRED"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/governance/human_review_completed","value":false},{"op":"set","path":"/governance/review_state","value":"PENDING"},{"op":"set","path":"/governance/reviewed_at","value":null}],"rehash":true}

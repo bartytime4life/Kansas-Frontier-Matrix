@@ -1,0 +1,1 @@
+{"case_id":"invalid-transform-overlap","expected":{"finding_codes":["TRANSFORM_PERMISSION_CONFLICT"],"outcome":"FAIL"},"mutations":[{"op":"add","path":"/ai_transform_permissions","value":"deanonymize"}],"rehash":true}
