@@ -25,8 +25,19 @@ sys.modules[spec.name] = validator
 spec.loader.exec_module(validator)
 
 CASES = json.loads(CASES_PATH.read_text(encoding="utf-8"))
-VALID_CASES = {case["name"]: case for case in CASES["valid_cases"]}
-INVALID_CASES = {case["name"]: case for case in CASES["invalid_cases"]}
+VALID_CASE_SPECS = {case["name"]: case for case in CASES["valid_cases"]}
+INVALID_CASE_SPECS = {case["name"]: case for case in CASES["invalid_cases"]}
+VALID_CASES = {
+    name: validator.materialize_case(CASES, case)
+    for name, case in VALID_CASE_SPECS.items()
+}
+INVALID_CASES = {
+    name: {
+        "payload": validator.materialize_case(CASES, case),
+        "expected_codes": case["expected_codes"],
+    }
+    for name, case in INVALID_CASE_SPECS.items()
+}
 
 
 class MapReleaseManifestTests(unittest.TestCase):
@@ -46,7 +57,7 @@ class MapReleaseManifestTests(unittest.TestCase):
         self.assertEqual(set(expected), set(VALID_CASES))
         for name, state in expected.items():
             with self.subTest(name=name):
-                result = validator.validate_payload(VALID_CASES[name]["payload"])
+                result = validator.validate_payload(VALID_CASES[name])
                 self.assertTrue(result.ok, result.findings)
                 self.assertEqual(state, result.release_state)
 
@@ -62,13 +73,13 @@ class MapReleaseManifestTests(unittest.TestCase):
                 )
 
     def test_identity_is_stable_across_mapping_key_order(self) -> None:
-        payload = VALID_CASES["published_public"]["payload"]
+        payload = VALID_CASES["published_public"]
         reordered = {key: payload[key] for key in reversed(list(payload))}
         self.assertEqual(payload["spec_hash"], validator.canonical_spec_hash(reordered))
         self.assertEqual(payload["map_release_id"], validator.expected_map_release_id(reordered))
 
     def test_published_case_has_catalog_evidence_review_attestation_and_rollback_closure(self) -> None:
-        payload = VALID_CASES["published_public"]["payload"]
+        payload = VALID_CASES["published_public"]
         for name in ("stac", "dcat", "prov"):
             self.assertTrue(payload["catalog_refs"][name])
         for name in (
@@ -88,7 +99,7 @@ class MapReleaseManifestTests(unittest.TestCase):
         self.assertIsNotNone(payload["rollback"]["rollback_card_ref"])
 
     def test_pmtiles_and_cog_require_range_and_cors_when_published(self) -> None:
-        payload = VALID_CASES["published_public"]["payload"]
+        payload = VALID_CASES["published_public"]
         ranged = [
             item
             for item in payload["artifact_manifests"]
@@ -98,12 +109,12 @@ class MapReleaseManifestTests(unittest.TestCase):
         self.assertTrue(all(item["range_supported"] and item["cors_allowed"] for item in ranged))
 
     def test_generalized_case_carries_redaction_receipt(self) -> None:
-        payload = VALID_CASES["published_generalized"]["payload"]
+        payload = VALID_CASES["published_generalized"]
         self.assertEqual("GENERALIZED", payload["public_boundary"]["geometry_posture"])
         self.assertTrue(payload["redaction_receipt_refs"])
 
     def test_public_boundary_denies_internal_and_unreleased_paths(self) -> None:
-        boundary = VALID_CASES["published_public"]["payload"]["public_boundary"]
+        boundary = VALID_CASES["published_public"]["public_boundary"]
         denied = (
             "raw_path_exposed",
             "work_path_exposed",
@@ -115,7 +126,7 @@ class MapReleaseManifestTests(unittest.TestCase):
         self.assertTrue(all(boundary[key] is False for key in denied))
 
     def test_unknown_member_is_denied_by_schema(self) -> None:
-        payload = dict(VALID_CASES["published_public"]["payload"])
+        payload = dict(VALID_CASES["published_public"])
         payload["unexpected"] = True
         result = validator.validate_payload(payload)
         self.assertFalse(result.ok)
@@ -171,7 +182,7 @@ class MapReleaseManifestTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "published.json"
             path.write_text(
-                json.dumps(VALID_CASES["published_public"]["payload"], sort_keys=True),
+                json.dumps(VALID_CASES["published_public"], sort_keys=True),
                 encoding="utf-8",
             )
             completed = subprocess.run(
