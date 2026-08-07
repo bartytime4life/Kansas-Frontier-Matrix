@@ -44,6 +44,7 @@
       "contracts/map/georeference_transform_quality.md",
       "docs/intake/exploratory/georeference-transform-quality-source-map.md",
       "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "schemas/contracts/v1/receipts/generated_receipt.schema.json"
     ]
   },
@@ -60,12 +61,12 @@
     {
       "gate": "focused-pytest-11",
       "outcome": "PASS",
-      "reason": "11 deterministic control-point-set identity tests passed."
+      "reason": "11 deterministic control-point-set identity tests passed locally and on hosted head c095afa51370b428eca7dec2722713090211f827."
     },
     {
       "gate": "fixture-exact-polarity-11",
       "outcome": "PASS",
-      "reason": "11 cases covered VALID and ERROR with exact reason sets."
+      "reason": "11 cases covered VALID and ERROR with exact reason sets locally and on hosted head c095afa51370b428eca7dec2722713090211f827."
     },
     {
       "gate": "lane-specific-identity",
@@ -97,10 +98,12 @@
     {
       "gate": "hosted-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending draft pull request creation."
+      "reason": "Hosted head c095afa51370b428eca7dec2722713090211f827 passed focused tests and fixture polarity but failed receipt validation with POLICY_DECISION_REQUIRED; this receipt-only correction adds the repository-adopted Directory Governance ADR reference and requires a new exact-head run."
     }
   ],
-  "policy_decisions": [],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
   "citations": [
     {
       "id": "GEOREFERENCE_TRANSFORM_QUALITY",
@@ -118,6 +121,11 @@
       "evidence_ref": "docs/doctrine/directory-rules.md"
     },
     {
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
       "id": "GENERATED_RECEIPT_SCHEMA_V1",
       "validated": true,
       "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
@@ -132,8 +140,8 @@
   "created_at": "2026-08-07T03:38:00Z",
   "emitter": "openai/gpt-5.6-sol",
   "links": {
-    "pr_number": null,
-    "adr_link": null,
+    "pr_number": 2095,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
   "notes": "Fixture-only canonical GCP set identity. VALID does not authenticate GCPs, establish transform or cartographic truth, evaluate policy, or authorize merge/release/publication/public use."
