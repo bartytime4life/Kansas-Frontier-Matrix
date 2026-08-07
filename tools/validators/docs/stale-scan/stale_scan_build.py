@@ -31,7 +31,6 @@ LIMITATIONS = (
     "The scanner never edits Markdown, registries, doctrine, policy, review, release, or publication state.",
 )
 
-
 IMPLEMENTATION_MARKERS = (
     "implemented",
     "bounded-executable",
@@ -68,7 +67,217 @@ def parse_type_windows(raw_values: Sequence[str]) -> dict[str, int]:
 
 
 def _claim_review_due(metadata: Mapping[str, object], text: str) -> bool:
-    status = (scalar(metadata, "status") or "").lower()
-    posture = (scalar(metadata, "truth_posture") or "").lower()
-    responsibility = (scalar(metadata, "responsibility") or "").lower()
-    combined = " ".joim¸ ¡ÍÑ…ÑÕÌ°Á½ÍÑÕÉ”°É•ÍÁ½¹Í¥‰¥±¥Ñä°Ñ•áÑlèÄÔÀÁt¹±½Ý•È ¤¤¤(€€€É•ÑÕÉ¸…¹ä¡µ…É­•È¥¸½µ‰¥¹•™½Èµ…É­•È¥¸%5A159QQ%=9}5I-IL¤(()‘•˜Í…¹}ÍÑ…±•}‘½Ì (€€€€¨°(€€€É•Á½}É½½ÐèA…Ñ °(€€€¥¹ÁÕÑÌèM•ÅÕ•¹•mÍÑÉt°(€€€…Í}½˜è‘…Ñ”°(€€€ÁÉ½™¥±”èÍÑÈ€ô€‰…‘Ù¥Í½Éäˆ°(€€€É•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌè¥¹Ð€ô€ÌØÔ°(€€€Á±…•¡½±‘•É}É…•}‘…åÌè¥¹Ð€ô€äÀ°(€€€ÑåÁ•}Ý¥¹‘½ÝÌè5…ÁÁ¥¹mÍÑÈ°¥¹Ñtð9½¹”€ô9½¹”°(€€€¥Ñ}‘¥™˜èÍÑÈð9½¹”€ô9½¹”°(€€€Ý…É¹¥¹Í}…Í}•ÉÉ½ÉÌè‰½½°€ô…±Í”°(¤€´øMÑ…±•M…¹I•ÍÕ±Ðè(€€€¥˜ÁÉ½™¥±”¹½Ð¥¸ì‰…‘Ù¥Í½Éäˆ°€‰‰½Õ¹‘•µÉ•ÅÕ¥É•‰ôè(€€€€€€€É…¥Í”MÑ…±•M…¹ÉÉ½È ‰Õ¹ÍÕÁÁ½ÉÑ•ÍÑ…±”µÍ…¸ÁÉ½™¥±”ˆ¤(€€€¥˜É•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌ€ð€Ä½ÈÁ±…•¡½±‘•É}É…•}‘…åÌ€ð€Äè(€€€€€€€É…¥Í”MÑ…±•M…¹ÉÉ½È ‰™É•Í¡¹•ÍÌÑ¡É•Í¡½±‘ÌµÕÍÐ‰”Á½Í¥Ñ¥Ù”¥¹Ñ••ÉÌˆ¤((€€€É½½Ð€ôÉ•Á½}É½½Ð¹É•Í½±Ù” ¤(€€€ÑåÁ•}Ý¥¹‘½Ý}µ…À€ôí­•ä¹±½Ý•È ¤èÙ…±Õ”™½È­•ä°Ù…±Õ”¥¸€¡ÑåÁ•}Ý¥¹‘½ÝÌ½Èíô¤¹¥Ñ•µÌ ¥ô(€€€Á…Ñ¡Ì€ô½±±•Ñ}µ…É­‘½Ý¹}Á…Ñ¡Ì¡É½½Ð°¥¹ÁÕÑÌ¤(€€€™¥¹‘¥¹Ìè±¥ÍÑm¥¹‘¥¹t€ômt(€€€‘½Õµ•¹ÑÌè±¥ÍÑm‘¥ÑmÍÑÈ°½‰©•Ñut€ômt((€€€™½È™¥±•}Á…Ñ ¥¸Á…Ñ¡Ìè(€€€€€€€É•±…Ñ¥Ù”€ô™¥±•}Á…Ñ ¹É•±…Ñ¥Ù•}Ñ¼¡É½½Ð¤¹…Í}Á½Í¥à ¤(€€€€€€€Ñ•áÐ€ôÉ•…‘}ÕÑ˜à¡™¥±•}Á…Ñ ¤(€€€€€€€Á…ÉÍ•€ôÁ…ÉÍ•}µ•Ñ…}‰±½¬¡Ñ•áÐ°É•±…Ñ¥Ù”¤(€€€€€€€™¥¹‘¥¹Ì¹•áÑ•¹¡Á…ÉÍ•¹™¥¹‘¥¹Ì¤(€€€€€€€µ•Ñ…‘…Ñ„€ôÁ…ÉÍ•¹µ•Ñ…‘…Ñ„((€€€€€€€‘½Õµ•¹Ñ}ÑåÁ”€ô€¡Í…±…È¡µ•Ñ…‘…Ñ„°€‰ÑåÁ”ˆ¤½È€‰Õ¹­¹½Ý¸ˆ¤¹±½Ý•È ¤(€€€€€€€Ý¥¹‘½Ü€ôÑåÁ•}Ý¥¹‘½Ý}µ…À¹•Ð¡‘½Õµ•¹Ñ}ÑåÁ”°É•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌ¤(€€€€€€€É•…Ñ•‘}É…Ü€ôÍ…±…È¡µ•Ñ…‘…Ñ„°€‰É•…Ñ•ˆ¤(€€€€€€€ÕÁ‘…Ñ•‘}É…Ü€ôÍ…±…È¡µ•Ñ…‘…Ñ„°€‰±…ÍÑ}É•Ù¥•Ý•ˆ°€‰É•Ù¥•Ý•ˆ°€‰ÕÁ‘…Ñ•ˆ¤(€€€€€€€É•…Ñ•€ôÁ…ÉÍ•}¥Í½}‘…Ñ”¡É•…Ñ•‘}É…Ü¤¥˜É•…Ñ•‘}É…Ü•±Í”9½¹”(€€€€€€€É•Ù¥•Ý•€ôÁ…ÉÍ•}¥Í½}‘…Ñ”¡ÕÁ‘…Ñ•‘}É…Ü¤¥˜ÕÁ‘…Ñ•‘}É…Ü•±Í”9½¹”(€€€€€€€½Ý¹•È€ô½Ý¹•É}Ñ•áÐ¡µ•Ñ…‘…Ñ„¤(€€€€€€€Á±…•¡½±‘•È€ô½Ý¹•É}¥Í}Á±…•¡½±‘•È¡½Ý¹•È¤(€€€€€€€…•}‘…åÌè¥¹Ðð9½¹”€ô9½¹”((€€€€€€€¥˜¹½ÐÁ…ÉÍ•¹¡…Í}‰±½¬è(€€€€€€€€€€€¥˜ÁÉ½™¥±”€ôô€‰‰½Õ¹‘•µÉ•ÅÕ¥É•ˆ…¹¹½ÐÁ…ÉÍ•¹™¥¹‘¥¹Ìè(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰1Q}Q=}5Q}	1=,ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€‰Q¡”‰½Õ¹‘•µÉ•ÅÕ¥É•ÍÑ…±”ÁÉ½™¥±”¹••‘Ì„µ•Ñ…‘…Ñ„‰±½¬ìÍÑÉÕÑÕÉ…°•¹™½É•µ•¹Ð‰•±½¹ÌÑ¼Ñ¡”µ•Ñ„µ‰±½¬Ù…±¥‘…Ñ½È¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€•±Í”è(€€€€€€€€€€€¥˜É•…Ñ•‘}É…Ü…¹É•…Ñ•¥Ì9½¹”è(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰IQ}Q}%9Y1%ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€˜‰É•…Ñ•‘…Ñ”€íÉ•…Ñ•‘}É…Ýôœ¥Ì¹½Ð…¸%M<…±•¹‘…È‘…Ñ”¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€¥˜ÕÁ‘…Ñ•‘}É…Ü…¹É•Ù¥•Ý•¥Ì9½¹”è(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰IY%]}Q}%9Y1%ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€˜‰I•Ù¥•Ü‘…Ñ”€íÕÁ‘…Ñ•‘}É…Ýôœ¥Ì¹½Ð…¸%M<…±•¹‘…È‘…Ñ”¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€¥˜É•Ù¥•Ý•¥Ì9½¹”…¹ÕÁ‘…Ñ•‘}É…Ü¥Ì9½¹”è(€€€€€€€€€€€€€€€Í•Ù•É¥Ñä€ô€‰™…¥°ˆ¥˜ÁÉ½™¥±”€ôô€‰‰½Õ¹‘•µÉ•ÅÕ¥É•ˆ•±Í”€‰Ý…É¸ˆ(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰IY%]}Q}5%MM%9ˆ°(€€€€€€€€€€€€€€€€€€€€€€€Í•Ù•É¥Ñä°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€‰9¼±…ÍÑ}É•Ù¥•Ý•°É•Ù¥•Ý•°½ÈÕÁ‘…Ñ•‘…Ñ”¥Ì…Ù…¥±…‰±”™½È™É•Í¡¹•ÍÌ…ÍÍ•ÍÍµ•¹Ð¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€¥˜É•…Ñ•…¹É•Ù¥•Ý•…¹É•…Ñ•€øÉ•Ù¥•Ý•è(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰Q}=II}%9Y1%ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€˜‰É•…Ñ•‘…Ñ”íÉ•…Ñ•¹¥Í½™½Éµ…Ð ¥ô¥Ì±…Ñ•ÈÑ¡…¸É•Ù¥•Ü‘…Ñ”íÉ•Ù¥•Ý•¹¥Í½™½Éµ…Ð ¥ô¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€¥˜É•Ù¥•Ý•è(€€€€€€€€€€€€€€€…•}‘…åÌ€ô€¡…Í}½˜€´É•Ù¥•Ý•¤¹‘…åÌ(€€€€€€€€€€€€€€€¥˜…•}‘…åÌ€ð€Àè(€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰UQUI}IY%]}Qˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€˜‰I•Ù¥•Ü‘…Ñ”íÉ•Ù¥•Ý•¹¥Í½™½Éµ…Ð ¥ô¥Ìí…‰Ì¡…•}‘…åÌ¥ô‘…ä¡Ì¤…™Ñ•ÈÑ¡”…Ìµ½˜‘…Ñ”¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€•±¥˜…•}‘…åÌ€øÝ¥¹‘½Üè(€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰IY%]}]%9=]}aA%Iˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Ý…É¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€˜‰I•Ù¥•Ü…”¥Ìí…•}‘…åÍô‘…åÌ°•á••‘¥¹œÑ¡”½¹™¥ÕÉ•íÝ¥¹‘½Ýôµ‘…äÝ¥¹‘½Ü¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€¥˜}±…¥µ}É•Ù¥•Ý}‘Õ”¡µ•Ñ…‘…Ñ„°Ñ•áÐ¤è(€€€€€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰%5A159QQ%=9}1%5}IY%]}Uˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Ý…É¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Q¡”‘½Õµ•¹Ð…ÉÉ¥•Ì¥µÁ±•µ•¹Ñ…Ñ¥½¸½ÕÉÉ•¹ÐµÍÑ…Ñ”±…¹Õ…”…¹¥ÑÌÉ•Ù¥•ÜÝ¥¹‘½Ü¡…Ì•áÁ¥É•ì…ÑÕ…°‰•¡…Ù¥½ÈµÕÍÐ‰”É•Ù•É¥™¥•¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€Á½ÍÑÕÉ”€ô€¡Í…±…È¡µ•Ñ…‘…Ñ„°€‰ÑÉÕÑ¡}Á½ÍÑÕÉ”ˆ¤½È€ˆˆ¤¹ÕÁÁ•È ¤(€€€€€€€€€€€€€€€€€€€¥˜€‰9LYI%%Q%=8ˆ¥¸Á½ÍÑÕÉ”½È€‰U9-9=]8ˆ¥¸Á½ÍÑÕÉ”è(€€€€€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰YI%%Q%=9}	Q}IY%]}Uˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Ý…É¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Q¡”‘½Õµ•¹ÐÉ•Ñ…¥¹ÌÕ¹É•Í½±Ù•Ù•É¥™¥…Ñ¥½¸Á½ÍÑÕÉ”‰•å½¹Ñ¡”½¹™¥ÕÉ•É•Ù¥•ÜÝ¥¹‘½Ü¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€…•}™½É}½Ý¹•È€ô…•}‘…åÌ(€€€€€€€€€€€¥˜…•}™½É}½Ý¹•È¥Ì9½¹”…¹É•…Ñ•è(€€€€€€€€€€€€€€€…•}™½É}½Ý¹•È€ô€¡…Í}½˜€´É•…Ñ•¤¹‘…åÌ(€€€€€€€€€€€¥˜Á±…•¡½±‘•È…¹…•}™½É}½Ý¹•È¥Ì¹½Ð9½¹”…¹…•}™½É}½Ý¹•È€øÁ±…•¡½±‘•É}É…•}‘…åÌè(€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€‰=]9I}A1!=1I}MQ1ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€‰Ý…É¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€˜‰=Ý¹•ÈÁ±…•¡½±‘•ÈÉ•µ…¥¹Ì…™Ñ•Èí…•}™½É}½Ý¹•Éô‘…åÌìÉ½ÕÑ”Ñ¼Ñ¡”½Ý¹¥¹œÍÑ•Ý…ÉÉ…Ñ¡•ÈÑ¡…¸¥¹Ù•¹Ñ¥¹œ…¸½Ý¹•È¸ˆ°(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€™½È­•ä°É…Ý}Ù…±Õ”¥¸Ñ•µÁ½É…±}µ…É­•É}Ù…±Õ•Ì¡µ•Ñ…‘…Ñ„¤è(€€€€€€€€€€€€€€€µ…É­•É}‘…Ñ”€ôÁ…ÉÍ•}¥Í½}‘…Ñ”¡É…Ý}Ù…±Õ”¤(€€€€€€€€€€€€€€€¥˜µ…É­•É}‘…Ñ”¥Ì9½¹”è(€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Q5A=IIe}5I-I}Q}%9Y1%ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰™…¥°ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€˜‰5•Ñ…‘…Ñ„™¥•±€í­•åôœÙ…±Õ”€íÉ…Ý}Ù…±Õ•ôœ¥Ì¹½Ð…¸%M<…±•¹‘…È‘…Ñ”¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€•±¥˜µ…É­•É}‘…Ñ”€ð…Í}½˜è(€€€€€€€€€€€€€€€€€€€™¥¹‘¥¹Ì¹…ÁÁ•¹ (€€€€€€€€€€€€€€€€€€€€€€€¥¹‘¥¹œ (€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Q5A=IIe}5I-I}aA%Iˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€‰Ý…É¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€€€€É•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€€€€€€€€€€€€˜‰5•Ñ…‘…Ñ„™¥•±€í­•åôœ•áÁ¥É•½¸íµ…É­•É}‘…Ñ”¹¥Í½™½Éµ…Ð ¥ô…¹É•ÅÕ¥É•ÌÍÑ•Ý…ÉÉ•Ù¥•Ü¸ˆ°(€€€€€€€€€€€€€€€€€€€€€€€€¤(€€€€€€€€€€€€€€€€€€€€¤((€€€€€€€‘½Õµ•¹ÑÌ¹…ÁÁ•¹ (€€€€€€€€€€€ì(€€€€€€€€€€€€€€€€‰Á…Ñ ˆèÉ•±…Ñ¥Ù”°(€€€€€€€€€€€€€€€€‰‘½}¥ˆèÍ…±…È¡µ•Ñ…‘…Ñ„°€‰‘½}¥ˆ°€‰‘½Õµ•¹Ñ}¥ˆ¤°(€€€€€€€€€€€€€€€€‰Ñ¥Ñ±”ˆèÍ…±…È¡µ•Ñ…‘…Ñ„°€‰Ñ¥Ñ±”ˆ¤°(€€€€€€€€€€€€€€€€‰ÑåÁ”ˆè‘½Õµ•¹Ñ}ÑåÁ”°(€€€€€€€€€€€€€€€€‰ÍÑ…ÑÕÌˆèÍ…±…È¡µ•Ñ…‘…Ñ„°€‰ÍÑ…ÑÕÌˆ¤°(€€€€€€€€€€€€€€€€‰½Ý¹•Èˆè½Ý¹•È°(€€€€€€€€€€€€€€€€‰¡…Í}µ•Ñ…‘…Ñ„ˆèÁ…ÉÍ•¹¡…Í}‰±½¬°(€€€€€€€€€€€€€€€€‰É•Ù¥•Ý}‘…Ñ”ˆèÉ•Ù¥•Ý•¹¥Í½™½Éµ…Ð ¤¥˜É•Ù¥•Ý••±Í”9½¹”°(€€€€€€€€€€€€€€€€‰…•}‘…åÌˆè…•}‘…åÌ°(€€€€€€€€€€€€€€€€‰É•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌˆèÝ¥¹‘½Ü°(€€€€€€€€€€€€€€€€‰½Ý¹•É}Á±…•¡½±‘•ÈˆèÁ±…•¡½±‘•È°(€€€€€€€€€€€€€€€€‰ÕÉÉ•¹ÐˆèQÉÕ”°(€€€€€€€€€€€ô(€€€€€€€€¤((€€€¡…¹•‘}Á…Ñ¡Ì€ô¡…¹•‘}Á…Ñ¡Í}™É½µ}¥Ð¡É½½Ð°¥Ñ}‘¥™˜¤¥˜¥Ñ}‘¥™˜•±Í”9½¹”(€€€É…Ñ¡•Ñ•€ôÉ…Ñ¡•Ñ}™¥¹‘¥¹Ì (€€€€€€€™¥¹‘¥¹Ì°(€€€€€€€¡…¹•‘}Á…Ñ¡Ìõ¡…¹•‘}Á…Ñ¡Ì°(€€€€€€€Ý…É¹¥¹Í}…Í}•ÉÉ½ÉÌõÝ…É¹¥¹Í}…Í}•ÉÉ½ÉÌ°(€€€€¤(€€€¥˜¡…¹•‘}Á…Ñ¡Ì¥Ì¹½Ð9½¹”è(€€€€€€€‘½Õµ•¹ÑÌ€ôl(€€€€€€€€€€€ì¨©‘½Õµ•¹Ð°€‰ÕÉÉ•¹ÐˆèÍÑÈ¡‘½Õµ•¹Ñl‰Á…Ñ ‰t¤¥¸¡…¹•‘}Á…Ñ¡Íô(€€€€€€€€€€€™½È‘½Õµ•¹Ð¥¸‘½Õµ•¹ÑÌ(€€€€€€€t(€€€É•ÑÕÉ¸É•ÍÕ±Ñ}™É½µ}Á…ÉÑÌ (€€€€€€€ÁÉ½™¥±”õÁÉ½™¥±”°(€€€€€€€…Í}½˜õ…Í}½˜¹¥Í½™½Éµ…Ð ¤°(€€€€€€€É•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌõÉ•Ù¥•Ý}Ý¥¹‘½Ý}‘…åÌ°(€€€€€€€Á±…•¡½±‘•É}É…•}‘…åÌõÁ±…•¡½±‘•É}É…•}‘…åÌ°(€€€€€€€‘½Õµ•¹ÑÌõ‘½Õµ•¹ÑÌ°(€€€€€€€™¥¹‘¥¹ÌõÉ…Ñ¡•Ñ•°(€€€€€€€Ý…É¹¥¹Í}…Í}•ÉÉ½ÉÌõÝ…É¹¥¹Í}…Í}•ÉÉ½ÉÌ°(€€€€€€€±¥µ¥Ñ…Ñ¥½¹Ìõ1%5%QQ%=9L°(€€€€¤(
+    values = (
+        scalar(metadata, "status") or "",
+        scalar(metadata, "truth_posture") or "",
+        scalar(metadata, "responsibility") or "",
+        text[:1500],
+    )
+    combined = " ".join(values).lower()
+    return any(marker in combined for marker in IMPLEMENTATION_MARKERS)
+
+
+def _verification_debt_due(metadata: Mapping[str, object]) -> bool:
+    posture = (scalar(metadata, "truth_posture") or "").upper()
+    return "NEEDS VERIFICATION" in posture or "UNKNOWN" in posture
+
+
+def scan_stale_docs(
+    *,
+    repo_root: Path,
+    inputs: Sequence[str],
+    as_of: date,
+    profile: str = "advisory",
+    review_window_days: int = 365,
+    placeholder_grace_days: int = 90,
+    type_windows: Mapping[str, int] | None = None,
+    git_diff: str | None = None,
+    warnings_as_errors: bool = False,
+) -> StaleScanResult:
+    if profile not in {"advisory", "bounded-required"}:
+        raise StaleScanError("unsupported stale-scan profile")
+    if review_window_days < 1 or placeholder_grace_days < 1:
+        raise StaleScanError("freshness thresholds must be positive integers")
+
+    root = repo_root.resolve()
+    windows = {key.lower(): value for key, value in (type_windows or {}).items()}
+    paths = collect_markdown_paths(root, inputs)
+    findings: list[Finding] = []
+    documents: list[dict[str, object]] = []
+
+    for file_path in paths:
+        relative = file_path.relative_to(root).as_posix()
+        text = read_utf8(file_path)
+        parsed = parse_meta_block(text, relative)
+        findings.extend(parsed.findings)
+        metadata = parsed.metadata
+        document_type = (scalar(metadata, "type") or "unknown").lower()
+        window = windows.get(document_type, review_window_days)
+        created_raw = scalar(metadata, "created")
+        reviewed_raw = scalar(metadata, "last_reviewed", "reviewed", "updated")
+        created = parse_iso_date(created_raw) if created_raw else None
+        reviewed = parse_iso_date(reviewed_raw) if reviewed_raw else None
+        owner = owner_text(metadata)
+        placeholder = owner_is_placeholder(owner)
+        age_days: int | None = None
+
+        if not parsed.has_block:
+            if profile == "bounded-required" and not parsed.findings:
+                findings.append(
+                    Finding(
+                        "DELEGATE_TO_META_BLOCK",
+                        "fail",
+                        relative,
+                        "The bounded-required stale profile needs a metadata block; structural enforcement belongs to the meta-block validator.",
+                    )
+                )
+        else:
+            if created_raw and created is None:
+                findings.append(
+                    Finding(
+                        "CREATED_DATE_INVALID",
+                        "fail",
+                        relative,
+                        f"Created date '{created_raw}' is not an ISO calendar date.",
+                    )
+                )
+            if reviewed_raw and reviewed is None:
+                findings.append(
+                    Finding(
+                        "REVIEW_DATE_INVALID",
+                        "fail",
+                        relative,
+                        f"Review date '{reviewed_raw}' is not an ISO calendar date.",
+                    )
+                )
+            if reviewed is None and reviewed_raw is None:
+                severity = "fail" if profile == "bounded-required" else "warn"
+                findings.append(
+                    Finding(
+                        "REVIEW_DATE_MISSING",
+                        severity,
+                        relative,
+                        "No last_reviewed, reviewed, or updated date is available for freshness assessment.",
+                    )
+                )
+            if created and reviewed and created > reviewed:
+                findings.append(
+                    Finding(
+                        "DATE_ORDER_INVALID",
+                        "fail",
+                        relative,
+                        f"Created date {created.isoformat()} is later than review date {reviewed.isoformat()}.",
+                    )
+                )
+            if reviewed:
+                age_days = (as_of - reviewed).days
+                if age_days < 0:
+                    findings.append(
+                        Finding(
+                            "FUTURE_REVIEW_DATE",
+                            "fail",
+                            relative,
+                            f"Review date {reviewed.isoformat()} is {abs(age_days)} day(s) after the as-of date.",
+                        )
+                    )
+                elif age_days > window:
+                    findings.append(
+                        Finding(
+                            "REVIEW_WINDOW_EXPIRED",
+                            "warn",
+                            relative,
+                            f"Review age is {age_days} days, exceeding the configured {window}-day window.",
+                        )
+                    )
+                    if _claim_review_due(metadata, text):
+                        findings.append(
+                            Finding(
+                                "IMPLEMENTATION_CLAIM_REVIEW_DUE",
+                                "warn",
+                                relative,
+                                "The document carries implementation/current-state language and its review window has expired; actual behavior must be reverified.",
+                            )
+                        )
+                    if _verification_debt_due(metadata):
+                        findings.append(
+                            Finding(
+                                "VERIFICATION_DEBT_REVIEW_DUE",
+                                "warn",
+                                relative,
+                                "The document retains unresolved verification posture beyond the configured review window.",
+                            )
+                        )
+
+            age_for_owner = age_days
+            if age_for_owner is None and created:
+                age_for_owner = (as_of - created).days
+            if placeholder and age_for_owner is not None and age_for_owner > placeholder_grace_days:
+                findings.append(
+                    Finding(
+                        "OWNER_PLACEHOLDER_STALE",
+                        "warn",
+                        relative,
+                        f"Owner placeholder remains after {age_for_owner} days; route to the owning steward rather than inventing an owner.",
+                    )
+                )
+
+            for key, raw_value in temporal_marker_values(metadata):
+                marker_date = parse_iso_date(raw_value)
+                if marker_date is None:
+                    findings.append(
+                        Finding(
+                            "TEMPORARY_MARKER_DATE_INVALID",
+                            "fail",
+                            relative,
+                            f"Metadata field '{key}' value '{raw_value}' is not an ISO calendar date.",
+                        )
+                    )
+                elif marker_date < as_of:
+                    findings.append(
+                        Finding(
+                            "TEMPORARY_MARKER_EXPIRED",
+                            "warn",
+                            relative,
+                            f"Metadata field '{key}' expired on {marker_date.isoformat()} and requires steward review.",
+                        )
+                    )
+
+        documents.append(
+            {
+                "path": relative,
+                "doc_id": scalar(metadata, "doc_id", "document_id"),
+                "title": scalar(metadata, "title"),
+                "type": document_type,
+                "status": scalar(metadata, "status"),
+                "owner": owner,
+                "has_metadata": parsed.has_block,
+                "review_date": reviewed.isoformat() if reviewed else None,
+                "age_days": age_days,
+                "review_window_days": window,
+                "owner_placeholder": placeholder,
+                "current": True,
+            }
+        )
+
+    changed_paths = changed_paths_from_git(root, git_diff) if git_diff else None
+    ratcheted = ratchet_findings(
+        findings,
+        changed_paths=changed_paths,
+        warnings_as_errors=warnings_as_errors,
+    )
+    if changed_paths is not None:
+        documents = [
+            {**document, "current": str(document["path"]) in changed_paths}
+            for document in documents
+        ]
+
+    return result_from_parts(
+        profile=profile,
+        as_of=as_of.isoformat(),
+        review_window_days=review_window_days,
+        placeholder_grace_days=placeholder_grace_days,
+        documents=documents,
+        findings=ratcheted,
+        warnings_as_errors=warnings_as_errors,
+        limitations=LIMITATIONS,
+    )

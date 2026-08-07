@@ -99,11 +99,11 @@ jobs:
 
           cat "$RUNNER_TEMP/docs-stale-scan.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current stale-scan repair receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-docs-stale-scan-20260807.json \
+            data/receipts/generated/genrec-docs-stale-scan-ci-repair-20260807.json \
             --repo-root .
 
       - name: Record freshness trust boundary
