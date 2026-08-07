@@ -1,6 +1,6 @@
 # KFM policy and trust-membrane boundary guards.
 # Status: command-bearing structural/static suite with a non-authoritative JUnit
-# report. The four test modules currently collect 16 tests.
+# report. The four test modules currently collect 18 tests.
 #
 # Responsibility:
 # - Enforce the implemented control-plane meta contract, explorer adapter/store
@@ -157,9 +157,9 @@ jobs:
                   raise SystemExit(f"Boundary test module collected no tests: {path}")
               discovered.extend(f"{path}:{name}" for name in functions)
 
-          if len(discovered) != 16:
+          if len(discovered) != 18:
               raise SystemExit(
-                  "Boundary-suite inventory changed from the reviewed 16 tests. "
+                  "Boundary-suite inventory changed from the reviewed 18 tests. "
                   "Update scope, documentation, and JUnit expectations deliberately:\n"
                   + "\n".join(discovered)
               )
@@ -198,7 +198,7 @@ jobs:
                   "dependency policy before running the suite."
               )
 
-          print("Boundary-suite wiring is complete and non-vacuous: 16 tests in four modules.")
+          print("Boundary-suite wiring is complete and non-vacuous: 18 tests in four modules.")
           print("The Make target and JUnit output path match the reviewed contract.")
           print("The workflow pin is compatible with the repository pytest constraint.")
           PY
@@ -258,7 +258,7 @@ jobs:
             echo "### Policy boundary guards"
             echo "- Test-step outcome: ${BOUNDARY_OUTCOME}"
             echo "- Command: make boundary-guards-ci"
-            echo "- Scope: 16 structural/static/API tests in four named modules."
+            echo "- Scope: 18 structural/static/API tests in four named modules."
             echo "- Artifact: policy-boundary-guards-junit (14-day non-authoritative QA report)."
             echo "- Limit: this suite does not evaluate policy bundles, rights/sensitivity matrices, evidence closure, or release decisions."
           } >> "$GITHUB_STEP_SUMMARY"
