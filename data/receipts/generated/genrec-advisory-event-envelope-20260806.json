@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec:advisory-event-envelope:20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/briefing-integration.yml",
+    "contracts/common/advisory_event_envelope.md",
+    "schemas/contracts/v1/common/advisory_event_envelope.schema.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/README.md",
+    "fixtures/contracts/v1/common/advisory_event_envelope/cases.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_watch.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_check_failed.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_unconfirmed.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_rescinded.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_identity_conflict.json",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_zoned_warning.json",
+    "tools/validators/advisory_event_envelope_support.py",
+    "tools/validators/validate_advisory_event_envelope.py",
+    "tests/validators/test_validate_advisory_event_envelope.py",
+    "docs/intake/exploratory/advisory-event-envelope-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/briefing-integration.yml": "sha256:510baf83f9a6721aa55ee3388d992637bb14b050bb30a80f4c796d9c242b5ca4",
+    "contracts/common/advisory_event_envelope.md": "sha256:207f594a7c56c9d4b95c990ba03c0bdd372ed5ba3e8e5aba4ba2e7d1480e6481",
+    "schemas/contracts/v1/common/advisory_event_envelope.schema.json": "sha256:082b3f7ce0c2f2fd7d30809d6417ac31323fbf1f4415aecee5a7d6537435cbe1",
+    "fixtures/contracts/v1/common/advisory_event_envelope/README.md": "sha256:c98db4c7391698203c658fe9777729378bcf8f11806cdd1fdade26e014d1d3a1",
+    "fixtures/contracts/v1/common/advisory_event_envelope/cases.json": "sha256:a040df4067181a908a1af07e0201aae196497ee86602589ddf3c1cede459a1bc",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_watch.json": "sha256:38ba9c5245a6f300451bcc21b0c722e825f0483a656bae09cdbde5dfe1c2c19a",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_check_failed.json": "sha256:49e378aaf7a28b0e0fa13b66ed127c04cbf07f9097b69ab9082b3e7d506b3e2a",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_unconfirmed.json": "sha256:e9362606d548540b61917d4b1f6649f1b61390e00033254ca33146c34012f700",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_rescinded.json": "sha256:360af7de91154ab1be713901b0657db0eef5cbff4f4b884cd3c052e04429236c",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_identity_conflict.json": "sha256:2eb758779ee96395c2b0500426585713c649ebd5cb4c882a1d9d7aea4c0dfddc",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_zoned_warning.json": "sha256:80e0cd6383f047156e6ea04544437af11a228544ac8d5fec02426d8ad564cedb",
+    "tools/validators/advisory_event_envelope_support.py": "sha256:7e9ed06f60f90f3b41df4a586eb473be6a229156519b3750ab0471f439c842c8",
+    "tools/validators/validate_advisory_event_envelope.py": "sha256:15ebe81c23fd919a277acaa892450a7e9fac33c970f407e2ef7ddb9daa77accd",
+    "tests/validators/test_validate_advisory_event_envelope.py": "sha256:9a98c85a189eb589e4b6c5cbddc6e8c92e69001aa95edb2483ecb37ccdc6f4e4",
+    "docs/intake/exploratory/advisory-event-envelope-source-map.md": "sha256:bda213bec38f04125ba6593503c964eb3c8ce9a549a8dfaf74e740c6cfb80b30"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:6bc4378135595bfed9df49c7da46478a3b15b18b33fe43d2a824c9064a3ef4d3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:contracts/common/temporal_authority_envelope.md@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "repo:schemas/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json@ead1250f2923d1532257ec50cb44729be6f6c751",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#lane-b-advisory-event-envelope"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "New Ideas 4-10-26.pdf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/briefing-integration.yml": "PROPOSED",
+    "contracts/common/advisory_event_envelope.md": "PROPOSED",
+    "schemas/contracts/v1/common/advisory_event_envelope.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/README.md": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/cases.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_watch.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_check_failed.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_status_unconfirmed.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_rescinded.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_identity_conflict.json": "PROPOSED",
+    "fixtures/contracts/v1/common/advisory_event_envelope/bases/hab_zoned_warning.json": "PROPOSED",
+    "tools/validators/advisory_event_envelope_support.py": "PROPOSED",
+    "tools/validators/validate_advisory_event_envelope.py": "PROPOSED",
+    "tests/validators/test_validate_advisory_event_envelope.py": "PROPOSED",
+    "docs/intake/exploratory/advisory-event-envelope-source-map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest-15",
+      "outcome": "PASS",
+      "reason": "Fifteen deterministic AdvisoryEventEnvelope tests passed against final authored bytes."
+    },
+    {
+      "gate": "fixture-manifest-polarity-15",
+      "outcome": "PASS",
+      "reason": "Six positive base files materialized fifteen cases: six valid, two schema-invalid, and seven semantic-invalid, with exact required rejection codes."
+    },
+    {
+      "gate": "payload-binding-6",
+      "outcome": "PASS",
+      "reason": "Six positive wrappers resolved existing local KDHE HAB fixtures, validated payload shape, and matched canonical record and source-content digests."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS",
+      "reason": "The AdvisoryEventEnvelope schema passed Draft 2020-12 meta-schema validation."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "The support module, CLI validator, and focused tests compiled successfully."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The updated read-only briefing-integration workflow parsed as YAML."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind all fifteen authored non-receipt artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_BRIEFING_ADVISORY_LANE",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#lane-b-advisory-event-envelope"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES_V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ead1250f2923d1532257ec50cb44729be6f6c751"
+    },
+    {
+      "id": "KFM_TEMPORAL_AUTHORITY_ENVELOPE",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/temporal_authority_envelope.md@ead1250f2923d1532257ec50cb44729be6f6c751"
+    },
+    {
+      "id": "KFM_KDHE_HAB_PROFILE",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json@ead1250f2923d1532257ec50cb44729be6f6c751"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T23:06:22Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only shared AdvisoryEventEnvelope and a first KDHE HAB binding profile. The slice preserves domain ownership, proves failed or stale checks cannot clear status, preserves zone and identity conflicts, and creates no live source, alert, lifecycle, release, deployment, publication, or public-use authority."
+}
