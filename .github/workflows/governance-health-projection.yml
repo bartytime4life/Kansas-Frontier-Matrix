@@ -1,0 +1,47 @@
+name: governance-health-projection
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/governance/governance_health_projection.md'
+      - 'schemas/contracts/v1/governance/governance_health_projection.schema.json'
+      - 'fixtures/contracts/v1/governance/governance_health_projection/**'
+      - 'tools/generators/governance_health/**'
+      - 'tests/generators/governance_health/**'
+      - '.github/workflows/governance-health-projection.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/governance/governance_health_projection.md'
+      - 'schemas/contracts/v1/governance/governance_health_projection.schema.json'
+      - 'fixtures/contracts/v1/governance/governance_health_projection/**'
+      - 'tools/generators/governance_health/**'
+      - 'tests/generators/governance_health/**'
+      - '.github/workflows/governance-health-projection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile
+        run: python -m py_compile tools/generators/governance_health/compile_governance_health_projection.py tests/generators/governance_health/test_compile_governance_health_projection.py
+      - name: Replay fixtures
+        run: python tools/generators/governance_health/compile_governance_health_projection.py --fixtures
+      - name: Run focused tests
+        run: python -m pytest -q tests/generators/governance_health/test_compile_governance_health_projection.py --strict-config --strict-markers
