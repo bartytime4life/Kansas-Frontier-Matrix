@@ -40,7 +40,9 @@ def evaluate_status(
         ), None
 
     status = response.status_code
-    if 300 <= status <= 399 and status != 304:
+    if status == 304:
+        return evaluate_not_modified(request, response, observed_at), None
+    if 300 <= status <= 399:
         return failure_evaluation(
             TransportCategory.UNSAFE_METADATA,
             "REDIRECT_BLOCKED",
@@ -48,8 +50,6 @@ def evaluate_status(
             request,
             status,
         ), None
-    if status == 304:
-        return evaluate_not_modified(request, response, observed_at), None
     if status == 206:
         return failure_evaluation(
             TransportCategory.PARTIAL,
