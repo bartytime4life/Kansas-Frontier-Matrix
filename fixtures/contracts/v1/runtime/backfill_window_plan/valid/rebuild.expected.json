@@ -1,0 +1,25 @@
+{
+  "artifact_uri": "data/processed/soil-moisture/window=20260401T000000Z_20260408T000000Z/artifact-ed6b3fbc083f89737c7feebe018a892e99542e0d9bbb820a4fd48de584876941.json",
+  "current_published_spec_hash": null,
+  "dataset_id": "soil-moisture",
+  "decision": "REBUILD",
+  "dedupe_key": "sha256:ef691f464a81c6d724c9ef47bafc5546a22a17d46f4a90dbcd2fb0d7b7be943b",
+  "plan_id": "backfill:soil-moisture:20260401T000000Z_20260408T000000Z:cd2fb0d7b7be943b",
+  "planner_version": "v1",
+  "reason_codes": [
+    "CURRENT_SPEC_ABSENT"
+  ],
+  "required_gates": {
+    "policy_check": true,
+    "promotion_review": true,
+    "signature_verification": true
+  },
+  "source_uri": "kfm://source/mesonet",
+  "spec_hash": "sha256:ed6b3fbc083f89737c7feebe018a892e99542e0d9bbb820a4fd48de584876941",
+  "window": {
+    "end": "2026-04-08T00:00:00Z",
+    "semantics": "half-open",
+    "start": "2026-04-01T00:00:00Z"
+  },
+  "write_authority": false
+}
