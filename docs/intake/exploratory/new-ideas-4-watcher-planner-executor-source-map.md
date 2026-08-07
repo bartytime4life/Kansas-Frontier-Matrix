@@ -4,14 +4,19 @@ title: New Ideas 4 — Watcher-Planner-Executor source map
 type: exploratory-source-map
 version: v1.0.0
 status: proposed; source-adaptation; non-authoritative
+authority_class: exploratory-intake
+owning_root: docs/
+responsibility: exploratory source intake and implementation traceability
+owner: OWNER_TBD
+truth_posture: cite-or-abstain
 created: 2026-08-07
 updated: 2026-08-07
 policy_label: internal; exploratory
 related:
-  - ../../../contracts/governance/agent_operation_envelope.md
-  - ../../../schemas/contracts/v1/governance/agent_operation_envelope.schema.json
-  - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - contracts/governance/agent_operation_envelope.md
+  - schemas/contracts/v1/governance/agent_operation_envelope.schema.json
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags: [new-ideas, agents, watcher, planner, executor, source-map, intake]
 [/KFM_META_BLOCK_V2] -->
 
