@@ -1,0 +1,13 @@
+{
+  "decision_id": "dec-error",
+  "outcome": "ERROR",
+  "policy_family": "capability",
+  "reasons": [
+    "safe upstream failure"
+  ],
+  "obligations": [],
+  "evidence_refs": [
+    "evidence:fixture:one"
+  ],
+  "evaluated_at": "2026-08-07T00:00:00Z"
+}

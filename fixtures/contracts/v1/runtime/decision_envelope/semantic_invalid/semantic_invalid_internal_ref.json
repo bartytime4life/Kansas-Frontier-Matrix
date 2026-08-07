@@ -1,0 +1,15 @@
+{
+  "decision_id": "dec-ref",
+  "outcome": "ANSWER",
+  "policy_family": "access",
+  "reasons": [
+    "allowed"
+  ],
+  "obligations": [
+    "show citation"
+  ],
+  "evidence_refs": [
+    "internal:evidence:secret"
+  ],
+  "evaluated_at": "2026-08-07T00:00:00Z"
+}
