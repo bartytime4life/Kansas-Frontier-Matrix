@@ -33,16 +33,19 @@ def _fixture(name: str) -> dict[str, object]:
     return value
 
 
-def _assert_report_schema(report: dict[str, object]) -> None:
+def _schema_errors(report: dict[str, object]) -> list[object]:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
-    errors = list(
+    return list(
         Draft202012Validator(
             schema,
             format_checker=FormatChecker(),
         ).iter_errors(report)
     )
-    assert errors == []
+
+
+def _assert_report_schema(report: dict[str, object]) -> None:
+    assert _schema_errors(report) == []
 
 
 def test_retrieval_only_change_is_no_material_change_and_deterministic() -> None:
@@ -58,6 +61,11 @@ def test_retrieval_only_change_is_no_material_change_and_deterministic() -> None
     assert first.findings == ()
     assert first.report is not None
     _assert_report_schema(first.report)
+    assert first.report["schema_version"] == "1.1.0"
+    assert (
+        first.report["source_record_absence_contract_ref"]
+        == MODULE.SOURCE_RECORD_ABSENCE_CONTRACT_REF
+    )
     assert (
         first.report["prior_snapshot"]["content_hash"]
         == first.report["current_snapshot"]["content_hash"]
@@ -72,6 +80,58 @@ def test_retrieval_only_change_is_no_material_change_and_deterministic() -> None
         "promotion_allowed": False,
         "publication": False,
     }
+
+
+def test_missing_site_is_absence_not_removal_and_requires_common_assessment() -> None:
+    result = MODULE.compare_snapshots(
+        _fixture("prior.json"),
+        _fixture("current_site_absent.json"),
+    )
+
+    assert result.outcome == "ABSTAIN"
+    assert result.reason_code == "AQS_SOURCE_RECORD_ABSENCE_REQUIRES_ASSESSMENT"
+    assert result.findings == ()
+    assert result.report is not None
+    _assert_report_schema(result.report)
+    assert result.report["decision"] == {
+        "outcome": "ABSTAIN",
+        "reason_codes": [
+            "SOURCE_RECORD_ABSENCE_REQUIRES_ASSESSMENT",
+            "SOURCE_SURFACE_CHANGED",
+        ],
+    }
+    assert result.report["changes"] == [
+        {
+            "site_id": "20-999-0002",
+            "change_type": "SITE_ABSENT_FROM_CURRENT_SNAPSHOT",
+            "impact": "HIGH",
+            "changed_fields": ["site"],
+            "absence_assessment_required": True,
+            "absence_contract_ref": MODULE.SOURCE_RECORD_ABSENCE_CONTRACT_REF,
+        }
+    ]
+    serialized = json.dumps(result.report, sort_keys=True)
+    assert "SITE_REMOVED" not in serialized
+    assert result.report["governance"] == {
+        "steward_review_required": True,
+        "promotion_allowed": False,
+        "publication": False,
+    }
+
+
+def test_schema_rejects_legacy_removed_token_in_v1_1_report() -> None:
+    result = MODULE.compare_snapshots(
+        _fixture("prior.json"),
+        _fixture("current_site_absent.json"),
+    )
+    assert result.report is not None
+    legacy = copy.deepcopy(result.report)
+    legacy_change = legacy["changes"][0]
+    legacy_change["change_type"] = "SITE_REMOVED"
+    legacy_change.pop("absence_assessment_required")
+    legacy_change.pop("absence_contract_ref")
+    legacy["summary"]["changes_by_type"] = {"SITE_REMOVED": 1}
+    assert _schema_errors(legacy)
 
 
 def test_large_location_shift_abstains_without_echoing_coordinates() -> None:
