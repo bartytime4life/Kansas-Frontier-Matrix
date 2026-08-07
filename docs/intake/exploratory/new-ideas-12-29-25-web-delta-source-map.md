@@ -65,7 +65,7 @@ Creating a second event schema or pipeline authority would duplicate responsibil
 
 The slice is complete when:
 
-- all 17 synthetic cases replay with exact outcomes and findings;
+- all 17 synthetic cases across the split fixture manifests replay with exact outcomes and findings;
 - the base source-event validator remains a hard prerequisite;
 - contentful unknown-license records fail;
 - restrictive, ambiguous, and unknown licenses carry metadata only;
