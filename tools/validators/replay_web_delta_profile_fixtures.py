@@ -1,10 +1,11 @@
 """Replay the effective web-delta fixture set with append-only corrections.
 
 The three original fixture manifests remain immutable lineage. A small correction
-manifest updates only the two stale HTTP 304 identity fields exposed by hosted
-RFC 8785 validation. This module applies those corrections in memory, verifies
-the prior values before replacement, and then replays exact outcomes/findings.
-It performs no network, source, lifecycle, policy, release, or publication work.
+manifest repairs malformed digest literals in the two HTTP 304 records while
+verifying every prior value before replacement. The corrected digest literals
+restore the payload and event identities already stored in the original fixture
+manifests. This module performs no network, source, lifecycle, policy, release,
+or publication work.
 """
 
 from __future__ import annotations
@@ -41,6 +42,27 @@ def _load_mapping(path: Path) -> Mapping[str, object]:
     return value
 
 
+def _apply_attribute_corrections(
+    *,
+    case_id: str,
+    attributes: dict[str, object],
+    corrections: object,
+) -> None:
+    if not isinstance(corrections, Mapping) or not corrections:
+        raise ValueError(f"{case_id}:ATTRIBUTE_CORRECTIONS_INVALID")
+    for attribute_name in sorted(corrections):
+        correction = corrections[attribute_name]
+        if not isinstance(attribute_name, str) or not isinstance(correction, Mapping):
+            raise ValueError(f"{case_id}:ATTRIBUTE_CORRECTION_INVALID")
+        if set(correction) != {"prior", "value"}:
+            raise ValueError(f"{case_id}:{attribute_name}:ATTRIBUTE_CORRECTION_SHAPE_INVALID")
+        if attribute_name not in attributes:
+            raise ValueError(f"{case_id}:{attribute_name}:ATTRIBUTE_MISSING")
+        if attributes[attribute_name] != correction.get("prior"):
+            raise ValueError(f"{case_id}:{attribute_name}:PRIOR_ATTRIBUTE_MISMATCH")
+        attributes[attribute_name] = correction.get("value")
+
+
 def load_effective_cases() -> list[dict[str, object]]:
     cases: list[dict[str, object]] = []
     index_by_id: dict[str, int] = {}
@@ -66,6 +88,7 @@ def load_effective_cases() -> list[dict[str, object]]:
         raise ValueError("identity-corrections.json:CORRECTIONS_INVALID")
 
     corrected_ids: set[str] = set()
+    attribute_correction_count = 0
     for raw_correction in corrections:
         if not isinstance(raw_correction, Mapping):
             raise ValueError("identity-corrections.json:CORRECTION_INVALID")
@@ -84,11 +107,22 @@ def load_effective_cases() -> list[dict[str, object]]:
         payload = document.get("payload")
         if not isinstance(payload, dict):
             raise ValueError(f"{case_id}:PAYLOAD_INVALID")
+        attributes = payload.get("attributes")
+        if not isinstance(attributes, dict):
+            raise ValueError(f"{case_id}:ATTRIBUTES_INVALID")
 
         if payload.get("payload_spec_hash") != correction.get("prior_payload_spec_hash"):
             raise ValueError(f"{case_id}:PRIOR_PAYLOAD_HASH_MISMATCH")
         if document.get("event_id") != correction.get("prior_event_id"):
             raise ValueError(f"{case_id}:PRIOR_EVENT_ID_MISMATCH")
+
+        raw_attribute_corrections = correction.get("attribute_corrections")
+        _apply_attribute_corrections(
+            case_id=case_id,
+            attributes=attributes,
+            corrections=raw_attribute_corrections,
+        )
+        attribute_correction_count += len(raw_attribute_corrections)
 
         new_payload_hash = correction.get("payload_spec_hash")
         new_event_id = correction.get("event_id")
@@ -96,13 +130,15 @@ def load_effective_cases() -> list[dict[str, object]]:
             raise ValueError(f"{case_id}:CORRECTED_IDENTITY_INVALID")
         payload["payload_spec_hash"] = new_payload_hash
         document["event_id"] = new_event_id
-        case["identity_correction_reason"] = correction.get("reason_code")
+        case["correction_reason"] = correction.get("reason_code")
 
     if corrected_ids != {
         "valid_http_304_heartbeat",
         "invalid_heartbeat_carries_new_content",
     }:
         raise ValueError("identity-corrections.json:CORRECTION_SET_INVALID")
+    if attribute_correction_count != 3:
+        raise ValueError("identity-corrections.json:ATTRIBUTE_CORRECTION_COUNT_INVALID")
     return cases
 
 
@@ -153,7 +189,8 @@ def run_fixture_suite() -> tuple[bool, dict[str, object]]:
     return not suite_findings, {
         "authority": "NONE",
         "cases": len(cases),
-        "corrections_applied": 2,
+        "corrected_cases": 2,
+        "corrected_attributes": 3,
         "execution_mode": "FIXTURE_ONLY",
         "findings": suite_findings,
         "non_effects": NON_EFFECTS,
