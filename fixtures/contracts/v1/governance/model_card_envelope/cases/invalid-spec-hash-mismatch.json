@@ -1,0 +1,1 @@
+{"case_id":"invalid-spec-hash-mismatch","expected":{"finding_codes":["SPEC_HASH_MISMATCH"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/purpose","value":"Changed without rehash to exercise deterministic identity mismatch."}],"rehash":false}

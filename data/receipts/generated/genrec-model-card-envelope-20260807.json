@@ -1,0 +1,203 @@
+{
+  "receipt_id": "genrec-model-card-envelope-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/model-card-envelope.yml",
+    "contracts/governance/model_card_envelope.md",
+    "docs/intake/exploratory/model-card-envelope-source-map.md",
+    "fixtures/contracts/v1/governance/model_card_envelope/README.md",
+    "fixtures/contracts/v1/governance/model_card_envelope/base.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/deny-sensitive-alignment.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/hold-focus-mode-narrative.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-allow-without-review.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-authority-overclaim.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-environmental-use-boundary.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-identity-mismatch.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-narrative-missing-citation-control.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-reference-role-mismatch.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-released-without-rollback.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-spec-hash-mismatch.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-transform-overlap.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-unsafe-reference.json",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/pass-climate-reconstruction.json",
+    "schemas/contracts/v1/governance/model_card_envelope.schema.json",
+    "tests/validators/governance/test_validate_model_card_envelope.py",
+    "tools/validators/governance/model_card_envelope_core.py",
+    "tools/validators/governance/validate_model_card_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/model-card-envelope.yml": "sha256:a4c34d7843a21845f6953de9894c07f325be93a888fd3e614764b53d83cf22e0",
+    "contracts/governance/model_card_envelope.md": "sha256:769e69cb891bb8a9d3649600ef08e67e08ef378c81e17ce6fcbed7647e76eca2",
+    "docs/intake/exploratory/model-card-envelope-source-map.md": "sha256:ca5443677c5aa2dd9c496871d3bf272c9e72c214f20941d2d4df122e2a47d6df",
+    "fixtures/contracts/v1/governance/model_card_envelope/README.md": "sha256:1c737c1b2e7ee2905a4b7d131f0b8fa3d60698dfc275b0cffc52f4d9e5ed0de8",
+    "fixtures/contracts/v1/governance/model_card_envelope/base.json": "sha256:3a1ba5a1bd511a2a670dddb5337122ad04ebfe369919283c08f96b090e9c7894",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/deny-sensitive-alignment.json": "sha256:531248ace14a86f4f820f87a73a3112fdbd6833e95cdad15e1b33fb8ae914a97",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/hold-focus-mode-narrative.json": "sha256:8446ff68106d1cdfa8782b1c20320575c84f0c8b742760b51f3bdaf5cbf720d2",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-allow-without-review.json": "sha256:273a815c619f0030702f101d268839eb33e21449d3f12a6e9965f74af61a2a0d",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-authority-overclaim.json": "sha256:e9051bbda08df3473b70985a76e66f34b4893bdff45603f9a9df0802efcf4ddb",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-environmental-use-boundary.json": "sha256:e6a0d1d933018bb0bd3d2354835941b54507591de6b5c830401c9050ba325d15",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-identity-mismatch.json": "sha256:0ea83f4f7290e24b3adca4cce05386be42c20b2a43446fc40bbbc4324e7eaa9f",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-narrative-missing-citation-control.json": "sha256:92822d954b425413c1aaa693cc19e183929ddf40384f79f1e2937f10dcc9c3ec",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-reference-role-mismatch.json": "sha256:c99be859d996865955e79fa0f8bbbe2805912e394dc27d92eb8e5fcd4930cf84",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-released-without-rollback.json": "sha256:89ef5cfcd61d072653262aa5fbbdb7a1f6e637b87fd063184e98e6194057937a",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-spec-hash-mismatch.json": "sha256:0cd5ae049717c9ad438ed2395e64aad06c1e0bd432face1e906a013a59e6539a",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-transform-overlap.json": "sha256:3cbb4ceb283cc0ff89ae017bbc412cd104c601f9383d06d3b6049e17d327c1d9",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-unsafe-reference.json": "sha256:8a7d9845ee561b9f2317424bd6288d460fa3db947fa0246d9310d760a5841830",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/pass-climate-reconstruction.json": "sha256:0f3e251332a42aaa6fa87f4a60702c7c3f353b6854f497d2ef441eb378fa8563",
+    "schemas/contracts/v1/governance/model_card_envelope.schema.json": "sha256:6dcf4565fad0b38097b41dcf29039c7eed1a02aa76f8570d1d6d34ae4d93fc77",
+    "tests/validators/governance/test_validate_model_card_envelope.py": "sha256:8e84288cd2043b2c5f4bfde517fd99ea4e4a9b003e562a3c3dfa461cbf788a6f",
+    "tools/validators/governance/model_card_envelope_core.py": "sha256:7b97548f42d901434b0b712ff314d96bd597761a1a499ea42d4a4940b84160b6",
+    "tools/validators/governance/validate_model_card_envelope.py": "sha256:5fcad7364e799eb6a437f54d95e5241baa21a9d51ab173f284d07280b7402a16"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:83ad55cf1b35620e8faa3bcc2d9b28b7eb65e72b8f1c2b99681a7b1eea3e8f99",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "File search",
+      "GitHub connector",
+      "Python static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44faf7a5ad953d5a5878d49a34a0a342c97b43ed71abd452be227ad97d2c1115"
+    ],
+    "attached_docs": [
+      "New Ideas 2.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "repo:main@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:docs/domains/habitat/model_cards/README.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:schemas/contracts/v1/ai/README.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "attached:New Ideas 2.pdf#model-cards",
+      "attached:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P11-PROG-0001"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/model-card-envelope.yml": "PROPOSED",
+    "contracts/governance/model_card_envelope.md": "PROPOSED",
+    "docs/intake/exploratory/model-card-envelope-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/base.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/deny-sensitive-alignment.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/hold-focus-mode-narrative.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-allow-without-review.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-authority-overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-environmental-use-boundary.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-identity-mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-narrative-missing-citation-control.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-reference-role-mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-released-without-rollback.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-spec-hash-mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-transform-overlap.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/invalid-unsafe-reference.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/model_card_envelope/cases/pass-climate-reconstruction.json": "PROPOSED",
+    "schemas/contracts/v1/governance/model_card_envelope.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_model_card_envelope.py": "PROPOSED",
+    "tools/validators/governance/model_card_envelope_core.py": "PROPOSED",
+    "tools/validators/governance/validate_model_card_envelope.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-assay",
+      "outcome": "PASS",
+      "reason": "New Ideas 2 and KFM-P11-PROG-0001 identify machine-extractable governed model cards with stable identity, FAIR+CARE and sovereignty metadata, STAC/DCAT/PROV references, signatures, SBOMs, telemetry, permissions, prohibitions, and source-bound model limits."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and current responsibility roots support a governance contract/schema/fixture/validator/test packet; the compatibility AI schema lane remains noncanonical and no mcp root or parallel authority is created."
+    },
+    {
+      "gate": "draft-2020-12-schema-self-check",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator.check_schema accepted the strict final schema."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic unittest methods passed against the final non-receipt bytes."
+    },
+    {
+      "gate": "finite-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirteen reviewed split-fixture cases matched exactly: 1 PASS, 1 HOLD, 1 DENY, 10 FAIL, and 0 ERROR."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "The core validator, CLI, and focused test module compiled successfully."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The focused workflow parsed as YAML and uses read-only permissions plus immutable action pins."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator, fixtures, and tests make no live model, catalog, source, signature, attestation, or telemetry request."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over all 22 final non-receipt artifacts and keys exactly match artifact_paths and truth_labels."
+    },
+    {
+      "gate": "hosted-exact-head-model-card-envelope",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch commit and draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+    "repo:docs/doctrine/ai-build-operating-contract.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+  ],
+  "citations": [
+    {
+      "id": "SRC-NEW-IDEAS-2-MODEL-CARDS",
+      "validated": true,
+      "evidence_ref": "attached:New Ideas 2.pdf#model-cards"
+    },
+    {
+      "id": "KFM-P11-PROG-0001",
+      "validated": true,
+      "evidence_ref": "attached:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P11-PROG-0001"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    },
+    {
+      "id": "HABITAT-MODEL-CARD-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/habitat/model_cards/README.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T04:55:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance for a 22-artifact, fixture-first shared ModelCardEnvelope object family with deterministic identity, digest-pinned bindings, model-kind use boundaries, governance finite states, and a deny-by-default authority ceiling. The packet creates no model, training run, source activation, EvidenceBundle, policy decision, review approval, release, deployment, publication, or public-use authority."
+}
