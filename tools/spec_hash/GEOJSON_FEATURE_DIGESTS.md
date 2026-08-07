@@ -1,6 +1,6 @@
 # Structural GeoJSON Feature Digests
 
-**Status:** implemented on a feature branch; fixture-tested locally; exact-head hosted CI pending.  
+**Status:** implemented on main by merged PR #2099; validation and receipt integrity remain governed by `.github/workflows/spec-hash.yml`.  
 **Authority:** none. Digest equality is integrity evidence under a declared profile, not evidence, policy, review, release, publication, or public-use authority.
 
 ## Purpose
