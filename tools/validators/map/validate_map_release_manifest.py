@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -199,6 +200,49 @@ def _floating_ref(value: str) -> bool:
     )
 
 
+def _set_pointer(payload: Any, pointer: str, value: Any) -> None:
+    parts = [
+        part.replace("~1", "/").replace("~0", "~")
+        for part in pointer.lstrip("/").split("/")
+        if part
+    ]
+    if not parts:
+        raise ValueError("root replacement is not supported")
+    current = payload
+    for part in parts[:-1]:
+        if isinstance(current, list):
+            current = current[int(part)]
+        elif isinstance(current, dict):
+            current = current[part]
+        else:
+            raise ValueError(f"cannot traverse patch path {pointer}")
+    final = parts[-1]
+    if isinstance(current, list):
+        current[int(final)] = copy.deepcopy(value)
+    elif isinstance(current, dict):
+        current[final] = copy.deepcopy(value)
+    else:
+        raise ValueError(f"cannot set patch path {pointer}")
+
+
+def materialize_case(cases: Mapping[str, Any], case: Mapping[str, Any]) -> dict[str, Any]:
+    base = cases.get("base_payload")
+    if not isinstance(base, dict):
+        raise ValueError("base_payload must be an object")
+    payload = copy.deepcopy(base)
+    for patch in _array(case.get("patches")):
+        if not isinstance(patch, dict) or not isinstance(patch.get("path"), str):
+            raise ValueError("case patch must contain a path")
+        _set_pointer(payload, patch["path"], patch.get("value"))
+    payload["spec_hash"] = canonical_spec_hash(payload)
+    payload["map_release_id"] = expected_map_release_id(payload)
+    for patch in _array(case.get("post_identity_patches")):
+        if not isinstance(patch, dict) or not isinstance(patch.get("path"), str):
+            raise ValueError("post-identity patch must contain a path")
+        _set_pointer(payload, patch["path"], patch.get("value"))
+    return payload
+
+
 def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
     try:
@@ -233,12 +277,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             artifact_ids.append(artifact_id)
         artifact_ref = artifact.get("artifact_ref")
         if isinstance(artifact_ref, str) and _floating_ref(artifact_ref):
-            findings.append(
-                Finding(
-                    "FLOATING_ARTIFACT_REF_DENIED",
-                    f"/artifact_manifests/{index}/artifact_ref",
-                )
-            )
+            findings.append(Finding("FLOATING_ARTIFACT_REF_DENIED", f"/artifact_manifests/{index}/artifact_ref"))
     if artifact_ids != sorted(set(artifact_ids)) or len(artifact_ids) != len(artifacts):
         findings.append(Finding("ARTIFACT_MANIFESTS_NOT_CANONICAL", "/artifact_manifests"))
 
@@ -249,10 +288,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     rollback = _mapping(candidate.get("rollback"))
     redaction_refs = _array(candidate.get("redaction_receipt_refs"))
 
-    if (
-        public.get("geometry_posture") in {"GENERALIZED", "RESTRICTED", "WITHHELD"}
-        and not redaction_refs
-    ):
+    if public.get("geometry_posture") in {"GENERALIZED", "RESTRICTED", "WITHHELD"} and not redaction_refs:
         findings.append(Finding("REDACTION_RECEIPT_REQUIRED", "/redaction_receipt_refs"))
 
     if state == "PUBLISHED":
@@ -272,31 +308,17 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 findings.append(Finding("PUBLISHED_CLOSURE_INCOMPLETE", f"/{field}"))
         for name in ("stac", "dcat", "prov"):
             if not _array(catalogs.get(name)):
-                findings.append(
-                    Finding(
-                        "PUBLISHED_CATALOG_CLOSURE_INCOMPLETE",
-                        f"/catalog_refs/{name}",
-                    )
-                )
+                findings.append(Finding("PUBLISHED_CATALOG_CLOSURE_INCOMPLETE", f"/catalog_refs/{name}"))
         if _parse_utc(published_at) is None:
             findings.append(Finding("PUBLISHED_AT_REQUIRED", "/published_at"))
         if public.get("rights_state") in {"UNKNOWN", "DENIED"}:
-            findings.append(
-                Finding("PUBLISHED_RIGHTS_NOT_RESOLVED", "/public_boundary/rights_state")
-            )
+            findings.append(Finding("PUBLISHED_RIGHTS_NOT_RESOLVED", "/public_boundary/rights_state"))
         if public.get("sensitivity_state") in {"UNKNOWN", "DENIED"}:
-            findings.append(
-                Finding(
-                    "PUBLISHED_SENSITIVITY_NOT_RESOLVED",
-                    "/public_boundary/sensitivity_state",
-                )
-            )
+            findings.append(Finding("PUBLISHED_SENSITIVITY_NOT_RESOLVED", "/public_boundary/sensitivity_state"))
         if rollback.get("rollback_target_ref") is None or rollback.get("rollback_card_ref") is None:
             findings.append(Finding("PUBLISHED_ROLLBACK_CLOSURE_REQUIRED", "/rollback"))
         if rollback.get("verified") is not True:
-            findings.append(
-                Finding("PUBLISHED_ROLLBACK_VERIFICATION_REQUIRED", "/rollback/verified")
-            )
+            findings.append(Finding("PUBLISHED_ROLLBACK_VERIFICATION_REQUIRED", "/rollback/verified"))
         if "RELEASE_CLOSED" not in reason_set:
             findings.append(Finding("PUBLISHED_REASON_REQUIRED", "/state_reason_codes"))
         for index, artifact in enumerate(artifacts):
@@ -304,21 +326,12 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 continue
             if artifact.get("artifact_type") in {"PMTILES", "COG"}:
                 if artifact.get("range_supported") is not True:
-                    findings.append(
-                        Finding(
-                            "RANGE_SUPPORT_REQUIRED",
-                            f"/artifact_manifests/{index}/range_supported",
-                        )
-                    )
+                    findings.append(Finding("RANGE_SUPPORT_REQUIRED", f"/artifact_manifests/{index}/range_supported"))
                 if artifact.get("cors_allowed") is not True:
-                    findings.append(
-                        Finding(
-                            "CORS_SUPPORT_REQUIRED",
-                            f"/artifact_manifests/{index}/cors_allowed",
-                        )
-                    )
-    elif published_at is not None and state in {"CANDIDATE", "HELD"}:
-        findings.append(Finding("UNPUBLISHED_STATE_HAS_PUBLISHED_AT", "/published_at"))
+                    findings.append(Finding("CORS_SUPPORT_REQUIRED", f"/artifact_manifests/{index}/cors_allowed"))
+    else:
+        if published_at is not None and state in {"CANDIDATE", "HELD"}:
+            findings.append(Finding("UNPUBLISHED_STATE_HAS_PUBLISHED_AT", "/published_at"))
 
     if state == "CANDIDATE" and "CANDIDATE_PENDING_REVIEW" not in reason_set:
         findings.append(Finding("CANDIDATE_REASON_REQUIRED", "/state_reason_codes"))
@@ -330,18 +343,14 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         if correction.get("superseded_by_ref") is None:
             findings.append(Finding("SUPERSEDED_BY_REF_REQUIRED", "/correction/superseded_by_ref"))
         if not _array(correction.get("cache_invalidation_refs")):
-            findings.append(
-                Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs")
-            )
+            findings.append(Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs"))
         if "SUPERSEDED_BY_NEW_RELEASE" not in reason_set:
             findings.append(Finding("SUPERSEDED_REASON_REQUIRED", "/state_reason_codes"))
     elif state == "WITHDRAWN":
         if correction.get("withdrawal_notice_ref") is None:
             findings.append(Finding("WITHDRAWAL_NOTICE_REQUIRED", "/correction/withdrawal_notice_ref"))
         if not _array(correction.get("cache_invalidation_refs")):
-            findings.append(
-                Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs")
-            )
+            findings.append(Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs"))
         if "WITHDRAWN_BY_STEWARD" not in reason_set:
             findings.append(Finding("WITHDRAWN_REASON_REQUIRED", "/state_reason_codes"))
     elif state == "ROLLED_BACK":
@@ -350,13 +359,9 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         if rollback.get("verified") is not True:
             findings.append(Finding("ROLLBACK_VERIFICATION_REQUIRED", "/rollback/verified"))
         if rollback.get("restoration_receipt_ref") is None:
-            findings.append(
-                Finding("RESTORATION_RECEIPT_REQUIRED", "/rollback/restoration_receipt_ref")
-            )
+            findings.append(Finding("RESTORATION_RECEIPT_REQUIRED", "/rollback/restoration_receipt_ref"))
         if not _array(correction.get("cache_invalidation_refs")):
-            findings.append(
-                Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs")
-            )
+            findings.append(Finding("CACHE_INVALIDATION_REQUIRED", "/correction/cache_invalidation_refs"))
         if "ROLLBACK_EXECUTED" not in reason_set:
             findings.append(Finding("ROLLED_BACK_REASON_REQUIRED", "/state_reason_codes"))
 
@@ -396,13 +401,7 @@ def _serialize(path: Path, result: ValidationResult) -> str:
                 {"code": finding.code, "field": finding.field}
                 for finding in result.findings
             ],
-            "outcome": (
-                "PASS"
-                if result.ok
-                else "ERROR"
-                if result.operational_error
-                else "FAIL"
-            ),
+            "outcome": "PASS" if result.ok else "ERROR" if result.operational_error else "FAIL",
             "release_state": result.release_state,
             "scope": SCOPE,
             "authority": {
@@ -434,20 +433,28 @@ def run_fixture_profile() -> int:
         return 2
     passed = True
     for case in valid_cases:
-        if not isinstance(case, dict) or not isinstance(case.get("payload"), dict):
+        if not isinstance(case, dict):
             return 2
         name = str(case.get("name", "valid"))
         path = Path(f"fixture:valid:{name}")
-        result = validate_payload(case["payload"])
+        try:
+            payload = materialize_case(cases, case)
+        except (KeyError, TypeError, ValueError, IndexError):
+            return 2
+        result = validate_payload(payload)
         print(_serialize(path, result))
         if not result.ok or result.release_state != case.get("expected_state"):
             passed = False
     for case in invalid_cases:
-        if not isinstance(case, dict) or not isinstance(case.get("payload"), dict):
+        if not isinstance(case, dict):
             return 2
         name = str(case.get("name", "invalid"))
         path = Path(f"fixture:invalid:{name}")
-        result = validate_payload(case["payload"])
+        try:
+            payload = materialize_case(cases, case)
+        except (KeyError, TypeError, ValueError, IndexError):
+            return 2
+        result = validate_payload(payload)
         print(_serialize(path, result))
         expected = sorted(case.get("expected_codes", []))
         actual = sorted({finding.code for finding in result.findings})
@@ -470,9 +477,7 @@ def run_fixture_profile() -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Validate one fixture-first MapReleaseManifest."
-    )
+    parser = argparse.ArgumentParser(description="Validate one fixture-first MapReleaseManifest.")
     parser.add_argument("path", nargs="?")
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
