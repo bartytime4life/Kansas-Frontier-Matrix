@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import hashlib
-import importlib
+import importlib.util
 import socket
 import sys
 from datetime import datetime, timezone
@@ -26,14 +26,28 @@ def _unexpected_network(*_args, **_kwargs):
 def test_import_is_side_effect_free_and_has_no_public_package_exports(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     before = list(tmp_path.iterdir())
-    with (
-        patch.object(socket.socket, "connect", side_effect=_unexpected_network),
-        patch.object(socket.socket, "connect_ex", side_effect=_unexpected_network),
-        patch.object(socket, "create_connection", side_effect=_unexpected_network),
-        patch.object(socket, "getaddrinfo", side_effect=_unexpected_network),
-    ):
-        importlib.reload(core)
+    retry_policy_type = core.RetryPolicy
+    probe_name = "connectors_core._core_import_probe"
+    spec = importlib.util.spec_from_file_location(
+        probe_name,
+        PACKAGE_SRC / "connectors_core/core.py",
+    )
+    assert spec is not None and spec.loader is not None
+    probe = importlib.util.module_from_spec(spec)
+    sys.modules[probe_name] = probe
+    try:
+        with (
+            patch.object(socket.socket, "connect", side_effect=_unexpected_network),
+            patch.object(socket.socket, "connect_ex", side_effect=_unexpected_network),
+            patch.object(socket, "create_connection", side_effect=_unexpected_network),
+            patch.object(socket, "getaddrinfo", side_effect=_unexpected_network),
+        ):
+            spec.loader.exec_module(probe)
+    finally:
+        sys.modules.pop(probe_name, None)
     assert list(tmp_path.iterdir()) == before
+    assert probe.RetryPolicy is not retry_policy_type
+    assert core.RetryPolicy is retry_policy_type
 
     import connectors_core
 
