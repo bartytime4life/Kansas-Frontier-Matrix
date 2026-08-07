@@ -24,8 +24,8 @@
   ],
   "artifact_hashes": {
     ".github/workflows/catalog-health.yml": "sha256:9debf324289968ec970d623373d385ad651f4ef75d9f76cf4ebdf1b12f6f8af2",
-    "contracts/data/catalog_health_report.md": "sha256:022730df281a36bf59664f82fd7f2a3d2d476eb6217256dff939d9d37e71d902",
-    "fixtures/data/catalog_health/README.md": "sha256:a92ab85e06d9af6079d456f832b934a3250ec03084abc529286af9ea961711dc",
+    "contracts/data/catalog_health_report.md": "sha256:6c4dc97f17f72ae7fe9e72a27d711547928ec3b7a7dd03750a5949755efeebe3",
+    "fixtures/data/catalog_health/README.md": "sha256:1ae00ae5e87e7c78581f0b81cfa3c35001ef3641feed002d4f6bee96858b61bd",
     "fixtures/data/catalog_health/assets/sample.bin": "sha256:ab39b02de5828664a6643fc221de0c81f68e1c7e73ab3a347deb8381d8718466",
     "fixtures/data/catalog_health/expected_findings.json": "sha256:540bec57753149bfa0e28666a66521f4e04babd3dc032a683df44bd96edb03de",
     "fixtures/data/catalog_health/expected_outcomes.json": "sha256:3cb236b43d4c679e3e7c0403413db1010224ceffc48975905f51a23956e00ff5",
@@ -38,7 +38,7 @@
     "fixtures/data/catalog_health/valid/valid_local_item.json": "sha256:75b8599797d795536fa7d2eff6590f7717d68127e466f858525fd6a3b3735c29",
     "schemas/contracts/v1/data/catalog_health_report.schema.json": "sha256:f9e5d7faefa62ece540b9651be17ec35144e5c8ea1d79b182d7aa6ce360aacea",
     "tests/validators/test_validate_catalog_health.py": "sha256:2242bf017c2997873504d6d1d3a0fe39d7717fc86efd6e5729fac8ba0234669b",
-    "tools/validators/catalog/README.md": "sha256:0ccd3889eb977c7a6abb6dcfbb3da3aa629cc9e37a86cc4f36a9a8948e4820b8",
+    "tools/validators/catalog/README.md": "sha256:19e3e7c91437869884a7cf844b54f6ec35c8c5617e43089bec1ad1719b300b8b",
     "tools/validators/catalog/catalog_health_core.py": "sha256:48c5bd6d16be76290dc0e2a21e6ba50d01c431d61e8df44439118f9452d43453",
     "tools/validators/catalog/catalog_health_rules.py": "sha256:120ff650a4372db2ca5ae7d022da49d230e1a0a8b7bc50babe063e80ae8e0695",
     "tools/validators/catalog/validate_catalog_health.py": "sha256:c068e773cd707115eea14d6e35bf7f47f98b12b696e41d557751e683bc173b6f"

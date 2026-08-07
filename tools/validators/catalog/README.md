@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-validators-catalog-readme
 title: tools/validators/catalog/ — Catalog Record Validator Boundary
-type: README; validator-lane; catalog-record-validation; stac; dcat; prov; non-authoritative
+type: validator-lane-readme
 version: v0.3
 status: draft; PROPOSED implementation; fixture-first; catalog-health-executable; no-network-by-default; release-gated; fail-closed
 owners: OWNER_TBD — Catalog · STAC · DCAT · PROV/PAV · Validator · Schema · Contract · Source · Evidence · Rights/Sensitivity · Policy · Release · Security · CI · Docs stewards
@@ -12,8 +12,7 @@ policy_label: repository-facing; catalog; discovery; interchange; evidence-aware
 owning_root: tools/
 current_path: tools/validators/catalog/README.md
 responsibility: Validate individual catalog discovery/interchange records and bounded indexes; delegate cross-record closure, evidence, policy, release, storage, construction, and public serving to their owning lanes.
-truth_posture: >
-  CONFIRMED at main@14b9608addcf6cac80adaa0a836182f7a6e47806: this lane contained a detailed README and a placeholder evidence-closure file but no catalog-health executable, dedicated catalog-health fixtures/tests, report schema, or focused workflow. PROPOSED in this change: one narrow STAC Item health profile with deterministic local-byte verification, provenance-link checks, embargoed-access metadata, remote HOLD behavior, optional allowlisted HTTPS HEAD probes, a strict report schema, synthetic fixtures, tests, and focused CI. UNKNOWN: production consumers, accepted repository-wide STAC profile, required-check status, deployment, and public serving.
+truth_posture: CONFIRMED base evidence; PROPOSED fixture-first implementation; UNKNOWN production adoption and public serving.
 related:
   - ../README.md
   - ../_common/README.md

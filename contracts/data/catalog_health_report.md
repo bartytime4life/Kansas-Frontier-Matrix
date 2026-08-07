@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/data/catalog-health-report
 title: CatalogHealthReport Contract
-type: semantic-contract; data; catalog-record-health; stac-item; non-authoritative
+type: semantic-contract
 version: v1.0.0
 status: draft; PROPOSED; fixture-first
 owners: OWNER_TBD — Catalog steward · STAC steward · Validation steward · Security reviewer
 created: 2026-08-07
 updated: 2026-08-07
 policy_label: public; contracts; data; catalog-health; no-network-by-default; non-authoritative
+owning_root: contracts/
+responsibility: Define the non-authoritative semantic meaning and trust boundary of CatalogHealthReport.
+truth_posture: PROPOSED implementation; CONFIRMED local validation; UNKNOWN production adoption.
 related:
   - ../../schemas/contracts/v1/data/catalog_health_report.schema.json
   - ../../tools/validators/catalog/catalog_health_core.py

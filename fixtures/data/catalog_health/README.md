@@ -1,12 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/fixtures-data-catalog-health-readme
 title: Catalog health fixture family
-type: README; fixtures; catalog-health; stac-item
+type: fixture-readme
 version: v1.0.0
 status: PROPOSED; synthetic; no-network
+owner: Validation steward (PROPOSED)
 created: 2026-08-07
 updated: 2026-08-07
 owning_root: fixtures/
+responsibility: Provide synthetic positive, hold, and negative records for the CatalogHealthReport validator.
+truth_posture: PROPOSED fixtures; CONFIRMED synthetic byte identities; UNKNOWN production source applicability.
 policy_label: public; synthetic; no real source or sensitive data
 related:
   - ../../../contracts/data/catalog_health_report.md
