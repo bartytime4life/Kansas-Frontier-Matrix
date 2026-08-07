@@ -51,8 +51,8 @@
     "fixtures/release/promotion_verification_execution/valid/pass.json": "sha256:7d257a0ffa19944424b12f5ab1b1ad1fcdfdbb547d04318a0f98e46e3014f5d8",
     "schemas/contracts/v1/release/promotion_verification_execution.schema.json": "sha256:c72f3374c8584ca1fd8aba30da69c25d76e02f2baf67fb48fef154f35148ffa2",
     "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json": "sha256:a90fa1720411c9d4376d5e7f39bdb9580c25d6eeb631e13f837b01e5b5c97c8a",
-    "tests/release/test_promotion_verification_execution.py": "sha256:64330af07673ba381e747bacbcd548571c1ed5383cca8d2c7bb4f103307da7ae",
-    "tools/validators/promotion_gate/execute_promotion_verification.py": "sha256:a9db0e643123f3837dda6eb2814d222770f625e9213acbccbf54f3586fd30be6",
+    "tests/release/test_promotion_verification_execution.py": "sha256:9b1c712e3b24e873afa3e457c65cfeb18cad14970be3ce103587a4f44dbc5b8c",
+    "tools/validators/promotion_gate/execute_promotion_verification.py": "sha256:bb72755bfea32d7c84aba70dadf6b2ac97466973a5546d92671e01b18d99731d",
     "tools/validators/promotion_gate/execution/__init__.py": "sha256:b178883d6f3ab3f2dbf5a9d432b8be2804c96470e015018047957c8206f30be8",
     "tools/validators/promotion_gate/execution/common.py": "sha256:5097a2a3ee806b74cf33ab7db0b305d46fce6d2756ae65aeb7eb4e9c2dccd368",
     "tools/validators/promotion_gate/execution/engine.py": "sha256:4cc3e245bcc5a6ccf09beaa33f19c21c704df9c47ae5f6382435d9f599f4aa9f"
@@ -157,6 +157,11 @@
       "reason": "A substituted Cosign binary is denied before execution by exact digest binding."
     },
     {
+      "gate": "direct-entrypoint-hosted-regression",
+      "outcome": "SKIPPED",
+      "reason": "The new direct-file-entrypoint regression is included; exact-head hosted execution begins after the corrective draft PR opens."
+    },
+    {
       "gate": "production-cosign-cryptography",
       "outcome": "SKIPPED",
       "reason": "Fixture tools prove adapter behavior only; production tool installation and real Sigstore bundles remain a separate security-reviewed change."
@@ -164,7 +169,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted CI begins after the draft pull request is opened."
+      "reason": "Hosted CI begins after the corrective draft pull request is opened."
     },
     {
       "gate": "human-review",
@@ -210,5 +215,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a fixture-first promotion verification executor that composes current readiness and Cosign-plan validators with exact-byte tool, subject, bundle, policy, EvidenceBundle, STAC/DCAT/PROV, and rollback checks. It executes no production cryptography and never promotes, releases, deploys, or publishes."
+  "notes": "Adds a fixture-first promotion verification executor that composes current readiness and Cosign-plan validators with exact-byte tool, subject, bundle, policy, EvidenceBundle, STAC/DCAT/PROV, and rollback checks. The corrective change bootstraps the repository root before package imports and adds a direct-file-entrypoint regression. It executes no production cryptography and never promotes, releases, deploys, or publishes."
 }
