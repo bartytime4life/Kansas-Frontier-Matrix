@@ -1,0 +1,50 @@
+{
+  "artifact": {
+    "artifact_kind": "data_instance",
+    "authority_owner": "raw_data_authority",
+    "current_path": null,
+    "execution_role": "none",
+    "exposure": "public",
+    "lifecycle_stage": "raw",
+    "mutability": "immutable",
+    "name": "public_raw_copy",
+    "physical_storage": "git",
+    "proposed_path": "data/raw/public-copy.json",
+    "retention": "audit_bound",
+    "scope_id": "public_raw_copy",
+    "scope_kind": "object_family"
+  },
+  "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+  "candidate_roots": [
+    "data/"
+  ],
+  "canonical_source": null,
+  "consumer_refs": [],
+  "decision_id": "pathdec:public_raw_copy_denied",
+  "doctrine": {
+    "decision_ref": "ADR-0029",
+    "digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "path": "docs/doctrine/directory-rules.md"
+  },
+  "evaluated_at": "2026-08-07T20:30:00Z",
+  "evidence": [
+    "repo:control_plane/root_registry.yaml",
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "repo:docs/doctrine/directory-rules.md"
+  ],
+  "outcome": "DENY",
+  "reason_codes": [
+    "public_internal_lifecycle_forbidden"
+  ],
+  "registry": {
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+    "digest": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "path": "control_plane/root_registry.yaml"
+  },
+  "rules": [
+    "DIR-PLACE-002",
+    "DIR-PLACE-007"
+  ],
+  "split_targets": [],
+  "version": "v1"
+}
