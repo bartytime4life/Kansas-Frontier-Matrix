@@ -22,7 +22,7 @@ tags: [kfm, governance, review, stewardship, authority-binding, fixture-only, no
 
 # ReviewAuthorityBinding
 
-> A deterministic, fixture-only binding report that checks whether one exact `ReviewRecord`, one exact `StewardshipAssignment`, and one exact reviewed subject agree.
+> A deterministic, fixture-only binding report that checks whether declared `ReviewRecord`, `StewardshipAssignment`, and reviewed-subject projections agree.
 
 ## Why this slice comes before an apply preflight
 
@@ -34,7 +34,7 @@ Creating a purported authenticated apply preflight over those stubs would overcl
 
 | Outcome | Meaning |
 |---|---|
-| `BOUND` | The exact records validate; actor, role, subject, time window, active status, approved disposition, and declared separation of duties agree. |
+| `BOUND` | The declared projections validate; actor, role, subject reference, time window, active status, approved disposition, and declared separation of duties agree. |
 | `HOLD` | The records are valid but the assignment is provisional or the review is conditional/non-approving. |
 | `DENY` | A record is invalid, mismatched, outside the effective window, inactive, or fails separation of duties. |
 
@@ -44,14 +44,13 @@ Creating a purported authenticated apply preflight over those stubs would overcl
 
 The validator independently recomputes:
 
-- both source-object hashes and identifiers;
+- the binding report hash and identifier over the declared projections;
 - reviewer actor and role agreement;
-- exact subject reference and content identity;
+- declared subject reference agreement, with the subject hash bound into the report identity;
 - review time within the assignment interval;
 - active versus provisional/inactive status;
 - review disposition eligibility;
-- author/reviewer separation where required;
-- the binding report hash and identifier.
+- author/reviewer separation where required.
 
 ## Deterministic identity
 
