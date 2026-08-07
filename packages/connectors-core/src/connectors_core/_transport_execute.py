@@ -117,7 +117,7 @@ def execute_retrieval(
                 request,
                 number,
             )
-        except (TimeoutError, ConnectionTimeoutError):
+        except TimeoutError:
             evaluation = failed_evaluation(
                 TransportCategory.TIMEOUT,
                 "TRANSPORT_TIMEOUT",
