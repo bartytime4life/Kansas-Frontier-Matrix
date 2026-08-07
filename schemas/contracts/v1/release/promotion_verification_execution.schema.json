@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/release/promotion_verification_execution.schema.json",
+  "title": "PromotionVerificationExecution",
+  "description": "Explicit no-network execution packet that composes promotion readiness, a validated Cosign plan, policy evaluation, and local reference closure without promoting.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "execution_id",
+    "evaluated_at",
+    "promotion_packet",
+    "cosign_plan",
+    "subject",
+    "bundle",
+    "policy",
+    "references",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "PromotionVerificationExecution"},
+    "schema_version": {"const": "1.0.0"},
+    "execution_id": {
+      "type": "string",
+      "pattern": "^promotion-verification:[a-z0-9][a-z0-9._:-]{7,179}$"
+    },
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "promotion_packet": {"$ref": "#/$defs/fileBinding"},
+    "cosign_plan": {"$ref": "#/$defs/fileBinding"},
+    "subject": {"$ref": "#/$defs/fileBinding"},
+    "bundle": {"$ref": "#/$defs/fileBinding"},
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["directory", "files", "conftest_binary_sha256"],
+      "properties": {
+        "directory": {"$ref": "#/$defs/repoPath"},
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/fileBinding"}
+        },
+        "conftest_binary_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "references": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref_id", "path", "sha256"],
+        "properties": {
+          "kind": {
+            "enum": ["EVIDENCE_BUNDLE", "STAC", "DCAT", "PROV", "ROLLBACK", "CORRECTION"]
+          },
+          "ref_id": {"type": "string", "minLength": 8, "maxLength": 240},
+          "path": {"$ref": "#/$defs/repoPath"},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_access",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "network_access": {"const": "DENIED"},
+        "lifecycle_write": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "deployment_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "fileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/repoPath"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
