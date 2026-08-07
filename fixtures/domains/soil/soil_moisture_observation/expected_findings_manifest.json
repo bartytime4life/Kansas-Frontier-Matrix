@@ -1,0 +1,26 @@
+{
+  "answer_without_value.json": [
+    "ANSWER_VALUE_REQUIRED"
+  ],
+  "noncanonical_evidence_refs.json": [
+    "EVIDENCE_REFS_NOT_CANONICAL"
+  ],
+  "public_authority_claimed.json": [
+    "SCHEMA_INVALID"
+  ],
+  "retrieval_precedes_observation.json": [
+    "RETRIEVAL_PRECEDES_OBSERVATION"
+  ],
+  "satellite_sensor_depth.json": [
+    "SATELLITE_SENSOR_DEPTH_FORBIDDEN"
+  ],
+  "spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "station_missing_depth.json": [
+    "STATION_DEPTH_REQUIRED"
+  ],
+  "support_type_role_collapse.json": [
+    "SOURCE_ROLE_SUPPORT_MISMATCH"
+  ]
+}
