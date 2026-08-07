@@ -1,0 +1,275 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-internal-success-complete",
+      "dataset_stage": "PROCESSED",
+      "event_time": "2026-08-06T21:00:00-05:00",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "declared_decision": "PASS",
+        "event_type": "COMPLETE",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:0aa8503568a8898e26a4c30f668e890ad3bf29359c3b026ec44c4de1197bc773",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "valid-internal-failed-run",
+      "dataset_stage": "WORK",
+      "evidence_release_state": "WORK",
+      "expected": {
+        "declared_decision": "PASS",
+        "event_type": "FAIL",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:2d0220a435ebcc5268477b4e8ffc70a942d0f3cf3159f6b2353868934e034511",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "FAIL",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "valid-public-success-complete",
+      "dataset_stage": "PUBLISHED",
+      "evidence_release_state": "PUBLISHED",
+      "expected": {
+        "declared_decision": "PASS",
+        "event_type": "COMPLETE",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:5452cc7155ef8cb5cd2253eacc0e8b83414659100d2288c4555569207fa88270",
+      "mutation": null,
+      "public_safe": true,
+      "public_use_allowed": true,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "generalized",
+      "telemetry_allowed": true,
+      "visibility": "PUBLIC"
+    },
+    {
+      "case_id": "valid-partial-run-abstain",
+      "dataset_stage": "WORK",
+      "evidence_release_state": "WORK",
+      "expected": {
+        "declared_decision": "ABSTAIN",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:322e9256fff6d24d8ca78c06fb1665d712ef9f346989815b360f74b6baaa73d8",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "PARTIAL",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "valid-public-unpublished-deny",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "declared_decision": "DENY",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:90d3955293f283765095c0b82fa918ea7b7ac1cff7ed45a76cd6d239dca7f0c7",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "public",
+      "telemetry_allowed": true,
+      "visibility": "PUBLIC"
+    },
+    {
+      "case_id": "valid-restricted-evidence-deny",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "declared_decision": "DENY",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:b463e119bfedcb1df62390ef77980b6c9c0ad0c2cfbd3f7bb46322e397290d1c",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "restricted",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "valid-telemetry-policy-deny",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "declared_decision": "DENY",
+        "finding_codes": [],
+        "validation_outcome": "PASS"
+      },
+      "expected_projection_id": "kfm:openlineage-projection:91434b1c2151a883bc6525fdef9d2e1be8d8f07ba30b913093861cb4395ec101",
+      "mutation": null,
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": false,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "invalid-unresolved-evidence-ref",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "finding_codes": [
+          "DECISION_OUTCOME_MISMATCH",
+          "EVENT_PRESENCE_MISMATCH",
+          "EVIDENCE_RESOLUTION_SET_MISMATCH",
+          "REASON_CODES_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "UNRESOLVED_EVIDENCE_REF",
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "invalid-dataset-receipt-drift",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "finding_codes": [
+          "DECISION_OUTCOME_MISMATCH",
+          "EVENT_PRESENCE_MISMATCH",
+          "INPUT_DATASET_BINDING_MISMATCH",
+          "REASON_CODES_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "DATASET_RECEIPT_DRIFT",
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "internal",
+      "telemetry_allowed": true,
+      "visibility": "INTERNAL"
+    },
+    {
+      "case_id": "invalid-projection-id-drift",
+      "expected": {
+        "finding_codes": [
+          "PROJECTION_ID_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "PROJECTION_ID_DRIFT"
+    },
+    {
+      "case_id": "invalid-spec-hash-drift",
+      "expected": {
+        "finding_codes": [
+          "SPEC_HASH_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "SPEC_HASH_DRIFT"
+    },
+    {
+      "case_id": "invalid-decision-reason-drift",
+      "expected": {
+        "finding_codes": [
+          "REASON_CODES_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "DECISION_REASON_DRIFT"
+    },
+    {
+      "case_id": "invalid-event-on-deny",
+      "dataset_stage": "PROCESSED",
+      "evidence_release_state": "PROCESSED",
+      "expected": {
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "EVENT_ON_DENY",
+      "public_safe": false,
+      "public_use_allowed": false,
+      "run_outcome": "SUCCESS",
+      "sensitivity_level": "public",
+      "telemetry_allowed": true,
+      "visibility": "PUBLIC"
+    },
+    {
+      "case_id": "invalid-event-run-id-drift",
+      "expected": {
+        "finding_codes": [
+          "EVENT_RUN_ID_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "EVENT_RUN_ID_DRIFT"
+    },
+    {
+      "case_id": "invalid-event-time-drift",
+      "expected": {
+        "finding_codes": [
+          "EVENT_TIME_MISMATCH"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "EVENT_TIME_DRIFT"
+    },
+    {
+      "case_id": "invalid-unsorted-datasets",
+      "expected": {
+        "finding_codes": [
+          "DATASETS_NOT_SORTED"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "UNSORTED_DATASETS"
+    },
+    {
+      "case_id": "invalid-extra-geometry",
+      "expected": {
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "EXTRA_GEOMETRY"
+    },
+    {
+      "case_id": "invalid-non-effects-drift",
+      "expected": {
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ],
+        "validation_outcome": "DENY"
+      },
+      "mutation": "NON_EFFECTS_DRIFT"
+    }
+  ],
+  "profile": "kfm.telemetry.openlineage-run-event-projection.v1"
+}
