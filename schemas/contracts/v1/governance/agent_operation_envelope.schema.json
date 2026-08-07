@@ -1,0 +1,420 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/agent_operation_envelope.schema.json",
+  "title": "AgentOperationEnvelope",
+  "description": "Fixture-only envelope that enforces Watcher, Planner, and Executor separation. Conformance creates no repository, evidence, policy, review, merge, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "operation_id",
+    "actor",
+    "operation",
+    "determinism",
+    "kill_switch",
+    "inputs",
+    "outputs",
+    "gates",
+    "capability_ceiling",
+    "credential_ceiling",
+    "target",
+    "evidence_refs",
+    "disposition",
+    "permissions",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.agent-operation-envelope.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_EXTERNAL_EFFECT"},
+    "authority": {"const": "NONE"},
+    "operation_id": {
+      "type": "string",
+      "pattern": "^kfm:agent-operation:[0-9a-f]{64}$"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "component_id", "component_version"],
+      "properties": {
+        "role": {"enum": ["WATCHER", "PLANNER", "EXECUTOR"]},
+        "component_id": {
+          "type": "string",
+          "pattern": "^kfm:agent:[a-z0-9][a-z0-9._-]{2,63}$"
+        },
+        "component_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "subject_ref",
+        "window",
+        "commit_seed",
+        "input_bundle_hash",
+        "idempotency_key"
+      ],
+      "properties": {
+        "kind": {"enum": ["OBSERVE", "PLAN", "OPEN_OR_UPDATE_DRAFT_PR"]},
+        "subject_ref": {"$ref": "#/$defs/kfm_ref"},
+        "window": {"type": "string", "minLength": 8, "maxLength": 128},
+        "commit_seed": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+        },
+        "input_bundle_hash": {"$ref": "#/$defs/spec_hash"},
+        "idempotency_key": {"$ref": "#/$defs/spec_hash"}
+      }
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalization",
+        "hash_algorithm",
+        "clock_mode",
+        "network_access",
+        "replay_safe"
+      ],
+      "properties": {
+        "canonicalization": {"const": "RFC8785-JCS"},
+        "hash_algorithm": {"const": "SHA-256"},
+        "clock_mode": {"const": "PINNED"},
+        "network_access": {"const": "FORBIDDEN"},
+        "replay_safe": {"const": true}
+      }
+    },
+    "kill_switch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked", "state", "source_ref"],
+      "properties": {
+        "checked": {"const": true},
+        "state": {"enum": ["DISENGAGED", "ENGAGED"]},
+        "source_ref": {"$ref": "#/$defs/kfm_ref"}
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/output_binding"}
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {"$ref": "#/$defs/schema_gate"},
+        {"$ref": "#/$defs/policy_gate"},
+        {"$ref": "#/$defs/qa_gate"},
+        {"$ref": "#/$defs/reproducibility_gate"}
+      ],
+      "items": false
+    },
+    "capability_ceiling": {"$ref": "#/$defs/capabilities"},
+    "credential_ceiling": {
+      "enum": ["READ_ONLY", "FEATURE_BRANCH_AND_DRAFT_PR_ONLY"]
+    },
+    "target": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/draft_pr_target"}
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/kfm_ref"}
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["READY", "HOLD", "DENY", "ERROR"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        }
+      }
+    },
+    "permissions": {
+      "const": {
+        "repository_write_allowed": false,
+        "lifecycle_write_allowed": false,
+        "canonical_write_allowed": false,
+        "merge_allowed": false,
+        "promotion_allowed": false,
+        "release_allowed": false,
+        "deployment_allowed": false,
+        "publication_allowed": false,
+        "public_use_allowed": false
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_execute_network_or_repository_operations",
+        "does_not_authenticate_evidence_policy_review_or_attestation",
+        "does_not_grant_branch_or_pull_request_permissions",
+        "does_not_merge_or_write_protected_branches",
+        "does_not_promote_release_deploy_or_publish",
+        "does_not_authorize_public_use"
+      ]
+    },
+    "spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"actor": {"properties": {"role": {"const": "WATCHER"}}}}
+      },
+      "then": {
+        "properties": {
+          "operation": {"properties": {"kind": {"const": "OBSERVE"}}},
+          "capability_ceiling": {"const": {
+            "repository_read": true,
+            "consume_facts": false,
+            "consume_plan": false,
+            "emit_facts": true,
+            "emit_alerts": true,
+            "emit_plan": false,
+            "emit_diff_candidate": false,
+            "feature_branch_write": false,
+            "draft_pr_write": false,
+            "protected_branch_write": false,
+            "merge": false,
+            "release": false,
+            "deploy": false,
+            "publish": false
+          }},
+          "credential_ceiling": {"const": "READ_ONLY"},
+          "target": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"actor": {"properties": {"role": {"const": "PLANNER"}}}}
+      },
+      "then": {
+        "properties": {
+          "operation": {"properties": {"kind": {"const": "PLAN"}}},
+          "capability_ceiling": {"const": {
+            "repository_read": true,
+            "consume_facts": true,
+            "consume_plan": false,
+            "emit_facts": false,
+            "emit_alerts": false,
+            "emit_plan": true,
+            "emit_diff_candidate": true,
+            "feature_branch_write": false,
+            "draft_pr_write": false,
+            "protected_branch_write": false,
+            "merge": false,
+            "release": false,
+            "deploy": false,
+            "publish": false
+          }},
+          "credential_ceiling": {"const": "READ_ONLY"},
+          "target": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"actor": {"properties": {"role": {"const": "EXECUTOR"}}}}
+      },
+      "then": {
+        "properties": {
+          "operation": {"properties": {"kind": {"const": "OPEN_OR_UPDATE_DRAFT_PR"}}},
+          "capability_ceiling": {"const": {
+            "repository_read": true,
+            "consume_facts": false,
+            "consume_plan": true,
+            "emit_facts": false,
+            "emit_alerts": false,
+            "emit_plan": false,
+            "emit_diff_candidate": false,
+            "feature_branch_write": true,
+            "draft_pr_write": true,
+            "protected_branch_write": false,
+            "merge": false,
+            "release": false,
+            "deploy": false,
+            "publish": false
+          }},
+          "credential_ceiling": {"const": "FEATURE_BRANCH_AND_DRAFT_PR_ONLY"},
+          "target": {"$ref": "#/$defs/draft_pr_target"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:(//)?[A-Za-z0-9][A-Za-z0-9._:/-]{3,255}$"
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref", "spec_hash"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "SOURCE_SNAPSHOT",
+            "WATCHER_FACTS",
+            "POLICY_BASELINE",
+            "PLAN",
+            "VALIDATION_EVIDENCE",
+            "ATTESTATION"
+          ]
+        },
+        "ref": {"$ref": "#/$defs/kfm_ref"},
+        "spec_hash": {"$ref": "#/$defs/spec_hash"}
+      }
+    },
+    "output_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref", "spec_hash"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "FACTS",
+            "ALERTS",
+            "PLAN",
+            "DIFF_CANDIDATE",
+            "VALIDATION_EVIDENCE",
+            "DRAFT_PR_METADATA",
+            "EXECUTION_RECEIPT"
+          ]
+        },
+        "ref": {"$ref": "#/$defs/kfm_ref"},
+        "spec_hash": {"$ref": "#/$defs/spec_hash"}
+      }
+    },
+    "gate_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "outcome", "evidence_ref"],
+      "properties": {
+        "gate": {"type": "string"},
+        "outcome": {"enum": ["PASS", "HOLD", "DENY", "ERROR"]},
+        "evidence_ref": {"$ref": "#/$defs/kfm_ref"}
+      }
+    },
+    "schema_gate": {
+      "allOf": [
+        {"$ref": "#/$defs/gate_base"},
+        {"properties": {"gate": {"const": "SCHEMA"}}}
+      ]
+    },
+    "policy_gate": {
+      "allOf": [
+        {"$ref": "#/$defs/gate_base"},
+        {"properties": {"gate": {"const": "POLICY"}}}
+      ]
+    },
+    "qa_gate": {
+      "allOf": [
+        {"$ref": "#/$defs/gate_base"},
+        {"properties": {"gate": {"const": "QA"}}}
+      ]
+    },
+    "reproducibility_gate": {
+      "allOf": [
+        {"$ref": "#/$defs/gate_base"},
+        {"properties": {"gate": {"const": "REPRODUCIBILITY"}}}
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_read",
+        "consume_facts",
+        "consume_plan",
+        "emit_facts",
+        "emit_alerts",
+        "emit_plan",
+        "emit_diff_candidate",
+        "feature_branch_write",
+        "draft_pr_write",
+        "protected_branch_write",
+        "merge",
+        "release",
+        "deploy",
+        "publish"
+      ],
+      "properties": {
+        "repository_read": {"type": "boolean"},
+        "consume_facts": {"type": "boolean"},
+        "consume_plan": {"type": "boolean"},
+        "emit_facts": {"type": "boolean"},
+        "emit_alerts": {"type": "boolean"},
+        "emit_plan": {"type": "boolean"},
+        "emit_diff_candidate": {"type": "boolean"},
+        "feature_branch_write": {"type": "boolean"},
+        "draft_pr_write": {"type": "boolean"},
+        "protected_branch_write": {"const": false},
+        "merge": {"const": false},
+        "release": {"const": false},
+        "deploy": {"const": false},
+        "publish": {"const": false}
+      }
+    },
+    "draft_pr_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base_branch",
+        "head_branch",
+        "base_is_protected",
+        "head_is_protected",
+        "draft"
+      ],
+      "properties": {
+        "base_branch": {"const": "main"},
+        "head_branch": {
+          "type": "string",
+          "pattern": "^agent/[a-z0-9][a-z0-9._/-]{2,120}$"
+        },
+        "base_is_protected": {"const": true},
+        "head_is_protected": {"const": false},
+        "draft": {"const": true}
+      }
+    }
+  }
+}
