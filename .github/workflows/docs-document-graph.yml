@@ -104,12 +104,47 @@ jobs:
 
           cat "$RUNNER_TEMP/docs-document-graph.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Verify generated authoring receipt integrity
+      - name: Validate changed document-graph authoring receipts
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-docs-document-graph-20260806.json \
-            --repo-root .
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base_sha="$PR_BASE_SHA"
+            range_mode="merge-base"
+          elif [[ "$EVENT_NAME" == "push" && ! "$PUSH_BEFORE_SHA" =~ ^0+$ ]]; then
+            base_sha="$PUSH_BEFORE_SHA"
+            range_mode="direct"
+          else
+            base_sha="$(git rev-parse HEAD^)"
+            range_mode="direct"
+          fi
+
+          receipt_list="$RUNNER_TEMP/changed-document-graph-receipts.bin"
+          python tools/validators/docs/document-graph/select_changed_receipts.py \
+            --repo-root . \
+            --base "$base_sha" \
+            --head HEAD \
+            --mode "$range_mode" \
+            --prefix "data/receipts/generated/genrec-docs-document-graph-" \
+            > "$receipt_list"
+
+          mapfile -d '' -t receipt_paths < "$receipt_list"
+          if (( ${#receipt_paths[@]} == 0 )); then
+            echo "::notice title=NO_CHANGED_AUTHORING_RECEIPT::No added, copied, modified, or renamed document-graph GENERATED_RECEIPT requires current-byte validation."
+            exit 0
+          fi
+
+          for receipt_path in "${receipt_paths[@]}"; do
+            echo "Validating changed authoring receipt: $receipt_path"
+            python tools/validators/validate_generated_receipt.py \
+              "$receipt_path" \
+              --repo-root .
+          done
 
       - name: Record graph trust boundary
         if: always()
@@ -120,6 +155,8 @@ jobs:
             echo "### Documentation graph trust boundary"
             echo "- Scope: explicit Markdown graph, backlinks, generated Maps of Content, entrypoint reachability, and bounded machine document-registry parity."
             echo "- Ratchet: current changed-path failures remain blocking; unchanged historical failures are review warnings."
-            echo "- Network: graph construction and tests make no external request."
+            echo "- Authoring receipts: only document-graph GENERATED_RECEIPT files added, copied, modified, or renamed in the triggering range are checked against current bytes."
+            echo "- Historical integrity: an older receipt remains immutable process memory; later unrelated edits to its former artifact set do not retroactively rewrite or invalidate that historical authorship record."
+            echo "- Network: graph construction, receipt selection, and tests make no external request."
             echo "- Non-effects: no documentation edit, registry mutation, doctrine decision, release, deployment, publication, or public authority is created."
           } >> "$GITHUB_STEP_SUMMARY"
