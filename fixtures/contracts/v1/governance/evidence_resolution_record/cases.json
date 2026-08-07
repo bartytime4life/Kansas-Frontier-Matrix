@@ -1,0 +1,123 @@
+{
+  "cases": [
+    {
+      "name": "complete",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:71faecf02bc80b190d63915f23308a7293e23229fe1d06b3175d408cd356ce14",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:a", "bundle_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"evidence_ref": "evidence:ks:b", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:b", "bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+        ],
+        "outcome": "COMPLETE",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "COMPLETE"
+    },
+    {
+      "name": "partial",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:c36836675795c88889493f38b7cfda57d7816373989823775395a964408a8739",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:a", "bundle_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"evidence_ref": "evidence:ks:b", "status": "UNRESOLVED", "reason_code": "NOT_FOUND"}
+        ],
+        "outcome": "PARTIAL",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "PARTIAL"
+    },
+    {
+      "name": "unresolved",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:2b69956d11a8d3171d345684136c08950ad0a60d6ed737123bd58628ae4c0bda",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "UNRESOLVED", "reason_code": "NOT_FOUND"},
+          {"evidence_ref": "evidence:ks:b", "status": "UNRESOLVED", "reason_code": "NOT_FOUND"}
+        ],
+        "outcome": "UNRESOLVED",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "UNRESOLVED"
+    },
+    {
+      "name": "denied",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:0d788b5205e95a2cbde689844a0e52e1bd2eb9534284af91266c81e92fd43448",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "DENIED", "reason_code": "POLICY_DENIED"},
+          {"evidence_ref": "evidence:ks:b", "status": "DENIED", "reason_code": "POLICY_DENIED"}
+        ],
+        "outcome": "DENIED",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "DENIED"
+    },
+    {
+      "name": "unsorted_requested_refs",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:734522657961051189491604077236565964d2bdfc00a0682280bc87c87e18f4",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:b", "evidence:ks:a"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:a", "bundle_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"evidence_ref": "evidence:ks:b", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:b", "bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+        ],
+        "outcome": "COMPLETE",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "ERROR"
+    },
+    {
+      "name": "unresolved_with_bundle",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:19b5f56402b35c3f88217b1a15c47f819c2c299af02092a5caa290b69c7dd4f2",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "UNRESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:a", "bundle_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"evidence_ref": "evidence:ks:b", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:b", "bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+        ],
+        "outcome": "PARTIAL",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": false, "public_use_authorized": false}
+      },
+      "expected": "ERROR"
+    },
+    {
+      "name": "authority_overreach",
+      "candidate": {
+        "profile": "kfm.governance.evidence-resolution-record.v1",
+        "record_id": "kfm:evidence-resolution:c22d119ac57639293138649e622a17a56e4c7db42709163f80776925fe31ea57",
+        "query_run_id": "kfm:query-run:fixture-001",
+        "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
+        "resolutions": [
+          {"evidence_ref": "evidence:ks:a", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:a", "bundle_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+          {"evidence_ref": "evidence:ks:b", "status": "RESOLVED", "reason_code": "RESOLVED", "bundle_id": "bundle:ks:b", "bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+        ],
+        "outcome": "COMPLETE",
+        "evaluated_at": "2026-08-07T23:15:00Z",
+        "effects": {"evidence_created": false, "policy_evaluated": false, "lifecycle_written": false, "promoted": false, "released": false, "deployed": false, "published": true, "public_use_authorized": false}
+      },
+      "expected": "ERROR"
+    }
+  ]
+}
