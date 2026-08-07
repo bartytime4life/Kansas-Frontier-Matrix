@@ -1,0 +1,94 @@
+# Validate the fixture-only ConditionalWriteAttemptReceiptCandidate profile.
+# The workflow authenticates no target state or execution and performs no write,
+# lifecycle transition, release, deployment, publication, or public-use action.
+name: conditional-write-attempt-receipt
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/conditional-write-attempt-receipt.yml"
+      - "contracts/release/conditional_write_attempt_receipt.md"
+      - "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_attempt_receipt/**"
+      - "tools/validators/release/_conditional_write_attempt_receipt_model.py"
+      - "tools/validators/release/validate_conditional_write_attempt_receipt.py"
+      - "tests/validators/release/test_validate_conditional_write_attempt_receipt.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md"
+      - "data/receipts/generated/genrec-conditional-write-attempt-receipt-20260807.json"
+      - "contracts/release/conditional_write_preflight.md"
+      - "schemas/contracts/v1/release/conditional_write_preflight.schema.json"
+      - "tools/validators/release/_conditional_write_preflight_model.py"
+      - "tools/validators/release/validate_conditional_write_preflight.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/conditional-write-attempt-receipt.yml"
+      - "contracts/release/conditional_write_attempt_receipt.md"
+      - "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_attempt_receipt/**"
+      - "tools/validators/release/_conditional_write_attempt_receipt_model.py"
+      - "tools/validators/release/validate_conditional_write_attempt_receipt.py"
+      - "tests/validators/release/test_validate_conditional_write_attempt_receipt.py"
+      - "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md"
+      - "data/receipts/generated/genrec-conditional-write-attempt-receipt-20260807.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: conditional-write-attempt-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Revalidate upstream conditional-write preflight
+        run: |
+          python -m unittest discover             --start-directory tests/validators/release             --pattern 'test_validate_conditional_write_preflight.py'             --verbose
+          python tools/validators/release/validate_conditional_write_preflight.py --fixtures
+      - name: Run focused deterministic receipt tests
+        run: |
+          python -m unittest discover             --start-directory tests/validators/release             --pattern 'test_validate_conditional_write_attempt_receipt.py'             --verbose
+      - name: Replay exact attempt-receipt fixture polarity
+        run: python tools/validators/release/validate_conditional_write_attempt_receipt.py --fixtures
+      - name: Exercise repository-wide release schema polarity
+        run: |
+          python -m pytest -q tests/schemas/test_common_contracts.py             -k conditional_write_attempt_receipt
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-conditional-write-attempt-receipt-20260807.json             --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### ConditionalWriteAttemptReceiptCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact preflight composition, declared conditional request/response transcript, idempotent no-action, conflict/hold preservation, deterministic receipt identity, and fixed no-effect claims."
+            echo "- No target is contacted; no request, credential, write, lifecycle mutation, release, deployment, publication, or public-use action occurs."
+            echo "- APPLIED means only internally consistent fixture declaration; external execution and write verification remain false."
+          } >> "$GITHUB_STEP_SUMMARY"

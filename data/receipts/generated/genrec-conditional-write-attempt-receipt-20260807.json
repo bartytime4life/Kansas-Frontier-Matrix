@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-conditional-write-attempt-receipt-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/conditional-write-attempt-receipt.yml",
+    "contracts/release/conditional_write_attempt_receipt.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json",
+    "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json",
+    "tests/validators/release/test_validate_conditional_write_attempt_receipt.py",
+    "tools/validators/release/_conditional_write_attempt_receipt_model.py",
+    "tools/validators/release/validate_conditional_write_attempt_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:cc42a809a7c743e1e60c41ca593dd450cf8ed5f2813c48e89b674ee2d4e503c1",
+    "contracts/release/conditional_write_attempt_receipt.md": "sha256:2652e69eb464fdc58cb3a48e71143e842864e34ece5ac53fb71a84ff8d34ea71",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md": "sha256:cce439af6fdc5fcf245b7e72d32983ee863d3815dc8dc7128c35634bf7cfa88b",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md": "sha256:ce172a4311c388b683c0950d738722041f492b09fe5e481c02564845790a9a36",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "sha256:9329dec74321e3084b7f1c3cef4560a30f0af3006392fbb2b504730f21845583",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt": "sha256:69556030fa36b793f16ad9c5d602bd1ebef581f35b67667b4ac31eb21f269c09",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json": "sha256:ec1bc4612e42a8ae0d12a8809f9022a1a6f18e86d58fbb06af48c05fd5fd4439",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json": "sha256:140e10d5c79777b7af25c72c7febbdb085a1778b206d86332b3b6a963bcf8984",
+    "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json": "sha256:0df0df9ef33e304376be578e4f1c17a07570c879c23fd787db3dbd1407e5a287",
+    "tests/validators/release/test_validate_conditional_write_attempt_receipt.py": "sha256:58ececa9212225e54f0b811d7da3daa61793795e1991882eee5b4cc3b6a8577f",
+    "tools/validators/release/_conditional_write_attempt_receipt_model.py": "sha256:e141b5145f524a85b82f0aaa775ce0c9dba47c67e71c4901a694443570405b62",
+    "tools/validators/release/validate_conditional_write_attempt_receipt.py": "sha256:f1c4908c519361eaf612811bfc8d060bc227eaa8753a8d34437602bad20c0880"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:de129b84d0e918ff11e51971a297665933388a949a5b53bb6fdd624f924f2519",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ef632ec5d1bceec45a39bae8abd83b30d71f2abf0cf29aa77567733f336c688b"
+    ],
+    "attached_docs": [
+      "New Ideas 3-11-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-11-26.pdf",
+      "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:contracts/release/conditional_write_preflight.md",
+      "github:tools/validators/release/validate_conditional_write_preflight.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/conditional-write-attempt-receipt.yml": "PROPOSED",
+    "contracts/release/conditional_write_attempt_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json": "PROPOSED",
+    "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json": "PROPOSED",
+    "tests/validators/release/test_validate_conditional_write_attempt_receipt.py": "PROPOSED",
+    "tools/validators/release/_conditional_write_attempt_receipt_model.py": "PROPOSED",
+    "tools/validators/release/validate_conditional_write_attempt_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Sixteen deterministic no-network tests passed across upstream composition, exact cases, identity, negative polarity, no-authority claims, and CLI behavior."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Ten exact attempt-transcript cases, one valid fixture, and one schema-invalid authority-overreach fixture replayed as expected."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema and local reference to ConditionalWritePreflightCandidate passed meta-validation and resolution."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed as YAML and uses immutable checkout/setup-python pins."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact path, SHA-256, truth-label, and receipt-shape closure were checked after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are evaluated after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-3-11-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-11-26.pdf"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    },
+    {
+      "id": "repository:conditional-write-preflight",
+      "validated": true,
+      "evidence_ref": "github:contracts/release/conditional_write_preflight.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T03:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only ConditionalWriteAttemptReceiptCandidate successor to the merged conditional-write preflight. It validates declared optimistic-concurrency transcripts and finite outcomes without contacting a target, authenticating execution, performing a write, mutating lifecycle state, or creating release/publication authority. Prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761."
+}
