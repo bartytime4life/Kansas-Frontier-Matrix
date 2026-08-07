@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/telemetry/openlineage_run_event_projection.schema.json",
+  "title": "OpenLineageRunEventProjection",
+  "description": "Closed fixture-only KFM profile for a deterministic, non-authoritative OpenLineage terminal RunEvent projection.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "projection_id",
+    "request",
+    "source_run_receipt",
+    "datasets",
+    "evidence_resolutions",
+    "decision",
+    "event",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.telemetry.openlineage-run-event-projection.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_NETWORK"},
+    "authority": {"const": "NONE"},
+    "projection_id": {"type": "string", "pattern": "^kfm:openlineage-projection:[0-9a-f]{64}$"},
+    "request": {"$ref": "#/$defs/request"},
+    "source_run_receipt": {"$ref": "../runtime/run_receipt.schema.json"},
+    "datasets": {"type": "array", "minItems": 1, "maxItems": 256, "items": {"$ref": "#/$defs/dataset"}},
+    "evidence_resolutions": {"type": "array", "minItems": 1, "maxItems": 512, "items": {"$ref": "#/$defs/evidenceResolution"}},
+    "decision": {"$ref": "#/$defs/decision"},
+    "event": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/runEvent"}]},
+    "non_effects": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "prefixItems": [
+        {"const": "does_not_post_or_export_openlineage_events"},
+        {"const": "does_not_create_or_modify_canonical_evidence"},
+        {"const": "does_not_admit_sources_or_mutate_lifecycle_state"},
+        {"const": "does_not_grant_policy_review_or_release_authority"},
+        {"const": "does_not_promote_release_deploy_or_publish"},
+        {"const": "does_not_authorize_public_use"}
+      ]
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1, "maxLength": 1024, "pattern": "\\S"},
+    "absoluteUri": {"type": "string", "format": "uri", "minLength": 1, "maxLength": 2048, "pattern": "^[^\\s\\u0000-\\u001f\\u007f]+$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "reasonCode": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,127}$"},
+    "lifecycleStage": {"type": "string", "enum": ["RAW", "WORK", "QUARANTINE", "PROCESSED", "CATALOG", "TRIPLET", "PUBLISHED"]},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "event_time", "namespace", "job_name", "producer", "schema_url", "run_receipt_ref"],
+      "properties": {
+        "visibility": {"enum": ["INTERNAL", "PUBLIC"]},
+        "event_time": {"type": "string", "format": "date-time"},
+        "namespace": {"$ref": "#/$defs/nonEmptyString"},
+        "job_name": {"$ref": "#/$defs/nonEmptyString"},
+        "producer": {"$ref": "#/$defs/absoluteUri"},
+        "schema_url": {"$ref": "#/$defs/absoluteUri"},
+        "run_receipt_ref": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "role", "namespace", "name", "lifecycle_stage", "public_safe", "evidence_refs"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/nonEmptyString"},
+        "role": {"enum": ["INPUT", "OUTPUT"]},
+        "namespace": {"$ref": "#/$defs/nonEmptyString"},
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "lifecycle_stage": {"$ref": "#/$defs/lifecycleStage"},
+        "public_safe": {"type": "boolean"},
+        "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/nonEmptyString"}}
+      }
+    },
+    "evidenceResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ref", "bundle_id", "bundle_spec_hash", "release_state", "sensitivity_level", "telemetry_allowed", "public_use_allowed"],
+      "properties": {
+        "evidence_ref": {"$ref": "#/$defs/nonEmptyString"},
+        "bundle_id": {"$ref": "#/$defs/nonEmptyString"},
+        "bundle_spec_hash": {"$ref": "#/$defs/sha256"},
+        "release_state": {"enum": ["WORK", "QUARANTINE", "PROCESSED", "CATALOG", "PUBLISHED"]},
+        "sensitivity_level": {"enum": ["public", "generalized", "internal", "restricted", "unknown", "quarantine"]},
+        "telemetry_allowed": {"type": "boolean"},
+        "public_use_allowed": {"type": "boolean"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR"]},
+        "reason_codes": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/reasonCode"}}
+      }
+    },
+    "evidenceBundleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceRef", "bundleId", "bundleSpecHash", "releaseState", "sensitivityLevel"],
+      "properties": {
+        "evidenceRef": {"$ref": "#/$defs/nonEmptyString"},
+        "bundleId": {"$ref": "#/$defs/nonEmptyString"},
+        "bundleSpecHash": {"$ref": "#/$defs/sha256"},
+        "releaseState": {"enum": ["WORK", "QUARANTINE", "PROCESSED", "CATALOG", "PUBLISHED"]},
+        "sensitivityLevel": {"enum": ["public", "generalized", "internal", "restricted", "unknown", "quarantine"]}
+      }
+    },
+    "datasetFacet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_producer", "_schemaURL", "datasetRef", "evidenceBundles", "evidenceRefs", "lifecycleStage", "publicSafe"],
+      "properties": {
+        "_producer": {"$ref": "#/$defs/absoluteUri"},
+        "_schemaURL": {"$ref": "#/$defs/absoluteUri"},
+        "datasetRef": {"$ref": "#/$defs/nonEmptyString"},
+        "evidenceBundles": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/evidenceBundleRef"}},
+        "evidenceRefs": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/nonEmptyString"}},
+        "lifecycleStage": {"$ref": "#/$defs/lifecycleStage"},
+        "publicSafe": {"type": "boolean"}
+      }
+    },
+    "lineageDataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "name", "facets"],
+      "properties": {
+        "namespace": {"$ref": "#/$defs/nonEmptyString"},
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "facets": {"type": "object", "additionalProperties": false, "required": ["kfm_dataset_state"], "properties": {"kfm_dataset_state": {"$ref": "#/$defs/datasetFacet"}}}
+      }
+    },
+    "runReceiptFacet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_producer", "_schemaURL", "codeRef", "outcome", "runReceiptRef", "sourceDescriptorRefs", "sourceRunId", "sourceRunSpecHash", "validationRefs"],
+      "properties": {
+        "_producer": {"$ref": "#/$defs/absoluteUri"},
+        "_schemaURL": {"$ref": "#/$defs/absoluteUri"},
+        "codeRef": {"$ref": "#/$defs/nonEmptyString"},
+        "outcome": {"enum": ["SUCCESS", "FAIL"]},
+        "runReceiptRef": {"$ref": "#/$defs/nonEmptyString"},
+        "sourceDescriptorRefs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonEmptyString"}},
+        "sourceRunId": {"$ref": "#/$defs/nonEmptyString"},
+        "sourceRunSpecHash": {"$ref": "#/$defs/sha256"},
+        "validationRefs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonEmptyString"}}
+      }
+    },
+    "projectionFacet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["_producer", "_schemaURL", "authority", "executionMode", "profile", "visibility"],
+      "properties": {
+        "_producer": {"$ref": "#/$defs/absoluteUri"},
+        "_schemaURL": {"$ref": "#/$defs/absoluteUri"},
+        "authority": {"const": "NONE"},
+        "executionMode": {"const": "FIXTURE_ONLY_NO_NETWORK"},
+        "profile": {"const": "kfm.telemetry.openlineage-run-event-projection.v1"},
+        "visibility": {"enum": ["INTERNAL", "PUBLIC"]}
+      }
+    },
+    "runEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eventType", "eventTime", "run", "job", "inputs", "outputs", "producer", "schemaURL"],
+      "properties": {
+        "eventType": {"enum": ["COMPLETE", "FAIL"]},
+        "eventTime": {"type": "string", "format": "date-time"},
+        "run": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runId", "facets"],
+          "properties": {
+            "runId": {"type": "string", "format": "uuid"},
+            "facets": {"type": "object", "additionalProperties": false, "required": ["kfm_run_receipt"], "properties": {"kfm_run_receipt": {"$ref": "#/$defs/runReceiptFacet"}}}
+          }
+        },
+        "job": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["namespace", "name", "facets"],
+          "properties": {
+            "namespace": {"$ref": "#/$defs/nonEmptyString"},
+            "name": {"$ref": "#/$defs/nonEmptyString"},
+            "facets": {"type": "object", "additionalProperties": false, "required": ["kfm_projection"], "properties": {"kfm_projection": {"$ref": "#/$defs/projectionFacet"}}}
+          }
+        },
+        "inputs": {"type": "array", "maxItems": 256, "items": {"$ref": "#/$defs/lineageDataset"}},
+        "outputs": {"type": "array", "maxItems": 256, "items": {"$ref": "#/$defs/lineageDataset"}},
+        "producer": {"$ref": "#/$defs/absoluteUri"},
+        "schemaURL": {"$ref": "#/$defs/absoluteUri"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"properties": {"outcome": {"const": "PASS"}}, "required": ["outcome"]}}, "required": ["decision"]},
+      "then": {"properties": {"event": {"$ref": "#/$defs/runEvent"}}},
+      "else": {"properties": {"event": {"type": "null"}}}
+    }
+  ]
+}
