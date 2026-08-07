@@ -1,0 +1,66 @@
+{
+  "bridge_id": "hydro-bridge:765eae35f47a1733e84cac93",
+  "governance": {
+    "authority_created": false,
+    "geometry_equality_assumed": false,
+    "legacy_relabel_denied": true,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "source_data_mutated": false,
+    "source_native_ids_preserved": true
+  },
+  "request": {
+    "identifier": "123456",
+    "identifier_kind": "LEGACY_COMID",
+    "request_id": "request:hydro:sample"
+  },
+  "resolution": {
+    "current_identifiers": [
+      {
+        "id_type": "PERMANENT_IDENTIFIER",
+        "source_native": true,
+        "value": "perm-ks-0001"
+      }
+    ],
+    "evidence_refs": [
+      "kfm://evidence/crosswalk-row/123456",
+      "kfm://evidence/source-release/nhdplus-hr-2026q2"
+    ],
+    "join_receipt_ref": null,
+    "legacy_comids": [
+      "123456"
+    ],
+    "outcome": "ANSWER",
+    "reason_codes": [
+      "EXACT_ONE_TO_ONE"
+    ],
+    "relationship_type": "EXACT"
+  },
+  "schema_version": "v1",
+  "source_versions": {
+    "crosswalk": {
+      "artifact_ref": "kfm://processed/hydrology/nhdplus-waterbody-crosswalk/2026-04-17",
+      "dataset": "NHDPLUS_WATERBODY_CROSSWALK",
+      "release_id": "waterbody-crosswalk-2026-04-17",
+      "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "current": {
+      "dataset": "NHDPLUS_HR",
+      "release_id": "nhdplus-hr-2026q2",
+      "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "legacy": {
+      "dataset": "NHDPLUS_LEGACY",
+      "release_id": "nhdplus-v2.1",
+      "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  },
+  "spec_hash": "sha256:765eae35f47a1733e84cac93683a78f91b2153fb79a356a25765b7b4537ffcb9",
+  "temporal_basis": {
+    "crosswalk_release_date": "2026-04-17",
+    "crosswalk_release_id": "waterbody-crosswalk-2026-04-17",
+    "evaluated_at": "2026-08-07T20:00:00Z"
+  }
+}
