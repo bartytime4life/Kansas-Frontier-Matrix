@@ -1,0 +1,77 @@
+{
+  "object_type": "WbdHuc12SourcePackage",
+  "schema_version": "1.0.0",
+  "package_id": "wbd-huc12-package:add",
+  "observed_at": "2026-04-11T18:02:00Z",
+  "source_descriptor_ref": "data/registry/hydrology/sources/wbd_huc12.yaml",
+  "huc12": "102600030504",
+  "request": {
+    "url": "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&f=geojson",
+    "method": "GET",
+    "where_clause": "huc12='102600030504'",
+    "out_fields": [
+      "areasqkm",
+      "huc12",
+      "lastEditDate",
+      "LoadDate"
+    ],
+    "http_status": 200,
+    "etag": "\"new\"",
+    "last_modified": "Sat, 11 Apr 2026 18:00:00 GMT",
+    "content_type": "application/geo+json"
+  },
+  "response": {
+    "body_sha256": "sha256:7d0114339df0fb61b2ee404448bc750760617174891c247dd8672d104be39b4d",
+    "feature_collection": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "huc12": "102600030504",
+            "areasqkm": 12.3456784,
+            "LoadDate": "2026-04-10",
+            "lastEditDate": "2026-04-10"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  -98.0,
+                  38.4
+                ],
+                [
+                  -98.1,
+                  38.4
+                ],
+                [
+                  -98.1,
+                  38.5
+                ],
+                [
+                  -98.0,
+                  38.5
+                ],
+                [
+                  -98.0,
+                  38.4
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "prior_snapshot": null,
+  "governance": {
+    "fixture_only": true,
+    "network_fetch": false,
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:80f6ca6905e5ab5a14a8f7828939ccfd8adfd97d7e07c7e3d9929e159b056716"
+}
