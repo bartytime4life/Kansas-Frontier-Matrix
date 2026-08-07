@@ -77,8 +77,17 @@ class WebDeltaProfileTests(unittest.TestCase):
                     {"code": finding.code, "path": finding.path}
                     for finding in result.findings
                 ]
-                self.assertEqual(result.outcome, case["expected_outcome"])
-                self.assertEqual(actual, case["expected_findings"])
+                diagnostics = {
+                    "findings": actual,
+                    "payload_spec_hash": result.payload_spec_hash,
+                    "stored_payload_spec_hash": case["document"]["payload"]["payload_spec_hash"],
+                }
+                self.assertEqual(
+                    result.outcome,
+                    case["expected_outcome"],
+                    diagnostics,
+                )
+                self.assertEqual(actual, case["expected_findings"], diagnostics)
 
     def test_fixture_runner_passes_and_carries_no_authority(self) -> None:
         ok, payload = run_fixture_suite()
@@ -118,7 +127,16 @@ class WebDeltaProfileTests(unittest.TestCase):
         self.assertEqual(attrs["web.payload_mode"], "heartbeat")
         self.assertIsNone(attrs["web.raw_digest"])
         self.assertEqual(candidate["routing"]["disposition"], "NO_ACTION")
-        self.assertEqual(validate_document(candidate).outcome, "PASS")
+        result = validate_document(candidate)
+        self.assertEqual(
+            result.outcome,
+            "PASS",
+            {
+                "findings": result.findings,
+                "payload_spec_hash": result.payload_spec_hash,
+                "stored_payload_spec_hash": candidate["payload"]["payload_spec_hash"],
+            },
+        )
 
     def test_base_envelope_integrity_is_a_hard_dependency(self) -> None:
         candidate = self._document("valid_contentful_created_permissive")
@@ -157,7 +175,8 @@ class WebDeltaProfileTests(unittest.TestCase):
         completed = subprocess.run(
             [
                 sys.executable,
-                str(ROOT / "tools/validators/validate_web_delta_profile.py"),
+                "-m",
+                "tools.validators.validate_web_delta_profile",
                 str(fifo),
             ],
             cwd=ROOT,
