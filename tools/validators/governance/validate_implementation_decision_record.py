@@ -248,7 +248,8 @@ def _plain(value: object) -> str:
 
 
 def _code(value: object) -> str:
-    return f"`{_plain(value).replace('`', "'")}`"
+    normalized = _plain(value).replace("`", "'")
+    return f"`{normalized}`"
 
 
 def render_markdown(rows: Sequence[tuple[Path, Mapping[str, object], Evaluation]]) -> str:
