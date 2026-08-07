@@ -1,8 +1,8 @@
 # Validate non-authoritative briefing integration, deterministic BriefingSignal
 # identity/dedup/materiality/routing, read-only issue-inventory binding, the
-# proposed shared temporal-authority profile, and water-planning semantic and
-# canonical registry boundaries.
-# This workflow is read-only and emits no KFM release or publication authority.
+# shared temporal-authority and advisory-event profiles, and water-planning
+# semantic and canonical registry boundaries.
+# This workflow is read-only and emits no KFM alert, release, or publication authority.
 name: briefing-integration
 
 "on":
@@ -24,6 +24,14 @@ name: briefing-integration
       - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
       - "tools/validators/validate_temporal_authority_envelope.py"
       - "tests/validators/test_validate_temporal_authority_envelope.py"
+      - "contracts/common/advisory_event_envelope.md"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "fixtures/contracts/v1/common/advisory_event_envelope/**"
+      - "tools/validators/validate_advisory_event_envelope.py"
+      - "tools/validators/advisory_event_envelope_support.py"
+      - "tests/validators/test_validate_advisory_event_envelope.py"
+      - "data/receipts/generated/genrec-advisory-event-envelope-*.json"
+      - "docs/intake/exploratory/advisory-event-envelope-source-map.md"
       - "contracts/domains/water_planning/**"
       - "schemas/contracts/v1/domains/water_planning/**"
       - "fixtures/domains/water_planning/**"
@@ -53,6 +61,14 @@ name: briefing-integration
       - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
       - "tools/validators/validate_temporal_authority_envelope.py"
       - "tests/validators/test_validate_temporal_authority_envelope.py"
+      - "contracts/common/advisory_event_envelope.md"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "fixtures/contracts/v1/common/advisory_event_envelope/**"
+      - "tools/validators/validate_advisory_event_envelope.py"
+      - "tools/validators/advisory_event_envelope_support.py"
+      - "tests/validators/test_validate_advisory_event_envelope.py"
+      - "data/receipts/generated/genrec-advisory-event-envelope-*.json"
+      - "docs/intake/exploratory/advisory-event-envelope-source-map.md"
       - "contracts/domains/water_planning/**"
       - "schemas/contracts/v1/domains/water_planning/**"
       - "fixtures/domains/water_planning/**"
@@ -170,6 +186,23 @@ jobs:
         run: |
           python tools/validators/validate_temporal_authority_envelope.py --fixtures
 
+      - name: Run AdvisoryEventEnvelope tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_advisory_event_envelope.py' \
+            --verbose
+
+      - name: Validate AdvisoryEventEnvelope fixture polarity
+        run: |
+          python tools/validators/validate_advisory_event_envelope.py --fixtures
+
+      - name: Verify AdvisoryEventEnvelope authoring receipt
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-advisory-event-envelope-20260806.json \
+            --repo-root .
+
       - name: Record briefing boundary
         if: always()
         run: |
@@ -177,13 +210,14 @@ jobs:
             echo "### Briefing integration"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: non-authoritative BriefingSignal shape, deterministic identity, durable event clustering, replay/collision checks, explainable materiality, mandatory overrides, finite declared issue routing, and a validated read-only fixture-backed issue inventory projection plus the proposed shared TemporalAuthorityEnvelope profile."
+            echo "- Scope: non-authoritative BriefingSignal shape, deterministic identity, durable event clustering, replay/collision checks, explainable materiality, mandatory overrides, finite declared issue routing, a validated read-only fixture-backed issue inventory projection, the shared TemporalAuthorityEnvelope profile, and the release-neutral AdvisoryEventEnvelope HAB profile."
+            echo "- Advisory scope: local KDHE HAB fixtures only; canonical payload digest, source-content digest, event identity, false-clear defenses, stale/failed checks, rescission, identity conflict, zone scope, time ordering, and source-role anti-collapse."
             echo "- Existing-issue routes retain UPDATE_EXISTING_ISSUE only when exactly one declared target is projected OPEN and none is missing; absent, closed, missing, or ambiguous targets hold."
             echo "- The projection contains no title, body, comment, label, assignee, permission, ruleset, merge state, or mutation capability and explicitly reports live_state_verified=false."
-            echo "- All dry-run tools read local validated files only and emit authority_created=false plus repository_mutation_allowed=false."
-            echo "- A materiality priority or projected issue state is a review-order input, not evidence, live GitHub state, policy, repository authorization, issue mutation, or release authority."
+            echo "- All dry-run tools read local validated files only and emit no source activation, alert, lifecycle, repository-mutation, release, or publication authority."
+            echo "- A materiality priority, projected issue state, or advisory fixture is a review/test input, not current evidence, live status, policy, repository authorization, public guidance, or release authority."
             echo "- The temporal-authority profile does not accept ADR-0014, replace TemporalWindow, select a global temporal vocabulary, or replace a domain contract."
-            echo "- A green result is not evidence, source admission, repository authorization, issue mutation, policy approval, review approval, proof closure, release, deployment, publication, or public truth."
+            echo "- A green result is not evidence, source admission, repository authorization, issue mutation, policy approval, review approval, proof closure, alert authority, release, deployment, publication, or public truth."
           } >> "$GITHUB_STEP_SUMMARY"
 
   preserve-water-planning-anti-collapse:
