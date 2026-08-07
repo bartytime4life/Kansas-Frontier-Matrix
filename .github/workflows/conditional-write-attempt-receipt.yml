@@ -17,6 +17,7 @@ name: conditional-write-attempt-receipt
       - "data/receipts/generated/genrec-conditional-write-attempt-receipt-20260807.json"
       - "contracts/release/conditional_write_preflight.md"
       - "schemas/contracts/v1/release/conditional_write_preflight.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_preflight/**"
       - "tools/validators/release/_conditional_write_preflight_model.py"
       - "tools/validators/release/validate_conditional_write_preflight.py"
   push:
@@ -31,6 +32,11 @@ name: conditional-write-attempt-receipt
       - "tests/validators/release/test_validate_conditional_write_attempt_receipt.py"
       - "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md"
       - "data/receipts/generated/genrec-conditional-write-attempt-receipt-20260807.json"
+      - "contracts/release/conditional_write_preflight.md"
+      - "schemas/contracts/v1/release/conditional_write_preflight.schema.json"
+      - "fixtures/contracts/v1/release/conditional_write_preflight/**"
+      - "tools/validators/release/_conditional_write_preflight_model.py"
+      - "tools/validators/release/validate_conditional_write_preflight.py"
   workflow_dispatch:
 
 permissions:

@@ -10,20 +10,22 @@
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json",
     "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json",
     "tests/validators/release/test_validate_conditional_write_attempt_receipt.py",
     "tools/validators/release/_conditional_write_attempt_receipt_model.py",
     "tools/validators/release/validate_conditional_write_attempt_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:c74efcd4c3a39585feda84fff54ef3af26c6d4214c90053302a417fc586adf7e",
+    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:f9a8028b33615d348d28eea4eb6854a704bb1420113c1d5d8bea686c88a7248f",
     "contracts/release/conditional_write_attempt_receipt.md": "sha256:2652e69eb464fdc58cb3a48e71143e842864e34ece5ac53fb71a84ff8d34ea71",
     "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md": "sha256:cce439af6fdc5fcf245b7e72d32983ee863d3815dc8dc7128c35634bf7cfa88b",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md": "sha256:ce172a4311c388b683c0950d738722041f492b09fe5e481c02564845790a9a36",
-    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "sha256:9329dec74321e3084b7f1c3cef4560a30f0af3006392fbb2b504730f21845583",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "sha256:b695974e58a78b2dcf2f1d66847a30aa3be7b3a9c30dca9460d3f0a4d609cfa3",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt": "sha256:69556030fa36b793f16ad9c5d602bd1ebef581f35b67667b4ac31eb21f269c09",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json": "sha256:ec1bc4612e42a8ae0d12a8809f9022a1a6f18e86d58fbb06af48c05fd5fd4439",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json": "sha256:140e10d5c79777b7af25c72c7febbdb085a1778b206d86332b3b6a963bcf8984",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "sha256:14aeff530c3fffd1e33796073a89ed18c1e99089f0fcbece0559cf45ebb97002",
     "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json": "sha256:0df0df9ef33e304376be578e4f1c17a07570c879c23fd787db3dbd1407e5a287",
     "tests/validators/release/test_validate_conditional_write_attempt_receipt.py": "sha256:58ececa9212225e54f0b811d7da3daa61793795e1991882eee5b4cc3b6a8577f",
     "tools/validators/release/_conditional_write_attempt_receipt_model.py": "sha256:e141b5145f524a85b82f0aaa775ce0c9dba47c67e71c4901a694443570405b62",
@@ -55,10 +57,11 @@
     ],
     "evidence_refs": [
       "attachment:New Ideas 3-11-26.pdf",
-      "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "github:8ee05f3738c29344d055025bf47448150429e05e",
       "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "github:contracts/release/conditional_write_preflight.md",
-      "github:tools/validators/release/validate_conditional_write_preflight.py"
+      "github:tools/validators/release/validate_conditional_write_preflight.py",
+      "github:tests/validators/release/test_validate_conditional_write_preflight.py"
     ]
   },
   "truth_labels": {
@@ -70,6 +73,7 @@
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt": "PROPOSED",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json": "PROPOSED",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json": "PROPOSED",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "PROPOSED",
     "schemas/contracts/v1/release/conditional_write_attempt_receipt.schema.json": "PROPOSED",
     "tests/validators/release/test_validate_conditional_write_attempt_receipt.py": "PROPOSED",
     "tools/validators/release/_conditional_write_attempt_receipt_model.py": "PROPOSED",
@@ -84,7 +88,7 @@
     {
       "gate": "fixture-polarity",
       "outcome": "PASS",
-      "reason": "Ten exact attempt-transcript cases, one valid fixture, and one schema-invalid authority-overreach fixture replayed as expected."
+      "reason": "Ten exact attempt-transcript cases, one valid fixture, and one schema-invalid authority-overreach fixture replayed as expected; the corrupted upstream preflight cases carrier was reconstructed as valid UTF-8 JSON with the ten case IDs asserted by the existing upstream tests."
     },
     {
       "gate": "schema-self-check",
@@ -94,17 +98,17 @@
     {
       "gate": "workflow-yaml",
       "outcome": "PASS",
-      "reason": "The read-only path-scoped workflow parsed as YAML and uses immutable checkout/setup-python pins."
+      "reason": "The read-only path-scoped workflow parsed as YAML, uses immutable checkout/setup-python pins, hashing package through PYTHONPATH, and ratchets upstream preflight contract/schema/fixture/model/validator changes."
     },
     {
       "gate": "generated-receipt-integrity",
       "outcome": "PASS",
-      "reason": "Artifact path, SHA-256, truth-label, and receipt-shape closure were checked after final byte generation."
+      "reason": "Artifact path, SHA-256, truth-label, and receipt-shape closure were recomputed after the workflow and upstream fixture repairs."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The initial exact-head run exposed a missing workflow PYTHONPATH for the repository hashing package; the bounded workflow repair is pending a new exact-head hosted rerun."
+      "reason": "Two earlier exact-head runs exposed integration defects before substantive receipt tests: the first lacked the hashing package on PYTHONPATH; the second exposed a corrupted upstream conditional-write-preflight cases carrier. Hosted checks are evaluated again after this final dependency repair, and the PR body records the exact run history."
     },
     {
       "gate": "human-review",
@@ -129,7 +133,7 @@
     {
       "id": "repository:current-main",
       "validated": true,
-      "evidence_ref": "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+      "evidence_ref": "github:8ee05f3738c29344d055025bf47448150429e05e"
     },
     {
       "id": "repository:conditional-write-preflight",
@@ -143,12 +147,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-07T03:20:00Z",
+  "created_at": "2026-08-07T04:50:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only ConditionalWriteAttemptReceiptCandidate successor to the merged conditional-write preflight. It validates declared optimistic-concurrency transcripts and finite outcomes without contacting a target, authenticating execution, performing a write, mutating lifecycle state, or creating release/publication authority. Prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761."
+  "notes": "Fixture-only ConditionalWriteAttemptReceiptCandidate successor to the merged conditional-write preflight. It validates declared optimistic-concurrency transcripts and finite outcomes without contacting a target, authenticating execution, performing a write, mutating lifecycle state, or creating release/publication authority. This revision also repairs the merged upstream conditional-write-preflight cases carrier, which contained non-UTF-8 bytes and prevented its own deterministic tests from loading. Prepared against main@8ee05f3738c29344d055025bf47448150429e05e."
 }
