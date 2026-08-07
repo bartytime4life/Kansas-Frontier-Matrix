@@ -60,6 +60,17 @@ jobs:
       - name: Install declared validation dependencies
         run: python -m pip install -e ".[test]"
 
+      - name: Emit repair hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in \
+            tools/validators/docs/stale-scan/stale_scan_build.py \
+            tests/validators/docs/stale-scan/test_stale_scan_core.py; do
+            digest="$(sha256sum "$path" | awk '{print $1}')"
+            echo "::warning file=$path::sha256:$digest"
+          done
+
       - name: Run deterministic no-network freshness tests
         run: |
           set -euo pipefail
