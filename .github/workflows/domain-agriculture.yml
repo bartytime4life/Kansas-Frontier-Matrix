@@ -137,10 +137,10 @@ jobs:
           domain_validator_root = Path("tools/validators/domains/agriculture")
           assert_no_symlinks(domain_validator_root, "Agriculture domain validator")
           expected_placeholder_validators = {
-              "validate_cdl_aggregate.py",
-              "validate_decision_envelope.py",
+              "validate_catalog_matrix.py",
               "validate_evidence_bundle.py",
-              "validate_soil_join.py",
+              "validate_schema.py",
+              "validate_source_descriptor.py",
           }
           expected_dedicated_validator_files = {
               "hls_ndvi_zonal_materiality/README.md",
