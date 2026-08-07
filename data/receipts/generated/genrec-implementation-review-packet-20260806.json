@@ -1,0 +1,150 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/implementation-review-packet.yml": "sha256:24876d4e54f3c1c5e0d3af38a85801a9fdd3289f3f4108f22c5850739924b7d7",
+    "contracts/governance/implementation_review_packet.md": "sha256:116bafeb5676ff928fba4f5fc9afd76968034cf2760b70f2769ac121aaf93366",
+    "docs/intake/exploratory/fluencyloop-review-packet-source-map.md": "sha256:81e0c81c2e5f64377ff3a43ee0bb84960b5ed73f654c14b6db01a23bcf6fc852",
+    "fixtures/contracts/v1/governance/implementation_review_packet/cases.json": "sha256:65976a60b417d12a973a2d55cc81d394b88bb835d3660bb844ad2504fb80e06d",
+    "tests/validators/governance/test_implementation_review_packet.py": "sha256:a2a4bc07dccfbb804b3fd1b2722c021b67edc4c1dff1cddea5a2425954bcd1a2",
+    "tools/validators/governance/validate_implementation_review_packet.py": "sha256:9a9465615e09c3cf88f38f23f6c0de4bed755625e14c049dfdb0d6efa0d4ce9b"
+  },
+  "artifact_paths": [
+    ".github/workflows/implementation-review-packet.yml",
+    "contracts/governance/implementation_review_packet.md",
+    "docs/intake/exploratory/fluencyloop-review-packet-source-map.md",
+    "fixtures/contracts/v1/governance/implementation_review_packet/cases.json",
+    "tests/validators/governance/test_implementation_review_packet.py",
+    "tools/validators/governance/validate_implementation_review_packet.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:claude-skills/review/SKILL.md",
+      "id": "FLUENCYLOOP_REVIEW_STAGE",
+      "validated": true
+    },
+    {
+      "evidence_ref": "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/scripts/bash/slice-context.sh",
+      "id": "FLUENCYLOOP_SLICE_CONTEXT",
+      "validated": true
+    },
+    {
+      "evidence_ref": "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:LICENSE",
+      "id": "FLUENCYLOOP_APACHE_2_LICENSE",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/governance/implementation_change_context.md",
+      "id": "KFM_IMPLEMENTATION_CHANGE_CONTEXT",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/governance/implementation_decision_record.md",
+      "id": "KFM_IMPLEMENTATION_DECISION_RECORD",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/intake/exploratory/fluencyloop-change-context-source-map.md",
+      "id": "KFM_FLUENCYLOOP_PRIOR_SOURCE_MAPS",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-07T01:29:19Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:bartytime4life/Kansas-Frontier-Matrix@14b9608addcf6cac80adaa0a836182f7a6e47806",
+      "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:LICENSE",
+      "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:claude-skills/review/SKILL.md",
+      "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/scripts/bash/slice-context.sh",
+      "contracts/governance/implementation_change_context.md",
+      "contracts/governance/implementation_decision_record.md",
+      "docs/intake/exploratory/fluencyloop-change-context-source-map.md",
+      "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "gpt-5.6-pro",
+    "provider": "openai",
+    "version": "2026-08-06"
+  },
+  "notes": "Original KFM-native adaptation of FluencyLoop review assembly. No upstream program text is copied. The receipt binds AI-authored bytes and validation claims only; it does not authenticate references, approve review, authorize merge, or create release/publication authority.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "container",
+      "github"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "prompt_or_contract": "sha256:36591198f36474c99af4055c2e96fd103cb93428f03878cfd6f8e780ed36c668",
+  "receipt_id": "genrec:implementation-review-packet:20260806",
+  "truth_labels": {
+    ".github/workflows/implementation-review-packet.yml": "PROPOSED",
+    "contracts/governance/implementation_review_packet.md": "PROPOSED",
+    "docs/intake/exploratory/fluencyloop-review-packet-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/implementation_review_packet/cases.json": "PROPOSED",
+    "tests/validators/governance/test_implementation_review_packet.py": "PROPOSED",
+    "tools/validators/governance/validate_implementation_review_packet.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-15",
+      "outcome": "PASS",
+      "reason": "Fifteen deterministic tests passed in an interface-compatible local harness; exact full-tree integration remains delegated to hosted CI."
+    },
+    {
+      "gate": "fixture-polarity-7",
+      "outcome": "PASS",
+      "reason": "Seven exact READY, HOLD, and ERROR cases matched their declared outcomes."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "context-identity-summary-recompute",
+      "outcome": "PASS",
+      "reason": "The copied canonical context fixture retained its exact content identity and mechanically recomputed summary after decision-reference changes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Fixture execution passed with socket creation denied."
+    },
+    {
+      "gate": "local-path-and-invalid-id-minimization",
+      "outcome": "PASS",
+      "reason": "Focused tests confirm rendered and diagnostic output omit local input paths and do not echo malformed decision identifiers."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "All six non-self authored artifact hashes were recomputed from final bytes."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ]
+}
