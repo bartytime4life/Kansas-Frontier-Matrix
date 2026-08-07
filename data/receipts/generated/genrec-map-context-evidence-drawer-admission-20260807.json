@@ -71,7 +71,9 @@
       "github:schemas/contracts/v1/runtime/decision_envelope.schema.json",
       "github:packages/envelopes/src/envelopes/runtime_response.py",
       "github:tools/validators/ui/validate_map_context_envelope.py",
-      "github:tools/validators/ui/validate_evidence_drawer_payload.py"
+      "github:tools/validators/ui/validate_evidence_drawer_payload.py",
+      "github:8ee05f3738c29344d055025bf47448150429e05e",
+      "github:424e06b1a054298a5f4ef435765f01e85c721fc9"
     ]
   },
   "truth_labels": {
@@ -126,7 +128,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation begins after the draft pull request is created."
+      "reason": "Hosted validation is tracked on draft PR #2105 after the authoring receipt is emitted."
     },
     {
       "gate": "human-review",
@@ -166,7 +168,7 @@
     {
       "id": "repository:current-main",
       "validated": true,
-      "evidence_ref": "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+      "evidence_ref": "github:8ee05f3738c29344d055025bf47448150429e05e"
     },
     {
       "id": "repository:map-context-contract",
@@ -182,6 +184,11 @@
       "id": "repository:decision-envelope-contract",
       "validated": true,
       "evidence_ref": "github:schemas/contracts/v1/runtime/decision_envelope.schema.json"
+    },
+    {
+      "id": "repository:exact-pr-head",
+      "validated": true,
+      "evidence_ref": "github:424e06b1a054298a5f4ef435765f01e85c721fc9"
     }
   ],
   "human_review": {
@@ -193,9 +200,9 @@
   "created_at": "2026-08-07T04:06:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2105,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a deterministic candidate-only anticorruption adapter from validated renderer-neutral MapContextEnvelope and public-safe EvidenceDrawerPayload inputs to the existing DecisionEnvelope shape. Prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761 after confirming open PRs #2089 and #2096 are path-disjoint. The packet creates no evidence, policy, review, release, publication, or public-use authority."
+  "notes": "Adds a deterministic candidate-only anticorruption adapter from validated renderer-neutral MapContextEnvelope and public-safe EvidenceDrawerPayload inputs to the existing DecisionEnvelope shape. Initially prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761, then synchronized without force to main@8ee05f3738c29344d055025bf47448150429e05e at draft PR #2105 head 424e06b1a054298a5f4ef435765f01e85c721fc9 after confirming the intervening path set was disjoint. The packet creates no evidence, policy, review, release, publication, or public-use authority."
 }
