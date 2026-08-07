@@ -1,0 +1,57 @@
+{
+  "bridge_id": "hydro-bridge:db5067ef6e95b226e8e1bc59",
+  "governance": {
+    "authority_created": false,
+    "geometry_equality_assumed": false,
+    "legacy_relabel_denied": true,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "source_data_mutated": false,
+    "source_native_ids_preserved": true
+  },
+  "request": {
+    "identifier": "777777",
+    "identifier_kind": "LEGACY_COMID",
+    "request_id": "request:hydro:error"
+  },
+  "resolution": {
+    "current_identifiers": [],
+    "evidence_refs": [
+      "kfm://evidence/validator/runtime-error"
+    ],
+    "join_receipt_ref": null,
+    "legacy_comids": [],
+    "outcome": "ERROR",
+    "reason_codes": [
+      "OPERATIONAL_ERROR"
+    ],
+    "relationship_type": "UNRESOLVED"
+  },
+  "schema_version": "v1",
+  "source_versions": {
+    "crosswalk": {
+      "artifact_ref": "kfm://processed/hydrology/nhdplus-waterbody-crosswalk/2026-04-17",
+      "dataset": "NHDPLUS_WATERBODY_CROSSWALK",
+      "release_id": "waterbody-crosswalk-2026-04-17",
+      "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "current": {
+      "dataset": "NHDPLUS_HR",
+      "release_id": "nhdplus-hr-2026q2",
+      "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "legacy": {
+      "dataset": "NHDPLUS_LEGACY",
+      "release_id": "nhdplus-v2.1",
+      "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  },
+  "spec_hash": "sha256:db5067ef6e95b226e8e1bc59eed5572fbfd57116e8f1a73f566fa5803ecb2bfa",
+  "temporal_basis": {
+    "crosswalk_release_date": "2026-04-17",
+    "crosswalk_release_id": "waterbody-crosswalk-2026-04-17",
+    "evaluated_at": "2026-08-07T20:00:00Z"
+  }
+}
