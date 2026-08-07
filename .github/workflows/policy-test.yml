@@ -114,13 +114,39 @@ jobs:
               "API, evaluator, and package-test evidence before treating it as executable"
           )
 
-          validator_payloads = [
-              path for path in Path("tools/validators/policy").rglob("*")
-              if path.is_file() and path.suffix.lower() in {".py", ".sh", ".rego"}
+          # Policy validators are not OPA evaluators. Allow additive, fixture-only
+          # validator helpers only when each has a dedicated no-network test and
+          # workflow. Unexpected executable payloads still fail closed.
+          policy_validator_root = Path("tools/validators/policy")
+          policy_python_validators = sorted(policy_validator_root.glob("validate_*.py"))
+          validator_support_gaps = []
+          for validator in policy_python_validators:
+              profile = validator.stem.removeprefix("validate_")
+              test_path = Path("tests/validators") / f"test_{validator.name}"
+              workflow_path = Path(".github/workflows") / f"{profile.replace('_', '-')}.yml"
+              if not test_path.is_file():
+                  validator_support_gaps.append(
+                      f"{validator.as_posix()} missing {test_path.as_posix()}"
+                  )
+              if not workflow_path.is_file():
+                  validator_support_gaps.append(
+                      f"{validator.as_posix()} missing {workflow_path.as_posix()}"
+                  )
+          assert not validator_support_gaps, (
+              "policy validator helpers require dedicated no-network tests and workflow wiring: "
+              f"{validator_support_gaps}"
+          )
+
+          unexpected_validator_payloads = [
+              path for path in policy_validator_root.rglob("*")
+              if path.is_file()
+              and path.suffix.lower() in {".py", ".sh", ".rego"}
+              and path not in policy_python_validators
           ]
-          assert not validator_payloads, (
-              "policy validator executables have appeared; review and invoke their accepted "
-              f"entry point instead of preserving the hold: {[p.as_posix() for p in validator_payloads]}"
+          assert not unexpected_validator_payloads, (
+              "unexpected policy validator/evaluator payloads have appeared; review their "
+              "authority and wire the accepted OPA lane deliberately: "
+              f"{[p.as_posix() for p in unexpected_validator_payloads]}"
           )
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
@@ -161,7 +187,7 @@ jobs:
             echo "### OPA test readiness"
             echo
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** Rego sources exist, but no accepted Rego test modules, OPA command, bundle payload/manifest, evaluator binding, or executable policy runtime is established."
-            echo "- Documentation-only growth is allowed; executable bundle, validator, or runtime candidates fail the guard and require deliberate graduation."
+            echo "- Dedicated fixture-only policy validators may exist with their own tests and workflows; Rego tests, executable bundles, unexpected evaluator payloads, an accepted OPA command, or policy-runtime implementation still fail the guard."
             echo "- This job evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
           } >> "$GITHUB_STEP_SUMMARY"
 
