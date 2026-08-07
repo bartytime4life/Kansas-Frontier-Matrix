@@ -49,7 +49,7 @@ env:
 
 jobs:
   validate:
-    name: validate-commmon-spec-hash
+    name: validate-common-spec-hash
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
