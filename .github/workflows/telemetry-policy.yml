@@ -2,10 +2,11 @@
 #
 # Responsibility:
 #   Enforce the current telemetry safety boundary without treating fixture-only
-#   trace/receipt linkage as operational telemetry, policy, evidence, or release
-#   authority. The workflow validates the admitted TraceReceiptLink profile and
-#   keeps raw-evidence, prompt, restricted-coordinate, emitter, sink, and receipt
-#   instance enforcement on an explicit fail-closed hold.
+#   trace/receipt linkage or the inactive OpenLineage projection profile as
+#   operational telemetry, policy, evidence, or release authority. The workflow
+#   validates every admitted fixture-only telemetry profile and keeps raw-evidence,
+#   prompt, restricted-coordinate, emitter, sink, and receipt-instance enforcement
+#   on an explicit fail-closed hold.
 #
 # Trust boundary:
 #   Pull-request content is untrusted. Jobs have read-only repository permission,
@@ -67,7 +68,7 @@ jobs:
       - name: Install declared schema and test dependencies
         run: python -m pip install -e ".[test]"
 
-      - name: Validate bounded trace receipt linkage and raw-evidence boundary
+      - name: Validate admitted fixture-only telemetry profiles and raw-evidence boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -76,28 +77,55 @@ jobs:
             --pattern 'test_validate_trace_receipt_link.py' \
             --verbose
           python tools/validators/validate_trace_receipt_link.py --fixtures
+          python -m unittest discover \
+            --start-directory tests/validators/telemetry \
+            --pattern 'test_openlineage_run_event_projection.py' \
+            --verbose
+          python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
+            --fixtures
           python - <<'PY'
           from pathlib import Path
           import json
           import re
 
-          profile_root = Path("fixtures/contracts/v1/telemetry/trace_receipt_link")
+          telemetry_fixture_root = Path("fixtures/contracts/v1/telemetry")
+          trace_profile_root = telemetry_fixture_root / "trace_receipt_link"
+          openlineage_profile_root = (
+              telemetry_fixture_root / "openlineage_run_event_projection"
+          )
           schema_root = Path("schemas/contracts/v1/telemetry")
           receipt_root = Path("data/receipts/telemetry")
           required = [
               Path("contracts/telemetry/README.md"),
               Path("contracts/telemetry/trace_receipt_link.md"),
+              Path("contracts/telemetry/openlineage_run_event_projection.md"),
               Path("docs/standards/TELEMETRY_MINIMUMS.md"),
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
               Path("policy/ui/no_raw_in_telemetry.rego"),
               Path("tools/validators/validate_telemetry_safety.py"),
               Path("tools/validators/validate_trace_receipt_link.py"),
               Path("tests/validators/test_validate_trace_receipt_link.py"),
+              Path(
+                  "tools/generators/telemetry/"
+                  "build_openlineage_run_event_projection.py"
+              ),
+              Path(
+                  "tools/validators/telemetry/"
+                  "validate_openlineage_run_event_projection.py"
+              ),
+              Path(
+                  "tests/validators/telemetry/"
+                  "test_openlineage_run_event_projection.py"
+              ),
+              Path(".github/workflows/openlineage-run-event-projection.yml"),
               schema_root / "README.md",
               schema_root / "trace_receipt_link.schema.json",
-              profile_root / "valid/valid_linked.json",
-              profile_root / "valid/valid_linked_restricted.json",
-              profile_root / "invalid/expected_findings_manifest.json",
+              schema_root / "openlineage_run_event_projection.schema.json",
+              trace_profile_root / "valid/valid_linked.json",
+              trace_profile_root / "valid/valid_linked_restricted.json",
+              trace_profile_root / "invalid/expected_findings_manifest.json",
+              openlineage_profile_root / "README.md",
+              openlineage_profile_root / "cases.json",
               receipt_root / "README.md",
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
@@ -108,47 +136,81 @@ jobs:
               for path in schema_root.rglob("*")
               if path.is_file()
           )
-          assert schema_files == ["README.md", "trace_receipt_link.schema.json"], (
+          assert schema_files == [
+              "README.md",
+              "openlineage_run_event_projection.schema.json",
+              "trace_receipt_link.schema.json",
+          ], (
               "telemetry schema inventory changed; classify each profile and update "
               f"policy/negative-test coverage deliberately: {schema_files}"
           )
           fixture_profiles = sorted(
-              path.name for path in profile_root.parent.iterdir() if path.is_dir()
+              path.name for path in telemetry_fixture_root.iterdir() if path.is_dir()
           )
-          assert fixture_profiles == ["trace_receipt_link"], (
+          assert fixture_profiles == [
+              "openlineage_run_event_projection",
+              "trace_receipt_link",
+          ], (
               "telemetry fixture profile inventory changed without this safety review: "
               f"{fixture_profiles}"
           )
 
           forbidden_raw_keys = {
               "payload",
+              "raw",
               "raw_payload",
+              "rawPayload",
               "source_payload",
+              "sourcePayload",
               "evidence_payload",
+              "evidencePayload",
               "raw_record",
+              "rawRecord",
               "source_record",
+              "sourceRecord",
           }
 
           def walk(value, path="/"):
               if isinstance(value, dict):
                   for key, child in value.items():
                       assert key not in forbidden_raw_keys, (
-                          f"raw payload-bearing key is forbidden in trace linkage fixtures: {path}{key}"
+                          "raw payload-bearing key is forbidden in telemetry fixtures "
+                          f"or schemas: {path}{key}"
                       )
                       walk(child, f"{path}{key}/")
               elif isinstance(value, list):
                   for index, child in enumerate(value):
                       walk(child, f"{path}{index}/")
 
-          for path in sorted(profile_root.rglob("*.json")):
+          for path in sorted(telemetry_fixture_root.rglob("*.json")):
               walk(json.loads(path.read_text(encoding="utf-8")))
+          for path in sorted(schema_root.glob("*.schema.json")):
+              walk(json.loads(path.read_text(encoding="utf-8")))
+
+          openlineage_schema = json.loads(
+              (schema_root / "openlineage_run_event_projection.schema.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          assert openlineage_schema["additionalProperties"] is False
+          assert (
+              openlineage_schema["properties"]["profile_status"]["const"]
+              == "PROPOSED_INACTIVE"
+          )
+          assert (
+              openlineage_schema["properties"]["execution_mode"]["const"]
+              == "FIXTURE_ONLY_NO_NETWORK"
+          )
+          assert openlineage_schema["properties"]["authority"]["const"] == "NONE"
 
           validator_path = Path("tools/validators/validate_telemetry_safety.py")
           validator = validator_path.read_text(encoding="utf-8")
           assert "# Greenfield validator stub: telemetry_safety" in validator
           assert 'raise NotImplementedError("Greenfield placeholder")' in validator
 
-          policy = Path("policy/ui/no_raw_in_telemetry.rego").read_text(encoding="utf-8")
+          policy = Path("policy/ui/no_raw_in_telemetry.rego").read_text(
+              encoding="utf-8"
+          )
           assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
           assert "package kfm.no_raw_in_telemetry" in policy
           assert "default deny := false" in policy
@@ -171,26 +233,51 @@ jobs:
           for root in [Path("runtime"), Path("apps"), Path("packages"), Path("pipelines")]:
               for path in root.rglob("*"):
                   if path.is_file() and path.suffix in {".py", ".ts", ".tsx", ".js"}:
-                      if code_pattern.search(path.read_text(encoding="utf-8", errors="ignore")):
+                      if code_pattern.search(
+                          path.read_text(encoding="utf-8", errors="ignore")
+                      ):
                           surfaced_code.append(path.as_posix())
           assert not surfaced_code, (
-              "operational telemetry instrumentation surfaced; wire accepted event shapes, "
-              "allowlists, redaction, policy, negative tests, receipts, and sink controls: "
-              f"{sorted(surfaced_code)}"
+              "operational telemetry instrumentation surfaced; wire accepted event "
+              "shapes, allowlists, redaction, policy, negative tests, receipts, and "
+              f"sink controls: {sorted(surfaced_code)}"
           )
 
-          contract = Path("contracts/telemetry/README.md").read_text(encoding="utf-8")
-          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(encoding="utf-8")
-          adr = Path("docs/adr/ADR-0016-telemetry-redaction-posture.md").read_text(encoding="utf-8")
+          contract = Path("contracts/telemetry/README.md").read_text(
+              encoding="utf-8"
+          )
+          openlineage_contract = Path(
+              "contracts/telemetry/openlineage_run_event_projection.md"
+          ).read_text(encoding="utf-8").lower()
+          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(
+              encoding="utf-8"
+          )
+          adr = Path(
+              "docs/adr/ADR-0016-telemetry-redaction-posture.md"
+          ).read_text(encoding="utf-8")
           assert "status: draft; PROPOSED" in contract
+          assert (
+              "status: draft; proposed; fixture-first; local-only; no-network; "
+              "non-authoritative"
+          ) in openlineage_contract
+          assert "does not post the event" in openlineage_contract
           assert "status: draft" in standard
           assert "status: proposed" in adr
           assert "payload fragments" in contract.lower()
           assert "no raw payload echo" in adr.lower()
 
-          print("CONFIRMED: the fixture-only TraceReceiptLink schema, validator, tests, and positive/negative vectors passed.")
-          print("CONFIRMED: TraceReceiptLink fixtures contain no raw payload-bearing fields and create no operational telemetry authority.")
-          print("WORKFLOW_HOLD: operational raw-evidence telemetry policy, redactor, emitter, receipt flow, and sink controls remain unimplemented.")
+          print(
+              "CONFIRMED: TraceReceiptLink and inactive OpenLineage projection "
+              "tests and exact fixture polarity passed."
+          )
+          print(
+              "CONFIRMED: admitted telemetry fixtures and schemas contain no raw "
+              "payload-bearing fields and create no operational telemetry authority."
+          )
+          print(
+              "WORKFLOW_HOLD: operational raw-evidence telemetry policy, redactor, "
+              "emitter, receipt flow, and sink controls remain unimplemented."
+          )
           PY
 
       - name: Record raw-evidence telemetry boundary
@@ -200,7 +287,7 @@ jobs:
           {
             echo "### Raw evidence in telemetry"
             echo
-            echo "- Fixture-only TraceReceiptLink contract checks: ${{ job.status }}."
+            echo "- Admitted fixture-only telemetry profile checks: ${{ job.status }}."
             echo "- Operational boundary remains **WORKFLOW_HOLD**: the named raw-evidence Rego policy and general telemetry safety validator remain proposed placeholders; no emitter, sink, or operational telemetry receipt was evaluated."
             echo "- No telemetry, redaction, policy decision, receipt instance, proof, release record, promotion, deployment, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
@@ -222,7 +309,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Verify trace linkage profile is prompt-free while operational enforcement stays held
+      - name: Verify admitted fixture-only telemetry profiles are prompt-free while operational enforcement stays held
         shell: bash
         run: |
           set -euo pipefail
@@ -230,18 +317,32 @@ jobs:
           from pathlib import Path
           import json
 
-          profile_root = Path("fixtures/contracts/v1/telemetry/trace_receipt_link")
+          telemetry_fixture_root = Path("fixtures/contracts/v1/telemetry")
           required = [
               Path("policy/ui/no_prompt_in_telemetry.rego"),
               Path("contracts/telemetry/README.md"),
               Path("docs/standards/TELEMETRY_MINIMUMS.md"),
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
-              profile_root,
+              telemetry_fixture_root / "trace_receipt_link",
+              telemetry_fixture_root / "openlineage_run_event_projection",
           ]
           missing = [path.as_posix() for path in required if not path.exists()]
           assert not missing, f"required prompt-telemetry boundary evidence is missing: {missing}"
 
-          policy = Path("policy/ui/no_prompt_in_telemetry.rego").read_text(encoding="utf-8")
+          fixture_profiles = sorted(
+              path.name for path in telemetry_fixture_root.iterdir() if path.is_dir()
+          )
+          assert fixture_profiles == [
+              "openlineage_run_event_projection",
+              "trace_receipt_link",
+          ], (
+              "telemetry fixture profile inventory changed without prompt-safety "
+              f"classification: {fixture_profiles}"
+          )
+
+          policy = Path("policy/ui/no_prompt_in_telemetry.rego").read_text(
+              encoding="utf-8"
+          )
           assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
           assert "package kfm.no_prompt_in_telemetry" in policy
           assert "default deny := false" in policy
@@ -251,33 +352,51 @@ jobs:
               "prompts",
               "messages",
               "input_text",
+              "inputText",
               "output_text",
+              "outputText",
               "chain_of_thought",
+              "chainOfThought",
               "reasoning_content",
+              "reasoningContent",
           }
 
           def walk(value, path="/"):
               if isinstance(value, dict):
                   for key, child in value.items():
-                      assert key not in forbidden, f"prompt-bearing key is forbidden: {path}{key}"
+                      assert key not in forbidden, (
+                          f"prompt-bearing key is forbidden: {path}{key}"
+                      )
                       walk(child, f"{path}{key}/")
               elif isinstance(value, list):
                   for index, child in enumerate(value):
                       walk(child, f"{path}{index}/")
 
-          for path in sorted(profile_root.rglob("*.json")):
+          for path in sorted(telemetry_fixture_root.rglob("*.json")):
               walk(json.loads(path.read_text(encoding="utf-8")))
 
-          contract = Path("contracts/telemetry/README.md").read_text(encoding="utf-8").lower()
-          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(encoding="utf-8").lower()
-          adr = Path("docs/adr/ADR-0016-telemetry-redaction-posture.md").read_text(encoding="utf-8").lower()
+          contract = Path("contracts/telemetry/README.md").read_text(
+              encoding="utf-8"
+          ).lower()
+          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(
+              encoding="utf-8"
+          ).lower()
+          adr = Path(
+              "docs/adr/ADR-0016-telemetry-redaction-posture.md"
+          ).read_text(encoding="utf-8").lower()
           assert "raw prompts" in contract
           assert "no prompt content" in adr
           assert "status: proposed" in adr
           assert "status: draft" in standard
 
-          print("CONFIRMED: TraceReceiptLink fixtures contain no prompt, message, output-text, or reasoning-content fields.")
-          print("WORKFLOW_HOLD: general prompt telemetry allowlists, redaction, policy implementation, and emitter controls remain unimplemented.")
+          print(
+              "CONFIRMED: admitted fixture-only telemetry profiles contain no "
+              "prompt, message, output-text, or reasoning-content fields."
+          )
+          print(
+              "WORKFLOW_HOLD: general prompt telemetry allowlists, redaction, "
+              "policy implementation, and emitter controls remain unimplemented."
+          )
           PY
 
       - name: Record prompt telemetry boundary
@@ -287,7 +406,7 @@ jobs:
           {
             echo "### Prompts in telemetry"
             echo
-            echo "- TraceReceiptLink prompt-free fixture check: ${{ job.status }}."
+            echo "- Admitted fixture-only telemetry prompt-free check: ${{ job.status }}."
             echo "- Operational boundary remains **WORKFLOW_HOLD**: prompt exclusion is documented, but the named Rego policy is a proposed placeholder and no general emitter/redactor enforcement was evaluated."
             echo "- No telemetry, redaction, policy decision, receipt instance, proof, release record, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
@@ -309,7 +428,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Verify trace linkage profile has no coordinates while operational enforcement stays held
+      - name: Verify admitted fixture-only telemetry profiles contain no restricted coordinates while operational enforcement stays held
         shell: bash
         run: |
           set -euo pipefail
@@ -317,18 +436,32 @@ jobs:
           from pathlib import Path
           import json
 
-          profile_root = Path("fixtures/contracts/v1/telemetry/trace_receipt_link")
+          telemetry_fixture_root = Path("fixtures/contracts/v1/telemetry")
           required = [
               Path("policy/telemetry/no_restricted_coords.rego"),
               Path("contracts/telemetry/README.md"),
               Path("docs/standards/TELEMETRY_MINIMUMS.md"),
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
-              profile_root,
+              telemetry_fixture_root / "trace_receipt_link",
+              telemetry_fixture_root / "openlineage_run_event_projection",
           ]
           missing = [path.as_posix() for path in required if not path.exists()]
           assert not missing, f"required coordinate-telemetry boundary evidence is missing: {missing}"
 
-          policy = Path("policy/telemetry/no_restricted_coords.rego").read_text(encoding="utf-8")
+          fixture_profiles = sorted(
+              path.name for path in telemetry_fixture_root.iterdir() if path.is_dir()
+          )
+          assert fixture_profiles == [
+              "openlineage_run_event_projection",
+              "trace_receipt_link",
+          ], (
+              "telemetry fixture profile inventory changed without coordinate-safety "
+              f"classification: {fixture_profiles}"
+          )
+
+          policy = Path("policy/telemetry/no_restricted_coords.rego").read_text(
+              encoding="utf-8"
+          )
           assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
           assert "package kfm.no_restricted_coords" in policy
           assert "default deny := false" in policy
@@ -347,25 +480,40 @@ jobs:
           def walk(value, path="/"):
               if isinstance(value, dict):
                   for key, child in value.items():
-                      assert key not in forbidden, f"coordinate-bearing key is forbidden: {path}{key}"
+                      assert key not in forbidden, (
+                          f"coordinate-bearing key is forbidden: {path}{key}"
+                      )
                       walk(child, f"{path}{key}/")
               elif isinstance(value, list):
                   for index, child in enumerate(value):
                       walk(child, f"{path}{index}/")
 
-          for path in sorted(profile_root.rglob("*.json")):
+          for path in sorted(telemetry_fixture_root.rglob("*.json")):
               walk(json.loads(path.read_text(encoding="utf-8")))
 
-          contract = Path("contracts/telemetry/README.md").read_text(encoding="utf-8").lower()
-          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(encoding="utf-8").lower()
-          adr = Path("docs/adr/ADR-0016-telemetry-redaction-posture.md").read_text(encoding="utf-8").lower()
+          contract = Path("contracts/telemetry/README.md").read_text(
+              encoding="utf-8"
+          ).lower()
+          standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(
+              encoding="utf-8"
+          ).lower()
+          adr = Path(
+              "docs/adr/ADR-0016-telemetry-redaction-posture.md"
+          ).read_text(encoding="utf-8").lower()
           assert "exact restricted coordinates" in contract
           assert "replaces precise `lat` / `lon`" in adr
           assert "status: proposed" in adr
           assert "status: draft" in standard
 
-          print("CONFIRMED: TraceReceiptLink fixtures contain no coordinates, geometry, bbox, or WKT fields.")
-          print("WORKFLOW_HOLD: general geometry allowlists, sensitivity binding, redaction/generalization, policy implementation, and emitter controls remain unimplemented.")
+          print(
+              "CONFIRMED: admitted fixture-only telemetry profiles contain no "
+              "coordinates, geometry, bbox, or WKT fields."
+          )
+          print(
+              "WORKFLOW_HOLD: general geometry allowlists, sensitivity binding, "
+              "redaction/generalization, policy implementation, and emitter controls "
+              "remain unimplemented."
+          )
           PY
 
       - name: Record restricted-coordinate telemetry boundary
@@ -375,7 +523,7 @@ jobs:
           {
             echo "### Restricted coordinates in telemetry"
             echo
-            echo "- TraceReceiptLink coordinate-free fixture check: ${{ job.status }}."
+            echo "- Admitted fixture-only telemetry coordinate-free check: ${{ job.status }}."
             echo "- Operational boundary remains **WORKFLOW_HOLD**: exact-coordinate exclusion is documented, but the named Rego policy is a proposed placeholder and no general emitter/redactor enforcement was evaluated."
             echo "- No telemetry, redaction, policy decision, receipt instance, proof, release record, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
