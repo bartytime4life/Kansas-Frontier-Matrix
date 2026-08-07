@@ -1,0 +1,20 @@
+{
+  "current_published_spec_hash": "sha256:ed6b3fbc083f89737c7feebe018a892e99542e0d9bbb820a4fd48de584876941",
+  "dataset_id": "soil-moisture",
+  "manifest": {
+    "parameters": {
+      "depth_cm": [
+        5,
+        10
+      ],
+      "units": "m3/m3"
+    },
+    "schema_version": "v1",
+    "source_head": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "source_uri": "kfm://source/mesonet",
+  "window": {
+    "end": "2026-04-08T00:00:00Z",
+    "start": "2026-04-01T00:00:00Z"
+  }
+}

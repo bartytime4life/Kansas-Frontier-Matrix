@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-backfill-window-planner-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/runtime/backfill_window_plan.md",
+    "schemas/contracts/v1/runtime/backfill_window_request.schema.json",
+    "schemas/contracts/v1/runtime/backfill_window_plan.schema.json",
+    "packages/pipelines-core/src/pipelines_core/backfill_window.py",
+    "scripts/plan_backfill_window.py",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.request.json",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.expected.json",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.request.json",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.expected.json",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/reverse_window.request.json",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/unsafe_dataset_id.request.json",
+    "tests/packages/pipelines_core/test_backfill_window.py"
+  ],
+  "artifact_hashes": {
+    "contracts/runtime/backfill_window_plan.md": "sha256:e6cddf7d99fed2b7e2d3880c60006a23b93da44346d5f5f3c5e7d7fa1615788b",
+    "schemas/contracts/v1/runtime/backfill_window_request.schema.json": "sha256:6b3d88a03f4fbe3fb59dbb18967adda48af95d7b1ca7242f6f98fe7501463f40",
+    "schemas/contracts/v1/runtime/backfill_window_plan.schema.json": "sha256:8850430a799d7573538633429950c35841da25092b041d46b6adee06db2d44b6",
+    "packages/pipelines-core/src/pipelines_core/backfill_window.py": "sha256:4f100d6db3f1f31a299e41b3039afaafe1ee190654ad502e5cfbcfca522b27b1",
+    "scripts/plan_backfill_window.py": "sha256:822b4a965bcfdce859bda93c929730afb371c00810970d1865c0913c00169768",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.request.json": "sha256:d001b620159ab1de84f30d6de1d20fd4cfa8e94fad4689e25b7f3bce8775dde4",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.expected.json": "sha256:afa66e54619de300d8ceb3dbf77eb7f16042a3582384b083006c1b215981a068",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.request.json": "sha256:622e1c0407d776e75e1ccc87abd0906a04e6708df77aba43cc9fcd9897110c12",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.expected.json": "sha256:221c43ba6e65b1469edf3505e7a8fc2049d2175e0dcb11e7d0df35cdeb48e252",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/reverse_window.request.json": "sha256:f1c6dff83c3fb43d06843c857479d42dfef1479377acc3ff2fefc1ef8422f844",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/unsafe_dataset_id.request.json": "sha256:d8038adeec3ea333aedf280c819f0aa363df0bed83c2a0ed3b6d251cc584581f",
+    "tests/packages/pipelines_core/test_backfill_window.py": "sha256:ea861081bd18f17885c5a2bb2cda3b082fb01a4379e5b1fa53adb94aab7f5504"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:7252d5be4c899071724ac8c6268653cd5d9b7cdc56d6d81f352e03c996e55f90",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-23-26(3).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-23-26(3).pdf#deterministic-backfill-window-job",
+      "repo:packages/pipelines-core@c9f9c6674df604c7ce247fdb23212607fe155357",
+      "repo:schemas/contracts/v1/runtime/run_receipt.schema.json@c9f9c6674df604c7ce247fdb23212607fe155357",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c9f9c6674df604c7ce247fdb23212607fe155357"
+    ]
+  },
+  "truth_labels": {
+    "contracts/runtime/backfill_window_plan.md": "PROPOSED",
+    "schemas/contracts/v1/runtime/backfill_window_request.schema.json": "PROPOSED",
+    "schemas/contracts/v1/runtime/backfill_window_plan.schema.json": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/backfill_window.py": "PROPOSED",
+    "scripts/plan_backfill_window.py": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/valid/noop.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/reverse_window.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/backfill_window_plan/invalid/unsafe_dataset_id.request.json": "PROPOSED",
+    "tests/packages/pipelines_core/test_backfill_window.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic planner and CLI tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Planner module, CLI, and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "json-schema-self-check",
+      "outcome": "PASS",
+      "reason": "Both new Draft 2020-12 schemas pass Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "REBUILD and NOOP plans exactly match checked-in expected fixtures; invalid windows and unsafe IDs fail closed."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI is unavailable until the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:deterministic-backfill-window",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-23-26(3).pdf#backfill-window-job"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c9f9c6674df604c7ce247fdb23212607fe155357"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T19:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a deterministic planning-only backfill window contract, request/plan schemas, reusable package module, no-network CLI, replay fixtures, and focused tests. It performs no network fetch, source activation, lifecycle write, policy evaluation, signature operation, promotion, release, deployment, or publication."
+}
