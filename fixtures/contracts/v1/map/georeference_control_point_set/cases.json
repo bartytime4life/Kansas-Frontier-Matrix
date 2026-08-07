@@ -4,33 +4,65 @@
     "control_points": [
       {
         "id": "gcp-01",
-        "resource": [50, 50],
-        "target": [225, 262.5]
+        "resource": [
+          50,
+          50
+        ],
+        "target": [
+          225,
+          262.5
+        ]
       },
       {
         "id": "gcp-02",
-        "resource": [950, 50],
-        "target": [2025, 37.5]
+        "resource": [
+          950,
+          50
+        ],
+        "target": [
+          2025,
+          37.5
+        ]
       },
       {
         "id": "gcp-03",
-        "resource": [950, 750],
-        "target": [2375, 1087.5]
+        "resource": [
+          950,
+          750
+        ],
+        "target": [
+          2375,
+          1087.5
+        ]
       },
       {
         "id": "gcp-04",
-        "resource": [50, 750],
-        "target": [575, 1312.5]
+        "resource": [
+          50,
+          750
+        ],
+        "target": [
+          575,
+          1312.5
+        ]
       },
       {
         "id": "gcp-05",
-        "resource": [500, 400],
-        "target": [1300, 675]
+        "resource": [
+          500,
+          400
+        ],
+        "target": [
+          1300,
+          675
+        ]
       }
     ],
     "decision": {
       "outcome": "VALID",
-      "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]
+      "reasons": [
+        "GEOREFERENCE_CONTROL_POINT_SET_VALID"
+      ]
     },
     "fixture_only": true,
     "governance": {
@@ -47,7 +79,10 @@
     "profile": "kfm.georeference.control-point-set.v1",
     "resource_set_hash": "sha256:30d9ac02ce788cc1e5c74162ca432bd40b46d779564468547729342930f2db81",
     "resource_space": {
-      "axis_order": ["x", "y"],
+      "axis_order": [
+        "x",
+        "y"
+      ],
       "height_px": 800,
       "kind": "image_pixel",
       "width_px": 1000
@@ -56,22 +91,250 @@
     "set_id": "kfm:georeference-gcp-set:sha256:9d9da050628e5efe57737fa791116066a1bab4921e28a98d70ec7603730a174a",
     "target_set_hash": "sha256:bc2a8f740578f6f1112e888126eef236fb0a81a594e95dad3f977037ed373ad5",
     "target_space": {
-      "axis_order": ["X", "Y"],
+      "axis_order": [
+        "X",
+        "Y"
+      ],
       "kind": "synthetic_planar",
       "unit": "synthetic_meters"
     }
   },
   "cases": [
-    {"case_id": "valid_baseline", "decision": {"outcome": "VALID", "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]}, "expected": {"outcome": "VALID", "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]}},
-    {"case_id": "valid_numeric_spelling_normalized", "decision": {"outcome": "VALID", "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]}, "expected": {"outcome": "VALID", "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]}, "mutations": [{"path": "/control_points/0/resource", "value": [50.0, 50.0]}], "recompute": true},
-    {"case_id": "error_unsorted_ids", "decision": {"outcome": "ERROR", "reasons": ["POINT_IDS_NOT_CANONICAL"]}, "expected": {"outcome": "ERROR", "reasons": ["POINT_IDS_NOT_CANONICAL"]}, "mutations": [{"path": "/control_points/0/id", "value": "gcp-02"}, {"path": "/control_points/1/id", "value": "gcp-01"}]},
-    {"case_id": "error_duplicate_resource", "decision": {"outcome": "ERROR", "reasons": ["DUPLICATE_RESOURCE_POINT"]}, "expected": {"outcome": "ERROR", "reasons": ["DUPLICATE_RESOURCE_POINT"]}, "mutations": [{"path": "/control_points/4/resource", "value": [50, 50]}]},
-    {"case_id": "error_duplicate_target", "decision": {"outcome": "ERROR", "reasons": ["DUPLICATE_TARGET_POINT"]}, "expected": {"outcome": "ERROR", "reasons": ["DUPLICATE_TARGET_POINT"]}, "mutations": [{"path": "/control_points/4/target", "value": [225, 262.5]}]},
-    {"case_id": "error_resource_out_of_bounds", "decision": {"outcome": "ERROR", "reasons": ["RESOURCE_POINT_OUT_OF_BOUNDS"]}, "expected": {"outcome": "ERROR", "reasons": ["RESOURCE_POINT_OUT_OF_BOUNDS"]}, "mutations": [{"path": "/control_points/4/resource", "value": [1200, 400]}]},
-    {"case_id": "error_count_mismatch", "decision": {"outcome": "ERROR", "reasons": ["CONTROL_POINT_COUNT_MISMATCH"]}, "expected": {"outcome": "ERROR", "reasons": ["CONTROL_POINT_COUNT_MISMATCH"]}, "mutations": [{"path": "/control_point_count", "value": 4}]},
-    {"case_id": "error_resource_hash_mismatch", "decision": {"outcome": "ERROR", "reasons": ["RESOURCE_SET_HASH_MISMATCH"]}, "expected": {"outcome": "ERROR", "reasons": ["RESOURCE_SET_HASH_MISMATCH"]}, "mutations": [{"path": "/resource_set_hash", "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}]},
-    {"case_id": "error_target_hash_mismatch", "decision": {"outcome": "ERROR", "reasons": ["TARGET_SET_HASH_MISMATCH"]}, "expected": {"outcome": "ERROR", "reasons": ["TARGET_SET_HASH_MISMATCH"]}, "mutations": [{"path": "/target_set_hash", "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}]},
-    {"case_id": "error_full_set_id_mismatch", "decision": {"outcome": "ERROR", "reasons": ["SET_ID_MISMATCH"]}, "expected": {"outcome": "ERROR", "reasons": ["SET_ID_MISMATCH"]}, "mutations": [{"path": "/set_id", "value": "kfm:georeference-gcp-set:sha256:3333333333333333333333333333333333333333333333333333333333333333"}]},
-    {"case_id": "error_decision_mismatch", "decision": {"outcome": "ERROR", "reasons": ["SET_ID_MISMATCH"]}, "expected": {"outcome": "ERROR", "reasons": ["DECISION_MISMATCH"]}}
+    {
+      "case_id": "valid_baseline",
+      "decision": {
+        "outcome": "VALID",
+        "reasons": [
+          "GEOREFERENCE_CONTROL_POINT_SET_VALID"
+        ]
+      },
+      "expected": {
+        "outcome": "VALID",
+        "reasons": [
+          "GEOREFERENCE_CONTROL_POINT_SET_VALID"
+        ]
+      }
+    },
+    {
+      "case_id": "valid_numeric_spelling_normalized",
+      "decision": {
+        "outcome": "VALID",
+        "reasons": [
+          "GEOREFERENCE_CONTROL_POINT_SET_VALID"
+        ]
+      },
+      "expected": {
+        "outcome": "VALID",
+        "reasons": [
+          "GEOREFERENCE_CONTROL_POINT_SET_VALID"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_points/0/resource",
+          "value": [
+            50.0,
+            50.0
+          ]
+        }
+      ],
+      "recompute": true
+    },
+    {
+      "case_id": "error_unsorted_ids",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "POINT_IDS_NOT_CANONICAL"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "POINT_IDS_NOT_CANONICAL"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_points/0/id",
+          "value": "gcp-02"
+        },
+        {
+          "path": "/control_points/1/id",
+          "value": "gcp-01"
+        }
+      ]
+    },
+    {
+      "case_id": "error_duplicate_resource",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DUPLICATE_RESOURCE_POINT"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DUPLICATE_RESOURCE_POINT"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_points/4/resource",
+          "value": [
+            50,
+            50
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "error_duplicate_target",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DUPLICATE_TARGET_POINT"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DUPLICATE_TARGET_POINT"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_points/4/target",
+          "value": [
+            225,
+            262.5
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "error_resource_out_of_bounds",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "RESOURCE_POINT_OUT_OF_BOUNDS"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "RESOURCE_POINT_OUT_OF_BOUNDS"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_points/4/resource",
+          "value": [
+            1200,
+            400
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "error_count_mismatch",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "CONTROL_POINT_COUNT_MISMATCH"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "CONTROL_POINT_COUNT_MISMATCH"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/control_point_count",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "case_id": "error_resource_hash_mismatch",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "RESOURCE_SET_HASH_MISMATCH"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "RESOURCE_SET_HASH_MISMATCH"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/resource_set_hash",
+          "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        }
+      ]
+    },
+    {
+      "case_id": "error_target_hash_mismatch",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "TARGET_SET_HASH_MISMATCH"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "TARGET_SET_HASH_MISMATCH"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/target_set_hash",
+          "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ]
+    },
+    {
+      "case_id": "error_full_set_id_mismatch",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "SET_ID_MISMATCH"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "SET_ID_MISMATCH"
+        ]
+      },
+      "mutations": [
+        {
+          "path": "/set_id",
+          "value": "kfm:georeference-gcp-set:sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        }
+      ]
+    },
+    {
+      "case_id": "error_decision_mismatch",
+      "decision": {
+        "outcome": "ERROR",
+        "reasons": [
+          "SET_ID_MISMATCH"
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reasons": [
+          "DECISION_MISMATCH"
+        ]
+      }
+    }
   ]
 }
