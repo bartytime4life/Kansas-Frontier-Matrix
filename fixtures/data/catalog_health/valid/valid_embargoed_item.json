@@ -1,0 +1,92 @@
+{
+  "assets": {
+    "data": {
+      "file:checksum": "sha256:ab39b02de5828664a6643fc221de0c81f68e1c7e73ab3a347deb8381d8718466",
+      "file:size": 27,
+      "href": "https://catalog.example.invalid/private/data.bin",
+      "roles": [
+        "data",
+        "embargoed"
+      ],
+      "title": "Synthetic embargoed catalog asset",
+      "type": "application/octet-stream"
+    }
+  },
+  "bbox": [
+    -98.0,
+    38.0,
+    -97.0,
+    39.0
+  ],
+  "geometry": {
+    "coordinates": [
+      [
+        [
+          -98.0,
+          38.0
+        ],
+        [
+          -97.0,
+          38.0
+        ],
+        [
+          -97.0,
+          39.0
+        ],
+        [
+          -98.0,
+          39.0
+        ],
+        [
+          -98.0,
+          38.0
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "kfm-catalog-health-fixture-embargoed",
+  "license": "CC-BY-4.0",
+  "links": [
+    {
+      "href": "urn:kfm:catalog:item:fixture-embargoed",
+      "rel": "self"
+    },
+    {
+      "href": "urn:kfm:source:fixture",
+      "rel": "derived_from"
+    },
+    {
+      "href": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rel": "checksum"
+    },
+    {
+      "href": "git:14b9608addcf6cac80adaa0a836182f7a6e47806",
+      "rel": "commit"
+    },
+    {
+      "href": "urn:kfm:manifest:fixture-embargoed",
+      "rel": "manifest_uri"
+    },
+    {
+      "href": "urn:kfm:access-request:fixture-embargoed",
+      "rel": "via"
+    }
+  ],
+  "properties": {
+    "created": "2026-08-06T00:00:00Z",
+    "datetime": "2026-08-06T00:00:00Z",
+    "updated": "2026-08-06T00:00:00Z"
+  },
+  "providers": [
+    {
+      "name": "KFM synthetic fixture",
+      "roles": [
+        "producer",
+        "licensor"
+      ]
+    }
+  ],
+  "stac_version": "1.0.0",
+  "type": "Feature"
+}
