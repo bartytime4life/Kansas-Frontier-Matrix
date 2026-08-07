@@ -73,6 +73,27 @@ Validates and mechanically renders the proposed non-authoritative
 The tool does not inspect a diff, infer a decision, authenticate a reference,
 create review approval, or replace the KFM pull-request template.
 
+## Implementation-change context
+
+### `validate_implementation_change_context.py`
+
+Builds and validates the proposed non-authoritative
+`ImplementationChangeContext` profile:
+
+- binds a local committed Git range to full base and head SHAs;
+- records sorted path, status, rename/copy source, text-line count, and binary metadata only;
+- excludes raw diff hunks, file contents, prompts, private reasoning, and person profiles;
+- recomputes responsibility roots, finite signal codes, score, and the decision-capture recommendation;
+- derives content identity with the repository RFC 8785 + SHA-256 helper;
+- supports deterministic `DRAFT` backfill from an existing committed range without inventing rationale;
+- returns finite `READY`, `HOLD`, and `ERROR` outcomes with exit codes `0`, `3`, and `2`; and
+- retains exact false permission and non-effect boundaries.
+
+The recommendation only says that durable implementation rationale may help a
+reviewer. It is not a policy decision, risk rating, approval, merge gate, or
+claim that a design decision exists. Rationale belongs in a separately authored
+and validated `ImplementationDecisionRecord`.
+
 ## Commands
 
 ```bash
@@ -94,7 +115,12 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tools/validators/governance/validate_implementation_decision_record.py \
   --cases
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/governance/validate_implementation_change_context.py \
+  --cases
 ```
 
 None of these tools fetches sources, reads live GitHub state, writes GitHub
-issues, activates policy, or validates real-world truth.
+issues, activates policy, or validates real-world truth. The change-context
+builder may read local committed Git metadata only when explicitly invoked.

@@ -1,0 +1,154 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/implementation-change-context.yml": "sha256:27f60b5342b7f05f6de42e0892d1cdc33d5fe1aba7b152dfc91e0f4da3278fd1",
+    "contracts/governance/implementation_change_context.md": "sha256:5c513baef2bbd6121f2e56accaee55331a7ccd3f967b40de3a1ca3bb0a51b0b5",
+    "docs/intake/exploratory/fluencyloop-change-context-source-map.md": "sha256:62bae21d2e17c2ddf2d6f412e843c628e25d01bbc3188f9b069102b54e0cba89",
+    "fixtures/contracts/v1/governance/implementation_change_context/cases.json": "sha256:2d2a50bc91da451f4b36faf24835def136d205812f01b3a7e18c992125ba8f25",
+    "schemas/contracts/v1/governance/implementation_change_context.schema.json": "sha256:e87a68d99580756da52dcce064f9c6ec5fb71334b8939ca86acb780a69f39565",
+    "tests/validators/governance/test_implementation_change_context.py": "sha256:e748d3c8d935d99bc7b9d1760820f79094ec3ab820df0956dd081d57b5560295",
+    "tools/validators/governance/README.md": "sha256:ae606682df2db51dd40f648f00d78e9d5e7c57488af2a410f6ddb2e11e048fe2",
+    "tools/validators/governance/implementation_change_context_git.py": "sha256:1d68a5b1ad1dda1d85b6bdc8149e9fc2e97a7c3b71c078b50dd8c5d6a6f5282d",
+    "tools/validators/governance/implementation_change_context_model.py": "sha256:c70dd880484c825550113e9d8dfd8e379e00e548db0a045a55491c84eacc177d",
+    "tools/validators/governance/validate_implementation_change_context.py": "sha256:8d1c598d9fd4a0a8627715da430b5e7341d7518b9cbfbfdf914c8bc5a646e6d0"
+  },
+  "artifact_paths": [
+    ".github/workflows/implementation-change-context.yml",
+    "contracts/governance/implementation_change_context.md",
+    "docs/intake/exploratory/fluencyloop-change-context-source-map.md",
+    "fixtures/contracts/v1/governance/implementation_change_context/cases.json",
+    "schemas/contracts/v1/governance/implementation_change_context.schema.json",
+    "tests/validators/governance/test_implementation_change_context.py",
+    "tools/validators/governance/README.md",
+    "tools/validators/governance/implementation_change_context_model.py",
+    "tools/validators/governance/implementation_change_context_git.py",
+    "tools/validators/governance/validate_implementation_change_context.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/scripts/bash/slice-context.sh",
+      "id": "FLUENCYLOOP_SLICE_CONTEXT",
+      "validated": true
+    },
+    {
+      "evidence_ref": "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/skills/backfill/SKILL.md",
+      "id": "FLUENCYLOOP_BACKFILL",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "KFM_ADR_0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/governance/implementation_decision_record.md",
+      "id": "KFM_IMPLEMENTATION_DECISION_RECORD",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-06T23:28:00Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:bartytime4life/Kansas-Frontier-Matrix@4e5a45f19d5b3bd24e108c816b0e88d4606ff1be",
+      "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/scripts/bash/slice-context.sh",
+      "git:baokhang83/fluencyloop@fe3ccf6dada2c36057a3d65b84ca150bd9b9c96e:plugins/fluencyloop/skills/backfill/SKILL.md",
+      "contracts/governance/implementation_decision_record.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "gpt-5.6-pro",
+    "provider": "openai",
+    "version": "2026-08-06"
+  },
+  "notes": "Original KFM adaptation of FluencyLoop changed-slice mechanics. The receipt records AI authorship and final byte hashes only; it does not authenticate upstream claims, approve review, authorize merge, or create release/publication authority.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "github",
+      "container"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "prompt_or_contract": "sha256:89be196f277b5f38cf46490349c2b9a02661bf12dcdb602a26add762e4547f83",
+  "receipt_id": "genrec:implementation-change-context:20260806",
+  "truth_labels": {
+    ".github/workflows/implementation-change-context.yml": "PROPOSED",
+    "contracts/governance/implementation_change_context.md": "PROPOSED",
+    "docs/intake/exploratory/fluencyloop-change-context-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/implementation_change_context/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/implementation_change_context.schema.json": "PROPOSED",
+    "tests/validators/governance/test_implementation_change_context.py": "PROPOSED",
+    "tools/validators/governance/README.md": "PROPOSED",
+    "tools/validators/governance/implementation_change_context_git.py": "PROPOSED",
+    "tools/validators/governance/implementation_change_context_model.py": "PROPOSED",
+    "tools/validators/governance/validate_implementation_change_context.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-18",
+      "outcome": "PASS",
+      "reason": "Eighteen deterministic tests passed, including synthetic Git repository generation and raw-content exclusion."
+    },
+    {
+      "gate": "fixture-polarity-11",
+      "outcome": "PASS",
+      "reason": "Eleven exact READY, HOLD, and ERROR cases matched their expected outcomes."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "local-git-builder-determinism",
+      "outcome": "PASS",
+      "reason": "Repeated builds over the same local commit range produced identical closed documents and omitted a marker present only in file content."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Fixture execution passed with socket creation denied and the implementation imports no HTTP client."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "All eight non-self authored artifact hashes were recomputed from final bytes."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ]
+}
