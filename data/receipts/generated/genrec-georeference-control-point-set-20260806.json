@@ -13,7 +13,7 @@
   "artifact_hashes": {
     ".github/workflows/map-georeference-control-point-set.yml": "sha256:74e5649b15858733e2061edd356d197b8895c8a27426143c21471e8eca3b24f2",
     "contracts/map/georeference_control_point_set.md": "sha256:25a77df1d1b8f802d96c53da5af0d733ce85c2e2c8e855265286a113fba7fba4",
-    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "sha256:66bbb974eafcf18941ea1a7168ef292f3f35d88510b3cade02e2503b4d2e3bb3",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "sha256:34ef64419c85cac265804371d622a3ed9b897b56163f495d918a0c3e13c91574",
     "fixtures/contracts/v1/map/georeference_control_point_set/cases.json": "sha256:f3f128cab9915c401b4b03fdfde3c70959b8ac945fa7cb35218ae7c102211280",
     "schemas/contracts/v1/map/georeference_control_point_set.schema.json": "sha256:373ce8cda8e35de3e3cc275bfca81774f1c1b3c87e696b277601256024e61055",
     "tests/map/test_georeference_control_point_set.py": "sha256:89fa0882d229a1e74c4cdc7ab1b928e95b49957cb07deef0d220a5e4fdb64b4f",
@@ -61,12 +61,12 @@
     {
       "gate": "focused-pytest-11",
       "outcome": "PASS",
-      "reason": "11 deterministic control-point-set identity tests passed locally and on hosted head c095afa51370b428eca7dec2722713090211f827."
+      "reason": "11 deterministic control-point-set identity tests passed locally and on hosted synchronized heads."
     },
     {
       "gate": "fixture-exact-polarity-11",
       "outcome": "PASS",
-      "reason": "11 cases covered VALID and ERROR with exact reason sets locally and on hosted head c095afa51370b428eca7dec2722713090211f827."
+      "reason": "11 cases covered VALID and ERROR with exact reason sets locally and on hosted synchronized heads."
     },
     {
       "gate": "lane-specific-identity",
@@ -93,12 +93,22 @@
     {
       "gate": "generated-receipt-local-parity",
       "outcome": "PASS",
-      "reason": "Artifact paths, SHA-256 hashes, and truth-label keys match all seven non-self artifacts."
+      "reason": "Artifact paths, SHA-256 hashes, and truth-label keys match all seven non-self artifacts, including the metadata-complete source map."
     },
     {
-      "gate": "hosted-ci",
+      "gate": "hosted-profile-ci-15bd4d",
+      "outcome": "PASS",
+      "reason": "Dedicated exact-head run 31145579618 completed successfully after the ADR-0029 receipt correction."
+    },
+    {
+      "gate": "hosted-docs-pre-fix",
+      "outcome": "FAIL",
+      "reason": "docs-meta-block and docs-document-graph on head 15bd4d failed because the new source map lacked KFM_META_BLOCK_V2; no implementation or GCP-identity test failed."
+    },
+    {
+      "gate": "hosted-current-head",
       "outcome": "SKIPPED",
-      "reason": "Hosted head c095afa51370b428eca7dec2722713090211f827 passed focused tests and fixture polarity but failed receipt validation with POLICY_DECISION_REQUIRED; this receipt-only correction adds the repository-adopted Directory Governance ADR reference and requires a new exact-head run."
+      "reason": "Pending exact-head rerun after adding KFM_META_BLOCK_V2 and refreshing this receipt hash."
     }
   ],
   "policy_decisions": [
