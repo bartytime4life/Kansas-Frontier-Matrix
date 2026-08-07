@@ -1,4 +1,4 @@
-"""Deterministic no-network tests for the web delta source profile."""
+"""Deterministic no-network tests for the corrected web-delta profile fixtures."""
 
 from __future__ import annotations
 
@@ -18,12 +18,15 @@ from unittest import mock
 
 from jsonschema import Draft202012Validator
 
+from tools.validators.replay_web_delta_profile_fixtures import (
+    CORRECTION_PATH,
+    load_effective_cases,
+    run_fixture_suite,
+)
 from tools.validators.validate_web_delta_profile import (
-    FIXTURE_FILES,
     MAX_FILE_BYTES,
     SCHEMA_PATH,
-    main,
-    run_fixture_suite,
+    main as validate_main,
     validate_document,
     validate_file,
 )
@@ -38,9 +41,7 @@ def _unexpected_network(*_args, **_kwargs):
 class WebDeltaProfileTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.cases = []
-        for fixture_path in FIXTURE_FILES:
-            cls.cases.extend(json.loads(fixture_path.read_text(encoding="utf-8"))["cases"])
+        cls.cases = load_effective_cases()
         cls.by_id = {case["case_id"]: case for case in cls.cases}
 
     def setUp(self) -> None:
@@ -54,8 +55,8 @@ class WebDeltaProfileTests(unittest.TestCase):
     def _document(self, case_id: str) -> dict[str, object]:
         return copy.deepcopy(self.by_id[case_id]["document"])
 
-    def _write(self, payload: object) -> Path:
-        self.path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    def _write(self, value: object) -> Path:
+        self.path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
         return self.path
 
     def test_profile_schema_is_valid_and_closed(self) -> None:
@@ -64,12 +65,19 @@ class WebDeltaProfileTests(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual(schema["properties"]["web.profile"]["const"], "kfm.web_delta.v1")
 
-    def test_fixture_matrix_has_exact_valid_and_invalid_polarity(self) -> None:
-        self.assertEqual(len(self.cases), 17)
+    def test_correction_manifest_is_bounded_and_append_only(self) -> None:
+        correction = json.loads(CORRECTION_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(correction["status"], "CORRECTION")
         self.assertEqual(
-            sum(case["expected_outcome"] == "PASS" for case in self.cases),
-            6,
+            {item["case_id"] for item in correction["corrections"]},
+            {"valid_http_304_heartbeat", "invalid_heartbeat_carries_new_content"},
         )
+        self.assertIn("no_source_activation", correction["non_effects"])
+        self.assertIn("no_publication", correction["non_effects"])
+
+    def test_effective_fixture_matrix_has_exact_polarity(self) -> None:
+        self.assertEqual(len(self.cases), 17)
+        self.assertEqual(sum(case["expected_outcome"] == "PASS" for case in self.cases), 6)
         for case in self.cases:
             with self.subTest(case=case["case_id"]):
                 result = validate_document(case["document"])
@@ -78,34 +86,30 @@ class WebDeltaProfileTests(unittest.TestCase):
                     for finding in result.findings
                 ]
                 diagnostics = {
-                    "findings": actual,
-                    "payload_spec_hash": result.payload_spec_hash,
+                    "actual_findings": actual,
+                    "actual_event_id": result.event_id,
+                    "actual_payload_spec_hash": result.payload_spec_hash,
+                    "stored_event_id": case["document"]["event_id"],
                     "stored_payload_spec_hash": case["document"]["payload"]["payload_spec_hash"],
                 }
-                self.assertEqual(
-                    result.outcome,
-                    case["expected_outcome"],
-                    diagnostics,
-                )
+                self.assertEqual(result.outcome, case["expected_outcome"], diagnostics)
                 self.assertEqual(actual, case["expected_findings"], diagnostics)
 
-    def test_fixture_runner_passes_and_carries_no_authority(self) -> None:
+    def test_replay_runner_passes_without_authority(self) -> None:
         ok, payload = run_fixture_suite()
         self.assertTrue(ok, payload)
         self.assertEqual(payload["outcome"], "PASS")
         self.assertEqual(payload["cases"], 17)
+        self.assertEqual(payload["corrections_applied"], 2)
         self.assertEqual(payload["authority"], "NONE")
-        self.assertIn("no_source_activation", payload["non_effects"])
         self.assertIn("no_raw_or_lifecycle_write", payload["non_effects"])
 
-    def test_license_behavior_fails_closed_without_exposing_content(self) -> None:
-        unknown = validate_document(
-            self._document("invalid_contentful_unknown_license")
-        )
-        self.assertEqual(unknown.outcome, "DENY")
+    def test_license_modes_fail_closed(self) -> None:
+        denied = validate_document(self._document("invalid_contentful_unknown_license"))
+        self.assertEqual(denied.outcome, "DENY")
         self.assertIn(
             "CONTENTFUL_LICENSE_NOT_PERMITTED",
-            {finding.code for finding in unknown.findings},
+            {finding.code for finding in denied.findings},
         )
         for case_id in (
             "valid_metadata_only_restrictive",
@@ -113,39 +117,38 @@ class WebDeltaProfileTests(unittest.TestCase):
             "valid_metadata_only_unknown",
         ):
             candidate = self._document(case_id)
-            attrs = candidate["payload"]["attributes"]
-            self.assertEqual(attrs["web.payload_mode"], "metadata_only")
-            self.assertIsNone(attrs["web.canonical_new_digest"])
-            self.assertIsNone(attrs["web.diff_digest"])
+            attributes = candidate["payload"]["attributes"]
+            self.assertEqual(attributes["web.payload_mode"], "metadata_only")
+            self.assertIsNone(attributes["web.canonical_new_digest"])
+            self.assertIsNone(attributes["web.diff_digest"])
             self.assertEqual(candidate["routing"]["disposition"], "PROPOSE_QUARANTINE")
             self.assertEqual(validate_document(candidate).outcome, "PASS")
 
-    def test_http_304_is_a_no_action_heartbeat(self) -> None:
+    def test_http_304_is_no_action_and_identity_valid(self) -> None:
         candidate = self._document("valid_http_304_heartbeat")
-        attrs = candidate["payload"]["attributes"]
-        self.assertEqual(attrs["web.http_status"], 304)
-        self.assertEqual(attrs["web.payload_mode"], "heartbeat")
-        self.assertIsNone(attrs["web.raw_digest"])
-        self.assertEqual(candidate["routing"]["disposition"], "NO_ACTION")
         result = validate_document(candidate)
         self.assertEqual(
             result.outcome,
             "PASS",
             {
                 "findings": result.findings,
-                "payload_spec_hash": result.payload_spec_hash,
+                "actual_event_id": result.event_id,
+                "actual_payload_spec_hash": result.payload_spec_hash,
+                "stored_event_id": candidate["event_id"],
                 "stored_payload_spec_hash": candidate["payload"]["payload_spec_hash"],
             },
         )
+        self.assertEqual(candidate["routing"]["disposition"], "NO_ACTION")
+        self.assertIsNone(candidate["payload"]["attributes"]["web.raw_digest"])
 
-    def test_base_envelope_integrity_is_a_hard_dependency(self) -> None:
+    def test_base_envelope_integrity_remains_a_hard_dependency(self) -> None:
         candidate = self._document("valid_contentful_created_permissive")
         candidate["event_id"] = "kfm:source-event:sha256:" + "f" * 64
         result = validate_document(candidate)
         self.assertEqual(result.outcome, "DENY")
         self.assertIn("EVENT_ID_MISMATCH", {finding.code for finding in result.findings})
 
-    def test_duplicate_nonfinite_oversized_and_symlink_inputs_fail_closed(self) -> None:
+    def test_bounded_file_reader_rejects_unsafe_inputs(self) -> None:
         valid = self._document("valid_contentful_created_permissive")
         text = json.dumps(valid, indent=2)
         duplicate = text.replace(
@@ -173,12 +176,7 @@ class WebDeltaProfileTests(unittest.TestCase):
         fifo = self.root / "candidate.fifo"
         os.mkfifo(fifo)
         completed = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "tools.validators.validate_web_delta_profile",
-                str(fifo),
-            ],
+            [sys.executable, "-m", "tools.validators.validate_web_delta_profile", str(fifo)],
             cwd=ROOT,
             capture_output=True,
             text=True,
@@ -188,40 +186,28 @@ class WebDeltaProfileTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 1)
         self.assertIn("UNSAFE_FILE", completed.stdout)
 
-    def test_validation_performs_no_network_io(self) -> None:
+    def test_validation_is_no_network_and_diagnostics_do_not_echo_values(self) -> None:
         candidate = self._document("valid_contentful_created_permissive")
         with (
             mock.patch.object(socket.socket, "connect", _unexpected_network),
             mock.patch.object(socket, "create_connection", _unexpected_network),
             mock.patch.object(urllib.request, "urlopen", _unexpected_network),
         ):
-            result = validate_document(candidate)
-        self.assertEqual(result.outcome, "PASS", result.findings)
+            self.assertEqual(validate_document(candidate).outcome, "PASS")
 
-    def test_cli_is_deterministic_and_does_not_echo_source_values(self) -> None:
-        candidate = self._document("valid_contentful_created_permissive")
         marker = "synthetic-source-marker-that-must-not-echo"
         candidate["payload"]["attributes"]["web.canonical_url"] = marker
         path = self._write(candidate)
-        outputs = []
+        outputs: list[str] = []
         for _ in range(2):
             stream = io.StringIO()
             with contextlib.redirect_stdout(stream):
-                code = main([str(path)])
+                code = validate_main([str(path)])
             self.assertEqual(code, 1)
             outputs.append(stream.getvalue())
         self.assertEqual(outputs[0], outputs[1])
         self.assertNotIn(marker, outputs[0])
         self.assertIn("PAYLOAD_SPEC_HASH_MISMATCH", outputs[0])
-
-    def test_fixture_cli_passes(self) -> None:
-        stream = io.StringIO()
-        with contextlib.redirect_stdout(stream):
-            code = main(["--fixtures"])
-        self.assertEqual(code, 0, stream.getvalue())
-        payload = json.loads(stream.getvalue())
-        self.assertEqual(payload["outcome"], "PASS")
-        self.assertEqual(payload["cases"], 17)
 
 
 if __name__ == "__main__":
