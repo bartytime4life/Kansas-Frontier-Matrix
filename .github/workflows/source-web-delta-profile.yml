@@ -10,6 +10,7 @@ name: source-web-delta-profile
       - "schemas/contracts/v1/source/source_event_envelope.schema.json"
       - "fixtures/contracts/v1/source/web_delta_profile/**"
       - "tools/validators/validate_web_delta_profile.py"
+      - "tools/validators/replay_web_delta_profile_fixtures.py"
       - "tools/validators/validate_source_event_envelope.py"
       - "tests/validators/test_validate_web_delta_profile.py"
       - "docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md"
@@ -26,6 +27,7 @@ name: source-web-delta-profile
       - "schemas/contracts/v1/source/source_event_envelope.schema.json"
       - "fixtures/contracts/v1/source/web_delta_profile/**"
       - "tools/validators/validate_web_delta_profile.py"
+      - "tools/validators/replay_web_delta_profile_fixtures.py"
       - "tools/validators/validate_source_event_envelope.py"
       - "tests/validators/test_validate_web_delta_profile.py"
       - "docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md"
@@ -80,11 +82,28 @@ jobs:
             --pattern 'test_validate_web_delta_profile.py' \
             --verbose
 
-      - name: Replay exact fixture outcomes and findings
+      - name: Replay effective fixture outcomes and findings
         shell: bash
         run: |
           set -euo pipefail
-          python tools/validators/validate_web_delta_profile.py --fixtures
+          python -m tools.validators.replay_web_delta_profile_fixtures
+
+      - name: Record exact receipt artifact hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/source-web-delta-profile.yml \
+            contracts/source/web_delta_profile.md \
+            docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md \
+            fixtures/contracts/v1/source/web_delta_profile/cases-01.json \
+            fixtures/contracts/v1/source/web_delta_profile/cases-02.json \
+            fixtures/contracts/v1/source/web_delta_profile/cases-03.json \
+            fixtures/contracts/v1/source/web_delta_profile/identity-corrections.json \
+            schemas/contracts/v1/source/web_delta_profile.schema.json \
+            tests/validators/test_validate_web_delta_profile.py \
+            tools/validators/replay_web_delta_profile_fixtures.py \
+            tools/validators/validate_web_delta_profile.py
 
       - name: Verify generated authoring receipt integrity
         shell: bash
@@ -102,7 +121,7 @@ jobs:
             echo "### License-respectful web delta profile"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: fixture-only SourceEventEnvelopeCandidate profile for 200/304 state, canonical schema references, deterministic digests, license-aware contentful/metadata-only behavior, and finite routing."
-            echo "- Boundary: PASS is local profile consistency only."
+            echo "- Scope: fixture-only SourceEventEnvelopeCandidate profile for 200/304 state, append-only digest corrections, canonical schema references, deterministic digests, license-aware contentful/metadata-only behavior, and finite routing."
+            echo "- Boundary: PASS is local profile and corrected-fixture consistency only."
             echo "- Non-effects: no network fetch, extraction, source activation, lifecycle write, evidence or policy decision, release, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"

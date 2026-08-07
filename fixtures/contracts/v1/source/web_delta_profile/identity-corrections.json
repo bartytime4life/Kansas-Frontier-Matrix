@@ -1,0 +1,47 @@
+{
+  "profile": "kfm.web_delta.fixture_identity_corrections.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "status": "CORRECTION",
+  "reason": "Hosted RFC 8785 and JSON Schema replay exposed malformed digest fixture literals in the two HTTP 304 records. Correcting those literals restores the payload and event identities already stored in the original immutable fixture manifests.",
+  "corrections": [
+    {
+      "case_id": "valid_http_304_heartbeat",
+      "attribute_corrections": {
+        "web.manifest_digest": {
+          "prior": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf",
+          "value": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf"
+        }
+      },
+      "prior_payload_spec_hash": "sha256:143fabf1fdc6cd23431576f77ba84305e466b866149a931bffa112bdf500f2ca",
+      "payload_spec_hash": "sha256:143fabf1fdc6cd23431576f77ba84305e466b866149a931bffa112bdf500f2ca",
+      "prior_event_id": "kfm:source-event:sha256:c5c99bf8f28930e37bf6487563c2536c0970f61430344fe8e3742f90f2dd5eb4",
+      "event_id": "kfm:source-event:sha256:c5c99bf8f28930e37bf6487563c2536c0970f61430344fe8e3742f90f2dd5eb4",
+      "reason_code": "HOSTED_DIGEST_LITERAL_CORRECTION"
+    },
+    {
+      "case_id": "invalid_heartbeat_carries_new_content",
+      "attribute_corrections": {
+        "web.manifest_digest": {
+          "prior": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf",
+          "value": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf"
+        },
+        "web.raw_digest": {
+          "prior": "sha256:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+          "value": "sha256:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c"
+        }
+      },
+      "prior_payload_spec_hash": "sha256:67cfbded929c1551dc9e11cac7964141121941f95e8fd29e9fb7cc0ad602ce9f",
+      "payload_spec_hash": "sha256:67cfbded929c1551dc9e11cac7964141121941f95e8fd29e9fb7cc0ad602ce9f",
+      "prior_event_id": "kfm:source-event:sha256:a7a008e78b9da5f9c00b550a400f533ea991486fa8fc50b0c554faccf5434991",
+      "event_id": "kfm:source-event:sha256:a7a008e78b9da5f9c00b550a400f533ea991486fa8fc50b0c554faccf5434991",
+      "reason_code": "HOSTED_DIGEST_LITERAL_CORRECTION"
+    }
+  ],
+  "non_effects": [
+    "no_source_activation",
+    "no_lifecycle_write",
+    "no_evidence_policy_review_or_release_authority",
+    "no_network_fetch_or_extraction",
+    "no_publication"
+  ]
+}

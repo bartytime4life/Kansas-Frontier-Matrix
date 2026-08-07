@@ -8,19 +8,23 @@
     "fixtures/contracts/v1/source/web_delta_profile/cases-01.json",
     "fixtures/contracts/v1/source/web_delta_profile/cases-02.json",
     "fixtures/contracts/v1/source/web_delta_profile/cases-03.json",
+    "fixtures/contracts/v1/source/web_delta_profile/identity-corrections.json",
     "schemas/contracts/v1/source/web_delta_profile.schema.json",
     "tests/validators/test_validate_web_delta_profile.py",
+    "tools/validators/replay_web_delta_profile_fixtures.py",
     "tools/validators/validate_web_delta_profile.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-web-delta-profile.yml": "sha256:e4cdb8b6771c277287eccc2e8454a33c9dd4c56550872c7e23336b33a80b9e0b",
+    ".github/workflows/source-web-delta-profile.yml": "sha256:44c7bf11e284406be9197db9a074d9209d4d3a55f7a731ddd7d78bd230d160e0",
     "contracts/source/web_delta_profile.md": "sha256:56773dc9f88e79a9473cf770d93006f39d06b4d77cd79464586a124b88da1c02",
     "docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md": "sha256:bac293b4cf71f6987fd099137cbe1ea1c7f7e8949bb71abce9dc16dee70484db",
-    "fixtures/contracts/v1/source/web_delta_profile/cases-01.json": "sha256:b673bd810be8de6ce972f025505025df38189e3561f37fcdb17a5df5ccb41017",
+    "fixtures/contracts/v1/source/web_delta_profile/cases-01.json": "sha256:652e50699170b3a872f9e76bae48b0d387fb050ff08e02278ed3024dbe5e18f0",
     "fixtures/contracts/v1/source/web_delta_profile/cases-02.json": "sha256:9a9f860c1c644d7610bef233f8003b521bf0fac3de43086b54fe6c7d21ffae12",
-    "fixtures/contracts/v1/source/web_delta_profile/cases-03.json": "sha256:3b40e573063b2bc1b16ad78e21701596bf4a01f99fde1f67cad3cf00f3727908",
+    "fixtures/contracts/v1/source/web_delta_profile/cases-03.json": "sha256:34e46fa6fa704fdf34df2f3190c8066af45403e028115f1fcff908c6de727dde",
+    "fixtures/contracts/v1/source/web_delta_profile/identity-corrections.json": "sha256:da4cecaece69a43b7e51b3299e6c98350065b7bcccc3dec57e0ca01346430771",
     "schemas/contracts/v1/source/web_delta_profile.schema.json": "sha256:5b3a0c3cf814273f78fabd0070d5bb428fcebfd4fca0e1b8b8524c20486d2f56",
-    "tests/validators/test_validate_web_delta_profile.py": "sha256:c9180e85b40ed5791fbe0d42756e34b68f6a0f84800c82eab09299d6d93d5144",
+    "tests/validators/test_validate_web_delta_profile.py": "sha256:f564957cff4a903044809431acd4dd13e27dc709d607fbc56d7d7b229a70474f",
+    "tools/validators/replay_web_delta_profile_fixtures.py": "sha256:32a8209ad42c24d50108e2d8a8e466fdbb31d19d2294de3d026aa9d4383eebf2",
     "tools/validators/validate_web_delta_profile.py": "sha256:fc96f70da5bca668133fb873552fe8571ae63b62c079f5f49155b52fbc687883"
   },
   "model_identity": {
@@ -37,7 +41,7 @@
     "tools_enabled": [
       "uploaded-file search",
       "GitHub connector repository inspection and mutation",
-      "deterministic local Python validation"
+      "deterministic hosted Python validation"
     ]
   },
   "inputs": {
@@ -53,7 +57,10 @@
       "repo:docs/doctrine/directory-rules.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
       "repo:contracts/source/source_event_envelope.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
       "repo:schemas/contracts/v1/source/source_event_envelope.schema.json@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
-      "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+      "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "github-actions:run/31146556779/job/92767075176",
+      "github-actions:run/31148414894/job/92772778326",
+      "github-actions:run/31148519894/job/92773075266"
     ]
   },
   "truth_labels": {
@@ -63,8 +70,10 @@
     "fixtures/contracts/v1/source/web_delta_profile/cases-01.json": "CONFIRMED",
     "fixtures/contracts/v1/source/web_delta_profile/cases-02.json": "CONFIRMED",
     "fixtures/contracts/v1/source/web_delta_profile/cases-03.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/web_delta_profile/identity-corrections.json": "CONFIRMED",
     "schemas/contracts/v1/source/web_delta_profile.schema.json": "CONFIRMED",
     "tests/validators/test_validate_web_delta_profile.py": "CONFIRMED",
+    "tools/validators/replay_web_delta_profile_fixtures.py": "CONFIRMED",
     "tools/validators/validate_web_delta_profile.py": "CONFIRMED"
   },
   "validation_gates": [
@@ -77,11 +86,15 @@
       "outcome": "PASS"
     },
     {
-      "gate": "focused-unittest-suite-11-tests",
+      "gate": "focused-unittest-suite-10-tests",
       "outcome": "PASS"
     },
     {
       "gate": "fixture-polarity-6-pass-11-deny",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "append-only-correction-replay-2-cases-3-attributes",
       "outcome": "PASS"
     },
     {
@@ -105,13 +118,19 @@
       "outcome": "PASS"
     },
     {
-      "gate": "generated-receipt-artifact-hash-replay",
-      "outcome": "PASS"
+      "gate": "hosted-focused-tests-and-corrected-fixture-replay",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31148519894 passed the focused unit-test and effective-fixture replay steps before receipt verification."
     },
     {
-      "gate": "hosted-exact-head-workflows",
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "Artifact hashes were emitted from the checked-out merge revision by GitHub Actions run 31148519894 and are bound above."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
       "outcome": "SKIPPED",
-      "reason": "pending until the draft pull request runs on GitHub"
+      "reason": "Pending rerun after this receipt-only correction."
     }
   ],
   "policy_decisions": [
@@ -143,9 +162,9 @@
   "created_at": "2026-08-07T03:58:09Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 2106,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only license-respectful web delta profile adapted from New Ideas 12-29-2025.docx.pdf. It reuses SourceEventEnvelopeCandidate, splits 17 deterministic cases across three bounded manifests, performs no network fetch or extraction, claims no full CloudEvents conformance, activates no source, writes no lifecycle state, and creates no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+  "notes": "Fixture-only license-respectful web delta profile adapted from New Ideas 12-29-2025.docx.pdf. PR #2102 introduced the profile and was merged by repository automation while its focused check was failing. Draft PR #2106 applies the smallest bounded correction: module-safe invocation, inspectable identity diagnostics, append-only repair of two malformed HTTP 304 digest literals, exact replay of 17 cases, and regenerated artifact bindings. The slice performs no network fetch or extraction, claims no full CloudEvents conformance, activates no source, writes no lifecycle state, and creates no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
 }
