@@ -74,7 +74,7 @@ An `AgentOperationEnvelope` binds these concerns without collapsing their author
 
 - one actor role and component identity;
 - one bounded operation kind and subject;
-- one pinned window, commit_seed, input-bundle hash, and deterministic idempotency key;
+- one pinned window, commit seed, input-bundle hash, and deterministic idempotency key;
 - exact input and output kinds permitted for the role;
 - four ordered gate declarations: schema, policy, quality assurance, and reproducibility;
 - a checked kill-switch state;
@@ -85,7 +85,7 @@ An `AgentOperationEnvelope` binds these concerns without collapsing their author
 
 ### Capability ceiling is not permission
 
-`capability_ceiling` expresses the maximum shape a separately authorized runtime profile could request. The fixture has no credential and performs no effect. The separate `permissions  object is fixed to `false` for repository writes, lifecycle writes, canonical writes, merge, promotion, release, deployment, publication, and public use.
+`capability_ceiling` expresses the maximum shape a separately authorized runtime profile could request. The fixture has no credential and performs no effect. The separate `permissions` object is fixed to `false` for repository writes, lifecycle writes, canonical writes, merge, promotion, release, deployment, publication, and public use.
 
 A valid Executor record may therefore declare this ceiling:
 
@@ -105,7 +105,7 @@ That declaration is not a token, authorization decision, GitHub App installation
 | Role | Inputs required | Outputs allowed | Credential ceiling | Forbidden effects |
 |---|---|---|---|---|
 | `WATCHER` | `SOURCE_SNAPSHOT` | `FACTS`, optional `ALERTS` | `READ_ONLY` | Planning, branch/PR writes, protected writes, merge, release, deploy, publish |
-| `PLANNER` | `WATCHER_FACTS`, `POLICY_BASELINE` | `PLAN`, `DIFF_CANDIDATE`, `VALIDATION_EVIDENCE` | `READ_ONLYP | Facts authority, branch/PR writes, protected writes, merge, release, deploy, publish |
+| `PLANNER` | `WATCHER_FACTS`, `POLICY_BASELINE` | `PLAN`, `DIFF_CANDIDATE`, `VALIDATION_EVIDENCE` | `READ_ONLY` | Facts authority, branch/PR writes, protected writes, merge, release, deploy, publish |
 | `EXECUTOR` | `PLAN`, `VALIDATION_EVIDENCE`, `ATTESTATION` | `DRAFT_PR_METADATA`, `EXECUTION_RECEIPT` | `FEATURE_BRANCH_AND_DRAFT_PR_ONLY` | Protected writes, merge, promotion, release, deploy, publish |
 
 Input and output bindings are sorted, kind-unique, and content-hashed. Executor targets are fixed to protected `main` as the base, an unprotected `agent/...` head, and `draft: true`.
