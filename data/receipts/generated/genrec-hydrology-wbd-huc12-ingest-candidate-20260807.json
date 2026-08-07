@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-hydrology-wbd-huc12-ingest-candidate-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
+    "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/invalid/duplicate_huc12.json",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/add.json",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/material_change.json",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/no_change.json",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/not_modified.json",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/remove.json",
+    "pipeline_specs/hydrology/wbd_huc12_ingest.yaml",
+    "pipelines/domains/hydrology/ingest_wbd_huc/README.md",
+    "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json",
+    "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "sha256:a146633452db081125ac23c8dcb4262f270abfa15f7faad35cf2f6f9116baa68",
+    "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md": "sha256:67c681f7182b693bb2be98b7fa164d42d5f7ae8d40923946968bf38cb76f6ca7",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/invalid/duplicate_huc12.json": "sha256:821429ebe03a7c0f5e810fd3af8f578ed552a0c0c583f5127eae393ed91daca8",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/add.json": "sha256:6ca15148ce8e609d7de2c6a9691db92417b152ac6380b2926dc4275d62e29542",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/material_change.json": "sha256:a046ace8559af721b4399eb7820d3d51b4b1bf25a0b2e622c9e93397906e5208",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/no_change.json": "sha256:183c77a68283c1a49668c97dc885abb26dea98cf56d06b865a6c0920c3b00509",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/not_modified.json": "sha256:e01ac8b83b07b9bccfe2f17cb11642e90390a2db6a64af182173809dc8cfcbcd",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/remove.json": "sha256:7e61cb79c4887c9c46db3f1e3cc3ff9942412d03b83f858ac019a4377c22fa94",
+    "pipeline_specs/hydrology/wbd_huc12_ingest.yaml": "sha256:a30f111366142901cfbef378b1750a449f20eae913eefd80baa577fdeba45711",
+    "pipelines/domains/hydrology/ingest_wbd_huc/README.md": "sha256:feccb24fd3ec691a8461f652e718fa1aa058112e3a0c803fab9c1c4d33a24d77",
+    "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py": "sha256:ba1e39729a4ac61a413a54dddfc127d73b4fb29a6b8acc68b073cb482ac5e590",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json": "sha256:9b1e116b90047bddb34708b2ccba538311e976f31b6162b5680cbb2c3569f45b",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json": "sha256:8ea79d472f83e8b07fed5b8395d2911f33d717d68612f9aecb3785e263599f33",
+    "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py": "sha256:d09b9b024a4984110af39c21d24a94fdbd4f10de3990351356383f0f71d30e25"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:964baefd5f117dce217e3cebfc3cbcf8fae5c255876844d3257aaac7b15b41e4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-10-26.pdf",
+      "New Ideas 4-12-26.pdf",
+      "New Ideas 4-13-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-10-26.pdf#wbd-huc12-change-detection",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "repo:data/registry/hydrology/sources/wbd_huc12.yaml@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "repo:tools/validators/domains/hydrology/wbd_huc12_material_change/validate_wbd_huc12_material_change.py@b7e8548a469f6849af97223a29c3a5e8bf646c0c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "PROPOSED",
+    "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/invalid/duplicate_huc12.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/add.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/material_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/no_change.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/not_modified.json": "PROPOSED",
+    "fixtures/domains/hydrology/wbd_huc12_ingest/valid/remove.json": "PROPOSED",
+    "pipeline_specs/hydrology/wbd_huc12_ingest.yaml": "PROPOSED",
+    "pipelines/domains/hydrology/ingest_wbd_huc/README.md": "PROPOSED",
+    "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json": "PROPOSED",
+    "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic source-package and ingest-candidate tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The producer and focused test module compile without syntax errors."
+    },
+    {
+      "gate": "json-schema-check",
+      "outcome": "PASS",
+      "reason": "Both new Draft 2020-12 schemas passed jsonschema schema checks."
+    },
+    {
+      "gate": "fixture-json-parse",
+      "outcome": "PASS",
+      "reason": "All six synthetic source-package fixtures parse as strict JSON objects."
+    },
+    {
+      "gate": "workflow-and-spec-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The workflow and declarative pipeline spec parsed as YAML."
+    },
+    {
+      "gate": "network-and-write-boundary",
+      "outcome": "PASS",
+      "reason": "Tests prove no HTTP client path, no lifecycle write, deterministic output, and overwrite denial."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:wbd-huc12-change-detection",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-10-26.pdf#wbd-huc12-change-detection"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c"
+    },
+    {
+      "id": "repository:wbd-huc12-source-descriptor",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/hydrology/sources/wbd_huc12.yaml@b7e8548a469f6849af97223a29c3a5e8bf646c0c"
+    },
+    {
+      "id": "repository:wbd-material-change-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/hydrology/wbd_huc12_material_change/validate_wbd_huc12_material_change.py@b7e8548a469f6849af97223a29c3a5e8bf646c0c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T22:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2142,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds the smallest dependency-closed WBD HUC12 source-edge slice: captured-package schemas, deterministic candidate producer, synthetic fixtures, tests, declarative spec, documentation, and read-only CI. The spec remains PROPOSED for live-source orchestration and lifecycle writes while the bounded no-network fixture-first candidate projection is implemented and tested. It reuses the existing material-change validator and never fetches WBD, activates a source, writes lifecycle state, promotes, releases, deploys, or publishes."
+}

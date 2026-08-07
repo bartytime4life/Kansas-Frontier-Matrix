@@ -1,5 +1,66 @@
+spec_version: "1.0.0"
+pipeline_id: domains.hydrology.wbd_huc12_ingest_candidate
 status: PROPOSED
-source_doc: docs/domains/hydrology/FILE_SYSTEM_PLAN.md
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/hydrology/wbd_huc12_ingest.yaml
-notes:
-  - Placeholder created from docs/domains markdown inventory.
+readiness_note: >-
+  Placeholder status applies only to future live-source orchestration and lifecycle
+  writes; the deterministic no-network fixture-first candidate projection is
+  implemented and validated by the dedicated workflow.
+responsibility_root: pipelines/
+implementation: pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py
+source_descriptor_ref: data/registry/hydrology/sources/wbd_huc12.yaml
+contracts:
+  - contracts/domains/hydrology/wbd_huc12_ingest_candidate.md
+  - contracts/domains/hydrology/wbd_huc12_material_change_assessment.md
+schemas:
+  input: schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json
+  output: schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json
+  material_change: schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json
+execution:
+  mode: FIXTURE_ONLY
+  network_access: DENIED
+  source_activation: DENIED
+  lifecycle_write: DENIED
+  overwrite: DENIED
+  deterministic: true
+  python: ">=3.11"
+inputs:
+  - kind: WbdHuc12SourcePackage
+    homes:
+      - fixtures/domains/hydrology/wbd_huc12_ingest/
+    maximum_bytes: 8388608
+outputs:
+  kind: WbdHuc12IngestCandidate
+  transport: stdout_or_explicit_new_file
+  dispositions:
+    - RAW_CANDIDATE
+    - NO_CHANGE_RECEIPT
+  declared_possible_lifecycle_targets:
+    - data/quarantine/hydrology/wbd_huc12/
+    - data/raw/hydrology/wbd_huc12/
+  writes_targets: false
+reason_codes:
+  - HTTP_NOT_MODIFIED
+  - CONTENT_UNCHANGED
+  - FEATURE_ADDED
+  - FEATURE_REMOVED
+  - FEATURE_MATERIAL_CHANGE
+validation:
+  command: >-
+    python -m pytest
+    tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py
+    tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py
+    -q --strict-config --strict-markers
+  workflow: .github/workflows/hydrology-wbd-huc12-ingest-candidate.yml
+non_effects:
+  - no_live_wbd_request
+  - no_source_activation
+  - no_lifecycle_persistence
+  - no_evidence_closure
+  - no_promotion
+  - no_release
+  - no_deployment
+  - no_publication
+rollback:
+  strategy: revert_bounded_commit

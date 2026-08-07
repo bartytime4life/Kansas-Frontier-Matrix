@@ -1,0 +1,214 @@
+{
+  "receipt_id": "genrec-promotion-verification-execution-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-verification-execution.yml",
+    "contracts/release/promotion_verification_execution.md",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego",
+    "fixtures/release/promotion_verification_execution/references/dcat.json",
+    "fixtures/release/promotion_verification_execution/references/evidence.json",
+    "fixtures/release/promotion_verification_execution/references/prov.json",
+    "fixtures/release/promotion_verification_execution/references/rollback.json",
+    "fixtures/release/promotion_verification_execution/references/stac.json",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json",
+    "fixtures/release/promotion_verification_execution/valid/pass.json",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json",
+    "tests/release/test_promotion_verification_execution.py",
+    "tools/validators/promotion_gate/execute_promotion_verification.py",
+    "tools/validators/promotion_gate/execution/__init__.py",
+    "tools/validators/promotion_gate/execution/common.py",
+    "tools/validators/promotion_gate/execution/engine.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-verification-execution.yml": "sha256:4f5ef4439b9bb2ff6c4218f84cf8d8828ea3f27ed18750bf901995e94e52222b",
+    "contracts/release/promotion_verification_execution.md": "sha256:53d00b1c6a4802f12ff612b9ff805894d36ecd9a03bab1728aa19cc8dd1988f1",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json": "sha256:29090c2484fca06bbcbc70a606e07587f29f97118433a92039f877b2ced0672a",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json": "sha256:bd5b2a09368088d64ff7df6d1f8d32b5e67b941c9db74ab39f98566aebae77b1",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json": "sha256:10d6007df8ece4411f281e8238afe5d80cb973fd7d684b25efc77acd6acab2df",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py": "sha256:3fafa5c5ebbfa8e4c029be14d52b34980670c1cab0612ba706346fd20e249303",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py": "sha256:fcc15a785c02295bdfa54d216264d0bcf09d2aa9149d3379bc4afe14bc3188c5",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py": "sha256:1c80f0ebe261e1b3e69c9d1402746a422b9d0280c4c12cd5b0a8a38996371bc5",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py": "sha256:a1d5d832f30c9723d12b75681e4f04b659c05dc9687abb7d1717d7066a2220ae",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json": "sha256:2b7c2f6a5e56130df57637d5bd6a0ac8ec15e78fb70e488cb48fbea71f5a9896",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego": "sha256:d6ca89b42739768cf98f0cdd258c9eea802ab626ae498e5392bf9d9db6c9c5a3",
+    "fixtures/release/promotion_verification_execution/references/dcat.json": "sha256:0dbf3671b3f89cf69ecc28c8b70e79a2263123b42fbe6cc396b4b1b06b49cdda",
+    "fixtures/release/promotion_verification_execution/references/evidence.json": "sha256:962db9f0f09442363affdc4e5c04fd95e3cb2f0f1fd33d73c5a38c4d7bcff9db",
+    "fixtures/release/promotion_verification_execution/references/prov.json": "sha256:3bc6598116415c92a5770185bb2350904f392f8e2e9ff8f2ddf08b58b5a38993",
+    "fixtures/release/promotion_verification_execution/references/rollback.json": "sha256:9ea06d3df0c7e12eb5165eff8b797b47e755f7f2e6356db5cf72e9c029f1df29",
+    "fixtures/release/promotion_verification_execution/references/stac.json": "sha256:170f3a83109f62f90331c320f489ab27f459e29085e79b9a9e1d7ba0e224b759",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json": "sha256:28e65ded881deb74bd2363fb0f8f760b46ec00552c64304d728fb9948f52656b",
+    "fixtures/release/promotion_verification_execution/valid/pass.json": "sha256:7d257a0ffa19944424b12f5ab1b1ad1fcdfdbb547d04318a0f98e46e3014f5d8",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json": "sha256:c72f3374c8584ca1fd8aba30da69c25d76e02f2baf67fb48fef154f35148ffa2",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json": "sha256:a90fa1720411c9d4376d5e7f39bdb9580c25d6eeb631e13f837b01e5b5c97c8a",
+    "tests/release/test_promotion_verification_execution.py": "sha256:64330af07673ba381e747bacbcd548571c1ed5383cca8d2c7bb4f103307da7ae",
+    "tools/validators/promotion_gate/execute_promotion_verification.py": "sha256:a9db0e643123f3837dda6eb2814d222770f625e9213acbccbf54f3586fd30be6",
+    "tools/validators/promotion_gate/execution/__init__.py": "sha256:b178883d6f3ab3f2dbf5a9d432b8be2804c96470e015018047957c8206f30be8",
+    "tools/validators/promotion_gate/execution/common.py": "sha256:5097a2a3ee806b74cf33ab7db0b305d46fce6d2756ae65aeb7eb4e9c2dccd368",
+    "tools/validators/promotion_gate/execution/engine.py": "sha256:4cc3e245bcc5a6ccf09beaa33f19c21c704df9c47ae5f6382435d9f599f4aa9f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:b5b334a7403b0537e140274075a412deaf46099753b00c63153bec9d785b16ee",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-12-26.pdf",
+      "New Ideas 4-13-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-12-26.pdf#promotion-gate-cosign-stac-dcat-prov",
+      "attachment:New Ideas 4-13-26.pdf#promotion-proof-test",
+      "repo:contracts/release/cosign_attestation_verification_plan.md@0e2c83ae5f35a55c353c58cdfbf2f608c3c3a879",
+      "repo:tools/validators/promotion_gate/validate_promotion_gate.py@0e2c83ae5f35a55c353c58cdfbf2f608c3c3a879",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0e2c83ae5f35a55c353c58cdfbf2f608c3c3a879"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-verification-execution.yml": "PROPOSED",
+    "contracts/release/promotion_verification_execution.md": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/dcat.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/evidence.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/prov.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/rollback.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/stac.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json": "PROPOSED",
+    "fixtures/release/promotion_verification_execution/valid/pass.json": "PROPOSED",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json": "PROPOSED",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json": "PROPOSED",
+    "tests/release/test_promotion_verification_execution.py": "PROPOSED",
+    "tools/validators/promotion_gate/execute_promotion_verification.py": "PROPOSED",
+    "tools/validators/promotion_gate/execution/__init__.py": "PROPOSED",
+    "tools/validators/promotion_gate/execution/common.py": "PROPOSED",
+    "tools/validators/promotion_gate/execution/engine.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Four deterministic executor tests passed locally after the executor was split into bounded modules."
+    },
+    {
+      "gate": "execution-schema-check",
+      "outcome": "PASS",
+      "reason": "The execution-plan and finite-result Draft 2020-12 schemas passed schema checks."
+    },
+    {
+      "gate": "fixture-json-parse",
+      "outcome": "PASS",
+      "reason": "Every JSON fixture and reference object parsed successfully."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Entry point, execution modules, fixture tools, and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "offline-pass-proof",
+      "outcome": "PASS",
+      "reason": "The complete fixture returns PASS/APPROVE_READY while all authority flags remain false."
+    },
+    {
+      "gate": "negative-catalog-proof",
+      "outcome": "PASS",
+      "reason": "A STAC artifact-digest mismatch deterministically returns DENY/BLOCKED."
+    },
+    {
+      "gate": "binary-substitution-proof",
+      "outcome": "PASS",
+      "reason": "A substituted Cosign binary is denied before execution by exact digest binding."
+    },
+    {
+      "gate": "production-cosign-cryptography",
+      "outcome": "SKIPPED",
+      "reason": "Fixture tools prove adapter behavior only; production tool installation and real Sigstore bundles remain a separate security-reviewed change."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:promotion-gate-execution",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-12-26.pdf#promotion-gate-cosign-stac-dcat-prov"
+    },
+    {
+      "id": "attachment:promotion-proof-test",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-13-26.pdf#promotion-proof-test"
+    },
+    {
+      "id": "repository:cosign-plan-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/cosign_attestation_verification_plan.md@0e2c83ae5f35a55c353c58cdfbf2f608c3c3a879"
+    },
+    {
+      "id": "repository:promotion-gate-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/promotion_gate/validate_promotion_gate.py@0e2c83ae5f35a55c353c58cdfbf2f608c3c3a879"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T23:25:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-first promotion verification executor that composes current readiness and Cosign-plan validators with exact-byte tool, subject, bundle, policy, EvidenceBundle, STAC/DCAT/PROV, and rollback checks. It executes no production cryptography and never promotes, releases, deploys, or publishes."
+}

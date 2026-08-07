@@ -1,22 +1,395 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schemas/contracts/v1/map/map_release_manifest.schema.json",
-  "title": "Map Release Manifest",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "$id": "https://schemas.kfm.local/contracts/v1/map/map_release_manifest.schema.json",
+  "title": "MapReleaseManifest",
+  "description": "Fixture-first map release closure profile binding map artifacts, evidence, catalog, policy, review, public-safety, correction, and rollback references.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "additionalProperties": false,
+  "required": [
+    "map_release_id",
+    "schema_version",
+    "profile_status",
+    "release_state",
+    "release_ref",
+    "artifact_manifests",
+    "layer_manifest_refs",
+    "style_manifest_refs",
+    "catalog_refs",
+    "evidence_refs",
+    "policy_decision_refs",
+    "rights_refs",
+    "sensitivity_refs",
+    "review_refs",
+    "attestation_refs",
+    "public_boundary",
+    "correction",
+    "rollback",
+    "state_reason_codes",
+    "spec_hash"
+  ],
+  "properties": {
+    "map_release_id": {
+      "type": "string",
+      "pattern": "^map-release:[a-f0-9]{24}$"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "release_state": {
+      "type": "string",
+      "enum": [
+        "CANDIDATE",
+        "HELD",
+        "PUBLISHED",
+        "STALE",
+        "SUPERSEDED",
+        "WITHDRAWN",
+        "ROLLED_BACK"
+      ]
+    },
+    "release_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "published_at": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "artifact_manifests": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "layer_manifest_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "style_manifest_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "catalog_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stac",
+        "dcat",
+        "prov"
+      ],
+      "properties": {
+        "stac": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "dcat": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "prov": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "policy_decision_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "rights_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "sensitivity_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "review_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "attestation_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "redaction_receipt_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "public_boundary": {
+      "$ref": "#/$defs/public_boundary"
+    },
+    "correction": {
+      "$ref": "#/$defs/correction"
+    },
+    "rollback": {
+      "$ref": "#/$defs/rollback"
+    },
+    "state_reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/token"
+      }
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "artifact_ref",
+        "digest",
+        "media_type",
+        "immutable",
+        "cache_policy"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._:-]{2,127}$"
+        },
+        "artifact_type": {
+          "type": "string",
+          "enum": [
+            "PMTILES",
+            "COG",
+            "GEOPARQUET",
+            "TILEJSON",
+            "STYLE_JSON",
+            "SPRITE_JSON",
+            "SPRITE_IMAGE",
+            "GLYPH_RANGE",
+            "MVT_ARCHIVE",
+            "METADATA_SIDECAR"
+          ]
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/hash"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "immutable": {
+          "const": true
+        },
+        "range_supported": {
+          "type": "boolean"
+        },
+        "cors_allowed": {
+          "type": "boolean"
+        },
+        "cache_policy": {
+          "type": "string",
+          "enum": [
+            "IMMUTABLE",
+            "NO_STORE",
+            "REVALIDATE"
+          ]
+        }
+      }
+    },
+    "public_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geometry_posture",
+        "rights_state",
+        "sensitivity_state",
+        "raw_path_exposed",
+        "work_path_exposed",
+        "quarantine_path_exposed",
+        "canonical_store_exposed",
+        "unreleased_fetch_allowed",
+        "direct_model_output_exposed"
+      ],
+      "properties": {
+        "geometry_posture": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "GENERALIZED",
+            "RESTRICTED",
+            "WITHHELD"
+          ]
+        },
+        "rights_state": {
+          "type": "string",
+          "enum": [
+            "RESOLVED_PUBLIC",
+            "RESOLVED_RESTRICTED",
+            "UNKNOWN",
+            "DENIED"
+          ]
+        },
+        "sensitivity_state": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "GENERALIZED",
+            "RESTRICTED",
+            "UNKNOWN",
+            "DENIED"
+          ]
+        },
+        "raw_path_exposed": {
+          "const": false
+        },
+        "work_path_exposed": {
+          "const": false
+        },
+        "quarantine_path_exposed": {
+          "const": false
+        },
+        "canonical_store_exposed": {
+          "const": false
+        },
+        "unreleased_fetch_allowed": {
+          "const": false
+        },
+        "direct_model_output_exposed": {
+          "const": false
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes_refs",
+        "superseded_by_ref",
+        "correction_notice_refs",
+        "withdrawal_notice_ref",
+        "cache_invalidation_refs"
+      ],
+      "properties": {
+        "supersedes_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "superseded_by_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "correction_notice_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "withdrawal_notice_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "cache_invalidation_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rollback_target_ref",
+        "rollback_card_ref",
+        "verified",
+        "restoration_receipt_ref"
+      ],
+      "properties": {
+        "rollback_target_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "rollback_card_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "restoration_receipt_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        }
+      }
+    }
+  },
   "x-kfm": {
     "status": "PROPOSED",
-    "path": "schemas/contracts/v1/map/map_release_manifest.schema.json",
-    "source_docs": [
-      "docs/domains/archaeology/API_CONTRACTS.md",
-      "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
-      "docs/domains/fauna/API_CONTRACTS.md",
-      "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md",
-      "docs/domains/roads-rail-trade/API_CONTRACTS.md",
-      "docs/domains/settlements-infrastructure/MAP_UI_CONTRACTS.md"
-    ],
-    "contract_doc": null
+    "profile_status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/release/map_release_manifest.md",
+    "compatibility_doc": "contracts/map/map_release_manifest/README.md",
+    "fixtures_root": "fixtures/contracts/v1/map/map_release_manifest/",
+    "validator": "tools/validators/map/validate_map_release_manifest.py",
+    "tests": "tests/map/test_map_release_manifest.py",
+    "non_effects": [
+      "does_not_publish",
+      "does_not_authorize_release",
+      "does_not_resolve_evidence_or_policy",
+      "does_not_load_map_artifacts"
+    ]
   }
 }

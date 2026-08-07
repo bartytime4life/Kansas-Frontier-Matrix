@@ -1,0 +1,83 @@
+# Validate the fixture-first WBD HUC12 ingest-candidate projection.
+name: hydrology-wbd-huc12-ingest-candidate
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml"
+      - "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md"
+      - "pipeline_specs/hydrology/wbd_huc12_ingest.yaml"
+      - "pipelines/domains/hydrology/ingest_wbd_huc/**"
+      - "schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json"
+      - "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json"
+      - "fixtures/domains/hydrology/wbd_huc12_ingest/**"
+      - "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py"
+      - "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml"
+      - "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md"
+      - "pipeline_specs/hydrology/wbd_huc12_ingest.yaml"
+      - "pipelines/domains/hydrology/ingest_wbd_huc/**"
+      - "schemas/contracts/v1/domains/hydrology/wbd_huc12_source_package.schema.json"
+      - "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json"
+      - "fixtures/domains/hydrology/wbd_huc12_ingest/**"
+      - "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py"
+      - "data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-*.json"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: hydrology-wbd-huc12-ingest-candidate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+jobs:
+  validate:
+    name: validate-wbd-huc12-ingest-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run deterministic WBD HUC12 ingest tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py \
+            tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py \
+            -q --strict-config --strict-markers
+      - name: Verify declarative spec and generated authoring receipt
+        run: |
+          set -euo pipefail
+          grep -F 'network_access: DENIED' pipeline_specs/hydrology/wbd_huc12_ingest.yaml
+          grep -F 'writes_targets: false' pipeline_specs/hydrology/wbd_huc12_ingest.yaml
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260807.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Fixture-first WBD HUC12 ingest candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: captured-package validation, response digest binding, one-HUC selection, material-change reuse, and finite RAW_CANDIDATE/NO_CHANGE_RECEIPT projection."
+            echo "- Boundary: no WBD request, source activation, lifecycle write, evidence closure, promotion, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"

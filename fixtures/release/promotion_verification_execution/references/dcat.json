@@ -1,0 +1,7 @@
+{
+  "object_type": "ResolvedPromotionReference",
+  "kind": "DCAT",
+  "ref_id": "catalog:synthetic:promotion-proof:dcat:v1",
+  "subject_spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411",
+  "artifact_digest": "sha256:4214a9deea39c870e605b7fd9719f1abd873a6df5ba0bd4fd43b7448569238aa"
+}

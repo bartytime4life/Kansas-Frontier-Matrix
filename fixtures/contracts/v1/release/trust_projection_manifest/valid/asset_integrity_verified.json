@@ -1,0 +1,25 @@
+{
+  "object_type": "AssetIntegrityResult",
+  "schema_version": "1.0.0",
+  "result_id": "integrity:pmtiles:fixture:v1",
+  "evaluated_at": "2026-04-13T00:00:00Z",
+  "asset_ref": "asset:pmtiles:fixture:v1",
+  "media_type": "PMTILES",
+  "expected_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "observed_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "byte_length": 4096,
+  "outcome": "VERIFIED",
+  "checkpoint_receipt_refs": [
+    "receipt:integrity:checkpoint:v1"
+  ],
+  "release_manifest_ref": "release:fixture:v1",
+  "evidence_bundle_ref": "evidence:fixture:v1",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  },
+  "spec_hash": "sha256:8f789e4d3870365ef6e49cf0cc716518da6d8c53166be2d3b471e97e35b1e483"
+}
