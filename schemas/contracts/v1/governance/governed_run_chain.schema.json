@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/governed_run_chain.schema.json",
+  "title": "governed_run_chain",
+  "description": "Fixture-first linkage of one RunReceipt, PolicyDecision, optional QuarantineRecord, and optional PromotionDecision.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/governance/governed_run_chain.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/governed_run_chain/",
+    "validator": "tools/validators/governance/validate_governed_run_chain.py",
+    "policy": "policy/promotion/",
+    "status": "PROPOSED"
+  },
+  "required": [
+    "chain_id",
+    "subject_ref",
+    "spec_hash",
+    "outcome",
+    "run_receipt",
+    "policy_decision",
+    "quarantine_record",
+    "promotion_decision",
+    "evaluated_at"
+  ],
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["PROMOTABLE", "QUARANTINED", "HELD", "ERROR"]
+    },
+    "run_receipt": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/runtime/run_receipt.schema.json"
+    },
+    "policy_decision": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/policy/policy_decision.schema.json"
+    },
+    "quarantine_record": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "https://schemas.kfm.local/contracts/v1/governance/quarantine_record.schema.json"}
+      ]
+    },
+    "promotion_decision": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "https://schemas.kfm.local/contracts/v1/release/promotion_decision.schema.json"}
+      ]
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

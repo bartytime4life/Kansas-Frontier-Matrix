@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-governed-run-chain-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/governance/governed_run_chain.md",
+    "schemas/contracts/v1/governance/quarantine_record.schema.json",
+    "schemas/contracts/v1/governance/governed_run_chain.schema.json",
+    "tools/validators/governance/validate_governed_run_chain.py",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/promotable.json",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/quarantined.json",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/held.json",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/error.json",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/spec_hash_mismatch.json",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/promotion_bypasses_quarantine.json",
+    "tests/validators/governance/governed_run_chain/test_validate_governed_run_chain.py"
+  ],
+  "artifact_hashes": {
+    "contracts/governance/governed_run_chain.md": "sha256:97292063612fe68581c2d7b5d645954e709d7bf12af97828965b430396e899b1",
+    "schemas/contracts/v1/governance/quarantine_record.schema.json": "sha256:35bed8aa49c66f4b5feaf5950343327c583fba8d5e1287505eca33ea36563502",
+    "schemas/contracts/v1/governance/governed_run_chain.schema.json": "sha256:55d4289739c73a5509a24b30368a5943ea93cf119a54bf518d46eb63e7419da4",
+    "tools/validators/governance/validate_governed_run_chain.py": "sha256:c578bd6f245182cc52a0ae7f69c0806e80aba3b4fe4a07788c90e8105c893c9e",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/promotable.json": "sha256:9982256d73021639774294b71e45761adabfadc5ec815d91e9e7a7493400184a",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/quarantined.json": "sha256:2a330ee101f2aa464529db35b5efb2650c4886d432adf11cffc1c286cef77e72",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/held.json": "sha256:35d91734841f09c83533a8d01b8b78ff3fa7edf4afec2ddbb59740a98d7c5c82",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/error.json": "sha256:5621fc1e9f7cd57d93e123958ba6db75088a23320c271977b9062c9d1d9090d6",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/spec_hash_mismatch.json": "sha256:750480f25313e497c29f4f1a16faa58be343ea3e8972114bbecbe14cd959a61e",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/promotion_bypasses_quarantine.json": "sha256:a0603b74f09aa5b28a243d65c9c7d05f39b999079a0abccdb571c6553a76e1a4",
+    "tests/validators/governance/governed_run_chain/test_validate_governed_run_chain.py": "sha256:bebe86f81bb3b10302afb4c07e86f82aade549b439601088dff0ef2e5606859a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:7bafb88303ea4b5f79de9a8dd9a72077acc28f9415de201071f4410334e5802b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-12-26(1).pdf",
+      "New Ideas 4-13-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-12-26(1).pdf#governed-run-chain-golden-packs",
+      "attachment:New Ideas 4-13-26(1).pdf#signed-decision-flow",
+      "repo:schemas/contracts/v1/runtime/run_receipt.schema.json@c9f9c6674df604c7ce247fdb23212607fe155357",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@c9f9c6674df604c7ce247fdb23212607fe155357",
+      "repo:schemas/contracts/v1/release/promotion_decision.schema.json@c9f9c6674df604c7ce247fdb23212607fe155357",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c9f9c6674df604c7ce247fdb23212607fe155357"
+    ]
+  },
+  "truth_labels": {
+    "contracts/governance/governed_run_chain.md": "PROPOSED",
+    "schemas/contracts/v1/governance/quarantine_record.schema.json": "PROPOSED",
+    "schemas/contracts/v1/governance/governed_run_chain.schema.json": "PROPOSED",
+    "tools/validators/governance/validate_governed_run_chain.py": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/promotable.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/quarantined.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/held.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/valid/error.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/governed_run_chain/invalid/promotion_bypasses_quarantine.json": "PROPOSED",
+    "tests/validators/governance/governed_run_chain/test_validate_governed_run_chain.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic governed-run-chain tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "json-schema-self-check",
+      "outcome": "PASS",
+      "reason": "Both new Draft 2020-12 schemas pass Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "fixture-cli",
+      "outcome": "PASS",
+      "reason": "All four finite positive states validate; contradictory linkage fixtures fail closed."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI is unavailable until the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:governed-run-chain",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-12-26(1).pdf#governed-run-chain-golden-packs"
+    },
+    {
+      "id": "attachment:signed-decision-flow",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-13-26(1).pdf#signed-decision-flow"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c9f9c6674df604c7ce247fdb23212607fe155357"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T19:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds an additive fixture-first linkage contract, QuarantineRecord schema, GovernedRunChain schema, deterministic validator, four valid finite-state fixtures, two contradictory invalid fixtures, and focused tests. It performs no network access, source activation, lifecycle mutation, promotion, release, deployment, or publication."
+}
