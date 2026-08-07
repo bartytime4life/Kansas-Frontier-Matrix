@@ -26,7 +26,7 @@
     "fixtures/domains/hydrology/wbd_huc12_ingest/valid/no_change.json": "sha256:183c77a68283c1a49668c97dc885abb26dea98cf56d06b865a6c0920c3b00509",
     "fixtures/domains/hydrology/wbd_huc12_ingest/valid/not_modified.json": "sha256:e01ac8b83b07b9bccfe2f17cb11642e90390a2db6a64af182173809dc8cfcbcd",
     "fixtures/domains/hydrology/wbd_huc12_ingest/valid/remove.json": "sha256:7e61cb79c4887c9c46db3f1e3cc3ff9942412d03b83f858ac019a4377c22fa94",
-    "pipeline_specs/hydrology/wbd_huc12_ingest.yaml": "sha256:3b86bafe9fc00a6214ac12701bda95524012f90f07763801eb7ca94245cde660",
+    "pipeline_specs/hydrology/wbd_huc12_ingest.yaml": "sha256:a30f111366142901cfbef378b1750a449f20eae913eefd80baa577fdeba45711",
     "pipelines/domains/hydrology/ingest_wbd_huc/README.md": "sha256:feccb24fd3ec691a8461f652e718fa1aa058112e3a0c803fab9c1c4d33a24d77",
     "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py": "sha256:ba1e39729a4ac61a413a54dddfc127d73b4fb29a6b8acc68b073cb482ac5e590",
     "schemas/contracts/v1/domains/hydrology/wbd_huc12_ingest_candidate.schema.json": "sha256:9b1e116b90047bddb34708b2ccba538311e976f31b6162b5680cbb2c3569f45b",
@@ -155,9 +155,9 @@
   "created_at": "2026-08-07T22:30:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2142,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds the smallest dependency-closed WBD HUC12 source-edge slice: captured-package schemas, deterministic candidate producer, synthetic fixtures, tests, declarative spec, documentation, and read-only CI. It reuses the existing material-change validator and never fetches WBD, activates a source, writes lifecycle state, promotes, releases, deploys, or publishes."
+  "notes": "Adds the smallest dependency-closed WBD HUC12 source-edge slice: captured-package schemas, deterministic candidate producer, synthetic fixtures, tests, declarative spec, documentation, and read-only CI. The spec remains PROPOSED for live-source orchestration and lifecycle writes while the bounded no-network fixture-first candidate projection is implemented and tested. It reuses the existing material-change validator and never fetches WBD, activates a source, writes lifecycle state, promotes, releases, deploys, or publishes."
 }
