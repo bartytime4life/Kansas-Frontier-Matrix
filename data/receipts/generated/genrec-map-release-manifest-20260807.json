@@ -1,0 +1,157 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/map-release-manifest.yml": "sha256:038071c743cbe721a8633acc3452b995327e68d3f720f398d27516f3c7aca7b3",
+    "contracts/map/map_release_manifest/README.md": "sha256:ecae70878f175b2f2b84f28172a06563d69ac7e8b5b968b1137bb8f419524a0a",
+    "contracts/release/map_release_manifest.md": "sha256:2408d10e7139cdb2068ca067b39fc14c22607d4165ee4d576b5d4c99c08c404d",
+    "fixtures/contracts/v1/map/map_release_manifest/cases.json": "sha256:4e68201fa4c0d792810dfc0ec60f133fa67926e66b00282f4889c2b15edb207c",
+    "schemas/contracts/v1/map/README.md": "sha256:6fb033731c91df327508936841dde2cd8422f7be1b813cb2b7d4dd485d47a4e1",
+    "schemas/contracts/v1/map/map_release_manifest.schema.json": "sha256:59b881837eebba0d2627496c1a43ba44ad4e849cac42f119accacf0eb6a37530",
+    "tests/map/test_map_release_manifest.py": "sha256:17d8bf11c4c45bbd231423ae9c222b1777df2cb82c78fec209a872d273e87164",
+    "tools/validators/map/validate_map_release_manifest.py": "sha256:1791aaaca3fd05a7c0c897645e952135d9034f7cd06582554eb1a3e6a3114b17"
+  },
+  "artifact_paths": [
+    ".github/workflows/map-release-manifest.yml",
+    "contracts/map/map_release_manifest/README.md",
+    "contracts/release/map_release_manifest.md",
+    "fixtures/contracts/v1/map/map_release_manifest/cases.json",
+    "schemas/contracts/v1/map/README.md",
+    "schemas/contracts/v1/map/map_release_manifest.schema.json",
+    "tests/map/test_map_release_manifest.py",
+    "tools/validators/map/validate_map_release_manifest.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-M-081",
+      "id": "attachment:map-release-closure",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-M-090",
+      "id": "attachment:rollback-and-cache-invalidation",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/release/map_release_manifest.md@1264a1dc76070664ffc8acce22943a2811b48693",
+      "id": "repository:existing-map-release-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/map/map_release_manifest.schema.json@1264a1dc76070664ffc8acce22943a2811b48693",
+      "id": "repository:existing-map-schema-scaffold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1264a1dc76070664ffc8acce22943a2811b48693",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-07T22:48:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Master MapLibre Components-Functions-Features.pdf#map-release-manifest",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#release-and-rollback",
+      "repo:contracts/release/map_release_manifest.md@1264a1dc76070664ffc8acce22943a2811b48693",
+      "repo:schemas/contracts/v1/map/map_release_manifest.schema.json@1264a1dc76070664ffc8acce22943a2811b48693",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1264a1dc76070664ffc8acce22943a2811b48693"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-07"
+  },
+  "notes": "Converts the existing permissive MapReleaseManifest scaffold into a fixture-first no-network closure profile. It binds immutable artifacts, STAC/DCAT/PROV, evidence, policy, rights, sensitivity, review, attestations, correction, cache invalidation, and rollback without authorizing release or publication.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:6bd9c832928bf3150dbce39cc6ab821a8c46245680e617fb49713dbf30e4ea13",
+  "receipt_id": "genrec-map-release-manifest-20260807",
+  "truth_labels": {
+    ".github/workflows/map-release-manifest.yml": "PROPOSED",
+    "contracts/map/map_release_manifest/README.md": "PROPOSED",
+    "contracts/release/map_release_manifest.md": "PROPOSED",
+    "fixtures/contracts/v1/map/map_release_manifest/cases.json": "PROPOSED",
+    "schemas/contracts/v1/map/README.md": "PROPOSED",
+    "schemas/contracts/v1/map/map_release_manifest.schema.json": "PROPOSED",
+    "tests/map/test_map_release_manifest.py": "PROPOSED",
+    "tools/validators/map/validate_map_release_manifest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Seventeen deterministic MapReleaseManifest tests passed locally."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "release-state-replay",
+      "outcome": "PASS",
+      "reason": "Seven valid fixtures cover candidate, held, published, generalized, superseded, withdrawn, and rolled-back states."
+    },
+    {
+      "gate": "negative-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Eleven contradictory fixtures produced exact reviewed finding-code sets."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network client and performs only local deterministic evaluation."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile without syntax errors."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt path, SHA-256, and truth-label maps close over all eight non-receipt artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}
