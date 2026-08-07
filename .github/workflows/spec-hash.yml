@@ -1,4 +1,4 @@
-# Validate the common deterministic spec-hash implementation and fixture profile.
+# Validate the common deterministic spec-hash and structural GeoJSON digest profiles.
 name: spec-hash
 
 "on":
@@ -12,8 +12,9 @@ name: spec-hash
       - "contracts/common/spec_hash.md"
       - "schemas/contracts/v1/common/spec_hash.schema.json"
       - "fixtures/contracts/v1/common/spec_hash/**"
-      - "tests/validators/test_validate_spec_hash.py"
+      - "tests/validators/test_validate_spec_hash*.py"
       - "data/receipts/generated/genrec-spec-hash-validator-*.json"
+      - "data/receipts/generated/genrec-geojson-feature-digests-*.json"
   push:
     branches: [main]
     paths:
@@ -25,8 +26,9 @@ name: spec-hash
       - "contracts/common/spec_hash.md"
       - "schemas/contracts/v1/common/spec_hash.schema.json"
       - "fixtures/contracts/v1/common/spec_hash/**"
-      - "tests/validators/test_validate_spec_hash.py"
+      - "tests/validators/test_validate_spec_hash*.py"
       - "data/receipts/generated/genrec-spec-hash-validator-*.json"
+      - "data/receipts/generated/genrec-geojson-feature-digests-*.json"
   workflow_dispatch:
 
 permissions:
@@ -75,7 +77,7 @@ jobs:
           set -euo pipefail
           python -m unittest discover \
             --start-directory tests/validators \
-            --pattern 'test_validate_spec_hash.py' \
+            --pattern 'test_validate_spec_hash*.py' \
             --verbose
           python tools/validators/validate_spec_hash.py --fixtures
 
@@ -85,14 +87,17 @@ jobs:
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-spec-hash-validator-20260806.json \
             --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geojson-feature-digests-20260806.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
         run: |
           {
-            echo "### Common spec-hash validation"
+            echo "### Common spec-hash and GeoJSON digest validation"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: bounded RFC 8785 JCS + SHA-256 computation, current sha256:<hex> shape, fixture polarity, and authoring-receipt integrity."
-            echo "- Boundary: a green result creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
+            echo "- Scope: bounded RFC 8785 JCS + SHA-256 computation, current sha256:<hex> shape, structural GeoJSON geometry/record digests, fixture polarity, and authoring-receipt integrity."
+            echo "- Boundary: GeoJSON digest equality is structural under a declared CRS/precision profile; it is not topological equivalence and creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"
