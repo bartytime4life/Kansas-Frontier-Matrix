@@ -10,7 +10,7 @@
     "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md"
   ],
   "artifact_hashes": {
-    ".github/workflows/spec-hash.yml": "sha256:2f8163719dfd706f546144c152a51f508a50d69f5e143ec370543ac8d39f32c5",
+    ".github/workflows/spec-hash.yml": "sha256:aa524e338105ace267d451759b86f8c8c0cb30868ff03a5eb899a513e4e1917d",
     "packages/hashing/src/hashing/__init__.py": "sha256:288e6783711382dd1a3953f79613b4294eec9907e3716f378b1d10e15f83fc5d",
     "packages/hashing/src/hashing/cli.py": "sha256:155cfac4ff345967cb2cfe9fe6890ef066d04ea6f8f4969efc279b99366ae568",
     "packages/hashing/src/hashing/geojson.py": "sha256:491ed9f7eb84202299e5c174b1c2bd598de4d3883df6095849e5f7e780471eb6",
@@ -77,7 +77,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation requires the pushed exact pull-request head."
+      "reason": "The first hosted run passed deterministic tests but exposed an obsolete-receipt validation coupling; this change removes that stale historical receipt from the current-state gate, and a new exact-head run is required."
     },
     {
       "gate": "human-review",
@@ -111,7 +111,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-07T04:03:38Z",
+  "created_at": "2026-08-07T04:12:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
     "pr_number": 2099,
