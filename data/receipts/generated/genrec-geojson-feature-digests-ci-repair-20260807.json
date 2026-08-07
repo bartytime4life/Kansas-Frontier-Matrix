@@ -3,18 +3,10 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/spec-hash.yml",
-    "packages/hashing/src/hashing/__init__.py",
-    "packages/hashing/src/hashing/cli.py",
-    "packages/hashing/src/hashing/geojson.py",
-    "tests/validators/test_validate_spec_hash_geojson.py",
     "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md"
   ],
   "artifact_hashes": {
     ".github/workflows/spec-hash.yml": "sha256:169e19e3d78896595b8b026593c37d3f5c3c453c2787f020f8b61cebccda1918",
-    "packages/hashing/src/hashing/__init__.py": "sha256:288e6783711382dd1a3953f79613b4294eec9907e3716f378b1d10e15f83fc5d",
-    "packages/hashing/src/hashing/cli.py": "sha256:155cfac4ff345967cb2cfe9fe6890ef066d04ea6f8f4969efc279b99366ae568",
-    "packages/hashing/src/hashing/geojson.py": "sha256:491ed9f7eb84202299e5c174b1c2bd598de4d3883df6095849e5f7e780471eb6",
-    "tests/validators/test_validate_spec_hash_geojson.py": "sha256:681f02b7e38cb71200a6ef7d09613de898491a2a602d0c4ac784bb475b8f844a",
     "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "sha256:df0674816d3707a4dd3ac6e16b7202a5ce00bc50023c160306aa56334aff1d34"
   },
   "model_identity": {
@@ -47,22 +39,13 @@
   },
   "truth_labels": {
     ".github/workflows/spec-hash.yml": "CONFIRMED",
-    "packages/hashing/src/hashing/__init__.py": "CONFIRMED",
-    "packages/hashing/src/hashing/cli.py": "CONFIRMED",
-    "packages/hashing/src/hashing/geojson.py": "CONFIRMED",
-    "tests/validators/test_validate_spec_hash_geojson.py": "CONFIRMED",
     "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "CONFIRMED"
   },
   "validation_gates": [
     {
-      "gate": "local-focused-tests",
-      "outcome": "PASS",
-      "reason": "Three deterministic no-network GeoJSON digest tests passed, including a golden vector, hash-domain separation, explicit profile inputs, fail-closed invalid input, and bounded CLI behavior."
-    },
-    {
       "gate": "hosted-deterministic-tests-pr-2099",
       "outcome": "PASS",
-      "reason": "The PR #2099 spec-hash run completed dependency installation and deterministic no-network tests successfully before the receipt step failed."
+      "reason": "The PR #2099 spec-hash run completed dependency installation and deterministic no-network tests successfully before the historical receipt step failed."
     },
     {
       "gate": "historical-receipt-coupling",
@@ -75,9 +58,9 @@
       "reason": "The corrected workflow parsed successfully and validates only the new current-state receipt while preserving the historical receipt file."
     },
     {
-      "gate": "artifact-byte-binding",
+      "gate": "follow-up-artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "Every declared authored or current-slice artifact is bound to its prepared SHA-256 bytes without receipt self-reference."
+      "reason": "The workflow and durable status documentation modified by this follow-up are bound to their prepared SHA-256 bytes without receipt self-reference."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -116,12 +99,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-07T04:22:00Z",
+  "created_at": "2026-08-07T04:29:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
     "pr_number": 2099,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Follow-up current-state receipt for the structural GeoJSON Feature digest slice merged through PR #2099. The historical PR receipt is preserved unchanged. This receipt binds the corrected spec-hash workflow, current implementation, tests, and documentation; it creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
+  "notes": "Follow-up current-state receipt for the CI and documentation repair after the structural GeoJSON Feature digest slice merged through PR #2099. The historical PR receipt is preserved unchanged. This receipt binds only the two non-receipt artifacts modified by the follow-up; the merged implementation and tests are cited as repository evidence rather than re-authored artifacts. It creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
 }
