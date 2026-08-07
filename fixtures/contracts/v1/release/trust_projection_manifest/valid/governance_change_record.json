@@ -1,0 +1,27 @@
+{
+  "object_type": "GovernanceChangeRecord",
+  "schema_version": "1.0.0",
+  "change_id": "governance-change:policy-fixture:v1",
+  "event_type": "POLICY_UPDATED",
+  "occurred_at": "2026-04-13T00:00:00Z",
+  "owner_role": "policy-steward",
+  "changed_paths": [
+    "policy/promotion/README.md"
+  ],
+  "decision_refs": [
+    "adr:fixture:policy-change:v1"
+  ],
+  "rollback_refs": [
+    "rollback:governance:fixture:v1"
+  ],
+  "append_only": true,
+  "prior_record_ref": null,
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  },
+  "spec_hash": "sha256:9fa0853da3c39d2bd04afb0c486edf5ce8ad2480ef07c4726322baf35249903b"
+}

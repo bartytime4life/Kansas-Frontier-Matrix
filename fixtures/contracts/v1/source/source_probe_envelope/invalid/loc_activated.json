@@ -1,0 +1,39 @@
+{
+  "object_type": "SourceProbeEnvelope",
+  "schema_version": "1.0.0",
+  "probe_id": "source-probe:loc-activated-invalid-v1",
+  "profile": "LOC_CHRONICLING_AMERICA",
+  "observed_at": "2026-04-12T12:00:00Z",
+  "source_descriptor_ref": "data/registry/sources/archives/loc_chronicling_america.yaml",
+  "source_head": {
+    "etag": "\"fixture\"",
+    "last_modified": "Sun, 12 Apr 2026 12:00:00 GMT",
+    "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "scope": {
+    "geography_level": "STATE",
+    "geography_id": "KS"
+  },
+  "materiality": {
+    "status": "CHANGED",
+    "reason_codes": [
+      "SOURCE_CHANGED"
+    ]
+  },
+  "profile_data": {
+    "source_role": "candidate",
+    "family_decision": "DEFERRED_OPEN_DSC_10",
+    "rights_state": "NEEDS_REVIEW",
+    "care_review": "PENDING",
+    "source_activation": true
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_access": "DENIED",
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:42cb91b922912f9a6e1d1611385624c24a97e46012ebd9020a3b55c4a589c53c"
+}
