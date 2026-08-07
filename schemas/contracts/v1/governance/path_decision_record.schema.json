@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/path_decision_record.schema.json",
+  "title": "KFM Path Decision Record",
+  "description": "Reviewable record of one Directory Rules placement evaluation. A valid record documents reasoning; it does not authorize the placement.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "decision_id",
+    "evaluated_at",
+    "base_ref",
+    "registry",
+    "doctrine",
+    "artifact",
+    "evidence",
+    "rules",
+    "reason_codes",
+    "candidate_roots",
+    "canonical_source",
+    "consumer_refs",
+    "split_targets",
+    "outcome"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "decision_id": {
+      "type": "string",
+      "pattern": "^pathdec:[a-z][a-z0-9_.:-]{5,160}$"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "base_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "registry": {
+      "$ref": "#/$defs/registry_binding"
+    },
+    "doctrine": {
+      "$ref": "#/$defs/doctrine_binding"
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "uniqueItems": true
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "string",
+        "pattern": "^DIR-[A-Z]+-[0-9]{3}$"
+      },
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{2,96}$"
+      },
+      "uniqueItems": true
+    },
+    "candidate_roots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/root_path"
+      },
+      "uniqueItems": true
+    },
+    "canonical_source": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/repo_path"
+        }
+      ]
+    },
+    "consumer_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "uniqueItems": true
+    },
+    "split_targets": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/repo_path"
+      },
+      "uniqueItems": true
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "PLACE",
+        "SPLIT",
+        "MIGRATE",
+        "MIRROR",
+        "HOLD",
+        "DENY"
+      ]
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "root_path": {
+      "type": "string",
+      "pattern": "^(?:\\.github|[a-z][a-z0-9_-]*)/$"
+    },
+    "repo_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?:\\.github|[a-z0-9][a-z0-9_.-]*)(?:/[a-z0-9][a-z0-9_.-]*)*/?$"
+    },
+    "registry_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "digest",
+        "base_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "control_plane/root_registry.yaml"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "base_ref": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        }
+      }
+    },
+    "doctrine_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "digest",
+        "decision_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "docs/doctrine/directory-rules.md"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "decision_ref": {
+          "const": "ADR-0029"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "current_path",
+        "proposed_path",
+        "artifact_kind",
+        "authority_owner",
+        "lifecycle_stage",
+        "execution_role",
+        "scope_kind",
+        "scope_id",
+        "exposure",
+        "mutability",
+        "retention",
+        "physical_storage"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.:-]{2,160}$"
+        },
+        "current_path": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/repo_path"
+            }
+          ]
+        },
+        "proposed_path": {
+          "$ref": "#/$defs/repo_path"
+        },
+        "artifact_kind": {
+          "type": "string",
+          "enum": [
+            "configuration",
+            "data_instance",
+            "deployable_application",
+            "generated_output",
+            "governance_projection",
+            "human_document",
+            "infrastructure",
+            "migration",
+            "pipeline",
+            "pipeline_spec",
+            "platform_integration",
+            "policy_rule",
+            "release_decision",
+            "reusable_library",
+            "runnable_example",
+            "runtime_adapter",
+            "schema",
+            "semantic_contract",
+            "source_connector",
+            "test",
+            "test_fixture",
+            "thin_script",
+            "repository_tool"
+          ]
+        },
+        "authority_owner": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,96}$"
+        },
+        "lifecycle_stage": {
+          "type": "string",
+          "enum": [
+            "not_applicable",
+            "pre_raw_event",
+            "raw",
+            "work",
+            "quarantine",
+            "processed",
+            "catalog",
+            "triplets",
+            "published",
+            "receipt",
+            "proof",
+            "registry"
+          ]
+        },
+        "execution_role": {
+          "type": "string",
+          "enum": [
+            "none",
+            "deployable",
+            "reusable_library",
+            "source_connector",
+            "transformation_pipeline",
+            "declarative_spec",
+            "repository_tool",
+            "thin_script",
+            "runtime_adapter",
+            "infrastructure"
+          ]
+        },
+        "scope_kind": {
+          "type": "string",
+          "enum": [
+            "global",
+            "domain",
+            "source",
+            "geography",
+            "cross_domain",
+            "object_family"
+          ]
+        },
+        "scope_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,128}$"
+        },
+        "exposure": {
+          "type": "string",
+          "enum": [
+            "public",
+            "semi_public",
+            "internal",
+            "steward_only",
+            "restricted"
+          ]
+        },
+        "mutability": {
+          "type": "string",
+          "enum": [
+            "immutable",
+            "append_only",
+            "versioned",
+            "generated",
+            "ephemeral"
+          ]
+        },
+        "retention": {
+          "type": "string",
+          "enum": [
+            "durable",
+            "release_bound",
+            "audit_bound",
+            "cacheable",
+            "disposable"
+          ]
+        },
+        "physical_storage": {
+          "type": "string",
+          "enum": [
+            "git",
+            "database",
+            "object_storage",
+            "package_registry",
+            "ci_artifact",
+            "external_system"
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "SPLIT"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "split_targets": {
+            "minItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "MIRROR"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "canonical_source": {
+            "type": "string"
+          },
+          "consumer_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "MIGRATE"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "artifact": {
+            "properties": {
+              "current_path": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/governance/path_decision_record.md",
+    "registry_dependency": "control_plane/root_registry.yaml",
+    "validator": "tools/validators/directory_governance/validate_path_decision_record.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/path_decision_record/",
+    "tests": "tests/validators/directory_governance/test_validate_path_decision_record.py",
+    "authority": "placement_evaluation_record_only",
+    "non_effects": [
+      "does_not_authorize_paths_or_adrs",
+      "does_not_move_release_or_publish"
+    ]
+  }
+}
