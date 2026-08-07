@@ -1,0 +1,99 @@
+# Validate the fixture-only Watcher -> Planner -> Executor governance boundary.
+name: agent-operation-envelope
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/agent-operation-envelope.yml"
+      - "contracts/governance/agent_operation_envelope.md"
+      - "schemas/contracts/v1/governance/agent_operation_envelope.schema.json"
+      - "fixtures/contracts/v1/governance/agent_operation_envelope/**"
+      - "tools/generators/agent_operation_envelope/**"
+      - "tools/validators/governance/validate_agent_operation_envelope.py"
+      - "tests/validators/governance/test_agent_operation_envelope.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-agent-operation-envelope-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-operation-envelope.yml"
+      - "contracts/governance/agent_operation_envelope.md"
+      - "schemas/contracts/v1/governance/agent_operation_envelope.schema.json"
+      - "fixtures/contracts/v1/governance/agent_operation_envelope/**"
+      - "tools/generators/agent_operation_envelope/**"
+      - "tools/validators/governance/validate_agent_operation_envelope.py"
+      - "tests/validators/governance/test_agent_operation_envelope.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-agent-operation-envelope-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-operation-envelope-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-agent-operation-envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            packages/hashing/pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]" -e "./packages/hashing[test]"
+
+      - name: Run deterministic no-network role-boundary tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_agent_operation_envelope.py' \
+            --verbose
+          python tools/generators/agent_operation_envelope/build_agent_operation_envelope.py \
+            --case valid-executor-ready
+          python tools/validators/governance/validate_agent_operation_envelope.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-agent-operation-envelope-20260807.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### AgentOperationEnvelope validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only Watcher/Planner/Executor role separation, deterministic identities, kill-switch behavior, gate/disposition polarity, feature-branch/draft-PR ceiling, and authoring-receipt integrity."
+            echo "- Boundary: a green result creates no credential, branch, pull request, approval, merge, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
