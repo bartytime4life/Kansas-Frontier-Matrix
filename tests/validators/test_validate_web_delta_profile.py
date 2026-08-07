@@ -19,7 +19,7 @@ from unittest import mock
 from jsonschema import Draft202012Validator
 
 from tools.validators.validate_web_delta_profile import (
-    FIXTURE_PATH,
+    FIXTURE_FILES,
     MAX_FILE_BYTES,
     SCHEMA_PATH,
     main,
@@ -38,8 +38,9 @@ def _unexpected_network(*_args, **_kwargs):
 class WebDeltaProfileTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.fixture = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
-        cls.cases = cls.fixture["cases"]
+        cls.cases = []
+        for fixture_path in FIXTURE_FILES:
+            cls.cases.extend(json.loads(fixture_path.read_text(encoding="utf-8"))["cases"])
         cls.by_id = {case["case_id"]: case for case in cls.cases}
 
     def setUp(self) -> None:
