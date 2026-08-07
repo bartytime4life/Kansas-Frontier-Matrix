@@ -84,7 +84,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/validators/validate_web_delta_profile.py --fixtures
+          python -m tools.validators.validate_web_delta_profile --fixtures
 
       - name: Verify generated authoring receipt integrity
         shell: bash
