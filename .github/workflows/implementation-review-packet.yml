@@ -1,0 +1,107 @@
+name: implementation-review-packet
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/implementation-review-packet.yml"
+      - "contracts/governance/implementation_review_packet.md"
+      - "fixtures/contracts/v1/governance/implementation_review_packet/**"
+      - "tools/validators/governance/validate_implementation_review_packet.py"
+      - "tests/validators/governance/test_implementation_review_packet.py"
+      - "docs/intake/exploratory/fluencyloop-review-packet-source-map.md"
+      - "data/receipts/generated/genrec-implementation-review-packet-20260806.json"
+      - "contracts/governance/implementation_change_context.md"
+      - "contracts/governance/implementation_decision_record.md"
+      - "schemas/contracts/v1/governance/implementation_change_context.schema.json"
+      - "schemas/contracts/v1/governance/implementation_decision_record.schema.json"
+      - "tools/validators/governance/implementation_change_context_model.py"
+      - "tools/validators/governance/validate_implementation_change_context.py"
+      - "tools/validators/governance/validate_implementation_decision_record.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/implementation-review-packet.yml"
+      - "contracts/governance/implementation_review_packet.md"
+      - "fixtures/contracts/v1/governance/implementation_review_packet/**"
+      - "tools/validators/governance/validate_implementation_review_packet.py"
+      - "tests/validators/governance/test_implementation_review_packet.py"
+      - "docs/intake/exploratory/fluencyloop-review-packet-source-map.md"
+      - "data/receipts/generated/genrec-implementation-review-packet-20260806.json"
+      - "contracts/governance/implementation_change_context.md"
+      - "contracts/governance/implementation_decision_record.md"
+      - "schemas/contracts/v1/governance/implementation_change_context.schema.json"
+      - "schemas/contracts/v1/governance/implementation_decision_record.schema.json"
+      - "tools/validators/governance/implementation_change_context_model.py"
+      - "tools/validators/governance/validate_implementation_change_context.py"
+      - "tools/validators/governance/validate_implementation_decision_record.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: implementation-review-packet-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-implementation-review-packet
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        run: >-
+          python -m pytest -q
+          tests/validators/governance/test_implementation_review_packet.py
+
+      - name: Run exact fixture polarity
+        run: >-
+          python
+          tools/validators/governance/validate_implementation_review_packet.py
+          --cases
+
+      - name: Compile the packet validator
+        run: >-
+          python -m py_compile
+          tools/validators/governance/validate_implementation_review_packet.py
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-implementation-review-packet-20260806.json
+          --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Implementation review packet"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: local validation and deterministic assembly of declared ImplementationChangeContext and ImplementationDecisionRecord fields."
+            echo "- Boundary: no raw diff or changed-file content is read; no rationale is inferred; no evidence, policy, review approval, repository mutation, promotion, release, deployment, publication, or public-use authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"
