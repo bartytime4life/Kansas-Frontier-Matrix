@@ -2,23 +2,39 @@
   "profile": "kfm.web_delta.fixture_identity_corrections.v1",
   "execution_mode": "FIXTURE_ONLY",
   "status": "CORRECTION",
-  "reason": "Hosted RFC 8785 replay exposed stale payload and event identities for the two HTTP 304 fixture records after PR #2102 merged.",
+  "reason": "Hosted RFC 8785 and JSON Schema replay exposed malformed digest fixture literals in the two HTTP 304 records. Correcting those literals restores the payload and event identities already stored in the original immutable fixture manifests.",
   "corrections": [
     {
       "case_id": "valid_http_304_heartbeat",
+      "attribute_corrections": {
+        "web.manifest_digest": {
+          "prior": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf",
+          "value": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf"
+        }
+      },
       "prior_payload_spec_hash": "sha256:143fabf1fdc6cd23431576f77ba84305e466b866149a931bffa112bdf500f2ca",
-      "payload_spec_hash": "sha256:b45a4e33ee2210aea2de114e21c85666b85513d5dd39f5d22dd52b3020a4c11b",
+      "payload_spec_hash": "sha256:143fabf1fdc6cd23431576f77ba84305e466b866149a931bffa112bdf500f2ca",
       "prior_event_id": "kfm:source-event:sha256:c5c99bf8f28930e37bf6487563c2536c0970f61430344fe8e3742f90f2dd5eb4",
-      "event_id": "kfm:source-event:sha256:aba98886ceaca26bb05d9c58cfe05562f608789640e0e645cd9adcbb8a24f988",
-      "reason_code": "HOSTED_RFC8785_IDENTITY_REPLAY_CORRECTION"
+      "event_id": "kfm:source-event:sha256:c5c99bf8f28930e37bf6487563c2536c0970f61430344fe8e3742f90f2dd5eb4",
+      "reason_code": "HOSTED_DIGEST_LITERAL_CORRECTION"
     },
     {
       "case_id": "invalid_heartbeat_carries_new_content",
+      "attribute_corrections": {
+        "web.manifest_digest": {
+          "prior": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf",
+          "value": "sha256:cfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcfcf"
+        },
+        "web.raw_digest": {
+          "prior": "sha256:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+          "value": "sha256:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c"
+        }
+      },
       "prior_payload_spec_hash": "sha256:67cfbded929c1551dc9e11cac7964141121941f95e8fd29e9fb7cc0ad602ce9f",
-      "payload_spec_hash": "sha256:851a95d187088823fb37e7a718eb5117017baafdd6b90fa13f5134202e8d7147",
+      "payload_spec_hash": "sha256:67cfbded929c1551dc9e11cac7964141121941f95e8fd29e9fb7cc0ad602ce9f",
       "prior_event_id": "kfm:source-event:sha256:a7a008e78b9da5f9c00b550a400f533ea991486fa8fc50b0c554faccf5434991",
-      "event_id": "kfm:source-event:sha256:c79142c0d2f0eb5bf169671a4a92e09e0fdcae7311d561112d8e2b8eef16a4dc",
-      "reason_code": "HOSTED_RFC8785_IDENTITY_REPLAY_CORRECTION"
+      "event_id": "kfm:source-event:sha256:a7a008e78b9da5f9c00b550a400f533ea991486fa8fc50b0c554faccf5434991",
+      "reason_code": "HOSTED_DIGEST_LITERAL_CORRECTION"
     }
   ],
   "non_effects": [
