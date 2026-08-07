@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/map-release-manifest.yml": "sha256:038071c743cbe721a8633acc3452b995327e68d3f720f398d27516f3c7aca7b3",
+    ".github/workflows/map-release-manifest.yml": "sha256:b6e271b962ce8eb375452493bd92d3a76052f3e68b5b19b5ccd68fe5399bb587",
     "contracts/map/map_release_manifest/README.md": "sha256:ecae70878f175b2f2b84f28172a06563d69ac7e8b5b968b1137bb8f419524a0a",
     "contracts/release/map_release_manifest.md": "sha256:2408d10e7139cdb2068ca067b39fc14c22607d4165ee4d576b5d4c99c08c404d",
     "fixtures/contracts/v1/map/map_release_manifest/cases.json": "sha256:4e68201fa4c0d792810dfc0ec60f133fa67926e66b00282f4889c2b15edb207c",
