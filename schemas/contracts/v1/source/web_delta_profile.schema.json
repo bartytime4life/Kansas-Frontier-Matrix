@@ -170,7 +170,7 @@
     "applies_to": "SourceEventEnvelopeCandidate.payload.attributes",
     "base_contract": "contracts/source/source_event_envelope.md",
     "base_schema": "schemas/contracts/v1/source/source_event_envelope.schema.json",
-    "fixtures": "fixtures/contracts/v1/source/web_delta_profile/cases.json",
+    "fixtures": "fixtures/contracts/v1/source/web_delta_profile/cases-*.json",
     "validator": "tools/validators/validate_web_delta_profile.py",
     "tests": "tests/validators/test_validate_web_delta_profile.py",
     "non_effects": [
