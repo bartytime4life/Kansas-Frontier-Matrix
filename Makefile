@@ -8,7 +8,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -17,6 +17,7 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
+	@echo "  hazards-validate      Run bounded synthetic USDM materiality validation"
 	@echo "  governed-api-smoke    Run governed API tests"
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
 	@echo "  boundary-guards       Run policy/API boundary tests"
@@ -52,6 +53,10 @@ schemas:
 
 test:
 	python -m pytest tests/schemas tests/contracts -q
+
+hazards-validate:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
 
 # Readiness markers preserve exact TODO bodies consumed by repository workflows.
 # They are discovery surfaces only and must not be cited as executable proof.
