@@ -37,15 +37,15 @@ SCHEMA_PATH = (
     / "source"
     / "web_delta_profile.schema.json"
 )
-FIXTURE_PATH = (
+FIXTURE_ROOT = (
     REPO_ROOT
     / "fixtures"
     / "contracts"
     / "v1"
     / "source"
     / "web_delta_profile"
-    / "cases.json"
 )
+FIXTURE_FILES = tuple(sorted(FIXTURE_ROOT.glob("cases-*.json")))
 MAX_SCHEMA_FINDINGS = 100
 SCOPE = "source.web_delta_profile"
 NON_EFFECTS = (
@@ -360,24 +360,59 @@ def _serialize(path: Path | None, result: ProfileValidationResult) -> str:
     )
 
 
+def _load_fixture_cases() -> tuple[list[object], list[dict[str, object]]]:
+    cases: list[object] = []
+    load_findings: list[dict[str, object]] = []
+    if not FIXTURE_FILES:
+        return cases, [{"code": "FIXTURE_FILES_MISSING", "path": "/"}]
+
+    for fixture_path in FIXTURE_FILES:
+        fixture, findings = _load_json_object(fixture_path)
+        if not isinstance(fixture, Mapping):
+            load_findings.extend(
+                {
+                    "code": finding.code,
+                    "file": fixture_path.name,
+                    "path": finding.path,
+                }
+                for finding in findings
+            )
+            if not findings:
+                load_findings.append(
+                    {
+                        "code": "FIXTURE_ROOT_INVALID",
+                        "file": fixture_path.name,
+                        "path": "/",
+                    }
+                )
+            continue
+        file_cases = fixture.get("cases")
+        if not isinstance(file_cases, list):
+            load_findings.append(
+                {
+                    "code": "FIXTURE_CASES_INVALID",
+                    "file": fixture_path.name,
+                    "path": "/cases",
+                }
+            )
+            continue
+        cases.extend(file_cases)
+    return cases, load_findings
+
+
 def run_fixture_suite() -> tuple[bool, dict[str, object]]:
-    fixture, findings = _load_json_object(FIXTURE_PATH)
-    if not isinstance(fixture, Mapping):
+    cases, suite_findings = _load_fixture_cases()
+    if suite_findings:
         return False, {
             "authority": "NONE",
-            "cases": 0,
+            "cases": len(cases),
             "execution_mode": "FIXTURE_ONLY",
-            "findings": [
-                {"code": finding.code, "path": finding.path} for finding in findings
-            ] or [{"code": "FIXTURE_ROOT_INVALID", "path": "/"}],
+            "findings": suite_findings,
             "non_effects": NON_EFFECTS,
             "outcome": "ERROR",
             "scope": SCOPE,
         }
-    cases = fixture.get("cases")
-    if not isinstance(cases, list):
-        cases = []
-    suite_findings: list[dict[str, object]] = []
+    suite_findings = []
     for index, case in enumerate(cases):
         if not isinstance(case, Mapping):
             suite_findings.append({
