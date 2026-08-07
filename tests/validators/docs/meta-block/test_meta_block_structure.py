@@ -94,6 +94,29 @@ class DocsMetaBlockStructureTests(DocsMetaBlockTestCase):
         result = self._validate(root)
         self.assertIn("META_BLOCK_DUPLICATE_KEY", self._codes(result))
 
+    def test_unsupported_nesting_emits_warning_without_crashing(self) -> None:
+        temporary, root = self._copy_fixture()
+        self.addCleanup(temporary.cleanup)
+        alpha = root / "docs" / "alpha.md"
+        alpha.write_text(
+            alpha.read_text(encoding="utf-8").replace(
+                "title: Alpha Fixture\n",
+                "title: Alpha Fixture\n  nested: unsupported\n",
+            ),
+            encoding="utf-8",
+        )
+
+        result = self._validate(root)
+        findings = [
+            item
+            for item in result.findings
+            if item.code == "META_BLOCK_UNSUPPORTED_NESTING"
+        ]
+
+        self.assertEqual(result.outcome, "DOC_META_BLOCK_PASS")
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].severity, "WARN")
+
     def test_missing_required_field_fails_closed(self) -> None:
         temporary, root = self._copy_fixture()
         self.addCleanup(temporary.cleanup)
@@ -188,4 +211,3 @@ class DocsMetaBlockStructureTests(DocsMetaBlockTestCase):
         )
         result = self._validate(root, registry=False)
         self.assertIn("DUPLICATE_DOC_ID", self._codes(result))
-
