@@ -4,7 +4,7 @@
       "name": "complete",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:71faecf02bc80b190d63915f23308a7293e23229fe1d06b3175d408cd356ce14",
+        "record_id": "kfm:evidence-resolution:8e393feb3cab8e8b46b291a3f82fd50c332567e52753d8c9f67d2a79dc64a1f2",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
@@ -21,7 +21,7 @@
       "name": "partial",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:c36836675795c88889493f38b7cfda57d7816373989823775395a964408a8739",
+        "record_id": "kfm:evidence-resolution:961b7df3086d6bef335f2f5b7c0c26e27135372f9a0b8b027f3dd9ed4060a373",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
@@ -38,7 +38,7 @@
       "name": "unresolved",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:2b69956d11a8d3171d345684136c08950ad0a60d6ed737123bd58628ae4c0bda",
+        "record_id": "kfm:evidence-resolution:b02c5bd5cbafb2127a186ece3a42aac4ebf8890c10205669f5f325d57ad93506",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
@@ -55,7 +55,7 @@
       "name": "denied",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:0d788b5205e95a2cbde689844a0e52e1bd2eb9534284af91266c81e92fd43448",
+        "record_id": "kfm:evidence-resolution:f0fb3e0bb75c81fd806217725a1651dd1c7ad8b369f747b074b8a0ddd1684616",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
@@ -72,7 +72,7 @@
       "name": "unsorted_requested_refs",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:734522657961051189491604077236565964d2bdfc00a0682280bc87c87e18f4",
+        "record_id": "kfm:evidence-resolution:4704fa98134b22d5e46518698b92be277b89ec0432d71a03a3e58127d70299ef",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:b", "evidence:ks:a"],
         "resolutions": [
@@ -89,7 +89,7 @@
       "name": "unresolved_with_bundle",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:19b5f56402b35c3f88217b1a15c47f819c2c299af02092a5caa290b69c7dd4f2",
+        "record_id": "kfm:evidence-resolution:c91929fcfa9e571e3c3a451c13249573a50e9ebb763c0ae699b4836995062799",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
@@ -106,7 +106,7 @@
       "name": "authority_overreach",
       "candidate": {
         "profile": "kfm.governance.evidence-resolution-record.v1",
-        "record_id": "kfm:evidence-resolution:c22d119ac57639293138649e622a17a56e4c7db42709163f80776925fe31ea57",
+        "record_id": "kfm:evidence-resolution:5327b1d02e98d8203ff4fea74661cee3fb888446fc0a074b40de00f4338cf782",
         "query_run_id": "kfm:query-run:fixture-001",
         "requested_refs": ["evidence:ks:a", "evidence:ks:b"],
         "resolutions": [
