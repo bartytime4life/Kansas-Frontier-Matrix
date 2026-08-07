@@ -33,7 +33,7 @@
     "tests/validators/docs/meta-block/fixtures/valid_repo/docs/beta.md": "sha256:c0039ca36d64c9b4318501da0e2976b9abedf8a71a7b317397aa421507a87b20",
     "tests/validators/docs/meta-block/fixtures/valid_repo/expected_meta_block_report.json": "sha256:cb0b2a84048eb1b3761afcc4f26db25053508fe2b92f252a5b35c9ced0508a34",
     "tests/validators/docs/meta-block/test_meta_block_registry.py": "sha256:d879a2154b05be50aa25612a1ed683af12e703e4f38914cd7da6c2912fd46644",
-    "tests/validators/docs/meta-block/test_meta_block_structure.py": "sha256:53b32046b9b316547d390b57da92ae14547fa4daf4afce642354c2c829d2b59d",
+    "tests/validators/docs/meta-block/test_meta_block_structure.py": "sha256:21afdd857da19ad0cd094ebba2071f536ae61c3595e7f52a40d4869fcde39d3e",
     "tools/validators/docs/README.md": "sha256:6ddb9bfb8aa56adf727f5c16b1ff7f408db61134610d86b01607c5e07ab73a39",
     "tools/validators/docs/meta-block/README.md": "sha256:25e415b4f4d688e5f8ba1a90b3d7c181cf3eb2ec794425e0cd56ed8be697e465",
     "tools/validators/docs/meta-block/check_meta_blocks.py": "sha256:3760a2c9aeb686274f02c630acbc37a420c1c1c92aaf9ffdb31eb9d7940b09d1",
@@ -102,7 +102,7 @@
     {
       "gate": "focused-unittest",
       "outcome": "SKIPPED",
-      "reason": "Exact-head hosted validation including the new unsupported-nesting warning regression is pending."
+      "reason": "Exact-head hosted validation including the corrected unsupported-nesting warning regression is pending."
     },
     {
       "gate": "fixture-snapshot-replay",
@@ -137,7 +137,7 @@
     {
       "gate": "receipt-byte-binding",
       "outcome": "PASS",
-      "reason": "SHA-256 values bind all 19 current non-receipt artifacts, including the two repaired files."
+      "reason": "SHA-256 values bind all 19 current non-receipt artifacts, including the repaired parser and corrected warning regression."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -167,7 +167,7 @@
     {
       "id": "repository:meta-block-gap",
       "validated": true,
-      "evidence_ref": "repo:tools/validators/docs/meta-block/README.md@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
+      "evidence_ref": "repo:tools/validators/docs/meta-block/README.dd@eccaae28375b7f997e40f4a4f25e528c15ecf8a4"
     },
     {
       "id": "repository:document-registry-boundary",
@@ -203,5 +203,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Forward correction for docs-meta-block run 31204925488, job 92953499898. Imports the existing WARN severity used by unsupported-nesting findings, adds a deterministic regression that exercises that warning path without crashing, and refreshes review-pending byte bindings for the repaired parser and test. The validator remains read-only, no-network, and non-authoritative; hosted exact-head validation and human review remain pending."
+  "notes": "Forward correction for docs-meta-block run 31204925488, job 92953499898. Imports the existing WARN severity used by unsupported-nesting findings, adds a deterministic regression that exercises that warning path without crashing, and binds the corrected DOC_META_BLOCK_WARN expectation. The validator remains read-only, no-network, and non-authoritative; hosted exact-head validation and human review remain pending."
 }
