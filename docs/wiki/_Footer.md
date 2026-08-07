@@ -1,0 +1,2 @@
+---
+**Authority note:** This wiki is an orientation projection. Current repository evidence, adopted KFM doctrine and ADRs, contracts, schemas, policy, evidence, lifecycle records, and release decisions outrank wiki prose. [Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) · [Report security issues](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/SECURITY.md) · [Correct this wiki](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/wiki/Wiki-Maintenance.md)
