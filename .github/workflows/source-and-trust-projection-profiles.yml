@@ -1,0 +1,103 @@
+# Validate fixture-first source profiles and release trust projections.
+name: source-and-trust-projection-profiles
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-and-trust-projection-profiles.yml"
+      - "contracts/source/source_probe_envelope.md"
+      - "contracts/release/trust_projection_manifest.md"
+      - "schemas/contracts/v1/source/source_probe_envelope.schema.json"
+      - "schemas/contracts/v1/release/trust_projection_manifest.schema.json"
+      - "tools/validators/source_probe/**"
+      - "tools/validators/release/validate_trust_projection_manifest.py"
+      - "fixtures/contracts/v1/source/source_probe_envelope/**"
+      - "fixtures/contracts/v1/release/trust_projection_manifest/**"
+      - "tests/source/test_source_probe_envelope.py"
+      - "tests/release/test_trust_projection_manifest.py"
+      - "data/receipts/generated/genrec-source-and-trust-projection-profiles-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-and-trust-projection-profiles.yml"
+      - "contracts/source/source_probe_envelope.md"
+      - "contracts/release/trust_projection_manifest.md"
+      - "schemas/contracts/v1/source/source_probe_envelope.schema.json"
+      - "schemas/contracts/v1/release/trust_projection_manifest.schema.json"
+      - "tools/validators/source_probe/**"
+      - "tools/validators/release/validate_trust_projection_manifest.py"
+      - "fixtures/contracts/v1/source/source_probe_envelope/**"
+      - "fixtures/contracts/v1/release/trust_projection_manifest/**"
+      - "tests/source/test_source_probe_envelope.py"
+      - "tests/release/test_trust_projection_manifest.py"
+      - "data/receipts/generated/genrec-source-and-trust-projection-profiles-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-and-trust-projection-profiles-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-source-and-trust-projection-profiles
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run fixture matrices
+        run: |
+          set -euo pipefail
+          python tools/validators/source_probe/validate_source_probe_envelope.py --fixtures
+          python tools/validators/release/validate_trust_projection_manifest.py --fixtures
+
+      - name: Run focused tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/source/test_source_probe_envelope.py \
+            tests/release/test_trust_projection_manifest.py \
+            -q --strict-config --strict-markers
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Source and trust projection profiles"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Profiles: NASS aggregate, eDNA monitoring, KGS geology, LOC deferred hold, PMTiles/COG integrity, time slices, read-only review packets, and governance change records."
+            echo "- Boundary: synthetic fixtures only; no live source access, source activation, lifecycle write, approval, release, deployment, publication, or repository-setting change."
+          } >> "$GITHUB_STEP_SUMMARY"
