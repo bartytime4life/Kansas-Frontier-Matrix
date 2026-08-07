@@ -1,0 +1,121 @@
+# Validate the fixture-first promotion verification execution adapter.
+name: promotion-verification-execution
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/promotion-verification-execution.yml"
+      - "contracts/release/promotion_verification_execution.md"
+      - "schemas/contracts/v1/release/promotion_verification_execution*.schema.json"
+      - "tools/validators/promotion_gate/execute_promotion_verification.py"
+      - "tools/validators/promotion_gate/execution/**"
+      - "fixtures/release/promotion_verification_execution/**"
+      - "tests/release/test_promotion_verification_execution.py"
+      - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/promotion-verification-execution.yml"
+      - "contracts/release/promotion_verification_execution.md"
+      - "schemas/contracts/v1/release/promotion_verification_execution*.schema.json"
+      - "tools/validators/promotion_gate/execute_promotion_verification.py"
+      - "tools/validators/promotion_gate/execution/**"
+      - "fixtures/release/promotion_verification_execution/**"
+      - "tests/release/test_promotion_verification_execution.py"
+      - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promotion-verification-execution-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-promotion-verification-execution
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Validate existing readiness and Cosign-plan prerequisites
+        run: |
+          set -euo pipefail
+          python tools/validators/promotion_gate/validate_promotion_gate.py \
+            fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json
+          python tools/validators/release/validate_cosign_attestation_verification_plan.py \
+            fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json
+
+      - name: Execute deterministic offline adapter with fixture tools
+        run: |
+          set -euo pipefail
+          python tools/validators/promotion_gate/execute_promotion_verification.py \
+            fixtures/release/promotion_verification_execution/valid/pass.json \
+            --cosign-bin fixtures/release/promotion_verification_execution/bin/fake_cosign.py \
+            --conftest-bin fixtures/release/promotion_verification_execution/bin/fake_conftest.py \
+            > /tmp/promotion-verification-result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          value = json.loads(Path('/tmp/promotion-verification-result.json').read_text())
+          assert value['status'] == 'PASS', value
+          assert value['readiness'] == 'APPROVE_READY', value
+          assert value['authority'] == {
+              'deployment_authorized': False,
+              'lifecycle_write': False,
+              'promotion_authorized': False,
+              'publication_authorized': False,
+              'release_authorized': False,
+          }, value
+          PY
+
+      - name: Run focused deterministic tests
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/release/test_promotion_verification_execution.py \
+            tests/release/test_cosign_attestation_verification_plan.py \
+            tests/release/test_promotion_gate.py \
+            -q --strict-config --strict-markers
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-promotion-verification-execution-20260807.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Fixture-first promotion verification execution"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Executed: current A–G readiness validator, current Cosign-plan validator, digest-bound fixture Cosign adapter, digest-bound fixture Conftest adapter, and local EvidenceBundle/STAC/DCAT/PROV/rollback closure."
+            echo "- Boundary: fake tools prove adapter behavior only; no production cryptography, live policy service, promotion, release, deployment, publication, or repository-setting change."
+          } >> "$GITHUB_STEP_SUMMARY"
