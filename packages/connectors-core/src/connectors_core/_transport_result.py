@@ -9,6 +9,7 @@ import math
 from .core import (
     FailureDetail,
     SourceHeadObservation,
+    TRANSIENT_CATEGORIES,
     TransportCategory,
     redact_url,
     sha256_stream,
@@ -16,6 +17,10 @@ from .core import (
 )
 from ._transport_identity import TransportValueError, normalize_media_type
 from ._transport_request import TransportInputError, TransportMethod
+
+_EXHAUSTED_ATTEMPT_CATEGORIES = TRANSIENT_CATEGORIES | frozenset(
+    {TransportCategory.RETRY_EXHAUSTED}
+)
 
 
 @dataclass(frozen=True, slots=True, repr=False)
@@ -105,7 +110,13 @@ class RetrievalResult:
         numbers = tuple(v.attempt_number for v in self.attempts)
         if numbers != expected and numbers != (0,):
             raise TransportInputError("attempts must be contiguous and 1-based, except pre-transport cancellation")
-        if self.attempts[-1].category is not self.category:
+        final_attempt_category = self.attempts[-1].category
+        if self.category is TransportCategory.RETRY_EXHAUSTED:
+            if final_attempt_category not in _EXHAUSTED_ATTEMPT_CATEGORIES:
+                raise TransportInputError(
+                    "RETRY_EXHAUSTED must follow a transient or deadline-exhausted attempt"
+                )
+        elif final_attempt_category is not self.category:
             raise TransportInputError("final category must match the last attempt")
         success = self.category in {TransportCategory.SUCCESS, TransportCategory.NOT_MODIFIED}
         if success:

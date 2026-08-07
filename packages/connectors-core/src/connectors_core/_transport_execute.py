@@ -1,8 +1,6 @@
 """Bounded executor for caller-injected connector transports."""
 from __future__ import annotations
 
-from dataclasses import replace
-
 from .core import RetryPolicy, TRANSIENT_CATEGORIES, TransportCategory
 from ._transport_eval import evaluate_response
 from ._transport_evaluation import Evaluation
@@ -173,8 +171,7 @@ def execute_retrieval(
                 )
             if failure is None:
                 raise TransportInputError("failure evaluation did not carry failure detail")
-            final_evaluation = replace(evaluation, category=final_category, failure=failure)
-            attempts.append(attempt_record(number, final_evaluation, observed_at, duration, request))
+            attempts.append(attempt_record(number, evaluation, observed_at, duration, request))
             return failed_result(request, final_category, attempts, failure)
 
         attempts.append(
