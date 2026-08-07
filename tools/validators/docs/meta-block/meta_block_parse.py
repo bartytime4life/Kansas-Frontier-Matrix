@@ -10,7 +10,7 @@ from typing import Sequence
 
 from meta_block_core import (
     GIT_DIFF_RE, KEY_RE, MARKDOWN_SUFFIXES, MAX_DOCUMENTS, MAX_MARKDOWN_BYTES,
-    Finding, MetaBlockError, SEVERITY_FAIL, _inside, _relative,
+    Finding, MetaBlockError, SEVERITY_FAIL, SEVERITY_WARN, _inside, _relative,
 )
 
 def _collect_documents(root: Path, inputs: Sequence[str]) -> tuple[Path, ...]:
