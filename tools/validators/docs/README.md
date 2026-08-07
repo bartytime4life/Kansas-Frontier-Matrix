@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.5
-status: draft; three-bounded-child-executables; remaining-children-proposed
+version: v0.6
+status: draft; four-bounded-child-executables; remaining-children-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-06
+updated: 2026-08-07
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
 responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, truth-label posture, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
-truth_posture: CONFIRMED bounded local-only link-check, document-graph, and meta-block executables with synthetic tests / PROPOSED remaining child executables and parent orchestration / NEEDS VERIFICATION hosted exact-head results, historical baselines, and required-check coupling
+truth_posture: CONFIRMED bounded local-only link-check, document-graph, meta-block, and stale-scan executables with synthetic tests / PROPOSED remaining child executables and parent orchestration / NEEDS VERIFICATION hosted exact-head results, historical baselines, and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
@@ -26,9 +26,9 @@ related:
   - ../../../control_plane/document_registry.yaml
   - ../../../tests/validators/docs/
 notes:
-  - "This parent lane contains three bounded local-only executables: link-check, document-graph, and meta-block."
+  - "This parent lane contains four bounded local-only executables: link-check, document-graph, meta-block, and stale-scan."
   - "Documentation validators emit QA projections and cannot create truth, source admission, policy, review, release, or publication authority."
-  - "Link resolution, graph connectivity, and metadata conformance remain distinct validator responsibilities."
+  - "Link resolution, graph connectivity, metadata conformance, and freshness review signals remain distinct validator responsibilities."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -47,7 +47,7 @@ notes:
 | `link-check/` | **CONFIRMED bounded executable** | Local inline/reference links, files, directories, images, and fragments; external URLs remain unverified. |
 | `document-graph/` | **CONFIRMED bounded executable** | Nodes, typed edges, backlinks, reachability, generated MOCs, and registry parity. |
 | `meta-block/` | **CONFIRMED bounded executable** | `KFM_META_BLOCK_V2` structure plus review-only registry-delta candidates. |
-| `stale-scan/` | **README-only proposal** | Freshness and overdue-review posture. |
+| `stale-scan/` | **CONFIRMED bounded executable** | Explicit-as-of freshness, review-age, placeholder-owner, temporal-marker, and review-due signals. |
 | `terminology-parity/` | **README-only proposal** | Vocabulary, casing, and source-role consistency. |
 | `truth-label-lint/` | **README-only proposal** | Evidence-posture and implementation-overclaim signals. |
 | Hosted enforcement | **NEEDS VERIFICATION** | Workflow definitions exist; exact-head runs and required-check coupling remain separate evidence. |
@@ -59,13 +59,18 @@ notes:
 | Does a local Markdown target or fragment resolve? | `link-check/` |
 | How are documents connected, and which are unreachable or identity-conflicted? | `document-graph/` |
 | Is the bounded metadata envelope structurally valid, and what registry review delta follows? | `meta-block/` |
-| Is review/freshness posture stale? | `stale-scan/` — proposed |
+| Is review/freshness posture stale under an explicit as-of date and threshold? | `stale-scan/` |
 | Does terminology align with accepted KFM vocabulary? | `terminology-parity/` — proposed |
 | Does prose expose truth labels without overclaiming? | `truth-label-lint/` — proposed |
 
 Child validators must delegate rather than silently reimplement another lane's
-authority. In particular, metadata validation does not become a second link
-checker, and document graph construction does not become metadata doctrine.
+authority. In particular:
+
+- metadata validation does not become a second link checker;
+- document graph construction does not become metadata doctrine;
+- stale scanning does not infer truth or current runtime behavior from a date;
+- freshness parsing delegates malformed metadata to `meta-block/`; and
+- exact local target resolution remains with `link-check/`.
 
 ## Authority boundary
 
@@ -77,7 +82,7 @@ route gaps to review. They must not:
 - decide whether a claim is true or an EvidenceBundle is sufficient;
 - approve source admission, rights, sensitivity, or policy exceptions;
 - create review, release, promotion, publication, correction, or rollback state;
-- turn a passing workflow, badge, graph, or metadata block into authority; or
+- turn a passing workflow, badge, graph, metadata block, or recent date into authority; or
 - write generated QA reports into canonical trust-object homes.
 
 Responsibility-root placement remains:
@@ -100,8 +105,9 @@ Responsibility-root placement remains:
 | Link check | `DOC_LINK_CHECK_PASS` | informational external/unverified state | target/anchor/path failures | `ERROR` |
 | Document graph | `DOC_GRAPH_PASS` | `DOC_GRAPH_WARN` | `DOC_GRAPH_FAIL` | `ERROR` |
 | Metadata block | `DOC_META_BLOCK_PASS` | `DOC_META_BLOCK_WARN` | `DOC_META_BLOCK_FAIL` | `ERROR` |
+| Freshness scan | `DOC_STALE_SCAN_PASS` | `DOC_STALE_SCAN_WARN` | `DOC_STALE_SCAN_FAIL` | `ERROR` |
 
-A parent outcome grammar remains **PROPOSED** until precedence, ignore rules,
+A parent outcome grammar remains **PROPOSED** until precedence, waiver rules,
 report destinations, and composition semantics are reviewed. No parent runner is
 claimed by this README.
 
@@ -130,10 +136,18 @@ python -m unittest discover \
   --verbose
 ```
 
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/stale-scan \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
 ## Review checklist
 
 - [ ] The child validator has one distinct QA responsibility.
 - [ ] The implementation uses explicit bounded inputs and no network by default.
+- [ ] Time-dependent scans record an explicit as-of date and thresholds.
 - [ ] Current regressions fail closed while inherited debt is classified honestly.
 - [ ] Generated outputs remain non-authoritative and review-only.
 - [ ] Documentation and registry mutation require a separate authorized action.
@@ -143,9 +157,10 @@ python -m unittest discover \
 
 ## Next smallest safe change
 
-Classify the first whole-repository metadata and graph reports together, then
-select either the stale-scan profile or a steward-reviewed metadata requirement
-for one bounded documentation lane. Do not turn the initial `present` profile
-into a repository-wide `required` gate without a reviewed baseline.
+Classify the first combined graph, metadata, and freshness reports. Then choose
+one of two bounded follow-ups: a steward-reviewed freshness profile for a
+specific documentation lane, or the separate terminology-parity validator.
+Do not promote advisory freshness defaults into repository-wide required policy
+without a reviewed baseline and owner disposition.
 
 [Back to top](#top)

@@ -1,4 +1,4 @@
-"""Command-line interface for bounded KFM spec-hash computation and comparison."""
+"""Command-line interface for bounded KFM deterministic content digests."""
 
 from __future__ import annotations
 
@@ -19,6 +19,12 @@ from .core import (
     load_json_file,
     verify_spec_hash,
 )
+from .geojson import (
+    DEFAULT_COORDINATE_PRECISION,
+    GEOJSON_DIGEST_PROFILE,
+    GeoJSONDigestError,
+    compute_geojson_feature_digests,
+)
 
 SCOPE = "common.spec_hash"
 NON_EFFECTS = [
@@ -34,13 +40,13 @@ def _emit(payload: dict[str, object]) -> None:
     print(json.dumps(payload, sort_keys=True, separators=(",", ":")))
 
 
-def _base(status: str) -> dict[str, object]:
+def _base(status: str, *, scope: str = SCOPE) -> dict[str, object]:
     return {
         "authority": "NONE",
         "canonicalization": CANONICALIZATION_PROFILE,
         "hash_algorithm": HASH_ALGORITHM,
         "non_effects": NON_EFFECTS,
-        "scope": SCOPE,
+        "scope": scope,
         "status": status,
     }
 
@@ -100,9 +106,51 @@ def _verify(subject_path: Path, hash_path: Path) -> int:
     return 2
 
 
+def _geojson_feature(
+    path: Path,
+    *,
+    crs: str,
+    precision: int,
+    excluded_property_keys: Sequence[str],
+    include_feature_id: bool,
+) -> int:
+    scope = "geojson.feature_digests"
+    try:
+        feature = load_json_file(path)
+        digests = compute_geojson_feature_digests(
+            feature,
+            crs=crs,
+            coordinate_precision=precision,
+            excluded_property_keys=excluded_property_keys,
+            include_feature_id=include_feature_id,
+        )
+        payload = _base("GEOJSON_FEATURE_DIGESTS_CREATED", scope=scope)
+        payload.update(digests.as_dict())
+        payload["input"] = str(path)
+        _emit(payload)
+        return 0
+    except JsonInputError:
+        payload = _base("JSON_INPUT_INVALID", scope=scope)
+    except GeoJSONDigestError:
+        payload = _base("GEOJSON_DIGEST_INPUT_INVALID", scope=scope)
+    except CanonicalizationFailure:
+        payload = _base("CANONICALIZATION_ERROR", scope=scope)
+    payload.update(
+        {
+            "input": str(path),
+            "normalization_profile": GEOJSON_DIGEST_PROFILE,
+        }
+    )
+    _emit(payload)
+    return 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Compute or verify deterministic RFC 8785 JCS + SHA-256 spec hashes."
+        description=(
+            "Compute or verify deterministic RFC 8785 JCS + SHA-256 content "
+            "digests."
+        )
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -113,11 +161,48 @@ def main(argv: Sequence[str] | None = None) -> int:
     verify_parser.add_argument("input", type=Path)
     verify_parser.add_argument("hash_record", type=Path)
 
+    geojson_parser = subparsers.add_parser(
+        "geojson-feature",
+        help="compute separate structural geometry and record digests",
+    )
+    geojson_parser.add_argument("input", type=Path)
+    geojson_parser.add_argument(
+        "--crs",
+        required=True,
+        help="declared CRS bound into both digests, for example EPSG:4326",
+    )
+    geojson_parser.add_argument(
+        "--precision",
+        type=int,
+        default=DEFAULT_COORDINATE_PRECISION,
+        help="coordinate decimal places retained before RFC 8785 hashing",
+    )
+    geojson_parser.add_argument(
+        "--exclude-property",
+        action="append",
+        default=[],
+        dest="excluded_property_keys",
+        help="top-level property key to exclude; repeat for multiple keys",
+    )
+    geojson_parser.add_argument(
+        "--include-feature-id",
+        action="store_true",
+        help="bind the optional top-level GeoJSON Feature id into record_sha256",
+    )
+
     args = parser.parse_args(argv)
     if args.command == "compute":
         return _compute(args.input)
     if args.command == "verify":
         return _verify(args.input, args.hash_record)
+    if args.command == "geojson-feature":
+        return _geojson_feature(
+            args.input,
+            crs=args.crs,
+            precision=args.precision,
+            excluded_property_keys=args.excluded_property_keys,
+            include_feature_id=args.include_feature_id,
+        )
     parser.error("unsupported command")
     return 2
 

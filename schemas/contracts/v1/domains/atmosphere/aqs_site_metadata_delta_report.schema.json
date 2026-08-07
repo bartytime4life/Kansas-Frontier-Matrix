@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json",
   "title": "AqsSiteMetadataDeltaReport",
-  "description": "Fixture-only semantic delta report for EPA AQS site metadata; review signal only.",
+  "description": "Fixture-only semantic delta report for EPA AQS site metadata; review signal only. Version 1.1 binds missing-record signals to SourceRecordAbsenceAssessment and never represents snapshot absence as removal authority.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -23,7 +23,11 @@
       "const": "AqsSiteMetadataDeltaReport"
     },
     "schema_version": {
-      "const": "1.0.0"
+      "type": "string",
+      "enum": [
+        "1.0.0",
+        "1.1.0"
+      ]
     },
     "report_id": {
       "type": "string",
@@ -34,6 +38,9 @@
     },
     "fixture_only": {
       "const": true
+    },
+    "source_record_absence_contract_ref": {
+      "const": "kfm:contract:source-record-absence-assessment:v1"
     },
     "prior_snapshot": {
       "$ref": "#/$defs/snapshot_ref"
@@ -84,6 +91,7 @@
             "enum": [
               "SITE_ADDED",
               "SITE_REMOVED",
+              "SITE_ABSENT_FROM_CURRENT_SNAPSHOT",
               "SITE_LIFECYCLE",
               "LOCATION_SHIFT",
               "LOCATION_CORRECTION",
@@ -120,6 +128,7 @@
             "enum": [
               "SITE_ADDED",
               "SITE_REMOVED",
+              "SITE_ABSENT_FROM_CURRENT_SNAPSHOT",
               "SITE_LIFECYCLE",
               "LOCATION_SHIFT",
               "LOCATION_CORRECTION",
@@ -157,8 +166,50 @@
           "distance_m": {
             "type": "number",
             "minimum": 0
+          },
+          "absence_assessment_required": {
+            "const": true
+          },
+          "absence_contract_ref": {
+            "const": "kfm:contract:source-record-absence-assessment:v1"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "change_type": {
+                  "const": "SITE_ABSENT_FROM_CURRENT_SNAPSHOT"
+                }
+              },
+              "required": [
+                "change_type"
+              ]
+            },
+            "then": {
+              "required": [
+                "absence_assessment_required",
+                "absence_contract_ref"
+              ]
+            },
+            "else": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "absence_assessment_required"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "absence_contract_ref"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
       }
     },
     "decision": {
@@ -182,7 +233,8 @@
           "items": {
             "enum": [
               "SOURCE_SURFACE_CHANGED",
-              "HIGH_IMPACT_CHANGE_REQUIRES_REVIEW"
+              "HIGH_IMPACT_CHANGE_REQUIRES_REVIEW",
+              "SOURCE_RECORD_ABSENCE_REQUIRES_ASSESSMENT"
             ]
           }
         }
@@ -209,6 +261,42 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.1.0"
+          }
+        },
+        "required": [
+          "schema_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_record_absence_contract_ref"
+        ],
+        "properties": {
+          "changes": {
+            "not": {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "change_type": {
+                    "const": "SITE_REMOVED"
+                  }
+                },
+                "required": [
+                  "change_type"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "snapshot_ref": {
       "type": "object",

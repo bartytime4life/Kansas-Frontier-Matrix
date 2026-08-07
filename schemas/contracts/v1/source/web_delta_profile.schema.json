@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/web_delta_profile.schema.json",
+  "title": "WebDeltaProfileAttributes",
+  "description": "Closed fixture-only payload.attributes profile for license-respectful web deltas carried by SourceEventEnvelopeCandidate. It creates no source activation, lifecycle write, evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "web.profile",
+    "web.canonical_url",
+    "web.http_status",
+    "web.extraction_method",
+    "web.canonical_schema_ref",
+    "web.canonicalizer_version",
+    "web.license_state",
+    "web.payload_mode",
+    "web.change_kind",
+    "web.severity",
+    "web.raw_digest",
+    "web.canonical_old_ref",
+    "web.canonical_new_digest",
+    "web.diff_digest",
+    "web.manifest_digest",
+    "web.notice_fields",
+    "web.source_pointer",
+    "web.etag_present",
+    "web.last_modified_present",
+    "web.lossy_transform_count"
+  ],
+  "properties": {
+    "web.profile": {
+      "const": "kfm.web_delta.v1"
+    },
+    "web.canonical_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 12,
+      "maxLength": 2048,
+      "pattern": "^https://"
+    },
+    "web.http_status": {
+      "type": "integer",
+      "enum": [
+        200,
+        304
+      ]
+    },
+    "web.extraction_method": {
+      "type": "string",
+      "enum": [
+        "jsonld",
+        "microdata",
+        "rdfa",
+        "heuristic_tables",
+        "none"
+      ]
+    },
+    "web.canonical_schema_ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^(?:kfm://schema/|schema:)[^\\s]+$"
+    },
+    "web.canonicalizer_version": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 160,
+      "pattern": "^kfm:[a-z0-9_.-]+:[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "web.license_state": {
+      "type": "string",
+      "enum": [
+        "permissive",
+        "restrictive",
+        "ambiguous",
+        "unknown"
+      ]
+    },
+    "web.payload_mode": {
+      "type": "string",
+      "enum": [
+        "contentful",
+        "metadata_only",
+        "heartbeat"
+      ]
+    },
+    "web.change_kind": {
+      "type": "string",
+      "enum": [
+        "created",
+        "updated",
+        "unchanged"
+      ]
+    },
+    "web.severity": {
+      "type": "string",
+      "enum": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "web.raw_digest": {
+      "$ref": "#/$defs/nullable_hash"
+    },
+    "web.canonical_old_ref": {
+      "$ref": "#/$defs/nullable_hash"
+    },
+    "web.canonical_new_digest": {
+      "$ref": "#/$defs/nullable_hash"
+    },
+    "web.diff_digest": {
+      "$ref": "#/$defs/nullable_hash"
+    },
+    "web.manifest_digest": {
+      "$ref": "#/$defs/hash"
+    },
+    "web.notice_fields": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]*(?:\\|[A-Za-z][A-Za-z0-9_.:-]*)*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "web.source_pointer": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 12,
+      "maxLength": 2048,
+      "pattern": "^https://"
+    },
+    "web.etag_present": {
+      "type": "boolean"
+    },
+    "web.last_modified_present": {
+      "type": "boolean"
+    },
+    "web.lossy_transform_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullable_hash": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hash"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/web_delta_profile.md",
+    "applies_to": "SourceEventEnvelopeCandidate.payload.attributes",
+    "base_contract": "contracts/source/source_event_envelope.md",
+    "base_schema": "schemas/contracts/v1/source/source_event_envelope.schema.json",
+    "fixtures": "fixtures/contracts/v1/source/web_delta_profile/cases-*.json",
+    "validator": "tools/validators/validate_web_delta_profile.py",
+    "tests": "tests/validators/test_validate_web_delta_profile.py",
+    "non_effects": [
+      "no_network_fetch_or_extraction",
+      "no_cloudevents_conformance_claim",
+      "no_source_activation",
+      "no_lifecycle_write",
+      "no_policy_or_review_creation",
+      "no_release_or_publication"
+    ]
+  }
+}

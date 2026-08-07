@@ -6,19 +6,27 @@ name: atmosphere-aqs-site-delta
     paths:
       - ".github/workflows/atmosphere-aqs-site-delta.yml"
       - "contracts/domains/atmosphere/aqs_site_metadata_delta.md"
+      - "contracts/source/source_record_absence_assessment.md"
       - "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json"
+      - "schemas/contracts/v1/source/source_record_absence_assessment.schema.json"
       - "tools/ingest/aqs_watch/**"
+      - "tools/validators/validate_source_record_absence_assessment.py"
       - "tests/ingest/aqs_watch/**"
-      - "data/receipts/generated/genrec-atmosphere-aqs-site-delta-*.json"
+      - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
+      - "data/receipts/generated/genrec-atmosphere-aqs-site-*.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/atmosphere-aqs-site-delta.yml"
       - "contracts/domains/atmosphere/aqs_site_metadata_delta.md"
+      - "contracts/source/source_record_absence_assessment.md"
       - "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json"
+      - "schemas/contracts/v1/source/source_record_absence_assessment.schema.json"
       - "tools/ingest/aqs_watch/**"
+      - "tools/validators/validate_source_record_absence_assessment.py"
       - "tests/ingest/aqs_watch/**"
-      - "data/receipts/generated/genrec-atmosphere-aqs-site-delta-*.json"
+      - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
+      - "data/receipts/generated/genrec-atmosphere-aqs-site-*.json"
   workflow_dispatch:
 
 permissions:
@@ -65,11 +73,16 @@ jobs:
             tests/ingest/aqs_watch/test_aqs_site_delta.py \
             -q --strict-config --strict-markers
 
+      - name: Verify common missing-record semantics remain fail closed
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_source_record_absence_assessment.py --fixtures
+
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-atmosphere-aqs-site-delta-20260806.json \
+            data/receipts/generated/genrec-atmosphere-aqs-site-absence-binding-20260807.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -79,6 +92,7 @@ jobs:
             echo "### Synthetic EPA AQS site-metadata delta"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: fixture-only lifecycle, location, method, parameter, POC, and metadata change classification."
-            echo "- Boundary: no live AQS/KDHE access, source admission, lifecycle write, evidence resolution, policy decision, air-quality guidance, promotion, release, or publication."
+            echo "- Scope: fixture-only lifecycle, location, method, parameter, POC, metadata, and missing-record signal classification."
+            echo "- Missing-record rule: current-snapshot absence is not removal; SourceRecordAbsenceAssessment is required before any transition candidate."
+            echo "- Boundary: no live AQS/KDHE access, source admission, lifecycle write, evidence resolution, source-state mutation, clearance, policy decision, air-quality guidance, promotion, release, publication, or public use."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,209 @@
+"""Deterministic no-network tests for the web delta source profile."""
+
+from __future__ import annotations
+
+import contextlib
+import copy
+import io
+import json
+import os
+import socket
+import subprocess
+import sys
+import tempfile
+import unittest
+import urllib.request
+from pathlib import Path
+from unittest import mock
+
+from jsonschema import Draft202012Validator
+
+from tools.validators.validate_web_delta_profile import (
+    FIXTURE_FILES,
+    MAX_FILE_BYTES,
+    SCHEMA_PATH,
+    main,
+    run_fixture_suite,
+    validate_document,
+    validate_file,
+)
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _unexpected_network(*_args, **_kwargs):
+    raise AssertionError("web delta validation attempted network access")
+
+
+class WebDeltaProfileTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.cases = []
+        for fixture_path in FIXTURE_FILES:
+            cls.cases.extend(json.loads(fixture_path.read_text(encoding="utf-8"))["cases"])
+        cls.by_id = {case["case_id"]: case for case in cls.cases}
+
+    def setUp(self) -> None:
+        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary_directory.name)
+        self.path = self.root / "candidate.json"
+
+    def tearDown(self) -> None:
+        self.temporary_directory.cleanup()
+
+    def _document(self, case_id: str) -> dict[str, object]:
+        return copy.deepcopy(self.by_id[case_id]["document"])
+
+    def _write(self, payload: object) -> Path:
+        self.path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        return self.path
+
+    def test_profile_schema_is_valid_and_closed(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["web.profile"]["const"], "kfm.web_delta.v1")
+
+    def test_fixture_matrix_has_exact_valid_and_invalid_polarity(self) -> None:
+        self.assertEqual(len(self.cases), 17)
+        self.assertEqual(
+            sum(case["expected_outcome"] == "PASS" for case in self.cases),
+            6,
+        )
+        for case in self.cases:
+            with self.subTest(case=case["case_id"]):
+                result = validate_document(case["document"])
+                actual = [
+                    {"code": finding.code, "path": finding.path}
+                    for finding in result.findings
+                ]
+                self.assertEqual(result.outcome, case["expected_outcome"])
+                self.assertEqual(actual, case["expected_findings"])
+
+    def test_fixture_runner_passes_and_carries_no_authority(self) -> None:
+        ok, payload = run_fixture_suite()
+        self.assertTrue(ok, payload)
+        self.assertEqual(payload["outcome"], "PASS")
+        self.assertEqual(payload["cases"], 17)
+        self.assertEqual(payload["authority"], "NONE")
+        self.assertIn("no_source_activation", payload["non_effects"])
+        self.assertIn("no_raw_or_lifecycle_write", payload["non_effects"])
+
+    def test_license_behavior_fails_closed_without_exposing_content(self) -> None:
+        unknown = validate_document(
+            self._document("invalid_contentful_unknown_license")
+        )
+        self.assertEqual(unknown.outcome, "DENY")
+        self.assertIn(
+            "CONTENTFUL_LICENSE_NOT_PERMITTED",
+            {finding.code for finding in unknown.findings},
+        )
+        for case_id in (
+            "valid_metadata_only_restrictive",
+            "valid_metadata_only_ambiguous",
+            "valid_metadata_only_unknown",
+        ):
+            candidate = self._document(case_id)
+            attrs = candidate["payload"]["attributes"]
+            self.assertEqual(attrs["web.payload_mode"], "metadata_only")
+            self.assertIsNone(attrs["web.canonical_new_digest"])
+            self.assertIsNone(attrs["web.diff_digest"])
+            self.assertEqual(candidate["routing"]["disposition"], "PROPOSE_QUARANTINE")
+            self.assertEqual(validate_document(candidate).outcome, "PASS")
+
+    def test_http_304_is_a_no_action_heartbeat(self) -> None:
+        candidate = self._document("valid_http_304_heartbeat")
+        attrs = candidate["payload"]["attributes"]
+        self.assertEqual(attrs["web.http_status"], 304)
+        self.assertEqual(attrs["web.payload_mode"], "heartbeat")
+        self.assertIsNone(attrs["web.raw_digest"])
+        self.assertEqual(candidate["routing"]["disposition"], "NO_ACTION")
+        self.assertEqual(validate_document(candidate).outcome, "PASS")
+
+    def test_base_envelope_integrity_is_a_hard_dependency(self) -> None:
+        candidate = self._document("valid_contentful_created_permissive")
+        candidate["event_id"] = "kfm:source-event:sha256:" + "f" * 64
+        result = validate_document(candidate)
+        self.assertEqual(result.outcome, "DENY")
+        self.assertIn("EVENT_ID_MISMATCH", {finding.code for finding in result.findings})
+
+    def test_duplicate_nonfinite_oversized_and_symlink_inputs_fail_closed(self) -> None:
+        valid = self._document("valid_contentful_created_permissive")
+        text = json.dumps(valid, indent=2)
+        duplicate = text.replace(
+            '  "schema_version": "1.0.0",',
+            '  "schema_version": "1.0.0",\n  "schema_version": "1.0.0",',
+            1,
+        )
+        self.path.write_text(duplicate, encoding="utf-8")
+        self.assertIn("DUPLICATE_KEY", {f.code for f in validate_file(self.path).findings})
+
+        self.path.write_text('{"value": NaN}\n', encoding="utf-8")
+        self.assertIn("NONFINITE_NUMBER", {f.code for f in validate_file(self.path).findings})
+
+        oversized = self.root / "oversized.json"
+        oversized.write_bytes(b" " * (MAX_FILE_BYTES + 1))
+        self.assertIn("FILE_TOO_LARGE", {f.code for f in validate_file(oversized).findings})
+
+        target = self._write(valid)
+        linked = self.root / "linked.json"
+        linked.symlink_to(target)
+        self.assertIn("UNSAFE_FILE", {f.code for f in validate_file(linked).findings})
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "FIFO inputs require POSIX")
+    def test_fifo_input_fails_without_blocking(self) -> None:
+        fifo = self.root / "candidate.fifo"
+        os.mkfifo(fifo)
+        completed = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "tools/validators/validate_web_delta_profile.py"),
+                str(fifo),
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+        self.assertEqual(completed.returncode, 1)
+        self.assertIn("UNSAFE_FILE", completed.stdout)
+
+    def test_validation_performs_no_network_io(self) -> None:
+        candidate = self._document("valid_contentful_created_permissive")
+        with (
+            mock.patch.object(socket.socket, "connect", _unexpected_network),
+            mock.patch.object(socket, "create_connection", _unexpected_network),
+            mock.patch.object(urllib.request, "urlopen", _unexpected_network),
+        ):
+            result = validate_document(candidate)
+        self.assertEqual(result.outcome, "PASS", result.findings)
+
+    def test_cli_is_deterministic_and_does_not_echo_source_values(self) -> None:
+        candidate = self._document("valid_contentful_created_permissive")
+        marker = "synthetic-source-marker-that-must-not-echo"
+        candidate["payload"]["attributes"]["web.canonical_url"] = marker
+        path = self._write(candidate)
+        outputs = []
+        for _ in range(2):
+            stream = io.StringIO()
+            with contextlib.redirect_stdout(stream):
+                code = main([str(path)])
+            self.assertEqual(code, 1)
+            outputs.append(stream.getvalue())
+        self.assertEqual(outputs[0], outputs[1])
+        self.assertNotIn(marker, outputs[0])
+        self.assertIn("PAYLOAD_SPEC_HASH_MISMATCH", outputs[0])
+
+    def test_fixture_cli_passes(self) -> None:
+        stream = io.StringIO()
+        with contextlib.redirect_stdout(stream):
+            code = main(["--fixtures"])
+        self.assertEqual(code, 0, stream.getvalue())
+        payload = json.loads(stream.getvalue())
+        self.assertEqual(payload["outcome"], "PASS")
+        self.assertEqual(payload["cases"], 17)
+
+
+if __name__ == "__main__":
+    unittest.main()

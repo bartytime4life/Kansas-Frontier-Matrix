@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-atmosphere-aqs-site-absence-binding-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/atmosphere-aqs-site-delta.yml",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json",
+    "tests/ingest/aqs_watch/fixtures/current_site_absent.json",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py",
+    "tools/ingest/aqs_watch/README.md",
+    "tools/ingest/aqs_watch/aqs_site_delta.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/atmosphere-aqs-site-delta.yml": "sha256:1cc67b5fe83c274fe8165a8db2a0b46030877580456c69ae13964b0aa0c77112",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md": "sha256:30c8ca467f476bfd8014887a4d2e44d6d293feb2cf74ff0df838f849f75466b5",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json": "sha256:6f33bde789ec06e617e8124cb41c8a3679a5e27f5d36144adb4ecc5689a8ec9d",
+    "tests/ingest/aqs_watch/fixtures/current_site_absent.json": "sha256:6a964730ab3716a2b9db23e4716be028e39e913f2699187da39b180857ea35ee",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py": "sha256:e381a7c07d4fce409a1f6eff9d44f8ec27f5a5e57a9edfbc640c09d16ebe1e35",
+    "tools/ingest/aqs_watch/README.md": "sha256:f970473a8bd2a452a841c05c3578eaca3cc8cc0c471c95d40337542521cd7704",
+    "tools/ingest/aqs_watch/aqs_site_delta.py": "sha256:a812c7844e7361be0c337a480c75d0b1109314c05c08ad165a27a464c6593a2f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:43edb45672266d4b8a0135c3c3a893c69f067931cd93ce3e3c93b236f86bc660",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#missing-record-source-semantics",
+      "repo:contracts/source/source_record_absence_assessment.md@55f2f981bc252b14c19c9d5069bf3aff0625bb6b",
+      "repo:tools/ingest/aqs_watch/aqs_site_delta.py@55f2f981bc252b14c19c9d5069bf3aff0625bb6b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@55f2f981bc252b14c19c9d5069bf3aff0625bb6b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/atmosphere-aqs-site-delta.yml": "PROPOSED",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/current_site_absent.json": "PROPOSED",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py": "PROPOSED",
+    "tools/ingest/aqs_watch/README.md": "PROPOSED",
+    "tools/ingest/aqs_watch/aqs_site_delta.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Ten deterministic AQS site-metadata delta tests passed, including missing-record abstention, legacy-token rejection for schema 1.1.0, and prior regression vectors."
+    },
+    {
+      "gate": "fixture-cli-no-change",
+      "outcome": "PASS",
+      "reason": "The CLI returned NO_MATERIAL_CHANGE with exit code 0 for retrieval-only drift."
+    },
+    {
+      "gate": "fixture-cli-missing-record",
+      "outcome": "PASS",
+      "reason": "The CLI returned ABSTAIN with exit code 1 and emitted SITE_ABSENT_FROM_CURRENT_SNAPSHOT bound to SourceRecordAbsenceAssessment."
+    },
+    {
+      "gate": "schema-and-workflow-parse",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema validation and workflow YAML parsing passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The comparator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this receipt, which cannot self-bind."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:briefing-integration-missing-record-semantics",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#missing-record-source-semantics"
+    },
+    {
+      "id": "repository:source-record-absence-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_record_absence_assessment.md@55f2f981bc252b14c19c9d5069bf3aff0625bb6b"
+    },
+    {
+      "id": "repository:aqs-delta-baseline",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/aqs_watch/aqs_site_delta.py@55f2f981bc252b14c19c9d5069bf3aff0625bb6b"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@55f2f981bc252b14c19c9d5069bf3aff0625bb6b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T03:39:09Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Refines the fixture-only AQS site-metadata comparator so a missing current-snapshot record is an abstaining absence signal bound to SourceRecordAbsenceAssessment rather than a removal token. No live source, source-state mutation, clearance, promotion, release, publication, or public-use authority is created."
+}
