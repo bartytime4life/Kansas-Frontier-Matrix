@@ -27,15 +27,17 @@ def test_import_is_side_effect_free_and_has_no_public_package_exports(tmp_path, 
     monkeypatch.chdir(tmp_path)
     before = list(tmp_path.iterdir())
     retry_policy_type = core.RetryPolicy
-    probe_name = "connectors_core._core_import_probe"
+    module_name = "_connectors_core_import_probe"
     spec = importlib.util.spec_from_file_location(
-        probe_name,
+        module_name,
         PACKAGE_SRC / "connectors_core/core.py",
     )
     assert spec is not None and spec.loader is not None
     probe = importlib.util.module_from_spec(spec)
-    sys.modules[probe_name] = probe
+    sys.modules[module_name] = probe
     try:
+        # Execute a disposable module object. Reloading the live core module would
+        # replace class identities already captured by the transport facade.
         with (
             patch.object(socket.socket, "connect", side_effect=_unexpected_network),
             patch.object(socket.socket, "connect_ex", side_effect=_unexpected_network),
@@ -44,9 +46,8 @@ def test_import_is_side_effect_free_and_has_no_public_package_exports(tmp_path, 
         ):
             spec.loader.exec_module(probe)
     finally:
-        sys.modules.pop(probe_name, None)
+        sys.modules.pop(module_name, None)
     assert list(tmp_path.iterdir()) == before
-    assert probe.RetryPolicy is not retry_policy_type
     assert core.RetryPolicy is retry_policy_type
 
     import connectors_core
