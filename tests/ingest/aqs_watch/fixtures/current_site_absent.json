@@ -1,0 +1,20 @@
+{
+  "profile_id": "kfm.aqs-site-metadata.synthetic.v1",
+  "fixture_only": true,
+  "source_descriptor_ref": "fixture://source/epa-aqs",
+  "captured_at": "2026-04-02T00:00:00Z",
+  "source_revision": "synthetic-aqs-2026-04-02",
+  "sites": [
+    {
+      "site_id": "20-999-0001",
+      "site_name": "Synthetic Central Monitor",
+      "status": "ACTIVE",
+      "latitude": 38.5,
+      "longitude": -98.5,
+      "parameter_code": "88101",
+      "method_code": "SYN-M01",
+      "method_name": "Synthetic PM2.5 reference method",
+      "poc": 1
+    }
+  ]
+}
