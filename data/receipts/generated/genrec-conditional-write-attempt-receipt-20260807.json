@@ -16,7 +16,7 @@
     "tools/validators/release/validate_conditional_write_attempt_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:cc42a809a7c743e1e60c41ca593dd450cf8ed5f2813c48e89b674ee2d4e503c1",
+    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:c74efcd4c3a39585feda84fff54ef3af26c6d4214c90053302a417fc586adf7e",
     "contracts/release/conditional_write_attempt_receipt.md": "sha256:2652e69eb464fdc58cb3a48e71143e842864e34ece5ac53fb71a84ff8d34ea71",
     "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md": "sha256:cce439af6fdc5fcf245b7e72d32983ee863d3815dc8dc7128c35634bf7cfa88b",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md": "sha256:ce172a4311c388b683c0950d738722041f492b09fe5e481c02564845790a9a36",
@@ -104,7 +104,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks are evaluated after the draft pull request is created."
+      "reason": "The initial exact-head run exposed a missing workflow PYTHONPATH for the repository hashing package; the bounded workflow repair is pending a new exact-head hosted rerun."
     },
     {
       "gate": "human-review",

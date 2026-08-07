@@ -46,6 +46,7 @@ env:
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
+  PYTHONPATH: ".:packages/hashing/src"
   PYTHONUNBUFFERED: "1"
   TZ: UTC
 
