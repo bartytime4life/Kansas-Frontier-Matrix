@@ -1,0 +1,95 @@
+# Validate the fixture-first SoilMoistureObservation profile.
+#
+# A green result proves bounded synthetic shape and polarity only. It performs
+# no live source fetch, source activation, evidence resolution, policy decision,
+# lifecycle promotion, release, deployment, or publication.
+name: soil-moisture-observation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-moisture-observation.yml"
+      - "contracts/domains/soil/soil_moisture_observation.md"
+      - "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json"
+      - "fixtures/domains/soil/soil_moisture_observation/**"
+      - "tools/validators/domains/soil/validate_soil_moisture_observation.py"
+      - "tests/domains/soil/test_soil_moisture_observation.py"
+      - "data/receipts/generated/genrec-soil-moisture-observation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-moisture-observation.yml"
+      - "contracts/domains/soil/soil_moisture_observation.md"
+      - "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json"
+      - "fixtures/domains/soil/soil_moisture_observation/**"
+      - "tools/validators/domains/soil/validate_soil_moisture_observation.py"
+      - "tests/domains/soil/test_soil_moisture_observation.py"
+      - "data/receipts/generated/genrec-soil-moisture-observation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-moisture-observation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-soil-moisture-observation:
+    name: validate-soil-moisture-observation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.domains.soil.test_soil_moisture_observation \
+            --verbose
+
+      - name: Validate reviewed fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/soil/validate_soil_moisture_observation.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-moisture-observation-20260807.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### SoilMoistureObservation fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic identity, station/reference/satellite support separation, depth, normalized unit/value, QC, UTC time, evidence references, finite outcomes, and explicit governance non-effects."
+            echo "- Boundary: fixture-only and PROPOSED_INACTIVE; no source activation, evidence resolution, policy evaluation, promotion, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
