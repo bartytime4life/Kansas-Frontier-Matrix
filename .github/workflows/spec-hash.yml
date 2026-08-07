@@ -81,14 +81,11 @@ jobs:
             --verbose
           python tools/validators/validate_spec_hash.py --fixtures
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current generated authoring receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-spec-hash-validator-20260806.json \
-            --repo-root .
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geojson-feature-digests-20260806.json \
+            data/receipts/generated/genrec-geojson-feature-digests-ci-repair-20260807.json \
             --repo-root .
 
       - name: Record trust boundary

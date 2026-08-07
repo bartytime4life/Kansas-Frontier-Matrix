@@ -1,0 +1,110 @@
+{
+  "receipt_id": "genrec-geojson-feature-digests-ci-repair-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/spec-hash.yml",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/spec-hash.yml": "sha256:169e19e3d78896595b8b026593c37d3f5c3c453c2787f020f8b61cebccda1918",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "sha256:df0674816d3707a4dd3ac6e16b7202a5ce00bc50023c160306aa56334aff1d34"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:22251a0f1604b769d1d7ae0c33ff3c75e34dea0d8083bf104260a80b60c32cbb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas.pdf#verifiable-digests-attestations-stac-pmtiles-cog",
+      "repo:pull/2099@924921864fe2aace5f72a45f66f2b57cb1edd1a5",
+      "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/spec-hash.yml": "CONFIRMED",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "hosted-deterministic-tests-pr-2099",
+      "outcome": "PASS",
+      "reason": "The PR #2099 spec-hash run completed dependency installation and deterministic no-network tests successfully before the historical receipt step failed."
+    },
+    {
+      "gate": "historical-receipt-coupling",
+      "outcome": "FAIL",
+      "reason": "The merged workflow revalidated a historical spec-hash receipt against changed current workflow bytes, so the generated-receipt integrity step failed after deterministic tests passed."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The corrected workflow parsed successfully and validates only the new current-state receipt while preserving the historical receipt file."
+    },
+    {
+      "gate": "follow-up-artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The workflow and durable status documentation modified by this follow-up are bound to their prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact follow-up pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft follow-up pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-geojson-digests",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas.pdf#verifiable-digests-attestations-stac-pmtiles-cog"
+    },
+    {
+      "id": "repository:merged-implementation-pr",
+      "validated": true,
+      "evidence_ref": "repo:pull/2099@924921864fe2aace5f72a45f66f2b57cb1edd1a5"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T04:29:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2099,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up current-state receipt for the CI and documentation repair after the structural GeoJSON Feature digest slice merged through PR #2099. The historical PR receipt is preserved unchanged. This receipt binds only the two non-receipt artifacts modified by the follow-up; the merged implementation and tests are cited as repository evidence rather than re-authored artifacts. It creates no source, evidence, policy, review, promotion, release, publication, or public-use authority."
+}
