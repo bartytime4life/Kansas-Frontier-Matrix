@@ -25,6 +25,8 @@ permissions:
 
 env:
   KFM_NO_NETWORK: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PIP_NO_INPUT: '1'
   PYTHONHASHSEED: '0'
   TZ: UTC
 
@@ -39,6 +41,8 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
       - name: Compile
         run: python -m py_compile tools/generators/governance_health/compile_governance_health_projection.py tests/generators/governance_health/test_compile_governance_health_projection.py
       - name: Replay fixtures
