@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-condition-relation-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/common/condition_relation.md",
+    "fixtures/contracts/v1/common/condition_relation/invalid/answer_unknown_scale.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/assessment_evidence_incomplete.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/causal_answer.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/cross_scale_marked_compatible.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/noncanonical_reason_codes.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/outlook_without_forecast.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/spec_hash_mismatch.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/support_type_mismatch.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/temporal_reverse.json",
+    "fixtures/contracts/v1/common/condition_relation/invalid/weighting_missing.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/causal_request_denied.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/forecast_observation_answer.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/observation_classification_answer.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/operational_error.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/scale_incompatible_abstain.json",
+    "fixtures/contracts/v1/common/condition_relation/valid/temporal_unknown_abstain.json",
+    "schemas/contracts/v1/common/condition_relation.schema.json",
+    "tests/validators/test_validate_condition_relation.py",
+    "tools/validators/validate_condition_relation.py"
+  ],
+  "artifact_hashes": {
+    "contracts/common/condition_relation.md": "sha256:dfbc9eaa4bf855fcf471bfd7196901ebb3094a1fa317fb59889dd896b784f01b",
+    "fixtures/contracts/v1/common/condition_relation/invalid/answer_unknown_scale.json": "sha256:e57b3f1ac5a0835b808b4918030ed05e96375173ed4efa2a94ad871c61e2ee8f",
+    "fixtures/contracts/v1/common/condition_relation/invalid/assessment_evidence_incomplete.json": "sha256:2a92a7c48aad662aeb4398d82ce78b5ef81efedc44d014095e339a078b02cac8",
+    "fixtures/contracts/v1/common/condition_relation/invalid/causal_answer.json": "sha256:b08a81530388a4973d3cd7bd47b2202db8d20840e2a8e84e7196fa15e74f9cc0",
+    "fixtures/contracts/v1/common/condition_relation/invalid/cross_scale_marked_compatible.json": "sha256:a209b82529fe900572592bfe395eee98eb83b53ea6e844462ec86f8de05d92f0",
+    "fixtures/contracts/v1/common/condition_relation/invalid/noncanonical_reason_codes.json": "sha256:4ea0ded5f46c8ca50d9d54769d83579163c6a769029c738a5e4c3435368a0f34",
+    "fixtures/contracts/v1/common/condition_relation/invalid/outlook_without_forecast.json": "sha256:ebc6c25918447be2852588c53df0585e0e3648331ef67c5efcc80305a967be0a",
+    "fixtures/contracts/v1/common/condition_relation/invalid/spec_hash_mismatch.json": "sha256:83149ab5565ac9ac5b3a76aa45fc9b6c9a62988a4d631b0f9181749dc609c6eb",
+    "fixtures/contracts/v1/common/condition_relation/invalid/support_type_mismatch.json": "sha256:7f5c22fb53e6feba1893483b26f87665888325b6bd039213515623334f7cca32",
+    "fixtures/contracts/v1/common/condition_relation/invalid/temporal_reverse.json": "sha256:54c5a18eff68e7096f4abf05451b0e21147c16da856877b17eaf2a0b6dcad798",
+    "fixtures/contracts/v1/common/condition_relation/invalid/weighting_missing.json": "sha256:19f7c7e0f65c0bf90c8b2b956668bca2439a9ac491b15616b8862207b063009c",
+    "fixtures/contracts/v1/common/condition_relation/valid/causal_request_denied.json": "sha256:14edee1b7b892f78807b33a5928afa534b99c0298b1c72710300032a8715e8c4",
+    "fixtures/contracts/v1/common/condition_relation/valid/forecast_observation_answer.json": "sha256:00fa0eb243c09004e06dc440efc3178380b1052156ad3341f79cf4043fe21fd5",
+    "fixtures/contracts/v1/common/condition_relation/valid/observation_classification_answer.json": "sha256:251354efd24dc97627d845df599f887e5667c4081ae6cd927f5e4bda01f2e376",
+    "fixtures/contracts/v1/common/condition_relation/valid/operational_error.json": "sha256:7dbe6365920e71c65e95dd602da710ea00eeed6020a7720e1fc72f91d930319b",
+    "fixtures/contracts/v1/common/condition_relation/valid/scale_incompatible_abstain.json": "sha256:794dc81465932c8b0d40f4297db2937438a1c85044dbaca8f9888fb6288ea08e",
+    "fixtures/contracts/v1/common/condition_relation/valid/temporal_unknown_abstain.json": "sha256:eff17814e7950f8276b431c162df244aa4f464e4e124ef5815a2a548566c0227",
+    "schemas/contracts/v1/common/condition_relation.schema.json": "sha256:3f8b19dc83b35564e03f9d22dc188b790dc9a91f95d3fc017dfe70f23af396c9",
+    "tests/validators/test_validate_condition_relation.py": "sha256:924107472dc0172f6c1895a5c5664ae1b3cc297ab208d3820275bc8f9f5f93d3",
+    "tools/validators/validate_condition_relation.py": "sha256:785b8d35a85b2f0cba68379a136f7bfedcd11ca20914c81fcf8eb4a874cf833a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:98a1d8c1aeff540d425a2b66dabda29e0ac64f294b11292f22e40cb6992308d4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#phase-4-condition-relation",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#implementation-backlog-pr-4",
+      "repo:contracts/common/temporal_authority_envelope.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:schemas/contracts/v1/common/temporal_authority_envelope.schema.json@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    ]
+  },
+  "truth_labels": {
+    "contracts/common/condition_relation.md": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/answer_unknown_scale.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/assessment_evidence_incomplete.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/causal_answer.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/cross_scale_marked_compatible.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/noncanonical_reason_codes.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/outlook_without_forecast.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/support_type_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/temporal_reverse.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/invalid/weighting_missing.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/causal_request_denied.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/forecast_observation_answer.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/observation_classification_answer.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/operational_error.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/scale_incompatible_abstain.json": "PROPOSED",
+    "fixtures/contracts/v1/common/condition_relation/valid/temporal_unknown_abstain.json": "PROPOSED",
+    "schemas/contracts/v1/common/condition_relation.schema.json": "PROPOSED",
+    "tests/validators/test_validate_condition_relation.py": "PROPOSED",
+    "tools/validators/validate_condition_relation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Twenty-eight deterministic ConditionRelation tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile without syntax errors."
+    },
+    {
+      "gate": "json-schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passes Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "finite-outcome-replay",
+      "outcome": "PASS",
+      "reason": "ANSWER, ABSTAIN, DENY, and ERROR fixtures validate; unsupported causal and scale-collapse packets fail closed."
+    },
+    {
+      "gate": "source-role-anti-collapse",
+      "outcome": "PASS",
+      "reason": "Fixtures enforce role-to-support mapping, endpoint evidence closure, temporal ordering, scale weighting, and no causal inference."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network or spatial engine and exposes no lifecycle, policy, promotion, release, or publication authority."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind all authored non-receipt artifacts with exact path closure."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation occurs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:condition-relation-phase",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#phase-4-condition-relation"
+    },
+    {
+      "id": "attachment:condition-relation-backlog",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#implementation-backlog-pr-4"
+    },
+    {
+      "id": "repository:temporal-authority-envelope",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/temporal_authority_envelope.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T20:09:57Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a common, fixture-first ConditionRelation contract and validator for contextual links among observations, classifications, forecasts, advisories, models, and context. It preserves source roles, valid time, scale, weighting, and evidence references; causal requests are denied and no lifecycle or public authority is created."
+}
