@@ -10,12 +10,11 @@ from .core import (
     FailureDetail,
     SourceHeadObservation,
     TransportCategory,
-    TransportValueError,
     redact_url,
     sha256_stream,
     validate_sha256_digest,
 )
-from ._transport_identity import normalize_media_type
+from ._transport_identity import TransportValueError, normalize_media_type
 from ._transport_request import TransportInputError, TransportMethod
 
 
