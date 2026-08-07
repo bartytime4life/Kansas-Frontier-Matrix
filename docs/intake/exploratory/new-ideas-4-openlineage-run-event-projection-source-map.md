@@ -26,7 +26,7 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
   - "Source: New Ideas 4.pdf supplied in the authoring session."
-  - "Assay base: main@a6bbaa2a7986858bd72629cf3a77181b9e72a761."
+  - "Assay base: main@8ee05f3738c29344d055025bf47448150429e05e."
   - "No live endpoint, OpenLineage transport, Sigstore identity, GitHub App, source activation, release, deployment, or publication is introduced."
 [/KFM_META_BLOCK_V2] -->
 
@@ -38,7 +38,7 @@ notes:
 |---|---|
 | Source | `New Ideas 4.pdf` supplied in the authoring session |
 | Source role | Exploratory implementation pressure; not repository, standards, policy, or runtime authority |
-| Repository assay base | `main@a6bbaa2a7986858bd72629cf3a77181b9e72a761` |
+| Repository assay base | `main@8ee05f3738c29344d055025bf47448150429e05e` |
 | Placement authority | Accepted ADR-0029 and Directory Governance Standard v2 |
 | Selected increment | Deterministic, fixture-only terminal OpenLineage `RunEvent` projection from canonical RunReceipt and EvidenceBundle-resolution summaries |
 | Delivery boundary | Additive contract, schema, fixture manifest, generator, validator, tests, read-only workflow, docs, and generated authoring receipt |
@@ -57,6 +57,8 @@ The source packet proposes a broad detect -> validate -> signed promotion pipeli
 - an already-implemented fixture-only Watcher/Planner/Executor `AgentOperationEnvelope` slice.
 
 No executable, deterministic `RunReceipt` -> terminal OpenLineage `RunEvent` projection was found at the base. That bounded gap was selected instead of adding a live exporter or duplicating the broader agent architecture.
+
+Before pull-request creation, the implementation branch was reconciled with current `main@8ee05f3738c29344d055025bf47448150429e05e`. Main had advanced with review-authority, source-role, advisory-event, stale-scan, decision-envelope, georeference, web-delta, and GeoJSON hashing work. The selected fourteen paths remained non-overlapping, and the current hashing package continued to export the `compute_spec_hash` and `load_json_file` interfaces consumed here. Hosted exact-head CI remains the authority for merge-context compatibility.
 
 ## Adopted ideas
 
