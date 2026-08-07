@@ -1,5 +1,6 @@
 # KFM Agriculture domain CI readiness workflow.
-# Status: one bounded fixture-only CDL watcher proof is executable; Agriculture
+# Status: one bounded fixture-only CDL watcher proof is executable in this lane;
+# two dedicated Agriculture validator suites are separately governed; broader
 # domain validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -58,9 +59,13 @@ jobs:
             "tests/ingest/cdl_watch/test_cdl_watch.py"
             "tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json"
             "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json"
+            "tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py"
+            "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py"
             "tools/ingest/cdl_watch/cdl_watch.py"
             "tools/validators/agriculture/README.md"
             "tools/validators/domains/agriculture/README.md"
+            ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml"
+            ".github/workflows/agriculture-ndvi-readiness.yml"
             "release/agriculture/README.md"
           )
 
@@ -71,14 +76,143 @@ jobs:
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Agriculture" \
-            --test-root tests/domains/agriculture \
-            --validator-root tools/validators/agriculture \
-            --validator-root tools/validators/domains/agriculture
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              PLACEHOLDER_DOCUMENT_NAMES,
+              PLACEHOLDER_DOCUMENT_SUFFIXES,
+              classify_test_source,
+              classify_validator_source,
+          )
+
+
+          def assert_no_symlinks(root: Path, label: str) -> None:
+              symlinks = sorted(path.as_posix() for path in root.rglob("*") if path.is_symlink())
+              if symlinks:
+                  raise SystemExit(f"{label} inventory contains symlinks: {symlinks}.")
+
+
+          test_root = Path("tests/domains/agriculture")
+          assert_no_symlinks(test_root, "Agriculture test")
+          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
+          unexpected_test_sources = sorted(
+              path.as_posix()
+              for path in test_inventory
+              if path.suffix != ".py"
+              and path.name not in PLACEHOLDER_DOCUMENT_NAMES
+              and path.suffix.lower() not in PLACEHOLDER_DOCUMENT_SUFFIXES
+          )
+          if unexpected_test_sources:
+              raise SystemExit(
+                  "Agriculture test inventory contains unexpected non-document sources: "
+                  f"{unexpected_test_sources}."
+              )
+          test_paths = [path for path in test_inventory if path.suffix == ".py"]
+          if not test_paths:
+              raise SystemExit("Agriculture test inventory contains no Python modules.")
+          for path in test_paths:
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if not classification.placeholder:
+                  raise SystemExit(
+                      f"Agriculture test placeholder changed at {path}; "
+                      "review and wire it deliberately."
+                  )
+
+          direct_validator_root = Path("tools/validators/agriculture")
+          assert_no_symlinks(direct_validator_root, "Agriculture direct validator")
+          expected_direct_inventory = {".gitkeep", "README.md"}
+          observed_direct_inventory = {
+              path.relative_to(direct_validator_root).as_posix()
+              for path in direct_validator_root.rglob("*")
+              if path.is_file()
+          }
+          if observed_direct_inventory != expected_direct_inventory:
+              raise SystemExit(
+                  "Agriculture direct validator inventory changed; "
+                  f"expected={sorted(expected_direct_inventory)}; "
+                  f"observed={sorted(observed_direct_inventory)}."
+              )
+
+          domain_validator_root = Path("tools/validators/domains/agriculture")
+          assert_no_symlinks(domain_validator_root, "Agriculture domain validator")
+          expected_placeholder_validators = {
+              "validate_cdl_aggregate.py",
+              "validate_decision_envelope.py",
+              "validate_evidence_bundle.py",
+              "validate_soil_join.py",
+          }
+          expected_dedicated_validator_files = {
+              "hls_ndvi_zonal_materiality/README.md",
+              "hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py",
+              "ndvi_readiness/README.md",
+              "ndvi_readiness/validate_ndvi_readiness.py",
+          }
+          expected_domain_inventory = {
+              "README.md",
+              "soil-join/.gitkeep",
+              "soil-join/README.md",
+              *expected_placeholder_validators,
+              *expected_dedicated_validator_files,
+          }
+          observed_domain_inventory = {
+              path.relative_to(domain_validator_root).as_posix(): path
+              for path in domain_validator_root.rglob("*")
+              if path.is_file()
+          }
+          if set(observed_domain_inventory) != expected_domain_inventory:
+              raise SystemExit(
+                  "Agriculture domain validator inventory changed; "
+                  f"expected={sorted(expected_domain_inventory)}; "
+                  f"observed={sorted(observed_domain_inventory)}."
+              )
+
+          for name in sorted(expected_placeholder_validators):
+              classification = classify_validator_source(
+                  observed_domain_inventory[name].read_text(encoding="utf-8")
+              )
+              if (
+                  not classification.placeholder
+                  or classification.detail != "exact validator placeholder"
+              ):
+                  raise SystemExit(
+                      f"Agriculture validator scaffold changed at "
+                      f"{observed_domain_inventory[name]}; review and wire it deliberately."
+                  )
+
+          dedicated_validator_paths = sorted(
+              name
+              for name in expected_dedicated_validator_files
+              if name.endswith(".py")
+          )
+          for name in dedicated_validator_paths:
+              classification = classify_validator_source(
+                  observed_domain_inventory[name].read_text(encoding="utf-8")
+              )
+              if (
+                  classification.placeholder
+                  or classification.reason != "substantive_validator_module"
+              ):
+                  raise SystemExit(
+                      "Dedicated Agriculture validator is not a substantive Python module: "
+                      f"{observed_domain_inventory[name]} "
+                      f"({classification.reason}: {classification.detail})."
+                  )
+
+          print(
+              "READINESS_OK label=agriculture "
+              f"tests={len(test_paths)} "
+              f"placeholder_validators={len(expected_placeholder_validators)} "
+              f"dedicated_validators={len(dedicated_validator_paths)}"
+          )
+          print(
+              "Dedicated HLS NDVI materiality and NDVI readiness suites remain "
+              "owned by their path-filtered workflows."
+          )
+          PY
 
           echo "WORKFLOW_SKIPPED_EXPLICIT: validate-agriculture"
-          echo "WORKFLOW_HOLD: Agriculture executable validation is not established"
+          echo "WORKFLOW_HOLD: broader Agriculture executable validation is not established"
 
       - name: Run bounded CDL material-change watcher proof
         env:
@@ -95,16 +229,17 @@ jobs:
 
           `WORKFLOW_SKIPPED_EXPLICIT`
 
-          `WORKFLOW_HOLD: Agriculture executable validation is not established`
+          `WORKFLOW_HOLD: broader Agriculture executable validation is not established`
 
           Recognized placeholder inventory is not domain validation. This job
           separately executes the synthetic, fixture-only CDL material-change
           watcher proof; that helper is ingest-adjacent and review-signal-only.
 
-          Current repository evidence is documentation-heavy: the inspected
-          Agriculture test lane contains placeholders rather than an accepted
-          pytest suite. The direct validator lane is README-only, while the
-          canonical domain lane contains recognized greenfield validator stubs.
+          The direct Agriculture validator lane remains documentation-only. The
+          canonical domain lane contains four recognized greenfield validator
+          stubs plus two substantive, fixture-only validators. The HLS NDVI zonal
+          materiality and smoke-aware NDVI readiness suites remain executed by
+          their own path-filtered workflows rather than this broad readiness lane.
 
           The CDL helper compares bounded local sidecars with networking denied.
           It cannot admit a source, decide canonical materiality policy, create
