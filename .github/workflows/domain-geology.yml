@@ -45,6 +45,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Geology validation dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
       - name: Inspect Geology validation boundaries
         shell: bash
         run: |
@@ -97,6 +100,7 @@ jobs:
                   "test_source_role_anti_collapse.py"
               ),
               Path("tests/domains/geology/test_aem_campaign.py"),
+              Path("tests/domains/geology/test_production_material_change.py"),
           }
           accepted_validators = {
               Path(
@@ -106,6 +110,10 @@ jobs:
               Path(
                   "tools/validators/domains/geology/"
                   "validate_aem_campaign.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_production_material_change.py"
               ),
           }
 
@@ -193,6 +201,20 @@ jobs:
           echo "EXPECTED_REJECTION: invalid Geology AEM campaign fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture"
 
+      - name: Run bounded Geology production material-change validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_production_material_change.py
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-production-material-change"
+
       - name: Record Geology validation result and broader hold
         if: always()
         shell: bash
@@ -203,6 +225,8 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-production-material-change`
 
           `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
 
@@ -225,6 +249,13 @@ jobs:
           credential, connector, source-head, prose, claim-role, and release
           posture drift fails closed. Neither fixture is source-registry
           authority, evidence closure, or current campaign truth.
+
+          The production material-change profile compares version-pinned snapshot
+          metadata and emits only NO_CHANGE, REVIEW, HOLD, or ERROR. It preserves
+          production as production evidence rather than physical-geology,
+          deposit, estimate, or reserve truth; fails closed on missing baseline,
+          unresolved rights, or regressing coverage; and performs no live KGS
+          request, source activation, lifecycle write, promotion, or publication.
 
           The profile is not a canonical resource-classification vocabulary and
           does not evaluate live Geology records, source rights, EvidenceBundles,

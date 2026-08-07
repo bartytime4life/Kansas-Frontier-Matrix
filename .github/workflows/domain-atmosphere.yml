@@ -128,6 +128,10 @@ jobs:
                   "tests/domains/atmosphere/"
                   "test_observed_modeled_separation.py"
               ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_prescribed_burn_quality_flag.py"
+              ),
           }
           accepted_validators = {
               Path(
@@ -145,6 +149,10 @@ jobs:
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_observed_modeled_separation.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_prescribed_burn_quality_flag.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
@@ -212,6 +220,7 @@ jobs:
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
           python -m pytest \
             tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
+            tests/domains/atmosphere/test_prescribed_burn_quality_flag.py \
             -q --strict-config --strict-markers
 
           python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
@@ -263,6 +272,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()
@@ -280,6 +290,8 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation`
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag`
 
           `WORKFLOW_HOLD: broader Atmosphere semantics, evidence closure, proof, and release remain unestablished`
 
@@ -327,6 +339,14 @@ jobs:
           ABSTAIN, and DENY decisions. It performs no live EPA or KDHE request,
           certifies no concentration, admits no source, and authorizes no
           promotion, release, alert, or publication.
+
+          The prescribed-burn quality-flag profile keeps observed air quality as
+          direct measurement and burn-smoke support as context only. It checks
+          finite ANSWER, ABSTAIN, DENY, and ERROR outcomes, rejects causal
+          attribution and configuration mutation, and limits downstream use to
+          review recommendations. It performs no plume or dispersion modeling,
+          source attribution, health determination, detector mutation, or model
+          corpus mutation.
 
           Other Atmosphere test and validator modules outside these accepted
           profiles remain explicit placeholders or documentation-only lanes and
