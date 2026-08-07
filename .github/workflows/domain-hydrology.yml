@@ -74,6 +74,8 @@ jobs:
             "tools/validators/domains/hydrology/README.md"
             "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py"
             "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py"
+            ".github/workflows/hydrology-usgs-water-api-cutover.yml"
+            ".github/workflows/hydrology-wbd-huc12-material-change.yml"
             "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md"
             "schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json"
             "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/README.md"
@@ -212,11 +214,18 @@ jobs:
               "validate_nhdplus_waterbody_crosswalk.py",
               "validate_public_safe_flow_fixture.py",
           }
+          expected_dedicated_validator_files = {
+              "usgs_water_api_cutover/README.md",
+              "usgs_water_api_cutover/validate_usgs_water_api_cutover.py",
+              "wbd_huc12_material_change/README.md",
+              "wbd_huc12_material_change/validate_wbd_huc12_material_change.py",
+          }
           expected_domain_inventory = {
               "README.md",
               *expected_placeholder_validators,
               *expected_schema_wrappers,
               *expected_semantic_validators,
+              *expected_dedicated_validator_files,
           }
           domain_validator_symlinks = sorted(
               path for path in domain_validator_root.rglob("*") if path.is_symlink()
@@ -289,6 +298,20 @@ jobs:
                   raise SystemExit(
                       f"Accepted Hydrology validator regressed to a placeholder: "
                       f"{observed_validators[name]}"
+                  )
+
+          for name in sorted(
+              path
+              for path in expected_dedicated_validator_files
+              if path.endswith(".py")
+          ):
+              classification = classify_validator_source(
+                  observed_domain_inventory[name].read_text(encoding="utf-8")
+              )
+              if classification.placeholder:
+                  raise SystemExit(
+                      "Dedicated Hydrology validator regressed to a placeholder: "
+                      f"{observed_domain_inventory[name]}"
                   )
 
           hydro_routing_root = Path("tools/validators/hydro")
@@ -400,6 +423,10 @@ jobs:
           )
           print("Confirmed two bounded semantic Hydrology fixture validators.")
           print(
+              "Inventoried two dedicated Hydrology validator modules as substantive; "
+              "their fixture suites remain owned by dedicated workflows."
+          )
+          print(
               "Inventoried the exact Hydrology shorthand placeholder, PROPOSED schema, "
               "and deny-by-default policy scaffolds without executing them."
           )
@@ -496,8 +523,12 @@ jobs:
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
-          placeholders, five inventoried schema wrappers, and PROPOSED schema/policy
-          scaffolds. Every such file is checked against an explicit inventory.
+          placeholders, five inventoried schema wrappers, two bounded semantic
+          validators, two dedicated validator subtrees, and PROPOSED schema/policy
+          scaffolds. Every file is checked against an explicit inventory. The
+          dedicated USGS Water API cutover and WBD HUC12 material-change suites
+          remain executed by their own workflows rather than this broad readiness
+          lane.
 
           This is acceptance only of local JSON Schema shape and valid/invalid
           fixture polarity for the PROPOSED Hydrology EvidenceBundle alias and
