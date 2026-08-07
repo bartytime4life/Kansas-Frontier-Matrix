@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-directory-root-registry-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "contracts/governance/root_registry.md",
+    "control_plane/root_registry.yaml",
+    "fixtures/contracts/v1/governance/root_registry/expected_findings_manifest.json",
+    "fixtures/contracts/v1/governance/root_registry/invalid/canonical_not_active.yaml",
+    "fixtures/contracts/v1/governance/root_registry/valid/root_classes.yaml",
+    "schemas/contracts/v1/governance/root_registry.schema.json",
+    "tests/validators/directory_governance/test_validate_root_registry.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/validate_root_registry.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:c1fd22e75a16c8a836583d54dcc38de01ef9e17253dd3c305fad0decacf43aac",
+    "contracts/governance/root_registry.md": "sha256:39df8c48699696bad8b94ffcd5613b8aaa921a17fb3247a0102a1f4b5d1f3464",
+    "control_plane/root_registry.yaml": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "fixtures/contracts/v1/governance/root_registry/expected_findings_manifest.json": "sha256:866e4177cd49b69d9aa102f34e640f1c231b2c37afe2547e7ac1fd9fc9911da7",
+    "fixtures/contracts/v1/governance/root_registry/invalid/canonical_not_active.yaml": "sha256:2a4b6dc18f0d9358ca3fe53a69a4881d06ef82a8570eb9d75da1ce0d828c44d9",
+    "fixtures/contracts/v1/governance/root_registry/valid/root_classes.yaml": "sha256:073e8dd0b542fa213b8978d2af049678cb36c9fb528efcebf04bf1df05bdf2b1",
+    "schemas/contracts/v1/governance/root_registry.schema.json": "sha256:f0fccefd8e641d6d67b231dd63c401cdeba325aa2bda8f2b192ce21d58619c84",
+    "tests/validators/directory_governance/test_validate_root_registry.py": "sha256:14746420a8d0b869c1522ac4d769f812332206e6c2dd2f954f17432823a3b20c",
+    "tools/validators/directory_governance/README.md": "sha256:aa959fb7e7ccc7f3e45ed5083f9d086e8513d17def7a2459a53ed3b97b814256",
+    "tools/validators/directory_governance/validate_root_registry.py": "sha256:6fd67a3fbb2e838f4e2a17ce3805eb03e3b48eee47560854e2750c096556cf9b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:f0074943c36ec5a67a2533280dfe23d0a4ad7717a560607068969cb137a9b5ea",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-5-7-19",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:docs/doctrine/directory-rules.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:.github/CODEOWNERS@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:tree/29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "PROPOSED",
+    "contracts/governance/root_registry.md": "PROPOSED",
+    "control_plane/root_registry.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/root_registry/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/root_registry/invalid/canonical_not_active.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/root_registry/valid/root_classes.yaml": "PROPOSED",
+    "schemas/contracts/v1/governance/root_registry.schema.json": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_root_registry.py": "PROPOSED",
+    "tools/validators/directory_governance/README.md": "PROPOSED",
+    "tools/validators/directory_governance/validate_root_registry.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic root-registry validator tests passed locally."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 root-registry schema passed Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "One valid all-root-class fixture and one reviewed invalid fixture passed exact polarity; four additional class/digest/uniqueness negatives are generated deterministically in focused tests."
+    },
+    {
+      "gate": "projected-root-replay",
+      "outcome": "PASS",
+      "reason": "The current register passed canonical-root parity and exact projected top-level-root replay."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused tests compiled without syntax errors."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:directory-governance-machine-projection",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#section-19"
+    },
+    {
+      "id": "repository:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    },
+    {
+      "id": "repository:current-root-tree",
+      "validated": true,
+      "evidence_ref": "repo:tree/29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T20:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a projection-only root registry, strict schema, deterministic no-network validator, root-class fixtures, focused tests, and read-only CI. It does not create or activate roots, authorize writes, migrate paths, release, deploy, promote, or publish."
+}
