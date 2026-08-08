@@ -1,1 +1,122 @@
-{"version":"v1","registry":"domain_lane_register","status":"PROPOSED","authority":"machine_projection_only","updated_at":"2026-08-07","base_ref":"49a803e91bb28bf3a52bd7e98d80ce04acdb2edd","doctrine":{"path":"docs/doctrine/directory-rules.md","document_id":"kfm://doctrine/directory-governance/v2","sha256":"sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e","decision_ref":"ADR-0029"},"narrative_register":{"path":"docs/registers/DOMAIN_LANE.md","git_blob":"7cd641d99e1e4e3b3823f608d63679a438590c3a","status":"draft"},"root_registry":{"path":"control_plane/root_registry.yaml","git_blob":"024f668b5f0a9239bafa4f8b09e2afd86300ff8c","base_ref":"49a803e91bb28bf3a52bd7e98d80ce04acdb2edd"},"owner":"@bartytime4life","reviewers":["@bartytime4life"],"description":"Projection of the current KFM domain-lane inventory and path identities. It records unresolved governance posture and does not create domain, source, evidence, policy, release, or publication authority.","non_effects":["does_not_assign_unverified_stewards","does_not_create_or_remove_domains","does_not_activate_sources_or_write_lifecycle_state","does_not_adopt_sensitivity_policy","does_not_release_deploy_promote_or_publish"],"placement":{"domain_roots_forbidden":true,"documentation_template":"docs/domains/{lane_id}/","public_clients_governed_only":true,"sparse_lanes_required":true},"cross_cutting_exclusions":["matrix","scene","spatial"],"unresolved_aliases":{"air":"atmosphere","settlement":"settlements-infrastructure","transport":"roads-rail-trade"},"lane_defaults":{"registration_authority":"NEEDS_VERIFICATION","owner_role":"domain_steward","owner_identity":null,"implementation_maturity":"NEEDS_VERIFICATION","sensitivity_authority":"PROPOSED_PENDING_ADR_S_05"},"lanes":[{"lane_id":"agriculture","display_name":"Agriculture","documentation_path":"docs/domains/agriculture/","code_alias":"agriculture","sensitivity_baseline":"T0"},{"lane_id":"archaeology","display_name":"Archaeology","documentation_path":"docs/domains/archaeology/","code_alias":"archaeology","sensitivity_baseline":"T4"},{"lane_id":"atmosphere","display_name":"Atmosphere","documentation_path":"docs/domains/atmosphere/","code_alias":"atmosphere","sensitivity_baseline":"T0"},{"lane_id":"fauna","display_name":"Fauna","documentation_path":"docs/domains/fauna/","code_alias":"fauna","sensitivity_baseline":"T4"},{"lane_id":"flora","display_name":"Flora","documentation_path":"docs/domains/flora/","code_alias":"flora","sensitivity_baseline":"T4"},{"lane_id":"geology","display_name":"Geology","documentation_path":"docs/domains/geology/","code_alias":"geology","sensitivity_baseline":"T0"},{"lane_id":"habitat","display_name":"Habitat","documentation_path":"docs/domains/habitat/","code_alias":"habitat","sensitivity_baseline":"T0"},{"lane_id":"hazards","display_name":"Hazards","documentation_path":"docs/domains/hazards/","code_alias":"hazards","sensitivity_baseline":"T0"},{"lane_id":"hydrology","display_name":"Hydrology","documentation_path":"docs/domains/hydrology/","code_alias":"hydrology","sensitivity_baseline":"T0"},{"lane_id":"people-dna-land","display_name":"People, DNA & Land","documentation_path":"docs/domains/people-dna-land/","code_alias":"people_dna_land","sensitivity_baseline":"T4"},{"lane_id":"roads-rail-trade","display_name":"Roads, Rail & Trade","documentation_path":"docs/domains/roads-rail-trade/","code_alias":"roads_rail_trade","sensitivity_baseline":"T0"},{"lane_id":"settlements-infrastructure","display_name":"Settlements & Infrastructure","documentation_path":"docs/domains/settlements-infrastructure/","code_alias":"settlements_infrastructure","sensitivity_baseline":"T0"},{"lane_id":"soil","display_name":"Soil","documentation_path":"docs/domains/soil/","code_alias":"soil","sensitivity_baseline":"T0"}]}
+meta:
+  status: PROPOSED
+  owner: "@bartytime4life"
+  description: >-
+    Projection of the current KFM domain-lane inventory and path identities. It records
+    unresolved governance posture and does not create domain, source, evidence, policy,
+    release, or publication authority.
+  last_reviewed: 2026-08-07
+  related_doctrine:
+    - docs/doctrine/directory-rules.md
+    - docs/registers/DOMAIN_LANE.md
+version: v1
+registry: domain_lane_register
+authority: machine_projection_only
+updated_at: 2026-08-07
+base_ref: 49a803e91bb28bf3a52bd7e98d80ce04acdb2edd
+doctrine:
+  path: docs/doctrine/directory-rules.md
+  document_id: kfm://doctrine/directory-governance/v2
+  sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
+  decision_ref: ADR-0029
+narrative_register:
+  path: docs/registers/DOMAIN_LANE.md
+  git_blob: 7cd641d99e1e4e3b3823f608d63679a438590c3a
+  status: draft
+root_registry:
+  path: control_plane/root_registry.yaml
+  git_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  base_ref: 49a803e91bb28bf3a52bd7e98d80ce04acdb2edd
+reviewers:
+  - "@bartytime4life"
+non_effects:
+  - does_not_assign_unverified_stewards
+  - does_not_create_or_remove_domains
+  - does_not_activate_sources_or_write_lifecycle_state
+  - does_not_adopt_sensitivity_policy
+  - does_not_release_deploy_promote_or_publish
+placement:
+  domain_roots_forbidden: true
+  documentation_template: docs/domains/{lane_id}/
+  public_clients_governed_only: true
+  sparse_lanes_required: true
+cross_cutting_exclusions:
+  - matrix
+  - scene
+  - spatial
+unresolved_aliases:
+  air: atmosphere
+  settlement: settlements-infrastructure
+  transport: roads-rail-trade
+lane_defaults:
+  registration_authority: NEEDS_VERIFICATION
+  owner_role: domain_steward
+  owner_identity: null
+  implementation_maturity: NEEDS_VERIFICATION
+  sensitivity_authority: PROPOSED_PENDING_ADR_S_05
+entries:
+  - lane_id: agriculture
+    display_name: Agriculture
+    documentation_path: docs/domains/agriculture/
+    code_alias: agriculture
+    sensitivity_baseline: T0
+  - lane_id: archaeology
+    display_name: Archaeology
+    documentation_path: docs/domains/archaeology/
+    code_alias: archaeology
+    sensitivity_baseline: T4
+  - lane_id: atmosphere
+    display_name: Atmosphere
+    documentation_path: docs/domains/atmosphere/
+    code_alias: atmosphere
+    sensitivity_baseline: T0
+  - lane_id: fauna
+    display_name: Fauna
+    documentation_path: docs/domains/fauna/
+    code_alias: fauna
+    sensitivity_baseline: T4
+  - lane_id: flora
+    display_name: Flora
+    documentation_path: docs/domains/flora/
+    code_alias: flora
+    sensitivity_baseline: T4
+  - lane_id: geology
+    display_name: Geology
+    documentation_path: docs/domains/geology/
+    code_alias: geology
+    sensitivity_baseline: T0
+  - lane_id: habitat
+    display_name: Habitat
+    documentation_path: docs/domains/habitat/
+    code_alias: habitat
+    sensitivity_baseline: T0
+  - lane_id: hazards
+    display_name: Hazards
+    documentation_path: docs/domains/hazards/
+    code_alias: hazards
+    sensitivity_baseline: T0
+  - lane_id: hydrology
+    display_name: Hydrology
+    documentation_path: docs/domains/hydrology/
+    code_alias: hydrology
+    sensitivity_baseline: T0
+  - lane_id: people-dna-land
+    display_name: People, DNA & Land
+    documentation_path: docs/domains/people-dna-land/
+    code_alias: people_dna_land
+    sensitivity_baseline: T4
+  - lane_id: roads-rail-trade
+    display_name: Roads, Rail & Trade
+    documentation_path: docs/domains/roads-rail-trade/
+    code_alias: roads_rail_trade
+    sensitivity_baseline: T0
+  - lane_id: settlements-infrastructure
+    display_name: Settlements & Infrastructure
+    documentation_path: docs/domains/settlements-infrastructure/
+    code_alias: settlements_infrastructure
+    sensitivity_baseline: T0
+  - lane_id: soil
+    display_name: Soil
+    documentation_path: docs/domains/soil/
+    code_alias: soil
+    sensitivity_baseline: T0
