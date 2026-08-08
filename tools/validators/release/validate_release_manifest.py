@@ -143,7 +143,10 @@ def _schema_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         return [Finding("SCHEMA_UNAVAILABLE", "/")]
     findings = [
         Finding("SCHEMA_INVALID", _pointer(error.absolute_path))
-        for error in sorted(errors[:MAX_SCHEMA_FINDINGS], key=lambda e: (_pointer(e.absolute_path), str(e.validator)))
+        for error in sorted(
+            errors[:MAX_SCHEMA_FINDINGS],
+            key=lambda error: (_pointer(error.absolute_path), str(error.validator)),
+        )
     ]
     if len(errors) > MAX_SCHEMA_FINDINGS:
         findings.append(Finding("SCHEMA_FINDINGS_TRUNCATED", "/"))
@@ -169,14 +172,20 @@ def compute_manifest_id(candidate: Mapping[str, Any]) -> str:
 
 
 def _canonical_ref_array(value: object) -> bool:
-    return isinstance(value, list) and all(isinstance(item, str) for item in value) and value == sorted(set(value))
+    return (
+        isinstance(value, list)
+        and all(isinstance(item, str) for item in value)
+        and value == sorted(set(value))
+    )
 
 
 def _dt(value: object) -> datetime | None:
     if not isinstance(value, str):
         return None
     try:
-        return datetime.fromisoformat(value[:-1] + "+00:00" if value.endswith("Z") else value)
+        return datetime.fromisoformat(
+            value[:-1] + "+00:00" if value.endswith("Z") else value
+        )
     except ValueError:
         return None
 
@@ -196,7 +205,10 @@ def _iter_role_refs(candidate: Mapping[str, Any]) -> Iterable[tuple[str, object]
                 yield f"/release_scope/transform_receipt_refs/{index}", item
     lineage = candidate.get("lineage")
     if isinstance(lineage, Mapping):
-        yield "/lineage/previous_release_manifest_ref", lineage.get("previous_release_manifest_ref")
+        yield (
+            "/lineage/previous_release_manifest_ref",
+            lineage.get("previous_release_manifest_ref"),
+        )
         yield "/lineage/withdrawal_ref", lineage.get("withdrawal_ref")
         yield "/lineage/rollback_ref", lineage.get("rollback_ref")
         refs = lineage.get("correction_refs")
@@ -224,15 +236,27 @@ def _semantic(candidate: Mapping[str, Any]) -> list[Finding]:
         if not _canonical_ref_array(candidate.get(name)):
             findings.add(Finding("REFERENCE_ARRAY_NOT_CANONICAL", f"/{name}"))
     scope = candidate.get("release_scope")
-    if isinstance(scope, Mapping) and not _canonical_ref_array(scope.get("transform_receipt_refs")):
-        findings.add(Finding("REFERENCE_ARRAY_NOT_CANONICAL", "/release_scope/transform_receipt_refs"))
+    if isinstance(scope, Mapping) and not _canonical_ref_array(
+        scope.get("transform_receipt_refs")
+    ):
+        findings.add(
+            Finding("REFERENCE_ARRAY_NOT_CANONICAL", "/release_scope/transform_receipt_refs")
+        )
     lineage = candidate.get("lineage")
-    if isinstance(lineage, Mapping) and not _canonical_ref_array(lineage.get("correction_refs")):
-        findings.add(Finding("REFERENCE_ARRAY_NOT_CANONICAL", "/lineage/correction_refs"))
+    if isinstance(lineage, Mapping) and not _canonical_ref_array(
+        lineage.get("correction_refs")
+    ):
+        findings.add(
+            Finding("REFERENCE_ARRAY_NOT_CANONICAL", "/lineage/correction_refs")
+        )
 
     artifacts = candidate.get("artifacts")
     if isinstance(artifacts, list):
-        refs = [item.get("artifact_ref") for item in artifacts if isinstance(item, Mapping)]
+        refs = [
+            item.get("artifact_ref")
+            for item in artifacts
+            if isinstance(item, Mapping)
+        ]
         if refs != sorted(refs) or len(refs) != len(set(refs)):
             findings.add(Finding("ARTIFACT_ARRAY_NOT_CANONICAL", "/artifacts"))
         if candidate.get("artifact_count") != len(artifacts):
@@ -243,8 +267,12 @@ def _semantic(candidate: Mapping[str, Any]) -> list[Finding]:
             if isinstance(item, Mapping) and item.get("role") == "EVIDENCE_BUNDLE"
         }
         evidence_refs = candidate.get("evidence_bundle_refs")
-        if isinstance(evidence_refs, list) and not set(evidence_refs).issubset(evidence_artifacts):
-            findings.add(Finding("EVIDENCE_ARTIFACT_BINDING_MISSING", "/evidence_bundle_refs"))
+        if isinstance(evidence_refs, list) and not set(evidence_refs).issubset(
+            evidence_artifacts
+        ):
+            findings.add(
+                Finding("EVIDENCE_ARTIFACT_BINDING_MISSING", "/evidence_bundle_refs")
+            )
 
     role_values: list[str] = []
     for path, value in _iter_role_refs(candidate):
@@ -255,7 +283,11 @@ def _semantic(candidate: Mapping[str, Any]) -> list[Finding]:
     # Repeated RunReceipt is allowed between receipt_refs and provenance because it is
     # one declared process-memory object, not a role collapse. Remove that exact pair.
     provenance = candidate.get("provenance")
-    allowed_repeat = provenance.get("run_receipt_ref") if isinstance(provenance, Mapping) else None
+    allowed_repeat = (
+        provenance.get("run_receipt_ref")
+        if isinstance(provenance, Mapping)
+        else None
+    )
     adjusted = list(role_values)
     if isinstance(allowed_repeat, str) and adjusted.count(allowed_repeat) == 2:
         adjusted.remove(allowed_repeat)
@@ -264,41 +296,71 @@ def _semantic(candidate: Mapping[str, Any]) -> list[Finding]:
 
     temporal = candidate.get("temporal")
     if isinstance(temporal, Mapping):
-        start, end = _dt(temporal.get("effective_from")), _dt(temporal.get("effective_to"))
+        start = _dt(temporal.get("effective_from"))
+        end = _dt(temporal.get("effective_to"))
         if start is not None and end is not None and start > end:
             findings.add(Finding("TEMPORAL_WINDOW_INCOHERENT", "/temporal"))
 
     if isinstance(lineage, Mapping):
         corrections = lineage.get("correction_refs")
-        if isinstance(corrections, list) and corrections and lineage.get("previous_release_manifest_ref") is None:
-            findings.add(Finding("CORRECTION_PREDECESSOR_REQUIRED", "/lineage"))
+        if (
+            isinstance(corrections, list)
+            and corrections
+            and lineage.get("previous_release_manifest_ref") is None
+        ):
+            findings.add(
+                Finding("CORRECTION_PREDECESSOR_REQUIRED", "/lineage")
+            )
 
     if isinstance(scope, Mapping) and scope.get("audience") == "PUBLIC":
         if scope.get("rights_status") != "APPROVED":
-            findings.add(Finding("PUBLIC_RIGHTS_NOT_APPROVED", "/release_scope/rights_status"))
-        if scope.get("sensitivity_status") not in {"PUBLIC_SAFE", "TRANSFORM_REQUIRED"}:
-            findings.add(Finding("PUBLIC_SENSITIVITY_NOT_APPROVED", "/release_scope/sensitivity_status"))
+            findings.add(
+                Finding("PUBLIC_RIGHTS_NOT_APPROVED", "/release_scope/rights_status")
+            )
+        if scope.get("sensitivity_status") not in {
+            "PUBLIC_SAFE",
+            "TRANSFORM_REQUIRED",
+        }:
+            findings.add(
+                Finding(
+                    "PUBLIC_SENSITIVITY_NOT_APPROVED",
+                    "/release_scope/sensitivity_status",
+                )
+            )
         if not candidate.get("evidence_bundle_refs"):
             findings.add(Finding("PUBLIC_EVIDENCE_REQUIRED", "/evidence_bundle_refs"))
         if not candidate.get("policy_decision_refs"):
             findings.add(Finding("PUBLIC_POLICY_REQUIRED", "/policy_decision_refs"))
         if not candidate.get("promotion_decision_refs"):
-            findings.add(Finding("PUBLIC_PROMOTION_REQUIRED", "/promotion_decision_refs"))
+            findings.add(
+                Finding("PUBLIC_PROMOTION_REQUIRED", "/promotion_decision_refs")
+            )
         if not candidate.get("review_record_refs"):
             findings.add(Finding("PUBLIC_REVIEW_REQUIRED", "/review_record_refs"))
-    if isinstance(scope, Mapping) and scope.get("sensitivity_status") == "TRANSFORM_REQUIRED" and (
-        scope.get("generalized") is not True or not scope.get("transform_receipt_refs")
+    if (
+        isinstance(scope, Mapping)
+        and scope.get("sensitivity_status") == "TRANSFORM_REQUIRED"
+        and (
+            scope.get("generalized") is not True
+            or not scope.get("transform_receipt_refs")
+        )
     ):
         findings.add(Finding("TRANSFORM_EVIDENCE_REQUIRED", "/release_scope"))
 
     governance = candidate.get("governance")
-    if isinstance(governance, Mapping) and any(value is not False for value in governance.values()):
+    if isinstance(governance, Mapping) and any(
+        value is not False for value in governance.values()
+    ):
         findings.add(Finding("GOVERNANCE_BOUNDARY_VIOLATION", "/governance"))
     return sorted(findings)
 
 
 def _outcome(findings: Sequence[Finding]) -> str:
-    return "ERROR" if any(item.code in ERROR_CODES for item in findings) else ("FAIL" if findings else "PASS")
+    return (
+        "ERROR"
+        if any(item.code in ERROR_CODES for item in findings)
+        else ("FAIL" if findings else "PASS")
+    )
 
 
 def validate_record(path: Path) -> ValidationResult:
@@ -324,13 +386,103 @@ def serialize(path: Path, result: ValidationResult) -> str:
         {
             "authority_created": False,
             "file": _display(path),
-            "findings": [{"code": item.code, "path": item.path} for item in result.findings],
+            "findings": [
+                {"code": item.code, "path": item.path}
+                for item in result.findings
+            ],
             "outcome": result.outcome,
             "scope": SCOPE,
         },
         sort_keys=True,
         separators=(",", ":"),
     )
+
+
+def _segments(pointer: str) -> list[str]:
+    if not isinstance(pointer, str) or not pointer.startswith("/") or pointer == "/":
+        raise ValueError("fixture pointer must be a non-root JSON pointer")
+    return [
+        part.replace("~1", "/").replace("~0", "~")
+        for part in pointer[1:].split("/")
+    ]
+
+
+def _parent(candidate: dict[str, Any], pointer: str) -> tuple[dict[str, Any], str]:
+    parts = _segments(pointer)
+    current: Any = candidate
+    for part in parts[:-1]:
+        if not isinstance(current, dict) or part not in current:
+            raise ValueError("fixture pointer does not resolve")
+        current = current[part]
+    if not isinstance(current, dict):
+        raise ValueError("fixture pointer parent is not an object")
+    return current, parts[-1]
+
+
+def _set_pointer(candidate: dict[str, Any], pointer: str, value: Any) -> None:
+    parent, key = _parent(candidate, pointer)
+    parent[key] = copy.deepcopy(value)
+
+
+def _remove_pointer(candidate: dict[str, Any], pointer: str) -> None:
+    parent, key = _parent(candidate, pointer)
+    if key not in parent:
+        raise ValueError("fixture remove pointer does not resolve")
+    del parent[key]
+
+
+def _reverse_pointer(candidate: dict[str, Any], pointer: str) -> None:
+    parent, key = _parent(candidate, pointer)
+    value = parent.get(key)
+    if not isinstance(value, list):
+        raise ValueError("fixture reverse pointer is not an array")
+    parent[key] = list(reversed(value))
+
+
+def materialize_case(
+    matrix: Mapping[str, Any], record: Mapping[str, Any]
+) -> dict[str, Any]:
+    bases = matrix.get("bases")
+    base_id = record.get("base")
+    if not isinstance(bases, Mapping) or not isinstance(base_id, str):
+        raise ValueError("fixture case lacks a valid base")
+    base = bases.get(base_id)
+    if not isinstance(base, Mapping):
+        raise ValueError("fixture case references an unknown base")
+    candidate = copy.deepcopy(dict(base))
+    removals = record.get("remove", [])
+    settings = record.get("set", {})
+    reversals = record.get("reverse", [])
+    overrides = record.get("override", {})
+    if not isinstance(removals, list) or not all(
+        isinstance(item, str) for item in removals
+    ):
+        raise ValueError("fixture remove must be an array of pointers")
+    if not isinstance(settings, Mapping) or not isinstance(overrides, Mapping):
+        raise ValueError("fixture set/override must be pointer mappings")
+    if not isinstance(reversals, list) or not all(
+        isinstance(item, str) for item in reversals
+    ):
+        raise ValueError("fixture reverse must be an array of pointers")
+    for pointer in removals:
+        _remove_pointer(candidate, pointer)
+    for pointer, value in sorted(settings.items()):
+        if not isinstance(pointer, str):
+            raise ValueError("fixture set pointer must be a string")
+        _set_pointer(candidate, pointer, value)
+    for pointer in reversals:
+        _reverse_pointer(candidate, pointer)
+    if (
+        record.get("recompute_identity") is True
+        and candidate.get("object_type") == "ReleaseManifest"
+    ):
+        candidate["spec_hash"] = compute_manifest_spec_hash(candidate)
+        candidate["id"] = compute_manifest_id(candidate)
+    for pointer, value in sorted(overrides.items()):
+        if not isinstance(pointer, str):
+            raise ValueError("fixture override pointer must be a string")
+        _set_pointer(candidate, pointer, value)
+    return candidate
 
 
 def validate_candidate(candidate: Mapping[str, Any]) -> ValidationResult:
@@ -346,7 +498,10 @@ def serialize_label(label: str, result: ValidationResult) -> str:
         {
             "authority_created": False,
             "file": label,
-            "findings": [{"code": item.code, "path": item.path} for item in result.findings],
+            "findings": [
+                {"code": item.code, "path": item.path}
+                for item in result.findings
+            ],
             "outcome": result.outcome,
             "scope": SCOPE,
         },
@@ -369,15 +524,22 @@ def run_fixture_profile() -> int:
             if not isinstance(case_id, str) or not isinstance(record, Mapping):
                 passed = False
                 continue
-            candidate = record.get("candidate")
             expected = record.get("expected")
-            if not isinstance(candidate, Mapping) or not isinstance(expected, Mapping):
+            if not isinstance(expected, Mapping):
+                passed = False
+                continue
+            try:
+                candidate = materialize_case(matrix, record)
+            except (TypeError, ValueError, RuntimeError, RecursionError):
                 passed = False
                 continue
             result = validate_candidate(candidate)
             print(serialize_label(f"fixture:{group}:{case_id}", result))
             actual = sorted({item.code for item in result.findings})
-            if result.outcome != expected.get("outcome") or actual != expected.get("findings"):
+            if (
+                result.outcome != expected.get("outcome")
+                or actual != expected.get("findings")
+            ):
                 passed = False
             seen += 1
     return 0 if passed and seen == 21 else 1
