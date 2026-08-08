@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-pass2-nfhl-nld-nid-source-role-profile-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/nfhl-nld-nid-source-role-profile.yml",
+    "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md",
+    "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md",
+    "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/cases.json",
+    "schemas/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json",
+    "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py",
+    "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/nfhl-nld-nid-source-role-profile.yml": "sha256:44fa411bafccdd0158b99d5e2dc41d110712e7fb189a4a0df7235699f679fc14",
+    "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md": "sha256:88a30184a3b225b0518122887f27b4de4032872060e91ab88eeadbc069a1f650",
+    "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md": "sha256:d9b7ec6578895c1fd6f05de4db97a646b0d1dd0a3ad5b39f184bd6c157b83c9b",
+    "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/cases.json": "sha256:6357b434202332b2f509a7de830c3dc82987c1955f5885644a2a0af085e8885a",
+    "schemas/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json": "sha256:7ce0f25b0aadf45f5998bdc9c513b66fb086a1807dabedfbaee28264823de78c",
+    "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py": "sha256:621846b685331dbc2820f0b09607e8ff5a6923d6e0ab173646f4e6ffc6851129",
+    "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py": "sha256:9e5cb1870b3695979963bd7c2b6923fb95e3569e3bbf6a5ec2d95f3e65abf697"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:6beea000e69e82a346191f93d37a66768f24cb20c9a35fd27a6105cd52ea2a72",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b53cb11d1a396029ae9e15d5a169f33415d399ca01ca0667742303d4e8473322",
+      "sha256:b4dd284ed411d703f718f60bd383c8c0b240e0731850e4cfd8ee404b4dd51a73",
+      "sha256:80daf44fbc60fcd3b9afb827b166fbaad70cb2ec3ab3425ef2253bbc14693845"
+    ],
+    "attached_docs": [
+      "KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0026",
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-PROG-0008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/753cda68c468e8d01457c38e563c107a437aa608",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/753cda68c468e8d01457c38e563c107a437aa608/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/753cda68c468e8d01457c38e563c107a437aa608/docs/sources/catalog/fema/nfhl-flood-hazard.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/nfhl-nld-nid-source-role-profile.yml": "PROPOSED",
+    "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json": "PROPOSED",
+    "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py": "CONFIRMED",
+    "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-9-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-2-pass-2-abstain-10-deny",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "source-role-anti-collapse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "infrastructure-generalization-and-no-operational-detail",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "time-identity-relation-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, source, hazards, infrastructure, and policy review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P2-IDEA-0026",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0026"
+    },
+    {
+      "id": "KFM-P2-PROG-0008",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-PROG-0008"
+    },
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/753cda68c468e8d01457c38e563c107a437aa608"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/753cda68c468e8d01457c38e563c107a437aa608/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T21:17:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of Pass 2 cards KFM-P2-IDEA-0026 and KFM-P2-PROG-0008. NFHL remains a regulatory flood-hazard baseline; NLD and NID remain infrastructure inventory references. The packet validates synthetic role, time, identity, evidence support, relation, generalization, and no-authority boundaries. It performs no live source access, source admission, evidence resolution, operational or engineering claim, policy evaluation, lifecycle write, release, deployment, publication, or public-use authorization."
+}

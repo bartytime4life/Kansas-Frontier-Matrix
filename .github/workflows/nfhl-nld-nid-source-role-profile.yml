@@ -1,0 +1,108 @@
+name: nfhl-nld-nid-source-role-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/nfhl-nld-nid-source-role-profile.yml"
+      - "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md"
+      - "schemas/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json"
+      - "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/**"
+      - "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
+      - "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py"
+      - "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "tools/validators/validate_generated_receipt.py"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/nfhl-nld-nid-source-role-profile.yml"
+      - "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md"
+      - "schemas/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json"
+      - "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/**"
+      - "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py"
+      - "tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py"
+      - "docs/intake/exploratory/pass-2-nfhl-nld-nid-source-role-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "tools/validators/validate_generated_receipt.py"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nfhl-nld-nid-source-role-profile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-nfhl-nld-nid-source-role-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/domains/hazards \
+            --pattern 'test_validate_nfhl_nld_nid_source_role_profile.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes and findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass2-nfhl-nld-nid-source-role-profile-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### NFHL / NLD / NID source-role profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only source-role, time, identity, evidence-support, relation, and public-geometry validation."
+            echo "- Boundary: NFHL remains regulatory baseline; NLD/NID remain inventory references."
+            echo "- Non-effects: no network, source admission, evidence resolution, policy approval, lifecycle write, engineering or life-safety conclusion, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
