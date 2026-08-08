@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import socket
@@ -54,6 +55,22 @@ class OutputLaneSplitTests(unittest.TestCase):
         candidate = {key: value for key, value in self.valid.items() if key != "spec_hash"}
         self.assertEqual(self.valid["spec_hash"], MODULE.canonical_hash(candidate))
         self.assertEqual(self.valid["spec_hash"], MODULE.canonical_hash(candidate))
+
+    def test_spec_hash_uses_repository_rfc8785_profile(self) -> None:
+        from hashing import compute_spec_hash
+
+        candidate = {"value": 1e-7, "label": "rfc8785"}
+        legacy = "sha256:" + hashlib.sha256(
+            json.dumps(
+                candidate,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(compute_spec_hash(candidate), MODULE.canonical_hash(candidate))
+        self.assertNotEqual(legacy, MODULE.canonical_hash(candidate))
 
     def test_split_result_preserves_all_lanes_and_no_authority(self) -> None:
         result = MODULE.split_payload(self.valid)

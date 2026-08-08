@@ -33,7 +33,7 @@ placement, implementation, promotion, release, or publication.
 
 The packet was initially authored against `main@03b37ee771410573f2a2050379417dd2758d1501`. Before delivery, the
 placement and non-overlap checks were repeated against
-`main@6586e77211a95a9c61f62594d26ff2755662d778`. At the delivery checkpoint:
+`main@a7917a25c985362a853c30588f71f18bcd7531f3`. At the delivery checkpoint:
 
 - `contracts/data/` is the current semantic-contract family for data-related
   candidates and derived products;
@@ -52,7 +52,9 @@ policy-report surfaces remain separate object families and are not replaced.
 
 The repository slice defines one closed manifest, one deterministic dry-run
 generator, strict schema and semantic checks, exact synthetic polarity, a
-read-only workflow, and an authoring receipt.
+read-only workflow, and an authoring receipt. Manifest identity is computed
+through the repository-owned `packages/hashing` RFC 8785 JCS + SHA-256 helper
+rather than a parallel local hashing implementation.
 
 It deliberately does not create physical `feature-vectors/`, `scorecards/`,
 `policy-reports/`, `receipts/`, or `prefilter/` data directories. The generator

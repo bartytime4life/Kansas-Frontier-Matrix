@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import argparse
 import copy
-import hashlib
 import json
 import math
+import sys
 from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
@@ -20,6 +20,14 @@ from typing import Any, Iterable, Mapping, Sequence
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[2]
+HASH_SRC = ROOT / "packages/hashing/src"
+if str(HASH_SRC) not in sys.path:
+    sys.path.insert(0, str(HASH_SRC))
+try:
+    from hashing import CanonicalizationFailure, compute_spec_hash
+except ImportError as exc:  # fail closed when the repository hashing package is unavailable
+    raise RuntimeError("repository hashing package is required") from exc
+
 SCHEMA = ROOT / "schemas/contracts/v1/data/output_lane_split_manifest.schema.json"
 FIXTURES = ROOT / "fixtures/contracts/v1/data/output_lane_split_manifest/cases.json"
 MAX_BYTES = 2 * 1024 * 1024
@@ -89,14 +97,9 @@ def _json(value: Any) -> str:
 
 
 def canonical_hash(value: Mapping[str, Any]) -> str:
-    raw = json.dumps(
-        value,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-        allow_nan=False,
-    ).encode("utf-8")
-    return "sha256:" + hashlib.sha256(raw).hexdigest()
+    """Return the repository-owned RFC 8785 JCS + SHA-256 spec hash."""
+
+    return compute_spec_hash(value)
 
 
 def _read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
@@ -151,8 +154,13 @@ def _schema_findings(value: Mapping[str, Any]) -> list[Finding]:
 def _semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
     candidate = {key: item for key, item in value.items() if key != "spec_hash"}
-    if value.get("spec_hash") != canonical_hash(candidate):
-        findings.append(Finding("OUTPUT_LANE_SPEC_HASH_MISMATCH", "/spec_hash"))
+    try:
+        actual_spec_hash = canonical_hash(candidate)
+    except CanonicalizationFailure:
+        findings.append(Finding("OUTPUT_LANE_CANONICALIZATION_ERROR", "/"))
+    else:
+        if value.get("spec_hash") != actual_spec_hash:
+            findings.append(Finding("OUTPUT_LANE_SPEC_HASH_MISMATCH", "/spec_hash"))
     if value.get("required_lanes") != list(LANES):
         findings.append(Finding("OUTPUT_LANE_REQUIRED_LANES_INVALID", "/required_lanes"))
 
