@@ -1,0 +1,138 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/policy-obligation-set.yml": "sha256:19feca1b38d591182a62c2423bac8669195568814b1c26e07bc466db31f48c26",
+    "contracts/policy/policy_obligation_set.md": "sha256:403b936738a97cea570993c0d60b14a06110f5af5650683750f374b3026dc2a3",
+    "fixtures/contracts/v1/policy/policy_obligation_set/README.md": "sha256:caa697334f76a2269ece9ca81aafadaaaeb9b53314ca557a9a4bca913cda7bf6",
+    "fixtures/contracts/v1/policy/policy_obligation_set/expected_findings_manifest.json": "sha256:7f4b0ba5736b7b72f6ef834f77b8dce43453693ab6f15e6c6e09997ec53bcb28",
+    "fixtures/contracts/v1/policy/policy_obligation_set/schema_invalid/missing_basis_ref.json": "sha256:4ca1de1323886bc7d812b6b7e1ade5ec8347bd15d518fd5d924ce9c4c46123b3",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/authority_overreach.json": "sha256:428174c8d55262ee56fa24dc2765c1920b172df05ad236a00f7f60a5da7e3d2b",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/noncanonical_obligations.json": "sha256:2b9d15509abf0e8012ea4a4b632ddac45c889f4058a49cf478e1fad17ba66843",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/parameter_mismatch.json": "sha256:8079ca2be90bc232f194e4c17fd7bebe60deda8cff5f241de91f0aba5bc5ae22",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/spec_hash_mismatch.json": "sha256:3c78d84312d017777967ee6f2cfbc324f169e69543324e7a6d08acfeb0d4502c",
+    "fixtures/contracts/v1/policy/policy_obligation_set/valid/valid_obligation_set.json": "sha256:c81a3984e253369664f26570eac37f9a52606f7cdacaab263a9c337d9a20e1c8",
+    "schemas/contracts/v1/policy/policy_obligation_set.schema.json": "sha256:368de609e263c15014b8b271c39249900a091a86b6f2770a404cb0f629c67870",
+    "tests/validators/test_validate_policy_obligation_set.py": "sha256:effdc527fe7182c6267f39c14774d656efaffc2c5e9476e8bf2d731954d509fa",
+    "tools/validators/policy/validate_policy_obligation_set.py": "sha256:cc216ecd16dcbe4cb14f8add50b117cdcfa9cc989032878b883a04f25317a6a9"
+  },
+  "artifact_paths": [
+    ".github/workflows/policy-obligation-set.yml",
+    "contracts/policy/policy_obligation_set.md",
+    "fixtures/contracts/v1/policy/policy_obligation_set/README.md",
+    "fixtures/contracts/v1/policy/policy_obligation_set/expected_findings_manifest.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/schema_invalid/missing_basis_ref.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/authority_overreach.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/noncanonical_obligations.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/parameter_mismatch.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/spec_hash_mismatch.json",
+    "fixtures/contracts/v1/policy/policy_obligation_set/valid/valid_obligation_set.json",
+    "schemas/contracts/v1/policy/policy_obligation_set.schema.json",
+    "tests/validators/test_validate_policy_obligation_set.py",
+    "tools/validators/policy/validate_policy_obligation_set.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0004",
+      "id": "attachment:pass7-policy-obligation-set",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/policy/policy_obligation_reduction.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:policy-obligation-reduction-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T16:59:05Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0004",
+      "repo:contracts/policy/policy_obligation_reduction.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only structured downstream-duty carrier. It does not evaluate policy, authenticate references, enforce obligations, mutate EvidenceBundle, promote, release, publish, or authorize public use.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:044eafd8ae0d80f4347cf2984e9a5229ed172a85518913ecece13e89331eafc9",
+  "receipt_id": "genrec-policy-obligation-set-20260808",
+  "truth_labels": {
+    ".github/workflows/policy-obligation-set.yml": "CONFIRMED",
+    "contracts/policy/policy_obligation_set.md": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/schema_invalid/missing_basis_ref.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/authority_overreach.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/noncanonical_obligations.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/parameter_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation_set/valid/valid_obligation_set.json": "CONFIRMED",
+    "schemas/contracts/v1/policy/policy_obligation_set.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_policy_obligation_set.py": "CONFIRMED",
+    "tools/validators/policy/validate_policy_obligation_set.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Seven deterministic PolicyObligationSet tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Six synthetic positive and negative cases matched exact finite outcomes and finding codes."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema and deterministic candidate identity validated locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-obligation-set",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_obligation_set.json"
+    },
+    {
+      "case_id": "missing-basis-ref",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "schema_invalid/missing_basis_ref.json"
+    },
+    {
+      "case_id": "noncanonical-obligations",
+      "expected_findings": [
+        "OBLIGATIONS_NOT_CANONICAL"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/noncanonical_obligations.json"
+    },
+    {
+      "case_id": "parameter-mismatch",
+      "expected_findings": [
+        "PARAMETERS_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/parameter_mismatch.json"
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/spec_hash_mismatch.json"
+    },
+    {
+      "case_id": "authority-overreach",
+      "expected_findings": [
+        "AUTHORITY_OVERREACH"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/authority_overreach.json"
+    }
+  ]
+}
