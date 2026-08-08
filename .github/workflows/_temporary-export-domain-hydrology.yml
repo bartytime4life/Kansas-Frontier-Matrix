@@ -1,0 +1,44 @@
+# Temporary read-only export helper for exact current-main workflow bytes.
+# This file is removed before the implementation pull request is opened.
+name: temporary-export-domain-hydrology
+
+"on":
+  push:
+    branches:
+      - agent/pass3-flow-permanence-assessment-20260808
+    paths:
+      - ".github/workflows/_temporary-export-domain-hydrology.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact branch revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Stage exact workflow bytes and digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/domain-hydrology-export
+          cp .github/workflows/domain-hydrology.yml \
+            artifacts/domain-hydrology-export/domain-hydrology.yml
+          sha256sum .github/workflows/domain-hydrology.yml \
+            > artifacts/domain-hydrology-export/sha256.txt
+          git hash-object .github/workflows/domain-hydrology.yml \
+            > artifacts/domain-hydrology-export/git-blob-sha.txt
+
+      - name: Upload exact workflow bytes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: temporary-domain-hydrology-export
+          path: artifacts/domain-hydrology-export
+          if-no-files-found: error
+          retention-days: 1
