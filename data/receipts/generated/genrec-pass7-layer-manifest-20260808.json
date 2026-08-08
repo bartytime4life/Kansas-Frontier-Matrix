@@ -1,0 +1,198 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/layer-manifest.yml": "sha256:c88f0887107161b40f2667b355b258049aa32ee139fe1c5679f053afa69ec9f7",
+    "contracts/data/layer_manifest.md": "sha256:cc4d2baa8cb9114f297a4f95d8202a49ffa364a89348b99171452eec50740c08",
+    "fixtures/data/layer_manifest/README.md": "sha256:ede172037c658b8e0ded7f7da228419ac9edca74930c4b9d117e6ba74a360e92",
+    "fixtures/data/layer_manifest/expected_findings_manifest.json": "sha256:acc804e99fc7b79557a797fbbdfc46c50d6b75de9c27330558b81bc4f8cfcb05",
+    "fixtures/data/layer_manifest/invalid/invalid_governance_overclaim.json": "sha256:a8c96023db3231b076ced8b44182612a3b4efc362653ba5e01ff53b9a09a35ef",
+    "fixtures/data/layer_manifest/invalid/invalid_missing_layer_id.json": "sha256:2d4b84474e41c9626da857562b55cb4565a608af29cf84873ab5161afd8a0079",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_bounds.json": "sha256:e6b347c2a7656b0bc42909938f4f0ee188c66741dbda07c09248031066c42249",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_floating_latest.json": "sha256:548b3a254f5a03a220593ddeef8a5a587aa93aa57bb103ddfb6c48987083ece5",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_noncanonical_array.json": "sha256:ddeb2d3a6d2332fee5ddd419bc6fcf2ab010a1bdadb1a1881e4692ef5a7514b2",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_public_rights.json": "sha256:e9565b0c2b65be346558ffd89f606ec1546d9d6dc1d34c7f2cce6070f5bbec86",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_reference_role_collapse.json": "sha256:2dd7ed02a658b34da330e97afa4ffd6f95f7d93acc3e8271c400807e49f966b8",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_spec_hash.json": "sha256:93463403f3fe9c2016c843afa47545486815fce148c2bff4400628432889b566",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_temporal_window.json": "sha256:228bf766b5e59b23f36fcba2bf0a0502c7b827bc7b02517d81a0a1cf66b20a64",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_transform_evidence.json": "sha256:61bfe5ee3b62a444d058273f74327bcfe65b0c8b5923673ea2bb201d76126ec9",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_vector_without_source_layer.json": "sha256:d67300aa26b9c11523922b51c49746204704dea7fd41e2ee872dc127bbde0d82",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_zoom_range.json": "sha256:18c07c33692ea348e35fe1d8c9190dd8132a4a51d52d5684d15477909223ef0e",
+    "fixtures/data/layer_manifest/valid/valid_generalized_public_candidate.json": "sha256:49c2253b574e753e63b859d335fbe83316d0912c3f21a9cb87dfa91605203c6a",
+    "fixtures/data/layer_manifest/valid/valid_legacy_minimal.json": "sha256:2013af5920a992af91c462484642c613017b42f03cc558e7a1ef89adba613333",
+    "fixtures/data/layer_manifest/valid/valid_public_pmtiles_candidate.json": "sha256:1985b031e5405bf6cab3f717fa89fe17ba671d540aa0058566218ea4ad6105df",
+    "fixtures/data/layer_manifest/valid/valid_restricted_cog_candidate.json": "sha256:105100cbabc804bad437e6a7836e500274e12f560d3c4c614da08603598268d5",
+    "schemas/contracts/v1/data/layer_manifest.schema.json": "sha256:bb5692576ac116a6374ab624e2733b87743272fc75941fbf3c57adc0298e79f4",
+    "tests/validators/test_validate_layer_manifest.py": "sha256:dcc554b2c4af5f9a12d3aad3d3f020fd8b5ae94f12acef1c9517625347bf8c79",
+    "tools/validators/data/README.md": "sha256:613306cdb4be787c321b7d04f3fcee7cfde83551dd62763189ca08331a6c2fdd",
+    "tools/validators/data/validate_layer_manifest.py": "sha256:e3857b30f4bea810cb7eed7b1ec95edbe16a09ab4eb5e4746d03cdc80c1c767e",
+    "tools/validators/validator_registry.json": "sha256:3a1194f34f4173c888d0aba7a9e5d732a43559c21ea2f0cc5aaff6566f52d0cc"
+  },
+  "artifact_paths": [
+    ".github/workflows/layer-manifest.yml",
+    "contracts/data/layer_manifest.md",
+    "fixtures/data/layer_manifest/README.md",
+    "fixtures/data/layer_manifest/expected_findings_manifest.json",
+    "fixtures/data/layer_manifest/invalid/invalid_governance_overclaim.json",
+    "fixtures/data/layer_manifest/invalid/invalid_missing_layer_id.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_bounds.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_floating_latest.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_noncanonical_array.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_public_rights.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_reference_role_collapse.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_spec_hash.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_temporal_window.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_transform_evidence.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_vector_without_source_layer.json",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_zoom_range.json",
+    "fixtures/data/layer_manifest/valid/valid_generalized_public_candidate.json",
+    "fixtures/data/layer_manifest/valid/valid_legacy_minimal.json",
+    "fixtures/data/layer_manifest/valid/valid_public_pmtiles_candidate.json",
+    "fixtures/data/layer_manifest/valid/valid_restricted_cog_candidate.json",
+    "schemas/contracts/v1/data/layer_manifest.schema.json",
+    "tests/validators/test_validate_layer_manifest.py",
+    "tools/validators/data/README.md",
+    "tools/validators/data/validate_layer_manifest.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0006",
+      "id": "attachment:pass7-layer-manifest-runtime-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/data/layer_manifest.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:layer-manifest-semantic-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/data/layer_manifest.schema.json@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:layer-manifest-schema-scaffold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T18:48:17Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0006",
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0014",
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0044",
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0065",
+      "repo:contracts/data/layer_manifest.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "repo:schemas/contracts/v1/data/layer_manifest.schema.json@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first implementation of Pass 7 KFM-P7-PROG-0006 at the existing LayerManifest responsibility-rooted paths. It preserves the permissive legacy profile, adds a closed deterministic inactive candidate profile, and keeps reference resolution, artifact/signature verification, policy/review execution, runtime registration, release, deployment, publication, and public use outside this slice.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:b454ce8c05f2369b49fa2e4cc93c4b2ab00937585e8cc6f56f81f9c39891751e",
+  "receipt_id": "genrec-pass7-layer-manifest-20260808",
+  "truth_labels": {
+    ".github/workflows/layer-manifest.yml": "CONFIRMED",
+    "contracts/data/layer_manifest.md": "PROPOSED",
+    "fixtures/data/layer_manifest/README.md": "PROPOSED",
+    "fixtures/data/layer_manifest/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/invalid_governance_overclaim.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/invalid_missing_layer_id.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_bounds.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_floating_latest.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_noncanonical_array.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_public_rights.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_reference_role_collapse.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_spec_hash.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_temporal_window.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_transform_evidence.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_vector_without_source_layer.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/invalid/semantic_invalid_zoom_range.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/valid/valid_generalized_public_candidate.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/valid/valid_legacy_minimal.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/valid/valid_public_pmtiles_candidate.json": "CONFIRMED",
+    "fixtures/data/layer_manifest/valid/valid_restricted_cog_candidate.json": "CONFIRMED",
+    "schemas/contracts/v1/data/layer_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_layer_manifest.py": "CONFIRMED",
+    "tools/validators/data/README.md": "PROPOSED",
+    "tools/validators/data/validate_layer_manifest.py": "CONFIRMED",
+    "tools/validators/validator_registry.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The dual-profile schema parsed and passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated read-only workflow parsed as YAML with pinned checkout and setup-python actions."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Focused deterministic no-network tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Four valid and twelve invalid fixtures matched exact value-free outcomes and findings."
+    },
+    {
+      "gate": "validator-registry-shape",
+      "outcome": "PASS",
+      "reason": "The new entry is unique and profiles.full exactly matches validator order."
+    },
+    {
+      "gate": "generated-receipt-byte-integrity",
+      "outcome": "PASS",
+      "reason": "25 artifact paths have exact SHA-256 hashes and matching truth-label keys."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
