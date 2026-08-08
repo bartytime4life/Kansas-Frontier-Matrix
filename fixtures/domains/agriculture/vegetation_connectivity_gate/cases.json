@@ -1,0 +1,354 @@
+{
+  "bases": {
+    "candidate": {
+      "analysis_profile": "SYNTHETIC_PRECOMPUTED_COMPONENT_SUMMARY_V1",
+      "assessed_at": "2026-08-08T00:00:00Z",
+      "assessment_id": "vegetation-connectivity-ks-20173-2026-08-08",
+      "components": [
+        {
+          "area_m2": 400000,
+          "component_id": "component-001",
+          "persistence_basis_points": 10000,
+          "present_observation_ids": [
+            "obs-2026-07-25",
+            "obs-2026-08-01",
+            "obs-2026-08-08"
+          ],
+          "qualifies": true
+        },
+        {
+          "area_m2": 100000,
+          "component_id": "component-002",
+          "persistence_basis_points": 6667,
+          "present_observation_ids": [
+            "obs-2026-08-01",
+            "obs-2026-08-08"
+          ],
+          "qualifies": false
+        }
+      ],
+      "governance": {
+        "fixture_only": true,
+        "network_allowed": false,
+        "promotion_allowed": false,
+        "public_use_allowed": false,
+        "publication_allowed": false,
+        "raster_processing_allowed": false,
+        "raw_admission_allowed": false,
+        "release_allowed": false,
+        "source_activation_allowed": false
+      },
+      "inputs": [
+        {
+          "artifact_ref": "urn:kfm:artifact:ndvi-materiality:ks-20173:2026-08-08",
+          "artifact_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "evidence_ref": "evidence:synthetic:ndvi-materiality:ks-20173:2026-08-08",
+          "logical_role": "NDVI_MATERIALITY_ASSESSMENT",
+          "receipt_state": "RESOLVED"
+        },
+        {
+          "artifact_ref": "urn:kfm:artifact:ndvi-readiness:ks-20173:2026-08-08",
+          "artifact_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evidence_ref": "evidence:synthetic:ndvi-readiness:ks-20173:2026-08-08",
+          "logical_role": "NDVI_READINESS_ASSESSMENT",
+          "receipt_state": "RESOLVED"
+        }
+      ],
+      "object_type": "VegetationConnectivityGateAssessment",
+      "observation_ids": [
+        "obs-2026-07-25",
+        "obs-2026-08-01",
+        "obs-2026-08-08"
+      ],
+      "outcome": {
+        "reasons": [],
+        "status": "PROPOSED_INDICATOR_CANDIDATE"
+      },
+      "schema_version": "1.0.0",
+      "spatial_unit": {
+        "id": "20173",
+        "kind": "COUNTY"
+      },
+      "spec_hash": "sha256:5d547292c0c282bbbe5b40e7b4554dc633422398e027ac1de5a08bcac1ad9c3d",
+      "summary": {
+        "component_count": 2,
+        "largest_qualifying_component_area_m2": 400000,
+        "qualifying_area_m2": 400000,
+        "qualifying_component_count": 1
+      },
+      "thresholds": {
+        "min_component_area_m2": 250000,
+        "min_persistence_basis_points": 6667,
+        "min_persistent_observations": 2,
+        "min_qualifying_component_count": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "base": "candidate",
+      "case_id": "valid_candidate",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "mutations": []
+    },
+    {
+      "base": "candidate",
+      "case_id": "valid_hold_area_threshold",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/assessment_id",
+          "value": "vegetation-connectivity-hold-area-2026-08-08"
+        },
+        {
+          "op": "replace",
+          "path": "/components/0/area_m2",
+          "value": 200000
+        },
+        {
+          "op": "replace",
+          "path": "/components/0/qualifies",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/summary/qualifying_component_count",
+          "value": 0
+        },
+        {
+          "op": "replace",
+          "path": "/summary/qualifying_area_m2",
+          "value": 0
+        },
+        {
+          "op": "replace",
+          "path": "/summary/largest_qualifying_component_area_m2",
+          "value": 0
+        },
+        {
+          "op": "replace",
+          "path": "/outcome/status",
+          "value": "HOLD"
+        },
+        {
+          "op": "replace",
+          "path": "/outcome/reasons",
+          "value": [
+            "AREA_THRESHOLD_NOT_MET"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "valid_hold_unresolved_input",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/assessment_id",
+          "value": "vegetation-connectivity-hold-input-2026-08-08"
+        },
+        {
+          "op": "replace",
+          "path": "/inputs/0/receipt_state",
+          "value": "UNRESOLVED"
+        },
+        {
+          "op": "replace",
+          "path": "/outcome/status",
+          "value": "HOLD"
+        },
+        {
+          "op": "replace",
+          "path": "/outcome/reasons",
+          "value": [
+            "INPUT_RECEIPT_UNRESOLVED"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_spec_hash",
+      "expected_findings": [
+        {
+          "code": "VEGETATION_CONNECTIVITY_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [],
+      "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_component_order",
+      "expected_findings": [
+        {
+          "code": "COMPONENTS_NOT_CANONICAL",
+          "path": "/components"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/components",
+          "value": [
+            {
+              "area_m2": 100000,
+              "component_id": "component-002",
+              "persistence_basis_points": 6667,
+              "present_observation_ids": [
+                "obs-2026-08-01",
+                "obs-2026-08-08"
+              ],
+              "qualifies": false
+            },
+            {
+              "area_m2": 400000,
+              "component_id": "component-001",
+              "persistence_basis_points": 10000,
+              "present_observation_ids": [
+                "obs-2026-07-25",
+                "obs-2026-08-01",
+                "obs-2026-08-08"
+              ],
+              "qualifies": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_component_unknown_observation",
+      "expected_findings": [
+        {
+          "code": "COMPONENT_OBSERVATION_UNKNOWN",
+          "path": "/components/0/present_observation_ids"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/components/0/present_observation_ids",
+          "value": [
+            "obs-2026-07-25",
+            "obs-2026-08-08",
+            "obs-2026-08-15"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_component_persistence",
+      "expected_findings": [
+        {
+          "code": "COMPONENT_PERSISTENCE_MISMATCH",
+          "path": "/components/0/persistence_basis_points"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/components/0/persistence_basis_points",
+          "value": 9999
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_component_qualification",
+      "expected_findings": [
+        {
+          "code": "COMPONENT_QUALIFICATION_MISMATCH",
+          "path": "/components/1/qualifies"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/components/1/qualifies",
+          "value": true
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_summary",
+      "expected_findings": [
+        {
+          "code": "SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/summary/qualifying_component_count",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_decision",
+      "expected_findings": [
+        {
+          "code": "DECISION_OUTCOME_MISMATCH",
+          "path": "/outcome/status"
+        },
+        {
+          "code": "DECISION_REASONS_MISMATCH",
+          "path": "/outcome/reasons"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outcome/status",
+          "value": "HOLD"
+        },
+        {
+          "op": "replace",
+          "path": "/outcome/reasons",
+          "value": [
+            "AREA_THRESHOLD_NOT_MET"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "candidate",
+      "case_id": "invalid_governance_authority",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/governance/network_allowed"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/governance/network_allowed",
+          "value": true
+        }
+      ]
+    }
+  ],
+  "schema_version": "kfm.fixture-cases.v1",
+  "scope": "domains.agriculture.vegetation_connectivity_gate"
+}
