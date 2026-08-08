@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KFM synthetic mobile PMTiles verification</title>
+  </head>
+  <body>
+    <main aria-labelledby="mobile-pmtiles-title">
+      <h1 id="mobile-pmtiles-title">Synthetic mobile PMTiles verification</h1>
+      <p>
+        This fixture verifies in-memory synthetic archive, index, signature-subject,
+        receipt, tile, decode, and render behavior. It does not load MapLibre or
+        authorize release.
+      </p>
+      <button id="verify-mobile-pmtiles" type="button">
+        Verify and render synthetic tile
+      </button>
+      <button id="verify-tampered-pmtiles" type="button">
+        Verify tampered archive
+      </button>
+      <p id="mobile-pmtiles-status" role="status" aria-live="polite">
+        HOLD / VERIFICATION_REQUIRED
+      </p>
+      <canvas
+        id="mobile-pmtiles-canvas"
+        width="1"
+        height="1"
+        aria-label="Verified synthetic PMTiles tile"
+      ></canvas>
+      <ul id="mobile-pmtiles-holds" aria-label="Verification holds"></ul>
+    </main>
+    <script type="module" src="./mobile-pmtiles-verification.fixture.ts"></script>
+  </body>
+</html>

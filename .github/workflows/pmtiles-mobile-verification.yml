@@ -1,0 +1,241 @@
+# KFM synthetic mobile PMTiles verification workflow.
+#
+# Responsibility:
+# - Prove one fixture-only PMTiles v3 archive/index/signature-subject/receipt
+#   packet under deterministic Python and mobile-emulated browser checks.
+# - Preserve explicit cryptographic, MapLibre-runtime, policy, release, and
+#   publication holds.
+#
+# Trigger:
+# - Path-scoped pull requests and pushes cover the fixture, validator, tests,
+#   app-local verification module, locked Explorer toolchain, generated receipt,
+#   and this workflow.
+#
+# Security and authority:
+# - Pull-request code runs on GitHub-hosted runners with contents:read only.
+# - Dependency installation may contact the package registry. Validation after
+#   installation is synthetic and no-network except the loopback Vite server.
+# - No secrets, write scopes, OIDC, artifact publication, deployment, signing,
+#   source activation, release, or publication authority exists.
+name: pmtiles-mobile-verification
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/pmtiles-mobile-verification.yml"
+      - "fixtures/pmtiles/mobile_verification/**"
+      - "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+      - "tools/validators/pmtiles/validate_header.py"
+      - "tools/validators/pmtiles/verify_merkle.py"
+      - "tests/validators/test_pmtiles_mobile_verification_fixture.py"
+      - "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts"
+      - "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md"
+      - "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.*"
+      - "apps/explorer-web/package.json"
+      - "apps/explorer-web/playwright.config.ts"
+      - "apps/explorer-web/tsconfig.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pmtiles-mobile-verification.yml"
+      - "fixtures/pmtiles/mobile_verification/**"
+      - "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+      - "tools/validators/pmtiles/validate_header.py"
+      - "tools/validators/pmtiles/verify_merkle.py"
+      - "tests/validators/test_pmtiles_mobile_verification_fixture.py"
+      - "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts"
+      - "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md"
+      - "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.*"
+      - "apps/explorer-web/package.json"
+      - "apps/explorer-web/playwright.config.ts"
+      - "apps/explorer-web/tsconfig.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pmtiles-mobile-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  KFM_NO_NETWORK: "1"
+  NODE_VERSION: "22"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  verify-mobile-pmtiles-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out fixture boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python fixture integrity and polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "fixtures/pmtiles/mobile_verification/README.md"
+            "fixtures/pmtiles/mobile_verification/cases.json"
+            "tools/validators/pmtiles/validate_header.py"
+            "tools/validators/pmtiles/verify_merkle.py"
+            "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+            "tests/validators/test_pmtiles_mobile_verification_fixture.py"
+          )
+          for path in "${required_paths[@]}"; do
+            if [[ ! -f "$path" ]]; then
+              echo "::error::Required mobile PMTiles fixture boundary is missing: $path"
+              exit 1
+            fi
+          done
+
+          python -m py_compile \
+            tools/validators/pmtiles/validate_mobile_verification_fixture.py \
+            tests/validators/test_pmtiles_mobile_verification_fixture.py
+
+          python -m unittest -v \
+            tests.validators.test_pmtiles_mobile_verification_fixture
+
+          python tools/validators/pmtiles/validate_mobile_verification_fixture.py \
+            --fixtures
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Validate explicit renderer and authority holds
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          const modulePath =
+            "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts";
+          const fixturePath =
+            "fixtures/pmtiles/mobile_verification/cases.json";
+          const appManifestPath = "apps/explorer-web/package.json";
+          const rootManifestPath = "package.json";
+
+          const moduleSource = fs.readFileSync(modulePath, "utf8");
+          const fixtures = JSON.parse(fs.readFileSync(fixturePath, "utf8"));
+          const appManifest = JSON.parse(fs.readFileSync(appManifestPath, "utf8"));
+          const rootManifest = JSON.parse(fs.readFileSync(rootManifestPath, "utf8"));
+
+          for (const marker of [
+            "MAPLIBRE_RUNTIME_UNADMITTED",
+            'authority: "NONE"',
+            "CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
+            "RELEASE_AUTHORIZATION_NOT_EVALUATED",
+          ]) {
+            if (!moduleSource.includes(marker)) {
+              throw new Error(`required hold marker is missing: ${marker}`);
+            }
+          }
+
+          for (const forbidden of [
+            "fetch(",
+            "XMLHttpRequest",
+            "WebSocket",
+            'from "maplibre',
+            'import("maplibre',
+          ]) {
+            if (moduleSource.includes(forbidden)) {
+              throw new Error(`transport or renderer shortcut surfaced: ${forbidden}`);
+            }
+          }
+
+          const dependencyFields = [
+            "dependencies",
+            "devDependencies",
+            "optionalDependencies",
+            "peerDependencies",
+          ];
+          for (const manifest of [appManifest, rootManifest]) {
+            for (const field of dependencyFields) {
+              const dependencies = manifest[field] || {};
+              for (const dependency of ["maplibre-gl", "pmtiles"]) {
+                if (dependencies[dependency]) {
+                  throw new Error(
+                    `${dependency} surfaced without an accepted runtime-admission slice`,
+                  );
+                }
+              }
+            }
+          }
+
+          if (fixtures.base.maplibre_boot_state !== "HOLD") {
+            throw new Error("fixture must retain MapLibre boot HOLD");
+          }
+          if (Object.values(fixtures.base.authority).some(Boolean)) {
+            throw new Error("fixture authority flags must remain false");
+          }
+
+          console.log(
+            "CONFIRMED: fixture remains byte-injected, transport-free, renderer-unadmitted, and authority-free.",
+          );
+          NODE
+
+      - name: Install locked Explorer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Run focused Explorer unit proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web exec vitest run \
+            tests/mobile-pmtiles-verification.test.ts
+
+      - name: Run mobile-emulated browser proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web exec playwright test \
+            --config=playwright.config.ts \
+            tests/browser/mobile-pmtiles-verification.spec.ts
+
+      - name: Record verification boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Synthetic mobile PMTiles verification"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Python: header, archive digest, PMIDX leaf/root/range, tile digest, PMSIG subject, RunReceipt subject, exact fixture polarity, no-network guard"
+            echo "- Browser: 390x844 viewport, device scale factor 3, touch/mobile emulation, in-memory PNG decode/canvas render, tampered-archive denial, external-request absence"
+            echo "- Holds: cryptographic verification, live MapLibre runtime boot, policy, release authorization, deployment, publication"
+            echo "- Authority: NONE; synthetic fixture proof only"
+          } >> "$GITHUB_STEP_SUMMARY"

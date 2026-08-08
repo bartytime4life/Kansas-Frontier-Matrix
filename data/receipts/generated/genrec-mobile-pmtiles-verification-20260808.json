@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-mobile-pmtiles-verification-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pmtiles-mobile-verification.yml",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts",
+    "fixtures/pmtiles/mobile_verification/README.md",
+    "fixtures/pmtiles/mobile_verification/cases.json",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-mobile-verification.yml": "sha256:5c950eff9d46a2b3928eeb41a6f316458600af02f84704ab095cc88b0dc82f7c",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md": "sha256:a40379ccf8ac7cfab42d0fe268b45acee2e274c2c8ab7486fdc306c3d9a4bc39",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts": "sha256:2cdc54643bf2c768d6d587ceab990f16055d759ff7dd01b56039a8045f4c00a8",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts": "sha256:21c3f0e07d0ef1b9570bd6464e08cb5a3cc604fe22889147ebaea4427fe866d5",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html": "sha256:288347a4daaac75c0427b4191be8cabbfd6bf3cc6a7d4ffce6130bb6a94bf73c",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "sha256:6f4bffc890af0cf1c81e8178f6079a927c91df5a5182c97e3cee5a249deeb94a",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts": "sha256:550c1ca849e44d28ef2a4880940b58b89b97b12f484fd708fb7dc9bd4dc9a826",
+    "fixtures/pmtiles/mobile_verification/README.md": "sha256:691acad08826b87127d1657f0a1b176eb9257a6a027779d00940cc70c0958ef0",
+    "fixtures/pmtiles/mobile_verification/cases.json": "sha256:7dc14edf9479e3de5fdd098c25a68dd7c2e993a04a2220f317675fad1b8e6995",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py": "sha256:124ee432ae5e24d1586bac08d98722877b93c5ce874db960913c7773adfcfd9d",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "sha256:aa175d06928bc41286d7107b5b93f70c30102799763f2de0945aafa1d4f9530c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:a270b6dc320350b060626e1ab40f601d5c436bc2a481b27156e4b8699ebb8153",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local Python deterministic validation",
+      "local TypeScript strict compile",
+      "local emitted-JavaScript fixture replay"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-111",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fbfa7f95791094a858ebf659098fd39b7866adda",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/tools/validators/pmtiles/validate_header.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/tools/validators/pmtiles/verify_merkle.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/tools/validators/pmtiles/validate_attestation_bundle.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/apps/explorer-web/playwright.config.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pmtiles-mobile-verification.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "CONFIRMED",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts": "CONFIRMED",
+    "fixtures/pmtiles/mobile_verification/README.md": "PROPOSED",
+    "fixtures/pmtiles/mobile_verification/cases.json": "CONFIRMED",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py": "CONFIRMED",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "The new validator and focused unittest module compile under Python 3.13; hosted Python 3.12 remains controlling."
+    },
+    {
+      "gate": "focused-python-unittest-5",
+      "outcome": "PASS",
+      "reason": "Five standard-library tests passed for exact fixture polarity, deterministic replay, CLI behavior, no-network denial, duplicate-key denial, and size limits."
+    },
+    {
+      "gate": "fixture-polarity-1-pass-7-deny",
+      "outcome": "PASS",
+      "reason": "The compact base-plus-mutation manifest produced one positive and seven exact negative outcomes."
+    },
+    {
+      "gate": "pmtiles-header-pmidx-tile-subject-closure",
+      "outcome": "PASS",
+      "reason": "The synthetic packet binds the PMTiles v3 header/metadata, archive SHA-256, PMIDX leaf/root/range, tile SHA-256, PMSIG subject, and RunReceipt subject."
+    },
+    {
+      "gate": "no-network-socket-denial",
+      "outcome": "PASS",
+      "reason": "Python fixture validation passed with socket, create_connection, and getaddrinfo denied."
+    },
+    {
+      "gate": "typescript-strict-static-compile",
+      "outcome": "PASS",
+      "reason": "The app-local module, browser fixture, focused unit source, and browser spec compile under global TypeScript 5.8 with interface-compatible declarations; repository TypeScript 7 hosted validation remains controlling."
+    },
+    {
+      "gate": "emitted-javascript-fixture-replay",
+      "outcome": "PASS",
+      "reason": "An emitted ES2022 replay matched all eight declared finite outcomes and retained MapLibre, cryptographic, and release holds."
+    },
+    {
+      "gate": "workflow-yaml-parse-and-least-privilege-preflight",
+      "outcome": "PASS",
+      "reason": "The workflow parses as YAML, uses immutable GitHub action pins, contents:read, no secrets, no OIDC, and no write/deploy/publish step."
+    },
+    {
+      "gate": "repository-native-vitest",
+      "outcome": "SKIPPED",
+      "reason": "The local environment lacks the repository's locked pnpm dependency installation; hosted exact-head CI is controlling."
+    },
+    {
+      "gate": "mobile-playwright-verify-decode-render",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native Playwright execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human semantic and security review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:master-maplibre-ml-y-111",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-111"
+    },
+    {
+      "id": "attachment:directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:pmtiles-header-validator",
+      "validated": true,
+      "evidence_ref": "github:tools/validators/pmtiles/validate_header.py"
+    },
+    {
+      "id": "repository:pmtiles-merkle-validator",
+      "validated": true,
+      "evidence_ref": "github:tools/validators/pmtiles/verify_merkle.py"
+    },
+    {
+      "id": "repository:explorer-browser-baseline",
+      "validated": true,
+      "evidence_ref": "github:apps/explorer-web/playwright.config.ts"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T22:12:32Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Partial, dependency-ordered realization of ML-Y-111. The packet commits one synthetic base64 PMTiles v3 archive and sidecar objects, exact mutation cases, a standard-library validator, focused Python and Explorer tests, a mobile-emulated PNG decode/canvas render fixture, and a read-only workflow. It deliberately does not install or boot MapLibre because the current @kfm/maplibre package and runtime dependency remain unadmitted. Cryptographic verification and release authorization also remain explicit holds. No source, evidence, policy, lifecycle, release, cache, deployment, publication, or public-use authority is created."
+}
