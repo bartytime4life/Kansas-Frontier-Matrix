@@ -1,0 +1,88 @@
+# Render stable-diff reports into deterministic reviewer-facing Markdown.
+name: stable-diff-review-summary
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/stable-diff-review-summary.yml"
+      - "tools/diff/stable_diff.py"
+      - "tools/ci/render_stable_diff_summary.py"
+      - "tests/diff/**"
+      - "data/receipts/generated/genrec-stable-diff-review-summary-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/stable-diff-review-summary.yml"
+      - "tools/diff/stable_diff.py"
+      - "tools/ci/render_stable_diff_summary.py"
+      - "tests/diff/**"
+      - "data/receipts/generated/genrec-stable-diff-review-summary-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stable-diff-review-summary-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: |
+          set -euo pipefail
+          python -m unittest tests.diff.test_stable_diff tests.diff.test_render_stable_diff_summary -v
+      - name: Exercise stable-diff to reviewer-summary handoff
+        run: |
+          set -euo pipefail
+          python tools/diff/stable_diff.py \
+            --left tests/diff/fixtures/changed/left.json \
+            --right tests/diff/fixtures/changed/right.json \
+            --output /tmp/stable-diff-report.json
+          python tools/ci/render_stable_diff_summary.py \
+            --report /tmp/stable-diff-report.json \
+            --output /tmp/stable-diff-summary.md
+          grep -F '# Stable Diff Review Summary' /tmp/stable-diff-summary.md
+          grep -F 'Changed top-level keys' /tmp/stable-diff-summary.md
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-stable-diff-review-summary-20260808.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Stable diff review summary"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: strict report-envelope validation and deterministic Markdown rendering."
+            echo "- Boundary: summary output is not evidence, policy, review approval, proof, promotion, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
