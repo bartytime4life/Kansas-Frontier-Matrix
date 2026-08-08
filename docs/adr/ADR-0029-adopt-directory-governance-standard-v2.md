@@ -8,6 +8,9 @@ owners: ["@bartytime4life"]
 created: 2026-07-26
 updated: 2026-08-08
 policy_label: public
+owning_root: "docs/"
+responsibility: "Record the accepted Directory Rules v2 decision and bounded post-adoption implementation status."
+truth_posture: "CONFIRMED evidence / ACCEPTED decision / NEEDS VERIFICATION follow-up"
 related:
   - "docs/doctrine/directory-rules.md"
   - "docs/architecture/directory-rules.md"
