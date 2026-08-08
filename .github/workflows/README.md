@@ -14,10 +14,10 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: 4989f6d5145908dfc56f778b39082719ce1788ad
-  workflows_tree: a417dccf118d69edd0145629f81524717c93b849
+  read_commit: d4586ec659d86e4bf07e59bccd65c6c3412755e7
+  workflows_tree: 2ae2cae3c225bfd56ead2a2dd0f96690f13d8f0d
   readme_prior_blob: e88e3a5d4b76d02edc55885274a21523e39ae044
-  current_workflow_files: 190
+  current_workflow_files: 191
   current_workflow_extension: .yml
   current_workflow_readme_files: 1
   prior_detailed_inventory: 44 workflow files at v0.14; retained in Git history; superseded as current inventory
@@ -40,7 +40,7 @@ related:
   - ../../contracts/README.md
   - ../../release/README.md
 notes:
-  - "The 190-file count is exact for the pinned Git tree. This edition does not claim a complete current per-workflow trigger, permission, action, network, maturity, or hosted-result audit."
+  - "The 191-file count is exact for the pinned Git tree. This edition does not claim a complete current per-workflow trigger, permission, action, network, maturity, or hosted-result audit."
   - "The v0.14 detailed forty-four-workflow classification and action inventory remain historical process evidence in Git history, not current-tree evidence."
   - "Workflow filenames and green checks are orchestration evidence only; they do not create policy, review, release, lifecycle, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -50,7 +50,7 @@ notes:
 # `.github/workflows/`
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
-[![Current inventory: 190 workflows](https://img.shields.io/badge/current%20inventory-190%20workflows-1f6feb?style=flat-square)](#current-inventory-boundary)
+[![Current inventory: 191 workflows](https://img.shields.io/badge/current%20inventory-191%20workflows-1f6feb?style=flat-square)](#current-inventory-boundary)
 [![Audit: bounded](https://img.shields.io/badge/per--workflow%20audit-bounded-f59e0b?style=flat-square)](#current-inventory-boundary)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c?style=flat-square)](#authority-level)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-8250df?style=flat-square)](../../docs/doctrine/ai-build-operating-contract.md)
@@ -109,16 +109,16 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ## Status and evidence boundary
 
-This edition was prepared against `main@4989f6d5145908dfc56f778b39082719ce1788ad` and workflow tree `a417dccf118d69edd0145629f81524717c93b849`.
+This edition was prepared against `main@d4586ec659d86e4bf07e59bccd65c6c3412755e7` and workflow tree `2ae2cae3c225bfd56ead2a2dd0f96690f13d8f0d`.
 
 **CONFIRMED for that snapshot:**
 
-- the workflow subtree contains one README and **190 tracked `.yml` workflow files**;
+- the workflow subtree contains one README and **191 tracked `.yml` workflow files**;
 - the old v0.14 README blob remains in Git history;
 - the current tree includes rapidly expanded domain, source, evidence, policy, review, artifact, map, runtime, and governance lanes;
 - this change edits documentation only and changes no workflow bytes or GitHub setting.
 
-**NEEDS VERIFICATION for the complete 190-file tree:**
+**NEEDS VERIFICATION for the complete 191-file tree:**
 
 - every trigger and path filter;
 - every permission and write scope;
@@ -135,11 +135,11 @@ A filename proves only that bytes exist. It does not establish that the lane is 
 
 | Inventory fact | Current value | Interpretation |
 |---|---:|---|
-| Workflow files | **190** | Exact count of tracked `.yml` files in the pinned tree. |
+| Workflow files | **191** | Exact count of tracked `.yml` files in the pinned tree. |
 | Workflow README files | **1** | This file. |
 | Alternative `.yaml` workflow files | **0 observed** | The pinned workflow tree contains `.yml` files and this README. |
 | Prior documented workflow set | **44** | Historical v0.14 classification; no longer a complete current inventory. |
-| Net growth since prior detailed snapshot | **146** | Maintenance and audit pressure, not maturity. |
+| Net growth since prior detailed snapshot | **147** | Maintenance and audit pressure, not maturity. |
 | Complete current behavioral audit | **Not performed** | Must remain `NEEDS VERIFICATION` until generated and reviewed against exact bytes. |
 
 The count should be regenerated from the Git tree whenever workflows change. A future repository-owned inventory validator is preferred over manual arithmetic.
@@ -170,7 +170,7 @@ This edition therefore:
 - supersedes its 44-file count and “complete workflow inventory” label as current evidence;
 - does not copy stale per-workflow conclusions onto 146 additional files;
 - retains the underlying authoring, threat-model, validation, non-publisher, and rollback rules;
-- makes a full 190-workflow static and hosted audit an explicit verification item.
+- makes a full 191-workflow static and hosted audit an explicit verification item.
 
 Historical evidence remains citable at its pinned commit. It must not be silently presented as current-main behavior.
 
@@ -353,7 +353,7 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — generated complete inventory of workflow names, top-level names, job IDs, triggers, paths, permissions, runners, actions, secrets/OIDC, network, caches, artifacts, and write scopes for all 190 files.
+- **NEEDS VERIFICATION** — generated complete inventory of workflow names, top-level names, job IDs, triggers, paths, permissions, runners, actions, secrets/OIDC, network, caches, artifacts, and write scopes for all 191 files.
 - **NEEDS VERIFICATION** — current rulesets and exact required-check coupling.
 - **NEEDS VERIFICATION** — recent hosted outcomes, failure causes, logs, rerun state, and artifact retention.
 - **NEEDS VERIFICATION** — duplicate, overlapping, obsolete, or misleading workflow/check identities created during rapid growth.
@@ -367,7 +367,7 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 
 | Date | Version | Change |
 |---|---|---|
-| 2026-08-08 | v0.15 | Re-pinned the subtree to `main@4989f6d…`; recorded the exact 190-workflow count; superseded the 44-file classification as current inventory while preserving it in Git history; separated filename facts from unverified per-workflow behavior; and retained the non-publisher, threat-preflight, validation, review, and rollback contracts. |
+| 2026-08-08 | v0.15 | Re-pinned the subtree to `main@d4586ec…`; recorded the exact 191-workflow count; superseded the 44-file classification as current inventory while preserving it in Git history; separated filename facts from unverified per-workflow behavior; and retained the non-publisher, threat-preflight, validation, review, and rollback contracts. |
 | 2026-08-03 | v0.14 | Reconciled promotion workflow documentation with a bounded fixture-only ReviewRecord candidate inside the prior 44-workflow snapshot. |
 | 2026-08-02 | v0.13 | Added a deterministic finite-envelope shape proof while preserving mock-runtime and composed-E2E holds. |
 | 2026-08-02 | v0.12 | Added focused `GENERATED_RECEIPT` validation to the validator suite without changing publication authority. |
