@@ -1,17 +1,175 @@
 {
-  "artifact_hashes": {},
-  "artifact_paths": [],
-  "citations": [],
+  "artifact_hashes": {
+    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:f7667f614130f8e490b655016404f29c5b14ba9241580fe694ac27100ffb6942",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "sha256:e16a58a5bb7e6728e7c2228c39bec6429f353b3a83f228fd02e1ee1fc5d36226",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/README.md": "sha256:083e5bb6b7324809a788f66029ee06ecdf1e9814e50c1072468489bbd0b42a68",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/fixture_manifest.json": "sha256:19823f1682c709321113f3928ac8ac4991bb7611412ad601dd88eb4c03aa7f11",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_proof_without_receipt.json": "sha256:42513574bbab705aed6ff2981a68017317e635e945c541b34616775d2a5bb0f7",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_publication_without_release.json": "sha256:4ab3ea6bdd7247fe37ec8bc2be9dbdcbce724e28c0b38028b291192128abcac8",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_reason_codes_not_canonical.json": "sha256:9a8cbeb11ee9247222d9f064a1f2d88b01ccc9e53eb6e2c93e496cebb0f0854a",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_receipt_as_proof.json": "sha256:0a2e235f210f0c18c104cb6ccdee8279b42f87ba4896a3794804db82ac731bbc",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_release_without_proof.json": "sha256:a2df6032a788a9c76516e80f4818502387fd25d13f95a3b01be200d4fe3acaa4",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_spec_hash_mismatch.json": "sha256:050dcab5b69be53438674665e9c74798d1e421f91e69e09cf9e4ac11d665d40c",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_proof_bound_cataloged.json": "sha256:3be9ba8a00b5a36f21534a879b94d22a54a1c30f206a0edb0e8adb962bb4ff5a",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_receipt_bound_candidate.json": "sha256:7fdf0eee2fede8c6dfb75d7c66cfd2d4b7fa7fa2ed0e3b66edcf1cbee8f18215",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_release_linked_not_published.json": "sha256:cc882bc841e73d71bf2b33d8c129d244f7ef09f88a2632b93c68a248e8ee65d3",
+    "schemas/contracts/v1/stac/kfm-profile-v1.schema.json": "sha256:762758aa8358b079038595690f04eca20a38ea8fbca9fc2374e80352970462bb",
+    "tests/validators/test_validate_kfm_stac_profile.py": "sha256:425701d9b39c49e7283d462a08fe1c64f98ab563c04fa7c23d150eec0552fbd5",
+    "tools/validators/stac/README.md": "sha256:7b6661245b0c67131e09c5bf9e6344baeca0cc51bef8f4fc592f0a3040b90264",
+    "tools/validators/stac/validate_kfm_profile_v1.py": "sha256:1d30bbaf33783e320e9e78e19ece5a5d44563ced72c0a6a3a15eba4c568c34d8"
+  },
+  "artifact_paths": [
+    ".github/workflows/stac-kfm-trust-profile.yml",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/README.md",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/fixture_manifest.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_proof_without_receipt.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_publication_without_release.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_reason_codes_not_canonical.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_receipt_as_proof.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_release_without_proof.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_proof_bound_cataloged.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_receipt_bound_candidate.json",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_release_linked_not_published.json",
+    "schemas/contracts/v1/stac/kfm-profile-v1.schema.json",
+    "tests/validators/test_validate_kfm_stac_profile.py",
+    "tools/validators/stac/README.md",
+    "tools/validators/stac/validate_kfm_profile_v1.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-IDEA-0004",
+      "id": "attachment:pass3-kfm-catalog-extensions",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/stac/kfm-profile-v1.schema.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:stac-profile-scaffold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:directory-governance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass3-catalog-trust-extension-20260808.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:correction-target",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github-actions:run/31271963065#report-correction-binding-digests",
+      "id": "github-actions:stac-profile-digest-readback",
+      "validated": true
+    }
+  ],
   "contract_version": "3.0.0",
-  "created_at": "2026-08-08T17:00:00Z",
+  "created_at": "2026-08-08T18:13:02Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
-  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
-  "inputs": {},
-  "model_identity": {"model": "GPT-5.6 Pro", "provider": "OpenAI", "version": "2026-08-08"},
-  "parameters": {},
-  "policy_decisions": [],
-  "prompt_or_contract": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-  "receipt_id": "placeholder-not-used",
-  "truth_labels": {},
-  "validation_gates": []
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-IDEA-0004",
+      "repo:schemas/contracts/v1/stac/kfm-profile-v1.schema.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:docs/standards/STAC_KFM_TRUST_EXTENSION.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Corrective completion of Pass 3 KFM-P3-IDEA-0004. The prior merged packet contained only the standards document and a placeholder GENERATED_RECEIPT while its pull-request narrative described executable companions. This packet adds the missing schema, validator, fixtures, tests, workflow, and exact-byte provenance without activating a source, catalog service, release, deployment, or publication. GitHub Actions run 31271963065 read back the exact workflow and standards-document SHA-256 values used by this forward correction.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:8d21e887eee656094477b57784fef12229ccba32dddf4e0209a3e2f5290bd88a",
+  "receipt_id": "genrec-pass3-catalog-trust-extension-20260808",
+  "truth_labels": {
+    ".github/workflows/stac-kfm-trust-profile.yml": "CONFIRMED",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "PROPOSED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/README.md": "PROPOSED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/fixture_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_proof_without_receipt.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_publication_without_release.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_reason_codes_not_canonical.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_receipt_as_proof.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_release_without_proof.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_proof_bound_cataloged.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_receipt_bound_candidate.json": "CONFIRMED",
+    "fixtures/contracts/v1/stac/kfm-profile-v1/valid/valid_release_linked_not_published.json": "CONFIRMED",
+    "schemas/contracts/v1/stac/kfm-profile-v1.schema.json": "PROPOSED",
+    "tests/validators/test_validate_kfm_stac_profile.py": "CONFIRMED",
+    "tools/validators/stac/README.md": "PROPOSED",
+    "tools/validators/stac/validate_kfm_profile_v1.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The replacement profile schema parsed and passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow parsed as YAML with pinned checkout and setup-python actions."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic no-network STAC trust-profile tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Three valid and six semantic-invalid fixtures matched exact value-free outcomes and reason codes."
+    },
+    {
+      "gate": "generated-receipt-byte-integrity",
+      "outcome": "PASS",
+      "reason": "Seventeen artifact paths have exact SHA-256 hashes and matching truth-label keys."
+    },
+    {
+      "gate": "hosted-digest-readback",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31271963065 emitted the checked-out workflow and standards-document SHA-256 values before this receipt-only correction."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed corrective pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the corrective draft pull request."
+    }
+  ]
 }

@@ -5,7 +5,7 @@
     "apps/explorer-web/src/features/consent_card/index.ts": "sha256:e29dfef78ea6648a8fb18e1cfb5631b16781a4f19b33cd2bbcfb8ebec3685916",
     "apps/explorer-web/tests/browser/consent-card.fixture.ts": "sha256:ce0302cdc4d424ce1aedab1929a094bcb520eccf9db0d0a007a6a600b336b544",
     "apps/explorer-web/tests/browser/consent-card.html": "sha256:a2e94f06bf08ceb291f37b05b0193479b63db6b5047ef3b8d47733f7da231d0e",
-    "apps/explorer-web/tests/browser/consent-card.spec.ts": "sha256:25fe8a9381852012c52c2f57086fd8c84641615c822016e2c56a7ca0df8e83d3",
+    "apps/explorer-web/tests/browser/consent-card.spec.ts": "sha256:4be91061d2408d2d75af73f0e29b0f27016dbeee8f8df7968738f3eb55dde67e",
     "apps/explorer-web/tests/consent-card.test.ts": "sha256:bf99f97a525534e5fd26b99f6c06c3b17b2d8265fb7064febfe56096244af30c",
     "fixtures/ui/consent_card_projection/README.md": "sha256:15f85d2bc036f37518197e7bdf99300b321cc9698fbb3a790a9ae2bc447ce6ad",
     "fixtures/ui/consent_card_projection/invalid/answer-missing-scope.json": "sha256:d5d501191a50c1d5723ace5f61fc36723cb46130b61d2cfb3641f68725d51577",
