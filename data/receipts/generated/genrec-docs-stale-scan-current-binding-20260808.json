@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-docs-stale-scan-current-binding-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/docs-stale-scan.yml",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md",
+    "tests/validators/docs/stale-scan/README.md",
+    "tests/validators/docs/stale-scan/_support.py",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/stale-scan/README.md",
+    "tools/validators/docs/stale-scan/check_stale_docs.py",
+    "tools/validators/docs/stale-scan/stale_scan_build.py",
+    "tools/validators/docs/stale-scan/stale_scan_core.py",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/docs-stale-scan.yml": "sha256:5a10f62eea031762d0de2bde87222d9e4774f9b729c02d5891e79c83a69a4f72",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md": "sha256:3ae2bf8530085d93b4b5807b4c23cfb37285e40ca8271018fa9ec1df32ed2ffd",
+    "tests/validators/docs/stale-scan/README.md": "sha256:5f16bbe2631d5fc7876a5e724f2e6ddf6e6040cbeb1c59fd0b68ff75dbada03f",
+    "tests/validators/docs/stale-scan/_support.py": "sha256:5884b901c3a5c71071fcde5dffe86e39505907408010522dd350364552195e4c",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md": "sha256:d92c6e09e7f0e750dc1b71b08882172c21ec96d61b9c75cbf043d54ac2f0407d",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md": "sha256:d2fa7d1ad20963add521f6df71c7259d56b288b3c0d72b97ad1e7cd1742d89a1",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md": "sha256:74783f5707f5aae93dc0477a93299255e8668c5cfbbab49251f2a1b0f8f385e5",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json": "sha256:012bea660b260587a176f59a2ddde975182eac240465ead8e17cefe8423a26dc",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "sha256:54e5308ad988f669d44caf568e7cd7e9a6e41cbe1da4fde155f37639694a841a",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py": "sha256:2a7eb3c30a68d2c77c3f06a6df99950500a278c13f5a4ffe475e281bf2181d69",
+    "tools/validators/docs/README.md": "sha256:784065833dad82016d66445429b2a04197d9d4944050fd782de0d3497921e902",
+    "tools/validators/docs/stale-scan/README.md": "sha256:d49af641a97700ed2aca8b3c59cb7ce7817c121fc909a24f5357bb72fc06b69f",
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "sha256:eb73b3546a352b69123b9f08756addc58af7a0675e181e116a7137f3028230d0",
+    "tools/validators/docs/stale-scan/stale_scan_build.py": "sha256:bc8f3fa898d0a56265711671f2f12a41e938cf5662d016dbc73da03275779ab3",
+    "tools/validators/docs/stale-scan/stale_scan_core.py": "sha256:bdee59e5f488dcc81d4a4d18eb2fff5c6e8dca6ecc18d5910665b303415b975d",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py": "sha256:6b0a852afa723f9b58d081f9a146ce2e970db2f47cfd925410f57290deb98b9b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:0eb85003244251b62e383fdfff2e4edebedf457c3581dbda3460b1b2f94dd8ec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "hosted exact-head validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@9db7f714371513b49a25025ee537c14077813d15",
+      "repo:pull/2104@7d1f191c16b9415fad0ee598237157a55f4e7f2e",
+      "repo:workflow-run/31147095062",
+      "repo:workflow-run/31147566259",
+      "repo:pull/2195@87ccee54dc90fe7d6c5ca0106491ca6ed7a94dde",
+      "repo:pull/2196@50dcefbd5f4d1e31299189cacf19eac022b47baa",
+      "repo:pull/2197@501110d80eb4714d1377c8033238968f8fad55ee",
+      "repo:data/receipts/generated/genrec-docs-stale-scan-ci-repair-20260807.json@4e4c87031f694f4a7502f898803d42bc1c9c14df"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/docs-stale-scan.yml": "PROPOSED",
+    "docs/intake/exploratory/docs-stale-scan-source-map.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/README.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/_support.py": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/README.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/expired.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/docs/recent.md": "PROPOSED",
+    "tests/validators/docs/stale-scan/fixtures/valid_repo/expected_stale_scan_report.json": "PROPOSED",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "PROPOSED",
+    "tests/validators/docs/stale-scan/test_stale_scan_core.py": "PROPOSED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/stale-scan/README.md": "PROPOSED",
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_build.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_core.py": "PROPOSED",
+    "tools/validators/docs/stale-scan/stale_scan_parse.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-failure-reproduction",
+      "outcome": "PASS",
+      "reason": "At main 9db7f714371513b49a25025ee537c14077813d15, all 23 focused freshness tests pass and the historical repair receipt fails only its three unsupported artifact digests."
+    },
+    {
+      "gate": "receipt-origin-forensics",
+      "outcome": "PASS",
+      "reason": "The receipt commit parent, receipt commit, PR #2104 exact head, and current main contain the same three artifact bytes. Diagnostic run 31147095062 emitted the committed Python digests, but the later receipt recorded different values and added an unsupported README digest."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The original genrec-docs-stale-scan-ci-repair-20260807.json remains unchanged as historical process memory."
+    },
+    {
+      "gate": "focused-no-network-tests",
+      "outcome": "PASS",
+      "reason": "The deterministic stale-scan unittest suite passes 23 of 23 tests locally with KFM_NO_NETWORK=1."
+    },
+    {
+      "gate": "current-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds the current workflow and complete stale-scan implementation artifact set to repository bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "A new exact-head hosted run is required after this current-state receipt and workflow reference are pushed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the separate corrective draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:current-main-reproduction",
+      "validated": true,
+      "evidence_ref": "repo:main@9db7f714371513b49a25025ee537c14077813d15"
+    },
+    {
+      "id": "repository:diagnostic-digest-run",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31147095062"
+    },
+    {
+      "id": "repository:original-receipt-commit",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-docs-stale-scan-ci-repair-20260807.json@4e4c87031f694f4a7502f898803d42bc1c9c14df"
+    },
+    {
+      "id": "repository:original-receipt-exact-head-failure",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31147566259"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T15:59:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current-state correction for the documentation freshness workflow. It preserves the invalid August 7 receipt unchanged as historical process memory, changes no freshness profile, finding rule, test, or trust boundary, and creates no truth, policy, review, merge, release, deployment, or publication authority."
+}
