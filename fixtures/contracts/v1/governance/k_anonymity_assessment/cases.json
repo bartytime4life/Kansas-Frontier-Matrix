@@ -1,0 +1,392 @@
+{
+  "fixture_profile": "kfm.k_anonymity_assessment.cases.v2",
+  "source_cards": [
+    "KFM-P2-IDEA-0015"
+  ],
+  "base_document": {
+    "profile": "kfm.k_anonymity_assessment.v1",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "assessment_id": "kfm:k-anonymity-assessment:sha256:cb2fbb3336f5dd87acc19f1b310daefe31c45140242bc15710d3d43311231453",
+    "subject": {
+      "subject_id": "synthetic:aggregate:county-month:v1",
+      "row_count": 25,
+      "geography_granularity": "county",
+      "time_granularity": "month",
+      "policy_label": "synthetic-sensitive-aggregate"
+    },
+    "policy_selection": {
+      "policy_profile_ref": "kfm://policy/synthetic/k-anonymity-profile-v1",
+      "policy_version": "1.0.0",
+      "selected_k": 5,
+      "selected_k_source": "policy_profile",
+      "policy_decision_refs": [
+        "kfm://policy-decision/synthetic/kanon-allow-review-v1"
+      ]
+    },
+    "quasi_identifiers": [
+      "age_band",
+      "county_fips",
+      "reporting_month"
+    ],
+    "generalization": {
+      "applied": true,
+      "steps": [
+        {
+          "field": "age_band",
+          "from_granularity": "five_year",
+          "to_granularity": "ten_year",
+          "reason": "synthetic low-frequency classes require broader bands",
+          "transform_receipt_ref": "kfm://receipt/synthetic/generalize-age-band-v1"
+        }
+      ]
+    },
+    "suppression": {
+      "record_count": 0,
+      "reasons": [],
+      "transform_receipt_refs": []
+    },
+    "equivalence_classes": [
+      {
+        "key_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "record_count": 5
+      },
+      {
+        "key_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "record_count": 8
+      },
+      {
+        "key_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "record_count": 12
+      }
+    ],
+    "evidence_refs": [
+      "kfm://evidence/synthetic/aggregate-input-v1",
+      "kfm://evidence/synthetic/privacy-review-v1"
+    ],
+    "assessment": {
+      "evaluated_at": "2026-08-08T18:40:00Z",
+      "class_count": 3,
+      "min_class_size": 5
+    },
+    "claims": {
+      "privacy_proof": false,
+      "policy_approved": false,
+      "release_authorized": false,
+      "lifecycle_write_performed": false,
+      "published": false
+    },
+    "spec_hash": "sha256:cb2fbb3336f5dd87acc19f1b310daefe31c45140242bc15710d3d43311231453"
+  },
+  "cases": [
+    {
+      "case_id": "valid_policy_selected_k5",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "refresh_identity": true,
+      "mutations": [],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "abstain_missing_evidence_support",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "KANON_SUPPORT_INCOMPLETE",
+          "path": "/evidence_refs"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_refs",
+          "value": []
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "abstain_missing_policy_decision",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "KANON_SUPPORT_INCOMPLETE",
+          "path": "/policy_selection/policy_decision_refs"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/policy_selection/policy_decision_refs",
+          "value": []
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "deny_missing_quasi_identifiers",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_QUASI_IDENTIFIERS_REQUIRED",
+          "path": "/quasi_identifiers"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/quasi_identifiers",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/generalization",
+          "value": {
+            "applied": false,
+            "steps": []
+          }
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "deny_equivalence_class_below_k",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_THRESHOLD_NOT_MET",
+          "path": "/equivalence_classes/0/record_count"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/equivalence_classes/0/record_count",
+          "value": 4
+        },
+        {
+          "op": "replace",
+          "path": "/subject/row_count",
+          "value": 24
+        },
+        {
+          "op": "replace",
+          "path": "/assessment/min_class_size",
+          "value": 4
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "deny_spec_hash_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_ASSESSMENT_ID_MISMATCH",
+          "path": "/assessment_id"
+        },
+        {
+          "code": "KANON_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [],
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/spec_hash",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb ¢ÒÀ¢°¢&÷#¢'&WÆ6R"À¢'F‚#¢"ö76W76ÖVçEö–B"À¢'fÇVR#¢&¶fÓ¦²Öæöç–Ö—G’Ö76W76ÖVçC§6†#Sc¦ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_assessment_id_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_ASSESSMENT_ID_MISMATCH",
+          "path": "/assessment_id"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [],
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/assessment_id",
+          "value": "kfm:k-anonymity-assessment:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_noncanonical_class_order",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_CLASS_ORDER_INVALID",
+          "path": "/equivalence_classes"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/equivalence_classes",
+          "value": [
+            {
+              "key_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+              "record_count": 12
+            },
+            {
+              "key_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+              "record_count": 8
+            },
+            {
+              "key_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+              "record_count": 5
+            }
+          ]
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "error_unexplained_generalization",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "KANON_GENERALIZATION_UNEXPLAINED",
+          "path": "/generalization/steps"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/generalization/steps",
+          "value": []
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "error_unexplained_suppression",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "KANON_SUPPRESSION_UNEXPLAINED",
+          "path": "/suppression/reasons"
+        },
+        {
+          "code": "KANON_SUPPRESSION_UNEXPLAINED",
+          "path": "/suppression/transform_receipt_refs"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/suppression/record_count",
+          "value": 5
+        },
+        {
+          "op": "replace",
+          "path": "/suppression/reasons",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/suppression/transform_receipt_refs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/subject/row_count",
+          "value": 30
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "error_row_count_closure",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "KANON_ROW_COUNT_CLOSURE_INVALID",
+          "path": "/subject/row_count"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/subject/row_count",
+          "value": 26
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "error_class_count_report",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "KANON_CLASS_COUNT_MISMATCH",
+          "path": "/assessment/class_count"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/assessment/class_count",
+          "value": 4
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "deny_generalization_field_outside_quasi_set",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_GENERALIZATION_FIELD_INVALID",
+          "path": "/generalization/steps/0/field"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/generalization/steps/0/field",
+          "value": "unregistered_quasi_identifier"
+        }
+      ],
+      "post_identity_mutations": []
+    },
+    {
+      "case_id": "deny_authority_claim",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "KANON_SCHEMA_INVALID",
+          "path": "/claims/privacy_proof"
+        }
+      ],
+      "refresh_identity": true,
+      "mutations": [],
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/privacy_proof",
+          "value": true
+        }
+      ]
+    }
+  ]
+}
