@@ -34,13 +34,11 @@ BASE_FIELDS = {
     "freshness",
     "correction_state",
 }
-ANSWER_EVIDENCE = [
-    {
-        "ref": "evidence:synthetic-soil-moisture-series",
-        "kind": "measurement",
-        "bundle_ref": "bundle:synthetic-soil-moisture-series",
-    }
-]
+ANSWER_EVIDENCE = {
+    "ref": "evidence:synthetic-soil-moisture-series",
+    "kind": "measurement",
+    "bundle_ref": "bundle:synthetic-soil-moisture-series",
+}
 
 
 def _load_validator() -> Draft202012Validator:
@@ -71,39 +69,35 @@ def _kwargs() -> dict[str, object]:
     }
 
 
-def _precision(
-    evidence_refs: list[dict[str, str]] | None = None,
-) -> dict[str, object]:
-    refs = copy.deepcopy(evidence_refs or ANSWER_EVIDENCE)
+def _precision(*, evidence_ref: dict[str, str] | None = None) -> dict[str, object]:
+    ref = evidence_ref or ANSWER_EVIDENCE
     return {
         "spatial": {
-            "representation": "grid",
-            "resolution": "250 m modeled grid",
-            "accuracy": (
-                "Source-reported grid resolution; positional accuracy is not asserted."
-            ),
+            "representation": "point",
+            "resolution": "station observation",
+            "accuracy": "Source-reported station position; no stronger positional accuracy asserted.",
             "generalization_applied": False,
         },
         "temporal": {
-            "granularity": "daily",
+            "granularity": "instantaneous observation",
             "observation_interval": {
-                "start": "2026-08-04T00:00:00Z",
-                "end": "2026-08-05T00:00:00Z",
+                "start": "2026-08-05T21:00:00Z",
+                "end": "2026-08-05T21:00:00Z",
             },
-            "freshness_class": "stale-accepted",
+            "freshness_class": "current",
         },
         "attribute": {
-            "measure": "synthetic_soil_moisture",
-            "unit": "percent",
-            "significant_precision": 2,
+            "measure": "synthetic soil moisture",
+            "unit": "fraction",
+            "significant_precision": 3,
             "classification_granularity": None,
         },
         "requested_precision": {
-            "spatial": "30 m",
+            "spatial": "field scale",
             "temporal": "hourly",
-            "attribute": "3 decimal places",
+            "attribute": "four decimal places",
         },
-        "evidence_refs": refs,
+        "evidence_refs": [copy.deepcopy(ref)],
         "transform_receipt_refs": [],
     }
 
@@ -113,37 +107,20 @@ def test_builds_schema_valid_closed_candidate_for_each_outcome(outcome: str) -> 
     kwargs = _kwargs()
     kwargs["outcome"] = outcome
     if outcome == "ANSWER":
-        kwargs["evidence_refs"] = copy.deepcopy(ANSWER_EVIDENCE)
+        kwargs["evidence_refs"] = [copy.deepcopy(ANSWER_EVIDENCE)]
         kwargs["precision_actually_used"] = _precision()
 
     candidate = build_runtime_response_candidate(**kwargs)
 
-    expected_fields = BASE_FIELDS | (
-        {"precision_actually_used"} if outcome == "ANSWER" else set()
-    )
-    assert set(candidate) == expected_fields
+    expected = BASE_FIELDS | ({"precision_actually_used"} if outcome == "ANSWER" else set())
+    assert set(candidate) == expected
     assert candidate["outcome"] == outcome
     assert list(_load_validator().iter_errors(candidate)) == []
 
 
-def test_answer_requires_precision_and_non_answer_forbids_it() -> None:
-    answer = _kwargs()
-    answer["outcome"] = "ANSWER"
-    answer["evidence_refs"] = copy.deepcopy(ANSWER_EVIDENCE)
-    with pytest.raises(EnvelopeBuildError) as missing:
-        build_runtime_response_candidate(**answer)
-    assert missing.value.code == "PRECISION_REQUIRED"
-
-    abstain = _kwargs()
-    abstain["precision_actually_used"] = _precision()
-    with pytest.raises(EnvelopeBuildError) as forbidden:
-        build_runtime_response_candidate(**abstain)
-    assert forbidden.value.code == "PRECISION_FORBIDDEN"
-
-
-def test_precision_is_defensively_copied_and_evidence_bound() -> None:
-    evidence_refs = copy.deepcopy(ANSWER_EVIDENCE)
-    precision = _precision(evidence_refs)
+def test_is_deterministic_and_defensively_copies_nested_inputs() -> None:
+    evidence_refs = [copy.deepcopy(ANSWER_EVIDENCE)]
+    precision = _precision(evidence_ref=evidence_refs[0])
     kwargs = _kwargs()
     kwargs.update(
         {
@@ -159,52 +136,11 @@ def test_precision_is_defensively_copied_and_evidence_bound() -> None:
     precision["spatial"]["resolution"] = "mutated"
 
     assert first == second
-    assert first["evidence_refs"][0]["ref"] == (
-        "evidence:synthetic-soil-moisture-series"
+    assert first["evidence_refs"][0]["ref"] == ANSWER_EVIDENCE["ref"]
+    assert (
+        first["precision_actually_used"]["spatial"]["resolution"]
+        == "station observation"
     )
-    assert first["precision_actually_used"]["spatial"]["resolution"] == (
-        "250 m modeled grid"
-    )
-
-
-def test_rejects_precision_evidence_not_present_at_top_level() -> None:
-    kwargs = _kwargs()
-    kwargs.update(
-        {
-            "outcome": "ANSWER",
-            "evidence_refs": copy.deepcopy(ANSWER_EVIDENCE),
-            "precision_actually_used": _precision(
-                [{"ref": "evidence:other", "kind": "measurement"}]
-            ),
-        }
-    )
-
-    with pytest.raises(EnvelopeBuildError) as error:
-        build_runtime_response_candidate(**kwargs)
-    assert error.value.code == "PRECISION_EVIDENCE_NOT_TOP_LEVEL"
-
-
-def test_is_deterministic_and_defensively_copies_evidence_refs() -> None:
-    evidence_refs = [
-        {
-            "ref": "evidence:synthetic-soil-moisture-series",
-            "kind": "measurement",
-        }
-    ]
-    kwargs = _kwargs()
-    kwargs["evidence_refs"] = evidence_refs
-
-    first = build_runtime_response_candidate(**kwargs)
-    second = build_runtime_response_candidate(**kwargs)
-    evidence_refs[0]["ref"] = "evidence:mutated-after-build"
-
-    assert first == second
-    assert first["evidence_refs"] == [
-        {
-            "ref": "evidence:synthetic-soil-moisture-series",
-            "kind": "measurement",
-        }
-    ]
 
 
 @pytest.mark.parametrize(
@@ -263,6 +199,91 @@ def test_rejects_invalid_evidence_ref_shapes(
         build_runtime_response_candidate(**kwargs)
 
     assert error.value.code == code
+
+
+def test_answer_requires_evidence_and_precision() -> None:
+    kwargs = _kwargs()
+    kwargs["outcome"] = "ANSWER"
+
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+    assert error.value.code == "ANSWER_EVIDENCE_REFS_REQUIRED"
+
+    kwargs["evidence_refs"] = [copy.deepcopy(ANSWER_EVIDENCE)]
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+    assert error.value.code == "ANSWER_PRECISION_REQUIRED"
+
+
+def test_negative_outcome_forbids_precision_disclosure() -> None:
+    kwargs = _kwargs()
+    kwargs["precision_actually_used"] = _precision()
+
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+
+    assert error.value.code == "NEGATIVE_OUTCOME_PRECISION_FORBIDDEN"
+
+
+def test_precision_evidence_must_be_bound_at_envelope_top_level() -> None:
+    kwargs = _kwargs()
+    kwargs.update(
+        {
+            "outcome": "ANSWER",
+            "evidence_refs": [copy.deepcopy(ANSWER_EVIDENCE)],
+            "precision_actually_used": _precision(
+                evidence_ref={"ref": "evidence:other", "kind": "measurement"}
+            ),
+        }
+    )
+
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+
+    assert error.value.code == "PRECISION_EVIDENCE_NOT_TOP_LEVEL"
+
+
+def test_generalization_requires_transform_receipt() -> None:
+    precision = _precision()
+    precision["spatial"]["generalization_applied"] = True
+    kwargs = _kwargs()
+    kwargs.update(
+        {
+            "outcome": "ANSWER",
+            "evidence_refs": [copy.deepcopy(ANSWER_EVIDENCE)],
+            "precision_actually_used": precision,
+        }
+    )
+
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+    assert error.value.code == "PRECISION_GENERALIZATION_RECEIPT_REQUIRED"
+
+    precision["transform_receipt_refs"] = [
+        "urn:kfm:transform-receipt:synthetic-generalization-v1"
+    ]
+    assert build_runtime_response_candidate(**kwargs)["outcome"] == "ANSWER"
+
+
+def test_precision_interval_must_not_be_inverted() -> None:
+    precision = _precision()
+    precision["temporal"]["observation_interval"] = {
+        "start": "2026-08-05T22:00:00Z",
+        "end": "2026-08-05T21:00:00Z",
+    }
+    kwargs = _kwargs()
+    kwargs.update(
+        {
+            "outcome": "ANSWER",
+            "evidence_refs": [copy.deepcopy(ANSWER_EVIDENCE)],
+            "precision_actually_used": precision,
+        }
+    )
+
+    with pytest.raises(EnvelopeBuildError) as error:
+        build_runtime_response_candidate(**kwargs)
+
+    assert error.value.code == "PRECISION_INTERVAL_INVERTED"
 
 
 def test_does_not_add_authority_or_payload_fields() -> None:
