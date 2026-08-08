@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-pass7-ai-output-artifact-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/ai-output-artifact.yml",
+    "contracts/runtime/ai_output_artifact.md",
+    "contracts/runtime/ai_output_batch_manifest.md",
+    "docs/intake/exploratory/pass7-ai-output-artifact-granularity.md",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/README.md",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_schema_invalid.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_1.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_2.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_valid.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_schema_invalid.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_1.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_2.json",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_valid.json",
+    "schemas/contracts/v1/runtime/ai_output_artifact.schema.json",
+    "schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json",
+    "tests/validators/test_validate_ai_output_artifact.py",
+    "tools/validators/ai/validate_ai_output_artifact.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/ai-output-artifact.yml": "sha256:4da3ff826e0bc9f5eebe4fe9ca10bf6b81bad1c3d545af39b5cec771db1f5611",
+    "contracts/runtime/ai_output_artifact.md": "sha256:c6b45ee1bcba7acb3d2a278664a0ade560ab563653e4b6e7ab60cacfe5bd6b2b",
+    "contracts/runtime/ai_output_batch_manifest.md": "sha256:0030a367c8129b72fe9480930cc4583da041e534f81da5e2aca867ac3cd7db48",
+    "docs/intake/exploratory/pass7-ai-output-artifact-granularity.md": "sha256:f28f73a62483fd17da28af2669287e549cea33895d5be9022c1ab3d354b80296",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/README.md": "sha256:b193f5e8c0c88946c22024ec55168e06afadc48cb8d9b4675b3d4a42b83df9b9",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_schema_invalid.json": "sha256:d2bcc00c3c41ac96e57029d6a9c0597053946580febd1c394792bcf21cd4160a",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_1.json": "sha256:a40147708dd9b79fbbf178a7c9e88d6342fb3e069600ad1b7df753fd947b24c4",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_2.json": "sha256:a42ddf27ea6bf740e79f8cb6dd891e7549a1c924f63cb22afc685809fa32f8ca",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_valid.json": "sha256:19bd7be37bd3bcde10dfc7ecd8069c1e1ac906ca31a65e283f09f340327a3589",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_schema_invalid.json": "sha256:9e3e3a2bf95ddc03892f0ec132581e59f44ac55d5c32cd9f9ec6641520174bc1",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_1.json": "sha256:e8213f21949057bdd9145edde38c3aed4d122a24fadc9d9d5986928775501792",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_2.json": "sha256:9991cc47314c885e36010e135f304623e09c3c156f65cae9d21ad367abd09bfd",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_valid.json": "sha256:b68fd715d286e9720c13c0d26c5d7168235d9468b75802534c02713bd94a2d23",
+    "schemas/contracts/v1/runtime/ai_output_artifact.schema.json": "sha256:f8b9f43330e39fc19e656778c9875aae1d72e4d958677d38e3af66115b49a6d0",
+    "schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json": "sha256:5a5b1a1205f454e69ade6e95256c70f2fd88b9155a6dd059540ebf18bc7111b3",
+    "tests/validators/test_validate_ai_output_artifact.py": "sha256:65bc6c7765bf25e9306ed181a99a6d254d005baf71cc58fcef52315ee12840ae",
+    "tools/validators/ai/validate_ai_output_artifact.py": "sha256:806ac93d66c66ae526316d96159b3dfb4f614815ea615b25c69fe7e69768c5db"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:b8209ab3d4bdac8a13a7b6b9d21b430babe7a780007c8b68253c929cc0dfaba7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-IDEA-0001",
+      "repo:contracts/runtime/ai_receipt.md@88274e95e3a69988eb8af8cf382b098c712f4d2c",
+      "repo:docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md@88274e95e3a69988eb8af8cf382b098c712f4d2c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@88274e95e3a69988eb8af8cf382b098c712f4d2c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/ai-output-artifact.yml": "CONFIRMED",
+    "contracts/runtime/ai_output_artifact.md": "PROPOSED",
+    "contracts/runtime/ai_output_batch_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass7-ai-output-artifact-granularity.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_schema_invalid.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_1.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_semantic_invalid_2.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/artifact_valid.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_schema_invalid.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_1.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_semantic_invalid_2.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/ai_output_artifact/cases/batch_valid.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/ai_output_artifact.schema.json": "PROPOSED",
+    "schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_ai_output_artifact.py": "CONFIRMED",
+    "tools/validators/ai/validate_ai_output_artifact.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-to-repository-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main had AIReceipt but no AIOutputArtifact or AIOutputBatchManifest; the packet reuses the runtime contract and governed-AI validator roots instead of creating parallel authorities."
+    },
+    {
+      "gate": "json-schema-and-yaml-validation",
+      "outcome": "PASS",
+      "reason": "The two closed Draft 2020-12 schemas passed meta-validation, all ten authored JSON documents parsed, and the dedicated workflow parsed as YAML."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic no-network unit tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Eight valid and eighteen invalid cases reproduced exact finite outcomes and finding-code sets."
+    },
+    {
+      "gate": "partial-revocation-non-cascade",
+      "outcome": "PASS",
+      "reason": "The partially revoked batch retained the unchanged active artifact ID and spec_hash while the batch manifest identity changed."
+    },
+    {
+      "gate": "dedicated-workflow-wiring",
+      "outcome": "PASS",
+      "reason": "The repository-owned read-only workflow runs the focused validator and test suite without changing the aggregate validator registry while its LayerManifest inventory repair remains independently reviewable."
+    },
+    {
+      "gate": "generated-receipt-shape-and-integrity",
+      "outcome": "PASS",
+      "reason": "Required fields, key-set equality, canonical artifact paths, and exact SHA-256 bindings were checked against the seventeen authored artifacts; the receipt does not bind itself."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass7-ai-output-artifact-granularity",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-IDEA-0001"
+    },
+    {
+      "id": "repository:ai-receipt-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/ai_receipt.md@88274e95e3a69988eb8af8cf382b098c712f4d2c"
+    },
+    {
+      "id": "repository:governed-ai-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md@88274e95e3a69988eb8af8cf382b098c712f4d2c"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@88274e95e3a69988eb8af8cf382b098c712f4d2c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T20:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of KFM-P7-IDEA-0001. The packet adds per-input deterministic AI output artifacts and a batch index that supports partial revocation without bulk invalidation. It runs no model, stores no prompt/output/chain-of-thought payload, resolves no evidence or policy reference, mutates no lifecycle state, and creates no promotion, release, publication, or public-use authority."
+}
