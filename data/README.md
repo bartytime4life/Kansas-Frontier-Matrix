@@ -1,56 +1,59 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/readme
-title: data/ — Governed Lifecycle Data and Trust-Artifact Root
-type: readme; root-readme; canonical-data-root; lifecycle-boundary; compatibility-drift-index; non-public-internal-root
-version: v0.3.0
-status: draft; repository-grounded; canonical-root-confirmed; mixed-lane-maturity; maps-compatibility-visible; manifests-compatibility-refreshed; payload-inventory-unverified; operational-enforcement-unverified; release-gated; non-authoritative
-owners: NEEDS VERIFICATION — Data steward · Source steward · Pipeline steward · Domain stewards · Catalog/triplet steward · Evidence/proof steward · Receipt steward · Registry steward · Rights/sensitivity/policy reviewers · Release/correction/rollback steward · Security reviewer · Docs steward
+title: data/ — Governed Lifecycle, Accountability, Registry, Catalog, and Released Carrier Root
+type: readme; root-readme; canonical-data-root; lifecycle-and-accountability-boundary; compatibility-drift-index
+version: v0.4.0
+status: repository-grounded; ADR-0029-aligned; root-registry-active; mixed-maturity; payload-and-runtime-enforcement-unverified; no-release; no-publication
+owners: ["@bartytime4life"]
 created: 2026-06-29
-updated: 2026-07-24
-supersedes: v0.2.0 data root README at the same path; no data, source, lifecycle, release, runtime, or publication state is superseded
-prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
-policy_label: "restricted-review; data-root; lifecycle-governed; internal-by-default; no-direct-public-path; release-gated; source-role-aware; rights-aware; sensitivity-aware; evidence-aware; receipt-proof-catalog-release-separated; correction-aware; rollback-aware"
+updated: 2026-08-08
+supersedes: v0.3.0 documentation at the same path; no data instance, lifecycle state, source admission, policy decision, release decision, runtime behavior, or publication state is superseded
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+policy_label: repository-facing; data-root; lifecycle-governed; internal-by-default; mixed-exposure; no-direct-public-path; release-gated; source-role-aware; rights-aware; sensitivity-aware; correction-aware; rollback-aware
 current_path: data/README.md
-review_packet_id: kfm-md-data-readme-v0.3-20260724
+owning_root: data/
+root_registry_id: root.data
+responsibility: governed lifecycle, accountability, registry, catalog, and released carrier instances
+review_packet_id: kfm-data-root-readme-20260808
 truth_posture: >
-  CONFIRMED existing data root README and stable document identity; Directory Rules v1.4
-  canonical data lifecycle root, phase map, release split, and mandatory root-README order;
-  current root blob; current main head; current data/maps compatibility README; current
-  data/manifests compatibility README and its five documented direct child README lanes;
-  v0.2 evidence for eleven canonical child READMEs, release-root separation, workflow
-  inventory, Makefile boundaries, CODEOWNERS routing, generated-receipt lane, and the
-  bounded static connector/pipeline non-publisher test / PROPOSED minimum lifecycle
-  artifact review profile, transition evidence profile, compatibility retirement sequence,
-  and unified data-root validation packet / CONFLICTED data/maps topic placement versus
-  lifecycle-rooted map artifacts; data/manifests versus responsibility-rooted manifest
-  families; data/prov versus data/catalog/prov; data/triplet and data/triplet(s) versus
-  canonical data/triplets; topic-level data/trade-routes versus lifecycle-domain lanes;
-  sources versus source_descriptors registry taxonomy; release/manifest versus
-  release/manifests; and data rollback support versus release rollback-decision families /
-  UNKNOWN exhaustive recursive payload inventory, historical compatibility payloads,
-  active source admissions, accepted cross-family lifecycle schemas, runtime writers,
-  emitted receipt/proof completeness, catalog/triplet closure, release binding, public
-  hosting, production behavior, and public effects / NEEDS VERIFICATION named accountable
-  owners, independent review enforcement, branch protection, retention/deletion policy,
-  sensitive-data access controls, validator orchestration, policy runtime, compatibility
-  consumer cutover, correction propagation, cache invalidation, and rollback drills
+  CONFIRMED same-path target and stable document identity; accepted ADR-0029; adopted
+  Directory Rules v2 bytes; active root.data machine projection; current main, repository,
+  and data tree identities; nineteen current direct child directories; ten present canonical
+  data lanes; absent conditional pre_raw lane; current compatibility, deprecated, and
+  migration-candidate children; bounded data/catalog, data/registry, data/document,
+  data/reports, data/maps, data/manifests, and data/rollback evidence; no exact-path open PR /
+  PROPOSED future child-README convergence, recursive object-family inventory, migration
+  manifests, consumer cutovers, and enforcement ratchets / CONFLICTED current direct and
+  nested paths versus adopted subtype-first, lifecycle-first, and object-family-first
+  placement; child READMEs that still cite prior Directory Rules or describe superseded
+  authority; catalog domain/domains duplication; registry source and domain duplication /
+  UNKNOWN exhaustive payloads, external stores, writers, consumers, runtime routes,
+  deployed services, current source admissions, emitted closure objects, branch-rule
+  coupling, retention execution, public hosting, and production effects / NEEDS VERIFICATION
+  accountable specialist stewards, independent review, recursive rights and sensitivity
+  posture, current-main enforcement breadth, compatibility expiry, correction propagation,
+  cache invalidation, and rollback drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
-  prior_blob: fb7b0acfaea25b630a3042f24cb97558a996d05a
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  maps_compatibility_readme_blob: a787a4417ad5ed4e1a678b8ffb52c8d947a37907
-  manifests_compatibility_readme_blob: 8e7e70c52b02990c87194bdc28c04e6849903bec
-  prior_evidence_base_commit: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7
-  prior_manifests_blob: c4cdbf0c0038f737447a7dc173f0fe49ef62490e
-  open_overlapping_pull_requests_found: "0"
-  checked_absent_paths_from_v0_2:
-    - data/events/README.md
-    - data/release/README.md
-  inventory_method: exact GitHub file reads, main-head comparison, bounded repository search, branch-name search, and open-PR overlap search; no clone, recursive payload inventory, Git history walk, Git LFS inventory, runtime, deployment, object store, CDN, or production environment was inspected
+  base_commit: 1001a87233e0f23695b6b12e60c654f938e6ffb5
+  base_tree: 1ef11008331b41797b8601f45003e2fe42c5c029
+  data_tree: e4ce79ed25b3d6b772bf00ec77fca92d38801fd3
+  prior_blob: 22d13b833369c290fe99e4a3d3c083835e5f2a37
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
+  directory_rules_decision: ADR-0029 accepted
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  catalog_tree: 6d7849e718244a9f9b540d047af6993a47cd0ed9
+  registry_tree: 515fa1ff5ae98a332114b67b2cb486791f5d07d8
+  document_tree: 0f790bcc92eddec204968aa0219663debb94a019
+  reports_tree: 89de9c854233576cdeac443f480ad4b9ae881946
+  direct_child_directories: 19
+  direct_child_files: 1
+  open_exact_path_pull_requests: 0
+  inventory_method: exact commit and blob reads, exact Git tree inspection, bounded child README reads, code and pull-request search, and workflow threat preflight; no clone, payload download, Git LFS walk, object-store query, database query, runtime probe, deployment inspection, or production access
 related:
   - raw/README.md
   - work/README.md
@@ -60,815 +63,799 @@ related:
   - triplets/README.md
   - receipts/README.md
   - proofs/README.md
-  - published/README.md
   - registry/README.md
-  - rollback/README.md
+  - published/README.md
+  - document/README.md
+  - reports/README.md
   - maps/README.md
   - manifests/README.md
   - prov/README.md
+  - rollback/README.md
+  - trade-routes/README.md
   - triplet/README.md
   - triplet(s)/README.md
-  - trade-routes/README.md
   - ../release/README.md
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../control_plane/root_registry.yaml
   - ../docs/doctrine/lifecycle-law.md
   - ../docs/doctrine/trust-membrane.md
-  - ../docs/doctrine/map-first.md
-  - ../docs/adr/INDEX.md
-  - ../contracts/
-  - ../schemas/
-  - ../policy/
-  - ../tools/validators/
-  - ../tests/
-  - ../fixtures/
-  - ../pipelines/
-  - ../pipeline_specs/
-  - ../connectors/
-  - ../apps/governed-api/
-  - ../apps/explorer-web/
+  - ../contracts/README.md
+  - ../schemas/README.md
+  - ../policy/README.md
+  - ../tools/validators/README.md
+  - ../tests/README.md
+  - ../fixtures/README.md
+  - ../pipelines/README.md
+  - ../connectors/README.md
+  - ../apps/governed-api/README.md
+  - ../apps/explorer-web/README.md
   - ../.github/workflows/README.md
-  - ../.github/CODEOWNERS
-  - ../Makefile
-tags: [kfm, data, lifecycle, raw, work, quarantine, processed, catalog, triplets, receipts, proofs, published, registry, rollback, maps, manifests, evidence, release, correction, compatibility, cite-or-abstain]
+  - ../.github/PULL_REQUEST_TEMPLATE.md
+tags: [kfm, data, lifecycle, raw, work, quarantine, processed, catalog, triplets, receipts, proofs, registry, published, release, correction, compatibility, migration, cite-or-abstain]
 notes:
-  - "v0.3.0 updates data/README.md in place and changes Markdown only."
-  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
-  - "The v0.2 lifecycle, authority, trust-membrane, validation, review, migration, evidence, and no-loss material is preserved."
-  - "data/maps is indexed as a frozen compatibility pointer and retirement lane; this documentation does not authorize map payloads there."
-  - "data/manifests is refreshed to its current non-canonical compatibility posture and five documented child README lanes."
-  - "No payload, source activation, contract, schema, policy, fixture, test, validator, pipeline, workflow, release record, runtime, API, UI, deployment, redirect, tombstone, migration, or public artifact is created or modified."
+  - "v0.4.0 reconciles the root README with accepted ADR-0029 and the exact current data tree."
+  - "The README follows the adopted ROOT_FULL profile and preserves legacy anchors used by prior editions."
+  - "The current direct-child tree is evidence, not automatic canon; nonconforming children remain visible and fail closed."
+  - "No payload, child README, source activation, contract, schema, policy, fixture, test, validator, pipeline, workflow, release record, migration, redirect, tombstone, runtime, API, UI, deployment, or public artifact is changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/` — Governed Lifecycle Data and Trust-Artifact Root
+# `data/` — Governed Lifecycle and Accountability Root
 
-> **One-line purpose.** Own KFM lifecycle material and its data-plane trust adjuncts—from immutable source capture through governed public-safe artifacts—without turning directory placement, a generated derivative, a compatibility path, or a release-adjacent record into truth or publication authority.
+> **One-line purpose.** `data/` owns governed lifecycle instances, accountability records, registries, catalog projections, and release-approved public-safe carriers. It does not create semantic meaning, policy permission, release authority, or truth merely by containing bytes.
 
-<p>
-  <a href="#status"><img alt="Status: repository-grounded draft" src="https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square"></a>
-  <a href="#authority-level"><img alt="Authority: canonical data root" src="https://img.shields.io/badge/authority-canonical%20data%20root-1f6feb?style=flat-square"></a>
-  <a href="#operating-model-and-lifecycle-invariant"><img alt="Lifecycle: governed RAW to PUBLISHED" src="https://img.shields.io/badge/lifecycle-governed%20RAW%E2%86%92PUBLISHED-8250df?style=flat-square"></a>
-  <a href="#compatibility-and-placement-conflicts"><img alt="Compatibility debt: visible" src="https://img.shields.io/badge/compatibility%20debt-visible-d97706?style=flat-square"></a>
-  <a href="#public-client-and-sensitive-data-boundary"><img alt="Public path: governed interfaces only" src="https://img.shields.io/badge/public%20path-governed%20only-b42318?style=flat-square"></a>
-  <a href="#outputs"><img alt="Release authority: separate" src="https://img.shields.io/badge/release%20authority-separate-6e7781?style=flat-square"></a>
-  <a href="#validation"><img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square"></a>
-</p>
+**Quick navigation:** [Purpose](#purpose) · [Authority](#root-class-and-authority-owner) · [Status](#adoption-and-conformance-status) · [Belongs](#what-belongs-here) · [Prohibited](#what-does-not-belong-here) · [Inputs and outputs](#inputs-outputs-and-permitted-writers) · [Exposure and storage](#exposure-sensitivity-mutability-retention-and-storage) · [Validation](#validation-and-negative-checks) · [Review](#owners-reviewers-and-escalation) · [Governance](#governing-decisions-aliases-migrations-and-compatibility) · [Directory map](#direct-child-directory-map) · [Review triggers](#last-evidence-review-and-review-triggers) · [Lifecycle](#operating-model-and-lifecycle-invariant) · [Current classification](#current-direct-child-classification) · [Drift](#current-nested-drift-and-documentation-conflicts) · [Public boundary](#public-client-and-sensitive-data-boundary) · [Open verification](#open-verification-register) · [Evidence](#evidence-ledger)
 
 > [!IMPORTANT]
-> **`data/` is a lifecycle authority boundary, not a truth shortcut.** A file, hash, registry entry, receipt, proof, catalog record, triplet, map artifact, manifest, published carrier, generated summary, workflow result, pull request, or merge does not become factual truth, policy permission, release approval, or KFM publication merely because it exists under this root.
+> **A path is not promotion.** A file, digest, registry entry, receipt, proof, catalog record, triplet, map, report, manifest, workflow result, pull request, merge, or placement under `data/published/` does not become factual truth, policy permission, review approval, release authority, or KFM publication by location alone.
 
 > [!CAUTION]
-> **Normal public clients must not read internal lifecycle stores or compatibility paths directly.** RAW, WORK, QUARANTINE, PROCESSED, registry, receipt, proof, catalog, triplet, rollback support, `data/maps/`, and `data/manifests/` remain behind governed boundaries. Only release-approved public-safe artifacts may flow from `data/published/` through approved delivery paths.
+> **Normal public clients do not read internal lifecycle or compatibility lanes.** Public interfaces resolve release-approved, public-safe carriers through governed APIs or approved static delivery. RAW, WORK, QUARANTINE, PROCESSED, receipts, proofs, registries, internal catalogs, graph projections, and compatibility paths remain behind the trust membrane.
 
 > [!WARNING]
-> **Secrets and restricted material do not belong in this public repository.** Credentials, private endpoints, source-system secrets, living-person private data, DNA/genomic material, precise rare-species or archaeology locations, sensitive infrastructure detail, private-land joins, protected cultural knowledge, and unreviewed source payloads require approved storage and access controls outside ordinary repository paths.
-
-**Quick navigation**
-
-| Root contract | Trust and operation | Maintenance |
-|---|---|---|
-| [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) | [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Lifecycle](#operating-model-and-lifecycle-invariant) · [Lane map](#canonical-lane-map) | [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Conflicts](#compatibility-and-placement-conflicts) · [Open verification](#open-verification-register) · [Evidence](#evidence-ledger) |
+> **Restricted bytes must not be committed because `data/` is their logical home.** Credentials, private endpoints, living-person private data, DNA/genomic material, precise rare-species or archaeology locations, sensitive infrastructure detail, protected cultural knowledge, unsafe private-land joins, and unclear-rights source payloads require approved storage, access, audit, retention, redaction, generalization, quarantine, or denial.
 
 ---
 
 <a id="scope"></a>
+<a id="purpose"></a>
 
 ## Purpose
 
-`data/` is the canonical KFM responsibility root for lifecycle material and data-plane trust artifacts.
+`data/` is the canonical responsibility root for KFM **data instances** and their governed lifecycle and accountability relationships.
 
-It answers five questions:
+It answers these questions:
 
-1. Which governed source capture, candidate, hold, processed product, catalog/triplet projection, receipt, proof, registry record, published carrier, or rollback-support artifact is this?
-2. Which lifecycle phase and domain lane owns it?
-3. Which source identity, role, rights, sensitivity, spatial scope, temporal scope, digest, code/spec identity, and validation lineage travel with it?
-4. Which evidence, policy, review, release, correction, and rollback obligations remain open?
-5. Which governed interface may expose it, to which audience and at which precision, after release gates close?
+1. What stable data instance, capture, candidate, hold, validated record, projection, registry record, receipt, proof-support object, or released carrier is this?
+2. Which lifecycle or accountability lane owns it?
+3. Which source identity, source role, spatial scope, temporal scope, rights posture, sensitivity posture, digest, schema version, code/spec identity, and producer receipt travel with it?
+4. Which validation, evidence, policy, review, release, correction, withdrawal, and rollback obligations remain open?
+5. Which governed interface may expose it, to which audience and at which precision?
 
-The durable public unit remains the **inspectable claim**. Data artifacts may support or carry that claim, but no path under `data/` can make the claim true, cited, rights-cleared, policy-admitted, reviewed, released, or public by implication.
+The durable public unit remains the **inspectable claim**. Data instances may support or carry that claim, but this root cannot make a claim true, cited, rights-cleared, reviewed, released, or public by implication.
 
-This README changes no data state. It does not admit a source, run a pipeline, validate a payload, emit a receipt, close a proof, catalog a dataset, approve a release, switch an alias, invalidate a derivative, publish an artifact, redirect a compatibility path, or expose a route.
+This README documents repository state and adopted boundaries. It does not change lifecycle state or authorize any source, payload, release, migration, public route, or deletion.
 
 [Back to top](#top)
 
 ---
 
 <a id="repo-fit"></a>
+<a id="authority-level"></a>
+<a id="root-class-and-authority-owner"></a>
 
-## Authority level
+## Root class and authority owner
 
-**Canonical data-lifecycle responsibility root; non-authoritative for object meaning, machine shape, policy, release decisions, public serving, and factual truth.**
+| Field | Current bounded result |
+|---|---|
+| Root ID | `root.data` |
+| Root class | `canonical` |
+| Projection status | `ACTIVE` |
+| Responsibility | Governed lifecycle, accountability, registry, catalog, and released carrier instances |
+| Allowed artifact kind | `data_instance` |
+| Prohibited artifact kinds | `policy_rule`, `release_decision`, `schema`, `semantic_contract` |
+| Exposure | `mixed` |
+| Mutation | `mixed` |
+| Retention | `lifecycle_policy` |
+| Verified repository owner/review route | `@bartytime4life` |
+| Validation profile | `lifecycle_and_accountability` |
 
-| Concern | Owning authority | Role of `data/` |
+The values above are projected by [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) from accepted Directory Rules v2. The registry is **machine projection only**: it cannot activate a source, approve a policy, admit a payload, migrate a path, release an artifact, or publish.
+
+### Authority split
+
+| Concern | Authority owner | `data/` role |
 |---|---|---|
-| Lifecycle material | `data/` | Stores governed artifacts in the correct phase or trust-support lane. |
-| Object meaning | [`contracts/`](../contracts/) | Data instances conform to accepted semantics; this README does not redefine them. |
-| Machine shape | [`schemas/`](../schemas/) | Data instances reference accepted schemas; schemas do not live beside payloads as parallel authority. |
-| Admissibility, rights, sensitivity, access | [`policy/`](../policy/) plus governed decisions | Data carries references and obligations; path placement does not grant permission. |
-| Executable intake and transforms | [`connectors/`](../connectors/), [`pipelines/`](../pipelines/), admitted packages and tools | Produce candidates and receipts; do not create truth or publication by writing a path. |
-| Enforceability | [`tests/`](../tests/), [`fixtures/`](../fixtures/), validators under [`tools/`](../tools/) | Prove bounded behavior; test success is not release approval. |
-| Evidence and proof meaning | contracts/schemas/policy plus [`proofs/`](proofs/README.md) | Stores proof-support instances; neither README nor folder is proof by itself. |
-| Process memory | [`receipts/`](receipts/README.md) | Stores receipts; receipts are not proof, catalog closure, release, or publication. |
-| Catalog and graph projections | [`catalog/`](catalog/README.md), [`triplets/`](triplets/README.md) | Stores derived discovery/relationship projections; they remain downstream of governed records. |
-| Release decisions | [`release/`](../release/README.md) | Separate root owns candidates, reviews, manifests, decisions, corrections, withdrawals, signatures, and rollback records. |
-| Released public-safe artifacts | [`published/`](published/README.md) | Stores approved delivery carriers after release governance closes. |
-| Public delivery | governed API, approved static delivery, release-resolved services | Consumes released artifacts; internal lifecycle stores are not normal public backends. |
-| Compatibility documentation | [`maps/`](maps/README.md), [`manifests/`](manifests/README.md), and other classified paths | Makes drift visible and reversible; cannot become an alternate artifact or authority home. |
-
-### Authority invariants
-
-- `data/published/` owns released **artifact bytes and public-safe sidecars**; `release/` owns the **decision and review record** that authorizes a release.
-- `data/receipts/` records process memory; `data/proofs/` supports evidence/proof closure; `data/catalog/` and `data/triplets/` provide projections. These families must not collapse.
-- Registry records identify and route sources, datasets, layers, rights, sensitivity, domains, and crosswalks. They do not replace domain evidence or lifecycle state.
-- A domain name is a segment under a lifecycle or trust-support lane, not a root-level topic bucket.
-- A map or manifest is classified by object family, lifecycle state, and responsibility—not by a topic-level convenience path.
-- Compatibility paths remain non-canonical until an accepted ADR and migration record say otherwise.
+| Semantic meaning and interface promises | [`contracts/`](../contracts/README.md) | Stores conforming instances; does not redefine meaning. |
+| Machine shape and declared generated types | [`schemas/`](../schemas/README.md) | References validated shapes; does not host parallel schemas. |
+| Allow, deny, hold, restrict, redact, or abstain rules | [`policy/`](../policy/README.md) | Carries policy references and obligations; path placement grants no permission. |
+| Source-specific fetch and admission | [`connectors/`](../connectors/README.md) | Receives admitted candidates only through governed boundaries. |
+| Transform and lifecycle orchestration | [`pipelines/`](../pipelines/README.md) and owned tools/packages | Stores results and receipts; job completion is not promotion. |
+| Executable conformance | [`tests/`](../tests/README.md), [`fixtures/`](../fixtures/README.md), and validators | Provides bounded evidence; success is not review or release authority. |
+| Release, correction, withdrawal, rollback, promotion, and signatures | [`release/`](../release/README.md) | Stores public-safe released carriers only after a separate decision. |
+| Public delivery | Governed API and approved static delivery | Consumes release-resolved carriers; does not read internal stores as the normal path. |
 
 [Back to top](#top)
 
 ---
 
+<a id="status"></a>
 <a id="status-notes"></a>
+<a id="adoption-and-conformance-status"></a>
 
-## Status
+## Adoption and conformance status
 
-### Evidence snapshot
+### Current evidence snapshot
 
-| Field | Current bounded result |
-|---|---|
-| Repository base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad` |
-| Prior target blob | `fb7b0acfaea25b630a3042f24cb97558a996d05a` |
-| Directory Rules | v1.4, blob `2affb080e6f0043867c64c7f06c1ca52030fbd55` |
-| Canonical root posture | **CONFIRMED:** Directory Rules assigns `data/` the lifecycle invariant and requires responsibility/lifecycle placement. |
-| Required README order | **CONFIRMED:** Directory Rules §15 requires the first twelve H2 sections used here. |
-| Canonical child README roots | **CONFIRMED at v0.2 evidence boundary:** eleven exact child READMEs listed in [Canonical lane map](#canonical-lane-map). |
-| `data/maps/` | **CONFIRMED:** current README classifies the path as non-canonical, pointer-only, deny-new-writes compatibility/retirement documentation. |
-| `data/manifests/` | **CONFIRMED:** current README classifies the path as non-canonical, deny-new-writes compatibility/retirement documentation with five documented direct child README lanes. |
-| Other compatibility/conflicted paths | **CONFIRMED at v0.2 evidence boundary:** `prov/`, `triplet/`, `triplet(s)/`, and `trade-routes/` remain non-canonical or conflicted. |
-| Separate release root | **CONFIRMED at v0.2 evidence boundary:** [`release/README.md`](../release/README.md) owns release governance and keeps readiness holds visible. |
-| Direct `data/events/README.md` | **NOT FOUND at the v0.2 checked path.** This README does not create a new pre-RAW sibling. |
-| Direct `data/release/README.md` | **NOT FOUND at the v0.2 checked path.** Release decisions remain under `release/`. |
-| Open overlapping pull requests | **0 found** for the target during preflight. |
+| Evidence | Current result | Interpretation |
+|---|---|---|
+| Default branch | `main@1001a87233e0f23695b6b12e60c654f938e6ffb5` | Immutable base for this review. |
+| Repository tree | `1ef11008331b41797b8601f45003e2fe42c5c029` | Current root tree at the base. |
+| `data/` tree | `e4ce79ed25b3d6b772bf00ec77fca92d38801fd3` | Exact current direct-child inventory. |
+| Prior README blob | `22d13b833369c290fe99e4a3d3c083835e5f2a37` | v0.3.0 source replaced in place. |
+| Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d` | Exact bytes adopted by ADR-0029. |
+| Directory Rules decision | `ADR-0029`, `accepted` | Makes `docs/doctrine/directory-rules.md` the single writable human authority. |
+| Root Registry | blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | Active projection; does not create authority. |
+| Current direct children | 19 directories plus this README | Exact direct tree, not recursive payload proof. |
+| Present canonical lanes | 10 | `raw`, `work`, `quarantine`, `processed`, `catalog`, `triplets`, `receipts`, `proofs`, `registry`, `published`. |
+| Conditional `pre_raw/` | Absent | Correct unless a durable bounded intake queue is implemented and governed. |
+| Noncanonical/deprecated direct children | 9 | Compatibility, migration, or deprecation work remains open. |
+| Exact-path open PR search | 0 found | No open PR was found for `data/README.md` at preflight. |
+| Runtime and deployed consumers | Not inspected | Current behavior remains `UNKNOWN`. |
 
-### Capability and enforcement posture
+### Conformance determination
 
-| Surface | Truth status | Current bounded finding |
-|---|---:|---|
-| Root and child documentation | `CONFIRMED / MIXED` | Canonical and compatibility README contracts exist, but versions, ownership placeholders, maturity labels, and evidence dates vary. |
-| Exhaustive payload inventory | `UNKNOWN` | Exact file reads establish README/path evidence, not a recursive inventory of payloads, databases, generated files, ignored files, external stores, or runtime objects. |
-| Accepted cross-family lifecycle contract | `NEEDS VERIFICATION` | No accepted root-wide object contract was established for every lifecycle and trust-support artifact family. |
-| Unified validator orchestration | `NOT ESTABLISHED at v0.2 evidence boundary` | `tools/validate_all.py` was a comment-only placeholder; current behavior requires re-verification before reliance. |
-| Repository baseline validation | `CONFIRMED BOUNDED at v0.2 evidence boundary` | `make validate` ran configured schema validators plus schema/contract tests; it did not validate all data payloads, lifecycle transitions, policy, proof closure, release state, or public hosting. |
-| Connector/pipeline non-publisher guard | `CONFIRMED EXECUTABLE / BOUNDED at v0.2 evidence boundary` | Static test coverage was established; it was not a runtime sandbox or complete writer inventory. |
-| Catalog, release-dry-run, publish-check Make targets | `WORKFLOW_HOLD / TODO at v0.2 evidence boundary` | They printed explicit TODO readiness markers and did not authorize publication. |
-| Workflow inventory | `CONFIRMED / MIXED at v0.2 evidence boundary` | Definitions included schema, contract, source, policy-boundary, promotion, release-dry-run, rollback, and domain checks; definitions and green checks prove only their executed scope. |
-| ADR authority | `PROPOSED at v0.2 evidence boundary` | The ADR index reported numbered ADRs as effectively proposed; this README accepts none. |
-| CODEOWNERS routing | `CONFIRMED / LIMITED at v0.2 evidence boundary` | Routing is not stewardship assignment, independent review, approval, or proof review occurred. |
-| Public release readiness | `DENY BY DEFAULT` | No artifact becomes public from path placement, README text, a receipt, manifest, workflow result, or merge alone. |
-| Production stores and public effects | `UNKNOWN` | No deployment, runtime, database, object store, tile host, cache, public route, dashboard, or production release was inspected. |
+**CONFIRMED:** `data/` is a canonical active root and its core present lifecycle/accountability lanes agree with adopted v2.
 
-### Truth labels used here
+**CONFLICTED:** the current tree also retains topic buckets, singular/placeholder collection names, direct provenance, generic manifest, and generic rollback paths that adopted v2 classifies as compatibility, migration candidates, deprecated, or denied for new canonical writes.
 
-| Label | Meaning |
-|---|---|
-| `CONFIRMED` | Verified from current repository bytes, tracked metadata, executable source, or pinned documentation evidence. |
-| `PROPOSED` | A future contract, migration, check, or operating model not accepted or implemented at root scope. |
-| `CONFLICTED` | Current paths or documents expose competing placement or authority claims. |
-| `UNKNOWN` | Not established by inspected repository, runtime, release, or production evidence. |
-| `NEEDS VERIFICATION` | Checkable, but unresolved strongly enough to block reliance. |
-| `DENY` | Fail-closed posture for unsafe exposure, unauthorized transition, or unsupported publication. |
+**NEEDS VERIFICATION:** current payload families, active producers and consumers, external storage, rights and sensitivity, complete receipt/proof/catalog/release closure, enforcement breadth, and safe migration order.
+
+The correct posture is **brownfield ratcheting**: preserve recoverability, deny new instances of known drift, classify before moving, cut producers to canonical single-write, prove consumers, and retire only after evidence supports it.
 
 [Back to top](#top)
 
 ---
 
 <a id="accepted-material"></a>
+<a id="what-belongs-here"></a>
 
 ## What belongs here
 
-Only governed lifecycle material and data-plane trust/support instances belong under this root:
+### Canonical lifecycle and accountability instances
 
-- **RAW:** immutable source captures or immutable references, retrieval metadata, checksums, and source-admission sidecars;
-- **WORK:** normalized intermediates, candidate assertions, deterministic transform outputs, QA material, redaction/generalization trials, and run-local manifests;
-- **QUARANTINE:** held material and review sidecars for unresolved identity, source role, rights, sensitivity, schema, geometry, time, evidence, policy, review, or receipt requirements;
-- **PROCESSED:** normalized, versioned, validation-supported domain artifacts that are not thereby public;
-- **CATALOG:** STAC, DCAT, PROV, domain catalog, and index projections tied to governed records;
-- **TRIPLETS:** graph-compatible relationship projections, graph deltas, and exports that retain evidence/source-role references;
-- **RECEIPTS:** ingest, transform, validation, pipeline, AI, redaction, aggregation, catalog, release-support, correction, rollback, and generated-work process memory;
-- **PROOFS:** EvidenceBundle, ProofPack, validation, citation, review, integrity, agreement, and release-support instances under accepted profiles;
-- **PUBLISHED:** release-approved, public-safe artifact bytes and sidecars such as API payload snapshots, layers, PMTiles, GeoParquet, reports, stories, and approved indexes;
-- **REGISTRY:** source, source-descriptor, dataset, layer, domain, rights, sensitivity, crosswalk, and other accepted registry records;
-- **ROLLBACK SUPPORT:** data-plane restoration, invalidation, alias-revert support, dependency records, and rollback-local receipts that remain separate from release decisions;
-- **LOCAL DOCUMENTATION:** README, index, digest, inventory, migration, redirect, tombstone, and compatibility sidecars that explain a boundary without creating another authority home.
-
-### Admission questions for every new artifact
-
-| Question | Required posture |
+| Lane | Owns |
 |---|---|
-| What responsibility and lifecycle phase owns it? | Exact root and lane identified before write. |
-| What stable identity and digest bind it? | Deterministic where practical; no secret or sensitive value encoded in IDs. |
-| Which source and source role support it? | Resolvable references; source role not inferred from filename or path. |
-| Which spatial and temporal scopes apply? | Explicit where material; observed/source/retrieval/valid/release/correction times kept distinct as required. |
-| Which rights, sensitivity, sovereignty, consent, or access obligations apply? | Resolved or fail closed into quarantine/restricted handling. |
-| Which contract and schema apply? | Accepted references; no parallel local schema authority. |
-| Which code/spec/run identity produced it? | Reproducible reference and receipt where applicable. |
-| Which evidence, policy, review, release, correction, and rollback references remain open? | Visible; missing required closure blocks downstream transition. |
-| Is the proposed path canonical or compatibility-only? | New trust-bearing payloads are denied in compatibility paths unless accepted governance explicitly authorizes the transition. |
+| [`raw/`](raw/README.md) | Immutable source captures or governed logical pointers with retrieval identity. |
+| [`work/`](work/README.md) | Candidate normalization, georeferencing, crosswalk, extraction, transformation, and review state. |
+| [`quarantine/`](quarantine/README.md) | Held material, reason codes, obligations, remediation linkage, and denied or unresolved state. |
+| [`processed/`](processed/README.md) | Validated canonical records and deterministic versions that are not automatically public. |
+| [`catalog/`](catalog/README.md) | STAC, DCAT, PROV, domain, matrix, discovery, and closure projections. |
+| [`triplets/`](triplets/README.md) | Optional rebuildable relationship and graph projections. |
+| [`receipts/`](receipts/README.md) | Durable process memory describing what ran, on what, with which inputs, tools, policies, and outputs. |
+| [`proofs/`](proofs/README.md) | Evidence, validation, citation, review, integrity, and proof-pack support. |
+| [`registry/`](registry/README.md) | Stable source, dataset, layer, domain, rights, sensitivity, and crosswalk identities. |
+| [`published/`](published/README.md) | Immutable, versioned, release-approved public-safe carriers. |
+
+A durable `pre_raw/` lane belongs here only when an accepted implementation establishes a bounded intake queue. It is not required for every source edge and is absent at the reviewed base.
+
+### Instance requirements
+
+A consequential instance should carry or resolve, as applicable:
+
+- stable object identity and version;
+- source identity, authority role, and upstream locator;
+- observed, valid, source, retrieval, processing, release, and correction time without collapsing them;
+- spatial scope, CRS, scale, precision, geometry digest, and public-safe transform;
+- media type, size, content digest, schema version, and canonicalization rule;
+- rights, attribution, sensitivity, access, retention, and legal-hold posture;
+- producer code/spec/tool identity and run or transform receipt;
+- evidence and citation references;
+- validation, policy, review, and release references;
+- correction, withdrawal, supersession, and rollback target.
+
+Not every field belongs inline. A stable reference is acceptable when the referenced object is governed and resolvable.
 
 [Back to top](#top)
 
 ---
 
 <a id="exclusions"></a>
+<a id="what-does-not-belong-here"></a>
 
-## What does NOT belong here
+## What does not belong here
 
-| Do not place here | Correct responsibility home or action |
+| Material or behavior | Owning home or safe action |
 |---|---|
-| ReleaseManifest, PromotionDecision, review approval, RollbackCard, CorrectionNotice, WithdrawalNotice, release signature, or release changelog | [`release/`](../release/README.md) |
-| Semantic contract definitions | [`contracts/`](../contracts/) |
-| JSON Schema, schema registry, or machine-shape authority | [`schemas/`](../schemas/) |
-| Policy rules, policy bundles, or policy-engine code | [`policy/`](../policy/) |
-| Connector, pipeline, validator, generator, package, application, API, UI, workflow, migration, or infrastructure code | Owning implementation root: `connectors/`, `pipelines/`, `tools/`, `packages/`, `apps/`, `.github/`, `migrations/`, or `infra/` |
-| Reusable test fixtures or executable tests | [`fixtures/`](../fixtures/) and [`tests/`](../tests/) |
-| Credentials, tokens, private keys, connection strings, secret-bearing config, or private endpoint details | Approved secret-management system; rotate and investigate if committed |
-| Public client backing directly from RAW, WORK, QUARANTINE, PROCESSED, registry, receipt, proof, rollback, unreleased catalog/triplet material, `data/maps/`, or `data/manifests/` | Governed API or approved released artifact path after policy/release checks |
-| Generated language, embeddings, vector indexes, graph projections, maps, tiles, scenes, screenshots, reports, dashboards, or AI answers presented as sovereign truth | Downstream carriers only; resolve evidence and release state or abstain |
-| Material with unresolved rights, precise sensitive locations, living-person private data, DNA/genomic context, cultural/archaeological restrictions, rare-species detail, critical infrastructure exposure, or private-land/title joins outside a governed hold/restricted path | Quarantine, approved restricted storage, redaction/generalization, staged access, delay, `ABSTAIN`, or `DENY` |
-| New trust-bearing map payloads under `data/maps/` | Route by lifecycle phase, then use `data/registry/layers/`, `data/published/layers/`, `data/published/pmtiles/`, catalog, proof, receipt, and release lanes as applicable |
-| New manifest families or public payloads under `data/manifests/` | Route each family to its semantic, schema, catalog, registry, receipt, proof, published-artifact, or release authority |
-| New top-level topic lanes or alternate homes for manifests, provenance, triplets, sources, registries, proofs, receipts, release, contracts, schemas, or policy | Use canonical lane; otherwise require ADR, migration plan, compatibility record, and rollback |
-| Silent deletion or overwrite used as correction/rollback | Preserve prior meaning, issue correction/withdrawal records, invalidate derivatives, and use governed rollback |
+| Semantic contracts | [`contracts/`](../contracts/README.md) |
+| JSON Schema, contexts, generated type authority | [`schemas/`](../schemas/README.md) |
+| Normative policy modules or release policy | [`policy/`](../policy/README.md), including `policy/release/` |
+| ReleaseManifest, PromotionDecision/Receipt, CorrectionNotice, WithdrawalNotice, RollbackCard, or signatures | Object-family-first collections under [`release/`](../release/README.md) |
+| Connector, pipeline, application, runtime, infrastructure, or reusable library code | Its execution-responsibility root |
+| Secrets, credentials, private keys, signed URLs, or private endpoints | Approved secret and restricted operational systems |
+| Unreviewed production, private, restricted, or harmful-precision data committed for test convenience | Synthetic fixtures or approved controlled storage |
+| Direct public routes to RAW, WORK, QUARANTINE, PROCESSED, registry, receipt, proof, internal catalog, graph, or compatibility lanes | Governed API or released static delivery only |
+| Topic-level data buckets used as new writable authorities | Route by lifecycle, accountability family, and registered scope |
+| Hand-authored catalog or published records that claim release by location | Generate or validate from governed inputs and separate release decisions |
+| Generated preview, build output, cache, virtual environment, or dependency install | Ignored local cache, external CI artifact, or approved generated-output boundary |
+| AI output, map pixels, reports, graph edges, indexes, or scores represented as sovereign truth | Resolve EvidenceRef to EvidenceBundle and release state, or abstain/deny |
 
-Compatibility READMEs may remain at existing paths during review or migration, but they must not receive new trust-bearing payloads or evolve independently.
+**Negative rule:** no new canonical writes go to `data/document/`, `data/manifests/`, `data/maps/`, `data/prov/`, `data/reports/`, `data/rollback/`, `data/trade-routes/`, `data/triplet/`, or `data/triplet(s)/` without an accepted decision and migration-compatible authority model.
 
 [Back to top](#top)
 
 ---
 
-## Inputs
+<a id="inputs-outputs-and-permitted-writers"></a>
 
-Inputs arrive from governed producers; a file copy, generated map, manifest-shaped JSON file, or external upload is not sufficient admission.
+## Inputs, outputs, and permitted writers
 
-| Producer or source | Candidate input | Required boundary before acceptance |
-|---|---|---|
-| Source registry and admission process | SourceDescriptor, source role, rights, sensitivity, cadence, activation/review references | Identity and use posture resolved; otherwise quarantine or deny. |
-| Connectors and source-edge tools | Immutable capture/reference, retrieval metadata, checksums, ingest receipt candidate | Output limited to RAW or QUARANTINE; no direct processed/catalog/published write. |
-| Pipelines and admitted packages | WORK/PROCESSED candidates, transform reports, run receipts, validation references | Accepted spec/code identity, deterministic behavior where practical, bounded side effects, no direct publication. |
-| Validators and tests | ValidationReport, citation report, integrity report, policy input, negative-case outcome | Tool/version/inputs recorded; a pass proves only the declared check. |
-| Evidence/proof builders | EvidenceBundle, ProofPack, agreement/integrity support | Inputs resolve; claim scope and limitations preserved; proof is not release approval. |
-| Catalog/triplet builders | STAC/DCAT/PROV records, catalog indexes, graph deltas/exports | Identifiers and evidence/source lineage close; projections remain derived. |
-| Map/layer builders | Processed spatial candidates, layer descriptors, tile-build outputs, style bindings | Route to WORK/PROCESSED/CATALOG/REGISTRY/PUBLISHED lanes; never `data/maps/` by topic alone. |
-| Manifest builders | Artifact, catalog, registry, proof, or release descriptors | Route by object family and authority; never `data/manifests/` by filename alone. |
-| Review, policy, and release processes | Decision references, obligations, release IDs, correction/rollback dependencies | Records remain in owning roots; `data/` stores referenced artifacts only where appropriate. |
-| Authorized manual stewardship | Curated records, corrections, crosswalks, redaction/generalization outcomes | Actor, evidence, rationale, review, and receipt requirements met; no undocumented direct edit. |
-| Recompile/correction processes | Superseding artifacts, invalidation sets, alias-revert support | Prior meaning retained; affected derivatives and public surfaces enumerated. |
+### Inputs
 
-### Minimum input metadata
+Inputs may include:
 
-A non-trivial artifact should carry or resolve, as applicable:
+- admitted source captures and event/admission records;
+- source, dataset, layer, domain, rights, sensitivity, and crosswalk registry identities;
+- deterministic pipeline outputs and receipts;
+- validated domain records and evidence references;
+- policy, review, and release references;
+- correction, withdrawal, and supersession records;
+- externally stored payload manifests whose locators are access-appropriate and digest-bound.
 
-```text
-stable_id + content_digest
-source_id + source_role + source_version
-spatial_scope + temporal_scope
-rights_posture + sensitivity_posture + access_class
-contract_ref + schema_ref
-code_ref + spec_hash + run_id
-validation_refs + receipt_refs
-evidence_refs + proof_refs
-policy_refs + review_refs
-release_ref + correction_ref + rollback_ref
-```
+An input is not admissible merely because a connector fetched it or a workflow produced it.
 
-This is a **PROPOSED cross-family minimum profile**, not an accepted universal schema. Individual contracts control exact fields and finite outcomes.
+### Outputs
+
+| Output family | Maximum meaning |
+|---|---|
+| RAW capture | Preserved source response or logical pointer; not normalized truth. |
+| WORK candidate | Mutable/versioned candidate under review. |
+| QUARANTINE record | Held material plus obligations; not a failure to be hidden. |
+| PROCESSED record | Validated canonical instance; not automatically public. |
+| Catalog/triplet projection | Rebuildable discovery or relationship projection; not canonical replacement. |
+| Receipt | Process memory; not proof, approval, release, or publication. |
+| Proof-support object | Evidence/validation/review/integrity support; not release authority by itself. |
+| Registry record | Stable identity and routing; not domain fact or release. |
+| Published carrier | Release-approved public-safe bytes or logical artifact; release decision remains under `release/`. |
+
+### Permitted writer classes
+
+| Writer class | Bounded capability |
+|---|---|
+| Source admission | Emit governed RAW or QUARANTINE candidates and ingest receipts. |
+| Pipeline processor | Emit WORK, QUARANTINE, or PROCESSED instances plus transform receipts. |
+| Catalog/triplet builder | Emit rebuildable projections from validated inputs. |
+| Receipt emitter | Record process memory without claiming proof or approval. |
+| Proof builder | Emit proof-support objects from resolvable evidence and receipts. |
+| Registry steward/process | Create or version stable identity records after required review. |
+| Release assembler | Materialize `data/published/` carriers only from an accepted release decision. |
+| Correction/rollback executor | Emit execution receipts and updated carriers without erasing prior lineage. |
+
+Capabilities come from authenticated runtime policy and reviewed implementation, not from directory convention.
 
 [Back to top](#top)
 
 ---
 
-## Outputs
+<a id="exposure-sensitivity-mutability-retention-and-storage"></a>
 
-`data/` emits or supports governed artifacts and references for downstream validation, catalog/triplet projection, release review, public delivery, correction, and rollback. It does not emit release approval by itself.
+## Exposure, sensitivity, mutability, retention, and storage
 
-| Lane | Output role | Downstream consumer | Boundary |
-|---|---|---|---|
-| `raw/` | Immutable source capture/reference | WORK, QUARANTINE, source review | Internal; no public path. |
-| `work/` | Candidate normalization and analysis | Validation, review, PROCESSED or QUARANTINE | Candidate, not truth or release. |
-| `quarantine/` | Held material plus blocker context | Remediation, review, governed exit | Fail closed; no silent promotion. |
-| `processed/` | Normalized validation-supported artifact | Catalog/triplet/proof/release-candidate builders | Not automatically public. |
-| `catalog/` | Discovery/interchange projection | Governed catalog APIs, release/public indexes where approved | Catalog does not replace evidence or release. |
-| `triplets/` | Relationship/graph projection | Graph/index consumers, analysis, released graph artifacts | Derived; not canonical replacement semantics. |
-| `receipts/` | Process memory | Audit, replay, review, correction, rollback | Receipt is not proof or approval. |
-| `proofs/` | Evidence/proof support | Policy/review/release and inspectable-claim surfaces | Proof support is not release authority. |
-| `registry/` | Stable routing and governance metadata | Connectors, pipelines, validators, APIs, release review | Registry is not domain truth. |
-| `rollback/` | Data-plane restoration and invalidation support | Release/correction/rollback processes | Release decision remains under `release/`. |
-| `published/` | Released public-safe carrier | Governed APIs, approved static delivery, maps, exports, Evidence Drawer, bounded AI | Downstream carrier; release and evidence remain inspectable. |
-| Compatibility READMEs | Routing, migration, redirect, tombstone, and retirement documentation | Maintainers and reviewers | No data, evidence, release, runtime, or publication authority. |
+### Exposure
 
-### Release split
+| Lane class | Default exposure |
+|---|---|
+| RAW, WORK, QUARANTINE | Internal, steward-only, or restricted |
+| PROCESSED, receipts, proofs, registries, internal catalogs/triplets | Internal unless an explicit governed projection permits more |
+| PUBLISHED | Public or semi-public only within the release decision and access policy |
+| Compatibility/deprecated paths | No direct public use |
 
-```text
-release/         = review, decision, manifest, correction, withdrawal, signature, rollback authority
+### Mutability
 
-data/published/  = release-approved public-safe artifact bytes and delivery sidecars
-```
+- RAW captures are immutable or append-only by identity.
+- WORK is mutable/versioned and must preserve derivation.
+- QUARANTINE is append-only for holds, obligations, and remediation lineage; remediation emits a new state.
+- PROCESSED instances are versioned; corrections do not silently overwrite relied-upon history.
+- Catalogs and triplets are rebuildable projections with deterministic inputs where practical.
+- Receipts, proof support, and registries preserve audit history appropriate to their role.
+- PUBLISHED carriers are immutable by release identity; corrections create new release/correction lineage.
 
-A release record may point to a published artifact. The published artifact must not contain or impersonate the release decision that authorized it.
+### Retention and deletion
+
+Retention is policy-driven and may depend on source terms, legal hold, public reliance, sensitivity, incident response, and correction needs. Deletion is never inferred from a README, an empty directory, a migration target, or a new release. Restricted or trust-bearing content is inventoried before movement or deletion.
+
+### Logical home versus physical bytes
+
+The directory tree defines logical authority even when bytes live in PostGIS, object storage, a package registry, an external archive, or another governed service. A logical record or manifest should resolve:
+
+- object ID and version;
+- storage class and access-appropriate locator;
+- digest, media type, size, and creation time;
+- source, rights, sensitivity, retention, and legal-hold posture;
+- schema, policy, producer, and receipt versions;
+- exposure and release references;
+- correction, withdrawal, and rollback target.
+
+A locator is not authority. Restricted bytes must not be committed merely to make a repository tree look complete.
 
 [Back to top](#top)
 
 ---
 
 <a id="required-checks-before-use"></a>
+<a id="validation"></a>
+<a id="validation-and-negative-checks"></a>
+<a id="root-guardrails"></a>
 
-## Validation
+## Validation and negative checks
 
-Validation is layered. No single current command was established as a complete data-root gate.
+Validation is layered. A pass proves only the check's declared scope.
 
-### Repository-grounded controls from the v0.2 evidence boundary
+### Required checks by effect
 
-| Control | Bounded behavior | Limit |
-|---|---|---|
-| [`make validate`](../Makefile) | Ran configured schema validators plus schema/contract tests. | Did not recursively validate all lifecycle payloads, transitions, policy, proofs, releases, or hosting. |
-| [`make boundary-guards`](../Makefile) | Ran selected policy/API boundary tests, including the connector/pipeline static non-publisher guard. | Bounded static/source tests; not a runtime filesystem or network sandbox. |
-| [`tests/policy/test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Rejected detected connector/pipeline write contexts near `data/catalog`, `data/published`, or `release/`. | Scanned selected extensions and lexical windows; not exhaustive behavior proof. |
-| [`tools/validate_all.py`](../tools/validate_all.py) | Repository path existed. | Was a comment-only placeholder; re-verify before claiming current orchestration. |
-| `make catalog`, `make release-dry-run`, `make publish-check` | Emitted explicit TODO readiness markers. | Did not build a catalog, assemble a release, evaluate promotion, or authorize publication. |
-| [Workflow inventory](../.github/workflows/README.md) | Recorded schema, contract, source, policy-boundary, promotion, release-dry-run, rollback, docs, and domain checks. | Workflow definitions and green conclusions prove only their executed scope. |
-
-### Required artifact checks
-
-Before a non-trivial artifact advances, validate the applicable closure:
-
-1. **Placement:** correct lifecycle phase, domain segment, compatibility class, and authority root.
-2. **Identity and integrity:** stable ID, canonical digest, version, immutable input references, and collision/duplicate checks.
-3. **Source:** admitted source reference, source role, authority class, source version/head, and retrieval lineage.
-4. **Rights and sensitivity:** terms, attribution, access class, sovereignty/cultural authority, living-person/consent constraints, harmful precision, and redaction/generalization obligations.
-5. **Contract and schema:** resolvable accepted versions, valid shape, semantic invariants, and closed additional fields where required.
-6. **Spatial and temporal support:** CRS/geometry/topology, scale/precision, valid/source/observation/retrieval/release/correction times, stale-state behavior, and uncertainty.
-7. **Execution:** code/spec/run identity, deterministic/no-network posture where practical, side effects, retries, cancellation, replay, idempotency, and partial-state cleanup.
-8. **Receipts and provenance:** input/output hashes, transform lineage, validation references, safe logs, and process receipt closure.
-9. **Evidence and proof:** EvidenceRef resolution, EvidenceBundle/ProofPack limitations, citation closure, review support, and anti-collapse checks.
-10. **Catalog/triplet:** identifier agreement, source/evidence lineage, projection parity, derivative status, and invalidation dependencies.
-11. **Policy and review:** finite decision, reasons/obligations, accountable review, separation of duties where required, and no self-approval.
-12. **Release, correction, rollback:** release reference, prior state, correction/withdrawal path, affected derivative/public-surface inventory, cache invalidation, and tested rollback target.
-13. **Compatibility:** no new trust-bearing writes, consumers inventoried, redirect/tombstone semantics explicit, stale references detected, and rollback tested before retirement.
-
-### Documentation checks for this root
-
-- parse KFM metadata and preserve the stable `doc_id`;
-- keep exactly one H1 and the Directory Rules §15 H2 order;
-- resolve internal fragments and repository-relative links;
-- preserve legacy anchors documented in the no-loss ledger;
-- keep fenced blocks, Mermaid, tables, HTML, alerts, and badge destinations valid;
-- scan for credentials, secret patterns, private endpoints, and sensitive payload content;
-- distinguish current repository evidence from prior bounded evidence, proposed contracts, and unknown runtime state;
-- confirm `data/maps/` and `data/manifests/` remain compatibility-only and deny new trust-bearing writes;
-- read back remote bytes and verify the final Git blob after mutation.
-
-A validation pass is not factual proof, policy permission, human approval, release authorization, publication, or production parity.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-### Current routing
-
-[`.github/CODEOWNERS`](../.github/CODEOWNERS) routed the repository by default and selected trust-bearing data subroots to the verified repository account at the v0.2 evidence boundary. This is **GitHub routing only**. It does not prove named data stewards, independent reviewers, required code-owner review, branch protection, separation of duties, or completed review.
-
-### Review matrix
-
-| Change class | Minimum review burden |
+| Effect | Minimum checks |
 |---|---|
-| README clarification or dead-link repair | Data/docs maintainer; verify no authority or lifecycle meaning changed. |
-| New artifact or domain lane | Data steward, producer owner, domain steward, schema/contract reviewer, and source/rights/sensitivity reviewers as applicable. |
-| RAW/source admission | Source steward, connector owner, rights/sensitivity reviewer, and data steward; no live activation by documentation alone. |
-| Processed/catalog/triplet output | Pipeline/data owner, domain steward, validation reviewer, evidence/catalog/graph reviewer, and policy reviewer where consequences are material. |
-| Receipt or proof profile | Receipt/proof steward, contract/schema/validation reviewer, evidence reviewer, and release reviewer if consumed by release gates. |
-| Published artifact or public-serving change | Evidence, policy, sensitivity/rights, security, public-interface, release, correction, and rollback reviewers; independent approval where governance requires it. |
-| Compatibility-path use, migration, redirect, tombstone, move, rename, or retirement | Directory Rules/architecture reviewer, affected consumers, data steward, migration owner, and rollback reviewer; ADR when authority or lifecycle structure changes. |
-| Sensitive-domain or exact-location material | Relevant domain and sovereignty/cultural/privacy/safety reviewers; fail closed until approved handling is established. |
-| Correction, withdrawal, supersession, or rollback | Data, evidence, release, public-interface, cache/index, and affected-domain reviewers; preserve prior meaning and dependency lineage. |
+| README-only edit | UTF-8/LF/final newline, one H1, metadata parse, heading order, anchors, relative links, current-tree claims, no unsupported maturity claims, diff review, generated receipt integrity |
+| New or changed data instance | Contract/schema, identity/digest, source role, temporal/spatial scope, rights/sensitivity, provenance/receipt, evidence/citation, policy/review, release/correction/rollback dependencies |
+| Lifecycle transition | Valid predecessor, transition rule, actor/tool identity, input/output digests, finite outcome/reason code, receipt, replay/idempotency, failure and rollback path |
+| Catalog/triplet projection | Canonical input refs, deterministic projection identity, STAC/DCAT/PROV or graph profile checks, parity, stale/supersession handling, non-authority statement |
+| Published carrier | Evidence/proof closure, policy/review state, accepted release decision, immutable manifest/digests, public-safe transform, governed delivery, correction/withdrawal/cache invalidation, rollback target |
+| Compatibility migration | Accepted authority decision when required, per-object classification, migration manifest, single-write cutover, bounded dual-read, consumer proof, parity, zero-writer/zero-consumer evidence, retirement record |
 
-Generated receipts and pull requests are review inputs, not human approval. AI-authored work must not approve its own artifacts or change review state.
+### Representative repository checks
+
+```bash
+git diff --check
+
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json
+
+make validate
+```
+
+Inspect each command and its dependencies before execution. Use deterministic no-network fixtures by default. Hosted checks remain separate evidence tied to an exact head SHA.
+
+### Fail-closed negative checks
+
+Reject or hold:
+
+- source capture without source identity, role, rights, sensitivity, or retrieval identity;
+- direct public reads from internal or compatibility lanes;
+- RAW or QUARANTINE material presented as released;
+- PROCESSED material assumed public-safe;
+- a receipt treated as proof, or proof treated as release approval;
+- a catalog/triplet projection treated as canonical truth;
+- `data/published/` bytes without a release reference and correction/rollback path;
+- new writes to deprecated or compatibility paths without governed migration authority;
+- duplicate writable source, registry, catalog, triplet, proof, receipt, or published homes;
+- exact sensitive geometry hidden only by client styling;
+- silent overwrite, deletion, history erasure, or correction without supersession lineage.
 
 [Back to top](#top)
 
 ---
 
-## Related folders
+<a id="owners-reviewers-and-escalation"></a>
+<a id="review-burden"></a>
 
-### Canonical and adjacent responsibilities
+## Owners, reviewers, and escalation
 
-| Path | Relationship |
+`@bartytime4life` is the verified repository owner and Root Registry review route. That is not proof that specialist stewardship or independent approval has occurred.
+
+| Change | Minimum review posture |
 |---|---|
-| [`raw/`](raw/README.md) | Immutable source capture; no public path. |
-| [`work/`](work/README.md) | Candidate/intermediate processing. |
-| [`quarantine/`](quarantine/README.md) | Fail-closed hold and governed exit boundary. |
-| [`processed/`](processed/README.md) | Normalized, validation-supported artifacts before projection/release. |
-| [`catalog/`](catalog/README.md) | STAC/DCAT/PROV/domain discovery projections. |
-| [`triplets/`](triplets/README.md) | Canonical plural relationship-projection lane. |
-| [`receipts/`](receipts/README.md) | Process-memory root, including generated-work provenance. |
-| [`proofs/`](proofs/README.md) | Evidence/proof-support root. |
-| [`published/`](published/README.md) | Release-approved public-safe delivery artifacts. |
-| [`registry/`](registry/README.md) | Source/dataset/layer/domain/rights/sensitivity/crosswalk routing records. |
-| [`rollback/`](rollback/README.md) | Data-plane restoration, invalidation, and alias-revert support. |
-| [`../release/`](../release/README.md) | Separate release-governance authority. |
-| [`../contracts/`](../contracts/) · [`../schemas/`](../schemas/) · [`../policy/`](../policy/) | Meaning, machine shape, and admissibility. |
-| [`../connectors/`](../connectors/) · [`../pipelines/`](../pipelines/) · [`../pipeline_specs/`](../pipeline_specs/) | Source access, executable transforms, and declarative intent. |
-| [`../tests/`](../tests/) · [`../fixtures/`](../fixtures/) · [`../tools/`](../tools/) | Enforceability, deterministic cases, validators, generators, and operators. |
-| [`../apps/governed-api/`](../apps/governed-api/) | Intended trust-membrane application; direct internal-store access remains denied. |
-| [`../apps/explorer-web/`](../apps/explorer-web/) | Map-first public shell; consumes governed released surfaces, not compatibility paths. |
-| [`../docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Placement and lifecycle authority. |
-| [`../docs/doctrine/lifecycle-law.md`](../docs/doctrine/lifecycle-law.md) | Lifecycle semantics and transition discipline. |
-| [`../docs/doctrine/trust-membrane.md`](../docs/doctrine/trust-membrane.md) | Public/internal boundary. |
-| [`../docs/doctrine/map-first.md`](../docs/doctrine/map-first.md) | Map-first doctrine; map carriers remain downstream of evidence and release. |
-| [`../.github/workflows/README.md`](../.github/workflows/README.md) | Workflow inventory and maturity disclosure. |
+| Root README wording with no changed authority | Root owner plus documentation review |
+| Lifecycle or accountability semantics | Data architecture, affected lane, contract/schema, policy, and validation review |
+| Source admission or registry identity | Source steward, rights/sensitivity review, affected domain, and validation |
+| Sensitive payload or precision change | Qualified rights/privacy/cultural/security/domain review; independent approval where required |
+| Migration, alias, deprecation, or deletion | Old/new owners, producers, consumers, migration/validation, correction, and rollback review |
+| Published carrier, correction, withdrawal, or rollback | Release authority, evidence/proof, policy, public-surface, correction, and rollback review |
+| Public route or client behavior | Governed API/public UI owner plus policy, security, release, and affected data owners |
 
-### Compatibility and conflicted children
-
-| Path | Current posture | Canonical relationship |
-|---|---|---|
-| [`maps/`](maps/README.md) | Non-canonical, pointer-only compatibility and retirement lane; new trust-bearing writes denied | Route spatial material by lifecycle phase; layer registry records to `data/registry/layers/`; released carriers to `data/published/layers/` or `data/published/pmtiles/`; release decisions/manifests to `release/`; renderer code to implementation roots. |
-| [`manifests/`](manifests/README.md) | Non-canonical compatibility, routing, and retirement subtree; new trust-bearing writes denied; five documented child README lanes | Route each manifest family to its contract/schema/catalog/registry/receipt/proof/published/release authority. Do not select `release/manifest/` versus `release/manifests/` here. |
-| [`prov/`](prov/README.md) | Placement conflicted | PROV catalog projections are also documented under `data/catalog/prov/`; migration/ADR required before authority claims. |
-| [`triplet/`](triplet/README.md) | Transitional compatibility | Canonical lane is `data/triplets/`. |
-| [`triplet(s)/`](triplet%28s%29/README.md) | Transitional literal-path compatibility | Canonical lane is `data/triplets/`. |
-| [`trade-routes/`](trade-routes/README.md) | Transitional topic-path compatibility | Domain data belongs under lifecycle lanes using the `roads-rail-trade` domain segment. |
+Escalate unresolved authority, identity, rights, sensitivity, public exposure, or migration conflicts to `HOLD`. Do not resolve them by prose, path convention, or majority of similar files.
 
 [Back to top](#top)
 
 ---
 
-## ADRs
+<a id="governing-decisions-aliases-migrations-and-compatibility"></a>
+<a id="adrs"></a>
 
-[`docs/adr/INDEX.md`](../docs/adr/INDEX.md) reported numbered ADRs as effectively **proposed** at the v0.2 evidence snapshot. This README records relevance but accepts none and does not use a proposed ADR to authorize a move, release, redirect, tombstone, migration, or status transition.
+## Governing decisions, aliases, migrations, and compatibility
 
-| ADR | Relevance to `data/` | Effective status at v0.2 evidence boundary |
-|---|---|---:|
-| [`ADR-0001`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Keeps machine schemas under `schemas/contracts/v1/`, not beside data payloads. | `proposed` |
-| [`ADR-0005`](../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | Proposes Explorer Web as the map-first shell that consumes governed data surfaces. | `proposed` |
-| [`ADR-0006`](../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposes the MapLibre boundary for browser rendering concerns. | `proposed` |
-| [`ADR-0011`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Separates receipts, proofs, manifests, catalogs, and publication; directly relevant to `data/manifests/`. | `proposed` |
-| [`ADR-0012`](../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) | Restricts connector output to RAW or QUARANTINE. | `proposed` |
-| [`ADR-0013`](../docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md) | Proposes shared run/spec identity grammar. | `proposed` |
-| [`ADR-0014`](../docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md) | Proposes shared temporal vocabulary. | `proposed` |
-| [`ADR-0015`](../docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md) | Proposes governed `current` aliases and RollbackCard binding. | `proposed` |
-| [`ADR-0017`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Proposes source descriptor admission and activation records. | `proposed` |
-| [`ADR-0018`](../docs/adr/ADR-0018-promotion-gate-sequence.md) | Proposes promotion gate sequence and records. | `proposed` |
-| [`ADR-0021`](../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) | Proposes named governed quarantine exits. | `proposed` |
-| [`ADR-0022`](../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Proposes STAC/DCAT/PROV catalog closure. | `proposed` |
-| [`ADR-0023`](../docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md) | Proposes signed geospatial artifact manifests. | `proposed` |
-| [`ADR-0024`](../docs/adr/ADR-0024-steward-separation-of-duties-for-release.md) | Proposes release separation of duties. | `proposed` |
-| [`ADR-0025`](../docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Proposes the public-client trust-membrane rule as a numbered decision. | `proposed` |
+### Governing authority
 
-### ADR and migration triggers
+- [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is accepted and adopts the exact v2 bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md).
+- [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) projects `root.data` as canonical and active without granting data, policy, release, or publication authority.
+- Other numbered ADRs referenced by older data READMEs may remain proposed. Their filenames or prose do not override ADR-0029.
 
-An accepted ADR and migration/rollback plan are required before:
+### Compatibility rule
 
-- adding, removing, renaming, merging, or splitting a canonical data lifecycle phase;
-- promoting `data/maps/`, `data/manifests/`, `data/prov/`, `data/triplet/`, `data/triplet(s)/`, or `data/trade-routes/` into authority;
-- selecting or consolidating conflicted release-manifest collection paths where current governance has not resolved them;
-- changing the `data/published/` versus `release/` split;
-- creating a parallel receipt, proof, registry, catalog, release, schema, contract, source, or policy home;
-- changing artifact identity semantics in a way that affects released or referenced records.
+Compatibility paths use **dual-read/single-write** only when verified consumers require it. New writes go to canonical homes. A compatibility pointer may preserve old-to-new mappings, migration facts, and recovery instructions; it may not retain a live writable copy of authority.
+
+Every compatibility or deprecation record should identify:
+
+- old path and canonical target;
+- object family and stable identity mapping;
+- reason and accepted decision;
+- known producers and consumers;
+- write prohibition and allowed read window;
+- generation/synchronization method when a mirror exists;
+- owner, start, expiry, and exit criteria;
+- parity validation and rollback or forward-fix behavior.
+
+### Migration discipline
+
+1. Freeze authority inputs, tree, producers, consumers, identities, and digests.
+2. Classify each object; do not route by filename alone.
+3. Accept an authority decision before dependent structural work when required.
+4. Add the canonical target and negative write guard.
+5. Record old-to-new mappings in a schema-backed migration manifest.
+6. Cut producers to canonical single-write.
+7. Support bounded dual-read only for verified consumers.
+8. Validate content, identity, rights, sensitivity, imports, links, schemas, policy, tests, workflows, release, correction, and rollback.
+9. Prove zero writers and zero consumers at the old path.
+10. Retire the alias while preserving decision history.
+
+No migration, redirect, tombstone, or deletion is performed by this README update.
 
 [Back to top](#top)
 
 ---
 
-## Last reviewed
+<a id="directory-map"></a>
+<a id="direct-child-directory-map"></a>
 
-- **Date:** 2026-07-24
-- **Evidence snapshot:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad`
-- **Prior target blob:** `fb7b0acfaea25b630a3042f24cb97558a996d05a`
-- **Review type:** exact target, Directory Rules, `data/maps/`, and `data/manifests/` reads; main-head comparison; bounded search; branch-name and open-PR overlap checks; v0.2 evidence carried forward with explicit qualification
-- **Recursive payload/runtime inspection:** not performed
-- **Named accountable owners:** needs verification
-- **Independent review and branch protection:** needs verification
-- **Public release readiness:** denied by default
+## Direct-child directory map
 
-Re-review this root when Directory Rules, lifecycle phases, the release split, child-lane authority, map or manifest object homes, registry taxonomy, receipt/proof profiles, source admission, validator orchestration, public-serving architecture, correction behavior, or rollback mechanics change. Re-review immediately if a new direct child appears or a compatibility lane receives non-documentation payloads.
+The map below is the exact direct-child tree at `data_tree=e4ce79ed25b3d6b772bf00ec77fca92d38801fd3`. It shows repository state, not automatic canonicality.
+
+```text
+data/
+├── README.md
+├── catalog/
+├── document/
+├── manifests/
+├── maps/
+├── processed/
+├── proofs/
+├── prov/
+├── published/
+├── quarantine/
+├── raw/
+├── receipts/
+├── registry/
+├── reports/
+├── rollback/
+├── trade-routes/
+├── triplet(s)/
+├── triplet/
+├── triplets/
+└── work/
+```
+
+`pre_raw/` is not present. Adopted v2 makes it conditional, so absence is conforming until a durable bounded intake queue is actually implemented.
+
+A child README owns deeper detail. This root README does not reproduce recursive domain trees or imply that every child payload was inspected.
+
+[Back to top](#top)
+
+---
+
+<a id="last-reviewed"></a>
+<a id="last-evidence-review-and-review-triggers"></a>
+
+## Last evidence review and review triggers
+
+- **Review date:** 2026-08-08
+- **Base:** `main@1001a87233e0f23695b6b12e60c654f938e6ffb5`
+- **Target prior blob:** `22d13b833369c290fe99e4a3d3c083835e5f2a37`
+- **Review type:** exact root and direct-child tree inspection; accepted Directory Rules/ADR/Root Registry inspection; bounded child README and workflow preflight; no payload/runtime/deployment inspection
+- **Direct-child directories:** 19
+- **Current open exact-path PRs:** 0 found at preflight
+
+Re-review when:
+
+- authority, root class, permitted writer, consumer, exposure, sensitivity, storage, retention, or public route changes;
+- a lifecycle, receipt, proof, registry, catalog, graph, published, release, correction, or rollback contract changes;
+- a child is added, removed, renamed, reclassified, migrated, or retired;
+- a compatibility deadline arrives;
+- a payload, producer, consumer, secret, rights issue, sensitive-data issue, security event, correction, withdrawal, or rollback is discovered;
+- validator/CODEOWNERS/workflow/ruleset coupling changes;
+- current repository evidence materially diverges from the snapshot above.
 
 [Back to top](#top)
 
 ---
 
 <a id="lifecycle-invariant"></a>
+<a id="operating-model-and-lifecycle-invariant"></a>
 
 ## Operating model and lifecycle invariant
 
-Directory Rules defines the governing sequence:
+The canonical lifecycle remains:
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+SOURCE EDGE
+  -> PRE_RAW candidate, when a durable bounded queue exists
+  -> RAW
+  -> WORK or QUARANTINE
+  -> PROCESSED
+  -> CATALOG and optional TRIPLETS
+  -> PUBLISHED
 ```
 
-Promotion is a governed state transition, not a copy, move, rename, alias switch, tile build, catalog entry, graph projection, receipt, proof, manifest, workflow result, pull request, merge, or generated narrative.
+A more precise state model is:
 
-```mermaid
-flowchart LR
-    SRC["Admitted source identity<br/>rights · role · sensitivity"] --> RAW["data/raw/<br/>immutable capture"]
-    RAW --> TRIAGE{"Triage / validation"}
-    TRIAGE --> WORK["data/work/<br/>candidate work"]
-    TRIAGE --> QUAR["data/quarantine/<br/>fail-closed hold"]
-    QUAR -->|governed remediation and exit| WORK
-    WORK --> PROC["data/processed/<br/>normalized candidate"]
-    PROC --> CAT["data/catalog/<br/>discovery projection"]
-    PROC --> TRIP["data/triplets/<br/>relationship projection"]
-
-    REG["data/registry/<br/>identity · rights · sensitivity"] -. references .-> SRC
-    REC["data/receipts/<br/>process memory"] -. execution lineage .-> RAW
-    REC -. execution lineage .-> PROC
-    PROOF["data/proofs/<br/>evidence / validation support"] -. support .-> CAT
-    PROOF -. support .-> TRIP
-
-    CAT --> REVIEW["release/<br/>policy · review · manifest · decision"]
-    TRIP --> REVIEW
-    PROC --> REVIEW
-    REVIEW -->|approved governed transition| PUB["data/published/<br/>public-safe carriers"]
-    PUB --> API["governed API / approved delivery"]
-
-    MAPS["data/maps/<br/>compatibility pointer only"] -. routes; never publishes .-> REG
-    MAPS -. routes .-> PUB
-    MANI["data/manifests/<br/>compatibility routing only"] -. routes; never approves .-> REVIEW
-
-    REVIEW -->|correction / withdrawal / rollback| ROLL["release records + data/rollback support"]
-    ROLL -. invalidate / restore .-> PUB
-    ROLL -. recompile affected derivatives .-> CAT
-    ROLL -. recompile affected derivatives .-> TRIP
-
-    classDef internal fill:#fff4ce,stroke:#8a6d3b,color:#24292f;
-    classDef hold fill:#ffebe9,stroke:#cf222e,color:#24292f;
-    classDef release fill:#ddf4ff,stroke:#0969da,color:#24292f;
-    classDef public fill:#dafbe1,stroke:#1a7f37,color:#24292f;
-    classDef compat fill:#f6f8fa,stroke:#6e7781,color:#24292f,stroke-dasharray:5 5;
-    class RAW,WORK,PROC,CAT,TRIP,REG,REC,PROOF internal;
-    class QUAR hold;
-    class REVIEW,ROLL release;
-    class PUB,API public;
-    class MAPS,MANI compat;
+```text
+PRE_RAW --admit----------------------> RAW
+PRE_RAW --hold or reject-------------> QUARANTINE or finite denial record
+RAW ---------------------------------> WORK
+RAW --hold----------------------------> QUARANTINE
+WORK --validate-----------------------> PROCESSED
+WORK --hold---------------------------> QUARANTINE
+QUARANTINE --remediate---------------> WORK
+PROCESSED ----------------------------> CATALOG
+PROCESSED --when applicable-----------> TRIPLETS
+CATALOG + PROOF + ACCEPTED RELEASE ---> PUBLISHED
+PUBLISHED --correct/supersede---------> new release lineage
+PUBLISHED --withdraw------------------> withdrawal state plus invalidation
 ```
 
-> [!NOTE]
-> The diagram states the responsibility contract. It does not prove that every source admission, lifecycle writer, registry resolver, validator, receipt emitter, proof builder, policy evaluator, catalog/triplet builder, release reviewer, alias switch, correction handler, rollback engine, cache invalidator, or public route is implemented.
+### Transition law
 
-### Transition matrix
+Promotion emits a new governed state or version. It is never inferred from a copy, move, filename, mutable alias, successful job, merge, or public URL.
 
-| Transition | Minimum evidence before transition | Fail-safe outcome |
-|---|---|---|
-| Source edge → RAW | source identity/role, use posture, capture integrity, retrieval context, admission decision where required | QUARANTINE or DENY |
-| RAW → WORK | immutable input reference, transform identity, bounded scope, run/receipt context | QUARANTINE or ERROR |
-| RAW/WORK → QUARANTINE | explicit blocker, reason, affected scope, safe retention/access posture | HOLD / DENY according to applicable contract |
-| QUARANTINE → WORK/PROCESSED | named exit, remediation evidence, revalidation, policy/review closure, receipt | Remain QUARANTINED |
-| WORK → PROCESSED | contract/schema, source role, spatial/temporal, quality, provenance, policy checks appropriate to the artifact | QUARANTINE, ABSTAIN, DENY, or ERROR according to applicable contract |
-| PROCESSED → CATALOG/TRIPLET | stable IDs, evidence/source lineage, projection parity, derivative label, catalog/graph validation | HOLD or ERROR |
-| CATALOG/TRIPLET/PROCESSED → PUBLISHED | evidence/proof, rights/sensitivity, validation, policy, accountable review, release decision, correction and rollback closure | DENY / HOLD |
-| PUBLISHED → corrected/superseded/withdrawn/rolled back | affected-artifact inventory, prior state, public notices where required, dependency/cache invalidation, rollback/recompile receipt | HOLD; never silent overwrite/delete |
-| Compatibility path → redirected/tombstoned/retired | pinned payload/consumer inventory, accepted decision, target mapping, stale-reference tests, correction/cutover plan, rollback drill | Remain compatibility-only and deny new writes |
+A transition record should make these facts inspectable:
 
-The exact finite outcomes and record fields come from applicable contracts. This README does not normalize conflicting vocabularies by prose.
+- object ID and predecessor version;
+- source and evidence references;
+- transition type and finite outcome;
+- actor, tool, code/spec, schema, and policy versions;
+- input and output digests;
+- observed/effective/decision times;
+- validation, policy, review, and release references;
+- reason code, obligations, denied alternatives, and error state;
+- correction, withdrawal, rollback, and replay behavior.
+
+[Back to top](#top)
+
+---
+
+<a id="canonical-lane-map"></a>
+
+## Canonical lane map
+
+| Lane | Current path state | Canonical role | Public posture |
+|---|---:|---|---|
+| `pre_raw/` | `ABSENT / CONDITIONAL` | Bounded intake events and admission candidates only when implemented | Denied |
+| [`raw/`](raw/README.md) | `PRESENT` | Immutable capture or governed pointer | Denied |
+| [`work/`](work/README.md) | `PRESENT` | Candidate transform/review state | Denied |
+| [`quarantine/`](quarantine/README.md) | `PRESENT` | Held material and obligations | Denied |
+| [`processed/`](processed/README.md) | `PRESENT` | Validated canonical records | Internal by default |
+| [`catalog/`](catalog/README.md) | `PRESENT` | Discovery, interoperability, provenance, and closure projections | Governed |
+| [`triplets/`](triplets/README.md) | `PRESENT / OPTIONAL BY ARTIFACT` | Rebuildable relationship projections | Governed |
+| [`receipts/`](receipts/README.md) | `PRESENT` | Durable process memory | Internal |
+| [`proofs/`](proofs/README.md) | `PRESENT` | Evidence, validation, citation, review, and integrity support | Internal/review |
+| [`registry/`](registry/README.md) | `PRESENT` | Stable identities and routing | Internal/governed projection |
+| [`published/`](published/README.md) | `PRESENT` | Immutable release-approved public-safe carriers | Release-scoped |
+
+The presence of a lane proves repository bytes, not populated payload quality, active producers, complete validation, release fitness, or public deployment.
 
 [Back to top](#top)
 
 ---
 
 <a id="confirmed-child-roots"></a>
-<a id="directory-map"></a>
+<a id="current-direct-child-classification"></a>
 
-## Canonical lane map
+## Current direct-child classification
 
-### Canonical responsibility map
-
-```text
-data/
-├── README.md
-├── raw/
-│   └── <domain>/<source_id>/<run_id>/
-├── work/
-│   └── <domain>/<run_id>/
-├── quarantine/
-│   └── <domain>/<reason>/<run_id>/
-├── processed/
-│   └── <domain>/<dataset_id>/<version>/
-├── catalog/
-│   ├── stac/
-│   ├── dcat/
-│   ├── prov/
-│   └── domain/
-├── triplets/
-│   ├── graph_deltas/
-│   └── exports/
-├── receipts/
-│   ├── ingest/
-│   ├── validation/
-│   ├── pipeline/
-│   ├── ai/
-│   └── generated/
-├── proofs/
-│   ├── evidence_bundle/
-│   ├── proof_pack/
-│   ├── validation_report/
-│   └── citation_validation/
-├── published/
-│   ├── api_payloads/
-│   ├── layers/
-│   ├── pmtiles/
-│   ├── geoparquet/
-│   ├── reports/
-│   └── stories/
-├── rollback/
-│   └── <domain>/<release_id>/
-└── registry/
-    ├── sources/
-    ├── source_descriptors/
-    ├── layers/
-    ├── datasets/
-    ├── domains/
-    ├── rights/
-    ├── sensitivity/
-    └── crosswalks/
-```
-
-This is a responsibility map, not a recursive manifest and not permission to pre-create empty directories. Add a child only when a real governed artifact, source, run, dataset, registry record, receipt, proof, release dependency, migration, or steward decision requires it.
-
-### Current canonical child-root evidence
-
-| Root | Lifecycle/trust role | README evidence | Current limitation |
-|---|---|---:|---|
-| [`raw/`](raw/README.md) | Immutable source capture | `CONFIRMED at v0.2 evidence boundary` | Payloads, source admissions, and connector activation unverified. |
-| [`work/`](work/README.md) | Candidate/intermediate work | `CONFIRMED at v0.2 evidence boundary` | Run inventory, receipts, validators, and side-effect controls unverified. |
-| [`quarantine/`](quarantine/README.md) | Fail-closed hold | `CONFIRMED at v0.2 evidence boundary` | Held payloads, exit automation, and policy enforcement unverified. |
-| [`processed/`](processed/README.md) | Normalized candidate products | `CONFIRMED at v0.2 evidence boundary` | Inventory and downstream closure unverified. |
-| [`catalog/`](catalog/README.md) | Discovery/interchange projections | `CONFIRMED at v0.2 evidence boundary` | Catalog inventory, agreement checks, and release binding unverified. |
-| [`triplets/`](triplets/README.md) | Relationship/graph projections | `CONFIRMED at v0.2 evidence boundary` | Graph payloads, validators, consumers, and parity unverified. |
-| [`receipts/`](receipts/README.md) | Process memory | `CONFIRMED at v0.2 evidence boundary` | Exact layout, instance validity, signing, and complete emission unverified. |
-| [`proofs/`](proofs/README.md) | Evidence/proof support | `CONFIRMED at v0.2 evidence boundary` | Emitted proof closure, profiles, and release enforcement unverified. |
-| [`published/`](published/README.md) | Released public-safe carriers | `CONFIRMED at v0.2 evidence boundary` | Release approval, hosted payloads, routes, and current alias behavior unverified. |
-| [`registry/`](registry/README.md) | Source/dataset/layer/domain/rights/sensitivity/crosswalk routing | `CONFIRMED at v0.2 evidence boundary` | Taxonomy, completeness, activation, and machine consumers unverified. |
-| [`rollback/`](rollback/README.md) | Data-plane restoration/invalidation support | `CONFIRMED at v0.2 evidence boundary` | Rollback instances, execution, public invalidation, and drills unverified. |
-
-[Back to top](#top)
-
----
-
-## Compatibility and placement conflicts
-
-Current repository paths expose real compatibility debt. This README preserves it as a review surface rather than silently calling it canonical, moving it, or deleting it in a documentation PR.
-
-| Conflict | Current safe posture | Resolution burden |
-|---|---|---|
-| `data/maps/` versus lifecycle-rooted spatial artifacts and map responsibility surfaces | Treat `data/maps/` as pointer-only compatibility/retirement documentation; deny new trust-bearing writes and public reads. | Recursive payload/history/consumer inventory; classify each map object; accepted placement decision; target mapping; stale-reference and cache tests; rollback. |
-| `data/manifests/` versus responsibility-rooted manifest families | Treat `data/manifests/` and its five documented child README lanes as compatibility/routing/retirement only; no new trust records or payloads. | Recursive inventory; manifest-family classification; resolve consumer paths; accepted migration/retirement decision; redirects/tombstones; rollback. |
-| `release/manifest/` versus `release/manifests/` | Do not select either collection path through this README. | Resolve with accepted release governance, consumer inventory, migration, compatibility window, stale-reference tests, and rollback. |
-| `data/prov/` versus `data/catalog/prov/` | Treat as placement conflicted; do not create competing PROV authority. | Classify support records versus catalog projections; decide through ADR/migration; update consumers and references. |
-| `data/triplets/` versus `data/triplet/` and `data/triplet(s)/` | Canonical lane is plural `data/triplets/`; singular/literal paths deny new payloads. | Reference inventory, migration map, deprecation/retirement decision, compatibility tests, rollback. |
-| `data/trade-routes/` versus lifecycle-domain lanes | Treat topic path as transitional compatibility; canonical domain segment is `roads-rail-trade` under each phase. | Inventory payloads/consumers; resolve naming splits; migrate by lifecycle phase. |
-| `data/registry/sources/` versus `data/registry/source_descriptors/` | Keep both visible; do not assume identical semantics or duplicate active IDs. | Define family ownership, IDs, activation records, consumers, migration, and drift checks. |
-| `data/rollback/` versus release rollback families | Use `data/rollback/` for data-plane support; use `release/` for decisions, cards, notices, and governance. | Accept exact record split, references, execution order, public invalidation, and drills. |
-| Catalog/triplet discoverability versus publication | A projection may exist internally; public exposure still requires release binding and policy-safe delivery. | Define accepted catalog visibility states and route behavior. |
-| Child README maturity vocabulary | Preserve source labels; do not treat `draft`, `PROPOSED`, `active`, lifecycle stage, and runtime outcome as one status system. | Adopt shared documentation/contract vocabularies through reviewed changes. |
-
-### Compatibility child registry
-
-| Compatibility path | Current bounded evidence | Denied behavior | Intended next evidence |
+| Direct child | Current disposition | Adopted destination or rule | Safe current action |
 |---|---|---|---|
-| `data/maps/` | Current README at blob `a787a44…`; indexed search in its own packet surfaced only the README at that path | New map payloads, public map reads, renderer/runtime ownership, release authority | Recursive tree/history/consumer inventory and object-family routing decision |
-| `data/manifests/` | Current README at blob `8e7e70c…`; five documented direct child README lanes: `geo/`, `layers/`, `release/`, `flora/`, `story/` | New trust-bearing manifests, public payloads, release authority, independent schema/contract evolution | Recursive payload/consumer inventory, manifest-family mapping, collection-path decision, cutover and rollback evidence |
-| `data/prov/` | README existence carried from v0.2 evidence boundary | New competing provenance/catalog authority | Record classification and accepted PROV placement decision |
-| `data/triplet/` and `data/triplet(s)/` | README existence carried from v0.2 evidence boundary | New relationship payloads | Consumer inventory and migration to `data/triplets/` |
-| `data/trade-routes/` | README existence carried from v0.2 evidence boundary | New topic-rooted domain data | Lifecycle/domain classification and migration to `roads-rail-trade` lanes |
+| `catalog/` | `PLACE` with nested drift | Canonical subtype-first catalog family | Keep canonical; reconcile nested names separately. |
+| `processed/` | `PLACE` | Canonical lifecycle lane | Preserve. |
+| `proofs/` | `PLACE` | Canonical accountability lane | Preserve separation from receipts/release. |
+| `published/` | `PLACE` | Canonical released-carrier lane | Require separate release decision. |
+| `quarantine/` | `PLACE` | Canonical hold lane | Preserve reason/obligation lineage. |
+| `raw/` | `PLACE` | Canonical capture lane | Preserve immutable identity. |
+| `receipts/` | `PLACE` | Canonical process-memory lane | Preserve non-proof boundary. |
+| `registry/` | `PLACE` with nested drift | Canonical subtype-first registry family | Keep canonical; reconcile duplicate topic views separately. |
+| `triplets/` | `PLACE` | Canonical optional graph lane | Preserve as rebuildable projection. |
+| `work/` | `PLACE` | Canonical candidate lane | Preserve. |
+| `document/` | `MIGRATE/HOLD` compatibility pointer | Route artifacts by lifecycle and authority | Freeze payload writes; retain pointer until inventory/cutover. |
+| `manifests/` | `MIGRATE/HOLD` compatibility subtree | Route each manifest by object family | Deny new trust-bearing writes; classify and migrate. |
+| `maps/` | `MIGRATE/HOLD` compatibility pointer | Route source/work/catalog/registry/published/release/rendering separately | Deny new canonical writes; preserve recovery. |
+| `reports/` | `MIGRATE/HOLD` compatibility candidate lane | Unreleased candidates vs `data/published/reports/` vs `docs/reports/` | Freeze authority expansion; inventory producers/consumers. |
+| `prov/` | `MIGRATE` candidate | `data/catalog/prov/` | Cut writers only after inventory and mapping. |
+| `rollback/` | `DEPRECATED/HOLD` ambiguous lane | Decisions: `release/rollback_cards/`; execution: `data/receipts/rollback/` | No new generic writes; classify before migration. |
+| `trade-routes/` | `MIGRATE/HOLD` topic bucket | `data/<lifecycle>/roads-rail-trade/` or registered object family | No bulk move; classify each object. |
+| `triplet/` | `MIGRATE` compatibility source | `data/triplets/` | Canonical single-write after consumer inventory. |
+| `triplet(s)/` | `DENY FOR NEW CANONICAL USE` | `data/triplets/` | Parenthesized placeholder grammar is nonconforming; preserve only for migration evidence. |
 
-### Safe migration sequence
-
-1. Freeze new payloads in the compatibility/conflicted path.
-2. Produce a pinned recursive inventory of files, IDs, consumers, workflows, registries, public references, releases, caches, and external stores.
-3. Classify every object by responsibility, lifecycle phase, authority, rights, sensitivity, release state, and correction dependencies.
-4. Open required ADR, drift, deprecation, and migration records; do not let a migration draft authorize itself.
-5. Move with history preservation, stable identity or explicit identity migration, compatibility pointers where justified, and updated references.
-6. Run positive/negative validation, consumer parity, public-path, stale-reference, cache invalidation, correction, and rollback tests.
-7. Retire the compatibility path only after the verified window closes; preserve lineage and correction records.
-
-No compatibility path is moved, renamed, redirected, tombstoned, or retired by this README update.
+These outcomes classify path posture; they do not authorize the migrations themselves.
 
 [Back to top](#top)
 
 ---
 
-## Minimum lifecycle artifact contract
+<a id="compatibility-and-placement-conflicts"></a>
+<a id="current-nested-drift-and-documentation-conflicts"></a>
 
-The following is a **PROPOSED root-level review profile**. It helps reviewers locate missing support; it does not replace object-family contracts or schemas.
+## Current nested drift and documentation conflicts
 
-| Area | Minimum reviewable support |
-|---|---|
-| Identity | Stable artifact ID, family, version, lifecycle phase, domain lane, content digest, prior/superseding IDs. |
-| Source | SourceDescriptor/source ID, source role, authority class, source version/head, retrieval reference. |
-| Scope | Spatial support, CRS/precision/scale, temporal support and time roles, uncertainty/limitations. |
-| Rights and sensitivity | Rights/terms/attribution, access class, sovereignty/cultural authority, consent/privacy, sensitive geometry, obligations. |
-| Meaning and shape | Accepted contract and schema refs; validator/profile refs; no parallel local authority. |
-| Execution | Code ref, spec/profile hash, run ID, tool/runtime versions, inputs/outputs, deterministic/replay posture, side effects. |
-| Validation | Schema/semantic/spatial/temporal/source-role/policy/citation/integrity results and finite reason codes. |
-| Provenance and receipts | Process receipt refs, input/output digests, transform lineage, safe logs, timestamps, failure/partial-state record. |
-| Evidence and proof | EvidenceRef/EvidenceBundle/ProofPack or explicit non-claim role; support and limitations resolvable. |
-| Projection | Catalog/triplet IDs, parity and derivation status, source/evidence lineage, dependent indexes/tiles/graphs. |
-| Policy and review | PolicyDecision refs, obligations, accountable reviewer state, separation of author/approver where required. |
-| Release and recovery | Candidate/release refs, manifest/decision, prior state, correction/withdrawal, affected derivatives, rollback and recompile targets. |
-| Compatibility | Compatibility class, canonical target, payload and consumer inventory, redirect/tombstone semantics, sunset criteria, stale-reference checks, rollback target. |
+### `data/catalog/`
 
-### Anti-collapse assertions
+The exact direct catalog tree currently contains:
 
 ```text
-path presence        != factual truth
-processed artifact   != EvidenceBundle
-receipt              != proof
-proof                != release approval
-manifest             != authority by filename
-catalog record        != publication
-triplet / graph edge  != canonical replacement truth
-published artifact    != release decision
-release decision      != permanent correctness
-map / report / AI     != sovereign truth
-compatibility path    != canonical authority
-rollback              != deletion of history
+catalog/
+├── README.md
+├── dcat/
+├── domain/
+├── domains/
+├── prov/
+├── settlements-infrastructure/
+└── stac/
 ```
 
+Current conflicts:
+
+- both `domain/` and `domains/` exist;
+- adopted v2 selects collection spelling `domains/`;
+- `settlements-infrastructure/` is a direct topic child rather than a subtype-first domain projection;
+- adopted v2's illustrative `matrix/` collection is absent;
+- the current catalog README was authored against prior rules and does not enumerate the exact current tree.
+
+These are migration and documentation-convergence candidates, not permission for this PR to move or create payloads.
+
+### `data/registry/`
+
+The exact direct registry tree contains canonical subtype-first families—`crosswalks/`, `datasets/`, `domains/`, `layers/`, `rights/`, `sensitivity/`, and `sources/`—plus domain topic directories and `source_descriptors/`.
+
+Adopted v2 makes `data/registry/sources/<source_id>/` the canonical source identity/descriptor home. Domain-specific source views may be generated but not independent writers. The current `sources/` versus `source_descriptors/` split and topic-domain directories therefore require producer/consumer and identity analysis before convergence.
+
+### Child README conflicts
+
+- `data/rollback/README.md` still describes `data/rollback/` as canonical rollback support, while adopted v2 deprecates the generic lane and separates decision cards from execution receipts.
+- several compatibility child READMEs cite prior Directory Rules and proposed ADR status;
+- the v0.3 root README omitted current `document/` and `reports/` direct children;
+- the current exact tree, adopted rules, and some child documentation are therefore not fully synchronized.
+
+This root README records those conflicts. It does not silently rewrite child history or claim child conformance.
+
 [Back to top](#top)
 
 ---
 
-<a id="root-guardrails"></a>
+<a id="minimum-artifact-contract"></a>
 
-## Public-client and sensitive-data boundary
+## Minimum artifact and transition contract
 
-### Public-client law
+A reviewable lifecycle artifact should provide, inline or by resolvable reference:
 
-Ordinary clients may consume:
-
-- governed API envelopes;
-- release-resolved artifact URLs;
-- approved public-safe `data/published/` artifacts;
-- released catalog records and tiles where policy allows;
-- resolved EvidenceBundle/citation support at the permitted detail level;
-- correction, stale, supersession, withdrawal, and release-state cues.
-
-Ordinary clients must not consume:
-
-- RAW, WORK, QUARANTINE, or unreleased PROCESSED payloads;
-- internal registry, receipt, proof, rollback, or review stores;
-- unreleased catalog/triplet projections;
-- `data/maps/`, `data/manifests/`, or other compatibility paths as data services;
-- direct source credentials/endpoints or unrestricted source payloads;
-- hidden model output or generated text without governed evidence/policy envelopes;
-- exact sensitive geometry or reconstructive joins withheld by policy.
-
-### Sensitive-data defaults
-
-| Material or risk | Default posture |
+| Concern | Minimum support |
 |---|---|
-| Unknown rights or redistribution terms | QUARANTINE / DENY public exposure |
-| Living-person or private household data | Restricted; minimize, purpose-bind, review consent/legal basis, deny public detail by default |
-| DNA/genomic or derived kinship information | Fail closed; no ordinary repository payload or public path |
-| Archaeology, sacred/cultural knowledge, sovereignty-sensitive material | Steward/authority review; generalize, delay, stage, or deny |
-| Rare species/plants or vulnerable habitat | Public-safe generalization and anti-reconstruction review |
-| Critical infrastructure or vulnerability detail | Minimize and restrict; public-safe aggregation only when approved |
-| Private land/title/owner joins | Separate evidence roles; deny owner-resolved public exposure without authority |
-| Exact source endpoints, credentials, or operational internals | Keep out of committed data and logs; use approved secret/config systems |
-| Uncertain spatial precision or temporal support | Mark limitations, narrow claim, abstain, or hold |
+| Identity | Stable ID, version, object family, domain/source/scope identifiers |
+| Source | Source ID, role, authority class, native ID, locator, retrieval identity |
+| Time | Observation/valid/source/retrieval/processing/release/correction times as applicable |
+| Space | CRS, geometry type, scope, precision, scale, digest, transform/generalization |
+| Integrity | Media type, size, canonicalization, content/spec/schema digests |
+| Rights and sensitivity | Rights/license/attribution, access class, sensitivity tier, obligations |
+| Process | Producer code/spec/tool identity, inputs, outputs, receipt, finite outcome |
+| Evidence | EvidenceRef, EvidenceBundle resolution, citations, limitations |
+| Governance | Validation, policy, review, release, correction, withdrawal, rollback refs |
+| Storage | Logical home, access-appropriate physical locator, retention/legal-hold posture |
 
-Redaction, aggregation, generalization, masking, delay, and withholding are transforms. They require reason, scope, input/output identity, policy/review references, and a receipt where material. A client-side style filter is not a sufficient secrecy control.
+A missing field does not always invalidate the object. It must, however, yield an explicit finite result—such as `HOLD`, `QUARANTINE`, `ABSTAIN`, `DENY`, or `ERROR`—when the missing support is material to the next transition.
 
 [Back to top](#top)
 
 ---
+
+<a id="transition-evidence-profile"></a>
+
+## Transition evidence profile
+
+| Transition | Required evidence posture | Failure posture |
+|---|---|---|
+| PRE_RAW -> RAW | Source activation/admission state, event/candidate identity, rights/sensitivity precheck, ingest receipt | Hold, quarantine, reject, or error |
+| RAW -> WORK | Immutable input identity, transform plan/spec, target schema, run identity | Error or quarantine |
+| RAW/WORK -> QUARANTINE | Reason code, obligations, restricted access, source link, remediation target | Remain held |
+| WORK -> PROCESSED | Schema/contract, identity, geometry/time, source-role, rights/sensitivity, deterministic output, validation/transform receipt | Hold, quarantine, or error |
+| PROCESSED -> CATALOG/TRIPLETS | Canonical input refs, projection spec/hash, catalog/graph profile, parity and stale handling | Abstain, hold, or error |
+| CATALOG + PROOF -> PUBLISHED | Evidence closure, policy/review state, accepted release decision, immutable manifest/digests, public-safe transform, rollback/correction | Deny, hold, abstain, or error |
+| PUBLISHED -> CORRECTED/WITHDRAWN | Prior release identity, reason, replacement/withdrawal object, affected surfaces, invalidation, new manifest or tombstone, rollback/forward fix | Error and containment |
+
+Watchers and drift detectors may create candidates and receipts. They are non-publishers.
+
+[Back to top](#top)
+
+---
+
+<a id="public-client-and-sensitive-data-boundary"></a>
+
+## Public client and sensitive data boundary
+
+### Public clients
+
+Normal clients may consume:
+
+- governed API responses resolved against release state;
+- released static files and public-safe distributions;
+- released map/tile/raster/vector carriers and catalog projections;
+- EvidenceBundle-backed explanations and finite AI response envelopes;
+- correction, supersession, stale, and withdrawal state appropriate to the audience.
+
+They must not consume internal lifecycle or compatibility paths directly.
+
+### Sensitive data
+
+When rights, sovereignty, cultural sensitivity, living-person data, genomics, rare species, archaeology, infrastructure, private land, exact locations, or harmful inference are unclear:
+
+1. stop or narrow intake;
+2. preserve source and evidence lineage;
+3. quarantine, restrict, redact, generalize, aggregate, delay, or deny;
+4. record the transform, reason, policy, reviewer, and precision change;
+5. validate cross-layer inference and side-channel leakage;
+6. release only a reviewed public-safe carrier;
+7. preserve correction, withdrawal, and rollback.
+
+Client-side hiding is not a public-safe transform.
+
+[Back to top](#top)
+
+---
+
+<a id="compatibility-retirement-sequence"></a>
+
+## Compatibility retirement sequence
+
+For each noncanonical direct child:
+
+1. pin the tree, history, direct and indirect payloads, LFS/external stores, and current README;
+2. identify object families, stable IDs, rights, sensitivity, lifecycle state, and release reliance;
+3. identify all repository, runtime, deployed, external, and historical producers/consumers;
+4. choose `MIRROR`, `MIGRATE`, `HOLD`, or `DENY` through the applicable authority;
+5. add canonical target and negative write guard;
+6. create a migration manifest with old/new path, digests, producers, consumers, compatibility window, validation, and rollback/forward-fix;
+7. cut writers to canonical single-write;
+8. support bounded dual-read only where verified consumers require it;
+9. validate identity, content, links, imports, policy, rights, sensitivity, catalogs, graphs, public surfaces, caches, correction, and rollback;
+10. prove zero writers and zero consumers before tombstone retirement or deletion;
+11. preserve decision and supersession history.
+
+A broad cleanup command is not an acceptable migration plan.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification-register"></a>
 
 ## Open verification register
 
-| Item | Status | Verification needed before reliance |
-|---|---:|---|
-| Exhaustive recursive `data/` inventory | `NEEDS VERIFICATION` | Pinned tree, file families, payload types, sizes, generated/ignored/external stores, and owners. |
-| `data/maps/` payload/history/consumer inventory | `NEEDS VERIFICATION` | Recursive tree, Git history, LFS/external stores, inbound references, runtime resolvers, map artifacts, public routes, caches, and release dependencies. |
-| `data/manifests/` recursive payload/consumer inventory | `NEEDS VERIFICATION` | Parent and five child lanes, payloads, producers, consumers, contract/schema refs, release references, redirects, and tombstones. |
-| Canonical release-manifest collection path | `CONFLICTED` | Resolve `release/manifest/` versus `release/manifests/` through accepted governance, migration, cutover, stale-reference tests, and rollback. |
-| Canonical versus compatibility-path disposition | `CONFLICTED` | Payload/consumer inventory, accepted ADRs, migration manifests, compatibility window, rollback. |
-| Registry family taxonomy and active source records | `NEEDS VERIFICATION` | IDs, source/source-descriptor split, activation decisions, rights/sensitivity records, consumers. |
-| Cross-family lifecycle contract and identity grammar | `PROPOSED` | Accepted contracts/schemas, canonicalization, digest algorithm, validators, fixtures, migrations. |
-| Lifecycle writer inventory | `UNKNOWN` | Connector/pipeline/package/tool/runtime code paths, permissions, side effects, sandbox, deployment. |
-| Unified validator and data-profile registry | `NOT ESTABLISHED at v0.2 boundary` | Accepted orchestrator, registered validators, deterministic commands, exit codes, CI wiring. |
-| Rights/sensitivity/policy runtime enforcement | `UNKNOWN` | Active policy bundles, evaluator, input bindings, decisions, negative fixtures, logs/receipts. |
-| Receipt emission, validity, signing, and retention | `NEEDS VERIFICATION` | Instance inventory, schema validation, producer binding, signing/attestation, review, retention. |
-| Evidence/proof closure and correction propagation | `UNKNOWN` | EvidenceRef resolution, ProofPack profiles, invalidation graph, released-claim dependencies. |
-| Catalog/triplet closure and parity | `UNKNOWN` | STAC/DCAT/PROV agreement, graph parity, ID closure, validators, released/public visibility. |
-| Release binding and `current` alias behavior | `UNKNOWN` | Candidate/manifest/decision/review chain, alias mechanism, RollbackCard, atomicity, receipts. |
-| Public serving, hosting, caching, and invalidation | `UNKNOWN` | Governed routes, artifact hosts, access control, headers, caches, stale/correction/withdrawal behavior. |
-| Retention, deletion, legal hold, and storage governance | `UNKNOWN` | Accepted policy, source obligations, deletion/retention schedules, backup/recovery, audit. |
-| Named stewards and independent review enforcement | `NEEDS VERIFICATION` | Approved role assignments, GitHub teams, rulesets, required checks/reviews, separation of duties. |
-| Production release, rollback, and disaster-recovery evidence | `UNKNOWN` | Observed releases, dashboards/logs, rollback drills, recovery objectives, post-rollback verification. |
+| ID | Item | Current status | Evidence needed before higher-risk action |
+|---|---|---:|---|
+| DATA-V-001 | Recursive object-family inventory | `NEEDS VERIFICATION` | Commit-pinned recursive tree, LFS/external-store inventory, per-object classification |
+| DATA-V-002 | Active writers and consumers | `UNKNOWN` | Connector, pipeline, tool, workflow, API/UI, deployed-service, external-consumer graph |
+| DATA-V-003 | Rights, sensitivity, retention, legal hold | `NEEDS VERIFICATION` | Source terms, policy decisions, steward review, storage/access/retention evidence |
+| DATA-V-004 | Lifecycle contract/schema enforcement | `UNKNOWN` | Accepted contracts/schemas, validators, fixtures, negative tests, current hosted results |
+| DATA-V-005 | Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted linked instances and identity/digest agreement |
+| DATA-V-006 | Public route and cache boundary | `UNKNOWN` | Governed route inventory, authorization, static hosting, cache/invalidation evidence |
+| DATA-V-007 | Compatibility producer cutover | `NOT STARTED` | Per-path migration manifests, single-write proof, bounded dual-read consumers |
+| DATA-V-008 | `catalog/domain` vs `catalog/domains` | `CONFLICTED` | Payload/producer/consumer inventory and accepted mapping |
+| DATA-V-009 | `registry/sources` vs `registry/source_descriptors` | `CONFLICTED` | Canonical source ID mapping, writer inventory, generated-view decision |
+| DATA-V-010 | Generic `data/rollback/` convergence | `HOLD` | Classification into release decisions vs execution receipts; consumer and recovery proof |
+| DATA-V-011 | Triplet aliases | `HOLD` | Identity/parity, writer/consumer graph, canonical single-write and retirement plan |
+| DATA-V-012 | Child README convergence | `NEEDS VERIFICATION` | Separate bounded docs slice against adopted v2 and exact child trees |
+| DATA-V-013 | Specialist and independent stewardship | `NEEDS VERIFICATION` | Named accountable roles and review policy |
+| DATA-V-014 | Current-main enforcement breadth | `NEEDS VERIFICATION` | Directory validator, required-check/ruleset evidence, latest exact-head runs |
+| DATA-V-015 | Correction/withdrawal/rollback drill | `NOT RUN` | Representative released fixture, invalidation plan, replay and recovery evidence |
 
-Unknown or conflicted items narrow claims and block higher-risk transitions; they do not invite plausible defaults.
+Unknowns narrow claims and block higher-risk transitions. They do not invite plausible defaults.
 
 [Back to top](#top)
 
@@ -878,78 +865,67 @@ Unknown or conflicted items narrow claims and block higher-risk transitions; the
 
 ## Evidence ledger
 
-| Evidence | Observation used | Limit |
+| Evidence | What it supports | What it does not prove |
 |---|---|---|
-| Prior [`data/README.md`](./README.md) blob `fb7b0ac…` | Stable identity, v0.2 lifecycle contract, root README order, authority split, child-root index, transition matrix, validation/review boundaries, conflicts, minimum profile, sensitive-data guardrails, verification register, and no-loss ledger. | Snapshot base was `79603b7…`; newly modernized compatibility contracts were not indexed. |
-| [Directory Rules](../docs/doctrine/directory-rules.md) blob `2affb08…` | Canonical data tree, lifecycle rules, release split, compatibility/ADR/migration discipline, README order. | Doctrine does not prove implementation or payloads. |
-| [`data/maps/README.md`](maps/README.md) blob `a787a44…` | Confirms pointer-only, deny-new-writes compatibility/retirement role and object-family routing obligations. | Does not prove complete tree/history, payload absence, consumers, cutover, runtime, release, or retirement. |
-| [`data/manifests/README.md`](manifests/README.md) blob `8e7e70c…` | Confirms non-canonical compatibility/routing/retirement parent, five documented direct child README lanes, overloaded manifest terminology, and unresolved collection-path conflict. | Does not prove recursive payload inventory, accepted target, consumer cutover, redirect/tombstone, or retirement. |
-| Canonical child READMEs from v0.2 packet | Eleven exact lane boundaries and mixed maturity. | Not re-read in this v0.3 packet; payload and enforcement claims remain bounded. |
-| Other compatibility/conflicted READMEs from v0.2 packet | Existing provenance, triplet, and topic-path drift. | Not re-read in this v0.3 packet; does not decide migration. |
-| Release root, workflow inventory, Makefile, validator placeholder, static non-publisher test, ADR index, generated-receipt lane/schema, and CODEOWNERS from v0.2 packet | Separate release authority, bounded checks, proposed decisions, process-memory lane, and review routing. | Not re-read in this v0.3 packet; prior evidence is explicitly qualified and does not prove current runtime/CI/release behavior. |
-| Main-head comparison | `b125a21…` was identical to `main` during preflight. | Does not prove branch protection, workflow results, or no concurrent change after the check. |
-| Open-PR overlap search | No open pull request matching the target path was found during preflight. | Search is a bounded coordination check, not a lock. |
+| `main@1001a87233e0f23695b6b12e60c654f938e6ffb5` | Repository/base identity for this review | Runtime, deployment, or public behavior |
+| `data_tree=e4ce79ed25b3d6b772bf00ec77fca92d38801fd3` | Exact direct-child names and object IDs | Recursive payload quality, writers, consumers, or rights |
+| `data/README.md` prior blob `22d13b...` | Stable target identity and v0.3 lineage | Current governance alignment after ADR-0029 |
+| Adopted Directory Rules blob `fd49a0...` and digest `44f7e9...` | Normative placement, lifecycle/accountability, data/release split, naming, README, migration rules | Whether every current path conforms |
+| Accepted ADR-0029 | Adoption and sole writable Directory Rules authority | Child migrations or release/publication approval |
+| Root Registry blob `024f66...` | Active machine projection for `root.data` | Authority expansion, source activation, policy, review, or release |
+| Catalog tree `6d7849...` | Exact direct catalog children | Semantic equivalence or safe migration |
+| Registry tree `515fa1...` | Exact direct registry children | Canonical writer/consumer choice for duplicated families |
+| `data/document/README.md` and tree `0f790b...` | Pointer-only compatibility posture and bounded direct contents | External/deployed consumers |
+| `data/reports/README.md` and tree `89de9c...` | Transitional report-candidate posture and exact direct domain children | Payload correctness or release state |
+| `data/maps/README.md` | Noncanonical pointer/retirement boundary | Complete map artifact inventory or renderer readiness |
+| `data/manifests/README.md` | Noncanonical manifest routing/retirement boundary | Complete manifest inventory or accepted target for every family |
+| `data/rollback/README.md` | Historical support-lane documentation | Current authority under adopted v2 |
+| Workflow governance README and `repository-control.yml` | Non-publisher posture; bounded trusted-base `pull_request_target` guard | Complete safety audit of all workflows or effective settings |
+| Open PR search | No exact-path open PR at preflight | No stale branch, external work, or future overlap |
 
-### Evidence limits
-
-No recursive clone, database, object store, bucket, registry service, source endpoint, secret store, policy runtime, catalog/triplet service, public API, tile host, cache, dashboard, deployment, production log, branch-protection setting, or released artifact was inspected. Current implementation and operational claims remain bounded accordingly.
+No source in this ledger proves release, deployment, publication, source fitness, or public safety.
 
 [Back to top](#top)
 
 ---
 
-## v0.2 to v0.3 no-loss ledger
+## No-loss ledger
 
-| v0.2 element | v0.3 disposition |
+| Prior v0.3 material | v0.4 disposition |
 |---|---|
-| Stable path and `kfm://data/readme` identity | Preserved exactly. |
-| Directory Rules §15 H2 order | Preserved exactly for the first twelve H2 sections. |
-| Canonical lifecycle-root purpose and authority split | Preserved and clarified for compatibility paths. |
-| Lifecycle invariant, diagram, and transition matrix | Preserved; diagram now shows `maps/` and `manifests/` as non-authoritative routing surfaces, and transition matrix adds compatibility retirement evidence. |
-| Public-client trust membrane | Preserved and explicitly denies compatibility paths as data services. |
-| Release decision versus published artifact split | Preserved exactly. |
-| Accepted material and admission questions | Preserved; compatibility-class check added. |
-| Exclusions | Preserved; explicit map/manifests routing added. |
-| Eleven canonical child roots | Preserved with the v0.2 evidence boundary made explicit. |
-| Existing compatibility conflicts | Preserved; `data/maps/`, current `data/manifests/`, and `release/manifest` versus `release/manifests` added. |
-| Required checks | Preserved; compatibility cutover, stale-reference, redirect/tombstone, and rollback checks added. |
-| Review burden | Preserved; redirect/tombstone and consumer-cutover review included. |
-| Minimum lifecycle artifact contract | Preserved; compatibility metadata added. |
-| Sensitive-data and public-client controls | Preserved; map metadata and compatibility paths remain fail-closed. |
-| Open verification and evidence ledgers | Preserved and refreshed with current exact evidence and explicit carry-forward limits. |
-| Legacy fragment IDs | Preserved: `scope`, `lifecycle-invariant`, `repo-fit`, `accepted-material`, `exclusions`, `confirmed-child-roots`, `root-guardrails`, `directory-map`, `required-checks-before-use`, `status-notes`, and `evidence-ledger`. |
-| Correction and rollback posture | Preserved and extended to compatibility migration, redirect, tombstone, cache invalidation, and stale-reference recovery. |
-| No-overclaim boundary | Preserved; payload, runtime, release, migration, retirement, and production maturity remain explicit UNKNOWN/NEEDS VERIFICATION. |
-
-### Earlier v0.1 to v0.2 preservation
-
-v0.2 preserved the stable identity, canonical lifecycle-root purpose, lifecycle invariant, public-client trust membrane, release/published split, accepted material, exclusions, eleven child roots, root guardrails, directory map, required checks, evidence posture, legacy fragment IDs, correction/rollback discipline, and no-overclaim boundary from v0.1. Those dispositions carry forward unchanged unless the v0.3 ledger above states an additive refinement.
+| Stable path, `doc_id`, created date, H1 role, and legacy anchors | Preserved |
+| Lifecycle law and state-transition framing | Preserved and aligned to adopted v2 |
+| Trust membrane and no-direct-public-path rule | Preserved and strengthened |
+| Source-role, rights, sensitivity, evidence, policy, review, release, correction, and rollback controls | Preserved |
+| Receipts/proofs/catalogs/triplets/registries/release separation | Preserved and corrected where v2 is more precise |
+| Compatibility debt for maps, manifests, prov, triplet variants, and trade routes | Preserved and updated |
+| `document/` and `reports/` omission | Repaired from exact current tree |
+| Directory Rules v1.4/proposed-authority framing | Superseded by accepted ADR-0029 and adopted v2 evidence |
+| Generic `data/rollback/` as canonical support | Corrected to adopted v2 deprecation and object-family split |
+| `catalog/domain/` singular target | Corrected to adopted subtype-first `catalog/domains/`; current conflict remains visible |
+| Current direct-child map | Replaced with exact 19-directory tree |
+| Static badge wall | Removed; status is expressed through evidence tables and alerts |
+| Payload, source, code, schema, policy, workflow, release, migration, or public-state change | None |
 
 ### Change history
 
+#### v0.4.0 — 2026-08-08
+
+- reconciled the same-path root README with accepted ADR-0029 and the active Root Registry;
+- pinned current main, repository tree, data tree, target blob, and key child trees;
+- adopted the v2 `ROOT_FULL` README profile without treating path or prose as authority;
+- refreshed the exact direct-child map and classified all 19 current directories;
+- corrected the data/release/rollback split and conditional `pre_raw/` posture;
+- surfaced exact catalog and registry naming/authority drift;
+- preserved trust, sensitivity, no-public-path, correction, migration, and rollback boundaries;
+- changed documentation only.
+
 #### v0.3.0 — 2026-07-24
 
-- refreshed the evidence snapshot to `main@b125a21e83f727c45a2d36709bbb594d38a904ad`;
-- indexed `data/maps/` as a pointer-only, deny-new-writes compatibility and retirement lane;
-- reconciled the modernized `data/manifests/` parent and its five documented direct child README lanes;
-- surfaced the unresolved `release/manifest/` versus `release/manifests/` collection-path conflict;
-- added compatibility child evidence, transition, validation, review, migration, redirect/tombstone, stale-reference, cache-invalidation, and rollback requirements;
-- preserved the canonical lifecycle, release split, trust membrane, stable identity, required README order, legacy anchors, and v0.2 evidence limits;
-- changed one Markdown file only.
+- documented lifecycle and compatibility boundaries against then-current v1.4 evidence;
+- refreshed maps and manifests compatibility posture;
+- preserved v0.2 lifecycle, authority, and no-loss material.
 
-#### v0.2.0 — 2026-07-23
-
-- reorganized the first twelve H2 sections to the Directory Rules §15 contract;
-- refreshed the evidence snapshot to then-current repository files;
-- separated canonical lifecycle lanes from compatibility/conflicted paths;
-- recorded the placeholder aggregate validator and bounded Make/workflow/test controls honestly;
-- strengthened source, identity, time, rights, sensitivity, evidence, policy, release, public-client, correction, and rollback boundaries;
-- added a transition matrix, compatibility migration sequence, minimum artifact profile, review matrix, verification register, and no-loss ledger;
-- changed documentation and generated provenance only.
-
-#### v0.1.0 — 2026-06-29
-
-- replaced the short root stub with a lifecycle contract;
-- documented child roots, accepted/excluded material, guardrails, directory map, checks, status notes, and evidence ledger.
+> **Operating rule:** classify by responsibility and lifecycle first; preserve evidence and identity; release only through governed state transitions; keep every compatibility path single-write, reviewable, and reversible.
 
 [Back to top](#top)
