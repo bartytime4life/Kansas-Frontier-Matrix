@@ -1,0 +1,474 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/gate_override_record.schema.json",
+  "title": "GateOverrideRecordCandidate",
+  "description": "Closed fixture-first candidate for an auditable gate override record. Passing grants no bypass, policy, review, promotion, release, deployment, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "execution_mode",
+    "override_id",
+    "created_at",
+    "validity",
+    "override_class",
+    "target_gate",
+    "actors",
+    "rationale",
+    "scope",
+    "remediation",
+    "evidence_refs",
+    "policy_decision_refs",
+    "review_refs",
+    "attestation",
+    "claims",
+    "spec_hash"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.gate_override_record_candidate.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "override_id": {
+      "type": "string",
+      "pattern": "^kfm:gate-override:sha256:[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/aware_datetime"
+    },
+    "validity": {
+      "$ref": "#/$defs/validity"
+    },
+    "override_class": {
+      "enum": [
+        "EMERGENCY_HOTFIX",
+        "TIME_SENSITIVE_CORRECTION",
+        "AVAILABILITY_RESTORE"
+      ]
+    },
+    "target_gate": {
+      "$ref": "#/$defs/target_gate"
+    },
+    "actors": {
+      "$ref": "#/$defs/actors"
+    },
+    "rationale": {
+      "$ref": "#/$defs/rationale"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "remediation": {
+      "$ref": "#/$defs/remediation"
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/evidence_refs"
+    },
+    "policy_decision_refs": {
+      "$ref": "#/$defs/policy_decision_refs"
+    },
+    "review_refs": {
+      "$ref": "#/$defs/review_refs"
+    },
+    "attestation": {
+      "$ref": "#/$defs/attestation"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^kfm://[^\\s]+$"
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 512,
+      "pattern": "^kfm://actor/[^\\s]+$"
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid_from",
+        "expires_at"
+      ],
+      "properties": {
+        "valid_from": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/aware_datetime"
+        }
+      }
+    },
+    "target_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "gate_name",
+        "gate_run_ref",
+        "prior_result",
+        "candidate_ref",
+        "candidate_revision",
+        "requested_effect"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[A-Z][A-Z0-9_.:-]+$"
+        },
+        "gate_name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "gate_run_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://gate-run/[^\\s]+$"
+        },
+        "prior_result": {
+          "enum": [
+            "FAILED",
+            "HOLD",
+            "BLOCKED"
+          ]
+        },
+        "candidate_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://candidate/[^\\s]+$"
+        },
+        "candidate_revision": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 256,
+          "pattern": "^[^\\s]+$"
+        },
+        "requested_effect": {
+          "const": "TEMPORARY_GATE_BYPASS"
+        }
+      }
+    },
+    "actors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requester_ref",
+        "requester_role",
+        "approver_ref",
+        "approver_role",
+        "policy_profile_ref",
+        "separation_required"
+      ],
+      "properties": {
+        "requester_ref": {
+          "$ref": "#/$defs/actor_ref"
+        },
+        "requester_role": {
+          "enum": [
+            "MAINTAINER",
+            "RELEASE_STEWARD",
+            "SECURITY_RESPONDER",
+            "DOMAIN_STEWARD",
+            "AUTOMATION_OPERATOR"
+          ]
+        },
+        "approver_ref": {
+          "$ref": "#/$defs/actor_ref"
+        },
+        "approver_role": {
+          "enum": [
+            "MAINTAINER",
+            "RELEASE_STEWARD",
+            "SECURITY_RESPONDER",
+            "DOMAIN_STEWARD"
+          ]
+        },
+        "policy_profile_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://policy/[^\\s]+$"
+        },
+        "separation_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rationale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason_code",
+        "summary",
+        "justification_digest"
+      ],
+      "properties": {
+        "reason_code": {
+          "enum": [
+            "EMERGENCY_HOTFIX",
+            "TIME_SENSITIVE_CORRECTION",
+            "AVAILABILITY_RESTORE"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        "justification_digest": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environment",
+        "operations",
+        "paths",
+        "effect_limit"
+      ],
+      "properties": {
+        "environment": {
+          "enum": [
+            "TEST",
+            "STAGING",
+            "PRODUCTION_CANDIDATE"
+          ]
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "APPLY_PATCH",
+              "RETRY_GATE",
+              "RESTORE_SERVICE",
+              "CORRECT_RELEASE_METADATA"
+            ]
+          }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+          }
+        },
+        "effect_limit": {
+          "const": "NO_RELEASE_NO_PUBLICATION"
+        }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "work_item_ref",
+        "owner_ref",
+        "due_at",
+        "expected_actions",
+        "rollback_ref",
+        "verification_required"
+      ],
+      "properties": {
+        "work_item_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://work-item/[^\\s]+$"
+        },
+        "owner_ref": {
+          "$ref": "#/$defs/actor_ref"
+        },
+        "due_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "expected_actions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 256,
+            "pattern": "\\S"
+          }
+        },
+        "rollback_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://rollback/[^\\s]+$"
+        },
+        "verification_required": {
+          "const": true
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 12,
+        "maxLength": 512,
+        "pattern": "^kfm://evidence/[^\\s]+$"
+      }
+    },
+    "policy_decision_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 12,
+        "maxLength": 512,
+        "pattern": "^kfm://policy-decision/[^\\s]+$"
+      }
+    },
+    "review_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 12,
+        "maxLength": 512,
+        "pattern": "^kfm://review/[^\\s]+$"
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "signer_ref",
+        "subject_digest",
+        "signature_value",
+        "production_signature_verified"
+      ],
+      "properties": {
+        "profile": {
+          "const": "kfm.fixture.sha256-attestation.v1"
+        },
+        "signer_ref": {
+          "$ref": "#/$defs/actor_ref"
+        },
+        "subject_digest": {
+          "$ref": "#/$defs/hash"
+        },
+        "signature_value": {
+          "$ref": "#/$defs/hash"
+        },
+        "production_signature_verified": {
+          "const": false
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "override_authorized",
+        "gate_bypassed",
+        "human_review_authenticated",
+        "policy_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized",
+        "lifecycle_write_performed"
+      ],
+      "properties": {
+        "override_authorized": {
+          "const": false
+        },
+        "gate_bypassed": {
+          "const": false
+        },
+        "human_review_authenticated": {
+          "const": false
+        },
+        "policy_approved": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "contract_doc": "contracts/governance/gate_override_record.md",
+    "fixtures": "fixtures/contracts/v1/governance/gate_override_record/cases.json",
+    "validator": "tools/validators/governance/validate_gate_override_record.py",
+    "tests": "tests/validators/governance/test_validate_gate_override_record.py",
+    "source_cards": [
+      "KFM-P3-IDEA-0003"
+    ],
+    "non_effects": [
+      "no_gate_bypass",
+      "no_production_signature",
+      "no_policy_or_review_authority",
+      "no_repository_setting_change",
+      "no_promotion_release_deployment_or_publication"
+    ]
+  }
+}
