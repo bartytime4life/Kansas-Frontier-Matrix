@@ -11,6 +11,7 @@
     "changed-area": [],
     "release-dry-run": [
       "evidence-bundle",
+      "layer-manifest",
       "decision-envelope",
       "run-receipt",
       "ingest-receipt"
@@ -19,6 +20,7 @@
       "source-descriptor",
       "evidence-ref",
       "evidence-bundle",
+      "layer-manifest",
       "runtime-response-envelope",
       "decision-envelope",
       "run-receipt",
@@ -30,7 +32,9 @@
       "id": "source-descriptor",
       "description": "Validate SourceDescriptor fixture polarity and bounded semantics.",
       "script": "tools/validators/validate_source_descriptor.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/source/**",
         "schemas/contracts/v1/source/**",
@@ -47,7 +51,9 @@
       "id": "evidence-ref",
       "description": "Validate EvidenceRef fixture polarity and safe reference syntax.",
       "script": "tools/validators/validate_evidence_ref.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/evidence/evidence_ref.md",
         "schemas/contracts/v1/evidence/evidence_ref.schema.json",
@@ -62,7 +68,9 @@
       "id": "evidence-bundle",
       "description": "Validate EvidenceBundle fixture polarity and bounded evidence closure shape.",
       "script": "tools/validators/validate_evidence_bundle.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/evidence/evidence_bundle.md",
         "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
@@ -74,10 +82,35 @@
       "artifact_refs": []
     },
     {
+      "id": "layer-manifest",
+      "description": "Validate legacy and fixture-only LayerManifest candidates without creating release authority.",
+      "script": "tools/validators/data/validate_layer_manifest.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/layer-manifest.yml",
+        "contracts/data/layer_manifest.md",
+        "contracts/release/layer_manifest.md",
+        "contracts/runtime/layer_manifest.md",
+        "schemas/contracts/v1/data/layer_manifest.schema.json",
+        "schemas/contracts/v1/layers/layer_manifest.schema.json",
+        "schemas/contracts/v1/map/layer_manifest.schema.json",
+        "schemas/contracts/v1/runtime/layer_manifest.schema.json",
+        "fixtures/data/layer_manifest/**",
+        "tests/validators/test_validate_layer_manifest.py",
+        "tools/validators/data/**"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
       "id": "runtime-response-envelope",
       "description": "Validate finite runtime response envelopes against synthetic fixtures.",
       "script": "tools/validators/validate_runtime_response_envelope.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/runtime/runtime_response_envelope.md",
         "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
@@ -92,7 +125,9 @@
       "id": "decision-envelope",
       "description": "Validate finite DecisionEnvelope records and negative-state non-disclosure.",
       "script": "tools/validators/validate_decision_envelope.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/runtime/decision_envelope.md",
         "contracts/runtime/decision_envelope/**",
@@ -108,7 +143,9 @@
       "id": "run-receipt",
       "description": "Validate RunReceipt fixture polarity and deterministic execution-memory shape.",
       "script": "tools/validators/validate_run_receipt.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/runtime/run_receipt.md",
         "schemas/contracts/v1/runtime/run_receipt.schema.json",
@@ -123,7 +160,9 @@
       "id": "ingest-receipt",
       "description": "Validate ingest receipt fixture polarity without granting source admission.",
       "script": "tools/validators/validate_ingest_receipt.py",
-      "args": ["--fixtures"],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         "contracts/source/ingest_receipt.md",
         "schemas/contracts/v1/source/ingest_receipt.schema.json",

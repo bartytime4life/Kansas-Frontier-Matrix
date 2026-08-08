@@ -1,0 +1,95 @@
+{
+  "invalid": {
+    "invalid_governance_overclaim.json": {
+      "findings": [
+        "SCHEMA_INVALID"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_missing_layer_id.json": {
+      "findings": [
+        "SCHEMA_INVALID"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_bounds.json": {
+      "findings": [
+        "BOUNDS_INCOHERENT"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_floating_latest.json": {
+      "findings": [
+        "FLOATING_REFERENCE_DENIED"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_noncanonical_array.json": {
+      "findings": [
+        "REFERENCE_ARRAY_NOT_CANONICAL"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_public_rights.json": {
+      "findings": [
+        "PUBLIC_RIGHTS_NOT_APPROVED"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_reference_role_collapse.json": {
+      "findings": [
+        "REFERENCE_ROLE_COLLAPSE"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_spec_hash.json": {
+      "findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_temporal_window.json": {
+      "findings": [
+        "TEMPORAL_WINDOW_INCOHERENT"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_transform_evidence.json": {
+      "findings": [
+        "TRANSFORM_EVIDENCE_REQUIRED"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_vector_without_source_layer.json": {
+      "findings": [
+        "SOURCE_LAYER_REQUIRED"
+      ],
+      "outcome": "FAIL"
+    },
+    "semantic_invalid_zoom_range.json": {
+      "findings": [
+        "ZOOM_RANGE_INCOHERENT"
+      ],
+      "outcome": "FAIL"
+    }
+  },
+  "profile": "layer-manifest-fixture-only-v1",
+  "valid": {
+    "valid_generalized_public_candidate.json": {
+      "findings": [],
+      "outcome": "PASS"
+    },
+    "valid_legacy_minimal.json": {
+      "findings": [],
+      "outcome": "PASS"
+    },
+    "valid_public_pmtiles_candidate.json": {
+      "findings": [],
+      "outcome": "PASS"
+    },
+    "valid_restricted_cog_candidate.json": {
+      "findings": [],
+      "outcome": "PASS"
+    }
+  }
+}
