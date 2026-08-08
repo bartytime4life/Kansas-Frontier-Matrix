@@ -1,0 +1,142 @@
+{
+  "cases": [
+    {
+      "name": "pass",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "PASS",
+        "findings": [],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": false,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:dad5088ee966895c65bbc89c7c71897200acf546ed4b5e1df480ae9f5e408a26",
+        "id": "soil-validation:dad5088ee966895c65bbc89c"
+      },
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "fail",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "FAIL",
+        "findings": [{"code": "SCHEMA_INVALID", "severity": "ERROR"}],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": false,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:99876e9ea5e9bb99faf9ce33be16f6f1e3c26322b127071b9c0b44ea468cef70",
+        "id": "soil-validation:99876e9ea5e9bb99faf9ce33"
+      },
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_with_findings",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "PASS",
+        "findings": [{"code": "SHOULD_NOT_EXIST", "severity": "WARNING"}],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": false,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:2661ef4530fcda5fe2c8314261c4d3c9a35f537d1734177c57a0daaf252381d0",
+        "id": "soil-validation:2661ef4530fcda5fe2c83142"
+      },
+      "expected_outcome": "ERROR",
+      "expected_findings": ["PASS_HAS_FINDINGS"]
+    },
+    {
+      "name": "fail_without_findings",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "FAIL",
+        "findings": [],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": false,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:17dc3302e63f1000d70532d8e6bde23f339805f2fd5984160128eac99557ce49",
+        "id": "soil-validation:17dc3302e63f1000d70532d8"
+      },
+      "expected_outcome": "ERROR",
+      "expected_findings": ["NONPASS_MISSING_FINDINGS"]
+    },
+    {
+      "name": "public_overclaim",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "PASS",
+        "findings": [],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": true,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:94531b0ebf71801e6d1913e9d653e0a634bd4682a7b7f1c09ca49f639908e66f",
+        "id": "soil-validation:94531b0ebf71801e6d1913e9"
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": ["PUBLIC_USE_OVERCLAIM"]
+    },
+    {
+      "name": "hash_mismatch",
+      "candidate": {
+        "profile": "kfm.domains.soil.domain-validation-report.v1",
+        "status": "PROPOSED_INACTIVE",
+        "version": "1.0.0",
+        "domain": "soil",
+        "subject_ref": "soil-layer:synthetic",
+        "subject_kind": "DOMAIN_LAYER_DESCRIPTOR",
+        "validator_ref": "validator:soil:domain-layer-descriptor",
+        "validator_version": "1.0.0",
+        "outcome": "PASS",
+        "findings": [],
+        "input_refs": ["fixture:soil:layer:synthetic"],
+        "checked_at": "2026-08-08T02:20:00Z",
+        "public_use_allowed": false,
+        "effects": {"evidence_admitted": false, "policy_approved": false, "promoted": false, "released": false, "deployed": false, "published": false},
+        "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "id": "soil-validation:dad5088ee966895c65bbc89c"
+      },
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}
