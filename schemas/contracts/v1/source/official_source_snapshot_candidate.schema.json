@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.invalid/schemas/contracts/v1/source/official_source_snapshot_candidate.schema.json",
+  "title": "OfficialSourceSnapshotCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_id",
+    "source_id",
+    "source_url",
+    "retrieved_at",
+    "http_status",
+    "media_type",
+    "retrieval_outcome",
+    "content_sha256",
+    "content_length",
+    "source_activation_authorized",
+    "evidence_bundle_emitted",
+    "public_use_allowed"
+  ],
+  "properties": {
+    "snapshot_id": {"type": "string", "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"},
+    "source_id": {"type": "string", "minLength": 1},
+    "source_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "http_status": {"type": "integer", "minimum": 100, "maximum": 599},
+    "media_type": {"type": ["string", "null"]},
+    "etag": {"type": ["string", "null"]},
+    "last_modified": {"type": ["string", "null"], "format": "date-time"},
+    "retrieval_outcome": {"enum": ["CAPTURED", "NOT_MODIFIED", "FAILED"]},
+    "content_sha256": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "content_length": {"type": ["integer", "null"], "minimum": 0},
+    "source_activation_authorized": {"const": false},
+    "evidence_bundle_emitted": {"const": false},
+    "public_use_allowed": {"const": false}
+  }
+}
