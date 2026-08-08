@@ -1,0 +1,48 @@
+name: soil-domain-feature-identity
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json'
+      - 'fixtures/domains/soil/domain_feature_identity/**'
+      - 'tools/validators/domains/soil/validate_domain_feature_identity.py'
+      - 'tests/validators/domains/soil/test_domain_feature_identity.py'
+      - '.github/workflows/soil-domain-feature-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile focused validator and tests
+        run: |
+          python -m py_compile tools/validators/domains/soil/validate_domain_feature_identity.py
+          python -m py_compile tests/validators/domains/soil/test_domain_feature_identity.py
+      - name: Replay exact fixture matrix
+        run: python tools/validators/domains/soil/validate_domain_feature_identity.py --fixtures
+      - name: Run deterministic no-network tests
+        run: python -m unittest -q tests.validators.domains.soil.test_domain_feature_identity
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo '### Soil DomainFeatureIdentity candidate profile'
+            echo
+            echo '- Fixture-only and no-network.'
+            echo '- A PASS does not create canonical identity, resolve evidence, evaluate policy, approve review, release, publish, or authorize public use.'
+          } >> "$GITHUB_STEP_SUMMARY"
