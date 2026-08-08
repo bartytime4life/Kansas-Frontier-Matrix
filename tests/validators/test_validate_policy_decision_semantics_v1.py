@@ -18,6 +18,7 @@ VALID_PATH = (
     REPO_ROOT
     / "fixtures/contracts/v1/policy/policy_decision_semantics_v1/valid_answer.json"
 )
+VOCABULARY_PATH = REPO_ROOT / "policy/decision/vocabulary.v1.json"
 
 SPEC = importlib.util.spec_from_file_location(
     "validate_policy_decision_semantics_v1", VALIDATOR_PATH
@@ -86,6 +87,16 @@ class PolicyDecisionSemanticsV1Tests(unittest.TestCase):
             {item.code for item in MODULE.validate_payload(candidate).findings},
             {"OBLIGATIONS_NOT_CANONICAL"},
         )
+
+    def test_vocabulary_profile_remains_inactive_and_non_authoritative(self) -> None:
+        vocabulary = json.loads(VOCABULARY_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(vocabulary.get("object_type"), "PolicyDecisionVocabulary")
+        self.assertEqual(vocabulary.get("version"), "v1")
+        self.assertEqual(vocabulary.get("status"), "PROPOSED_INACTIVE")
+        governance = vocabulary.get("governance")
+        self.assertIsInstance(governance, dict)
+        self.assertTrue(governance)
+        self.assertTrue(all(value is False for value in governance.values()))
 
     def test_cli_is_deterministic_and_no_network(self) -> None:
         with mock.patch.object(
