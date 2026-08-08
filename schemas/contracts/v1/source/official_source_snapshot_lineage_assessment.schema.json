@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/official_source_snapshot_lineage_assessment.schema.json",
+  "title": "OfficialSourceSnapshotLineageAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_state",
+    "assessment_id",
+    "source_id",
+    "lineage_state",
+    "snapshot_refs",
+    "preferred_snapshot_ref",
+    "supersedes",
+    "correction_refs",
+    "withdrawal_refs",
+    "reason_codes",
+    "source_activation_authorized",
+    "evidence_bundle_emitted",
+    "lifecycle_mutation_allowed",
+    "release_authorized",
+    "publication_authorized",
+    "public_use_allowed"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_state": {"const": "PROPOSED_INACTIVE"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:source-snapshot-lineage:[a-f0-9]{64}$"},
+    "source_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "lineage_state": {"enum": ["CURRENT", "SUPERSEDED", "CORRECTED", "CONFLICTED", "WITHDRAWN"]},
+    "snapshot_refs": {"type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": {"$ref": "#/$defs/snapshot_ref"}},
+    "preferred_snapshot_ref": {"oneOf": [{"$ref": "#/$defs/snapshot_ref"}, {"type": "null"}]},
+    "supersedes": {"type": "array", "maxItems": 7, "uniqueItems": true, "items": {"$ref": "#/$defs/snapshot_ref"}},
+    "correction_refs": {"type": "array", "maxItems": 7, "uniqueItems": true, "items": {"$ref": "#/$defs/snapshot_ref"}},
+    "withdrawal_refs": {"type": "array", "maxItems": 8, "uniqueItems": true, "items": {"$ref": "#/$defs/snapshot_ref"}},
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {"enum": ["SINGLE_CURRENT_CANDIDATE", "NEWER_SNAPSHOT_SUPERSEDES_PRIOR", "SOURCE_CORRECTION_RECORDED", "SOURCE_CONFLICT_UNRESOLVED", "SOURCE_WITHDRAWAL_RECORDED"]}
+    },
+    "source_activation_authorized": {"const": false},
+    "evidence_bundle_emitted": {"const": false},
+    "lifecycle_mutation_allowed": {"const": false},
+    "release_authorized": {"const": false},
+    "publication_authorized": {"const": false},
+    "public_use_allowed": {"const": false}
+  },
+  "$defs": {
+    "snapshot_ref": {"type": "string", "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"}
+  }
+}
