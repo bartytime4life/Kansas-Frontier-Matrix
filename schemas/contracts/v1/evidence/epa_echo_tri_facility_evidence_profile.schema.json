@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile.schema.json",
+  "title": "EpaEchoTriFacilityEvidenceProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "execution_mode",
+    "assessment_id",
+    "bundle",
+    "epa_echo_tri_profile",
+    "claims"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.epa_echo_tri_facility_evidence_profile.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:epa-facility-assessment:sha256:[0-9a-f]{64}$"
+    },
+    "bundle": {
+      "$ref": "#/$defs/bundle"
+    },
+    "epa_echo_tri_profile": {
+      "$ref": "#/$defs/profileBody"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 300,
+      "pattern": "^[^\\s]+$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_id",
+        "claim_scope",
+        "evidence_refs",
+        "source_records",
+        "citations",
+        "rights",
+        "sensitivity",
+        "transforms",
+        "checksums",
+        "spec_hash"
+      ],
+      "properties": {
+        "bundle_id": {
+          "type": "string"
+        },
+        "claim_scope": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "source_records": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "license"
+          ],
+          "properties": {
+            "license": {
+              "const": "fixture-only-no-rights-claim"
+            }
+          }
+        },
+        "sensitivity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "reason",
+            "applied_at"
+          ],
+          "properties": {
+            "level": {
+              "const": "generalized"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 4
+            },
+            "applied_at": {
+              "$ref": "#/$defs/dt"
+            }
+          }
+        },
+        "transforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "checksums": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/hash"
+          },
+          "required": [
+            "epa_echo_tri_facility_evidence_profile"
+          ]
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "sourceRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "role",
+        "support_ref_ids",
+        "source_time",
+        "retrieved_at",
+        "rights_state",
+        "sensitivity_state"
+      ],
+      "properties": {
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "role": {
+          "enum": [
+            "ECHO_COMPLIANCE",
+            "TRI_ANNUAL_RELEASE",
+            "DERIVED_PUBLIC_SAFE_SUMMARY"
+          ]
+        },
+        "support_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "source_time": {
+          "$ref": "#/$defs/dt"
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/dt"
+        },
+        "rights_state": {
+          "const": "REVIEWED_PUBLIC_FIXTURE"
+        },
+        "sensitivity_state": {
+          "const": "GENERALIZED_FIXTURE"
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "record_kind",
+        "source_role",
+        "reporting_year",
+        "quantity_scaled",
+        "support_ref_ids"
+      ],
+      "properties": {
+        "record_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "record_kind": {
+          "enum": [
+            "COMPLIANCE_EVENT",
+            "ANNUAL_CHEMICAL_RELEASE",
+            "PUBLIC_SAFE_SUMMARY"
+          ]
+        },
+        "source_role": {
+          "enum": [
+            "ECHO_COMPLIANCE",
+            "TRI_ANNUAL_RELEASE",
+            "DERIVED_PUBLIC_SAFE_SUMMARY"
+          ]
+        },
+        "reporting_year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100
+        },
+        "quantity_scaled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "support_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "profileBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_roles",
+        "facility_identity",
+        "records",
+        "policy_profile_ref",
+        "review_refs",
+        "temporal_lineage",
+        "spec_hash"
+      ],
+      "properties": {
+        "source_roles": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/sourceRole"
+          }
+        },
+        "facility_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "facility_ref",
+            "geography_scope",
+            "geometry_precision",
+            "exact_geometry_present"
+          ],
+          "properties": {
+            "facility_ref": {
+              "$ref": "#/$defs/ref"
+            },
+            "geography_scope": {
+              "enum": [
+                "COUNTY",
+                "HUC12"
+              ]
+            },
+            "geometry_precision": {
+              "const": "GENERALIZED"
+            },
+            "exact_geometry_present": {
+              "const": false
+            }
+          }
+        },
+        "records": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/record"
+          }
+        },
+        "policy_profile_ref": {
+          "type": "string",
+          "maxLength": 300,
+          "pattern": "^[^\\s]*$"
+        },
+        "review_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rights_review_ref",
+            "sensitivity_review_ref"
+          ],
+          "properties": {
+            "rights_review_ref": {
+              "type": "string",
+              "maxLength": 300,
+              "pattern": "^[^\\s]*$"
+            },
+            "sensitivity_review_ref": {
+              "type": "string",
+              "maxLength": 300,
+              "pattern": "^[^\\s]*$"
+            }
+          }
+        },
+        "temporal_lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "period_start",
+            "period_end",
+            "computed_at"
+          ],
+          "properties": {
+            "period_start": {
+              "$ref": "#/$defs/dt"
+            },
+            "period_end": {
+              "$ref": "#/$defs/dt"
+            },
+            "computed_at": {
+              "$ref": "#/$defs/dt"
+            }
+          }
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_identity",
+        "evidence_resolved",
+        "policy_evaluated",
+        "network_access_performed",
+        "source_activated",
+        "compliance_authority",
+        "current_emissions_authority",
+        "facility_score_generated",
+        "lifecycle_write_performed",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "deterministic_identity": {
+          "const": true
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "network_access_performed": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "compliance_authority": {
+          "const": false
+        },
+        "current_emissions_authority": {
+          "const": false
+        },
+        "facility_score_generated": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "source_cards": [
+      "KFM-P2-IDEA-0025",
+      "KFM-P2-PROG-0007"
+    ],
+    "non_effects": [
+      "no_live_source",
+      "no_lifecycle_write",
+      "no_release_or_publication"
+    ]
+  }
+}

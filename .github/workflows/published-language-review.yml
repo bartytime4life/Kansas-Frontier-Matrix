@@ -1,0 +1,119 @@
+# Validate the inactive, fixture-only PublishedLanguageReview profile.
+name: published-language-review
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/published-language-review.yml"
+      - "contracts/governance/published_language_review.md"
+      - "schemas/contracts/v1/governance/published_language_review.schema.json"
+      - "fixtures/contracts/v1/governance/published_language_review/**"
+      - "tools/validators/governance/validate_published_language_review.py"
+      - "tools/validators/governance/published_language_review/**"
+      - "tests/validators/governance/test_validate_published_language_review.py"
+      - "docs/intake/exploratory/published-language-review-source-map.md"
+      - "data/receipts/generated/genrec-published-language-review-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/published-language-review.yml"
+      - "contracts/governance/published_language_review.md"
+      - "schemas/contracts/v1/governance/published_language_review.schema.json"
+      - "fixtures/contracts/v1/governance/published_language_review/**"
+      - "tools/validators/governance/validate_published_language_review.py"
+      - "tools/validators/governance/published_language_review/**"
+      - "tests/validators/governance/test_validate_published_language_review.py"
+      - "docs/intake/exploratory/published-language-review-source-map.md"
+      - "data/receipts/generated/genrec-published-language-review-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: published-language-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-published-language-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Compile the focused validator and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/governance/validate_published_language_review.py \
+            tools/validators/governance/published_language_review/model.py \
+            tools/validators/governance/published_language_review/rules.py \
+            tools/validators/governance/published_language_review/fixtures.py \
+            tools/validators/governance/published_language_review/cli.py \
+            tests/validators/governance/test_validate_published_language_review.py
+
+      - name: Run focused PublishedLanguageReview tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.validators.governance.test_validate_published_language_review \
+            --verbose
+
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/validate_published_language_review.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-published-language-review-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### PublishedLanguageReview fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: bounded-context ownership, public/internal vocabulary separation, compatibility-window coherence, deterministic identity, and exact fixture polarity."
+            echo "- Boundary: no context-map amendment, API/schema mutation, source activation, evidence resolution, policy or review execution, adoption, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
