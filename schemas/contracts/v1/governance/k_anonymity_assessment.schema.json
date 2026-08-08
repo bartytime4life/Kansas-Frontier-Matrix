@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/k_anonymity_assessment.schema.json",
+  "title": "KAnonymityAssessment",
+  "description": "Closed fixture-first assessment of equivalence-class sizes for one policy-selected k. Passing creates no privacy, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "execution_mode",
+    "assessment_id",
+    "subject",
+    "policy_selection",
+    "quasi_identifiers",
+    "generalization",
+    "suppression",
+    "equivalence_classes",
+    "evidence_refs",
+    "assessment",
+    "claims",
+    "spec_hash"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.k_anonymity_assessment.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:k-anonymity-assessment:sha256:[0-9a-f]{64}$"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "policy_selection": {
+      "$ref": "#/$defs/policy_selection"
+    },
+    "quasi_identifiers": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 96,
+        "pattern": "^[a-z][a-z0-9_.:-]*$"
+      }
+    },
+    "generalization": {
+      "$ref": "#/$defs/generalization"
+    },
+    "suppression": {
+      "$ref": "#/$defs/suppression"
+    },
+    "equivalence_classes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/equivalence_class"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 512,
+        "pattern": "^kfm://evidence/[^\\s]+$"
+      }
+    },
+    "assessment": {
+      "$ref": "#/$defs/assessment"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_id",
+        "row_count",
+        "geography_granularity",
+        "time_granularity",
+        "policy_label"
+      ],
+      "properties": {
+        "subject_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 256,
+          "pattern": "^[^\\s]+$"
+        },
+        "row_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "geography_granularity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "\\S"
+        },
+        "time_granularity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "\\S"
+        },
+        "policy_label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "policy_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_profile_ref",
+        "policy_version",
+        "selected_k",
+        "selected_k_source",
+        "policy_decision_refs"
+      ],
+      "properties": {
+        "policy_profile_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://policy/[^\\s]+$"
+        },
+        "policy_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+        },
+        "selected_k": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 10000
+        },
+        "selected_k_source": {
+          "const": "policy_profile"
+        },
+        "policy_decision_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 512,
+            "pattern": "^kfm://policy-decision/[^\\s]+$"
+          }
+        }
+      }
+    },
+    "generalization_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "from_granularity",
+        "to_granularity",
+        "reason",
+        "transform_receipt_ref"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "^[a-z][a-z0-9_.:-]*$"
+        },
+        "from_granularity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "\\S"
+        },
+        "to_granularity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96,
+          "pattern": "\\S"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        "transform_receipt_ref": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 512,
+          "pattern": "^kfm://receipt/[^\\s]+$"
+        }
+      }
+    },
+    "generalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied",
+        "steps"
+      ],
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "steps": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/generalization_step"
+          }
+        }
+      }
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_count",
+        "reasons",
+        "transform_receipt_refs"
+      ],
+      "properties": {
+        "record_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "reasons": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 512,
+            "pattern": "\\S"
+          }
+        },
+        "transform_receipt_refs": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 512,
+            "pattern": "^kfm://receipt/[^\\s]+$"
+          }
+        }
+      }
+    },
+    "equivalence_class": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_digest",
+        "record_count"
+      ],
+      "properties": {
+        "key_digest": {
+          "$ref": "#/$defs/hash"
+        },
+        "record_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated_at",
+        "class_count",
+        "min_class_size"
+      ],
+      "properties": {
+        "evaluated_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "class_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "min_class_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "privacy_proof",
+        "policy_approved",
+        "release_authorized",
+        "lifecycle_write_performed",
+        "published"
+      ],
+      "properties": {
+        "privacy_proof": {
+          "const": false
+        },
+        "policy_approved": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "contract_doc": "contracts/governance/k_anonymity_assessment.md",
+    "fixtures": "fixtures/contracts/v1/governance/k_anonymity_assessment/cases.json",
+    "validator": "tools/validators/governance/validate_k_anonymity_assessment.py",
+    "tests": "tests/validators/governance/test_validate_k_anonymity_assessment.py",
+    "source_cards": [
+      "KFM-P2-IDEA-0015"
+    ],
+    "non_effects": [
+      "no_policy_threshold_adoption",
+      "no_privacy_proof",
+      "no_source_access",
+      "no_lifecycle_write",
+      "no_release_or_publication"
+    ]
+  }
+}

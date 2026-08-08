@@ -1,0 +1,111 @@
+name: k-anonymity-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/k-anonymity-assessment.yml"
+      - "contracts/governance/k_anonymity_assessment.md"
+      - "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/k_anonymity_assessment/**"
+      - "tools/validators/governance/k_anonymity_assessment_core.py"
+      - "tools/validators/governance/validate_k_anonymity_assessment.py"
+      - "tests/validators/governance/test_validate_k_anonymity_assessment.py"
+      - "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md"
+      - "docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md"
+      - "data/receipts/generated/genrec-pass2-k-anonymity-assessment-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/k-anonymity-assessment.yml"
+      - "contracts/governance/k_anonymity_assessment.md"
+      - "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/k_anonymity_assessment/**"
+      - "tools/validators/governance/k_anonymity_assessment_core.py"
+      - "tools/validators/governance/validate_k_anonymity_assessment.py"
+      - "tests/validators/governance/test_validate_k_anonymity_assessment.py"
+      - "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md"
+      - "docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md"
+      - "data/receipts/generated/genrec-pass2-k-anonymity-assessment-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k-anonymity-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-k-anonymity-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_validate_k_anonymity_assessment.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes and findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/validate_k_anonymity_assessment.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass2-k-anonymity-assessment-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### K-anonymity assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only measurement against one separately governed policy-selected k."
+            echo "- Outcomes: PASS, ABSTAIN, DENY, and ERROR with stable finding codes."
+            echo "- Boundary: PASS is not a privacy proof, policy approval, release decision, or publication authorization."
+            echo "- Non-effects: no live source, real record transform, lifecycle write, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
