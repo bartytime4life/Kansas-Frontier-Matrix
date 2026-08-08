@@ -1,0 +1,199 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/story-node-trust-inheritance.yml": "sha256:bac0063a80970eddcc404bacad26b340b1f4def6231c74c3159a2b77cd526724",
+    "contracts/ui/story_node.md": "sha256:7d70887ce6f3d2aac70f09f573bf216b14de84adf5899d825bf0e91f197f7f4a",
+    "fixtures/ui/story_node/README.md": "sha256:fd7179ed4686d6aa457c88314065d81e26d233b0251d9fce8cb201c1333424b3",
+    "fixtures/ui/story_node/expected_findings_manifest.json": "sha256:d3c5eca30e1674b96c10c8743650ce882e2c06dcf98eb0f89be8774ad7a1a034",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json": "sha256:27dbebf201d4bc92c102eca9c46987321c7f5e7ac144aacb9d3df3d9225f883a",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json": "sha256:24a770ab7439f97c4e91cc2a928ee68253de2f66064aaa5495a429ef60a69bd1",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json": "sha256:6f590423de2d1f5bb37deff019deeba2b80553d55763dcb0a73dcff29ebbf0cf",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json": "sha256:45c6af2af1ab668be1e75c673ead77f36ea84169adb748a49a7e4bff246b6792",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json": "sha256:5b0823c870a1cefad303e012b668b00e1132ba27212f23ef1b3dac254a0a0191",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json": "sha256:559e1dd06aad275b3002cf8b84258dd7f5c8ca7f8c1ff14502d5d5c877a84d52",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json": "sha256:76f625766cd76ec27f3d6e34b2ded7d7aa9a0906b7d749ba9e3b829955a098a8",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json": "sha256:8670ef1a2dec4e2f44ec68b3d264165665ba055a1669cef3fe360c70cd4b67c9",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json": "sha256:da9f080443694c806887ba4305e53edd7422aae0ee776c08c1e17ce3d2c96263",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json": "sha256:735c4ebc52f3fa22c92863789b9b567c9953eaf4f34c59b4e8396afb916be430",
+    "fixtures/ui/story_node/valid/blocked-rights.json": "sha256:338707d262270c42a43bf7365cd5d73ca6485bc6260e5947959a975bf18e45a9",
+    "fixtures/ui/story_node/valid/error-upstream.json": "sha256:b6d4d0505c1d3e80166018daa015eda9498ee8726b3c74d9c2ac3052ad3fe6f6",
+    "fixtures/ui/story_node/valid/partial-stale.json": "sha256:f6362438f7650d28d08356bcea2f8dbe7c8fe1e923ff888cf8b1648e32e9a5da",
+    "fixtures/ui/story_node/valid/ready-corrected.json": "sha256:e74a54fa2777cd351eae67175ae6ceabc28d407d6cf11d26fffc0bb49d218bbc",
+    "fixtures/ui/story_node/valid/ready-released.json": "sha256:392941e8977974fe9d4806fbfc4ac2dd19c379528310fe7b89bffc98691af520",
+    "fixtures/ui/story_node/valid/superseded-replaced.json": "sha256:b0e5d9cb681bf7f3daf0f7fa21274b49592f5af04710f0a6b87f013e27a24b56",
+    "schemas/contracts/v1/ui/story_node.schema.json": "sha256:2d4d245f3b33c9c2d01da0752bae59942bdd77ce74187c6c6b106d87e3b48741",
+    "tests/validators/test_validate_story_node.py": "sha256:c3fcbd258de5b8cefc03d9a179bc17433363651a9fa820a65374f0585d8dc181",
+    "tools/validators/ui/README.md": "sha256:b23c3b129dea612c65910ea20164ea89f5b94a2904ebf8f752f7dee1586950f1",
+    "tools/validators/ui/validate_story_node.py": "sha256:ed0262731ca676d6c6784e497e537070c566d98dd32de2e624a28809d53b6c4b"
+  },
+  "artifact_paths": [
+    ".github/workflows/story-node-trust-inheritance.yml",
+    "contracts/ui/story_node.md",
+    "fixtures/ui/story_node/README.md",
+    "fixtures/ui/story_node/expected_findings_manifest.json",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json",
+    "fixtures/ui/story_node/valid/blocked-rights.json",
+    "fixtures/ui/story_node/valid/error-upstream.json",
+    "fixtures/ui/story_node/valid/partial-stale.json",
+    "fixtures/ui/story_node/valid/ready-corrected.json",
+    "fixtures/ui/story_node/valid/ready-released.json",
+    "fixtures/ui/story_node/valid/superseded-replaced.json",
+    "schemas/contracts/v1/ui/story_node.schema.json",
+    "tests/validators/test_validate_story_node.py",
+    "tools/validators/ui/README.md",
+    "tools/validators/ui/validate_story_node.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0068",
+      "id": "attachment:pass1-story-node-release-rights-inheritance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0065",
+      "id": "attachment:pass1-evidence-drawer-governed-envelope",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0066",
+      "id": "attachment:pass1-evidence-bounded-focus",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/ui/story_node.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:existing-story-node-contract-stub",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T16:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:d73bf83f53b0aa4c56362b56fdba5dce81ca8dec2f5c48a189b62939a035cfa6"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0065",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0066",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0068",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-FEAT-0074",
+      "repo:docs/intake/exploratory/pass-1-idea-index-coverage-source-map.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:contracts/ui/story_node.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:schemas/contracts/v1/ui/story_node.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements the bounded Pass 1 StoryNode trust-inheritance profile at existing UI responsibility-rooted paths. It replaces a permissive schema stub with a closed public-safe projection and validates finite state/outcome, evidence/citation, rights/sensitivity, policy/review/release, correction, and supersession relationships over synthetic fixtures. It does not resolve evidence, execute policy, approve review or release, wire a public UI/API, activate sources, write lifecycle data, deploy, or publish.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3892f7e4ec8f6de226e887366cea9368fb0d8b7c4c429eaff3e30c3c202952c3",
+  "receipt_id": "genrec-story-node-trust-inheritance-20260808",
+  "truth_labels": {
+    ".github/workflows/story-node-trust-inheritance.yml": "CONFIRMED",
+    "contracts/ui/story_node.md": "PROPOSED",
+    "fixtures/ui/story_node/README.md": "CONFIRMED",
+    "fixtures/ui/story_node/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/blocked-rights.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/error-upstream.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/partial-stale.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/ready-corrected.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/ready-released.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/superseded-replaced.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/story_node.schema.json": "PROPOSED",
+    "tests/validators/test_validate_story_node.py": "CONFIRMED",
+    "tools/validators/ui/README.md": "PROPOSED",
+    "tools/validators/ui/validate_story_node.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-and-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "All fixture and manifest JSON parsed and the closed Draft 2020-12 StoryNode schema passed meta-validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The focused StoryNode workflow parsed as YAML with read-only permissions, pinned actions, and no-network test posture."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic no-network StoryNode validator tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Seven finite-state valid fixtures and nine semantic-invalid fixtures matched the exact expected findings matrix."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "This current-state receipt binds all 24 non-receipt authored artifacts with exact SHA-256 values."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

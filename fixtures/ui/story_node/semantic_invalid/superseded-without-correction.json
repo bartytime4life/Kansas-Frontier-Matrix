@@ -1,0 +1,47 @@
+{
+  "profile": "kfm.ui.story-node.public-safe.v1",
+  "id": "kfm://story-node/superseded-replaced",
+  "version": "1.0.0",
+  "manifest_ref": "kfm://story-manifest/synthetic-pass1",
+  "node_type": "SECTION",
+  "order_index": 6,
+  "state": "SUPERSEDED",
+  "outcome": "ABSTAIN",
+  "reason_code": "SUPERSEDED",
+  "title": "Synthetic Superseded node",
+  "summary": "This synthetic node was replaced by a governed successor.",
+  "accessibility_label": "Superseded story node status",
+  "map_context_refs": [
+    "map:context/synthetic-kansas"
+  ],
+  "support": {
+    "evidence_bundle_refs": [],
+    "citation_validation_refs": [],
+    "policy_decision_refs": [
+      "kfm://policy/decision/synthetic-abstain"
+    ],
+    "release_refs": [],
+    "review_refs": [],
+    "correction_refs": []
+  },
+  "trust_state": {
+    "rights": "CLEARED",
+    "sensitivity": "PUBLIC",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "WITHDRAWN",
+    "freshness": "CURRENT",
+    "correction": "SUPERSEDED"
+  },
+  "caveats": [
+    "Synthetic fixture; not publication authority."
+  ],
+  "authoritative": false,
+  "projection_only": true,
+  "supersession": {
+    "superseded_by": "kfm://story-node/ready-corrected",
+    "cause": "NODE_REPLACED",
+    "recorded_at": "2026-08-08T16:40:00Z",
+    "public_note": "A corrected synthetic node replaces this projection."
+  }
+}

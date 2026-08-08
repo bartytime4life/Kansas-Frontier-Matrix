@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.ui.story-node.public-safe.v1",
+  "valid": [
+    "abstained-missing-evidence.json",
+    "blocked-rights.json",
+    "error-upstream.json",
+    "partial-stale.json",
+    "ready-corrected.json",
+    "ready-released.json",
+    "superseded-replaced.json"
+  ],
+  "invalid": {
+    "blocked-support-leak.json": [
+      "BLOCKED_SUPPORT_LEAK"
+    ],
+    "corrected-without-correction-ref.json": [
+      "CORRECTED_REFS_REQUIRED"
+    ],
+    "error-support-leak.json": [
+      "ERROR_SUPPORT_LEAK"
+    ],
+    "ready-missing-evidence.json": [
+      "CITATION_WITHOUT_EVIDENCE",
+      "READY_EVIDENCE_REQUIRED"
+    ],
+    "ready-unreleased.json": [
+      "READY_TRUST_STATE_INVALID",
+      "UNRELEASED_READY_DENIED"
+    ],
+    "rights-unresolved-answer.json": [
+      "READY_RIGHTS_INVALID",
+      "UNRESOLVED_RIGHTS_FAIL_CLOSED"
+    ],
+    "state-outcome-mismatch.json": [
+      "STATE_OUTCOME_MISMATCH"
+    ],
+    "superseded-without-correction.json": [
+      "SUPERSEDED_CORRECTION_REQUIRED"
+    ],
+    "supersession-self-reference.json": [
+      "SUPERSESSION_SELF_REFERENCE"
+    ]
+  }
+}

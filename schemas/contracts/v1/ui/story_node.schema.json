@@ -1,32 +1,320 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/ui/story_node.schema.json",
-  "title": "story_node",
+  "title": "StoryNode public-safe UI projection",
+  "description": "Closed fixture-first StoryNode projection that inherits evidence, citation, rights, sensitivity, policy, review, release, freshness, correction, and supersession posture. It is not truth, policy, review, release, or publication authority.",
   "type": "object",
-  "description": "KFM v1 contract schema stub for story_node. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "additionalProperties": false,
   "x-kfm": {
     "contract_doc": "contracts/ui/story_node.md",
     "fixtures_root": "fixtures/ui/story_node/",
     "validator": "tools/validators/ui/validate_story_node.py",
     "policy": "policy/ui/",
-    "status": "PROPOSED"
+    "status": "PROPOSED",
+    "profile": "kfm.ui.story-node.public-safe.v1",
+    "authority": "public-safe-ui-projection-only"
   },
+  "required": [
+    "profile",
+    "id",
+    "version",
+    "manifest_ref",
+    "node_type",
+    "order_index",
+    "state",
+    "outcome",
+    "reason_code",
+    "title",
+    "summary",
+    "accessibility_label",
+    "map_context_refs",
+    "support",
+    "trust_state",
+    "caveats",
+    "authoritative",
+    "projection_only"
+  ],
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "profile": {
+      "const": "kfm.ui.story-node.public-safe.v1"
     },
     "id": {
       "type": "string",
-      "description": "Canonical identifier."
+      "pattern": "^kfm://story-node/[a-z0-9][a-z0-9._/-]{0,127}$"
     },
     "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
       "type": "string",
-      "description": "Contract or object version."
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "manifest_ref": {
+      "type": "string",
+      "pattern": "^kfm://story-manifest/[a-z0-9][a-z0-9._/-]{0,127}$"
+    },
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "SECTION",
+        "CALLOUT",
+        "TIMELINE_EVENT",
+        "CAVEAT",
+        "EVIDENCE_NOTE",
+        "TRANSITION"
+      ]
+    },
+    "order_index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9999
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "PARTIAL",
+        "ABSTAINED",
+        "BLOCKED",
+        "ERROR",
+        "SUPERSEDED"
+      ]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "PARTIAL_SUPPORT",
+        "MISSING_EVIDENCE",
+        "STALE_EVIDENCE",
+        "CITATION_UNRESOLVED",
+        "POLICY_DENIED",
+        "RIGHTS_UNRESOLVED",
+        "SENSITIVE_DETAIL_RESTRICTED",
+        "RELEASE_UNAVAILABLE",
+        "SUPERSEDED",
+        "UPSTREAM_ERROR"
+      ]
+    },
+    "title": {
+      "$ref": "#/$defs/title"
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "accessibility_label": {
+      "$ref": "#/$defs/bounded_text"
+    },
+    "body_ref": {
+      "$ref": "#/$defs/governed_ref"
+    },
+    "map_context_refs": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/governed_ref"
+      }
+    },
+    "support": {
+      "$ref": "#/$defs/support"
+    },
+    "trust_state": {
+      "$ref": "#/$defs/trust_state"
+    },
+    "caveats": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/bounded_text"
+      }
+    },
+    "supersession": {
+      "$ref": "#/$defs/supersession"
+    },
+    "authoritative": {
+      "const": false
+    },
+    "projection_only": {
+      "const": true
     }
   },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+  "$defs": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]+$"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]+$"
+    },
+    "bounded_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[^\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\u007F]+$"
+    },
+    "governed_ref": {
+      "type": "string",
+      "maxLength": 192,
+      "pattern": "^(?:kfm://|artifact:|evidence:|citation:|policy:|release:|review:|correction:|rollback:|map:|story:)[A-Za-z0-9][A-Za-z0-9:._/-]{0,175}$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/governed_ref"
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_bundle_refs",
+        "citation_validation_refs",
+        "policy_decision_refs",
+        "release_refs",
+        "review_refs",
+        "correction_refs"
+      ],
+      "properties": {
+        "evidence_bundle_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "citation_validation_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "release_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "review_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/governed_ref"
+        }
+      }
+    },
+    "trust_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights",
+        "sensitivity",
+        "policy",
+        "review",
+        "release",
+        "freshness",
+        "correction"
+      ],
+      "properties": {
+        "rights": {
+          "enum": [
+            "CLEARED",
+            "GENERALIZED",
+            "WITHHELD",
+            "UNRESOLVED"
+          ]
+        },
+        "sensitivity": {
+          "enum": [
+            "PUBLIC",
+            "GENERALIZED",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "policy": {
+          "enum": [
+            "ALLOW",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "review": {
+          "enum": [
+            "REVIEWED",
+            "PENDING",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "release": {
+          "enum": [
+            "RELEASED",
+            "UNRELEASED",
+            "WITHDRAWN"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "CURRENT",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "correction": {
+          "enum": [
+            "NONE",
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED"
+          ]
+        }
+      }
+    },
+    "supersession": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "superseded_by",
+        "cause",
+        "recorded_at",
+        "public_note"
+      ],
+      "properties": {
+        "superseded_by": {
+          "type": "string",
+          "pattern": "^kfm://story-node/[a-z0-9][a-z0-9._/-]{0,127}$"
+        },
+        "cause": {
+          "enum": [
+            "UNDERLYING_CARD_SUPERSEDED",
+            "UNDERLYING_LAYER_SUPERSEDED",
+            "NODE_REPLACED",
+            "RELEASE_WITHDRAWN"
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "public_note": {
+          "$ref": "#/$defs/bounded_text"
+        }
+      }
+    }
+  }
 }
