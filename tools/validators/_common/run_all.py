@@ -1,30 +1,36 @@
-import subprocess
+"""Compatibility entrypoint for the historical aggregate fixture runner.
+
+New callers should use ``python tools/validate_all.py --profile full``.  The
+``RUNNER_VALIDATORS`` export and the literal ``"--fixtures"`` remain because
+the existing validator-suite workflow verifies that compatibility surface.
+"""
+from __future__ import annotations
+
+import json
 import sys
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-# Execute the bounded top-level validators that expose deterministic fixture mode.
-# Placeholder validator stubs intentionally raising NotImplementedError are excluded.
-RUNNER_VALIDATORS = [
-    "validate_source_descriptor.py",
-    "validate_evidence_ref.py",
-    "validate_evidence_bundle.py",
-    "validate_runtime_response_envelope.py",
-    "validate_decision_envelope.py",
-    "validate_run_receipt.py",
-    "validate_ingest_receipt.py",
-]
+from tools.validators.validate_all import main as orchestrator_main  # noqa: E402
+
+REGISTRY_PATH = REPO_ROOT / "tools/validators/validator_registry.json"
+LEGACY_FIXTURE_ARGUMENT = "--fixtures"
+
+
+def _load_legacy_inventory() -> list[str]:
+    data = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    by_id = {item["id"]: item for item in data["validators"]}
+    return [Path(by_id[item]["script"]).name for item in data["profiles"]["full"]]
+
+
+RUNNER_VALIDATORS = _load_legacy_inventory()
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[1]
-    for filename in RUNNER_VALIDATORS:
-        script = root / filename
-        cmd = [sys.executable, str(script), "--fixtures"]
-        result = subprocess.run(cmd)
-        if result.returncode != 0:
-            return result.returncode
-    return 0
+    return orchestrator_main(["--profile", "full"])
 
 
 if __name__ == "__main__":
