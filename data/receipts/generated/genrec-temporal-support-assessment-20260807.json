@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-temporal-support-assessment-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-support-assessment.yml",
+    "contracts/evidence/temporal_support_assessment.md",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/corrected_missing_reference.json",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/out_of_scope_marked_supported.json",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/stale_marked_supported.json",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/corrected_supported.json",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/current_supported.json",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/stale_with_obligation.json",
+    "schemas/contracts/v1/evidence/temporal_support_assessment.schema.json",
+    "tests/evidence/test_temporal_support_assessment.py",
+    "tools/validators/evidence/validate_temporal_support_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-support-assessment.yml": "sha256:03d5bd4fbc50ed887f20c2823ac0ebfdcdda9e2d8430cca964834c868acc80f7",
+    "contracts/evidence/temporal_support_assessment.md": "sha256:517f5a958812f1974a73530dd692c63dbba7560b6580af6d97fe5ca56bca5247",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/corrected_missing_reference.json": "sha256:4197e34366967d7ac76798358bdddb925087de04fce657638284442bb057af02",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/out_of_scope_marked_supported.json": "sha256:b590a2d4f504a9a930fecf94c94edf97d14e58389a7279af5d91f8f3c5bb93d4",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/stale_marked_supported.json": "sha256:2f211c60f411c1f71d37fdf527b4271c006a71b412a5358eb7ac0867e26c3b60",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/corrected_supported.json": "sha256:820c152b4a5ab8969aa7d90df35b269c8d24caa9b299ed069e3102eefa1b8412",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/current_supported.json": "sha256:2274226fc9f81252baf00865aa86c9fae4607022c1a3a77722051e46f866eb27",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/stale_with_obligation.json": "sha256:155121f8e41425184fa827b798871f52e26a7a1dca7567c5d4f698900376a245",
+    "schemas/contracts/v1/evidence/temporal_support_assessment.schema.json": "sha256:9e0e834fe06945d940556978febe2aa432f6e95d208be7bb45eca6350e483dcf",
+    "tests/evidence/test_temporal_support_assessment.py": "sha256:edbc0a934ff9a1c5e808f2d2cc18ff422c467e5a0ec5d93f8b67ef5f664c903c",
+    "tools/validators/evidence/validate_temporal_support_assessment.py": "sha256:a0fb41a42f46b336cab2b832817507d7d0032cc9a413ba330269bf53b0d3e9ff"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:7596fbbc229ac2a8ba847b76e21f01d6955517a8e34abd57f41d75b1fe84ee24",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_15_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_18_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM Components Pass 13#time-aware-shell-and-correction-state",
+      "attachment:KFM Components Pass 15#trust-visible-freshness-and-correction",
+      "attachment:KFM Components Pass 18#temporal-support-and-correction-support-criteria",
+      "repo:contracts/release/trust_projection_manifest.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2",
+      "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-support-assessment.yml": "PROPOSED",
+    "contracts/evidence/temporal_support_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/corrected_missing_reference.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/out_of_scope_marked_supported.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/invalid/stale_marked_supported.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/corrected_supported.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/current_supported.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/temporal_support_assessment/valid/stale_with_obligation.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/temporal_support_assessment.schema.json": "PROPOSED",
+    "tests/evidence/test_temporal_support_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_temporal_support_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Four deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Three valid and three invalid temporal-support fixtures produced expected polarity."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed locally."
+    },
+    {
+      "gate": "runtime-temporal-resolution",
+      "outcome": "SKIPPED",
+      "reason": "No governed API, resolver, cache, or runtime was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human evidence, correction, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass-13-time-aware-shell",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 13#time-aware-shell-and-correction-state"
+    },
+    {
+      "id": "attachment:pass-15-trust-visible-time",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 15#trust-visible-freshness-and-correction"
+    },
+    {
+      "id": "attachment:pass-18-temporal-support",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 18#temporal-support-and-correction-support-criteria"
+    },
+    {
+      "id": "repo:time-slice-manifest",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/trust_projection_manifest.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T23:53:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first temporal support and correction-aware assessment referencing the existing TimeSliceManifest contract."
+}
