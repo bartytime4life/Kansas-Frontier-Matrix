@@ -1,5 +1,5 @@
 # Temporary read-only diagnostic for the merged PMTiles negative-path packet.
-# Removed before the repair PR. It emits bounded pytest output only.
+# Removed before the repair PR. It reports canonical fixture hashes only.
 name: pmtiles-negative-path-diagnostic
 
 "on":
@@ -20,34 +20,38 @@ env:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.11"
-
-      - name: Install repository test dependencies
-        run: python -m pip install --no-input -e ".[test]"
-
-      - name: Publish bounded pytest failure detail
+      - name: Report canonical semantic fixture hashes
         shell: bash
         run: |
-          set +e
-          output="$(python -m pytest -q -p no:cacheprovider tests/validators/test_pmtiles_delta_manifest.py 2>&1)"
-          status=$?
-          output="${output: -10000}"
-          printf '%s\n' "$output"
-          {
-            echo "### PMTiles negative-path diagnostic"
-            echo
-            echo '```text'
-            printf '%s\n' "$output"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit "$status"
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from tools.validators.validate_pmtiles_delta_manifest import (
+              FIXTURES_ROOT,
+              canonical_spec_hash,
+              validate_document,
+          )
+
+          invalid_root = FIXTURES_ROOT / "invalid"
+          for path in sorted(invalid_root.glob("invalid_*.json")):
+              if path.name in {"invalid_schema.json", "invalid_spec_hash_mismatch.json"}:
+                  continue
+              candidate = json.loads(path.read_text(encoding="utf-8"))
+              digest = canonical_spec_hash(candidate)
+              candidate["spec_hash"] = digest
+              findings = [
+                  f"{finding.code}@{finding.path}"
+                  for finding in validate_document(candidate)
+              ]
+              print(f"CANONICAL {path.name} {digest}")
+              print(f"FINDINGS {path.name} {'|'.join(findings)}")
+          PY
