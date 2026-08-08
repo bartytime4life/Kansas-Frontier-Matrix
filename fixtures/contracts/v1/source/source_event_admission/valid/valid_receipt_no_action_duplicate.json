@@ -1,0 +1,50 @@
+{
+  "object_type": "SourceEventRunReceiptCandidate",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_run_receipt_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "receipt_type": "kfm.source_event_run_receipt_candidate.v1",
+  "receipt_id": "kfm:event-run-receipt:sha256:f114e53502f4c46963c9ac46449038c3e545651f224cba801d5eb4006c941e04",
+  "spec_hash": "sha256:40b61182689740195558ad593749161e430e8d0c56e0b10942fe272cd619b4b2",
+  "event_ref": "kfm:source-event:sha256:5ccbdc62af5552c9e83735f4d1fe56d2a30ff0d2af33197aa28b5291ebc36bb7",
+  "event_payload_spec_hash": "sha256:4442d3415bc87235c353c0d5fce5f3a89b5cfeaffe3a0a54a9a506604637844a",
+  "prefilter_ref": "kfm:source-prefilter:sha256:8b19e44dbcad350d1776c73174811011f5ac1a4f9dca98ba93f2a5ace4aeca92",
+  "prefilter_spec_hash": "sha256:2cdcbee0c3200570ddfb633c768e63ac74ac811bce380fa1d84349b5fbb3b19d",
+  "recorded_at": "2026-08-06T17:00:07Z",
+  "decision": "NO_ACTION",
+  "target_lane": "NONE",
+  "policy_summary": {
+    "outcome": "NOT_EVALUATED",
+    "rights_state": "KNOWN",
+    "sensitivity_state": "KNOWN",
+    "policy_refs": []
+  },
+  "review_required": false,
+  "reason_codes": [
+    "DUPLICATE_REDELIVERY"
+  ],
+  "signature": {
+    "profile": "kfm.fixture.sha256-attestation.v1",
+    "signer_ref": "kfm://fixture/signer/source-event-admission",
+    "signed_spec_hash": "sha256:40b61182689740195558ad593749161e430e8d0c56e0b10942fe272cd619b4b2",
+    "signature_value": "sha256:46a3a64eaaa64e8cea6d01ae56f1332b02e115ecd7c53610a56f0d3c984c559e",
+    "verification_status": "FIXTURE_VERIFIED",
+    "production_signature_claimed": false
+  },
+  "claims": {
+    "operational_effect": "NONE_FIXTURE_ONLY",
+    "raw_write_allowed": false,
+    "raw_write_performed": false,
+    "work_write_performed": false,
+    "quarantine_write_performed": false,
+    "authority_created": false,
+    "evidence_created": false,
+    "proof_created": false,
+    "policy_authority_created": false,
+    "review_approved": false,
+    "promoted": false,
+    "released": false,
+    "published": false,
+    "network_access_performed": false
+  }
+}

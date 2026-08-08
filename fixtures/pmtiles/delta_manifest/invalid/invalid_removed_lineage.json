@@ -36,7 +36,7 @@
   "source_manifest_refs": [
     "kfm://manifest/flora/presence@v1"
   ],
-  "spec_hash": "sha256:b1a75bf9fe03ff8905f5af4ed301eb31957ab6ab257b0589ec78120a2d0348c0",
+  "spec_hash": "sha256:e2c7368d2f011ebdd1e2e4299b15862aa3495693bfb0c882be2bffec30fb1545",
   "tiles": [
     {
       "bytes": 4000,

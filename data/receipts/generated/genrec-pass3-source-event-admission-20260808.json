@@ -1,0 +1,177 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/source-event-admission.yml": "sha256:269e3231c178a3a5a8aca9be5f46f6decf880ac4b5eaac41da3a15a418236879",
+    "contracts/source/source_event_admission.md": "sha256:4d81dacab938c190d9b9e0e5c29929f98cb1f1acd37e7b2eca001b7e73ec70c6",
+    "fixtures/contracts/v1/source/source_event_admission/README.md": "sha256:52013b2253e7487c1382efb021c64311b303363b02f5d8dd2b71890573823b68",
+    "fixtures/contracts/v1/source/source_event_admission/fixture_manifest.json": "sha256:517e121ee0c1e55a032a67967883474a96af82711ec3cbf1f72f91d46a426ae2",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_destination_mismatch.json": "sha256:8177dfcec2743fa59a080abae746957327a2b1483862a5d93836559a56e719ec",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_nondeterministic_model.json": "sha256:d622d5bf750a6814459ed30d599e6ddd3aab9ba4f9a515ba5c943aa9abbffc2c",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_score_range.json": "sha256:968880aab6067be392a11979795ac19ff31ad91ccda7423266efaa5bf1f9de44",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_decision_target_mismatch.json": "sha256:7dcd86fd5082ca87a156ea474caa8b5c1a586cdd849ae2fd0803bd88ea347e69",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_missing_signature.json": "sha256:84921b631c5ddaa75e74fd563e6d08a7386d8acf43246cbd0e3cb417becff4d1",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_prefilter_reference_mismatch.json": "sha256:8d7e4f68e0dbe8208e0e985b20c5921ca98ab93abda53109e09ab993499f5be7",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_signature_mismatch.json": "sha256:5ef89d98816698fef542ef5455121251cbed3af6d4dab944a11e35c16b9c2ba9",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_duplicate_no_action.json": "sha256:1c02a01428b148e5ce9c1fc4d95de5f2e1742f02bbae2bef6a290ef1e69df25c",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_material_change.json": "sha256:c54df14b29e378f6d7db32955cd9b6de47a3fb2db063ca291c7afeec31587c1c",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_quarantine_unknown_rights.json": "sha256:8ab6ca11f404295441ad539e753019bac7ca91873d3b3ee111592c86414eb511",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_allow_fixture.json": "sha256:c8ec3a8600b7f70af1b68e3fe8cae657a2110b31db7350b05799aa8e8cf3dc99",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_no_action_duplicate.json": "sha256:21d06d32d39a9fcc463fcfcb6e46e03a8910118d9ccfe8fb1aabf1476a44303d",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_quarantine_unknown_rights.json": "sha256:d61290f5ed191a63777ad2a17e3da84e9de3b3b33342859ac72ea7115b440b1d",
+    "schemas/contracts/v1/source/source_event_prefilter_output.schema.json": "sha256:d71f0c6d95ad3b1bed33c4d0475670349d81e2a61cef2f3b9a8888e16df19fd4",
+    "schemas/contracts/v1/source/source_event_run_receipt.schema.json": "sha256:b20cb5adfc0f810066ebf7be567cb398227261a8555b4ef03ea5e8e0df89047f",
+    "tests/validators/test_validate_source_event_admission.py": "sha256:850397c4efecdb7ef6e43347967ed092d0b6c9afdc823067c8d45a16b0330ba7",
+    "tools/validators/validate_source_event_admission.py": "sha256:f36c7a657f3548982747819654ac31255380ceb7c65d7a6ce1d11af0297922c4"
+  },
+  "artifact_paths": [
+    ".github/workflows/source-event-admission.yml",
+    "contracts/source/source_event_admission.md",
+    "fixtures/contracts/v1/source/source_event_admission/README.md",
+    "fixtures/contracts/v1/source/source_event_admission/fixture_manifest.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_destination_mismatch.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_nondeterministic_model.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_score_range.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_decision_target_mismatch.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_missing_signature.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_prefilter_reference_mismatch.json",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_signature_mismatch.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_duplicate_no_action.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_material_change.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_quarantine_unknown_rights.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_allow_fixture.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_no_action_duplicate.json",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_quarantine_unknown_rights.json",
+    "schemas/contracts/v1/source/source_event_prefilter_output.schema.json",
+    "schemas/contracts/v1/source/source_event_run_receipt.schema.json",
+    "tests/validators/test_validate_source_event_admission.py",
+    "tools/validators/validate_source_event_admission.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0008",
+      "id": "attachment:pass3-pre-raw-events-and-watcher-intake",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/source/source_event_envelope.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:existing-source-event-envelope",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_event_envelope.schema.json@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:existing-source-event-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T18:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0008",
+      "repo:contracts/source/source_event_envelope.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "repo:schemas/contracts/v1/source/source_event_envelope.schema.json@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first completion of Pass 3 carry-forward KFM-P1-PROG-0008. The packet extends the existing SourceEventEnvelopeCandidate family with deterministic prefilter output and fixture-only run-receipt candidates. It creates no second event envelope, new root, live source, queue, model call, policy execution, production signature, lifecycle write, release, deployment, or publication.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:993871def67aabcbb2d30e19fd950424fb784a60f0b6616e2fde9dd07c7b211b",
+  "receipt_id": "genrec-pass3-source-event-admission-20260808",
+  "truth_labels": {
+    ".github/workflows/source-event-admission.yml": "CONFIRMED",
+    "contracts/source/source_event_admission.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_event_admission/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_event_admission/fixture_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_destination_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_nondeterministic_model.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_prefilter_score_range.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_decision_target_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_missing_signature.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_prefilter_reference_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/invalid/invalid_receipt_signature_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_duplicate_no_action.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_material_change.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_prefilter_quarantine_unknown_rights.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_allow_fixture.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_no_action_duplicate.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_quarantine_unknown_rights.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_event_prefilter_output.schema.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_event_run_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_event_admission.py": "CONFIRMED",
+    "tools/validators/validate_source_event_admission.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Both new source-event companion schemas parsed and passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated source-event-admission workflow parsed as YAML with pinned checkout and setup-python actions."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic no-network admission-family unit tests passed in the local fixture workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Six valid and seven invalid prefilter/receipt cases matched exact value-free outcomes and reason codes."
+    },
+    {
+      "gate": "generated-receipt-artifact-parity",
+      "outcome": "PASS",
+      "reason": "Twenty-one artifact paths have exact SHA-256 hashes and matching truth-label keys."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

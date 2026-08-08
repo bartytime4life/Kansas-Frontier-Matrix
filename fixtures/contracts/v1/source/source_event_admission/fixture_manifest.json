@@ -1,0 +1,152 @@
+{
+  "profile": "kfm.source_event_admission.fixture-manifest.v1",
+  "event_fixture_root": "fixtures/contracts/v1/source/source_event_envelope/valid/",
+  "cases": [
+    {
+      "case_id": "valid-prefilter-material",
+      "kind": "PREFILTER",
+      "file": "valid/valid_prefilter_material_change.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-prefilter-quarantine",
+      "kind": "PREFILTER",
+      "file": "valid/valid_prefilter_quarantine_unknown_rights.json",
+      "event_file": "valid_quarantine_unknown_rights.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-prefilter-no-action",
+      "kind": "PREFILTER",
+      "file": "valid/valid_prefilter_duplicate_no_action.json",
+      "event_file": "valid_duplicate_replay_no_action.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-receipt-allow",
+      "kind": "RECEIPT",
+      "file": "valid/valid_receipt_allow_fixture.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "prefilter_file": "valid/valid_prefilter_material_change.json"
+    },
+    {
+      "case_id": "valid-receipt-quarantine",
+      "kind": "RECEIPT",
+      "file": "valid/valid_receipt_quarantine_unknown_rights.json",
+      "event_file": "valid_quarantine_unknown_rights.json",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "prefilter_file": "valid/valid_prefilter_quarantine_unknown_rights.json"
+    },
+    {
+      "case_id": "valid-receipt-no-action",
+      "kind": "RECEIPT",
+      "file": "valid/valid_receipt_no_action_duplicate.json",
+      "event_file": "valid_duplicate_replay_no_action.json",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "prefilter_file": "valid/valid_prefilter_duplicate_no_action.json"
+    },
+    {
+      "case_id": "invalid-prefilter-score",
+      "kind": "PREFILTER",
+      "file": "invalid/invalid_prefilter_score_range.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/significance_score"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-prefilter-model",
+      "kind": "PREFILTER",
+      "file": "invalid/invalid_prefilter_nondeterministic_model.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "MODEL_CONFIGURATION_NOT_DETERMINISTIC",
+          "path": "/evaluator"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-prefilter-destination",
+      "kind": "PREFILTER",
+      "file": "invalid/invalid_prefilter_destination_mismatch.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PREFILTER_DESTINATION_MISMATCH",
+          "path": "/candidate_destination"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-receipt-signature-required",
+      "kind": "RECEIPT",
+      "file": "invalid/invalid_receipt_missing_signature.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/"
+        }
+      ],
+      "prefilter_file": "valid/valid_prefilter_material_change.json"
+    },
+    {
+      "case_id": "invalid-receipt-target",
+      "kind": "RECEIPT",
+      "file": "invalid/invalid_receipt_decision_target_mismatch.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "DECISION_TARGET_MISMATCH",
+          "path": "/target_lane"
+        }
+      ],
+      "prefilter_file": "valid/valid_prefilter_material_change.json"
+    },
+    {
+      "case_id": "invalid-receipt-signature",
+      "kind": "RECEIPT",
+      "file": "invalid/invalid_receipt_signature_mismatch.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "FIXTURE_SIGNATURE_MISMATCH",
+          "path": "/signature/signature_value"
+        }
+      ],
+      "prefilter_file": "valid/valid_prefilter_material_change.json"
+    },
+    {
+      "case_id": "invalid-receipt-prefilter-ref",
+      "kind": "RECEIPT",
+      "file": "invalid/invalid_receipt_prefilter_reference_mismatch.json",
+      "event_file": "valid_admission_candidate.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PREFILTER_REFERENCE_MISMATCH",
+          "path": "/prefilter_ref"
+        }
+      ],
+      "prefilter_file": "valid/valid_prefilter_material_change.json"
+    }
+  ]
+}
