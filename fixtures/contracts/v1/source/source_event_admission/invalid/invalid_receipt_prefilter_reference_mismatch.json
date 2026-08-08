@@ -1,0 +1,52 @@
+{
+  "object_type": "SourceEventRunReceiptCandidate",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_run_receipt_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "receipt_type": "kfm.source_event_run_receipt_candidate.v1",
+  "receipt_id": "kfm:event-run-receipt:sha256:6258c12751870a3ee1c2c481796b5625d8073181260b2cb9f54fb566a2f39f61",
+  "spec_hash": "sha256:b9e8dc44e31fdf728a102af6354b65938a7ac93441fe6b0f2f3a47c126b07836",
+  "event_ref": "kfm:source-event:sha256:cbe09b6c3df3a5b9df4eef7067ece0f0a8ba62158eae770988636cca4fe54d1d",
+  "event_payload_spec_hash": "sha256:b979e9845ee0a7c93c488c9ea1c8f3b1eb6b1158d5d7d67f168f6d78b93cce25",
+  "prefilter_ref": "kfm:source-prefilter:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "prefilter_spec_hash": "sha256:ac3ef17484483c07cf4061794fe5ff9c331e981058380a26f3d8f5e4bd101682",
+  "recorded_at": "2026-08-06T17:00:07Z",
+  "decision": "ALLOW",
+  "target_lane": "RAW",
+  "policy_summary": {
+    "outcome": "ALLOW",
+    "rights_state": "KNOWN",
+    "sensitivity_state": "KNOWN",
+    "policy_refs": [
+      "policy:synthetic:source-admission-fixture"
+    ]
+  },
+  "review_required": true,
+  "reason_codes": [
+    "SOURCE_EVENT_READY_FOR_RAW_ADMISSION"
+  ],
+  "signature": {
+    "profile": "kfm.fixture.sha256-attestation.v1",
+    "signer_ref": "kfm://fixture/signer/source-event-admission",
+    "signed_spec_hash": "sha256:b9e8dc44e31fdf728a102af6354b65938a7ac93441fe6b0f2f3a47c126b07836",
+    "signature_value": "sha256:976d966b233742f927dcd0fd10785b5c0ca7ea4cb5659574359e41902ebfc8cc",
+    "verification_status": "FIXTURE_VERIFIED",
+    "production_signature_claimed": false
+  },
+  "claims": {
+    "operational_effect": "NONE_FIXTURE_ONLY",
+    "raw_write_allowed": false,
+    "raw_write_performed": false,
+    "work_write_performed": false,
+    "quarantine_write_performed": false,
+    "authority_created": false,
+    "evidence_created": false,
+    "proof_created": false,
+    "policy_authority_created": false,
+    "review_approved": false,
+    "promoted": false,
+    "released": false,
+    "published": false,
+    "network_access_performed": false
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_event_prefilter_output.schema.json",
+  "title": "SourceEventPrefilterOutputCandidate",
+  "description": "Fixture-only deterministic triage output for an existing SourceEventEnvelopeCandidate. It creates no evidence, policy, source activation, lifecycle write, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "execution_mode",
+    "prefilter_id",
+    "spec_hash",
+    "event_ref",
+    "event_payload_spec_hash",
+    "evaluated_at",
+    "evaluator",
+    "classification",
+    "significance_score",
+    "uncertainty",
+    "explanation_digest",
+    "candidate_destination",
+    "reason_codes",
+    "claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "SourceEventPrefilterOutputCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source_event_prefilter_output_candidate.v1"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "prefilter_id": {
+      "type": "string",
+      "pattern": "^kfm:source-prefilter:sha256:[0-9a-f]{64}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "event_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-event:sha256:[0-9a-f]{64}$"
+    },
+    "event_payload_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluator_id",
+        "kind",
+        "version",
+        "configuration_hash",
+        "deterministic",
+        "temperature",
+        "seed"
+      ],
+      "properties": {
+        "evaluator_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "RULE_SET",
+            "MODEL"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "configuration_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "deterministic": {
+          "const": true
+        },
+        "temperature": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seed": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "classification": {
+      "enum": [
+        "MATERIAL_CHANGE",
+        "NON_MATERIAL_CHANGE",
+        "REVIEW_REQUIRED",
+        "RIGHTS_UNRESOLVED",
+        "SENSITIVITY_UNRESOLVED",
+        "DUPLICATE_REPLAY"
+      ]
+    },
+    "significance_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "uncertainty": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "explanation_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "candidate_destination": {
+      "enum": [
+        "RAW_REVIEW",
+        "WORK_REVIEW",
+        "QUARANTINE_REVIEW",
+        "NO_ACTION"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network_access_performed",
+        "hidden_reasoning_recorded",
+        "model_decides_truth",
+        "evidence_resolved",
+        "policy_evaluated",
+        "authority_created",
+        "source_activated",
+        "lifecycle_write_performed",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "network_access_performed": {
+          "const": false
+        },
+        "hidden_reasoning_recorded": {
+          "const": false
+        },
+        "model_decides_truth": {
+          "const": false
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "authority_created": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_event_admission.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_event_admission/",
+    "validator": "tools/validators/validate_source_event_admission.py",
+    "tests": "tests/validators/test_validate_source_event_admission.py",
+    "authority": "fixture_only_source_event_prefilter_candidate",
+    "non_effects": [
+      "no_hidden_reasoning_capture",
+      "no_ai_truth_decision",
+      "no_evidence_or_policy_resolution",
+      "no_source_activation",
+      "no_lifecycle_write",
+      "no_release_or_publication"
+    ]
+  }
+}
