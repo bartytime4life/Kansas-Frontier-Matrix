@@ -1,0 +1,92 @@
+# Validate fixture-only per-input AI output artifacts and batch manifests.
+name: ai-output-artifact
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/ai-output-artifact.yml"
+      - "contracts/runtime/ai_output_artifact.md"
+      - "contracts/runtime/ai_output_batch_manifest.md"
+      - "schemas/contracts/v1/runtime/ai_output_artifact.schema.json"
+      - "schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json"
+      - "fixtures/contracts/v1/runtime/ai_output_artifact/**"
+      - "tools/validators/ai/validate_ai_output_artifact.py"
+      - "tests/validators/test_validate_ai_output_artifact.py"
+      - "docs/intake/exploratory/pass7-ai-output-artifact-granularity.md"
+      - "data/receipts/generated/genrec-pass7-ai-output-artifact-20260808.json"
+      - "packages/hashing/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ai-output-artifact.yml"
+      - "contracts/runtime/ai_output_artifact.md"
+      - "contracts/runtime/ai_output_batch_manifest.md"
+      - "schemas/contracts/v1/runtime/ai_output_artifact.schema.json"
+      - "schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json"
+      - "fixtures/contracts/v1/runtime/ai_output_artifact/**"
+      - "tools/validators/ai/validate_ai_output_artifact.py"
+      - "tests/validators/test_validate_ai_output_artifact.py"
+      - "docs/intake/exploratory/pass7-ai-output-artifact-granularity.md"
+      - "data/receipts/generated/genrec-pass7-ai-output-artifact-20260808.json"
+      - "packages/hashing/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-output-artifact-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Validate schemas, fixtures, identity, and partial revocation
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_ai_output_artifact.py' \
+            --verbose
+          python tools/validators/ai/validate_ai_output_artifact.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass7-ai-output-artifact-20260808.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### AIOutputArtifact"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed synthetic per-input artifact and batch-manifest shape, deterministic identity, finite outcome closure, and partial-revocation accounting."
+            echo "- Boundary: no model runs, output bytes are fetched, references are resolved, policy/review/signatures are authenticated, or promotion/release/publication/public use is authorized."
+          } >> "$GITHUB_STEP_SUMMARY"
