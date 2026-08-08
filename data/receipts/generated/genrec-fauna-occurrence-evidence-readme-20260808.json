@@ -1,0 +1,168 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "sha256:af72fba5556018989c72129634415135a96d64069917d33dc62c496a66d4937e",
+    "tools/validators/domains/fauna/README.md": "sha256:585e712dd10f485e1aaf0f309832d137a29731d991c80ce62e518b3c57270175",
+    "tools/validators/domains/fauna/occurrence/README.md": "sha256:4547096f3209df5cda01b956c23c6d74bba85e7b839a5d331b5c06d1a8728f4a"
+  },
+  "artifact_paths": [
+    ".github/workflows/fauna-occurrence-evidence.yml",
+    "tools/validators/domains/fauna/README.md",
+    "tools/validators/domains/fauna/occurrence/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:Pasted text(20260808-164258).txt#KFM_REPO_BUILD_V6",
+      "id": "attachment:kfm-repository-build-out-v6",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/domains/fauna/occurrence/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-validator-readme-baseline",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/domains/fauna/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-validator-parent-index-baseline",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-validator-executable",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/domains/fauna/occurrence_evidence.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-semantic-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-machine-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tests/domains/fauna/test_occurrence_evidence.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-focused-tests",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/workflows/fauna-occurrence-evidence.yml@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-workflow-baseline",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-fauna-occurrence-evidence-20260808.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:fauna-occurrence-implementation-receipt",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:directory-governance-adoption",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T16:56:14Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(20260808-164258).txt"
+    ],
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "evidence_refs": [
+      "attachment:Pasted text(20260808-164258).txt#KFM_REPO_BUILD_V6",
+      "repo:tools/validators/domains/fauna/occurrence/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tools/validators/domains/fauna/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:contracts/domains/fauna/occurrence_evidence.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:fixtures/domains/fauna/occurrence_evidence/expected_findings_manifest.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tests/domains/fauna/test_occurrence_evidence.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:.github/workflows/fauna-occurrence-evidence.yml@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:data/receipts/generated/genrec-fauna-occurrence-evidence-20260808.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Modernizes the exact Fauna OccurrenceEvidence validator README, synchronizes the direct Fauna parent index, and advances the dedicated workflow to a new current authoring receipt. The earlier implementation receipt remains immutable historical process memory. No validator behavior, schema, contract, fixture, test, source, policy, proof, release, deployment, or publication surface changes.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded prompt",
+      "local deterministic documentation validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "receipt_id": "genrec-fauna-occurrence-evidence-readme-20260808",
+  "truth_labels": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "CONFIRMED",
+    "tools/validators/domains/fauna/README.md": "PROPOSED",
+    "tools/validators/domains/fauna/occurrence/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "complete-baseline-and-governing-evidence-read",
+      "outcome": "PASS",
+      "reason": "The complete target, parent index, executable, contract, schema, fixtures, tests, workflow, prior receipt, accepted ADR, and attached v6 prompt were inspected."
+    },
+    {
+      "gate": "same-path-placement-and-index-closure",
+      "outcome": "PASS",
+      "reason": "The requested README remains at its existing tools/validators path and the direct Fauna parent index is synchronized without creating a new root or authority surface."
+    },
+    {
+      "gate": "markdown-structure-and-claim-reconciliation",
+      "outcome": "PASS",
+      "reason": "Headings, anchors, commands, outcomes, finding families, fixture counts, security boundaries, and rollback language were reconciled to current repository bytes."
+    },
+    {
+      "gate": "workflow-yaml-and-trigger-safety",
+      "outcome": "PASS",
+      "reason": "The workflow parses as YAML, remains read-only/no-network, adds the direct parent index to path triggers, and validates the new receipt without release, deployment, publication, secret, or write permissions."
+    },
+    {
+      "gate": "generated-receipt-shape-and-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt parses as duplicate-free JSON, uses contract 3.0.0, has exact path/hash/truth-label key parity, and its SHA-256 values match the three final authored artifacts."
+    },
+    {
+      "gate": "local-executable-regression",
+      "outcome": "SKIPPED",
+      "reason": "No validator, schema, contract, fixture, hashing, or test behavior changed; the dedicated hosted workflow re-runs the unchanged focused suite at the pushed head."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
