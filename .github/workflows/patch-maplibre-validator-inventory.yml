@@ -1,0 +1,135 @@
+# Temporary branch-local patch helper; removed before review delivery.
+name: temporary-maplibre-validator-inventory-patch
+
+"on":
+  push:
+    branches:
+      - "agent/fix-maplibre-validator-inventory-20260808"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-maplibre-validator-inventory-patch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the bounded repair branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Reconcile the separately governed validator inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import ast
+          import hashlib
+          import json
+          from pathlib import Path
+
+          workflow_path = Path(".github/workflows/maplibre-perf-governance.yml")
+          old = '''          separately_governed_validators = (
+              {"validate_source_metadata.py"}
+              if source_metadata_root.exists()
+              else set()
+          )
+'''
+          new = '''          separately_governed_validators = {"validate_v6_readiness.py"} | (
+              {"validate_source_metadata.py"}
+              if source_metadata_root.exists()
+              else set()
+          )
+'''
+
+          text = workflow_path.read_text(encoding="utf-8")
+          if old in text:
+              if text.count(old) != 1:
+                  raise SystemExit("Expected exactly one stale validator-inventory block.")
+              text = text.replace(old, new)
+              workflow_path.write_text(text, encoding="utf-8")
+          elif new not in text:
+              raise SystemExit(
+                  "Neither the reviewed stale block nor the corrected block was found."
+              )
+
+          companions = (
+              Path(".github/workflows/briefing-implementation-campaign.yml"),
+              Path("fixtures/maplibre/v6_readiness/cases.json"),
+              Path("tests/maplibre/test_validate_v6_readiness.py"),
+              Path("tools/validators/maplibre/validate_v6_readiness.py"),
+          )
+          missing = [path.as_posix() for path in companions if not path.is_file()]
+          if missing:
+              raise SystemExit(
+                  "MapLibre v6 readiness is not dependency-closed:\n" + "\n".join(missing)
+              )
+
+          for path in companions:
+              if path.suffix == ".py":
+                  ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+          cases = json.loads(companions[1].read_text(encoding="utf-8"))
+          if not isinstance(cases, dict) or not cases.get("valid") or not cases.get("invalid"):
+              raise SystemExit("MapLibre v6 readiness fixture polarity is incomplete.")
+
+          validator_root = Path("tools/validators/maplibre")
+          actual = {path.name for path in validator_root.glob("*.py")}
+          schema_wrappers = {
+              "validate_perf_correction_notice.py",
+              "validate_perf_envelope.py",
+              "validate_perf_failure_bundle.py",
+              "validate_perf_proof_pack.py",
+              "validate_perf_receipt.py",
+              "validate_perf_release_manifest.py",
+              "validate_perf_rollback_plan.py",
+              "validate_render_diff_report.py",
+          }
+          placeholders = {
+              "validate_perf_governance.py",
+              "verify_perf_artifact_hashes.py",
+              "verify_perf_manifest_coverage.py",
+              "verify_perf_metrics_from_frames.py",
+              "verify_perf_subject_links.py",
+              "verify_perf_thresholds.py",
+              "verify_render_diff_coverage.py",
+          }
+          separately_governed = {
+              "validate_v6_readiness.py",
+              "validate_source_metadata.py",
+          }
+          expected = schema_wrappers | placeholders | separately_governed
+          if actual != expected:
+              raise SystemExit(
+                  "Validator inventory still differs after reconciliation: "
+                  f"missing={sorted(expected - actual)} extra={sorted(actual - expected)}"
+              )
+
+          digest = hashlib.sha256(workflow_path.read_bytes()).hexdigest()
+          print(f"MAPLIBRE_PERF_WORKFLOW_SHA256={digest}")
+          print("BOUNDARY: runtime/browser/performance/release HOLD remains unchanged")
+          PY
+
+          python -m unittest tests.maplibre.test_validate_v6_readiness --verbose
+          python tools/validators/maplibre/validate_v6_readiness.py --fixtures
+
+      - name: Commit the bounded repair when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- .github/workflows/maplibre-perf-governance.yml; then
+            echo "No patch commit is needed."
+            exit 0
+          fi
+          git config user.name "KFM bounded repair automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add .github/workflows/maplibre-perf-governance.yml
+          git commit -m "fix(ci): recognize governed MapLibre v6 validator"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
