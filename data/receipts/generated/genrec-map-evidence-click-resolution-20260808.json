@@ -14,7 +14,7 @@
     "apps/explorer-web/src/features/map_runtime/index.tsx": "sha256:1b8a759a514c819d5bcf24e4a03aa5d24738d975e2fac828d368e4755c951ea7",
     "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "sha256:d9a74744f61a40d059b5aba57017be71eacdb50f50403fe7302d7b6b179d7876",
     "apps/explorer-web/tests/browser/map-evidence-drawer.html": "sha256:62e86e38f33442e9376f5829d24265168b85df0b73beace2f27d25ae24a34265",
-    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:d1383f3d2d5220154b8b21efd1c4efd69f3a251b2f3b24d591b9a05b25f901fb",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:67d21ecdfbf40a84253f35422d78187370e6a5bc2f83589779dba74e6ba5f4b9",
     "apps/explorer-web/tests/map-evidence-drawer.test.ts": "sha256:1fb8217b97b8aaacfa7ec6661bf8dfd9bf8bc133abee76230bc0e4c7b4eaaef6"
   },
   "model_identity": {
@@ -53,7 +53,7 @@
       "github:apps/explorer-web/src/features/evidence_drawer/index.tsx",
       "github:apps/explorer-web/src/adapters/GovernedClient.ts",
       "github:fixtures/ui/map_context_evidence_drawer_admission/cases.json",
-      "github:dc1f38419d6b1219be2b55571cb6c8d50ce22544"
+      "github:4f049b26ca27035e4fe0c97574ff78f65eaa3204"
     ]
   },
   "truth_labels": {
@@ -87,18 +87,18 @@
     },
     {
       "gate": "vitest-focused-suite",
-      "outcome": "SKIPPED",
-      "reason": "The first hosted receipt-bearing head ran 83 unit tests with 82 passing and one false-positive source-text guard failure; commit dc1f3841 narrows that guard to actual MapLibre imports, and exact-head rerun remains pending."
+      "outcome": "PASS",
+      "reason": "Hosted ui-build ran all 83 Explorer Web unit tests successfully at commit ef6474cd, including the eight new map-evidence tests."
     },
     {
       "gate": "playwright-browser-suite",
       "outcome": "SKIPPED",
-      "reason": "The first hosted test job stopped after the unit-test false positive, before Playwright. Exact-head browser execution remains pending after commit dc1f3841."
+      "reason": "The first browser execution passed 40 of 41 tests; the remaining assertion expected bridge-local text that the existing Evidence Drawer intentionally replaces with fixed no-leak copy. Commit 4f049b26 aligns the proof with that established boundary; exact-head rerun remains pending."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation is pending on draft PR #2235 after the focused test correction and receipt refresh."
+      "reason": "Hosted validation is pending on draft PR #2235 after the focused browser assertion correction and receipt refresh."
     },
     {
       "gate": "human-review",
@@ -136,9 +136,9 @@
       "evidence_ref": "github:apps/explorer-web/src/features/evidence_drawer/index.tsx"
     },
     {
-      "id": "repository:focused-test-repair",
+      "id": "repository:focused-browser-proof-repair",
       "validated": true,
-      "evidence_ref": "github:dc1f38419d6b1219be2b55571cb6c8d50ce22544"
+      "evidence_ref": "github:4f049b26ca27035e4fe0c97574ff78f65eaa3204"
     }
   ],
   "human_review": {
@@ -154,5 +154,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Implements the fixture-first ML-Y-113 bridge at draft PR #2235. The app-local module validates renderer-neutral selections, injects governed resolution, enforces returned EvidenceRefs as a subset of clicked selection scope, and reuses the existing no-leak Evidence Drawer. The first hosted test run exposed a test-only false positive because an import guard matched the word MapLibre in documentation; commit dc1f3841 narrows the guard to actual package imports without weakening the renderer boundary. The slice adds no MapLibre dependency, network access, live API route, source activation, policy authority, release state, deployment, or publication."
+  "notes": "Implements the fixture-first ML-Y-113 bridge at draft PR #2235. The app-local module validates renderer-neutral selections, injects governed resolution, enforces returned EvidenceRefs as a subset of clicked selection scope, and reuses the existing no-leak Evidence Drawer. Hosted validation exposed two test-only expectation defects: an import guard matched the word MapLibre in documentation, and one browser assertion expected bridge-local abstain text that the established drawer correctly replaced with fixed no-leak copy. Commits dc1f3841 and 4f049b26 repair those proofs without changing or weakening the runtime boundary. The slice adds no MapLibre dependency, network access, live API route, source activation, policy authority, release state, deployment, or publication."
 }
