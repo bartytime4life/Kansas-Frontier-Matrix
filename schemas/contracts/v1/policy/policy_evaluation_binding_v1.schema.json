@@ -46,7 +46,7 @@
       "additionalProperties": false,
       "required": ["path","sha256"],
       "properties": {
-        "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\.\.(?:/|$)).{3,512}$"},
+        "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).{3,512}$"},
         "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
       }
     }
