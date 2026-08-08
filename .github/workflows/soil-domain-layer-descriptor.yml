@@ -1,0 +1,48 @@
+name: soil-domain-layer-descriptor
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/contracts/v1/domains/soil/domain_layer_descriptor.schema.json'
+      - 'fixtures/domains/soil/domain_layer_descriptor/**'
+      - 'tools/validators/domains/soil/validate_domain_layer_descriptor.py'
+      - 'tests/validators/domains/soil/test_domain_layer_descriptor.py'
+      - '.github/workflows/soil-domain-layer-descriptor.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile focused validator and tests
+        run: |
+          python -m py_compile tools/validators/domains/soil/validate_domain_layer_descriptor.py
+          python -m py_compile tests/validators/domains/soil/test_domain_layer_descriptor.py
+      - name: Replay exact fixture matrix
+        run: python tools/validators/domains/soil/validate_domain_layer_descriptor.py --fixtures
+      - name: Run deterministic no-network tests
+        run: python -m unittest -q tests.validators.domains.soil.test_domain_layer_descriptor
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo '### Soil DomainLayerDescriptor candidate profile'
+            echo
+            echo '- Fixture-only and no-network.'
+            echo '- A PASS does not write CATALOG, promote, release, deploy, publish, or authorize public use.'
+          } >> "$GITHUB_STEP_SUMMARY"
