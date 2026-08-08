@@ -1,0 +1,329 @@
+{
+  "profile": "kfm.gate_override_record_fixture_manifest.v1",
+  "base_document": {
+    "profile": "kfm.gate_override_record_candidate.v1",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "override_id": "kfm:gate-override:sha256:c10868b7741f9c3884606eafbb4e261219fd0834446cf1b154151c83972e5912",
+    "created_at": "2026-08-08T19:40:00Z",
+    "validity": {
+      "valid_from": "2026-08-08T19:45:00Z",
+      "expires_at": "2026-08-08T21:45:00Z"
+    },
+    "override_class": "TIME_SENSITIVE_CORRECTION",
+    "target_gate": {
+      "gate_id": "GATE-F-POLICY",
+      "gate_name": "no_policy_violations",
+      "gate_run_ref": "kfm://gate-run/example-20260808-001",
+      "prior_result": "HOLD",
+      "candidate_ref": "kfm://candidate/example-release-001",
+      "candidate_revision": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "requested_effect": "TEMPORARY_GATE_BYPASS"
+    },
+    "actors": {
+      "requester_ref": "kfm://actor/maintainer-example",
+      "requester_role": "MAINTAINER",
+      "approver_ref": "kfm://actor/release-steward-example",
+      "approver_role": "RELEASE_STEWARD",
+      "policy_profile_ref": "kfm://policy/gate-override/example-v1",
+      "separation_required": true
+    },
+    "rationale": {
+      "reason_code": "TIME_SENSITIVE_CORRECTION",
+      "summary": "Correct a stale byte binding before rerunning the blocked policy gate.",
+      "justification_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "scope": {
+      "environment": "PRODUCTION_CANDIDATE",
+      "operations": [
+        "APPLY_PATCH",
+        "RETRY_GATE"
+      ],
+      "paths": [
+        "data/receipts/generated/example.json",
+        "policy/example.rego"
+      ],
+      "effect_limit": "NO_RELEASE_NO_PUBLICATION"
+    },
+    "remediation": {
+      "work_item_ref": "kfm://work-item/example-override-remediation-001",
+      "owner_ref": "kfm://actor/maintainer-example",
+      "due_at": "2026-08-09T19:40:00Z",
+      "expected_actions": [
+        "correct the stale artifact binding",
+        "record the exact rerun result",
+        "rerun the blocked gate"
+      ],
+      "rollback_ref": "kfm://rollback/example-override-001",
+      "verification_required": true
+    },
+    "evidence_refs": [
+      "kfm://evidence/example-gate-log",
+      "kfm://evidence/example-receipt-diff"
+    ],
+    "policy_decision_refs": [
+      "kfm://policy-decision/example-override-hold"
+    ],
+    "review_refs": [
+      "kfm://review/example-override-shape"
+    ],
+    "attestation": {
+      "profile": "kfm.fixture.sha256-attestation.v1",
+      "signer_ref": "kfm://actor/release-steward-example",
+      "subject_digest": "sha256:c10868b7741f9c3884606eafbb4e261219fd0834446cf1b154151c83972e5912",
+      "signature_value": "sha256:f2032460a207333a1e5d7ecedcd82c8dc4250d0c5dfc72d566c8eeabc863d808",
+      "production_signature_verified": false
+    },
+    "claims": {
+      "override_authorized": false,
+      "gate_bypassed": false,
+      "human_review_authenticated": false,
+      "policy_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "deployment_authorized": false,
+      "publication_authorized": false,
+      "lifecycle_write_performed": false
+    },
+    "spec_hash": "sha256:c10868b7741f9c3884606eafbb4e261219fd0834446cf1b154151c83972e5912"
+  },
+  "cases": [
+    {
+      "case_id": "valid_complete_candidate",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "hold_missing_evidence_support",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_refs",
+          "value": []
+        }
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SUPPORT_INCOMPLETE",
+          "path": "/evidence_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_missing_policy_decision",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/policy_decision_refs",
+          "value": []
+        }
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SUPPORT_INCOMPLETE",
+          "path": "/policy_decision_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_missing_review_support",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/review_refs",
+          "value": []
+        }
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SUPPORT_INCOMPLETE",
+          "path": "/review_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_self_approval",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/actors/approver_ref",
+          "value": "kfm://actor/maintainer-example"
+        },
+        {
+          "op": "replace",
+          "path": "/attestation/signer_ref",
+          "value": "kfm://actor/maintainer-example"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SELF_APPROVAL_DENIED",
+          "path": "/actors/approver_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_noncanonical_paths",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/scope/paths",
+          "value": [
+            "policy/example.rego",
+            "data/receipts/generated/example.json"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SCOPE_ORDER_INVALID",
+          "path": "/scope/paths"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_noncanonical_operations",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/scope/operations",
+          "value": [
+            "RETRY_GATE",
+            "APPLY_PATCH"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SCOPE_ORDER_INVALID",
+          "path": "/scope/operations"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_signer_approver_mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/attestation/signer_ref",
+          "value": "kfm://actor/security-responder-example"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SIGNER_APPROVER_MISMATCH",
+          "path": "/attestation/signer_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_fixture_signature_mismatch",
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/attestation/signature_value",
+          "value": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_FIXTURE_SIGNATURE_MISMATCH",
+          "path": "/attestation/signature_value"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_spec_hash_mismatch",
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/spec_hash",
+          "value": "sha256:4444444444444444444444444444444444444444444444444444444444444"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_override_id_mismatch",
+      "post_identity_mutations": [
+        {
+          "op": "replace",
+          "path": "/override_id",
+          "value": "kfm:gate-override:sha256:5555555555555555555555555555555555555555555555555555555555555555"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_ID_MISMATCH",
+          "path": "/override_id"
+        }
+      ]
+    },
+    {
+      "case_id": "error_expires_before_valid",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/validity/expires_at",
+          "value": "2026-08-08T19:44:00Z"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_VALIDITY_INTERVAL_INVALID",
+          "path": "/validity/expires_at"
+        }
+      ]
+    },
+    {
+      "case_id": "error_valid_before_created",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/validity/valid_from",
+          "value": "2026-08-08T19:39:00Z"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_VALIDITY_START_INVALID",
+          "path": "/validity/valid_from"
+        }
+      ]
+    },
+    {
+      "case_id": "error_remediation_due_before_created",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/remediation/due_at",
+          "value": "2026-08-08T19:39:00Z"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "OVERRIDE_REMEDIATION_DUE_INVALID",
+          "path": "/remediation/due_at"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-pass3-gate-override-record-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/gate-override-record.yml",
+    "contracts/governance/gate_override_record.md",
+    "docs/intake/exploratory/pass-3-gate-override-record-source-map.md",
+    "fixtures/contracts/v1/governance/gate_override_record/cases.json",
+    "schemas/contracts/v1/governance/gate_override_record.schema.json",
+    "tests/validators/governance/test_validate_gate_override_record.py",
+    "tools/validators/governance/gate_override_record_core.py",
+    "tools/validators/governance/validate_gate_override_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/gate-override-record.yml": "sha256:65d1d1ba2f0a0edff78a5eb772abaffad74cd3b8697fb3bc526b85c146036749",
+    "contracts/governance/gate_override_record.md": "sha256:504025341a6517c2ce890a1c02d10889b9bb54fc31fa266bf5892889dd7b5173",
+    "docs/intake/exploratory/pass-3-gate-override-record-source-map.md": "sha256:01dce5139f6001cee230c2f8703633e7cd474e3ebddd0895c62237d53c2e8c63",
+    "fixtures/contracts/v1/governance/gate_override_record/cases.json": "sha256:f260fefb2fbe8fd4c70788f0c2882c3e9d8e76a4557399765f13e5c480bedeb8",
+    "schemas/contracts/v1/governance/gate_override_record.schema.json": "sha256:fd01cfcf4a880753af3c344ce5b21468f7cd03193956e3258a245888480aedbf",
+    "tests/validators/governance/test_validate_gate_override_record.py": "sha256:25df1b1881f3fd26735dbb17ca381ceadd71883da67fb8e35d12858ccebbe5cc",
+    "tools/validators/governance/gate_override_record_core.py": "sha256:63606056a393a15ef5f5bd4d22ef553021e523e9057f0135c0af2c9ca1de30f6",
+    "tools/validators/governance/validate_gate_override_record.py": "sha256:cf8d2629545b610852405196832fadf49e8a959af6dc6c2cbde10d47bed2ed2b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:c87b13d652287914388f99443df82463db81f6f575d59aa7d42f47947cf3f47e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b2a42b3dac7fbf7c4c37cb8a72913a6cb57c9f37fcd4bdf745ed415bef91be0e",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-IDEA-0003",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/88274e95e3a69988eb8af8cf382b098c712f4d2c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/88274e95e3a69988eb8af8cf382b098c712f4d2c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/gate-override-record.yml": "PROPOSED",
+    "contracts/governance/gate_override_record.md": "PROPOSED",
+    "docs/intake/exploratory/pass-3-gate-override-record-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/gate_override_record/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/gate_override_record.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_gate_override_record.py": "CONFIRMED",
+    "tools/validators/governance/gate_override_record_core.py": "CONFIRMED",
+    "tools/validators/governance/validate_gate_override_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-8-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-1-pass-3-hold-7-deny-3-error",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "actor-separation-and-signer-shape",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "time-remediation-and-rollback-coherence",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance, policy, signing, and semantic review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P3-IDEA-0003",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-IDEA-0003"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T19:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of Pass 3 card KFM-P3-IDEA-0003. The candidate makes actor, gate, rationale, scope, validity, remediation, rollback, support references, deterministic identity, and fixture attestation inspectable while keeping every bypass, authenticated-review, policy, promotion, release, deployment, publication, and lifecycle-write authority claim false. It does not select production signing, override duration, universally required dual approval, bypassable gates, or operational integration."
+}
