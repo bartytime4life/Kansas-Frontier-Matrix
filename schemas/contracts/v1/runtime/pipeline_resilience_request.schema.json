@@ -1,0 +1,530 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/pipeline_resilience_request.schema.json",
+  "title": "pipeline_resilience_request",
+  "description": "Planning-only input for deterministic trigger, retry, backpressure, replay, and kill-switch decisions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pipeline_id",
+    "step_id",
+    "contract_version",
+    "trigger",
+    "input_manifest",
+    "retry_context",
+    "queue",
+    "breaker",
+    "delivery",
+    "kill_switch",
+    "policy"
+  ],
+  "properties": {
+    "pipeline_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,127}$"
+    },
+    "step_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,127}$"
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "trigger": {
+      "$ref": "#/$defs/trigger"
+    },
+    "input_manifest": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "retry_context": {
+      "$ref": "#/$defs/retry_context"
+    },
+    "queue": {
+      "$ref": "#/$defs/queue"
+    },
+    "breaker": {
+      "$ref": "#/$defs/breaker"
+    },
+    "delivery": {
+      "$ref": "#/$defs/delivery"
+    },
+    "kill_switch": {
+      "$ref": "#/$defs/kill_switch"
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    }
+  },
+  "$defs": {
+    "kfm_ref_or_null": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^kfm://\\S+$"
+        }
+      ]
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "environment",
+        "authorization_ref",
+        "environment_gate_ref",
+        "concurrency_group",
+        "secret_scope"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "push",
+            "pull_request",
+            "schedule",
+            "workflow_dispatch",
+            "repository_dispatch",
+            "release",
+            "workflow_call",
+            "pipeline_handoff",
+            "external_webhook"
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "enum": [
+            "fixture",
+            "development",
+            "staging",
+            "production"
+          ]
+        },
+        "authorization_ref": {
+          "$ref": "#/$defs/kfm_ref_or_null"
+        },
+        "environment_gate_ref": {
+          "$ref": "#/$defs/kfm_ref_or_null"
+        },
+        "concurrency_group": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+        },
+        "secret_scope": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "READ_ONLY",
+            "DOMAIN_SCOPED",
+            "ENVIRONMENT_SCOPED"
+          ]
+        }
+      }
+    },
+    "retry_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "error_class",
+        "attempt_number",
+        "elapsed_seconds",
+        "retry_after_seconds",
+        "jitter_unit"
+      ],
+      "properties": {
+        "error_class": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "TRANSIENT",
+            "RATE_LIMITED",
+            "DETERMINISTIC",
+            "POLICY_DENIED",
+            "QUARANTINE",
+            "OPERATOR_REQUIRED"
+          ]
+        },
+        "attempt_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "elapsed_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "retry_after_seconds": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0
+            }
+          ]
+        },
+        "jitter_unit": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "partition",
+        "depth",
+        "oldest_age_seconds",
+        "in_flight",
+        "isolated_outputs",
+        "public_side_effects",
+        "contracts_match_production",
+        "schemas_match_production",
+        "policies_match_production"
+      ],
+      "properties": {
+        "partition": {
+          "type": "string",
+          "enum": [
+            "CANARY",
+            "FULL"
+          ]
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "oldest_age_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "in_flight": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "isolated_outputs": {
+          "type": "boolean"
+        },
+        "public_side_effects": {
+          "type": "boolean"
+        },
+        "contracts_match_production": {
+          "type": "boolean"
+        },
+        "schemas_match_production": {
+          "type": "boolean"
+        },
+        "policies_match_production": {
+          "type": "boolean"
+        }
+      }
+    },
+    "breaker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "consecutive_failures",
+        "cooldown_elapsed",
+        "probe_succeeded"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "CLOSED",
+            "OPEN",
+            "HALF_OPEN"
+          ]
+        },
+        "consecutive_failures": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cooldown_elapsed": {
+          "type": "boolean"
+        },
+        "probe_succeeded": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    },
+    "dead_letter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "reason_code",
+        "attempt_count",
+        "contract_version",
+        "replay_requested",
+        "replay_eligibility",
+        "authorization_ref",
+        "admission_rechecked",
+        "policy_rechecked",
+        "target_contract_version"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+        },
+        "reason_code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+        },
+        "attempt_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "contract_version": {
+          "type": "string",
+          "pattern": "^v[1-9][0-9]*$"
+        },
+        "replay_requested": {
+          "type": "boolean"
+        },
+        "replay_eligibility": {
+          "type": "string",
+          "enum": [
+            "ELIGIBLE",
+            "INELIGIBLE",
+            "REVIEW_REQUIRED"
+          ]
+        },
+        "authorization_ref": {
+          "$ref": "#/$defs/kfm_ref_or_null"
+        },
+        "admission_rechecked": {
+          "type": "boolean"
+        },
+        "policy_rechecked": {
+          "type": "boolean"
+        },
+        "target_contract_version": {
+          "type": "string",
+          "pattern": "^v[1-9][0-9]*$"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "emits_event",
+        "durability_mode",
+        "atomic_commit_verified",
+        "consumer_idempotency_verified",
+        "dead_letter"
+      ],
+      "properties": {
+        "emits_event": {
+          "type": "boolean"
+        },
+        "durability_mode": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "TRANSACTIONAL_OUTBOX",
+            "WAL"
+          ]
+        },
+        "atomic_commit_verified": {
+          "type": "boolean"
+        },
+        "consumer_idempotency_verified": {
+          "type": "boolean"
+        },
+        "dead_letter": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/dead_letter"
+            }
+          ]
+        }
+      }
+    },
+    "kill_switch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_mode",
+        "mode",
+        "activation_receipt_ref",
+        "reenable_review_ref",
+        "in_flight_policy"
+      ],
+      "properties": {
+        "previous_mode": {
+          "type": "string",
+          "enum": [
+            "RUNNING",
+            "PAUSE_NEW_STARTS",
+            "EMERGENCY_STOP"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "RUNNING",
+            "PAUSE_NEW_STARTS",
+            "EMERGENCY_STOP"
+          ]
+        },
+        "activation_receipt_ref": {
+          "$ref": "#/$defs/kfm_ref_or_null"
+        },
+        "reenable_review_ref": {
+          "$ref": "#/$defs/kfm_ref_or_null"
+        },
+        "in_flight_policy": {
+          "type": "string",
+          "enum": [
+            "CONTINUE",
+            "CANCEL"
+          ]
+        }
+      }
+    },
+    "retry_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_attempts",
+        "base_delay_seconds",
+        "multiplier",
+        "max_delay_seconds",
+        "deadline_seconds",
+        "jitter_fraction",
+        "idempotency_retention_seconds"
+      ],
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "base_delay_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "multiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "max_delay_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "deadline_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "jitter_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "idempotency_retention_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "backpressure_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_queue_depth",
+        "max_oldest_age_seconds",
+        "max_in_flight",
+        "shed_allowed"
+      ],
+      "properties": {
+        "max_queue_depth": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_oldest_age_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_in_flight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "shed_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "breaker_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "failure_threshold"
+      ],
+      "properties": {
+        "failure_threshold": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retry",
+        "backpressure",
+        "breaker"
+      ],
+      "properties": {
+        "retry": {
+          "$ref": "#/$defs/retry_policy"
+        },
+        "backpressure": {
+          "$ref": "#/$defs/backpressure_policy"
+        },
+        "breaker": {
+          "$ref": "#/$defs/breaker_policy"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/pipeline_resilience_plan.md",
+    "planner": "packages/pipelines-core/src/pipelines_core/pipeline_resilience.py",
+    "cli": "scripts/plan_pipeline_resilience.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/pipeline_resilience_plan/",
+    "source_idea_ids": [
+      "KFM-P8-PROG-0001",
+      "KFM-P8-PROG-0002",
+      "KFM-P8-PROG-0003",
+      "KFM-P8-PROG-0004",
+      "KFM-P8-PROG-0005"
+    ],
+    "status": "PROPOSED"
+  }
+}
