@@ -1,0 +1,116 @@
+{
+  "schema_version": "v1",
+  "matrix_id": "kfm://control-plane/hash-profile-readiness/v1",
+  "status": "PROPOSED_INACTIVE",
+  "source_card": "KFM-P4-PROG-0003",
+  "generated_at": "2026-08-08T16:10:00Z",
+  "decision_ref": null,
+  "profiles": [
+    {
+      "profile_id": "kfm.hash.content-sha256-raw-bytes.v1",
+      "hash_role": "content_hash",
+      "object_families": [
+        "Artifact",
+        "EvidenceCarrier",
+        "RawCapture"
+      ],
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RAW-BYTES",
+      "proof_kind": "BYTE_IDENTITY",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE",
+      "signature_required": false,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Candidate exact-byte digest profile; no shared activation decision is created."
+    },
+    {
+      "profile_id": "kfm.hash.descriptor-sha256-jcs.v1",
+      "hash_role": "descriptor_hash",
+      "object_families": [
+        "SourceDescriptor"
+      ],
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RFC8785-JCS",
+      "proof_kind": "SEMANTIC_IDENTITY",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE",
+      "signature_required": false,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Candidate descriptor identity profile; field-selection rules remain object-family-owned."
+    },
+    {
+      "profile_id": "kfm.hash.range-blake3-bao.v1",
+      "hash_role": "range_hash",
+      "object_families": [
+        "COG",
+        "PMTiles"
+      ],
+      "algorithm": "BLAKE3",
+      "digest_prefix": "blake3:",
+      "canonicalization_profile": "BAO-TREE-V1",
+      "proof_kind": "RANGE_PROOF",
+      "implementation_state": "UNAVAILABLE",
+      "activation_state": "INACTIVE",
+      "signature_required": false,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Readiness-only Bao/BLAKE3 candidate; current shared hashing package does not implement it."
+    },
+    {
+      "profile_id": "kfm.hash.root-sha256-fileset.v1",
+      "hash_role": "root_hash",
+      "object_families": [
+        "ProofPack",
+        "ReleaseManifest",
+        "TileArtifactManifest"
+      ],
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "ORDERED-FILESET-V1",
+      "proof_kind": "FILESET_ROOT",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE",
+      "signature_required": false,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Candidate file-set root profile; file inclusion and leaf rules require a later decision."
+    },
+    {
+      "profile_id": "kfm.hash.signature-sha256-dsse.v1",
+      "hash_role": "signature_digest",
+      "object_families": [
+        "DSSEEnvelope",
+        "RunReceipt"
+      ],
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "DSSE-PAYLOAD-BYTES",
+      "proof_kind": "SIGNATURE_INPUT",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE",
+      "signature_required": true,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Candidate signed-envelope digest role; signature verification remains a separate trust control."
+    },
+    {
+      "profile_id": "kfm.hash.spec-sha256-jcs.v1",
+      "hash_role": "spec_hash",
+      "object_families": [
+        "Contract",
+        "PolicyBundle",
+        "Schema",
+        "WatcherRegistry"
+      ],
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RFC8785-JCS",
+      "proof_kind": "SEMANTIC_IDENTITY",
+      "implementation_state": "EXECUTABLE",
+      "activation_state": "BASELINE",
+      "signature_required": false,
+      "migration_state": "NO_MIGRATION_AUTHORIZED",
+      "notes": "Executable current baseline exposed by packages/hashing; this matrix does not expand its authority."
+    }
+  ],
+  "spec_hash": "sha256:acf43ed21bd8438a1825f10f4db90b93c61d1fff0c9ef8ba8b762279dad385d3"
+}
