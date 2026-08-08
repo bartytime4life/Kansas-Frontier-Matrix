@@ -99,6 +99,48 @@ jobs:
 
           cat "$RUNNER_TEMP/docs-stale-scan.md" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Capture current stale-scan artifact hashes
+        if: always()
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          receipt_path = Path(
+              "data/receipts/generated/genrec-docs-stale-scan-ci-repair-20260807.json"
+          )
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          artifact_hashes = {}
+          for raw_path in receipt["artifact_paths"]:
+              path = Path(raw_path)
+              artifact_hashes[raw_path] = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+          output = {
+              "head_sha": os.environ.get("GITHUB_SHA"),
+              "source_receipt": receipt_path.as_posix(),
+              "artifact_paths": receipt["artifact_paths"],
+              "artifact_hashes": artifact_hashes,
+          }
+          target = Path("artifacts/qa/docs-stale-scan/current-artifact-hashes.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(
+              json.dumps(output, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload current stale-scan artifact hashes
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: docs-stale-scan-current-artifact-hashes
+          path: artifacts/qa/docs-stale-scan/current-artifact-hashes.json
+          if-no-files-found: error
+          retention-days: 3
+
       - name: Verify current stale-scan repair receipt integrity
         run: |
           set -euo pipefail
