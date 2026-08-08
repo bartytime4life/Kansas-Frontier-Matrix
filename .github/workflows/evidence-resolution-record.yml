@@ -1,0 +1,51 @@
+name: evidence-resolution-record
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/governance/evidence_resolution_record.md'
+      - 'schemas/contracts/v1/governance/evidence_resolution_record.schema.json'
+      - 'fixtures/contracts/v1/governance/evidence_resolution_record/**'
+      - 'tools/validators/governance/validate_evidence_resolution_record.py'
+      - 'tests/validators/governance/test_evidence_resolution_record.py'
+      - '.github/workflows/evidence-resolution-record.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/governance/evidence_resolution_record.md'
+      - 'schemas/contracts/v1/governance/evidence_resolution_record.schema.json'
+      - 'fixtures/contracts/v1/governance/evidence_resolution_record/**'
+      - 'tools/validators/governance/validate_evidence_resolution_record.py'
+      - 'tests/validators/governance/test_evidence_resolution_record.py'
+      - '.github/workflows/evidence-resolution-record.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PIP_NO_INPUT: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate-evidence-resolution-record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Compile validator and tests
+        run: python -m py_compile tools/validators/governance/validate_evidence_resolution_record.py tests/validators/governance/test_evidence_resolution_record.py
+      - name: Run focused tests
+        run: python -m pytest -q tests/validators/governance/test_evidence_resolution_record.py --strict-config --strict-markers
+      - name: Replay exact fixture matrix
+        run: python tools/validators/governance/validate_evidence_resolution_record.py --cases
