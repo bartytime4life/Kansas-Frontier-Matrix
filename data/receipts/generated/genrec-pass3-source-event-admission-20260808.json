@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/source-event-admission.yml": "sha256:269e3231c178a3a5a8aca9be5f46f6decf880ac4b5eaac41da3a15a418236879",
+    ".github/workflows/source-event-admission.yml": "sha256:97a68f08f6fc42595b080dfdf1a6909073f9cc354f0279e5b87f151bf82e6094",
     "contracts/source/source_event_admission.md": "sha256:4d81dacab938c190d9b9e0e5c29929f98cb1f1acd37e7b2eca001b7e73ec70c6",
     "fixtures/contracts/v1/source/source_event_admission/README.md": "sha256:52013b2253e7487c1382efb021c64311b303363b02f5d8dd2b71890573823b68",
     "fixtures/contracts/v1/source/source_event_admission/fixture_manifest.json": "sha256:517e121ee0c1e55a032a67967883474a96af82711ec3cbf1f72f91d46a426ae2",
@@ -20,7 +20,7 @@
     "schemas/contracts/v1/source/source_event_prefilter_output.schema.json": "sha256:d71f0c6d95ad3b1bed33c4d0475670349d81e2a61cef2f3b9a8888e16df19fd4",
     "schemas/contracts/v1/source/source_event_run_receipt.schema.json": "sha256:b20cb5adfc0f810066ebf7be567cb398227261a8555b4ef03ea5e8e0df89047f",
     "tests/validators/test_validate_source_event_admission.py": "sha256:850397c4efecdb7ef6e43347967ed092d0b6c9afdc823067c8d45a16b0330ba7",
-    "tools/validators/validate_source_event_admission.py": "sha256:f36c7a657f3548982747819654ac31255380ceb7c65d7a6ce1d11af0297922c4"
+    "tools/validators/validate_source_event_admission.py": "sha256:30efbb650382425bfdc647c64785df71b0332b26d5728d43971f648269d3758c"
   },
   "artifact_paths": [
     ".github/workflows/source-event-admission.yml",
@@ -65,6 +65,11 @@
       "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
       "id": "repository:directory-governance",
       "validated": true
+    },
+    {
+      "evidence_ref": "github-actions:run/31273760381#report-correction-binding-digests",
+      "id": "github-actions:source-event-admission-digest-readback",
+      "validated": true
     }
   ],
   "contract_version": "3.0.0",
@@ -83,20 +88,21 @@
       "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0008",
       "repo:contracts/source/source_event_envelope.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
       "repo:schemas/contracts/v1/source/source_event_envelope.schema.json@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda"
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "github-actions:run/31273760381#report-correction-binding-digests"
     ]
   },
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 2241
   },
   "model_identity": {
     "model": "GPT-5.6 Pro",
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Fixture-first completion of Pass 3 carry-forward KFM-P1-PROG-0008. The packet extends the existing SourceEventEnvelopeCandidate family with deterministic prefilter output and fixture-only run-receipt candidates. It creates no second event envelope, new root, live source, queue, model call, policy execution, production signature, lifecycle write, release, deployment, or publication.",
+  "notes": "Fixture-first completion of Pass 3 carry-forward KFM-P1-PROG-0008. The packet extends the existing SourceEventEnvelopeCandidate family with deterministic prefilter output and fixture-only run-receipt candidates. It creates no second event envelope, new root, live source, queue, model call, policy execution, production signature, lifecycle write, release, deployment, or publication. GitHub Actions run 31273760381 read back the exact checked-out workflow and validator SHA-256 values used by the forward receipt correction in PR #2241.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -159,14 +165,19 @@
       "reason": "Six valid and seven invalid prefilter/receipt cases matched exact value-free outcomes and reason codes."
     },
     {
+      "gate": "hosted-digest-readback",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31273760381 emitted the exact checked-out workflow and validator SHA-256 values used by this correction."
+    },
+    {
       "gate": "generated-receipt-artifact-parity",
       "outcome": "PASS",
-      "reason": "Twenty-one artifact paths have exact SHA-256 hashes and matching truth-label keys."
+      "reason": "Twenty-one artifact paths now use exact SHA-256 values and matching truth-label keys; the two stale paths were replaced from hosted digest readback."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Requires the pushed draft pull-request head."
+      "reason": "Requires the updated corrective pull-request head."
     },
     {
       "gate": "human-review",
