@@ -137,6 +137,9 @@ jobs:
                   "tools/validators/data/validate_layer_manifest.py"
               ),
           }
+          manifest_expectation_validators = {
+              "validate_layer_manifest.py",
+          }
 
           valid_total = 0
           invalid_total = 0
@@ -150,8 +153,14 @@ jobs:
               invalid = sorted((fixture_root / "invalid").glob("*.json"))
               assert valid, f"configured valid fixture lane is empty: {fixture_root}"
               assert invalid, f"configured invalid fixture lane is empty: {fixture_root}"
-              expectation_manifest = fixture_root / "expected_findings_manifest.json"
-              if expectation_manifest.is_file():
+              if filename in manifest_expectation_validators:
+                  expectation_manifest = (
+                      fixture_root / "expected_findings_manifest.json"
+                  )
+                  assert expectation_manifest.is_file(), (
+                      f"configured fixture expectation manifest is missing: "
+                      f"{expectation_manifest}"
+                  )
                   expectations = json.loads(
                       expectation_manifest.read_text(encoding="utf-8")
                   )
@@ -166,7 +175,8 @@ jobs:
                       f"{expectation_manifest}"
                   )
                   assert set(valid_expectations) == {path.name for path in valid}, (
-                      f"valid fixture expectation coverage changed: {expectation_manifest}"
+                      f"valid fixture expectation coverage changed: "
+                      f"{expectation_manifest}"
                   )
                   assert set(invalid_expectations) == {path.name for path in invalid}, (
                       f"invalid fixture expectation coverage changed: "
