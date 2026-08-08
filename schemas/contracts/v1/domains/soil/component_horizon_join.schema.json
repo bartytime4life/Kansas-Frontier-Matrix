@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/soil/component_horizon_join.schema.json",
+  "title": "ComponentHorizonJoin candidate profile",
+  "description": "Closed fixture-first lineage object for map-unit -> component -> horizon relationships. It is not ETL success, source truth, evidence closure, release approval, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile","status","id","version","spec_hash","domain","support_type","source_ref","source_role","map_unit_ref","component_ref","horizon_ref","source_native_keys","join_method","source_vintage","retrieval_time","evidence_refs","lifecycle_stage","release_state","release_ref","rollback_ref","limitations","public_use_allowed","effects"],
+  "properties": {
+    "profile": {"const": "kfm.domains.soil.component-horizon-join.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "id": {"type": "string", "pattern": "^soil-component-horizon-join:[0-9a-f]{24}$"},
+    "version": {"const": "1.0.0"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "domain": {"const": "soil"},
+    "support_type": {"enum": ["authoritative_static_soil","gridded_derivative_soil"]},
+    "source_ref": {"type": "string", "minLength": 1},
+    "source_role": {"type": "string", "minLength": 1},
+    "map_unit_ref": {"type": "string", "minLength": 1},
+    "component_ref": {"type": "string", "minLength": 1},
+    "horizon_ref": {"type": "string", "minLength": 1},
+    "source_native_keys": {
+      "type": "object", "additionalProperties": false, "required": ["MUKEY","COKEY","CHKEY"],
+      "properties": {"MUKEY":{"type":"string","minLength":1},"COKEY":{"type":"string","minLength":1},"CHKEY":{"type":"string","minLength":1}}
+    },
+    "join_method": {"enum": ["SOURCE_NATIVE_RELATION","NORMALIZED_TABLE_RELATION","DERIVED_CANDIDATE","REVIEW_ONLY"]},
+    "source_vintage": {"type": "string", "minLength": 1},
+    "retrieval_time": {"type": "string", "minLength": 1},
+    "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type":"string","minLength":1}},
+    "lifecycle_stage": {"enum": ["WORK","QUARANTINE","PROCESSED","CATALOG"]},
+    "release_state": {"const": "UNRELEASED"},
+    "release_ref": {"type": "null"},
+    "rollback_ref": {"type": "string", "minLength": 1},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type":"string","minLength":1}},
+    "public_use_allowed": {"const": false},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["join_persisted","evidence_resolved","policy_evaluated","review_approved","released","published"],
+      "properties": {"join_persisted":{"const":false},"evidence_resolved":{"const":false},"policy_evaluated":{"const":false},"review_approved":{"const":false},"released":{"const":false},"published":{"const":false}}
+    }
+  },
+  "x-kfm": {"status":"PROPOSED_INACTIVE","contract_doc":"contracts/domains/soil/component_horizon_join.md","authority":"lineage_candidate_only"}
+}

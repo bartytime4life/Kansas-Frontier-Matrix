@@ -1,0 +1,72 @@
+name: policy-evaluation-binding-v1
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/policy-evaluation-binding-v1.yml"
+      - "contracts/policy/policy_evaluation_binding_v1.md"
+      - "schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json"
+      - "tools/validators/policy/validate_policy_evaluation_binding_v1.py"
+      - "fixtures/contracts/v1/policy/policy_evaluation_binding_v1/**"
+      - "tests/validators/test_validate_policy_evaluation_binding_v1.py"
+      - "contracts/policy/policy_input_bundle_profile_v1.md"
+      - "schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json"
+      - "schemas/contracts/v1/policy/policy_decision.schema.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-evaluation-binding-v1.yml"
+      - "contracts/policy/policy_evaluation_binding_v1.md"
+      - "schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json"
+      - "tools/validators/policy/validate_policy_evaluation_binding_v1.py"
+      - "fixtures/contracts/v1/policy/policy_evaluation_binding_v1/**"
+      - "tests/validators/test_validate_policy_evaluation_binding_v1.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-policy-evaluation-binding-v1
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: python -m pytest tests/validators/test_validate_policy_evaluation_binding_v1.py -q --strict-config --strict-markers
+      - name: Validate bound fixture through CLI
+        run: python tools/validators/policy/validate_policy_evaluation_binding_v1.py fixtures/contracts/v1/policy/policy_evaluation_binding_v1/valid.json
+      - name: Prove digest substitution fails closed
+        run: |
+          if python tools/validators/policy/validate_policy_evaluation_binding_v1.py fixtures/contracts/v1/policy/policy_evaluation_binding_v1/invalid_digest.json; then
+            echo "expected digest mismatch denial" >&2
+            exit 1
+          fi
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Policy evaluation binding v1"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact-byte input/decision provenance and evaluator declaration coherence."
+            echo "- Boundary: no policy evaluation, decision authentication, promotion, release, deployment, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
