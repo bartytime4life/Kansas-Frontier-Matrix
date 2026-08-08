@@ -1,0 +1,47 @@
+# Temporary exact-byte diagnostic for PR #2221.
+# This workflow emits only SHA-256 notice annotations and is removed after the
+# generated receipt is corrected. It performs no network, source, policy,
+# lifecycle, release, deployment, or publication operation.
+name: source-descriptor-hash-report
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-descriptor-hash-report.yml"
+      - ".github/workflows/source-descriptor-validate.yml"
+      - "schemas/contracts/v1/sources/source_descriptor.schema.json"
+      - "tests/validators/test_validate_source_descriptor_entrypoints.py"
+      - "tools/validators/sources/validate_source_descriptor.py"
+      - "data/receipts/generated/genrec-source-descriptor-convergence-20260808.json"
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Emit exact authored SHA-256 digests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          paths = [
+              Path(".github/workflows/source-descriptor-validate.yml"),
+              Path("schemas/contracts/v1/sources/source_descriptor.schema.json"),
+              Path("tests/validators/test_validate_source_descriptor_entrypoints.py"),
+              Path("tools/validators/sources/validate_source_descriptor.py"),
+          ]
+          for path in paths:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              print(f"::notice file={path.as_posix()}::sha256:{digest}")
+          PY
