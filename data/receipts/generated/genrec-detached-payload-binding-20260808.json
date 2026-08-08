@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
-    ".github/workflows/detached-payload-binding.yml": "sha256:218901327ab57dcb34d04467c5bcf213fc6698dcf42f770946733b8b2c31b1d8",
-    "contracts/evidence/detached_payload_binding.md": "sha256:4c155dd0f4768ee6a591c18615a540968d7c8e2ab9fb141f3aeef9188359fff3",
+    ".github/workflows/detached-payload-binding.yml": "sha256:bb337b28a237a691e1961dc37d644929f82d2e63d73dd32ff7924d04419b8266",
+    "contracts/evidence/detached_payload_binding.md": "sha256:f15bccf9b133e9ec612af6ad2c4f6c4af3ed63b5b506a1c6cf1f62b09f2a47a3",
     "fixtures/contracts/v1/evidence/detached_payload_binding/README.md": "sha256:402faa8d77398cf491ce618cff58baa22dea67df9b241d4903e9135f870068c1",
     "fixtures/contracts/v1/evidence/detached_payload_binding/expected_findings_manifest.json": "sha256:7b3a0856f501013546ea366161c52c8d3a37939e9ec5c86f0de33fa79661abfd",
     "fixtures/contracts/v1/evidence/detached_payload_binding/payload/synthetic_payload.bin": "sha256:6b07e1dbe824a4acbdf4877d389689059784beb58c4bf7a2234617e6f46bfefc",
@@ -13,7 +13,7 @@
     "fixtures/contracts/v1/evidence/detached_payload_binding/semantic_invalid/unsafe_location.json": "sha256:522a912cfdf5d4e1a22e568bf2c520753fd140b277f9b41516fa76508139da30",
     "fixtures/contracts/v1/evidence/detached_payload_binding/valid/valid_binding.json": "sha256:3d4cb275f9a79a16af343c467241fc6f4fa5d4c7e94cb52207ee68add9d36044",
     "schemas/contracts/v1/evidence/detached_payload_binding.schema.json": "sha256:8f6eced9a9b0e510c38620028d8b6f045354b4097dc84c4dfcc11e7f8035f2c5",
-    "tests/validators/evidence/test_validate_detached_payload_binding.py": "sha256:86daaf510732a02945b42fbd33912ae460bc67c3bd7aa61799d16463e374389c",
+    "tests/validators/evidence/test_validate_detached_payload_binding.py": "sha256:cceae7fda86065b94b1f105e358c6ee33b5cfb03a682aff9fe3067d0359fb124",
     "tools/validators/evidence/validate_detached_payload_binding.py": "sha256:51f57cc2322c8d140970c39d5d6c2a7591595a9de1ac9124563e7f4a308ba362"
   },
   "artifact_paths": [
@@ -79,7 +79,7 @@
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Fixture-only detached binary binding. The validator never fetches a URL and does not resolve EvidenceBundle, verify a bundle signature, establish rights or policy, promote, release, publish, or authorize public use.",
+  "notes": "Fixture-only detached binary binding. The validator never fetches a URL and does not resolve EvidenceBundle, verify a bundle signature, establish rights or policy, promote, release, publish, or authorize public use. Corrected after hosted validation exposed three stale text-file digests; Git history preserves the superseded receipt bytes.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -133,12 +133,12 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Requires the pushed pull-request head."
+      "reason": "Requires the corrected pushed pull-request head."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
+      "reason": "Human review remains pending on the correction pull request."
     }
   ]
 }

@@ -11,7 +11,7 @@
     "fixtures/contracts/v1/policy/policy_obligation_set/semantic_invalid/spec_hash_mismatch.json": "sha256:3c78d84312d017777967ee6f2cfbc324f169e69543324e7a6d08acfeb0d4502c",
     "fixtures/contracts/v1/policy/policy_obligation_set/valid/valid_obligation_set.json": "sha256:c81a3984e253369664f26570eac37f9a52606f7cdacaab263a9c337d9a20e1c8",
     "schemas/contracts/v1/policy/policy_obligation_set.schema.json": "sha256:368de609e263c15014b8b271c39249900a091a86b6f2770a404cb0f629c67870",
-    "tests/validators/test_validate_policy_obligation_set.py": "sha256:effdc527fe7182c6267f39c14774d656efaffc2c5e9476e8bf2d731954d509fa",
+    "tests/validators/test_validate_policy_obligation_set.py": "sha256:14c19906e0e2ab5b353c685e4503fae5c4dd80a5743c3600ec5d667e8397b694",
     "tools/validators/policy/validate_policy_obligation_set.py": "sha256:cc216ecd16dcbe4cb14f8add50b117cdcfa9cc989032878b883a04f25317a6a9"
   },
   "artifact_paths": [
@@ -75,7 +75,7 @@
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Fixture-only structured downstream-duty carrier. It does not evaluate policy, authenticate references, enforce obligations, mutate EvidenceBundle, promote, release, publish, or authorize public use.",
+  "notes": "Fixture-only structured downstream-duty carrier. It does not evaluate policy, authenticate references, enforce obligations, mutate EvidenceBundle, promote, release, publish, or authorize public use. Corrected after hosted validation exposed one stale test-file digest; Git history preserves the superseded receipt bytes.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -127,12 +127,12 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Requires the pushed pull-request head."
+      "reason": "Requires the corrected pushed pull-request head."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
+      "reason": "Human review remains pending on the correction pull request."
     }
   ]
 }
