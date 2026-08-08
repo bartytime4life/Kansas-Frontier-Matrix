@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "asset_root": "package",
+      "case_id": "valid-adapter",
+      "expected_findings": [],
+      "expected_item": "expected/valid_item.json",
+      "expected_outcome": "PASS",
+      "manifest": "valid/manifest.json",
+      "request": "valid/request.json"
+    },
+    {
+      "asset_root": "package",
+      "case_id": "manifest-digest-drift",
+      "expected_findings": [
+        "ASSET_DIGEST_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "manifest": "semantic_invalid/manifest_digest_drift.json",
+      "request": "valid/request.json"
+    },
+    {
+      "asset_root": "package",
+      "case_id": "manifest-authority-overreach",
+      "expected_findings": [
+        "MANIFEST_AUTHORITY_OVERREACH"
+      ],
+      "expected_outcome": "ERROR",
+      "manifest": "semantic_invalid/manifest_authority_overreach.json",
+      "request": "valid/request.json"
+    },
+    {
+      "asset_root": "package",
+      "case_id": "request-missing-evidence",
+      "expected_findings": [
+        "REQUEST_SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "manifest": "valid/manifest.json",
+      "request": "schema_invalid/request_missing_evidence.json"
+    }
+  ]
+}
