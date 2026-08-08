@@ -1,0 +1,86 @@
+{
+  "attestation_ref": "kfm://attestation/pmtiles/flora-presence/delta-2026-05@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "base_archive": {
+    "archive_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_ref": "kfm://artifact/map/flora-presence/base@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "index_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "tile_count": 3
+  },
+  "delta_archive": {
+    "archive_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "artifact_ref": "kfm://artifact/map/flora-presence/delta-2026-05@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "byte_size": 12345,
+    "index_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "delta_id": "kfm://manifest/map/pmtiles-delta/flora-presence/2026-05-01",
+  "expected_tile_count": 3,
+  "layer_id": "kfm:flora-presence",
+  "object_type": "PMTilesDeltaManifest",
+  "produced_tile_count": 3,
+  "qc": {
+    "decision": "PASS",
+    "observed": {
+      "average_tile_bytes": 6000.0,
+      "max_masked_pct": 8.0,
+      "tile_count_deviation_pct": 0.0
+    },
+    "thresholds": {
+      "max_average_tile_bytes": 60000,
+      "max_tile_count_deviation_pct": 1.0,
+      "reject_masked_pct": 15.0,
+      "review_masked_pct": 10.0
+    }
+  },
+  "schema_version": "kfm.pmtiles.delta-manifest.v1",
+  "source_manifest_refs": [
+    "kfm://manifest/flora/presence@v1"
+  ],
+  "spec_hash": "sha256:aa0eddd866f9ba6f36166d29d1604fbb92fffc55902f7d812aa4048eef0612f8",
+  "tiles": [
+    {
+      "bytes": 4000,
+      "change_type": "added",
+      "coverage_pct": 95.0,
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "masked_pct": 5.0,
+      "prior_digest": null,
+      "quadkey": "00",
+      "run_receipt_ref": "kfm://receipt/run/pmtiles/2-0-0@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "tile_id": "2/0/0",
+      "x": 0,
+      "y": 0,
+      "z": 2
+    },
+    {
+      "bytes": 8000,
+      "change_type": "modified",
+      "coverage_pct": 92.0,
+      "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "masked_pct": 8.0,
+      "prior_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "quadkey": "00",
+      "run_receipt_ref": "kfm://receipt/run/pmtiles/2-0-1@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "tile_id": "2/0/0",
+      "x": 0,
+      "y": 0,
+      "z": 2
+    },
+    {
+      "bytes": 0,
+      "change_type": "removed",
+      "coverage_pct": 0.0,
+      "digest": null,
+      "masked_pct": 0.0,
+      "prior_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "quadkey": "01",
+      "run_receipt_ref": "kfm://receipt/run/pmtiles/2-1-0@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "tile_id": "2/1/0",
+      "x": 1,
+      "y": 0,
+      "z": 2
+    }
+  ],
+  "valid_from": "2026-05-01T00:00:00Z",
+  "valid_to": "2026-05-31T23:59:59Z"
+}

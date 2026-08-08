@@ -1,0 +1,176 @@
+{
+  "artifact_hashes": {
+    "fixtures/pmtiles/delta_manifest/README.md": "sha256:e1c4c08d389186a25c3fafafc7cb1742b6cd27d1eb9feb896703566361a03321",
+    "fixtures/pmtiles/delta_manifest/expected_findings_manifest.json": "sha256:cb2195f980bfe0813bafacb2bbebd8f3341d7026c44d070825f524987b02ce6f",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_archive_digest_placeholder.json": "sha256:ae3c4a824dfb27af0f265e8ba9d7346366b093a7699d933c42feb3a4e9669584",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_artifact_ref_digest_mismatch.json": "sha256:f4b67ecb6691da91888ce81e1e17df83470dc4fe8ce67f524692ef85d3b68c59",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_coverage_balance.json": "sha256:13c3e0aa9c17c04fe164baf692fe873e52ba94e7ccae0c9874f779ca6a303c05",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_duplicate_tile_identity.json": "sha256:e304ec797fe88c951fbb28f879614ed1471094045fc08ffb0cf09fb78d0d6f8d",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_internal_lifecycle_receipt_ref.json": "sha256:4b9689fec149b69bf79af6e02de0179ef87799f848dc2b158cf9f17e9d9b84bc",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_modified_lineage_missing_prior.json": "sha256:8ade677eb461da4e0f6ab03eeced9285c0b56fe2fbd3096755efaf445ba94f96",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_average_bytes_mismatch.json": "sha256:beb44d108c0f5729ba80223c1a152d74467b90759cb1096ac12d26ca5e362ee7",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_decision_mismatch.json": "sha256:88b2d511ad0699cd05c4c37346c33a2bc87b67af64653a1fa441b84971d0c4d7",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_removed_lineage.json": "sha256:edb030a43f62145e91806c2afef91653f40edb37e99072d8932eeb3c58ee14e1",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_spec_hash_mismatch.json": "sha256:5353173cde78ef12b7aaf759fcb64cd1b9097316f8762b6436e59934d1a42b8d",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_coordinate_out_of_range.json": "sha256:2b852e465d280ca81fe7b9597edc1b325444b8bc53bce27984e2aa068277e739",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_digest_placeholder.json": "sha256:fd5b24eedc0f6adb59451d1816ae36fdbcd80a0eeaa0bde64e5e70f84f3d2b84",
+    "tests/validators/test_pmtiles_delta_manifest.py": "sha256:dc6c17f26603ae80289902d106dfd1979b3ead46b17928335179061050e2e757"
+  },
+  "artifact_paths": [
+    "fixtures/pmtiles/delta_manifest/README.md",
+    "fixtures/pmtiles/delta_manifest/expected_findings_manifest.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_archive_digest_placeholder.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_artifact_ref_digest_mismatch.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_coverage_balance.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_duplicate_tile_identity.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_internal_lifecycle_receipt_ref.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_modified_lineage_missing_prior.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_average_bytes_mismatch.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_decision_mismatch.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_removed_lineage.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_coordinate_out_of_range.json",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_digest_placeholder.json",
+    "tests/validators/test_pmtiles_delta_manifest.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0018",
+      "id": "attachment:pass1-pmtiles-sidecar-proof-carrier",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0024",
+      "id": "attachment:pass1-no-network-fixture-first-validation",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0028",
+      "id": "attachment:pass1-negative-fixtures-publication-denial",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0043",
+      "id": "attachment:pass1-pmtiles-range-cache-integrity-tests",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/intake/exploratory/pass-1-idea-index-coverage-source-map.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba#P1-IMPORT-05",
+      "id": "repository:pass1-pmtiles-negative-path-gap",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/validate_pmtiles_delta_manifest.py@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:existing-pmtiles-delta-validator",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T18:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:d73bf83f53b0aa4c56362b56fdba5dce81ca8dec2f5c48a189b62939a035cfa6"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0018",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0024",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0028",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0043",
+      "repo:docs/intake/exploratory/pass-1-idea-index-coverage-source-map.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:schemas/contracts/v1/map/pmtiles_delta_manifest.schema.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:tools/validators/validate_pmtiles_delta_manifest.py@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:tests/validators/test_pmtiles_delta_manifest.py@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0023-pmtiles-signing-and-client-verification.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements the fixture-first negative-path portion of Pass 1 P1-IMPORT-05 at the existing PMTiles delta-manifest responsibility homes. Twelve persisted semantic-invalid fixtures isolate hash, digest binding, lineage, lifecycle-reference, coordinate, duplicate identity, coverage, and QC failures; an exact findings manifest and focused tests prevent broad 'any failure is good enough' polarity. Archive-byte inspection, Range hosting, signatures, EvidenceBundle resolution, policy, release, deployment, and publication remain held.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic JSON/hash/syntax validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:a599b148eab702daae8b293e5389a0482ee0e5dc27e1c8db4575c8328d97a65d",
+  "receipt_id": "genrec-pass1-pmtiles-negative-path-proof-20260808",
+  "truth_labels": {
+    "fixtures/pmtiles/delta_manifest/README.md": "PROPOSED",
+    "fixtures/pmtiles/delta_manifest/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_archive_digest_placeholder.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_artifact_ref_digest_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_coverage_balance.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_duplicate_tile_identity.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_internal_lifecycle_receipt_ref.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_modified_lineage_missing_prior.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_average_bytes_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_qc_decision_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_removed_lineage.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_coordinate_out_of_range.json": "CONFIRMED",
+    "fixtures/pmtiles/delta_manifest/invalid/invalid_tile_digest_placeholder.json": "CONFIRMED",
+    "tests/validators/test_pmtiles_delta_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-parse",
+      "outcome": "PASS",
+      "reason": "Twelve semantic-invalid fixtures and the exact findings manifest parsed as JSON."
+    },
+    {
+      "gate": "authoring-semantic-replay",
+      "outcome": "PASS",
+      "reason": "Twelve isolated mutations matched one value-free finding code and JSON path each against the current validator rules."
+    },
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "The focused PMTiles delta-manifest test module compiled as Python syntax."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "15 authored non-receipt artifacts were bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "repository-dependent-tests",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed repository head and installed declared test dependencies."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
