@@ -1,0 +1,159 @@
+{
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/ConsentCardProjection.ts": "sha256:abc94e515052fc30014821a607286fef218770c3268143c11660d7839c73f180",
+    "apps/explorer-web/src/features/consent_card/README.md": "sha256:7f5b6f6112adae3267a7f3c2b11e9dac84e05a1d4c459fa50d402b8cf05b8e67",
+    "apps/explorer-web/src/features/consent_card/index.ts": "sha256:e29dfef78ea6648a8fb18e1cfb5631b16781a4f19b33cd2bbcfb8ebec3685916",
+    "apps/explorer-web/tests/browser/consent-card.fixture.ts": "sha256:ce0302cdc4d424ce1aedab1929a094bcb520eccf9db0d0a007a6a600b336b544",
+    "apps/explorer-web/tests/browser/consent-card.html": "sha256:a2e94f06bf08ceb291f37b05b0193479b63db6b5047ef3b8d47733f7da231d0e",
+    "apps/explorer-web/tests/browser/consent-card.spec.ts": "sha256:25fe8a9381852012c52c2f57086fd8c84641615c822016e2c56a7ca0df8e83d3",
+    "apps/explorer-web/tests/consent-card.test.ts": "sha256:bf99f97a525534e5fd26b99f6c06c3b17b2d8265fb7064febfe56096244af30c",
+    "fixtures/ui/consent_card_projection/README.md": "sha256:15f85d2bc036f37518197e7bdf99300b321cc9698fbb3a790a9ae2bc447ce6ad",
+    "fixtures/ui/consent_card_projection/invalid/answer-missing-scope.json": "sha256:d5d501191a50c1d5723ace5f61fc36723cb46130b61d2cfb3641f68725d51577",
+    "fixtures/ui/consent_card_projection/invalid/answer-unresolved-subject.json": "sha256:3d6b3d7e84e9fd9a4dfbbb8e9b39ffd0efb8e043aaa2908ccefc967bf7cf1739",
+    "fixtures/ui/consent_card_projection/invalid/extra-field.json": "sha256:5b86800f1a90433a5a92ad43a164f9128d5f95ba2f3ec3799f0c2900bb80c1f8",
+    "fixtures/ui/consent_card_projection/invalid/reason-mismatch.json": "sha256:aa37bf2061360052b33958ddcaff649b3758f7381bcecbc3f52a63eba17bbef1",
+    "fixtures/ui/consent_card_projection/valid/abstain-unresolved.json": "sha256:516408cd2ed58c338fb98259967a721d5dfe443a5f3300fa5cc8f7e8fd7fa13a",
+    "fixtures/ui/consent_card_projection/valid/answer-viewer-choice.json": "sha256:9cc35bc0e5df050dcb044a75ff53c3a81cf0a7707d449cf430c792ca91bfbffa",
+    "fixtures/ui/consent_card_projection/valid/deny-policy.json": "sha256:0a5ba77a8f2c1fa3d6c6c3fd405850241f6d171c76d57999c367eee2a756da17",
+    "fixtures/ui/consent_card_projection/valid/error-upstream.json": "sha256:f1ebd825526c873372b536f18510e42eb0872c97b7cc33d96d109c3cf69974bb"
+  },
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/ConsentCardProjection.ts",
+    "apps/explorer-web/src/features/consent_card/README.md",
+    "apps/explorer-web/src/features/consent_card/index.ts",
+    "apps/explorer-web/tests/browser/consent-card.fixture.ts",
+    "apps/explorer-web/tests/browser/consent-card.html",
+    "apps/explorer-web/tests/browser/consent-card.spec.ts",
+    "apps/explorer-web/tests/consent-card.test.ts",
+    "fixtures/ui/consent_card_projection/README.md",
+    "fixtures/ui/consent_card_projection/invalid/answer-missing-scope.json",
+    "fixtures/ui/consent_card_projection/invalid/answer-unresolved-subject.json",
+    "fixtures/ui/consent_card_projection/invalid/extra-field.json",
+    "fixtures/ui/consent_card_projection/invalid/reason-mismatch.json",
+    "fixtures/ui/consent_card_projection/valid/abstain-unresolved.json",
+    "fixtures/ui/consent_card_projection/valid/answer-viewer-choice.json",
+    "fixtures/ui/consent_card_projection/valid/deny-policy.json",
+    "fixtures/ui/consent_card_projection/valid/error-upstream.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-FEAT-0002",
+      "id": "attachment:pass7-tiny-consent-card-ux",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/policy/policy_obligation_set.schema.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:policy-obligation-set-projection-source",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/explorer-web/src/features/evidence_drawer/index.tsx@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:explorer-finite-no-leak-pattern",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T18:06:24Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-FEAT-0002",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/policy/policy_obligation_set.schema.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/explorer-web/src/features/evidence_drawer/index.tsx@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/ui-build.yml@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first Explorer projection and non-modal viewer-choice card. The component does not parse canonical consent records, evaluate policy, resolve EvidenceBundle, issue or revoke subject consent, access lifecycle stores, fetch a source, activate a layer release, promote, publish, or notify a remote revocation feed. Viewer withdrawal always hides the layer locally; an optional caller callback receives an explicitly non-subject-consent event. Production governed-API wiring remains HOLD.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local TypeScript 5.8.3",
+      "Node.js 22.16.0 deterministic proof"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:c0e3f3ae8d4e0895569480132d4458fc598e1fc0d41a9d7ff562726956272449",
+  "receipt_id": "genrec-pass7-tiny-consent-card-20260808",
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/ConsentCardProjection.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/consent_card/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/consent_card/index.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/consent-card.fixture.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/consent-card.html": "CONFIRMED",
+    "apps/explorer-web/tests/browser/consent-card.spec.ts": "CONFIRMED",
+    "apps/explorer-web/tests/consent-card.test.ts": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/README.md": "PROPOSED",
+    "fixtures/ui/consent_card_projection/invalid/answer-missing-scope.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/invalid/answer-unresolved-subject.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/invalid/extra-field.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/invalid/reason-mismatch.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/valid/abstain-unresolved.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/valid/answer-viewer-choice.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/valid/deny-policy.json": "CONFIRMED",
+    "fixtures/ui/consent_card_projection/valid/error-upstream.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main 0f4cccc367e1beb18a31bb3459a579d6ab6e3fba, ADR-0029, PolicyObligationSet, Explorer feature conventions, Evidence Drawer no-leak boundary, fixtures, tests, and ui-build workflow were inspected. No existing consent_card implementation or overlapping open pull request was found."
+    },
+    {
+      "gate": "strict-typescript-source",
+      "outcome": "PASS",
+      "reason": "Global TypeScript 5.8.3 completed strict no-emit checking for the new app-local adapter and feature with ES2022 and DOM libraries."
+    },
+    {
+      "gate": "deterministic-projection-proof",
+      "outcome": "PASS",
+      "reason": "A compiled CommonJS proof accepted the valid ANSWER, ABSTAIN, DENY, and ERROR fixtures; rejected all four invalid fixtures; failed closed on expiration; and confirmed no fetch or lifecycle-store references."
+    },
+    {
+      "gate": "viewer-subject-consent-separation",
+      "outcome": "PASS",
+      "reason": "The view model and decision event keep browser display preference separate from subject inclusion state; events are fixed to affectsSubjectConsent=false and negative states expose no override."
+    },
+    {
+      "gate": "hosted-explorer-unit-browser-build",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head and repository-owned pnpm/Vitest/Playwright/Vite workflow."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
