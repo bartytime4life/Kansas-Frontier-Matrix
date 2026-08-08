@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "catalog-trust-extension-payload-only",
+  "authority_boundary": "Fixture replay proves shape and bounded semantic findings only; it does not validate host records or create catalog, proof, policy, review, release, publication, or public-use authority.",
+  "cases": [
+    {
+      "path": "valid/valid_dcat_catalog.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "path": "valid/valid_prov_proof.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "path": "valid/valid_stac_publication_descriptor.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "path": "valid/valid_stac_receipt.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "path": "invalid/invalid_authority_true.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "GOVERNANCE_BOUNDARY_VIOLATION",
+          "field": "/governance"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_candidate_publication.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "CANDIDATE_PUBLICATION_FORBIDDEN",
+          "field": "/kfm:trust_class"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_missing_run_receipt_ref.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "field": "/"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_proof_without_proof_ref.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "PROOF_REF_REQUIRED",
+          "field": "/kfm:proof_ref"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_source_role.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "field": "/kfm:source_role"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_spec_hash.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SPEC_HASH_MISMATCH",
+          "field": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "path": "invalid/invalid_unknown_field.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "field": "/"
+        }
+      ]
+    }
+  ]
+}
