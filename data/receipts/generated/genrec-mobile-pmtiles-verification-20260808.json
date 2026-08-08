@@ -20,7 +20,7 @@
     "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts": "sha256:2cdc54643bf2c768d6d587ceab990f16055d759ff7dd01b56039a8045f4c00a8",
     "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts": "sha256:21c3f0e07d0ef1b9570bd6464e08cb5a3cc604fe22889147ebaea4427fe866d5",
     "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html": "sha256:288347a4daaac75c0427b4191be8cabbfd6bf3cc6a7d4ffce6130bb6a94bf73c",
-    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "sha256:6f4bffc890af0cf1c81e8178f6079a927c91df5a5182c97e3cee5a249deeb94a",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "sha256:1d153dd92c9c9a8b8ed3f590509b641f4bb4ec73de3952699917135381dea395",
     "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts": "sha256:550c1ca849e44d28ef2a4880940b58b89b97b12f484fd708fb7dc9bd4dc9a826",
     "fixtures/pmtiles/mobile_verification/README.md": "sha256:691acad08826b87127d1657f0a1b176eb9257a6a027779d00940cc70c0958ef0",
     "fixtures/pmtiles/mobile_verification/cases.json": "sha256:7dc14edf9479e3de5fdd098c25a68dd7c2e993a04a2220f317675fad1b8e6995",

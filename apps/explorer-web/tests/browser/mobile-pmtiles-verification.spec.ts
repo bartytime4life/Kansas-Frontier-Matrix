@@ -72,7 +72,10 @@ test.describe("synthetic mobile PMTiles verification", () => {
       },
     });
     expect(
-      await page.getByRole("list", { name: "Verification holds" }).allTextContents(),
+      await page
+        .getByRole("list", { name: "Verification holds" })
+        .getByRole("listitem")
+        .allTextContents(),
     ).toEqual([
       "CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
       "MAPLIBRE_RUNTIME_UNADMITTED",
