@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-pass4-hash-profile-readiness-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hash-profile-readiness.yml",
+    "contracts/common/hash_profile_readiness_matrix.md",
+    "control_plane/hash_profile_readiness_matrix.json",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/README.md",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/cases.json",
+    "schemas/contracts/v1/common/hash_profile_readiness_matrix.schema.json",
+    "tests/validators/test_validate_hash_profile_readiness_matrix.py",
+    "tools/validators/validate_hash_profile_readiness_matrix.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hash-profile-readiness.yml": "sha256:cbc5cfbf88744f9c29e9b5051389fdd5252c39bdf4758efa2cbf77dbd647dddd",
+    "contracts/common/hash_profile_readiness_matrix.md": "sha256:77fe801b1212736a8401bd4d078d151bf9550fdff7b66501bd14f8bc442b4deb",
+    "control_plane/hash_profile_readiness_matrix.json": "sha256:a8963bfc7dcc4572827045e488c1137d0878708415f4198c9eed0c881aa24548",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/README.md": "sha256:5145da753bb3537c27fd96e9a742ef13dfcb875dfddd21723c87504de19bcf3b",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/cases.json": "sha256:d27a4d99d48db1948dc8570257bce8bd61e4032ea784140dcb045d2501babef2",
+    "schemas/contracts/v1/common/hash_profile_readiness_matrix.schema.json": "sha256:7ea77c86734f4b7ad119e248ed06005ad1fa72cd6f19a41b575f76c65addc18d",
+    "tests/validators/test_validate_hash_profile_readiness_matrix.py": "sha256:b02a5a0a7a7f8fc74046de5c096f5a03362b0eebe56fe242dd8bf8dc393a14e1",
+    "tools/validators/validate_hash_profile_readiness_matrix.py": "sha256:e462ea64cbc75e1a0fbc50312d5624a9de99977925d9d92b9ed90c16846056d4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:f45efabb3c13b0182a9f8ceb02c768d66738d2b4d4a174fa6355aa6207cf0286",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-PROG-0003",
+      "repo:packages/hashing/src/hashing/core.py@ea62011a4a4b94affbec3a9ea667f76284b2719d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ea62011a4a4b94affbec3a9ea667f76284b2719d"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hash-profile-readiness.yml": "CONFIRMED",
+    "contracts/common/hash_profile_readiness_matrix.md": "PROPOSED",
+    "control_plane/hash_profile_readiness_matrix.json": "PROPOSED",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/hash_profile_readiness_matrix/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/hash_profile_readiness_matrix.schema.json": "PROPOSED",
+    "tests/validators/test_validate_hash_profile_readiness_matrix.py": "CONFIRMED",
+    "tools/validators/validate_hash_profile_readiness_matrix.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Five local reconstructed-workspace unit tests passed."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Six mutation cases matched their exact finite outcomes and reason codes."
+    },
+    {
+      "gate": "matrix-spec-hash",
+      "outcome": "PASS",
+      "reason": "The repository matrix matched the current RFC8785-JCS + SHA-256 executable baseline for this admitted simple JSON domain."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires a pushed draft pull request exact-head run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass4-hash-policy",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-PROG-0003"
+    },
+    {
+      "id": "repository:hashing-baseline",
+      "validated": true,
+      "evidence_ref": "repo:packages/hashing/src/hashing/core.py@ea62011a4a4b94affbec3a9ea667f76284b2719d"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ea62011a4a4b94affbec3a9ea667f76284b2719d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T16:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inactive readiness implementation of KFM-P4-PROG-0003. Only the current spec_hash tuple is executable baseline; BLAKE3/Bao and all other cross-family roles remain inactive, and no ADR, migration, signing, release, or publication authority is created."
+}
