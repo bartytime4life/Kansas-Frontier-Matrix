@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile.schema.json",
+  "title": "NFHL/NLD/NID source-role profile",
+  "description": "Fixture-only source-role, time, evidence-support, public-geometry, and authority-boundary profile for FEMA NFHL and USACE NLD/NID.",
+  "type": "object",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hazards/nfhl_nld_nid_source_role_profile.md",
+    "fixtures_root": "fixtures/contracts/v1/domains/hazards/nfhl_nld_nid_source_role_profile/",
+    "validator": "tools/validators/domains/hazards/validate_nfhl_nld_nid_source_role_profile.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY"
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.hazards.nfhl-nld-nid-source-role-profile.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:hazards:nfhl-nld-nid:sha256:[a-f0-9]{64}$"
+    },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "nfhl": {
+          "$ref": "#/$defs/nfhl_source"
+        },
+        "nld": {
+          "$ref": "#/$defs/nld_source"
+        },
+        "nid": {
+          "$ref": "#/$defs/nid_source"
+        }
+      },
+      "required": [
+        "nfhl",
+        "nld",
+        "nid"
+      ],
+      "additionalProperties": false
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      },
+      "maxItems": 12
+    },
+    "claims": {
+      "type": "object",
+      "properties": {
+        "observed_flood_extent_claimed": {
+          "type": "boolean"
+        },
+        "forecast_or_current_inundation_claimed": {
+          "type": "boolean"
+        },
+        "levee_operational_condition_claimed": {
+          "type": "boolean"
+        },
+        "dam_operational_condition_claimed": {
+          "type": "boolean"
+        },
+        "engineering_safety_claimed": {
+          "type": "boolean"
+        },
+        "source_admission_authorized": {
+          "type": "boolean"
+        },
+        "evidence_resolved": {
+          "type": "boolean"
+        },
+        "policy_approved": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "observed_flood_extent_claimed",
+        "forecast_or_current_inundation_claimed",
+        "levee_operational_condition_claimed",
+        "dam_operational_condition_claimed",
+        "engineering_safety_claimed",
+        "source_admission_authorized",
+        "evidence_resolved",
+        "policy_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "additionalProperties": false
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "profile",
+    "status",
+    "execution_mode",
+    "assessment_id",
+    "sources",
+    "relations",
+    "claims",
+    "spec_hash"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "base_source": {
+      "type": "object",
+      "properties": {
+        "source_key": {
+          "type": "string"
+        },
+        "source_family": {
+          "type": "string"
+        },
+        "source_role": {
+          "type": "string"
+        },
+        "source_descriptor_ref": {
+          "type": "string",
+          "pattern": "^kfm://source/[a-z0-9][a-z0-9._/-]{2,127}$"
+        },
+        "native_identity_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "data_state": {
+          "enum": [
+            "POPULATED",
+            "EMPTY",
+            "NO_DATA"
+          ]
+        },
+        "time": {
+          "type": "object",
+          "properties": {
+            "source_effective_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "source_updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "retrieved_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "source_effective_at",
+            "source_updated_at",
+            "retrieved_at"
+          ],
+          "additionalProperties": false
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^evidence:synthetic:[a-z0-9][a-z0-9._:-]{2,127}$"
+          },
+          "uniqueItems": true,
+          "maxItems": 16
+        },
+        "public_geometry": {
+          "type": "object",
+          "properties": {
+            "representation_class": {
+              "type": "string"
+            },
+            "precision_class": {
+              "enum": [
+                "PUBLIC_REGULATORY_GEOMETRY",
+                "GENERALIZED_LINEAR_REFERENCE",
+                "GENERALIZED_POINT_REFERENCE"
+              ]
+            },
+            "exact_operational_detail_present": {
+              "type": "boolean"
+            },
+            "restricted_attribute_present": {
+              "type": "boolean"
+            },
+            "public_safe_transform_ref": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^transform:synthetic:[a-z0-9][a-z0-9._:-]{2,127}$"
+                }
+              ]
+            }
+          },
+          "required": [
+            "representation_class",
+            "precision_class",
+            "exact_operational_detail_present",
+            "restricted_attribute_present",
+            "public_safe_transform_ref"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "source_key",
+        "source_family",
+        "source_role",
+        "source_descriptor_ref",
+        "native_identity_hash",
+        "data_state",
+        "time",
+        "evidence_refs",
+        "public_geometry"
+      ],
+      "additionalProperties": false
+    },
+    "nfhl_source": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_source"
+        },
+        {
+          "properties": {
+            "source_key": {
+              "const": "NFHL"
+            },
+            "source_family": {
+              "const": "FEMA_NFHL"
+            },
+            "source_role": {
+              "const": "REGULATORY_FLOOD_HAZARD_BASELINE"
+            },
+            "source_descriptor_ref": {
+              "const": "kfm://source/fema/nfhl"
+            },
+            "public_geometry": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/base_source/properties/public_geometry"
+                },
+                {
+                  "properties": {
+                    "representation_class": {
+                      "const": "FLOOD_HAZARD_POLYGON"
+                    },
+                    "precision_class": {
+                      "const": "PUBLIC_REGULATORY_GEOMETRY"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nld_source": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_source"
+        },
+        {
+          "properties": {
+            "source_key": {
+              "const": "NLD"
+            },
+            "source_family": {
+              "const": "USACE_NLD"
+            },
+            "source_role": {
+              "const": "LEVEE_INVENTORY_REFERENCE"
+            },
+            "source_descriptor_ref": {
+              "const": "kfm://source/usace/nld"
+            },
+            "public_geometry": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/base_source/properties/public_geometry"
+                },
+                {
+                  "properties": {
+                    "representation_class": {
+                      "const": "LEVEE_GENERALIZED_LINE"
+                    },
+                    "precision_class": {
+                      "const": "GENERALIZED_LINEAR_REFERENCE"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nid_source": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_source"
+        },
+        {
+          "properties": {
+            "source_key": {
+              "const": "NID"
+            },
+            "source_family": {
+              "const": "USACE_NID"
+            },
+            "source_role": {
+              "const": "DAM_INVENTORY_REFERENCE"
+            },
+            "source_descriptor_ref": {
+              "const": "kfm://source/usace/nid"
+            },
+            "public_geometry": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/base_source/properties/public_geometry"
+                },
+                {
+                  "properties": {
+                    "representation_class": {
+                      "const": "DAM_GENERALIZED_POINT"
+                    },
+                    "precision_class": {
+                      "const": "GENERALIZED_POINT_REFERENCE"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "relation_id": {
+          "type": "string",
+          "pattern": "^relation:synthetic:[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "from_source": {
+          "enum": [
+            "NFHL",
+            "NLD",
+            "NID"
+          ]
+        },
+        "to_source": {
+          "enum": [
+            "NFHL",
+            "NLD",
+            "NID"
+          ]
+        },
+        "relation_type": {
+          "enum": [
+            "SPATIAL_CONTEXT_ONLY",
+            "ADMINISTRATIVE_CONTEXT_ONLY",
+            "NO_DIRECT_RELATION"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^evidence:synthetic:[a-z0-9][a-z0-9._:-]{2,127}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "relation_id",
+        "from_source",
+        "to_source",
+        "relation_type",
+        "evidence_refs"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

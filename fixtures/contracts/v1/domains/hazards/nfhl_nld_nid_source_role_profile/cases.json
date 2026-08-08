@@ -1,0 +1,410 @@
+{
+  "bases": {
+    "default": {
+      "profile": "kfm.hazards.nfhl-nld-nid-source-role-profile.v1",
+      "status": "PROPOSED_INACTIVE",
+      "execution_mode": "FIXTURE_ONLY",
+      "assessment_id": "placeholder",
+      "sources": {
+        "nfhl": {
+          "source_key": "NFHL",
+          "source_family": "FEMA_NFHL",
+          "source_role": "REGULATORY_FLOOD_HAZARD_BASELINE",
+          "source_descriptor_ref": "kfm://source/fema/nfhl",
+          "native_identity_hash": "sha256:c90914f4edbc8b7a3670097754dde8900369861269122bbfe531e40ec751c709",
+          "data_state": "POPULATED",
+          "time": {
+            "source_effective_at": "2025-01-01T00:00:00Z",
+            "source_updated_at": "2025-03-01T00:00:00Z",
+            "retrieved_at": "2026-08-08T00:00:00Z"
+          },
+          "evidence_refs": [
+            "evidence:synthetic:nfhl-metadata",
+            "evidence:synthetic:nfhl-regulatory-geometry"
+          ],
+          "public_geometry": {
+            "representation_class": "FLOOD_HAZARD_POLYGON",
+            "precision_class": "PUBLIC_REGULATORY_GEOMETRY",
+            "exact_operational_detail_present": false,
+            "restricted_attribute_present": false,
+            "public_safe_transform_ref": null
+          }
+        },
+        "nld": {
+          "source_key": "NLD",
+          "source_family": "USACE_NLD",
+          "source_role": "LEVEE_INVENTORY_REFERENCE",
+          "source_descriptor_ref": "kfm://source/usace/nld",
+          "native_identity_hash": "sha256:a029eed125986568621fdc6cfb88608f8d8264f077c7d28d952b2316a99889c0",
+          "data_state": "POPULATED",
+          "time": {
+            "source_effective_at": "2024-06-01T00:00:00Z",
+            "source_updated_at": "2025-05-15T00:00:00Z",
+            "retrieved_at": "2026-08-08T00:00:00Z"
+          },
+          "evidence_refs": [
+            "evidence:synthetic:nld-inventory",
+            "evidence:synthetic:nld-public-transform"
+          ],
+          "public_geometry": {
+            "representation_class": "LEVEE_GENERALIZED_LINE",
+            "precision_class": "GENERALIZED_LINEAR_REFERENCE",
+            "exact_operational_detail_present": false,
+            "restricted_attribute_present": false,
+            "public_safe_transform_ref": "transform:synthetic:nld-county-generalization"
+          }
+        },
+        "nid": {
+          "source_key": "NID",
+          "source_family": "USACE_NID",
+          "source_role": "DAM_INVENTORY_REFERENCE",
+          "source_descriptor_ref": "kfm://source/usace/nid",
+          "native_identity_hash": "sha256:afba8687fbf3300fd6fbf36d3cc64ebe9cf442c117481bca6ed6c375858e06ea",
+          "data_state": "POPULATED",
+          "time": {
+            "source_effective_at": "2024-01-01T00:00:00Z",
+            "source_updated_at": "2025-04-20T00:00:00Z",
+            "retrieved_at": "2026-08-08T00:00:00Z"
+          },
+          "evidence_refs": [
+            "evidence:synthetic:nid-inventory",
+            "evidence:synthetic:nid-public-transform"
+          ],
+          "public_geometry": {
+            "representation_class": "DAM_GENERALIZED_POINT",
+            "precision_class": "GENERALIZED_POINT_REFERENCE",
+            "exact_operational_detail_present": false,
+            "restricted_attribute_present": false,
+            "public_safe_transform_ref": "transform:synthetic:nid-county-generalization"
+          }
+        }
+      },
+      "relations": [
+        {
+          "relation_id": "relation:synthetic:nfhl-nid-context",
+          "from_source": "NFHL",
+          "to_source": "NID",
+          "relation_type": "SPATIAL_CONTEXT_ONLY",
+          "evidence_refs": [
+            "evidence:synthetic:nfhl-regulatory-geometry",
+            "evidence:synthetic:nid-inventory"
+          ]
+        },
+        {
+          "relation_id": "relation:synthetic:nfhl-nld-context",
+          "from_source": "NFHL",
+          "to_source": "NLD",
+          "relation_type": "SPATIAL_CONTEXT_ONLY",
+          "evidence_refs": [
+            "evidence:synthetic:nfhl-regulatory-geometry",
+            "evidence:synthetic:nld-inventory"
+          ]
+        }
+      ],
+      "claims": {
+        "observed_flood_extent_claimed": false,
+        "forecast_or_current_inundation_claimed": false,
+        "levee_operational_condition_claimed": false,
+        "dam_operational_condition_claimed": false,
+        "engineering_safety_claimed": false,
+        "source_admission_authorized": false,
+        "evidence_resolved": false,
+        "policy_approved": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      },
+      "spec_hash": "placeholder"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_populated_sources",
+      "base": "default",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_empty_nid_snapshot",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nid/data_state",
+          "value": "EMPTY"
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "abstain_nid_no_data",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nid/data_state",
+          "value": "NO_DATA"
+        },
+        {
+          "op": "replace",
+          "path": "/sources/nid/evidence_refs",
+          "value": []
+        },
+        {
+          "op": "replace",
+          "path": "/relations",
+          "value": [
+            {
+              "relation_id": "relation:synthetic:nfhl-nld-context",
+              "from_source": "NFHL",
+              "to_source": "NLD",
+              "relation_type": "SPATIAL_CONTEXT_ONLY",
+              "evidence_refs": [
+                "evidence:synthetic:nfhl-regulatory-geometry",
+                "evidence:synthetic:nld-inventory"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "NID_NO_DATA",
+          "path": "/sources/nid/data_state"
+        }
+      ]
+    },
+    {
+      "case_id": "abstain_relation_evidence_unresolved",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/relations/0/evidence_refs",
+          "value": [
+            "evidence:synthetic:missing-context"
+          ]
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "HAZARD_RELATION_EVIDENCE_UNRESOLVED",
+          "path": "/relations/0/evidence_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_observed_flood_claim",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/observed_flood_extent_claimed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "NFHL_OBSERVED_FLOOD_COLLAPSE_DENIED",
+          "path": "/claims/observed_flood_extent_claimed"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_nld_operational_condition_claim",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/levee_operational_condition_claimed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "NLD_OPERATIONAL_CONDITION_DENIED",
+          "path": "/claims/levee_operational_condition_claimed"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_exact_operational_detail",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nid/public_geometry/exact_operational_detail_present",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_OPERATIONAL_DETAIL_DENIED",
+          "path": "/sources/nid/public_geometry/exact_operational_detail_present"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_restricted_attribute",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nld/public_geometry/restricted_attribute_present",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_RESTRICTED_ATTRIBUTE_DENIED",
+          "path": "/sources/nld/public_geometry/restricted_attribute_present"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_missing_generalization_receipt",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nld/public_geometry/public_safe_transform_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "INFRASTRUCTURE_GENERALIZATION_REQUIRED",
+          "path": "/sources/nld/public_geometry/public_safe_transform_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_source_time_order",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nfhl/time/retrieved_at",
+          "value": "2024-01-01T00:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_SOURCE_TIME_ORDER_INVALID",
+          "path": "/sources/nfhl/time"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_native_identity_collision",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/sources/nid/native_identity_hash",
+          "value": "sha256:a029eed125986568621fdc6cfb88608f8d8264f077c7d28d952b2316a99889c0"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_NATIVE_IDENTITY_COLLISION",
+          "path": "/sources"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_relation_order",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/relations",
+          "value": [
+            {
+              "relation_id": "relation:synthetic:nfhl-nld-context",
+              "from_source": "NFHL",
+              "to_source": "NLD",
+              "relation_type": "SPATIAL_CONTEXT_ONLY",
+              "evidence_refs": [
+                "evidence:synthetic:nfhl-regulatory-geometry",
+                "evidence:synthetic:nld-inventory"
+              ]
+            },
+            {
+              "relation_id": "relation:synthetic:nfhl-nid-context",
+              "from_source": "NFHL",
+              "to_source": "NID",
+              "relation_type": "SPATIAL_CONTEXT_ONLY",
+              "evidence_refs": [
+                "evidence:synthetic:nfhl-regulatory-geometry",
+                "evidence:synthetic:nid-inventory"
+              ]
+            }
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_RELATIONS_NOT_CANONICAL",
+          "path": "/relations"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_identity_hash_drift",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/forecast_or_current_inundation_claimed",
+          "value": true
+        }
+      ],
+      "preserve_identity": true,
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_SOURCE_ROLE_ASSESSMENT_ID_MISMATCH",
+          "path": "/assessment_id"
+        },
+        {
+          "code": "HAZARD_SOURCE_ROLE_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        },
+        {
+          "code": "NFHL_FORECAST_COLLAPSE_DENIED",
+          "path": "/claims/forecast_or_current_inundation_claimed"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_schema_missing_source",
+      "base": "default",
+      "mutations": [
+        {
+          "op": "remove",
+          "path": "/sources/nid"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "HAZARD_SOURCE_ROLE_SCHEMA_INVALID",
+          "path": "/sources"
+        }
+      ]
+    }
+  ]
+}
