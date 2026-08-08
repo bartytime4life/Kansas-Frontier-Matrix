@@ -12,7 +12,7 @@
   "object_type": "WatcherRegistry",
   "registry_id": "kfm://control-plane/watcher-registry/v1",
   "schema_version": "1.0.0",
-  "spec_hash": "sha256:b1422d4b8fd2eaaf4bcb81f695aca3e3faa2fb9fe8bc3cfd698cfa3a27b68dd9",
+  "spec_hash": "sha256:2fa3d43db474fc244bf9ba5fcb66ffb6e9a711fb905c4d117352edef75f66ab9",
   "status": "PROPOSED_INACTIVE",
   "watchers": [
     {
@@ -47,6 +47,57 @@
       "state": "PLACEHOLDER",
       "version": "0.0.0-placeholder",
       "watcher_id": "kfm.watcher.shared.plants_drift.placeholder"
+    },
+    {
+      "activation_ref": null,
+      "canonical_id": "kfm://watcher/soil/ssurgo-gnatsgo-candidate",
+      "capabilities": [
+        "CONTENT_DIGEST",
+        "MATERIALITY_CLASSIFICATION",
+        "SCHEMA_AWARE_DIFF"
+      ],
+      "endpoint_ref": null,
+      "governance": {
+        "promotion_authorized": false,
+        "publication_authorized": false,
+        "raw_admission_authorized": false,
+        "release_authorized": false,
+        "source_activated": false
+      },
+      "outputs": [
+        {
+          "contract_ref": "contracts/domains/soil/soil_watcher_spec.md",
+          "output_type": "SOIL_CHANGE_CANDIDATE",
+          "schema_ref": "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+          "target_zone": "WORK"
+        },
+        {
+          "contract_ref": "contracts/domains/soil/soil_watcher_spec.md",
+          "output_type": "SOIL_WATCHER_HOLD",
+          "schema_ref": "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+          "target_zone": "QUARANTINE"
+        }
+      ],
+      "policy_ref": "policy/domains/soil/watcher_spec.rego",
+      "poll": {
+        "cadence": null,
+        "max_attempts": 0,
+        "mode": "MANUAL_ONLY",
+        "timeout_seconds": null
+      },
+      "reason_codes": [
+        "FIXTURE_ONLY",
+        "RIGHTS_AND_SENSITIVITY_UNRESOLVED",
+        "SOURCE_AUTHORITY_UNRESOLVED"
+      ],
+      "schema_url": "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+      "signature_ref": null,
+      "source_descriptor_ref": null,
+      "spec_path": "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json",
+      "spec_sha256": "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+      "state": "INACTIVE",
+      "version": "0.1.0",
+      "watcher_id": "kfm.watcher.soil.ssurgo_gnatsgo.candidate"
     }
   ]
 }
