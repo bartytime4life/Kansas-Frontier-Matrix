@@ -68,18 +68,13 @@ adapter, protocol, browser-budget, and rollback evidence.
 ## Validation
 
 ```bash
-python -m unittest -v \
-  tests.validators.test_pmtiles_mobile_verification_fixture
+python -m unittest -v   tests.validators.test_pmtiles_mobile_verification_fixture
 
-python tools/validators/pmtiles/validate_mobile_verification_fixture.py \
-  --fixtures
+python tools/validators/pmtiles/validate_mobile_verification_fixture.py   --fixtures
 
-pnpm --filter explorer-web exec vitest run \
-  tests/mobile-pmtiles-verification.test.ts
+pnpm --filter explorer-web exec vitest run   tests/mobile-pmtiles-verification.test.ts
 
-pnpm --filter explorer-web exec playwright test \
-  --config=playwright.config.ts \
-  tests/browser/mobile-pmtiles-verification.spec.ts
+pnpm --filter explorer-web exec playwright test   --config=playwright.config.ts   tests/browser/mobile-pmtiles-verification.spec.ts
 ```
 
 All checks are synthetic and no-network after dependency installation. A green

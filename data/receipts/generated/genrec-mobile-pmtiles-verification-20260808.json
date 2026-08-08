@@ -25,7 +25,7 @@
     "fixtures/pmtiles/mobile_verification/README.md": "sha256:691acad08826b87127d1657f0a1b176eb9257a6a027779d00940cc70c0958ef0",
     "fixtures/pmtiles/mobile_verification/cases.json": "sha256:7dc14edf9479e3de5fdd098c25a68dd7c2e993a04a2220f317675fad1b8e6995",
     "tests/validators/test_pmtiles_mobile_verification_fixture.py": "sha256:124ee432ae5e24d1586bac08d98722877b93c5ce874db960913c7773adfcfd9d",
-    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "sha256:aa175d06928bc41286d7107b5b93f70c30102799763f2de0945aafa1d4f9530c"
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "sha256:79f028f6a4b914d749cd62d30281b5db89f7ea56a41d3dd55326653b7912c503"
   },
   "model_identity": {
     "provider": "OpenAI",
