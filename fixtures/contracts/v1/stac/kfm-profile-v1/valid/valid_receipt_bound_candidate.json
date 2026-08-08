@@ -1,0 +1,58 @@
+{
+  "assets": {},
+  "bbox": [
+    -98,
+    38,
+    -98,
+    38
+  ],
+  "geometry": {
+    "coordinates": [
+      -98,
+      38
+    ],
+    "type": "Point"
+  },
+  "id": "fixture-receipt-bound",
+  "links": [
+    {
+      "href": "kfm://catalog/stac/item/fixture-receipt-bound",
+      "rel": "self",
+      "type": "application/geo+json"
+    },
+    {
+      "href": "kfm://receipt/run/fixture-receipt-bound",
+      "rel": "kfm:receipt",
+      "type": "application/json"
+    }
+  ],
+  "properties": {
+    "datetime": "2026-08-08T00:00:00Z",
+    "kfm:authority": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "publication_authority": false,
+      "release_authority": false,
+      "review_authority": false,
+      "source_authority": false
+    },
+    "kfm:catalog_state": "CANDIDATE",
+    "kfm:profile_version": "1.0.0-draft.1",
+    "kfm:proof_ref": null,
+    "kfm:publication_state": "NOT_PUBLISHED",
+    "kfm:reason_codes": [
+      "FIXTURE_SYNTHETIC"
+    ],
+    "kfm:release_ref": null,
+    "kfm:release_state": "NOT_RELEASED",
+    "kfm:run_receipt_ref": "kfm://receipt/run/fixture-receipt-bound",
+    "kfm:source_role": "synthetic",
+    "kfm:spec_hash": "sha256:bf136a99ce20cced3e05914b7cbe5723f0efdf0d7c542ae74b0aa5f17e708364",
+    "kfm:trust_class": "RECEIPT_BOUND"
+  },
+  "stac_extensions": [
+    "kfm://profile/stac/kfm-profile-v1"
+  ],
+  "stac_version": "1.0.0",
+  "type": "Feature"
+}
