@@ -7,6 +7,7 @@ name: fauna-occurrence-evidence
       - ".github/workflows/fauna-occurrence-evidence.yml"
       - "contracts/domains/fauna/occurrence_evidence.md"
       - "schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json"
+      - "tools/validators/domains/fauna/README.md"
       - "tools/validators/domains/fauna/occurrence/**"
       - "fixtures/domains/fauna/occurrence_evidence/**"
       - "tests/domains/fauna/test_occurrence_evidence.py"
@@ -18,6 +19,7 @@ name: fauna-occurrence-evidence
       - ".github/workflows/fauna-occurrence-evidence.yml"
       - "contracts/domains/fauna/occurrence_evidence.md"
       - "schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json"
+      - "tools/validators/domains/fauna/README.md"
       - "tools/validators/domains/fauna/occurrence/**"
       - "fixtures/domains/fauna/occurrence_evidence/**"
       - "tests/domains/fauna/test_occurrence_evidence.py"
@@ -72,11 +74,11 @@ jobs:
             --verbose
           python tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py --fixtures
 
-      - name: Validate generated authoring receipt
+      - name: Validate current generated authoring receipt
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-fauna-occurrence-evidence-20260808.json \
+            data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260808.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -86,6 +88,6 @@ jobs:
             echo "### Fauna OccurrenceEvidence draft profile"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: closed draft schema, deterministic identity, source-role anti-collapse, rights/sensitivity consistency, and exact fixture polarity."
+            echo "- Scope: closed draft schema, deterministic identity, source-role anti-collapse, rights/sensitivity consistency, exact fixture polarity, and current authoring-receipt integrity."
             echo "- Boundary: PASS does not admit a live source, resolve taxonomic or stewardship authority, create an EvidenceBundle, perform geoprivacy transformation, release, promote, deploy, or publish."
           } >> "$GITHUB_STEP_SUMMARY"

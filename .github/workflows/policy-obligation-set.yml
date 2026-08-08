@@ -1,0 +1,85 @@
+# Validate the fixture-only PolicyObligationSet contract family.
+name: policy-obligation-set
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/policy-obligation-set.yml"
+      - "contracts/policy/policy_obligation_set.md"
+      - "schemas/contracts/v1/policy/policy_obligation_set.schema.json"
+      - "fixtures/contracts/v1/policy/policy_obligation_set/**"
+      - "tools/validators/policy/validate_policy_obligation_set.py"
+      - "tests/validators/test_validate_policy_obligation_set.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-policy-obligation-set-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-obligation-set.yml"
+      - "contracts/policy/policy_obligation_set.md"
+      - "schemas/contracts/v1/policy/policy_obligation_set.schema.json"
+      - "fixtures/contracts/v1/policy/policy_obligation_set/**"
+      - "tools/validators/policy/validate_policy_obligation_set.py"
+      - "tests/validators/test_validate_policy_obligation_set.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-policy-obligation-set-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-obligation-set-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Validate contract, fixtures, and deterministic identity
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_policy_obligation_set -v
+          python tools/validators/policy/validate_policy_obligation_set.py --fixtures
+          python tools/validators/policy/validate_policy_obligation_set.py \
+            fixtures/contracts/v1/policy/policy_obligation_set/valid/valid_obligation_set.json
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-policy-obligation-set-20260808.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### PolicyObligationSet"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed candidate shape, canonical duties, parameter coherence, identity, and authority denial."
+            echo "- Boundary: PASS does not evaluate policy, enforce a duty, modify evidence, promote, release, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

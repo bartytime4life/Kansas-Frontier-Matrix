@@ -1,0 +1,92 @@
+# Validate the proposed public-safe StoryNode projection.
+name: story-node-trust-inheritance
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/story-node-trust-inheritance.yml"
+      - "contracts/ui/story_node.md"
+      - "schemas/contracts/v1/ui/story_node.schema.json"
+      - "fixtures/ui/story_node/**"
+      - "tools/validators/ui/README.md"
+      - "tools/validators/ui/validate_story_node.py"
+      - "tests/validators/test_validate_story_node.py"
+      - "data/receipts/generated/genrec-story-node-trust-inheritance-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/story-node-trust-inheritance.yml"
+      - "contracts/ui/story_node.md"
+      - "schemas/contracts/v1/ui/story_node.schema.json"
+      - "fixtures/ui/story_node/**"
+      - "tools/validators/ui/README.md"
+      - "tools/validators/ui/validate_story_node.py"
+      - "tests/validators/test_validate_story_node.py"
+      - "data/receipts/generated/genrec-story-node-trust-inheritance-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: story-node-trust-inheritance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-story-node-trust-inheritance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_story_node -v
+
+      - name: Replay the exact fixture matrix
+        run: |
+          set -euo pipefail
+          python tools/validators/ui/validate_story_node.py --fixtures
+
+      - name: Verify current authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-story-node-trust-inheritance-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### StoryNode trust-inheritance profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed synthetic StoryNode projection and finite trust-inheritance validation."
+            echo "- Fail-closed rule: unresolved rights, restricted sensitivity, pending review, stale support, unreleased state, or supersession cannot produce READY/ANSWER."
+            echo "- Boundary: a green result does not grant evidence truth, citation validity, policy approval, review authority, release, deployment, publication, or public-use permission."
+          } >> "$GITHUB_STEP_SUMMARY"
