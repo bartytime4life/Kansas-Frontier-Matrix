@@ -1,0 +1,41 @@
+name: soil-support-type-alias-map
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/domains/soil/support_type_alias_map.md'
+      - 'schemas/contracts/v1/domains/soil/support_type_alias_map.schema.json'
+      - 'pipeline_specs/soil/support_type_alias_map.v1.json'
+      - 'pipeline_specs/soil/support_type_profile.v1.json'
+      - 'tools/validators/domains/soil/support_type/validate_support_type_alias_map.py'
+      - 'tests/validators/domains/soil/support_type/test_support_type_alias_map.py'
+      - '.github/workflows/soil-support-type-alias-map.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile validator and test
+        run: |
+          python -m py_compile tools/validators/domains/soil/support_type/validate_support_type_alias_map.py
+          python -m py_compile tests/validators/domains/soil/support_type/test_support_type_alias_map.py
+      - name: Validate inactive compatibility map
+        run: python tools/validators/domains/soil/support_type/validate_support_type_alias_map.py
+      - name: Run deterministic no-network tests
+        run: python -m unittest -q tests.validators.domains.soil.support_type.test_support_type_alias_map
