@@ -13,5 +13,39 @@
   ],
   "policy_state": "baseline",
   "freshness": "stale_ok",
-  "correction_state": "none"
+  "correction_state": "none",
+  "precision_actually_used": {
+    "spatial": {
+      "representation": "grid",
+      "resolution": "250 m modeled grid",
+      "accuracy": "Source-reported grid resolution; positional accuracy is not asserted.",
+      "generalization_applied": false
+    },
+    "temporal": {
+      "granularity": "daily",
+      "observation_interval": {
+        "start": "2026-05-08T00:00:00Z",
+        "end": "2026-05-09T00:00:00Z"
+      },
+      "freshness_class": "stale-accepted"
+    },
+    "attribute": {
+      "measure": "synthetic_measure",
+      "unit": "unitless",
+      "significant_precision": 2,
+      "classification_granularity": null
+    },
+    "requested_precision": {
+      "spatial": "30 m",
+      "temporal": "hourly",
+      "attribute": "3 decimal places"
+    },
+    "evidence_refs": [
+      {
+        "ref": "obs:1",
+        "kind": "measurement"
+      }
+    ],
+    "transform_receipt_refs": []
+  }
 }

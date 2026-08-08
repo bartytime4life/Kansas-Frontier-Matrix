@@ -3,9 +3,10 @@
   "$id": "https://schemas.kfm.local/contracts/v1/runtime/runtime_response_envelope.schema.json",
   "title": "runtime_response_envelope",
   "type": "object",
-  "description": "KFM contract for runtime_response_envelope.",
+  "description": "KFM contract for a finite runtime response. ANSWER outcomes disclose the precision actually supported by cited evidence.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/runtime_response_envelope.md",
+    "precision_contract_doc": "contracts/runtime/precision_actually_used.md",
     "fixtures_root": "fixtures/contracts/v1/runtime/runtime_response_envelope/",
     "validator": "tools/validators/validate_runtime_response_envelope.py",
     "policy": "policy/runtime/",
@@ -20,40 +21,25 @@
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
-    "version": {
-      "type": "string"
-    },
-    "issued_at": {
-      "type": "string",
-      "format": "date-time"
-    },
+    "version": {"type": "string"},
+    "issued_at": {"type": "string", "format": "date-time"},
     "outcome": {
       "type": "string",
-      "enum": [
-        "ANSWER",
-        "ABSTAIN",
-        "DENY",
-        "ERROR"
-      ]
+      "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
     },
-    "reason_code": {
-      "type": "string"
-    },
+    "reason_code": {"type": "string"},
     "evidence_refs": {
       "type": "array",
+      "maxItems": 128,
       "items": {
         "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
-      }
+      },
+      "uniqueItems": true
     },
-    "policy_state": {
-      "type": "string"
-    },
-    "freshness": {
-      "type": "string"
-    },
-    "correction_state": {
-      "type": "string"
-    }
+    "policy_state": {"type": "string"},
+    "freshness": {"type": "string"},
+    "correction_state": {"type": "string"},
+    "precision_actually_used": {"$ref": "#/$defs/precisionActuallyUsed"}
   },
   "required": [
     "id",
@@ -67,5 +53,122 @@
     "freshness",
     "correction_state"
   ],
-  "additionalProperties": false
+  "allOf": [
+    {
+      "if": {
+        "properties": {"outcome": {"const": "ANSWER"}},
+        "required": ["outcome"]
+      },
+      "then": {
+        "required": ["precision_actually_used"],
+        "properties": {"evidence_refs": {"minItems": 1}}
+      },
+      "else": {
+        "not": {"required": ["precision_actually_used"]}
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "boundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "receiptRef": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 640,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "precisionActuallyUsed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spatial",
+        "temporal",
+        "attribute",
+        "evidence_refs",
+        "transform_receipt_refs"
+      ],
+      "properties": {
+        "spatial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["representation", "resolution", "accuracy", "generalization_applied"],
+          "properties": {
+            "representation": {
+              "type": "string",
+              "enum": ["point", "line", "polygon", "grid", "raster", "aggregate", "none"]
+            },
+            "resolution": {"$ref": "#/$defs/boundedText"},
+            "accuracy": {"$ref": "#/$defs/boundedText"},
+            "generalization_applied": {"type": "boolean"}
+          }
+        },
+        "temporal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["granularity", "observation_interval", "freshness_class"],
+          "properties": {
+            "granularity": {"$ref": "#/$defs/boundedText"},
+            "observation_interval": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["start", "end"],
+              "properties": {
+                "start": {"type": "string", "format": "date-time"},
+                "end": {"type": "string", "format": "date-time"}
+              }
+            },
+            "freshness_class": {
+              "type": "string",
+              "enum": ["current", "stale-accepted", "historical", "unknown"]
+            }
+          }
+        },
+        "attribute": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["measure", "unit", "significant_precision", "classification_granularity"],
+          "properties": {
+            "measure": {"$ref": "#/$defs/boundedText"},
+            "unit": {"$ref": "#/$defs/boundedText"},
+            "significant_precision": {"type": "integer", "minimum": 0, "maximum": 12},
+            "classification_granularity": {
+              "oneOf": [
+                {"$ref": "#/$defs/boundedText"},
+                {"type": "null"}
+              ]
+            }
+          }
+        },
+        "requested_precision": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "spatial": {"$ref": "#/$defs/boundedText"},
+            "temporal": {"$ref": "#/$defs/boundedText"},
+            "attribute": {"$ref": "#/$defs/boundedText"}
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
+          },
+          "uniqueItems": true
+        },
+        "transform_receipt_refs": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {"$ref": "#/$defs/receiptRef"},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
 }
