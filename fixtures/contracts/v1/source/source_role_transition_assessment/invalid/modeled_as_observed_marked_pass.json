@@ -1,0 +1,42 @@
+{
+  "object_type": "SourceRoleTransitionAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:source-role:modeled-as-observed:v1",
+  "operation": "PASSTHROUGH",
+  "inputs": [
+    {
+      "source_ref": "kfm:source:model:smoke-v1",
+      "source_role": "MODELED",
+      "evidence_bundle_ref": "kfm:evidence-bundle:model:smoke-v1"
+    }
+  ],
+  "output": {
+    "artifact_ref": "kfm:artifact:smoke:claim:v1",
+    "source_role": "OBSERVED",
+    "lineage_roles": [
+      "MODELED"
+    ]
+  },
+  "receipts": {
+    "aggregation_receipt_ref": null,
+    "model_run_receipt_ref": null,
+    "representation_receipt_ref": null,
+    "reality_boundary_note_ref": null
+  },
+  "outcome": "PASS",
+  "reason_codes": [],
+  "obligations": [],
+  "validator_error_ref": null,
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "source_activation": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:ba21d18b3cba1e177241a58ff4ffa67c4736a87b7bb0cde6cf9a9f842bc1ba8b"
+}
