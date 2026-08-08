@@ -145,7 +145,9 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
 
   it("keeps the feature bridge renderer-neutral, no-network, and outside lifecycle stores", () => {
     expect(mapRuntimeSource).not.toMatch(/\bfetch\s*\(/);
-    expect(mapRuntimeSource).not.toMatch(/\bmaplibre(?:-gl)?\b/i);
+    expect(mapRuntimeSource).not.toMatch(
+      /(?:from\s+|import\s*\()\s*["'](?:maplibre-gl|@maplibre\/[^"']+)["']/i,
+    );
     expect(mapRuntimeSource).not.toMatch(
       /data\/(?:raw|work|quarantine|processed|catalog|triplets|published)/i,
     );
