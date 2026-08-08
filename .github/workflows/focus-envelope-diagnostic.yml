@@ -1,5 +1,5 @@
 # Temporary bounded diagnostic for the inherited finite-envelope failure.
-# Removed before the repair pull request. It reports test method names only.
+# Removed before the repair pull request. It reports unittest IDs only.
 name: focus-envelope-diagnostic
 
 "on":
@@ -31,25 +31,34 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Enumerate and isolate finite-envelope methods
+      - name: Enumerate and isolate complete module suite
         shell: bash
         run: |
           set +e
-          mapfile -t methods < <(
+          mapfile -t test_ids < <(
             python - <<'PY'
           import unittest
-          from tests.runtime_proof.test_envelope_finite_outcomes import FiniteRuntimeEnvelopeTests
-          for name in unittest.defaultTestLoader.getTestCaseNames(FiniteRuntimeEnvelopeTests):
-              print(name)
+
+          def flatten(suite):
+              for item in suite:
+                  if isinstance(item, unittest.TestSuite):
+                      yield from flatten(item)
+                  else:
+                      yield item
+
+          suite = unittest.defaultTestLoader.loadTestsFromName(
+              "tests.runtime_proof.test_envelope_finite_outcomes"
+          )
+          for test in flatten(suite):
+              print(test.id())
           PY
           )
           failed=0
-          prefix=tests.runtime_proof.test_envelope_finite_outcomes.FiniteRuntimeEnvelopeTests
-          for method in "${methods[@]}"; do
-            if python -m unittest "$prefix.$method" >/dev/null 2>&1; then
-              echo "::notice file=tests/runtime_proof/test_envelope_finite_outcomes.py::$method PASS"
+          for test_id in "${test_ids[@]}"; do
+            if python -m unittest "$test_id" >/dev/null 2>&1; then
+              echo "::notice file=tests/runtime_proof/test_envelope_finite_outcomes.py::$test_id PASS"
             else
-              echo "::error file=tests/runtime_proof/test_envelope_finite_outcomes.py::$method FAIL"
+              echo "::error file=tests/runtime_proof/test_envelope_finite_outcomes.py::$test_id FAIL"
               failed=1
             fi
           done
