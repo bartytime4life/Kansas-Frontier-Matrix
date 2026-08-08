@@ -12,7 +12,7 @@
   "object_type": "WatcherRegistry",
   "registry_id": "kfm://control-plane/watcher-registry/v1",
   "schema_version": "1.0.0",
-  "spec_hash": "sha256:15e1d5088e19bdadb02a8f93c5dbe594e6ba299a887daa4bbbc0ebea4f7c7435",
+  "spec_hash": "sha256:b1422d4b8fd2eaaf4bcb81f695aca3e3faa2fb9fe8bc3cfd698cfa3a27b68dd9",
   "status": "PROPOSED_INACTIVE",
   "watchers": [
     {
@@ -43,7 +43,7 @@
       "signature_ref": null,
       "source_descriptor_ref": null,
       "spec_path": "pipeline_specs/watchers/plants_drift.yaml",
-      "spec_sha256": "sha256:aa781b3a7f200e4f857171694a794fb981cdb5ba296323e8dc315dc4ddcf3e2a",
+      "spec_sha256": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
       "state": "PLACEHOLDER",
       "version": "0.0.0-placeholder",
       "watcher_id": "kfm.watcher.shared.plants_drift.placeholder"
