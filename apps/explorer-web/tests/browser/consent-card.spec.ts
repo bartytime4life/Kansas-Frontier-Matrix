@@ -7,11 +7,15 @@ test("the first-view card is lightweight and keeps viewer choice separate from s
 
   const main = page.getByRole("main", { name: "Consent Card browser fixture" });
   const card = page.getByRole("region", {
-    name: "Consent card for Synthetic generalized soil-moisture layer",
+    name: "Synthetic generalized soil-moisture layer",
   });
 
   await expect(main).toBeVisible();
   await expect(card).toBeVisible();
+  await expect(card).toHaveAttribute(
+    "aria-label",
+    "Consent card for Synthetic generalized soil-moisture layer",
+  );
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(card).toContainText("ANSWER / CONSENT_CARD_READY");
   await expect(card).toContainText("Viewer acknowledgement is required");
