@@ -14,12 +14,12 @@ truth_posture: cite-or-abstain; implementation claims are bounded to the pinned 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 4989f6d5145908dfc56f778b39082719ce1788ad
-  root_tree: 2a86a09845646a130972b8c4cad9a8a4ae51bcc7
+  base_commit: d4586ec659d86e4bf07e59bccd65c6c3412755e7
+  root_tree: 11d536872a6ddeefb5d4f80fa7cf0b957fe674b6
   github_readme_prior_blob: 3bef7347b113473215e20e48b4ee85a1b304f580
-  workflows_tree: a417dccf118d69edd0145629f81524717c93b849
+  workflows_tree: 2ae2cae3c225bfd56ead2a2dd0f96690f13d8f0d
   issue_template_tree: 188d3879975bd1096a58350c9c3a6bf63ddbedc6
-  inventory: 203 tracked paths; 190 workflow YAML files; 6 issue chooser templates
+  inventory: 204 tracked paths; 191 workflow YAML files; 6 issue chooser templates
 related:
   - ../README.md
   - ../CONTRIBUTING.md
@@ -49,8 +49,8 @@ notes:
 # `.github/` — GitHub platform governance hooks
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status-and-evidence-boundary)
-[![Inventory: 203 paths](https://img.shields.io/badge/inventory-203%20tracked%20paths-1f6feb)](#confirmed-inventory)
-[![Workflows: 190](https://img.shields.io/badge/workflows-190-2563eb)](workflows/README.md)
+[![Inventory: 204 paths](https://img.shields.io/badge/inventory-204%20tracked%20paths-1f6feb)](#confirmed-inventory)
+[![Workflows: 191](https://img.shields.io/badge/workflows-191-2563eb)](workflows/README.md)
 [![Issue templates: 6](https://img.shields.io/badge/issue%20templates-6-7c3aed)](ISSUE_TEMPLATE/README.md)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c)](#authority-boundary)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-15803d)](#authority-boundary)
@@ -112,12 +112,12 @@ Neither a commit, pull request, check, artifact upload, merge, badge, nor GitHub
 
 ## Status and evidence boundary
 
-This edition is pinned to `main@4989f6d5145908dfc56f778b39082719ce1788ad` and the Git tree identities recorded in the metadata block.
+This edition is pinned to `main@d4586ec659d86e4bf07e59bccd65c6c3412755e7` and the Git tree identities recorded in the metadata block.
 
 | Surface | Confirmed repository state | Boundary |
 |---|---|---|
-| Tracked `.github/` paths | **203** | Exact for the pinned tree: five top-level files, seven issue-template files, one workflow README, and 190 workflow files. GitHub settings are external. |
-| Workflows | **190 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | Exact filename count. Per-workflow triggers, permissions, action pins, network use, maturity, and hosted outcomes were not re-audited for all 190 in this documentation slice. |
+| Tracked `.github/` paths | **204** | Exact for the pinned tree: five top-level files, seven issue-template files, one workflow README, and 191 workflow files. GitHub settings are external. |
+| Workflows | **191 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | Exact filename count. Per-workflow triggers, permissions, action pins, network use, maturity, and hosted outcomes were not re-audited for all 191 in this documentation slice. |
 | Issue intake | **6 Markdown chooser templates** plus [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | No issue-form YAML or chooser `config.yml` is present in the pinned issue-template tree. Blank-issue behavior remains settings-dependent. |
 | Pull-request intake | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Tracked and review-visible; completion and enforcement remain human/process questions. |
 | Review routing | [`CODEOWNERS`](CODEOWNERS) routes all paths to `@bartytime4life` with narrower path entries | File behavior is confirmed; required code-owner review and separation of duties remain **NEEDS VERIFICATION**. |
@@ -147,7 +147,7 @@ This edition is pinned to `main@4989f6d5145908dfc56f778b39082719ce1788ad` and th
 │   └── source_admission.md
 └── workflows/
     ├── README.md
-    └── 190 workflow .yml files
+    └── 191 workflow .yml files
 ```
 
 The workflow subtree README records the current filename-count boundary and the audit work still required. The issue-template README owns chooser-specific guidance.
@@ -182,7 +182,7 @@ This flow is repository collaboration, not the KFM data lifecycle. It must not c
 
 ## Workflow growth and maturity boundary
 
-The prior v1.4 README recorded **44** workflows at `main@c455e51be776a355a392284711898af092fb423f`. The pinned current tree contains **190**, an increase of **146** workflow files.
+The prior v1.4 README recorded **44** workflows at `main@c455e51be776a355a392284711898af092fb423f`. The pinned current tree contains **191**, an increase of **147** workflow files.
 
 That increase is a tree fact, not a maturity claim. It creates a maintenance obligation:
 
@@ -193,7 +193,7 @@ That increase is a tree fact, not a maturity claim. It creates a maintenance obl
 5. holds, skips, partial coverage, and substantive validation must remain distinguishable;
 6. redundant or overlapping workflows must be reconciled rather than inferred safe from filenames.
 
-The companion [`workflows/README.md`](workflows/README.md) is updated with the current count and explicitly retires the old 44-file classification as a current inventory. A complete 190-workflow behavioral audit remains **NEEDS VERIFICATION**.
+The companion [`workflows/README.md`](workflows/README.md) is updated with the current count and explicitly retires the old 44-file classification as a current inventory. A complete 191-workflow behavioral audit remains **NEEDS VERIFICATION**.
 
 ## What belongs here
 
@@ -300,8 +300,8 @@ Do not claim a command passed unless it was actually run. A README-only packet s
 - **NEEDS VERIFICATION** — exact current rulesets, branch protections, and required workflow/job names.
 - **NEEDS VERIFICATION** — whether required code-owner review is enabled and whether independent review is available.
 - **NEEDS VERIFICATION** — repository and organization default `GITHUB_TOKEN` permissions.
-- **NEEDS VERIFICATION** — current conclusions, failure causes, logs, and artifact retention across all 190 workflows.
-- **NEEDS VERIFICATION** — complete trigger, path-filter, permission, runner, secret/OIDC, network, cache, artifact, action-pin, and write-scope inventory for all 190 workflows.
+- **NEEDS VERIFICATION** — current conclusions, failure causes, logs, and artifact retention across all 191 workflows.
+- **NEEDS VERIFICATION** — complete trigger, path-filter, permission, runner, secret/OIDC, network, cache, artifact, action-pin, and write-scope inventory for all 191 workflows.
 - **NEEDS VERIFICATION** — overlapping, redundant, stale, or misleading workflow/check names introduced during rapid expansion.
 - **NEEDS VERIFICATION** — issue labels, blank-issue chooser behavior, and private vulnerability reporting settings.
 - **NEEDS VERIFICATION** — Dependabot execution, alert, and security-update state.
@@ -316,7 +316,7 @@ Before merge, close the draft pull request or revert the documentation commits o
 
 | Date | Version | Change |
 |---|---|---|
-| 2026-08-08 | v1.5 | Re-pinned the root to `main@4989f6d…`; reconciled 203 tracked `.github/` paths, 190 workflows, and six issue templates; retired the 44-workflow snapshot as current evidence; separated exact tree facts from unverified per-workflow behavior; and preserved the non-publisher authority boundary. |
+| 2026-08-08 | v1.5 | Re-pinned the root to `main@d4586ec…`; reconciled 204 tracked `.github/` paths, 191 workflows, and six issue templates; retired the 44-workflow snapshot as current evidence; separated exact tree facts from unverified per-workflow behavior; and preserved the non-publisher authority boundary. |
 | 2026-07-31 | v1.4 | Reconciled the complete 57-path tree and 44-workflow static posture at `main@c455e51…`; recorded the trusted-base `pull_request_target` exception, mixed action-pinning posture, accepted Directory Rules authority, and corrected the workflow-threat-preflight fragment. |
 | 2026-07-22 | v1.3 | Reconciled the parent README to the complete 54-path tree, 41 workflows, six issue templates, current CODEOWNERS and Dependabot configuration, static permission posture, and explicit external-settings boundary. |
 | 2026-07-08 | v1.2 | Added a repository-aware draft, but retained a partial inventory and target workflow map. |
