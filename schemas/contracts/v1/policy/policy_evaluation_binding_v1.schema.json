@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json",
+  "title": "PolicyEvaluationBindingV1",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/policy/policy_evaluation_binding_v1.md",
+    "validator": "tools/validators/policy/validate_policy_evaluation_binding_v1.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY"
+  },
+  "required": ["object_type","profile_version","binding_id","input","decision","evaluator","governance"],
+  "properties": {
+    "object_type": {"const": "PolicyEvaluationBinding"},
+    "profile_version": {"const": "v1"},
+    "binding_id": {"type": "string", "pattern": "^policy-eval-binding:[a-z0-9][a-z0-9_.:-]{7,127}$"},
+    "input": {"$ref": "#/$defs/fileBinding"},
+    "decision": {"$ref": "#/$defs/fileBinding"},
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_ref","bundle_version","execution_mode"],
+      "properties": {
+        "bundle_ref": {"type": "string", "minLength": 3, "maxLength": 256},
+        "bundle_version": {"type": "string", "minLength": 1, "maxLength": 64},
+        "execution_mode": {"const": "DECLARED_ONLY"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_evaluated","decision_authenticated","promotion_authorized","release_authorized","publication_authorized"],
+      "properties": {
+        "policy_evaluated": {"const": false},
+        "decision_authenticated": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "fileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path","sha256"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\.\.(?:/|$)).{3,512}$"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}
