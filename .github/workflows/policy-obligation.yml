@@ -1,0 +1,100 @@
+# Validate the fixture-first structured PolicyObligation profile.
+name: policy-obligation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/policy-obligation.yml"
+      - "contracts/policy/policy_obligation.md"
+      - "schemas/contracts/v1/policy/policy_obligation.schema.json"
+      - "policy/decision/vocabulary.v1.json"
+      - "tools/validators/policy/validate_policy_obligation.py"
+      - "tools/validators/validator_registry.json"
+      - "fixtures/contracts/v1/policy/policy_obligation/**"
+      - "tests/validators/test_validate_policy_obligation.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass7-policy-obligation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-obligation.yml"
+      - "contracts/policy/policy_obligation.md"
+      - "schemas/contracts/v1/policy/policy_obligation.schema.json"
+      - "policy/decision/vocabulary.v1.json"
+      - "tools/validators/policy/validate_policy_obligation.py"
+      - "tools/validators/validator_registry.json"
+      - "fixtures/contracts/v1/policy/policy_obligation/**"
+      - "tests/validators/test_validate_policy_obligation.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass7-policy-obligation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-obligation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused unit and fixture replay
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_policy_obligation.py' \
+            --verbose
+          python tools/validators/policy/validate_policy_obligation.py --fixtures
+          python tools/validators/policy/validate_policy_decision_vocabulary.py --registry
+          python tools/validate_all.py --validate-registry
+          python tools/validate_all.py --profile changed-area \
+            --changed-path contracts/policy/policy_obligation.md \
+            --changed-path schemas/contracts/v1/policy/policy_obligation.schema.json
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass7-policy-obligation-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Structured PolicyObligation fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: registered obligation codes, typed parameters, deterministic identity, enforcement-state coherence, and exact fixture polarity."
+            echo "- Boundary: PASS does not evaluate policy, enforce an obligation, apply a transform, grant access, promote, release, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"

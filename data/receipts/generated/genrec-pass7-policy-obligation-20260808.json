@@ -1,0 +1,188 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/policy-obligation.yml": "sha256:bf3d77aca682730cc4d0ad5f2dea4b468737191eb7d7cec19c687e880cdd87f5",
+    "contracts/policy/policy_obligation.md": "sha256:d55b2c210a87b8ac7a0a5fc23b0d1acff3ad07b358b0a543ac07c92326a5f27d",
+    "fixtures/contracts/v1/policy/policy_obligation/README.md": "sha256:8edea7f0b250dd6c2985cf5b771d1f4ca0fba5e9984f849bda413c01a53ecef5",
+    "fixtures/contracts/v1/policy/policy_obligation/expected_findings_manifest.json": "sha256:a3d64f66612db1e6b34d96f7a65e55c0caedf8ddb0743555bc688a3ef2c7dabd",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/invalid_governance_overclaim.json": "sha256:f3d5c94d44f7120179e457af06fbe4fb808c81dee91aa3c970d819c3ba0790a7",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_enforcement_state.json": "sha256:f924b8ccc2540380df747e5668447041485ec7ea05830d43778955a12783ebd0",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_family_mismatch.json": "sha256:dd9d1e4d7e8a15ec8b92b54b3193ab00220073b2b55e99beb1467b96844a81dd",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_noncanonical_array.json": "sha256:0bfe79b71a113cbc64c9b18c38ad700a9ffeee75b6341928ce646ee91983ec90",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_required_parameter.json": "sha256:fe35e927644ce9ece10c67318d04bd1b31cda0e349e76a09446c1c4f58f3797e",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_spec_hash_mismatch.json": "sha256:3a70df38de1f6a614dcdf1271432c53da7dae463b9c557189be35550ff796218",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_unknown_code.json": "sha256:69c2cf5953ea038ddcf4619a2118264159e282215e8540a4d1e48e6905ac6183",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_aggregate_only_pending.json": "sha256:ebfcff196350dbaa7a0b17ca0ee505556667240aeb40a0e5090faef860f9556e",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_attach_citations_pending.json": "sha256:69e097736a1937ae5c51443129dd0745213f165b0299cecfd7633c95cc530ff5",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_generalize_satisfied.json": "sha256:594dd8942c54f86054c3beb30788fcb640efb6c8474bf2364dfa1ffa42eabe0b",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_withhold_export_pending.json": "sha256:e238e7c5b1e3e8686d8d42bb0255cdc123573ffcfb23a52134aaebd3c427b59e",
+    "policy/decision/vocabulary.v1.json": "sha256:567c937cdbe0251b0fcbbbf6a2899c3b8642bb3afbed878c3b218147bb011d18",
+    "schemas/contracts/v1/policy/policy_obligation.schema.json": "sha256:3421e333cb628c9d1013ede0dfac73dd315a4f4e2c8601a0ab9cf37ba426f56c",
+    "tests/validators/test_validate_policy_obligation.py": "sha256:2f3c940c1a6e6af5926bb41b0cfcdd555e97fcf978af031ba927e070c174cde1",
+    "tools/validators/policy/validate_policy_obligation.py": "sha256:bbce9cf693eb48ebf4d8857fbdc216d828075cc23872ddcbe2fad8180ab255aa",
+    "tools/validators/validator_registry.json": "sha256:0ed8a33ccdd61778deacaf360174825a72a188e63fec299efb168b17409a895a"
+  },
+  "artifact_paths": [
+    ".github/workflows/policy-obligation.yml",
+    "contracts/policy/policy_obligation.md",
+    "fixtures/contracts/v1/policy/policy_obligation/README.md",
+    "fixtures/contracts/v1/policy/policy_obligation/expected_findings_manifest.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_enforcement_state.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_family_mismatch.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_noncanonical_array.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_required_parameter.json",
+    "fixtures/contracts/v1/policy_obligation/invalid/semantic_invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_unknown_code.json",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_aggregate_only_pending.json",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_attach_citations_pending.json",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_generalize_satisfied.json",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_withhold_export_pending.json",
+    "policy/decision/vocabulary.v1.json",
+    "schemas/contracts/v1/policy/policy_obligation.schema.json",
+    "tests/validators/test_validate_policy_obligation.py",
+    "tools/validators/policy/validate_policy_obligation.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0004",
+      "id": "attachment:pass7-structured-obligations",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/policy/policy_obligation_reduction.md@73eb84993d717a9452f64cee191df484eeb7803b",
+      "id": "repository:existing-obligation-reduction",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:policy/decision/vocabulary.v1.json@73eb84993d717a9452f64cee191df484eeb7803b",
+      "id": "repository:existing-policy-vocabulary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@73eb84993d717a9452f64cee191df484eeb7803b",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:f238a3e3c7fe3b83cb6ab19462580c65a2b02bc837724fb40cbe96528097c1a9"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0004",
+      "repo:contracts/policy/policy_obligation_reduction.md@73eb84993d717a9452f64cee191df484eeb7803b",
+      "repo:schemas/contracts/v1/policy/policy_obligation_reduction.schema.json@73eb84993d717a9452f64cee191df484eeb7803b",
+      "repo:policy/decision/vocabulary.v1.json@73eb84993d717a9452f64cee191df484eeb7803b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@73eb84993d717a9452f64cee191df484eebb7803b"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Pass 7 campaign slice 1 adds an inactive, fixture-first PolicyObligation carrier that parameterizes existing decision-vocabulary duties and preserves the existing PolicyObligationReduction boundary. It adds no live evaluator, enforcement engine, access grant, promotion, release, deployment, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:8aa34d8b00887a37814361096cd5cad9083cacc8e8b94b5426acc41066093d43",
+  "receipt_id": "genrec-pass7-policy-obligation-20260808",
+  "truth_labels": {
+    ".github/workflows/policy-obligation.yml": "CONFIRMED",
+    "contracts/policy/policy_obligation.md": "PROPOSED",
+    "fixtures/contracts/v1/policy/policy_obligation/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/invalid_governance_overclaim.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_enforcement_state.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_family_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_noncanonical_array.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_required_parameter.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/invalid/semantic_invalid_unknown_code.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_aggregate_only_pending.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_attach_citations_pending.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_generalize_satisfied.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_obligation/valid/valid_withhold_export_pending.json": "CONFIRMED",
+    "policy/decision/vocabulary.v1.json": "PROPOSED",
+    "schemas/contracts/v1/policy/policy_obligation.schema.json": "PROPOSED",
+    "tests/validators/test_validate_policy_obligation.py": "CONFIRMED",
+    "tools/validators/policy/validate_policy_obligation.py": "CONFIRMED",
+    "tools/validators/validator_registry.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-and-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 PolicyObligation schema and all fixture JSON documents parsed and passed local meta-validation."
+    },
+    {
+      "gate": "policy-vocabulary-validation",
+      "outcome": "PASS",
+      "reason": "The modified inactive obligation-code registry retained canonical ordering, unique codes, supported policy families, and ANSWER-only obligation applicability."
+    },
+    {
+      "gate": "validator-orchestrator-registry",
+      "outcome": "PASS",
+      "reason": "The policy-obligation validator entry preserves stable ordering, complete full-profile coverage, bounded execution, and changed-area path selection."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic no-network PolicyObligation tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Four valid and seven invalid fixtures matched exact value-free finding-code expectations."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated policy-obligation workflow parsed as YAML and records a no-authority trust boundary."
+    },
+    {
+      "gate": "shared-hashing-dependency",
+      "outcome": "SKIPPED",
+      "reason": "Local tests used a compatibility implementation of the declared hashing API; hosted CI installs the repository-pinned RFC 8785 dependency and is authoritative."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

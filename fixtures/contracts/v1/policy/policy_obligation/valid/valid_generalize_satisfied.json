@@ -1,0 +1,57 @@
+{
+  "audiences": [
+    "PUBLIC"
+  ],
+  "code": "GENERALIZE_GEOMETRY",
+  "enforcement": {
+    "evaluated_at": "2026-08-08T01:00:00Z",
+    "evaluator_ref": "validator:public-safe-geometry-v1",
+    "evidence_refs": [
+      "transform-receipt:pass7-generalize"
+    ],
+    "state": "SATISFIED",
+    "waiver_ref": null
+  },
+  "governance": {
+    "canonical_state_mutated": false,
+    "obligation_enforced_by_this_object": false,
+    "policy_evaluated_by_this_object": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "publication_authorized": false,
+    "release_authorized": false
+  },
+  "internal_reason_ref": "review:pass7-policy-obligation-fixture",
+  "object_type": "PolicyObligation",
+  "obligation_id": "policy-obligation:pass7-generalize-geometry",
+  "operation": "map.render",
+  "parameters": {
+    "aggregation_unit_ref": null,
+    "date_fuzz_days": null,
+    "embargo_until": null,
+    "export_allowed": null,
+    "generalize_distance_m": 5000,
+    "minimum_group_size": null,
+    "required_evidence_refs": [],
+    "required_notice_ref": null,
+    "retain_until": null,
+    "review_role": null,
+    "rollback_target_ref": null,
+    "share_alike_license_ref": null,
+    "suppress_geometry": null
+  },
+  "policy_decision_ref": "poldec:pass7:sensitivity:generalize-geometry",
+  "policy_family": "sensitivity",
+  "profile_status": "PROPOSED_INACTIVE",
+  "public_explanation": "The operation remains held until the declared obligation is enforced.",
+  "reason_codes": [
+    "OPERATION_ALLOWED_WITH_OBLIGATIONS"
+  ],
+  "schema_version": "1.0.0",
+  "scope": "LAYER",
+  "spec_hash": "sha256:6fa9c336dc3d543e3be6af18770aacefbe8e97e820d4db900cbdfa979e25c6e4",
+  "valid_time": {
+    "effective_from": "2026-08-08T00:00:00Z",
+    "effective_until": null
+  }
+}

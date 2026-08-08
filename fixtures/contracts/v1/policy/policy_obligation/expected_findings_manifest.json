@@ -1,0 +1,84 @@
+{
+  "cases": [
+    {
+      "case_id": "valid_aggregate_only_pending",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "record": "valid/valid_aggregate_only_pending.json"
+    },
+    {
+      "case_id": "valid_attach_citations_pending",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "record": "valid/valid_attach_citations_pending.json"
+    },
+    {
+      "case_id": "valid_generalize_satisfied",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "record": "valid/valid_generalize_satisfied.json"
+    },
+    {
+      "case_id": "valid_withhold_export_pending",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "record": "valid/valid_withhold_export_pending.json"
+    },
+    {
+      "case_id": "invalid_governance_overclaim",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/invalid_governance_overclaim.json"
+    },
+    {
+      "case_id": "semantic_invalid_enforcement_state",
+      "expected_findings": [
+        "ENFORCEMENT_STATE_INCOHERENT"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_enforcement_state.json"
+    },
+    {
+      "case_id": "semantic_invalid_family_mismatch",
+      "expected_findings": [
+        "POLICY_FAMILY_NOT_ALLOWED"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_family_mismatch.json"
+    },
+    {
+      "case_id": "semantic_invalid_noncanonical_array",
+      "expected_findings": [
+        "ARRAY_NOT_CANONICAL"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_noncanonical_array.json"
+    },
+    {
+      "case_id": "semantic_invalid_required_parameter",
+      "expected_findings": [
+        "REQUIRED_PARAMETER_MISSING"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_required_parameter.json"
+    },
+    {
+      "case_id": "semantic_invalid_spec_hash_mismatch",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_spec_hash_mismatch.json"
+    },
+    {
+      "case_id": "semantic_invalid_unknown_code",
+      "expected_findings": [
+        "OBLIGATION_CODE_UNKNOWN"
+      ],
+      "expected_outcome": "FAIL",
+      "record": "invalid/semantic_invalid_unknown_code.json"
+    }
+  ]
+}
