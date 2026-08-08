@@ -1,0 +1,78 @@
+{
+  "geometry": {
+    "geoprivacy_status": "open",
+    "latitude": 0,
+    "longitude": 0,
+    "precision_class": "exact",
+    "public_safe_geometry": {
+      "coordinates": [
+        0,
+        0
+      ],
+      "generalization_method": null,
+      "geometry_type": "point",
+      "precision_class": "exact"
+    }
+  },
+  "object_type": "occurrence_evidence",
+  "observation": {
+    "basis_of_record": "human_observation",
+    "event_date": "2026-01-15",
+    "event_time": "2026-01-15T12:00:00Z",
+    "individual_count": 1,
+    "observation_method": "synthetic fixture record",
+    "observed_by": null
+  },
+  "occurrence_evidence_id": "kfm://occurrence/da295934db349fb50f069c1d140bcc9518f0193d5c94ba1ae7376bc662c34906",
+  "provenance": {
+    "evidence_refs": [
+      "fixture:evidence:fauna:occurrence:001"
+    ],
+    "ingestion_run_id": "fixture:run:fauna:occurrence:001",
+    "publisher": "KFM synthetic fixture",
+    "raw_artifact_ref": "fixture:raw:fauna:occurrence:001",
+    "retrieved_at": "2026-08-08T00:00:00Z",
+    "source_descriptor_ref": "fixture:source:fauna:occurrence",
+    "source_uri": "urn:kfm:fixture:fauna:observed-open-001"
+  },
+  "rights": {
+    "attribution_required": false,
+    "commercial_use_allowed": true,
+    "license": "CC0-1.0",
+    "redistribution_allowed": true
+  },
+  "schema_version": "v1",
+  "sensitivity": {
+    "exact_location_public_safe": true,
+    "generalization_required": false,
+    "review_required": false,
+    "sensitive_species_flag": false,
+    "withhold_required": false
+  },
+  "source_family": "other",
+  "source_record_id": "fixture:fauna:observed-open-001",
+  "source_role": "observed",
+  "spec_hash": "sha256:da295934db349fb50f069c1d140bcc9518f0193d5c94ba1ae7376bc662c34906",
+  "taxon": {
+    "accepted_scientific_name": "Specimen fictivus",
+    "common_name": "Synthetic fixture animal",
+    "scientific_name": "Specimen fictivus",
+    "taxon_rank": "species"
+  },
+  "validation": {
+    "checks": {
+      "geometry_public_safe": true,
+      "provenance_complete": true,
+      "rights_resolved": true,
+      "schema_valid": true,
+      "sensitivity_evaluated": true,
+      "spec_hash_stable": true,
+      "taxonomy_normalized": true
+    },
+    "evidence_strength": "single_source",
+    "reason_codes": [],
+    "validated_at": "2026-08-08T00:00:00Z",
+    "validator_result": "pass",
+    "validator_version": "1.0.0"
+  }
+}
