@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/evidence_drawer_payload.schema.json",
   "title": "Soil EvidenceDrawerPayload projection",
   "description": "PROPOSED Soil-domain projection of the shared Explorer public-safe EvidenceDrawerPayload. This schema does not create independent evidence, policy, review, release, correction, or publication authority.",
-  "$ref": "../../../ui/evidence_drawer_payload.schema.json",
+  "$ref": "../../ui/evidence_drawer_payload.schema.json",
   "x-kfm": {
     "status": "PROPOSED",
     "authority": "projection",
