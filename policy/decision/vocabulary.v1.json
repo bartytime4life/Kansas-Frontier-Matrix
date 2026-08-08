@@ -115,6 +115,19 @@
   ],
   "obligation_codes": [
     {
+      "code": "AGGREGATE_ONLY",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "promotion",
+        "render",
+        "sensitivity"
+      ],
+      "description": "Permit only an approved aggregate representation and withhold row-level or feature-level exposure."
+    },
+    {
       "code": "ATTACH_CITATIONS",
       "applicable_outcomes": [
         "ANSWER"
@@ -185,6 +198,30 @@
         "sensitivity"
       ],
       "description": "Require the named steward or qualified reviewer to approve the exact candidate version."
+    },
+    {
+      "code": "RETAIN_UNTIL",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "consent",
+        "promotion"
+      ],
+      "description": "Retain the governed record only until the approved date, then invoke the documented retention disposition."
+    },
+    {
+      "code": "SHARE_ALIKE",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "promotion",
+        "render"
+      ],
+      "description": "Carry the approved share-alike license obligation into any redistributed derivative."
     },
     {
       "code": "VERIFY_ROLLBACK_TARGET",

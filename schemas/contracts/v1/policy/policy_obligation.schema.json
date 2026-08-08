@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/policy/policy_obligation.schema.json",
+  "title": "PolicyObligation",
+  "description": "Fixture-first, non-authoritative structured duty referenced by a PolicyDecision. Shape validity does not prove policy evaluation, enforcement, release, publication, or public use.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/policy/policy_obligation.md",
+    "registry": "policy/decision/vocabulary.v1.json",
+    "fixtures_root": "fixtures/contracts/v1/policy/policy_obligation/",
+    "validator": "tools/validators/policy/validate_policy_obligation.py",
+    "tests": "tests/validators/test_validate_policy_obligation.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "non_effects": [
+      "does_not_evaluate_or_author_policy",
+      "does_not_apply_or_prove_an_obligation",
+      "does_not_authorize_promotion_release_publication_or_public_use"
+    ]
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_status",
+    "obligation_id",
+    "code",
+    "policy_decision_ref",
+    "policy_family",
+    "operation",
+    "scope",
+    "audiences",
+    "parameters",
+    "valid_time",
+    "enforcement",
+    "reason_codes",
+    "public_explanation",
+    "internal_reason_ref",
+    "spec_hash",
+    "governance"
+  ],
+  "properties": {
+    "object_type": { "const": "PolicyObligation" },
+    "schema_version": { "const": "1.0.0" },
+    "profile_status": { "const": "PROPOSED_INACTIVE" },
+    "obligation_id": { "$ref": "#/$defs/obligation_id" },
+    "code": { "$ref": "#/$defs/code" },
+    "policy_decision_ref": { "$ref": "#/$defs/ref" },
+    "policy_family": { "$ref": "#/$defs/policy_family" },
+    "operation": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[a-z][a-z0-9_.:-]*$"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["RESPONSE", "RECORD", "ARTIFACT", "LAYER", "RELEASE", "EXPORT"]
+    },
+    "audiences": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["AUTHENTICATED", "PIPELINE", "PUBLIC", "RELEASE_ASSEMBLER", "RESTRICTED", "STEWARD"]
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generalize_distance_m",
+        "date_fuzz_days",
+        "suppress_geometry",
+        "embargo_until",
+        "retain_until",
+        "required_notice_ref",
+        "required_evidence_refs",
+        "review_role",
+        "minimum_group_size",
+        "aggregation_unit_ref",
+        "share_alike_license_ref",
+        "export_allowed",
+        "rollback_target_ref"
+      ],
+      "properties": {
+        "generalize_distance_m": { "$ref": "#/$defs/nullable_nonnegative_integer" },
+        "date_fuzz_days": { "$ref": "#/$defs/nullable_nonnegative_integer" },
+        "suppress_geometry": { "$ref": "#/$defs/nullable_boolean" },
+        "embargo_until": { "$ref": "#/$defs/nullable_date" },
+        "retain_until": { "$ref": "#/$defs/nullable_date" },
+        "required_notice_ref": { "$ref": "#/$defs/nullable_ref" },
+        "required_evidence_refs": { "$ref": "#/$defs/ref_array" },
+        "review_role": { "$ref": "#/$defs/nullable_ref" },
+        "minimum_group_size": {
+          "oneOf": [
+            { "type": "integer", "minimum": 2, "maximum": 1000000000 },
+            { "type": "null" }
+          ]
+        },
+        "aggregation_unit_ref": { "$ref": "#/$defs/nullable_ref" },
+        "share_alike_license_ref": { "$ref": "#/$defs/nullable_ref" },
+        "export_allowed": { "$ref": "#/$defs/nullable_boolean" },
+        "rollback_target_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "valid_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effective_from", "effective_until"],
+      "properties": {
+        "effective_from": { "type": "string", "format": "date-time" },
+        "effective_until": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "enforcement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evaluator_ref", "evidence_refs", "evaluated_at", "waiver_ref"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["PENDING", "SATISFIED", "UNSATISFIED", "CONFLICTED", "WAIVED"]
+        },
+        "evaluator_ref": { "$ref": "#/$defs/nullable_ref" },
+        "evidence_refs": { "$ref": "#/$defs/ref_array" },
+        "evaluated_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "waiver_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/code" }
+    },
+    "public_explanation": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "internal_reason_ref": { "$ref": "#/$defs/nullable_ref" },
+    "spec_hash": { "$ref": "#/$defs/sha256" },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_evaluated_by_this_object",
+        "obligation_enforced_by_this_object",
+        "canonical_state_mutated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "policy_evaluated_by_this_object": { "const": false },
+        "obligation_enforced_by_this_object": { "const": false },
+        "canonical_state_mutated": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false },
+        "public_use_allowed": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "obligation_id": {
+      "type": "string",
+      "pattern": "^policy-obligation:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+    },
+    "policy_family": {
+      "type": "string",
+      "enum": ["access", "capability", "consent", "promotion", "render", "sensitivity"]
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/ref" },
+        { "type": "null" }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "nullable_date": {
+      "oneOf": [
+        { "type": "string", "format": "date" },
+        { "type": "null" }
+      ]
+    },
+    "nullable_nonnegative_integer": {
+      "oneOf": [
+        { "type": "integer", "minimum": 0, "maximum": 20000000 },
+        { "type": "null" }
+      ]
+    },
+    "nullable_boolean": {
+      "oneOf": [
+        { "type": "boolean" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

@@ -22,7 +22,8 @@
       "runtime-response-envelope",
       "decision-envelope",
       "run-receipt",
-      "ingest-receipt"
+      "ingest-receipt",
+      "policy-obligation"
     ]
   },
   "validators": [
@@ -130,6 +131,22 @@
         "fixtures/contracts/v1/source/ingest_receipt/**",
         "tests/validators/test_validate_ingest_receipt.py",
         "tools/validators/validate_ingest_receipt.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "policy-obligation",
+      "description": "Validate inactive structured PolicyObligation fixtures and deterministic enforcement-state semantics.",
+      "script": "tools/validators/policy/validate_policy_obligation.py",
+      "args": ["--fixtures"],
+      "path_globs": [
+        "contracts/policy/policy_obligation.md",
+        "schemas/contracts/v1/policy/policy_obligation.schema.json",
+        "policy/decision/vocabulary.v1.json",
+        "fixtures/contracts/v1/policy/policy_obligation/**",
+        "tests/validators/test_validate_policy_obligation.py",
+        "tools/validators/policy/validate_policy_obligation.py"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
