@@ -36,9 +36,7 @@ test("a feature without governed evidence visibly abstains without citations", a
     name: /Evidence Drawer: abstain/,
   });
   await expect(drawer).toContainText("ABSTAIN / MISSING_EVIDENCE");
-  await expect(drawer).toContainText(
-    "The selected map feature has no governed evidence reference.",
-  );
+  await expect(drawer).toContainText("Required evidence is not available.");
   await expect(drawer.getByRole("link")).toHaveCount(0);
 });
 
