@@ -1,0 +1,56 @@
+{
+  "object_type": "SourceIntakeRecord",
+  "schema_version": "v1",
+  "intake_id": "kfm://source-intake/invalid/resolved-without-ref",
+  "source_descriptor_ref": "kfm://source/usda/nass/cdl",
+  "source_role": "official_derived",
+  "observed_at": "2026-08-08T15:35:00Z",
+  "publication_state": "WORK",
+  "promotion_required": true,
+  "evidence_bundle_resolved": true,
+  "policy_review_required": true,
+  "policy_decision_ref": "policy:fixture/source-drift-review",
+  "drift_summary": {
+    "object_type": "DriftSummary",
+    "schema_version": "v1",
+    "drift_id": "kfm://drift/usda-cdl/20091/2026-08-08",
+    "source_descriptor_ref": "kfm://source/usda/nass/cdl",
+    "observed_at": "2026-08-08T15:35:00Z",
+    "comparison_window": {
+      "prior_observed_at": "2026-08-01T15:35:00Z",
+      "current_observed_at": "2026-08-08T15:35:00Z"
+    },
+    "drift_kind": "CONTENT",
+    "materiality": "REVIEW_REQUIRED",
+    "change_codes": [
+      "CLASS_AREA_CHANGE",
+      "SOURCE_HEAD_CHANGED"
+    ],
+    "changed_fields": [
+      "/class_histogram_m2/1",
+      "/source_metadata/etag"
+    ],
+    "summary": "Synthetic county fixture crossed the declared material-change threshold.",
+    "metrics": [
+      {
+        "name": "relative_change_ppm",
+        "value": 25000,
+        "unit": "ppm",
+        "threshold": 20000,
+        "triggered": true
+      }
+    ],
+    "prior_identity_ref": "sha256:fixture-prior-cdl-20091",
+    "current_identity_ref": "sha256:fixture-current-cdl-20091",
+    "sensitive_implication": "NONE",
+    "public_detail_allowed": true
+  },
+  "disposition": "PROPOSED_WORK_RECORD",
+  "reason_codes": [
+    "MATERIAL_CHANGE_REVIEW_REQUIRED",
+    "SOURCE_HEAD_CHANGED"
+  ],
+  "candidate_delta_ref": "kfm://candidate-delta/usda-cdl/20091/2026-08-08",
+  "receipt_ref": "receipt:fixture/cdl-watch-20091",
+  "emitted_by": "tool:fixture-source-watch"
+}
