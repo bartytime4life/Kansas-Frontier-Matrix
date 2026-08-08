@@ -31,19 +31,19 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Isolate failing method names
+      - name: Enumerate and isolate finite-envelope methods
         shell: bash
         run: |
           set +e
-          failed=0
-          methods=(
-            test_canonical_schema_is_closed_to_four_outcomes
-            test_focus_path_is_a_compatibility_alias_not_a_second_shape
-            test_valid_fixtures_cover_outcomes_and_disclose_answer_precision
-            test_existing_invalid_fixtures_remain_rejected
-            test_precision_semantics_fail_closed_without_external_packages
-            test_canonical_validator_source_remains_wired
+          mapfile -t methods < <(
+            python - <<'PY'
+          import unittest
+          from tests.runtime_proof.test_envelope_finite_outcomes import FiniteRuntimeEnvelopeTests
+          for name in unittest.defaultTestLoader.getTestCaseNames(FiniteRuntimeEnvelopeTests):
+              print(name)
+          PY
           )
+          failed=0
           prefix=tests.runtime_proof.test_envelope_finite_outcomes.FiniteRuntimeEnvelopeTests
           for method in "${methods[@]}"; do
             if python -m unittest "$prefix.$method" >/dev/null 2>&1; then
