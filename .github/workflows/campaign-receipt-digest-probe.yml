@@ -1,0 +1,28 @@
+# Temporary branch-local digest probe; removed before review delivery.
+name: campaign-receipt-digest-probe
+
+"on":
+  push:
+    branches:
+      - "agent/repair-campaign-receipt-digests-20260808"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out probed branch without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Print exact SHA-256 values
+        run: |
+          set -euo pipefail
+          sha256sum \
+            tests/validators/test_validate_policy_obligation_set.py \
+            .github/workflows/detached-payload-binding.yml \
+            contracts/evidence/detached_payload_binding.md \
+            tests/validators/evidence/test_validate_detached_payload_binding.py
