@@ -1,0 +1,52 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "governance": {
+    "execution_authorized": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "raw_admission_authorized": false,
+    "release_authorized": false,
+    "source_activation_authorized": false,
+    "source_authority_created": false
+  },
+  "object_type": "WatcherRegistry",
+  "registry_id": "kfm://control-plane/watcher-registry/v1",
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:b1422d4b8fd2eaaf4bcb81f695aca3e3faa2fb9fe8bc3cfd698cfa3a27b68dd9",
+  "status": "PROPOSED_INACTIVE",
+  "watchers": [
+    {
+      "activation_ref": null,
+      "canonical_id": "kfm://watcher/shared/plants-drift-placeholder",
+      "capabilities": [],
+      "endpoint_ref": null,
+      "governance": {
+        "promotion_authorized": false,
+        "publication_authorized": false,
+        "raw_admission_authorized": false,
+        "release_authorized": false,
+        "source_activated": false
+      },
+      "outputs": [],
+      "policy_ref": null,
+      "poll": {
+        "cadence": null,
+        "max_attempts": 0,
+        "mode": "MANUAL_ONLY",
+        "timeout_seconds": null
+      },
+      "reason_codes": [
+        "PLACEHOLDER_ONLY",
+        "SOURCE_AUTHORITY_UNRESOLVED"
+      ],
+      "schema_url": null,
+      "signature_ref": null,
+      "source_descriptor_ref": null,
+      "spec_path": "pipeline_specs/watchers/plants_drift.yaml",
+      "spec_sha256": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
+      "state": "PLACEHOLDER",
+      "version": "0.0.0-placeholder",
+      "watcher_id": "kfm.watcher.shared.plants_drift.placeholder"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/watcher-registry.yml": "sha256:6b2dca0f7922960f545e74a2cc0c53398c7e092f6432ca3e487f59e18650e1e2",
+    "contracts/source/watcher_registry.md": "sha256:190a542215bdf06b3a07c6912aeeaea6504407097c1729471929725e4d7643e9",
+    "control_plane/watcher_registry.json": "sha256:e7c2d8a12e808e1f8f2330dd63e78926c2230ae1fb337424f027cdfb59fc4ecc",
+    "fixtures/contracts/v1/source/watcher_registry/README.md": "sha256:fd3af76e5c3aae951b5cb3bcf923c46cb3c65f56782614f8433195baf0a7278c",
+    "fixtures/contracts/v1/source/watcher_registry/expected_findings_manifest.json": "sha256:113a618486a7cc988344736665e3ea997ecd5068bb484a832dd5ed0684102c88",
+    "fixtures/contracts/v1/source/watcher_registry/invalid/invalid_active_without_bindings.json": "sha256:283c8ef4e92d642ba9b86b6f59c8216c3de609c1ac10942792842a8577f397ae",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "sha256:bc4a6e7f25265a74f6c32b8ae12223cd699d2f06b66d2259cc57c11b5ebe47c8",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_spec_file_hash_mismatch.json": "sha256:83f3039f9154dc843ea727b42a72eaad008c25db033ba5d9246d89ba1cbb9dfd",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "sha256:e7c2d8a12e808e1f8f2330dd63e78926c2230ae1fb337424f027cdfb59fc4ecc",
+    "schemas/contracts/v1/source/watcher_registry.schema.json": "sha256:d6a318af341fdf9a8ec8928a701572cbc9ab27c6fdfc8db13c08d97ec851448b",
+    "tests/validators/test_validate_watcher_registry.py": "sha256:e6da393e29d579aa1b8356c4a5537cfe6435e3444c91c77e43d2388ae9a87237",
+    "tools/validators/validate_watcher_registry.py": "sha256:d0406014e9cb70879e2d9c98863740607777ee3f28d317a02ae784ff5e0d1b3f"
+  },
+  "artifact_paths": [
+    ".github/workflows/watcher-registry.yml",
+    "contracts/source/watcher_registry.md",
+    "control_plane/watcher_registry.json",
+    "fixtures/contracts/v1/source/watcher_registry/README.md",
+    "fixtures/contracts/v1/source/watcher_registry/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/watcher_registry/invalid/invalid_active_without_bindings.json",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_spec_file_hash_mismatch.json",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json",
+    "schemas/contracts/v1/source/watcher_registry.schema.json",
+    "tests/validators/test_validate_watcher_registry.py",
+    "tools/validators/validate_watcher_registry.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0020",
+      "id": "attachment:pass31-watcher-registry",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:pipeline_specs/watchers/README.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:watcher-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T04:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0020",
+      "repo:pipeline_specs/watchers/README.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 2190
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first control-plane watcher registry. The existing plants_drift YAML remains a placeholder; no source activation, execution, lifecycle admission, release, publication, or notification authority is created. PR #2190 repair binds spec_sha256 to the committed file's exact bytes, including its terminal LF.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:ac1e7ee7513aef4a6da165bbe0990e186f5b4d03aae3d7cb08b274d474ac1647",
+  "receipt_id": "genrec-watcher-registry-20260808",
+  "truth_labels": {
+    ".github/workflows/watcher-registry.yml": "CONFIRMED",
+    "contracts/source/watcher_registry.md": "PROPOSED",
+    "control_plane/watcher_registry.json": "PROPOSED",
+    "fixtures/contracts/v1/source/watcher_registry/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/invalid/invalid_active_without_bindings.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_spec_file_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "CONFIRMED",
+    "schemas/contracts/v1/source/watcher_registry.schema.json": "PROPOSED",
+    "tests/validators/test_validate_watcher_registry.py": "CONFIRMED",
+    "tools/validators/validate_watcher_registry.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Focused deterministic unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Synthetic positive and negative fixtures matched their expected finite outcomes and reason codes after rebinding the exact spec-file bytes."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "Closed Draft 2020-12 schemas, canonical spec_hash values, and the terminal-LF-inclusive spec-file SHA-256 binding validated deterministically."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The repair commit requires a new pushed exact-head run; prior head 700a92402aa24a9c395cca4e98788f6e26566509 exposed the stale no-terminal-LF digest."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

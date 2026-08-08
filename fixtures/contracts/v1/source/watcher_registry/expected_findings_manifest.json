@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-placeholder",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_placeholder_registry.json"
+    },
+    {
+      "case_id": "active-missing-bindings",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "invalid/invalid_active_without_bindings.json"
+    },
+    {
+      "case_id": "duplicate-watcher",
+      "expected_findings": [
+        "SPEC_PATH_DUPLICATE",
+        "WATCHER_ID_DUPLICATE"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/semantic_duplicate_watcher.json"
+    },
+    {
+      "case_id": "spec-file-hash-mismatch",
+      "expected_findings": [
+        "SPEC_FILE_HASH_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/semantic_spec_file_hash_mismatch.json"
+    }
+  ]
+}
