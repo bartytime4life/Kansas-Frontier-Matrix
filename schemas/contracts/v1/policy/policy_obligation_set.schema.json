@@ -1,0 +1,271 @@
+{
+  "$defs": {
+    "obligation": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "items": {
+            "enum": [
+              "ANALYZE",
+              "CACHE",
+              "DERIVE",
+              "DOWNLOAD",
+              "EXPORT",
+              "PUBLISH",
+              "REDISTRIBUTE",
+              "VIEW"
+            ]
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "basis_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "kind": {
+          "enum": [
+            "AGGREGATION_ONLY",
+            "ATTRIBUTION_REQUIRED",
+            "CONSENT_REQUIRED",
+            "EMBARGO",
+            "NO_REDISTRIBUTION",
+            "NOTICE_REQUIRED",
+            "RETENTION_LIMIT",
+            "SHARE_ALIKE_REQUIRED"
+          ]
+        },
+        "obligation_id": {
+          "pattern": "^kfm://policy/obligation/[a-z0-9][a-z0-9/_-]{2,126}$",
+          "type": "string"
+        },
+        "parameters": {
+          "$ref": "#/$defs/parameters"
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "reason_codes": {
+          "items": {
+            "$ref": "#/$defs/reasonCode"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "obligation_id",
+        "policy_decision_ref",
+        "kind",
+        "applies_to",
+        "basis_ref",
+        "parameters",
+        "reason_codes"
+      ],
+      "type": "object"
+    },
+    "parameters": {
+      "additionalProperties": false,
+      "properties": {
+        "attribution_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "consent_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "embargo_until": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "format": "date",
+              "type": "string"
+            }
+          ]
+        },
+        "minimum_aggregation_count": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maximum": 1000000,
+              "minimum": 2,
+              "type": "integer"
+            }
+          ]
+        },
+        "notice_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        },
+        "retention_days": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maximum": 36500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          ]
+        },
+        "share_alike_license": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "attribution_ref",
+        "share_alike_license",
+        "retention_days",
+        "minimum_aggregation_count",
+        "embargo_until",
+        "notice_ref",
+        "consent_ref"
+      ],
+      "type": "object"
+    },
+    "reasonCode": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+      "type": "string"
+    },
+    "ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/policy/policy_obligation_set.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "obligations_enforced": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "policy_evaluated",
+        "obligations_enforced",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "object_type": {
+      "const": "PolicyObligationSet"
+    },
+    "obligation_set_id": {
+      "pattern": "^kfm://policy/obligation-set/[a-f0-9]{24}$",
+      "type": "string"
+    },
+    "obligations": {
+      "items": {
+        "$ref": "#/$defs/obligation"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array"
+    },
+    "policy_decision_refs": {
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/ref"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "obligation_set_id",
+    "status",
+    "subject_ref",
+    "policy_decision_refs",
+    "obligations",
+    "canonicalization_profile",
+    "spec_hash",
+    "governance"
+  ],
+  "title": "PolicyObligationSet",
+  "type": "object",
+  "x-kfm": {
+    "authority": "candidate_obligation_carrier_only",
+    "contract_doc": "contracts/policy/policy_obligation_set.md",
+    "non_effects": [
+      "does_not_evaluate_policy",
+      "does_not_enforce_obligations",
+      "does_not_modify_evidence_bundle",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ],
+    "validator": "tools/validators/policy/validate_policy_obligation_set.py"
+  }
+}
