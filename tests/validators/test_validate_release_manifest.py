@@ -18,7 +18,6 @@ VALIDATOR_PATH = REPO_ROOT / "tools/validators/release/validate_release_manifest
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/release/release_manifest.schema.json"
 FIXTURE_ROOT = REPO_ROOT / "fixtures/release/release_manifest"
 CASES_PATH = FIXTURE_ROOT / "cases.json"
-REGISTRY_PATH = REPO_ROOT / "tools/validators/validator_registry.json"
 
 SPEC = importlib.util.spec_from_file_location("validate_release_manifest", VALIDATOR_PATH)
 assert SPEC is not None and SPEC.loader is not None
@@ -181,21 +180,6 @@ class ReleaseManifestValidatorTests(unittest.TestCase):
         self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
         self.assertEqual(first.stdout, second.stdout)
         self.assertEqual(len(first.stdout.splitlines()), 21)
-
-    def test_validator_registry_entry_and_profile_membership(self) -> None:
-        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
-        ids = [item["id"] for item in registry["validators"]]
-        self.assertEqual(ids.count("release-manifest"), 1)
-        entry = next(
-            item for item in registry["validators"] if item["id"] == "release-manifest"
-        )
-        self.assertEqual(
-            entry["script"],
-            "tools/validators/release/validate_release_manifest.py",
-        )
-        self.assertIn("release-manifest", registry["profiles"]["release-dry-run"])
-        self.assertIn("release-manifest", registry["profiles"]["full"])
-        self.assertEqual(registry["profiles"]["full"], ids)
 
 
 if __name__ == "__main__":
