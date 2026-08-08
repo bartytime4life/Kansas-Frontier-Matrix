@@ -1,0 +1,165 @@
+{
+  "$defs": {
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_size": {
+          "maximum": 67108864,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "media_type": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "path": {
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "tileset",
+            "subtree",
+            "content"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "path",
+        "byte_size",
+        "sha256",
+        "media_type",
+        "role"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/map/tiles3d_tree_hash_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "digest_algorithm": {
+      "const": "sha256"
+    },
+    "file_count": {
+      "maximum": 1024,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/file"
+      },
+      "maxItems": 1024,
+      "minItems": 1,
+      "type": "array"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "release_manifest_ref": {
+          "type": "null"
+        },
+        "source_activated": {
+          "const": false
+        },
+        "tile_artifact_manifest_ref": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "tile_artifact_manifest_ref",
+        "release_manifest_ref"
+      ],
+      "type": "object"
+    },
+    "manifest_id": {
+      "pattern": "^kfm://map/tiles3d-tree/[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "object_type": {
+      "const": "Tiles3DTreeHashManifest"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "CANDIDATE_INTEGRITY_ONLY"
+    },
+    "tileset_path": {
+      "const": "tileset.json"
+    },
+    "total_bytes": {
+      "maximum": 268435456,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "tree_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "manifest_id",
+    "status",
+    "canonicalization_profile",
+    "digest_algorithm",
+    "tileset_path",
+    "file_count",
+    "total_bytes",
+    "tree_hash",
+    "files",
+    "spec_hash",
+    "governance"
+  ],
+  "title": "Tiles3DTreeHashManifest",
+  "type": "object",
+  "x-kfm": {
+    "authority": "candidate_integrity_report_only",
+    "builder": "tools/validators/map/tiles3d_tree_hash_manifest/build_tiles3d_tree_hash_manifest.py",
+    "contract_doc": "contracts/map/tiles3d_tree_hash_manifest.md",
+    "non_effects": [
+      "does_not_validate_full_3d_tiles_conformance",
+      "does_not_create_tile_artifact_manifest",
+      "does_not_sign_or_attest",
+      "does_not_authorize_release",
+      "does_not_publish"
+    ]
+  }
+}
