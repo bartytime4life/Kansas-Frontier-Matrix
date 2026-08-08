@@ -1,6 +1,6 @@
 # KFM Agriculture domain CI readiness workflow.
 # Status: one bounded fixture-only CDL watcher proof is executable in this lane;
-# two dedicated Agriculture validator suites are separately governed; broader
+# three dedicated Agriculture validator suites are separately governed; broader
 # domain validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -61,11 +61,17 @@ jobs:
             "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json"
             "tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py"
             "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py"
+            "tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py"
             "tools/ingest/cdl_watch/cdl_watch.py"
             "tools/validators/agriculture/README.md"
             "tools/validators/domains/agriculture/README.md"
+            "tools/validators/domains/agriculture/vegetation_connectivity_gate/validate_connectivity_gate.py"
             ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml"
             ".github/workflows/agriculture-ndvi-readiness.yml"
+            ".github/workflows/agriculture-vegetation-connectivity-gate.yml"
+            "contracts/domains/agriculture/vegetation_connectivity_gate.md"
+            "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json"
+            "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json"
             "release/agriculture/README.md"
           )
 
@@ -147,6 +153,7 @@ jobs:
               "hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py",
               "ndvi_readiness/README.md",
               "ndvi_readiness/validate_ndvi_readiness.py",
+              "vegetation_connectivity_gate/validate_connectivity_gate.py",
           }
           expected_domain_inventory = {
               "README.md",
@@ -206,8 +213,8 @@ jobs:
               f"dedicated_validators={len(dedicated_validator_paths)}"
           )
           print(
-              "Dedicated HLS NDVI materiality and NDVI readiness suites remain "
-              "owned by their path-filtered workflows."
+              "Dedicated HLS NDVI materiality, NDVI readiness, and vegetation "
+              "connectivity suites remain owned by their path-filtered workflows."
           )
           PY
 
@@ -237,9 +244,10 @@ jobs:
 
           The direct Agriculture validator lane remains documentation-only. The
           canonical domain lane contains four recognized greenfield validator
-          stubs plus two substantive, fixture-only validators. The HLS NDVI zonal
-          materiality and smoke-aware NDVI readiness suites remain executed by
-          their own path-filtered workflows rather than this broad readiness lane.
+          stubs plus three substantive, fixture-only validators. The HLS NDVI zonal
+          materiality, smoke-aware NDVI readiness, and vegetation connectivity
+          suites remain executed by their own path-filtered workflows rather than
+          this broad readiness lane.
 
           The CDL helper compares bounded local sidecars with networking denied.
           It cannot admit a source, decide canonical materiality policy, create
