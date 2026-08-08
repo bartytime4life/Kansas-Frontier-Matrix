@@ -19,6 +19,8 @@ dependencies = [
     "jsonschema>=4.26.0,<5",
     # Exact RFC 8785 JCS implementation for deterministic common spec_hash support.
     "rfc8785==0.1.4",
+    # Strict YAML parsing for repository governance projections and validators.
+    "PyYAML==6.0.3",
 ]
 
 [project.optional-dependencies]
