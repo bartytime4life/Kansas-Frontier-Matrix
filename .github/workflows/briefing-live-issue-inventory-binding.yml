@@ -1,0 +1,75 @@
+name: briefing-live-issue-inventory-binding
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/briefing-live-issue-inventory-binding.yml"
+      - "docs/architecture/briefing-live-issue-inventory-binding.md"
+      - "tools/validators/governance/route_briefing_signals.py"
+      - "tools/validators/governance/validate_github_issue_inventory_read.py"
+      - "tests/governance/test_briefing_signal_live_issue_inventory.py"
+      - "fixtures/contracts/v1/governance/github_issue_inventory_read/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-live-issue-inventory-binding
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Compile integration modules
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/governance/validate_github_issue_inventory_read.py
+          python -m py_compile tools/validators/governance/route_briefing_signals.py
+          python -m py_compile tests/governance/test_briefing_signal_live_issue_inventory.py
+
+      - name: Run live-read binding tests
+        run: |
+          set -euo pipefail
+          python -m pytest tests/governance/test_briefing_signal_live_issue_inventory.py tests/governance/test_briefing_signal_issue_inventory.py -q --strict-config --strict-markers
+
+      - name: Replay fresh stored receipt through router
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/route_briefing_signals.py \
+            --github-issue-inventory-read fixtures/contracts/v1/governance/github_issue_inventory_read/fresh_receipt_1647.json \
+            --as-of 2026-08-08T02:31:00Z \
+            examples/briefing_integration/*.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Briefing live issue inventory binding"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: stored read-only GitHub issue receipt to dry-run BriefingSignal routing."
+            echo "- Boundary: no network in this lane and no issue mutation, evidence creation, policy/review authority, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
