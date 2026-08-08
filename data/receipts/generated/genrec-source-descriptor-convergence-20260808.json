@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/source-descriptor-validate.yml": "sha256:a02634f35678356b05e1873211ab44224adfc653b68214037447cb8cf57be3e7",
+    ".github/workflows/source-descriptor-validate.yml": "sha256:38b38085569911ef31a8dbb1d090b5359abf85d2c89e3be9122a89cbed0f3f6e",
     "schemas/contracts/v1/sources/source_descriptor.schema.json": "sha256:01e2c03e770d7c84d0d329e482703688281792fcf0b2f7c9e431a65b10c13c5c",
     "tests/validators/test_validate_source_descriptor_entrypoints.py": "sha256:ab04c1b86e202020e8bf0ede60be38eb1abc4101fc8164bb2a81a352e4f1ceea",
     "tools/validators/sources/validate_source_descriptor.py": "sha256:f1f97b07c4afc6653e12c868b814d12c5b24d3de66684e64d3ba1f8a57885c2c"
