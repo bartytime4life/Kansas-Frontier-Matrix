@@ -1,2 +1,11 @@
-// focus_panel feature entry — greenfield placeholder
-export const placeholder = true;
+export * from "./types";
+export {
+  makeNegativeDrawerProjection,
+  parseFocusComposedClaimProjection,
+  parseFocusComposedClaimRequest,
+} from "./parsers";
+export { resolveFocusComposedClaim } from "./resolver";
+export {
+  mountFocusComposedClaimFixture,
+  mountFocusComposedClaimPanel,
+} from "./panel";
