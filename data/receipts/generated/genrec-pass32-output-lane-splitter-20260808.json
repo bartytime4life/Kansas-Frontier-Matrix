@@ -1,0 +1,159 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/output-lane-splitter.yml": "sha256:afce053f982a17a00f4ad701687c85ca14c0f56a28055c4594afbaff254c1694",
+    "contracts/data/output_lane_split_manifest.md": "sha256:2c25f66df83c3e0792f7a88633bfe063d5872089c6571663771417b1ef37f253",
+    "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md": "sha256:b7663b40208b496ca2cf741ca965d2036749607b5fbefdcbbf60fe0ec923fb53",
+    "fixtures/contracts/v1/data/output_lane_split_manifest/cases.json": "sha256:cb0d6857ce8295fba2f0e39b8533c087bb9fdf604540df0c2e6b283a90bda40f",
+    "schemas/contracts/v1/data/output_lane_split_manifest.schema.json": "sha256:dbb5ec5563495f8fae86682e7f27ea80134d4346ee3df4e2576b350e8677b783",
+    "tests/generators/test_build_output_lane_split.py": "sha256:25007c9e85e0d70aad72565d0c0b4e8d72341cd18da0482d07266fd717be13cb",
+    "tools/generators/build_output_lane_split.py": "sha256:4b9c245a34128804e8a9ba808c2cf7a44012548b6f79d1e34e3561536fb2f836"
+  },
+  "artifact_paths": [
+    ".github/workflows/output-lane-splitter.yml",
+    "contracts/data/output_lane_split_manifest.md",
+    "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md",
+    "fixtures/contracts/v1/data/output_lane_split_manifest/cases.json",
+    "schemas/contracts/v1/data/output_lane_split_manifest.schema.json",
+    "tests/generators/test_build_output_lane_split.py",
+    "tools/generators/build_output_lane_split.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0020",
+      "id": "KFM-P32-PROG-0020",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/6586e77211a95a9c61f62594d26ff2755662d778",
+      "id": "delivery-main-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/contracts/data/README.md",
+      "id": "data-contract-family",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/tools/generators/README.md",
+      "id": "generator-responsibility-lane",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T19:45:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Pass_32_Repo_Import_Candidate_Register.md"
+    ],
+    "evidence_hashes": [
+      "sha256:0bd0e9cabf8666163a58597e21ef282ac1ccffd203ef9d2ff6aa13300c4d18b1",
+      "sha256:665cfb1df924299a3011bbc2a0ed66d3e1bd5e8e5717ec6a2c94ca4445f2f153"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0020",
+      "attachment:KFM_Pass_32_Repo_Import_Candidate_Register.md#output-lane-splitter",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6586e77211a95a9c61f62594d26ff2755662d778",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/contracts/data/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/tools/generators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6586e77211a95a9c61f62594d26ff2755662d778/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only adaptation of Pass 32 KFM-P32-PROG-0020. The manifest routes opaque generated-output references into feature-vector, scorecard, policy-report candidate, process-memory receipt, and prefilter candidate lanes before review. The compact base-plus-mutation fixture family is replayed through the deterministic generator, which writes nothing by default and, only when explicitly requested, creates six temporary JSON indexes in an empty directory. It never reads, moves, or copies payload bytes; creates no EvidenceBundle or PolicyDecision; changes no lifecycle state; and grants no promotion, release, deployment, publication, or public-use authority. Initial authoring inspection used main@03b37ee771410573f2a2050379417dd2758d1501; delivery placement and non-overlap were rechecked against main@6586e77211a95a9c61f62594d26ff2755662d778.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:83f13eb0d7114733f1a3c8ad7f222a4bde91cd56b27037efb5381467d75b0c5f",
+  "receipt_id": "genrec-pass32-output-lane-splitter-20260808",
+  "truth_labels": {
+    ".github/workflows/output-lane-splitter.yml": "CONFIRMED",
+    "contracts/data/output_lane_split_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/output_lane_split_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/output_lane_split_manifest.schema.json": "PROPOSED",
+    "tests/generators/test_build_output_lane_split.py": "CONFIRMED",
+    "tools/generators/build_output_lane_split.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-9-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-1-pass-8-deny",
+      "outcome": "PASS",
+      "reason": "Compact base-plus-mutation manifest replayed one positive and eight exact negative cases."
+    },
+    {
+      "gate": "canonical-five-lane-closure-and-ordering",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-no-payload-movement-and-no-authority",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "dry-run-and-explicit-temporary-index-write",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "metadata-links-and-workflow-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic review remains pending on the draft pull request."
+    }
+  ]
+}
