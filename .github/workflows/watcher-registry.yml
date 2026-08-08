@@ -70,10 +70,10 @@ jobs:
           python -m unittest discover --start-directory tests/validators --pattern 'test_validate_watcher_registry.py' --verbose
           python tools/validators/validate_watcher_registry.py control_plane/watcher_registry.json
           python tools/validators/validate_watcher_registry.py --fixtures
-      - name: Validate generated authoring receipt
+      - name: Validate current registry-extension receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-watcher-registry-20260808.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-watcher-registry-soil-extension-20260808.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
