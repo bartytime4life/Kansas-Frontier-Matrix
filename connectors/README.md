@@ -1,107 +1,81 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/connectors-readme
-title: connectors/ — Source Admission Connectors
-type: readme; directory-readme; canonical-implementation-root; source-admission-index
-version: v0.6
-status: draft; repository-grounded; mixed-maturity; partial-static-enforcement; ingest-receipt-validator-prerequisite-enforced; connector-run-receipt-presence-hold; no-release; no-publication
-owners: NEEDS VERIFICATION — CODEOWNERS routes /connectors/ to @bartytime4life; accepted connector/source stewardship and independent approval controls were not established
+title: connectors/ — Source-Specific Fetch, Capture, and Admission Implementation
+type: readme; directory-readme; canonical-root-landing-page
+version: v0.7
+prior_version: v0.6
+status: repository-grounded; canonical-active-projection; mixed-maturity; internal-core-implemented; partial-no-network-enforcement; connector-run-receipt-presence-held; non-publisher
+owners: "NEEDS VERIFICATION — Root Registry and CODEOWNERS route connectors/ to @bartytime4life; accepted source stewards, rights reviewers, domain owners, security reviewers, and independent release approvers remain unverified"
 created: 2026-06-20
-updated: 2026-07-31
-supersedes: v0.5 at the same path
-policy_label: public; implementation-root; source-admission; pre-RAW; raw-quarantine-receipts-only; fail-closed; no-publication
+updated: 2026-08-08
+supersedes: v0.6 documentation at the same path; no connector implementation, source activation, SourceDescriptor, schema, contract, policy, fixture, validator, workflow, receipt instance, lifecycle object, release decision, runtime behavior, or public behavior is superseded
+policy_label: repository-facing; source-edge; internal; descriptor-gated; rights-aware; sensitivity-aware; no-network-by-default; raw-quarantine-receipt-only; non-publisher
 current_path: connectors/README.md
 owning_root: connectors/
-base_commit: c0f64c85f89a439aeb27025ed76554306539a6b3
-prior_blob: 14df552efad7384f76eea37455ade7f889350566
-truth_posture: >
-  CONFIRMED same-path target; canonical connectors responsibility root; current connector-gate workflow;
-  bounded connector repository-path scanner and legacy connector/pipeline lexical publication-target canary;
-  repository-owned IngestReceipt validator, direct no-network tests, deterministic contract fixtures, and
-  connector-gate validator-prerequisite wiring; fielded singular SourceDescriptor schema and executable wrapper;
-  empty source-authority register; placeholder connectors-core package; CODEOWNERS routing; and representative
-  family, product, package, and compatibility-lane documentation /
-  PROPOSED repository-root connector contract, shared invocation profile, child-lane requirements, receipt
-  semantics, topology normalization, and implementation sequence /
-  CONFLICTED singular versus plural SourceDescriptor schema authority; schema-declared versus observed
-  validator and fixture paths; documentation maturity versus runtime enforcement; and connector alias, product,
-  and source-family naming patterns /
-  UNKNOWN exhaustive connector inventory, active sources and activation decisions, live network behavior,
-  endpoint health, complete rights and sensitivity review, emitted ingest receipts, runtime consumers,
-  branch-rule significance, release integration, and public-delivery state.
+root_class: canonical
+root_registry_id: root.connectors
+responsibility: source-specific fetch, probe, transport, source-native parsing, capture, and pre-RAW admission implementation that may hand candidates only to governed RAW, QUARANTINE, or receipt surfaces
+truth_posture: cite-or-abstain; path, package, test, workflow, or successful transport evidence does not prove source authority, activation, rights clearance, evidence closure, lifecycle promotion, release, publication, or public fitness
 evidence_snapshot:
-  snapshot_status: historical_v0.4_baseline
   repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
   base_ref: main
-  base_commit: 5c88eed8086182c600e276060a31d33a6ad2e977
-  prior_blob: bdd50032bed62ac36964c79f16cf5541b21759a6
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  connector_gate_workflow_blob: ae3ef92ac5f717cc149a609c3b74dd105dd17e44
-  non_publisher_test_blob: c6164787bc848eb2347c347af203d76afae37a2b
-  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
-  source_descriptor_validator_blob: 9d0538e727b5eb49c043998a3550972349d2e790
+  base_commit: 753cda68c468e8d01457c38e563c107a437aa608
+  root_tree: 637f840667060074adc91564ae3b709b7d84ff9e
+  connectors_tree: a42079263e682022cd0cab3c22456d5c805ce637
+  prior_blob: 11184062e9917b5cc34c6d73b67dbc0ef995f913
+  direct_child_directories: 104
+  direct_child_files: 1
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  connector_gate_workflow_blob: e3a1082c0f59aa47b903c5bf71d058a49e6ceb11
+  connectors_core_tree: 45e044d1d6013e48e68b21051b0ad8d14b93ac5e
+  connectors_core_pyproject_blob: ea94c0b24f50a68f3d59becbb34625c42298d7d9
+  source_artifact_contract_blob: 9f5e2f082fa2a3aaf94c1e9d879b0a0baa797639
+  source_artifact_schema_blob: f451ccbcd7543896cffb98e6abbca23f61432fa3
+  source_artifact_workflow_blob: d6fc7cd1658319cbde1c4958d31a73d77bb7f658
   source_authority_register_blob: 82c23722520922f5ca0dad7f37ed794d1c2edf81
-  connectors_core_blob: 0db121b6f378b64bacaf74af57dbfcd40c969d1f
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-change_evidence:
-  base_commit: c0f64c85f89a439aeb27025ed76554306539a6b3
-  target_prior_blob: 14df552efad7384f76eea37455ade7f889350566
-  connector_gate_workflow_prior_blob: 9d2d7cc8ccfcf100e2ef7ec8b2d70331f4119c0b
-  non_publisher_test_prior_blob: c6164787bc848eb2347c347af203d76afae37a2b
-  connector_output_validator_prior_state: absent
-  ingest_receipt_validator_blob: 6596685b04b7889355bf66ae6b25f1f83bacccaf
-  ingest_receipt_test_blob: c80a81ac87fb4df7bacb6bbc9d0bd55c12addfde
 related:
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../control_plane/root_registry.yaml
   - ../docs/sources/ADMISSION_PROCESS.md
   - ../docs/sources/catalog/README.md
   - ../data/registry/sources/README.md
-  - ../contracts/source/
+  - ../control_plane/source_authority_register.yaml
+  - ../contracts/source/README.md
   - ../schemas/contracts/v1/source/
   - ../schemas/contracts/v1/sources/
-  - ../policy/rights/
-  - ../policy/sensitivity/
-  - ../data/raw/
-  - ../data/quarantine/
-  - ../data/receipts/
-  - ../pipelines/README.md
   - ../packages/connectors-core/README.md
   - ../tools/validators/connector_gate/README.md
-  - ../tests/policy/test_pipeline_connector_non_publisher.py
   - ../.github/workflows/connector-gate.yml
   - ../release/README.md
-tags: [kfm, connectors, source-admission, pre-raw, source-descriptor, source-head, rights, sensitivity, raw, quarantine, receipts, non-publisher, trust-membrane, rollback]
 notes:
-  - "v0.6 records the executable IngestReceipt validator prerequisite in connector-gate while preserving a separate hold on connector-run receipt presence, persistence, source profiles, replay, and correction."
-  - "v0.5 documents the bounded connector output-path scanner and its workflow/test integration; it does not change connector runtime code, activate a source, emit lifecycle payloads, approve release, or publish."
-  - "Directory Rules §7.3 assigns source-specific fetch and admission to connectors/ and limits direct handoff to RAW, QUARANTINE, and receipts."
-  - "The current connector-gate workflow provides partial static non-publisher enforcement and runs the IngestReceipt validator prerequisite; connector-run receipt presence remains an explicit readiness hold."
-  - "Static badges summarize inspected repository state only; they are not source activation, test completion, policy approval, release, or publication proof."
+  - "This is a same-path Markdown modernization and evidence reconciliation. It changes no connector code, package, schema, contract, policy, fixture, validator, workflow, source registry entry, receipt instance, lifecycle object, release object, or public interface."
+  - "ADR-0029 adopts docs/doctrine/directory-rules.md as the sole writable human Directory Rules authority. The Root Registry is a machine projection and cannot expand connector authority."
+  - "The exact direct-child inventory is verified at the pinned connectors tree and records 104 directories plus this README. The inventory exposes naming and alias drift; it does not decide migrations."
+  - "packages/connectors-core is no longer a 0.0.0 placeholder. At the pinned base it is a 0.0.1 internal, no-network implementation with primitives, injected transport, and SourceArtifact handoff, while stable package exports, concrete live transport, source-specific adoption, persistence, and release effects remain unproved."
+  - "The current SourceDescriptor singular and plural schema metadata point at each other as canonical/implementation homes. This circular authority claim remains CONFLICTED and is not resolved by this README."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Connectors
 
-> **One-line purpose.** `connectors/` is KFM's canonical implementation root for source-specific, descriptor-gated fetch, probe, capture, and pre-RAW admission support; connectors may hand material to `RAW`, `QUARANTINE`, or receipt surfaces, but they never create source truth, promote lifecycle state, approve release, publish, or serve public clients.
+> **One-line purpose.** `connectors/` owns source-specific fetch, probe, transport, source-native parsing, capture, and pre-RAW admission implementation. A connector may produce a governed RAW candidate, QUARANTINE candidate, or receipt-ready finite result; it never creates truth, evidence closure, promotion, release, publication, or a public client path.
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Authority: source admission](https://img.shields.io/badge/authority-source%20admission-1f6feb?style=flat-square)](#authority-level)
-[![Direct handoff: RAW | QUARANTINE | receipts](https://img.shields.io/badge/direct%20handoff-RAW%20%7C%20QUARANTINE%20%7C%20receipts-d97706?style=flat-square)](#outputs)
-[![Connector gate: partial](https://img.shields.io/badge/connector%20gate-partial-d4a72c?style=flat-square)](../.github/workflows/connector-gate.yml)
-[![IngestReceipt: validator checked, presence held](https://img.shields.io/badge/IngestReceipt-validator%20checked%20%7C%20presence%20held-d4a72c?style=flat-square)](#validation)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-07-31](https://img.shields.io/badge/reviewed-2026--07--31-0969da?style=flat-square)](#last-reviewed)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Direct children](#direct-child-directory-map) · [Topology](#connector-topology-and-lane-classes) · [Lifecycle](#admission-and-lifecycle-flow) · [Conflicts](#current-conflicts-and-maturity-limits) · [Child contract](#child-readme-contract) · [Rollback](#correction-and-rollback) · [Open work](#open-verification-register)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** the connector root, a partial static non-publisher workflow, an executable IngestReceipt validator prerequisite, a fielded `SourceDescriptor` schema candidate, an executable descriptor validator wrapper, and many source-lane READMEs exist. Current evidence does **not** establish an exhaustive connector inventory, accepted source activation system, connector-run receipt presence or persistence, live endpoint fitness, universal child-lane tests, production consumers, release integration, or public-safe publication.
+> **Safe current conclusion:** the repository contains a canonical `connectors/` root, an active Root Registry projection, 104 direct connector directories, a bounded no-network `connectors-core` implementation, SourceArtifact contract/schema/validation surfaces, and partial connector-gate enforcement. It does **not** yet prove a synchronized root-wide source-admission runtime, an active source register, universal source-specific consumers, connector-emitted receipt persistence, live source fitness, release readiness, or publication.
 
 > [!CAUTION]
-> A successful network request is not source admission. A valid descriptor is not an activation decision. A checksum is not evidence closure. A connector receipt is process memory, not proof of release. A connector may preserve facts and candidate artifacts; it cannot manufacture source authority, rights clearance, sensitivity clearance, review, promotion, release, or public truth.
+> A connector path, endpoint string, README, package, test, workflow, successful HTTP status, digest, or captured byte stream does not authorize source use. Source identity, role, rights, sensitivity, access terms, activation state, completeness strategy, evidence treatment, and correction posture must be resolved before a live invocation can be treated as admissible.
 
-> [!WARNING]
-> The machine source-authority register currently has `entries: []`, and the fielded singular `SourceDescriptor` schema declares a different plural path as canonical. Treat source registration and schema placement as **CONFLICTED**, not synchronized or operationally complete.
-
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#connector-topology-and-lane-classes) · [Admission flow](#admission-and-lifecycle-flow) · [Conflicts](#current-conflicts-and-maturity-limits) · [Outcomes](#connector-outcomes-and-receipt-boundary) · [Child contract](#child-readme-contract) · [Inspection](#inspection-path) · [Rollback](#correction-and-rollback) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
+> [!NOTE]
+> `packages/connectors-core` is implemented as an internal `0.0.1` no-network package at the pinned base, but its package root intentionally exports no stable public surface and it includes no concrete live transport. Treat its primitives as bounded implementation evidence, not as proof that connector lanes are integrated or operational.
 
 ---
 
@@ -109,27 +83,22 @@ notes:
 
 ## Purpose
 
-`connectors/` owns the source-specific implementation boundary between an external or supplied source surface and KFM's governed pre-RAW admission process.
+`connectors/` is KFM's canonical implementation root for the **source edge**. It exists to make acquisition behavior explicit, bounded, testable, source-role-aware, and separable from downstream truth and publication systems.
 
-A connector may help a governed caller answer:
+A connector should answer, with reviewable evidence:
 
-- which source family, product, distribution, endpoint, local package, or upload surface is being addressed;
-- whether the caller supplied a resolvable `SourceDescriptor`, activation context, source role, rights posture, sensitivity posture, cadence, and resource limits;
-- what source-native bytes, records, manifests, metadata, identifiers, or pointers were observed;
-- which source-head, integrity, completeness, freshness, and transport facts were preserved;
-- whether the attempt should produce a RAW candidate, QUARANTINE candidate, no-op, denial, hold, rate-limit result, or error;
-- which receipt-ready metadata is needed to make the attempt replayable and reviewable.
+- which exact source family, product, distribution, endpoint, archive, package, or supplied input it serves;
+- which governed source identity and activation context authorize the requested operation;
+- which source-native identifiers, fields, geometries, times, flags, manifests, and byte identities it preserves;
+- which rights, terms, attribution, consent, privacy, sensitivity, and precision constraints apply;
+- how requests, bytes, records, pages, retries, redirects, time, memory, and cancellation are bounded;
+- how source head, completeness, freshness, drift, conflicts, and corrections are represented;
+- which finite result occurred;
+- which RAW, QUARANTINE, or receipt candidate was produced;
+- how replay can identify the prior run without duplicating captures;
+- why the connector did **not** perform any later lifecycle, proof, release, or public write.
 
-A connector does **not** decide whether admitted material is processed truth, evidence closure, catalog closure, a graph assertion, a released artifact, a public map layer, an API response, an AI answer, or KFM-published knowledge.
-
-**Primary audience**
-
-- connector and source maintainers;
-- domain stewards consuming source-specific material;
-- rights, sensitivity, privacy, security, and source-role reviewers;
-- contracts, schema, registry, validator, fixture, workflow, and receipt maintainers;
-- pipeline and lifecycle maintainers receiving connector handoffs;
-- reviewers checking that source access cannot bypass the KFM trust membrane.
+The root does not turn source material into a KFM-grade claim. It preserves source-native material and process memory for downstream validation, evidence resolution, policy, review, promotion, correction, and release.
 
 [Back to top](#top)
 
@@ -139,68 +108,113 @@ A connector does **not** decide whether admitted material is processed truth, ev
 
 ## Authority level
 
-**Canonical implementation root for source-specific fetch and admission behavior; non-semantic, non-schema, non-policy, non-evidence, non-lifecycle-authority, non-release, non-publication, and non-public-serving.**
+**Canonical implementation root with narrow source-edge authority.**
 
-Directory Rules §7.3 assigns source-specific fetch and admission to `connectors/`. The root is canonical for that responsibility because the rule and the current repository path agree. That does not make every child path, package, source identity, alias, endpoint, or activation state canonical.
+| Field | Current posture |
+|---|---|
+| Root class | `canonical`; class default `ACTIVE` in the Root Registry projection |
+| Root registry ID | `root.connectors` |
+| Primary responsibility | Source-specific fetch, capture, and admission implementation |
+| Permitted artifact kind | `source_connector` |
+| Prohibited artifact kinds | Deployable application, pipeline, release decision |
+| Exposure | Internal |
+| Mutation | Versioned |
+| Retention | Repository lifetime |
+| Validation profile | `source_admission_only` |
+| Current GitHub routing | `/connectors/` → `@bartytime4life` |
+| Accepted source stewards and independent release approvers | **NEEDS VERIFICATION** |
+| Public-client role | None |
+| Publication role | None |
 
-| Concern | Owning surface | `connectors/` relationship |
+### Directory Rules basis
+
+ADR-0029 accepts the current `docs/doctrine/directory-rules.md` bytes and makes that file the sole writable human Directory Rules authority. The adopted dependency and write-capability rules constrain connectors to shared packages, source contracts, schemas, and admission policy, while direct durable writes end at RAW or QUARANTINE candidates plus ingest receipts.
+
+The active Root Registry projects those rules for `connectors/`; it does not create source authority, activate a connector, grant credentials, admit a source, authorize a lifecycle transition, or release data.
+
+### Authority split
+
+| Question | Owning surface | Connector relationship |
 |---|---|---|
-| Source-family and product doctrine | [`docs/sources/catalog/`](../docs/sources/catalog/README.md) and reviewed source docs | Consume and link; do not redefine source authority in connector code. |
-| Source identity and registration | [`data/registry/sources/`](../data/registry/sources/README.md) and machine registers | Resolve accepted records; do not mint authority by successful fetch. |
-| Object meaning | [`contracts/source/`](../contracts/source/) | Consume semantic contracts; do not replace them with connector-local models. |
-| Machine shape | [`schemas/contracts/v1/source/`](../schemas/contracts/v1/source/) or an accepted successor | Validate against accepted schemas; do not create parallel schema authority. |
-| Rights, sensitivity, consent, and access | [`policy/rights/`](../policy/rights/), [`policy/sensitivity/`](../policy/sensitivity/), and reviewed decisions | Supply facts and enforce returned obligations; do not self-clear. |
-| Source-specific transport and capture | `connectors/<source-or-product>/` | Primary responsibility of this root. |
-| Reusable source-agnostic primitives | [`packages/connectors-core/`](../packages/connectors-core/README.md) after maturity is proved | Consume shared helpers; source-specific behavior remains here. |
-| Validation | [`tools/validators/`](../tools/validators/) and [`tests/`](../tests/) | Be testable; a passing validator is not source admission or release. |
-| Direct lifecycle handoff | [`data/raw/`](../data/raw/), [`data/quarantine/`](../data/quarantine/), [`data/receipts/`](../data/receipts/) | Allowed boundary, under explicit governed orchestration. |
-| Normalization and later lifecycle stages | [`pipelines/`](../pipelines/README.md) and governed data phases | Outside connector ownership. |
-| Release, correction, withdrawal, rollback | [`release/`](../release/README.md) | Connectors may provide references; they never approve or execute release. |
-| Public API, UI, map, export, and AI surfaces | governed applications over released/public-safe artifacts | Never direct connector consumers in the normal public path. |
+| What does a source or ingest object mean? | [`contracts/source/`](../contracts/source/) | Consume the accepted meaning; do not redefine it locally |
+| What machine shape is valid? | [`schemas/contracts/v1/source/`](../schemas/contracts/v1/source/) and accepted aliases | Produce or consume validated candidates; do not mint a parallel schema |
+| Is a source active, allowed, restricted, or denied? | source registry, policy, and accepted review/activation decisions | Require a resolvable decision; do not self-activate |
+| Where do exact captures and held material go? | [`data/raw/`](../data/raw/) and [`data/quarantine/`](../data/quarantine/) | Hand off candidates only through caller-owned, governed sinks |
+| Where does process memory go? | [`data/receipts/`](../data/receipts/) | Produce receipt-ready metadata; authoritative persistence is owned elsewhere |
+| Who normalizes or joins sources? | [`pipelines/`](../pipelines/README.md) and shared packages | Preserve source-native data; do not perform cross-source truth resolution |
+| Who proves evidence or citation closure? | proof/evidence producers and [`data/proofs/`](../data/proofs/) | Provide refs and hashes only |
+| Who releases or corrects public state? | [`release/`](../release/README.md) | No self-approval, release, correction, withdrawal, or rollback decision |
+| Who serves the public? | governed application/runtime and released carriers | No direct connector-to-browser, map, export, or AI path |
 
-> [!NOTE]
-> A README, path, import, workflow, successful request, descriptor instance, registry row, or connector receipt activates nothing by itself. Activation and use require the applicable governed decision and review state.
+### Exposure, sensitivity, mutability, and storage
+
+- Source credentials and resolved secret values never enter repository bytes, fixtures, logs, URLs, or receipts.
+- Sensitive or restricted payloads default to deny or quarantine until a qualified review supports a narrower posture.
+- Exact captures are immutable by identity; corrections create new artifacts and preserve supersession/conflict lineage.
+- Connector code is versioned; generated or captured data is not stored under `connectors/`.
+- Physical storage may be external, but logical ownership and lifecycle placement remain explicit.
+- A connector must not infer public-safe geometry from a style filter or client-side hiding.
 
 [Back to top](#top)
 
 ---
 
-## Status
-
 <a id="current-inspected-snapshot"></a>
 
-### Repository-grounded snapshot
+## Status
 
-| Surface | Evidence at `main@c0f64c85…` plus this working diff | Safe conclusion |
-|---|---|---|
-| Parent README | **CONFIRMED** v0.5 preimage, blob `14df552…` | Same-path v0.6 reconciliation. |
-| `connectors/` responsibility root | **CONFIRMED** in Directory Rules and repository | Canonical source-specific implementation root; child topology remains mixed. |
-| Connector output workflow | **CONFIRMED command-bearing / PARTIAL** | Runs a bounded two-part static canary: selected connector output targets plus the prior pipeline publication-target denylist. |
-| Static connector output guard | **CONFIRMED executable source** | Compares selected, statically resolvable connector repository-output targets with `data/raw/`, `data/quarantine/`, and `data/receipts/`; it is not runtime confinement or receipt-correspondence proof. |
-| Ingest-receipt workflow prerequisite | **CONFIRMED command-bearing / PARTIAL** | Runs the repository-owned validator tests and deterministic contract-fixture polarity; actual connector-run receipt presence, persistence, source profiles, replay, and correction remain `WORKFLOW_HOLD`. |
-| `SourceDescriptor` singular schema | **CONFIRMED fielded, closed, status `PROPOSED`** | Strong machine-shape candidate; not accepted authority by presence alone. |
-| `SourceDescriptor` schema metadata | **CONFIRMED points to plural path as canonical** | Singular/plural schema authority is `CONFLICTED`. |
-| Descriptor validator wrapper | **CONFIRMED executable wrapper at `tools/validators/validate_source_descriptor.py`** | Invokes the singular schema and root fixture family; declared and observed paths disagree. |
-| Machine source-authority register | **CONFIRMED present with `entries: []`** | No active source inventory is established by the register. |
-| Connector gate validator lane | **CONFIRMED bounded output-path scanner; full admission gate unestablished** | `output_paths.py` is a static source canary, not the proposed connector admission CLI/report system. |
-| Shared connectors-core package | **CONFIRMED `0.0.0` placeholder** | Empty initializer and comment-only core do not establish reusable runtime behavior. |
-| Representative child lanes | **CONFIRMED family, product, package, and compatibility READMEs** | Documentation is extensive but implementation maturity varies by lane. |
-| Alias and naming topology | **CONFIRMED conflicts in inspected examples** | `osm`/`openstreetmap`, `people`/`people-dna-land`, and Kansas Mesonet variants require governed disposition. |
-| CODEOWNERS | **CONFIRMED `/connectors/` routes to `@bartytime4life`** | Review routing exists; stewardship, required review, and separation of duties are separate and unproved. |
-| Active sources, live network runs, endpoint health, emitted ingest receipts, consumers, release/publication | **UNKNOWN / NEEDS VERIFICATION** | No root-wide operational maturity claim is supported. |
+### Repository snapshot
 
-### Truth labels used here
-
-| Label | Meaning |
+| Field | Verified value |
 |---|---|
-| `CONFIRMED` | Verified from current repository bytes, workflow definitions, tests, registers, or direct path reads in this update. |
-| `PROPOSED` | A design, requirement, path normalization, input profile, or implementation sequence not established as accepted behavior. |
-| `UNKNOWN` | Evidence is insufficient for a stronger claim. |
-| `NEEDS VERIFICATION` | A concrete check exists but is not closed. |
-| `CONFLICTED` | Relevant repository or authority surfaces disagree. |
+| Repository/base | `bartytime4life/Kansas-Frontier-Matrix@753cda68c468e8d01457c38e563c107a437aa608` |
+| Root tree | `637f840667060074adc91564ae3b709b7d84ff9e` |
+| `connectors/` tree | `a42079263e682022cd0cab3c22456d5c805ce637` |
+| Prior README blob | `11184062e9917b5cc34c6d73b67dbc0ef995f913` |
+| Direct children | 104 directories plus this README |
+| Root Registry | `root.connectors`, canonical, ACTIVE by class default, `source_admission_only` |
+| CODEOWNERS route | `@bartytime4life` |
+| Connector-gate workflow | Present; bounded static and no-network checks |
+| Shared connector core | `packages/connectors-core` version `0.0.1`; internal, no stable root export |
+| SourceArtifact profile | Proposed semantic contract, closed schema, validator/tests, no-network workflow |
+| Source authority register | Present but `PROPOSED` and empty (`entries: []`) |
+| SourceDescriptor authority | **CONFLICTED** by circular singular/plural canonical metadata |
+| Active source coverage | **UNKNOWN** |
+| Live network execution and emitted connector receipts | **UNKNOWN / not established by this review** |
+| Release or publication effect | None |
+
+### Maturity matrix
+
+| Capability | Status | Safe conclusion |
+|---|---:|---|
+| Root placement and responsibility | **CONFIRMED** | Existing same-path root matches adopted Directory Rules and Root Registry projection |
+| Direct-child inventory | **CONFIRMED at pinned tree** | 104 directories exist; presence does not establish implementation or activation |
+| Root documentation | **CONFIRMED** | Root boundary and child README contract exist |
+| Shared primitives | **CONFIRMED, bounded** | Header parsing, source-head identity, retry planning, streamed hashing/limits, integrity results, and redaction exist in internal code |
+| Injected transport layer | **CONFIRMED, bounded** | Request/response profiles, HTTPS host admission, finite retries, source-head handling, and secret-safe results exist without a concrete HTTP client |
+| Retrieval-to-SourceArtifact handoff | **CONFIRMED, bounded** | Exact successful GET bytes may become a candidate with deterministic non-effects; no persistence or lifecycle authority is created |
+| SourceArtifact contract/schema/validator | **CONFIRMED as proposed implementation** | Closed shape, deterministic identity, byte binding, temporal/lineage checks, and no-network workflow exist |
+| IngestReceipt validator prerequisite | **CONFIRMED, partial** | Validator and fixture polarity run before the receipt-presence hold |
+| Connector-run receipt presence/persistence | **HELD / NEEDS VERIFICATION** | No universal emitted instance, governed storage route, replay, correction, or signing proof is established |
+| Static non-publisher enforcement | **CONFIRMED, partial** | Selected statically resolved repository paths are checked against RAW/QUARANTINE/receipts |
+| Runtime confinement | **UNKNOWN** | Dynamic targets, external sinks, symlinks, indirect writes, every language, and runtime effects are not closed |
+| Source registration and activation | **UNKNOWN / incomplete** | Empty machine register and detailed docs do not establish active sources |
+| Source rights/currentness across lanes | **NEEDS VERIFICATION per lane** | Root documentation cannot settle volatile provider terms or endpoint fitness |
+| Downstream evidence/release integration | **UNKNOWN** | No root-wide EvidenceRef-to-release proof is established |
+| Public serving | **DENIED by boundary** | Connectors are not public APIs, maps, exports, alerts, or AI surfaces |
+
+### Material corrections from v0.6
+
+- `packages/connectors-core` is no longer accurately described as a `0.0.0` placeholder. The pinned repository contains a `0.0.1` internal implementation and focused tests.
+- The current connector gate imports and tests core primitives, injected transport, and SourceArtifact handoff in addition to the static non-publisher and receipt-validator checks.
+- The SourceArtifact family now has a proposed semantic contract, closed schema, exact-byte validator, fixtures, tests, local reference CAS tooling, and a read-only no-network workflow.
+- SourceDescriptor authority is more precisely classified as a circular metadata conflict: the singular schema points to the plural path as canonical, while the plural alias points back to the singular implementation schema.
+- ADR-0029 and the active Root Registry now provide accepted placement evidence for the existing root.
+- The current exact direct-child inventory is recorded rather than described only through representative lanes.
+- None of these corrections upgrades a source to active, proves live execution, closes rights review, creates an authoritative receipt, or establishes release/publication readiness.
 
 > [!IMPORTANT]
-> Root maturity must be stated per governed flow. A repository with many child READMEs and some placeholder packages is not automatically an implemented connector system.
+> Root maturity is flow-specific. A shared package, a closed schema, and green no-network checks are meaningful implementation evidence, but they do not collapse source identity, activation, transport, capture, receipt persistence, evidence, policy, release, and publication into one “implemented” label.
 
 [Back to top](#top)
 
@@ -214,19 +228,19 @@ Files belong under `connectors/` when their primary responsibility is **source-s
 
 Permitted material includes:
 
-- source-family coordination lanes that keep distinct products and source roles visible;
+- source-family coordination lanes that preserve distinct products and source roles;
 - product-, distribution-, endpoint-, package-, feed-, archive-, or upload-specific connector lanes;
-- source-specific clients and parsers whose network and resource behavior is explicit and testable;
+- source-specific clients and parsers with explicit network, resource, and side-effect behavior;
 - source-native identifier, field, geometry, raster, network, time-series, pagination, and manifest preservation logic;
-- caller-supplied provider or distribution profiles after rights and service-use review;
-- descriptor-gated source-head and integrity observations such as ETag, Last-Modified, content length, upstream version, revision ID, and content digest;
-- finite source-interaction results that distinguish success, no-op, denial, hold, rate limit, incompleteness, stale state, and operational error;
-- connector-local package metadata and source roots when they serve one source lane and do not become shared authority;
-- no-network fixtures and connector behavior tests using synthetic or redistribution-safe samples;
-- adapters that construct **candidate** RAW, QUARANTINE, or receipt payloads from accepted contracts;
-- child READMEs that state the source boundary, rights, sensitivity, source role, network posture, outputs, validation, correction, and rollback.
+- reviewed provider/distribution profiles whose current terms and access posture are recorded elsewhere;
+- source-head and integrity observations such as ETag, Last-Modified, upstream version, revision ID, content length, manifest checksum, and content digest;
+- finite source-interaction results that distinguish capture, no-op, denial, hold, rate limit, incomplete response, stale state, source conflict, and operational error;
+- connector-local package metadata and implementation roots when they serve one source lane;
+- no-network fixtures and connector behavior tests using synthetic, redacted, public-domain, or redistribution-safe samples;
+- adapters that construct candidate RAW, QUARANTINE, SourceArtifact, or receipt payloads from accepted contracts;
+- child READMEs that state source role, rights, sensitivity, network posture, outputs, validation, correction, and rollback.
 
-A file belongs here because it is source-specific implementation—not because it mentions an agency, domain, data product, API, download, or source.
+A file belongs here because it is source-specific implementation—not merely because it mentions an agency, domain, data product, endpoint, or download.
 
 [Back to top](#top)
 
@@ -236,25 +250,25 @@ A file belongs here because it is source-specific implementation—not because i
 
 ## What does NOT belong here
 
-| Do not put this in `connectors/` | Correct responsibility |
+| Prohibited content | Correct responsibility |
 |---|---|
-| Source-family or product doctrine presented as authority | `docs/sources/catalog/` or the applicable reviewed domain/source docs |
-| Canonical `SourceDescriptor`, activation decision, source-authority register, rights record, or sensitivity record | `data/registry/`, `control_plane/`, policy, and accepted decision homes |
-| Semantic object definitions | `contracts/` |
-| JSON Schema, DTO, enum, or machine-shape authority | `schemas/contracts/v1/` |
-| General reusable transport/retry/hash helpers used by multiple source lanes | `packages/` after a real shared-package boundary is established |
-| Generic validators or admission-gate implementations | `tools/validators/` |
-| Declarative run configuration | `pipeline_specs/` |
-| Cross-source normalization, joins, identity resolution, canonicalization, or domain transformation | `pipelines/` and downstream implementation packages |
-| Normalized WORK candidates or PROCESSED domain records | `data/work/`, `data/processed/` |
-| Catalog, STAC/DCAT/PROV, triplet, graph, or search-index authority | `data/catalog/`, `data/triplets/`, and catalog tooling |
-| `EvidenceBundle`, proof pack, validation proof, or citation-closure authority | `data/proofs/` and governed proof producers |
-| Release manifests, promotion decisions, corrections, withdrawals, rollback cards, or signatures | `release/` |
-| Published layers, PMTiles, GeoParquet, reports, stories, API payloads, or exports | `data/published/` after governed release |
-| Public API routes, UI/map components, dashboards, exports, alerts, or AI answers | governed application/runtime roots |
-| Credentials, session cookies, API keys, consent tokens, or secret values | approved secret-management systems, never repository connector files |
-| Real protected precise locations or private living-person/DNA payloads in tests or docs | denied; use synthetic/redacted fixtures under the proper fixture root |
-| A second source identity, package, registry, schema, or policy authority created by an alias path | compatibility/migration documentation only until governed disposition |
+| Source doctrine presented as authority | [`docs/sources/catalog/`](../docs/sources/catalog/README.md) or reviewed domain/source docs |
+| Canonical `SourceDescriptor`, activation decision, source-authority, rights, or sensitivity records | [`data/registry/`](../data/registry/), `control_plane/`, policy, and accepted decision homes |
+| Semantic object definitions | [`contracts/`](../contracts/README.md) |
+| Machine-shape authority | [`schemas/`](../schemas/README.md) |
+| Shared source-agnostic primitives | [`packages/`](../packages/README.md) after a real reusable boundary is proved |
+| Generic validators or admission gates | [`tools/validators/`](../tools/validators/README.md) |
+| Declarative schedules/run graphs | [`pipeline_specs/`](../pipeline_specs/README.md) |
+| Cross-source normalization, joins, identity resolution, or domain transformation | [`pipelines/`](../pipelines/README.md) and shared implementation packages |
+| WORK or PROCESSED records | [`data/work/`](../data/work/) and [`data/processed/`](../data/processed/) |
+| Catalog, STAC/DCAT/PROV, triplet, graph, or search authority | [`data/catalog/`](../data/catalog/) and [`data/triplets/`](../data/triplets/) |
+| EvidenceBundle, proof pack, or citation-closure authority | [`data/proofs/`](../data/proofs/) |
+| Release, promotion, correction, withdrawal, rollback, or signature decisions | [`release/`](../release/README.md) |
+| Published layers, PMTiles, GeoParquet, reports, stories, API payloads, or exports | [`data/published/`](../data/published/) after governed release |
+| Public API, UI/map component, dashboard, alert, export, or AI answer | Governed app/runtime roots |
+| Secret values, tokens, private keys, cookies, signed URLs, or embedded credentials | Approved secret-management systems, never repository files |
+| Real protected precision or private living-person/DNA payloads in docs/tests | Denied; use synthetic/redacted fixtures in the correct fixture root |
+| A second source identity, package, registry, schema, policy, or receipt authority through an alias path | Compatibility/migration documentation only until governed disposition |
 
 [Back to top](#top)
 
@@ -262,24 +276,24 @@ A file belongs here because it is source-specific implementation—not because i
 
 ## Inputs
 
-A mature connector invocation should receive an explicit, immutable, reviewable input packet. Current repository evidence does not establish one universal connector-input schema, so this profile is **PROPOSED** and must be specialized by accepted contracts.
+A mature connector invocation should receive an explicit, immutable, reviewable packet. The repository does not yet establish one universal connector-input schema, so the profile below is **PROPOSED** and must be specialized by accepted contracts.
 
 | Input class | Minimum governed context | Fail-closed trigger |
 |---|---|---|
-| Requested action | probe, fetch, import, inspect local package, resume, or replay; stable run/request ID | implicit or overbroad operation |
-| Connector identity | source family, product/distribution, connector/package version, source-specific entrypoint | unknown or alias-resolved-to-multiple implementations |
-| Source authority | `SourceDescriptor` reference and applicable activation/review decision | missing, stale, conflicted, inactive, denied, or unresolvable |
-| Source role and scope | allowed claim roles, domain scope, spatial/temporal limits, source-native identifiers | role collapse or scope expansion |
-| Rights and sensitivity | terms/license snapshot or reference, attribution, redistribution, consent where relevant, sensitivity/default precision | unknown, expired, revoked, incompatible, or insufficiently reviewed |
-| Access plan | reviewed host/local input, paths, parameters, method, auth reference, user agent, limits, pagination and completeness strategy | undeclared host, secret value in input, unsafe automation, or service-use mismatch |
-| Resource controls | request/byte/record/page/time/retry/deadline/cancellation limits | unbounded operation |
-| Source-head strategy | ETag, Last-Modified, version, revision, manifest checksum, content digest, or documented not-applicable reason | no content-identity or drift strategy where one is required |
-| Output sinks | caller-owned RAW, QUARANTINE, and receipt candidate destinations | connector chooses later lifecycle or public targets |
-| Deterministic dependencies | injected transport, clock, sleeper, randomness, filesystem/archive interfaces, parser limits | hidden network, clock, randomness, or write effects |
-| Correction/replay context | prior run/source-head refs, supersession/correction state, expected output identity | replay cannot identify prior state or rollback target |
+| Requested action | Probe, fetch, import, inspect local package, resume, or replay; stable run/request ID | Implicit or overbroad operation |
+| Connector identity | Source family, product/distribution, connector/package version, source-specific entrypoint | Unknown or alias-resolved-to-multiple implementations |
+| Source authority | `SourceDescriptor` ref and applicable activation/review decision | Missing, stale, conflicted, inactive, denied, or unresolvable |
+| Source role and scope | Allowed claim roles, domain scope, spatial/temporal limits, source-native identifiers | Role collapse or scope expansion |
+| Rights and sensitivity | Terms/license snapshot or ref, attribution, redistribution, consent, sensitivity/default precision | Unknown, expired, revoked, incompatible, or insufficiently reviewed |
+| Access plan | Reviewed host/local input, method, safe parameter names, auth reference, user agent, limits, pagination/completeness strategy | Undeclared host, secret value, unsafe automation, or service-use mismatch |
+| Resource controls | Request, byte, record, page, time, retry, deadline, memory, cancellation limits | Unbounded operation |
+| Source-head strategy | ETag, Last-Modified, version, revision, checksum, digest, or documented not-applicable reason | Missing drift/content-identity strategy where required |
+| Output sinks | Caller-owned RAW, QUARANTINE, and receipt candidate destinations | Connector chooses later lifecycle or public targets |
+| Deterministic dependencies | Injected transport, clock, sleeper, jitter, cancellation, filesystem/archive interfaces, parser limits | Hidden network, clock, randomness, or write effect |
+| Correction/replay | Prior run/source-head refs, supersession/correction state, expected identity | Prior state or rollback target cannot be identified |
 
 > [!CAUTION]
-> Repository files may reference an endpoint or provider without authorizing its use. Current source terms, rate limits, account requirements, and automated-access conditions must be verified per child lane before activation or live execution.
+> Repository files may name an endpoint without authorizing its use. Current terms, rate limits, account requirements, automation conditions, and data redistribution rules must be verified for the exact lane before activation or live execution.
 
 [Back to top](#top)
 
@@ -287,19 +301,20 @@ A mature connector invocation should receive an explicit, immutable, reviewable 
 
 ## Outputs
 
-Directory Rules limit connector output to governed RAW or QUARANTINE handoff plus receipts. The exact authoritative object shapes and sink ownership must come from accepted contracts and orchestration; this README does not create an enum or receipt schema.
+The direct connector boundary ends at governed RAW or QUARANTINE handoff plus receipt/process-memory candidates. Authoritative shapes and sink ownership come from accepted contracts and orchestration; this README does not create an enum or receipt schema.
 
-| Output family | Connector posture | Authority limit |
+| Output family | Required posture | Authority limit |
 |---|---|---|
-| RAW capture candidate | Preserve source-native bytes/records, source identity, retrieval metadata, checksum/source-head facts, and intended `data/raw/<domain>/<source_id>/<run_id>/` route | Not normalized truth, evidence closure, processed state, or public data |
-| QUARANTINE candidate | Preserve held payload/reference, reason codes, unresolved dependencies, safe diagnostics, and steward routing | Not a failed artifact to silently discard or auto-promote |
-| Connector/ingest receipt candidate | Preserve operation, inputs, source-head, tool/connector identity, outcome, hashes, timing, limits, and failures | Process memory; not proof, activation, promotion, or release |
-| No-op result | State why no new capture is needed and bind the observed source head | Not evidence that upstream content is unchanged beyond the observation |
-| Deny/hold/abstain result | Preserve safe public/reviewer reason families and unresolved references | No protected details in public reasons; no fallback to allow |
-| Rate-limit/retry result | Preserve provider response class, retry eligibility, bounded delay/deadline, and attempt history | Never evade controls, rotate identities, or retry without bounds |
-| Operational error | Preserve safe failure class, partial-state disposition, and cleanup/replay instructions | Never silently emit incomplete RAW as success |
+| RAW capture candidate | Preserve exact source-native bytes/records, source identity, retrieval metadata, completeness state, source-head facts, content digest, and intended route | Not normalized truth, evidence closure, processed state, or public data |
+| QUARANTINE candidate | Preserve held payload/ref, safe reason families, unresolved dependencies, and steward route | Never discard silently or auto-promote |
+| SourceArtifact candidate | Bind exact nonempty bytes to deterministic identity, safe locator, rights snapshot, parser identity, lineage, and fixed non-effects | Proposed internal verification object; not source admission, evidence, lifecycle transition, or public use |
+| Connector/ingest receipt candidate | Preserve operation, inputs, source head, connector/tool identity, limits, timing, hashes, outcome, and safe diagnostics | Process memory; not proof, activation, promotion, or release |
+| No-op | Bind the observed source head and explain why no capture is needed | Not a universal claim that upstream content is unchanged |
+| Deny/hold/abstain | Preserve safe reason families and unresolved refs | Do not leak protected details or fall back to allow |
+| Rate-limit/retry | Preserve provider response class, bounded retry eligibility, deadline, and attempts | Never evade controls or retry without bounds |
+| Operational error | Preserve safe failure class, partial-state disposition, cleanup, and replay instructions | Never emit incomplete RAW as success |
 
-Direct connector writes or hidden effects to these surfaces are prohibited:
+Direct writes or hidden effects to these surfaces are prohibited:
 
 ```text
 data/pre_raw/
@@ -315,9 +330,7 @@ release/
 public API / UI / map / export / AI surfaces
 ```
 
-Current CI runs a bounded two-part static canary. Under `connectors/`, it inspects selected Python sink calls, shell destinations, and YAML command/output keys. For targets those parsers recognize and statically resolve as repository-relative, the connector check compares them with the `data/raw/`, `data/quarantine/`, and `data/receipts/` allowlist. A separate legacy lexical check scans selected write contexts under `connectors/` and `pipelines/` for `data/catalog`, `data/published`, and `release/`.
-
-This test does not establish complete coverage of dynamic paths, unrecognized sinks or languages, external or URI targets, symlinks, runtime effects, or receipt correspondence.
+`data/pre_raw/` is named here as a denied connector output path; the adopted Directory Rules do not grant that path as a canonical lifecycle home.
 
 [Back to top](#top)
 
@@ -325,48 +338,63 @@ This test does not establish complete coverage of dynamic paths, unrecognized si
 
 ## Validation
 
-### Current executable and held checks
+### Current executable checks
 
 | Surface | Current behavior | What it proves | What it does not prove |
 |---|---|---|---|
-| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) — `connector-output-gate` | Uses its existing checkout/setup/install path to run the bounded static pytest, focused IngestReceipt suite, and deterministic fixture polarity | The connector target check, legacy publication-target canary, receipt validator behavior, and contract-fixture polarity execute without adding another dependency-install or live-source step | Source correctness, rights, sensitivity, descriptor activation, connector-emitted receipt presence, persistence, or runtime write safety |
-| [`test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Exercises the validator module against selected Python, shell, and YAML cases and preserves the legacy connector/pipeline lexical publication-target canary | Deterministic positive/negative cases, traversal handling, selected unresolved-target refusal, exclusions for path components named `test`, `tests`, `fixture`, `fixtures`, `example`, or `examples`, a non-vacuous path-filtered connector source inventory, and bounded static evidence | Complete dynamic/external/URI coverage, runtime confinement, symlinks, every language or sink, indirect/cloud/database writes, receipt correspondence, connector correctness, or release safety |
-| `connector-gate.yml` — `ingest-receipt-presence` | Depends on `connector-output-gate`, fails closed unless that prerequisite job passes, and records `CONNECTOR_RECEIPT_PRESENCE_HELD` | The stable presence boundary cannot turn green after a failed validator/static prerequisite | A connector run, connector-emitted receipt instance, persistence route, source-specific profile, replay, correction, or receipt authority |
-| [`validate_source_descriptor.py`](../tools/validators/validate_source_descriptor.py) | Runs JSON Schema validation over supplied files or the existing fixture family | The wrapper, singular schema, and fixture path are executable source | Accepted schema authority, activation, source-role correctness beyond schema, or all registry instances |
-| [`tools/validators/connector_gate/output_paths.py`](../tools/validators/connector_gate/output_paths.py) | Standard-library static output-path scanner exercised by the policy test | Selected repository-path findings for Python, shell, and YAML source | Connector admission, runtime confinement, or complete side-effect coverage |
-| Child-lane tests and fixtures | Mixed and lane-specific | Only what each inspected lane's current tests actually execute | Root-wide connector correctness or source activation |
+| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) | Installs repository test dependencies and `packages/connectors-core`; compiles/imports core, transport, and artifact-handoff modules; runs focused core tests, static non-publisher tests, and IngestReceipt validator/fixture checks | Bounded no-network implementation and static trust-boundary checks execute together | Live connectors, rights, activation, runtime confinement, persistence, evidence closure, release |
+| [`tests/packages/connectors_core/`](../tests/packages/connectors_core/) | Covers core primitives, import surface, transport success/failure/retry/safety, and artifact handoff | Deterministic internal behavior for the tested package scope | Stable public exports, concrete HTTP transport, source-specific consumers, real network behavior |
+| [`test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Exercises selected Python, shell, and YAML path findings plus a legacy lexical canary | Positive/negative static cases and bounded repository-path evidence | Dynamic/external/URI targets, symlinks, indirect writes, every language, runtime side effects |
+| `connector-gate.yml` — `ingest-receipt-presence` | Requires the prerequisite job, then records `CONNECTOR_RECEIPT_PRESENCE_HELD` | Receipt presence cannot appear green after failed prerequisites | A connector-emitted receipt, governed persistence, replay, correction, signing, or authority |
+| [`SourceArtifact` workflow](../.github/workflows/source-artifact-validation.yml) | Runs no-network contract/schema/validator/fixture tests and exact synthetic byte binding | Closed proposed shape, deterministic identity, locator/time/lineage rules, local reference CAS | Source admission, truth, evidence closure, lifecycle mutation, release, public use |
+| [`validate_source_descriptor.py`](../tools/validators/validate_source_descriptor.py) | Validates supplied files or existing fixture polarity against the fielded singular schema | Wrapper and fixture family are executable | Accepted schema authority, activation, role correctness beyond shape, or registry completeness |
+| Child-lane tests | Mixed and lane-specific | Only the exact behavior each inspected lane test executes | Root-wide connector correctness |
 
-Observed commands:
+### Repository-native commands
 
 ```bash
+python -m pip install -e ".[test]"
+python -m pip install -e "./packages/connectors-core"
+
+python -m compileall -q \
+  packages/connectors-core/src/connectors_core
+
 python -m pytest \
+  tests/packages/connectors_core \
   tests/policy/test_pipeline_connector_non_publisher.py \
+  tests/validators/test_validate_ingest_receipt.py \
   -q --strict-config --strict-markers
 
+python tools/validators/validate_ingest_receipt.py --fixtures
 python tools/validators/validate_source_descriptor.py --fixtures
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_source_artifact.py' \
+  --verbose
+
+python tools/validators/validate_source_artifact.py --fixtures
 ```
 
-For the descriptor fixture command, invalid fixtures are expected to fail schema validation while the wrapper checks that polarity and returns success only when valid examples pass and invalid examples fail as intended.
+The commands are the current documented changed-area surfaces, not proof that every environment, connector, source, or workflow succeeds. Install and test steps should remain credential-scrubbed and no-network except for approved package retrieval.
 
-### Minimum validation before a connector lane can claim implementation readiness
+### Minimum readiness evidence for a connector lane
 
-- accepted source and connector identities are stable and non-duplicated;
-- an accepted descriptor/activation profile is resolvable;
-- default tests perform no live network requests;
-- imports and documentation builds have no network or write side effects;
-- fixtures are synthetic, redacted, public-domain, or redistribution-safe;
-- provider/service behavior is profile-gated, bounded, and current;
-- rights, attribution, sensitivity, privacy, consent, and source-role negative cases fail closed;
-- pagination, truncation, partial response, stale state, source-head drift, and schema drift are tested;
-- retry, timeout, cancellation, rate limit, byte/record/page limits, and cleanup are deterministic;
-- RAW, QUARANTINE, no-op, denial, rate-limit, and error outcomes are exercised;
-- forbidden writes to every later lifecycle, proof, release, and public surface are tested;
-- receipt candidates bind operation, connector identity, descriptor/source head, inputs, outputs, limits, hashes, and outcome;
-- replay and correction tests preserve prior identity and do not duplicate source captures;
-- CI commands, ownership, and required-check significance are verified.
+- stable connector/source/product/alias identity;
+- accepted descriptor and activation context;
+- no live network in default unit tests or imports;
+- rights-safe fixtures and explicit source-role negative cases;
+- bounded host, redirect, retry, timeout, cancellation, byte/record/page, and completeness behavior;
+- source-head, pagination, truncation, stale, schema-drift, and conflict tests;
+- RAW, QUARANTINE, no-op, deny/hold, rate-limit, and error outcomes;
+- forbidden later-lifecycle and public-write tests;
+- receipt binding across operation, connector version, descriptor, source head, inputs, output IDs/digests, limits, and outcome;
+- replay/correction identity without duplicate captures;
+- observed workflow result at the exact revision;
+- source-owner, rights/sensitivity, security, domain, and release review appropriate to consequence.
 
 > [!IMPORTANT]
-> A green static boundary check is useful evidence, but it is not a `SourceActivationDecision`, admission record, ingest receipt, `EvidenceBundle`, promotion decision, release approval, or publication proof.
+> A green check is evidence for its assertions. It is not a `SourceActivationDecision`, source-rights approval, ingest receipt instance, `EvidenceBundle`, promotion decision, release approval, or publication proof.
 
 [Back to top](#top)
 
@@ -374,22 +402,22 @@ For the descriptor fixture command, invalid fixtures are expected to fail schema
 
 ## Review burden
 
-CODEOWNERS currently routes `/connectors/` changes to `@bartytime4life`. That is GitHub review routing, not proof of a connector stewardship assignment, source-owner approval, rights clearance, independent review, or separation of duties.
+CODEOWNERS and the Root Registry currently route `connectors/` to `@bartytime4life`. Routing is not proof of source stewardship, rights clearance, independent review, or release authority.
 
 | Change class | Minimum review posture |
 |---|---|
-| README-only clarification | Connector-aware maintainer plus docs review. |
-| Source-specific parsing or transport | Connector/source maintainer plus affected domain owner and validation reviewer. |
-| New endpoint, service, distribution, provider profile, or automation method | Source owner/steward, rights/terms reviewer, security reviewer, and affected domain reviewer. |
-| Credentials, accounts, authentication, private services, or protected local inputs | Security/identity review; secrets remain outside repository bytes. |
-| Rights, redistribution, consent, privacy, sensitive locations, living persons, DNA/genomics, archaeology/cultural knowledge, rare species, or critical infrastructure | Relevant specialist and policy/sensitivity reviewer; fail closed without ownership. |
-| Source role, authority class, or admissibility limit | Source/domain/evidence review and accepted contract/schema/policy alignment. |
-| Shared connectors-core primitive | Package owner plus representative connector consumers and compatibility/test review. |
-| Connector path, alias, package namespace, or source-ID migration | Directory-governance review, affected consumers, migration/deprecation plan, and rollback proof; ADR where authority changes. |
-| Contract, schema, reason-code, receipt, or policy change | Owning contract/schema/policy/receipt maintainers plus fixtures, validators, consumers, and migration review. |
-| Source activation, promotion, release, correction, or rollback | Separate governing decision outside connector self-approval; connector authors do not approve their own public release. |
+| README-only clarification | Connector-aware maintainer and docs review |
+| Source-specific parsing or transport | Connector/source maintainer, affected domain owner, validation reviewer |
+| New endpoint, provider, distribution, automation method | Source steward, rights/terms reviewer, security reviewer, affected domain reviewer |
+| Credentials, accounts, protected local inputs | Security/identity review; secrets remain external |
+| Sensitive people/DNA, archaeology, rare species, infrastructure, private land, or protected precision | Qualified specialist plus policy/sensitivity review; fail closed without ownership |
+| Source role, authority class, or admissibility | Source/domain/evidence review and contract/schema/policy alignment |
+| Shared connectors-core change | Package owner, representative consumers, compatibility and test review |
+| Alias, path, package namespace, or source-ID migration | Directory-governance review, migration/deprecation plan, reference repair, rollback; ADR when authority changes |
+| Contract/schema/reason/receipt/policy change | Owning authority maintainers plus fixtures, validators, consumers, and migration review |
+| Source activation, promotion, release, correction, rollback | Separate governing decision; connector authors do not approve their own public release |
 
-Accepted owners, required reviews, branch rules, and independent approval controls remain **NEEDS VERIFICATION**.
+Escalate unresolved rights, sensitivity, source identity, alias ownership, or public-precision questions before live use. Accepted steward assignments, required reviews, and separation-of-duty enforcement remain **NEEDS VERIFICATION**.
 
 [Back to top](#top)
 
@@ -401,21 +429,26 @@ Accepted owners, required reviews, branch rules, and independent approval contro
 
 | Surface | Relationship |
 |---|---|
-| [Directory Rules](../docs/doctrine/directory-rules.md) | Placement, connector output boundary, lifecycle, anti-pattern, and migration doctrine. |
-| [Source Admission Process](../docs/sources/ADMISSION_PROCESS.md) | Human-facing pre-RAW admission doctrine; not current implementation proof. |
-| [`docs/sources/catalog/`](../docs/sources/catalog/README.md) | Source-family and product doctrine. |
-| [`data/registry/sources/`](../data/registry/sources/README.md) | Source identity, role, rights, sensitivity, cadence, and registry instances; current machine register synchronization is incomplete. |
-| [`control_plane/source_authority_register.yaml`](../control_plane/source_authority_register.yaml) | Machine source-authority index; currently empty. |
-| [`contracts/source/`](../contracts/source/) | Semantic meaning for source and ingest objects. |
-| [`schemas/contracts/v1/source/`](../schemas/contracts/v1/source/) | Fielded singular source schemas used by current wrapper. |
-| [`schemas/contracts/v1/sources/`](../schemas/contracts/v1/sources/) | Plural schema lane referenced as canonical by singular schema metadata; authority remains conflicted. |
-| [`policy/rights/`](../policy/rights/) and [`policy/sensitivity/`](../policy/sensitivity/) | Admissibility gates and obligations. |
-| [`data/raw/`](../data/raw/), [`data/quarantine/`](../data/quarantine/), [`data/receipts/`](../data/receipts/) | Permitted direct handoff surfaces. |
-| [`pipelines/`](../pipelines/README.md) | Normalization, validation, promotion candidates, and later lifecycle work outside connector ownership. |
-| [`packages/connectors-core/`](../packages/connectors-core/README.md) | Proposed shared primitive package; currently a `0.0.0` placeholder. |
-| [`tools/validators/connector_gate/`](../tools/validators/connector_gate/README.md) | Owns a bounded output-path scanner; the full admission-readiness executable/report remains unestablished. |
-| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) | Partial static non-publisher enforcement and explicit receipt hold. |
-| [`release/`](../release/README.md) | Release, correction, withdrawal, and rollback decisions outside connector authority. |
+| [Directory Rules](../docs/doctrine/directory-rules.md) | Adopted placement, dependency, write-capability, README, migration, and validation doctrine |
+| [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepts the current Directory Rules bytes |
+| [Root Registry](../control_plane/root_registry.yaml) | Machine projection classifying `root.connectors`; not authority by itself |
+| [Source Admission Process](../docs/sources/ADMISSION_PROCESS.md) | Human pre-RAW admission guidance; not implementation proof |
+| [`docs/sources/catalog/`](../docs/sources/catalog/README.md) | Source-family/product doctrine |
+| [`data/registry/sources/`](../data/registry/sources/README.md) | Source identity, role, rights, sensitivity, cadence, registry instances |
+| [`source_authority_register.yaml`](../control_plane/source_authority_register.yaml) | Machine source-authority index; currently proposed and empty |
+| [`contracts/source/`](../contracts/source/) | Source and ingest semantics |
+| [`schemas/contracts/v1/source/`](../schemas/contracts/v1/source/) | Fielded source schemas and SourceArtifact profile |
+| [`schemas/contracts/v1/sources/`](../schemas/contracts/v1/sources/) | SourceDescriptor alias lane participating in the current authority conflict |
+| [`packages/connectors-core/`](../packages/connectors-core/README.md) | Internal `0.0.1` shared primitives, injected transport, and artifact handoff; no stable root export |
+| [`tests/packages/connectors_core/`](../tests/packages/connectors_core/) | Focused no-network tests for the shared package |
+| [`tools/validators/connector_gate/`](../tools/validators/connector_gate/README.md) | Bounded static output-path scanner |
+| [`SourceArtifact` contract](../contracts/source/source_artifact.md) | Proposed exact-captured-byte semantic boundary |
+| [`SourceArtifact` schema](../schemas/contracts/v1/source/source_artifact.schema.json) | Closed machine shape |
+| [`SourceArtifact` validator](../tools/validators/validate_source_artifact.py) | Deterministic shape/semantic/byte-binding checks |
+| [`connector-gate.yml`](../.github/workflows/connector-gate.yml) | Partial connector/core/receipt prerequisite enforcement |
+| [`source-artifact-validation.yml`](../.github/workflows/source-artifact-validation.yml) | Separate no-network SourceArtifact validation |
+| [`pipelines/`](../pipelines/README.md) | Normalization and later lifecycle work |
+| [`release/`](../release/README.md) | Release/correction/withdrawal/rollback decisions outside connector authority |
 
 [Back to top](#top)
 
@@ -425,13 +458,14 @@ Accepted owners, required reviews, branch rules, and independent approval contro
 
 | Decision record | Status | Relevance |
 |---|---:|---|
-| [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | **PROPOSED** | Descriptor-level and record-level admission model; not accepted authority yet. |
-| [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Default schema-home decision; current singular/plural source-schema conflict remains unresolved operationally. |
-| [`ADR-0003 — Singular Policy Root`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Policy-root compatibility control; does not activate source policy. |
-| Connector lane/alias/source-ID normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Needed before declaring one family/product/alias topology universally canonical. |
-| Connector outcome, ingest-receipt, and admission-gate normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Needed before one root-wide machine contract can be claimed. |
+| [`ADR-0029 — Adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Governs current root placement and machine projection |
+| [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | **PROPOSED** | Descriptor/record admission model; not accepted authority |
+| [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Relevant to circular singular/plural SourceDescriptor metadata |
+| [`ADR-0003 — Singular Policy Root`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Policy-root compatibility; does not activate source policy |
+| Connector alias/source-ID normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Required before universal family/product/alias topology claims |
+| Root-wide connector outcome and receipt normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Required before one machine outcome/receipt contract is claimed |
 
-This README records current repository evidence and open decisions. It does not accept an ADR, activate a source, or normalize paths through prose.
+This README records evidence and open decisions. It does not accept a proposed ADR, resolve aliases, activate a source, or migrate paths through prose.
 
 [Back to top](#top)
 
@@ -439,59 +473,190 @@ This README records current repository evidence and open decisions. It does not 
 
 ## Last reviewed
 
-**2026-07-29** against `main@9e0808149b2a391f171021d9bdca59311e80be36` plus the current bounded working diff.
+**2026-08-08**
+
+Evidence snapshot: `main@753cda68c468e8d01457c38e563c107a437aa608`, root tree `637f840667060074adc91564ae3b709b7d84ff9e`, connector tree `a42079263e682022cd0cab3c22456d5c805ce637`, prior README blob `11184062e9917b5cc34c6d73b67dbc0ef995f913`.
 
 Reviewed:
 
-- the complete v0.4 preimage;
-- current Directory Rules connector, lifecycle, validation, anti-pattern, README, and migration boundaries;
-- `connector-gate.yml`, the bounded connector scanner/test, and the preserved legacy connector/pipeline lexical publication-target canary;
-- the fielded singular `SourceDescriptor` schema and observed validator wrapper;
-- the source-authority machine register;
-- connectors-core package documentation and placeholder maturity;
-- CODEOWNERS routing;
-- representative USGS, OpenStreetMap/OSM, Kansas Mesonet, and People compatibility-lane documentation.
+- complete v0.6 target bytes and legacy anchors;
+- accepted ADR-0029, current Directory Rules, and Root Registry projection;
+- exact direct-child inventory;
+- connector-gate workflow and bounded hold semantics;
+- `connectors-core` package metadata, source tree, internal contracts, and focused tests;
+- SourceArtifact contract, schema, validator, tests, and workflow;
+- singular/plural SourceDescriptor schema metadata;
+- empty source-authority machine register;
+- CODEOWNERS routing and representative topology conflicts.
 
 Not established:
 
-- an exhaustive recursive connector tree or source inventory;
-- active `SourceDescriptor` and activation-decision coverage;
-- current endpoint, provider, rights, cadence, or rate-limit fitness for every lane;
-- live network execution, deployment, consumers, schedules, or emitted ingest receipts;
-- complete validator/test/fixture/workflow coverage;
-- required-check and independent-review enforcement;
-- production promotion, correction, rollback, release, or public-delivery integration.
+- recursive semantic classification of every child lane;
+- current provider terms, endpoint fitness, credentials, consent, rates, cadence, or rights;
+- active source and activation-decision coverage;
+- concrete live transport and source-specific adoption of shared core;
+- connector-emitted receipt instances and governed persistence;
+- runtime confinement across every sink/language;
+- downstream EvidenceRef-to-release closure;
+- required review/ruleset enforcement, deployment, release, or publication.
+
+Review again when authority, root class, connector writers/consumers, shared package exports, SourceDescriptor authority, source activation, receipt persistence, validation coverage, alias migration, sensitivity posture, or public-boundary behavior changes.
 
 [Back to top](#top)
 
 ---
 
 <a id="directory-tree"></a>
+
+## Direct-child directory map
+
+The following is the exact tracked direct-child map at connector tree `a42079263e682022cd0cab3c22456d5c805ce637`. It records **presence only**. Names may represent source families, products, domains, aliases, compatibility paths, supplied-input lanes, or mixed maturity. The map does not activate, normalize, or approve any lane.
+
+```text
+connectors/
+├── README.md
+├── agriculture/
+├── ahgp/
+├── airnow/
+├── archaeology/
+├── atmosphere/
+├── blm/
+├── census/
+├── domains/
+├── drought-monitor/
+├── ebird/
+├── eddmaps/
+├── epa/
+├── epa_aqs/
+├── familysearch/
+├── fauna/
+├── fema-nfhl/
+├── fema-openfema/
+├── fema/
+├── fhwa_hpms/
+├── fhwa_nhfn/
+├── flora/
+├── fra_form57/
+├── fra_gcis/
+├── ftDNA/
+├── gbif/
+├── geology/
+├── gnis/
+├── goes_abi_aod/
+├── habitat/
+├── hazards/
+├── hifld/
+├── hms_smoke/
+├── hrrr_smoke/
+├── idigbio/
+├── inaturalist/
+├── isric/
+├── kansas/
+├── kansas_memory/
+├── kansas_mesonet/
+├── kansas_state_archives/
+├── kbs/
+├── kcc_oil_gas_reg/
+├── kdot/
+├── kdwp/
+├── kdwp_ert/
+├── kgs/
+├── kgs_bedrock/
+├── kgs_kdhe_wwc5/
+├── kgs_las/
+├── kgs_oil_gas_wells/
+├── kgs_surficial/
+├── khri/
+├── ksgs/
+├── ksu_research_extension/
+├── ku_herbarium/
+├── lf/
+├── loc/
+├── local_upload/
+├── manual_curation/
+├── nasa-earthdata/
+├── nasa-firms/
+├── nasa-hls/
+├── nasa-smap/
+├── nasa/
+├── nass/
+├── natureserve/
+├── newspapers/
+├── nlcd/
+├── noaa-hms-smoke/
+├── noaa-storm-events/
+├── noaa-uscrn/
+├── noaa/
+├── noaa_storm_events/
+├── nrcs-scan/
+├── nrcs-ssurgo/
+├── nrcs/
+├── ntad/
+├── nws-api/
+├── nws/
+├── openaq/
+├── openstreetmap/
+├── osm/
+├── people-dna-land/
+├── people/
+├── settlements-infrastructure/
+├── soil/
+├── ssurgo/
+├── state-emergency-context/
+├── stb_class1/
+├── symbiota/
+├── tiger_line/
+├── usda-nass/
+├── usda-plants/
+├── usda/
+├── usda_plants/
+├── usfws-ecos/
+├── usfws/
+├── usfws_ecos/
+├── usgs-earthquake/
+├── usgs/
+├── usgs_mrds/
+├── usgs_ngmdb/
+├── viirs_hotspot/
+└── wzdx/
+```
+
+### Inventory observations
+
+- 104 direct child directories and one root README are tracked.
+- Both family-style and product-style layouts exist.
+- Hyphen, underscore, abbreviation, compound-name, and mixed-case patterns coexist.
+- Known candidate alias/conflict families include `openstreetmap/` and `osm/`; `people-dna-land/` and `people/`; `noaa-storm-events/` and `noaa_storm_events/`; `usda-plants/` and `usda_plants/`; `usfws-ecos/` and `usfws_ecos/`; `nrcs-ssurgo/` and `ssurgo/`.
+- `ftDNA/` is a pre-existing mixed-case direct child and is not treated as a new naming precedent.
+- No move, rename, deletion, alias resolution, or source-ID decision occurs in this documentation update.
+
+[Back to top](#top)
+
+---
+
 <a id="connector-lane-patterns"></a>
 
 ## Connector topology and lane classes
 
-The repository contains multiple connector shapes. This README classifies them without silently renaming, merging, or making one observed pattern universal.
-
-| Lane class | Representative inspected or documented shape | Safe interpretation |
+| Lane class | Representative current shape | Safe interpretation |
 |---|---|---|
-| Source-family coordination lane | `connectors/usgs/` | Coordinates multiple distinct products; family identity is not one source role or one activation. |
-| Product/distribution lane | nested or flat product paths such as USGS product sublanes, WZDx, or VIIRS-related lanes | Owns source-specific implementation only after descriptor, rights, role, and path posture are resolved. |
-| Implementation/package lane | `connectors/openstreetmap/` with package/source/test READMEs | Documentation-rich but implementation-light; package presence and version `0.0.0` do not prove runtime behavior. |
-| Nested source/package/test sublanes | `src/`, import-package, and `tests/` directories within a connector family | Local implementation/test boundaries, not independent source or release authority. |
-| Compound source name | paths such as `usgs_mrds` or `usgs_ngmdb` | Existing naming pattern; universal canonicality is not inferred. |
-| Short-name compatibility alias | `connectors/osm/`, `connectors/people/` | README-only or compatibility-focused in inspected examples; must not duplicate implementation or source identity. |
-| Multi-variant compatibility topology | Kansas Mesonet underscore, family/product, short-name, deleted, and proposed variants | `CONFLICTED`; freeze new parallel implementation until path, identity, consent, and migration are governed. |
-| Sensitive-domain connector boundary | People/DNA/Land and other protected-source lanes | Deny/quarantine by default where identity, consent, rights, sensitivity, or public precision is unresolved. |
+| Source-family coordination | `usgs/`, `nasa/`, `noaa/`, `nrcs/`, `fema/` | Coordinates products; family identity is not one source role or activation |
+| Product/distribution | `nasa-smap/`, `nrcs-ssurgo/`, `fema-nfhl/`, `usgs-earthquake/` | Owns source-specific implementation after identity/rights/role review |
+| Domain coordination | `agriculture/`, `geology/`, `soil/`, `domains/` | May coordinate source lanes; cannot become domain truth authority |
+| State/institution source | `kdot/`, `kdwp/`, `kgs/`, `kbs/`, `ku_herbarium/` | Requires source-native role, rights, and product distinctions |
+| Supplied/local input | `local_upload/`, `manual_curation/` | No live-network implication; still requires source identity, rights, sensitivity, receipts |
+| Abbreviation/compatibility | `osm/`, `people/`, `lf/`, `loc/` | Must not duplicate source identity, implementation, fixtures, or receipts |
+| Naming variants | hyphen/underscore/mixed-case pairs | `CONFLICTED`; freeze new parallel implementation until governed migration |
+| Sensitive boundary | people/DNA, archaeology, infrastructure, protected biodiversity | Default deny/quarantine when consent, rights, identity, or precision is unresolved |
 
 ### Topology rules
 
-1. Source families may coordinate; products retain distinct roles, rights, cadence, endpoints, and activation decisions.
+1. Families may coordinate; products retain distinct role, rights, cadence, endpoints, versions, and activation decisions.
 2. An abbreviation or alternate slug must not mint a second connector, package, source ID, descriptor family, fixture set, receipt stream, or release path.
-3. Nested versus flat placement must be resolved by responsibility, consumers, current evidence, and migration cost—not convenience.
-4. Source-specific code stays in the chosen connector lane; source-agnostic primitives graduate to a reviewed shared package.
-5. Path migration requires reference updates, compatibility/deprecation posture where needed, validation, and rollback. A README cannot perform the migration by declaration.
-6. A complete root inventory should be generated by repository tooling before maintainers claim topology normalization or coverage.
+3. Flat versus nested placement is decided by responsibility, consumers, current evidence, and migration cost—not convenience.
+4. Source-specific code stays in its chosen connector lane; source-agnostic primitives graduate to a reviewed shared package.
+5. Migration requires accepted authority, reference repair, compatibility/deprecation posture, validation, and rollback.
+6. Presence in the exact tree does not establish implementation, active source status, or source fitness.
 
 [Back to top](#top)
 
@@ -507,8 +672,8 @@ flowchart LR
     EXT["External or supplied source"] --> INV["Explicit connector invocation"]
     INV --> ID["Resolve connector + SourceDescriptor + activation context"]
     ID --> GATE{"Identity, role, rights, sensitivity, access, limits, source head clear?"}
-    GATE -->|admit candidate| RAW["RAW capture candidate<br/>+ receipt candidate"]
-    GATE -->|hold or unsafe payload| QUAR["QUARANTINE candidate<br/>+ reason + receipt candidate"]
+    GATE -->|capture candidate| RAW["RAW candidate<br/>+ SourceArtifact/receipt candidates"]
+    GATE -->|hold or unsafe payload| QUAR["QUARANTINE candidate<br/>+ safe reason + receipt candidate"]
     GATE -->|deny / no-op / rate limit| STOP["Finite non-capture result<br/>+ receipt candidate"]
     GATE -->|system failure| ERR["ERROR<br/>safe diagnostics + replay state"]
 
@@ -530,22 +695,23 @@ flowchart LR
     class PIPE,WORK,PROC,CAT,REL,PUB downstream
 ```
 
-The diagram is an authority map, not proof that a universal connector runtime exists. The direct connector boundary ends at RAW, QUARANTINE, or a receipt-ready finite result. Every later state transition is owned elsewhere and must remain auditable.
+The diagram is an authority map, not proof that one universal connector runtime exists. Direct connector authority ends at RAW, QUARANTINE, SourceArtifact/receipt candidates, or a finite non-capture result.
 
 ### Source-role anti-collapse
 
-A connector must preserve, not blur:
+A connector must preserve:
 
 - observed versus modeled versus aggregate versus administrative versus candidate material;
-- source family versus specific product, distribution, endpoint, or upstream version;
-- discovery/catalog carrier versus the underlying asset;
+- source family versus product, distribution, endpoint, and upstream version;
+- discovery/catalog carrier versus underlying asset;
 - source-native quality flags versus KFM validation results;
-- upstream currentness versus connector retrieval time and KFM release time;
+- source update time versus retrieval, processing, release, and correction time;
 - exact source geometry versus public-safe derivative geometry;
 - successful transport versus complete response;
 - fixture behavior versus live source behavior;
-- RAW capture versus normalized admission;
-- connector receipt versus evidence, proof, or release.
+- captured bytes versus parsed assertions;
+- RAW candidate versus downstream admission;
+- connector receipt versus evidence, proof, policy, review, release, or publication.
 
 [Back to top](#top)
 
@@ -555,18 +721,20 @@ A connector must preserve, not blur:
 
 | ID | Conflict or gap | Current evidence | Required disposition |
 |---|---|---|---|
-| CONN-001 | Singular versus plural `SourceDescriptor` schema authority | Fielded singular schema declares plural path canonical; plural lane is separately referenced | Accept/migrate one authority; preserve compatibility and fixture parity. |
-| CONN-002 | Declared versus observed descriptor validator and fixtures | Schema metadata names nested validator/test fixtures; wrapper invokes root validator and root fixture family | Reconcile metadata, wrapper, fixtures, tests, and consumers in one governed packet. |
-| CONN-003 | Empty source-authority machine register | `control_plane/source_authority_register.yaml` contains `entries: []` | Populate only through reviewed source-governance work; do not infer activation from child docs. |
-| CONN-004 | Partial connector-gate enforcement | Current workflow runs one bounded two-part static canary with deterministic positive/negative cases | Add restricted sink/runtime and receipt-binding proof without treating this static pass as admission or release authority. |
-| CONN-005 | Connector-run IngestReceipt presence unestablished | The repository-owned validator, focused tests, deterministic contract fixtures, and CI prerequisite exist; no connector-emitted instance or persistence route is checked | Bind a deterministic connector run to the accepted receipt profile and governed persistence, replay, correction, and review controls without live-source PR dependencies. |
-| CONN-006 | Full connector-admission validator unestablished | The bounded output-path module exists, but the proposed admission packet/report CLI and dedicated validator suite do not | Implement the smallest deterministic no-network admission gate before broader enforcement claims. |
-| CONN-007 | Shared connector runtime placeholder | connectors-core is version `0.0.0`, empty/comment-only at inspected surfaces | Implement and test source-agnostic primitives or keep the package explicitly placeholder. |
-| CONN-008 | Child path and alias drift | Inspected OSM/OpenStreetMap, People/People-DNA-Land, and Mesonet variants coexist | Record accepted identity/path/migration decision; block parallel implementation. |
-| CONN-009 | Source documentation can outrun activation | Many detailed READMEs exist while active register/runtime evidence is missing | Keep docs valuable but label activation, tests, endpoints, and consumers separately. |
-| CONN-010 | Static guard remains bounded | Selected statically resolved connector repository targets use the DIR-PLACE-003 allowlist, while dynamic/external targets, unrecognized sinks, runtime escape, and receipt correspondence remain unproved | Add restricted sink and runtime tests; do not treat static coverage as complete enforcement. |
-| CONN-011 | External service terms and fitness are lane-specific and volatile | Root docs cannot establish current endpoint, license, consent, rate-limit, or service-use posture | Reverify in each activation/review cycle; pin evidence and expiry. |
-| CONN-012 | Root-wide outcome vocabulary is not accepted | Child docs use several descriptive states and receipt families | Normalize through contracts/ADRs; do not invent an enum here. |
+| CONN-001 | Circular SourceDescriptor schema authority | Singular schema names plural as canonical; plural alias names singular as implementation canonical | Accept one authority; repair metadata, refs, fixtures, validators, and consumers with compatibility |
+| CONN-002 | Descriptor validator/fixture path divergence | Schema metadata and root wrapper/fixture paths do not present one settled layout | Reconcile in one governed dependency-closed packet |
+| CONN-003 | Empty source-authority machine register | `entries: []` | Populate only through reviewed source governance; never infer activation from docs |
+| CONN-004 | Static connector guard is partial | Current scanner/test covers selected Python, shell, YAML, and lexical paths | Add restricted-sink/runtime evidence without overstating static coverage |
+| CONN-005 | Connector-run receipt presence is held | Validator/fixtures/prerequisite exist; no emitted instance/persistence check | Bind a deterministic connector run to accepted receipt profile and governed persistence |
+| CONN-006 | Shared core adoption is unproved | `0.0.1` internal package exists and is tested; source-specific consumers were not established here | Adopt lane by lane with compatibility and no-network tests |
+| CONN-007 | Stable core API and license are unresolved | Package root exports no stable API; metadata license remains `TBD` | Accept export/version/license posture before external reliance |
+| CONN-008 | Direct-child alias and naming drift | 104-dir inventory includes duplicate-style families and mixed case | Decide identities/migrations; block parallel implementation |
+| CONN-009 | Documentation can outrun activation | Many detailed child READMEs; empty source-authority register | Keep docs useful while labeling activation and execution separately |
+| CONN-010 | SourceArtifact handoff is candidate-only | Contract/schema/validator/core handoff exist with fixed non-effects | Establish descriptor/receipt correspondence, persistence, lifecycle transition, correction |
+| CONN-011 | Provider terms and fitness are volatile | Root docs cannot establish current external terms | Reverify for each activation/review cycle and pin evidence/expiry |
+| CONN-012 | Root-wide outcome vocabulary is not accepted | Child docs and code use several descriptive states | Normalize through accepted contract/ADR, not this README |
+| CONN-013 | Active-source monitoring and deactivation are unproved | No root-wide observed run/health/correction cascade | Define monitoring, revocation, source drift, cache and downstream correction behavior |
+| CONN-014 | First proof-bearing connector slice is unresolved | Multiple candidate lanes exist | Select one fixture-first no-network slice with full evidence-to-rollback closure |
 
 [Back to top](#top)
 
@@ -574,33 +742,35 @@ A connector must preserve, not blur:
 
 ## Connector outcomes and receipt boundary
 
-The terms below describe required semantic distinctions; they are **not** a new canonical enum.
+The terms below preserve required distinctions; they are not a new canonical enum.
 
 | Semantic result | Required behavior |
 |---|---|
-| Capture candidate | Preserve exact source and run identity, content/source-head evidence, completeness state, intended RAW route, and receipt metadata. |
-| Quarantine candidate | Preserve safe held material/reference, reason families, unresolved dependencies, reviewer route, and no-public exposure. |
-| Deny | Do not contact, capture, persist, or expose beyond what the accepted policy allows; emit safe audit metadata. |
-| Hold / review required | Stop before the blocked action; preserve unresolved refs and reviewer requirements. |
-| Abstain / unsupported | State that the connector cannot decide or represent the requested source action from current support. |
-| No-op | Bind the source-head observation and explain why no capture occurred. |
-| Rate-limited / retry later | Preserve bounded retry eligibility and deadline; do not evade upstream controls. |
-| Error | Preserve safe diagnostics, partial-state cleanup, and replay context; never fall back to success or public exposure. |
+| Capture candidate | Preserve exact source/run identity, source-head evidence, completeness, intended RAW route, output digest, receipt metadata |
+| Quarantine candidate | Preserve safe held material/ref, reason families, unresolved dependencies, reviewer route, no-public exposure |
+| Deny | Do not contact, capture, persist, or expose beyond accepted policy; emit safe audit metadata |
+| Hold/review required | Stop before blocked action; preserve refs and reviewer requirements |
+| Abstain/unsupported | State that the connector cannot decide or represent the requested operation |
+| No-op | Bind source-head observation and explain why no capture occurred |
+| Rate-limited/retry later | Preserve bounded eligibility/deadline; do not evade upstream controls |
+| Error | Preserve safe diagnostics, cleanup, replay context; never fall back to success |
+| Source conflict | Preserve separate captures and conflict lineage; do not choose by plausibility |
+| Malformed capture | Preserve exact bytes and parser identity while withholding downstream interpretation |
 
-A mature connector receipt candidate should identify:
+A mature receipt candidate should identify:
 
-- run/request and connector version;
-- source, descriptor, activation, provider/distribution, and endpoint/local-input references;
-- requested operation and effective resource limits;
+- run/request ID and connector version;
+- source, descriptor, activation, provider/product, and endpoint/local-input refs;
+- requested operation and effective limits;
 - source-head and integrity observations;
-- retrieval/capture start and end times;
-- byte, record, page, request, retry, and truncation counts where relevant;
-- output candidate IDs, digests, and intended RAW/QUARANTINE routes;
+- start/end times;
+- byte, record, page, request, retry, redirect, and truncation counts;
+- output candidate IDs, digests, and intended routes;
 - finite outcome, reason families, obligations, and safe diagnostics;
-- policy/review dependency refs;
-- correction, supersession, prior-run, and replay refs.
+- policy/review dependencies;
+- prior-run, correction, conflict, supersession, and replay refs.
 
-Receipt shape, persistence, signing, and authority remain governed by their accepted contracts. A helper object or log line is not automatically an authoritative receipt.
+Receipt shape, persistence, signing, and authority remain governed by accepted contracts. A log line or helper object is not automatically an authoritative receipt.
 
 [Back to top](#top)
 
@@ -612,22 +782,22 @@ Receipt shape, persistence, signing, and authority remain governed by their acce
 
 Every non-trivial connector lane should make these items reviewable:
 
-1. stable source family, product/distribution, path, package, and alias identity;
+1. stable family, product/distribution, path, package, source-ID, and alias identity;
 2. purpose, audience, authority, status, and implementation evidence boundary;
-3. source doctrine links and source-role anti-collapse rules;
-4. current inventory of package/source/test/fixture surfaces, with bounded absence language;
+3. source-doctrine links and source-role anti-collapse rules;
+4. current package/source/test/fixture inventory with bounded absence language;
 5. accepted and prohibited services, methods, upstream mutations, and automation patterns;
 6. current rights, attribution, redistribution, consent, privacy, sensitivity, and precision posture;
-7. descriptor, activation, provider-profile, endpoint/local-input, and resource-limit inputs;
+7. descriptor, activation, provider profile, endpoint/local input, and resource-limit inputs;
 8. source-native preservation, completeness, freshness, pagination, source-head, and integrity behavior;
-9. finite outcomes, RAW/QUARANTINE/receipt candidate boundary, and forbidden downstream writes;
+9. finite outcomes, RAW/QUARANTINE/SourceArtifact/receipt candidate boundary, and forbidden writes;
 10. deterministic no-network fixtures and positive/negative tests;
-11. security, secrets, logging, retry, timeout, cancellation, cleanup, and replay behavior;
-12. correction, source deactivation, supersession, migration, and rollback;
-13. concrete definition of done and open verification register;
+11. secret handling, logging, retry, timeout, cancellation, cleanup, and replay behavior;
+12. correction, conflict, deactivation, supersession, migration, and rollback;
+13. definition of done and open verification register;
 14. evidence ledger separating repository facts, upstream facts, doctrine, proposals, conflicts, and unknowns.
 
-Child docs must not claim endpoint permission, activation, successful execution, currentness, receipt emission, public safety, release, or publication unless current evidence proves that exact claim.
+A child README must not claim endpoint permission, activation, successful live execution, receipt emission, public safety, release, or publication without current evidence for that exact claim.
 
 [Back to top](#top)
 
@@ -641,17 +811,17 @@ Before relying on a connector or source-derived claim:
 
 1. Start with this root README for responsibility and trust boundaries.
 2. Inspect the exact family, product, alias, package, source-root, and test READMEs.
-3. Resolve source-family and product doctrine under `docs/sources/catalog/`.
-4. Resolve the current `SourceDescriptor`, machine register entry, activation/review decision, and correction state.
-5. Inspect applicable contracts, schemas, reason/obligation vocabularies, rights, sensitivity, consent, and source-role policy.
-6. Inspect package/source code, default configuration, provider profiles, network side effects, imports, secret handling, and bounded resources.
-7. Inspect deterministic fixtures, negative cases, direct connector tests, validator code, workflow definition, and observed workflow run for the target revision.
-8. Resolve connector/ingest receipt instances, source-head identity, output digests, intended lifecycle route, and replay/correction refs.
-9. Inspect downstream pipeline validation, proof/evidence closure, release decision, correction lineage, and rollback target before relying on any public surface.
+3. Resolve source doctrine under `docs/sources/catalog/`.
+4. Resolve the current SourceDescriptor, machine register entry, activation/review decision, and correction state.
+5. Inspect applicable contracts, schemas, rights, sensitivity, consent, source-role policy, and reason/obligation vocabularies.
+6. Inspect code, package exports, provider profiles, network effects, imports, secrets, limits, and sinks.
+7. Inspect deterministic fixtures, negative cases, direct tests, validators, workflow definition, and exact-head run.
+8. Resolve receipt instances, source-head identity, output digests, intended lifecycle routes, and replay/correction refs.
+9. Inspect downstream validation, EvidenceRef/EvidenceBundle closure, policy/review, release, correction, and rollback before relying on a public surface.
 10. Abstain or deny when required evidence is missing, stale, conflicted, or unsafe.
 
 > [!CAUTION]
-> Never run live source activation, scraping, bulk download, credentialed access, protected-source retrieval, or public exposure merely because a connector path or README exists.
+> Never run live source activation, scraping, bulk download, credentialed access, protected-source retrieval, or public exposure merely because a connector path, package, or README exists.
 
 [Back to top](#top)
 
@@ -663,29 +833,31 @@ Before relying on a connector or source-derived claim:
 
 ### This README update
 
-This batch changes a static validator, its policy test, workflow wiring, and direct documentation; it does not change connector runtime behavior. Before merge, close the draft pull request and abandon only the scoped branch when separately authorized. After merge, use a focused reviewed revert of the batch; do not rewrite shared history.
+This version changes only `connectors/README.md`. It does not alter connector code, the shared package, schemas, contracts, policy, fixtures, validators, workflows, registry entries, receipts, source activity, lifecycle data, release objects, or public interfaces.
 
-Byte-level recovery targets:
+Before merge, rollback is to close the draft PR or transparently revert the feature-branch commit. After an authorized merge, restore prior README blob `11184062e9917b5cc34c6d73b67dbc0ef995f913` or revert the merge through a reviewed PR. Do not rewrite shared history.
+
+Historical recovery anchors retained from v0.6:
 
 - v0.4 target/preimage blob: `8db6ee9cbefdd1ce099789d827f759df9ebd9f59`
 - v0.3 target blob: `bdd50032bed62ac36964c79f16cf5541b21759a6`
-- v0.2 content SHA recorded by v0.3: `01953f857db053dccd83b8de1c81177e5fd609d0`
-- prior stub SHA recorded by v0.3: `465b004a56b1119e5cf7e00a34e3f9a7cb132dbb`
+- v0.2 content SHA: `01953f857db053dccd83b8de1c81177e5fd609d0`
+- prior stub SHA: `465b004a56b1119e5cf7e00a34e3f9a7cb132dbb`
 
-### Connector and source correction
+### Connector/source correction
 
 A material connector correction should:
 
 1. stop or constrain affected source activity;
-2. preserve the failed run, source-head, input, output, and receipt identities;
+2. preserve failed run, source-head, input, output, artifact, and receipt identities;
 3. quarantine unsafe or ambiguous captures rather than mutating RAW history;
-4. emit reviewed correction/supersession records through their owning roots;
-5. invalidate derived candidates and caches without deleting lineage;
+4. emit correction/supersession records through their owning roots;
+5. invalidate derived candidates/caches without deleting lineage;
 6. reevaluate affected evidence, catalogs, releases, and public surfaces through downstream owners;
 7. restore the prior accepted connector/package/provider profile or disable the lane;
 8. prove replay and rollback with deterministic fixtures before reactivation.
 
-Aliases and path migrations require parity, one-way delegation, consumer/reference updates, no duplicate fetch/receipt emission, a sunset or retention policy, and a tested rollback path.
+Alias/path migrations require parity, one-way delegation, consumer/reference repair, no duplicate fetch or receipt emission, a sunset/retention policy, and a tested rollback or forward-fix path.
 
 [Back to top](#top)
 
@@ -693,30 +865,32 @@ Aliases and path migrations require parity, one-way delegation, consumer/referen
 
 ## Definition of done
 
-### Root README modernization
+### Root README v0.7
 
-- [x] Existing path, `doc_id`, created date, core authority boundary, lifecycle law, child contract, rollback targets, and definition-of-done intent preserved.
-- [x] Directory Rules §15 section order applied.
-- [x] Current workflow, static test, descriptor schema/wrapper, source register, shared package, CODEOWNERS, and representative child-lane evidence incorporated.
-- [x] Partial enforcement, held receipt validation, schema/path conflicts, alias drift, and unknown runtime state surfaced.
-- [x] Static evidence-backed badges, concise navigation, tables, alerts, Mermaid flow, legacy anchors, evidence ledger, and changelog added.
-- [x] No connector code, source activation, network access, policy, lifecycle data, receipt instance, release object, public route, or workflow changed.
+- [x] Existing path, `doc_id`, created date, H1, core authority boundary, lifecycle law, child contract, rollback lineage, and legacy anchors are preserved.
+- [x] Adopted Directory Rules v2 and Root Registry evidence replace stale pre-adoption framing.
+- [x] Exact direct-child inventory is recorded at the pinned tree.
+- [x] `connectors-core` is correctly classified as a bounded internal `0.0.1` implementation rather than a placeholder.
+- [x] Current core, transport, artifact-handoff, SourceArtifact, connector-gate, IngestReceipt, SourceDescriptor, and register evidence is reconciled.
+- [x] Singular/plural schema conflict, alias drift, held receipt presence, and runtime/source-activation unknowns remain visible.
+- [x] No non-documentation surface is changed.
 
 ### Active connector system
 
-- [ ] Accepted connector and source stewards replace placeholders through governed assignments.
-- [ ] Complete recursive connector/source/alias/package/test inventory is generated and reviewed.
-- [ ] One accepted connector topology, source-ID rule, and compatibility/migration discipline are documented.
-- [ ] SourceDescriptor schema, validator, fixtures, registry, role vocabulary, and activation decision are synchronized.
-- [ ] Active source register is populated with reviewed rights, sensitivity, cadence, access, and expiry posture.
-- [ ] Shared connector primitives are implemented only where reuse is proved, with package tests and consumers.
-- [ ] Direct connector-gate validator, report schema, reason codes, and deterministic no-network tests exist.
-- [x] Repository-owned IngestReceipt validator, focused positive/negative proof, source-head/artifact binding, deterministic contract fixtures, and CI prerequisite are executable.
-- [ ] Accepted connector-run receipt profile, emitted instance, governed persistence, replay, correction, and review controls are established.
-- [ ] Every active lane proves import safety, bounded resource use, terms compliance, completeness, drift, retry, quarantine, and correction behavior.
-- [ ] Static and runtime tests prove no WORK/PROCESSED/CATALOG/TRIPLET/PROOF/PUBLISHED/RELEASE/public writes.
-- [ ] Required checks, ownership, independent review, source deactivation, correction propagation, and rollback drills are observed.
-- [ ] No connector is described as active, release-ready, or public without corresponding governed evidence.
+- [ ] Accepted connector/source stewards and independent release roles are established.
+- [ ] Every direct child is semantically classified as family, product, implementation, supplied input, alias, compatibility, deprecated, or held.
+- [ ] One connector/source-ID/path/alias grammar is accepted and migrated without parallel writers.
+- [ ] SourceDescriptor schema, validator, fixtures, registry, role vocabulary, and activation decisions are synchronized.
+- [ ] Source-authority register contains reviewed entries with rights, sensitivity, cadence, access, expiry, and correction state.
+- [x] Internal source-agnostic primitives, injected transport, and SourceArtifact handoff exist with focused no-network tests.
+- [ ] Stable connectors-core exports, versioning, license, consumer compatibility, and source-specific adoption are accepted.
+- [x] Proposed SourceArtifact contract/schema/validator/fixtures/workflow exist with exact synthetic byte binding.
+- [x] Repository-owned IngestReceipt validator prerequisite and deterministic fixture polarity are executable.
+- [ ] A connector run emits an accepted receipt instance to governed persistence with replay/correction controls.
+- [ ] Static and runtime tests close forbidden WORK/PROCESSED/CATALOG/TRIPLET/PROOF/PUBLISHED/RELEASE/public writes.
+- [ ] Every active lane proves import safety, limits, terms, completeness, drift, retry, quarantine, and correction behavior.
+- [ ] Required checks, independent review, deactivation, correction propagation, and rollback drills are observed.
+- [ ] No lane is called active, release-ready, or public without governing evidence.
 
 [Back to top](#top)
 
@@ -726,21 +900,22 @@ Aliases and path migrations require parity, one-way delegation, consumer/referen
 
 | ID | Question | Status |
 |---|---|---:|
-| CONN-OV-001 | What is the exhaustive recursive connector inventory, including code, packages, aliases, tests, fixtures, generated files, and consumers? | **NEEDS VERIFICATION** |
-| CONN-OV-002 | Which source-family, product, provider, and alias topology is accepted, and which paths require migration or compatibility controls? | **CONFLICTED / NEEDS ADR OR MIGRATION** |
-| CONN-OV-003 | Which SourceDescriptor schema path is authoritative, and how will singular/plural parity and metadata be repaired? | **CONFLICTED** |
-| CONN-OV-004 | What accepted SourceDescriptor validator, fixture root, role vocabulary, and registry contract should all consumers use? | **CONFLICTED / NEEDS VERIFICATION** |
-| CONN-OV-005 | Where is the accepted `SourceActivationDecision`, and what states, reasons, reviews, expiry, deactivation, and correction rules apply? | **UNKNOWN** |
-| CONN-OV-006 | Which entries should populate the source-authority machine register, and what prevents docs or placeholders from appearing active? | **UNKNOWN** |
-| CONN-OV-007 | What direct connector-gate executable, report schema, registry ID, exit-code contract, and dedicated test lane are accepted? | **UNKNOWN** |
-| CONN-OV-008 | What connector-run IngestReceipt profile, storage, signing, replay, correction, and rollback are accepted beyond the executable validator prerequisite? | **PARTIAL CONFIRMED / NEEDS VERIFICATION** |
-| CONN-OV-009 | Which connector lanes have executable clients, approved provider profiles, no-network tests, current terms, and observed successful dry-runs? | **NEEDS VERIFICATION** |
-| CONN-OV-010 | Which source-specific operations require explicit consent, accounts, credentials, or restrictions, and how are expiry and revocation enforced? | **NEEDS VERIFICATION** |
-| CONN-OV-011 | How will static and runtime guards cover WORK, PROCESSED, CATALOG, TRIPLET, PROOF, PUBLISHED, RELEASE, API, UI, map, export, and AI writes? | **NEEDS VERIFICATION** |
-| CONN-OV-012 | Which connector outcomes, reason codes, obligations, and receipt fields are canonical across packages, validators, workflows, and consumers? | **UNKNOWN** |
-| CONN-OV-013 | Which connector checks are required by branch rules, and how are code-owner review and independent source/release approval enforced? | **UNKNOWN / NEEDS VERIFICATION** |
-| CONN-OV-014 | What monitoring, deactivation, correction cascade, cache invalidation, and rollback drill prove safe source retirement or upstream drift response? | **UNKNOWN** |
-| CONN-OV-015 | Which downstream pipeline is the first accepted proof-bearing connector slice, and what complete EvidenceRef-to-release chain proves it? | **PROPOSED** |
+| CONN-OV-001 | What is the recursive semantic classification of all 104 direct-child lanes, code roots, tests, fixtures, aliases, and consumers? | **NEEDS VERIFICATION** |
+| CONN-OV-002 | Which family/product/provider/alias topology is accepted, and which paths require migration or compatibility controls? | **CONFLICTED / NEEDS ADR OR MIGRATION** |
+| CONN-OV-003 | Which SourceDescriptor schema path is authoritative, and how will circular singular/plural metadata be repaired? | **CONFLICTED** |
+| CONN-OV-004 | What accepted SourceDescriptor validator, fixture root, role vocabulary, and registry contract should consumers use? | **CONFLICTED / NEEDS VERIFICATION** |
+| CONN-OV-005 | Where is the accepted SourceActivationDecision, and what states, reviews, expiry, deactivation, and correction rules apply? | **UNKNOWN** |
+| CONN-OV-006 | Which reviewed entries should populate the source-authority register, and what prevents docs/placeholders from appearing active? | **UNKNOWN** |
+| CONN-OV-007 | What root-wide admission report, reason codes, exit contract, and runtime-confinement proof are accepted? | **UNKNOWN** |
+| CONN-OV-008 | What connector-run IngestReceipt profile, storage, signing, replay, correction, and rollback are accepted beyond validator prerequisites? | **PARTIAL / NEEDS VERIFICATION** |
+| CONN-OV-009 | Which lanes consume `connectors-core` `0.0.1`, and what compatibility/public-export contract is intended? | **UNKNOWN** |
+| CONN-OV-010 | Which lanes have executable clients, approved profiles, no-network tests, current terms, and observed dry-runs? | **NEEDS VERIFICATION** |
+| CONN-OV-011 | Which operations require consent, accounts, credentials, contracts, or restricted handling, and how are expiry/revocation enforced? | **NEEDS VERIFICATION** |
+| CONN-OV-012 | How will static/runtime guards cover every later lifecycle, release, API, UI, map, export, and AI sink? | **NEEDS VERIFICATION** |
+| CONN-OV-013 | Which connector outcomes, reason families, obligations, SourceArtifact states, and receipt fields are canonical? | **UNKNOWN** |
+| CONN-OV-014 | Which connector checks are required by branch rules, and how are source/release approvals separated? | **UNKNOWN / NEEDS VERIFICATION** |
+| CONN-OV-015 | What monitoring, deactivation, correction cascade, cache invalidation, and rollback drill proves safe source retirement? | **UNKNOWN** |
+| CONN-OV-016 | Which fixture-first lane is the first complete EvidenceRef-to-release proof-bearing connector slice? | **PROPOSED** |
 
 [Back to top](#top)
 
@@ -751,27 +926,25 @@ Aliases and path migrations require parity, one-way delegation, consumer/referen
 <details>
 <summary><strong>No-loss and evidence ledger</strong></summary>
 
-| Baseline element | Disposition |
+| Baseline element | v0.7 disposition |
 |---|---|
-| Stable path, H1, `doc_id`, created date, source-admission purpose | **KEEP / CLARIFY** |
-| Connector non-publisher and RAW/QUARANTINE/receipt boundary | **KEEP / ENRICH** with current workflow/test evidence and explicit gaps |
-| Status and owner placeholders | **REPAIR** to evidence-bounded CODEOWNERS routing and stewardship unknowns |
-| Scope and repository-fit narrative | **CONSOLIDATE** into Purpose and Authority level |
-| Accepted inputs | **RELOCATE / ENRICH** across What belongs here and Inputs |
-| Exclusions | **KEEP / ENRICH** in Directory Rules order |
-| Current inspected snapshot | **REPAIR / ENRICH** with pinned workflow, tests, schema, validator, register, package, and representative child evidence |
-| Partial directory tree and lane-pattern table | **RELOCATE / ENRICH** into topology classes without pretending exhaustiveness |
-| Admission field list | **KEEP / ENRICH** into explicit input, source-role, outcome, and receipt boundaries |
-| Mermaid lifecycle flow | **KEEP / ENRICH** with finite negative states and downstream authority separation |
-| Inspection path | **KEEP / ENRICH** with code, tests, run, receipts, downstream proof/release checks |
-| Required child README contract | **KEEP / ENRICH** with provider, security, correction, compatibility, and evidence requirements |
-| Validation checklist | **REPAIR / ENRICH** with current partial workflow, exact command, test limits, descriptor wrapper, and receipt hold |
-| Evidence basis | **KEEP / ENRICH** as this ledger and metadata snapshot |
-| Rollback targets | **KEEP** and add current v0.4 preimage plus governed connector correction sequence |
-| Definition of done | **KEEP / SPLIT** into completed documentation work and unproved active-system closure |
-| Related surfaces and status summary | **KEEP / ENRICH** with direct links, conflicts, and current maturity |
+| Stable path, H1, `doc_id`, created date, source-edge purpose | **KEEP / CLARIFY** |
+| Connector non-publisher and RAW/QUARANTINE/receipt boundary | **KEEP / ENRICH** with SourceArtifact and current core evidence |
+| Status/owner placeholders | **REPAIR** to current routing and explicit stewardship gaps |
+| Scope/repo-fit narrative | **CONSOLIDATE** into Purpose and Authority |
+| Accepted inputs and exclusions | **KEEP / ENRICH** |
+| Current snapshot | **REPAIR** to current base/tree and exact direct children |
+| Topology classes | **KEEP / ENRICH** with exact inventory and drift examples |
+| Admission/lifecycle flow | **KEEP / ENRICH** with SourceArtifact candidate boundary |
+| Child README contract | **KEEP / ENRICH** |
+| Validation | **REPAIR / ENRICH** with `connectors-core` and SourceArtifact checks |
+| Evidence basis | **KEEP / ENRICH** with accepted ADR-0029 and Root Registry |
+| Rollback lineage | **KEEP** and add v0.6 prior blob |
+| Definition of done | **KEEP / SPLIT** between documentation closure and active-system closure |
+| Open verification register | **KEEP / UPDATE** |
+| Legacy anchors | **KEEP** |
 
-Evidence used: current target preimage `8db6ee9…`; historical target blob `bdd5003…`; Directory Rules `2affb08…`; connector workflow preimage `ae3ef92…`; non-publisher test preimage `c616478…`; SourceDescriptor schema `582e70b…`; descriptor validator `9d0538e…`; source register `82c2372…`; connectors-core README `0db121b…`; CODEOWNERS `dd2a84a…`; representative USGS, OpenStreetMap/OSM, Kansas Mesonet, and People child READMEs.
+Evidence used: complete v0.6 blob `11184062…`; exact connector tree `a4207926…`; Directory Rules `fd49a0b8…`; accepted ADR-0029; Root Registry `024f668b…`; connector workflow `e3a1082c…`; connectors-core package/tree; SourceArtifact contract/schema/workflow; SourceDescriptor singular/plural schemas; source-authority register `82c2372…`; CODEOWNERS `dd2a84a…`.
 
 </details>
 
@@ -779,26 +952,29 @@ Evidence used: current target preimage `8db6ee9…`; historical target blob `bdd
 
 | Version | Date | Change | Rollback |
 |---|---|---|---|
-| Prior stub | Before 2026-06-20 | Short connector-root boundary. | Restore recorded stub SHA `465b004…`. |
-| v0.2 | 2026-06-20 | Expanded connector source-admission, lifecycle, validation, rollback, and completion posture. | Restore recorded content SHA `01953f8…`. |
-| v0.3 | 2026-06-20 | Applied prior README authoring guidance, partial tree, lane patterns, child contract, and evidence basis. | Restore blob `bdd50032bed62ac36964c79f16cf5541b21759a6`. |
-| v0.4 | 2026-07-23 | Same-path repository-grounded modernization with Directory Rules section order, current partial CI evidence, schema/register/package conflicts, topology classes, input/output/receipt boundaries, stronger review/validation/rollback, legacy anchors, no-loss ledger, and verification register. | Before merge, close or leave the draft PR and abandon the branch. After merge, revert the documentation commit without rewriting shared history. |
-| v0.5 | 2026-07-29 | Recorded the bounded connector output-path scanner, deterministic policy tests, two-part workflow canary, and explicit static/runtime limits. | Before merge, close the draft PR and abandon only its scoped branch when separately authorized. After merge, use a focused reviewed revert. |
-| v0.6 | 2026-07-31 | Wired the merged IngestReceipt validator and deterministic fixture polarity as an executable connector-gate prerequisite while retaining an explicit hold on connector-run receipt presence and persistence. | Before merge, close the draft PR and abandon its scoped branch. After merge, revert the focused workflow/documentation commit without rewriting history. |
+| Prior stub | Before 2026-06-20 | Short connector-root boundary | Restore recorded stub SHA `465b004…` |
+| v0.2 | 2026-06-20 | Expanded source-admission, lifecycle, validation, rollback, and completion posture | Restore content SHA `01953f8…` |
+| v0.3 | 2026-06-20 | Added partial tree, lane patterns, child contract, and evidence basis | Restore blob `bdd50032…` |
+| v0.4 | 2026-07-23 | Repository-grounded modernization with partial CI/schema/register/package evidence | Restore blob `8db6ee9c…` |
+| v0.5 | 2026-07-29 | Recorded bounded output-path scanner, deterministic policy tests, and static/runtime limits | Focused reviewed revert |
+| v0.6 | 2026-07-31 | Wired IngestReceipt validation and fixture polarity as connector-gate prerequisite while holding connector-run receipt presence | Restore blob `11184062…` |
+| v0.7 | 2026-08-08 | Reconciled accepted Directory Rules/Root Registry, exact 104-directory inventory, connectors-core `0.0.1`, SourceArtifact implementation, circular SourceDescriptor metadata, current validation, conflicts, and rollback without changing runtime behavior | Revert the documentation commit or restore v0.6 blob |
 
 ## Status summary
 
-`connectors/` is the canonical KFM implementation root for source-specific fetch, probe, capture, and pre-RAW admission support. The repository now has partial static non-publisher enforcement, an executable IngestReceipt validator prerequisite, and substantial connector documentation, but it is not yet a proved, synchronized, root-wide connector admission system.
+`connectors/` is the canonical KFM root for source-specific fetch, probe, capture, source-native parsing, and pre-RAW admission support.
 
-Until source registration, activation decisions, schema/validator authority, connector topology, direct admission gates, deterministic fixtures, ingest receipts, active source reviews, runtime consumers, required checks, correction cascades, and rollback drills are accepted and observed, the safe posture is:
+At the pinned base, the repository has meaningful bounded implementation: internal no-network shared primitives, injected transport contracts, deterministic SourceArtifact handoff, a proposed SourceArtifact contract/schema/validator workflow, a partial static non-publisher gate, and an executable IngestReceipt validation prerequisite.
+
+It does **not** yet prove a synchronized root-wide source-admission system. Until source registration, activation decisions, SourceDescriptor authority, connector identity/alias convergence, stable shared exports, source-specific consumers, runtime confinement, emitted receipts, governed persistence, rights/currentness review, downstream evidence/release closure, independent approval, correction cascades, and rollback drills are observed, the safe posture remains:
 
 ```text
 repository-grounded
 mixed-maturity
-descriptor- and policy-gated
+descriptor-, policy-, rights-, and sensitivity-gated
 no-network by default
-RAW / QUARANTINE / receipts only
-fail closed on unresolved identity, rights, sensitivity, role, or source head
+RAW / QUARANTINE / SourceArtifact / receipt candidates only
+fail closed on unresolved identity, role, rights, sensitivity, source head, or completeness
 non-release
 non-publication
 ```
