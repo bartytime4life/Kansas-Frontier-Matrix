@@ -1,0 +1,89 @@
+# Build and validate unreleased STAC Item candidates for 3D Tiles manifests.
+name: tiles3d-stac-item-adapter
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/tiles3d-stac-item-adapter.yml"
+      - "contracts/map/tiles3d_stac_item_adapter.md"
+      - "schemas/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json"
+      - "tools/validators/map/tiles3d_stac_item_adapter/**"
+      - "fixtures/map/tiles3d_stac_item_adapter/**"
+      - "tests/validators/map/tiles3d_stac_item_adapter/**"
+      - "tools/validators/catalog/**"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-tiles3d-stac-item-adapter-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/tiles3d-stac-item-adapter.yml"
+      - "contracts/map/tiles3d_stac_item_adapter.md"
+      - "schemas/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json"
+      - "tools/validators/map/tiles3d_stac_item_adapter/**"
+      - "fixtures/map/tiles3d_stac_item_adapter/**"
+      - "tests/validators/map/tiles3d_stac_item_adapter/**"
+      - "tools/validators/catalog/**"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-tiles3d-stac-item-adapter-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tiles3d-stac-adapter-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Run focused adapter tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators/map/tiles3d_stac_item_adapter --pattern 'test_*.py' --verbose
+          python tools/validators/map/tiles3d_stac_item_adapter/build_tiles3d_stac_item.py --fixtures
+      - name: Validate expected candidate with catalog-health profile
+        run: |
+          set -euo pipefail
+          python tools/validators/catalog/validate_catalog_health.py \
+            --asset-root fixtures/map/tiles3d_stac_item_adapter/package \
+            fixtures/map/tiles3d_stac_item_adapter/expected/valid_item.json
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-tiles3d-stac-item-adapter-20260808.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### 3D Tiles STAC Item adapter"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: manifest validation, exact local-byte binding, deterministic STAC candidate generation, asset roles, and catalog-health replay."
+            echo "- Boundary: PASS is not full 3D Tiles conformance, evidence, policy, promotion, release, publication, or public-scene authority."
+          } >> "$GITHUB_STEP_SUMMARY"
