@@ -1,0 +1,75 @@
+{
+  "version": "v1",
+  "registry": "cross_domain_seam_register",
+  "status": "PROPOSED",
+  "authority": "navigational_and_review_projection_only",
+  "updated_at": "2026-08-08",
+  "base_ref": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a",
+  "coverage_scope": "high_risk_initial_seams",
+  "completeness": "partial",
+  "owner_role": "control_plane_steward",
+  "description": "Initial machine-readable context-map projection for five high-risk KFM cross-domain seams. It records ownership, citation, evidence, policy, sensitivity, and release constraints without authorizing a join or creating public truth.",
+  "doctrine": {
+    "path": "docs/doctrine/directory-rules.md",
+    "document_id": "kfm://doctrine/directory-governance/v2",
+    "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "decision_ref": "ADR-0029"
+  },
+  "domain_lane_register": {
+    "path": "control_plane/domain_lane_register.yaml",
+    "git_blob": "1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+    "base_ref": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a"
+  },
+  "decision_requirement": "ADR_S_14_PENDING",
+  "defaults": {
+    "interaction_mode": "CITE_ONLY",
+    "evidence_rule": "EACH_PARTICIPANT_EVIDENCE_BUNDLE_REQUIRED",
+    "source_role_rule": "PRESERVE",
+    "sensitivity_rule": "MOST_RESTRICTIVE",
+    "policy_rule": "MOST_RESTRICTIVE",
+    "release_rule": "EACH_PARTICIPANT_RELEASE_REQUIRED",
+    "mutation_authority": false,
+    "publication_authority": false
+  },
+  "non_effects": [
+    "does_not_authorize_cross_domain_join",
+    "does_not_create_or_modify_domain_records",
+    "does_not_assign_source_evidence_policy_or_release_authority",
+    "does_not_lower_sensitivity_or_precision",
+    "does_not_activate_sources_or_write_lifecycle_state",
+    "does_not_release_deploy_promote_or_publish"
+  ],
+  "entries": [
+    {
+      "seam_id": "invented--soil--suitability-context",
+      "participants": [
+        "invented",
+        "soil"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contexual_join",
+      "summary": "An invented domain is intentionally used only to prove that unregistered bounded contexts fail closed before any join can be considered.",
+      "authority_allocations": [
+        {
+          "context_id": "invented",
+          "owns": [
+            "invented_concept"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "soil",
+          "owns": [
+            "soil_property"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "invented_context_as_registered_domain"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    }
+  ]
+}
