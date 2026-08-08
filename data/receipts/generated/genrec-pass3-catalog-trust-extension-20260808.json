@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
-    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:7a1ca3c178584d10c09417750b97df7781dead385e2f4749061155160600342e",
-    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "sha256:ada76bc65afca653443d2c3ea942e4fe2be0154547d65483e7a627ff6f0c3157",
+    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:f7667f614130f8e490b655016404f29c5b14ba9241580fe694ac27100ffb6942",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "sha256:e16a58a5bb7e6728e7c2228c39bec6429f353b3a83f228fd02e1ee1fc5d36226",
     "fixtures/contracts/v1/stac/kfm-profile-v1/README.md": "sha256:083e5bb6b7324809a788f66029ee06ecdf1e9814e50c1072468489bbd0b42a68",
     "fixtures/contracts/v1/stac/kfm-profile-v1/fixture_manifest.json": "sha256:19823f1682c709321113f3928ac8ac4991bb7611412ad601dd88eb4c03aa7f11",
     "fixtures/contracts/v1/stac/kfm-profile-v1/invalid/invalid_proof_without_receipt.json": "sha256:42513574bbab705aed6ff2981a68017317e635e945c541b34616775d2a5bb0f7",
@@ -57,6 +57,11 @@
       "evidence_ref": "repo:data/receipts/generated/genrec-pass3-catalog-trust-extension-20260808.json@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba",
       "id": "repository:correction-target",
       "validated": true
+    },
+    {
+      "evidence_ref": "github-actions:run/31271963065#report-correction-binding-digests",
+      "id": "github-actions:stac-profile-digest-readback",
+      "validated": true
     }
   ],
   "contract_version": "3.0.0",
@@ -88,7 +93,7 @@
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Corrective completion of Pass 3 KFM-P3-IDEA-0004. The prior merged packet contained only the standards document and a placeholder GENERATED_RECEIPT while its pull-request narrative described executable companions. This packet adds the missing schema, validator, fixtures, tests, workflow, and exact-byte provenance without activating a source, catalog service, release, deployment, or publication.",
+  "notes": "Corrective completion of Pass 3 KFM-P3-IDEA-0004. The prior merged packet contained only the standards document and a placeholder GENERATED_RECEIPT while its pull-request narrative described executable companions. This packet adds the missing schema, validator, fixtures, tests, workflow, and exact-byte provenance without activating a source, catalog service, release, deployment, or publication. GitHub Actions run 31271963065 read back the exact workflow and standards-document SHA-256 values used by this forward correction.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -150,6 +155,11 @@
       "gate": "generated-receipt-byte-integrity",
       "outcome": "PASS",
       "reason": "Seventeen artifact paths have exact SHA-256 hashes and matching truth-label keys."
+    },
+    {
+      "gate": "hosted-digest-readback",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31271963065 emitted the checked-out workflow and standards-document SHA-256 values before this receipt-only correction."
     },
     {
       "gate": "hosted-exact-head-ci",
