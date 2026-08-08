@@ -1,0 +1,106 @@
+# Validate the fixture-only SourceEvent admission family.
+# This workflow creates no source activation, lifecycle write, release, or publication authority.
+name: source-event-admission
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-event-admission.yml"
+      - "contracts/source/source_event_admission.md"
+      - "schemas/contracts/v1/source/source_event_prefilter_output.schema.json"
+      - "schemas/contracts/v1/source/source_event_run_receipt.schema.json"
+      - "fixtures/contracts/v1/source/source_event_admission/**"
+      - "fixtures/contracts/v1/source/source_event_envelope/valid/**"
+      - "tools/validators/validate_source_event_admission.py"
+      - "tools/validators/validate_source_event_envelope.py"
+      - "tests/validators/test_validate_source_event_admission.py"
+      - "tests/validators/test_validate_source_event_envelope.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass3-source-event-admission-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-event-admission.yml"
+      - "contracts/source/source_event_admission.md"
+      - "schemas/contracts/v1/source/source_event_prefilter_output.schema.json"
+      - "schemas/contracts/v1/source/source_event_run_receipt.schema.json"
+      - "fixtures/contracts/v1/source/source_event_admission/**"
+      - "fixtures/contracts/v1/source/source_event_envelope/valid/**"
+      - "tools/validators/validate_source_event_admission.py"
+      - "tools/validators/validate_source_event_envelope.py"
+      - "tests/validators/test_validate_source_event_admission.py"
+      - "tests/validators/test_validate_source_event_envelope.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass3-source-event-admission-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-event-admission-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-source-event-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run existing envelope and new admission tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_source_event_*.py' \
+            --verbose
+
+      - name: Replay exact fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_source_event_envelope.py --fixtures
+          python tools/validators/validate_source_event_admission.py --fixtures
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass3-source-event-admission-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### SourceEvent admission candidates"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: existing event-envelope compatibility, deterministic prefilter identity, bounded evaluator configuration, finite admission disposition, reference/time coherence, fixture-signature shape, and exact fixture polarity."
+            echo "- Tests use synthetic repository fixtures and perform no network, queue, webhook, source, model, policy-engine, production-signing, registry, or lifecycle access."
+            echo "- A green result does not activate a source, authorize or perform a RAW/WORK/QUARANTINE write, resolve evidence, evaluate policy, approve review, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
