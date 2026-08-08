@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/policy/policy_decision_vocabulary.schema.json",
+  "title": "PolicyDecisionVocabulary",
+  "description": "Fixture-first, inactive registry of stable PolicyDecision reason and obligation codes.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/policy/policy_decision_vocabulary.md",
+    "registry": "policy/decision/vocabulary.v1.json",
+    "fixtures_root": "fixtures/contracts/v1/policy/policy_decision_vocabulary/",
+    "validator": "tools/validators/policy/validate_policy_decision_vocabulary.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY"
+  },
+  "required": [
+    "object_type",
+    "vocabulary_id",
+    "version",
+    "status",
+    "reason_codes",
+    "obligation_codes",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "PolicyDecisionVocabulary"
+    },
+    "vocabulary_id": {
+      "type": "string",
+      "pattern": "^policy-decision-vocabulary:v[1-9][0-9]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v[1-9][0-9]*$"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/reason_code"
+      }
+    },
+    "obligation_codes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/obligation_code"
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_evaluation",
+        "decision_emitted",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "policy_evaluation": {
+          "const": false
+        },
+        "decision_emitted": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "policy_family": {
+      "type": "string",
+      "enum": [
+        "access",
+        "capability",
+        "consent",
+        "promotion",
+        "render",
+        "sensitivity"
+      ]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reason_code": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "outcome",
+        "policy_families",
+        "public_safe",
+        "description"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+        },
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "policy_families": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/policy_family"
+          }
+        },
+        "public_safe": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    },
+    "obligation_code": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "applicable_outcomes",
+        "policy_families",
+        "description"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+        },
+        "applicable_outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/outcome"
+          }
+        },
+        "policy_families": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/policy_family"
+          }
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    }
+  }
+}
