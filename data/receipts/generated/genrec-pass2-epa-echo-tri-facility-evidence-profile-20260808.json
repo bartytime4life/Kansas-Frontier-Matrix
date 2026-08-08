@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-pass2-epa-echo-tri-facility-evidence-profile-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/epa-echo-tri-facility-evidence-profile.yml",
+    "contracts/evidence/epa_echo_tri_facility_evidence_profile.md",
+    "schemas/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile.schema.json",
+    "fixtures/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile/cases.json",
+    "tools/validators/validate_epa_echo_tri_facility_evidence_profile.py",
+    "tests/validators/test_validate_epa_echo_tri_facility_evidence_profile.py",
+    "docs/intake/exploratory/pass-2-epa-echo-tri-facility-evidence-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/epa-echo-tri-facility-evidence-profile.yml": "sha256:5846023de19d0253d84a8c35c2c9790f71dcb962d63a738a1ca9068e19316531",
+    "contracts/evidence/epa_echo_tri_facility_evidence_profile.md": "sha256:d889983e84607572dd11cdba1008a13c87c8789f694198b384d97e21cbbf4de9",
+    "schemas/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile.schema.json": "sha256:b0021875d7b828c321596b193a713867d32550cda506a56a884599bdd2af74cd",
+    "fixtures/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile/cases.json": "sha256:5d860e248fbd07f1e582ac6e2d45938bc9bad71e9cd0d0c3625387049353c3cd",
+    "tools/validators/validate_epa_echo_tri_facility_evidence_profile.py": "sha256:f9f34ff0311c21f444001af858e05eb8459f10405c720520b895b5790d1046bb",
+    "tests/validators/test_validate_epa_echo_tri_facility_evidence_profile.py": "sha256:50cd88dd8caae8d7cf068069a8db254e8d966015c158c314fe73fbac0839af97",
+    "docs/intake/exploratory/pass-2-epa-echo-tri-facility-evidence-source-map.md": "sha256:ec38e1ff60d724f2d4929c505bf28a959e640d13b0ff710e80f9a91c4c6b41fe"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:93909bf2921b5337b1c1d75a7b57cf0d02a5c623d2c7cd87c683e03b3c07e472",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:60451562c8be005ed77afa8c7eada978a7cec05f406cdff137d38ff60123d408"
+    ],
+    "attached_docs": [
+      "KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0025",
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-PROG-0007"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/epa-echo-tri-facility-evidence-profile.yml": "PROPOSED",
+    "contracts/evidence/epa_echo_tri_facility_evidence_profile.md": "PROPOSED",
+    "schemas/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/epa_echo_tri_facility_evidence_profile/cases.json": "CONFIRMED",
+    "tools/validators/validate_epa_echo_tri_facility_evidence_profile.py": "CONFIRMED",
+    "tests/validators/test_validate_epa_echo_tri_facility_evidence_profile.py": "CONFIRMED",
+    "docs/intake/exploratory/pass-2-epa-echo-tri-facility-evidence-source-map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "deterministic-identity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Runs after draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P2-IDEA-0025",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0025"
+    },
+    {
+      "id": "KFM-P2-PROG-0007",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-PROG-0007"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T23:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only EPA ECHO/TRI evidence profile. No live source, policy, lifecycle, release, deployment, or publication authority."
+}
