@@ -2,7 +2,7 @@
   "artifact_hashes": {
     ".github/workflows/output-lane-splitter.yml": "sha256:afce053f982a17a00f4ad701687c85ca14c0f56a28055c4594afbaff254c1694",
     "contracts/data/output_lane_split_manifest.md": "sha256:2c25f66df83c3e0792f7a88633bfe063d5872089c6571663771417b1ef37f253",
-    "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md": "sha256:c474c0e84551fb5acf5d97093d4fdb82aa7bb150c1b74e7f8df7b957a27735a7",
+    "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md": "sha256:ed56ea8c88596b293cd75d5999525511d47c5ef568eed4735c29c4ae13f5ea2d",
     "fixtures/contracts/v1/data/output_lane_split_manifest/cases.json": "sha256:cb0d6857ce8295fba2f0e39b8533c087bb9fdf604540df0c2e6b283a90bda40f",
     "schemas/contracts/v1/data/output_lane_split_manifest.schema.json": "sha256:dbb5ec5563495f8fae86682e7f27ea80134d4346ee3df4e2576b350e8677b783",
     "tests/generators/test_build_output_lane_split.py": "sha256:a5f24b5cb74c3130593deac16c42fc0aa549371d2003833489e8bbe71989dc7d",
@@ -24,28 +24,28 @@
       "validated": true
     },
     {
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f622ec9fc52dfb762aa39d709094e6c8af749dfb",
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/a7917a25c985362a853c30588f71f18bcd7531f3",
       "id": "delivery-main-base",
       "validated": true
     },
     {
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/data/README.md",
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/contracts/data/README.md",
       "id": "data-contract-family",
       "validated": true
     },
     {
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/tools/generators/README.md",
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/tools/generators/README.md",
       "id": "generator-responsibility-lane",
       "validated": true
     },
     {
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "id": "accepted-directory-governance",
       "validated": true
     }
   ],
   "contract_version": "3.0.0",
-  "created_at": "2026-08-08T20:40:56Z",
+  "created_at": "2026-08-08T20:47:05Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "human_review": {
     "reviewer_ids": [],
@@ -64,10 +64,10 @@
     "evidence_refs": [
       "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0020",
       "attachment:KFM_Pass_32_Repo_Import_Candidate_Register.md#output-lane-splitter",
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f622ec9fc52dfb762aa39d709094e6c8af749dfb",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/data/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/tools/generators/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a7917a25c985362a853c30588f71f18bcd7531f3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/contracts/data/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/tools/generators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a7917a25c985362a853c30588f71f18bcd7531f3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     ]
   },
   "links": {
@@ -80,7 +80,7 @@
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Fixture-only adaptation of Pass 32 KFM-P32-PROG-0020. The manifest routes opaque generated-output references into feature-vector, scorecard, policy-report candidate, process-memory receipt, and prefilter candidate lanes before review. The compact base-plus-mutation fixture family is replayed through the deterministic generator bound to the repository-owned RFC 8785 hashing package, which writes nothing by default and, only when explicitly requested, creates six temporary JSON indexes in an empty directory. It never reads, moves, or copies payload bytes; creates no EvidenceBundle or PolicyDecision; changes no lifecycle state; and grants no promotion, release, deployment, publication, or public-use authority. Initial authoring inspection used main@03b37ee771410573f2a2050379417dd2758d1501; delivery placement and non-overlap were rechecked against main@f622ec9fc52dfb762aa39d709094e6c8af749dfb.",
+  "notes": "Fixture-only adaptation of Pass 32 KFM-P32-PROG-0020. The manifest routes opaque generated-output references into feature-vector, scorecard, policy-report candidate, process-memory receipt, and prefilter candidate lanes before review. The compact base-plus-mutation fixture family is replayed through the deterministic generator bound to the repository-owned RFC 8785 hashing package, which writes nothing by default and, only when explicitly requested, creates six temporary JSON indexes in an empty directory. It never reads, moves, or copies payload bytes; creates no EvidenceBundle or PolicyDecision; changes no lifecycle state; and grants no promotion, release, deployment, publication, or public-use authority. Initial authoring inspection used main@03b37ee771410573f2a2050379417dd2758d1501; delivery placement and non-overlap were rechecked against main@a7917a25c985362a853c30588f71f18bcd7531f3.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,

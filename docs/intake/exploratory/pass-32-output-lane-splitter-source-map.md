@@ -33,7 +33,7 @@ placement, implementation, promotion, release, or publication.
 
 The packet was initially authored against `main@03b37ee771410573f2a2050379417dd2758d1501`. Before delivery, the
 placement and non-overlap checks were repeated against
-`main@f622ec9fc52dfb762aa39d709094e6c8af749dfb`. At the delivery checkpoint:
+`main@a7917a25c985362a853c30588f71f18bcd7531f3`. At the delivery checkpoint:
 
 - `contracts/data/` is the current semantic-contract family for data-related
   candidates and derived products;

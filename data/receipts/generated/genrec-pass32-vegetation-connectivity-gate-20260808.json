@@ -1,0 +1,161 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/agriculture-vegetation-connectivity-gate.yml": "sha256:1d57cc2aee5a6e24a737339ce25205edcefaa01d4d75c62fc94088fd53b59508",
+    "contracts/domains/agriculture/vegetation_connectivity_gate.md": "sha256:64c7807cdb62a408b995d22838fdee525447b4dd1c3734ead7e67780c846a9a4",
+    "docs/intake/exploratory/pass-32-vegetation-connectivity-gate-source-map.md": "sha256:ada8bf26d75086bebe61fab2f857ce7f401cabc79a1504868daaa09a6a74dc62",
+    "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json": "sha256:9972544cd1ae24671a819d52406e4dfeea3f0ea0830c7a506ebea0b5da40b63e",
+    "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json": "sha256:b5ca7f08761e231fa49d33269b0389878f3d9850898e5d2aa76062d3d761166b",
+    "tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py": "sha256:70d041d8930ca5702429406534593a907390b0a5d5b4baaf10cae5db8f8fe6f7",
+    "tools/validators/domains/agriculture/vegetation_connectivity_gate/validate_connectivity_gate.py": "sha256:5bf85b413ea89d67d525bd5c45fab8db1b04a953af4d9167e2a841265d2e3445"
+  },
+  "artifact_paths": [
+    ".github/workflows/agriculture-vegetation-connectivity-gate.yml",
+    "contracts/domains/agriculture/vegetation_connectivity_gate.md",
+    "docs/intake/exploratory/pass-32-vegetation-connectivity-gate-source-map.md",
+    "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json",
+    "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json",
+    "tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py",
+    "tools/validators/domains/agriculture/vegetation_connectivity_gate/validate_connectivity_gate.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0006",
+      "id": "KFM-P32-PROG-0006",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f622ec9fc52dfb762aa39d709094e6c8af749dfb",
+      "id": "delivery-main-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/domains/agriculture/hls_ndvi_zonal_materiality.md",
+      "id": "hls-ndvi-zonal-materiality",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/domains/agriculture/ndvi_readiness.md",
+      "id": "ndvi-readiness",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T20:06:28Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:0bd0e9cabf8666163a58597e21ef282ac1ccffd203ef9d2ff6aa13300c4d18b1"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0006",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f622ec9fc52dfb762aa39d709094e6c8af749dfb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/domains/agriculture/hls_ndvi_zonal_materiality.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/contracts/domains/agriculture/ndvi_readiness.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f622ec9fc52dfb762aa39d709094e6c8af749dfb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only adaptation of Pass 32 KFM-P32-PROG-0006. The packet validates synthetic precomputed vegetation-component summaries against integer area, observation-count, and persistence-basis-point thresholds. It reuses the verified agriculture contract/schema/validator/fixture/test responsibility lanes beside HLS NDVI zonal materiality and NDVI readiness. It does not read raster bytes, label connected pixels, perform geometry operations, calculate NDVI, establish scientific fitness, activate a source, admit RAW data, create EvidenceBundle or PolicyDecision authority, or promote, release, deploy, publish, or authorize public use. Delivery inspection and non-overlap were checked against main@f622ec9fc52dfb762aa39d709094e6c8af749dfb.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:9e20ec49930a1388695963519df44f5e94a86a830a1cd7d37196f76f9d66ce92",
+  "receipt_id": "genrec-pass32-vegetation-connectivity-gate-20260808",
+  "truth_labels": {
+    ".github/workflows/agriculture-vegetation-connectivity-gate.yml": "CONFIRMED",
+    "contracts/domains/agriculture/vegetation_connectivity_gate.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-vegetation-connectivity-gate-source-map.md": "CONFIRMED",
+    "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json": "PROPOSED",
+    "tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py": "CONFIRMED",
+    "tools/validators/domains/agriculture/vegetation_connectivity_gate/validate_connectivity_gate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-rfc8785-spec-hash-binding",
+      "outcome": "PASS",
+      "reason": "The committed validator delegates identity to the repository hashing package; fixture values use a restricted integer/string/Boolean/null JSON domain."
+    },
+    {
+      "gate": "focused-pytest-suite-10-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-3-pass-8-deny",
+      "outcome": "PASS",
+      "reason": "Compact base-plus-mutation manifest replayed candidate, valid HOLD, and eight exact negative cases."
+    },
+    {
+      "gate": "component-area-persistence-summary-decision-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "threshold-equality-inclusive-fixture-rule",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-no-raster-processing-and-no-authority",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "metadata-links-and-workflow-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic review remains pending on the draft pull request."
+    }
+  ]
+}
