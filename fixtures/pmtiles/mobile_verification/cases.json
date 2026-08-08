@@ -1,0 +1,180 @@
+{
+  "base": {
+    "archive_base64": "UE1UaWxlcwN/AAAAAAAAAAUAAAAAAAAAhAAAAAAAAACRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAQAAAAAAAEYAAAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQEBAgAAAAk0w4DADRYAvfjHAITXFwAAY5bFQKLyFgEAAQEBeyJmb3JtYXQiOiJwbmciLCJuYW1lIjoic3ludGhldGljLWtmbS1tb2JpbGUtdmVyaWZpY2F0aW9uIiwic3BlY19oYXNoIjoic2hhMjU2Ojc1ZDdiYjdkODg1ZTZiZDE3ZDE4MGE4NzA0MmM5MDkwYWZmNjJmODIxZTU1ODJiNDkzODYxN2U2MzRiMjA1YTUifYlQTkcNChoKAAAADUlIRFIAAAABAAAAAQgGAAAAHxXEiQAAAA1JREFUeNpjEFQy/g8AAhQBZtu+zG8AAAAASUVORK5CYII=",
+    "archive_name": "mobile-base.pmtiles",
+    "authority": {
+      "deployment": false,
+      "evidence": false,
+      "policy": false,
+      "promotion": false,
+      "public_use": false,
+      "publication": false,
+      "release": false,
+      "source_admission": false
+    },
+    "budgets": {
+      "max_archive_bytes": 4096,
+      "max_decode_render_ms": 2500,
+      "max_tile_bytes": 1024,
+      "max_verify_ms": 2500
+    },
+    "expected_pixel_rgba": [
+      17,
+      34,
+      51,
+      255
+    ],
+    "holds": [
+      "CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
+      "MAPLIBRE_RUNTIME_UNADMITTED",
+      "RELEASE_AUTHORIZATION_NOT_EVALUATED"
+    ],
+    "maplibre_boot_reason": "MAPLIBRE_RUNTIME_UNADMITTED",
+    "maplibre_boot_state": "HOLD",
+    "mobile_profile": {
+      "device_scale_factor": 3,
+      "has_touch": true,
+      "is_mobile": true,
+      "viewport_height": 844,
+      "viewport_width": 390
+    },
+    "pmidx": {
+      "merkle": {
+        "arity": 2,
+        "chunk_bytes": 512,
+        "leaves": [
+          "sha256:9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e"
+        ],
+        "root": "sha256:9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e"
+      },
+      "pmtiles_sha256": "sha256:9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e",
+      "ranges": [
+        {
+          "leaf": 0,
+          "length": 70,
+          "media_type": "image/png",
+          "offset": 277,
+          "sha256": "sha256:640c8ece93265bfceae9596483b829df34e8b2cfde3b964dab8d717cf1102e07",
+          "tile_id": "0/0/0"
+        }
+      ],
+      "schema_version": "kfm.pmidx.v1",
+      "spec_hash": "sha256:75d7bb7d885e6bd17d180a87042c9090aff62f821e5582b4938617e634b205a5"
+    },
+    "pmsig": {
+      "key_id": "TEST_ONLY_UNAPPROVED_KEY",
+      "schema_version": "kfm.pmsig.v1",
+      "signature": "DEVELOPMENT_PLACEHOLDER_NOT_A_VALID_COSE_SIGNATURE",
+      "subject": {
+        "pmidx_merkle_root": "sha256:9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e",
+        "pmtiles_sha256": "sha256:9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e",
+        "spec_hash": "sha256:75d7bb7d885e6bd17d180a87042c9090aff62f821e5582b4938617e634b205a5"
+      }
+    },
+    "profile": "kfm.pmtiles.mobile-verification-fixture.v1",
+    "runreceipt": {
+      "predicate": {
+        "buildDefinition": {
+          "buildType": "kfm/pmtiles/mobile-fixture@v1",
+          "externalParameters": {
+            "spec_hash": "sha256:75d7bb7d885e6bd17d180a87042c9090aff62f821e5582b4938617e634b205a5"
+          }
+        },
+        "runDetails": {
+          "builder": {
+            "id": "kfm-synthetic-mobile-fixture-builder"
+          }
+        }
+      },
+      "schema_version": "kfm.runreceipt.pmtiles.v1",
+      "subject": [
+        {
+          "digest": {
+            "sha256": "9d715115687977251dbc69d7df8e23fba0c5e27b76ddbf1386bd0f3ba026241e"
+          },
+          "name": "mobile-base.pmtiles"
+        }
+      ],
+      "type": "https://slsa.dev/provenance/v1"
+    },
+    "sidecar_digests": {
+      "pmidx_sha256": "sha256:3d60f251d16ea6e15cca7fd3c9ac2452183d9f634b6a75bf1536e1bda5066293",
+      "pmsig_sha256": "sha256:eb01ce1cf779d057f0f554dc42249d0651a751c775497a155f3760d174751f74",
+      "runreceipt_sha256": "sha256:f9e6902f7c6f1f584ece9ee70c4ff067d3115cdaf0fcd110eb545244f64540f2"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid-mobile-verify-decode-render",
+      "expected_code": "MOBILE_PMTILES_VERIFY_DECODE_RENDER_PASS",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "mutation": "NONE"
+    },
+    {
+      "case_id": "archive-digest-mismatch",
+      "expected_code": "MOBILE_PMTILES_ARCHIVE_DIGEST_MISMATCH",
+      "expected_findings": [
+        "MOBILE_PMTILES_ARCHIVE_DIGEST_MISMATCH"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "ARCHIVE_BYTE_FLIP"
+    },
+    {
+      "case_id": "pmidx-root-mismatch",
+      "expected_code": "MOBILE_PMTILES_MERKLE_ROOT_MISMATCH",
+      "expected_findings": [
+        "MOBILE_PMTILES_MERKLE_ROOT_MISMATCH"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "PMIDX_ROOT_MISMATCH"
+    },
+    {
+      "case_id": "signature-subject-mismatch",
+      "expected_code": "MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH",
+      "expected_findings": [
+        "MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "PMSIG_SUBJECT_MISMATCH"
+    },
+    {
+      "case_id": "range-out-of-bounds",
+      "expected_code": "MOBILE_PMTILES_RANGE_OUT_OF_BOUNDS",
+      "expected_findings": [
+        "MOBILE_PMTILES_RANGE_OUT_OF_BOUNDS"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "RANGE_OUT_OF_BOUNDS"
+    },
+    {
+      "case_id": "tile-digest-mismatch",
+      "expected_code": "MOBILE_PMTILES_TILE_DIGEST_MISMATCH",
+      "expected_findings": [
+        "MOBILE_PMTILES_TILE_DIGEST_MISMATCH"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "TILE_DIGEST_MISMATCH"
+    },
+    {
+      "case_id": "maplibre-authority-overclaim",
+      "expected_code": "MOBILE_PMTILES_MAPLIBRE_AUTHORITY_OVERCLAIM",
+      "expected_findings": [
+        "MOBILE_PMTILES_MAPLIBRE_AUTHORITY_OVERCLAIM"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "MAPLIBRE_READY_OVERCLAIM"
+    },
+    {
+      "case_id": "release-authority-overclaim",
+      "expected_code": "MOBILE_PMTILES_AUTHORITY_OVERCLAIM",
+      "expected_findings": [
+        "MOBILE_PMTILES_AUTHORITY_OVERCLAIM"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "RELEASE_AUTHORITY_OVERCLAIM"
+    }
+  ],
+  "profile": "kfm.pmtiles.mobile-verification-fixtures.v1",
+  "source_idea": "ML-Y-111"
+}
