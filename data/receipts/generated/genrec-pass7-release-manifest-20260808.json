@@ -14,13 +14,13 @@
   ],
   "artifact_hashes": {
     ".github/workflows/release-dry-run.yml": "sha256:50604c9a4c2e20fabcf3714502f27412c6b98953927ff9cb010fd9d7022dd092",
-    ".github/workflows/release-manifest.yml": "sha256:a7e49815fa3121d0a800b60030e7730fe670c1af499791a07ce328547909f117",
+    ".github/workflows/release-manifest.yml": "sha256:839eef6050e9ae0ea4b2d0f2f0392c1df803d006665b499ac14575697774f89a",
     "contracts/release/release_manifest.md": "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
     "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
     "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
     "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
     "schemas/contracts/v1/release/release_manifest.schema.json": "sha256:c420281c843e88000eaf2dc1bf62cff1ab1bd2d2628bfac0e07c2705fb3bcfb6",
-    "tests/validators/test_validate_release_manifest.py": "sha256:c98d11dab9ceb521a0a80cc454db2ec060bde714badc3c1bbe4c4b4101f5717e",
+    "tests/validators/test_validate_release_manifest.py": "sha256:4ec7c00a8bf2b8912693fa2ed44cc49c63297b270f0680be9f85b2ad2f3119a7",
     "tools/validators/release/validate_release_manifest.py": "sha256:7206739f7f831e2682d1b0a4fe574f07f48e70f19bc632ec247c4884a7d4321f"
   },
   "model_identity": {
