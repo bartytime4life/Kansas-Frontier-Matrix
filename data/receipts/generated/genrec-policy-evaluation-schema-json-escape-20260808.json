@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-policy-evaluation-schema-json-escape-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json"
+  ],
+  "artifact_hashes": {
+    "schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json": "sha256:b2ab5e04d68bca23bebca12ac2b9c1279b984c1fcb61d3c5f00d34ca46d1ec11"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:963003656613eb1b1588ed6b6c58009ac237ce28f29a6d494dcede7ddc57b3fb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic JSON validation",
+      "uploaded KFM doctrine"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/355d30d95bd0687b00cc2b0553bd9731cc8d594c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31236044981/jobs/93048610105",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31234613860",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/355d30d95bd0687b00cc2b0553bd9731cc8d594c/schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/201755dc44425a34fefe829d4f7777f6914965d6",
+      "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ]
+  },
+  "truth_labels": {
+    "schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "failure-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "Schema-validation run 31236044981 job 93048610105 failed while parsing schemas JSON with Invalid \\escape at line 49 column 66; the policy evaluation binding path regex used single JSON backslashes before literal dots."
+    },
+    {
+      "gate": "json-parse",
+      "outcome": "PASS",
+      "reason": "The repaired exact bytes parse with Python json.loads."
+    },
+    {
+      "gate": "json-schema-draft-2020-12-meta-schema",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator.check_schema accepts the repaired schema."
+    },
+    {
+      "gate": "path-pattern-semantics",
+      "outcome": "PASS",
+      "reason": "The decoded regex still allows a normal relative repository path and rejects absolute paths plus leading or embedded parent-directory traversal."
+    },
+    {
+      "gate": "authority-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "The one-line encoding repair leaves PROPOSED_INACTIVE, FIXTURE_ONLY, policy_evaluated=false, decision_authenticated=false, and every promotion, release, and publication authorization false."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted pull-request validation requires the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/355d30d95bd0687b00cc2b0553bd9731cc8d594c"
+    },
+    {
+      "id": "schema-validation-json-escape-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31236044981/jobs/93048610105"
+    },
+    {
+      "id": "last-known-green-schema-validation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31234613860"
+    },
+    {
+      "id": "kfm-lifecycle-and-public-client-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T03:05:09Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward repair for schema-validation run 31236044981. The schema intended to deny parent-directory path traversal, but its literal-dot regex used invalid single JSON escapes. The repair changes only JSON source encoding; the decoded regex and all fixture-only, inactive, no-authority semantics remain unchanged. It does not evaluate policy, authenticate a decision, write lifecycle state, promote, release, deploy, publish, or change repository settings."
+}
