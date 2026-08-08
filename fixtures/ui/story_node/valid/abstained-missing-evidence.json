@@ -1,0 +1,39 @@
+{
+  "profile": "kfm.ui.story-node.public-safe.v1",
+  "id": "kfm://story-node/abstained-missing-evidence",
+  "version": "1.0.0",
+  "manifest_ref": "kfm://story-manifest/synthetic-pass1",
+  "node_type": "SECTION",
+  "order_index": 3,
+  "state": "ABSTAINED",
+  "outcome": "ABSTAIN",
+  "reason_code": "MISSING_EVIDENCE",
+  "title": "Synthetic Abstained node",
+  "summary": "No authoritative synthetic node content is available.",
+  "accessibility_label": "Abstained story node status",
+  "map_context_refs": [
+    "map:context/synthetic-kansas"
+  ],
+  "support": {
+    "evidence_bundle_refs": [],
+    "citation_validation_refs": [],
+    "policy_decision_refs": [],
+    "release_refs": [],
+    "review_refs": [],
+    "correction_refs": []
+  },
+  "trust_state": {
+    "rights": "CLEARED",
+    "sensitivity": "PUBLIC",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "caveats": [
+    "Synthetic fixture; not publication authority."
+  ],
+  "authoritative": false,
+  "projection_only": true
+}

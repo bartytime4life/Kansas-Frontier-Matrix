@@ -1,214 +1,198 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-ui-story-node
-title: contracts/ui/story_node.md — UI StoryNode Contract
+title: UI StoryNode Contract
 type: semantic-contract
-version: v0.2
-status: draft; PROPOSED; schema-stub-confirmed; ui-family; story-node; evidence-dependent; release-gated
-owners: OWNER_TBD — UI steward · Story steward · Evidence steward · Runtime steward · Policy steward · Release steward · Schema steward · Accessibility steward · Docs steward
+version: v0.3
+status: draft; PROPOSED; closed-schema; fixture-first; ui-family; story-node; public-safe-projection; evidence-dependent; release-gated
+owners: OWNER_TBD — UI steward · Story steward · Evidence steward · Runtime steward · Policy steward · Release steward · Schema steward · Accessibility steward
 created: NEEDS VERIFICATION — greenfield scaffold existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-08
 policy_label: public; contracts; ui; story-node; projection; evidence-dependent; no-sovereign-truth
-tags: [kfm, contracts, ui, story-node, StoryNode, story-manifest, story, narrative, EvidenceBundle, EvidenceRef, CitationValidationReport, PolicyDecision, ReleaseManifest]
+owning_root: contracts/
+responsibility: Define the semantic meaning and fail-closed trust inheritance of the public-safe UI StoryNode projection.
+truth_posture: PROPOSED contract / CONFIRMED fixture-first enforcement / no publication authority
 related:
   - ./README.md
   - ./story_manifest.md
   - ./evidence_drawer_payload.md
-  - ./citation_validation_report.md
   - ../story/README.md
   - ../evidence/evidence_bundle.md
   - ../evidence/evidence_ref.md
-  - ../evidence/citation_validation_report.md
   - ../runtime/runtime_response_envelope.md
   - ../policy/policy_decision.md
   - ../release/release_manifest.md
   - ../../schemas/contracts/v1/ui/story_node.schema.json
-  - ../../policy/ui/
-  - ../../policy/story/
   - ../../fixtures/ui/story_node/
+  - ../../tools/validators/ui/validate_story_node.py
+  - ../../tests/validators/test_validate_story_node.py
+  - ../../docs/intake/exploratory/pass-1-idea-index-coverage-source-map.md
+tags: [kfm, contracts, ui, StoryNode, story, evidence, citation, rights, sensitivity, release, correction, supersession, accessibility]
 notes:
-  - "Expanded from a PROPOSED greenfield scaffold at `contracts/ui/story_node.md`."
-  - "A paired UI schema stub exists at `schemas/contracts/v1/ui/story_node.schema.json`; it requires only `id`, allows additional properties, and names this contract doc."
-  - "`contracts/ui/story_manifest.md` defines StoryManifest as a governed display manifest, not a truth source."
-  - "`contracts/story/README.md` defines story objects as evidence-dependent presentation objects and not sovereign truth."
-  - "Rollback target for this expansion is previous scaffold blob SHA `84e128097ec0fdbce9a6186ee1b77bc66118a246`."
+  - "Implements the bounded P1-IMPORT-09 StoryNode trust-inheritance slice for KFM-P1-FEAT-0068 and related UIX cards."
+  - "This contract and its schema define a public-safe UI projection only. They do not resolve evidence, decide policy, approve review or release, or publish."
+  - "The paired schema is closed and the validator enforces finite state/outcome, support, rights, sensitivity, release, correction, and supersession relationships over synthetic fixtures."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # UI StoryNode Contract
 
-> `StoryNode` is a UI-facing unit inside a governed story surface. It represents one renderable story section, callout, timeline item, evidence note, caveat, or transition in a `StoryManifest`. It is a display node, not story truth, not EvidenceBundle closure, not release approval, not policy execution, and not UI implementation.
+> A `StoryNode` is one public-safe, renderable unit inside a governed story surface. It inherits evidence, citation, rights, sensitivity, policy, review, release, freshness, correction, and supersession posture from upstream authority-bearing objects. It never creates that authority.
 
-<p>
-  <img alt="Status: PROPOSED" src="https://img.shields.io/badge/status-PROPOSED-yellow">
-  <img alt="Family: UI" src="https://img.shields.io/badge/family-ui-0a7ea4">
-  <img alt="Object: StoryNode" src="https://img.shields.io/badge/object-StoryNode-purple">
-  <img alt="Schema: stub confirmed" src="https://img.shields.io/badge/schema-stub__confirmed-orange">
-  <img alt="Boundary: display node not truth" src="https://img.shields.io/badge/boundary-display__node__not__truth-critical">
-</p>
-
-**Status:** draft / PROPOSED  
-**Path:** `contracts/ui/story_node.md`  
+**Profile:** `kfm.ui.story-node.public-safe.v1`  
 **Paired schema:** `schemas/contracts/v1/ui/story_node.schema.json`  
-**Schema posture:** PROPOSED stub; required field `id` only; `additionalProperties: true`  
-**Parent UI manifest:** `contracts/ui/story_manifest.md`  
-**Related story lane:** `contracts/story/README.md`  
-**Truth posture:** CONFIRMED target was a greenfield scaffold · CONFIRMED paired UI schema stub exists and names this contract doc · CONFIRMED StoryManifest is a governed UI display manifest · CONFIRMED story lane treats stories as evidence-dependent presentation · NEEDS VERIFICATION for final schema, fixtures, validator, UI implementation, policy wiring, and release behavior
-
-**Quick jumps:** [Purpose](#purpose) · [Repo fit](#repo-fit) · [Meaning](#meaning) · [Authority split](#authority-split) · [Schema posture](#schema-posture) · [Accepted uses](#accepted-uses) · [Exclusions](#exclusions) · [Recommended UI fields](#recommended-ui-fields) · [Node state relationship](#node-state-relationship) · [Validation expectations](#validation-expectations) · [Open questions](#open-questions) · [Rollback](#rollback)
-
----
+**Validator:** `tools/validators/ui/validate_story_node.py`  
+**Fixtures:** `fixtures/ui/story_node/`  
+**Status:** draft / PROPOSED contract; fixture-first enforcement present  
+**Pass 1 coverage:** `KFM-P1-FEAT-0065`, `KFM-P1-FEAT-0066`, `KFM-P1-FEAT-0068`, `KFM-P1-FEAT-0074`
 
 ## Purpose
 
-This contract defines how an individual UI story node is interpreted inside a governed story surface.
+The profile answers a narrow UI question:
 
-It answers:
+> May this story node render public-safe content, render only a bounded status card, abstain, deny, report an error, or show that the node was superseded?
 
-- what kind of story unit the UI may render;
-- which evidence, citation, policy, review, release, correction, and rollback references the node carries;
-- how node-level caveats and trust state must remain visible;
-- how a node relates to the parent `StoryManifest`.
-
-It does not answer whether a claim is true, whether release is approved, whether evidence is complete, or whether UI code is implemented.
-
-## Repo fit
-
-| Relationship | Path | Status |
-|---|---|---|
-| This semantic contract | `contracts/ui/story_node.md` | PROPOSED / current file |
-| Parent manifest contract | `contracts/ui/story_manifest.md` | CONFIRMED related UI display manifest |
-| Story semantic lane | `contracts/story/README.md` | CONFIRMED related lane guide |
-| Paired UI schema | `schemas/contracts/v1/ui/story_node.schema.json` | CONFIRMED permissive stub |
-| UI policy home | `policy/ui/` | Referenced by schema; implementation depth NEEDS VERIFICATION |
-| UI fixtures | `fixtures/ui/story_node/` | Referenced by schema; existence/coverage NEEDS VERIFICATION |
-
-## Meaning
-
-A `StoryNode` is one renderable unit in a governed story display.
+The answer is derived from explicit references and finite trust state. The node does not infer support from rendered pixels, client state, prose, map visibility, a model response, or a merged pull request.
 
 ```text
-StoryManifest
-  -> ordered StoryNode entries
-  -> each node carries display type + refs + trust posture
-  -> UI renders only policy-safe node content
+governed upstream objects
+  -> evidence / citation / policy / review / release / correction checks
+  -> public-safe StoryNode projection
+  -> Story Player or equivalent UI surface
 ```
-
-The node organizes display. It does not create evidence, approve release, or make narrative text authoritative.
 
 ## Authority split
 
-| Responsibility | Correct home | Rule |
-|---|---|---|
-| UI story node meaning | `contracts/ui/story_node.md` | This file. |
-| Story manifest meaning | `contracts/ui/story_manifest.md` | Parent manifest that orders/selects nodes. |
-| Story object meaning | `contracts/story/` | Story/narrative semantic lane. |
-| Evidence support | `contracts/evidence/` | EvidenceBundle and EvidenceRef support claims. |
-| Citation checking | `contracts/evidence/citation_validation_report.md` and `contracts/ui/citation_validation_report.md` | Citation validation remains separate. |
-| Runtime response | `contracts/runtime/runtime_response_envelope.md` | Runtime owns finite outcome envelopes. |
-| Policy/admissibility | `policy/ui/`, `policy/story/`, `policy/evidence/` | Policy owns allow/restrict/abstain decisions. |
-| Machine shape | `schemas/contracts/v1/ui/story_node.schema.json` | Current stub only. |
-| UI rendering | UI/web/app roots | Rendering code stays outside contracts. |
-| Release/correction/rollback | `release/` and release contracts | Publication state remains separate. |
-
-## Schema posture
-
-The paired UI schema currently confirms:
-
-| Field | Required | Shape |
-|---|---:|---|
-| `id` | yes | string |
-| `version` | no | string |
-| `spec_hash` | no | string |
-
-The schema allows additional properties, so the rest of this contract is semantic guidance until schema expansion is verified.
-
-## Accepted uses
-
-| Use | Allowed? | Rule |
-|---|---:|---|
-| Rendering one story section or callout | Yes | Must preserve evidence and release posture. |
-| Ordering nodes in a manifest | Yes | Order does not make claims true. |
-| Binding a node to map/time context | Yes | Must stay within governed context. |
-| Showing node-level caveats or no-data states | Yes | Trust state must remain visible. |
-| Linking to EvidenceDrawerPayload or citation reports | Conditional | Only display public-safe refs or summaries. |
-| Treating a node as release approval | No | Release roots own that. |
-| Treating a node as EvidenceBundle closure | No | EvidenceBundle owns that. |
-| Treating a node as story truth | No | Story remains evidence-dependent. |
-
-## Exclusions
-
-| Do not use this contract as | Correct home or behavior |
+| Responsibility | Owning family |
 |---|---|
-| Story truth authority | Use evidence, citation, policy, review, and release state. |
-| StoryManifest replacement | Use `contracts/ui/story_manifest.md`. |
-| Release approval | Use release contracts and release roots. |
-| EvidenceBundle closure | Use EvidenceBundle. |
-| Policy decision | Use policy roots and PolicyDecision contracts. |
-| Proof or receipt storage | Use proof/receipt roots. |
-| UI implementation | Use UI/web/app roots. |
-| Internal-store access path | Use governed API/released projections only. |
+| StoryNode public-safe projection meaning | `contracts/ui/story_node.md` |
+| Machine shape | `schemas/contracts/v1/ui/story_node.schema.json` |
+| Evidence truth and resolution | Evidence contracts and resolver |
+| Citation validation | Citation validation object family |
+| Rights, sensitivity, and admissibility | Policy objects and policy engine |
+| Review state | Review records |
+| Release and withdrawal state | Release objects |
+| Correction, supersession, and rollback | Correction and release object families |
+| Rendering and interaction | Explorer/UI implementation |
+| Validation evidence | Fixtures, tests, and validator |
 
-## Recommended UI fields
+A valid StoryNode is not an `EvidenceBundle`, `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, proof, receipt, or publication decision.
 
-PROPOSED until schema expansion:
+## Closed profile
 
-| Field | Meaning |
-|---|---|
-| `id` | Story node identifier. |
-| `version` | Node contract/object version. |
-| `spec_hash` | Deterministic baseline hash. |
-| `manifest_ref` | Parent StoryManifest reference. |
-| `node_type` | section, callout, timeline_event, caveat, evidence_note, transition, or accepted type. |
-| `order_index` | Stable ordering within the manifest. |
-| `title` | Public-safe node title. |
-| `body_ref` | Reference to released or governed node text/projection. |
-| `map_context_refs` | Map/time/layer context references. |
-| `evidence_bundle_refs` | Supporting EvidenceBundle references. |
-| `citation_validation_refs` | Citation validation references. |
-| `policy_decision_refs` | Policy decision references. |
-| `caveats` | Required limitations and uncertainty notes. |
-| `correction_refs` | Correction or supersession references. |
-| `rollback_ref` | Rollback reference if material. |
-| `trust_badges` | Visible trust-state badges. |
-| `accessibility_label` | Assistive-technology label for the node. |
+The machine profile requires:
 
-## Node state relationship
+- stable profile, node, manifest, type, and order identity;
+- one finite node `state`, runtime `outcome`, and `reason_code`;
+- bounded public-safe title, summary, accessibility label, caveats, and optional governed `body_ref`;
+- governed map-context and support references only;
+- explicit rights, sensitivity, policy, review, release, freshness, and correction posture;
+- optional supersession metadata for a replaced node;
+- `authoritative: false` and `projection_only: true`.
 
-| State | UI meaning | Required posture |
+References are opaque governed identifiers. Raw URLs, file paths, source payloads, prompts, credentials, precise restricted geometry, and internal denial details do not belong in this projection.
+
+## Finite states
+
+| State | Required outcome | Purpose |
 |---|---|---|
-| `ready` | Node points to released, cited, policy-safe content. | Display with caveats/trust badges. |
-| `partial` | Some node content cannot be shown or remains unresolved. | Display only safe content and visible caveats. |
-| `abstained` | Evidence/citation support is insufficient for the node claim. | Do not render as authoritative story truth. |
-| `blocked` | Policy, release, sensitivity, or rights posture prevents display. | Show safe status without exposing withheld details. |
-| `error` | Node/schema/runtime failure prevents safe display. | Show diagnostic state only. |
-| `superseded` | Node was corrected, withdrawn, or replaced. | Show correction/supersession posture and rollback/correction refs. |
+| `READY` | `ANSWER` | Render released, reviewed, current, policy-allowed, citation-backed content. |
+| `PARTIAL` | `ABSTAIN` | Show a bounded status card because support is incomplete, stale, or citation-limited. |
+| `ABSTAINED` | `ABSTAIN` | Show that no authoritative node content is available. |
+| `BLOCKED` | `DENY` | Show a public-safe denial without leaking evidence or restricted details. |
+| `ERROR` | `ERROR` | Show a bounded upstream/system failure without support leakage. |
+| `SUPERSEDED` | `ABSTAIN` | Show correction/supersession posture and the governed replacement reference. |
 
-## Validation expectations
+`READY` may carry `correction=CORRECTED` only when correction references are present. `SUPERSEDED` must carry a replacement reference, withdrawn release posture, and correction references.
 
-NEEDS VERIFICATION:
+## Trust inheritance rules
 
-- schema expansion beyond `id`, `version`, and `spec_hash`;
-- final UI/story home split;
-- validator path and CI wiring;
-- fixtures for ready, partial, abstained, blocked, error, corrected, and superseded node cases;
-- story player behavior;
-- evidence/citation/policy/release linkage;
-- accessibility behavior;
-- correction and rollback behavior.
+### Ready content
 
-## Open questions
+A `READY` node requires:
 
-- Should `StoryNode` live under `contracts/ui/`, `contracts/story/`, or a split model?
-- Should node text be embedded, referenced, or always generated from a released story artifact?
-- Which node types are canonical?
-- Which node fields are public versus steward-only?
-- Which node-state vocabulary is final?
+- `reason_code=SUPPORTED`;
+- evidence, citation-validation, policy-decision, review, and release references;
+- a governed `body_ref`;
+- `policy=ALLOW`, `review=REVIEWED`, `release=RELEASED`, and `freshness=CURRENT`;
+- rights `CLEARED` or `GENERALIZED`;
+- sensitivity `PUBLIC` or `GENERALIZED`;
+- no supersession record.
+
+A passing node still does not prove the referenced objects are genuine or authoritative. Downstream adapters must resolve them through governed interfaces.
+
+### Partial and abstained content
+
+`PARTIAL` and `ABSTAINED` never render a governed body. They show bounded status text and caveats only. A partial node may retain safe support references for reviewable context; an abstained node exposes no current evidence or citations.
+
+### Blocked and error content
+
+A `BLOCKED` node may carry a public-safe policy-decision reference, but it cannot expose evidence, citations, release, review, correction, rollback, or body references. An `ERROR` node cannot expose any support references.
+
+### Supersession
+
+A `SUPERSEDED` node:
+
+- cannot answer;
+- uses `reason_code=SUPERSEDED`;
+- has `release=WITHDRAWN` and `correction=SUPERSEDED`;
+- carries at least one correction reference;
+- names a different governed replacement node;
+- exposes no prior evidence, citation, body, review, release, or rollback reference.
+
+The replacement node is validated independently. This profile does not silently copy trust from the prior node to the replacement.
+
+## Public-safe fields
+
+| Field group | Meaning |
+|---|---|
+| Identity | `profile`, `id`, `version`, optional `spec_hash`, `manifest_ref`, `node_type`, `order_index` |
+| Finite posture | `state`, `outcome`, `reason_code` |
+| Display | `title`, `summary`, `accessibility_label`, `caveats`, optional `body_ref` |
+| Context | `map_context_refs` |
+| Support | Evidence, citation, policy, release, review, correction, and optional rollback references |
+| Trust | Rights, sensitivity, policy, review, release, freshness, and correction |
+| Lineage | Optional `supersession` replacement record |
+| Authority guard | `authoritative=false`, `projection_only=true` |
+
+## Validation boundary
+
+The validator proves only bounded local conformance:
+
+- Draft 2020-12 schema validity;
+- closed-field shape;
+- bounded and duplicate-safe JSON parsing;
+- finite state/outcome/reason combinations;
+- ready-support closure;
+- non-ready body suppression;
+- blocked/error support non-leakage;
+- rights/sensitivity/release/review fail-closed behavior;
+- corrected and superseded lineage requirements;
+- deterministic fixture replay without network.
+
+It does not verify source authority, EvidenceBundle resolution, citation content, policy execution, reviewer identity, release authenticity, correction authenticity, API/UI wiring, deployment, or publication.
+
+## Directory Rules basis
+
+This slice reuses established responsibility roots:
+
+- semantic meaning under `contracts/ui/`;
+- machine shape under `schemas/contracts/v1/ui/`;
+- synthetic cases under `fixtures/ui/`;
+- reusable validation under `tools/validators/ui/`;
+- enforceability under `tests/validators/`;
+- hosted orchestration under `.github/workflows/`;
+- authoring provenance under `data/receipts/generated/`.
+
+No new root or parallel evidence, policy, review, release, correction, proof, or publication authority is created.
 
 ## Rollback
 
-Rollback is required if this contract becomes story truth authority, StoryManifest replacement, publication approval, EvidenceBundle closure, PolicyDecision, editorial approval, story player implementation, schema authority, proof storage, internal-store access, or a way to display non-release-safe story material.
+Before merge, close the feature pull request and delete only its branch. After an authorized merge, revert the bounded packet and restore the prior contract and schema blobs:
 
-Rollback target for this expansion: previous scaffold blob SHA `84e128097ec0fdbce9a6186ee1b77bc66118a246`.
+- contract: `ecacd7d0e23926a5ee1c058ed06b9b22a6e46e8e`;
+- schema: `2a95ad3efada4f151e45358b3aeaa1df59563e12`.
+
+No live source, lifecycle record, API route, UI component, release, cache, deployment, or public artifact requires rollback.
 
 <p align="right"><a href="#top">Back to top</a></p>
