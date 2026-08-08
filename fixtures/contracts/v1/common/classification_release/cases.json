@@ -1,0 +1,329 @@
+{
+  "schema_version": "kfm.classification-release-fixtures.v1",
+  "profile": "kfm.common.classification-release.v1",
+  "description": "One reusable base with four positive states and isolated fail-closed mutations.",
+  "bases": {
+    "current": {
+      "profile": "kfm.common.classification-release.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "classification_family": "DROUGHT_CLASSIFICATION",
+      "product_ref": "kfm://product/usdm/weekly",
+      "source_ref": "kfm://source/usdm",
+      "source_native_id": "usdm:2026-08-04",
+      "issuing_authority_ref": "kfm://authority/usdm",
+      "source_role": "CLASSIFICATION",
+      "support_type": "DERIVED_CLASSIFICATION",
+      "source_snapshot_refs": [
+        "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+      ],
+      "temporal_authority_ref": "kfm://temporal-authority/classification/usdm/2026-08-04",
+      "times": {
+        "source_data_cutoff_at": "2026-08-04T12:00:00Z",
+        "source_valid_from": "2026-08-04T12:00:00Z",
+        "source_valid_to": "2026-08-11T12:00:00Z",
+        "source_released_at": "2026-08-06T12:00:00Z",
+        "retrieved_at": "2026-08-06T13:00:00Z",
+        "corrected_at": null,
+        "superseded_at": null,
+        "native_timezone": "America/Chicago"
+      },
+      "space": {
+        "geography_ref": "kfm://geography/kansas",
+        "scale": "STATEWIDE",
+        "geometry_role": "AUTHORITATIVE",
+        "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geometry_confidence": "CONFIRMED"
+      },
+      "spatial_artifact_refs": [
+        "kfm://artifact/usdm/2026-08-04/polygons"
+      ],
+      "aggregate_statistic_refs": [
+        "kfm://statistics/usdm/2026-08-04/kansas-area"
+      ],
+      "legend_ref": "kfm://legend/usdm/d0-d4/v1",
+      "narrative_ref": "kfm://narrative/usdm/2026-08-04",
+      "content_digests": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/usdm/2026-08-04"
+      ],
+      "class_codes": [
+        "D0",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "NONE"
+      ],
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "supersedes": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "limitations": [
+        "Fixture-only candidate.",
+        "Not a sensor observation."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_current",
+      "base": "current",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_corrected",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "usdm:2026-08-04:correction-1"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-08-06T15:00:00Z"
+        },
+        {
+          "path": "/times/corrected_at",
+          "value": "2026-08-06T14:00:00Z"
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence/usdm/2026-08-04/correction-1"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Correction lineage is fixture-only.",
+            "Fixture-only candidate.",
+            "Not a sensor observation."
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CORRECTED"
+        },
+        {
+          "path": "/lineage/corrects",
+          "value": [
+            "kfm://classification-release/usdm/2026-08-04/original"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_superseded",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "usdm:2026-07-28"
+        },
+        {
+          "path": "/times/source_data_cutoff_at",
+          "value": "2026-07-28T12:00:00Z"
+        },
+        {
+          "path": "/times/source_valid_from",
+          "value": "2026-07-28T12:00:00Z"
+        },
+        {
+          "path": "/times/source_valid_to",
+          "value": "2026-08-04T12:00:00Z"
+        },
+        {
+          "path": "/times/source_released_at",
+          "value": "2026-07-30T12:00:00Z"
+        },
+        {
+          "path": "/times/superseded_at",
+          "value": "2026-08-06T12:30:00Z"
+        },
+        {
+          "path": "/spatial_artifact_refs",
+          "value": [
+            "kfm://artifact/usdm/2026-07-28/polygons"
+          ]
+        },
+        {
+          "path": "/aggregate_statistic_refs",
+          "value": [
+            "kfm://statistics/usdm/2026-07-28/kansas-area"
+          ]
+        },
+        {
+          "path": "/narrative_ref",
+          "value": "kfm://narrative/usdm/2026-07-28"
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence/usdm/2026-07-28"
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "SUPERSEDED"
+        },
+        {
+          "path": "/lineage/superseded_by",
+          "value": [
+            "kfm://classification-release/usdm/2026-08-04"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_conflicted",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "usdm:2026-08-04:conflicted"
+        },
+        {
+          "path": "/space/geography_ref",
+          "value": null
+        },
+        {
+          "path": "/space/geometry_role",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/space/geometry_digest",
+          "value": null
+        },
+        {
+          "path": "/space/geometry_confidence",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence/usdm/2026-08-04/source-a",
+            "kfm://evidence/usdm/2026-08-04/source-b"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Conflict remains unresolved.",
+            "Fixture-only candidate.",
+            "Not a sensor observation."
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/lineage/conflict_refs",
+          "value": [
+            "kfm://conflict/usdm/2026-08-04/geometry",
+            "kfm://conflict/usdm/2026-08-04/statistics"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_collapse",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_role",
+          "value": "OBSERVATION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_ROLE_COLLAPSE"
+      ]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "path": "/release_ref",
+          "value": "kfm://release/usdm/2026-08-04"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RELEASE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_USE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "current",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    }
+  ]
+}
