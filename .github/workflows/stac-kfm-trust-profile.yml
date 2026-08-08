@@ -69,6 +69,13 @@ jobs:
           python -m unittest tests/validators/test_validate_kfm_stac_profile.py -v
           python tools/validators/stac/validate_kfm_profile_v1.py --fixtures
 
+      - name: Report correction-binding digests
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/stac-kfm-trust-profile.yml \
+            docs/standards/STAC_KFM_TRUST_EXTENSION.md
+
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
