@@ -1,0 +1,30 @@
+# Temporary branch-local probe; removed before review delivery.
+name: focus-finite-envelope-stdlib-probe
+
+"on":
+  push:
+    branches:
+      - "agent/fix-focus-finite-envelope-stdlib-20260808"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out probed branch without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Run dependency-free proof and print exact digest
+        run: |
+          set -euo pipefail
+          python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
+          python -m py_compile tests/runtime_proof/test_envelope_finite_outcomes.py
+          sha256sum tests/runtime_proof/test_envelope_finite_outcomes.py
