@@ -1,0 +1,1 @@
+{"assessment_id":"kfm:source-health:demo.healthy","source_id":"source:demo","probed_at":"2026-08-08T00:00:00Z","last_success_at":"2026-08-07T23:00:00Z","freshness_deadline":"2026-08-09T00:00:00Z","etag":"abc","last_modified":"2026-08-07T22:00:00Z","result_class":"NOT_MODIFIED","health_outcome":"HEALTHY","material_change":false,"reasons":["WITHIN_FRESHNESS"]}
