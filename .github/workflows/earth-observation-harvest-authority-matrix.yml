@@ -1,0 +1,88 @@
+# Validate the inactive Earth-observation harvest authority matrix.
+name: earth-observation-harvest-authority-matrix
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/earth-observation-harvest-authority-matrix.yml"
+      - "contracts/source/earth_observation_harvest_authority_matrix.md"
+      - "control_plane/earth_observation_harvest_authority_matrix.json"
+      - "schemas/contracts/v1/source/earth_observation_harvest_authority_matrix.schema.json"
+      - "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/**"
+      - "tools/validators/validate_earth_observation_harvest_authority_matrix.py"
+      - "tests/validators/test_validate_earth_observation_harvest_authority_matrix.py"
+      - "docs/sources/catalog/**"
+      - "connectors/**/README.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-eo-harvest-authority-matrix-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/earth-observation-harvest-authority-matrix.yml"
+      - "contracts/source/earth_observation_harvest_authority_matrix.md"
+      - "control_plane/earth_observation_harvest_authority_matrix.json"
+      - "schemas/contracts/v1/source/earth_observation_harvest_authority_matrix.schema.json"
+      - "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/**"
+      - "tools/validators/validate_earth_observation_harvest_authority_matrix.py"
+      - "tests/validators/test_validate_earth_observation_harvest_authority_matrix.py"
+      - "docs/sources/catalog/**"
+      - "connectors/**/README.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-eo-harvest-authority-matrix-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eo-harvest-authority-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Validate matrix and fixture polarity
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_earth_observation_harvest_authority_matrix.py' --verbose
+          python tools/validators/validate_earth_observation_harvest_authority_matrix.py control_plane/earth_observation_harvest_authority_matrix.json
+          python tools/validators/validate_earth_observation_harvest_authority_matrix.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-eo-harvest-authority-matrix-20260808.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### EO harvest authority matrix"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed matrix shape, deterministic ordering/spec_hash, repository-reference closure, and access-surface relationship closure."
+            echo "- Boundary: the matrix stores no endpoint or secret and grants no network, source admission, RAW, promotion, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
