@@ -1,0 +1,131 @@
+# Bind stable-diff artifacts into an exact-input reviewer handoff.
+name: stable-diff-review-handoff
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/stable-diff-review-handoff.yml"
+      - "tools/diff/stable_diff.py"
+      - "tools/ci/render_stable_diff_summary.py"
+      - "tools/ci/build_stable_diff_review_handoff.py"
+      - "tests/diff/**"
+      - "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md"
+      - "contracts/governance/ReviewRecord.md"
+      - "contracts/governance/review_authority_binding.md"
+      - "data/receipts/generated/genrec-stable-diff-review-handoff-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/stable-diff-review-handoff.yml"
+      - "tools/diff/stable_diff.py"
+      - "tools/ci/render_stable_diff_summary.py"
+      - "tools/ci/build_stable_diff_review_handoff.py"
+      - "tests/diff/**"
+      - "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md"
+      - "contracts/governance/ReviewRecord.md"
+      - "contracts/governance/review_authority_binding.md"
+      - "data/receipts/generated/genrec-stable-diff-review-handoff-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stable-diff-review-handoff-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Run deterministic diff, renderer, and handoff tests
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.diff.test_stable_diff \
+            tests.diff.test_render_stable_diff_summary \
+            tests.diff.test_build_stable_diff_review_handoff \
+            -v
+      - name: Exercise exact-input review handoff
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/temporary
+          workdir="$(mktemp -d artifacts/temporary/stable-diff-review-handoff.XXXXXX)"
+          trap 'rm -rf "$workdir"' EXIT
+          python tools/diff/stable_diff.py \
+            --left tests/diff/fixtures/changed/left.json \
+            --right tests/diff/fixtures/changed/right.json \
+            --output "$workdir/report.json"
+          python tools/ci/render_stable_diff_summary.py \
+            --report "$workdir/report.json" \
+            --output "$workdir/summary.md"
+          cat > "$workdir/context.json" <<'JSON'
+          {
+            "author_ref": "urn:kfm:actor:ci-synthetic-author",
+            "basis_refs": [
+              "repo:tools/diff/stable_diff.py@synthetic-ci"
+            ],
+            "candidate_ref": "kfm://candidate/stable-diff-review-handoff/ci",
+            "evidence_refs": [],
+            "policy_relevant_keys": [
+              "shared_changed"
+            ],
+            "required_reviewer_roles": [
+              "contract_steward",
+              "policy_steward"
+            ],
+            "review_scope": "contract",
+            "rollback_target_ref": "urn:kfm:rollback:stable-diff-review-handoff-ci",
+            "schema_version": "kfm.stable-diff-review-context.v1"
+          }
+          JSON
+          python tools/ci/build_stable_diff_review_handoff.py \
+            --left tests/diff/fixtures/changed/left.json \
+            --right tests/diff/fixtures/changed/right.json \
+            --report "$workdir/report.json" \
+            --summary "$workdir/summary.md" \
+            --context "$workdir/context.json" \
+            --output "$workdir/handoff.json"
+          grep -F '"disposition": "REVIEW_REQUIRED"' "$workdir/handoff.json"
+          grep -F '"review_authenticated": false' "$workdir/handoff.json"
+          grep -F '"classification": "POTENTIAL"' "$workdir/handoff.json"
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-stable-diff-review-handoff-20260808.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Stable diff review handoff"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact artifact/report/summary/context binding and declaration-based policy-impact triage."
+            echo "- Boundary: handoff output is not evidence resolution, policy clearance, authenticated review, proof, promotion, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
