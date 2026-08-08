@@ -4,41 +4,17 @@
 #   Inspect whether a release candidate can be assembled, exercise the concrete
 #   PromotionDecision shape-fixture test and bounded A-G readiness proof, and
 #   verify rollback-card readiness without writing release records or
-#   presenting placeholders as a dry run.
+#   presenting fixture validators as a release assembly.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
 #   is untrusted. The workflow has read-only repository permission. Network use
 #   is limited to installing dependencies declared by the root pyproject for
-#   the one repository-owned test; no release, signing, or deployment secret is
-#   available.
-#
-# Inputs:
-#   Release candidate inventory, release-support tooling and Make target,
-#   ReleaseManifest/PromotionDecision/RollbackCard contracts and schemas,
-#   PromotionDecision fixtures/test, promotion-gate fixtures/validator/tests,
-#   rollback-card records, inventories, and release/promotion policy routing.
+#   repository-owned tests; no release, signing, or deployment secret exists.
 #
 # Outputs and outcomes:
-#   Test output and job summaries only. Jobs either confirm the bounded current
-#   holds or fail on drift so newly surfaced implementation can be wired and
-#   reviewed deliberately. No candidate, decision, receipt, proof, manifest,
-#   rollback card, signature, release, or published artifact is emitted.
-#
-# Compatibility:
-#   Preserve workflow name `release-dry-run` and job ids `assemble-candidate`,
-#   `promotion-gate-check`, and `rollback-card-presence`; repository rules may
-#   refer to those check names.
-#
-# Rollback:
-#   Revert this file. Do not restore echo-only green jobs or run placeholder
-#   helpers as though they assemble, approve, or reverse a release.
-#
-# Placement:
-#   `.github/workflows/` owns CI orchestration. Release governance remains under
-#   `release/`; all contracts, schemas, policies, fixtures, validators, tests,
-#   evidence, receipts, proofs, lifecycle artifacts, and public outputs remain
-#   in their owning responsibility roots.
+#   Test output and job summaries only. No candidate, decision, receipt, proof,
+#   manifest, rollback card, signature, release, or published artifact is emitted.
 
 name: release-dry-run
 
@@ -96,6 +72,9 @@ jobs:
               Path("release/candidates/README.md"),
               Path("contracts/release/release_manifest.md"),
               Path("schemas/contracts/v1/release/release_manifest.schema.json"),
+              Path("fixtures/release/release_manifest/cases.json"),
+              Path("tools/validators/release/validate_release_manifest.py"),
+              Path("tests/validators/test_validate_release_manifest.py"),
               Path("policy/release/README.md"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
@@ -134,31 +113,34 @@ jobs:
                   "schemas/contracts/v1/release/release_manifest.schema.json"
               ).read_text(encoding="utf-8")
           )
-          assert schema["x-kfm"] == {
-              "contract_doc": "contracts/release/release_manifest.md",
-              "fixtures_root": "fixtures/release/release_manifest/",
-              "validator": "tools/validators/release/validate_release_manifest.py",
-              "policy": "policy/release/",
-              "status": "PROPOSED",
-          }, "ReleaseManifest schema metadata changed; reconcile the dry-run boundary"
-          assert schema["required"] == ["id"]
-          assert schema["additionalProperties"] is True
-          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
-              "ReleaseManifest fixtures have appeared; add non-vacuous schema and governance "
-              "tests before retaining this hold"
+          metadata = schema["x-kfm"]
+          assert metadata["contract_doc"] == "contracts/release/release_manifest.md"
+          assert metadata["fixtures_root"] == "fixtures/release/release_manifest/"
+          assert metadata["validator"] == "tools/validators/release/validate_release_manifest.py"
+          assert metadata["policy"] == "policy/release/"
+          assert metadata["status"] == "PROPOSED_INACTIVE"
+          assert metadata["execution_mode"] == "FIXTURE_ONLY"
+          assert metadata["legacy_profile"] == "LEGACY_MINIMAL"
+          assert metadata["strict_profile"] == "RELEASE_MANIFEST_FIXTURE_V1"
+          assert len(schema["oneOf"]) == 2
+          assert schema["$defs"]["strict_profile"]["additionalProperties"] is False
+
+          cases = json.loads(
+              Path("fixtures/release/release_manifest/cases.json").read_text(
+                  encoding="utf-8"
+              )
           )
-          assert not Path(schema["x-kfm"]["validator"]).exists(), (
-              "the schema-declared ReleaseManifest validator has appeared; wire and test it "
-              "instead of retaining this hold"
-          )
+          assert len(cases["valid"]) == 4
+          assert len(cases["invalid"]) == 17
 
           print(
               f"CONFIRMED: {len(candidate_files)} candidate-lane guidance/placeholder files "
               "exist and no candidate packet payload is present."
           )
-          print("CONFIRMED: ReleaseManifest remains a permissive PROPOSED id-only schema.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no candidate was assembled.")
-          print("WORKFLOW_HOLD: no accepted dry-run command, manifest fixture, or declared validator exists.")
+          print("CONFIRMED: ReleaseManifest has a preserved legacy branch and a closed fixture-only candidate profile.")
+          print("CONFIRMED: four valid and seventeen invalid grouped cases are present for the dedicated validator workflow.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no release candidate was assembled.")
+          print("WORKFLOW_HOLD: no accepted assembly command or candidate payload exists; fixture validation creates no release authority.")
           print("No release record, artifact, or publication authority was created.")
           PY
 
@@ -170,7 +152,7 @@ jobs:
             echo "### Candidate assembly"
             echo
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** candidate lanes contain guidance/placeholders, the release-dry-run helper is comment-only, and the Make target remains TODO-only."
-            echo "- ReleaseManifest is still a permissive PROPOSED id-only schema with no declared fixture directory or validator implementation."
+            echo "- ReleaseManifest now has a preserved legacy branch plus a closed PROPOSED_INACTIVE / FIXTURE_ONLY candidate profile; its dedicated validator proves only synthetic local shape and semantics."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
