@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-published-language-review-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/published-language-review.yml",
+    "contracts/governance/published_language_review.md",
+    "docs/intake/exploratory/published-language-review-source-map.md",
+    "fixtures/contracts/v1/governance/published_language_review/README.md",
+    "fixtures/contracts/v1/governance/published_language_review/cases.json",
+    "schemas/contracts/v1/governance/published_language_review.schema.json",
+    "tests/validators/governance/test_validate_published_language_review.py",
+    "tools/validators/governance/published_language_review/__init__.py",
+    "tools/validators/governance/published_language_review/cli.py",
+    "tools/validators/governance/published_language_review/fixtures.py",
+    "tools/validators/governance/published_language_review/model.py",
+    "tools/validators/governance/published_language_review/rules.py",
+    "tools/validators/governance/validate_published_language_review.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/published-language-review.yml": "sha256:a979eacb37b4e3622f9aa9b6b15fe008ed705f28f0ea719bebb6f55de6c128f8",
+    "contracts/governance/published_language_review.md": "sha256:66978c71e5203aae22b9638bd90544e93eded73d52ded3c0c0ddd4726311178e",
+    "docs/intake/exploratory/published-language-review-source-map.md": "sha256:472d8d5c68c84df82658e458265a8d658b92ef905e941f942c0680808e28fae8",
+    "fixtures/contracts/v1/governance/published_language_review/README.md": "sha256:83b62bedd48aa0a882c12b146364a45c2bc61719eb6b59a564b9c9a2fbd0dadd",
+    "fixtures/contracts/v1/governance/published_language_review/cases.json": "sha256:8a003285da45d439c29e0c52b1bacdf344a8de8b2332bd1f348acccd13a9aac7",
+    "schemas/contracts/v1/governance/published_language_review.schema.json": "sha256:b332d01ea831712cbc714f46fc181aff6b002a9a6546e150631ee858c1945389",
+    "tests/validators/governance/test_validate_published_language_review.py": "sha256:fe546bca9349524d489df37820d812bf9029814bc8314df1f384574104455c1c",
+    "tools/validators/governance/published_language_review/__init__.py": "sha256:bf6435428a19e1952b757a7ca077ff04719235608cb9b54490574e4412fe5f0c",
+    "tools/validators/governance/published_language_review/cli.py": "sha256:b610d4883b62392b324c1bf0c27e1c6875e74bb602af4a9cd16c702f4aef53c6",
+    "tools/validators/governance/published_language_review/fixtures.py": "sha256:0c0f04c770b7cc72631f3522bdf2387acd549f355dcd71ecd6f01d06da9ee8de",
+    "tools/validators/governance/published_language_review/model.py": "sha256:43ea8de1b58fecae3107a085d24e708df2335bcab6ad55071318678f98e7c999",
+    "tools/validators/governance/published_language_review/rules.py": "sha256:7a51ea5aedf6008cb78bb1e168f22e1496465eee81ae5cca2542d99998a918a2",
+    "tools/validators/governance/validate_published_language_review.py": "sha256:badff57875817573bee792e5035f4988ff589f2a4b91808c64b49d092926b39f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:4ced26e9e92bf06fe0dc9a7c1b3d939f2583895680a3639a9c3e1be5837ab51d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:23bf74bf27c6ec64192aa48beff5805b04229164fd9f6f2db547107aedb51926"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Domain-Driven Design Reference.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MOD-005",
+      "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-350",
+      "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-375",
+      "attachment:Domain-Driven Design Reference.pdf#bounded-context-context-map-published-language",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0ab94b49111fad3801f3ab3da4afb6433cc14d23",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ab94b49111fad3801f3ab3da4afb6433cc14d23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ab94b49111fad3801f3ab3da4afb6433cc14d23/control_plane/cross_domain_seam_register.yaml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/published-language-review.yml": "PROPOSED",
+    "contracts/governance/published_language_review.md": "PROPOSED",
+    "docs/intake/exploratory/published-language-review-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/published_language_review/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/published_language_review/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/published_language_review.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_published_language_review.py": "CONFIRMED",
+    "tools/validators/governance/published_language_review/__init__.py": "CONFIRMED",
+    "tools/validators/governance/published_language_review/cli.py": "CONFIRMED",
+    "tools/validators/governance/published_language_review/fixtures.py": "CONFIRMED",
+    "tools/validators/governance/published_language_review/model.py": "CONFIRMED",
+    "tools/validators/governance/published_language_review/rules.py": "CONFIRMED",
+    "tools/validators/governance/validate_published_language_review.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-12-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-2-pass-9-deny-1-error",
+      "outcome": "PASS",
+      "reason": "Two coherent held candidates, nine fail-closed semantic or authority negatives, and one intentional identity-corruption error replay exactly."
+    },
+    {
+      "gate": "bounded-context-alias-migration-and-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-value-free-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after this draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, domain, API compatibility, and governance review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-bounded-contexts",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MOD-005"
+    },
+    {
+      "id": "pass18-published-language",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-350"
+    },
+    {
+      "id": "pass18-context-map",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-375"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ab94b49111fad3801f3ab3da4afb6433cc14d23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T23:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the smallest fixture-only published-language review profile derived from Pass 20, Pass 18, and DDD context-mapping recommendations. The validator is split into bounded governance modules under the existing tools responsibility root, references the existing cross-domain seam projection rather than creating a second context-map authority, and creates no API, schema-consumer, policy, adoption, release, deployment, publication, or public-use authority."
+}
