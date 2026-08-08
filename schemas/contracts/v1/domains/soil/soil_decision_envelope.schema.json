@@ -1,18 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/domains/soil/soil_decision_envelope.schema.json",
-  "title": "Soil Decision Envelope",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
-  "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "title": "Soil DecisionEnvelope compatibility alias",
+  "description": "PROPOSED compatibility alias for the canonical Soil DecisionEnvelope projection. Do not add independent fields or semantics here.",
+  "$ref": "decision_envelope.schema.json",
   "x-kfm": {
-    "status": "PROPOSED",
-    "path": "schemas/contracts/v1/domains/soil/soil_decision_envelope.schema.json",
-    "source_docs": [
-      "docs/domains/soil/CONTINUITY_INVENTORY.md",
-      "docs/domains/soil/DATA_LIFECYCLE.md"
-    ],
-    "contract_doc": "contracts/domains/soil/soil_decision_envelope.md"
+    "status": "PROPOSED_DEPRECATED_ALIAS",
+    "authority": "compatibility_alias",
+    "canonical_schema": "schemas/contracts/v1/domains/soil/decision_envelope.schema.json",
+    "canonical_semantics": "contracts/runtime/decision_envelope.md",
+    "domain_contract": "contracts/domains/soil/decision_envelope.md",
+    "direct_edits": "DENY",
+    "retirement": "NEEDS_VERIFICATION after consumer inventory",
+    "public_release_authority": false
   }
 }
