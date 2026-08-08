@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.invalid/schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json",
+  "title": "TemporalAuthorityEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["envelope_id","subject_ref","source_role","authority_id","geography_ref","temporal_posture","times","freshness_deadline","lineage_refs"],
+  "properties": {
+    "envelope_id": {"type":"string","pattern":"^kfm:temporal-authority:[a-z0-9._:-]+$"},
+    "subject_ref": {"type":"string","minLength":1},
+    "source_role": {"enum":["OBSERVATION","FORECAST","MODEL","AGGREGATE","REGULATORY","ADMINISTRATIVE","CONTEXT","SYNTHETIC"]},
+    "authority_id": {"type":"string","minLength":1},
+    "geography_ref": {"type":"string","minLength":1},
+    "temporal_posture": {"enum":["CURRENT","STALE","SUPERSEDED","WITHDRAWN","UNKNOWN"]},
+    "times": {
+      "type":"object","additionalProperties":false,
+      "required":["observed_at","valid_from","valid_to","source_updated_at","retrieved_at","released_at","corrected_at"],
+      "properties": {
+        "observed_at":{"type":["string","null"],"format":"date-time"},
+        "valid_from":{"type":["string","null"],"format":"date-time"},
+        "valid_to":{"type":["string","null"],"format":"date-time"},
+        "source_updated_at":{"type":["string","null"],"format":"date-time"},
+        "retrieved_at":{"type":"string","format":"date-time"},
+        "released_at":{"type":["string","null"],"format":"date-time"},
+        "corrected_at":{"type":["string","null"],"format":"date-time"}
+      }
+    },
+    "freshness_deadline":{"type":["string","null"],"format":"date-time"},
+    "lineage_refs":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
+    "supersedes_ref":{"type":["string","null"]},
+    "withdrawal_ref":{"type":["string","null"]}
+  }
+}
