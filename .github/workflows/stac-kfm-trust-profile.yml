@@ -1,0 +1,95 @@
+# Validate the fixture-first KFM STAC catalog-trust profile.
+name: stac-kfm-trust-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/stac-kfm-trust-profile.yml"
+      - "docs/standards/STAC_KFM_TRUST_EXTENSION.md"
+      - "schemas/contracts/v1/stac/kfm-profile-v1.schema.json"
+      - "tools/validators/stac/**"
+      - "fixtures/contracts/v1/stac/kfm-profile-v1/**"
+      - "tests/validators/test_validate_kfm_stac_profile.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass3-catalog-trust-extension-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/stac-kfm-trust-profile.yml"
+      - "docs/standards/STAC_KFM_TRUST_EXTENSION.md"
+      - "schemas/contracts/v1/stac/kfm-profile-v1.schema.json"
+      - "tools/validators/stac/**"
+      - "fixtures/contracts/v1/stac/kfm-profile-v1/**"
+      - "tests/validators/test_validate_kfm_stac_profile.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass3-catalog-trust-extension-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stac-kfm-trust-profile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused unit and fixture replay
+        run: |
+          set -euo pipefail
+          python -m unittest tests/validators/test_validate_kfm_stac_profile.py -v
+          python tools/validators/stac/validate_kfm_profile_v1.py --fixtures
+
+      - name: Report correction-binding digests
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/stac-kfm-trust-profile.yml \
+            docs/standards/STAC_KFM_TRUST_EXTENSION.md
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass3-catalog-trust-extension-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### KFM STAC trust-extension draft"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: draft schema, deterministic identity, trust-reference separation, state consistency, and exact fixture polarity."
+            echo "- Boundary: PASS does not establish complete external STAC conformance, authenticate referenced objects, admit a source, approve policy or review, release, deploy, publish, or permit public use."
+          } >> "$GITHUB_STEP_SUMMARY"

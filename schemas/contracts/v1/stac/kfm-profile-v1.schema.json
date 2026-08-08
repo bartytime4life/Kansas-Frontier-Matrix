@@ -1,17 +1,331 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/stac/kfm-profile-v1.schema.json",
-  "title": "Kfm Profile V1",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "title": "KFM STAC Trust Extension Item v1",
+  "description": "Draft fixture-first KFM trust projection for a bounded STAC 1.0.0 Item. Validation creates no evidence, policy, review, promotion, release, publication, or public-use authority.",
   "type": "object",
+  "required": [
+    "type",
+    "stac_version",
+    "stac_extensions",
+    "id",
+    "geometry",
+    "bbox",
+    "properties",
+    "links",
+    "assets"
+  ],
+  "properties": {
+    "type": {
+      "const": "Feature"
+    },
+    "stac_version": {
+      "const": "1.0.0"
+    },
+    "stac_extensions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "contains": {
+        "const": "kfm://profile/stac/kfm-profile-v1"
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "geometry": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "coordinates"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "Point",
+                "MultiPoint",
+                "LineString",
+                "MultiLineString",
+                "Polygon",
+                "MultiPolygon"
+              ]
+            },
+            "coordinates": {}
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "bbox": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "number"
+      }
+    },
+    "properties": {
+      "type": "object",
+      "required": [
+        "datetime",
+        "kfm:profile_version",
+        "kfm:spec_hash",
+        "kfm:source_role",
+        "kfm:trust_class",
+        "kfm:run_receipt_ref",
+        "kfm:proof_ref",
+        "kfm:release_ref",
+        "kfm:catalog_state",
+        "kfm:release_state",
+        "kfm:publication_state",
+        "kfm:reason_codes",
+        "kfm:authority"
+      ],
+      "properties": {
+        "datetime": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kfm:profile_version": {
+          "const": "1.0.0-draft.1"
+        },
+        "kfm:spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "kfm:source_role": {
+          "enum": [
+            "observed",
+            "regulatory",
+            "modeled",
+            "aggregate",
+            "administrative",
+            "candidate",
+            "synthetic"
+          ]
+        },
+        "kfm:trust_class": {
+          "enum": [
+            "UNRESOLVED",
+            "CATALOG_ONLY",
+            "RECEIPT_BOUND",
+            "PROOF_BOUND",
+            "RELEASE_LINKED"
+          ]
+        },
+        "kfm:run_receipt_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kfm:proof_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kfm:release_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kfm:catalog_state": {
+          "enum": [
+            "CANDIDATE",
+            "CATALOGED"
+          ]
+        },
+        "kfm:release_state": {
+          "enum": [
+            "NOT_RELEASED",
+            "RELEASE_LINKED"
+          ]
+        },
+        "kfm:publication_state": {
+          "enum": [
+            "NOT_PUBLISHED",
+            "PUBLICATION_LINKED"
+          ]
+        },
+        "kfm:reason_codes": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+          }
+        },
+        "kfm:authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_authority",
+            "evidence_authority",
+            "policy_authority",
+            "review_authority",
+            "release_authority",
+            "publication_authority"
+          ],
+          "properties": {
+            "source_authority": {
+              "const": false
+            },
+            "evidence_authority": {
+              "const": false
+            },
+            "policy_authority": {
+              "const": false
+            },
+            "review_authority": {
+              "const": false
+            },
+            "release_authority": {
+              "const": false
+            },
+            "publication_authority": {
+              "const": false
+            }
+          }
+        }
+      },
+      "patternProperties": {
+        "^(?!kfm:).+$": {}
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "required": [
+          "rel",
+          "href"
+        ],
+        "properties": {
+          "rel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "href": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 512
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "assets": {
+      "type": "object",
+      "maxProperties": 512,
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "href"
+        ],
+        "properties": {
+          "href": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "roles": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
   "additionalProperties": true,
-  "properties": {},
   "x-kfm": {
-    "status": "PROPOSED",
-    "path": "schemas/contracts/v1/stac/kfm-profile-v1.schema.json",
-    "source_docs": [
-      "docs/domains/hazards/RELEASE_INDEX.md"
-    ],
-    "contract_doc": null
+    "status": "DRAFT_SCHEMA",
+    "profile_uri": "kfm://profile/stac/kfm-profile-v1",
+    "namespace_status": "PROPOSED_NEEDS_VERIFICATION",
+    "contract_doc": "docs/standards/STAC_KFM_TRUST_EXTENSION.md",
+    "fixtures_root": "fixtures/contracts/v1/stac/kfm-profile-v1/",
+    "validator": "tools/validators/stac/validate_kfm_profile_v1.py",
+    "tests": "tests/validators/test_validate_kfm_stac_profile.py",
+    "authority": "catalog_trust_projection_only",
+    "non_effects": [
+      "does_not_establish_complete_external_stac_conformance",
+      "does_not_authenticate_receipt_proof_evidence_review_or_release",
+      "does_not_admit_sources_or_write_lifecycle_data",
+      "does_not_authorize_promotion_release_publication_or_public_use"
+    ]
   }
 }

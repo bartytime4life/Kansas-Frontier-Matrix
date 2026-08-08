@@ -65,7 +65,14 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-manifest-shape"
           echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-per-tile-lineage"
           echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-qc-reconciliation"
+          echo "WORKFLOW_CHECK_EXECUTED: pmtiles-delta-exact-negative-findings"
           echo "WORKFLOW_HOLD: archive bytes, range hosting, signatures, policy, release, deployment, and publication are not evaluated"
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass1-pmtiles-negative-path-proof-20260808.json \
+            --repo-root .
 
       - name: Record bounded trust result
         if: always()
@@ -76,8 +83,9 @@ jobs:
 
           This job validates a closed synthetic profile, canonical `spec_hash`,
           base/delta digest binding, ordered per-tile lineage, coordinate and
-          quadkey identity, count reconciliation, and computed `PASS`, `REVIEW`,
-          or `REJECT` QC semantics.
+          quadkey identity, count reconciliation, computed `PASS`, `REVIEW`, or
+          `REJECT` QC semantics, exact semantic-negative findings, and current
+          generated-receipt byte closure.
 
           A green result does not inspect an archive, authenticate byte ranges,
           verify a PMSIG/DSSE signature, resolve evidence, evaluate policy,

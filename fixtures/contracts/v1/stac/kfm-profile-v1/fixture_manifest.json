@@ -1,0 +1,55 @@
+{
+  "invalid": {
+    "invalid_proof_without_receipt.json": {
+      "findings": [
+        "TRUST_CLASS_DEPENDENCY_MISMATCH"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_publication_without_release.json": {
+      "findings": [
+        "PUBLICATION_STATE_INCONSISTENT"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_reason_codes_not_canonical.json": {
+      "findings": [
+        "REASON_CODES_NOT_CANONICAL"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_receipt_as_proof.json": {
+      "findings": [
+        "REFERENCE_ROLE_COLLAPSE"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_release_without_proof.json": {
+      "findings": [
+        "TRUST_CLASS_DEPENDENCY_MISMATCH"
+      ],
+      "outcome": "FAIL"
+    },
+    "invalid_spec_hash_mismatch.json": {
+      "findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "outcome": "FAIL"
+    }
+  },
+  "profile": "kfm.stac.trust-extension.fixture-manifest.v1",
+  "valid": {
+    "valid_proof_bound_cataloged.json": {
+      "findings": [],
+      "outcome": "PASS"
+    },
+    "valid_receipt_bound_candidate.json": {
+      "findings": [],
+      "outcome": "PASS"
+    },
+    "valid_release_linked_not_published.json": {
+      "findings": [],
+      "outcome": "PASS"
+    }
+  }
+}
