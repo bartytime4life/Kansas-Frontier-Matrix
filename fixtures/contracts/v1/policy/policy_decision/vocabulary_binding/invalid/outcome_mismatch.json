@@ -1,0 +1,10 @@
+{
+  "decision_id": "poldec:20260808:access:stale-as-deny",
+  "outcome": "DENY",
+  "policy_family": "access",
+  "reasons": [
+    "EVIDENCE_STALE"
+  ],
+  "obligations": [],
+  "evaluated_at": "2026-08-08T02:15:00Z"
+}
