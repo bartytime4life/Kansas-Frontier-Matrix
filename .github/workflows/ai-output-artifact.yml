@@ -88,5 +88,5 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: closed synthetic per-input artifact and batch-manifest shape, deterministic identity, finite outcome closure, and partial-revocation accounting."
-            echo "- Boundary: no model runs, output bytes are fetched, references are resolved, policy/review/signatures are authenticated, or promotion/release/publication/public use is authorized."
+            echo "- Boundary: no model runs or output bytes are fetched; references are not resolved, policy/review/signatures are authenticated, or promotion/release/publication/public use is authorized."
           } >> "$GITHUB_STEP_SUMMARY"

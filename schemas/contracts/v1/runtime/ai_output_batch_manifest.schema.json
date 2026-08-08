@@ -5,76 +5,261 @@
   "description": "Fixture-only, non-authoritative manifest that names independently identified AIOutputArtifact records. The manifest supports partial revocation and supersession without merging item truth or invalidating unrelated artifact identities.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["object_type", "schema_version", "profile_status", "execution_mode", "manifest_id", "spec_hash", "batch_id", "batch_status", "created_at", "source_batch_ref", "artifacts", "counts", "lineage", "run_receipt_refs", "governance"],
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_status",
+    "execution_mode",
+    "manifest_id",
+    "spec_hash",
+    "batch_id",
+    "batch_status",
+    "created_at",
+    "source_batch_ref",
+    "artifacts",
+    "counts",
+    "lineage",
+    "run_receipt_refs",
+    "governance"
+  ],
   "properties": {
-    "object_type": {"const": "AIOutputBatchManifest"},
-    "schema_version": {"const": "1.0.0"},
-    "profile_status": {"const": "PROPOSED_INACTIVE"},
-    "execution_mode": {"const": "FIXTURE_ONLY"},
-    "manifest_id": {"type": "string", "pattern": "^ai-output-batch-manifest:[0-9a-f]{24}$"},
-    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "batch_id": {"$ref": "#/$defs/ref"},
-    "batch_status": {"type": "string", "enum": ["ACTIVE", "PARTIALLY_REVOKED", "SUPERSEDED", "WITHDRAWN"]},
-    "created_at": {"type": "string", "format": "date-time"},
-    "source_batch_ref": {"$ref": "#/$defs/ref"},
+    "object_type": {
+      "const": "AIOutputBatchManifest"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^ai-output-batch-manifest:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "batch_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "batch_status": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "PARTIALLY_REVOKED",
+        "SUPERSEDED",
+        "WITHDRAWN"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_batch_ref": {
+      "$ref": "#/$defs/ref"
+    },
     "artifacts": {
-      "type": "array", "minItems": 1, "maxItems": 10000,
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["input_ref", "artifact_id", "artifact_spec_hash", "outcome", "lineage_status"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "input_ref",
+          "artifact_id",
+          "artifact_spec_hash",
+          "outcome",
+          "lineage_status"
+        ],
         "properties": {
-          "input_ref": {"$ref": "#/$defs/ref"},
-          "artifact_id": {"type": "string", "pattern": "^ai-output-artifact:[0-9a-f]{24}$"},
-          "artifact_spec_hash": {"$ref": "#/$defs/sha256"},
-          "outcome": {"$ref": "#/$defs/outcome"},
-          "lineage_status": {"$ref": "#/$defs/lineage_status"}
+          "input_ref": {
+            "$ref": "#/$defs/ref"
+          },
+          "artifact_id": {
+            "type": "string",
+            "pattern": "^ai-output-artifact:[0-9a-f]{24}$"
+          },
+          "artifact_spec_hash": {
+            "$ref": "#/$defs/sha256"
+          },
+          "outcome": {
+            "$ref": "#/$defs/outcome"
+          },
+          "lineage_status": {
+            "$ref": "#/$defs/lineage_status"
+          }
         }
       }
     },
     "counts": {
-      "type": "object", "additionalProperties": false,
-      "required": ["total", "active", "revoked", "superseded", "answer", "abstain", "deny", "error"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "active",
+        "revoked",
+        "superseded",
+        "answer",
+        "abstain",
+        "deny",
+        "error"
+      ],
       "properties": {
-        "total": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "active": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "revoked": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "superseded": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "answer": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "abstain": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "deny": {"type": "integer", "minimum": 0, "maximum": 10000},
-        "error": {"type": "integer", "minimum": 0, "maximum": 10000}
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "active": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "revoked": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "superseded": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "answer": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "abstain": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "deny": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
       }
     },
     "lineage": {
-      "type": "object", "additionalProperties": false,
-      "required": ["previous_manifest_ref", "correction_refs"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_manifest_ref",
+        "correction_refs"
+      ],
       "properties": {
-        "previous_manifest_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
-        "correction_refs": {"$ref": "#/$defs/ref_array"}
+        "previous_manifest_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
       }
     },
-    "run_receipt_refs": {"$ref": "#/$defs/ref_array"},
-    "governance": {"$ref": "#/$defs/governance"}
+    "run_receipt_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
   },
   "$defs": {
-    "ref": {"type": "string", "minLength": 1, "maxLength": 640, "pattern": "\\S"},
-    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "outcome": {"type": "string", "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]},
-    "lineage_status": {"type": "string", "enum": ["ACTIVE", "REVOKED", "SUPERSEDED"]},
-    "ref_array": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "lineage_status": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "REVOKED",
+        "SUPERSEDED"
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
     "governance": {
-      "type": "object", "additionalProperties": false,
-      "required": ["evidence_resolved", "policy_evaluated", "citations_validated", "review_authenticated", "promotion_authorized", "release_authorized", "publication_authorized", "public_use_allowed", "canonical_state_mutated"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_resolved",
+        "policy_evaluated",
+        "citations_validated",
+        "review_authenticated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "canonical_state_mutated"
+      ],
       "properties": {
-        "evidence_resolved": {"const": false},
-        "policy_evaluated": {"const": false},
-        "citations_validated": {"const": false},
-        "review_authenticated": {"const": false},
-        "promotion_authorized": {"const": false},
-        "release_authorized": {"const": false},
-        "publication_authorized": {"const": false},
-        "public_use_allowed": {"const": false},
-        "canonical_state_mutated": {"const": false}
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "citations_validated": {
+          "const": false
+        },
+        "review_authenticated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "canonical_state_mutated": {
+          "const": false
+        }
       }
     }
   },
