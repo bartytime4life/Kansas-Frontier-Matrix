@@ -1,0 +1,147 @@
+# Temporary branch-local helper that applies a prevalidated, bounded payload.
+# It removes itself and all payload staging files before pushing the final branch.
+name: temporary-apply-flow-permanence
+
+"on":
+  push:
+    branches:
+      - agent/pass3-flow-permanence-assessment-20260808
+    paths:
+      - ".github/workflows/_temporary-apply-flow-permanence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-apply-flow-permanence-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  KFM_NO_NETWORK: "1"
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out branch with bounded write credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Merge current main without rewriting history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "KFM bounded implementation helper"
+          git config user.email "noreply@github.com"
+          git fetch --no-tags origin main
+          git merge --no-edit origin/main
+
+      - name: Verify the hydrology workflow preimage
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s  %s\n' \
+            '91b8540e86384f6641c08ed61ee31fc2bc9ef1d2fcb59d5f12cc54f923743386' \
+            '.github/workflows/domain-hydrology.yml' \
+            | sha256sum --check --strict
+
+      - name: Reassemble and verify the bounded payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .github/_tmp/flow-permanence-payload/part-000 \
+            .github/_tmp/flow-permanence-payload/part-001-0 \
+            .github/_tmp/flow-permanence-payload/part-001-1 \
+            .github/_tmp/flow-permanence-payload/part-002-0 \
+            .github/_tmp/flow-permanence-payload/part-002-1 \
+            .github/_tmp/flow-permanence-payload/part-003-0 \
+            .github/_tmp/flow-permanence-payload/part-003-1 \
+            .github/_tmp/flow-permanence-payload/part-004-0 \
+            .github/_tmp/flow-permanence-payload/part-004-1 \
+            | base64 --decode > /tmp/permanence-final.tar.gz
+
+          printf '%s  %s\n' \
+            '47b65d8f1a697a32f69e2176b63ebc0a4bfa36adbacae2414fb81344dcc829dd' \
+            '/tmp/permanence-final.tar.gz' \
+            | sha256sum --check --strict
+
+          expected_paths=$(cat <<'EOF'
+          .github/workflows/domain-hydrology.yml
+          .github/workflows/hydrology-flow-permanence-assessment.yml
+          contracts/domains/hydrology/flow_permanence_assessment.md
+          data/receipts/generated/genrec-pass3-flow-permanence-assessment-20260808.json
+          docs/intake/exploratory/pass-3-flow-permanence-assessment-source-map.md
+          fixtures/contracts/v1/domains/hydrology/flow_permanence_assessment/cases.json
+          schemas/contracts/v1/domains/hydrology/flow_permanence_assessment.schema.json
+          tests/domains/hydrology/test_flow_permanence_assessment.py
+          tools/validators/domains/hydrology/validate_flow_permanence_assessment.py
+          EOF
+          )
+          actual_paths=$(tar -tzf /tmp/permanence-final.tar.gz | LC_ALL=C sort)
+          if [[ "$actual_paths" != "$(printf '%s\n' "$expected_paths" | sed 's/^          //' | LC_ALL=C sort)" ]]; then
+            echo "::error::Bounded payload path set does not match the admitted nine-file packet."
+            printf 'Expected:\n%s\nActual:\n%s\n' "$expected_paths" "$actual_paths"
+            exit 1
+          fi
+
+      - name: Apply payload and remove temporary transport files
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -xzf /tmp/permanence-final.tar.gz -C .
+          rm -f .github/workflows/_temporary-export-domain-hydrology.yml
+          rm -f .github/workflows/_temporary-apply-flow-permanence.yml
+          rm -rf .github/_tmp/flow-permanence-payload
+
+      - name: Run bounded deterministic pre-push validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+          python -m py_compile \
+            tools/validators/domains/hydrology/validate_flow_permanence_assessment.py \
+            tests/domains/hydrology/test_flow_permanence_assessment.py
+          python -m unittest \
+            tests.domains.hydrology.test_flow_permanence_assessment \
+            --verbose
+          python tools/validators/domains/hydrology/validate_flow_permanence_assessment.py \
+            --fixtures
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass3-flow-permanence-assessment-20260808.json \
+            --repo-root .
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          for path in (
+              Path('.github/workflows/domain-hydrology.yml'),
+              Path('.github/workflows/hydrology-flow-permanence-assessment.yml'),
+          ):
+              yaml.safe_load(path.read_text(encoding='utf-8'))
+          PY
+
+      - name: Commit only the final dependency-closed packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --name-only | grep -Eq '^\.github/(?:_tmp/|workflows/_temporary-)'; then
+            echo "::error::Temporary transport paths remain staged."
+            git diff --cached --name-status
+            exit 1
+          fi
+          git diff --cached --name-status
+          git commit -m "feat(hydrology): add fixture-first flow permanence assessment"
+          git push origin HEAD:agent/pass3-flow-permanence-assessment-20260808
