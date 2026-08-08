@@ -1,0 +1,120 @@
+# Validate KFM compatibility path and identity aliases against adopted Directory Rules.
+#
+# A green result proves bounded projection consistency only. It does not accept an
+# ADR, authorize alias writes, move bytes, create a tombstone, close consumers,
+# retire/delete paths, release, deploy, promote, or publish.
+name: path-alias-register
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/path-alias-register.yml"
+      - "contracts/governance/path_alias_register.md"
+      - "control_plane/path_alias_register.yaml"
+      - "control_plane/root_registry.yaml"
+      - "docs/doctrine/directory-rules.md"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "schemas/contracts/v1/governance/path_alias_register.schema.json"
+      - "fixtures/contracts/v1/governance/path_alias_register/**"
+      - "tools/validators/directory_governance/README.md"
+      - "tools/validators/directory_governance/path_alias_register.md"
+      - "tools/validators/directory_governance/validate_path_alias_register.py"
+      - "tests/validators/directory_governance/test_validate_path_alias_register.py"
+      - "data/receipts/generated/genrec-path-alias-register-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/path-alias-register.yml"
+      - "contracts/governance/path_alias_register.md"
+      - "control_plane/path_alias_register.yaml"
+      - "control_plane/root_registry.yaml"
+      - "docs/doctrine/directory-rules.md"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "schemas/contracts/v1/governance/path_alias_register.schema.json"
+      - "fixtures/contracts/v1/governance/path_alias_register/**"
+      - "tools/validators/directory_governance/README.md"
+      - "tools/validators/directory_governance/path_alias_register.md"
+      - "tools/validators/directory_governance/validate_path_alias_register.py"
+      - "tests/validators/directory_governance/test_validate_path_alias_register.py"
+      - "data/receipts/generated/genrec-path-alias-register-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: path-alias-register-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-path-alias-register:
+    name: validate-path-alias-register
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_path_alias_register.py' \
+            --verbose
+
+      - name: Validate compatibility-class fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/directory_governance/validate_path_alias_register.py --fixtures
+
+      - name: Validate current alias projection and repository parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/directory_governance/validate_path_alias_register.py
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-path-alias-register-20260807.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Path Alias Register"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema, adopted-doctrine binding, Root Registry binding, compatibility classes, identity mapping, dual-read/single-write, path/blob/digest parity, expiry, consumers, and rollback fields."
+            echo "- Boundary: validation cannot accept an ADR, authorize alias writes, close consumers, create a tombstone, move/retire/delete paths, release, deploy, promote, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

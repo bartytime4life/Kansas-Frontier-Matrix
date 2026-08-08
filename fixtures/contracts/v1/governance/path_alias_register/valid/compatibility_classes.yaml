@@ -1,0 +1,479 @@
+{
+  "version": "v1",
+  "registry": "path_alias_register",
+  "status": "ACTIVE",
+  "authority": "machine_projection_only",
+  "updated_at": "2026-08-07",
+  "base_ref": "1111111111111111111111111111111111111111",
+  "coverage_scope": "synthetic_compatibility_classes",
+  "doctrine": {
+    "path": "docs/doctrine/directory-rules.md",
+    "document_id": "kfm://doctrine/directory-governance/v2",
+    "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "decision_ref": "ADR-0029"
+  },
+  "root_registry": {
+    "path": "control_plane/root_registry.yaml",
+    "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+  },
+  "owner": "@bartytime4life",
+  "reviewers": [
+    "@bartytime4life"
+  ],
+  "description": "Projection of accepted old-to-canonical path and identity mappings. It records compatibility constraints without creating authority, moving bytes, closing consumers, or authorizing retirement.",
+  "non_effects": [
+    "does_not_accept_or_amend_an_adr",
+    "does_not_authorize_alias_writes",
+    "does_not_close_unverified_consumers",
+    "does_not_migrate_tombstone_or_delete_paths",
+    "does_not_release_deploy_promote_or_publish"
+  ],
+  "aliases": [
+    {
+      "alias_id": "alias.contracts.transitional",
+      "class": "transitional",
+      "status": "ACTIVE",
+      "old_path": "contracts/legacy-contract.md",
+      "canonical_target": "contracts/current-contract.md",
+      "object_family": "semantic_contract",
+      "identity_mapping": {
+        "canonical_id": "kfm://contract/current",
+        "aliases": [
+          "kfm://contract/legacy"
+        ],
+        "identity_rule": "superseded_aliases_resolve_to_canonical"
+      },
+      "reason": "accepted_authority_migration_or_verified_compatibility_need",
+      "decision_ref": "ADR-0029",
+      "rule_ids": [
+        "DIR-COMPAT-001",
+        "DIR-COMPAT-002",
+        "DIR-COMPAT-003",
+        "DIR-CONTROL-001",
+        "DIR-CONTROL-002",
+        "DIR-ENFORCE-001"
+      ],
+      "source_digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "alias_root": "root.contracts",
+      "target_root": "root.contracts",
+      "writers": {
+        "alias": [],
+        "canonical": [
+          "@bartytime4life"
+        ]
+      },
+      "consumers": [
+        {
+          "consumer_id": "consumer.alias.contracts.transitional",
+          "kind": "repository_internal",
+          "state": "VERIFIED_AT_DECISION",
+          "evidence_ref": "repo:fixture/consumer"
+        }
+      ],
+      "consumer_closure": "OPEN",
+      "read_rule": "dual_read",
+      "write_rule": "canonical_only",
+      "synchronization": {
+        "method": "copy_then_cutover",
+        "source_path": "contracts/current-contract.md"
+      },
+      "owner": "@bartytime4life",
+      "reviewers": [
+        "@bartytime4life"
+      ],
+      "start_date": "2026-08-07",
+      "expiry": {
+        "mode": "condition",
+        "value": "zero_writers_zero_consumers_parity_and_retirement_receipt"
+      },
+      "exit_criteria": [
+        "link_and_identity_parity_verified",
+        "retirement_receipt_recorded",
+        "zero_consumers_verified",
+        "zero_writers_verified"
+      ],
+      "parity_validation": {
+        "method": "digest_identity_and_reference_validation",
+        "validation_refs": [
+          "repo:fixture/parity-check",
+          "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+        ]
+      },
+      "rollback": {
+        "mode": "restore_prior_bytes_or_forward_fix_without_parallel_writers",
+        "reference": "repo:fixture/rollback",
+        "parallel_writer_guard": true
+      },
+      "exposure": {
+        "alias": "public",
+        "target": "public"
+      },
+      "mutation": {
+        "alias": "read_only",
+        "target": "versioned"
+      },
+      "authority_mode": "non_authoritative",
+      "body_mode": "transitional_copy",
+      "legacy_git_blob": null,
+      "canonical_sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "verification_state": "CONFIRMED"
+    },
+    {
+      "alias_id": "alias.docs.deprecated",
+      "class": "deprecated",
+      "status": "ACTIVE",
+      "old_path": "docs/deprecated-note.md",
+      "canonical_target": "docs/current-note.md",
+      "object_family": "human_document",
+      "identity_mapping": {
+        "canonical_id": "kfm://doc/current-note",
+        "aliases": [
+          "kfm://doc/deprecated-note"
+        ],
+        "identity_rule": "superseded_aliases_resolve_to_canonical"
+      },
+      "reason": "accepted_authority_migration_or_verified_compatibility_need",
+      "decision_ref": "ADR-0029",
+      "rule_ids": [
+        "DIR-COMPAT-001",
+        "DIR-COMPAT-002",
+        "DIR-COMPAT-003",
+        "DIR-CONTROL-001",
+        "DIR-CONTROL-002",
+        "DIR-ENFORCE-001"
+      ],
+      "source_digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "alias_root": "root.docs",
+      "target_root": "root.docs",
+      "writers": {
+        "alias": [],
+        "canonical": [
+          "@bartytime4life"
+        ]
+      },
+      "consumers": [
+        {
+          "consumer_id": "consumer.alias.docs.deprecated",
+          "kind": "repository_internal",
+          "state": "VERIFIED_AT_DECISION",
+          "evidence_ref": "repo:fixture/consumer"
+        }
+      ],
+      "consumer_closure": "OPEN",
+      "read_rule": "canonical_only_with_redirect",
+      "write_rule": "canonical_only",
+      "synchronization": {
+        "method": "none_frozen",
+        "source_path": "docs/current-note.md"
+      },
+      "owner": "@bartytime4life",
+      "reviewers": [
+        "@bartytime4life"
+      ],
+      "start_date": "2026-08-07",
+      "expiry": {
+        "mode": "condition",
+        "value": "zero_writers_zero_consumers_parity_and_retirement_receipt"
+      },
+      "exit_criteria": [
+        "link_and_identity_parity_verified",
+        "retirement_receipt_recorded",
+        "zero_consumers_verified",
+        "zero_writers_verified"
+      ],
+      "parity_validation": {
+        "method": "digest_identity_and_reference_validation",
+        "validation_refs": [
+          "repo:fixture/parity-check",
+          "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+        ]
+      },
+      "rollback": {
+        "mode": "restore_prior_bytes_or_forward_fix_without_parallel_writers",
+        "reference": "repo:fixture/rollback",
+        "parallel_writer_guard": true
+      },
+      "exposure": {
+        "alias": "public",
+        "target": "public"
+      },
+      "mutation": {
+        "alias": "read_only",
+        "target": "versioned"
+      },
+      "authority_mode": "non_authoritative",
+      "body_mode": "deprecated_redirect",
+      "legacy_git_blob": null,
+      "canonical_sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "verification_state": "CONFIRMED"
+    },
+    {
+      "alias_id": "alias.docs.legacy",
+      "class": "legacy",
+      "status": "ACTIVE",
+      "old_path": "docs/legacy-note.md",
+      "canonical_target": "docs/current-legacy-note.md",
+      "object_family": "human_document",
+      "identity_mapping": {
+        "canonical_id": "kfm://doc/current-legacy-note",
+        "aliases": [
+          "kfm://doc/legacy-note"
+        ],
+        "identity_rule": "superseded_aliases_resolve_to_canonical"
+      },
+      "reason": "accepted_authority_migration_or_verified_compatibility_need",
+      "decision_ref": "ADR-0029",
+      "rule_ids": [
+        "DIR-COMPAT-001",
+        "DIR-COMPAT-002",
+        "DIR-COMPAT-003",
+        "DIR-CONTROL-001",
+        "DIR-CONTROL-002",
+        "DIR-ENFORCE-001"
+      ],
+      "source_digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "alias_root": "root.docs",
+      "target_root": "root.docs",
+      "writers": {
+        "alias": [],
+        "canonical": [
+          "@bartytime4life"
+        ]
+      },
+      "consumers": [
+        {
+          "consumer_id": "consumer.alias.docs.legacy",
+          "kind": "repository_internal",
+          "state": "VERIFIED_AT_DECISION",
+          "evidence_ref": "repo:fixture/consumer"
+        }
+      ],
+      "consumer_closure": "OPEN",
+      "read_rule": "dual_read",
+      "write_rule": "canonical_only",
+      "synchronization": {
+        "method": "none_frozen",
+        "source_path": "docs/current-legacy-note.md"
+      },
+      "owner": "@bartytime4life",
+      "reviewers": [
+        "@bartytime4life"
+      ],
+      "start_date": "2026-08-07",
+      "expiry": {
+        "mode": "condition",
+        "value": "zero_writers_zero_consumers_parity_and_retirement_receipt"
+      },
+      "exit_criteria": [
+        "link_and_identity_parity_verified",
+        "retirement_receipt_recorded",
+        "zero_consumers_verified",
+        "zero_writers_verified"
+      ],
+      "parity_validation": {
+        "method": "digest_identity_and_reference_validation",
+        "validation_refs": [
+          "repo:fixture/parity-check",
+          "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+        ]
+      },
+      "rollback": {
+        "mode": "restore_prior_bytes_or_forward_fix_without_parallel_writers",
+        "reference": "repo:fixture/rollback",
+        "parallel_writer_guard": true
+      },
+      "exposure": {
+        "alias": "public",
+        "target": "public"
+      },
+      "mutation": {
+        "alias": "read_only",
+        "target": "versioned"
+      },
+      "authority_mode": "non_authoritative",
+      "body_mode": "legacy_body_read_only",
+      "legacy_git_blob": null,
+      "canonical_sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "verification_state": "CONFIRMED"
+    },
+    {
+      "alias_id": "alias.docs.mirror",
+      "class": "mirror",
+      "status": "ACTIVE",
+      "old_path": "docs/mirror-note.md",
+      "canonical_target": "docs/current-mirror-note.md",
+      "object_family": "human_document",
+      "identity_mapping": {
+        "canonical_id": "kfm://doc/current-mirror-note",
+        "aliases": [
+          "kfm://doc/mirror-note"
+        ],
+        "identity_rule": "superseded_aliases_resolve_to_canonical"
+      },
+      "reason": "accepted_authority_migration_or_verified_compatibility_need",
+      "decision_ref": "ADR-0029",
+      "rule_ids": [
+        "DIR-COMPAT-001",
+        "DIR-COMPAT-002",
+        "DIR-COMPAT-003",
+        "DIR-CONTROL-001",
+        "DIR-CONTROL-002",
+        "DIR-ENFORCE-001"
+      ],
+      "source_digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "alias_root": "root.docs",
+      "target_root": "root.docs",
+      "writers": {
+        "alias": [],
+        "canonical": [
+          "@bartytime4life"
+        ]
+      },
+      "consumers": [
+        {
+          "consumer_id": "consumer.alias.docs.mirror",
+          "kind": "repository_internal",
+          "state": "VERIFIED_AT_DECISION",
+          "evidence_ref": "repo:fixture/consumer"
+        }
+      ],
+      "consumer_closure": "OPEN",
+      "read_rule": "generated_read",
+      "write_rule": "canonical_only",
+      "synchronization": {
+        "method": "generated_one_way",
+        "source_path": "docs/current-mirror-note.md"
+      },
+      "owner": "@bartytime4life",
+      "reviewers": [
+        "@bartytime4life"
+      ],
+      "start_date": "2026-08-07",
+      "expiry": {
+        "mode": "condition",
+        "value": "zero_writers_zero_consumers_parity_and_retirement_receipt"
+      },
+      "exit_criteria": [
+        "link_and_identity_parity_verified",
+        "retirement_receipt_recorded",
+        "zero_consumers_verified",
+        "zero_writers_verified"
+      ],
+      "parity_validation": {
+        "method": "digest_identity_and_reference_validation",
+        "validation_refs": [
+          "repo:fixture/parity-check",
+          "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+        ]
+      },
+      "rollback": {
+        "mode": "restore_prior_bytes_or_forward_fix_without_parallel_writers",
+        "reference": "repo:fixture/rollback",
+        "parallel_writer_guard": true
+      },
+      "exposure": {
+        "alias": "public",
+        "target": "public"
+      },
+      "mutation": {
+        "alias": "generated",
+        "target": "versioned"
+      },
+      "authority_mode": "non_authoritative",
+      "body_mode": "generated_mirror",
+      "legacy_git_blob": null,
+      "canonical_sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "verification_state": "CONFIRMED"
+    },
+    {
+      "alias_id": "alias.examples.external-export",
+      "class": "external_export",
+      "status": "ACTIVE",
+      "old_path": "examples/legacy-export.md",
+      "canonical_target": "examples/current-export.md",
+      "object_family": "runnable_example",
+      "identity_mapping": {
+        "canonical_id": "kfm://example/current-export",
+        "aliases": [
+          "kfm://example/legacy-export"
+        ],
+        "identity_rule": "superseded_aliases_resolve_to_canonical"
+      },
+      "reason": "accepted_authority_migration_or_verified_compatibility_need",
+      "decision_ref": "ADR-0029",
+      "rule_ids": [
+        "DIR-COMPAT-001",
+        "DIR-COMPAT-002",
+        "DIR-COMPAT-003",
+        "DIR-CONTROL-001",
+        "DIR-CONTROL-002",
+        "DIR-ENFORCE-001"
+      ],
+      "source_digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "alias_root": "root.examples",
+      "target_root": "root.examples",
+      "writers": {
+        "alias": [],
+        "canonical": [
+          "@bartytime4life"
+        ]
+      },
+      "consumers": [
+        {
+          "consumer_id": "consumer.alias.examples.external-export",
+          "kind": "repository_internal",
+          "state": "VERIFIED_AT_DECISION",
+          "evidence_ref": "repo:fixture/consumer"
+        }
+      ],
+      "consumer_closure": "OPEN",
+      "read_rule": "generated_read",
+      "write_rule": "canonical_only",
+      "synchronization": {
+        "method": "manual_export",
+        "source_path": "examples/current-export.md"
+      },
+      "owner": "@bartytime4life",
+      "reviewers": [
+        "@bartytime4life"
+      ],
+      "start_date": "2026-08-07",
+      "expiry": {
+        "mode": "condition",
+        "value": "zero_writers_zero_consumers_parity_and_retirement_receipt"
+      },
+      "exit_criteria": [
+        "link_and_identity_parity_verified",
+        "retirement_receipt_recorded",
+        "zero_consumers_verified",
+        "zero_writers_verified"
+      ],
+      "parity_validation": {
+        "method": "digest_identity_and_reference_validation",
+        "validation_refs": [
+          "repo:fixture/parity-check",
+          "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+        ]
+      },
+      "rollback": {
+        "mode": "restore_prior_bytes_or_forward_fix_without_parallel_writers",
+        "reference": "repo:fixture/rollback",
+        "parallel_writer_guard": true
+      },
+      "exposure": {
+        "alias": "public",
+        "target": "public"
+      },
+      "mutation": {
+        "alias": "generated",
+        "target": "versioned"
+      },
+      "authority_mode": "non_authoritative",
+      "body_mode": "external_export",
+      "legacy_git_blob": null,
+      "canonical_sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "verification_state": "CONFIRMED"
+    }
+  ]
+}

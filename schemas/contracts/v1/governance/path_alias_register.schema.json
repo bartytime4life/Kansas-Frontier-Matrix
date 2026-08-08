@@ -1,0 +1,662 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/path_alias_register.schema.json",
+  "title": "KFM Path Alias Register",
+  "description": "Projection-only register of accepted KFM compatibility path and identity mappings. JSON-compatible YAML is required for deterministic no-network parsing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "registry",
+    "status",
+    "authority",
+    "updated_at",
+    "base_ref",
+    "coverage_scope",
+    "doctrine",
+    "root_registry",
+    "owner",
+    "reviewers",
+    "description",
+    "non_effects",
+    "aliases"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "registry": {
+      "const": "path_alias_register"
+    },
+    "status": {
+      "const": "ACTIVE"
+    },
+    "authority": {
+      "const": "machine_projection_only"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "base_ref": {
+      "$ref": "#/$defs/commit"
+    },
+    "coverage_scope": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{4,128}$"
+    },
+    "doctrine": {
+      "$ref": "#/$defs/doctrine"
+    },
+    "root_registry": {
+      "$ref": "#/$defs/root_registry"
+    },
+    "owner": {
+      "$ref": "#/$defs/actor"
+    },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/actor"
+      },
+      "uniqueItems": true
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{4,160}$"
+      },
+      "uniqueItems": true
+    },
+    "aliases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/alias"
+      }
+    }
+  },
+  "$defs": {
+    "actor": {
+      "type": "string",
+      "pattern": "^@[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "git_blob": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        }
+      ]
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{1,255}$"
+    },
+    "token_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true
+    },
+    "repo_path": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^(?:\\.github|[a-z][a-z0-9_-]*)(?:/[A-Za-z0-9][A-Za-z0-9_.-]*)+/?$"
+    },
+    "root_id": {
+      "type": "string",
+      "pattern": "^root\\.[a-z][a-z0-9.-]{1,95}$"
+    },
+    "object_family": {
+      "type": "string",
+      "enum": [
+        "configuration",
+        "data_instance",
+        "deployable_application",
+        "generated_output",
+        "governance_projection",
+        "human_document",
+        "infrastructure",
+        "migration",
+        "pipeline",
+        "pipeline_spec",
+        "platform_integration",
+        "policy_rule",
+        "release_decision",
+        "reusable_library",
+        "runnable_example",
+        "runtime_adapter",
+        "schema",
+        "semantic_contract",
+        "source_connector",
+        "test",
+        "test_fixture",
+        "thin_script",
+        "repository_tool"
+      ]
+    },
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "document_id",
+        "sha256",
+        "decision_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "docs/doctrine/directory-rules.md"
+        },
+        "document_id": {
+          "const": "kfm://doctrine/directory-governance/v2"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "decision_ref": {
+          "const": "ADR-0029"
+        }
+      }
+    },
+    "root_registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "base_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "control_plane/root_registry.yaml"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "base_ref": {
+          "$ref": "#/$defs/commit"
+        }
+      }
+    },
+    "identity_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_id",
+        "aliases",
+        "identity_rule"
+      ],
+      "properties": {
+        "canonical_id": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._/-]{2,255}$"
+        },
+        "aliases": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._/-]{2,255}$"
+          },
+          "uniqueItems": true
+        },
+        "identity_rule": {
+          "const": "superseded_aliases_resolve_to_canonical"
+        }
+      }
+    },
+    "writers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "canonical"
+      ],
+      "properties": {
+        "alias": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "canonical": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer_id",
+        "kind",
+        "state",
+        "evidence_ref"
+      ],
+      "properties": {
+        "consumer_id": {
+          "type": "string",
+          "pattern": "^consumer\\.[a-z][a-z0-9.-]{2,127}$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "repository_internal",
+            "external",
+            "generated",
+            "runtime",
+            "unknown_scope"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "VERIFIED_AT_DECISION",
+            "VERIFIED_CURRENT",
+            "NEEDS_VERIFICATION"
+          ]
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 512
+        }
+      }
+    },
+    "synchronization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "source_path"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "none_frozen",
+            "generated_one_way",
+            "manual_export",
+            "copy_then_cutover"
+          ]
+        },
+        "source_path": {
+          "$ref": "#/$defs/repo_path"
+        }
+      }
+    },
+    "expiry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "value"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "date",
+            "condition"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256
+        }
+      }
+    },
+    "parity_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "validation_refs"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{4,128}$"
+        },
+        "validation_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 512
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "reference",
+        "parallel_writer_guard"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{4,160}$"
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 512
+        },
+        "parallel_writer_guard": {
+          "const": true
+        }
+      }
+    },
+    "exposure_pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "target"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "enum": [
+            "restricted",
+            "internal",
+            "semi_public",
+            "public",
+            "mixed"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "restricted",
+            "internal",
+            "semi_public",
+            "public",
+            "mixed"
+          ]
+        }
+      }
+    },
+    "mutation_pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "target"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "enum": [
+            "read_only",
+            "generated",
+            "append_only",
+            "versioned",
+            "mixed"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "immutable",
+            "read_only",
+            "generated",
+            "append_only",
+            "versioned",
+            "mixed"
+          ]
+        }
+      }
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias_id",
+        "class",
+        "status",
+        "old_path",
+        "canonical_target",
+        "object_family",
+        "identity_mapping",
+        "reason",
+        "decision_ref",
+        "rule_ids",
+        "source_digest",
+        "alias_root",
+        "target_root",
+        "writers",
+        "consumers",
+        "consumer_closure",
+        "read_rule",
+        "write_rule",
+        "synchronization",
+        "owner",
+        "reviewers",
+        "start_date",
+        "expiry",
+        "exit_criteria",
+        "parity_validation",
+        "rollback",
+        "exposure",
+        "mutation",
+        "authority_mode",
+        "body_mode",
+        "legacy_git_blob",
+        "canonical_sha256",
+        "verification_state"
+      ],
+      "properties": {
+        "alias_id": {
+          "type": "string",
+          "pattern": "^alias\\.[a-z][a-z0-9.-]{2,127}$"
+        },
+        "class": {
+          "type": "string",
+          "enum": [
+            "legacy",
+            "mirror",
+            "external_export",
+            "transitional",
+            "deprecated"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PROPOSED",
+            "ACTIVE",
+            "DEPRECATED",
+            "RETIRED"
+          ]
+        },
+        "old_path": {
+          "$ref": "#/$defs/repo_path"
+        },
+        "canonical_target": {
+          "$ref": "#/$defs/repo_path"
+        },
+        "object_family": {
+          "$ref": "#/$defs/object_family"
+        },
+        "identity_mapping": {
+          "$ref": "#/$defs/identity_mapping"
+        },
+        "reason": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{4,255}$"
+        },
+        "decision_ref": {
+          "type": "string",
+          "pattern": "^ADR-[0-9]{4}$"
+        },
+        "rule_ids": {
+          "$ref": "#/$defs/token_array"
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "alias_root": {
+          "$ref": "#/$defs/root_id"
+        },
+        "target_root": {
+          "$ref": "#/$defs/root_id"
+        },
+        "writers": {
+          "$ref": "#/$defs/writers"
+        },
+        "consumers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/consumer"
+          }
+        },
+        "consumer_closure": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "VERIFIED_ZERO",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "read_rule": {
+          "type": "string",
+          "enum": [
+            "dual_read",
+            "canonical_only_with_redirect",
+            "generated_read"
+          ]
+        },
+        "write_rule": {
+          "const": "canonical_only"
+        },
+        "synchronization": {
+          "$ref": "#/$defs/synchronization"
+        },
+        "owner": {
+          "$ref": "#/$defs/actor"
+        },
+        "reviewers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "expiry": {
+          "$ref": "#/$defs/expiry"
+        },
+        "exit_criteria": {
+          "$ref": "#/$defs/token_array"
+        },
+        "parity_validation": {
+          "$ref": "#/$defs/parity_validation"
+        },
+        "rollback": {
+          "$ref": "#/$defs/rollback"
+        },
+        "exposure": {
+          "$ref": "#/$defs/exposure_pair"
+        },
+        "mutation": {
+          "$ref": "#/$defs/mutation_pair"
+        },
+        "authority_mode": {
+          "const": "non_authoritative"
+        },
+        "body_mode": {
+          "type": "string",
+          "enum": [
+            "legacy_body_read_only",
+            "tombstone",
+            "generated_mirror",
+            "external_export",
+            "transitional_copy",
+            "deprecated_redirect"
+          ]
+        },
+        "legacy_git_blob": {
+          "$ref": "#/$defs/git_blob"
+        },
+        "canonical_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "verification_state": {
+          "type": "string",
+          "enum": [
+            "CONFIRMED",
+            "PARTIAL",
+            "NEEDS_VERIFICATION",
+            "HOLD"
+          ]
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/governance/path_alias_register.md",
+    "instance": "control_plane/path_alias_register.yaml",
+    "validator": "tools/validators/directory_governance/validate_path_alias_register.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/path_alias_register/",
+    "tests": "tests/validators/directory_governance/test_validate_path_alias_register.py",
+    "authority": "projection_shape_only",
+    "non_effects": [
+      "does_not_create_alias_authority",
+      "does_not_migrate_tombstone_or_delete_paths"
+    ]
+  }
+}

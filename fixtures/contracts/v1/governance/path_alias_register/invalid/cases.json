@@ -1,0 +1,100 @@
+{
+  "base": "../valid/compatibility_classes.yaml",
+  "cases": [
+    {
+      "name": "expired_alias",
+      "path": [
+        "aliases",
+        0,
+        "expiry"
+      ],
+      "value": {
+        "mode": "date",
+        "value": "2026-08-06"
+      },
+      "expected_codes": [
+        "ALIAS_EXPIRED"
+      ]
+    },
+    {
+      "name": "identity_collision",
+      "path": [
+        "aliases",
+        1,
+        "identity_mapping",
+        "aliases",
+        0
+      ],
+      "value": "kfm://contract/legacy",
+      "expected_codes": [
+        "IDENTITY_ALIAS_DUPLICATE"
+      ]
+    },
+    {
+      "name": "more_permissive_exposure",
+      "path": [
+        "aliases",
+        0,
+        "exposure"
+      ],
+      "value": {
+        "alias": "public",
+        "target": "internal"
+      },
+      "expected_codes": [
+        "ALIAS_EXPOSURE_TOO_PERMISSIVE"
+      ]
+    },
+    {
+      "name": "parallel_writer",
+      "path": [
+        "aliases",
+        0,
+        "writers",
+        "alias"
+      ],
+      "value": [
+        "@bartytime4life"
+      ],
+      "expected_codes": [
+        "ALIAS_WRITER_FORBIDDEN"
+      ]
+    },
+    {
+      "name": "root_registry_digest_mismatch",
+      "path": [
+        "root_registry",
+        "sha256"
+      ],
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_codes": [
+        "ROOT_REGISTRY_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "name": "tombstone_sync_violation",
+      "operations": [
+        {
+          "path": [
+            "aliases",
+            2,
+            "body_mode"
+          ],
+          "value": "tombstone"
+        },
+        {
+          "path": [
+            "aliases",
+            2,
+            "synchronization",
+            "method"
+          ],
+          "value": "generated_one_way"
+        }
+      ],
+      "expected_codes": [
+        "TOMBSTONE_SYNC_FORBIDDEN"
+      ]
+    }
+  ]
+}
