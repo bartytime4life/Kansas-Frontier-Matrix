@@ -1,0 +1,328 @@
+{
+  "$defs": {
+    "diff": {
+      "additionalProperties": false,
+      "properties": {
+        "added_records": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "changed_property_names": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{1,63}$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "computation_profile": {
+          "enum": [
+            "GNATSGO_GRID_METADATA_DIFF_V1",
+            "SSURGO_KEYED_RECORD_DIFF_V1"
+          ]
+        },
+        "diff_artifact_ref": {
+          "$ref": "#/$defs/opaqueRef"
+        },
+        "diff_artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "modified_records": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "observed_property_relabelled": {
+          "type": "boolean"
+        },
+        "removed_records": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "computation_profile",
+        "diff_artifact_ref",
+        "diff_artifact_sha256",
+        "added_records",
+        "removed_records",
+        "modified_records",
+        "changed_property_names",
+        "observed_property_relabelled"
+      ],
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "network_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activation_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "source_activation_authorized",
+        "network_authorized",
+        "raw_admission_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "normalization": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes_changed": {
+          "type": "boolean"
+        },
+        "geometry_changed": {
+          "type": "boolean"
+        },
+        "transform_receipt_refs": {
+          "items": {
+            "pattern": "^kfm://receipt/transform/[^\\s]+$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "geometry_changed",
+        "attributes_changed",
+        "transform_receipt_refs"
+      ],
+      "type": "object"
+    },
+    "opaqueRef": {
+      "maxLength": 300,
+      "minLength": 8,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$",
+      "type": "string"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "promotion_required": {
+          "const": true
+        },
+        "prov_chain_complete": {
+          "const": true
+        },
+        "stac_pair_complete": {
+          "const": true
+        },
+        "target_zone": {
+          "enum": [
+            "QUARANTINE",
+            "WORK"
+          ]
+        }
+      },
+      "required": [
+        "target_zone",
+        "promotion_required",
+        "stac_pair_complete",
+        "prov_chain_complete"
+      ],
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "diff_activity_ref": {
+          "pattern": "^kfm://prov/activity/diff/[^\\s]+$",
+          "type": "string"
+        },
+        "fetch_activity_ref": {
+          "pattern": "^kfm://prov/activity/fetch/[^\\s]+$",
+          "type": "string"
+        },
+        "publication_activity_ref": {
+          "const": null,
+          "type": "null"
+        },
+        "validation_activity_ref": {
+          "pattern": "^kfm://prov/activity/validation/[^\\s]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fetch_activity_ref",
+        "validation_activity_ref",
+        "diff_activity_ref",
+        "publication_activity_ref"
+      ],
+      "type": "object"
+    },
+    "repoPath": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/opaqueRef"
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "dataset_year": {
+          "maximum": 2200,
+          "minimum": 1900,
+          "type": "integer"
+        },
+        "prov_entity_ref": {
+          "pattern": "^kfm://prov/entity/[^\\s]+$",
+          "type": "string"
+        },
+        "snapshot_receipt_ref": {
+          "pattern": "^kfm://receipt/source-snapshot/[^\\s]+$",
+          "type": "string"
+        },
+        "stac_item_ref": {
+          "pattern": "^stac://[^\\s]+$",
+          "type": "string"
+        },
+        "validation_receipt_ref": {
+          "pattern": "^kfm://receipt/validation/[^\\s]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_year",
+        "artifact_ref",
+        "artifact_sha256",
+        "stac_item_ref",
+        "prov_entity_ref",
+        "snapshot_receipt_ref",
+        "validation_receipt_ref"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "current_snapshot": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "diff": {
+      "$ref": "#/$defs/diff"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "network_mode": {
+      "const": "DENY"
+    },
+    "normalization": {
+      "$ref": "#/$defs/normalization"
+    },
+    "object_type": {
+      "const": "SoilYearlyDiffProfile"
+    },
+    "output": {
+      "$ref": "#/$defs/output"
+    },
+    "previous_snapshot": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "profile_id": {
+      "const": "kfm.soil.ssurgo-gnatsgo-yearly-diff.fixture.v1"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "source_descriptor_ref": {
+      "$ref": "#/$defs/repoPath"
+    },
+    "source_family": {
+      "enum": [
+        "GNATSGO",
+        "SSURGO"
+      ]
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "support_type": {
+      "enum": [
+        "AUTHORITATIVE_STATIC_SOIL_SURVEY",
+        "GRIDDED_DERIVATIVE_SOIL"
+      ]
+    },
+    "version": {
+      "const": "0.1.0"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "version",
+    "status",
+    "canonicalization_profile",
+    "execution_mode",
+    "network_mode",
+    "source_family",
+    "support_type",
+    "source_descriptor_ref",
+    "previous_snapshot",
+    "current_snapshot",
+    "normalization",
+    "diff",
+    "provenance",
+    "output",
+    "governance",
+    "spec_hash"
+  ],
+  "title": "SoilYearlyDiffProfile",
+  "type": "object",
+  "x-kfm": {
+    "authority": "fixture_only_year_pinned_soil_diff_candidate",
+    "contract_doc": "contracts/domains/soil/ssurgo_yearly_diff_profile.md",
+    "instance": "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json",
+    "non_effects": [
+      "does_not_fetch_or_activate_sources",
+      "does_not_validate_real_stac_or_prov_records",
+      "does_not_admit_raw",
+      "does_not_promote_release_or_publish"
+    ],
+    "validator": "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py"
+  }
+}
