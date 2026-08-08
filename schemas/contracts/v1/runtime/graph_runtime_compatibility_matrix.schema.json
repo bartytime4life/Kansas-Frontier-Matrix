@@ -1,0 +1,253 @@
+{
+  "$defs": {
+    "nullableRef": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "row": {
+      "additionalProperties": false,
+      "properties": {
+        "deployment_mode": {
+          "enum": [
+            "SINGLE",
+            "CLUSTERED"
+          ]
+        },
+        "discovery_rehearsal_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "discovery_rehearsal_state": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "REQUIRED_NOT_RUN",
+            "PASSED",
+            "FAILED"
+          ]
+        },
+        "driver_version": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/version"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 512,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "gds_version": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/version"
+            }
+          ]
+        },
+        "governance": {
+          "additionalProperties": false,
+          "properties": {
+            "migration_authorized": {
+              "const": false
+            },
+            "publication_authorized": {
+              "const": false
+            },
+            "readiness_authorized": {
+              "const": false
+            },
+            "release_authorized": {
+              "const": false
+            }
+          },
+          "required": [
+            "readiness_authorized",
+            "migration_authorized",
+            "release_authorized",
+            "publication_authorized"
+          ],
+          "type": "object"
+        },
+        "jvm_major": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "maximum": 99,
+              "minimum": 8,
+              "type": "integer"
+            }
+          ]
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "row_id": {
+          "pattern": "^kfm\\.graph\\.compat\\.[a-z0-9][a-z0-9_.-]{2,126}$",
+          "type": "string"
+        },
+        "runtime_name": {
+          "const": "NEO4J"
+        },
+        "runtime_version": {
+          "$ref": "#/$defs/version"
+        },
+        "support_state": {
+          "enum": [
+            "NEEDS_VERIFICATION",
+            "SUPPORTED",
+            "UNSUPPORTED"
+          ]
+        }
+      },
+      "required": [
+        "row_id",
+        "runtime_name",
+        "runtime_version",
+        "jvm_major",
+        "gds_version",
+        "driver_version",
+        "deployment_mode",
+        "discovery_rehearsal_state",
+        "discovery_rehearsal_ref",
+        "support_state",
+        "evidence_refs",
+        "reason_codes",
+        "governance"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "version": {
+      "oneOf": [
+        {
+          "const": "UNRESOLVED"
+        },
+        {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$",
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_authorized": {
+          "const": false
+        },
+        "migration_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "runtime_selected": {
+          "const": false
+        }
+      },
+      "required": [
+        "runtime_selected",
+        "migration_authorized",
+        "execution_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "matrix_id": {
+      "const": "kfm://control-plane/graph-runtime-compatibility/v1"
+    },
+    "object_type": {
+      "const": "GraphRuntimeCompatibilityMatrix"
+    },
+    "rows": {
+      "items": {
+        "$ref": "#/$defs/row"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "target_family": {
+      "const": "PROPERTY_GRAPH_RUNTIME"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "matrix_id",
+    "status",
+    "canonicalization_profile",
+    "target_family",
+    "rows",
+    "spec_hash",
+    "governance"
+  ],
+  "title": "GraphRuntimeCompatibilityMatrix",
+  "type": "object",
+  "x-kfm": {
+    "authority": "readiness_evidence_index_only",
+    "contract_doc": "contracts/runtime/graph_runtime_compatibility_matrix.md",
+    "instance": "control_plane/graph_runtime_compatibility_matrix.json",
+    "non_effects": [
+      "does_not_select_runtime",
+      "does_not_connect_to_graph",
+      "does_not_authorize_migration",
+      "does_not_release_or_publish"
+    ],
+    "validator": "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py"
+  }
+}
