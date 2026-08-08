@@ -21,8 +21,8 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: b50231e37f928cad80bd3391b2c7129196e7b8ca
-  root_tree: d612ff7dbc6d0fc16e093c42eb21a1c71a43cd49
+  base_commit: 0f4cccc367e1beb18a31bb3459a579d6ab6e3fba
+  root_tree: 03885136400d1b33975459c1f00a0139920d39e2
   apps_tree: 37af16928f3dcdef8ccf22509d149642045ebc26
   target_prior_blob: 4b7d11b3f5e62ea4458c2895bf907eade8975918
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -92,7 +92,7 @@ notes:
 [![Maturity: mixed](https://img.shields.io/badge/maturity-mixed-d4a72c?style=flat-square)](#current-app-map)
 [![Public trust path: governed-api](https://img.shields.io/badge/public%20trust%20path-governed--api-bf8700?style=flat-square)](./governed-api/README.md)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: b50231e](https://img.shields.io/badge/evidence%20base-b50231e-6e7781?style=flat-square)](#evidence-ledger)
+[![Evidence base: 0f4cccc](https://img.shields.io/badge/evidence%20base-0f4cccc-6e7781?style=flat-square)](#evidence-ledger)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 [![Reviewed: 2026-08-08](https://img.shields.io/badge/reviewed-2026--08--08-0969da?style=flat-square)](#last-reviewed)
 
@@ -152,7 +152,7 @@ The root owns deployable composition. It does not own:
 
 **Draft / repository-grounded / mixed maturity.**
 
-This edition is pinned to `main@b50231e37f928cad80bd3391b2c7129196e7b8ca` and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`. It describes repository bytes and bounded tests; it does not describe a deployed system or current production health.
+This edition is pinned to `main@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba` and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`. It describes repository bytes and bounded tests; it does not describe a deployed system or current production health.
 
 ### Evidence boundary
 
@@ -332,7 +332,7 @@ Accepted Directory Rules and current repository evidence control placement and c
 
 ## Last reviewed
 
-**2026-08-08**, against `main@b50231e37f928cad80bd3391b2c7129196e7b8ca`, root tree `d612ff7dbc6d0fc16e093c42eb21a1c71a43cd49`, and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`.
+**2026-08-08**, against `main@0f4cccc367e1beb18a31bb3459a579d6ab6e3fba`, root tree `03885136400d1b33975459c1f00a0139920d39e2`, and apps tree `37af16928f3dcdef8ccf22509d149642045ebc26`.
 
 Re-review after any app-lane creation or removal, public-route change, package-manager or lockfile change, renderer/runtime integration, worker write-target change, deployment exposure change, accepted app-architecture ADR, or child README update that materially changes the maturity map.
 
@@ -341,7 +341,7 @@ Re-review after any app-lane creation or removal, public-route change, package-m
 | Evidence | Identifier | Supports | Does not support |
 |---|---|---|---|
 | Prior README | blob `4b7d11b3…` | Same-path baseline and no-loss review | Runtime behavior |
-| Current base | `main@b50231e…` | Repository state used for this edition | Untracked files or deployed state |
+| Current base | `main@0f4cccc…` | Repository state used for this edition | Untracked files or deployed state |
 | Apps tree | `37af1692…` | Direct lanes and tracked current app surfaces | Runtime reachability |
 | Accepted Directory Rules | blob `fd49a0b8…`; ADR-0029 | Root placement, responsibility split, and compatibility posture | App implementation maturity |
 | CODEOWNERS | blob `dd2a84aa…` | GitHub review routing | Stewardship, approval, or separation of duties |
