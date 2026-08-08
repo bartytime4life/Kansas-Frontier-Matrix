@@ -150,21 +150,25 @@ jobs:
 
           git add -A
 
-          unexpected_transport=$(
-            git diff --cached --name-status \
-              | awk -F '\t' '
-                  $1 !~ /^D/ {
-                    for (i = 2; i <= NF; i++) {
-                      if ($i ~ /^\.github\/(\_tmp\/|workflows\/_temporary-)/) {
-                        print $0
-                      }
-                    }
-                  }
-                '
-          )
-          if [[ -n "$unexpected_transport" ]]; then
-            echo "::error::Temporary transport paths contain a non-deletion change."
-            printf '%s\n' "$unexpected_transport"
+          transport_error=0
+          while IFS=$'\t' read -r status path path2; do
+            for candidate in "$path" "$path2"; do
+              [[ -z "$candidate" ]] && continue
+              case "$candidate" in
+                .github/_tmp/*|.github/workflows/_temporary-*)
+                  case "$status" in
+                    D*) ;;
+                    *)
+                      echo "::error::Temporary transport path has non-deletion status: $status $candidate"
+                      transport_error=1
+                      ;;
+                  esac
+                  ;;
+              esac
+            done
+          done < <(git diff --cached --name-status)
+
+          if (( transport_error != 0 )); then
             git diff --cached --name-status
             exit 1
           fi
