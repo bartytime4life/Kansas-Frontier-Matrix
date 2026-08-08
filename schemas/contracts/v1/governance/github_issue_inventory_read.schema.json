@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/github_issue_inventory_read.schema.json",
+  "title": "GitHubIssueInventoryRead",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","profile_state","receipt_id","outcome","repository","repository_id","default_branch","default_branch_head_sha","requested_issue_ids","issues","retrieved_at","stale_at","rate_limit_remaining","rate_limit_reset_at","response_digest","repository_mutation_allowed","authority_created","evidence_created","release_authorized","publication_authorized","public_use_allowed"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_state": {"const": "PROPOSED_INACTIVE"},
+    "receipt_id": {"type": "string", "pattern": "^kfm:github-issue-read:[a-f0-9]{24}$"},
+    "outcome": {"enum": ["FRESH","STALE","HOLD_AUTH","HOLD_RATE_LIMIT","HOLD_BINDING","ERROR"]},
+    "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "repository_id": {"type": ["integer","null"], "minimum": 1},
+    "default_branch": {"type": ["string","null"], "minLength": 1},
+    "default_branch_head_sha": {"type": ["string","null"], "pattern": "^[a-f0-9]{40}$"},
+    "requested_issue_ids": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true, "maxItems": 64},
+    "issues": {"type": "array", "maxItems": 64, "items": {"type": "object", "additionalProperties": false, "required": ["number","state","updated_at"], "properties": {"number": {"type": "integer", "minimum": 1}, "state": {"enum": ["OPEN","CLOSED"]}, "updated_at": {"type": "string", "format": "date-time"}}}},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "stale_at": {"type": "string", "format": "date-time"},
+    "rate_limit_remaining": {"type": ["integer","null"], "minimum": 0},
+    "rate_limit_reset_at": {"type": ["string","null"], "format": "date-time"},
+    "response_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "repository_mutation_allowed": {"const": false},
+    "authority_created": {"const": false},
+    "evidence_created": {"const": false},
+    "release_authorized": {"const": false},
+    "publication_authorized": {"const": false},
+    "public_use_allowed": {"const": false}
+  }
+}

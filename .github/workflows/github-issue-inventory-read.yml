@@ -1,0 +1,87 @@
+name: github-issue-inventory-read
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/governance/github_issue_inventory_read.md"
+      - "schemas/contracts/v1/governance/github_issue_inventory_read.schema.json"
+      - "fixtures/contracts/v1/governance/github_issue_inventory_read/**"
+      - "tools/probes/github_issue_inventory_read.py"
+      - "tests/governance/test_github_issue_inventory_read.py"
+      - ".github/workflows/github-issue-inventory-read.yml"
+  push:
+    branches: [main]
+    paths:
+      - "contracts/governance/github_issue_inventory_read.md"
+      - "schemas/contracts/v1/governance/github_issue_inventory_read.schema.json"
+      - "fixtures/contracts/v1/governance/github_issue_inventory_read/**"
+      - "tools/probes/github_issue_inventory_read.py"
+      - "tests/governance/test_github_issue_inventory_read.py"
+      - ".github/workflows/github-issue-inventory-read.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate-github-issue-inventory-read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Compile adapter and tests
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/probes/github_issue_inventory_read.py
+          python -m py_compile tests/governance/test_github_issue_inventory_read.py
+
+      - name: Run deterministic no-network tests
+        env:
+          KFM_NO_NETWORK: "1"
+        run: python -m pytest tests/governance/test_github_issue_inventory_read.py -q --strict-config --strict-markers
+
+      - name: Replay fixture transport without credentials
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          unset GITHUB_TOKEN || true
+          unset KFM_GITHUB_READ_TOKEN || true
+          python tools/probes/github_issue_inventory_read.py \
+            --repository bartytime4life/Kansas-Frontier-Matrix \
+            --issue 1647 --issue 1675 \
+            --now 2026-08-08T02:30:00Z \
+            --fixture fixtures/contracts/v1/governance/github_issue_inventory_read/api_fixture.json >/tmp/github-issue-read.json
+          python - <<'PY'
+          import json
+          row=json.load(open('/tmp/github-issue-read.json'))
+          assert row['outcome']=='FRESH'
+          assert row['repository_mutation_allowed'] is False
+          assert row['authority_created'] is False
+          PY
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### GitHub issue inventory read adapter"
+            echo
+            echo "- CI exercises fixture transport only; no live GitHub API request or credential is used."
+            echo "- Live mode is explicit, GET-only, value-minimized, freshness/rate-limit aware, and non-mutating."
+            echo "- A FRESH receipt is repository-state observation only, not evidence, policy, review, release, publication, or mutation authority."
+          } >> "$GITHUB_STEP_SUMMARY"
