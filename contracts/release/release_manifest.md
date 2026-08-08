@@ -61,7 +61,7 @@ notes:
 **Path:** `contracts/release/release_manifest.md`  
 **Paired schema:** `schemas/contracts/v1/release/release_manifest.schema.json`  
 **Schema maturity:** dual-profile — legacy permissive compatibility plus closed fixture-only strict candidate  
-**Validator:** `tools/validators/release/validate_release_manifest.py` — CONFIRMED fixture-only implementation and registry wiring  
+**Validator:** `tools/validators/release/validate_release_manifest.py` — CONFIRMED fixture-only implementation  
 **Policy authority:** `policy/release/`, not this contract  
 **Release artifact/process authority:** `release/`, not this contract  
 **Truth posture:** CONFIRMED schema pairing, legacy compatibility, strict fixture validation, deterministic identity, and finite synthetic outcomes · PROPOSED production release shape and integration until refs, bytes, signatures, policy, review, release persistence, correction propagation, rollback, and public consumers are verified
@@ -305,7 +305,7 @@ CONFIRMED for the inactive fixture slice:
 - closed strict schema plus preserved legacy branch;
 - deterministic RFC 8785 JCS/SHA-256 identity;
 - exact positive and negative fixture polarity;
-- no-network validator, focused tests, validator-registry entry, and read-only workflow;
+- no-network validator, focused tests, a dedicated read-only workflow, and release-dry-run hold reconciliation;
 - generated authoring receipt bound to exact changed bytes.
 
 NEEDS VERIFICATION before production use:
@@ -349,6 +349,6 @@ Fixtures use synthetic refs and repeated placeholder digests only. They represen
 
 Rollback is required if this contract is used to store release artifacts, bypass schema/policy/review/evidence gates, treat a manifest as publication approval without gate closure, silently mutate public release state, bypass correction/rollback lineage, or authorize public API/UI/map/AI exposure directly.
 
-Before merge, close the draft pull request and delete its branch. After an authorized merge, revert the v0.3 contract/schema/validator/fixture/test/workflow/registry/receipt packet or restore this contract to blob `9ca1c9d4a5b247196aa84a31a158fe734c8a6720`. No source activation, data migration, release, deployment, publication, cache, or public artifact requires rollback because the strict profile is inactive and fixture-only.
+Before merge, close the draft pull request and delete its branch. After an authorized merge, revert the v0.3 contract/schema/validator/fixture/test/workflow/release-dry-run/receipt packet or restore this contract to blob `9ca1c9d4a5b247196aa84a31a158fe734c8a6720`. No source activation, data migration, release, deployment, publication, cache, or public artifact requires rollback because the strict profile is inactive and fixture-only.
 
 <p align="right"><a href="#top">Back to top</a></p>

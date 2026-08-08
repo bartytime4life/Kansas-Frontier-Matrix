@@ -1,0 +1,96 @@
+# Validate the fixture-only Pass 32 source availability watchlist.
+name: source-availability-watchlist
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-availability-watchlist.yml"
+      - "contracts/source/source_availability_watchlist.md"
+      - "schemas/contracts/v1/source/source_availability_watchlist.schema.json"
+      - "fixtures/contracts/v1/source/source_availability_watchlist/**"
+      - "tools/validators/source/validate_source_availability_watchlist.py"
+      - "tests/validators/test_validate_source_availability_watchlist.py"
+      - "docs/intake/exploratory/pass-32-source-availability-watchlist-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass32-source-availability-watchlist-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-availability-watchlist.yml"
+      - "contracts/source/source_availability_watchlist.md"
+      - "schemas/contracts/v1/source/source_availability_watchlist.schema.json"
+      - "fixtures/contracts/v1/source/source_availability_watchlist/**"
+      - "tools/validators/source/validate_source_availability_watchlist.py"
+      - "tests/validators/test_validate_source_availability_watchlist.py"
+      - "docs/intake/exploratory/pass-32-source-availability-watchlist-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass32-source-availability-watchlist-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-availability-watchlist-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-source-availability-watchlist
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Compile validator and tests
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/source/validate_source_availability_watchlist.py
+          python -m py_compile tests/validators/test_validate_source_availability_watchlist.py
+
+      - name: Run focused deterministic no-network validation
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_source_availability_watchlist -v
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass32-source-availability-watchlist-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Pass 32 source availability watchlist"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only aggregate validation over existing source-health and material-change references; fixture replay is owned by the focused unittest suite."
+            echo "- Boundary: PASS may identify a review candidate but does not probe a source, create or execute work, write lifecycle state, evaluate policy, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
