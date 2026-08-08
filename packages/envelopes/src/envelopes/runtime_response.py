@@ -1,16 +1,16 @@
 """Deterministic candidate builder for the current RuntimeResponseEnvelope profile.
 
 The helper performs only local, schema-confirmed checks. It does not resolve
-EvidenceRef objects, evaluate policy, calculate source freshness, mutate
-correction state, authorize a release, or create a public response. Callers must
-supply every authority-bearing value explicitly and must still run the
-repository's authoritative JSON Schema validation at the trust boundary.
+EvidenceRef objects, evaluate policy, calculate source freshness or precision,
+mutate correction state, authorize a release, or create a public response.
+Callers must supply every authority-bearing value explicitly and must still run
+the repository's authoritative JSON Schema and semantic validation at the trust
+boundary.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from copy import deepcopy
 from datetime import datetime
 import re
 from typing import Final
@@ -21,6 +21,12 @@ OUTCOMES: Final[frozenset[str]] = frozenset(
 )
 EVIDENCE_KINDS: Final[frozenset[str]] = frozenset(
     {"measurement", "record", "dataset", "artifact"}
+)
+SPATIAL_REPRESENTATIONS: Final[frozenset[str]] = frozenset(
+    {"point", "line", "polygon", "grid", "raster", "aggregate", "none"}
+)
+FRESHNESS_CLASSES: Final[frozenset[str]] = frozenset(
+    {"current", "stale-accepted", "historical", "unknown"}
 )
 _ID_RE: Final[re.Pattern[str]] = re.compile(r"^[a-z][a-z0-9_:.-]*$")
 _SPEC_HASH_RE: Final[re.Pattern[str]] = re.compile(r"^sha256:[a-f0-9]{64}$")
@@ -79,6 +85,23 @@ def _require_aware_datetime(value: object, field: str) -> str:
     if parsed.tzinfo is None or parsed.utcoffset() is None:
         raise EnvelopeBuildError("DATETIME_NOT_OFFSET_AWARE", field)
     return candidate
+
+
+def _require_exact_fields(
+    value: object,
+    *,
+    field: str,
+    required: frozenset[str],
+    optional: frozenset[str] = frozenset(),
+) -> Mapping[str, object]:
+    if not isinstance(value, Mapping):
+        raise EnvelopeBuildError("FIELD_NOT_OBJECT", field)
+    keys = set(value)
+    if not required.issubset(keys):
+        raise EnvelopeBuildError("FIELD_REQUIRED_MISSING", field)
+    if keys - required - optional:
+        raise EnvelopeBuildError("FIELD_ADDITIONAL", field)
+    return value
 
 
 def _normalize_evidence_refs(
@@ -155,6 +178,114 @@ def _normalize_precision(
             "PRECISION_ADDITIONAL_FIELD", f"{field}[{len(extras)}]"
         )
 
+    spatial = _require_exact_fields(
+        value["spatial"],
+        field=f"{field}.spatial",
+        required=frozenset(
+            {"representation", "resolution", "accuracy", "generalization_applied"}
+        ),
+    )
+    representation = _require_nonempty_string(
+        spatial.get("representation"), f"{field}.spatial.representation"
+    )
+    if representation not in SPATIAL_REPRESENTATIONS:
+        raise EnvelopeBuildError(
+            "PRECISION_SPATIAL_REPRESENTATION_INVALID",
+            f"{field}.spatial.representation",
+        )
+    generalization_applied = spatial.get("generalization_applied")
+    if not isinstance(generalization_applied, bool):
+        raise EnvelopeBuildError(
+            "PRECISION_GENERALIZATION_FLAG_INVALID",
+            f"{field}.spatial.generalization_applied",
+        )
+    normalized_spatial: dict[str, object] = {
+        "representation": representation,
+        "resolution": _require_nonempty_string(
+            spatial.get("resolution"), f"{field}.spatial.resolution"
+        ),
+        "accuracy": _require_nonempty_string(
+            spatial.get("accuracy"), f"{field}.spatial.accuracy"
+        ),
+        "generalization_applied": generalization_applied,
+    }
+
+    temporal = _require_exact_fields(
+        value["temporal"],
+        field=f"{field}.temporal",
+        required=frozenset(
+            {"granularity", "observation_interval", "freshness_class"}
+        ),
+    )
+    interval = _require_exact_fields(
+        temporal.get("observation_interval"),
+        field=f"{field}.temporal.observation_interval",
+        required=frozenset({"start", "end"}),
+    )
+    start = _require_aware_datetime(
+        interval.get("start"), f"{field}.temporal.observation_interval.start"
+    )
+    end = _require_aware_datetime(
+        interval.get("end"), f"{field}.temporal.observation_interval.end"
+    )
+    start_instant = datetime.fromisoformat(start.replace("Z", "+00:00"))
+    end_instant = datetime.fromisoformat(end.replace("Z", "+00:00"))
+    if start_instant > end_instant:
+        raise EnvelopeBuildError(
+            "PRECISION_INTERVAL_INVERTED",
+            f"{field}.temporal.observation_interval",
+        )
+    freshness_class = _require_nonempty_string(
+        temporal.get("freshness_class"), f"{field}.temporal.freshness_class"
+    )
+    if freshness_class not in FRESHNESS_CLASSES:
+        raise EnvelopeBuildError(
+            "PRECISION_FRESHNESS_CLASS_INVALID",
+            f"{field}.temporal.freshness_class",
+        )
+    normalized_temporal: dict[str, object] = {
+        "granularity": _require_nonempty_string(
+            temporal.get("granularity"), f"{field}.temporal.granularity"
+        ),
+        "observation_interval": {"start": start, "end": end},
+        "freshness_class": freshness_class,
+    }
+
+    attribute = _require_exact_fields(
+        value["attribute"],
+        field=f"{field}.attribute",
+        required=frozenset(
+            {
+                "measure",
+                "unit",
+                "significant_precision",
+                "classification_granularity",
+            }
+        ),
+    )
+    significant_precision = attribute.get("significant_precision")
+    if type(significant_precision) is not int or not 0 <= significant_precision <= 12:
+        raise EnvelopeBuildError(
+            "PRECISION_SIGNIFICANT_PRECISION_INVALID",
+            f"{field}.attribute.significant_precision",
+        )
+    classification_granularity = attribute.get("classification_granularity")
+    if classification_granularity is not None:
+        classification_granularity = _require_nonempty_string(
+            classification_granularity,
+            f"{field}.attribute.classification_granularity",
+        )
+    normalized_attribute: dict[str, object] = {
+        "measure": _require_nonempty_string(
+            attribute.get("measure"), f"{field}.attribute.measure"
+        ),
+        "unit": _require_nonempty_string(
+            attribute.get("unit"), f"{field}.attribute.unit"
+        ),
+        "significant_precision": significant_precision,
+        "classification_granularity": classification_granularity,
+    }
+
     precision_evidence = _normalize_evidence_refs(
         value["evidence_refs"], field=f"{field}.evidence_refs"
     )
@@ -196,37 +327,39 @@ def _normalize_precision(
         seen_receipts.add(ref)
         normalized_receipts.append(ref)
 
-    spatial = value["spatial"]
-    if not isinstance(spatial, Mapping):
-        raise EnvelopeBuildError("PRECISION_SPATIAL_NOT_OBJECT", f"{field}.spatial")
-    if spatial.get("generalization_applied") is True and not normalized_receipts:
+    if generalization_applied and not normalized_receipts:
         raise EnvelopeBuildError(
             "PRECISION_GENERALIZATION_RECEIPT_REQUIRED",
             f"{field}.transform_receipt_refs",
         )
 
-    temporal = value["temporal"]
-    if not isinstance(temporal, Mapping):
-        raise EnvelopeBuildError("PRECISION_TEMPORAL_NOT_OBJECT", f"{field}.temporal")
-    interval = temporal.get("observation_interval")
-    if isinstance(interval, Mapping) and {"start", "end"}.issubset(interval):
-        start = _require_aware_datetime(
-            interval["start"], f"{field}.temporal.observation_interval.start"
-        )
-        end = _require_aware_datetime(
-            interval["end"], f"{field}.temporal.observation_interval.end"
-        )
-        start_instant = datetime.fromisoformat(start.replace("Z", "+00:00"))
-        end_instant = datetime.fromisoformat(end.replace("Z", "+00:00"))
-        if start_instant > end_instant:
-            raise EnvelopeBuildError(
-                "PRECISION_INTERVAL_INVERTED",
-                f"{field}.temporal.observation_interval",
-            )
+    normalized: dict[str, object] = {
+        "spatial": normalized_spatial,
+        "temporal": normalized_temporal,
+        "attribute": normalized_attribute,
+        "evidence_refs": precision_evidence,
+        "transform_receipt_refs": normalized_receipts,
+    }
 
-    normalized = deepcopy(dict(value))
-    normalized["evidence_refs"] = precision_evidence
-    normalized["transform_receipt_refs"] = normalized_receipts
+    if "requested_precision" in value:
+        requested = _require_exact_fields(
+            value["requested_precision"],
+            field=f"{field}.requested_precision",
+            required=frozenset(),
+            optional=frozenset({"spatial", "temporal", "attribute"}),
+        )
+        if not requested:
+            raise EnvelopeBuildError(
+                "PRECISION_REQUESTED_EMPTY", f"{field}.requested_precision"
+            )
+        normalized["requested_precision"] = {
+            key: _require_nonempty_string(
+                requested.get(key), f"{field}.requested_precision.{key}"
+            )
+            for key in ("spatial", "temporal", "attribute")
+            if key in requested
+        }
+
     return normalized
 
 
@@ -246,10 +379,11 @@ def build_runtime_response_candidate(
 ) -> dict[str, object]:
     """Build one closed RuntimeResponseEnvelope candidate from explicit inputs.
 
-    The return value contains exactly the fields in the current paired schema.
-    Successful construction means only that the local checks in this module
-    passed; it does not establish evidence sufficiency, policy allow, release
-    state, publication safety, or complete schema validity.
+    `ANSWER` requires an evidence-bound multidimensional precision disclosure.
+    Other finite outcomes reject that field. Successful construction means only
+    that the local checks in this module passed; it does not establish evidence
+    sufficiency, policy allow, release state, publication safety, or complete
+    schema validity.
     """
 
     checked_outcome = _require_nonempty_string(outcome, "outcome")
