@@ -1,0 +1,54 @@
+# Temporary read-only diagnostic for the merged PMTiles negative-path packet.
+# Removed before the repair PR. It emits bounded pytest output only.
+name: pmtiles-negative-path-diagnostic
+
+"on":
+  push:
+    branches:
+      - agent/fix-pass1-pmtiles-negative-path-20260808
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install repository test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Emit bounded pytest failure detail
+        shell: bash
+        run: |
+          set +e
+          output="$(python -m pytest -q -p no:cacheprovider tests/validators/test_pmtiles_delta_manifest.py 2>&1)"
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            output="${output: -7000}"
+            escaped="${output//'%'/'%25'}"
+            escaped="${escaped//$'\r'/'%0D'}"
+            escaped="${escaped//$'\n'/'%0A'}"
+            echo "::error file=tests/validators/test_pmtiles_delta_manifest.py::$escaped"
+          else
+            echo "::notice file=tests/validators/test_pmtiles_delta_manifest.py::focused PMTiles tests passed"
+          fi
+          exit "$status"
