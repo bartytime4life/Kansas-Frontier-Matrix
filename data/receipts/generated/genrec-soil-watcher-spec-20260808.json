@@ -1,0 +1,171 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/soil-watcher-spec.yml": "sha256:dbcea3be768b788bfdc2164a671075b486cc14e1b36382c5be557d028c019d77",
+    "contracts/domains/soil/soil_watcher_spec.md": "sha256:48964159da4bda663dd3b6c5a6dc21b3f756d2ac505327f8a1405b038ecae97e",
+    "control_plane/watcher_registry.json": "sha256:2996b5a0509513a2120c1732bb9694a03dcee08ecb60d05404653430e2845b50",
+    "fixtures/domains/soil/watcher_spec/README.md": "sha256:327b88344e4451e0c2811afbe911e94abeeb4bb54cd66459fdf659df493bc04c",
+    "fixtures/domains/soil/watcher_spec/expected_findings_manifest.json": "sha256:7206b3aa9b98576a6683c86d17834131d6674e1620063508592b9caff78ad541",
+    "fixtures/domains/soil/watcher_spec/schema_invalid/network_authorized.json": "sha256:327e1ba0e7c033191ea48b2fd4999669c21bd756ef80edc47cbf137180622016",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/materiality_missing_family.json": "sha256:e85c793db5a16da42b05efc31163ca967c511d5d2edb9a54c2dcd10234656343",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/phase_order.json": "sha256:7aa1db14105165b88fd420bccf4a1bc36a32327b19d7cee56fff2df1ee4ed69a",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/source_role_collapse.json": "sha256:e1e604b5249b1a89381c8d29356b886aabbe63ecb813f4f4edf56398ed164194",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/spec_hash_mismatch.json": "sha256:418e43c7d7ddf64206fe23c34689279ab3c29270ee14e2d37ebb7e915d3bac34",
+    "fixtures/domains/soil/watcher_spec/valid/valid_spec.json": "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json": "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+    "policy/domains/soil/watcher_spec.rego": "sha256:ab509c8d059ac6cd633436df59cb200ddb970a002a2000d70c3e385a1d151178",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json": "sha256:c3f4a0c61a9f1ad72d50d0d463d727775403cf4f576d3f01751da389536804d4",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py": "sha256:9c8a06bfdf0cf85769899cd031378795536b74c6803fffcae8ac0505102209c8",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py": "sha256:40ea800e64246a2e8429d28a5cc2a8ddae328b3c54886907236a8b3ad4495adb"
+  },
+  "artifact_paths": [
+    ".github/workflows/soil-watcher-spec.yml",
+    "contracts/domains/soil/soil_watcher_spec.md",
+    "control_plane/watcher_registry.json",
+    "fixtures/domains/soil/watcher_spec/README.md",
+    "fixtures/domains/soil/watcher_spec/expected_findings_manifest.json",
+    "fixtures/domains/soil/watcher_spec/schema_invalid/network_authorized.json",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/materiality_missing_family.json",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/phase_order.json",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/source_role_collapse.json",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/spec_hash_mismatch.json",
+    "fixtures/domains/soil/watcher_spec/valid/valid_spec.json",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json",
+    "policy/domains/soil/watcher_spec.rego",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0019",
+      "id": "attachment:pass31-soil-watcher",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:control_plane/watcher_registry.json@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:watcher-registry",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:soil-source-refresh-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/registry/sources/soil/nrcs-ssurgo.yaml@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:soil-source-placeholders",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T05:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0019",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0015",
+      "repo:control_plane/watcher_registry.json@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:data/registry/sources/soil/nrcs-ssurgo.yaml@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:data/registry/sources/soil/nrcs-gnatsgo.yaml@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Inactive fixture-only soil watcher specification for SSURGO and gNATSGO. The sources retain distinct support types and provider-specific materiality profiles. The registry entry creates no source authority, schedule, network permission, execution, RAW admission, promotion, release, or publication.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:e5d94fd8e4dc280a2636548bd41a20dc6e9dfaa7b38882582e8758f2be735cec",
+  "receipt_id": "genrec-soil-watcher-spec-20260808",
+  "truth_labels": {
+    ".github/workflows/soil-watcher-spec.yml": "CONFIRMED",
+    "contracts/domains/soil/soil_watcher_spec.md": "PROPOSED",
+    "control_plane/watcher_registry.json": "PROPOSED",
+    "fixtures/domains/soil/watcher_spec/README.md": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/schema_invalid/network_authorized.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/materiality_missing_family.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/phase_order.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/source_role_collapse.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/semantic_invalid/spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/domains/soil/watcher_spec/valid/valid_spec.json": "CONFIRMED",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json": "PROPOSED",
+    "policy/domains/soil/watcher_spec.rego": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json": "PROPOSED",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py": "CONFIRMED",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Five deterministic unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Positive and negative fixtures matched exact finite outcomes and reason codes."
+    },
+    {
+      "gate": "source-role-and-materiality",
+      "outcome": "PASS",
+      "reason": "SSURGO and gNATSGO retained distinct support types and independently bound materiality profiles."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema, watcher spec, canonical arrays, and spec_hash validated locally."
+    },
+    {
+      "gate": "watcher-registry-closure",
+      "outcome": "PASS",
+      "reason": "The updated registry was constructed in canonical watcher order, binds the exact soil specification bytes, and preserves all non-authority flags; exact repository validator replay remains in hosted CI."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
