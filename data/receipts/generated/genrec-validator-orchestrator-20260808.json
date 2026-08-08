@@ -1,0 +1,120 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/validator-orchestrator.yml": "sha256:809ec50d078c4f72e5db5f05a83f2fbf249f98508916194ebb3dfad8fe677296",
+    "tests/validators/test_validate_all.py": "sha256:56c35eae222a98113620666b74c465fa0ca084f2cc561199a5968353a7c77ce7",
+    "tools/validate_all.py": "sha256:f6f07af308f8dcffa93c6c2b2101fb42d147f876f9cab7ff510ad33b33ec77c0",
+    "tools/validators/ORCHESTRATOR.md": "sha256:0c64489e37ef82789115411023b9fc4eb3fb25efef8d67ae31f7b12eb194b3b2",
+    "tools/validators/_common/run_all.py": "sha256:33e0348b658605cd487c9234a9fde2e59b521a52d776a5588e09210e319f698a"
+  },
+  "artifact_paths": [
+    ".github/workflows/validator-orchestrator.yml",
+    "tests/validators/test_validate_all.py",
+    "tools/validate_all.py",
+    "tools/validators/ORCHESTRATOR.md",
+    "tools/validators/_common/run_all.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_5_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P5-PROG-0009",
+      "id": "attachment:pass5-validator-orchestrator",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validate_all.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:validator-placeholder",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_5_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_5_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P5-PROG-0009",
+      "repo:tools/validate_all.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tools/validators/_common/run_all.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements KFM-P5-PROG-0009 at the adopted root tools/validate_all.py, with deterministic registry order, finite exits, stable reports, a compatibility delegate, fixture-driven tests, and no promotion or publication authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:5d75c961d5d5ded1e2b4b7accb8641c8705497b0127ddc8b1490dfdf4a0b1edd",
+  "receipt_id": "genrec-validator-orchestrator-20260808",
+  "truth_labels": {
+    ".github/workflows/validator-orchestrator.yml": "CONFIRMED",
+    "tests/validators/test_validate_all.py": "CONFIRMED",
+    "tools/validate_all.py": "CONFIRMED",
+    "tools/validators/ORCHESTRATOR.md": "PROPOSED",
+    "tools/validators/_common/run_all.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "Both orchestrator entry points compiled successfully."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Seven deterministic orchestrator tests passed in the isolated reconstruction."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The path-scoped read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "hosted-core-registry",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed exact-head repository and declared dependencies."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "SKIPPED",
+      "reason": "Requires the committed exact-head repository paths."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+name: validator-orchestrator
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/validator-orchestrator.yml"
+      - "tools/validate_all.py"
+      - "tools/validators/_common/run_all.py"
+      - "tools/validators/ORCHESTRATOR.md"
+      - "tests/validators/test_validate_all.py"
+      - "data/receipts/generated/genrec-validator-orchestrator-20260808.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/validator-orchestrator.yml"
+      - "tools/validate_all.py"
+      - "tools/validators/_common/run_all.py"
+      - "tools/validators/ORCHESTRATOR.md"
+      - "tests/validators/test_validate_all.py"
+      - "data/receipts/generated/genrec-validator-orchestrator-20260808.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validator-orchestrator-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run orchestrator unit proof
+        run: |
+          set -euo pipefail
+          pytest -q tests/validators/test_validate_all.py
+
+      - name: Run current bounded core registry
+        run: |
+          set -euo pipefail
+          python tools/validate_all.py \
+            --profile core \
+            --format json \
+            --report "$RUNNER_TEMP/kfm-validation-report.json"
+
+      - name: Verify compatibility delegate
+        run: |
+          set -euo pipefail
+          python tools/validators/_common/run_all.py \
+            --only runtime-response-envelope \
+            --format json \
+            --report "$RUNNER_TEMP/kfm-compatibility-report.json"
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-validator-orchestrator-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Validator orchestrator"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic registry order, finite exits, bounded reports, compatibility delegation, and current core fixture replay."
+            echo "- Boundary: PASS does not resolve evidence, execute policy, approve review, promote, release, deploy, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"
