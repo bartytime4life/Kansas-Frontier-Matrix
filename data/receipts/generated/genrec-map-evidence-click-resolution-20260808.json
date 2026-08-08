@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-map-evidence-click-resolution-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md",
+    "apps/explorer-web/src/features/map_runtime/index.tsx",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.html",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts",
+    "apps/explorer-web/tests/map-evidence-drawer.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "sha256:30e71959639c6cc98de1bad4b374241b6ee4e0e2a2f9c734c5f7b040998c2036",
+    "apps/explorer-web/src/features/map_runtime/index.tsx": "sha256:1b8a759a514c819d5bcf24e4a03aa5d24738d975e2fac828d368e4755c951ea7",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "sha256:d9a74744f61a40d059b5aba57017be71eacdb50f50403fe7302d7b6b179d7876",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.html": "sha256:62e86e38f33442e9376f5829d24265168b85df0b73beace2f27d25ae24a34265",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:67d21ecdfbf40a84253f35422d78187370e6a5bc2f83589779dba74e6ba5f4b9",
+    "apps/explorer-web/tests/map-evidence-drawer.test.ts": "sha256:1fb8217b97b8aaacfa7ec6661bf8dfd9bf8bc133abee76230bc0e4c7b4eaaef6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:415dcc3dd13c025d8b86a7bf344a80ffef05c94e9012aadaa5d6182987fb8214",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local static validation",
+      "hosted GitHub Actions inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-113",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "github:99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "github:apps/explorer-web/src/features/map_runtime/README.md",
+      "github:apps/explorer-web/src/features/map_runtime/index.tsx",
+      "github:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "github:apps/explorer-web/src/adapters/GovernedClient.ts",
+      "github:fixtures/ui/map_context_evidence_drawer_admission/cases.json",
+      "github:4f049b26ca27035e4fe0c97574ff78f65eaa3204"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/index.tsx": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/map-evidence-drawer.test.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript-strict-static-compile",
+      "outcome": "PASS",
+      "reason": "The new source module compiled under global TypeScript 5.8 strict mode against interface-compatible declarations; the repository pins TypeScript 7.0.2 and hosted build remains controlling."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "All six authored artifacts were SHA-256 hashed and the receipt path/hash keys close exactly without self-reference."
+    },
+    {
+      "gate": "base-to-head-scope",
+      "outcome": "PASS",
+      "reason": "The branch remains limited to the seven declared app, test, documentation, and generated-receipt paths."
+    },
+    {
+      "gate": "repository-native-explorer-build",
+      "outcome": "PASS",
+      "reason": "Hosted ui-build compiled the Explorer Web application successfully at the first receipt-bearing head; the subsequent repair changes only the focused unit-test guard."
+    },
+    {
+      "gate": "vitest-focused-suite",
+      "outcome": "PASS",
+      "reason": "Hosted ui-build ran all 83 Explorer Web unit tests successfully at commit ef6474cd, including the eight new map-evidence tests."
+    },
+    {
+      "gate": "playwright-browser-suite",
+      "outcome": "SKIPPED",
+      "reason": "The first browser execution passed 40 of 41 tests; the remaining assertion expected bridge-local text that the existing Evidence Drawer intentionally replaces with fixed no-leak copy. Commit 4f049b26 aligns the proof with that established boundary; exact-head rerun remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation is pending on draft PR #2235 after the focused browser assertion correction and receipt refresh."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:master-maplibre-ml-y-113",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-113"
+    },
+    {
+      "id": "attachment:directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:accepted-directory-rules-adr",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:map-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "github:apps/explorer-web/src/features/map_runtime/README.md"
+    },
+    {
+      "id": "repository:evidence-drawer-runtime",
+      "validated": true,
+      "evidence_ref": "github:apps/explorer-web/src/features/evidence_drawer/index.tsx"
+    },
+    {
+      "id": "repository:focused-browser-proof-repair",
+      "validated": true,
+      "evidence_ref": "github:4f049b26ca27035e4fe0c97574ff78f65eaa3204"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T18:43:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2235,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the fixture-first ML-Y-113 bridge at draft PR #2235. The app-local module validates renderer-neutral selections, injects governed resolution, enforces returned EvidenceRefs as a subset of clicked selection scope, and reuses the existing no-leak Evidence Drawer. Hosted validation exposed two test-only expectation defects: an import guard matched the word MapLibre in documentation, and one browser assertion expected bridge-local abstain text that the established drawer correctly replaced with fixed no-leak copy. Commits dc1f3841 and 4f049b26 repair those proofs without changing or weakening the runtime boundary. The slice adds no MapLibre dependency, network access, live API route, source activation, policy authority, release state, deployment, or publication."
+}
