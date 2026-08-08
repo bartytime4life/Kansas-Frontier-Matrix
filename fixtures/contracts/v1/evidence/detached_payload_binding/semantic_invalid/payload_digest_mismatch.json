@@ -1,0 +1,42 @@
+{
+  "binding_id": "kfm://evidence/detached-payload-binding/e7e7ae00e87b783fb6a12adb",
+  "bundle_binding": {
+    "bundle_signature_ref": "kfm://attestation/signature/synthetic-detached-payload",
+    "evidence_bundle_ref": "kfm://evidence/bundle/synthetic-detached-payload",
+    "evidence_bundle_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "canonicalization_profile": "RFC8785-JCS",
+  "governance": {
+    "evidence_bundle_resolved": false,
+    "payload_verified": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "rights_evaluated": false,
+    "signature_verified": false
+  },
+  "locations": [
+    {
+      "content_addressed": false,
+      "role": "PRIMARY",
+      "url": "https://artifacts.example.org/kfm/synthetic/payload.bin"
+    },
+    {
+      "content_addressed": false,
+      "role": "MIRROR",
+      "url": "https://mirror.example.net/kfm/synthetic/payload.bin"
+    }
+  ],
+  "object_type": "DetachedPayloadBinding",
+  "payload": {
+    "byte_size": 33,
+    "media_type": "application/octet-stream",
+    "name": "synthetic_payload.bin",
+    "payload_id": "kfm://evidence/detached-payload/ffffffffffffffffffffffff",
+    "sha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:e7e7ae00e87b783fb6a12adbadc7b06b2dde3983a88b73b5542a14d942a142af",
+  "status": "PROPOSED_INACTIVE"
+}
