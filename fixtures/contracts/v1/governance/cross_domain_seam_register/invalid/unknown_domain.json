@@ -47,7 +47,7 @@
         "soil"
       ],
       "status": "HOLD_UNRESOLVED",
-      "relation_class": "contexual_join",
+      "relation_class": "contextual_join",
       "summary": "An invented domain is intentionally used only to prove that unregistered bounded contexts fail closed before any join can be considered.",
       "authority_allocations": [
         {
