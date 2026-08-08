@@ -1,1 +1,197 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/domain_lane_register.schema.json","title":"KFM Domain Lane Register","description":"Projection-only register. Validation grants no domain, source, evidence, policy, review, release, deployment, promotion, or publication authority.","type":"object","additionalProperties":false,"required":["version","registry","status","authority","updated_at","base_ref","doctrine","narrative_register","root_registry","owner","reviewers","description","non_effects","placement","cross_cutting_exclusions","unresolved_aliases","lane_defaults","lanes"],"properties":{"version":{"const":"v1"},"registry":{"const":"domain_lane_register"},"status":{"const":"PROPOSED"},"authority":{"const":"machine_projection_only"},"updated_at":{"type":"string","format":"date"},"base_ref":{"$ref":"#/$defs/sha"},"doctrine":{"$ref":"#/$defs/doctrine"},"narrative_register":{"$ref":"#/$defs/narrative"},"root_registry":{"$ref":"#/$defs/rootRegistry"},"owner":{"$ref":"#/$defs/actor"},"reviewers":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/actor"}},"description":{"type":"string","minLength":100},"non_effects":{"type":"array","minItems":5,"uniqueItems":true,"items":{"type":"string","pattern":"^[a-z][a-z0-9_]*$"}},"placement":{"$ref":"#/$defs/placement"},"cross_cutting_exclusions":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/laneId"}},"unresolved_aliases":{"type":"object","additionalProperties":{"$ref":"#/$defs/laneId"}},"lane_defaults":{"$ref":"#/$defs/defaults"},"lanes":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/lane"}}},"$defs":{"sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},"digest":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},"actor":{"type":"string","pattern":"^@[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$"},"laneId":{"type":"string","pattern":"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"},"doctrine":{"type":"object","additionalProperties":false,"required":["path","document_id","sha256","decision_ref"],"properties":{"path":{"const":"docs/doctrine/directory-rules.md"},"document_id":{"const":"kfm://doctrine/directory-governance/v2"},"sha256":{"$ref":"#/$defs/digest"},"decision_ref":{"const":"ADR-0029"}}},"narrative":{"type":"object","additionalProperties":false,"required":["path","git_blob","status"],"properties":{"path":{"const":"docs/registers/DOMAIN_LANE.md"},"git_blob":{"$ref":"#/$defs/sha"},"status":{"const":"draft"}}},"rootRegistry":{"type":"object","additionalProperties":false,"required":["path","git_blob","base_ref"],"properties":{"path":{"const":"control_plane/root_registry.yaml"},"git_blob":{"$ref":"#/$defs/sha"},"base_ref":{"$ref":"#/$defs/sha"}}},"placement":{"type":"object","additionalProperties":false,"required":["domain_roots_forbidden","documentation_template","public_clients_governed_only","sparse_lanes_required"],"properties":{"domain_roots_forbidden":{"const":true},"documentation_template":{"const":"docs/domains/{lane_id}/"},"public_clients_governed_only":{"const":true},"sparse_lanes_required":{"const":true}}},"defaults":{"type":"object","additionalProperties":false,"required":["registration_authority","owner_role","owner_identity","implementation_maturity","sensitivity_authority"],"properties":{"registration_authority":{"const":"NEEDS_VERIFICATION"},"owner_role":{"const":"domain_steward"},"owner_identity":{"oneOf":[{"type":"null"},{"$ref":"#/$defs/actor"}]},"implementation_maturity":{"const":"NEEDS_VERIFICATION"},"sensitivity_authority":{"const":"PROPOSED_PENDING_ADR_S_05"}}},"lane":{"type":"object","additionalProperties":false,"required":["lane_id","display_name","documentation_path","code_alias","sensitivity_baseline"],"properties":{"lane_id":{"$ref":"#/$defs/laneId"},"display_name":{"type":"string","minLength":3},"documentation_path":{"type":"string","pattern":"^docs/domains/[a-z][a-z0-9-]*/$"},"code_alias":{"type":"string","pattern":"^[a-z][a-z0-9_]*$"},"sensitivity_baseline":{"enum":["T0","T1","T2","T3","T4"]}}}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/domain_lane_register.schema.json",
+  "title": "KFM Domain Lane Register",
+  "description": "Projection-only register. Validation grants no domain, source, evidence, policy, review, release, deployment, promotion, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "version",
+    "registry",
+    "authority",
+    "updated_at",
+    "base_ref",
+    "doctrine",
+    "narrative_register",
+    "root_registry",
+    "reviewers",
+    "non_effects",
+    "placement",
+    "cross_cutting_exclusions",
+    "unresolved_aliases",
+    "lane_defaults",
+    "entries"
+  ],
+  "properties": {
+    "meta": { "$ref": "#/$defs/meta" },
+    "version": { "const": "v1" },
+    "registry": { "const": "domain_lane_register" },
+    "authority": { "const": "machine_projection_only" },
+    "updated_at": { "type": "string", "format": "date" },
+    "base_ref": { "$ref": "#/$defs/sha" },
+    "doctrine": { "$ref": "#/$defs/doctrine" },
+    "narrative_register": { "$ref": "#/$defs/narrative" },
+    "root_registry": { "$ref": "#/$defs/rootRegistry" },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/actor" }
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+    },
+    "placement": { "$ref": "#/$defs/placement" },
+    "cross_cutting_exclusions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/laneId" }
+    },
+    "unresolved_aliases": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/laneId" }
+    },
+    "lane_defaults": { "$ref": "#/$defs/defaults" },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/lane" }
+    }
+  },
+  "$defs": {
+    "sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "actor": {
+      "type": "string",
+      "pattern": "^@[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$"
+    },
+    "laneId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "owner", "description", "last_reviewed", "related_doctrine"],
+      "properties": {
+        "status": { "const": "PROPOSED" },
+        "owner": { "$ref": "#/$defs/actor" },
+        "description": { "type": "string", "minLength": 100 },
+        "last_reviewed": { "type": "string", "format": "date" },
+        "related_doctrine": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "docs/doctrine/directory-rules.md",
+              "docs/registers/DOMAIN_LANE.md"
+            ]
+          }
+        }
+      }
+    },
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "document_id", "sha256", "decision_ref"],
+      "properties": {
+        "path": { "const": "docs/doctrine/directory-rules.md" },
+        "document_id": { "const": "kfm://doctrine/directory-governance/v2" },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "decision_ref": { "const": "ADR-0029" }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "git_blob", "status"],
+      "properties": {
+        "path": { "const": "docs/registers/DOMAIN_LANE.md" },
+        "git_blob": { "$ref": "#/$defs/sha" },
+        "status": { "const": "draft" }
+      }
+    },
+    "rootRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "git_blob", "base_ref"],
+      "properties": {
+        "path": { "const": "control_plane/root_registry.yaml" },
+        "git_blob": { "$ref": "#/$defs/sha" },
+        "base_ref": { "$ref": "#/$defs/sha" }
+      }
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_roots_forbidden",
+        "documentation_template",
+        "public_clients_governed_only",
+        "sparse_lanes_required"
+      ],
+      "properties": {
+        "domain_roots_forbidden": { "const": true },
+        "documentation_template": { "const": "docs/domains/{lane_id}/" },
+        "public_clients_governed_only": { "const": true },
+        "sparse_lanes_required": { "const": true }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registration_authority",
+        "owner_role",
+        "owner_identity",
+        "implementation_maturity",
+        "sensitivity_authority"
+      ],
+      "properties": {
+        "registration_authority": { "const": "NEEDS_VERIFICATION" },
+        "owner_role": { "const": "domain_steward" },
+        "owner_identity": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/actor" }
+          ]
+        },
+        "implementation_maturity": { "const": "NEEDS_VERIFICATION" },
+        "sensitivity_authority": { "const": "PROPOSED_PENDING_ADR_S_05" }
+      }
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "display_name",
+        "documentation_path",
+        "code_alias",
+        "sensitivity_baseline"
+      ],
+      "properties": {
+        "lane_id": { "$ref": "#/$defs/laneId" },
+        "display_name": { "type": "string", "minLength": 3 },
+        "documentation_path": {
+          "type": "string",
+          "pattern": "^docs/domains/[a-z][a-z0-9-]*/$"
+        },
+        "code_alias": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "sensitivity_baseline": {
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        }
+      }
+    }
+  }
+}
