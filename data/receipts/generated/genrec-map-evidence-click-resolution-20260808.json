@@ -15,7 +15,7 @@
     "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "sha256:d9a74744f61a40d059b5aba57017be71eacdb50f50403fe7302d7b6b179d7876",
     "apps/explorer-web/tests/browser/map-evidence-drawer.html": "sha256:62e86e38f33442e9376f5829d24265168b85df0b73beace2f27d25ae24a34265",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:d1383f3d2d5220154b8b21efd1c4efd69f3a251b2f3b24d591b9a05b25f901fb",
-    "apps/explorer-web/tests/map-evidence-drawer.test.ts": "sha256:e3ff582ca860bb98796f27b62d3e028748f3770c406c46643550c9919c57f5fd"
+    "apps/explorer-web/tests/map-evidence-drawer.test.ts": "sha256:1fb8217b97b8aaacfa7ec6661bf8dfd9bf8bc133abee76230bc0e4c7b4eaaef6"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -31,7 +31,8 @@
     "tools_enabled": [
       "GitHub connector read/write",
       "uploaded-file search",
-      "local static validation"
+      "local static validation",
+      "hosted GitHub Actions inspection"
     ]
   },
   "inputs": {
@@ -52,7 +53,7 @@
       "github:apps/explorer-web/src/features/evidence_drawer/index.tsx",
       "github:apps/explorer-web/src/adapters/GovernedClient.ts",
       "github:fixtures/ui/map_context_evidence_drawer_admission/cases.json",
-      "github:53ea67c435e903a2808bdf825daff51040d90ccd"
+      "github:dc1f38419d6b1219be2b55571cb6c8d50ce22544"
     ]
   },
   "truth_labels": {
@@ -77,27 +78,27 @@
     {
       "gate": "base-to-head-scope",
       "outcome": "PASS",
-      "reason": "Compare 99f367c2...53ea67c4 shows one commit and exactly six intended app/test documentation paths."
+      "reason": "The branch remains limited to the seven declared app, test, documentation, and generated-receipt paths."
     },
     {
       "gate": "repository-native-explorer-build",
-      "outcome": "SKIPPED",
-      "reason": "The local environment could not install the repository-pinned Node dependencies; hosted ui-build is the execution source of truth."
+      "outcome": "PASS",
+      "reason": "Hosted ui-build compiled the Explorer Web application successfully at the first receipt-bearing head; the subsequent repair changes only the focused unit-test guard."
     },
     {
       "gate": "vitest-focused-suite",
       "outcome": "SKIPPED",
-      "reason": "Repository-pinned Vitest was unavailable locally; hosted checks exercise the pushed head."
+      "reason": "The first hosted receipt-bearing head ran 83 unit tests with 82 passing and one false-positive source-text guard failure; commit dc1f3841 narrows that guard to actual MapLibre imports, and exact-head rerun remains pending."
     },
     {
       "gate": "playwright-browser-suite",
       "outcome": "SKIPPED",
-      "reason": "Repository-pinned Playwright and browser dependencies were unavailable locally; hosted checks exercise the pushed head."
+      "reason": "The first hosted test job stopped after the unit-test false positive, before Playwright. Exact-head browser execution remains pending after commit dc1f3841."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation is pending on draft PR #2235 after this receipt is committed."
+      "reason": "Hosted validation is pending on draft PR #2235 after the focused test correction and receipt refresh."
     },
     {
       "gate": "human-review",
@@ -135,9 +136,9 @@
       "evidence_ref": "github:apps/explorer-web/src/features/evidence_drawer/index.tsx"
     },
     {
-      "id": "repository:exact-implementation-head",
+      "id": "repository:focused-test-repair",
       "validated": true,
-      "evidence_ref": "github:53ea67c435e903a2808bdf825daff51040d90ccd"
+      "evidence_ref": "github:dc1f38419d6b1219be2b55571cb6c8d50ce22544"
     }
   ],
   "human_review": {
@@ -153,5 +154,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Implements the fixture-first ML-Y-113 bridge at draft PR #2235. The app-local module validates renderer-neutral selections, injects governed resolution, enforces returned EvidenceRefs as a subset of clicked selection scope, and reuses the existing no-leak Evidence Drawer. It adds no MapLibre dependency, network access, live API route, source activation, policy authority, release state, deployment, or publication."
+  "notes": "Implements the fixture-first ML-Y-113 bridge at draft PR #2235. The app-local module validates renderer-neutral selections, injects governed resolution, enforces returned EvidenceRefs as a subset of clicked selection scope, and reuses the existing no-leak Evidence Drawer. The first hosted test run exposed a test-only false positive because an import guard matched the word MapLibre in documentation; commit dc1f3841 narrows the guard to actual package imports without weakening the renderer boundary. The slice adds no MapLibre dependency, network access, live API route, source activation, policy authority, release state, deployment, or publication."
 }
