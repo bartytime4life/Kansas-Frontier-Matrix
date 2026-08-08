@@ -22,7 +22,6 @@
     "fixtures/ui/story_node/valid/superseded-replaced.json": "sha256:b0e5d9cb681bf7f3daf0f7fa21274b49592f5af04710f0a6b87f013e27a24b56",
     "schemas/contracts/v1/ui/story_node.schema.json": "sha256:2d4d245f3b33c9c2d01da0752bae59942bdd77ce74187c6c6b106d87e3b48741",
     "tests/validators/test_validate_story_node.py": "sha256:c3fcbd258de5b8cefc03d9a179bc17433363651a9fa820a65374f0585d8dc181",
-    "tools/validators/ui/README.md": "sha256:b23c3b129dea612c65910ea20164ea89f5b94a2904ebf8f752f7dee1586950f1",
     "tools/validators/ui/validate_story_node.py": "sha256:ed0262731ca676d6c6784e497e537070c566d98dd32de2e624a28809d53b6c4b"
   },
   "artifact_paths": [
@@ -48,7 +47,6 @@
     "fixtures/ui/story_node/valid/superseded-replaced.json",
     "schemas/contracts/v1/ui/story_node.schema.json",
     "tests/validators/test_validate_story_node.py",
-    "tools/validators/ui/README.md",
     "tools/validators/ui/validate_story_node.py"
   ],
   "citations": [
@@ -156,7 +154,6 @@
     "fixtures/ui/story_node/valid/superseded-replaced.json": "CONFIRMED",
     "schemas/contracts/v1/ui/story_node.schema.json": "PROPOSED",
     "tests/validators/test_validate_story_node.py": "CONFIRMED",
-    "tools/validators/ui/README.md": "PROPOSED",
     "tools/validators/ui/validate_story_node.py": "CONFIRMED"
   },
   "validation_gates": [
@@ -183,7 +180,7 @@
     {
       "gate": "generated-receipt-byte-binding",
       "outcome": "PASS",
-      "reason": "This current-state receipt binds all 24 non-receipt authored artifacts with exact SHA-256 values."
+      "reason": "This current-state receipt binds all 23 non-receipt authored artifacts with exact SHA-256 values."
     },
     {
       "gate": "hosted-exact-head-ci",
