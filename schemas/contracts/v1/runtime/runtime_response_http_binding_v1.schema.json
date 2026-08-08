@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/runtime/runtime_response_http_binding_v1.schema.json",
+  "title": "RuntimeResponseHttpBindingV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "profile_version",
+    "http_status",
+    "outcome",
+    "failure_class",
+    "envelope_body_required",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "RuntimeResponseHttpBinding"},
+    "profile_version": {"const": "v1"},
+    "http_status": {"type": "integer", "enum": [200, 403, 422, 500, 503]},
+    "outcome": {"type": "string", "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]},
+    "failure_class": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "INSUFFICIENT_EVIDENCE_OR_CONTEXT",
+        "POLICY_OR_GOVERNANCE_DENIAL",
+        "INTERNAL_RUNTIME_FAILURE",
+        "DEPENDENCY_UNAVAILABLE"
+      ]
+    },
+    "envelope_body_required": {"const": true},
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "http_status_is_authority",
+        "policy_evaluated",
+        "lifecycle_write_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "http_status_is_authority": {"const": false},
+        "policy_evaluated": {"const": false},
+        "lifecycle_write_authorized": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/runtime_response_http_binding_v1.md",
+    "parent_contract": "contracts/runtime/runtime_response_envelope.md",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY"
+  }
+}
