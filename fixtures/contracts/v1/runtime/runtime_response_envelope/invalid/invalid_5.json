@@ -1,0 +1,17 @@
+{
+  "id": "resp2",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "version": "v1",
+  "issued_at": "2026-05-09T00:00:00Z",
+  "outcome": "ANSWER",
+  "reason_code": "OK",
+  "evidence_refs": [
+    {
+      "ref": "obs:1",
+      "kind": "measurement"
+    }
+  ],
+  "policy_state": "baseline",
+  "freshness": "stale_ok",
+  "correction_state": "none"
+}

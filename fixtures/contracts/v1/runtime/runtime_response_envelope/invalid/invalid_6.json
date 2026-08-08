@@ -41,12 +41,7 @@
       "classification_granularity": null
     },
     "basis": {
-      "evidence_refs": [
-        {
-          "ref": "obs:1",
-          "kind": "measurement"
-        }
-      ],
+      "evidence_refs": [],
       "source_refs": [
         "fixture:source:runtime-precision"
       ],

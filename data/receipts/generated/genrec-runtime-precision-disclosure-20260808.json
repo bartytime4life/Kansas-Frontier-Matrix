@@ -1,0 +1,148 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/runtime-precision-disclosure.yml": "sha256:b9807b645947cdefc097af5e3d56cf2f39de26c20a5486c77139722e858d64f2",
+    "apps/explorer-web/src/features/evidence_drawer/precision.ts": "sha256:e101ed81f6050706eeff4823666a089d7cc4249da1855d7f5515c58a6196cc93",
+    "apps/explorer-web/tests/evidence-drawer-precision.test.ts": "sha256:d179affa438004590e6582a5fd7b228cd8610811153c84b57fe86662888e9bf8",
+    "contracts/runtime/runtime_response_precision_profile.md": "sha256:d474f5fa707c4cecaee717ded81aba33982cce34ff44aa3a24e6b55383c3624b",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.expected_error.txt": "sha256:a5b0a56fd8d2fcf82092fb779244729989674b90787530cbf7946f4d00da53a6",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.json": "sha256:70696e2be49f51f0a4edcb233c836e4957fc5d74eb2f931df318342df78932f1",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.expected_error.txt": "sha256:ff431dd6505d1e3efd410c09cefe724dc6aab762afb990f6810c2579daa43b18",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.json": "sha256:7cb21d12705e97d30eeda2f312f28c0b1d677321ca7b78216880f56b1aed3a98",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_2.json": "sha256:9e55aee312cc8899e6db63b731b2e5efff7d09260b700f85f6d5563aa5f892df",
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json": "sha256:c87249bb948fdc1e30a36ebeef69080797088264d5badba7dfca346be1e32330",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "sha256:057e7ac0b44788cc26625f14dada75c160c7330a15d6b65113aa9452f6978e5d"
+  },
+  "artifact_paths": [
+    ".github/workflows/runtime-precision-disclosure.yml",
+    "apps/explorer-web/src/features/evidence_drawer/precision.ts",
+    "apps/explorer-web/tests/evidence-drawer-precision.test.ts",
+    "contracts/runtime/runtime_response_precision_profile.md",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.expected_error.txt",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.json",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.expected_error.txt",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.json",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_2.json",
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0001",
+      "id": "attachment:pass6-precision-disclosure",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:runtime-response-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0001",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:contracts/runtime/runtime_response_envelope.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tests/runtime_proof/test_envelope_finite_outcomes.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements KFM-P6-FEAT-0001 as a closed multidimensional ANSWER disclosure bound to evidence, source, and transform references. The UI formatter is fixture-first and not yet wired into the canonical public EvidenceDrawerPayload.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:6386d8a1a5f56c6c378d8484853d755b598fd4d3a8b0b9f5278bb85fa4e9619f",
+  "receipt_id": "genrec-runtime-precision-disclosure-20260808",
+  "truth_labels": {
+    ".github/workflows/runtime-precision-disclosure.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/evidence_drawer/precision.ts": "CONFIRMED",
+    "apps/explorer-web/tests/evidence-drawer-precision.test.ts": "CONFIRMED",
+    "contracts/runtime/runtime_response_precision_profile.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_5.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/invalid_6.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_2.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json": "PROPOSED",
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-meta-and-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema passed meta-validation; the ANSWER fixture passed and both new negative fixtures failed the intended constraints."
+    },
+    {
+      "gate": "finite-envelope-standard-library-proof",
+      "outcome": "PASS",
+      "reason": "Four deterministic no-network runtime-envelope proof tests passed in the isolated reconstruction."
+    },
+    {
+      "gate": "typescript-source-check",
+      "outcome": "PASS",
+      "reason": "The strict precision formatter passed TypeScript no-emit checking with the repository target language level."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The path-scoped read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "hosted-runtime-validator",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed exact-head repository and local schema registry."
+    },
+    {
+      "gate": "hosted-explorer-tests",
+      "outcome": "SKIPPED",
+      "reason": "Requires the exact-head locked pnpm workspace; the existing ui-build workflow is authoritative."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "SKIPPED",
+      "reason": "Requires committed exact-head repository paths."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

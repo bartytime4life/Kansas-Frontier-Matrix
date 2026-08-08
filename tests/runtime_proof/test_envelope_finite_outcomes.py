@@ -1,8 +1,9 @@
 """No-network proof of the finite RuntimeResponseEnvelope shape boundary.
 
-These tests prove repository fixture shape and compatibility aliasing only.
-They do not execute a runtime, resolve evidence, evaluate policy, authorize a
-release, or establish that a response is safe to publish.
+These tests prove repository fixture shape, ANSWER precision disclosure, and
+compatibility aliasing only. They do not execute a runtime, resolve evidence,
+evaluate policy, calculate precision from source data, authorize a release, or
+establish that a response is safe to publish.
 """
 
 from __future__ import annotations
@@ -34,10 +35,45 @@ def _load_json(path: Path) -> dict[str, object]:
     return value
 
 
+def _precision_findings(value: object) -> set[str]:
+    findings: set[str] = set()
+    if not isinstance(value, dict):
+        return {"type:precision_actually_used"}
+    required = {"spatial", "temporal", "attribute", "basis"}
+    if missing := required - set(value):
+        findings.add("required:precision/" + ",".join(sorted(missing)))
+    if extras := set(value) - required:
+        findings.add("additional:precision/" + ",".join(sorted(extras)))
+
+    spatial = value.get("spatial")
+    temporal = value.get("temporal")
+    attribute = value.get("attribute")
+    basis = value.get("basis")
+    if not isinstance(spatial, dict) or not isinstance(spatial.get("statement"), str):
+        findings.add("required:precision/spatial/statement")
+    if not isinstance(temporal, dict) or not isinstance(temporal.get("statement"), str):
+        findings.add("required:precision/temporal/statement")
+    if not isinstance(attribute, dict) or not isinstance(attribute.get("statement"), str):
+        findings.add("required:precision/attribute/statement")
+    if not isinstance(basis, dict):
+        findings.add("type:precision/basis")
+    else:
+        evidence_refs = basis.get("evidence_refs")
+        source_refs = basis.get("source_refs")
+        transform_refs = basis.get("transform_refs")
+        if not isinstance(evidence_refs, list) or not evidence_refs:
+            findings.add("minItems:precision/basis/evidence_refs")
+        if not isinstance(source_refs, list) or not source_refs:
+            findings.add("minItems:precision/basis/source_refs")
+        if not isinstance(transform_refs, list):
+            findings.add("type:precision/basis/transform_refs")
+    return findings
+
+
 def _shape_findings(
     value: dict[str, object], schema: dict[str, object]
 ) -> set[str]:
-    """Check the closed top-level profile with only the Python standard library."""
+    """Check the bounded profile with only the Python standard library."""
 
     findings: set[str] = set()
     required = set(schema["required"])
@@ -56,8 +92,13 @@ def _shape_findings(
         if not isinstance(candidate, str) or re.fullmatch(pattern, candidate) is None:
             findings.add(f"pattern:{name}")
 
-    if value.get("outcome") not in properties["outcome"]["enum"]:
+    outcome = value.get("outcome")
+    if outcome not in properties["outcome"]["enum"]:
         findings.add("enum:outcome")
+    if outcome == "ANSWER" and "precision_actually_used" not in value:
+        findings.add("required:precision_actually_used")
+    if "precision_actually_used" in value:
+        findings.update(_precision_findings(value["precision_actually_used"]))
 
     issued_at = value.get("issued_at")
     try:
@@ -113,6 +154,12 @@ class FiniteRuntimeEnvelopeTests(unittest.TestCase):
         )
         self.assertIs(self.schema["additionalProperties"], False)
         self.assertEqual(len(self.schema["required"]), 10)
+        precision = self.schema["$defs"]["precisionActuallyUsed"]
+        self.assertIs(precision["additionalProperties"], False)
+        self.assertEqual(
+            set(precision["required"]),
+            {"spatial", "temporal", "attribute", "basis"},
+        )
 
     def test_focus_path_is_a_compatibility_alias_not_a_second_shape(self) -> None:
         self.assertEqual(self.focus_alias["$ref"], self.schema["$id"])
@@ -139,19 +186,35 @@ class FiniteRuntimeEnvelopeTests(unittest.TestCase):
 
         answer = next(item for item in fixtures if item["outcome"] == "ANSWER")
         self.assertTrue(answer["evidence_refs"])
+        precision = answer["precision_actually_used"]
+        self.assertEqual(
+            precision["basis"]["evidence_refs"],
+            answer["evidence_refs"],
+        )
         for outcome in ("DENY", "ERROR"):
             bounded = next(item for item in fixtures if item["outcome"] == outcome)
             self.assertEqual(bounded["evidence_refs"], [])
 
     def test_invalid_fixtures_fail_the_closed_shape(self) -> None:
         paths = sorted((FIXTURE_ROOT / "invalid").glob("invalid_*.json"))
-        findings = {path.name: _shape_findings(_load_json(path), self.schema) for path in paths}
+        findings = {
+            path.name: _shape_findings(_load_json(path), self.schema)
+            for path in paths
+        }
 
         self.assertTrue(all(finding_set for finding_set in findings.values()), findings)
         self.assertIn("required:id", findings["invalid_1.json"])
         self.assertIn("additional:extra_field", findings["invalid_2.json"])
         self.assertIn("pattern:id", findings["invalid_3.json"])
         self.assertIn("enum:outcome", findings["invalid_4.json"])
+        self.assertIn(
+            "required:precision_actually_used",
+            findings["invalid_5.json"],
+        )
+        self.assertIn(
+            "minItems:precision/basis/evidence_refs",
+            findings["invalid_6.json"],
+        )
 
 
 if __name__ == "__main__":

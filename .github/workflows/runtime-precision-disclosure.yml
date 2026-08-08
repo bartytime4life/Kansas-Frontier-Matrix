@@ -1,0 +1,87 @@
+name: runtime-precision-disclosure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/runtime-precision-disclosure.yml"
+      - "contracts/runtime/runtime_response_precision_profile.md"
+      - "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+      - "fixtures/contracts/v1/runtime/runtime_response_envelope/**"
+      - "tests/runtime_proof/test_envelope_finite_outcomes.py"
+      - "apps/explorer-web/src/features/evidence_drawer/precision.ts"
+      - "apps/explorer-web/tests/evidence-drawer-precision.test.ts"
+      - "data/receipts/generated/genrec-runtime-precision-disclosure-20260808.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/runtime-precision-disclosure.yml"
+      - "contracts/runtime/runtime_response_precision_profile.md"
+      - "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+      - "fixtures/contracts/v1/runtime/runtime_response_envelope/**"
+      - "tests/runtime_proof/test_envelope_finite_outcomes.py"
+      - "apps/explorer-web/src/features/evidence_drawer/precision.ts"
+      - "apps/explorer-web/tests/evidence-drawer-precision.test.ts"
+      - "data/receipts/generated/genrec-runtime-precision-disclosure-20260808.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-precision-disclosure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run finite-envelope proof
+        run: |
+          set -euo pipefail
+          python -m unittest tests.runtime_proof.test_envelope_finite_outcomes -v
+          python tools/validators/validate_runtime_response_envelope.py --fixtures
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-runtime-precision-disclosure-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Runtime precision disclosure"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed ANSWER precision shape, evidence/source/transform basis, fixture polarity, and finite-envelope proof."
+            echo "- Boundary: PASS does not calculate precision, resolve evidence, authorize an answer, amend public EvidenceDrawerPayload, release, deploy, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

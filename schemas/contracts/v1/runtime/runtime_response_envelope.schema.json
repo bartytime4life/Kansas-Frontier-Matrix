@@ -6,6 +6,7 @@
   "description": "KFM contract for runtime_response_envelope.",
   "x-kfm": {
     "contract_doc": "contracts/runtime/runtime_response_envelope.md",
+    "precision_profile": "contracts/runtime/runtime_response_precision_profile.md",
     "fixtures_root": "fixtures/contracts/v1/runtime/runtime_response_envelope/",
     "validator": "tools/validators/validate_runtime_response_envelope.py",
     "policy": "policy/runtime/",
@@ -53,6 +54,9 @@
     },
     "correction_state": {
       "type": "string"
+    },
+    "precision_actually_used": {
+      "$ref": "#/$defs/precisionActuallyUsed"
     }
   },
   "required": [
@@ -67,5 +71,250 @@
     "freshness",
     "correction_state"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "ANSWER"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "precision_actually_used"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    },
+    "resolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "enum": [
+            "meter",
+            "kilometer",
+            "degree",
+            "grid_cell",
+            "county",
+            "state",
+            "other"
+          ]
+        }
+      }
+    },
+    "interval": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "spatialPrecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "representation",
+        "resolution",
+        "generalization_applied",
+        "generalization_ref"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "representation": {
+          "enum": [
+            "point",
+            "line",
+            "polygon",
+            "grid",
+            "county",
+            "state",
+            "none",
+            "other"
+          ]
+        },
+        "resolution": {
+          "$ref": "#/$defs/resolution"
+        },
+        "generalization_applied": {
+          "type": "boolean"
+        },
+        "generalization_ref": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "temporalPrecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "granularity",
+        "observation_interval"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "granularity": {
+          "enum": [
+            "instant",
+            "minute",
+            "hour",
+            "day",
+            "month",
+            "year",
+            "interval",
+            "unknown"
+          ]
+        },
+        "observation_interval": {
+          "$ref": "#/$defs/interval"
+        }
+      }
+    },
+    "attributePrecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "measure",
+        "unit",
+        "significant_digits",
+        "classification_granularity"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "measure": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "unit": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "significant_digits": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 15
+        },
+        "classification_granularity": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "precisionBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_refs",
+        "source_refs",
+        "transform_refs"
+      ],
+      "properties": {
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
+          }
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "transform_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "precisionActuallyUsed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spatial",
+        "temporal",
+        "attribute",
+        "basis"
+      ],
+      "properties": {
+        "spatial": {
+          "$ref": "#/$defs/spatialPrecision"
+        },
+        "temporal": {
+          "$ref": "#/$defs/temporalPrecision"
+        },
+        "attribute": {
+          "$ref": "#/$defs/attributePrecision"
+        },
+        "basis": {
+          "$ref": "#/$defs/precisionBasis"
+        }
+      }
+    }
+  }
 }
