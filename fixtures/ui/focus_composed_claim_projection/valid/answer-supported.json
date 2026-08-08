@@ -1,0 +1,76 @@
+{
+  "profile": "kfm.explorer.focus-composed-claim.public-safe.v1",
+  "request_id": "request:focus:soil-context-supported-001",
+  "claim_id": "claim:synthetic:soil-context-001",
+  "outcome": "ANSWER",
+  "reason_code": "COMPOSED_CLAIM_SUPPORTED",
+  "closure_id": "kfm:closure:synthetic:soil-context-supported-001",
+  "closure_outcome": "SUPPORTED",
+  "answer": "The synthetic composed claim is supported by separate static-survey and station-observation fixture evidence.",
+  "evidence_refs": [
+    "kfm:evidence:synthetic:soil-static-001",
+    "kfm:evidence:synthetic:soil-station-001"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "kfm:evidence:synthetic:soil-static-001",
+      "label": "Synthetic static soil survey fixture",
+      "href": "https://example.invalid/kfm/evidence/soil-static-001"
+    },
+    {
+      "evidence_ref": "kfm:evidence:synthetic:soil-station-001",
+      "label": "Synthetic soil station fixture",
+      "href": "https://example.invalid/kfm/evidence/soil-station-001"
+    }
+  ],
+  "resolved_roles": [
+    "STATIC_SURVEY",
+    "STATION_OBSERVATION"
+  ],
+  "unavailable_roles": [],
+  "limitations": [
+    "Fixture-only demonstration; it is not a live soil condition or operational instruction."
+  ],
+  "policy": "ALLOW",
+  "review": "REVIEWED",
+  "release": "RELEASED",
+  "freshness": "CURRENT",
+  "ai_receipt_ref": "kfm:receipt:ai:synthetic:focus-supported-001",
+  "evidence_drawer": {
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "id": "kfm:ui:evidence-drawer:focus-soil-supported-001",
+    "outcome": "ANSWER",
+    "reason_code": "SUPPORTED",
+    "title": "Synthetic composed soil support",
+    "summary": "Separate static-survey and station-observation fixtures support this synthetic composed claim.",
+    "evidence_refs": [
+      "kfm:evidence:synthetic:soil-static-001",
+      "kfm:evidence:synthetic:soil-station-001"
+    ],
+    "citations": [
+      {
+        "label": "Synthetic static soil survey fixture",
+        "href": "https://example.invalid/kfm/evidence/soil-static-001"
+      },
+      {
+        "label": "Synthetic soil station fixture",
+        "href": "https://example.invalid/kfm/evidence/soil-station-001"
+      }
+    ],
+    "limitations": [
+      "Fixture-only demonstration; it is not a live soil condition or operational instruction."
+    ],
+    "trust_state": {
+      "source_role": "official",
+      "policy": "ALLOW",
+      "review": "REVIEWED",
+      "release": "RELEASED",
+      "freshness": "CURRENT",
+      "correction": "NONE"
+    },
+    "history": {
+      "negative_outcomes": [],
+      "corrections": []
+    }
+  }
+}
