@@ -1,0 +1,329 @@
+{
+  "bases": {
+    "valid": {
+      "canonicalization_profile": "RFC8785-JCS",
+      "execution_mode": "DRY_RUN",
+      "governance": {
+        "network_authorized": false,
+        "promotion_authorized": false,
+        "publication_authorized": false,
+        "raw_admission_authorized": false,
+        "release_authorized": false,
+        "source_activation_authorized": false
+      },
+      "manifest_id": "kfm.output-lanes.pass32.fixture.v1",
+      "network_mode": "DENY",
+      "object_type": "OutputLaneSplitManifest",
+      "outputs": [
+        {
+          "artifact_ref": "artifact:work/pass32/feature-vector-001.json",
+          "artifact_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "contains_authoritative_claims": false,
+          "lane": "FEATURE_VECTOR",
+          "logical_role": "ANALYSIS_DERIVATIVE",
+          "media_type": "application/json",
+          "output_id": "feature-vector-001",
+          "write_authorized": false
+        },
+        {
+          "artifact_ref": "artifact:work/pass32/scorecard-001.json",
+          "artifact_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "contains_authoritative_claims": false,
+          "lane": "SCORECARD",
+          "logical_role": "REVIEW_SCORECARD",
+          "media_type": "application/json",
+          "output_id": "scorecard-001",
+          "write_authorized": false
+        },
+        {
+          "artifact_ref": "artifact:work/pass32/policy-report-001.json",
+          "artifact_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "contains_authoritative_claims": false,
+          "lane": "POLICY_REPORT",
+          "logical_role": "POLICY_REVIEW_CANDIDATE",
+          "media_type": "application/json",
+          "output_id": "policy-report-001",
+          "write_authorized": false
+        },
+        {
+          "artifact_ref": "artifact:work/pass32/receipt-001.json",
+          "artifact_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "contains_authoritative_claims": false,
+          "lane": "RECEIPT",
+          "logical_role": "PROCESS_MEMORY_RECEIPT",
+          "media_type": "application/json",
+          "output_id": "receipt-001",
+          "write_authorized": false
+        },
+        {
+          "artifact_ref": "artifact:work/pass32/prefilter-001.json",
+          "artifact_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "contains_authoritative_claims": false,
+          "lane": "PREFILTER",
+          "logical_role": "PREFILTER_DECISION_CANDIDATE",
+          "media_type": "application/json",
+          "output_id": "prefilter-001",
+          "write_authorized": false
+        }
+      ],
+      "required_lanes": [
+        "FEATURE_VECTOR",
+        "SCORECARD",
+        "POLICY_REPORT",
+        "RECEIPT",
+        "PREFILTER"
+      ],
+      "review_state": "PENDING",
+      "schema_version": "1.0.0",
+      "source_candidate_ref": "kfm://candidate/pass32/output-lane-splitter",
+      "spec_hash": "sha256:ad5521190bf211cd24cda0cdd5c758e79cd7cb71a68c34257c367f2906321747",
+      "status": "PROPOSED_INACTIVE"
+    }
+  },
+  "cases": [
+    {
+      "base": "valid",
+      "case_id": "valid_complete_split",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "mutations": []
+    },
+    {
+      "base": "valid",
+      "case_id": "required_lane_missing",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_REQUIRED_LANES_INVALID",
+          "field": "/required_lanes"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/required_lanes",
+          "value": [
+            "FEATURE_VECTOR",
+            "SCORECARD",
+            "POLICY_REPORT",
+            "RECEIPT"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "output_lane_unrepresented",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_REQUIRED_LANE_UNREPRESENTED",
+          "field": "/outputs"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outputs",
+          "value": [
+            {
+              "artifact_ref": "artifact:work/pass32/feature-vector-001.json",
+              "artifact_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+              "contains_authoritative_claims": false,
+              "lane": "FEATURE_VECTOR",
+              "logical_role": "ANALYSIS_DERIVATIVE",
+              "media_type": "application/json",
+              "output_id": "feature-vector-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/scorecard-001.json",
+              "artifact_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+              "contains_authoritative_claims": false,
+              "lane": "SCORECARD",
+              "logical_role": "REVIEW_SCORECARD",
+              "media_type": "application/json",
+              "output_id": "scorecard-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/policy-report-001.json",
+              "artifact_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+              "contains_authoritative_claims": false,
+              "lane": "POLICY_REPORT",
+              "logical_role": "POLICY_REVIEW_CANDIDATE",
+              "media_type": "application/json",
+              "output_id": "policy-report-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/receipt-001.json",
+              "artifact_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+              "contains_authoritative_claims": false,
+              "lane": "RECEIPT",
+              "logical_role": "PROCESS_MEMORY_RECEIPT",
+              "media_type": "application/json",
+              "output_id": "receipt-001",
+              "write_authorized": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "duplicate_artifact_ref",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_DUPLICATE_ARTIFACT_REF",
+          "field": "/outputs/1/artifact_ref"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outputs/1/artifact_ref",
+          "value": "artifact:work/pass32/feature-vector-001.json"
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "lane_role_mismatch",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_LOGICAL_ROLE_MISMATCH",
+          "field": "/outputs/0/logical_role"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outputs/0/logical_role",
+          "value": "REVIEW_SCORECARD"
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "write_authority_overreach",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "field": "/outputs/0/write_authorized"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outputs/0/write_authorized",
+          "value": true
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "noncanonical_order",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_ORDER_NONCANONICAL",
+          "field": "/outputs"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/outputs",
+          "value": [
+            {
+              "artifact_ref": "artifact:work/pass32/prefilter-001.json",
+              "artifact_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+              "contains_authoritative_claims": false,
+              "lane": "PREFILTER",
+              "logical_role": "PREFILTER_DECISION_CANDIDATE",
+              "media_type": "application/json",
+              "output_id": "prefilter-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/receipt-001.json",
+              "artifact_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+              "contains_authoritative_claims": false,
+              "lane": "RECEIPT",
+              "logical_role": "PROCESS_MEMORY_RECEIPT",
+              "media_type": "application/json",
+              "output_id": "receipt-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/policy-report-001.json",
+              "artifact_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+              "contains_authoritative_claims": false,
+              "lane": "POLICY_REPORT",
+              "logical_role": "POLICY_REVIEW_CANDIDATE",
+              "media_type": "application/json",
+              "output_id": "policy-report-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/scorecard-001.json",
+              "artifact_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+              "contains_authoritative_claims": false,
+              "lane": "SCORECARD",
+              "logical_role": "REVIEW_SCORECARD",
+              "media_type": "application/json",
+              "output_id": "scorecard-001",
+              "write_authorized": false
+            },
+            {
+              "artifact_ref": "artifact:work/pass32/feature-vector-001.json",
+              "artifact_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+              "contains_authoritative_claims": false,
+              "lane": "FEATURE_VECTOR",
+              "logical_role": "ANALYSIS_DERIVATIVE",
+              "media_type": "application/json",
+              "output_id": "feature-vector-001",
+              "write_authorized": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "publication_overreach",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "field": "/governance/publication_authorized"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/governance/publication_authorized",
+          "value": true
+        }
+      ]
+    },
+    {
+      "base": "valid",
+      "case_id": "spec_hash_mismatch",
+      "expected_findings": [
+        {
+          "code": "OUTPUT_LANE_SPEC_HASH_MISMATCH",
+          "field": "/spec_hash"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "mutations": [],
+      "spec_hash_override": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

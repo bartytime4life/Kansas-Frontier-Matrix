@@ -1,0 +1,150 @@
+# Validate the fixture-only Pass 32 output-lane splitter.
+name: output-lane-splitter
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/output-lane-splitter.yml"
+      - "contracts/data/output_lane_split_manifest.md"
+      - "schemas/contracts/v1/data/output_lane_split_manifest.schema.json"
+      - "fixtures/contracts/v1/data/output_lane_split_manifest/**"
+      - "tools/generators/build_output_lane_split.py"
+      - "tests/generators/test_build_output_lane_split.py"
+      - "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass32-output-lane-splitter-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/output-lane-splitter.yml"
+      - "contracts/data/output_lane_split_manifest.md"
+      - "schemas/contracts/v1/data/output_lane_split_manifest.schema.json"
+      - "fixtures/contracts/v1/data/output_lane_split_manifest/**"
+      - "tools/generators/build_output_lane_split.py"
+      - "tests/generators/test_build_output_lane_split.py"
+      - "docs/intake/exploratory/pass-32-output-lane-splitter-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass32-output-lane-splitter-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: output-lane-splitter-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-output-lane-splitter
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network validation
+        run: |
+          set -euo pipefail
+          python -m unittest tests.generators.test_build_output_lane_split -v
+          python tools/generators/build_output_lane_split.py --fixtures
+
+      - name: Exercise dry-run and explicit temporary-index modes
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          trap 'rm -rf "$workdir"' EXIT
+
+          python - "$workdir/manifest.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          fixtures = json.loads(
+              Path("fixtures/contracts/v1/data/output_lane_split_manifest/cases.json")
+              .read_text(encoding="utf-8")
+          )
+          valid = fixtures["bases"]["valid"]
+          Path(sys.argv[1]).write_text(
+              json.dumps(valid, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          python tools/generators/build_output_lane_split.py \
+            "$workdir/manifest.json" > "$workdir/dry-run.json"
+          test ! -e "$workdir/indexes"
+
+          python tools/generators/build_output_lane_split.py \
+            "$workdir/manifest.json" \
+            --write \
+            --output-dir "$workdir/indexes" \
+            > "$workdir/write-result.json"
+
+          python - "$workdir/indexes" "$workdir/write-result.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          output_dir = Path(sys.argv[1])
+          result = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+          expected = {
+              "feature_vector.json",
+              "scorecard.json",
+              "policy_report.json",
+              "receipt.json",
+              "prefilter.json",
+              "split-summary.json",
+          }
+          actual = {path.name for path in output_dir.iterdir() if path.is_file()}
+          if actual != expected:
+              raise SystemExit(f"unexpected output files: {sorted(actual)}")
+          if not result.get("writes_performed"):
+              raise SystemExit("explicit write result did not disclose writes")
+          for path in output_dir.iterdir():
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              if "payload_bytes" in payload:
+                  raise SystemExit(f"payload bytes leaked into {path.name}")
+          PY
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass32-output-lane-splitter-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Pass 32 output-lane splitter"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only validation and deterministic temporary indexing of opaque output references."
+            echo "- Lanes: feature vector, scorecard, policy-report candidate, process-memory receipt, and prefilter candidate."
+            echo "- Boundary: PASS does not read or move payload bytes, create a PolicyDecision, admit RAW, resolve evidence, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
