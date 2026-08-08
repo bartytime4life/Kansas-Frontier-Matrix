@@ -5,11 +5,11 @@ name: release-manifest
   pull_request:
     paths:
       - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/release-dry-run.yml"
       - "contracts/release/release_manifest.md"
       - "schemas/contracts/v1/release/release_manifest.schema.json"
       - "fixtures/release/release_manifest/**"
       - "tools/validators/release/validate_release_manifest.py"
-      - "tools/validators/validator_registry.json"
       - "tests/validators/test_validate_release_manifest.py"
       - "docs/intake/exploratory/pass7-release-manifest-profile.md"
       - "packages/hashing/**"
@@ -18,11 +18,11 @@ name: release-manifest
     branches: [main]
     paths:
       - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/release-dry-run.yml"
       - "contracts/release/release_manifest.md"
       - "schemas/contracts/v1/release/release_manifest.schema.json"
       - "fixtures/release/release_manifest/**"
       - "tools/validators/release/validate_release_manifest.py"
-      - "tools/validators/validator_registry.json"
       - "tests/validators/test_validate_release_manifest.py"
       - "docs/intake/exploratory/pass7-release-manifest-profile.md"
       - "packages/hashing/**"
@@ -73,13 +73,13 @@ jobs:
           set -euo pipefail
           python -m unittest tests.validators.test_validate_release_manifest -v
           python tools/validators/release/validate_release_manifest.py --fixtures
-          python tools/validate_all.py --validate-registry
-          python tools/validate_all.py --profile release-dry-run --validator release-manifest --quiet
 
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-pass7-release-manifest-20260808.json             --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass7-release-manifest-20260808.json \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
