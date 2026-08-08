@@ -1,0 +1,107 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "entries": [
+    {
+      "access": {
+        "auth_mode": "CREDENTIAL_REFERENCE_REQUIRED",
+        "conditional_request_mode": "NEEDS_VERIFICATION",
+        "credential_exposure": "SERVER_SIDE_ONLY_OR_NONE",
+        "discovery_mode": "CMR",
+        "endpoint_ref": null,
+        "pagination_mode": "NEEDS_VERIFICATION",
+        "rate_limit_mode": "NEEDS_VERIFICATION"
+      },
+      "access_surface_ref": null,
+      "activation_ref": null,
+      "authority_id": "kfm.eo.nasa.earthdata_access",
+      "authority_role": "ACCESS_SURFACE",
+      "catalog_doc_ref": "docs/sources/catalog/nasa/nasa-earthdata.md",
+      "connector_ref": "connectors/nasa-earthdata/README.md",
+      "governance": {
+        "browser_credential_exposure_allowed": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promotion_authorized": false,
+        "publication_authorized": false,
+        "raw_admission_authorized": false,
+        "release_authorized": false,
+        "source_admitted": false
+      },
+      "harvest": {
+        "allowed_operations": [],
+        "candidate_target_zones": [],
+        "network_authorized": false,
+        "state": "DOCUMENTED_ONLY"
+      },
+      "product_family": null,
+      "reason_codes": [
+        "CONNECTOR_README_ONLY",
+        "SOURCE_AUTHORITY_UNESTABLISHED"
+      ],
+      "review_state": "PENDING",
+      "rights_state": "NEEDS_VERIFICATION",
+      "sensitivity_state": "NEEDS_VERIFICATION",
+      "source_authority_ref": null,
+      "source_descriptor_ref": null,
+      "source_family": "nasa"
+    },
+    {
+      "access": {
+        "auth_mode": "UPSTREAM_ACCESS_SURFACE",
+        "conditional_request_mode": "UPSTREAM_ACCESS_SURFACE",
+        "credential_exposure": "SERVER_SIDE_ONLY_OR_NONE",
+        "discovery_mode": "UPSTREAM_ACCESS_SURFACE",
+        "endpoint_ref": null,
+        "pagination_mode": "UPSTREAM_ACCESS_SURFACE",
+        "rate_limit_mode": "UPSTREAM_ACCESS_SURFACE"
+      },
+      "access_surface_ref": "kfm.eo.nasa.earthdata_access",
+      "activation_ref": null,
+      "authority_id": "kfm.eo.nasa.hls_product",
+      "authority_role": "PRODUCT_CONTEXT",
+      "catalog_doc_ref": "docs/sources/catalog/nasa/nasa-hls.md",
+      "connector_ref": "connectors/nasa-hls/README.md",
+      "governance": {
+        "browser_credential_exposure_allowed": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promotion_authorized": false,
+        "publication_authorized": false,
+        "raw_admission_authorized": false,
+        "release_authorized": false,
+        "source_admitted": false
+      },
+      "harvest": {
+        "allowed_operations": [],
+        "candidate_target_zones": [],
+        "network_authorized": false,
+        "state": "DOCUMENTED_ONLY"
+      },
+      "product_family": "hls",
+      "reason_codes": [
+        "CONNECTOR_README_ONLY",
+        "PRODUCT_CLAIMS_REMAIN_BOUNDED"
+      ],
+      "review_state": "PENDING",
+      "rights_state": "NEEDS_VERIFICATION",
+      "sensitivity_state": "NEEDS_VERIFICATION",
+      "source_authority_ref": null,
+      "source_descriptor_ref": null,
+      "source_family": "nasa"
+    }
+  ],
+  "governance": {
+    "network_execution_authorized": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "raw_admission_authorized": false,
+    "release_authorized": false,
+    "source_activation_authorized": false,
+    "source_authority_created": false
+  },
+  "matrix_id": "kfm://control-plane/earth-observation-harvest-authority-matrix/v1",
+  "object_type": "EarthObservationHarvestAuthorityMatrix",
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:0a8ec77772179ec5a84e5cab5ffae1858d1e6c1dd9888e7b15873eccf3b34def",
+  "status": "PROPOSED_INACTIVE"
+}
