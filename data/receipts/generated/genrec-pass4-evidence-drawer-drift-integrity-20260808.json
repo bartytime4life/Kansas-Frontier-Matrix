@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-pass4-evidence-drawer-drift-integrity-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts",
+    "contracts/ui/evidence_drawer_drift_integrity_profile.md",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-missing-sidecar.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-source-quarantined-rights.json",
+    "fixtures/ui/evidence_drawer_payload/valid/error-artifact-hash-mismatch.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts": "sha256:683caa425b822ff4c9acc6ea5fc31c1cbc6533f518049a422d9321f73160b15f",
+    "contracts/ui/evidence_drawer_drift_integrity_profile.md": "sha256:b768095facd1c435a21b3e24d5840efae42787227046591cb560e34cd692ba2b",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.expected_code.txt": "sha256:8dfbba570e780c7bbc60387c5f9e98bad0d059a241d6c108d8f7063d1a993c8d",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.json": "sha256:97dc01ff0c8c8e5478fa2813347b4185786eb1c61e2de367735161f04bc8b2b2",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json": "sha256:1b2fc20db6705d60a08ab236fb587006352be7862d99389e7eb59b9622d919af",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-missing-sidecar.json": "sha256:409c536433e6664871e17e6122dcf7631db98d3f3dce2349d3849dfb4b8554ec",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-source-quarantined-rights.json": "sha256:d324a6ccb6e01f2631c21db33f6e17c8895f9486fd8f7723b5339dd2ade5ca7c",
+    "fixtures/ui/evidence_drawer_payload/valid/error-artifact-hash-mismatch.json": "sha256:457403d7380255da252261666e64bccc639b757def2ea7d6a8e206af89b37935"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:0e5db69af5b7a8635a17d071589319d9a7b66a78d0fd3c8799aff991335a3eed",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-FEAT-0001",
+      "repo:contracts/ui/evidence_drawer_payload.md@7a98ba5d48cd2f87ef6dea45f246ea405ddbfeb0",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@7a98ba5d48cd2f87ef6dea45f246ea405ddbfeb0",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts@7a98ba5d48cd2f87ef6dea45f246ea405ddbfeb0"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts": "CONFIRMED",
+    "contracts/ui/evidence_drawer_drift_integrity_profile.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.expected_code.txt": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/invalid/drift-integrity-internal-diagnostics-leak.json": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-missing-sidecar.json": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-source-quarantined-rights.json": "CONFIRMED",
+    "fixtures/ui/evidence_drawer_payload/valid/error-artifact-hash-mismatch.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "fixture-schema-validation",
+      "outcome": "PASS",
+      "reason": "Five valid fixtures passed the current closed public-safe schema reconstruction; the diagnostic-leak fixture failed additionalProperties as expected."
+    },
+    {
+      "gate": "finite-outcome-semantics",
+      "outcome": "PASS",
+      "reason": "ABSTAIN, DENY, and ERROR fixtures matched the current validator's finite cross-field rules."
+    },
+    {
+      "gate": "typescript-syntax",
+      "outcome": "PASS",
+      "reason": "The new Vitest source passed Node ESM syntax checking after extension-neutral copy."
+    },
+    {
+      "gate": "hosted-explorer-unit-tests",
+      "outcome": "SKIPPED",
+      "reason": "Requires exact-head locked-workspace ui-build execution."
+    },
+    {
+      "gate": "hosted-evidence-drawer-validator",
+      "outcome": "SKIPPED",
+      "reason": "Requires exact-head evidence-drawer-payload workflow execution."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass4-evidence-drawer",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-FEAT-0001"
+    },
+    {
+      "id": "repository:evidence-drawer-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/evidence_drawer_payload.md@7a98ba5d48cd2f87ef6dea45f246ea405ddbfeb0"
+    },
+    {
+      "id": "repository:evidence-drawer-adapter",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts@7a98ba5d48cd2f87ef6dea45f246ea405ddbfeb0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T16:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of KFM-P4-FEAT-0001 using the existing public-safe EvidenceDrawerPayload vocabulary. Public payloads explain held, missing, unresolved, denied, and unavailable states while fixed UI copy and closed-schema rejection prevent steward-only diagnostics from leaking."
+}

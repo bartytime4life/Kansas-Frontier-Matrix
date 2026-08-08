@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:artifact-hash-mismatch",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "title": "INTERNAL_HASH_TITLE_CANARY_8a0e55",
+  "summary": "INTERNAL_HASH_MISMATCH_CANARY_expected_sha256_private_actual_sha256_private",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "INTERNAL_HASH_PATH_CANARY_data/published/private.pmtiles"
+  ],
+  "trust_state": {
+    "source_role": "derived",
+    "policy": "ERROR",
+    "review": "NOT_APPLICABLE",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}
