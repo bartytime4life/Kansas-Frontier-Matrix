@@ -8,7 +8,7 @@ import json
 import math
 import sys
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -116,6 +116,39 @@ def _schema_findings(
     return findings
 
 
+def _operator_safe_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Project a validated plan without propagating restricted access metadata."""
+
+    trigger = plan["trigger"]
+    return {
+        "projection": "operator-safe-v1",
+        "plan_id": plan["plan_id"],
+        "planner_version": plan["planner_version"],
+        "pipeline_id": plan["pipeline_id"],
+        "step_id": plan["step_id"],
+        "contract_version": plan["contract_version"],
+        "spec_hash": plan["spec_hash"],
+        "idempotency_key": plan["idempotency_key"],
+        "decision": plan["decision"],
+        "reason_codes": plan["reason_codes"],
+        "trigger": {
+            "type": trigger["type"],
+            "environment": trigger["environment"],
+            "concurrency_group": trigger["concurrency_group"],
+            "decision": trigger["decision"],
+            "reason_codes": trigger["reason_codes"],
+        },
+        "retry": plan["retry"],
+        "backpressure": plan["backpressure"],
+        "circuit_breaker": plan["circuit_breaker"],
+        "delivery": plan["delivery"],
+        "kill_switch": plan["kill_switch"],
+        "required_receipts": plan["required_receipts"],
+        "observability_requirements": plan["observability_requirements"],
+        "write_authority": False,
+    }
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -148,7 +181,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     result = {
         "ok": not findings,
         "outcome": outcome,
-        "plan": plan if not findings else None,
+        "plan": (
+            _operator_safe_plan(plan)
+            if not findings and plan is not None
+            else None
+        ),
         "findings": sorted(
             findings, key=lambda item: (item["path"], item["code"])
         ),
@@ -159,7 +196,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             "artifact_write": False,
             "workflow_mutation": False,
             "database_mutation": False,
-            "secret_access": False,
             "policy_evaluation": False,
             "signature_operation": False,
             "promotion": False,

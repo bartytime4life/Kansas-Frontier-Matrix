@@ -24,7 +24,8 @@
     "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json",
     "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json",
     "scripts/plan_pipeline_resilience.py",
-    "tests/packages/pipelines_core/test_pipeline_resilience.py"
+    "tests/packages/pipelines_core/test_pipeline_resilience.py",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py"
   ],
   "artifact_hashes": {
     "contracts/runtime/pipeline_resilience_plan.md": "sha256:5abf0d17dd8c0c4296e6521250cf50fa9a737864a9e2a35655e2f53823cb6f60",
@@ -48,8 +49,9 @@
     "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_delivery.py": "sha256:a6c0feadead2b122853a03de722bd1d30dd2e20350c939565576bfe9cb37301f",
     "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json": "sha256:933875e5e6a771c376a19ef10759af5f57e4fe82033a8df5d1640383bc5e26d9",
     "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json": "sha256:57dd4ada5ddb669eff0ccf49a0fb30a0d228b97e519c5df8ad95b97f99354490",
-    "scripts/plan_pipeline_resilience.py": "sha256:e46305a028bf776ad362e84f3fb76d10b7dd69a89a552cc68f8a65b883e306b7",
-    "tests/packages/pipelines_core/test_pipeline_resilience.py": "sha256:ebf3526bc9f05de9f905e7723480dc2e2615d05c9f74fe7a19b726951743433b"
+    "scripts/plan_pipeline_resilience.py": "sha256:512ce3d17c66a105b3008c187ac288d977c4598b63787439f75c13571d3b6d76",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "sha256:ebf3526bc9f05de9f905e7723480dc2e2615d05c9f74fe7a19b726951743433b",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py": "sha256:ff51552109c4be72105e1d0be16d9d8ed80d36010cebc0a491804fea7dfc288b"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -80,7 +82,8 @@
       "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0005",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
       "repo:packages/pipelines-core/src/pipelines_core/backfill_window.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
-      "repo:packages/connectors-core/src/connectors_core/core.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e"
+      "repo:packages/connectors-core/src/connectors_core/core.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
+      "repo:pull/2238#discussion_r3741375559"
     ]
   },
   "truth_labels": {
@@ -106,38 +109,39 @@
     "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json": "PROPOSED",
     "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json": "PROPOSED",
     "scripts/plan_pipeline_resilience.py": "PROPOSED",
-    "tests/packages/pipelines_core/test_pipeline_resilience.py": "PROPOSED"
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "PROPOSED",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py": "PROPOSED"
   },
   "validation_gates": [
     {
       "gate": "focused-pytest",
-      "outcome": "PASS",
-      "reason": "Thirty-four deterministic planner and CLI tests passed locally after module decomposition."
+      "outcome": "SKIPPED",
+      "reason": "The prior exact head passed 34 focused tests; the post-security-projection exact-head hosted rerun is pending."
     },
     {
       "gate": "python-bytecode-compile",
       "outcome": "PASS",
-      "reason": "Planner module, CLI, and focused tests compile without syntax errors."
+      "reason": "The modified CLI and new projection regression test compile without syntax errors."
+    },
+    {
+      "gate": "operator-safe-projection-regression",
+      "outcome": "PASS",
+      "reason": "A deterministic local projection test confirmed restricted access metadata is omitted from serialized operator output."
     },
     {
       "gate": "json-schema-self-check",
       "outcome": "PASS",
-      "reason": "Both Draft 2020-12 schemas pass Draft202012Validator.check_schema."
-    },
-    {
-      "gate": "fixture-replay",
-      "outcome": "PASS",
-      "reason": "ALLOW_START, ALLOW_RETRY, ALLOW_REPLAY, PAUSE, and DENY plans exactly match checked-in fixtures."
+      "reason": "Both unchanged Draft 2020-12 schemas passed self-check before the security projection patch."
     },
     {
       "gate": "receipt-byte-binding",
       "outcome": "PASS",
-      "reason": "SHA-256 values bind every authored non-receipt artifact."
+      "reason": "SHA-256 values bind every authored non-receipt artifact, including the modified CLI and new regression test."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted CI is unavailable until the draft pull request exists."
+      "reason": "Hosted CI must rerun after this security hardening commit."
     },
     {
       "gate": "human-review",
@@ -163,6 +167,11 @@
       "id": "repository:pipeline-core-convention",
       "validated": true,
       "evidence_ref": "repo:packages/pipelines-core/src/pipelines_core/backfill_window.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e"
+    },
+    {
+      "id": "repository:codeql-review",
+      "validated": true,
+      "evidence_ref": "repo:pull/2238#discussion_r3741375559"
     }
   ],
   "human_review": {
@@ -171,12 +180,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-08T18:33:34Z",
+  "created_at": "2026-08-08T19:12:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2238,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a deterministic planning-only pipeline resilience kernel, split into focused internal modules, with semantic contract, schemas, no-network CLI, replay fixtures, focused tests, runbook, and byte-bound generated receipt. It performs no network fetch, workflow mutation, database mutation, secret access, policy evaluation, promotion, release, deployment, or publication."
+  "notes": "Adds a deterministic planning-only pipeline resilience kernel and a security-hardened operator projection that omits restricted access metadata from CLI serialization. It performs no network fetch, workflow mutation, database mutation, restricted-value access, policy evaluation, promotion, release, deployment, or publication."
 }
