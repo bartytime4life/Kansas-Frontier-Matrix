@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.example/schemas/contracts/v1/governance/governance_health_projection.schema.json",
+  "title": "GovernanceHealthProjection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "projection_id", "source_digest", "coverage_state", "indicators", "effects"],
+  "properties": {
+    "profile": {"const": "kfm.governance.health-projection.v1"},
+    "projection_id": {"type": "string", "pattern": "^kfm:governance-health:[a-f0-9]{64}$"},
+    "source_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "coverage_state": {"enum": ["COMPLETE", "PARTIAL", "EMPTY", "ERROR"]},
+    "indicators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_ref_resolution_rate",
+        "cite_or_abstain_compliance",
+        "release_with_rollback_rate",
+        "derivative_invalidation_coverage",
+        "sensitive_lane_fail_closed_rate",
+        "ai_receipt_presence_rate",
+        "adr_completeness",
+        "open_drift_count",
+        "max_open_drift_age_days"
+      ],
+      "properties": {
+        "evidence_ref_resolution_rate": {"$ref": "#/$defs/ratio"},
+        "cite_or_abstain_compliance": {"$ref": "#/$defs/ratio"},
+        "release_with_rollback_rate": {"$ref": "#/$defs/ratio"},
+        "derivative_invalidation_coverage": {"$ref": "#/$defs/ratio"},
+        "sensitive_lane_fail_closed_rate": {"$ref": "#/$defs/ratio"},
+        "ai_receipt_presence_rate": {"$ref": "#/$defs/ratio"},
+        "adr_completeness": {"$ref": "#/$defs/ratio"},
+        "open_drift_count": {"type": "integer", "minimum": 0},
+        "max_open_drift_age_days": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_evaluated", "release_authorized", "published", "enforcement_changed"],
+      "properties": {
+        "policy_evaluated": {"const": false},
+        "release_authorized": {"const": false},
+        "published": {"const": false},
+        "enforcement_changed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ratio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "value"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 0},
+        "denominator": {"type": "integer", "minimum": 0},
+        "value": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      }
+    }
+  }
+}
