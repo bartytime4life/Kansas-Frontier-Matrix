@@ -37,18 +37,26 @@ jobs:
           from pathlib import Path
 
           workflow_path = Path(".github/workflows/maplibre-perf-governance.yml")
-          old = '''          separately_governed_validators = (
-              {"validate_source_metadata.py"}
-              if source_metadata_root.exists()
-              else set()
+          old = "\n".join(
+              (
+                  "          separately_governed_validators = (",
+                  "              {\"validate_source_metadata.py\"}",
+                  "              if source_metadata_root.exists()",
+                  "              else set()",
+                  "          )",
+                  "",
+              )
           )
-'''
-          new = '''          separately_governed_validators = {"validate_v6_readiness.py"} | (
-              {"validate_source_metadata.py"}
-              if source_metadata_root.exists()
-              else set()
+          new = "\n".join(
+              (
+                  "          separately_governed_validators = {\"validate_v6_readiness.py\"} | (",
+                  "              {\"validate_source_metadata.py\"}",
+                  "              if source_metadata_root.exists()",
+                  "              else set()",
+                  "          )",
+                  "",
+              )
           )
-'''
 
           text = workflow_path.read_text(encoding="utf-8")
           if old in text:
