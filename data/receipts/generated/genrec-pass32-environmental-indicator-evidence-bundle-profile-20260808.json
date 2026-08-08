@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-pass32-environmental-indicator-evidence-bundle-profile-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/environmental-indicator-evidence-bundle-profile.yml",
+    "contracts/evidence/environmental_indicator_evidence_bundle_profile.md",
+    "docs/intake/exploratory/pass-32-environmental-indicator-evidence-bundle-source-map.md",
+    "fixtures/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile/cases.json",
+    "schemas/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile.schema.json",
+    "tests/validators/test_validate_environmental_indicator_evidence_bundle_profile.py",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_model.py",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_ordering.py",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_semantics.py",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_support.py",
+    "tools/validators/validate_environmental_indicator_evidence_bundle_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/environmental-indicator-evidence-bundle-profile.yml": "sha256:daa5148ee5c726dcd0484c7dceb202688737b4043c14e0d1725eb67f335216a7",
+    "contracts/evidence/environmental_indicator_evidence_bundle_profile.md": "sha256:6e6789d6d647ee5c878fc58cb40a11f4c8f6f8b13d5564383b0ad94ef438280a",
+    "docs/intake/exploratory/pass-32-environmental-indicator-evidence-bundle-source-map.md": "sha256:a10b841520e809f37c3b9edb5b34c04b14ab0b15a7f20d3b60253a7c7aaa790e",
+    "fixtures/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile/cases.json": "sha256:313c5326b25d30e166ff0eda69fdc76048abf9d893b1f109a2b5d4e3ff4ebfb2",
+    "schemas/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile.schema.json": "sha256:01bf566874ef331bf5daf901100e186a259cc9044c5fb9b68833c7f84b1481f8",
+    "tests/validators/test_validate_environmental_indicator_evidence_bundle_profile.py": "sha256:c27b46aca3796b39efae995f4d2aa08d9ef9320006db4e4167326958eebd33c9",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_model.py": "sha256:3ed4b7129ec8144f75571dca44aa4923d4ce5ea1be6dd9c2a8e1a69a1c29285b",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_ordering.py": "sha256:ebc5f67070e5c3607877579bd2bf67b00c6320a7f31595bce6db32d3c0d299e1",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_semantics.py": "sha256:186d9faf882b9af9fab9b833057e368e403561a10301634add1dfe0c5aaa4888",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_support.py": "sha256:806a7f89213300b3dcc69e389b791eb969f0fc401cb6cdd63c73e12e4cac44d5",
+    "tools/validators/validate_environmental_indicator_evidence_bundle_profile.py": "sha256:4a264fe54004f1827c68f8e0e4b7ad93a6e617f0eff08fa09cf0e7845d564c0e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:9af601c9aee8a472222520b024e663bdf238c9fc1092f6c70fe5340069f163ba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0bd0e9cabf8666163a58597e21ef282ac1ccffd203ef9d2ff6aa13300c4d18b1",
+      "sha256:665cfb1df924299a3011bbc2a0ed66d3e1bd5e8e5717ec6a2c94ca4445f2f153",
+      "sha256:320d637539e98388dab0c1c0c99434a95e9b53832f75b27d1badfabdab6651c6",
+      "sha256:f47297f9f254f6845ecf809cc78330769ddc99babe0a9932cfc0cc06a30ac092"
+    ],
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Pass_32_Repo_Import_Candidate_Register.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-IDEA-0013",
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0007",
+      "attachment:KFM_Pass_32_Repo_Import_Candidate_Register.md#environmental-evidencebundle-profile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4/schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/environmental-indicator-evidence-bundle-profile.yml": "PROPOSED",
+    "contracts/evidence/environmental_indicator_evidence_bundle_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-environmental-indicator-evidence-bundle-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/environmental_indicator_evidence_bundle_profile.schema.json": "PROPOSED",
+    "tests/validators/test_validate_environmental_indicator_evidence_bundle_profile.py": "CONFIRMED",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_model.py": "CONFIRMED",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_ordering.py": "CONFIRMED",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_semantics.py": "CONFIRMED",
+    "tools/validators/environmental_indicator_evidence_bundle_profile_support.py": "CONFIRMED",
+    "tools/validators/validate_environmental_indicator_evidence_bundle_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-profile-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-10-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-3-pass-11-deny",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "existing-evidence-bundle-hard-dependency",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "metadata-block-structure-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-least-privilege-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P32-IDEA-0013",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-IDEA-0013"
+    },
+    {
+      "id": "KFM-P32-PROG-0007",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0007"
+    },
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    },
+    {
+      "id": "existing-evidence-bundle-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4/contracts/evidence/evidence_bundle.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T05:54:01Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of Pass 32 cards KFM-P32-IDEA-0013 and KFM-P32-PROG-0007. The profile reuses the existing EvidenceBundle, stores opaque asset references and ETag digests, binds deterministic hashes and analysis identity, distinguishes POPULATED/EMPTY/NO_DATA, and proves exact synthetic positive/negative behavior. It performs no live source access, environmental computation, observation claim, evidence resolution, policy evaluation, lifecycle write, release, deployment, publication, or public-use authorization. The implementation separates schema/profile orchestration, shared value helpers, deterministic ordering checks, semantic checks, and compact fixture materialization into bounded modules without changing the authority boundary."
+}
