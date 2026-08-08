@@ -1,0 +1,71 @@
+name: wimas-wwc5-aggregate-first-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/wimas-wwc5-aggregate-first-profile.yml"
+      - "contracts/evidence/wimas_wwc5_aggregate_first_profile.md"
+      - "schemas/contracts/v1/evidence/wimas_wwc5_aggregate_first_profile.schema.json"
+      - "fixtures/contracts/v1/evidence/wimas_wwc5_aggregate_first_profile/cases.json"
+      - "tools/validators/validate_wimas_wwc5_aggregate_first_profile.py"
+      - "tests/validators/test_validate_wimas_wwc5_aggregate_first_profile.py"
+      - "docs/intake/exploratory/pass-2-wimas-wwc5-aggregate-first-source-map.md"
+      - "data/receipts/generated/genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/wimas-wwc5-aggregate-first-profile.yml"
+      - "contracts/evidence/wimas_wwc5_aggregate_first_profile.md"
+      - "schemas/contracts/v1/evidence/wimas_wwc5_aggregate_first_profile.schema.json"
+      - "fixtures/contracts/v1/evidence/wimas_wwc5_aggregate_first_profile/cases.json"
+      - "tools/validators/validate_wimas_wwc5_aggregate_first_profile.py"
+      - "tests/validators/test_validate_wimas_wwc5_aggregate_first_profile.py"
+      - "docs/intake/exploratory/pass-2-wimas-wwc5-aggregate-first-source-map.md"
+      - "data/receipts/generated/genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wimas-wwc5-aggregate-first-profile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused tests
+        run: python -m unittest discover --start-directory tests/validators --pattern 'test_validate_wimas_wwc5_aggregate_first_profile.py' --verbose
+      - name: Replay fixture outcomes
+        run: python tools/validators/validate_wimas_wwc5_aggregate_first_profile.py --fixtures
+      - name: Verify generated receipt integrity
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json --repo-root .
+      - name: Record authority boundary
+        if: always()
+        run: |
+          echo "### WIMAS/WWC5 Aggregate-First Profile" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Result: ${{ job.status }}." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Fixture-only; no source activation, lifecycle write, release, deployment, or publication." >> "$GITHUB_STEP_SUMMARY"
