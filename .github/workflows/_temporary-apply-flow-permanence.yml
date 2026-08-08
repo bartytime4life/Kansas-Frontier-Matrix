@@ -136,12 +136,39 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          for path in \
+            .github/_tmp/flow-permanence-payload \
+            .github/workflows/_temporary-export-domain-hydrology.yml \
+            .github/workflows/_temporary-apply-flow-permanence.yml
+          do
+            if [[ -e "$path" ]]; then
+              echo "::error::Temporary transport path still exists: $path"
+              exit 1
+            fi
+          done
+
           git add -A
-          if git diff --cached --name-only | grep -Eq '^\.github/(?:_tmp/|workflows/_temporary-)'; then
-            echo "::error::Temporary transport paths remain staged."
+
+          unexpected_transport=$(
+            git diff --cached --name-status \
+              | awk -F '\t' '
+                  $1 !~ /^D/ {
+                    for (i = 2; i <= NF; i++) {
+                      if ($i ~ /^\.github\/(\_tmp\/|workflows\/_temporary-)/) {
+                        print $0
+                      }
+                    }
+                  }
+                '
+          )
+          if [[ -n "$unexpected_transport" ]]; then
+            echo "::error::Temporary transport paths contain a non-deletion change."
+            printf '%s\n' "$unexpected_transport"
             git diff --cached --name-status
             exit 1
           fi
+
           git diff --cached --name-status
           git commit -m "feat(hydrology): add fixture-first flow permanence assessment"
           git push origin HEAD:agent/pass3-flow-permanence-assessment-20260808
