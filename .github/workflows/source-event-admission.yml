@@ -86,6 +86,13 @@ jobs:
           python tools/validators/validate_source_event_envelope.py --fixtures
           python tools/validators/validate_source_event_admission.py --fixtures
 
+      - name: Report correction-binding digests
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/source-event-admission.yml \
+            tools/validators/validate_source_event_admission.py
+
       - name: Validate generated authoring receipt integrity
         run: |
           set -euo pipefail
