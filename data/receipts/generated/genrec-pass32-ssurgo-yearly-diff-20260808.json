@@ -1,0 +1,150 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/soil-ssurgo-yearly-diff.yml": "sha256:f0abf4ce336524a97d23253dced6dc97b8e034bd4b51b8954291eb0c3d33ac53",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md": "sha256:4922f9acad5e1b02ad5386f307cd20cbb5fdf2100dc5c5c36c6f2bb627729bd4",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md": "sha256:ac686f3cbfaba5c7792d2d503cfadb2ac3ad6473a2c4332024113ec615331ef5",
+    "fixtures/domains/soil/yearly_diff/cases.json": "sha256:ff77efb8ee72e85fa80b17c2fdb883a1c139eeef7c1291034a5ea02c3e079be9",
+    "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json": "sha256:a37604578ef9c9e00dbbe4edcab68ec14974d63608aa722da9fdf4afe9bbf828",
+    "schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json": "sha256:f9ea1c9a62c03b8bd7aab8b174626cda1c1eaa53c527012b180538f16c3cacd6",
+    "tests/validators/domains/soil/test_validate_ssurgo_yearly_diff_profile.py": "sha256:453cb69a8319b29d454c56413e770eba10861b5460097d74bf7969d59116689e",
+    "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py": "sha256:017163cdafc4f766cfe6795fc59adaefec98321ceb13a8ed3e36096872e6469e"
+  },
+  "artifact_paths": [
+    ".github/workflows/soil-ssurgo-yearly-diff.yml",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md",
+    "fixtures/domains/soil/yearly_diff/cases.json",
+    "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json",
+    "schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json",
+    "tests/validators/domains/soil/test_validate_ssurgo_yearly_diff_profile.py",
+    "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-IDEA-0010",
+      "id": "KFM-P32-IDEA-0010",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0013",
+      "id": "KFM-P32-PROG-0013",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/domains/soil/soil_watcher_spec.md@d5b67a6cf916319ba34796f9feb92c3cce0fc0a1",
+      "id": "repository-soil-watcher-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d5b67a6cf916319ba34796f9feb92c3cce0fc0a1",
+      "id": "accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T19:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-IDEA-0010",
+      "attachment:KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P32-PROG-0013",
+      "repo:contracts/domains/soil/soil_watcher_spec.md@d5b67a6cf916319ba34796f9feb92c3cce0fc0a1",
+      "repo:pipeline_specs/watchers/soil_ssurgo_gnatsgo.json@d5b67a6cf916319ba34796f9feb92c3cce0fc0a1",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d5b67a6cf916319ba34796f9feb92c3cce0fc0a1"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only adaptation of Pass 32 KFM-P32-IDEA-0010 and KFM-P32-PROG-0013. The profile binds consecutive SSURGO or gNATSGO snapshot references, distinct source roles, STAC/PROV/receipt references, normalization receipts, deterministic diff summaries, exact findings, and all-false authority flags. It performs no live source access, RAW admission, evidence resolution, policy decision, promotion, release, deployment, publication, or public-use authorization.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "deterministic local validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:35694e42d2f717527c06b6ac369393920cb8a8b5c2b74b4053bf128f40683a51",
+  "receipt_id": "genrec-pass32-ssurgo-yearly-diff-20260808",
+  "truth_labels": {
+    ".github/workflows/soil-ssurgo-yearly-diff.yml": "CONFIRMED",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md": "CONFIRMED",
+    "fixtures/domains/soil/yearly_diff/cases.json": "CONFIRMED",
+    "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json": "PROPOSED",
+    "tests/validators/domains/soil/test_validate_ssurgo_yearly_diff_profile.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Validator and focused test module compiled in the authoring workspace."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed profile schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic no-network unit tests passed."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Two positive and six negative cases matched exact finite outcomes, codes, and paths."
+    },
+    {
+      "gate": "source-role-and-year-pinning",
+      "outcome": "PASS",
+      "reason": "SSURGO and gNATSGO retained distinct support/diff profiles and consecutive snapshot years."
+    },
+    {
+      "gate": "non-publishing-authority",
+      "outcome": "PASS",
+      "reason": "Output remains WORK/QUARANTINE, publication activity is null, and every authority flag is false."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "8 authored non-receipt artifacts are bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
