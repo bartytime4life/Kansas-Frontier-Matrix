@@ -1,0 +1,573 @@
+{
+  "profile": "kfm.map.three-d-admission-decision-fixtures.v1",
+  "source_idea_ids": [
+    "THREE-01",
+    "THREE-02",
+    "I-3D-6",
+    "I-3D-7",
+    "KFM-P9-FEAT-0013"
+  ],
+  "bases": {
+    "native": {
+      "profile": "kfm.map.three-d-admission-decision.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "scene_manifest_ref": "kfm:scene-manifest:synthetic-terrain-v1",
+      "layer_manifest_ref": "kfm:layer-manifest:synthetic-terrain-v1",
+      "view_state_ref": "kfm:view-state:synthetic-terrain-v1",
+      "representation_fitness_ref": "kfm:representation-fitness:synthetic-terrain-v1",
+      "reality_boundary_note_ref": null,
+      "evidence_bundle_refs": [
+        "kfm:evidence-bundle:synthetic-terrain-v1"
+      ],
+      "source_descriptor_refs": [
+        "kfm:source-descriptor:synthetic-terrain-v1"
+      ],
+      "domain_contexts": [
+        "hydrology",
+        "map"
+      ],
+      "requested_mode": "TERRAIN_3D",
+      "representation_kind": "DERIVED",
+      "geometry_label": "TWO_POINT_FIVE_D",
+      "requested_use": "TERRAIN_EXPLANATION",
+      "source_roles": [
+        "DERIVED"
+      ],
+      "sensitivity": {
+        "tier": "T0",
+        "living_person_present": false,
+        "rare_species_precision": "NONE",
+        "archaeology_present": false,
+        "archaeology_generalization_meters": null,
+        "critical_infrastructure_precision": "NONE",
+        "transformation_receipt_refs": []
+      },
+      "plugin_dependencies": [],
+      "parity": {
+        "two_d_evidence_refs": [
+          "kfm:evidence-bundle:synthetic-terrain-v1"
+        ],
+        "three_d_evidence_refs": [
+          "kfm:evidence-bundle:synthetic-terrain-v1"
+        ],
+        "drawer_fields_2d": [
+          "CORRECTION_STATE",
+          "EVIDENCE",
+          "LIMITATIONS",
+          "RELEASE_STATE",
+          "SENSITIVITY",
+          "SOURCE_ROLE",
+          "SPATIAL_SCOPE",
+          "TEMPORAL_SCOPE"
+        ],
+        "drawer_fields_3d": [
+          "CORRECTION_STATE",
+          "EVIDENCE",
+          "LIMITATIONS",
+          "RELEASE_STATE",
+          "SENSITIVITY",
+          "SOURCE_ROLE",
+          "SPATIAL_SCOPE",
+          "TEMPORAL_SCOPE"
+        ],
+        "correction_refs_2d": [
+          "kfm:correction:none:synthetic-terrain-v1"
+        ],
+        "correction_refs_3d": [
+          "kfm:correction:none:synthetic-terrain-v1"
+        ],
+        "release_refs_2d": [
+          "kfm:release:synthetic-terrain-v1"
+        ],
+        "release_refs_3d": [
+          "kfm:release:synthetic-terrain-v1"
+        ],
+        "sensitivity_labels_2d": [
+          "PUBLIC_SAFE",
+          "SYNTHETIC_FIXTURE"
+        ],
+        "sensitivity_labels_3d": [
+          "PUBLIC_SAFE",
+          "SYNTHETIC_FIXTURE"
+        ]
+      },
+      "limitations": [
+        "Synthetic terrain fixture only; no source, renderer, policy, release, or public-use authority."
+      ],
+      "review_state": "HOLD",
+      "public_use_allowed": false,
+      "effects": {
+        "renderer_booted": false,
+        "plugin_installed": false,
+        "policy_evaluated": false,
+        "human_review_approved": false,
+        "release_authorized": false,
+        "deployed": false,
+        "published": false
+      }
+    },
+    "tiles": {
+      "profile": "kfm.map.three-d-admission-decision.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "scene_manifest_ref": "kfm:scene-manifest:synthetic-tiles-v1",
+      "layer_manifest_ref": "kfm:layer-manifest:synthetic-tiles-v1",
+      "view_state_ref": "kfm:view-state:synthetic-tiles-v1",
+      "representation_fitness_ref": "kfm:representation-fitness:synthetic-tiles-v1",
+      "reality_boundary_note_ref": "kfm:reality-boundary:synthetic-tiles-v1",
+      "evidence_bundle_refs": [
+        "kfm:evidence-bundle:synthetic-tiles-v1"
+      ],
+      "source_descriptor_refs": [
+        "kfm:source-descriptor:synthetic-tiles-v1"
+      ],
+      "domain_contexts": [
+        "map",
+        "settlements-infrastructure"
+      ],
+      "requested_mode": "OGC_3D_TILES",
+      "representation_kind": "MODELED",
+      "geometry_label": "TRUE_3D",
+      "requested_use": "STORY_TRANSITION",
+      "source_roles": [
+        "MODEL"
+      ],
+      "sensitivity": {
+        "tier": "T0",
+        "living_person_present": false,
+        "rare_species_precision": "NONE",
+        "archaeology_present": false,
+        "archaeology_generalization_meters": null,
+        "critical_infrastructure_precision": "NONE",
+        "transformation_receipt_refs": []
+      },
+      "plugin_dependencies": [
+        {
+          "name": "3d-tiles-renderer",
+          "version": "0.4.4",
+          "integrity_sha256": "sha256:a581a737aff2aee912c06ca6bf43eabec7b185544ca84d17f4f79ebc43c41c7e",
+          "attestation_ref": "kfm:attestation:3d-tiles-renderer:0.4.4",
+          "admission_ref": "kfm:plugin-admission:3d-tiles-renderer:0.4.4",
+          "license_status": "VERIFIED",
+          "cve_watch_ref": "kfm:cve-watch:3d-tiles-renderer"
+        },
+        {
+          "name": "three",
+          "version": "0.180.0",
+          "integrity_sha256": "sha256:7f3ec67e410851841eb59a92f353231cf5783495a4ef523e0ea878514f8c6ae2",
+          "attestation_ref": "kfm:attestation:three:0.180.0",
+          "admission_ref": "kfm:plugin-admission:three:0.180.0",
+          "license_status": "VERIFIED",
+          "cve_watch_ref": "kfm:cve-watch:three"
+        }
+      ],
+      "parity": {
+        "two_d_evidence_refs": [
+          "kfm:evidence-bundle:synthetic-tiles-v1"
+        ],
+        "three_d_evidence_refs": [
+          "kfm:evidence-bundle:synthetic-tiles-v1"
+        ],
+        "drawer_fields_2d": [
+          "CORRECTION_STATE",
+          "EVIDENCE",
+          "LIMITATIONS",
+          "RELEASE_STATE",
+          "SENSITIVITY",
+          "SOURCE_ROLE",
+          "SPATIAL_SCOPE",
+          "TEMPORAL_SCOPE"
+        ],
+        "drawer_fields_3d": [
+          "CORRECTION_STATE",
+          "EVIDENCE",
+          "LIMITATIONS",
+          "RELEASE_STATE",
+          "SENSITIVITY",
+          "SOURCE_ROLE",
+          "SPATIAL_SCOPE",
+          "TEMPORAL_SCOPE"
+        ],
+        "correction_refs_2d": [
+          "kfm:correction:none:synthetic-tiles-v1"
+        ],
+        "correction_refs_3d": [
+          "kfm:correction:none:synthetic-tiles-v1"
+        ],
+        "release_refs_2d": [
+          "kfm:release:synthetic-tiles-v1"
+        ],
+        "release_refs_3d": [
+          "kfm:release:synthetic-tiles-v1"
+        ],
+        "sensitivity_labels_2d": [
+          "PUBLIC_SAFE",
+          "SYNTHETIC_FIXTURE"
+        ],
+        "sensitivity_labels_3d": [
+          "PUBLIC_SAFE",
+          "SYNTHETIC_FIXTURE"
+        ]
+      },
+      "limitations": [
+        "Synthetic modeled 3D Tiles fixture only; Reality Boundary Note review remains external."
+      ],
+      "review_state": "HOLD",
+      "public_use_allowed": false,
+      "effects": {
+        "renderer_booted": false,
+        "plugin_installed": false,
+        "policy_evaluated": false,
+        "human_review_approved": false,
+        "release_authorized": false,
+        "deployed": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "native_terrain_candidate",
+      "base": "native",
+      "mutations": [],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "ALLOW_RENDER_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "name": "plugin_hosted_true_3d_candidate",
+      "base": "tiles",
+      "mutations": [],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "ALLOW_RENDER_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "name": "two_point_five_d_vertical_evidence",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/requested_use",
+          "value": "VERTICAL_EVIDENCE"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TWO_POINT_FIVE_D_VERTICAL_EVIDENCE",
+          "path": "/requested_use"
+        }
+      ]
+    },
+    {
+      "name": "spectacle_only_burden_failure",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/requested_use",
+          "value": "SPECTACLE_ONLY"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EXPLANATORY_BURDEN_NOT_MET",
+          "path": "/requested_use"
+        }
+      ]
+    },
+    {
+      "name": "living_person_geometry",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/sensitivity/living_person_present",
+          "value": true
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "LIVING_PERSON_GEOMETRY_DENIED",
+          "path": "/sensitivity/living_person_present"
+        }
+      ]
+    },
+    {
+      "name": "precise_rare_species_geometry",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/sensitivity/rare_species_precision",
+          "value": "PRECISE"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RARE_SPECIES_PRECISION_DENIED",
+          "path": "/sensitivity/rare_species_precision"
+        }
+      ]
+    },
+    {
+      "name": "under_generalized_archaeology",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/sensitivity/archaeology_present",
+          "value": true
+        },
+        {
+          "path": "/sensitivity/archaeology_generalization_meters",
+          "value": 1000
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ARCHAEOLOGY_GENERALIZATION_INSUFFICIENT",
+          "path": "/sensitivity/archaeology_generalization_meters"
+        }
+      ]
+    },
+    {
+      "name": "precise_critical_infrastructure",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/sensitivity/critical_infrastructure_precision",
+          "value": "PRECISE"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CRITICAL_INFRASTRUCTURE_PRECISION_DENIED",
+          "path": "/sensitivity/critical_infrastructure_precision"
+        }
+      ]
+    },
+    {
+      "name": "modeled_without_reality_boundary",
+      "base": "tiles",
+      "mutations": [
+        {
+          "path": "/reality_boundary_note_ref",
+          "value": null
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "REALITY_BOUNDARY_NOTE_REQUIRED",
+          "path": "/reality_boundary_note_ref"
+        }
+      ]
+    },
+    {
+      "name": "evidence_parity_mismatch",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/parity/three_d_evidence_refs",
+          "value": [
+            "kfm:evidence-bundle:different"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TWO_D_EVIDENCE_PARITY_MISMATCH",
+          "path": "/parity/three_d_evidence_refs"
+        }
+      ]
+    },
+    {
+      "name": "drawer_parity_mismatch",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/parity/drawer_fields_3d",
+          "value": [
+            "EVIDENCE",
+            "LIMITATIONS"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EVIDENCE_DRAWER_PARITY_MISMATCH",
+          "path": "/parity/drawer_fields_3d"
+        }
+      ]
+    },
+    {
+      "name": "correction_parity_mismatch",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/parity/correction_refs_3d",
+          "value": [
+            "kfm:correction:different"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_PARITY_MISMATCH",
+          "path": "/parity/correction_refs_3d"
+        }
+      ]
+    },
+    {
+      "name": "release_parity_mismatch",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/parity/release_refs_3d",
+          "value": [
+            "kfm:release:different"
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RELEASE_PARITY_MISMATCH",
+          "path": "/parity/release_refs_3d"
+        }
+      ]
+    },
+    {
+      "name": "required_plugins_missing",
+      "base": "tiles",
+      "mutations": [
+        {
+          "path": "/plugin_dependencies",
+          "value": []
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PLUGIN_SET_MISMATCH",
+          "path": "/plugin_dependencies"
+        }
+      ]
+    },
+    {
+      "name": "native_mode_with_plugin",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/plugin_dependencies",
+          "value": [
+            {
+              "name": "three",
+              "version": "0.180.0",
+              "integrity_sha256": "sha256:7f3ec67e410851841eb59a92f353231cf5783495a4ef523e0ea878514f8c6ae2",
+              "attestation_ref": "kfm:attestation:three:0.180.0",
+              "admission_ref": "kfm:plugin-admission:three:0.180.0",
+              "license_status": "VERIFIED",
+              "cve_watch_ref": "kfm:cve-watch:three"
+            }
+          ]
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PLUGIN_SET_MISMATCH",
+          "path": "/plugin_dependencies"
+        }
+      ]
+    },
+    {
+      "name": "plugin_license_unknown",
+      "base": "tiles",
+      "mutations": [
+        {
+          "path": "/plugin_dependencies/0/license_status",
+          "value": "UNKNOWN"
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PLUGIN_LICENSE_UNVERIFIED",
+          "path": "/plugin_dependencies/0/license_status"
+        }
+      ]
+    },
+    {
+      "name": "authority_effect_overclaim",
+      "base": "native",
+      "mutations": [
+        {
+          "path": "/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        },
+        {
+          "path": "/effects/renderer_booted",
+          "value": true
+        },
+        {
+          "path": "/effects/published",
+          "value": true
+        }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AUTHORITY_EFFECT_OVERCLAIM",
+          "path": "/effects"
+        },
+        {
+          "code": "PUBLIC_USE_OVERCLAIM",
+          "path": "/public_use_allowed"
+        },
+        {
+          "code": "REVIEW_STATE_OVERCLAIM",
+          "path": "/review_state"
+        }
+      ]
+    },
+    {
+      "name": "spec_hash_corruption",
+      "base": "native",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    }
+  ]
+}
