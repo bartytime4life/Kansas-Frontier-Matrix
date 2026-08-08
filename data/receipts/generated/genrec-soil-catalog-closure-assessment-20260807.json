@@ -1,0 +1,45 @@
+{
+  "receipt_id": "genrec-soil-catalog-closure-assessment-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-catalog-closure-assessment.yml",
+    "contracts/domains/soil/catalog_closure_assessment.md",
+    "docs/domains/soil/CATALOG_CLOSURE.md",
+    "docs/intake/exploratory/soil-catalog-closure-assessment-source-map.md",
+    "fixtures/contracts/v1/domains/soil/catalog_closure_assessment/cases.json",
+    "schemas/contracts/v1/domains/soil/catalog_closure_assessment.schema.json",
+    "tests/validators/domains/soil/test_catalog_closure_assessment.py",
+    "tools/validators/domains/soil/validate_catalog_closure_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-catalog-closure-assessment.yml": "sha256:00000000000000000000000000000000",
+    "contracts/domains/soil/catalog_closure_assessment.md": "sha256:00000000000000000000000000000000",
+    "docs/domains/soil/CATALOG_CLOSURE.md": "sha256:00000000000000000000000000000000",
+    "docs/intake/exploratory/soil-catalog-closure-assessment-source-map.md": "sha256:00000000000000000000000000000000",
+    "fixtures/contracts/v1/domains/soil/catalog_closure_assessment/cases.json": "sha256:00000000000000000000000000000000",
+    "schemas/contracts/v1/domains/soil/catalog_closure_assessment.schema.json": "sha256:00000000000000000000000000000000",
+    "tests/validators/domains/soil/test_catalog_closure_assessment.py": "sha256:00000000000000000000000000000000",
+    "tools/validators/domains/soil/validate_catalog_closure_assessment.py": "sha256:00000000000000000000000000000000"
+  },
+  "model_identity": {"provider":"OpenAI","model":"GPT-5.6 Sol","version":"2026-08-07"},
+  "prompt_or_contract": "sha256:00000000000000000000000000000000",
+  "parameters": {"tools_enabled":["GitHub"]},
+  "inputs": {"attached_docs":["KFM Soil Architecture Extended Pro PDF-Only Planning Report"],"evidence_refs":["main@2dd8920f9ef6188ebcbd40af70e230fac34a7417"]},
+  "truth_labels": {
+    ".github/workflows/soil-catalog-closure-assessment.yml":"PROPOSED",
+    "contracts/domains/soil/catalog_closure_assessment.md":"PROPOSED",
+    "docs/domains/soil/CATALOG_CLOSURE.md":"PROPOSED",
+    "docs/intake/exploratory/soil-catalog-closure-assessment-source-map.md":"PROPOSED",
+    "fixtures/contracts/v1/domains/soil/catalog_closure_assessment/cases.json":"PROPOSED",
+    "schemas/contracts/v1/domains/soil/catalog_closure_assessment.schema.json":"PROPOSED",
+    "tests/validators/domains/soil/test_catalog_closure_assessment.py":"PROPOSED",
+    "tools/validators/domains/soil/validate_catalog_closure_assessment.py":"PROPOSED"
+  },
+  "validation_gates": [{"gate":"hosted-exact-head","outcome":"SKIPPED","reason":"pending after PR creation"}],
+  "policy_decisions": ["PROPOSED_INACTIVE_FIXTURE_ONLY"],
+  "citations": [{"id":"soil-readme-current-main","validated":true,"evidence_ref":"main@2dd8920f9ef6188ebcbd40af70e230fac34a7417"}],
+  "human_review": {"reviewer_ids":[],"state":"pending","timestamp":null},
+  "created_at": "2026-08-08T01:20:00Z",
+  "emitter": "GPT-5.6 Sol",
+  "notes": "Placeholder hash values intentionally make this receipt non-mergeable until exact final branch bytes are rebound by a repository-native receipt step."
+}
