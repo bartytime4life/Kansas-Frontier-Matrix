@@ -100,3 +100,32 @@ def test_execution_spec_hash_mismatch_is_denied() -> None:
             "status": "DENY",
         }
     ]
+
+
+def test_cli_entrypoint_runs_directly_by_file_path() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(MODULE_PATH),
+            str(FIXTURE_ROOT / "valid" / "pass.json"),
+            "--repo-root",
+            str(REPO_ROOT),
+            "--cosign-bin",
+            str(tool("fake_cosign.py")),
+            "--conftest-bin",
+            str(tool("fake_conftest.py")),
+            "--promotion-validator",
+            str(tool("fake_promotion_validator.py")),
+            "--cosign-plan-validator",
+            str(tool("fake_cosign_plan_validator.py")),
+        ],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    result = json.loads(completed.stdout)
+    assert result["status"] == "PASS"
+    assert result["readiness"] == "APPROVE_READY"
+    assert result["authority"]["promotion_authorized"] is False

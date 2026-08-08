@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Sequence
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from tools.validators.promotion_gate.execution.common import Finding, canonical_hash, read_json
 from tools.validators.promotion_gate.execution.engine import execute as _execute, result_payload
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/release/promotion_verification_execution.schema.json"
 PROMOTION_VALIDATOR = REPO_ROOT / "tools/validators/promotion_gate/validate_promotion_gate.py"
 COSIGN_PLAN_VALIDATOR = REPO_ROOT / "tools/validators/release/validate_cosign_attestation_verification_plan.py"
