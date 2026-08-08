@@ -17,7 +17,8 @@
 #   Doctrine registry/checker/tests, DoctrineArtifactDescriptor schema fixtures,
 #   PromotionDecision contract/schema/fixtures/validator/test, promotion policy
 #   source inventory, bounded promotion-gate and fixture-only ReviewRecord
-#   validators/fixtures/tests, and the tracked hydrology automation-smoke decision.
+#   validators/fixtures/tests, the bounded promotion-verification execution
+#   package inventory, and the tracked hydrology automation-smoke decision.
 #
 # Outputs and outcomes:
 #   Test output and job summaries only. Shape checks may pass while promotion
@@ -278,6 +279,10 @@ jobs:
               Path("release/reviews/README.md"),
               Path("tools/validators/validate_promotion_gate.py"),
               Path("tools/validators/promotion_gate/validate_promotion_gate.py"),
+              Path("tools/validators/promotion_gate/execute_promotion_verification.py"),
+              Path("tools/validators/promotion_gate/execution/__init__.py"),
+              Path("tools/validators/promotion_gate/execution/common.py"),
+              Path("tools/validators/promotion_gate/execution/engine.py"),
               Path("tools/validators/validate_review_record.py"),
               Path("tools/validators/promotion_gate/README.md"),
               Path("fixtures/release/promotion_gate/README.md"),
@@ -367,8 +372,42 @@ jobs:
               if path.is_file() and "__pycache__" not in path.parts
           }
           assert validator_inventory == {
-              "README.md", "__init__.py", "validate_promotion_gate.py"
+              "README.md",
+              "__init__.py",
+              "execute_promotion_verification.py",
+              "execution/__init__.py",
+              "execution/common.py",
+              "execution/engine.py",
+              "validate_promotion_gate.py",
           }, f"promotion-gate implementation inventory drifted: {sorted(validator_inventory)}"
+
+          execution_entrypoint = Path(
+              "tools/validators/promotion_gate/execute_promotion_verification.py"
+          ).read_text(encoding="utf-8")
+          for marker in (
+              "--cosign-bin",
+              "--conftest-bin",
+              "execution.engine import execute as _execute",
+          ):
+              assert marker in execution_entrypoint, (
+                  "promotion-verification entry point drifted; "
+                  f"missing marker {marker}"
+              )
+
+          execution_engine = Path(
+              "tools/validators/promotion_gate/execution/engine.py"
+          ).read_text(encoding="utf-8")
+          for marker in (
+              '"lifecycle_write": False',
+              '"promotion_authorized": False',
+              '"release_authorized": False',
+              '"deployment_authorized": False',
+              '"publication_authorized": False',
+          ):
+              assert marker in execution_engine, (
+                  "promotion-verification authority boundary drifted; "
+                  f"missing marker {marker}"
+              )
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^publish-check:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
@@ -381,6 +420,7 @@ jobs:
 
           print("CONFIRMED: release/reviews contains guidance only, not review records.")
           print("CONFIRMED: bounded promotion gate and fixture-only ReviewRecord validator are wired.")
+          print("CONFIRMED: the separately tested promotion-verification executor inventory is recognized with every authority flag false.")
           print("CONFIRMED: canonical identity syntax and review-time issuance, supplied authority/validity intervals, explicit supersession marking, and empty approving-review obligations were enforced over synthetic context.")
           print("CONFIRMED: the fixture projection creates no governed ReviewRecord or actor authority.")
           print("WORKFLOW_SKIPPED_EXPLICIT: the hydrology promoter was not executed.")
@@ -402,6 +442,7 @@ jobs:
             echo "### Review records"
             echo
             echo "- The bounded promotion gate and fixture-only ReviewRecord profile re-ran here; canonical identity syntax, issuance by review time, a declared authority interval covering evaluation, and an empty approving-review obligations list were checked. PASS is only APPROVE_READY over synthetic declarations."
+            echo "- The known promotion-verification execution package is inventory-checked here, but its dedicated workflow remains the authority for its deterministic fixture execution; every lifecycle, promotion, release, deployment, and publication effect remains false."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and no live actor identity or authority assignment was authenticated."
             echo "- The hydrology promoter was intentionally not run: it writes a timestamped automation-approved smoke decision whose EvidenceBundle and rollback-card paths are unresolved."
             echo "- Result: ${{ job.status }}. This readiness inventory is not reviewer approval, separation-of-duties proof, promotion, release, rollback readiness, or publication authority."
