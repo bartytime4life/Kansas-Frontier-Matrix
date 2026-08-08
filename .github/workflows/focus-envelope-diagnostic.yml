@@ -1,0 +1,56 @@
+# Temporary bounded diagnostic for the inherited finite-envelope failure.
+# Removed before the repair pull request. It reports test method names only.
+name: focus-envelope-diagnostic
+
+"on":
+  push:
+    branches:
+      - agent/pass1-focus-envelope-baseline-repair-20260808
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  isolate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Isolate failing method names
+        shell: bash
+        run: |
+          set +e
+          failed=0
+          methods=(
+            test_canonical_schema_is_closed_to_four_outcomes
+            test_focus_path_is_a_compatibility_alias_not_a_second_shape
+            test_valid_fixtures_cover_outcomes_and_disclose_answer_precision
+            test_existing_invalid_fixtures_remain_rejected
+            test_precision_semantics_fail_closed_without_external_packages
+            test_canonical_validator_source_remains_wired
+          )
+          prefix=tests.runtime_proof.test_envelope_finite_outcomes.FiniteRuntimeEnvelopeTests
+          for method in "${methods[@]}"; do
+            if python -m unittest "$prefix.$method" >/dev/null 2>&1; then
+              echo "::notice file=tests/runtime_proof/test_envelope_finite_outcomes.py::$method PASS"
+            else
+              echo "::error file=tests/runtime_proof/test_envelope_finite_outcomes.py::$method FAIL"
+              failed=1
+            fi
+          done
+          exit "$failed"
