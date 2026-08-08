@@ -1,0 +1,88 @@
+# Validate the inactive explicit PolicyInputBundle profile v1.
+name: policy-input-bundle-profile-v1
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/policy-input-bundle-profile-v1.yml"
+      - "contracts/policy/policy_input_bundle_profile_v1.md"
+      - "schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json"
+      - "fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/**"
+      - "tools/validators/policy/validate_policy_input_bundle_profile_v1.py"
+      - "tests/validators/test_validate_policy_input_bundle_profile_v1.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/policy-input-bundle-profile-v1.yml"
+      - "contracts/policy/policy_input_bundle_profile_v1.md"
+      - "schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json"
+      - "fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/**"
+      - "tools/validators/policy/validate_policy_input_bundle_profile_v1.py"
+      - "tests/validators/test_validate_policy_input_bundle_profile_v1.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: policy-input-bundle-profile-v1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-policy-input-bundle-profile-v1
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_policy_input_bundle_profile_v1.py' \
+            --verbose
+          python tools/validators/policy/validate_policy_input_bundle_profile_v1.py \
+            fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/valid/valid_1.json
+
+      - name: Verify schema fixture polarity
+        run: |
+          set -euo pipefail
+          python -m pytest tests/schemas/test_common_contracts.py \
+            -q -k policy_input_bundle_profile_v1
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### PolicyInputBundle explicit context profile v1"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only explicit context, public-safety coherence, release prerequisites, and no-hidden-fetch boundary."
+            echo "- Boundary: this workflow does not evaluate policy, emit a PolicyDecision, write lifecycle state, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
