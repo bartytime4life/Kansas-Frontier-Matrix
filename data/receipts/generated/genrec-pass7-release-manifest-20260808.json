@@ -14,7 +14,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/release-manifest.yml": "sha256:df7699fda0297f1554030e30902c3143dc36d8a030c2d4e134de7264c548b26a",
-    "contracts/release/release_manifest.md": "sha256:448f86eeb74d3414b9ca9d0d37d3a4d61c9e28e3282aad029be20b7bcb6eab58",
+    "contracts/release/release_manifest.md": "sha256:b41f5d0f7e565104e4756660fef29ce024c968f23c2a761ede6e63f424e9005a",
     "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
     "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
     "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
@@ -146,7 +146,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-08T21:58:00Z",
+  "created_at": "2026-08-08T22:10:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
     "pr_number": null,
