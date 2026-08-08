@@ -1,0 +1,87 @@
+{
+  "lockfile": {
+    "path": "pnpm-lock.yaml",
+    "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "node_engine": ">=22.13 <23",
+  "non_effects": [
+    "does_not_create_or_activate_an_internal_registry",
+    "does_not_fetch_or_install_packages",
+    "does_not_replace_vulnerability_audit_or_dependency_review",
+    "does_not_approve_dependency_admission",
+    "does_not_release_deploy_promote_or_publish"
+  ],
+  "npmrc": {
+    "@kfm:registry": "https://registry.invalid/",
+    "ignore-scripts": "true",
+    "registry": "https://registry.npmjs.org/",
+    "save-exact": "true",
+    "strict-peer-dependencies": "true",
+    "verify-store-integrity": "true"
+  },
+  "package_manager": "pnpm@11.17.0",
+  "policy_id": "kfm://policy/supply-chain/pnpm-dependency/v1",
+  "registries": {
+    "allowed": [
+      "https://registry.npmjs.org/"
+    ],
+    "default": "https://registry.npmjs.org/",
+    "deny_sink": true,
+    "internal_resolution": "workspace_only",
+    "internal_scope": "@kfm",
+    "internal_scope_registry": "https://registry.invalid/"
+  },
+  "requirements": {
+    "exact_versions": true,
+    "frozen_lockfile": true,
+    "lifecycle_scripts_disabled": true,
+    "lockfile_integrity": true,
+    "private_workspaces": true
+  },
+  "source_idea_ids": [
+    "KFM-P8-PROG-0007",
+    "KFM-P8-PROG-0008",
+    "KFM-P8-PROG-0009",
+    "KFM-P8-PROG-0016"
+  ],
+  "status": "PROPOSED",
+  "version": "v1",
+  "version_range_exceptions": [
+    {
+      "expires_on_change": true,
+      "field": "devDependencies",
+      "manifest": "package.json",
+      "name": "pixelmatch",
+      "reason": "Pre-existing root range retained until a separately reviewed lockfile-preserving exact-version migration.",
+      "specifier": "^7.1.0"
+    },
+    {
+      "expires_on_change": true,
+      "field": "devDependencies",
+      "manifest": "package.json",
+      "name": "playwright",
+      "reason": "Pre-existing root range retained until a separately reviewed lockfile-preserving exact-version migration.",
+      "specifier": "^1.62.1"
+    },
+    {
+      "expires_on_change": true,
+      "field": "devDependencies",
+      "manifest": "package.json",
+      "name": "pngjs",
+      "reason": "Pre-existing root range retained until a separately reviewed lockfile-preserving exact-version migration.",
+      "specifier": "^7.0.0"
+    }
+  ],
+  "workflows": {
+    "allowed_package_manager": "pnpm",
+    "required_env": {
+      "NPM_CONFIG_IGNORE_SCRIPTS": "true",
+      "PNPM_CONFIG_IGNORE_SCRIPTS": "true"
+    },
+    "required_pnpm_install_flags": [
+      "--frozen-lockfile",
+      "--ignore-scripts"
+    ],
+    "root": ".github/workflows"
+  }
+}
