@@ -1,0 +1,84 @@
+# Validate the fixture-first graph runtime compatibility matrix.
+name: graph-runtime-readiness
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/graph-runtime-readiness.yml"
+      - "contracts/runtime/graph_runtime_compatibility_matrix.md"
+      - "schemas/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json"
+      - "control_plane/graph_runtime_compatibility_matrix.json"
+      - "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py"
+      - "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/**"
+      - "tests/validators/test_validate_graph_runtime_compatibility_matrix.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-graph-runtime-readiness-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/graph-runtime-readiness.yml"
+      - "contracts/runtime/graph_runtime_compatibility_matrix.md"
+      - "schemas/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json"
+      - "control_plane/graph_runtime_compatibility_matrix.json"
+      - "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py"
+      - "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/**"
+      - "tests/validators/test_validate_graph_runtime_compatibility_matrix.py"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-graph-runtime-readiness-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graph-runtime-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Run focused tests and fixture replay
+        run: |
+          set -euo pipefail
+          python -m unittest discover --start-directory tests/validators --pattern 'test_validate_graph_runtime_compatibility_matrix.py' --verbose
+          python tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py --fixtures
+          python tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py control_plane/graph_runtime_compatibility_matrix.json
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-graph-runtime-readiness-20260808.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Graph runtime readiness"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed matrix shape, canonical rows, exact spec_hash, evidence requirements, and clustered rehearsal binding."
+            echo "- Boundary: PASS does not select or install a runtime, connect to a graph, authorize migration, release, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"
