@@ -148,7 +148,7 @@ def build(manifest_path:Path,request_path:Path,asset_root:Path)->Result:
     assets={}
     roles={"tileset":["metadata","3d-tiles"],"subtree":["data","3d-tiles","subtree"],"content":["data","3d-tiles","content"]}
     for index,entry in enumerate(manifest["files"]):
-        assets[_asset_key(index,entry["role"])]= {
+        assets[_asset_key(index,entry["role"])]={
             "href":entry["path"],"type":entry["media_type"],"title":entry["path"],
             "roles":roles[entry["role"]],"file:checksum":entry["sha256"],"file:size":entry["byte_size"],
             "kfm:path":entry["path"],"kfm:tree_hash":manifest["tree_hash"]
