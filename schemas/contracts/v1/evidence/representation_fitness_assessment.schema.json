@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/representation_fitness_assessment.schema.json",
+  "title": "RepresentationFitnessAssessment",
+  "description": "Fixture-first assessment of whether one representation is fit for one declared use without creating truth, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "subject",
+    "intended_use",
+    "dimensions",
+    "overall_outcome",
+    "reason_codes",
+    "obligations",
+    "evidence_bundle_refs",
+    "policy_decision_refs",
+    "review_state",
+    "evaluated_at",
+    "expires_at",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "RepresentationFitnessAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "representation_kind",
+        "source_role",
+        "crs",
+        "spatial_support",
+        "temporal_support_ref"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "representation_kind": {
+          "enum": [
+            "VECTOR",
+            "RASTER",
+            "TIME_SERIES",
+            "GRAPH",
+            "SCENE",
+            "REPORT"
+          ]
+        },
+        "source_role": {
+          "$ref": "#/$defs/sourceRole"
+        },
+        "crs": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "spatial_support": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "support_kind",
+            "nominal_resolution_m",
+            "source_scale_denominator",
+            "declared_precision_m",
+            "generalized",
+            "geometry_version_ref"
+          ],
+          "properties": {
+            "support_kind": {
+              "enum": [
+                "POINT",
+                "LINE",
+                "POLYGON",
+                "GRID",
+                "STATION",
+                "NETWORK",
+                "NON_SPATIAL"
+              ]
+            },
+            "nominal_resolution_m": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "source_scale_denominator": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "declared_precision_m": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "generalized": {
+              "type": "boolean"
+            },
+            "geometry_version_ref": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ref"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "temporal_support_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "intended_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "use_case_id",
+        "use_class",
+        "consequence_level"
+      ],
+      "properties": {
+        "use_case_id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "use_class": {
+          "enum": [
+            "PUBLIC_NAVIGATION",
+            "EXPLORATORY_ANALYSIS",
+            "POLICY_CONTEXT",
+            "SCIENTIFIC_ANALYSIS",
+            "OPERATIONAL_DECISION",
+            "HISTORICAL_INTERPRETATION",
+            "PUBLIC_COMMUNICATION"
+          ]
+        },
+        "consequence_level": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "positional",
+        "thematic",
+        "temporal",
+        "completeness",
+        "lineage"
+      ],
+      "properties": {
+        "positional": {
+          "$ref": "#/$defs/dimension"
+        },
+        "thematic": {
+          "$ref": "#/$defs/dimension"
+        },
+        "temporal": {
+          "$ref": "#/$defs/dimension"
+        },
+        "completeness": {
+          "$ref": "#/$defs/dimension"
+        },
+        "lineage": {
+          "$ref": "#/$defs/dimension"
+        }
+      }
+    },
+    "overall_outcome": {
+      "enum": [
+        "FIT",
+        "CONDITIONALLY_FIT",
+        "NOT_FIT",
+        "UNKNOWN"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/code"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/code"
+      }
+    },
+    "evidence_bundle_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "policy_decision_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "review_state": {
+      "enum": [
+        "DRAFT",
+        "REVIEWED",
+        "REJECTED"
+      ]
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 320
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,79}$"
+    },
+    "sourceRole": {
+      "enum": [
+        "OBSERVED",
+        "REGULATORY",
+        "MODELED",
+        "AGGREGATE",
+        "ADMINISTRATIVE",
+        "CANDIDATE",
+        "SYNTHETIC"
+      ]
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "evidence_refs",
+        "notes"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "SUPPORTED",
+            "CONDITIONALLY_SUPPORTED",
+            "UNSUPPORTED",
+            "UNKNOWN"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "lifecycle_write",
+        "truth_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "truth_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}
