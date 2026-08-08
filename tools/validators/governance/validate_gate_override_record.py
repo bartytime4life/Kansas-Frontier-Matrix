@@ -6,8 +6,13 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import sys
 from collections.abc import Sequence
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from tools.validators.governance.gate_override_record_core import (
     Finding,
@@ -18,7 +23,6 @@ from tools.validators.governance.gate_override_record_core import (
     validate_document,
 )
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_PATH = REPO_ROOT / "fixtures/contracts/v1/governance/gate_override_record/cases.json"
 SCOPE = "governance.gate_override_record_candidate"
 NON_EFFECTS = (

@@ -19,7 +19,7 @@
     "schemas/contracts/v1/governance/gate_override_record.schema.json": "sha256:fd01cfcf4a880753af3c344ce5b21468f7cd03193956e3258a245888480aedbf",
     "tests/validators/governance/test_validate_gate_override_record.py": "sha256:25df1b1881f3fd26735dbb17ca381ceadd71883da67fb8e35d12858ccebbe5cc",
     "tools/validators/governance/gate_override_record_core.py": "sha256:63606056a393a15ef5f5bd4d22ef553021e523e9057f0135c0af2c9ca1de30f6",
-    "tools/validators/governance/validate_gate_override_record.py": "sha256:cf8d2629545b610852405196832fadf49e8a959af6dc6c2cbde10d47bed2ed2b"
+    "tools/validators/governance/validate_gate_override_record.py": "sha256:9b847ac5dae04c6a74edc8ab83f9ba611ae2005851f75b6a68c0e459556fbad4"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -104,6 +104,11 @@
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Human governance, policy, signing, and semantic review remains pending on the draft pull request."
+    },
+    {
+      "gate": "direct-script-import-bootstrap",
+      "outcome": "PASS",
+      "reason": "Validator inserts the repository root before importing the tools namespace, matching established repository validator patterns and allowing direct CLI replay from the repository root."
     }
   ],
   "policy_decisions": [
@@ -134,5 +139,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only adaptation of Pass 3 card KFM-P3-IDEA-0003. The candidate makes actor, gate, rationale, scope, validity, remediation, rollback, support references, deterministic identity, and fixture attestation inspectable while keeping every bypass, authenticated-review, policy, promotion, release, deployment, publication, and lifecycle-write authority claim false. It does not select production signing, override duration, universally required dual approval, bypassable gates, or operational integration."
+  "notes": "Fixture-only adaptation of Pass 3 card KFM-P3-IDEA-0003. The candidate makes actor, gate, rationale, scope, validity, remediation, rollback, support references, deterministic identity, and fixture attestation inspectable while keeping every bypass, authenticated-review, policy, promotion, release, deployment, publication, and lifecycle-write authority claim false. It does not select production signing, override duration, universally required dual approval, bypassable gates, or operational integration. Hosted run 31276656797 confirmed all eight focused tests with the repository hashing package, then exposed a direct-script namespace import gap; the follow-up adds the established repository-root import bootstrap without changing record semantics."
 }
