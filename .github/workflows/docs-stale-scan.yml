@@ -103,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-docs-stale-scan-ci-repair-20260807.json \
+            data/receipts/generated/genrec-docs-stale-scan-current-binding-20260808.json \
             --repo-root .
 
       - name: Record freshness trust boundary
