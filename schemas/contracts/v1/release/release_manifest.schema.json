@@ -1,32 +1,423 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kfm.local/contracts/v1/release/release_manifest.schema.json",
-  "title": "release_manifest",
-  "type": "object",
-  "description": "KFM v1 contract schema stub for release_manifest. Greenfield placeholder; fields to be defined per the contract document and ADR.",
-  "x-kfm": {
-    "contract_doc": "contracts/release/release_manifest.md",
-    "fixtures_root": "fixtures/release/release_manifest/",
-    "validator": "tools/validators/release/validate_release_manifest.py",
-    "policy": "policy/release/",
-    "status": "PROPOSED"
-  },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "maxLength": 240,
+          "minLength": 3,
+          "pattern": "^[^\\s/]+/[^\\s/]+$",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "DATASET",
+            "EVIDENCE_BUNDLE",
+            "LAYER_MANIFEST",
+            "TILE_ARCHIVE",
+            "CATALOG",
+            "REPORT",
+            "API_PAYLOAD",
+            "PROOF",
+            "OTHER"
+          ]
+        }
+      },
+      "required": [
+        "artifact_ref",
+        "digest",
+        "media_type",
+        "role"
+      ],
+      "type": "object"
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts_verified": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "references_resolved": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "review_authenticated": {
+          "const": false
+        },
+        "signatures_verified": {
+          "const": false
+        }
+      },
+      "required": [
+        "references_resolved",
+        "artifacts_verified",
+        "policy_evaluated",
+        "review_authenticated",
+        "signatures_verified",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "type": "object"
     },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
+    "legacy_profile": {
+      "additionalProperties": true,
+      "description": "Backward-compatible permissive profile retained from the greenfield scaffold.",
+      "not": {
+        "required": [
+          "object_type"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "spec_hash": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "lineage": {
+      "additionalProperties": false,
+      "properties": {
+        "correction_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "previous_release_manifest_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "withdrawal_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      },
+      "required": [
+        "previous_release_manifest_ref",
+        "correction_refs",
+        "withdrawal_ref",
+        "rollback_ref"
+      ],
+      "type": "object"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "optional_ref_array": {
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "maxItems": 256,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "validator_implementation_ref": {
+          "const": "tools/validators/release/validate_release_manifest.py"
+        }
+      },
+      "required": [
+        "run_receipt_ref",
+        "validator_implementation_ref"
+      ],
+      "type": "object"
+    },
+    "ref": {
+      "maxLength": 640,
+      "minLength": 3,
+      "pattern": "^\\S+$",
+      "type": "string"
+    },
+    "ref_array": {
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "release_scope": {
+      "additionalProperties": false,
+      "properties": {
+        "audience": {
+          "enum": [
+            "PUBLIC",
+            "RESTRICTED",
+            "INTERNAL"
+          ]
+        },
+        "generalized": {
+          "type": "boolean"
+        },
+        "rights_status": {
+          "enum": [
+            "APPROVED",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "sensitivity_status": {
+          "enum": [
+            "PUBLIC_SAFE",
+            "TRANSFORM_REQUIRED",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "transform_receipt_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        }
+      },
+      "required": [
+        "audience",
+        "rights_status",
+        "sensitivity_status",
+        "generalized",
+        "transform_receipt_refs"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "strict_profile": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_count": {
+          "maximum": 10000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/artifact"
+          },
+          "maxItems": 10000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "attestation_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "catalog_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "evidence_bundle_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "governance": {
+          "$ref": "#/$defs/governance"
+        },
+        "id": {
+          "pattern": "^release-manifest:[0-9a-f]{24}$",
+          "type": "string"
+        },
+        "lifecycle_state": {
+          "const": "CANDIDATE"
+        },
+        "lineage": {
+          "$ref": "#/$defs/lineage"
+        },
+        "object_type": {
+          "const": "ReleaseManifest"
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "profile_status": {
+          "const": "PROPOSED_INACTIVE"
+        },
+        "promotion_decision_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "proof_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "receipt_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "release_id": {
+          "pattern": "^release:[a-z0-9][a-z0-9_.:-]{3,240}$",
+          "type": "string"
+        },
+        "release_scope": {
+          "$ref": "#/$defs/release_scope"
+        },
+        "release_state": {
+          "enum": [
+            "CANDIDATE",
+            "HELD",
+            "DEGRADED"
+          ]
+        },
+        "release_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+          "type": "string"
+        },
+        "review_record_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "source_descriptor_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "temporal": {
+          "$ref": "#/$defs/temporal"
+        },
+        "title": {
+          "maxLength": 240,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_type",
+        "schema_version",
+        "profile_status",
+        "execution_mode",
+        "id",
+        "spec_hash",
+        "release_id",
+        "release_version",
+        "title",
+        "lifecycle_state",
+        "release_state",
+        "artifact_count",
+        "artifacts",
+        "source_descriptor_refs",
+        "evidence_bundle_refs",
+        "policy_decision_refs",
+        "promotion_decision_refs",
+        "review_record_refs",
+        "catalog_refs",
+        "proof_refs",
+        "receipt_refs",
+        "attestation_refs",
+        "release_scope",
+        "temporal",
+        "lineage",
+        "provenance",
+        "governance"
+      ],
+      "type": "object"
+    },
+    "temporal": {
+      "additionalProperties": false,
+      "properties": {
+        "assembled_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "effective_from": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "effective_to": {
+          "$ref": "#/$defs/nullable_datetime"
+        }
+      },
+      "required": [
+        "assembled_at",
+        "effective_from",
+        "effective_to"
+      ],
+      "type": "object"
     }
   },
-  "required": [
-    "id"
+  "$id": "https://schemas.kfm.local/contracts/v1/release/release_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Dual-profile ReleaseManifest schema. The legacy id-required profile remains permissive; the closed fixture-only profile validates deterministic inactive candidates and creates no evidence, policy, review, promotion, release, publication, signing, or public-use authority.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/legacy_profile"
+    },
+    {
+      "$ref": "#/$defs/strict_profile"
+    }
   ],
-  "additionalProperties": true
+  "title": "ReleaseManifest",
+  "x-kfm": {
+    "authority": "deterministic_candidate_validation_only",
+    "contract_doc": "contracts/release/release_manifest.md",
+    "execution_mode": "FIXTURE_ONLY",
+    "fixtures_root": "fixtures/release/release_manifest/",
+    "hash_profile": "RFC8785-JCS+SHA-256",
+    "legacy_profile": "LEGACY_MINIMAL",
+    "non_effects": [
+      "does_not_resolve_or_authenticate_references",
+      "does_not_verify_artifact_bytes_or_signatures",
+      "does_not_evaluate_policy_or_authenticate_review",
+      "does_not_authorize_promotion_release_publication_or_public_use",
+      "does_not_write_release_or_lifecycle_state"
+    ],
+    "policy": "policy/release/",
+    "status": "PROPOSED_INACTIVE",
+    "strict_profile": "RELEASE_MANIFEST_FIXTURE_V1",
+    "tests": "tests/validators/test_validate_release_manifest.py",
+    "validator": "tools/validators/release/validate_release_manifest.py"
+  }
 }

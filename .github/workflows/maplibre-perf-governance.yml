@@ -52,6 +52,7 @@ name: MapLibre Perf Governance
   pull_request:
     paths:
       - ".github/workflows/maplibre-perf-governance.yml"
+      - ".github/workflows/briefing-implementation-campaign.yml"
       - "Makefile"
       - "package.json"
       - "package-lock.json"
@@ -65,8 +66,10 @@ name: MapLibre Perf Governance
       - "configs/maplibre/**"
       - "data/proofs/maplibre-perf/**"
       - "docs/quality/maplibre-perf-governance.md"
+      - "docs/architecture/briefing-implementation-campaign-20260806.md"
       - "fixtures/heavy/**"
       - "fixtures/slim/**"
+      - "fixtures/maplibre/v6_readiness/**"
       - "packages/maplibre/**"
       - "packages/maplibre-runtime/**"
       - "release/maplibre-perf/**"
@@ -80,6 +83,7 @@ name: MapLibre Perf Governance
     branches: [main]
     paths:
       - ".github/workflows/maplibre-perf-governance.yml"
+      - ".github/workflows/briefing-implementation-campaign.yml"
       - "Makefile"
       - "package.json"
       - "package-lock.json"
@@ -93,8 +97,10 @@ name: MapLibre Perf Governance
       - "configs/maplibre/**"
       - "data/proofs/maplibre-perf/**"
       - "docs/quality/maplibre-perf-governance.md"
+      - "docs/architecture/briefing-implementation-campaign-20260806.md"
       - "fixtures/heavy/**"
       - "fixtures/slim/**"
+      - "fixtures/maplibre/v6_readiness/**"
       - "packages/maplibre/**"
       - "packages/maplibre-runtime/**"
       - "release/maplibre-perf/**"
@@ -204,13 +210,16 @@ jobs:
 
           required_paths=(
             "Makefile"
+            ".github/workflows/briefing-implementation-campaign.yml"
             "apps/explorer-web"
             "configs/maplibre/README.md"
             "configs/maplibre/perf-envelope.v1.json"
             "docs/doctrine/directory-rules.md"
+            "docs/architecture/briefing-implementation-campaign-20260806.md"
             "docs/quality/maplibre-perf-governance.md"
             "fixtures/heavy/README.md"
             "fixtures/slim/README.md"
+            "fixtures/maplibre/v6_readiness/cases.json"
             "package.json"
             "pnpm-lock.yaml"
             "pnpm-workspace.yaml"
@@ -228,8 +237,10 @@ jobs:
             "tests/maplibre/README.md"
             "tests/maplibre/perf_fixture_builder.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
+            "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
             "tools/validators/maplibre/validate_perf_governance.py"
+            "tools/validators/maplibre/validate_v6_readiness.py"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -437,7 +448,7 @@ jobs:
               "verify_perf_thresholds.py",
               "verify_render_diff_coverage.py",
           }
-          separately_governed_validators = (
+          separately_governed_validators = {"validate_v6_readiness.py"} | (
               {"validate_source_metadata.py"}
               if source_metadata_root.exists()
               else set()
@@ -452,7 +463,7 @@ jobs:
           if actual_validators != expected_validators:
               raise SystemExit(
                   "MapLibre validator inventory changed outside the accepted perf "
-                  "wrappers/placeholders and separately governed source-metadata lane. "
+                  "wrappers/placeholders and separately governed source-metadata/v6-readiness lanes. "
                   "Review the aggregate command, inputs, fixtures, and exit outcomes before "
                   "changing CI."
               )
@@ -564,6 +575,10 @@ jobs:
                   f"Classified {len(source_metadata_payloads)} source-metadata JSON payloads "
                   "under the dedicated no-network validator lane."
               )
+          print(
+              "Classified the fixture-only MapLibre v6 readiness validator under "
+              "the briefing implementation campaign."
+          )
           print("No unclassified MapLibre performance fixture payloads exist.")
           print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
           print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
@@ -581,7 +596,7 @@ jobs:
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
-            echo "- Fixture boundary: source-metadata JSON fixtures are governed by their dedicated no-network workflow and are not runtime/performance baselines."
+            echo "- Fixture boundary: source-metadata JSON fixtures and the v6-readiness fixture pack remain governed by their dedicated no-network workflow/campaign and are not runtime/performance baselines."
             echo "- Blockers: dependency-free MapLibre package; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-release-release-manifest
 title: contracts/release/release_manifest.md — ReleaseManifest Contract
 type: contract
-version: v0.2
-status: draft; PROPOSED; schema-paired; thin-schema; release-governance-core
+version: v0.3
+status: draft; PROPOSED; schema-paired; dual-profile; fixture-only strict candidate; release-governance-core
 owners: OWNER_TBD — Release steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Rights steward · Sensitivity steward · Review steward · Rollback steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-08
 policy_label: public; contracts; release; release-manifest; content-addressed; signed-release; evidence-aware; rights-aware; sensitivity-aware; rollback-aware; correction-aware; no-artifact-store
 tags: [kfm, contracts, release, release-manifest, publication, published, content-addressed, signed, hashable, evidence-ref, rollback-target, correction-lineage, rights, sensitivity, attestations, promotion, fail-closed]
 related:
@@ -25,18 +25,21 @@ related:
   - ../../release/
   - ../../fixtures/release/release_manifest/
   - ../../tools/validators/release/validate_release_manifest.py
+  - ../../tests/validators/test_validate_release_manifest.py
+  - ../../docs/intake/exploratory/pass7-release-manifest-profile.md
   - ../../docs/architecture/release-discipline.md
   - ../../docs/standards/RELEASE_MANIFEST.md
   - ../../docs/architecture/contract-schema-policy-split.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../data/proofs/
   - ../../data/receipts/
 notes:
-  - "Expanded from existing `contracts/release/release_manifest.md`."
-  - "Paired schema verified at `schemas/contracts/v1/release/release_manifest.schema.json`; schema status is PROPOSED."
-  - "The current schema is a greenfield placeholder: only `id` is required and `additionalProperties` is true."
-  - "This contract states target release-manifest semantics, but fields beyond `id`, optional `spec_hash`, and optional `version` remain PROPOSED until the schema, fixtures, validators, policy, and release process are hardened."
+  - "Expanded from existing `contracts/release/release_manifest.md`; v0.3 preserves the v0.2 semantic baseline."
+  - "Paired schema verified at `schemas/contracts/v1/release/release_manifest.schema.json`; schema status remains PROPOSED."
+  - "The schema now preserves the permissive legacy `id`-required branch and adds a closed `PROPOSED_INACTIVE` / `FIXTURE_ONLY` strict candidate branch."
+  - "The strict branch is machine-checkable but not production release authority; ref resolution, real byte/signature verification, policy execution, authenticated review, release persistence, publication, and public use remain outside this validator."
   - "ReleaseManifest is semantic/object meaning. It is not the release artifact store, not proof closure by itself, not policy approval, not a promotion decision, not a public API/UI/map surface, and not AI truth."
-  - "Rollback target for this expansion is previous blob SHA `58327f2ad480d150b30952e8b7725fe40ebd4e19`."
+  - "Rollback target for the v0.3 hardening is prior blob SHA `9ca1c9d4a5b247196aa84a31a158fe734c8a6720`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -49,7 +52,7 @@ notes:
   <img alt="Status: proposed" src="https://img.shields.io/badge/status-PROPOSED-yellow">
   <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts-blue">
   <img alt="Object: ReleaseManifest" src="https://img.shields.io/badge/object-ReleaseManifest-0a7ea4">
-  <img alt="Schema: thin" src="https://img.shields.io/badge/schema-thin__placeholder-orange">
+  <img alt="Schema: dual profile" src="https://img.shields.io/badge/schema-dual__profile-orange">
   <img alt="Publication: gated" src="https://img.shields.io/badge/publication-gated-critical">
   <img alt="Artifacts: referenced only" src="https://img.shields.io/badge/artifacts-referenced__only-lightgrey">
 </p>
@@ -57,15 +60,15 @@ notes:
 **Status:** draft / PROPOSED  
 **Path:** `contracts/release/release_manifest.md`  
 **Paired schema:** `schemas/contracts/v1/release/release_manifest.schema.json`  
-**Schema maturity:** greenfield placeholder / thin / permissive  
-**Validator path named by schema:** `tools/validators/release/validate_release_manifest.py` — NEEDS VERIFICATION for implementation/wiring  
+**Schema maturity:** dual-profile — legacy permissive compatibility plus closed fixture-only strict candidate  
+**Validator:** `tools/validators/release/validate_release_manifest.py` — CONFIRMED fixture-only implementation and registry wiring  
 **Policy authority:** `policy/release/`, not this contract  
 **Release artifact/process authority:** `release/`, not this contract  
-**Truth posture:** CONFIRMED schema pairing and thin field surface · CONFIRMED release doctrine says ReleaseManifest is emitted at the PUBLISHED gate and consumers bind to it, not floating latest pointers · PROPOSED detailed fields and invariants until schema/fixtures/validator/policy/release integration are verified
+**Truth posture:** CONFIRMED schema pairing, legacy compatibility, strict fixture validation, deterministic identity, and finite synthetic outcomes · PROPOSED production release shape and integration until refs, bytes, signatures, policy, review, release persistence, correction propagation, rollback, and public consumers are verified
 
 ## Quick jumps
 
-[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Target semantic field families](#target-semantic-field-families) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
+[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Fixture-only strict profile](#fixture-only-strict-profile-v03) · [Target semantic field families](#target-semantic-field-families) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
 
 ---
 
@@ -115,22 +118,62 @@ A `ReleaseManifest` is not sovereign truth. It is an envelope that points to sou
 
 ## Schema-paired field surface
 
-The paired schema is currently intentionally thin.
+The paired schema now exposes two explicitly different branches.
 
-| Field | Required | Schema-confirmed shape | Semantic role |
-|---|---:|---|---|
-| `id` | yes | string | Canonical release manifest identifier. |
-| `spec_hash` | no | string | Deterministic content/spec hash, if present. |
-| `version` | no | string | Release/object version, if present. |
-
-Schema-confirmed posture:
-
-- `id` is the only required field.
-- `spec_hash` and `version` are optional.
-- `additionalProperties` is currently `true`.
+| Profile | Required shape | Compatibility / authority posture |
+|---|---|---|
+| Legacy minimal | `id` is required; optional `spec_hash` and `version`; additional properties remain allowed. | Preserves prior scaffold compatibility. It is not proof of release completeness. |
+| `RELEASE_MANIFEST_FIXTURE_V1` | Closed strict candidate with deterministic identity, artifacts, source/evidence/decision refs, release scope, temporal scope, lineage, provenance, and false authority flags. | `PROPOSED_INACTIVE` / `FIXTURE_ONLY`; never production release or publication authority. |
 
 > [!WARNING]
-> The detailed release semantics below are **PROPOSED** until the schema is hardened. Current schema permissiveness means an instance may validate while still being release-incomplete by governance standards.
+> Legacy schema permissiveness still means an id-only instance may validate while remaining release-incomplete. The strict branch closes only local candidate shape and bounded semantics; it does not resolve references or confer stronger authority.
+
+---
+
+## Fixture-only strict profile v0.3
+
+Pass 7 card `KFM-P7-PROG-0003` describes one signed, hashable release object that lists included datasets, EvidenceBundles, tile archives, and LayerManifests, and directs consumers to a fixed manifest instead of a floating `latest` pointer. v0.3 implements the smallest dependency-closed precursor: a deterministic, no-network candidate profile.
+
+### Strict candidate meaning
+
+| Field family | Fixture-only rule |
+|---|---|
+| Identity | `id` and `spec_hash` are derived from RFC 8785 JCS plus SHA-256 with only stored `id` and `spec_hash` omitted. |
+| Contents | `artifacts[]` carries opaque refs, exact SHA-256 digests, media types, and bounded roles; payload bytes are never embedded. |
+| Authority refs | SourceDescriptor, EvidenceBundle, policy, promotion, review, catalog, proof, receipt, and attestation refs remain separate. |
+| Release scope | Intended audience, rights, sensitivity, generalization, and transform receipts are declared without authorizing exposure. |
+| Time and lineage | Assembly/effective times, predecessor, correction, withdrawal, and rollback refs stay explicit. |
+| Governance | Every authority-bearing flag is fixed to `false`. |
+
+### Strict semantic invariants
+
+1. `artifact_count` equals the artifact array length.
+2. Artifacts and reference arrays are canonical, sorted, and duplicate-free.
+3. Floating `latest` references and cross-role reference collapse fail closed.
+4. EvidenceBundle refs must have matching `EVIDENCE_BUNDLE` artifact entries.
+5. Public-intended candidates require approved rights plus evidence, policy, promotion, and review refs.
+6. `TRANSFORM_REQUIRED` requires generalized output and transform-receipt support.
+7. Effective time cannot run backward; corrections require a predecessor.
+8. Diagnostics emit stable codes and JSON-pointer paths without echoing untrusted values.
+9. PASS keeps all governance authority flags false.
+
+### Finite outcome and non-effects
+
+The validator emits `PASS`, `FAIL`, or `ERROR`. A PASS proves only selected local candidate bytes and declared relationships. It does **not** resolve refs, verify real artifact bytes or signatures, execute policy, authenticate review, approve promotion, persist release state, publish, update aliases or caches, activate a public route, or authorize public use.
+
+### Responsibility split
+
+| Responsibility | Home |
+|---|---|
+| Semantic meaning | `contracts/release/release_manifest.md` |
+| Machine shape | `schemas/contracts/v1/release/release_manifest.schema.json` |
+| Synthetic matrix | `fixtures/release/release_manifest/` |
+| Executable validation | `tools/validators/release/validate_release_manifest.py` |
+| Behavior proof | `tests/validators/test_validate_release_manifest.py` |
+| Read-only CI | `.github/workflows/release-manifest.yml` |
+| Persisted release decisions and records | `release/`; untouched by this candidate profile |
+
+ADR-0029 adopts Directory Governance Standard v2. This packet uses established responsibility roots and creates no parallel release, schema, policy, proof, receipt, or publication home.
 
 ---
 
@@ -176,30 +219,33 @@ PROPOSED convention:
 release:<domain-or-surface>:<yyyy-mm-dd>:<sequence-or-hash>
 ```
 
+The fixture-only strict branch uses a content-derived `release-manifest:<24 hex>` candidate identifier. That candidate convention is not yet the production release identifier decision.
+
 ### `spec_hash`
 
 Deterministic hash claiming spec or content lineage.
 
-Current schema makes it optional; production-grade releases should include it or a stronger digest set. The hash should be computed from canonicalized release content or accepted manifest canonicalization rules.
+The legacy branch keeps it optional. The strict fixture branch requires RFC 8785 JCS plus SHA-256 over the complete candidate with only stored `id` and `spec_hash` omitted. Production-grade signing and manifest-digest policy remain separately governed.
 
 ### `version`
 
 Release/object version string.
 
-Current schema makes it optional. Mature release usage should include version or equivalent release lineage marker to support comparison, rollback, supersession, cache invalidation, and audit.
+The legacy branch keeps it optional. The strict branch uses `release_version`; mature release usage still needs an accepted versioning and compatibility policy for comparison, rollback, supersession, cache invalidation, and audit.
 
 ---
 
 ## Invariants
 
-CONFIRMED by paired schema:
+CONFIRMED by paired schema and fixture validator:
 
-- `id` is required.
-- `spec_hash` is optional and string-shaped if present.
-- `version` is optional and string-shaped if present.
-- Additional properties are currently allowed.
+- The legacy branch still requires only `id` and permits additional properties.
+- The strict branch is selected by `object_type: ReleaseManifest`, is closed, and fixes `profile_status`, `execution_mode`, and `lifecycle_state` to inactive candidate values.
+- Strict candidates require deterministic identity, release/artifact/ref/scope/time/lineage/provenance context, and false governance flags.
+- Unknown fields fail the strict branch.
+- Four valid and seventeen invalid synthetic cases have exact reviewed polarity.
 
-PROPOSED semantic invariants:
+Production semantic invariants remain:
 
 - A release manifest must not be a floating `latest` pointer.
 - A production release manifest should include deterministic digest/spec lineage.
@@ -209,7 +255,7 @@ PROPOSED semantic invariants:
 - Rights, sensitivity, review, correction, and rollback posture must be explicit or fail closed.
 - Release manifests do not store release artifacts, proofs, receipts, raw data, work data, quarantine data, UI state, or AI output.
 - A new release, correction, withdrawal, or rollback should supersede prior manifests without silently mutating them.
-- Public clients should bind to release manifests and governed APIs, not raw/candidate/internal stores.
+- Public clients should bind to released manifests and governed APIs, not raw/candidate/internal stores.
 
 ---
 
@@ -233,6 +279,8 @@ Expected use:
 | Rollback | ReleaseManifest references prior release/rollback card and invalidation path. |
 | Withdrawal | Manifest lineage records withdrawal posture and successor/null release state. |
 
+The v0.3 strict fixture profile stays at `CANDIDATE` and cannot perform the transition to `PUBLISHED`.
+
 ---
 
 ## Boundaries
@@ -252,49 +300,48 @@ Expected use:
 
 ## Validation expectations
 
-NEEDS VERIFICATION in implementation:
+CONFIRMED for the inactive fixture slice:
 
-- harden schema beyond current `id`-only required surface;
-- decide required fields for production release manifests;
-- validator existence and wiring for `tools/validators/release/validate_release_manifest.py`;
-- fixture coverage under `fixtures/release/release_manifest/`;
-- release policy behavior under `policy/release/`;
-- release artifact storage conventions under `release/`;
-- proof/receipt binding and signing/attestation strategy;
-- rollback, correction, withdrawal, supersession, and cache invalidation tests;
-- public client tests proving binding to release manifests rather than raw/latest/internal sources.
+- closed strict schema plus preserved legacy branch;
+- deterministic RFC 8785 JCS/SHA-256 identity;
+- exact positive and negative fixture polarity;
+- no-network validator, focused tests, validator-registry entry, and read-only workflow;
+- generated authoring receipt bound to exact changed bytes.
+
+NEEDS VERIFICATION before production use:
+
+- accepted production-required field set and compatibility version;
+- authenticated reference resolution and artifact-byte verification;
+- release policy execution and separation-of-duties enforcement;
+- signing/attestation strategy and verifier identity policy;
+- persisted release record and artifact storage conventions under `release/`;
+- rollback, correction, withdrawal, supersession, and cache invalidation drills;
+- public client tests proving binding to released manifests rather than raw/latest/internal sources.
 
 ---
 
 ## Fixtures
 
-Minimum fixture set PROPOSED:
+The v0.3 grouped fixture matrix contains:
 
-| Fixture | Purpose |
-|---|---|
-| `valid_minimal_schema.json` | Confirms current schema permits `id` only. |
-| `valid_recommended_release.json` | Demonstrates mature manifest with contents, digests, evidence, policy, rights, sensitivity, review, rollback. |
-| `valid_map_release_manifest_link.json` | Demonstrates map/layer release references. |
-| `valid_correction_supersession.json` | Demonstrates correction/supersession lineage. |
-| `valid_rollback_manifest.json` | Demonstrates rollback target and prior release ref. |
-| `invalid_missing_id.json` | Confirms current required field. |
-| `governance_invalid_missing_evidence.json` | Schema may pass; release governance should fail. |
-| `governance_invalid_missing_rollback.json` | Schema may pass; release governance should fail. |
-| `governance_invalid_unknown_rights.json` | Schema may pass; policy should fail closed. |
-| `governance_invalid_floating_latest.json` | Demonstrates no floating latest pointers. |
+| Fixture class | Count | Purpose |
+|---|---:|---|
+| Valid | 4 | Legacy compatibility, internal candidate, public-intended candidate, and correction candidate. |
+| Schema-negative | 2 | Missing required release identity and unknown-field denial. |
+| Semantic-negative | 15 | Identity, canonical order, count, evidence binding, floating refs, role collapse, public rights/policy/promotion/review, transform support, time, and correction lineage. |
 
-Fixtures must use synthetic or safe refs only.
+Fixtures use synthetic refs and repeated placeholder digests only. They represent no real source, reviewer, policy decision, signature, release, URL, or KFM publication.
 
 ---
 
 ## Open questions
 
-- When should the schema move from permissive placeholder to closed, explicit release shape?
-- Should `contents[]`, `digests`, `evidence_refs[]`, `rollback_target`, and `time` become required fields in the next schema version?
-- Should `MapReleaseManifest`, `LayerManifest`, `TileArtifactManifest`, and `StyleManifest` be nested under `ReleaseManifest.contents[]` or remain separate linked objects?
-- Which signing/attestation fields are mandatory for public release?
-- Which release root stores persisted manifest instances?
+- What exact production profile supersedes or graduates the inactive fixture branch?
+- Which signing/attestation fields and verifier identities are mandatory for public release?
+- Should `MapReleaseManifest`, `LayerManifest`, `TileArtifactManifest`, and `StyleManifest` remain separate linked objects or enter a typed production contents registry?
+- Which release root stores persisted manifest instances and how are aliases/caches updated transactionally?
 - Which gate owns final release authority and separation-of-duties enforcement?
+- How do public consumers verify released manifest identity, artifact bytes, correction state, and rollback state without reaching internal stores?
 
 ---
 
@@ -302,6 +349,6 @@ Fixtures must use synthetic or safe refs only.
 
 Rollback is required if this contract is used to store release artifacts, bypass schema/policy/review/evidence gates, treat a manifest as publication approval without gate closure, silently mutate public release state, bypass correction/rollback lineage, or authorize public API/UI/map/AI exposure directly.
 
-Rollback target for this expansion: previous blob SHA `58327f2ad480d150b30952e8b7725fe40ebd4e19`.
+Before merge, close the draft pull request and delete its branch. After an authorized merge, revert the v0.3 contract/schema/validator/fixture/test/workflow/registry/receipt packet or restore this contract to blob `9ca1c9d4a5b247196aa84a31a158fe734c8a6720`. No source activation, data migration, release, deployment, publication, cache, or public artifact requires rollback because the strict profile is inactive and fixture-only.
 
 <p align="right"><a href="#top">Back to top</a></p>

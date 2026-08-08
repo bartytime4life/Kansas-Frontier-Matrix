@@ -1,0 +1,93 @@
+# Validate the fixture-only strict ReleaseManifest profile.
+name: release-manifest
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/release-dry-run.yml"
+      - "contracts/release/release_manifest.md"
+      - "schemas/contracts/v1/release/release_manifest.schema.json"
+      - "fixtures/release/release_manifest/**"
+      - "tools/validators/release/validate_release_manifest.py"
+      - "tests/validators/test_validate_release_manifest.py"
+      - "docs/intake/exploratory/pass7-release-manifest-profile.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass7-release-manifest-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/release-dry-run.yml"
+      - "contracts/release/release_manifest.md"
+      - "schemas/contracts/v1/release/release_manifest.schema.json"
+      - "fixtures/release/release_manifest/**"
+      - "tools/validators/release/validate_release_manifest.py"
+      - "tests/validators/test_validate_release_manifest.py"
+      - "docs/intake/exploratory/pass7-release-manifest-profile.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass7-release-manifest-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-manifest-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-release-manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network validation
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_release_manifest -v
+          python tools/validators/release/validate_release_manifest.py --fixtures
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass7-release-manifest-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### ReleaseManifest fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic local shape and semantic validation for a PROPOSED_INACTIVE / FIXTURE_ONLY ReleaseManifest candidate."
+            echo "- Boundary: PASS does not resolve refs, verify artifact bytes or signatures, authenticate review, authorize promotion/release/publication, mutate lifecycle state, or permit public use."
+          } >> "$GITHUB_STEP_SUMMARY"

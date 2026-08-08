@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-pass7-release-manifest-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-manifest.yml",
+    "contracts/release/release_manifest.md",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md",
+    "fixtures/release/release_manifest/README.md",
+    "fixtures/release/release_manifest/cases.json",
+    "schemas/contracts/v1/release/release_manifest.schema.json",
+    "tests/validators/test_validate_release_manifest.py",
+    "tools/validators/release/validate_release_manifest.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-manifest.yml": "sha256:df7699fda0297f1554030e30902c3143dc36d8a030c2d4e134de7264c548b26a",
+    "contracts/release/release_manifest.md": "sha256:b41f5d0f7e565104e4756660fef29ce024c968f23c2a761ede6e63f424e9005a",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
+    "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
+    "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "sha256:c420281c843e88000eaf2dc1bf62cff1ab1bd2d2628bfac0e07c2705fb3bcfb6",
+    "tests/validators/test_validate_release_manifest.py": "sha256:9516c559a9c0bc7b74632cff12370ecff4f1530bba933ac9af87893cf262b7a3",
+    "tools/validators/release/validate_release_manifest.py": "sha256:7206739f7f831e2682d1b0a4fe574f07f48e70f19bc632ec247c4884a7d4321f",
+    "tools/validators/validator_registry.json": "sha256:7f2429fcc62ec7e6d46076791c563426dc54bb4393aa31b0576dd6e81aa8c133"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:b22897bb5108148ca526afc7a4442306eaa5c9f119681d3f36ede4eb018485a8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0003",
+      "repo:contracts/release/release_manifest.md@753cda68c468e8d01457c38e563c107a437aa608",
+      "repo:schemas/contracts/v1/release/release_manifest.schema.json@753cda68c468e8d01457c38e563c107a437aa608",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@753cda68c468e8d01457c38e563c107a437aa608",
+      "repo:schemas/contracts/v1/data/layer_manifest.schema.json@753cda68c468e8d01457c38e563c107a437aa608"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-manifest.yml": "CONFIRMED",
+    "contracts/release/release_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "PROPOSED",
+    "fixtures/release/release_manifest/README.md": "CONFIRMED",
+    "fixtures/release/release_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_manifest.py": "CONFIRMED",
+    "tools/validators/release/validate_release_manifest.py": "CONFIRMED",
+    "tools/validators/validator_registry.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-to-repository-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main had the ReleaseManifest semantic contract and permissive placeholder schema but no named validator or fixture lane; the packet hardens the existing object family without creating a parallel authority."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "ADR-0029 is accepted; semantics, shape, fixtures, validator, tests, workflow, source map, registry, and receipt remain in their existing responsibility roots."
+    },
+    {
+      "gate": "json-schema-and-yaml-validation",
+      "outcome": "PASS",
+      "reason": "The dual-profile Draft 2020-12 schema passed meta-validation; the fixture matrix and registry parsed as JSON; the dedicated workflow parsed as YAML."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic no-network unit tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix-polarity",
+      "outcome": "PASS",
+      "reason": "The compact fixture matrix contains four valid and seventeen invalid cases with exact finite outcomes and finding-code sets."
+    },
+    {
+      "gate": "deterministic-replay",
+      "outcome": "PASS",
+      "reason": "Two full fixture CLI runs were byte-identical and each emitted twenty-one bounded records."
+    },
+    {
+      "gate": "validator-registry-wiring",
+      "outcome": "PASS",
+      "reason": "The release-manifest entry is unique, uses the existing release validator lane, and appears in release-dry-run and full profile order."
+    },
+    {
+      "gate": "generated-receipt-shape-and-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, truth-label keys, and exact SHA-256 bindings close over the nine authored non-receipt files; the receipt does not bind itself."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass7-release-manifest",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0003"
+    },
+    {
+      "id": "repository:release-manifest-contract-gap",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/release_manifest.md@753cda68c468e8d01457c38e563c107a437aa608"
+    },
+    {
+      "id": "repository:release-manifest-schema-gap",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/release/release_manifest.schema.json@753cda68c468e8d01457c38e563c107a437aa608"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@753cda68c468e8d01457c38e563c107a437aa608"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T22:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of KFM-P7-PROG-0003. The packet preserves the legacy ReleaseManifest schema branch and adds an inactive deterministic candidate profile. It resolves no refs, verifies no real payload or signature, authenticates no review, mutates no lifecycle state, and creates no promotion, release, publication, deployment, cache, or public-use authority."
+}
