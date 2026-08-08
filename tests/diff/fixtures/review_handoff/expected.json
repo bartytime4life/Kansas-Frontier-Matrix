@@ -1,0 +1,60 @@
+{
+  "authority_boundary": "This derived handoff binds review inputs but is not a ReviewRecord, PolicyDecision, approval, promotion, release, deployment, or publication.",
+  "bundle_summary": {
+    "added_fields": [
+      "new_field"
+    ],
+    "changed_fields": [
+      "correction_state",
+      "policy_state"
+    ],
+    "diff_status": "changed",
+    "removed_fields": [],
+    "total_changes": 3
+  },
+  "handoff_state": "HOLD_UNMAPPED_POLICY_IMPACT",
+  "policy_impact": {
+    "affected_fields": [
+      "correction_state",
+      "new_field",
+      "policy_state"
+    ],
+    "policy_families": [
+      "correction",
+      "runtime-policy"
+    ],
+    "requires_policy_review": true,
+    "unmapped_changed_fields": [
+      "new_field"
+    ]
+  },
+  "review_handoff": {
+    "allowed_decisions": [
+      "approve",
+      "reject",
+      "request_changes"
+    ],
+    "handoff_id": "fixture-review-handoff-001",
+    "input_digests": {
+      "binding": "sha256:9813bd7fe42d2884e24bc6228597e62791d8a6accf364eb7bb0e8395ffa097b6",
+      "context": "sha256:03a9a4312d2ac3fb452e971582be7b49aa9400fb50e4942a6235b91a900d3245",
+      "diff_report": "sha256:5a141fcf5e50007336ddc2d5b3d0929c6f69ee46212d1610fed4ec2bbcaaf762",
+      "policy_map": "sha256:5023c655cd84f709869d892fc32a0a91a927f3e3256ae6fb6e6a0604e4cfdd01"
+    },
+    "left_artifact_ref": "urn:kfm:artifact:left@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "required_reviewer_roles": [
+      "reviewer"
+    ],
+    "review_record_schema_ref": "schemas/contracts/v1/governance/review_record.schema.json",
+    "review_scope": "runtime-envelope-fixture",
+    "right_artifact_ref": "urn:kfm:artifact:right@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_card_refs": [
+      "KFM-P6-FEAT-0002",
+      "KFM-P6-FEAT-0003",
+      "KFM-P6-PROG-0013"
+    ],
+    "subject_ref": "urn:kfm:diff-review-handoff:sha256:9813bd7fe42d2884e24bc6228597e62791d8a6accf364eb7bb0e8395ffa097b6"
+  },
+  "schema_version": "1.0.0",
+  "tool": "kfm-diff-review-handoff"
+}

@@ -1,0 +1,14 @@
+{
+  "handoff_id": "fixture-review-handoff-001",
+  "left_artifact_ref": "urn:kfm:artifact:left@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "required_reviewer_roles": [
+    "reviewer"
+  ],
+  "review_scope": "runtime-envelope-fixture",
+  "right_artifact_ref": "urn:kfm:artifact:right@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "source_card_refs": [
+    "KFM-P6-FEAT-0002",
+    "KFM-P6-FEAT-0003",
+    "KFM-P6-PROG-0013"
+  ]
+}

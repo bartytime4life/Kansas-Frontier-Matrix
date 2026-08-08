@@ -1,0 +1,17 @@
+{
+  "blocking": false,
+  "left": "fixture:left.json",
+  "right": "fixture:right.json",
+  "status": "changed",
+  "summary": {
+    "added": [
+      "new_field"
+    ],
+    "changed": [
+      "correction_state",
+      "policy_state"
+    ],
+    "removed": []
+  },
+  "tool": "stable-diff"
+}

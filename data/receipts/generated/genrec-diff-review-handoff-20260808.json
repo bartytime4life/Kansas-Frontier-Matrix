@@ -1,0 +1,142 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/diff-review-handoff.yml": "sha256:d67086f1fc27ff13cb90796d39732c5467c4c0d36ad2352f64431beca97006a6",
+    "tests/diff/fixtures/review_handoff/context.json": "sha256:03a9a4312d2ac3fb452e971582be7b49aa9400fb50e4942a6235b91a900d3245",
+    "tests/diff/fixtures/review_handoff/diff_report.json": "sha256:5a141fcf5e50007336ddc2d5b3d0929c6f69ee46212d1610fed4ec2bbcaaf762",
+    "tests/diff/fixtures/review_handoff/expected.json": "sha256:4e0261bbd72bef28ff07497a35aacb554a39ea994f518dd82a9b814651365f36",
+    "tests/diff/fixtures/review_handoff/policy_map.json": "sha256:5023c655cd84f709869d892fc32a0a91a927f3e3256ae6fb6e6a0604e4cfdd01",
+    "tests/diff/test_render_review_handoff.py": "sha256:cc139281cb756d960eb59a4da216fb4cf5d5a009dedadcea4d1bba72a044bfa8",
+    "tools/diff/REVIEW_HANDOFF.md": "sha256:86344baa8687b895e41b4b1c91357157f42bc7fadb0d6cb4a1f79f31f4fe739b",
+    "tools/diff/render_review_handoff.py": "sha256:a8807de80417c5ee12b78a3cfaa41da18a4174e19e7bf8d613750595d348a615"
+  },
+  "artifact_paths": [
+    ".github/workflows/diff-review-handoff.yml",
+    "tests/diff/fixtures/review_handoff/context.json",
+    "tests/diff/fixtures/review_handoff/diff_report.json",
+    "tests/diff/fixtures/review_handoff/expected.json",
+    "tests/diff/fixtures/review_handoff/policy_map.json",
+    "tests/diff/test_render_review_handoff.py",
+    "tools/diff/REVIEW_HANDOFF.md",
+    "tools/diff/render_review_handoff.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0002",
+      "id": "attachment:pass6-diff-renderers",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0003",
+      "id": "attachment:pass6-open-review",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/diff/stable_diff.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:stable-diff",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/governance/review_record.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:review-record-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0002",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0003",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0011",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0012",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0013",
+      "repo:tools/diff/stable_diff.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:schemas/contracts/v1/governance/review_record.schema.json@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements the Pass 6 diff-review family as one non-authoritative derived-QA renderer. It binds exact inputs for later human ReviewRecord creation and intentionally emits no decision or approval.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:cedb206580f246ef00ebaed3b2008790de70ce7a43f4c64461038644fbd9670b",
+  "receipt_id": "genrec-diff-review-handoff-20260808",
+  "truth_labels": {
+    ".github/workflows/diff-review-handoff.yml": "CONFIRMED",
+    "tests/diff/fixtures/review_handoff/context.json": "CONFIRMED",
+    "tests/diff/fixtures/review_handoff/diff_report.json": "CONFIRMED",
+    "tests/diff/fixtures/review_handoff/expected.json": "CONFIRMED",
+    "tests/diff/fixtures/review_handoff/policy_map.json": "CONFIRMED",
+    "tests/diff/test_render_review_handoff.py": "CONFIRMED",
+    "tools/diff/REVIEW_HANDOFF.md": "PROPOSED",
+    "tools/diff/render_review_handoff.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "The deterministic review-handoff renderer compiled successfully."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Six no-network handoff tests passed, including golden bytes, finite exit semantics, duplicate-key denial, symlink denial, Markdown projection, and subject binding."
+    },
+    {
+      "gate": "golden-render-replay",
+      "outcome": "PASS",
+      "reason": "The fixture render reproduced the committed expected JSON byte-for-byte."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The path-scoped read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "hosted-stable-diff-compatibility",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed exact-head repository and existing stable-diff test suite."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "SKIPPED",
+      "reason": "Requires committed exact-head repository paths."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

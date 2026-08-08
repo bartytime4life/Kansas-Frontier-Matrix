@@ -1,0 +1,97 @@
+name: diff-review-handoff
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/diff-review-handoff.yml"
+      - "tools/diff/render_review_handoff.py"
+      - "tools/diff/REVIEW_HANDOFF.md"
+      - "tests/diff/test_render_review_handoff.py"
+      - "tests/diff/fixtures/review_handoff/**"
+      - "data/receipts/generated/genrec-diff-review-handoff-20260808.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/diff-review-handoff.yml"
+      - "tools/diff/render_review_handoff.py"
+      - "tools/diff/REVIEW_HANDOFF.md"
+      - "tests/diff/test_render_review_handoff.py"
+      - "tests/diff/fixtures/review_handoff/**"
+      - "data/receipts/generated/genrec-diff-review-handoff-20260808.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diff-review-handoff-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run stable-diff and handoff proofs
+        run: |
+          set -euo pipefail
+          pytest -q \
+            tests/diff/test_stable_diff.py \
+            tests/diff/test_render_review_handoff.py
+
+      - name: Reproduce golden handoff
+        run: |
+          set -euo pipefail
+          python tools/diff/render_review_handoff.py \
+            --diff-report tests/diff/fixtures/review_handoff/diff_report.json \
+            --context tests/diff/fixtures/review_handoff/context.json \
+            --policy-map tests/diff/fixtures/review_handoff/policy_map.json \
+            --format json \
+            --output "$RUNNER_TEMP/review-handoff.json"
+          cmp \
+            "$RUNNER_TEMP/review-handoff.json" \
+            tests/diff/fixtures/review_handoff/expected.json
+
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-diff-review-handoff-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Diff review handoff"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic bundle summary, policy-impact summary, exact input binding, golden JSON/Markdown rendering, and fail-closed input handling."
+            echo "- Boundary: PASS does not create a ReviewRecord, authenticate a reviewer, decide policy, approve, promote, release, deploy, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

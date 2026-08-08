@@ -1,0 +1,10 @@
+{
+  "field_policy_map": {
+    "correction_state": [
+      "correction"
+    ],
+    "policy_state": [
+      "runtime-policy"
+    ]
+  }
+}
