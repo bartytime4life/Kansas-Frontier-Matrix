@@ -2,15 +2,18 @@
 doc_id: kfm://doc/configs-readme
 title: configs/ — Canonical Commit-Safe Configuration Root
 type: README
-version: v0.4
-status: draft; repository-grounded; canonical-config-root; mixed-maturity; no-secret-store; bounded-consumer-binding; non-authoritative
+subtype: canonical-root-landing-page
+version: v0.5
+prior_version: v0.4
+status: repository-grounded; canonical-root; active; mixed-maturity; no-secret-store; bounded-consumer-binding; non-authoritative
 owner: "NEEDS VERIFICATION — CODEOWNERS routes /configs/ to @bartytime4life; no accepted configuration steward, security steward, required-review rule, or independent approval control was verified"
 created: 2026-06-16
-updated: 2026-07-23
-supersedes: v0.3 documentation at the same path; no configuration payload, consumer, schema, contract, policy, test, workflow, deployment binding, runtime behavior, release object, or public behavior is superseded
+updated: 2026-08-08
+supersedes: v0.4 documentation at the same path; no configuration payload, consumer, schema, contract, policy, test, workflow, deployment binding, runtime behavior, release object, or public behavior is superseded
 policy_label: repository-facing; configuration; non-secret; commit-safe; consumer-bound; fail-closed; no-live-binding; non-publisher
 current_path: configs/README.md
 owning_root: configs/
+root_class: canonical
 responsibility: own safe, reviewable, non-secret configuration defaults, templates, examples, local-override guidance, and configuration-facing documentation without becoming semantic, schema, policy, source, evidence, lifecycle, release, runtime, deployment, or publication authority
 truth_posture: cite-or-abstain; a committed configuration file proves only that bytes exist at a revision unless a named consumer, loader, precedence rule, schema, tests, workflow evidence, and deployment or runtime evidence establish more
 evidence_snapshot:
@@ -18,10 +21,16 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: f4f48a7edbc4080267d50943223ab56d4f1ef154
-  prior_blob: 129c20163580bef696cf90fec79e063d9c9a5f08
-  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  directory_rules_architecture_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
+  base_commit: c46694ebc4a43030592a785b44e85977b33f1de2
+  root_tree: 6a86499d3428b3e909d334ff3b277e14962c53c3
+  configs_tree: 1474b2ba6f770f13d7184f56866944dae2f90789
+  prior_blob: 5c857beca50ebe103b2dcfc7d0212c64f3145d36
+  directory_rules_doctrine_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  directory_rules_legacy_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  gitignore_blob: 50e0e0e2485e6dbd6b7e1c2767350b459335b22b
   configs_domains_readme_blob: 0c4a7e7090dd9a8aabb01efc01ef073484bf0e08
   configs_maplibre_readme_blob: a216d1b1f2203f781846512ea2cca7ac163adc4b
   configs_templates_readme_blob: b1ab4ef69a6f5e74e7988ac8b3acb1ebb14cfcae
@@ -30,23 +39,23 @@ evidence_snapshot:
   configs_examples_readme_blob: c040064e4aea09e4e87658faf37f57b4e13a96f8
   configs_test_readme_blob: 06c635480879e3c449fbd5f8c5b205c87f7bf9db
   maplibre_perf_envelope_blob: 2833f99b5316df91e71c0f8913bb06d70917abcf
-  maplibre_workflow_blob: bfb36a84ba72bec68d964976dc7964cde7f5d603
-  maplibre_schema_blob: 511e7f34ca84390fd5d000326ab33c46c3050fc4
-  gitignore_blob: 50e0e0e2485e6dbd6b7e1c2767350b459335b22b
-  env_example_blob: 50e972a4c5c009ed89097753932fc328039c1aec
-  secrets_standard_blob: 562b654e101ca3c52e32b85f7acdaea9f589ab5c
-  incident_response_blob: ee0b4ceb6d20858297dfd8308afbfb0cc50d2ea6
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  tracked_directories_including_root: 21
+  tracked_blobs: 28
+  tracked_readmes: 21
+  tracked_templates: 5
+  tracked_json_payloads: 1
+  tracked_gitkeeps: 1
 related:
   - ../CONTRIBUTING.md
   - ../.github/CODEOWNERS
   - ../.gitignore
   - ../.env.example
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../docs/architecture/directory-rules.md
   - ../docs/security/SECRETS.md
   - ../docs/security/INCIDENT_RESPONSE.md
+  - ../control_plane/root_registry.yaml
   - ../contracts/README.md
   - ../schemas/README.md
   - ../policy/README.md
@@ -62,22 +71,16 @@ related:
   - ../release/README.md
 notes:
   - "This is a same-path Markdown modernization. It creates no sibling README, configuration payload, secret, schema, contract, policy rule, fixture, validator, test, workflow, deployment binding, receipt, proof, release record, runtime behavior, or publication state."
-  - "Directory Rules §15 controls the first twelve H2 sections in this root README."
-  - "The repository contains two Directory Rules artifacts with unresolved identity/placement tension. This README follows the section contract shared by the live rules and does not resolve that conflict."
-  - "The current configuration inventory is a bounded named-path snapshot assembled from current repository search and direct reads, not a full recursive tree attestation."
-  - "Only the MapLibre performance envelope has bounded executable consumer references. Generic configuration loading, precedence, schema binding, config-wide semantic validation, and dedicated repository secret scanning were not established."
-  - "Legacy anchors from v0.3 are retained through explicit compatibility anchors."
+  - "Adopted Directory Rules v2 §16 controls the first twelve H2 sections in this root README."
+  - "ADR-0029 makes docs/doctrine/directory-rules.md the sole writable human Directory Rules authority. The full legacy architecture copy remains a read-only compatibility dependency pending its separate tombstone migration."
+  - "The current tracked configuration inventory is closed over the exact Git tree at the pinned base: 21 README files, five templates, one JSON payload, and one zero-byte .gitkeep."
+  - "The active Root Registry declares configs/ canonical and ACTIVE with the non_secret_configuration profile. That projection does not prove consumer binding, semantic validation, deployment use, or runtime behavior."
+  - "Legacy anchors from v0.4 and earlier editions are retained through explicit compatibility anchors."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `configs/` — Canonical Commit-Safe Configuration Root
-
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Authority: canonical configuration root](https://img.shields.io/badge/authority-canonical%20configuration%20root-1f6feb?style=flat-square)](#authority-level)
-[![Secrets: forbidden](https://img.shields.io/badge/secrets-forbidden-b42318?style=flat-square)](#secrets-sensitive-values-endpoints-and-local-overrides)
-[![Consumer binding: partial](https://img.shields.io/badge/consumer%20binding-partial-8250df?style=flat-square)](#consumer-binding-precedence-and-overrides)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > **One-line purpose.** `configs/` owns safe, reviewable, non-secret configuration defaults, templates, examples, local-override guidance, and configuration-facing documentation for named consumers—without becoming schema, policy, source, evidence, lifecycle, release, runtime, deployment, or publication authority.
 
@@ -87,7 +90,10 @@ notes:
 > A configuration file is an **input to a named consumer**, not proof of consumer behavior. Presence, successful parsing, a friendly filename, a static badge, or a green unrelated workflow does not establish that the file is loaded, validated semantically, deployed, release-approved, or safe for public use.
 
 > [!CAUTION]
-> `configs/` is **not a secret store**. Real credentials, tokens, passwords, private keys, cookies, signed URLs, confidential endpoints, restricted identifiers, sensitive source details, and deployment-only values are forbidden—even in files labeled `local`, `dev`, `test`, or `example`. A committed real secret is a security incident: fail closed, rotate or revoke, audit exposure, and follow the repository incident-response process.
+> `configs/` is **not a secret store**. Real credentials, tokens, passwords, private keys, cookies, signed URLs, confidential endpoints, restricted identifiers, sensitive source details, and deployment-only values are forbidden—even in files labeled `local`, `dev`, `test`, `template`, or `example`.
+
+> [!NOTE]
+> The active Root Registry classifies `configs/` as a canonical, ACTIVE root with the `non_secret_configuration` validation profile. The register is a machine projection of adopted governance; it does not create configuration semantics, prove that a consumer loads a file, or authorize a configuration value to override policy, review, release, or public-access decisions.
 
 ---
 
@@ -97,23 +103,21 @@ notes:
 
 `configs/` is KFM's canonical responsibility root for **commit-safe configuration material**.
 
-It exists to make configuration inspectable and reviewable while keeping implementation and governance authorities separate. A useful configuration surface helps a maintainer answer:
+It exists to make configuration inspectable and reviewable while preserving the separation among meaning, shape, admissibility, implementation, operation, lifecycle state, and release authority. A useful configuration surface lets a maintainer determine:
 
 - what value is configurable;
-- which named app, package, pipeline, pipeline specification, runtime adapter, test harness, tool, or workflow consumes it;
-- whether the file is a default, template, example, threshold declaration, local override, or compatibility surface;
+- which named app, package, connector, pipeline, pipeline specification, runtime adapter, test harness, tool, or workflow consumes it;
+- whether the file is a default, template, example, threshold declaration, compatibility surface, or local-override guide;
 - which values are safe defaults, obvious mock values, placeholders, or references-by-name;
 - which semantic contract owns field meaning;
 - which schema checks machine shape;
 - which policy or release state constrains use;
-- which environment or operator supplies deployment-only values;
+- which environment supplies deployment-only values;
 - which loader and precedence rules apply;
 - which negative states fail closed;
 - how the configuration is validated, deprecated, corrected, and rolled back.
 
-This root serves configuration maintainers, consumer owners, security reviewers, domain stewards, test and validation owners, developer-experience maintainers, runtime and infrastructure operators, and reviewers checking that configuration does not become hidden authority.
-
-A configuration file may influence behavior. It does not make the behavior true, safe, reviewed, released, or published.
+A configuration file may influence behavior. It does not make the behavior true, safe, reviewed, released, deployed, or published.
 
 [Back to top](#top)
 
@@ -129,32 +133,40 @@ A configuration file may influence behavior. It does not make the behavior true,
 
 | Field | Authority posture |
 |---|---|
-| **Directory class** | Canonical responsibility root |
-| **Primary responsibility** | Commit-safe, non-secret configuration defaults, templates, examples, threshold declarations, local-override guidance, and config-facing documentation |
-| **May own** | Small JSON/YAML/TOML/text defaults, `.template` and `.example` files, references-by-name, named consumer metadata, config migration notes, deprecation guidance, validation instructions |
-| **Must not own** | Secrets, semantic contracts, machine schemas, policy rules, source registry records, evidence, lifecycle data, receipts, proofs, release decisions, runtime adapters, infrastructure definitions, application code, pipeline logic, pipeline specifications, generated artifacts, or public data |
-| **Truth posture** | Cite or abstain; configuration bytes prove only configuration bytes unless current consumer and runtime evidence establish more |
-| **Public-path posture** | Public clients must not treat `configs/` as a data, evidence, policy, release, or runtime interface |
-| **Promotion posture** | A config change is not lifecycle promotion, release, deployment, or publication |
+| Directory class | `canonical` / `ACTIVE` in the Root Registry projection |
+| Primary responsibility | Non-secret configuration profiles, templates, examples, and defaults |
+| Permitted artifact kind | `configuration` |
+| Mutation posture | Versioned, reviewable changes |
+| Exposure posture | Internal configuration surface; repository documentation may be public |
+| May own | Small safe defaults, templates, examples, threshold declarations, profile selectors, local-override guidance, migration notes, validation guidance |
+| Must not own | Secrets, semantic contracts, machine schemas, policy rules, source registry records, evidence, lifecycle data, receipts, proofs, release decisions, runtime adapters, infrastructure definitions, application code, pipeline logic, generated artifacts, or public data |
+| Public-path posture | Public clients must not read `configs/` as a data, evidence, policy, release, or runtime interface |
+| Promotion posture | A config change is not lifecycle promotion, release, deployment, or publication |
+
+Adopted Directory Rules establish four configuration-specific constraints:
+
+1. **No secrets.** Actual secret values never enter the repository.
+2. **No authority override.** Configuration may select behavior already defined by contracts and policy; it cannot override source authority, policy, review, release, or public-access decisions.
+3. **Explicit overlay rules.** Environment overlays require deterministic precedence and ignored local overrides.
+4. **Bounded consumption.** Runtime code should consume configuration through a bounded adapter rather than importing scattered files directly.
 
 ### Responsibility split
 
 | Question | Owning surface | Relationship to `configs/` |
 |---|---|---|
-| What does a field or object mean? | [`contracts/`](../contracts/README.md) | Configuration references the semantic contract; it does not redefine it |
-| What shape is machine-valid? | [`schemas/`](../schemas/README.md) | Schema validates configuration where an accepted schema exists |
-| May a value, source, operation, or exposure proceed? | [`policy/`](../policy/README.md) | Policy decides admissibility; configuration cannot override it |
-| Which values are deployment-bound? | [`infra/`](../infra/README.md) and environment-specific secret/configuration systems | Configuration may use placeholders or references-by-name only |
-| What runtime wiring exists? | [`runtime/`](../runtime/README.md) and named consumers | Runtime owns adapters and service wiring; config provides bounded inputs |
-| What code loads the file? | [`apps/`](../apps/README.md), packages, pipelines, runtime, tools, or tests | The consumer must document the exact load path and precedence |
-| What is a durable pipeline definition? | [`pipeline_specs/`](../pipeline_specs/README.md) | A pipeline spec is not demoted into generic configuration |
-| What is executable pipeline logic? | [`pipelines/`](../pipelines/README.md) | Configuration does not implement processing |
-| What proves behavior? | [`tests/`](../tests/README.md), [`fixtures/`](../fixtures/README.md), and validators | Passing scoped checks supports only their declared assertions |
+| What does a field or object mean? | [`contracts/`](../contracts/README.md) | Configuration references meaning; it does not redefine it |
+| What shape is machine-valid? | [`schemas/`](../schemas/README.md) | Schema validates configuration where an accepted profile exists |
+| May an operation or exposure proceed? | [`policy/`](../policy/README.md) | Policy decides admissibility; configuration cannot override it |
+| Which values are deployment-bound? | [`infra/`](../infra/README.md) and approved external secret/configuration systems | Repository config may use placeholders or references-by-name only |
+| What runtime wiring exists? | [`runtime/`](../runtime/README.md) and named consumers | Runtime owns adapters; config supplies bounded inputs |
+| What code loads the file? | [`apps/`](../apps/README.md), packages, connectors, pipelines, runtime, tools, tests, or workflows | Consumer code must identify the load path and precedence |
+| What is a durable pipeline definition? | [`pipeline_specs/`](../pipeline_specs/README.md) | Pipeline specifications are not generic configuration |
+| What proves behavior? | [`tests/`](../tests/README.md), [`fixtures/`](../fixtures/README.md), and validators | Checks prove only their declared scope |
 | What lifecycle state exists? | [`data/`](../data/README.md) | Configuration never stores canonical lifecycle records |
-| What is released, corrected, or rolled back? | [`release/`](../release/README.md) | A template may illustrate a manifest shape; release instances and decisions remain outside this root |
+| What is released or rolled back? | [`release/`](../release/README.md) | Templates may illustrate shape; release instances and decisions remain outside this root |
 
 > [!WARNING]
-> A file named `release_manifest.template.yaml`, `source_descriptor.template.yaml`, or similar is an illustrative configuration template. Its filename and fields do not create a release, admit a source, close evidence, or establish authority.
+> A file named `release_manifest.template.yaml`, `source_descriptor.template.yaml`, or similar remains a template. Its name and fields do not create a release, admit a source, close evidence, or establish authority.
 
 [Back to top](#top)
 
@@ -164,35 +176,35 @@ A configuration file may influence behavior. It does not make the behavior true,
 
 ### Repository snapshot
 
-| Field | Current value |
+| Field | Current bounded result |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Visibility | Public |
-| Base ref | `main` |
-| Base commit | `f4f48a7edbc4080267d50943223ab56d4f1ef154` |
-| Prior README blob | `129c20163580bef696cf90fec79e063d9c9a5f08` |
-| README status | Draft, repository-grounded, mixed maturity |
+| Base | `main@c46694ebc4a43030592a785b44e85977b33f1de2` |
+| Root tree | `6a86499d3428b3e909d334ff3b277e14962c53c3` |
+| `configs/` tree | `1474b2ba6f770f13d7184f56866944dae2f90789` |
+| Prior README blob | `5c857beca50ebe103b2dcfc7d0212c64f3145d36` |
+| Directory Rules | `docs/doctrine/directory-rules.md` blob `fd49a0b83e55cef52c1124281f093e263526898d`, adopted by ADR-0029 |
+| Root Registry | `control_plane/root_registry.yaml` blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` |
 | CODEOWNERS route | `/configs/` → `@bartytime4life` |
 | Accepted configuration steward | **NEEDS VERIFICATION** |
-| Generic config loader or precedence contract | **UNKNOWN** |
-| Generic config-wide validator | **NOT ESTABLISHED** |
-| Dedicated repository secret-scanning implementation | **NOT ESTABLISHED by bounded search**; platform settings remain **UNKNOWN** |
+| Generic config loader and precedence contract | **UNKNOWN** |
+| Generic config-wide semantic validator | **NOT ESTABLISHED by this review** |
+| Runtime or deployment use | **UNKNOWN unless proven by a named consumer** |
 | Release or publication effect | None |
 
-### Material corrections from v0.3
+### Material corrections from v0.4
 
-- The prior root inventory was pinned to an older commit and showed only the Habitat domain sublane. Current named-path inspection confirms README-backed configuration lanes for all thirteen canonical domain slugs.
-- `configs/local/` is not a shared tracked-template lane. Repository ignore rules exclude every child path except `configs/local/README.md`; local overrides are intentionally untracked.
-- `configs/maplibre/perf-envelope.v1.json` has bounded references from named scripts and a path-scoped workflow, but the current schema accepts any object and the workflow records explicit runtime/governance holds. It is not proof of complete semantic validation or production performance.
-- The five root configuration templates remain placeholder-oriented. Their presence is confirmed; named production consumers and semantic validators were not established by bounded search.
-- `make validate` runs aggregate schema validators and schema/contract tests; it does not provide generic `configs/` validation.
-- The repository contains two Directory Rules artifacts with unresolved placement/identity tension. Both carry the same required root-README section contract; this README does not decide which path is canonical.
+- ADR-0029 is now the accepted Directory Rules decision. `docs/doctrine/directory-rules.md` is the sole writable human authority; the full architecture copy is a read-only compatibility dependency pending separate tombstone migration.
+- The Root Registry now exists and classifies `configs/` as canonical and ACTIVE. Its machine projection is evidence of declared governance, not proof of operational configuration use.
+- The recursive tracked inventory is closed over the exact current Git tree rather than a bounded named-path search.
+- The tree contains **28 tracked blobs** across **21 directories including the root**: 21 README files, five templates, one JSON configuration payload, and one zero-byte `.gitkeep`.
+- `configs/maplibre/perf-envelope.v1.json` is the only tracked non-template configuration payload. It declares a public-safe MapLibre performance envelope and threshold values; consumer execution, semantic adequacy, deployment use, and release effect remain separate questions.
+- `configs/local/*` remains ignored except for `configs/local/README.md`. Ignored local files are outside the tracked inventory and are not assumed safe, present, or validated.
+- Child README files remain mixed-maturity documentation. Their tracked presence does not prove payloads, consumers, loaders, schemas, tests, CI enforcement, or deployment bindings.
 
 <a id="7-current-tracked-directory-shape"></a>
 
-### Bounded named-path inventory
-
-The following paths were confirmed through current repository search and direct reads. This is **not** a full recursive tree attestation; differently named, unindexed, ignored, generated, or branch-local files remain outside the claim.
+### Exact tracked tree
 
 ```text
 configs/
@@ -219,7 +231,7 @@ configs/
 ├── examples/
 │   └── README.md
 ├── local/
-│   └── README.md                       # only tracked path; child overrides are ignored
+│   └── README.md
 ├── maplibre/
 │   ├── README.md
 │   └── perf-envelope.v1.json
@@ -234,22 +246,35 @@ configs/
     └── README.md
 ```
 
+### Inventory closure
+
+| Class | Count | Bounded interpretation |
+|---|---:|---|
+| Direct child directories | 7 | `dev`, `domains`, `examples`, `local`, `maplibre`, `templates`, `test` |
+| Domain child directories | 13 | Documentation lanes for registered domain slugs |
+| Directories including root | 21 | Exact tracked Git-tree structure |
+| README files | 21 | Boundary and guidance surfaces; not implementation proof |
+| Templates | 5 | Illustrative placeholder-oriented files; not instances or authority objects |
+| JSON configuration payloads | 1 | MapLibre performance envelope; operational use is consumer-dependent |
+| `.gitkeep` placeholders | 1 | Zero-byte marker under `domains/habitat/` |
+| Other tracked blobs | 0 | No additional tracked payload class exists at the pinned tree |
+
 ### Maturity matrix
 
 | Capability | Status | Safe conclusion |
 |---|---:|---|
-| Root placement | **CONFIRMED** | `configs/` is repository-present and documented as the configuration responsibility root |
-| Root and child README coverage | **CONFIRMED for named paths** | Primary lanes and thirteen domain lanes have boundary documentation |
-| Shared template payloads | **CONFIRMED / scaffold-level** | Five placeholder-oriented templates exist; consumer binding remains limited |
-| MapLibre performance payload | **CONFIRMED / bounded consumer binding** | One JSON threshold file is referenced by named scripts/workflow surfaces |
-| Generic config payloads in `dev`, `test`, or `examples` | **NOT ESTABLISHED** | The inspected lanes are README-only at their bounded snapshots |
-| Tracked local override payloads | **DENIED by repository ignore rule** | Only the local README is tracked; ignored local files remain workstation-local and unknown |
-| Domain executable configuration payloads | **NOT ESTABLISHED** | Domain lanes are README-backed boundaries; payload and consumer maturity remain unverified |
-| Generic loader and precedence | **UNKNOWN** | No repository-wide merge order or environment override contract was verified |
-| Generic schema alignment | **NEEDS VERIFICATION** | Shape authority and per-file schema bindings are incomplete or absent |
-| Generic secret scanning | **NEEDS VERIFICATION** | Doctrine is explicit; dedicated repository enforcement was not established by bounded search |
-| Deployment integration | **UNKNOWN** | Presence under `configs/` does not establish deployment binding |
-| Release/publication | **NONE** | Configuration files do not approve or publish KFM artifacts |
+| Root placement | **CONFIRMED** | `configs/` is the adopted canonical configuration responsibility root |
+| Root Registry projection | **CONFIRMED** | Root class, status, responsibility, and prohibited artifact kinds are declared |
+| Exact tracked tree | **CONFIRMED** | 28 blobs and their path classes are closed at the pinned tree |
+| README coverage | **CONFIRMED** | Root, lane, and domain boundary documentation exists |
+| Template inventory | **CONFIRMED** | Five tracked template files exist |
+| MapLibre envelope bytes | **CONFIRMED** | One JSON performance-envelope payload exists |
+| Consumer binding | **PARTIAL / NEEDS VERIFICATION** | A named consumer must be verified per payload before behavior is claimed |
+| Repository-wide precedence | **UNKNOWN** | No global merge order is claimed |
+| Generic semantic validation | **NOT ESTABLISHED** | Syntax or unrelated checks are not config-wide semantic proof |
+| Secret-scanning enforcement | **NEEDS VERIFICATION** | Doctrine and ignore rules do not prove complete scanner coverage |
+| Deployment/runtime parity | **UNKNOWN** | Requires environment and runtime evidence |
+| Release/publication authority | **DENY** | This root does not own release or publication decisions |
 
 [Back to top](#top)
 
@@ -263,26 +288,28 @@ configs/
 |---|---|
 | Safe defaults for a named consumer | Non-secret, bounded, reviewable, and accompanied by consumer/load-path evidence |
 | Reusable templates | Obvious placeholders; must not be mistaken for source, evidence, release, or lifecycle instances |
-| Commit-safe examples | Clearly illustrative or mock; never production-bound by filename alone |
-| Threshold or budget declarations | Versioned, consumer-bound, with units, failure semantics, tests, and rollback |
-| References-by-name | Identifiers such as environment variable names or secret-store handles; never resolved secret values |
-| Local-override guidance | Documents ignored, machine-local overrides without making them shared or authoritative |
+| Examples | Synthetic or public-safe; clearly separated from operational configuration |
+| Threshold or feature profiles | Units, defaults, version, consumer, validation, and failure behavior documented |
 | Domain-scoped configuration boundaries | Safe defaults/templates for named domain consumers; domain truth and source admission remain elsewhere |
-| Config-facing documentation | Field explanations, precedence notes, migration notes, deprecation notes, validation instructions |
-| Compatibility aliases | Temporary, documented, one-way, deprecation-dated, and prevented from evolving independently |
-| Public verifier material | Public keys or verification references only when the security contract permits repository storage |
+| Local-override guidance | Guidance only in tracked Git; actual local values remain ignored and non-authoritative |
+| Configuration-facing documentation | Field explanations, precedence notes, migration notes, deprecation notes, validation instructions |
+| Compatibility aliases | Temporary, one-way, documented, deprecation-dated, and prevented from evolving independently |
+| Public verifier references | Only when the security contract permits repository storage and the material is not secret |
 
 ### Admission test
 
-A proposed file belongs under `configs/` only when all of these are true:
+A proposed file belongs under `configs/` only when all answers below are satisfactory:
 
 1. Its primary responsibility is configuration rather than semantic meaning, machine shape, policy, runtime wiring, deployment, or lifecycle state.
 2. It is safe to commit to a public repository.
-3. A named consumer or clearly bounded future consumer is identified.
-4. Deployment-only and sensitive values remain placeholders or references-by-name.
-5. The file does not duplicate another authority root.
-6. Validation and failure behavior are documented or explicitly marked `NEEDS VERIFICATION`.
-7. Removal or rollback is possible without hiding behavior.
+3. A named consumer or documented template purpose exists.
+4. The file does not duplicate a contract, schema, policy rule, source descriptor instance, receipt, proof, release object, or generated artifact.
+5. Precedence, environment scope, unknown-key behavior, failure behavior, and rollback are known or explicitly marked `NEEDS VERIFICATION`.
+6. Sensitive values remain external and are referenced only by safe names or placeholders.
+7. The intended check is proportionate to consequence.
+8. No parallel configuration authority or speculative directory is created.
+
+A README and `.gitkeep` alone document or reserve no implementation authority.
 
 [Back to top](#top)
 
@@ -294,25 +321,21 @@ A proposed file belongs under `configs/` only when all of these are true:
 
 | Prohibited content | Correct responsibility |
 |---|---|
-| Real credentials, tokens, passwords, private keys, cookies, signed URLs, or secret values | Approved environment-specific secret store; never the repository |
+| Credentials, tokens, passwords, private keys, cookies, signed URLs, or resolved secret values | Approved external secret store; never tracked Git |
 | Production host binding, firewall, reverse-proxy, VPN, Kubernetes, Terraform, or access-control definitions | [`infra/`](../infra/README.md) |
-| Runtime adapters, model clients, service harnesses, or runtime state | [`runtime/`](../runtime/README.md) |
-| Semantic object or field meaning | [`contracts/`](../contracts/README.md) |
-| JSON Schema or other machine-shape authority | [`schemas/`](../schemas/README.md) |
-| Allow/deny/restrict/abstain rules or policy decisions | [`policy/`](../policy/README.md) |
-| SourceDescriptor instances, source activation records, or source registry rows | Governed source registry under `data/registry/` |
-| EvidenceBundles, receipts, proof packs, or validation records | Governed evidence/receipt/proof homes under `data/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED data | Correct lifecycle lane under [`data/`](../data/README.md) |
-| ReleaseManifest instances, PromotionDecisions, correction notices, withdrawal records, or rollback cards | [`release/`](../release/README.md) |
-| Application or package source code | `apps/` or `packages/` |
-| Executable pipeline logic | [`pipelines/`](../pipelines/README.md) |
-| Durable declarative pipeline specifications | [`pipeline_specs/`](../pipeline_specs/README.md) |
-| Test assertions or fixture authority | [`tests/`](../tests/README.md) and [`fixtures/`](../fixtures/README.md) |
-| Generated build, coverage, lint, screenshot, or QA artifacts | `artifacts/` within its compatibility boundary |
-| Operator-specific absolute paths, private endpoint inventories, sensitive geometry, or restricted source details | Environment-specific operational systems or governed sensitive-data lanes |
-
-> [!NOTE]
-> A configuration value may refer to an endpoint, source, schema, policy, or release object. The reference does not transfer ownership of that object into `configs/`.
+| Runtime adapter or provider code | [`runtime/`](../runtime/README.md) or the owning implementation package |
+| Application or service code | [`apps/`](../apps/README.md) or `packages/` |
+| Connector fetch/admission code | [`connectors/`](../connectors/README.md) |
+| Executable transformation logic | [`pipelines/`](../pipelines/README.md) |
+| Durable pipeline definitions | [`pipeline_specs/`](../pipeline_specs/README.md) |
+| Semantic object or interface definitions | [`contracts/`](../contracts/README.md) |
+| Machine schemas | [`schemas/`](../schemas/README.md) |
+| Normative allow/deny/hold/restrict/abstain rules | [`policy/`](../policy/README.md) |
+| Source registry instances, evidence, lifecycle data, receipts, proofs, catalogs, or published carriers | [`data/`](../data/README.md) in the owning lane |
+| Release, correction, withdrawal, promotion, signature, or rollback decisions | [`release/`](../release/README.md) |
+| Generated reports, build products, caches, logs, or temporary outputs | `artifacts/` within its governed compatibility profile or external CI storage |
+| Real sensitive coordinates, private identifiers, or protected source metadata | Quarantine/restricted systems governed by policy; not configuration |
+| A second schema, policy, source, registry, proof, receipt, or release home | Denied without an accepted ADR and migration plan |
 
 [Back to top](#top)
 
@@ -320,32 +343,31 @@ A proposed file belongs under `configs/` only when all of these are true:
 
 ## Inputs
 
-Configuration files should be derived from explicit, reviewable inputs:
+Configuration should be derived from explicit, reviewable inputs:
 
 | Input | Required use |
 |---|---|
-| Named consumer implementation | Establishes the loader, supported keys, defaults, error behavior, and precedence |
-| Semantic contract | Defines field intent and invariants |
-| Machine schema | Defines types, required fields, enums, formats, and unknown-key behavior |
-| Policy and sensitivity requirements | Constrains endpoints, exposure, source use, geoprivacy, and public behavior |
-| Security and secrets doctrine | Determines which values are forbidden, placeholders, or references-by-name |
-| Deployment requirements | Define external binding without moving deployment authority into `configs/` |
+| Named consumer and loader | Establish who reads the file and how |
+| Semantic contract | Define field meaning outside `configs/` |
+| Machine schema or parser contract | Define allowed shape, types, duplicate-key behavior, and unknown-key behavior |
+| Policy and sensitivity posture | Bound values and exposure without moving policy authority into configuration |
+| Environment and infrastructure contract | Identify externally supplied values and operational constraints |
+| Safe defaults and units | Prevent ambiguous or environment-dependent interpretation |
 | Tests and fixtures | Exercise positive, negative, stale, missing, conflicting, and unsafe states |
-| Migration/deprecation records | Preserve compatibility and rollback |
-| Maintainer review | Confirms ownership, operational consequence, and change burden |
+| Migration/deprecation record | Preserve compatibility and rollback |
+| Maintainer review | Confirm ownership, consequence, and change burden |
 
-### Inputs that are not sufficient by themselves
+The following are insufficient by themselves:
 
 - a planning document that names a proposed path;
 - a filename such as `production.yaml`;
 - a README assertion that a consumer exists;
-- a sample copied from a vendor;
-- a successful syntax parse;
-- a configuration template with `TBD` fields;
-- a local workstation file;
-- an environment variable present on one machine;
-- a passing workflow unrelated to the configuration;
-- a map, screenshot, benchmark, or generated summary.
+- a vendor sample copied without review;
+- a successful parser run;
+- a passing unrelated workflow;
+- a merged pull request;
+- an operator's local file;
+- generated prose or AI output.
 
 [Back to top](#top)
 
@@ -359,29 +381,37 @@ Configuration files should be derived from explicit, reviewable inputs:
 
 - committed safe defaults and templates;
 - configuration examples and documentation;
-- named inputs to consumers;
-- reviewable threshold declarations;
-- migration/deprecation guidance;
-- local-override conventions;
-- validation instructions and expected failure posture.
+- threshold and profile declarations for named consumers;
+- explicit references-by-name to externally supplied values;
+- migration, deprecation, and rollback guidance;
+- validation inputs and deterministic expected failure states.
 
-It does **not** emit evidence, policy decisions, lifecycle promotion, release approval, deployment, runtime truth, or publication.
+It does **not** directly emit:
+
+- source admission;
+- evidence or claim authority;
+- policy decisions;
+- lifecycle transitions;
+- receipts or proofs;
+- release approval;
+- deployment;
+- public API responses;
+- published layers or artifacts;
+- runtime truth.
 
 ```mermaid
 flowchart LR
-    AUTHOR["author / generator"] --> CFG["configs/\ncommit-safe input"]
-    CONTRACT["contracts/\nmeaning"] -. "informs" .-> CFG
-    SCHEMA["schemas/\nshape"] -. "validates" .-> CFG
-    POLICY["policy/\nadmissibility"] -. "constrains" .-> CFG
-    CFG --> CONSUMER["named consumer\napp · package · pipeline · runtime · test · tool"]
-    CONSUMER --> TESTS["tests / validators\nbounded proof"]
-    INFRA["infra / secret store\ndeployment binding"] --> CONSUMER
-    CFG -. "must not write" .-> DATA["data/\nlifecycle state"]
-    CFG -. "must not decide" .-> RELEASE["release/\ndecisions"]
-    CFG -. "must not expose" .-> PUBLIC["public clients"]
-```
+    C["contracts/<br/>meaning"] --> CFG["configs/<br/>safe selectable inputs"]
+    S["schemas/<br/>shape"] --> CFG
+    P["policy/<br/>admissibility"] --> CFG
+    CFG --> A["bounded consumer adapter"]
+    E["external environment / secret store"] --> A
+    A --> R["runtime behavior"]
+    T["tests / validators"] --> CFG
+    T --> A
 
-Read the diagram as a responsibility map, not as proof that every arrow is implemented.
+    CFG -. does not authorize .-> REL["release / publication"]
+```
 
 [Back to top](#top)
 
@@ -391,61 +421,50 @@ Read the diagram as a responsibility map, not as proof that every arrow is imple
 
 ## Validation
 
-### Current repository evidence
+### Current evidence boundary
 
-| Validation surface | Current evidence | What it proves | What it does not prove |
-|---|---|---|---|
-| Root `Makefile` | `make validate` runs aggregate schema validators and schema/contract tests | Repository-wide named targets exist | Generic `configs/` validation, secret scanning, consumer loading, or deployment |
-| MapLibre performance workflow | Path-scoped workflow performs script syntax checks, selected negative tests, and readiness assertions | Bounded command-bearing checks for the MapLibre performance lane | Browser performance, visual equivalence, semantic schema completeness, release, or publication |
-| MapLibre envelope validator | Python wrapper invokes the JSON Schema runner | A validator entry point exists | Strong validation: the current schema accepts any object |
-| `perf-envelope.v1.json` | JSON payload with threshold fields and public-safe posture | The bounded payload exists | Threshold fitness, runtime use, or publication blocking in production |
-| Root templates | Five YAML/JSON placeholder templates exist | Template bytes and placeholder intent exist | Consumer binding, contract/schema alignment, source admission, or release readiness |
-| `configs/local/` ignore rule | `.gitignore` excludes local children except the README | Shared Git history should not include normal local overrides | Local files are safe, encrypted, validated, or absent |
-| Secret doctrine | `docs/security/SECRETS.md` explicitly forbids real secrets in the repository | Normative repository guidance exists | Dedicated repository-owned scanning coverage or platform secret-scanning settings |
-| Generic config loader | Not established | Nothing beyond absence of evidence | No repo-wide precedence, environment merge, or unknown-key contract may be claimed |
+| Surface | What is confirmed | What is not established |
+|---|---|---|
+| Directory Rules | Adopted ownership, no-secret, no-authority-override, overlay, and bounded-adapter rules | Per-payload runtime behavior |
+| Root Registry validator | Root projection shape, adopted-doctrine binding, root class/status invariants, top-level coverage | Configuration syntax, semantic validity, consumers, precedence, secrets, deployment |
+| Exact Git tree | Tracked paths, blobs, counts, and identities at the pinned base | Ignored/untracked files, external stores, runtime-loaded bytes |
+| `configs/maplibre/perf-envelope.v1.json` | Valid tracked JSON bytes declaring object type, version, policy posture, thresholds, and notes | Schema completeness, consumer use, browser performance, release effect |
+| Template files | Five small placeholder-oriented files exist | Consumer binding, source admission, release closure, semantic adequacy |
+| `.gitignore` | `configs/local/*` is ignored except its README | Safety, absence, encryption, or validation of local files |
+| CODEOWNERS | `/configs/` routes to `@bartytime4life` | Review occurrence, required-review enforcement, independence, approval |
 
 ### Minimum checks for a configuration change
 
-Every material configuration change should identify and run the applicable checks:
+Every material configuration change should identify and run applicable checks:
 
-1. **Syntax:** parse every changed JSON, YAML, TOML, or environment-example file with the intended parser.
-2. **Schema:** validate against the accepted schema; reject schema drift rather than silently accepting unknown keys.
-3. **Consumer:** prove the named consumer loads the exact path and interprets fields as documented.
-4. **Precedence:** test the declared default, environment, local override, and command-line ordering.
-5. **Negative cases:** missing required value, unknown key, invalid enum, stale version, unsafe endpoint, denied network, secret-like value, malformed file, and conflicting alias.
-6. **Security:** scan for real credentials, private keys, signed URLs, sensitive identifiers, private hosts, and accidental operational material.
-7. **Boundary:** confirm the file does not become schema, policy, lifecycle, release, or deployment authority.
-8. **Determinism:** where configuration influences proof or release, record units, versions, hashes, ordering, and stable failure semantics.
-9. **Rollback:** verify the prior configuration and consumer pair can be restored.
-10. **Documentation:** update the relevant lane README and consumer documentation.
+1. **Syntax** — parse changed JSON, YAML, TOML, or environment-example files with the intended parser.
+2. **Duplicate keys and non-finite values** — reject ambiguous or parser-dependent input.
+3. **Schema** — validate against the accepted machine shape and reject unsupported fields where consequence warrants it.
+4. **Semantics** — check ranges, units, cross-field constraints, placeholder resolution, and prohibited overrides.
+5. **Consumer binding** — prove the named loader reads the intended file and version.
+6. **Precedence** — test deterministic overlay order, local override boundaries, and conflicts.
+7. **Secrets** — scan changed and staged bytes; never log or echo suspect values.
+8. **Policy boundary** — confirm configuration cannot weaken source authority, policy, review, release, or public access.
+9. **Determinism** — pin ordering, units, versions, identity, and failure codes where configuration affects trust or release.
+10. **Rollback** — verify the prior reviewed config/consumer pair can be restored.
+11. **Documentation** — update the lane README, consumer docs, migration notes, and open holds.
 
-### Suggested scoped inspection commands
+### Safe inspection examples
 
-These commands are examples to adapt to the affected files. They are not a claim that a generic config validation target currently exists.
+Adapt these commands to the actual consumer and repository tooling; they are examples, not proof of a generic config-validation target.
 
 ```bash
-# Inventory tracked configuration material.
-git ls-files configs .env.example
-
-# Review common secret-bearing patterns. A clean grep is not a complete secret scan.
-git grep -nEI \
-  '(BEGIN (RSA|OPENSSH|EC) PRIVATE KEY|api[_-]?key\s*[:=]|token\s*[:=]|password\s*[:=]|secret\s*[:=])' \
-  -- configs .env.example
-
-# Confirm local overrides remain ignored.
+git ls-tree -r --name-only HEAD configs/
+python -m json.tool configs/maplibre/perf-envelope.v1.json >/dev/null
 git check-ignore -v configs/local/example.local.yaml
-
-# Run the bounded MapLibre envelope wrapper.
-python tools/validators/maplibre/validate_perf_envelope.py \
-  configs/maplibre/perf-envelope.v1.json
-
-# Run repository targets whose declared scope applies.
-make validate
-make maplibre-govern
+git diff --check
 ```
 
-> [!CAUTION]
-> The current MapLibre performance schema is permissive. A passing wrapper invocation proves syntax and acceptance by that scaffold; it does not prove threshold semantics, contract alignment, runtime use, release eligibility, or publication safety.
+For YAML, use the repository's pinned safe parser and duplicate-key controls. Do not introduce a new parser or dependency in a documentation-only change merely to make an example command pass.
+
+### Interpretation rule
+
+A green configuration check proves only the assertions that check executes. It does not establish evidence, policy approval, human review, release, deployment, or publication.
 
 [Back to top](#top)
 
@@ -455,25 +474,23 @@ make maplibre-govern
 
 ### Confirmed routing
 
-[`.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/configs/` changes to `@bartytime4life`.
-
-That routing is not a `StewardshipAssignment`, `ReviewRecord`, `PolicyDecision`, security approval, release approval, independent review, or proof that branch protection enforced a review.
+[`.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/configs/` to `@bartytime4life`. CODEOWNERS routes review requests; it is not a `StewardshipAssignment`, `ReviewRecord`, `PolicyDecision`, security approval, release approval, independent review, or proof that review occurred.
 
 ### Review by change class
 
 | Change class | Minimum review concerns |
 |---|---|
-| README-only clarification | Configuration boundary, link integrity, no implementation overclaim |
-| New or changed shared default | Config owner, named consumer owner, schema/test owner |
-| Secret reference or environment-variable contract | Security reviewer, consumer owner, infra/runtime owner |
-| Endpoint, network, host, CORS, cache, or proxy setting | Security + infra + consumer review; deny-by-default posture |
-| Domain-scoped setting | Config owner + affected domain steward + sensitivity/policy reviewer when material |
-| MapLibre threshold or renderer-facing setting | Map/runtime owner + validation/performance owner + release reviewer when used by release gates |
-| Test selection, skip, retry, network, or side-effect setting | Test/QA owner + security reviewer + affected subsystem owner |
-| Compatibility alias or path migration | Consumer owners + docs/config owner + migration/rollback review |
-| Production or public-exposure implication | Separate policy, security, release, and deployment evidence; config review alone is insufficient |
+| README-only clarification | Configuration boundary, source accuracy, link integrity, no implementation overclaim |
+| New or changed template | Placeholder safety, authority boundary, intended consumer, schema/contract references |
+| Shared default or threshold | Consumer owner, units/ranges, backward compatibility, negative tests, rollback |
+| Local/development/test guidance | No secrets, no unsafe production imitation, deterministic behavior |
+| Domain configuration | Domain consumer plus rights/sensitivity review where values affect exposure |
+| Map/runtime configuration | Runtime consumer, performance/accessibility, public-safe behavior, rollback |
+| Security-relevant selector | Security and policy reviewers; fail-closed negative cases |
+| Precedence or loader change | All affected consumers, compatibility analysis, migration, rollback |
+| Configuration used in release | Configuration, consumer, policy, validation, and release reviewers remain separate roles |
 
-Material changes should separate authorship from policy-significant approval when repository maturity supports that control.
+Human review must remain distinct from generation, automated validation, release, and publication.
 
 [Back to top](#top)
 
@@ -483,28 +500,26 @@ Material changes should separate authorship from policy-significant approval whe
 
 | Surface | Relationship |
 |---|---|
-| [`dev/`](dev/README.md) | Safe development defaults/templates for named consumers; currently documentation-only at its bounded snapshot |
+| [`dev/`](dev/README.md) | Development configuration guidance; tracked payloads are absent at the pinned tree |
 | [`local/`](local/README.md) | Ignored workstation-local overrides; not shared configuration or a secret store |
-| [`examples/`](examples/README.md) | Commit-safe illustrative configuration examples; not live binding |
-| [`templates/`](templates/README.md) | Reusable placeholder-based templates; not schema or release authority |
-| [`test/`](test/README.md) | Safe test-configuration guidance; tests and fixtures remain elsewhere |
-| [`domains/`](domains/README.md) | Domain-scoped configuration boundaries across thirteen README-backed lanes |
-| [`maplibre/`](maplibre/README.md) | MapLibre configuration boundary with one bounded performance-envelope payload and partial consumer binding |
-| [`.env.example`](../.env.example) | Root environment-variable example using safe local defaults and localhost bindings |
-| [`.gitignore`](../.gitignore) | Excludes real `.env*` files and `configs/local/*` while retaining documented examples/README |
-| [Secrets standard](../docs/security/SECRETS.md) | Governs secret classes, references-by-name, CI credentials, telemetry, and leak posture |
-| [Incident response](../docs/security/INCIDENT_RESPONSE.md) | Governs containment, correction, rollback, notification, and audit after a security incident |
-| [Directory Rules — doctrine path](../docs/doctrine/directory-rules.md) | Current repository placement doctrine used for this root contract |
-| [Directory Rules — architecture path](../docs/architecture/directory-rules.md) | Separate live artifact with unresolved path/identity tension |
-| [`runtime/service_configs/`](../runtime/service_configs/README.md) | Runtime service wiring and harness configuration; not the generic commit-safe defaults root |
-| [`infra/`](../infra/README.md) | Deployment, host, network, exposure, and operational control |
+| [`test/`](test/README.md) | Test configuration guidance; tracked payloads are absent at the pinned tree |
+| [`examples/`](examples/README.md) | Configuration examples guidance; tracked payloads are absent at the pinned tree |
+| [`templates/`](templates/README.md) | Five commit-safe templates; not source, evidence, release, or lifecycle instances |
+| [`maplibre/`](maplibre/README.md) | MapLibre configuration guidance plus one tracked performance envelope |
+| [`domains/`](domains/README.md) | README-backed configuration boundaries for thirteen domain slugs |
 | [`contracts/`](../contracts/README.md) | Semantic meaning |
-| [`schemas/`](../schemas/README.md) | Machine shape |
-| [`policy/`](../policy/README.md) | Admissibility |
-| [`tests/`](../tests/README.md) and [`fixtures/`](../fixtures/README.md) | Enforceability and deterministic examples |
-| [`data/`](../data/README.md) | Lifecycle, registry, receipt, proof, catalog, and published records |
-| [`release/`](../release/README.md) | Release, correction, withdrawal, and rollback decisions |
-| [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Focused branch, draft PR, validation, evidence, and reversible-change expectations |
+| [`schemas/`](../schemas/README.md) | Machine-checkable shape |
+| [`policy/`](../policy/README.md) | Normative admissibility |
+| [`apps/`](../apps/README.md) | Deployable consumers |
+| [`runtime/`](../runtime/README.md) | Bounded runtime adapters |
+| [`infra/`](../infra/README.md) | Deployment and exposure controls |
+| [`connectors/`](../connectors/README.md) | Source acquisition and admission implementation |
+| [`pipelines/`](../pipelines/README.md) | Executable transformations |
+| [`pipeline_specs/`](../pipeline_specs/README.md) | Durable declarative pipeline definitions |
+| [`tests/`](../tests/README.md) and [`fixtures/`](../fixtures/README.md) | Executable conformance evidence |
+| [`data/`](../data/README.md) | Governed lifecycle and accountability instances |
+| [`release/`](../release/README.md) | Release, correction, withdrawal, promotion, and rollback decisions |
+| [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) | Machine projection of adopted root governance |
 
 [Back to top](#top)
 
@@ -512,22 +527,24 @@ Material changes should separate authorship from policy-significant approval whe
 
 ## ADRs
 
-No accepted configuration-root-specific ADR was verified for this update.
+### Accepted governing decision
 
-- [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) is **proposed**. It informs the machine-shape boundary but does not make every configuration schema complete or accepted.
-- [`ADR-0003 — policy/ is canonical`](../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md) is **proposed**. Configuration cannot become policy authority regardless of the final policy-root decision.
-- [`ADR-0006 — MapLibre adapter boundary`](../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) is draft with effective status **proposed**. The current MapLibre configuration lane may support bounded tooling, but it does not accept the adapter decision or prove renderer runtime maturity.
+[`ADR-0029 — Adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes `docs/doctrine/directory-rules.md` the sole writable human Directory Rules authority and begins the controlled compatibility migration for the legacy architecture copy.
 
-An accepted ADR and migration plan are required before:
+This README applies the adopted configuration root contract and README profile. It does not perform the legacy Directory Rules tombstone migration.
 
-- adding, removing, or renaming the canonical `configs/` root;
-- promoting another root or path to parallel configuration authority;
-- moving deployment or secret authority into `configs/`;
-- changing schema-home or policy-home authority;
-- introducing a repository-wide precedence contract that materially changes existing consumers without compatible migration;
-- turning configuration presence into a release or publication gate without reviewed contracts, schemas, tests, and rollback.
+### Configuration-specific decision posture
 
-The unresolved Directory Rules path/identity conflict remains outside this README's authority.
+No accepted configuration-root-specific ADR was verified in this review. A new ADR may be required if a later change:
+
+- creates a second configuration root or compatibility root;
+- changes the authority owner of configuration;
+- moves semantic, schema, policy, source, lifecycle, or release authority into `configs/`;
+- establishes a repository-wide loader or precedence contract with cross-root compatibility impact;
+- renames, merges, splits, deprecates, or retires a configuration lane;
+- changes the public-access or secret posture of the root.
+
+Routine same-path documentation, safe defaults, and consumer-bound templates do not create authority merely by being committed.
 
 [Back to top](#top)
 
@@ -535,22 +552,18 @@ The unresolved Directory Rules path/identity conflict remains outside this READM
 
 ## Last reviewed
 
-**2026-07-23**
+**2026-08-08**
 
-Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at `main@f4f48a7edbc4080267d50943223ab56d4f1ef154`, prior target blob `129c20163580bef696cf90fec79e063d9c9a5f08`.
+Evidence boundary:
 
-Review this README again when any of these conditions occurs:
+- `main@c46694ebc4a43030592a785b44e85977b33f1de2`;
+- root tree `6a86499d3428b3e909d334ff3b277e14962c53c3`;
+- `configs/` tree `1474b2ba6f770f13d7184f56866944dae2f90789`;
+- prior README blob `5c857beca50ebe103b2dcfc7d0212c64f3145d36`;
+- adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`;
+- Root Registry blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c`.
 
-- six months pass without review;
-- a top-level configuration lane is added, moved, renamed, consolidated, or retired;
-- a non-README payload appears under `dev/`, `test/`, `examples/`, or a domain lane;
-- a generic configuration loader, schema family, validator, or precedence contract is established;
-- secret-scanning or platform protection evidence changes;
-- `.gitignore` or `.env.example` changes the local/secret boundary;
-- MapLibre configuration, schema authority, consumer binding, workflow behavior, or release use changes;
-- configuration begins to influence public exposure, source activation, policy decisions, or release gates;
-- Directory Rules or an accepted ADR changes configuration placement;
-- a configuration-related incident, correction, or rollback exposes a gap in this contract.
+Re-review when a tracked configuration payload, loader, precedence rule, secret posture, root class, consumer, schema, policy boundary, release dependency, or migration changes materially. Re-review is event- and risk-based; a blanket calendar interval is not asserted.
 
 [Back to top](#top)
 
@@ -558,23 +571,37 @@ Review this README again when any of these conditions occurs:
 
 ## Configuration lane index
 
-| Lane | Confirmed tracked posture | Intended responsibility | Key limitation |
+| Lane | Exact tracked posture | Intended responsibility | Current limitation |
 |---|---|---|---|
-| [`dev/`](dev/README.md) | README-only bounded finding | Shared safe development defaults/templates | No loader or payload established |
-| [`local/`](local/README.md) | README tracked; children ignored | Machine-local overrides | Ignored does not mean safe or validated |
-| [`examples/`](examples/README.md) | README-only bounded finding | Illustrative commit-safe examples | No consumer binding established |
-| [`templates/`](templates/README.md) | README + five placeholder payloads | Reusable configuration templates | Authority-shaped names do not create source/release objects |
-| [`test/`](test/README.md) | README-only bounded finding | Test-runner/configuration guidance | No test or CI proof |
-| [`domains/`](domains/README.md) | Parent + thirteen domain READMEs; Habitat `.gitkeep` | Domain-scoped config boundaries | Executable payloads and consumers not established |
-| [`maplibre/`](maplibre/README.md) | README + `perf-envelope.v1.json` | Bounded MapLibre performance configuration | Partial consumers; schema permissive; runtime/release held |
+| [`dev/`](dev/README.md) | README only | Shared safe development defaults and templates | No tracked payload or generic loader established |
+| [`local/`](local/README.md) | README only; all children ignored | Workstation-local overrides | Ignored does not mean safe, present, encrypted, or validated |
+| [`test/`](test/README.md) | README only | Deterministic test configuration guidance | No tracked payload at the pinned tree |
+| [`examples/`](examples/README.md) | README only | Public-safe illustrative configuration | No tracked example payload at the pinned tree |
+| [`templates/`](templates/README.md) | README plus five templates | Reusable placeholder-oriented templates | Named consumers and semantic validators require verification |
+| [`maplibre/`](maplibre/README.md) | README plus `perf-envelope.v1.json` | MapLibre-specific bounded configuration | Runtime, browser, and release behavior remain consumer-dependent |
+| [`domains/`](domains/README.md) | Parent README plus thirteen domain README lanes and one `.gitkeep` | Domain-scoped configuration boundaries | Mostly documentation surfaces; no domain payload maturity is implied |
 
-### Domain lane snapshot
+### Domain lanes
 
-The thirteen README-backed domain lanes are:
+The exact tracked domain slugs are:
 
-`agriculture`, `archaeology`, `atmosphere`, `fauna`, `flora`, `geology`, `habitat`, `hazards`, `hydrology`, `people-dna-land`, `roads-rail-trade`, `settlements-infrastructure`, and `soil`.
+```text
+agriculture
+archaeology
+atmosphere
+fauna
+flora
+geology
+habitat
+hazards
+hydrology
+people-dna-land
+roads-rail-trade
+settlements-infrastructure
+soil
+```
 
-Their presence is a navigation and boundary fact. It is not proof that domain configuration payloads are loaded, validated, deployed, or safe for public use.
+A domain lane may own safe configuration for a named domain consumer. It does not own domain truth, source admission, evidence, policy, lifecycle state, or release authority.
 
 [Back to top](#top)
 
@@ -582,29 +609,30 @@ Their presence is a navigation and boundary fact. It is not proof that domain co
 
 ## Minimum per-file configuration contract
 
-The following contract is **PROPOSED** for new or materially changed configuration payloads unless a more specific accepted contract applies.
+The following record is **PROPOSED** for new or materially changed configuration payloads unless a more specific accepted contract applies.
 
-| Field or concern | Required question |
+| Concern | Required declaration |
 |---|---|
-| Stable identity | What config ID, path, and version distinguish this surface? |
-| Configuration class | Default, template, example, threshold, local override, compatibility alias, or generated candidate? |
-| Named consumer | Which exact app, package, pipeline, pipeline spec, runtime adapter, test, tool, or workflow reads it? |
-| Loader evidence | Where is the load/import/read path, and how is failure reported? |
-| Precedence | Which source wins among built-in defaults, tracked config, environment, local override, CLI, or remote control plane? |
-| Environment scope | Local, development, test, review, staging, production, or environment-neutral? |
-| Semantic contract | Which contract defines field intent and invariants? |
-| Schema | Which schema validates shape, unknown keys, formats, and version? |
-| Policy | Which rights, sensitivity, access, source, network, or release policy constrains use? |
-| Safe defaults | Which values are safe to commit and why? |
-| External values | Which values must be injected outside the repository, by reference only? |
-| Network posture | No-network, localhost-only, allowlisted, mediated, or denied? |
-| Error posture | What happens when the file is absent, malformed, stale, conflicting, or contains an unknown key? |
-| Test coverage | Which positive and negative fixtures/assertions exercise it? |
-| Deprecation | How are aliases, old keys, and old versions warned, sunset, and removed? |
-| Rollback | Which prior config/consumer pair restores behavior? |
-| Ownership | Which verified maintainer and reviewers own operational consequence? |
+| `config_id` | Stable identity for the configuration profile |
+| `config_version` | Explicit version when consumer interpretation can change |
+| `class` | Default, template, example, threshold, selector, local override, or compatibility alias |
+| `consumer` | Exact app/package/connector/pipeline/runtime/tool/test/workflow |
+| `loader` | Exact adapter or load path |
+| `environment_scope` | Development, test, local, shared, or other bounded environment |
+| `contract_ref` | Semantic meaning, if applicable |
+| `schema_ref` | Machine shape, if applicable |
+| `policy_refs` | Rules that constrain use; never rules replaced by config |
+| `precedence` | Deterministic merge or replacement order |
+| `unknown_key_behavior` | Reject, warn, or explicitly ignore |
+| `secret_posture` | No secrets; external references-by-name only |
+| `defaults_and_units` | Explicit defaults, units, ranges, and sentinel behavior |
+| `failure_behavior` | Stable fail-closed outcome and non-echoing reason |
+| `tests` | Positive, negative, compatibility, and consumer-loading evidence |
+| `migration` | Prior/new version, compatibility window, and deprecation |
+| `rollback_target` | Prior reviewed configuration and compatible consumer |
+| `owner_and_review` | Responsible consumer owner and required reviewers |
 
-Do not add empty metadata merely to appear complete. Mark unresolved fields `NEEDS VERIFICATION`, narrow the configuration, or delay activation.
+This table is a documentation contract, not a machine schema. A later schema belongs under `schemas/`, semantic meaning under `contracts/`, and admissibility under `policy/`.
 
 [Back to top](#top)
 
@@ -614,51 +642,58 @@ Do not add empty metadata merely to appear complete. Mark unresolved fields `NEE
 
 ### Current posture
 
-A repository-wide configuration loader, merge order, unknown-key rule, and environment precedence contract were **not established** by the inspected evidence.
+A repository-wide loader, merge order, unknown-key rule, and environment precedence contract were **not established** by this review. Therefore:
 
-Therefore:
-
-- do not say a file is active merely because it is under `configs/`;
-- do not assume every consumer searches this root;
-- do not assume environment variables override tracked defaults;
-- do not assume `configs/local/` is auto-loaded;
+- do not assume `configs/local/` is loaded automatically;
 - do not assume templates are copied or rendered;
+- do not assume child-directory names imply environment selection;
 - do not assume unknown keys are ignored or rejected;
-- do not infer production behavior from development or test examples.
+- do not infer production behavior from development, test, or example guidance;
+- do not infer runtime use from a configuration filename.
 
-### Required consumer declaration
+### Required consumer binding
 
-A consumer-bound configuration should document:
+A consequential configuration should bind to:
 
 ```text
-consumer:
-  id: <verified app/package/pipeline/runtime/test/tool>
-  config_path: <exact repo path>
-  loader_path: <exact implementation path>
-  environment_scope: <declared scope>
-  precedence: <ordered sources>
-  schema_ref: <accepted schema or NEEDS VERIFICATION>
-  contract_ref: <semantic contract or NEEDS VERIFICATION>
-  failure_mode: <finite, observable behavior>
-  tests:
-    - <positive>
-    - <negative>
-  rollback_target: <prior config/consumer pair>
+config identity
+  -> named consumer
+  -> bounded loader or adapter
+  -> accepted contract and schema where applicable
+  -> explicit precedence and environment scope
+  -> policy constraints
+  -> positive and negative tests
+  -> migration and rollback target
 ```
 
-This is illustrative documentation, not a repository schema.
+Adopted Directory Rules prefer one bounded configuration adapter at each runtime boundary. Direct imports of scattered configuration files create drift, inconsistent precedence, and untestable authority edges.
 
 ### Precedence discipline
 
-Each consumer must define its own exact precedence until KFM accepts a repository-wide contract. Safe defaults:
+Until an accepted repository-wide contract exists, each consumer must state its own deterministic order. Safe behavior includes:
 
-- make the order explicit and deterministic;
-- log the class and source of an override without logging secret values;
-- reject ambiguous duplicate keys where practical;
-- treat unknown environment-specific values as an error rather than silently falling back;
-- keep local overrides out of shared CI and releases unless the consumer explicitly declares them;
-- prevent browser-visible configuration from exposing internal endpoints, credentials, or restricted handles;
-- test parity between local, CI, and deployment paths where parity is claimed.
+- one documented default source;
+- explicit environment overlays;
+- ignored local overrides that cannot be committed accidentally;
+- explicit conflict behavior;
+- rejection of unresolved required placeholders;
+- stable unknown-key handling;
+- no secret-value logging;
+- no client-side override of consequential policy or release state.
+
+### Override ceiling
+
+No configuration layer may override:
+
+- source identity or authority role;
+- evidence support;
+- rights or sensitivity posture;
+- policy decisions;
+- required review;
+- release state;
+- correction or rollback lineage;
+- public/private access class;
+- protections for exact sensitive locations or private data.
 
 [Back to top](#top)
 
@@ -666,59 +701,42 @@ Each consumer must define its own exact precedence until KFM accepts a repositor
 
 ## Secrets, sensitive values, endpoints, and local overrides
 
-### Allowed representations
+### Commit-safe representations
 
-- obvious placeholders such as `<REQUIRED_OUTSIDE_REPOSITORY>`;
-- references-by-name such as `${SOURCE_API_KEY}` or a secret-store key identifier;
-- public verifier material when approved;
-- localhost defaults for explicitly local development;
-- clearly synthetic hostnames and mock identifiers;
-- public, reviewed endpoints when the consumer and policy allow them.
+- unmistakable placeholders such as `<REQUIRED_OUTSIDE_REPOSITORY>`;
+- environment-variable or secret-store references by name;
+- clearly synthetic hostnames and identifiers;
+- localhost values for explicitly local development;
+- reviewed public endpoints when the consumer and policy allow them;
+- public verification material when explicitly approved.
 
 ### Forbidden representations
 
-- resolved secret values;
-- private key blocks;
-- real bearer tokens, cookies, session secrets, or passwords;
-- signed URLs or embedded credentials;
-- private internal hostnames or infrastructure inventory without approved need;
-- exact restricted locations or sensitive source metadata;
+- resolved credentials, tokens, passwords, cookies, or session secrets;
+- private key material;
+- signed URLs or embedded authorization headers;
+- confidential service endpoints;
+- private account, tenant, bucket, database, or registry identifiers that increase exposure;
+- exact protected locations, restricted source metadata, or living-person/private identifiers;
 - operator home directories or machine-specific absolute paths in shared files;
-- production account, tenant, bucket, database, or registry identifiers that create exposure risk;
-- browser-readable runtime or model-service credentials.
+- browser-exposed model, source, or administration credentials.
 
 ### Local overrides
 
-[`.gitignore`](../.gitignore) excludes `configs/local/*` and re-includes only the local README. This preserves a workstation-local override boundary, but it does not make ignored files safe.
+[`.gitignore`](../.gitignore) excludes `configs/local/*` and re-includes only `configs/local/README.md`. This is a tracked/untracked boundary, not a security guarantee. Local files can still leak through logs, screenshots, archives, backups, support bundles, container contexts, caches, or force-adds.
 
-Local files may still leak through:
-
-- shell history;
-- process listings;
-- logs and telemetry;
-- screenshots;
-- editor synchronization;
-- backups;
-- support bundles;
-- copied patches;
-- archives;
-- accidental force-adds.
-
-Prefer secret-store or environment injection by reference. Do not make an ignored file the only place a shared workflow can run.
+Prefer external secret injection by reference. A local file must not be the only undocumented prerequisite for a shared workflow.
 
 ### Incident posture
 
-When a real secret or protected operational value appears in tracked configuration:
+When a secret or protected operational value appears in tracked configuration:
 
-1. fail closed and stop further use;
-2. rotate or revoke the value immediately;
-3. audit repository history, logs, artifacts, caches, and downstream copies;
-4. preserve incident evidence without redisclosing the secret;
-5. follow [KFM Security Incident Response](../docs/security/INCIDENT_RESPONSE.md);
-6. correct documentation, consumers, and templates;
-7. record rollback, correction, or withdrawal impact when public or released surfaces were affected.
-
-Deleting the current line is not sufficient remediation because Git history and downstream copies may retain the value.
+1. stop use and fail closed;
+2. rotate or revoke the value;
+3. inspect history, logs, caches, artifacts, forks, and downstream consumers;
+4. follow [`docs/security/INCIDENT_RESPONSE.md`](../docs/security/INCIDENT_RESPONSE.md);
+5. remove the value without rewriting shared history unless the security response explicitly requires a separately governed exception;
+6. add prevention tests and document the correction without reproducing the value.
 
 [Back to top](#top)
 
@@ -728,39 +746,39 @@ Deleting the current line is not sufficient remediation because Git history and 
 
 ### Format guidance
 
-| Format | Use | Caution |
+| Format | Appropriate use | Required caution |
 |---|---|---|
-| JSON | Strict machine input and threshold declarations | No comments; schema and unknown-key behavior should be explicit |
-| YAML | Human-reviewable templates and structured defaults | Parser differences, duplicate keys, implicit types, and unsafe tags require discipline |
-| TOML | Tool/runtime settings when the named consumer supports it | Consumer/version binding must be explicit |
-| `.env.example` | Environment variable names and safe illustrative values | Never store resolved secrets; browser-exposed prefixes require security review |
-| Markdown | Configuration-facing contracts, migration notes, and validation guidance | Documentation cannot substitute for executable checks |
+| JSON | Strict machine input and threshold declarations | Reject duplicate keys/non-finite values; define schema and unknown-key behavior |
+| YAML | Human-reviewable templates and structured defaults | Safe parser only; duplicate keys, implicit typing, anchors, and tags require control |
+| TOML | Tool/runtime settings for a named consumer | Bind parser and consumer version |
+| `.env.example` | Variable names and safe illustrative values | Never resolved secrets; browser-exposed prefixes require review |
+| Markdown | Contracts, boundaries, migration notes, and validation guidance | Documentation cannot replace executable checks |
 
 ### Naming
 
-Prefer names that expose class and version:
+Prefer names that expose consumer, class, and version when ambiguity is material:
 
 ```text
 <consumer>.<class>.v<major>.json
+<consumer>.<environment>.v<major>.yaml
 <consumer>.<class>.template.yaml
 <consumer>.<class>.example.toml
 ```
 
-Existing filenames remain valid until a reviewed migration says otherwise.
+Existing filenames remain valid until a reviewed migration establishes otherwise.
 
 ### Placeholder rules
 
-A placeholder must be unmistakable and fail safely. Avoid plausible production-looking values. Use forms such as:
+Placeholders must be unmistakable and fail safely:
 
 ```text
 <REQUIRED_OUTSIDE_REPOSITORY>
-NEEDS_VERIFICATION
+${SECRET_REFERENCE_NAME}
 example.invalid
-127.0.0.1
 mock
 ```
 
-`TBD` communicates incompleteness but does not by itself guarantee fail-closed parsing. A consumer must reject unresolved required placeholders before operational use.
+A plausible production-looking placeholder is unsafe. `TBD` communicates incompleteness but does not guarantee fail-closed behavior; the consumer must reject unresolved required values.
 
 ### Versioning and deprecation
 
@@ -768,12 +786,13 @@ Version when a change alters consumer interpretation, defaults, units, enum mean
 
 - prior path/version;
 - new path/version;
-- compatibility period;
-- consumer migration;
-- fixture parity;
-- warning or rejection behavior;
-- sunset condition;
-- rollback target.
+- compatible consumer range;
+- migration procedure;
+- deprecation date or exit condition;
+- rollback target;
+- correction implications.
+
+A compatibility alias is one-way and derived from the canonical source. It must not become independently writable.
 
 [Back to top](#top)
 
@@ -781,27 +800,28 @@ Version when a change alters consumer interpretation, defaults, units, enum mean
 
 ## Failure semantics and negative cases
 
-| Condition | Required safe posture |
-|---|---|
-| File absent | Consumer uses a documented safe built-in default or fails explicitly; no hidden production fallback |
-| Parse failure | `ERROR`; do not continue with partial or guessed values |
-| Schema mismatch | Fail validation; do not coerce consequential fields silently |
-| Unknown key | Reject or explicitly report according to the accepted contract; silent ignore is not assumed |
-| Duplicate key | Reject where the parser permits detection |
-| Unresolved placeholder | Fail before operational use |
-| Missing external secret | Fail closed; never substitute an empty, public, or cached secret |
-| Secret-like tracked value | Security incident hold and rotation/audit workflow |
-| Unsafe or unreviewed endpoint | Deny connection until security, rights, source, and network posture are reviewed |
-| Local override in CI/release | Deny unless the consumer contract explicitly admits and records it |
-| Config/policy conflict | Policy wins; configuration cannot weaken policy |
-| Config/schema conflict | Treat as drift; do not let the config redefine shape |
-| Config/release conflict | Release record wins; config presence cannot promote an artifact |
-| Consumer not found | Mark use `UNKNOWN` or `NEEDS VERIFICATION`; do not claim activation |
-| Stale/deprecated version | Warn or fail according to a reviewed sunset contract; never silently revive |
-| Alias points to divergent content | Block and migrate; compatibility surfaces must not evolve independently |
-| Sensitive domain value is under-specified | Deny, hold, generalize, or require steward review according to policy |
+Configuration failure must be explicit, bounded, non-echoing, and fail closed in proportion to consequence.
 
-Negative tests are part of the contract. A configuration path without failure-state coverage is not ready for consequential use merely because the positive case parses.
+| Negative case | Required result |
+|---|---|
+| Missing required file or key | Stable error or held state; no unsafe fallback |
+| Duplicate key or non-finite number | Reject before semantic processing |
+| Unknown key | Follow the declared rule; trust-significant profiles should not silently accept drift |
+| Unresolved placeholder | Reject operational use |
+| Secret-like value in tracked config | Stop, redact output, and invoke incident handling |
+| Schema/version mismatch | Reject or enter a documented compatibility path |
+| Missing or ambiguous consumer | `HOLD` / `NEEDS VERIFICATION`; do not claim behavior |
+| Precedence conflict or cycle | Reject with bounded reason |
+| Invalid range, unit, or cross-field constraint | Reject before consumer action |
+| Policy or release override attempt | `DENY` |
+| Unsafe endpoint or public-client credential | `DENY` |
+| Sensitive coordinate or identifier exposure | `DENY` or quarantine/generalize through policy |
+| Deprecated profile outside its window | Reject or require explicit migration |
+| Loader/parser unavailable | `ERROR`; do not choose a weaker parser silently |
+| Rollback target incompatible with consumer | Hold rollback and restore a compatible pair |
+| Validation tool emits raw values | Treat as a defect; output only path/code or redacted context |
+
+A repository-wide reason-code registry and generic configuration validator are **PROPOSED**, not claimed as current implementation.
 
 [Back to top](#top)
 
@@ -813,49 +833,51 @@ Negative tests are part of the contract. A configuration path without failure-st
 
 ### Misplaced material
 
-When material under `configs/` owns another responsibility:
+When a file under `configs/` owns another responsibility:
 
-1. stop treating the path as authority;
-2. identify the correct responsibility root;
-3. inspect current consumers and references;
-4. open a drift entry when the misplaced path is already consumed;
-5. use a focused migration with compatibility only when required;
-6. update code, docs, schemas, policy, tests, workflows, and examples together;
-7. record deprecation and sunset behavior;
-8. verify rollback.
+1. stop treating its current path as authority;
+2. identify the correct responsibility root from adopted Directory Rules;
+3. search producers, consumers, docs, workflows, and generated references;
+4. classify the change as routine, migration, compatibility, or ADR-triggering;
+5. preserve identity and history where practical;
+6. update consumers and links in a bounded migration;
+7. validate parity and negative behavior;
+8. record correction and rollback;
+9. retire the old path only after zero-writer and verified consumer closure.
 
-Examples:
+### Common routing
 
-| Misplaced item | Migration target |
+| Misplaced material | Owning family |
 |---|---|
-| Real secret | Revoke/rotate; move only a reference-by-name into config; bind through approved secret system |
-| Runtime service wiring | `runtime/service_configs/` or the verified runtime lane |
-| Deployment topology | `infra/` |
-| Pipeline definition | `pipeline_specs/` |
-| Schema-shaped authority | `schemas/` |
+| Semantic contract | `contracts/` |
+| Machine schema | `schemas/` |
 | Policy rule | `policy/` |
-| SourceDescriptor instance | governed source registry |
-| Release manifest instance | `release/manifests/` |
-| Proof or receipt | governed `data/proofs/` or `data/receipts/` lane |
-| Generated report | `artifacts/` within its compatibility class |
+| SourceDescriptor instance | governed source registry under `data/registry/` |
+| Receipt or proof | governed `data/receipts/` or `data/proofs/` lane |
+| Release, correction, or rollback decision | `release/` |
+| Runtime adapter | `runtime/` or owning package |
+| Infrastructure binding | `infra/` |
+| Generated output | `artifacts/` compatibility lane or external CI storage |
 
 ### Documentation rollback
 
-This README is rolled back by reverting its same-path documentation commit and restoring the prior blob.
+This README can be rolled back by transparently reverting its same-path documentation commit or restoring prior blob:
+
+```text
+5c857beca50ebe103b2dcfc7d0212c64f3145d36
+```
 
 ### Configuration rollback
 
-A configuration rollback must restore a **reviewed config/consumer pair**, not just old bytes. Check:
+A configuration rollback restores a **reviewed configuration/consumer pair**, not only old bytes. Verify:
 
 - consumer compatibility;
-- schema version;
-- environment/secret references;
-- migration aliases;
-- tests and negative cases;
-- caches or generated derivatives;
-- release and correction impact if the config affected released behavior.
-
-A config rollback is not automatically a KFM release rollback. Release rollback requires the governed release system and its own records.
+- schema and parser version;
+- precedence and environment scope;
+- secret/reference availability;
+- policy and release constraints;
+- caches and generated derivatives;
+- correction notices where public behavior changed.
 
 [Back to top](#top)
 
@@ -865,37 +887,36 @@ A config rollback is not automatically a KFM release rollback. Release rollback 
 
 ## Safe change pattern
 
-For any change under `configs/`:
+For a change under `configs/`:
 
 1. Pin the base commit and read the target plus its lane README.
-2. Confirm there is no overlapping branch or pull request for the exact path.
-3. Classify the file: default, template, example, threshold, local override, or compatibility surface.
-4. Name the consumer and verify the loader path.
-5. Identify semantic contract, schema, policy, test, and deployment relationships.
-6. Prove the file is safe to commit; use placeholders and references-by-name.
-7. Define deterministic precedence and failure behavior.
-8. Add or update positive and negative tests.
-9. Run syntax, schema, consumer, boundary, and secret checks.
-10. Keep lifecycle, release, proof, and deployment objects in their owning roots.
-11. Update documentation and migration notes.
-12. Record rollback.
-13. Use a focused branch and draft pull request.
-14. Do not merge, deploy, activate a source, release, or publish as part of configuration documentation alone.
+2. Check for overlapping active branches and pull requests.
+3. Classify the file by responsibility, environment, consumer, exposure, mutability, and retention.
+4. Verify the file is safe to commit and contains no resolved secret or harmful precision.
+5. Identify the named consumer and bounded loader.
+6. Confirm meaning, schema, policy, and release authority remain in their owning roots.
+7. Define precedence, unknown-key behavior, defaults, units, failure behavior, and rollback.
+8. Update positive, negative, compatibility, and consumer-loading tests as applicable.
+9. Run changed-area and repository-native validation.
+10. Update documentation and migration notes.
+11. Record open holds honestly.
+12. Use a focused branch and draft pull request.
+13. Do not merge, deploy, activate a source, release, or publish as part of configuration documentation alone.
 
 ### Change-impact crosswalk
 
-| If the change affects… | Also inspect or update… |
+| Change affects | Also inspect or update |
 |---|---|
 | Field meaning | Contract |
-| Required key/type/enum | Schema + valid/invalid fixtures |
-| Allow/deny or exposure | Policy + negative tests |
-| Loader path/precedence | Consumer code + integration tests + docs |
-| Endpoint/network access | Security + infra + policy + no-network tests |
-| Source activation | Source registry + policy + connector + receipts |
-| Map style/layer/tile behavior | Map/runtime consumer + manifests + release boundary |
-| Release gate or threshold | Proof/release contracts, tests, rollback |
-| Local override behavior | `.gitignore`, `.env.example`, developer docs, CI parity |
-| Path or filename | References, deprecation, migration, rollback |
+| Required key, type, enum, or shape | Schema plus valid/invalid fixtures |
+| Allow/deny/exposure behavior | Policy tests and reviewer set |
+| Consumer loading or precedence | Consumer code, adapter, integration tests, migration |
+| Source selection | Source registry and source-admission controls |
+| Runtime/provider selection | Runtime adapter tests and exposure boundary |
+| Map thresholds or rendering | MapLibre consumer tests, accessibility/performance evidence, rollback |
+| Release-sensitive behavior | Proof, release, correction, rollback, and cache behavior |
+| Secret references | Security review and non-echoing tests |
+| Path or filename | Links, imports, aliases, migration, and rollback |
 
 [Back to top](#top)
 
@@ -905,36 +926,34 @@ For any change under `configs/`:
 
 ## Definition of done
 
-### Root documentation
+### Root README update
 
-- [x] `configs/` responsibility is explicit.
-- [x] The required Directory Rules §15 sections appear in order.
+- [x] Same path and document identity are preserved.
+- [x] The first twelve H2 sections match the adopted Root Full README profile.
+- [x] Accepted ADR-0029 and the sole writable Directory Rules authority are reflected.
+- [x] The active Root Registry projection is reflected without treating it as self-authorizing.
+- [x] The exact tracked tree is closed at the pinned base.
 - [x] Secret, schema, policy, lifecycle, release, runtime, and deployment boundaries are explicit.
-- [x] The current named-path inventory is recorded as bounded evidence rather than a complete tree claim.
-- [x] `configs/local/` tracking behavior is documented accurately.
-- [x] The MapLibre payload's partial consumer binding and permissive schema are visible.
-- [x] Legacy v0.3 anchors are retained.
+- [x] Current implementation maturity is bounded.
+- [x] Legacy anchors and rollback target are preserved.
 - [ ] Accepted configuration stewardship and independent review controls are established.
-- [ ] The Directory Rules duplicate-path/identity conflict is resolved by the appropriate governance process.
+- [ ] Generic consumer, precedence, semantic-validation, and secret-scanning closure is proven.
 
-### Per configuration payload
+### Consequential configuration payload
 
-A consequential payload is not done until applicable items are complete:
+A payload is not done until applicable items are complete:
 
-- [ ] named consumer and loader path verified;
+- [ ] named consumer and bounded loader verified;
 - [ ] precedence and environment scope documented;
-- [ ] contract and schema references verified;
-- [ ] safe defaults and external value injection separated;
-- [ ] no real secrets or protected operational material;
-- [ ] syntax and semantic validation pass;
-- [ ] positive and negative tests pass;
-- [ ] unknown-key, missing-value, stale-version, and conflict behavior verified;
-- [ ] network and endpoint posture reviewed;
-- [ ] migration/deprecation and rollback recorded;
-- [ ] docs updated;
-- [ ] release/publication implications handled in their governing roots.
-
-A checked README box is not proof that an external consumer or deployment satisfies the condition. Use current executable evidence.
+- [ ] contract and schema aligned;
+- [ ] safe defaults, units, and ranges explicit;
+- [ ] no secrets or harmful precision;
+- [ ] stable unknown-key and failure behavior;
+- [ ] positive, negative, compatibility, and consumer-loading tests pass;
+- [ ] policy and release boundaries remain intact;
+- [ ] migration, deprecation, correction, and rollback are documented;
+- [ ] review roles are satisfied;
+- [ ] operational evidence supports any behavior claim.
 
 [Back to top](#top)
 
@@ -944,29 +963,24 @@ A checked README box is not proof that an external consumer or deployment satisf
 
 ## Open verification register
 
-- Complete recursive tracked inventory of `configs/`, including file counts, formats, sizes, aliases, and history.
-- Accepted configuration steward, security reviewer, validation owner, and consumer ownership assignments.
-- Repository-wide consumer map from every configuration payload to loader/import/read paths.
-- Generic configuration identity, metadata, versioning, and deprecation contract.
-- Generic loader and deterministic precedence behavior across defaults, environment variables, local overrides, CLI values, and remote control planes.
-- Config-to-contract and config-to-schema coverage, including unknown-key behavior.
-- Dedicated config-wide syntax and semantic validation command.
-- Dedicated repository secret-scanning implementation and GitHub platform protection status.
-- Review of all tracked templates for placeholder safety, semantic adequacy, and risk of being mistaken for authority-shaped instances.
-- Current ignored `configs/local/` practices, documentation, and leak-prevention guidance.
-- Domain-lane payload inventory and consumer binding beyond README paths.
-- MapLibre performance schema authority, semantic completeness, runtime fixture coverage, and actual workflow pass history.
-- Whether MapLibre threshold changes participate in any accepted release gate.
-- Configuration-driven network endpoint inventory and allowlist/deny-by-default controls.
-- Browser-exposed environment/configuration prefixes and client-side secret/exposure risk.
-- Deployment binding across `infra/`, runtime, apps, CI environments, and external secret systems.
-- Compatibility and migration posture for any `config/` singular-path reference or other aliases.
-- Directory Rules path/identity resolution and downstream link repair.
-- Branch protection, required checks, CODEOWNERS enforcement, and independent review thresholds.
-- Correction and rollback evidence for configuration incidents affecting released behavior.
+| Item | Status | Closure evidence |
+|---|---:|---|
+| Accepted configuration steward and security reviewer | `NEEDS VERIFICATION` | Governed assignment and review routing |
+| Generic configuration identity/metadata contract | `PROPOSED` | Accepted contract and schema with fixtures |
+| Repository-wide bounded adapter pattern | `NEEDS VERIFICATION` | Consumer inventory and verified adapter boundaries |
+| Repository-wide precedence and unknown-key policy | `UNKNOWN` | Accepted decision plus positive/negative tests |
+| Complete consumer map for all payloads/templates | `NEEDS VERIFICATION` | Commit-pinned loader/import/read inventory |
+| Generic config semantic validator | `PROPOSED` | Deterministic validator, fixtures, tests, workflow |
+| Secret-scanning coverage and required-check coupling | `NEEDS VERIFICATION` | Scanner config, negative fixture, hosted enforcement evidence |
+| Child README freshness against adopted v2 rules | `NEEDS VERIFICATION` | Separate bounded documentation review |
+| Template consumer and schema bindings | `NEEDS VERIFICATION` | Per-template references and tests |
+| MapLibre envelope runtime and browser evidence | `NEEDS VERIFICATION` | Named consumer, deterministic replay, measured run |
+| Ignored/untracked local-file posture | `UNKNOWN` | Local audit without disclosing values |
+| External environment and secret-store integration | `UNKNOWN` | Deployment and operations evidence |
+| Config change correction propagation | `NEEDS VERIFICATION` | Drill across runtime, caches, map/UI, and release surfaces |
+| Independent review and separation of duties | `NEEDS VERIFICATION` | Repository controls plus observed review record |
 
-> [!NOTE]
-> This README is a repository-grounded configuration boundary. It does not claim that every configuration path has been recursively inventoried, every template is semantically mature, every consumer is wired, every secret scan runs, every schema is authoritative, every workflow passes, or any configuration is deployed, released, or published.
+Open items do not reopen this root to secrets or parallel authority. They narrow what can be claimed about maturity.
 
 [Back to top](#top)
 
@@ -977,51 +991,41 @@ A checked README box is not proof that an external consumer or deployment satisf
 
 ### Retained
 
-- `configs/` as the canonical home for safe non-secret defaults and templates.
-- Explicit prohibition on deployment-only confidential values.
-- Separation from contracts, schemas, policy, apps, runtime, infra, pipelines, lifecycle data, release records, and generated artifacts.
-- Existing tracked inventory, MapLibre threshold context, migration posture, safe-change sequence, definition of done, and verification backlog.
-- Document identity `kfm://doc/configs-readme` and same-path lineage.
+- canonical commit-safe configuration responsibility;
+- no-secret posture;
+- separation from contracts, schemas, policy, implementation, lifecycle data, release records, and generated outputs;
+- lane index, MapLibre envelope context, templates, consumer binding, precedence, failure behavior, migration, rollback, and verification backlog;
+- same path and document identity `kfm://doc/configs-readme`.
 
-### Repaired or narrowed
+### Corrected or narrowed
 
-- Reordered the root contract to Directory Rules §15.
-- Replaced the stale older inventory snapshot with a bounded current named-path inventory.
-- Corrected `configs/local/` from shared template language to ignored workstation-local override posture.
-- Distinguished the MapLibre envelope's bounded consumer references from complete semantic/runtime validation.
-- Exposed the permissive MapLibre schema and explicit workflow holds.
-- Narrowed generic consumer, precedence, validation, secret-scanning, deployment, and CI claims to the evidence inspected.
-- Replaced placeholder owner roles with the verified CODEOWNERS route plus explicit governance limits.
-
-### Added
-
-- Inputs and outputs contracts.
-- Current maturity matrix.
-- Minimum per-file configuration contract.
-- Consumer-binding and precedence discipline.
-- Secret, endpoint, and local-override incident posture.
-- Format, placeholder, versioning, failure-state, migration, correction, and rollback guidance.
-- Review-by-change-class matrix and expanded open verification register.
-- Compatibility anchors for the v0.3 numbered sections.
+- replaced the obsolete unresolved-Directory-Rules conflict with accepted ADR-0029 and the still-incomplete legacy tombstone migration;
+- replaced “no root registry” posture with the active machine projection and its explicit non-effects;
+- replaced bounded path sampling with the exact recursive Git-tree inventory;
+- updated base, tree, and blob identities;
+- distinguished tracked tree closure from ignored/untracked and external state;
+- avoided treating child README breadth as implementation maturity;
+- kept MapLibre thresholds as confirmed bytes while bounding consumer/runtime/release claims;
+- updated the README-profile reference from the prior section number to adopted Directory Rules v2 §16.
 
 ### Legacy anchor map
 
-| Prior anchor | Current destination |
+| Legacy anchor | Current destination |
 |---|---|
 | `#1-purpose` | Purpose |
 | `#2-authority` | Authority level |
-| `#3-directory-rules-basis` | Authority level / placement basis |
-| `#4-authority-boundary` | Authority level / responsibility split |
+| `#3-directory-rules-basis` | Authority level |
+| `#4-authority-boundary` | Authority level |
 | `#5-allowed-contents` | What belongs here |
 | `#6-forbidden-contents` | What does NOT belong here |
-| `#7-current-tracked-directory-shape` | Status / bounded inventory |
-| `#8-diagram` | Outputs / responsibility diagram |
+| `#7-current-tracked-directory-shape` | Status / exact tracked tree |
+| `#8-diagram` | Outputs |
 | `#9-validation-expectations` | Validation |
 | `#10-migration-posture` | Migration, correction, and rollback |
 | `#11-safe-change-pattern` | Safe change pattern |
 | `#12-definition-of-done` | Definition of done |
 | `#13-open-verification-items` | Open verification register |
-| `#status-summary` | Status summary below |
+| `#status-summary` | Status summary |
 
 </details>
 
@@ -1031,8 +1035,10 @@ A checked README box is not proof that an external consumer or deployment satisf
 
 ## Status summary
 
-`configs/` is the canonical repository root for commit-safe, non-secret configuration defaults, templates, examples, threshold declarations, local-override guidance, and configuration-facing documentation. It is not a secret store, schema registry, contract root, policy engine, source registry, evidence store, lifecycle store, release system, runtime, deployment system, generated-artifact root, or public interface.
+`configs/` is the adopted canonical repository root for commit-safe, non-secret configuration profiles, templates, examples, defaults, threshold declarations, local-override guidance, and configuration-facing documentation.
 
-Only bounded MapLibre performance consumers were confirmed for a tracked payload in this review. Generic configuration loading, precedence, schema alignment, semantic validation, secret-scanning enforcement, deployment binding, and operational use remain `UNKNOWN` or `NEEDS VERIFICATION`.
+At the pinned base, its exact tracked tree contains 28 blobs: 21 README files, five templates, one MapLibre performance-envelope JSON file, and one zero-byte `.gitkeep`. This proves tracked repository shape and bytes only. Generic loading, precedence, schema alignment, semantic validation, secret-scanning enforcement, deployment binding, runtime use, correction propagation, and operational maturity remain `UNKNOWN` or `NEEDS VERIFICATION` unless a named consumer and current evidence establish them.
 
-[Back to top](#top)
+This root is not a secret store, schema registry, semantic contract root, policy engine, source registry, evidence store, lifecycle store, receipt/proof family, release system, runtime, deployment system, generated-artifact root, or public interface.
+
+<p align="right"><a href="#top">Back to top</a></p>
