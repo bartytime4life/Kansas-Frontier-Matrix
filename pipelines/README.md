@@ -2,76 +2,66 @@
 doc_id: kfm://doc/pipelines-readme
 title: pipelines/ — Governed Executable Pipeline and Orchestration Root
 type: readme; root-readme; canonical-pipelines-root; executable-orchestration-boundary; non-publisher-index; compatibility-drift-index
-version: v0.3
-status: draft; repository-grounded; canonical-root-confirmed; placeholder-heavy; mixed-lane-maturity; dedicated-test-suite-unestablished; production-unverified; non-authoritative
-owners: OWNER_TBD — Pipeline steward · Pipeline-spec steward · Domain stewards · Connector/source steward · Contract/schema steward · Evidence/receipt steward · Policy/sensitivity steward · Validation/CI steward · Release/correction/rollback steward · Security reviewer · Docs steward
+version: v0.4
+status: draft; repository-grounded; canonical-root-confirmed; mixed-maturity; selected-deterministic-planning-kernels-confirmed; direct-stage-shells-partially-placeholder; live-execution-unverified; production-unverified; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "OWNER_TBD — Pipeline implementation steward"
+  - "OWNER_TBD — Pipeline-spec steward"
+  - "OWNER_TBD — Domain stewards"
+  - "OWNER_TBD — Source, rights, and sensitivity steward"
+  - "OWNER_TBD — Contract and schema steward"
+  - "OWNER_TBD — Evidence and receipt steward"
+  - "OWNER_TBD — Validation and CI steward"
+  - "OWNER_TBD — Release, correction, and rollback steward"
+  - "OWNER_TBD — Security reviewer"
+  - "OWNER_TBD — Docs steward"
 created: 2026-06-13
-updated: 2026-07-23
-supersedes: v0.2 pipelines root contract
-policy_label: "public-doctrine; pipelines-root; executable-logic; non-publisher; no-source-authority; no-evidence-authority; no-policy-authority; no-release-authority; lifecycle-governed; receipt-aware; placeholder-heavy; no-network-by-default; correction-aware; rollback-aware"
+updated: 2026-08-08
+supersedes: v0.3
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+policy_label: "public-doc; pipelines-root; executable-logic; non-publisher; no-source-authority; no-evidence-authority; no-policy-authority; no-release-authority; lifecycle-governed; receipt-aware; no-network-by-default; correction-aware; rollback-aware"
 current_path: pipelines/README.md
-prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
-truth_posture: >
-  CONFIRMED target v0.2 README; Directory Rules v1.4 pipeline/pipeline_specs split and
-  required root-README order; current repository-present shared, domain, proof, compatibility,
-  cross-lane, and biodiversity README surfaces; pipeline_specs v0.3 placeholder-heavy root;
-  pipelines/specs compatibility guardrail; sampled shared and domain Python placeholders;
-  tests/pipelines README-only direct lane and executable non-publisher policy test; schema-paired
-  draft/PROPOSED RunReceipt with validator and fixtures; pipeline receipt parent; workflow inventory
-  and bounded domain holds; and CODEOWNERS routing / PROPOSED root operating model, activation and
-  graduation states, minimum executable contract, finite stage-outcome mapping, lane-admission
-  checklist, correction propagation, and rollback requirements / CONFLICTED connector-versus-ingest
-  pre-RAW/RAW writer boundary; generic cross_lane and biodiversity umbrella placement; watcher
-  ownership; proof-harness home; triplet path variants; competing Directory Rules placements;
-  receipt layout; and domain aliases in pipeline_specs / UNKNOWN exhaustive executable inventory,
-  active consumers, scheduler and source activation, network behavior, emitted pipeline receipts,
-  functional shared API, dedicated pipeline test suite, CI enforcement, pass rate and coverage,
-  deployment, production behavior, and public effects / NEEDS VERIFICATION named owners,
-  CODEOWNERS enforcement and branch protection, accepted pipeline request/spec contracts,
-  source-registry binding, reason/state vocabularies, receipt profile, compatibility-lane
-  disposition, correction propagation, rollback automation, and the first active governed consumer
+root_profile: ROOT_FULL
+truth_posture: >-
+  CONFIRMED current same-path v0.3 README; adopted Directory Governance Standard v2
+  through accepted ADR-0029; current pipelines tree with thirteen direct child lanes;
+  current pipeline_specs v0.5 declarative boundary; selected deterministic no-network
+  backfill-window and pipeline-resilience planning kernels with contracts, schemas,
+  package modules, CLIs, fixtures, focused tests, and generated provenance; sampled
+  direct ingest and normalize shells remain placeholder-sized; bounded non-publisher
+  policy coverage; and no open pull request touching this file at discovery /
+  PROPOSED a root-wide accepted request/result contract, active consumer registry,
+  scheduler or executor, lifecycle-writer interface, common reason-code registry,
+  durable idempotency and breaker stores, receipt persistence profile, correction
+  propagation, and rollback automation /
+  CONFLICTED connector-versus-ingest admission ownership, watcher ownership,
+  proof-orchestration placement, generic cross-lane and biodiversity umbrellas,
+  triplet and receipt-layout variants, and legacy aliases /
+  UNKNOWN exhaustive runtime consumers, schedules, queues, database or outbox use,
+  live network behavior, emitted pipeline receipts for every lane, current-main
+  focused-test results, deployments, release use, and public effects /
+  NEEDS VERIFICATION named steward assignments, complete consumer and activation
+  matrix, source-rights decisions, required-check enforcement, first active governed
+  executor, correction propagation, rollback drills, and production admission
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 19670ca8e2c8a709fc69cd41173851f8359c8281
-  prior_blob: 9fb38acf5a67ca43608617d73a273d06f5f84db5
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  directory_rules_compatibility_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  pipeline_specs_blob: 7f35f1c06aaec08d03182cf71e88a812bf179ebf
-  ingest_blob: 47e484ed891d5b830f6cb30d20829610824f33ab
-  normalize_blob: 6be680f3faaca29b97a62dd29d3d77c646c0ed6a
-  validate_blob: ee38f7876e75848854294642a696f8dcf6be155a
-  catalog_blob: 2c7f919272e7ecc6a713787460f6cd0e781b0641
-  triplets_blob: ecc6ccd73c248d05aa6d921f8d0345953877ce2e
-  publish_blob: 1586920a993930f295f0305d54343dbf279b897c
-  rollback_blob: d70cb669fc861f10e819a2e555adc77b41bd6fad
-  watchers_blob: 8d6b6474365fbf4c93988db760c98348b1451af8
-  domains_blob: 5d0662ff795c72e7ced583a3ddedfe230131f40c
-  proofs_blob: 79297af6fa63694f18563addcaedcfed4cafe047
-  specs_compatibility_blob: 74ca6cff32623bdca785d47d088d04bdce6a80da
-  cross_lane_blob: bef088f3064a49832d8b1b370ac7668c46325c26
-  biodiversity_blob: 7d967a41f0184b9f0f55eb9e6d495695551acf11
-  biodiversity_vegetation_stress_blob: 265dce76a9fcad0349a28b0f7f0cf792888614c2
-  tests_pipelines_blob: 08fa70cd33af2c04f03aadbf7d973c6f4e29fbf3
-  non_publisher_test_blob: c6164787bc848eb2347c347af203d76afae37a2b
-  pipelines_core_blob: f1b069c91289890f371a2bd640dba31d7432659e
-  run_receipt_contract_blob: 5592aa5e22bbdd0c668189f79b50c18f7d1b2479
-  run_receipt_schema_blob: 80d13bcb750d56c769da2f8871242388f7f50a69
-  run_receipt_validator_blob: 9b59481e90c021f0f92b74511c43fcefbbe3a057
-  common_schema_test_blob: b04342cc034d7f1cc554e155fdd02d6e972976e6
-  pipeline_receipts_blob: 6b714cd3b1501d61a83a9d52c82f7887f6c3b368
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  workflows_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  adr_0011_blob: 158ad6d31946d7d32537d5278ec6d2828ec880b3
-  adr_0012_blob: e323ce42e82bdf93252fa0bd68bd86e3b7eedebf
-  adr_0017_blob: 0e8d03786bcc99b19f179680890df9e30a27633a
-  adr_0018_blob: d7604ab92b915abaec8d7d9bac3da5d40d51e7f3
-  adr_0021_blob: 95648b9967e02bfe662d4f6103de10ee5a467d21
-  adr_0022_blob: b09c1d7aaa39f3030afdcec419c58236fd324f17
+  base_commit: f3d24ac428f7e6a9631a2b1228d10ddc991e3f33
+  base_tree: 23f52e6ea73c07054290b14fc86787e90c76ff26
+  prior_blob: c2bee1db957a665b973b44aea8bda63bdd82b7e5
+  pipelines_tree: 514e8746c3a9de6ef7c4bedc625e39dcc8be69ff
+  pipeline_specs_tree: af01a540556ee9d9d06fe8240cffee3151f7482d
+  canonical_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  direct_child_lanes: 13
+  open_prs_touching_target: 0
+  inventory_method: GitHub connector exact-file reads, commit-pinned tree inspection, bounded code and commit search, and open-PR/branch reconciliation
 related:
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../docs/architecture/directory-rules.md
+  - ../pipeline_specs/README.md
   - ./ingest/README.md
   - ./normalize/README.md
   - ./validate/README.md
@@ -85,34 +75,54 @@ related:
   - ./specs/README.md
   - ./cross_lane/README.md
   - ./biodiversity/README.md
-  - ../pipeline_specs/README.md
-  - ../packages/pipelines-core/src/pipelines_core/README.md
-  - ../tests/pipelines/README.md
+  - ../packages/pipelines-core/README.md
+  - ../packages/pipelines-core/src/pipelines_core/backfill_window.py
+  - ../packages/pipelines-core/src/pipelines_core/pipeline_resilience.py
+  - ../scripts/plan_backfill_window.py
+  - ../scripts/plan_pipeline_resilience.py
+  - ../tests/packages/pipelines_core/test_backfill_window.py
+  - ../tests/packages/pipelines_core/test_pipeline_resilience.py
+  - ../tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py
   - ../tests/policy/test_pipeline_connector_non_publisher.py
+  - ../contracts/runtime/backfill_window_plan.md
+  - ../contracts/runtime/pipeline_resilience_plan.md
+  - ../schemas/contracts/v1/runtime/backfill_window_request.schema.json
+  - ../schemas/contracts/v1/runtime/backfill_window_plan.schema.json
+  - ../schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json
+  - ../schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json
+  - ../docs/runbooks/pipeline-resilience.md
   - ../contracts/runtime/run_receipt.md
   - ../schemas/contracts/v1/runtime/run_receipt.schema.json
-  - ../fixtures/contracts/v1/runtime/run_receipt/README.md
   - ../tools/validators/validate_run_receipt.py
   - ../data/receipts/pipeline/README.md
   - ../data/receipts/generated/README.md
-  - ../runtime/pipelines/README.md
-  - ../docs/doctrine/directory-rules.md
-  - ../docs/architecture/directory-rules.md
-  - ../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md
-  - ../docs/adr/ADR-0017-source-descriptor-admission-process.md
-  - ../docs/adr/ADR-0018-promotion-gate-sequence.md
-  - ../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
-  - ../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
-  - ../docs/registers/DRIFT_REGISTER.md
-  - ../.github/workflows/README.md
+  - ../release/README.md
+  - ../apps/governed-api/README.md
   - ../.github/CODEOWNERS
-tags: [kfm, pipelines, executable-logic, orchestration, lifecycle, non-publisher, pipeline-specs, placeholders, receipts, evidence, policy, validation, correction, rollback, migration]
+tags:
+  - kfm
+  - pipelines
+  - executable-logic
+  - orchestration
+  - lifecycle
+  - non-publisher
+  - pipeline-specs
+  - deterministic-planning
+  - resilience
+  - backfill
+  - receipts
+  - evidence
+  - policy
+  - validation
+  - correction
+  - rollback
+  - migration
 notes:
-  - "This revision changes pipelines/README.md and its required generated provenance receipt only."
-  - "The root remains the canonical executable-pipeline responsibility root; compatibility and unratified lanes are indexed without being silently promoted."
-  - "No pipeline, source activation, specification, contract, schema, policy, fixture, test, workflow, lifecycle record, receipt instance other than generated provenance, proof, release object, deployment, runtime, API, UI, or public artifact is created or modified."
-  - "The prior root README remains recoverable through the recorded prior blob and the v0.2 to v0.3 change summary."
+  - "v0.4 refreshes this README against current main after the backfill-window and pipeline-resilience planning kernels landed."
+  - "Selected planning kernels are real deterministic implementation, but they are side-effect-free decision tools rather than an active scheduler, lifecycle writer, queue worker, or production pipeline runtime."
+  - "ADR-0029 is accepted and makes docs/doctrine/directory-rules.md the sole writable Directory Rules authority; the architecture copy remains a compatibility surface pending migration."
+  - "This change modifies this README and its required generated provenance receipt only."
+  - "No pipeline, source, specification, contract, schema, policy, fixture, test, workflow, lifecycle record, runtime, release object, deployment, or public artifact is activated or changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -120,31 +130,31 @@ notes:
 
 # `pipelines/` — Governed Executable Pipeline and Orchestration Root
 
-> **One-line purpose.** Own executable KFM pipeline logic and orchestration—the **how** of bounded source intake, transformation, validation, projection, readiness, correction, and rollback support—while remaining subordinate to source admission, lifecycle, evidence, policy, review, release, and public-client authority.
+> **One-line purpose.** Own executable KFM pipeline logic and bounded orchestration—the **how** of admitted intake, transformation, validation, projection, readiness, correction, and rollback support—without becoming source authority, evidence authority, policy authority, release authority, or a public serving surface.
 
 <p>
   <a href="#status"><img alt="Status: repository-grounded draft" src="https://img.shields.io/badge/status-repository--grounded%20draft-yellow"></a>
-  <a href="#authority-level"><img alt="Root: canonical pipelines" src="https://img.shields.io/badge/root-pipelines%2F-blue"></a>
-  <a href="#status"><img alt="Maturity: placeholder-heavy" src="https://img.shields.io/badge/maturity-placeholder--heavy-orange"></a>
-  <a href="#related-folders"><img alt="Specs: separate pipeline_specs root" src="https://img.shields.io/badge/specs-pipeline__specs%2F-informational"></a>
+  <a href="#authority-level"><img alt="Root class: canonical implementation" src="https://img.shields.io/badge/root-canonical__implementation-blue"></a>
+  <a href="#confirmed-deterministic-planning-kernels"><img alt="Selected deterministic planners: confirmed" src="https://img.shields.io/badge/planners-selected__kernels-success"></a>
+  <a href="#status"><img alt="Live executor: not established" src="https://img.shields.io/badge/live__executor-not__established-critical"></a>
   <a href="#outputs"><img alt="Publication authority: denied" src="https://img.shields.io/badge/publication-DENIED-red"></a>
   <a href="#validation"><img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite__or__abstain-success"></a>
 </p>
 
 > [!IMPORTANT]
-> **A pipeline run is not lifecycle promotion or publication.** A runner may produce candidates, reports, receipts, blockers, projections, and release-review handoffs. It cannot make source material true, create an `EvidenceBundle` by assertion, approve policy, close review, issue a release decision, or move anything into `PUBLISHED` state by itself.
+> **A pipeline decision or run is not lifecycle promotion or publication.** A planner or runner may produce candidates, reports, receipts, blockers, projections, and release-review handoffs. It cannot make source material true, create an `EvidenceBundle` by assertion, approve policy, close review, issue a release decision, or move anything into `PUBLISHED` state by itself.
 
 > [!CAUTION]
-> **Normal pipeline code must not write directly to catalog, published, or release authority surfaces.** The repository has one executable static guard that scans `connectors/` and `pipelines/` for write contexts targeting `data/catalog`, `data/published`, or `release/`. That guard is useful but bounded; it does not establish a complete lifecycle writer, runtime sandbox, or promotion gate.
+> **Planning kernels are not executors.** The repository now contains substantive deterministic backfill and resilience planners. They calculate bounded decisions without network or writes. Their existence does not establish an active scheduler, queue worker, database writer, source activation path, policy evaluator, promotion gate, or production runtime.
 
 > [!WARNING]
-> **Secrets and restricted payloads do not belong in code, specs, fixtures, logs, receipts, issues, or pull requests.** Credentials, private endpoints, protected coordinates, living-person records, DNA/genomic material, rare-species locations, archaeology details, private-land joins, infrastructure vulnerabilities, and unrestricted source payloads require approved handling, minimization, redaction, and access controls outside ordinary public repository surfaces.
+> **Secrets and restricted payloads do not belong in code, specs, fixtures, logs, receipts, issues, or pull requests.** Credentials, private endpoints, protected coordinates, living-person records, DNA or genomic material, rare-species locations, archaeology details, private-land joins, infrastructure vulnerabilities, and unrestricted source payloads require approved handling outside ordinary public repository surfaces.
 
 **Quick navigation**
 
 | Root contract | Trust and operation | Maintenance |
 |---|---|---|
-| [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) | [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Lifecycle](#lifecycle-and-non-publisher-operating-model) · [Executable contract](#minimum-executable-pipeline-contract) | [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Migration](#lane-admission-migration-correction-and-rollback) · [No-loss](#v02-to-v03-no-loss-ledger) |
+| [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) | [Inputs](#inputs) · [Outputs](#outputs) · [Exposure](#public-exposure-and-sensitivity) · [Storage](#mutability-retention-generation-and-storage) · [Validation](#validation) · [Operating model](#lifecycle-and-non-publisher-operating-model) | [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-migrations-and-aliases) · [Directory map](#direct-child-directory-map) · [Last reviewed](#last-reviewed) · [Rollback](#lane-admission-migration-correction-and-rollback) · [No-loss](#v03-to-v04-no-loss-ledger) |
 
 ---
 
@@ -152,57 +162,59 @@ notes:
 
 ## Purpose
 
-`pipelines/` is the canonical KFM responsibility root for executable pipeline logic and bounded orchestration.
+`pipelines/` is the canonical KFM responsibility root for executable pipeline stages and bounded orchestration.
 
 It answers five questions:
 
-1. Which admitted inputs and declarative profile does a pipeline stage consume?
+1. Which admitted inputs and accepted declarative profile does a stage consume?
 2. How does the stage execute deterministically and fail safely?
 3. Which candidate outputs, reports, blockers, and receipt facts does it emit?
 4. Which evidence, policy, review, release, correction, and rollback obligations remain outside the stage?
-5. How can the stage be disabled, replayed, superseded, migrated, or rolled back without rewriting history or bypassing governance?
+5. How can the stage be disabled, replayed, superseded, migrated, corrected, or rolled back without rewriting history?
 
 ### Responsibility split
 
 ```text
-pipelines/       = executable pipeline logic and orchestration — HOW work runs
-pipeline_specs/  = declarative configuration and activation intent — WHAT may run
-connectors/      = source-specific fetch and admission edge
-data/            = lifecycle state, governed records, receipts, proofs, and published artifacts
-release/         = release, correction, withdrawal, and rollback decisions
+connectors/      = source-specific acquisition and admission-edge implementation
+pipeline_specs/  = declarative run intent — WHAT may run
+pipelines/       = executable transformation and orchestration — HOW work runs
+packages/        = reusable multi-consumer logic used by pipelines or tools
+data/            = lifecycle, evidence, receipt, proof, registry, and published instances
+release/         = promotion, release, correction, withdrawal, and rollback decisions
+apps/            = governed deployables and public or steward-facing surfaces
 ```
 
 ### Intended operating flow
 
 ```text
 admitted SourceDescriptor and bounded source or lifecycle references
-  -> accepted pipeline specification/profile
+  -> accepted pipeline specification/profile and fixed digest
   -> caller, scope, identity, rights, sensitivity, and policy prechecks
   -> executable stage under pipelines/ or an admitted reusable package
-  -> candidate output refs plus finite stage result
+  -> finite result plus candidate output references
   -> schema, contract, evidence, policy, and quality validation
   -> RunReceipt or accepted pipeline-receipt candidate
-  -> WORK / QUARANTINE / PROCESSED / CATALOG-TRIPLET candidate handoff
+  -> governed WORK / QUARANTINE / PROCESSED / CATALOG-TRIPLETS handoff
   -> independent review and release gates
-  -> PUBLISHED only through governed release authority
+  -> PUBLISHED only through release authority
 ```
 
-This is a **PROPOSED operating model**, not a claim that every arrow is implemented.
+This is the **PROPOSED complete operating model**. Current evidence confirms selected pieces, not every arrow.
 
 ### Keystone invariants
 
 Every pipeline change must preserve:
 
-- `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`;
-- promotion as a governed state transition, not a file write, run result, merge, or deployment;
-- source-role identity and source-admission boundaries;
-- `EvidenceRef -> EvidenceBundle` resolution when claims depend on evidence;
-- policy-aware, fail-closed behavior for rights, sensitivity, access, and review gaps;
+- `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`;
+- promotion as a governed state transition, never a file write, planner result, run result, merge, or deployment;
+- source identity, source role, rights, sensitivity, and source-admission boundaries;
+- `EvidenceRef -> EvidenceBundle` resolution when consequential claims depend on evidence;
+- fail-closed policy behavior for unknown rights, access, sensitivity, review, or release state;
 - deterministic identity, replay, idempotency, and explicit no-op behavior where practical;
-- candidate-producer and watcher-as-non-publisher discipline;
-- receipt/proof/catalog/release separation;
-- correction, withdrawal, supersession, invalidation, and rollback visibility;
-- public clients behind governed APIs rather than pipeline or lifecycle internals.
+- watcher and candidate-producer non-publisher discipline;
+- receipt, proof, catalog, review, release, correction, and rollback object-family separation;
+- visible correction, withdrawal, supersession, invalidation, and rollback lineage;
+- public clients behind governed interfaces rather than pipeline or lifecycle internals.
 
 [Back to top](#top)
 
@@ -212,43 +224,45 @@ Every pipeline change must preserve:
 
 ## Authority level
 
-**Canonical implementation root / non-authoritative execution boundary.**
+**Root class:** canonical implementation root.
 
-Directory Rules assign executable pipeline logic to `pipelines/` and declarative intent to `pipeline_specs/`. That placement does not grant `pipelines/` authority over sources, object meaning, machine shape, policy, evidence, lifecycle truth, release, or public serving.
+**Authority owner:** pipeline execution and orchestration implementation. The named steward role remains **NEEDS VERIFICATION**; `@bartytime4life` is the current verified CODEOWNERS review route.
+
+Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Governance Standard v2 bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md). That standard assigns lifecycle transformation and orchestration to `pipelines/`, declarative run graphs and schedules to `pipeline_specs/`, reusable multi-consumer logic to `packages/`, and thin invocation wrappers to `scripts/`.
+
+The internal `PROPOSED_FOR_ADOPTION` label remains inside the byte-pinned Directory Rules artifact, but the accepted ADR supplies the adoption decision. The full [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) body is a read-only compatibility dependency pending a separately governed tombstone migration; it is not a second writable authority.
 
 ### Responsibility routing
 
 | Concern | Owning surface | Pipeline role |
 |---|---|---|
-| Source-specific fetch and first admission | [`connectors/`](../connectors/) plus governed source registry | Consume admitted refs or receive a controlled handoff; do not replace source authority. |
-| Declarative stage, scope, cadence, and profile | [`pipeline_specs/`](../pipeline_specs/) | Resolve an accepted spec/profile; do not maintain a second spec authority here. |
-| Executable stage logic | `pipelines/` | Own bounded stage implementation and orchestration. |
-| Reusable, multi-consumer libraries | [`packages/`](../packages/) | Import admitted package APIs; one-off or workflow-specific orchestration stays here or in `tools/`. |
-| Object meaning | [`contracts/`](../contracts/) | Consume contracts; do not redefine semantics in implementation code. |
-| Machine-checkable shape | [`schemas/`](../schemas/) | Validate against paired schemas; do not create parallel shapes. |
-| Allow, deny, hold, redact, generalize, or obligate | [`policy/`](../policy/) | Submit governed inputs and obey results; never encode policy authority as convenience logic. |
-| Lifecycle records and artifacts | [`data/`](../data/) | Read and write only through accepted lifecycle interfaces and transitions. |
-| Receipts and proofs | [`data/receipts/`](../data/receipts/), [`data/proofs/`](../data/proofs/) | Emit or link candidates through accepted tooling; a receipt is not proof. |
-| Tests and fixtures | [`tests/`](../tests/), [`fixtures/`](../fixtures/) | Require deterministic positive and negative proof outside implementation code. |
-| Validation implementation | [`tools/validators/`](../tools/validators/) | Invoke repository-owned validators; do not duplicate them in workflow YAML or README snippets. |
-| Release, correction, withdrawal, rollback | [`release/`](../release/) | Assemble readiness handoffs only; release authority remains separate. |
-| Public and semi-public delivery | [`apps/governed-api/`](../apps/governed-api/), accepted application roots | No direct public pipeline endpoint or lifecycle-store exposure. |
-| Runtime model or service handoff | [`runtime/`](../runtime/) | Optional, minimized, policy-safe handoff only; executable pipeline authority stays here. |
+| Source acquisition and first admission | [`connectors/`](../connectors/) plus governed source registry | Consume admitted references or a controlled handoff; never infer authority from a URL or parser success. |
+| Declarative stage, scope, cadence, profile, or run graph | [`pipeline_specs/`](../pipeline_specs/) | Resolve an accepted declaration; do not maintain a second spec authority here. |
+| Executable transformation and orchestration | `pipelines/` | Own stage-specific behavior and bounded orchestration. |
+| Reusable source-agnostic planning or shared logic | [`packages/`](../packages/) | Import reviewed package APIs; do not duplicate shared logic in stage wrappers. |
+| Thin operator invocation | [`scripts/`](../scripts/) | Invoke governed implementations; scripts are not imported as production libraries. |
+| Object meaning | [`contracts/`](../contracts/) | Consume accepted semantics; implementation code does not redefine them. |
+| Machine shape | [`schemas/`](../schemas/) | Validate against accepted profiles; no parallel shape authority. |
+| Allow, deny, hold, redact, generalize, or obligate | [`policy/`](../policy/) | Submit governed inputs and obey decisions; convenience code is not policy authority. |
+| Lifecycle and accountability instances | [`data/`](../data/) | Use accepted writers and transitions; do not self-promote. |
+| Tests and fixtures | [`tests/`](../tests/), [`fixtures/`](../fixtures/) | Provide deterministic positive and negative evidence outside implementation code. |
+| Repository validators | [`tools/validators/`](../tools/validators/) | Invoke repository-owned validators rather than copying rules into workflow YAML. |
+| Release, correction, withdrawal, rollback | [`release/`](../release/) | Assemble readiness handoffs only; final decisions remain separate. |
+| Public and semi-public delivery | governed [`apps/`](../apps/) | No direct public pipeline endpoint or lifecycle-store exposure. |
 
 ### Canonical and compatibility posture
 
-| Path | Current classification | Admission rule |
+| Path | Classification | Rule |
 |---|---|---|
-| `pipelines/{ingest,normalize,validate,catalog,triplets,publish,rollback}/` | Directory-Rules functional lanes | New executable work still requires accepted contracts, specs, fixtures, tests, receipts, and review. |
-| `pipelines/domains/` | Canonical domain execution segment | Domain code lives below its domain segment; domain meaning and policy remain elsewhere. |
-| `pipelines/specs/` | Compatibility guardrail | Do not add declarative specs; route them to `pipeline_specs/`. |
-| `runtime/pipelines/` | Compatibility/runtime-handoff index | No executable pipeline logic or public route authority. |
-| `pipelines/watchers/` | Repository-present, placement-conflicted orchestration boundary | Preserve non-publisher behavior; resolve shared/domain/tool ownership before activation. |
-| `pipelines/proofs/` | Repository-present, placement-conflicted proof-orchestration boundary | May index future orchestration; does not own proof data or release authority. |
-| `pipelines/cross_lane/` | Repository-present compatibility and child-admission boundary | Do not treat the generic namespace as an accepted framework without ADR/migration resolution. |
-| `pipelines/biodiversity/` | Repository-present cross-lane umbrella, canonicality unresolved | Do not create a new domain truth root or duplicate an active concern across competing homes. |
+| `pipelines/{ingest,normalize,validate,catalog,triplets,publish,rollback}/` | Canonical stage-first lanes | Add domain work below the applicable stage; new execution still needs contracts, specs, fixtures, tests, receipts, and review. |
+| `pipelines/domains/` | Existing competing topology | Do not add a second writable domain implementation when stage-first placement already owns it; disposition requires inventory and migration evidence. |
+| `pipelines/specs/` | Compatibility candidate | Never add declarative specifications; canonical declarations belong in `pipeline_specs/`. |
+| `pipelines/watchers/` | Existing, ownership unresolved | Preserve non-publisher behavior; resolve stage, domain, tool, and declarative ownership before activation. |
+| `pipelines/proofs/` | Existing, placement unresolved | May orchestrate checks only if accepted; proof instances remain under `data/proofs/`. |
+| `pipelines/cross_lane/` | Existing generic composition boundary | Do not treat it as an accepted framework without a registered seam and one writable implementation owner. |
+| `pipelines/biodiversity/` | Existing cross-lane umbrella | Do not create a new sovereign domain or duplicate habitat, flora, fauna, or other domain truth. |
 
-A move, rename, retirement, or promotion of a compatibility or conflicted path requires current inventory, inbound-link review, an ADR or migration record where appropriate, a transition window, and a rollback target. This README authorizes none of those path mutations.
+A move, rename, retirement, or promotion of a compatibility or conflicted path requires current inventory, reference review, an accepted decision where authority changes, a migration record, parity validation, and a rollback target. This README performs none of those structural actions.
 
 [Back to top](#top)
 
@@ -256,70 +270,74 @@ A move, rename, retirement, or promotion of a compatibility or conflicted path r
 
 ## Status
 
-### Evidence boundary
+### Evidence snapshot
 
-The repository has a broad pipeline documentation surface, many declarative scaffolds, and a small amount of executable boundary enforcement. It does **not** yet establish a complete root pipeline engine, active shared-stage system, dedicated pipeline behavior suite, or production execution posture.
+| Field | Value |
+|---|---|
+| Base | `main@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33` |
+| Base tree | `23f52e6ea73c07054290b14fc86787e90c76ff26` |
+| Prior README blob | `c2bee1db957a665b973b44aea8bda63bdd82b7e5` |
+| `pipelines/` tree | `514e8746c3a9de6ef7c4bedc625e39dcc8be69ff` |
+| Direct child lanes | `13` |
+| Current Directory Rules | Adopted v2 bytes through accepted `ADR-0029` |
+| Current declarative companion | `pipeline_specs/README.md` v0.5 |
+| Open pull requests touching this file at discovery | `0` |
+| Change effect | Documentation plus required generated provenance only |
 
-| Surface | Current repository evidence | Safe conclusion |
-|---|---|---|
-| `pipelines/README.md` | Existing v0.2 root contract | Correct responsibility split, but lane maturity, compatibility paths, tests, receipts, and workflow statements are stale. |
-| Shared ingest | v0.2 repository-grounded README; direct lane bounded to README plus a Fauna child | No shared executable ingest system is established. Connector-versus-ingest admission responsibility remains conflicted. |
-| Shared normalize | v0.1 governed lane README | Useful contract prose exists; executable inventory, fixtures, tests, and CI remain unverified. |
-| Shared validate | v0.2 README plus one-line placeholder `main.py` | No active shared validation pipeline. Aggregate validators execute elsewhere under `tools/validators/`. |
-| Shared catalog | v0.2 repository-grounded README | Documentation-only in checked evidence; catalog closure implementation is not established. |
-| Shared triplets | v0.2 README; shared and sampled domain modules are placeholder-only | No active shared triplet pipeline; graph projection remains derived, not truth. |
-| Publish readiness | v0.2 README | Readiness boundary exists in prose; shared executable and canonical readiness result remain unverified. |
-| Rollback readiness | v0.1 README | Readiness support is documented; implementation and automation remain unverified. |
-| Watchers | v0.2 repository-grounded README | Shared/domain/tool ownership is conflicted; no active shared watcher framework is established. |
-| Domain pipelines | Parent and many child paths/READMEs; sampled Python files are placeholder docstrings | Path presence is not functional implementation. Complete executable inventory remains unknown. |
-| Proof orchestration | v0.2 parent plus one documented thin-slice child | No executable proof producer is established; proof and test placement remain conflicted. |
-| `pipelines/specs/` | v0.2 compatibility guardrail | Correctly blocks a second spec authority; parser/enforcement depth remains unknown. |
-| Cross-lane routing | v0.2 parent plus one child README | No umbrella contract, registry, shared implementation, matching spec/test/fixture lane, or dedicated workflow is established. |
-| Biodiversity umbrella | v0.1 parent plus repository-grounded vegetation-stress child | Direct vegetation-stress lane is README-only and competing implementation homes are unresolved. |
-| `pipeline_specs/` | v0.3; 17 direct README lanes and 5 nested READMEs in its bounded inventory | Declarative root is confirmed, but payloads are placeholder-heavy and no active root parser/consumer system is established. |
-| `packages/pipelines-core/` | `0.0.0`, empty initializer, comment-only `core.py`, no supported consumers/tests | Reusable implementation home is visible but not a functional library. |
-| `tests/pipelines/` | README-only direct lane | No dedicated pipeline behavior suite is established. |
-| Non-publisher test | Executable static policy test scans connectors and pipelines for forbidden publish-target write contexts | One bounded negative control is established; it is not end-to-end lifecycle enforcement. |
-| `RunReceipt` family | Draft/PROPOSED contract and paired schema, validator wrapper, valid/invalid fixtures | Shape validation exists; pipeline emission, persistence, and release use remain unverified. |
-| Pipeline receipts | Parent README plus confirmed Atmosphere and Flora child documentation | Receipt lane exists; emitted instances and canonical layout are not established. |
-| Workflows | 41-workflow inventory; domain readiness jobs and partial gates | Many jobs are holds or bounded checks. Current conclusions, branch protection, and complete pipeline enforcement remain unverified. |
+### Safe current conclusion
 
-### Bounded root map
+The root is **mixed maturity**:
 
-```text
-pipelines/
-├── README.md                  # this root contract
-├── ingest/                    # functional lane; documentation-only direct inventory
-├── normalize/                 # functional lane; implementation unverified
-├── validate/                  # functional lane; placeholder entrypoint
-├── catalog/                   # functional lane; documentation-only in checked evidence
-├── triplets/                  # functional lane; placeholder-heavy
-├── publish/                   # readiness lane; implementation unverified
-├── rollback/                  # readiness lane; implementation unverified
-├── domains/                   # domain execution segment; sampled code placeholder-heavy
-├── watchers/                  # repository-present; ownership conflicted
-├── proofs/                    # repository-present; proof-orchestration placement conflicted
-├── specs/                     # compatibility guardrail; canonical specs are pipeline_specs/
-├── cross_lane/                # compatibility/routing boundary; generic namespace unratified
-└── biodiversity/              # cross-lane umbrella; canonical placement unresolved
-```
+- the responsibility boundary and direct-child lane network are present;
+- sampled direct shared stage shells, including `ingest/main.py` and `normalize/main.py`, remain placeholder-sized;
+- selected reusable planning logic under `packages/pipelines-core/` is substantive and fixture-tested;
+- the planners are deterministic, no-network, and side-effect-free;
+- the package manifest remains `0.0.0` and the package does not establish a supported general pipeline runtime;
+- no root-wide active executor, scheduler, consumer registry, lifecycle writer, queue/database adapter, or production activation model is established by the inspected evidence;
+- no planner or lane is granted source, policy, evidence, promotion, release, deployment, or publication authority.
 
-This is a bounded, evidence-grounded orientation map—not authorization to add a lane, treat every present path as canonical, or infer implementation from directory names.
+<a id="confirmed-deterministic-planning-kernels"></a>
 
-### Confirmed drift and conflicts
+### Confirmed deterministic planning kernels
 
-1. **Admission ownership.** Connector doctrine assigns source-edge writes to `data/raw/` or `data/quarantine/`, while ingest documentation also describes pre-RAW executable coordination. The winning handoff contract is not accepted.
-2. **Specification duplication risk.** `pipeline_specs/` is canonical; `pipelines/specs/` remains a compatibility guardrail and must not accumulate specs.
-3. **Cross-lane naming and ownership.** `cross_lane`, cross-domain topic segments, domain-owned compositions, and biodiversity umbrella paths compete for some concerns.
-4. **Watcher ownership.** Shared pipeline, domain pipeline, declarative watcher, and tool watcher surfaces coexist without an accepted active owner.
-5. **Proof orchestration.** `pipelines/proofs/`, cross-domain tests, proof tools, and `data/proofs/` expose distinct responsibilities but final orchestration placement remains unresolved.
-6. **Triplet topology.** Repository documentation records plural and singular triplet paths plus compatibility catalog paths; derived projections must not become parallel truth.
-7. **Receipt layout.** `data/receipts/pipeline/<domain>/` versus domain-first alternatives remain unresolved; receipt presence does not prove execution.
-8. **Directory Rules duplication.** `docs/doctrine/directory-rules.md` v1.4 and `docs/architecture/directory-rules.md` v1.3.1 both exist; the placement question remains open even though the doctrine root copy is used here as current governing evidence.
-9. **Domain aliases.** `air`/`atmosphere`, `people`/`people-dna-land`, and `settlement`/`settlements-infrastructure` appear in declarative surfaces and need migration decisions before activation.
-10. **Implementation-versus-documentation drift.** Many READMEs describe mature contracts while sampled `.py` files, tests, package code, and specs remain placeholders or absent.
+| Capability | Current artifacts | What is confirmed | What is not established |
+|---|---|---|---|
+| Backfill-window planning | contract; request and plan schemas; `backfill_window.py`; no-network CLI; valid/invalid fixtures; focused tests | Deterministic canonical hashing, bounded UTC half-open windows, `NOOP`/`REBUILD`, stable dedupe and plan identity, and a proposed processed-artifact URI without writes | A backfill executor, source fetch, lifecycle writer, signature operation, policy evaluation, release, or publication |
+| Pipeline-resilience planning | contract; request and plan schemas; public module and internal helpers; no-network CLI; fixtures; focused tests; operator runbook | Finite trigger admission, idempotency identity, bounded retry, backpressure, canary isolation, circuit breaking, outbox/WAL prerequisites, dead-letter replay review, kill-switch planning, and operator-safe projection | A scheduler, workflow controller, queue or database mutation, persistent idempotency/breaker state, policy runtime, kill-switch adapter, deployment, or release |
+| Operator-safe CLI projection | `plan_pipeline_resilience.py` and a dedicated regression test | Restricted access and authorization metadata are omitted from stdout after validation | Complete privacy review for every future adapter or log sink |
 
-### Proposed capability progression
+The merged resilience pull request recorded focused deterministic validation and 42 successful exact-head hosted workflows. That is historical exact-head evidence for the merged packet, not a substitute for a fresh current-main run.
+
+### Current maturity matrix
+
+| Surface | Evidence-backed posture | Safe conclusion |
+|---|---:|---|
+| Root README | `CONFIRMED` | Canonical root boundary exists and is being refreshed to v2 `ROOT_FULL`. |
+| Direct stage lanes | `CONFIRMED, bounded` | Stage-first paths exist; sampled direct shells remain placeholder-sized. |
+| `pipeline_specs/` | `CONFIRMED, mixed` | Declarative root and selected fixture-first/inactive profiles exist; no general active registry or scheduler is established. |
+| `packages/pipelines-core/` | `CONFIRMED, mixed` | Selected planning modules are substantive; manifest/version and general API maturity remain early. |
+| Focused planner tests | `CONFIRMED present` | Three current test files cover backfill, resilience, and CLI projection; current-main execution is not claimed here. |
+| No-network operator CLIs | `CONFIRMED present` | Two planner entrypoints validate requests and print bounded outputs; they do not execute pipelines. |
+| Direct pipeline behavior suite | `PARTIAL` | Planner behavior is tested under `tests/packages/pipelines_core/`; `tests/pipelines/` is not shown here as a complete root execution suite. |
+| Non-publisher control | `CONFIRMED, bounded` | A static policy test scans selected connector and pipeline write contexts; it is not end-to-end sandboxing or promotion enforcement. |
+| `RunReceipt` family | `CONFIRMED shape support / PROPOSED semantics` | Contract, schema, validator, and fixtures exist; universal emission and persistence are unverified. |
+| Live orchestration | `UNKNOWN / not established` | No complete active executor, schedule, queue, database, or production consumer was verified. |
+| Release and public effects | `UNKNOWN / denied by this root` | Presence of code, tests, receipts, or green workflows does not prove release or publication. |
+
+### Confirmed conflicts and open boundaries
+
+1. **Connector-to-ingest handoff.** Source acquisition and admission belong to connectors and source governance; the exact executable handoff into ingest remains unresolved.
+2. **Stage-first versus domain-first implementation.** Adopted v2 prefers stage-first placement, while `pipelines/domains/` remains present. Do not add dual writers.
+3. **Specification duplication.** `pipeline_specs/` is canonical; `pipelines/specs/` is not a fallback discovery path.
+4. **Watcher ownership.** Shared stage, domain, declarative, and tool watcher surfaces coexist without one accepted active owner.
+5. **Proof orchestration.** `pipelines/proofs/`, validators, tests, and `data/proofs/` have different responsibilities; orchestration placement remains unsettled.
+6. **Cross-domain composition.** Generic `cross_lane/` and `biodiversity/` paths need registered seam ownership and migration decisions.
+7. **Triplet topology.** Historical singular/plural and compatibility paths must not become parallel truth.
+8. **Receipt layout.** Pipeline-first and domain-first receipt layouts need an accepted profile and one write authority.
+9. **Domain aliases.** `air`/`atmosphere`, `people`/`people-dna-land`, and `settlement`/`settlements-infrastructure` require migration decisions before activation.
+10. **Implementation versus documentation.** Mature README language must remain bounded to the actual contracts, modules, fixtures, tests, receipts, and consumers that exist.
+
+### Capability progression
 
 ```text
 PROPOSED
@@ -336,7 +354,7 @@ PROPOSED
   -> SUPERSEDED / DISABLED / RETIRED
 ```
 
-These state names are **PROPOSED** and do not replace accepted contract, policy, lifecycle, or release vocabularies. Unknown or missing gates fail closed.
+These names are an orientation aid, not a replacement for accepted lifecycle, policy, review, release, or runtime vocabularies. Unknown gates fail closed.
 
 [Back to top](#top)
 
@@ -349,38 +367,36 @@ These state names are **PROPOSED** and do not replace accepted contract, policy,
 Appropriate content includes:
 
 - executable stage runners and bounded orchestration;
-- shared stage helpers that are genuinely pipeline-specific and not reusable-package candidates;
-- domain-specific transformation code under `pipelines/domains/<domain>/`;
+- stage-first domain transformations under the applicable pipeline stage;
+- pipeline-specific helpers that are not reusable package candidates;
 - deterministic normalization, validation coordination, projection, and readiness logic;
-- explicit lifecycle candidate writers that use accepted interfaces and never bypass promotion;
+- lifecycle candidate writers that use accepted interfaces and never bypass promotion;
 - idempotency, replay, retry, cancellation, no-op, checkpoint, and partial-failure handling;
-- candidate receipt assembly and stable blocker/reason mapping;
+- candidate receipt assembly and stable blocker or reason mapping;
 - source-role-preserving joins and policy-safe cross-domain composition;
-- no-network dry-run harnesses when they execute pipeline behavior rather than merely describe it;
-- migration adapters, deactivation hooks, correction propagation, cache/index invalidation requests, and rollback support specific to execution;
-- lane READMEs that disclose placement, maturity, inputs, outputs, tests, receipts, review, activation, and rollback.
+- no-network dry-run harnesses when they execute stage behavior rather than only describe it;
+- deactivation hooks, correction propagation, cache or index invalidation requests, migration adapters, and rollback support specific to execution;
+- lane READMEs that disclose authority, status, inputs, outputs, tests, receipts, exposure, activation, correction, and rollback.
 
 Every implementation-bearing addition should identify:
 
 | Required field family | Why it is required |
 |---|---|
-| Stable pipeline, stage, and run identity | Supports replay, correction, receipts, and rollback. |
-| Owning lane and named consumer | Prevents orphan or accidental execution. |
-| Accepted spec/profile reference | Keeps executable behavior bound to reviewed declarative intent. |
-| Contract and schema references | Prevents shape guessing and undocumented payload drift. |
-| SourceDescriptor and source-role references | Prevents source identity and authority collapse. |
+| Stable pipeline, stage, run, and idempotency identity | Supports replay, correction, receipts, deduplication, and rollback. |
+| Owning lane, caller, and named consumer | Prevents orphan or accidental execution. |
+| Accepted spec/profile reference and digest | Binds implementation to reviewed declarative intent. |
+| Contract and schema references | Prevents shape guessing and undocumented drift. |
+| SourceDescriptor references and fixed source roles | Prevents source identity and authority collapse. |
 | Lifecycle input and candidate-output states | Prevents lifecycle skips and direct publication. |
 | Evidence, rights, sensitivity, policy, and review prerequisites | Preserves the trust membrane. |
-| Network, filesystem, tool, secret, and logging posture | Defines side-effect and exposure boundaries. |
-| Timeouts, retries, cancellation, idempotency, and checkpoints | Prevents uncontrolled or duplicate effects. |
-| Finite outcomes and stable reasons | Makes failure, no-op, hold, and quarantine inspectable. |
+| Network, filesystem, tool, secret, queue, and logging posture | Defines side-effect and exposure boundaries. |
+| Timeouts, retries, cancellation, idempotency, checkpoints, and compensation | Prevents uncontrolled or duplicate effects. |
+| Finite outcomes and stable reasons | Makes failure, no-op, hold, denial, and quarantine inspectable. |
 | Fixtures, tests, validators, and CI entrypoint | Separates implementation from assertion. |
 | Receipt and observability references | Supports audit without treating logs as truth. |
 | Activation, fallback, kill switch, supersession, migration, and rollback | Preserves reversible operation. |
 
-A useful placement test:
-
-> A file belongs here when its primary responsibility is **how a governed pipeline stage executes**. If it primarily declares what should run, defines meaning or shape, decides admissibility, stores lifecycle state, proves a claim, approves release, or serves a client, route it to the responsibility root that owns that role.
+> A file belongs here when its primary responsibility is **how a governed lifecycle stage executes**. If it primarily declares what should run, defines meaning or shape, decides admissibility, stores lifecycle state, proves a claim, approves release, or serves a client, route it to the root that owns that responsibility.
 
 [Back to top](#top)
 
@@ -392,27 +408,28 @@ A useful placement test:
 
 | Prohibited or misplaced material | Correct home or posture |
 |---|---|
-| Declarative pipeline specs, schedules, profiles, or activation records | [`pipeline_specs/`](../pipeline_specs/) |
-| Source-specific fetchers and source admission authority | [`connectors/`](../connectors/) and governed source registry/admission surfaces |
-| SourceDescriptor instances | [`data/registry/sources/`](../data/registry/sources/) or accepted registry home |
+| Declarative run graphs, schedules, specs, or activation profiles | [`pipeline_specs/`](../pipeline_specs/) |
+| Source-specific fetchers and source admission authority | [`connectors/`](../connectors/) plus governed source registry and decisions |
+| Reusable multi-consumer planning or domain libraries | [`packages/`](../packages/) |
+| Thin operator invocation with no unique trust logic | [`scripts/`](../scripts/) |
+| SourceDescriptor instances | Accepted `data/registry/` source lane |
 | Semantic object meaning | [`contracts/`](../contracts/) |
 | JSON Schema or other machine-shape authority | [`schemas/`](../schemas/) |
-| Policy rules, rights decisions, sensitivity decisions, consent, access, or release eligibility | [`policy/`](../policy/) and governed decision records |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED records | Governed [`data/`](../data/) lifecycle homes |
-| EvidenceBundle contents or proof packs | [`data/proofs/`](../data/proofs/) and accepted evidence/proof homes |
-| Final catalog records or catalog authority | [`data/catalog/`](../data/catalog/) and accepted catalog tooling |
-| Durable pipeline receipt instances | [`data/receipts/pipeline/`](../data/receipts/pipeline/) through accepted emitters |
-| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, RollbackCard, or final release decision | [`release/`](../release/) |
-| Reusable cross-application library code | [`packages/`](../packages/) |
+| Policy rules, rights decisions, consent, sensitivity, access, or release eligibility | [`policy/`](../policy/) and governed decision instances |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED records | Governed [`data/`](../data/) homes |
+| EvidenceBundle contents or proof packs | Accepted evidence and [`data/proofs/`](../data/proofs/) homes |
+| Final catalog records | [`data/catalog/`](../data/catalog/) through accepted emitters and closure checks |
+| Durable pipeline receipt instances | Accepted [`data/receipts/`](../data/receipts/) lane |
+| ReleaseManifest, PromotionDecision, CorrectionNotice, WithdrawalNotice, or RollbackCard | [`release/`](../release/) |
 | Validator libraries | [`tools/validators/`](../tools/validators/) |
 | Tests and fixtures | [`tests/`](../tests/) and [`fixtures/`](../fixtures/) |
-| Deployment, host, queue, service-manager, firewall, or secret-store definitions | [`infra/`](../infra/), [`configs/`](../configs/), and approved external secret handling |
-| Public API, UI, map, export, search, or AI serving code | Accepted [`apps/`](../apps/) and governed interfaces |
-| Direct writes to `data/catalog`, `data/published`, or `release/` as ordinary stage effects | Denied; use governed candidate and release transitions |
-| Real secrets, private URLs, signing material, unrestricted source payloads, protected coordinates, or private reasoning | Never in this public root or repository examples |
-| A new catch-all `jobs/`, `etl/`, `flows/`, `workflows/`, `processors/`, or parallel pipeline root | Requires Directory Rules review and usually an ADR/migration record |
+| Deployment, host, queue-service, firewall, or secret-store definitions | [`infra/`](../infra/), [`configs/`](../configs/), and external secret handling |
+| Public API, map, export, search, or AI serving code | Governed [`apps/`](../apps/) |
+| Direct writes to `data/catalog`, `data/published`, or `release/` as ordinary stage effects | **DENY**; use governed candidates and independent transitions |
+| Real secrets, private URLs, signing material, protected coordinates, or private reasoning | Never in this public root or examples |
+| A new catch-all `jobs/`, `etl/`, `flows/`, `workflows/`, `processors/`, or parallel pipeline root | Requires placement review and usually an ADR or migration record |
 
-Generated prose, a green run, a schema-valid object, a receipt, a graph projection, or a successful merge must never be stored or described here as sovereign truth or release approval.
+A generated summary, schema-valid payload, receipt, graph projection, successful planner output, green workflow, or merge must never be represented as sovereign truth or release approval.
 
 [Back to top](#top)
 
@@ -422,48 +439,47 @@ Generated prose, a green run, a schema-valid object, a receipt, a graph projecti
 
 ## Inputs
 
-Pipeline stages may accept only bounded, governed inputs from an identified caller.
+Pipeline stages accept only bounded, governed inputs from an identified caller.
 
 ### Permitted input classes
 
 - stable request, run, trace, stage, and idempotency identity;
-- an accepted pipeline specification/profile reference and digest;
+- an accepted specification/profile reference and digest;
 - admitted `SourceDescriptor` references and fixed source roles;
-- RAW, WORK, QUARANTINE, PROCESSED, or other allowed lifecycle references appropriate to the stage;
+- allowed lifecycle references appropriate to the stage;
 - contract and schema profile references;
 - resolved `EvidenceRef` pointers or approved synthetic fixtures where evidence is required;
 - policy, rights, sensitivity, consent, access, freshness, correction, and release-state references;
 - reviewed non-secret configuration references;
 - explicit network, filesystem, tool, queue, concurrency, retry, timeout, cancellation, and resource limits;
-- prior run/receipt/checkpoint references for replay, retry, correction, supersession, and rollback;
-- safe fallback, no-op, quarantine, disable, or hold instructions.
+- prior run, receipt, and checkpoint references for replay, retry, correction, supersession, and rollback;
+- safe fallback, no-op, quarantine, disable, hold, or operator-required instructions.
 
 ### Input admission checklist
 
-Before an execution that may alter lifecycle candidates or influence release review:
+Before execution that may create lifecycle candidates or influence release review:
 
 - [ ] Caller, owner, stage, domain, source, and scope are identified.
-- [ ] The executable path and accepted consumer are known.
-- [ ] The spec/profile exists in the accepted declarative home and its digest is fixed.
-- [ ] Source descriptors and source roles resolve.
-- [ ] Input lifecycle states are allowed for this stage.
+- [ ] The executable path and consumer are known.
+- [ ] The accepted spec/profile exists and its digest is fixed.
+- [ ] Source descriptors, source roles, and activation state resolve.
+- [ ] Input lifecycle states are allowed for the stage.
 - [ ] Rights, sensitivity, consent, policy, review, freshness, and correction prerequisites are explicit.
 - [ ] Context is minimized and contains no secrets or prohibited material.
-- [ ] Network, filesystem, subprocess, tool, and external-service permissions are bounded.
+- [ ] Network, filesystem, subprocess, model, and tool permissions are bounded.
 - [ ] Resource limits, retries, cancellation, idempotency, and checkpoint behavior are explicit.
 - [ ] Candidate output homes and write interfaces are accepted.
 - [ ] Receipt, validation, observability, and finite-outcome obligations are known.
 - [ ] A no-op, quarantine, hold, disable, or rollback path exists.
 
-Missing or unknown prerequisites must not become implicit allow or best-effort publication.
+Missing prerequisites never become implicit allow or best-effort publication.
 
 ### Forbidden normal inputs
 
 - unrestricted dumps of repository, RAW, private, or sensitive stores;
-- browser-supplied instructions treated as authority;
-- prompt-like text inside source material treated as trusted control input;
+- browser-supplied or source-embedded prompt text treated as authority;
 - credentials, private endpoints, signing keys, or secret-bearing configuration;
-- unreviewed living-person, DNA/genomic, archaeology, rare-species, infrastructure, or precise private-land joins;
+- unreviewed living-person, DNA/genomic, archaeology, rare-species, infrastructure, or private-land joins;
 - stale, withdrawn, corrected, or superseded material without explicit state handling;
 - arbitrary shell, filesystem, network, model, or tool authority;
 - unbounded queues, retries, concurrency, context, or output volume.
@@ -478,39 +494,123 @@ Pipeline outputs are **candidates, reports, receipts, blockers, and governed han
 
 ### Permitted output classes
 
-- WORK or QUARANTINE candidate references and structured reasons;
-- PROCESSED candidate references produced through accepted lifecycle writers;
+- WORK or QUARANTINE candidate references with structured reasons;
+- PROCESSED candidate references through accepted lifecycle writers;
 - validation, integrity, comparison, and quality reports;
 - catalog or triplet projection candidates for independent closure;
 - `RunReceipt` or accepted pipeline-receipt candidates;
-- no-op, partial, retryable, cancelled, held, denied, quarantined, or failed stage results;
+- no-op, partial, retryable, cancelled, held, denied, quarantined, or failed results;
 - publish-readiness or rollback-readiness handoffs to release authority;
-- correction, invalidation, supersession, and migration requests;
-- safe metrics, health, timings, counts, digests, and diagnostics that omit restricted content;
+- correction, invalidation, supersession, withdrawal, and migration requests;
+- safe metrics, health, timings, counts, digests, and diagnostics;
 - deterministic dry-run outputs and fixture comparison reports.
 
 ### Outcome vocabularies must not collapse
 
-| Layer | Currently evidenced or expected vocabulary | Boundary |
+| Layer | Evidenced or expected vocabulary | Boundary |
 |---|---|---|
-| `RunReceipt` contract/schema | `SUCCESS`, `PARTIAL`, `FAIL` | Records one execution outcome; does not decide truth, policy, promotion, or release. |
-| Pipeline/lifecycle caller | May need `NO_OP`, `HOLD`, `QUARANTINE`, `DENY`, `ABSTAIN`, `ERROR`, `CANCELLED`, or retry states | Vocabulary and reason registry remain **PROPOSED / NEEDS VERIFICATION**. |
-| Public runtime response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` in paired runtime schemas | Public/runtime envelope vocabulary; must not be copied into pipeline receipts without an accepted mapping. |
-| Promotion/release | Accepted release and promotion decision vocabularies | Owned by release contracts, policy, and reviewers—not by a pipeline stage. |
+| Current `RunReceipt` profile | `SUCCESS`, `PARTIAL`, `FAIL` | Records one execution outcome; does not decide truth, policy, promotion, or release. |
+| Backfill planner | `NOOP`, `REBUILD` | Planning result only; no artifact write or release effect. |
+| Resilience planner | `ALLOW_START`, `ALLOW_RETRY`, `ALLOW_REPLAY`, `PAUSE`, `QUARANTINE`, `DENY`, `NO_ACTION`, `OPERATOR_REQUIRED` | Side-effect-free orchestration decision; not a PolicyDecision or executor action. |
+| Public runtime response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Public envelope vocabulary; do not copy it into pipeline receipts without an accepted mapping. |
+| Promotion and release | Accepted promotion/release vocabularies | Owned by release contracts, policy, and reviewers. |
 
 Do not emit a hybrid object that combines convenient terms from several layers. Select an accepted profile and fail closed on unknown fields or states.
 
 ### Output invariants
 
-- A stage result never promotes lifecycle state by itself.
+- A planner or stage result never promotes lifecycle state by itself.
 - A validation report never becomes an `EvidenceBundle`.
 - A receipt records process memory; it is not proof or release approval.
-- A catalog/triplet candidate is derived and remains subordinate to evidence.
+- A catalog or triplet candidate remains subordinate to canonical evidence.
 - A readiness result does not author or approve a final release object.
-- Unknown output refs, fields, states, reason codes, or destinations fail closed.
-- Corrections, withdrawals, supersession, stale state, and rollback effects must propagate when material.
-- Logs and diagnostics must omit prompts, secrets, restricted payloads, protected coordinates, and private reasoning.
-- Public clients must receive governed API results, not pipeline objects or lifecycle-store paths.
+- Unknown refs, fields, states, reasons, or destinations fail closed.
+- Corrections, withdrawals, supersession, stale state, and rollback effects propagate when material.
+- Logs and diagnostics omit prompts, secrets, restricted payloads, protected coordinates, and private reasoning.
+- Public clients receive governed API results, never pipeline objects or lifecycle-store paths.
+
+### Permitted writers
+
+| Writer class | Permitted effect | Required guard |
+|---|---|---|
+| Side-effect-free planner | Return validated decision object or findings | No network or repository/lifecycle write; fixed schema profile |
+| Governed stage runner | Create candidate output through accepted writer | Caller identity, spec digest, lifecycle interface, policy/evidence prerequisites, receipt |
+| Validator or comparison stage | Emit report and candidate receipt facts | Deterministic inputs, finite result, no promotion authority |
+| Correction or rollback planner | Emit impact and replay/invalidation candidate | Existing release/correction lineage and independent authority |
+| Workflow wrapper | Invoke repository-owned command | Least privilege, bounded artifacts, no secret-bearing untrusted execution |
+
+No ordinary pipeline writer may directly author final `PUBLISHED`, release-decision, or proof authority.
+
+[Back to top](#top)
+
+---
+
+## Public exposure and sensitivity
+
+`pipelines/` is an internal implementation root in a public repository. Source code and public-safe synthetic fixtures may be visible; pipeline runtime objects and sensitive payloads are not public products.
+
+### Public-boundary rules
+
+- Public and semi-public clients use governed APIs and released artifacts.
+- Pipeline queues, logs, stage endpoints, local paths, candidate objects, lifecycle-store paths, and internal reason detail are not normal public interfaces.
+- Operator or review endpoints require authentication, authorization, audit, policy, least privilege, and explicit separation from public routes.
+- A renderer, dashboard, AI answer, export, or search index must never consume unreleased pipeline candidates as authoritative truth.
+
+### Sensitive-domain posture
+
+Unknown or unresolved rights, sovereignty, cultural sensitivity, living-person data, DNA/genomics, rare-species locations, archaeology, infrastructure, private-land joins, or harmful precision cause **HOLD**, **QUARANTINE**, **DENY**, narrowed output, or a generalized transform. They never trigger a permissive fallback.
+
+Transforms that redact, generalize, aggregate, delay, or stage access must be explicit, receipt-bearing, testable, and reviewable. Client-side styling is not a sensitivity transform.
+
+### Logging and observability
+
+Safe operational records may include stable IDs, finite reasons, counts, durations, digests, tool versions, and bounded error classes. They must exclude:
+
+- credentials and secret-bearing configuration;
+- raw private or restricted payloads;
+- protected coordinates or precise sensitive geometry;
+- unnecessary personal data;
+- policy-sensitive internal references when an operator-safe projection is required;
+- hidden reasoning or chain-of-thought.
+
+[Back to top](#top)
+
+---
+
+## Mutability, retention, generation, and storage
+
+### Source mutability
+
+Executable source under `pipelines/` is ordinary reviewed repository source. Changes are versioned through Git and must preserve compatibility or document migration.
+
+### Runtime and data mutability
+
+Runtime state does not belong in this root. Checkpoints, receipts, candidate objects, queue state, and artifacts use their governed logical homes even when physical bytes live in a database, object store, queue, or registry.
+
+### Generated content
+
+Generated code or indexes under this root require:
+
+- a named canonical source;
+- a deterministic generation command;
+- a tool/version reference;
+- a generated marker;
+- parity validation;
+- no independent manual writer.
+
+Generated provenance receipts belong under `data/receipts/generated/` and remain process memory, not implementation, proof, review, release, or publication authority.
+
+### Retention and recovery
+
+- Git history preserves source changes and reviewable rollback.
+- Runtime retention belongs to the owning data, receipt, log, queue, or storage profile.
+- A planner output has no durable effect unless a separately governed consumer persists it.
+- Corrections and withdrawals preserve prior identity and audit history rather than rewriting shared history.
+- Rollback may disable new execution, restore compatible code, replay from a checkpoint, or issue a forward fix; the method depends on actual side effects and release reliance.
+
+### Physical storage
+
+A repository path expresses logical responsibility, not necessarily byte location. External storage references require stable identity, digest, media type, access class, rights, sensitivity, producer receipt, retention, correction, and release linkage. A locator alone is never authority.
 
 [Back to top](#top)
 
@@ -520,13 +620,24 @@ Do not emit a hybrid object that combines convenient terms from several layers. 
 
 ## Validation
 
-Validation must separate **presence, shape, behavior, integration, security, operational execution, and release readiness**.
+Validation separates **presence, shape, behavior, integration, security, operational execution, and release readiness**.
 
-### Current repository entrypoints
+### Repository-present focused commands
 
-The following commands correspond to repository-present validators or tests. Run them in a suitable repository environment; their presence does not prove that they passed in this documentation update.
+Run these in a suitable isolated repository environment:
 
 ```bash
+python -m pytest -q tests/packages/pipelines_core/test_backfill_window.py
+python -m pytest -q \
+  tests/packages/pipelines_core/test_pipeline_resilience.py \
+  tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py
+
+python scripts/plan_backfill_window.py \
+  fixtures/contracts/v1/runtime/backfill_window_plan/valid/rebuild.request.json
+
+python scripts/plan_pipeline_resilience.py \
+  fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.request.json
+
 python tools/validators/validate_run_receipt.py --fixtures
 pytest -q tests/policy/test_pipeline_connector_non_publisher.py
 pytest -q tests/schemas/test_common_contracts.py
@@ -534,11 +645,12 @@ pytest -q tests/schemas/test_common_contracts.py
 
 Interpretation:
 
-- the RunReceipt wrapper exercises valid and invalid schema fixtures;
-- the non-publisher test performs a static scan for selected forbidden write contexts;
-- common contract tests establish only the schema fixtures they actually collect;
-- none of these commands proves a functional pipeline stage, source activation, lifecycle writer, evidence closure, policy execution, receipt persistence, release integration, or production behavior;
-- the inspected default `make test` target excludes the dedicated `tests/pipelines/` boundary, and no direct executable pipeline suite is established there.
+- planner tests prove only the deterministic request, decision, schema, fixture, and operator-projection behavior they exercise;
+- planner CLIs are no-network and planning-only, but the command must still run in a credential-scrubbed environment;
+- the RunReceipt wrapper exercises its paired fixtures;
+- the non-publisher test is a bounded static scan for selected forbidden write contexts;
+- common contract tests prove only the profiles they collect;
+- none of these checks establishes a live scheduler, source activation, lifecycle writer, evidence closure, policy runtime, persistent receipt store, release integration, deployment, or public behavior.
 
 ### Documentation and inventory checks
 
@@ -548,57 +660,57 @@ grep -RInE 'data/(catalog|published)|release/' pipelines || true
 grep -RInE '(^|/)(api[_-]?key|token|secret|password)[[:space:]]*[:=]' pipelines || true
 ```
 
-These are review aids, not automatic verdicts. File inventory proves only path presence. Grep matches require context; advisory `|| true` must not mask a governing validator once an accepted fail-closed check exists.
+These are review aids, not automatic verdicts. File inventory proves path presence. Grep matches require context, and advisory `|| true` must not mask an accepted fail-closed validator.
 
-### Required test families
+### Required negative test families
 
 | Test family | Minimum negative cases |
 |---|---|
-| Placement and discovery | Spec stored under `pipelines/`; compatibility lane treated as canonical; unknown stage or consumer. |
-| Source and admission | Missing SourceDescriptor; wrong source role; connector bypass; stale or withdrawn source. |
+| Placement and discovery | Spec stored under `pipelines/`; compatibility lane treated as canonical; unknown stage or consumer; domain-first/stage-first dual writer. |
+| Source and admission | Missing SourceDescriptor; wrong source role; connector bypass; stale, withdrawn, or unadmitted source. |
 | Lifecycle | RAW-to-PUBLISHED skip; illegal input state; direct catalog/published/release write; partial write. |
 | Contract and schema | Unknown profile; malformed payload; incompatible version; additional field; missing digest. |
 | Evidence and policy | Unresolved EvidenceRef; denied scope; policy unavailable; rights or sensitivity unknown. |
 | Determinism and replay | Duplicate run; changed spec hash; reordered inputs; non-deterministic output identity; no-op drift. |
-| Reliability | Timeout; retry exhaustion; cancellation; checkpoint mismatch; queue saturation; circuit open. |
+| Reliability | Timeout; retry exhaustion; cancellation; checkpoint mismatch; queue saturation; circuit open; kill switch. |
 | Side effects and security | Unapproved network call; path traversal; secret in logs; restricted payload in receipt; shell injection. |
 | Receipts and observability | Missing receipt; mismatched code/spec ref; missing validation refs; unsafe diagnostics. |
 | Correction and rollback | Corrected source; withdrawn evidence; superseded stage; invalidation failure; rollback target mismatch. |
-| Compatibility and migration | Old path still active; dual consumers; alias ambiguity; broken inbound link; unsafe rollback. |
+| Compatibility and migration | Old path still writable; dual consumers; alias ambiguity; broken inbound link; unsafe rollback. |
 | Public boundary | Direct browser/API access to pipeline or lifecycle store; candidate rendered as released truth. |
 
 ### Workflow preflight
 
-Before relying on or modifying a workflow that touches pipelines, record:
+Before relying on or modifying workflow automation that touches pipelines, record:
 
 - event and changed-path scope;
 - untrusted-input exposure;
-- runner and dependency pins;
+- runner and immutable dependency pins;
 - least-privilege token permissions;
-- secret/OIDC and network needs;
+- secret, OIDC, and network needs;
 - exact repository-owned command invoked;
-- finite hold/fail/pass semantics;
-- artifact and retention posture;
+- finite hold, fail, and pass semantics;
+- artifact content and retention;
 - check-name coupling to branch protection;
 - rollback or disable procedure.
 
-A held or readiness-only workflow must remain visibly held. A green hold is not implementation or release proof.
+A held or readiness-only workflow remains visibly held. A green hold is not implementation or release proof.
 
 <a id="11-definition-of-done"></a>
 
 ### Definition of done for an executable pipeline capability
 
-- [ ] Correct functional, domain, or reviewed cross-domain lane selected.
+- [ ] Correct stage-first, shared, domain, or accepted cross-domain lane selected.
 - [ ] Named owner, caller, consumer, and activation authority.
-- [ ] Accepted spec/profile, contract, schema, and version/digest binding.
-- [ ] Admitted SourceDescriptor refs and source roles.
+- [ ] Accepted spec/profile, contract, schema, version, and digest binding.
+- [ ] Admitted SourceDescriptor references and source roles.
 - [ ] Explicit lifecycle inputs, candidate outputs, and governed writers.
 - [ ] Evidence, rights, sensitivity, policy, review, freshness, and correction negative paths.
 - [ ] Deterministic identity, replay, idempotency, no-op, timeout, retry, cancellation, and checkpoint behavior.
 - [ ] Safe network, tool, filesystem, subprocess, queue, logging, and secret posture.
 - [ ] Valid and invalid synthetic fixtures.
-- [ ] Behavior tests and a substantive CI entrypoint that fails on zero collection or holds deliberately.
-- [ ] Receipt creation, schema validation, persistence handoff, and safe observability.
+- [ ] Behavior tests and substantive CI that fails on zero collection or holds deliberately.
+- [ ] Receipt creation, validation, persistence handoff, and safe observability.
 - [ ] Public-client and direct-publication denial tests.
 - [ ] Activation, fallback, disable, supersession, migration, correction, and rollback verified.
 - [ ] Documentation, evidence ledger, and open verification register updated.
@@ -614,22 +726,22 @@ A held or readiness-only workflow must remain visibly held. A green hold is not 
 
 | Change class | Minimum review burden |
 |---|---|
-| Root or lane README wording only | Pipeline maintainer + docs steward; add the affected authority steward when a boundary changes. |
-| New shared stage or domain pipeline implementation | Pipeline + domain + spec + contract/schema + validation/test + evidence/receipt reviewers. |
-| Connector/ingest admission handoff | Pipeline + connector/source + rights/sensitivity + lifecycle + security reviewers. |
-| Lifecycle writer or state transition | Pipeline + data/lifecycle + policy + evidence + release + correction/rollback reviewers. |
-| Cross-domain composition | Every affected domain steward + cross-domain architecture + policy/sensitivity + evidence reviewers. |
-| Spec/profile or consumer discovery | Pipeline + pipeline-spec + contract/schema + migration reviewers. |
-| Receipt or observability behavior | Pipeline + receipt + privacy/security + validation reviewers. |
-| Publish/rollback readiness | Pipeline + release + policy + evidence + correction/rollback reviewers; pipeline author cannot self-approve the release. |
-| Network, tool, queue, secret, or deployment change | Pipeline + infrastructure/runtime + security + operations reviewers. |
-| Sensitive-domain execution | Owning domain + consent/privacy/sensitivity/security + evidence + release reviewers. |
+| Root or lane README wording only | Pipeline implementation owner and docs reviewer; add affected authority owner when a boundary changes. |
+| New shared stage or domain pipeline implementation | Pipeline, domain, spec, contract/schema, validation/test, evidence/receipt reviewers. |
+| Connector or ingest admission handoff | Pipeline, connector/source, rights/sensitivity, lifecycle, and security reviewers. |
+| Lifecycle writer or state transition | Pipeline, data/lifecycle, policy, evidence, release, correction/rollback reviewers. |
+| Cross-domain composition | Every affected domain steward, seam owner, policy/sensitivity, and evidence reviewers. |
+| Spec/profile or consumer discovery | Pipeline, pipeline-spec, contract/schema, and migration reviewers. |
+| Receipt or observability behavior | Pipeline, receipt, privacy/security, and validation reviewers. |
+| Publish or rollback readiness | Pipeline, release, policy, evidence, correction/rollback reviewers; pipeline author cannot self-approve release. |
+| Network, tool, queue, secret, or deployment change | Pipeline, infrastructure/runtime, security, and operations reviewers. |
+| Sensitive-domain execution | Owning domain, privacy/consent/sensitivity/security, evidence, and release reviewers. |
 
-### CODEOWNERS posture
+### Current ownership evidence
 
-The current [`CODEOWNERS`](../.github/CODEOWNERS) routes `/pipelines/`, `/pipeline_specs/`, `/packages/`, `/tests/`, `/fixtures/`, `/contracts/`, `/schemas/`, `/policy/`, and trust-bearing data/release roots to `@bartytime4life`.
+[`CODEOWNERS`](../.github/CODEOWNERS) provides the current repository review route. That routing is not proof that every stewardship role is assigned or that branch rules require independent review.
 
-That is a verified GitHub review route, not proof that all required stewardship roles are assigned or that branch protection requires code-owner review. Owner-role assignment, rulesets, required reviews, and independent author/approver separation remain **NEEDS VERIFICATION**.
+Named pipeline, source, rights, evidence, policy, release, security, and domain steward assignments remain **NEEDS VERIFICATION**.
 
 ### Separation of duties
 
@@ -641,6 +753,14 @@ A pipeline author must not be the sole approver when a change can affect:
 - policy-significant behavior;
 - release eligibility, correction, withdrawal, or rollback;
 - public API, map, export, search, or AI behavior.
+
+### Escalation
+
+- Placement or authority conflict: architecture/governance reviewer and accepted ADR process.
+- Rights or sensitivity uncertainty: source, legal/privacy, sovereignty/cultural, or domain steward; fail closed meanwhile.
+- Security or secret exposure: security reviewer and repository security process; stop propagation.
+- Release or correction dispute: independent release and evidence reviewers.
+- Runtime incident: operations/security containment first, then auditable correction and rollback.
 
 [Back to top](#top)
 
@@ -654,43 +774,42 @@ A pipeline author must not be the sole approver when a change can affect:
 
 | Path | Relationship |
 |---|---|
-| [`ingest/`](./ingest/) | Shared ingest coordination boundary; direct implementation not established. |
-| [`normalize/`](./normalize/) | Shared normalization boundary; implementation maturity needs verification. |
-| [`validate/`](./validate/) | Shared validation orchestration boundary; inspected entrypoint is placeholder-only. |
-| [`catalog/`](./catalog/) | Shared catalog-closure execution boundary; documentation-only in checked evidence. |
-| [`triplets/`](./triplets/) | Shared derived relationship-projection boundary; placeholder-heavy. |
-| [`publish/`](./publish/) | Publish-readiness boundary; never release authority. |
+| [`ingest/`](./ingest/) | Source-to-lifecycle coordination boundary; exact connector handoff remains unresolved. |
+| [`normalize/`](./normalize/) | Shared normalization boundary; sampled direct shell remains placeholder-sized. |
+| [`validate/`](./validate/) | Validation orchestration boundary; repository validators remain under `tools/validators/`. |
+| [`catalog/`](./catalog/) | Catalog-candidate assembly boundary; never catalog authority by itself. |
+| [`triplets/`](./triplets/) | Derived relationship-projection boundary; projections remain non-sovereign. |
+| [`publish/`](./publish/) | Publish-readiness support; never release approval. |
 | [`rollback/`](./rollback/) | Rollback-readiness support; never rollback approval. |
-| [`domains/`](./domains/) | Domain-owned executable lanes; sampled modules are placeholders. |
-| [`watchers/`](./watchers/) | Non-publisher watcher orchestration; placement and active ownership conflicted. |
-| [`proofs/`](./proofs/) | Proposed proof orchestration; proof data remains outside this root. |
-| [`specs/`](./specs/) | Compatibility guardrail; route declarative work to `pipeline_specs/`. |
-| [`cross_lane/`](./cross_lane/) | Compatibility/routing and child-admission boundary; generic framework unratified. |
-| [`biodiversity/`](./biodiversity/) | Cross-lane umbrella; canonical ownership and placement unresolved. |
+| [`domains/`](./domains/) | Existing domain-first execution tree; accepted v2 stage-first convergence remains incomplete. |
+| [`watchers/`](./watchers/) | Non-publisher watcher orchestration; active ownership unresolved. |
+| [`proofs/`](./proofs/) | Proposed proof orchestration; proof instances remain outside this root. |
+| [`specs/`](./specs/) | Compatibility candidate; route declarations to `pipeline_specs/`. |
+| [`cross_lane/`](./cross_lane/) | Existing generic composition boundary; no sovereign framework authority. |
+| [`biodiversity/`](./biodiversity/) | Existing umbrella; domain ownership and canonical placement unresolved. |
 
-### Authority and proof counterparts
+### Implementation and authority counterparts
 
 | Root or file | Relationship to pipelines |
 |---|---|
 | [`pipeline_specs/`](../pipeline_specs/) | Canonical declarative intent and profile root. |
-| [`connectors/`](../connectors/) | Source-specific fetch and admission edge. |
-| [`packages/pipelines-core/`](../packages/pipelines-core/) | Reusable helper package scaffold; functional API not established. |
-| [`contracts/`](../contracts/) | Semantic object and receipt meaning. |
-| [`schemas/`](../schemas/) | Machine-checkable shapes. |
-| [`policy/`](../policy/) | Admissibility, rights, sensitivity, promotion, and release rules. |
-| [`tests/pipelines/`](../tests/pipelines/) | Pipeline behavior test boundary; direct lane currently README-only. |
-| [`tests/policy/test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Executable bounded non-publisher write-context guard. |
-| [`fixtures/`](../fixtures/) | Synthetic, valid, invalid, and golden inputs. |
-| [`tools/validators/`](../tools/validators/) | Validator implementations and orchestration. |
-| [`contracts/runtime/run_receipt.md`](../contracts/runtime/run_receipt.md) | Draft/PROPOSED RunReceipt semantics. |
-| [`schemas/contracts/v1/runtime/run_receipt.schema.json`](../schemas/contracts/v1/runtime/run_receipt.schema.json) | Paired proposed machine shape. |
-| [`data/receipts/pipeline/`](../data/receipts/pipeline/) | Pipeline-run process memory; not proof or release. |
-| [`data/proofs/`](../data/proofs/) | Evidence/proof authority. |
-| [`data/catalog/`](../data/catalog/) | Catalog records and closure surfaces. |
-| [`data/published/`](../data/published/) | Released artifact storage; not a direct pipeline write target. |
-| [`release/`](../release/) | Promotion, release, correction, withdrawal, and rollback authority. |
-| [`runtime/pipelines/`](../runtime/pipelines/) | Compatibility runtime-to-pipeline handoff index; no executable pipeline authority. |
-| [`.github/workflows/`](../.github/workflows/) | CI orchestration, bounded readiness checks, and holds. |
+| [`connectors/`](../connectors/) | Source-specific acquisition and admission edge. |
+| [`packages/pipelines-core/`](../packages/pipelines-core/) | Reusable planning logic; selected kernels implemented, general runtime not established. |
+| [`scripts/plan_backfill_window.py`](../scripts/plan_backfill_window.py) | Thin no-network backfill planner CLI. |
+| [`scripts/plan_pipeline_resilience.py`](../scripts/plan_pipeline_resilience.py) | Thin no-network resilience planner CLI with operator-safe projection. |
+| [`contracts/runtime/`](../contracts/runtime/) | Planner and receipt semantics. |
+| [`schemas/contracts/v1/runtime/`](../schemas/contracts/v1/runtime/) | Planner and receipt machine shapes. |
+| [`tests/packages/pipelines_core/`](../tests/packages/pipelines_core/) | Focused deterministic planner behavior tests. |
+| [`tests/pipelines/`](../tests/pipelines/) | Root pipeline behavior boundary; complete execution suite remains unverified. |
+| [`tests/policy/test_pipeline_connector_non_publisher.py`](../tests/policy/test_pipeline_connector_non_publisher.py) | Bounded static non-publisher guard. |
+| [`tools/validators/`](../tools/validators/) | Repository validator implementations. |
+| [`data/receipts/pipeline/`](../data/receipts/pipeline/) | Pipeline process memory; not proof or release. |
+| [`data/proofs/`](../data/proofs/) | Evidence and proof instances. |
+| [`data/catalog/`](../data/catalog/) | Catalog records and closure projections. |
+| [`data/published/`](../data/published/) | Release-approved public-safe carriers; never an ordinary pipeline write target. |
+| [`release/`](../release/) | Promotion, release, correction, withdrawal, and rollback decisions. |
+| [`runtime/pipelines/`](../runtime/pipelines/) | Runtime handoff or compatibility boundary; no pipeline authority. |
+| [`.github/workflows/`](../.github/workflows/) | CI and bounded readiness checks; green status is not publication. |
 
 ### Dependency direction
 
@@ -698,60 +817,99 @@ A pipeline author must not be the sole approver when a change can affect:
 flowchart LR
     CONNECTORS["connectors/<br/>source edge"] --> RAW["RAW / QUARANTINE refs"]
     SPECS["pipeline_specs/<br/>declarative intent"] --> PIPELINES["pipelines/<br/>executable stages"]
+    PACKAGES["packages/pipelines-core/<br/>reusable planners"] --> PIPELINES
     RAW --> PIPELINES
     CONTRACTS["contracts + schemas"] --> PIPELINES
     POLICY["policy decisions"] --> PIPELINES
-    PIPELINES --> CANDIDATES["WORK / PROCESSED /<br/>CATALOG-TRIPLET candidates"]
+    PIPELINES --> CANDIDATES["WORK / PROCESSED /<br/>CATALOG-TRIPLETS candidates"]
     PIPELINES --> RECEIPTS["data/receipts/<br/>process memory"]
     CANDIDATES --> VALIDATION["validators + tests + evidence closure"]
     VALIDATION --> RELEASE["release/<br/>independent decision"]
     RELEASE --> PUBLISHED["PUBLISHED"]
-    PUBLISHED --> GAPI["apps/governed-api/"]
+    PUBLISHED --> GAPI["governed applications"]
 
     PIPELINES -. "DENIED direct" .-> PUBLISHED
     PIPELINES -. "NO release authority" .-> RELEASE
     GAPI -. "DENIED direct" .-> RAW
 ```
 
-The diagram is a responsibility and governance model, not verified deployment topology or proof that the shown integrations execute.
+This is a responsibility model, not verified deployment topology.
 
 [Back to top](#top)
 
 ---
 
-## ADRs
+## ADRs, migrations, and aliases
 
-### Relevant decisions and doctrine
+### Governing decisions
 
-| Record | Current posture | Pipeline consequence |
+| Record | Status | Pipeline consequence |
 |---|---|---|
-| [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | v1.4 draft doctrine; used as the current placement basis | Establishes `pipelines/` versus `pipeline_specs/`, responsibility-root routing, lifecycle separation, and the root README contract. |
-| [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) | v1.3.1 review copy; placement conflict is explicit | Do not let duplicate placement create two independently evolving authorities. |
-| [`ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Proposed; not accepted | A pipeline receipt, proof, catalog record, and release manifest remain distinct. |
-| [`ADR-0012 — Connector Outputs to RAW or QUARANTINE Only`](../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) | Draft/proposed; Directory Rules carry the governing rule | Pipelines must not silently absorb connector source-edge authority. |
-| [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Proposed | An active pipeline must bind admitted source descriptors rather than infer source authority from a URL, fixture, or parser result. |
-| [`ADR-0018 — Promotion Gate Sequence`](../docs/adr/ADR-0018-promotion-gate-sequence.md) | Proposed; doctrinal A–G sequence exists, exact canonical naming pending | Pipeline readiness and validation must hand off to independent promotion gates. |
-| [`ADR-0021 — Quarantine Has Structured Exit Paths`](../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) | Proposed | Pipeline quarantine writes and remediation handoffs require named, auditable exits; no silent promotion or file-move shortcut. |
-| [`ADR-0022 — Catalog Matrix Agreement`](../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Proposed | Catalog pipeline code may prepare candidates; accepted closure and release enforcement remain pending. |
+| [`ADR-0029 — Adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | Makes `docs/doctrine/directory-rules.md` the sole writable human placement authority and adopts stage-first executable routing. |
+| [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Adopted exact bytes through ADR-0029 | Assigns `pipelines/` executable orchestration, `pipeline_specs/` declarative run graphs, `packages/` reusable logic, and `scripts/` thin wrappers. |
+| [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) | Superseded content / compatibility dependency | Do not edit as independent authority; tombstone and reference migration remain separate work. |
+| [`ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | Verify current status before reliance | Preserve object-family separation regardless of proposal maturity. |
+| [`ADR-0012 — Connector Outputs to RAW or QUARANTINE Only`](../docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md) | Verify current status before reliance | Pipeline execution must not silently absorb source authority. |
+| [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | Verify current status before reliance | Active execution requires admitted source identity and role. |
+| [`ADR-0018 — Promotion Gate Sequence`](../docs/adr/ADR-0018-promotion-gate-sequence.md) | Verify current status before reliance | Pipeline readiness hands off to independent promotion gates. |
+| [`ADR-0021 — Quarantine Has Structured Exit Paths`](../docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md) | Verify current status before reliance | Quarantine requires named, auditable exits; no silent file-move promotion. |
+| [`ADR-0022 — Catalog Matrix Agreement`](../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Verify current status before reliance | Catalog pipeline code may prepare candidates; closure remains separate. |
+
+Only ADR-0029 was verified here as accepted. Other ADR status must be read from current source and accepted indexes before being used as authority.
+
+### Migration and alias register
+
+| Surface | Current posture | Required next evidence |
+|---|---|---|
+| `pipelines/specs/` -> `pipeline_specs/` | Compatibility candidate; single-write to canonical declarative root | Consumer inventory, path guard, migration record, zero-writer proof |
+| `pipelines/domains/<domain>/<stage>/` versus `pipelines/<stage>/<domain>/` | Competing topology under adopted stage-first rule | Full file/consumer inventory, one writer, import and workflow parity, migration and rollback |
+| `cross_lane/` and `biodiversity/` | Existing generic/umbrella paths | Registered seam or owning domain, consumer map, ADR/migration disposition |
+| Domain aliases | Existing historical naming pressure | Alias registry, canonical scope IDs, no permissive bypass, transition window |
+| Legacy Directory Rules path | Read-only compatibility dependency | Separate tombstone change and repository/external link closure under ADR-0029 |
 
 ### Decisions still needed
 
-- accepted connector-to-ingest and pre-RAW-to-RAW handoff contract;
-- canonical pipeline specification schema, parser, registry, consumer discovery, activation, and deactivation model;
-- shared stage request/response and finite-reason vocabulary;
-- domain alias migration (`air`/`atmosphere`, `people`/`people-dna-land`, `settlement`/`settlements-infrastructure`);
-- watcher implementation ownership across pipelines, domains, specs, and tools;
-- `cross_lane` and biodiversity umbrella disposition;
-- proof orchestration and cross-domain test placement;
-- canonical triplet projection, storage, and compatibility-path disposition;
-- accepted RunReceipt/pipeline-receipt profile, persistence layout, retention, and redaction;
-- lifecycle writer interfaces and promotion handoff;
-- dedicated pipeline test collection and CI contract;
-- package-versus-pipeline helper graduation rule and supported `pipelines-core` API;
+- accepted connector-to-ingest and pre-RAW-to-RAW handoff;
+- root-wide stage request/result and finite-reason profiles;
+- active spec parser, registry, consumer discovery, activation, and deactivation model;
+- durable idempotency, checkpoint, circuit-breaker, queue, outbox/WAL, and dead-letter adapters;
+- accepted RunReceipt or pipeline-receipt persistence profile and redaction rules;
+- watcher, proof, cross-domain, and biodiversity execution ownership;
+- canonical triplet projection and compatibility-path disposition;
+- dedicated root pipeline test collection and required CI contract;
+- package-versus-pipeline graduation and supported `pipelines-core` API/version policy;
 - correction propagation, invalidation, supersession, kill switch, migration, and rollback automation;
 - first active governed consumer and production admission process.
 
-Do not create a new parallel authority path while these decisions remain open.
+Do not create another writable authority while these decisions remain open.
+
+[Back to top](#top)
+
+---
+
+## Direct-child directory map
+
+The map is verified from `pipelines/` tree `514e8746c3a9de6ef7c4bedc625e39dcc8be69ff` at the pinned base and shows direct children only.
+
+```text
+pipelines/
+├── README.md          # this ROOT_FULL authority and maturity contract
+├── biodiversity/      # existing cross-lane umbrella; canonical placement unresolved
+├── catalog/           # catalog-candidate execution boundary
+├── cross_lane/        # generic composition/compatibility boundary
+├── domains/           # existing domain-first execution tree; convergence unresolved
+├── ingest/            # source-to-lifecycle coordination boundary
+├── normalize/         # normalization boundary
+├── proofs/            # proof-orchestration candidate; no proof-instance authority
+├── publish/            # publish-readiness support; no release authority
+├── rollback/           # rollback-readiness support; no rollback authority
+├── specs/             # compatibility candidate; canonical specs are pipeline_specs/
+├── triplets/          # derived relationship-projection boundary
+├── validate/          # validation orchestration boundary
+└── watchers/          # non-publisher watcher orchestration; ownership unresolved
+```
+
+A directory name proves presence, not implementation, activation, public safety, release, or production use. Child READMEs own deeper inventories.
 
 [Back to top](#top)
 
@@ -761,28 +919,29 @@ Do not create a new parallel authority path while these decisions remain open.
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-23 |
-| Evidence base | `main@19670ca8e2c8a709fc69cd41173851f8359c8281` |
-| Prior target blob | `9fb38acf5a67ca43608617d73a273d06f5f84db5` |
+| Last reviewed | 2026-08-08 |
+| Evidence base | `main@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33` |
+| Prior target blob | `c2bee1db957a665b973b44aea8bda63bdd82b7e5` |
 | Review mode | Repository-grounded same-path Markdown modernization |
-| Implementation effect | None — documentation and generated provenance only |
-| Rollback | Revert the update and receipt commits, or restore the prior blob and remove the generated receipt; no pipeline, data, policy, release, deployment, or public state is changed |
+| Placement outcome | `PLACE` — existing canonical root README, no authority or path change |
+| Change class | Documentation/metadata plus generated provenance; no runtime behavior change |
+| Rollback | Revert the README and generated-receipt commits or restore the prior blob; no pipeline, lifecycle, policy, release, deployment, or public state requires unwinding |
 
 ### Maintenance triggers
 
 Re-review this README when:
 
-- a root lane is added, moved, renamed, retired, or promoted;
+- a direct child is added, moved, renamed, retired, or reclassified;
 - a placeholder gains executable behavior;
-- a spec parser, consumer registry, scheduler, or activation model becomes accepted;
-- a shared stage request/result, receipt, or reason-code contract changes;
-- `pipelines-core` gains a supported API or consumer;
-- `tests/pipelines/` gains executable collection or a dedicated workflow;
-- a lifecycle writer, source-admission handoff, receipt emitter, or promotion integration becomes active;
-- watcher, proof, cross-lane, biodiversity, triplet, or alias placement is resolved;
+- a spec parser, registry, scheduler, executor, or activation model becomes accepted;
+- a shared request/result, receipt, or reason-code contract changes;
+- `pipelines-core` changes supported API, version, consumers, or side-effect posture;
+- `tests/pipelines/` or planner tests change collection or workflow coupling;
+- a lifecycle writer, source handoff, receipt emitter, or promotion integration becomes active;
+- watcher, proof, cross-domain, biodiversity, triplet, receipt-layout, or alias placement is resolved;
 - correction propagation, invalidation, deactivation, migration, or rollback becomes implemented;
 - branch protection or required checks change;
-- Directory Rules or a governing ADR changes pipeline placement or authority.
+- Directory Rules or a governing ADR changes placement or authority.
 
 <a id="12-open-questions"></a>
 
@@ -790,18 +949,19 @@ Re-review this README when:
 
 | Item | Evidence needed |
 |---|---|
-| Exact recursive pipeline inventory | Commit-pinned tree listing plus classification of code, placeholders, READMEs, generated files, and ignored/runtime material. |
-| Named ownership and review enforcement | Accepted stewardship assignments, CODEOWNERS/ruleset evidence, and separation-of-duties checks. |
-| Functional implementation inventory | AST/import/runtime inspection, consumers, entrypoints, tests, and current run evidence for each lane. |
-| Connector/ingest boundary | Accepted contract, source-registry binding, lifecycle writer, fixtures, negative tests, and ADR/migration decision. |
+| Exact recursive implementation inventory | Commit-pinned listing plus classification of executable code, placeholders, generated files, tests, and consumers. |
+| Named ownership and review enforcement | Accepted steward assignments, CODEOWNERS/ruleset evidence, and separation-of-duties checks. |
+| Functional stage inventory | AST/import/runtime inspection, callers, entrypoints, fixtures, tests, and run evidence for each lane. |
+| Connector/ingest boundary | Accepted handoff contract, source-registry binding, lifecycle writer, negative tests, and migration decision. |
 | Active spec system | Schema, canonicalization/hash, parser, registry, consumers, activation state, fixtures, tests, receipts, and CI. |
-| Shared stage contracts | Accepted input/result contracts, schemas, reason registry, idempotency/replay rules, and compatibility policy. |
-| Pipeline receipts | Accepted profile and layout, emitted instances, validator results, persistence, retention, redaction, correction, and joins. |
-| Dedicated pipeline tests | Collected deterministic suite, zero-test failure, no-network enforcement, coverage scope, and current CI evidence. |
+| Shared stage contracts | Accepted request/result contracts, schemas, reasons, idempotency/replay rules, and compatibility policy. |
+| Planner graduation | Supported package API/version, consumers, persistence adapters, operational limits, and deprecation policy. |
+| Pipeline receipts | Accepted profile/layout, emitted instances, validation, persistence, retention, redaction, correction, and joins. |
+| Root pipeline tests | Deterministic collected suite, zero-test failure, no-network enforcement, scope, and current CI evidence. |
 | Lifecycle and release integration | Governed writers, promotion handoff, policy/evidence closure, release dependencies, and rollback tests. |
-| Cross-lane and biodiversity disposition | Inbound-link inventory, owning domains, ADR/migration record, one active implementation, deprecation, and rollback. |
+| Cross-domain and biodiversity disposition | Owning domains, seam register, one active implementation, deprecation, and rollback. |
 | Watcher and proof ownership | Accepted execution/spec/tool/test/proof boundaries with non-publisher and non-proof-store tests. |
-| Operational health | Deployment config, schedules/queues, resource budgets, logs, metrics, alerts, incident hooks, SLOs, and kill switches. |
+| Operational health | Deployment config, schedules/queues, budgets, logs, metrics, alerts, incident hooks, SLOs, and kill switches. |
 | Public boundary | Route inventory and tests proving no direct pipeline or lifecycle-store exposure. |
 
 [Back to top](#top)
@@ -817,10 +977,10 @@ Re-review this README when:
 | Boundary | Pipeline may | Pipeline must not |
 |---|---|---|
 | Source edge / pre-RAW | Coordinate an accepted handoff and validate bounded admission facts. | Activate a source, invent authority, or bypass connector/source review. |
-| RAW -> WORK / QUARANTINE | Normalize or classify candidates and emit deterministic receipts/reasons. | Treat normalized output as truth or silently drop quarantine conditions. |
-| WORK / QUARANTINE -> PROCESSED | Apply accepted transforms and validation with explicit blockers. | Promote without evidence, policy, review, and lifecycle decision records. |
-| PROCESSED -> CATALOG / TRIPLET candidate | Build derived catalog/graph candidates and agreement reports. | Make catalog/triplet output sovereign truth or write final release state. |
-| Release readiness | Assemble evidence, validation, policy, integrity, correction, and rollback references. | Approve a release, issue a final manifest, or expose a public surface. |
+| RAW -> WORK / QUARANTINE | Normalize or classify candidates and emit deterministic receipts and reasons. | Treat normalized output as truth or silently drop quarantine conditions. |
+| WORK / QUARANTINE -> PROCESSED | Apply accepted transforms and validation with explicit blockers. | Promote without evidence, policy, review, and lifecycle decisions. |
+| PROCESSED -> CATALOG / TRIPLETS candidate | Build derived catalog or graph candidates and agreement reports. | Make a projection sovereign truth or write final release state. |
+| Release readiness | Assemble evidence, validation, policy, integrity, correction, and rollback references. | Approve release, issue a final manifest, or expose a public surface. |
 | Correction / rollback readiness | Identify affected refs, digests, caches, projections, and prior targets. | Rewrite history, conceal supersession, or execute unreviewed rollback. |
 
 <a id="4-anti-collapse-rules"></a>
@@ -828,22 +988,23 @@ Re-review this README when:
 ### Anti-collapse rules
 
 ```text
-pipeline run                    != public truth
-pipeline spec                   != executable implementation
-schema-valid payload            != evidence closure
-validation report               != EvidenceBundle
-RunReceipt                      != proof
-catalog or triplet candidate    != release
-publish-readiness PASS          != release approval
-rollback-readiness PASS         != rollback approval
-green workflow                  != production readiness
-generated summary               != evidence
-merge                           != lifecycle promotion
+pipeline planner               != executor
+pipeline run                   != public truth
+pipeline spec                  != executable implementation
+schema-valid payload           != evidence closure
+validation report              != EvidenceBundle
+RunReceipt                     != proof
+catalog or triplet candidate   != release
+publish-readiness PASS         != release approval
+rollback-readiness PASS        != rollback approval
+green workflow                 != production readiness
+generated summary              != evidence
+merge                          != lifecycle promotion
 ```
 
 ### Public boundary
 
-Pipeline objects, stage endpoints, queues, local files, logs, and lifecycle paths are internal implementation concerns. Public and semi-public clients must use accepted governed APIs and released artifacts. Any proposed operator or review endpoint requires authentication, authorization, audit, policy, sensitivity, and least-privilege review and must remain outside the normal public path.
+Pipeline objects, stage endpoints, queues, files, logs, and lifecycle paths are internal concerns. Public and semi-public clients use governed APIs and released artifacts. Any operator or review endpoint remains authenticated, authorized, audited, policy-aware, least-privilege, and separate from the normal public path.
 
 [Back to top](#top)
 
@@ -851,7 +1012,7 @@ Pipeline objects, stage endpoints, queues, local files, logs, and lifecycle path
 
 ## Minimum executable pipeline contract
 
-Before a placeholder or README-only lane may claim executable maturity, establish a reviewable contract covering the following.
+Before a placeholder, README-only lane, or planning kernel may claim executable stage maturity, establish a reviewable contract covering the following.
 
 ### Identity and binding
 
@@ -872,11 +1033,11 @@ receipt ref or receipt candidate
 correction/supersession/rollback refs
 ```
 
-The exact object shape is **PROPOSED** until accepted contracts and schemas exist. Do not copy this block into production as an unofficial schema.
+The exact root-wide object shape remains **PROPOSED** until accepted contracts and schemas exist. Do not copy this block into production as an unofficial schema.
 
 ### Execution behavior
 
-An admitted stage must define:
+An admitted stage defines:
 
 - deterministic ordering and canonicalization where practical;
 - idempotency and duplicate-run behavior;
@@ -890,9 +1051,23 @@ An admitted stage must define:
 - receipt creation and validation;
 - activation, fallback, kill switch, deactivation, supersession, migration, correction, and rollback.
 
+### Planner-to-executor boundary
+
+A planning kernel must declare:
+
+- which facts it validates and which facts it accepts from a caller;
+- deterministic identity and decision semantics;
+- all denied side effects;
+- the accepted schema profile;
+- required downstream gates;
+- what persistent adapter or executor is still missing;
+- operator-safe output projection when internal authority metadata exists.
+
+A separately governed executor must re-check current source admission, policy, evidence, review, configuration, and operational state. It must not execute merely because a prior plan was valid.
+
 ### Evidence and policy posture
 
-A pipeline may calculate, compare, normalize, project, and assemble candidates. It may not decide that a claim is supported merely because the stage ran successfully. When a downstream claim depends on evidence, the caller must resolve admissible support and apply policy before release or presentation. Missing support narrows, holds, quarantines, denies, abstains, or fails; it never triggers fluent fallback.
+A pipeline may calculate, compare, normalize, project, and assemble candidates. It may not decide that a claim is supported merely because execution succeeded. Downstream claims resolve admissible evidence and policy before release or presentation. Missing support narrows, holds, quarantines, denies, abstains, or fails; it never triggers fluent fallback.
 
 [Back to top](#top)
 
@@ -906,68 +1081,84 @@ A pipeline may calculate, compare, normalize, project, and assemble candidates. 
 
 Before adding a lane or implementation:
 
-1. identify the primary responsibility and lifecycle boundary;
-2. confirm that the target belongs under `pipelines/` rather than `pipeline_specs/`, `connectors/`, `packages/`, `tools/`, or another root;
-3. prefer an existing functional or domain lane;
-4. for cross-domain work, choose the lowest common responsibility root and one stable topic segment; do not create competing active homes;
-5. document owner, consumer, spec, contracts, schemas, policy, source roles, inputs, outputs, tests, fixtures, receipts, activation, and rollback;
+1. identify the authority owner, execution role, lifecycle boundary, scope, exposure, mutability, and retention;
+2. confirm the target belongs under `pipelines/` rather than `pipeline_specs/`, `connectors/`, `packages/`, `tools/`, `scripts/`, or another root;
+3. follow adopted stage-first placement and avoid a competing domain-first writer;
+4. for cross-domain work, register one seam and one executable owner rather than a generic truth namespace;
+5. document owner, consumer, spec, contracts, schemas, policy, source roles, inputs, outputs, tests, fixtures, receipts, activation, correction, and rollback;
 6. add deterministic positive and negative tests before activation;
-7. record migration or ADR requirements for any compatibility path or naming conflict.
+7. record migration or ADR requirements for any compatibility path, alias, or authority change.
 
 ### Migration discipline
 
-A pipeline move or rename must include:
+A pipeline move or rename includes:
 
-- current and proposed path classes;
-- complete inbound and consumer inventory;
+- current and target path classes;
+- complete writer, consumer, import, workflow, config, fixture, test, receipt, and documentation inventory;
 - spec/parser/registry updates;
-- import, workflow, config, fixture, test, receipt, and documentation updates;
 - compatibility or deprecation window;
+- dual-read/single-write when a verified consumer requires transition;
 - dual-write prohibition unless explicitly reviewed and bounded;
-- data and receipt continuity plan;
-- correction and replay implications;
-- rollback target and verification steps;
-- drift-register and ADR updates when authority or canonical placement changes.
+- data, receipt, identity, and correction continuity;
+- parity and no-network validation;
+- rollback or forward-fix target;
+- drift-register and ADR updates when authority changes.
 
-### Correction and rollback
+### Correction and withdrawal
 
-Corrections and withdrawals must identify affected runs, candidate outputs, receipts, catalog/triplet projections, caches, indexes, releases, and public consumers. Pipelines may prepare invalidation or replay candidates, but correction and rollback authority remains governed. A rollback must not erase the audit trail or reintroduce withdrawn evidence, policy decisions, vulnerable code, or stale specs.
+Corrections identify affected runs, candidate outputs, receipts, evidence links, catalog/triplet projections, caches, indexes, releases, and consumers. Pipelines may prepare replay or invalidation candidates; correction and withdrawal authority remains governed.
 
-### Disable and kill-switch posture
+### Disable and kill switch
 
-Every active stage should have an explicit disable path that prevents new effects while preserving inspectable state. Unknown configuration, missing policy, broken receipt persistence, unresolvable evidence, or unsafe network/tool posture should stop or quarantine the stage rather than continue silently.
+Every active stage has a documented way to stop new effects while preserving inspectable state. Unknown configuration, missing policy, broken receipt persistence, unresolvable evidence, or unsafe network/tool posture stops, holds, or quarantines execution rather than continuing silently.
+
+### Rollback
+
+- Before merge: abandon the feature branch or draft PR.
+- After merge but before activation: transparent revert or forward fix.
+- After activation: disable new effects, preserve receipts and checkpoints, assess partial writes, replay or compensate through accepted procedures, and retain correction lineage.
+- After public reliance: code rollback alone may be insufficient; release, correction, withdrawal, cache invalidation, and supersession records may be required.
+
+Never reset or rewrite shared history to conceal a pipeline defect.
 
 [Back to top](#top)
 
 ---
 
-## v0.2 to v0.3 no-loss ledger
+<a id="v02-to-v03-no-loss-ledger"></a>
+<a id="v03-to-v04-no-loss-ledger"></a>
 
-| v0.2 material | v0.3 disposition |
+## v0.3 to v0.4 no-loss ledger
+
+The compatibility anchor for the prior `v0.2 to v0.3 no-loss ledger` remains above so known inbound fragments continue to resolve.
+
+| v0.3 material | v0.4 disposition |
 |---|---|
-| `pipelines/` is executable logic; `pipeline_specs/` is declarative intent | Preserved as the primary responsibility split and expanded with source, data, release, package, runtime, and public boundaries. |
-| Lifecycle invariant | Preserved verbatim and expanded into stage obligations and negative cases. |
-| Pipeline run is not publication | Elevated to the primary callout, output invariants, validation cases, and public-boundary diagram. |
-| Anti-collapse rules | Preserved and expanded to receipts, schemas, workflows, merge state, and generated summaries. |
-| Belongs/does-not-belong placement guidance | Preserved in the required Directory Rules §15 sections with explicit responsibility routing. |
-| Lane map | Preserved, grounded against current child evidence, and expanded to repository-present compatibility/conflicted lanes. |
-| Inputs and outputs | Preserved and expanded with admission checklists, bounded effects, and finite vocabulary separation. |
-| Required gates | Preserved across input admission, validation, definition of done, and the minimum executable contract. |
-| Expansion rules | Preserved as lane admission and migration discipline. |
-| Definition of done | Preserved and expanded into executable, test, receipt, public-boundary, activation, and rollback requirements. |
-| Five open questions | Preserved and expanded in the open verification register and ADR backlog. |
+| `pipelines/` is executable logic; `pipeline_specs/` is declarative intent | Preserved and aligned with accepted Directory Rules v2 and the `packages/`/`scripts/` graduation boundary. |
+| Lifecycle invariant and non-publisher rule | Preserved as primary callouts, stage obligations, output invariants, and negative tests. |
+| Existing child-lane map and conflicts | Preserved, repinned to the current tree, and reframed under v2 stage-first placement. |
+| Inputs, outputs, finite vocabularies, and required gates | Preserved and expanded for current backfill and resilience planners. |
+| Belongs and prohibited guidance | Preserved and mapped to v2 `ROOT_FULL` authority fields. |
+| Review, CODEOWNERS, and separation of duties | Preserved while distinguishing a verified review route from unverified steward-role assignment. |
+| Related roots, ADRs, and open verification | Preserved and corrected for accepted ADR-0029. |
+| Minimum executable contract | Preserved with a new planner-to-executor boundary. |
+| Migration, correction, disable, and rollback | Preserved and expanded with dual-read/single-write and public-reliance handling. |
+| Placeholder-heavy maturity claim | Narrowed: sampled direct stage shells remain placeholders, while selected reusable planning kernels are now substantive. |
+| `pipelines-core` empty-scaffold claim | Corrected: the package remains version `0.0.0`, but current backfill and resilience modules and tests are real. |
+| Dedicated pipeline testing gap | Clarified: focused package tests exist; complete root execution-suite and current-main enforcement remain unverified. |
 | Maintainer note | Preserved below. |
 
-### v0.2 -> v0.3 change summary
+### v0.3 -> v0.4 change summary
 
-- Reorders the first twelve H2 sections to the Directory Rules root-README contract.
-- Replaces proposal-only lane statuses with current repository-grounded maturity statements.
-- Records `cross_lane/` and `biodiversity/` paths omitted from v0.2 without promoting them to canonical authority.
-- Records sampled placeholder code, the README-only pipeline test lane, the bounded executable non-publisher guard, and workflow holds.
-- Reconciles the root with `pipeline_specs/` v0.3, the `pipelines/specs/` guardrail, the `pipelines-core` scaffold, and the RunReceipt family.
-- Makes connector/ingest, watcher, proof, triplet, receipt-layout, Directory Rules placement, and alias conflicts visible.
-- Adds explicit source, lifecycle, evidence, policy, security, determinism, receipt, correction, migration, rollback, and public-client boundaries.
-- Preserves the central rule: pipeline code is governed execution support, never truth or release authority.
+- Repins the evidence snapshot to current main and the current `pipelines/` tree.
+- Applies the accepted Directory Governance Standard v2 `ROOT_FULL` profile.
+- Corrects Directory Rules adoption status through accepted ADR-0029.
+- Replaces the stale blanket scaffold description with a mixed-maturity model.
+- Documents deterministic backfill-window and pipeline-resilience planning kernels without upgrading them to executors.
+- Adds current planner contracts, schemas, CLIs, fixtures, tests, security projection, and runbook relationships.
+- Preserves direct-stage placeholder, active-executor, source-admission, lifecycle-writer, receipt-persistence, release, deployment, and public-effect unknowns.
+- Preserves all evidence, policy, review, correction, rollback, and non-publisher boundaries.
+- Changes no executable, schema, policy, test, workflow, data, release, deployment, or public behavior.
 
 ### Maintainer note
 
