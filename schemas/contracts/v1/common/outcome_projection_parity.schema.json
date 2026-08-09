@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/outcome_projection_parity.schema.json",
+  "title": "OutcomeProjectionParityCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "layer": {
+      "enum": ["POLICY", "RELEASE", "RUNTIME", "API", "UI", "EXPORT", "CACHE"]
+    },
+    "semantic_outcome": {
+      "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
+    },
+    "visibility": {
+      "enum": ["FULL", "REDACTED", "STALE", "UNAVAILABLE"]
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+    },
+    "support_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{4,220}$"
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layer": {"$ref": "#/$defs/layer"},
+        "native_outcome": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+        },
+        "semantic_outcome": {"$ref": "#/$defs/semantic_outcome"},
+        "visibility": {"$ref": "#/$defs/visibility"},
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reason_code"}
+        },
+        "support_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/support_ref"}
+        }
+      },
+      "required": [
+        "layer",
+        "native_outcome",
+        "semantic_outcome",
+        "visibility",
+        "reason_codes",
+        "support_refs"
+      ]
+    },
+    "reason_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_code": {"$ref": "#/$defs/reason_code"},
+        "output_code": {"$ref": "#/$defs/reason_code"},
+        "mapping": {"enum": ["PRESERVED", "TRANSLATED"]}
+      },
+      "required": ["input_code", "output_code", "mapping"]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "step_index": {"type": "integer", "minimum": 1, "maximum": 6},
+        "transition_id": {
+          "type": "string",
+          "pattern": "^[A-Z_]+->[A-Z_]+$"
+        },
+        "input_state": {"$ref": "#/$defs/state"},
+        "output_state": {"$ref": "#/$defs/state"},
+        "reason_mappings": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/reason_mapping"}
+        },
+        "added_reason_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reason_code"}
+        },
+        "omitted_fields": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^/[a-z0-9_/-]{1,127}$"
+          }
+        },
+        "degradation_rule_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm:outcome-projection-rule:[a-z0-9][a-z0-9._:-]{2,127}$"
+            },
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": [
+        "step_index",
+        "transition_id",
+        "input_state",
+        "output_state",
+        "reason_mappings",
+        "added_reason_codes",
+        "omitted_fields",
+        "degradation_rule_ref"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "policy_evaluated": {"const": false},
+        "release_authorized": {"const": false},
+        "runtime_executed": {"const": false},
+        "api_called": {"const": false},
+        "ui_rendered": {"const": false},
+        "export_created": {"const": false},
+        "cache_mutated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "review_approved": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "policy_evaluated",
+        "release_authorized",
+        "runtime_executed",
+        "api_called",
+        "ui_rendered",
+        "export_created",
+        "cache_mutated",
+        "evidence_resolved",
+        "review_approved",
+        "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {"const": "OutcomeProjectionParityCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.outcome-projection-parity.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:outcome-projection-parity:[0-9a-f]{24}$"
+    },
+    "subject_ref": {"$ref": "#/$defs/support_ref"},
+    "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+    "projection_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile_ref": {
+          "type": "string",
+          "pattern": "^kfm:outcome-projection-profile:[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "profile_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "layer_order": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/layer"}
+        },
+        "allowed_outcome_pairs": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(ANSWER|ABSTAIN|DENY|ERROR)->(ANSWER|ABSTAIN|DENY|ERROR)$"
+          }
+        },
+        "allowed_visibility_pairs": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(FULL|REDACTED|STALE|UNAVAILABLE)->(FULL|REDACTED|STALE|UNAVAILABLE)$"
+          }
+        },
+        "reason_lineage_mode": {"const": "DECLARED_MAPPING_REQUIRED"},
+        "support_lineage_mode": {"const": "NO_SILENT_DROP"}
+      },
+      "required": [
+        "profile_ref",
+        "profile_spec_hash",
+        "layer_order",
+        "allowed_outcome_pairs",
+        "allowed_visibility_pairs",
+        "reason_lineage_mode",
+        "support_lineage_mode"
+      ]
+    },
+    "initial_state": {"$ref": "#/$defs/state"},
+    "steps": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/step"}
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "terminal_layer": {"$ref": "#/$defs/layer"},
+        "terminal_outcome": {"$ref": "#/$defs/semantic_outcome"},
+        "terminal_visibility": {"$ref": "#/$defs/visibility"},
+        "parity_status": {
+          "enum": [
+            "PARITY_CONFIRMED",
+            "AUTHORIZED_DEGRADATION",
+            "PARITY_FAILURE"
+          ]
+        },
+        "failing_step_indexes": {
+          "type": "array",
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1, "maximum": 6}
+        },
+        "finding_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reason_code"}
+        },
+        "trusted_surface_allowed": {"const": false},
+        "separate_policy_review_required": {"const": true}
+      },
+      "required": [
+        "terminal_layer",
+        "terminal_outcome",
+        "terminal_visibility",
+        "parity_status",
+        "failing_step_indexes",
+        "finding_codes",
+        "trusted_surface_allowed",
+        "separate_policy_review_required"
+      ]
+    },
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "subject_ref",
+    "assessed_at",
+    "projection_profile",
+    "initial_state",
+    "steps",
+    "report",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "NONE",
+    "contract_doc": "contracts/common/outcome_projection_parity.md",
+    "fixtures_root": "fixtures/contracts/v1/common/outcome_projection_parity/",
+    "validator": "tools/validators/validate_outcome_projection_parity.py"
+  }
+}

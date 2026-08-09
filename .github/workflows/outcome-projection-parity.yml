@@ -1,0 +1,87 @@
+# Validate the fixture-only cross-layer outcome projection parity candidate.
+name: outcome-projection-parity
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/outcome-projection-parity.yml"
+      - "contracts/common/outcome_projection_parity.md"
+      - "schemas/contracts/v1/common/outcome_projection_parity.schema.json"
+      - "fixtures/contracts/v1/common/outcome_projection_parity/**"
+      - "tools/validators/validate_outcome_projection_parity.py"
+      - "tests/validators/test_validate_outcome_projection_parity.py"
+      - "docs/intake/exploratory/outcome-projection-parity-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-outcome-projection-parity-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/outcome-projection-parity.yml"
+      - "contracts/common/outcome_projection_parity.md"
+      - "schemas/contracts/v1/common/outcome_projection_parity.schema.json"
+      - "fixtures/contracts/v1/common/outcome_projection_parity/**"
+      - "tools/validators/validate_outcome_projection_parity.py"
+      - "tests/validators/test_validate_outcome_projection_parity.py"
+      - "docs/intake/exploratory/outcome-projection-parity-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-outcome-projection-parity-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: outcome-projection-parity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-outcome-projection-parity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_outcome_projection_parity.py' \
+            --verbose
+          python tools/validators/validate_outcome_projection_parity.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-outcome-projection-parity-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### OutcomeProjectionParityCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: seven-layer projection order, finite outcome and visibility transitions, reason continuity, support preservation, declared degradation, and deterministic identity."
+            echo "- Boundary: no policy approval, runtime invocation, release decision, public projection, deployment, publication, or trusted-surface authority."
+          } >> "$GITHUB_STEP_SUMMARY"
