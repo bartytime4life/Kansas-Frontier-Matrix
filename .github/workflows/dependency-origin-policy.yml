@@ -1,0 +1,105 @@
+# Validate the proposed static dependency-origin and registry-isolation guard.
+name: dependency-origin-policy
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/dependency-origin-policy.yml"
+      - "contracts/governance/dependency_origin_policy.md"
+      - "schemas/contracts/v1/governance/dependency_origin_policy.schema.json"
+      - "policy/supply_chain/**"
+      - "fixtures/contracts/v1/governance/dependency_origin_policy/**"
+      - "tools/validators/governance/validate_dependency_origin_policy.py"
+      - "tests/validators/governance/test_dependency_origin_policy.py"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pyproject.toml"
+      - "apps/*/package.json"
+      - "packages/*/package.json"
+      - "data/receipts/generated/genrec-pass8-dependency-origin-policy-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/dependency-origin-policy.yml"
+      - "contracts/governance/dependency_origin_policy.md"
+      - "schemas/contracts/v1/governance/dependency_origin_policy.schema.json"
+      - "policy/supply_chain/**"
+      - "fixtures/contracts/v1/governance/dependency_origin_policy/**"
+      - "tools/validators/governance/validate_dependency_origin_policy.py"
+      - "tests/validators/governance/test_dependency_origin_policy.py"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pyproject.toml"
+      - "apps/*/package.json"
+      - "packages/*/package.json"
+      - "data/receipts/generated/genrec-pass8-dependency-origin-policy-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-origin-policy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-dependency-origin-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run deterministic no-network policy tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_dependency_origin_policy.py' \
+            --verbose
+          python tools/validators/governance/validate_dependency_origin_policy.py \
+            --fixtures
+          python tools/validators/governance/validate_dependency_origin_policy.py \
+            --scan-root .
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Dependency-origin policy validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact package-manager pin, single lockfile ownership, KFM workspace binding, direct-reference denial, lock integrity, explicit registry-host checks, Python direct-reference denial, and authoring-receipt integrity."
+            echo "- Boundary: a green result does not prove install-time registry identity, publisher identity, signatures, SBOM/provenance, vulnerability status, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
