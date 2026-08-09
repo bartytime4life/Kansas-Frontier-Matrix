@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/graph_migration_declaration.schema.json",
+  "title": "GraphMigrationDeclaration",
+  "description": "Fixture-only pre-execution declaration. Validation grants no graph, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "declaration_id", "migration", "scope", "invariants", "blast_radius", "telemetry", "reversibility", "governance", "assessment", "permissions", "non_effects", "spec_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "GraphMigrationDeclaration"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "declaration_id": {"type": "string", "pattern": "^kfm:graph-migration-declaration:[0-9a-f]{24}$"},
+    "migration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["title", "intent", "class", "status", "reason_refs"],
+      "properties": {
+        "title": {"type": "string", "minLength": 8, "maxLength": 160},
+        "intent": {"type": "string", "minLength": 16, "maxLength": 1000},
+        "class": {"enum": ["ADDITIVE", "VOCABULARY_TRANSITION", "SEMANTIC_RESHAPE", "IDENTITY_REMAP", "EVIDENCE_REPAIR", "TOPOLOGY_REPAIR", "SCOPE_OR_POSTURE_REPAIR", "REBUILDABLE_DERIVATIVE", "ONTOLOGY_ALIGNMENT", "COORDINATED"]},
+        "status": {"const": "PROPOSED"},
+        "reason_refs": {"$ref": "#/$defs/nonEmptyRefs"}
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["store_class", "environment_ref", "affected_surfaces", "node_classes", "relationship_types", "projections"],
+      "properties": {
+        "store_class": {"enum": ["UNRESOLVED", "PROPERTY_GRAPH", "RDF_TRIPLE_STORE", "HYBRID_GRAPH"]},
+        "environment_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "affected_surfaces": {"$ref": "#/$defs/nonEmptyNames"},
+        "node_classes": {"$ref": "#/$defs/names"},
+        "relationship_types": {"$ref": "#/$defs/names"},
+        "projections": {"$ref": "#/$defs/names"}
+      }
+    },
+    "invariants": {
+      "type": "array", "minItems": 10, "maxItems": 10,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "disposition"],
+        "properties": {
+          "name": {"enum": ["DETERMINISTIC_IDENTITY", "DIRECTIONALITY_CARDINALITY", "ENDPOINT_INTEGRITY", "EVIDENCE_CLOSURE", "IDENTITY_LINEAGE", "NO_AUTHORITY_INFLATION", "PROVENANCE", "RECOVERY", "SENSITIVITY_RIGHTS", "TEMPORAL_SPATIAL_SCOPE"]},
+          "disposition": {"const": "REQUIRED"}
+        }
+      }
+    },
+    "blast_radius": {
+      "type": "object", "additionalProperties": false,
+      "required": ["affected_components", "worst_case", "destructive_effects", "sensitive_data_impact"],
+      "properties": {
+        "affected_components": {"$ref": "#/$defs/nonEmptyNames"},
+        "worst_case": {"type": "string", "minLength": 12, "maxLength": 500},
+        "destructive_effects": {"const": false},
+        "sensitive_data_impact": {"enum": ["NONE", "UNRESOLVED"]}
+      }
+    },
+    "telemetry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "metric_names", "precheck_refs", "postcheck_refs"],
+      "properties": {
+        "state": {"const": "NOT_RUN"},
+        "metric_names": {"$ref": "#/$defs/nonEmptyNames"},
+        "precheck_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "postcheck_refs": {"$ref": "#/$defs/nonEmptyRefs"}
+      }
+    },
+    "reversibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["recovery_class", "paired_recovery_ref", "rehearsal_state", "irreversible_effects"],
+      "properties": {
+        "recovery_class": {"enum": ["FORWARD_FIX", "PAIRED_ROLLBACK", "REBUILDABLE_DERIVATIVE"]},
+        "paired_recovery_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "rehearsal_state": {"const": "NOT_RUN"},
+        "irreversible_effects": {"type": "array", "maxItems": 0}
+      }
+    },
+    "governance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_refs", "evidence_refs", "policy_refs", "review_state", "execution_authorized", "release_authorized", "publication_authorized"],
+      "properties": {
+        "authority_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "policy_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "review_state": {"const": "PENDING"},
+        "execution_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "assessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome", "reason_code"],
+      "properties": {
+        "outcome": {"const": "HOLD"},
+        "reason_code": {"const": "MIGRATION_DECLARATION_REVIEW_REQUIRED"}
+      }
+    },
+    "permissions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["network_access", "graph_read", "graph_write", "file_mutation", "policy_evaluation", "release", "publication"],
+      "properties": {
+        "network_access": {"const": false}, "graph_read": {"const": false}, "graph_write": {"const": false}, "file_mutation": {"const": false}, "policy_evaluation": {"const": false}, "release": {"const": false}, "publication": {"const": false}
+      }
+    },
+    "non_effects": {
+      "type": "array", "minItems": 8, "uniqueItems": true,
+      "items": {"enum": ["NO_GRAPH_ACCESS", "NO_QUERY_EXECUTION", "NO_GRAPH_WRITE", "NO_IDENTITY_REMAP", "NO_EVIDENCE_MUTATION", "NO_POLICY_DECISION", "NO_REVIEW_APPROVAL", "NO_LIFECYCLE_PROMOTION", "NO_RELEASE", "NO_PUBLICATION"]}
+    },
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "names": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$"}, "uniqueItems": true},
+    "nonEmptyNames": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$"}, "uniqueItems": true},
+    "nonEmptyRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 300}, "uniqueItems": true}
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "source_card": "KFM-P30-PROG-0008",
+    "source_spec_hash": "sha256:517810192f27527381aca4b4ce448b2409f26e47932fddb1954d30ceab7d4b14"
+  }
+}
