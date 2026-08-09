@@ -1,0 +1,137 @@
+# Validate the canonical fixtures/ root documentation and projection contract.
+#
+# Pull-request content is untrusted. This workflow uses a GitHub-hosted runner,
+# read-only repository permission, no secrets, and no external service calls
+# beyond installing dependencies declared by the repository.
+name: fixtures-root-contract
+
+"on":
+  pull_request:
+    paths:
+      - "fixtures/**"
+      - "control_plane/root_registry.yaml"
+      - "Makefile"
+      - "tools/validators/validator_registry.json"
+      - "tools/validators/_fixture_root_contract_io.py"
+      - "tools/validators/_fixture_root_contract_checks.py"
+      - "tools/validators/fixture_root_contract.py"
+      - "tools/validators/validate_fixture_root_contract.py"
+      - "tests/validators/test_validate_fixture_root_contract.py"
+      - ".github/workflows/fixtures-root-contract.yml"
+      - "data/receipts/generated/genrec-fixtures-root-contract-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - "fixtures/**"
+      - "control_plane/root_registry.yaml"
+      - "Makefile"
+      - "tools/validators/validator_registry.json"
+      - "tools/validators/_fixture_root_contract_io.py"
+      - "tools/validators/_fixture_root_contract_checks.py"
+      - "tools/validators/fixture_root_contract.py"
+      - "tools/validators/validate_fixture_root_contract.py"
+      - "tests/validators/test_validate_fixture_root_contract.py"
+      - ".github/workflows/fixtures-root-contract.yml"
+      - "data/receipts/generated/genrec-fixtures-root-contract-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fixtures-root-contract-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run deterministic no-network unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_fixture_root_contract.py' \
+            --verbose
+
+      - name: Validate the current fixture-root contract
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_fixture_root_contract.py \
+            --repo-root .
+
+      - name: Verify changed generated authoring receipts
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base_sha="$PR_BASE_SHA"
+          elif [[ "$EVENT_NAME" == "push" && ! "$PUSH_BEFORE_SHA" =~ ^0+$ ]]; then
+            base_sha="$PUSH_BEFORE_SHA"
+          else
+            base_sha="$(git rev-parse HEAD^)"
+          fi
+
+          mapfile -t receipts < <(
+            git diff --name-only "${base_sha}...HEAD" -- \
+              'data/receipts/generated/genrec-fixtures-root-contract-*.json'
+          )
+
+          if [[ "${#receipts[@]}" -eq 0 ]]; then
+            echo "No changed fixture-root authoring receipt requires validation."
+            exit 0
+          fi
+
+          for receipt in "${receipts[@]}"; do
+            python tools/validators/validate_generated_receipt.py \
+              "$receipt" \
+              --repo-root .
+          done
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Fixture root contract"
+            echo
+            echo "- Scope: root README identity and ROOT_FULL order, direct-child parity, root-registry projection, eight-validator aggregate profile, and Makefile readiness-marker agreement."
+            echo "- Network: validator and focused tests are deterministic and make no external request."
+            echo "- Receipt handling: only receipts changed by the tested revision are checked against current bytes; historical receipts are not replayed against later artifact revisions."
+            echo "- Non-effects: no fixture payload is generated, admitted, promoted, released, deployed, or published."
+            echo "- Authority: a green result is repository conformance evidence only; it is not source truth, rights clearance, policy approval, human review, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
