@@ -12,7 +12,7 @@ related:
   - ../../schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json
   - ../../fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json
   - ../../tools/validators/policy/validate_policy_enforcement_maturity.py
-  - ../../tests/validators/policy/test_validate_policy_enforcement_maturity.py
+  - ../../tests/validators/test_validate_policy_enforcement_maturity.py
 tags: [kfm, policy, enforcement, maturity, ci, promotion, runtime]
 [/KFM_META_BLOCK_V2] -->
 
@@ -71,7 +71,7 @@ Accepted ADR-0029 and Directory Rules v2 place policy semantics in `contracts/po
 ```bash
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python -m unittest \
-  tests.validators.policy.test_validate_policy_enforcement_maturity --verbose
+  tests.validators.test_validate_policy_enforcement_maturity --verbose
 
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tools/validators/policy/validate_policy_enforcement_maturity.py --fixtures

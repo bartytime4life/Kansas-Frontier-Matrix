@@ -7,15 +7,20 @@ import argparse
 import copy
 import json
 import math
+import sys
 from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
-from hashing import CanonicalizationFailure, compute_spec_hash
+REPO_ROOT = Path(__file__).resolve().parents[3]
+HASHING_SRC = REPO_ROOT / "packages" / "hashing" / "src"
+if str(HASHING_SRC) not in sys.path:
+    sys.path.insert(0, str(HASHING_SRC))
+
+from hashing import CanonicalizationFailure, compute_spec_hash  # noqa: E402
 from jsonschema import Draft202012Validator
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json"
 FIXTURES = REPO_ROOT / "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json"
 MAX_JSON_BYTES = 1024 * 1024

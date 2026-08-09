@@ -4,12 +4,12 @@ name: pass11-policy-enforcement-maturity
 "on":
   pull_request:
     paths:
-      - ".github/workflows/pass11-policy-enforcement-maturity.yml"
+      - ".github/workflows/policy-enforcement-maturity.yml"
       - "contracts/policy/policy_enforcement_maturity.md"
       - "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json"
       - "fixtures/contracts/v1/policy/policy_enforcement_maturity/**"
       - "tools/validators/policy/validate_policy_enforcement_maturity.py"
-      - "tests/validators/policy/test_validate_policy_enforcement_maturity.py"
+      - "tests/validators/test_validate_policy_enforcement_maturity.py"
       - "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md"
       - "data/receipts/generated/genrec-pass11-policy-enforcement-maturity-20260809.json"
       - "packages/hashing/src/hashing/**"
@@ -19,12 +19,12 @@ name: pass11-policy-enforcement-maturity
   push:
     branches: [main]
     paths:
-      - ".github/workflows/pass11-policy-enforcement-maturity.yml"
+      - ".github/workflows/policy-enforcement-maturity.yml"
       - "contracts/policy/policy_enforcement_maturity.md"
       - "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json"
       - "fixtures/contracts/v1/policy/policy_enforcement_maturity/**"
       - "tools/validators/policy/validate_policy_enforcement_maturity.py"
-      - "tests/validators/policy/test_validate_policy_enforcement_maturity.py"
+      - "tests/validators/test_validate_policy_enforcement_maturity.py"
       - "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md"
       - "data/receipts/generated/genrec-pass11-policy-enforcement-maturity-20260809.json"
       - "packages/hashing/src/hashing/**"
@@ -72,12 +72,12 @@ jobs:
           set -euo pipefail
           python -m py_compile \
             tools/validators/policy/validate_policy_enforcement_maturity.py \
-            tests/validators/policy/test_validate_policy_enforcement_maturity.py
+            tests/validators/test_validate_policy_enforcement_maturity.py
       - name: Run focused tests
         run: |
           set -euo pipefail
           python -m unittest \
-            tests.validators.policy.test_validate_policy_enforcement_maturity --verbose
+            tests.validators.test_validate_policy_enforcement_maturity --verbose
       - name: Replay exact fixture outcomes
         run: |
           set -euo pipefail

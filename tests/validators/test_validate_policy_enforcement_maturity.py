@@ -1,11 +1,14 @@
 import copy
 import importlib.util
+import os
+import subprocess
+import tempfile
 import json
 import sys
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_PATH = ROOT / "tools/validators/policy/validate_policy_enforcement_maturity.py"
 SPEC = importlib.util.spec_from_file_location("policy_enforcement_maturity", VALIDATOR_PATH)
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -22,6 +25,21 @@ class PolicyEnforcementMaturityTests(unittest.TestCase):
     def _rehash(self, record):
         record["spec_hash"] = MODULE.compute_record_spec_hash(record)
         return record
+
+
+    def test_direct_script_fixture_command_is_cwd_independent(self):
+        env = dict(os.environ)
+        env["KFM_NO_NETWORK"] = "1"
+        with tempfile.TemporaryDirectory() as cwd:
+            completed = subprocess.run(
+                [sys.executable, str(VALIDATOR_PATH), "--fixtures"],
+                cwd=cwd,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr or completed.stdout)
 
     def test_fixture_replay(self):
         self.assertEqual([], MODULE.replay())
