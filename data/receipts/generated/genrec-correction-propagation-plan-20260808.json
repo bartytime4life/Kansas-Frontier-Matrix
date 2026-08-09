@@ -12,7 +12,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/correction-propagation-plan.yml": "sha256:89507707a56bdb7b95e5d3245e6192ce22e09cb787283128de674315291cda78",
-    "contracts/correction/correction_propagation_plan.md": "sha256:2ee51c7366fb0cb474aa38b4cd1991ce98484b2e5f4d2d357e2c023a372750e8",
+    "contracts/correction/correction_propagation_plan.md": "sha256:2ee51ea3c5ea3e688a798367acb55e02cc9756e597949d7debf51dbc0162a226",
     "docs/intake/exploratory/correction-propagation-plan-source-map.md": "sha256:91da87719d1dfc2528620590240c202febda8e6b950ff41d06b09b6bdfb514ed",
     "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "sha256:cbdd0a2aba38aace292aaf11835777c2cb13ea68dd200b119f4ecced838326d1",
     "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "sha256:ea25d856d5f3aa1021688104482bdd1616fb987318b23ee1293962cb60a385c0",
@@ -87,7 +87,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The repair head requires hosted validation; the merged predecessor failed only on two stale generated-receipt digests."
+      "reason": "The receipt-only correction head requires hosted validation; predecessor run 31287457602 passed tests and fixtures but failed the contract digest binding."
     },
     {
       "gate": "human-review",
@@ -123,5 +123,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only additive implementation. Follow-up repair corrects the setup-python cache key and refreshes the exact contract digest after hosted validation exposed stale receipt bindings. No network access, lifecycle mutation, source activation, policy approval, merge, release, deployment, publication, or public-use authority is created."
+  "notes": "Fixture-only additive implementation. Second receipt-only follow-up corrects the contract SHA-256 from a prior transcription error using the exact checked-out UTF-8 bytes. No network access, lifecycle mutation, source activation, policy approval, merge, release, deployment, publication, or public-use authority is created."
 }
