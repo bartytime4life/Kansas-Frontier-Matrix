@@ -1,0 +1,54 @@
+{
+  "authority": "NONE",
+  "expected_package_manager": "pnpm@11.17.0",
+  "forbidden_lockfiles": [
+    "npm-shrinkwrap.json",
+    "package-lock.json",
+    "yarn.lock"
+  ],
+  "non_effects": [
+    "does_not_install_or_resolve_dependencies",
+    "does_not_prove_registry_or_publisher_identity",
+    "does_not_verify_package_signatures_attestations_or_vulnerabilities",
+    "does_not_authorize_source_evidence_policy_review_or_release",
+    "does_not_deploy_publish_or_create_public_use_authority"
+  ],
+  "npm": {
+    "allowed_registry_hosts": [
+      "registry.npmjs.org"
+    ],
+    "forbidden_direct_specifier_prefixes": [
+      "file:",
+      "git+",
+      "http:",
+      "https:"
+    ],
+    "internal_scopes": [
+      "@kfm/"
+    ],
+    "internal_specifier_prefixes": [
+      "link:",
+      "workspace:"
+    ],
+    "lockfile_version": "9.0",
+    "require_integrity": true
+  },
+  "outcomes": [
+    "PASS",
+    "DENY",
+    "ERROR"
+  ],
+  "profile": "kfm.governance.dependency-origin-policy.v1",
+  "profile_status": "PROPOSED_STATIC_GUARD",
+  "python": {
+    "allow_editable_local": true,
+    "forbidden_direct_reference_schemes": [
+      "file:",
+      "git+",
+      "http:",
+      "https:"
+    ]
+  },
+  "required_lockfile": "pnpm-lock.yaml",
+  "schema_version": "1.0.0"
+}
