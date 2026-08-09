@@ -2,6 +2,8 @@
 
 Status: `PROPOSED_INACTIVE`
 
+Profile version: `kfm.geospatial-carrier-readiness.v1.1` / schema `1.1.0`
+
 `GeospatialCarrierReadinessCheck` is a fixture-first preflight for downstream geospatial carriers. It turns three standards documents that currently describe KFM expectations into one finite, no-network review surface:
 
 - Cloud Optimized GeoTIFF (COG) raster carriers;
@@ -41,6 +43,25 @@ A style is never allowed to conceal attributes that were already encoded into pu
 The GeoParquet lane pins KFM to GeoParquet 1.1.0, `.parquet`, `application/vnd.apache.parquet`, one root primary geometry declaration, WKB, explicit PROJJSON CRS, stable deterministic row grouping/order, null-only missing-value behavior, forward-compatible unknown-metadata preservation, and numeric-unit coverage.
 
 GeoParquet 2.x declarations are held rather than silently accepted. Missing 1.1 bbox covering is an advisory because KFM recommends it for pruning but does not treat it as a universal hard requirement.
+
+Version 1.1 adds a required, inspectable layout profile. It records:
+
+- the compression codec;
+- the ordering strategy, version, and parameter digest;
+- row-group target rows and target bytes;
+- the partition strategy, version, and parameter digest;
+- the writer implementation, version, and parameter digest; and
+- the benchmark reference and result digest that justify the dataset-specific choice.
+
+The check does not prescribe one universal row count, byte target, ordering algorithm, or partition grid. Those choices vary with row width, geometry complexity, query pattern, writer behavior, and delivery versus analytics use. The profile makes the choice reviewable and repeatable. `ZSTD` remains a recommendation and produces an advisory when another declared codec is used; it is not a global fail condition.
+
+Placeholder parameter or benchmark digests fail closed. Partition strategies other than `NONE` require a declared version, while `NONE` must not carry a misleading partition version. The validator still reads declared metadata only and does not prove that Parquet bytes were written with the declared layout.
+
+### Evidence basis and limits
+
+This extension adapts the spatial-ordering, compression, and row-group ideas in the supplied *Kansas Frontier Matrix Improvements* document through the repository's governed source map at `docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md`. That source map rejects mandatory GeoParquet 2.0 adoption, a universal 50,000-100,000 row-group rule, Hilbert-only ordering, and one grid resolution for every dataset. The executable profile therefore records a benchmark-bound decision instead of promoting those proposal constants into KFM policy.
+
+This draft does not satisfy or bypass the source map's separate GeoParquet version-readiness decision. The contract remains `PROPOSED_INACTIVE`; activation, migration, release, and publication still require their own accepted decisions and evidence.
 
 ## Non-effects
 

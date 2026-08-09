@@ -7,8 +7,8 @@
   "required": ["object_type", "schema_version", "profile", "network_access", "carrier_kind", "artifact", "bindings", "carrier", "governance"],
   "properties": {
     "object_type": {"const": "GeospatialCarrierReadinessCheck"},
-    "schema_version": {"const": "1.0.0"},
-    "profile": {"const": "kfm.geospatial-carrier-readiness.v1"},
+    "schema_version": {"const": "1.1.0"},
+    "profile": {"const": "kfm.geospatial-carrier-readiness.v1.1"},
     "network_access": {"const": "forbidden"},
     "carrier_kind": {"enum": ["COG", "MVT", "GEOPARQUET"]},
     "artifact": {"$ref": "#/$defs/artifact"},
@@ -101,7 +101,7 @@
     },
     "geoparquet": {
       "type": "object", "additionalProperties": false,
-      "required": ["format_version", "geometry_column", "root_geometry_column", "encoding", "crs_format", "explicit_crs", "geometry_types", "stable_row_grouping", "deterministic_ordering", "null_policy", "bbox_covering", "unknown_metadata_preserved", "numeric_unit_coverage"],
+      "required": ["format_version", "geometry_column", "root_geometry_column", "encoding", "crs_format", "explicit_crs", "geometry_types", "stable_row_grouping", "deterministic_ordering", "layout_profile", "null_policy", "bbox_covering", "unknown_metadata_preserved", "numeric_unit_coverage"],
       "properties": {
         "format_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"},
         "geometry_column": {"$ref": "#/$defs/ref"},
@@ -112,10 +112,33 @@
         "geometry_types": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
         "stable_row_grouping": {"type": "boolean"},
         "deterministic_ordering": {"type": "boolean"},
+        "layout_profile": {"$ref": "#/$defs/geoparquet_layout_profile"},
         "null_policy": {"enum": ["NULL_ONLY", "NAN_ALLOWED", "SENTINEL_ALLOWED"]},
         "bbox_covering": {"type": "boolean"},
         "unknown_metadata_preserved": {"type": "boolean"},
         "numeric_unit_coverage": {"type": "boolean"}
+      }
+    },
+    "geoparquet_layout_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "compression", "ordering_strategy", "ordering_version", "ordering_parameters_digest", "row_group_target_rows", "row_group_target_bytes", "partition_strategy", "partition_version", "partition_parameters_digest", "writer_implementation", "writer_version", "writer_parameters_digest", "benchmark_ref", "benchmark_digest"],
+      "properties": {
+        "profile_id": {"type": "string", "pattern": "^kfm\\.geoparquet-layout\\.[a-z0-9][a-z0-9._-]{2,127}$"},
+        "compression": {"enum": ["ZSTD", "SNAPPY", "GZIP", "BROTLI", "LZ4", "UNCOMPRESSED"]},
+        "ordering_strategy": {"enum": ["HILBERT", "Z_ORDER", "GEOSPATIAL_SORT", "PRIMARY_KEY"]},
+        "ordering_version": {"type": "string", "minLength": 1, "maxLength": 64},
+        "ordering_parameters_digest": {"$ref": "#/$defs/sha256"},
+        "row_group_target_rows": {"type": "integer", "minimum": 1},
+        "row_group_target_bytes": {"type": "integer", "minimum": 1},
+        "partition_strategy": {"enum": ["NONE", "H3", "S2", "ADMIN", "CUSTOM"]},
+        "partition_version": {"type": ["string", "null"], "minLength": 1, "maxLength": 64},
+        "partition_parameters_digest": {"$ref": "#/$defs/sha256"},
+        "writer_implementation": {"type": "string", "minLength": 1, "maxLength": 128},
+        "writer_version": {"type": "string", "minLength": 1, "maxLength": 64},
+        "writer_parameters_digest": {"$ref": "#/$defs/sha256"},
+        "benchmark_ref": {"$ref": "#/$defs/ref"},
+        "benchmark_digest": {"$ref": "#/$defs/sha256"}
       }
     }
   },

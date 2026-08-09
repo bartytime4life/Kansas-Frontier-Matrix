@@ -75,6 +75,47 @@ def test_geoparquet_missing_bbox_covering_is_advisory_only():
     assert result.advisories == ("GEOPARQUET_BBOX_COVERING_RECOMMENDED",)
 
 
+def test_geoparquet_layout_profile_is_required():
+    candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
+    del candidate["carrier"]["layout_profile"]
+    result = module.assess(candidate)
+    assert result.outcome == "ERROR"
+    assert result.reason_codes == ("SCHEMA_INVALID",)
+
+
+def test_geoparquet_row_group_targets_are_profile_specific():
+    candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
+    candidate["carrier"]["layout_profile"]["row_group_target_rows"] = 12000
+    candidate["carrier"]["layout_profile"]["row_group_target_bytes"] = 67108864
+    result = module.assess(candidate)
+    assert result.outcome == "READY"
+    assert "GEOPARQUET_BBOX_COVERING_RECOMMENDED" in result.advisories
+
+
+def test_geoparquet_non_zstd_compression_is_advisory():
+    candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
+    candidate["carrier"]["layout_profile"]["compression"] = "SNAPPY"
+    result = module.assess(candidate)
+    assert result.outcome == "READY"
+    assert "GEOPARQUET_ZSTD_RECOMMENDED" in result.advisories
+
+
+def test_geoparquet_placeholder_benchmark_digest_fails_closed():
+    candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
+    candidate["carrier"]["layout_profile"]["benchmark_digest"] = module.ZERO_SHA256
+    result = module.assess(candidate)
+    assert result.outcome == "ERROR"
+    assert "GEOPARQUET_BENCHMARK_DIGEST_PLACEHOLDER_DENIED" in result.reason_codes
+
+
+def test_geoparquet_partition_version_matches_strategy():
+    candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
+    candidate["carrier"]["layout_profile"]["partition_strategy"] = "H3"
+    result = module.assess(candidate)
+    assert result.outcome == "HOLD"
+    assert "GEOPARQUET_PARTITION_VERSION_REQUIRED" in result.reason_codes
+
+
 def test_noncanonical_arrays_error():
     candidate = json.loads(json.dumps(_case("geoparquet-ready-with-advisory")["candidate"]))
     candidate["carrier"]["geometry_types"] = ["Polygon", "MultiPolygon"]
