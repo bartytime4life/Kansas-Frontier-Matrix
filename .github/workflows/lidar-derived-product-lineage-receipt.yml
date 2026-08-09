@@ -1,0 +1,71 @@
+name: lidar-derived-product-lineage-receipt
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/lidar-derived-product-lineage-receipt.yml"
+      - "contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md"
+      - "schemas/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json"
+      - "fixtures/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt/**"
+      - "tools/validators/validate_lidar_derived_product_lineage_receipt.py"
+      - "tests/validators/test_validate_lidar_derived_product_lineage_receipt.py"
+      - "docs/intake/exploratory/pass-30-lidar-derived-product-lineage-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass30-lidar-lineage-receipt-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/lidar-derived-product-lineage-receipt.yml"
+      - "contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md"
+      - "schemas/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json"
+      - "fixtures/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt/**"
+      - "tools/validators/validate_lidar_derived_product_lineage_receipt.py"
+      - "tests/validators/test_validate_lidar_derived_product_lineage_receipt.py"
+      - "docs/intake/exploratory/pass-30-lidar-derived-product-lineage-source-map.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-pass30-lidar-lineage-receipt-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lidar-derived-product-lineage-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: python -m pytest -q tests/validators/test_validate_lidar_derived_product_lineage_receipt.py
+      - name: Verify generated receipt
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-lidar-lineage-receipt-20260809.json --repo-root .
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### LiDAR derived product lineage receipt candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only lineage coherence over opaque artifact and transform references."
+            echo "- Boundary: no source fetch, external-byte verification, source admission, lifecycle/catalog write, policy, release, deployment, publication, engineering, or legal authority."
+          } >> "$GITHUB_STEP_SUMMARY"

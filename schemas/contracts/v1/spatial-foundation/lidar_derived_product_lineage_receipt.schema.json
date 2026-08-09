@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json",
+  "title": "LidarDerivedProductLineageReceipt",
+  "description": "Fixture-only LiDAR source-capture, access-carrier, and modeled-derivative lineage receipt. Conformance grants no source, evidence, policy, lifecycle, release, publication, engineering, legal, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "lineage_id",
+    "source_family",
+    "source_descriptor_ref",
+    "source_descriptor_spec_hash",
+    "products",
+    "lineage_summary",
+    "evidence_refs",
+    "outcome",
+    "claims",
+    "permissions",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "LidarDerivedProductLineageReceipt"},
+    "profile": {"const": "kfm.spatial-foundation.lidar-derived-product-lineage-receipt.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "lineage_id": {
+      "type": "string",
+      "pattern": "^kfm:lidar-derived-product-lineage:[0-9a-f]{64}$"
+    },
+    "source_family": {"const": "USGS_3DEP"},
+    "source_descriptor_ref": {"$ref": "#/$defs/kfm_ref"},
+    "source_descriptor_spec_hash": {"$ref": "#/$defs/spec_hash"},
+    "products": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/product"}
+    },
+    "lineage_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root_node_id",
+        "leaf_node_ids",
+        "edge_count",
+        "all_nodes_have_laz_ancestor",
+        "role_mapping_preserved",
+        "acquisition_window_preserved",
+        "spatial_reference_preserved"
+      ],
+      "properties": {
+        "root_node_id": {"$ref": "#/$defs/node_id"},
+        "leaf_node_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/node_id"}
+        },
+        "edge_count": {"type": "integer", "minimum": 1, "maximum": 496},
+        "all_nodes_have_laz_ancestor": {"type": "boolean"},
+        "role_mapping_preserved": {"type": "boolean"},
+        "acquisition_window_preserved": {"type": "boolean"},
+        "spatial_reference_preserved": {"type": "boolean"}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/kfm_ref"}
+    },
+    "outcome": {"const": "LINEAGE_RECORDED"},
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_upgraded",
+        "dem_is_pointcloud_substitute",
+        "engineering_authority",
+        "legal_boundary_authority",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "source_truth_upgraded": {"const": false},
+        "dem_is_pointcloud_substitute": {"const": false},
+        "engineering_authority": {"const": false},
+        "legal_boundary_authority": {"const": false},
+        "policy_evaluated": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_write_allowed",
+        "catalog_write_allowed",
+        "lifecycle_write_allowed",
+        "source_admission_allowed",
+        "promotion_allowed",
+        "release_allowed",
+        "deployment_allowed",
+        "publication_allowed"
+      ],
+      "properties": {
+        "repository_write_allowed": {"const": false},
+        "catalog_write_allowed": {"const": false},
+        "lifecycle_write_allowed": {"const": false},
+        "source_admission_allowed": {"const": false},
+        "promotion_allowed": {"const": false},
+        "release_allowed": {"const": false},
+        "deployment_allowed": {"const": false},
+        "publication_allowed": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_fetch_or_validate_external_artifact_bytes",
+        "does_not_admit_source_or_lifecycle_state",
+        "does_not_assert_dem_as_pointcloud_source_truth",
+        "does_not_create_engineering_legal_or_policy_authority",
+        "does_not_release_deploy_or_publish",
+        "does_not_write_repository_catalog_or_lifecycle_state"
+      ]
+    },
+    "spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "$defs": {
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^kfm:(//)?[A-Za-z0-9][A-Za-z0-9._:/-]+$"
+    },
+    "node_id": {
+      "type": "string",
+      "pattern": "^lidar-node:[0-9]{2}:[a-z0-9][a-z0-9_.:-]{2,180}$"
+    },
+    "acquisition_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "vertical_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["datum_ref", "geoid_model_ref", "units"],
+      "properties": {
+        "datum_ref": {"$ref": "#/$defs/kfm_ref"},
+        "geoid_model_ref": {
+          "oneOf": [
+            {"$ref": "#/$defs/kfm_ref"},
+            {"type": "null"}
+          ]
+        },
+        "units": {"enum": ["metre", "foot", "us_survey_foot"]}
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "product_kind",
+        "source_role",
+        "product_role",
+        "artifact_ref",
+        "artifact_spec_hash",
+        "media_type",
+        "parent_node_ids",
+        "transform_receipt_refs",
+        "acquisition_window",
+        "quality_level",
+        "horizontal_crs_ref",
+        "vertical_reference"
+      ],
+      "properties": {
+        "node_id": {"$ref": "#/$defs/node_id"},
+        "product_kind": {"enum": ["LAZ", "COPC", "EPT", "DEM", "TERRAIN"]},
+        "source_role": {"enum": ["OBSERVED", "MODELED"]},
+        "product_role": {
+          "enum": [
+            "SOURCE_CAPTURE",
+            "ANALYTIC_ACCESS_CARRIER",
+            "ELEVATION_MODEL",
+            "TERRAIN_DERIVATIVE"
+          ]
+        },
+        "artifact_ref": {"$ref": "#/$defs/kfm_ref"},
+        "artifact_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160,
+          "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+(?:;[A-Za-z0-9= ._+-]+)?$"
+        },
+        "parent_node_ids": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 31,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/node_id"}
+        },
+        "transform_receipt_refs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/kfm_ref"}
+        },
+        "acquisition_window": {"$ref": "#/$defs/acquisition_window"},
+        "quality_level": {"enum": ["QL0", "QL1", "QL2", "QL3"]},
+        "horizontal_crs_ref": {"$ref": "#/$defs/kfm_ref"},
+        "vertical_reference": {"$ref": "#/$defs/vertical_reference"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "source_card": "KFM-P30-PROG-0028"
+  }
+}

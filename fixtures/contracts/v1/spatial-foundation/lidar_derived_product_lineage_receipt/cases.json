@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "spatial-foundation.lidar-derived-product-lineage-receipt",
+  "base_document": {
+    "schema_version": "1.0.0",
+    "object_type": "LidarDerivedProductLineageReceipt",
+    "profile": "kfm.spatial-foundation.lidar-derived-product-lineage-receipt.v1",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "lineage_id": "kfm:lidar-derived-product-lineage:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_family": "USGS_3DEP",
+    "source_descriptor_ref": "kfm:source-descriptor:fixture-usgs-3dep",
+    "source_descriptor_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "products": [
+      {
+        "node_id": "lidar-node:01:laz",
+        "product_kind": "LAZ",
+        "source_role": "OBSERVED",
+        "product_role": "SOURCE_CAPTURE",
+        "artifact_ref": "kfm:artifact:fixture-laz-source-tile",
+        "artifact_spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "media_type": "application/vnd.laszip+binary",
+        "parent_node_ids": [],
+        "transform_receipt_refs": [],
+        "acquisition_window": {
+          "start": "2024-04-01T00:00:00Z",
+          "end": "2024-04-02T00:00:00Z"
+        },
+        "quality_level": "QL2",
+        "horizontal_crs_ref": "kfm:crs:fixture-nad83-utm-zone",
+        "vertical_reference": {
+          "datum_ref": "kfm:vertical-datum:fixture-navd88",
+          "geoid_model_ref": "kfm:geoid-model:fixture-geoid18",
+          "units": "metre"
+        }
+      },
+      {
+        "node_id": "lidar-node:02:copc",
+        "product_kind": "COPC",
+        "source_role": "OBSERVED",
+        "product_role": "ANALYTIC_ACCESS_CARRIER",
+        "artifact_ref": "kfm:artifact:fixture-copc-access-tile",
+        "artifact_spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "media_type": "application/vnd.copc+laszip",
+        "parent_node_ids": ["lidar-node:01:laz"],
+        "transform_receipt_refs": ["kfm:transform-receipt:fixture-laz-to-copc"],
+        "acquisition_window": {
+          "start": "2024-04-01T00:00:00Z",
+          "end": "2024-04-02T00:00:00Z"
+        },
+        "quality_level": "QL2",
+        "horizontal_crs_ref": "kfm:crs:fixture-nad83-utm-zone",
+        "vertical_reference": {
+          "datum_ref": "kfm:vertical-datum:fixture-navd88",
+          "geoid_model_ref": "kfm:geoid-model:fixture-geoid18",
+          "units": "metre"
+        }
+      },
+      {
+        "node_id": "lidar-node:03:dem",
+        "product_kind": "DEM",
+        "source_role": "MODELED",
+        "product_role": "ELEVATION_MODEL",
+        "artifact_ref": "kfm:artifact:fixture-dem-derivative",
+        "artifact_spec_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "media_type": "image/tiff;application=geotiff",
+        "parent_node_ids": ["lidar-node:02:copc"],
+        "transform_receipt_refs": ["kfm:transform-receipt:fixture-copc-to-dem"],
+        "acquisition_window": {
+          "start": "2024-04-01T00:00:00Z",
+          "end": "2024-04-02T00:00:00Z"
+        },
+        "quality_level": "QL2",
+        "horizontal_crs_ref": "kfm:crs:fixture-nad83-utm-zone",
+        "vertical_reference": {
+          "datum_ref": "kfm:vertical-datum:fixture-navd88",
+          "geoid_model_ref": "kfm:geoid-model:fixture-geoid18",
+          "units": "metre"
+        }
+      }
+    ],
+    "lineage_summary": {
+      "root_node_id": "lidar-node:01:laz",
+      "leaf_node_ids": ["lidar-node:03:dem"],
+      "edge_count": 2,
+      "all_nodes_have_laz_ancestor": true,
+      "role_mapping_preserved": true,
+      "acquisition_window_preserved": true,
+      "spatial_reference_preserved": true
+    },
+    "evidence_refs": [
+      "kfm:evidence:fixture-3dep-source-context",
+      "kfm:evidence:fixture-lineage-run"
+    ],
+    "outcome": "LINEAGE_RECORDED",
+    "claims": {
+      "source_truth_upgraded": false,
+      "dem_is_pointcloud_substitute": false,
+      "engineering_authority": false,
+      "legal_boundary_authority": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    },
+    "permissions": {
+      "repository_write_allowed": false,
+      "catalog_write_allowed": false,
+      "lifecycle_write_allowed": false,
+      "source_admission_allowed": false,
+      "promotion_allowed": false,
+      "release_allowed": false,
+      "deployment_allowed": false,
+      "publication_allowed": false
+    },
+    "non_effects": [
+      "does_not_fetch_or_validate_external_artifact_bytes",
+      "does_not_admit_source_or_lifecycle_state",
+      "does_not_assert_dem_as_pointcloud_source_truth",
+      "does_not_create_engineering_legal_or_policy_authority",
+      "does_not_release_deploy_or_publish",
+      "does_not_write_repository_catalog_or_lifecycle_state"
+    ],
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "case_id": "valid-laz-copc-dem",
+      "expected": {"status": "PASS", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": []}
+    },
+    {
+      "case_id": "valid-laz-ept-terrain",
+      "mutations": [
+        {"path": "products.1.product_kind", "value": "EPT"},
+        {"path": "products.1.node_id", "value": "lidar-node:02:ept"},
+        {"path": "products.1.artifact_ref", "value": "kfm:artifact:fixture-ept-access-tree"},
+        {"path": "products.1.artifact_spec_hash", "value": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+        {"path": "products.1.media_type", "value": "application/json"},
+        {"path": "products.1.transform_receipt_refs", "value": ["kfm:transform-receipt:fixture-laz-to-ept"]},
+        {"path": "products.2.node_id", "value": "lidar-node:03:terrain"},
+        {"path": "products.2.product_kind", "value": "TERRAIN"},
+        {"path": "products.2.product_role", "value": "TERRAIN_DERIVATIVE"},
+        {"path": "products.2.artifact_ref", "value": "kfm:artifact:fixture-terrain-derivative"},
+        {"path": "products.2.artifact_spec_hash", "value": "sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+        {"path": "products.2.media_type", "value": "application/vnd.kfm.terrain+json"},
+        {"path": "products.2.parent_node_ids", "value": ["lidar-node:02:ept"]},
+        {"path": "products.2.transform_receipt_refs", "value": ["kfm:transform-receipt:fixture-ept-to-terrain"]}
+      ],
+      "expected": {"status": "PASS", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": []}
+    },
+    {
+      "case_id": "invalid-dem-observed-role",
+      "mutations": [{"path": "products.2.source_role", "value": "OBSERVED"}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["SOURCE_ROLE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-carrier-source-capture-role",
+      "mutations": [{"path": "products.1.product_role", "value": "SOURCE_CAPTURE"}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["SOURCE_ROLE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-derived-transform-missing",
+      "mutations": [{"path": "products.2.transform_receipt_refs", "value": []}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["DERIVED_TRANSFORM_REQUIRED"]}
+    },
+    {
+      "case_id": "invalid-cycle-without-laz-ancestry",
+      "mutations": [{"path": "products.1.parent_node_ids", "value": ["lidar-node:03:dem"]}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["LAZ_ANCESTRY_MISSING", "LINEAGE_NOT_TOPOLOGICAL"]}
+    },
+    {
+      "case_id": "invalid-parent-unknown",
+      "mutations": [{"path": "products.2.parent_node_ids", "value": ["lidar-node:09:missing"]}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["LAZ_ANCESTRY_MISSING", "LINEAGE_PARENT_UNKNOWN"]}
+    },
+    {
+      "case_id": "invalid-acquisition-window-change",
+      "mutations": [{"path": "products.2.acquisition_window.end", "value": "2024-04-03T00:00:00Z"}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["ACQUISITION_WINDOW_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-vertical-units-change",
+      "mutations": [{"path": "products.2.vertical_reference.units", "value": "foot"}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["SPATIAL_REFERENCE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-parent-order",
+      "mutations": [{"path": "products.2.parent_node_ids", "value": ["lidar-node:02:copc", "lidar-node:01:laz"]}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["ORDER_OR_DUPLICATE_INVALID"]}
+    },
+    {
+      "case_id": "invalid-authority-overclaim",
+      "tamper": [{"path": "claims.dem_is_pointcloud_substitute", "value": true}],
+      "expected": {"status": "DENY", "lineage_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-spec-hash",
+      "tamper": [{"path": "spec_hash", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],
+      "expected": {"status": "DENY", "lineage_outcome": "LINEAGE_RECORDED", "finding_codes": ["LINEAGE_SPEC_HASH_MISMATCH"]}
+    }
+  ]
+}
