@@ -43,7 +43,7 @@
     "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_support_overstatement.json": "sha256:4c6b4ddc12b1e8ac47f760845a53fc78d5e8a917b67b2cbbbbeb1b9ee087d326",
     "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_release_ref_overstatement.json": "sha256:f6e4aaed1f726f569659b226e5747bbb3ab0f200ab675d9e6cfb692dd7ae582c",
     "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_rollback_ref_overstatement.json": "sha256:e7f1b4dd0109fc91fcf403b4f10449f8e6e5e1f07c88aa99dc44a15934b88580",
-    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_source_overstatement.json": "sha256:52609f3a49c7010a26ecdd37d51110785002be8ac5c899c74a7c76398c11667f",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_source_overstatement.json": "sha256:963b83e9823098bc495fa666c3a0d65c229e54df9c1836971acabd074615b95e",
     "fixtures/data/catalog_matrix/claim_closure/valid/valid_deny_terminal_posture.json": "sha256:579c6630d5973da3156d173404194901687d2ba99e8df3ffdfc385e61df1ba20",
     "fixtures/data/catalog_matrix/claim_closure/valid/valid_hold_candidate.json": "sha256:5c0e0b5c855c0200d651bc177ccfbee777ac980550a5880e121b0fdc99abc8ab",
     "fixtures/data/catalog_matrix/claim_closure/valid/valid_ready_published.json": "sha256:c19f7bf8f9c09a1bfce378cc735f5f40c9087191b3b349bc791deda6825a5892",
@@ -126,7 +126,7 @@
     {
       "gate": "hosted-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+      "reason": "The first hosted exact-head run exposed noncanonical source_ref ordering in one semantic-negative fixture; this correction rebinds the fixture and receipt, and a new hosted exact-head run is pending."
     },
     {
       "gate": "human-review",
@@ -163,7 +163,7 @@
   "created_at": "2026-08-09T23:45:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2355,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
