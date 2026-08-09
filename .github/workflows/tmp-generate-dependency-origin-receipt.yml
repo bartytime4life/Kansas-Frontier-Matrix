@@ -1,0 +1,178 @@
+# Temporary branch-local helper; removed before review delivery.
+name: temporary-generate-dependency-origin-receipt
+
+"on":
+  push:
+    branches:
+      - "agent/pass8-dependency-origin-policy-20260808"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-generate-dependency-origin-receipt-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the bounded feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Generate exact-byte authoring receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          artifacts = [
+              ".github/workflows/dependency-origin-policy.yml",
+              "contracts/governance/dependency_origin_policy.md",
+              "fixtures/contracts/v1/governance/dependency_origin_policy/README.md",
+              "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json",
+              "policy/supply_chain/README.md",
+              "policy/supply_chain/dependency_origin_policy.v1.json",
+              "schemas/contracts/v1/governance/dependency_origin_policy.schema.json",
+              "tests/validators/governance/test_dependency_origin_policy.py",
+              "tools/validators/governance/validate_dependency_origin_policy.py",
+          ]
+          for artifact in artifacts:
+              path = Path(artifact)
+              if path.is_symlink() or not path.is_file():
+                  raise SystemExit(f"required artifact is not a regular file: {artifact}")
+
+          hashes = {
+              artifact: "sha256:" + hashlib.sha256(Path(artifact).read_bytes()).hexdigest()
+              for artifact in artifacts
+          }
+          labels = {
+              ".github/workflows/dependency-origin-policy.yml": "CONFIRMED",
+              "contracts/governance/dependency_origin_policy.md": "PROPOSED",
+              "fixtures/contracts/v1/governance/dependency_origin_policy/README.md": "PROPOSED",
+              "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json": "CONFIRMED",
+              "policy/supply_chain/README.md": "PROPOSED",
+              "policy/supply_chain/dependency_origin_policy.v1.json": "PROPOSED",
+              "schemas/contracts/v1/governance/dependency_origin_policy.schema.json": "CONFIRMED",
+              "tests/validators/governance/test_dependency_origin_policy.py": "CONFIRMED",
+              "tools/validators/governance/validate_dependency_origin_policy.py": "CONFIRMED",
+          }
+          receipt = {
+              "artifact_hashes": hashes,
+              "artifact_paths": artifacts,
+              "citations": [
+                  {
+                      "evidence_ref": "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0007",
+                      "id": "attachment:pass8-dependency-confusion-defense",
+                      "validated": True,
+                  },
+                  {
+                      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86",
+                      "id": "repository:directory-governance",
+                      "validated": True,
+                  },
+              ],
+              "contract_version": "3.0.0",
+              "created_at": "2026-08-08T20:40:00Z",
+              "emitter": "openai/gpt-5.6-pro",
+              "human_review": {
+                  "reviewer_ids": [],
+                  "state": "pending",
+                  "timestamp": None,
+              },
+              "inputs": {
+                  "attached_docs": [
+                      "KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+                  ],
+                  "evidence_hashes": [
+                      "sha256:6d15388fca522f05c24d5c5e5ad648287eb9e4339c87bc519407aa247320effa"
+                  ],
+                  "evidence_refs": [
+                      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0007",
+                      "repo:bartytime4life/Kansas-Frontier-Matrix@c76a4860693830a783579c29bf276977856e9f86",
+                      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86",
+                  ],
+              },
+              "links": {
+                  "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+                  "drift_register_entry": None,
+                  "pr_number": None,
+              },
+              "model_identity": {
+                  "model": "GPT-5.6 Pro",
+                  "provider": "OpenAI",
+                  "version": "2026-08-08",
+              },
+              "notes": "Static no-network repository declaration guard derived from KFM-P8-PROG-0007. The profile checks package-manager identity, lockfile ownership, KFM workspace binding, direct references, lock integrity, explicit remote hosts when present, and Python direct references. It does not install packages, prove registry or publisher identity, reserve package names, verify signatures/SBOM/vulnerabilities, release, deploy, publish, or create public-use authority.",
+              "override_record": None,
+              "parameters": {
+                  "max_tokens": None,
+                  "seed": None,
+                  "temperature": None,
+                  "tools_enabled": [
+                      "GitHub connector",
+                      "Python standard library",
+                      "repository-owned generated-receipt validator",
+                  ],
+                  "top_p": None,
+              },
+              "policy_decisions": [
+                  "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+              ],
+              "prompt_or_contract": "sha256:e2b7a8ffecf6b8e9010432f71e0178e2285ab8e07579317d40345bc8a3618edf",
+              "receipt_id": "genrec-pass8-dependency-origin-policy-20260808",
+              "truth_labels": labels,
+              "validation_gates": [
+                  {
+                      "gate": "repository-authority-and-overlap-preflight",
+                      "outcome": "PASS",
+                      "reason": "Current main, ADR-0029, package manifests, lockfile, pyproject, existing governance validators, and open pull requests were inspected before authoring.",
+                  },
+                  {
+                      "gate": "exact-byte-artifact-binding",
+                      "outcome": "PASS",
+                      "reason": "All nine final authored artifacts are bound by SHA-256; this receipt is excluded from its own artifact map.",
+                  },
+                  {
+                      "gate": "focused-static-validation",
+                      "outcome": "SKIPPED",
+                      "reason": "Repository-owned exact-head unit, fixture, and repository scan validation will run in the draft pull request workflow.",
+                  },
+                  {
+                      "gate": "hosted-exact-head-checks",
+                      "outcome": "SKIPPED",
+                      "reason": "Hosted checks require draft pull-request delivery and are not inferred.",
+                  },
+                  {
+                      "gate": "human-review",
+                      "outcome": "SKIPPED",
+                      "reason": "Human review remains pending and is not authored or inferred.",
+                  },
+              ],
+          }
+          target = Path("data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Commit receipt when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          path="data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json"
+          if git diff --quiet -- "$path" && git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+            echo "Receipt is already current."
+            exit 0
+          fi
+          git config user.name "KFM bounded receipt automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$path"
+          git commit -m "chore(receipt): bind dependency origin guard"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
