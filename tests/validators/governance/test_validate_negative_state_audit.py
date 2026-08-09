@@ -1,5 +1,8 @@
 import copy
 import importlib.util
+import os
+import subprocess
+import tempfile
 import json
 import sys
 import unittest
@@ -22,6 +25,21 @@ class NegativeStateAuditTests(unittest.TestCase):
     def _rehash(self, record):
         record["spec_hash"] = MODULE.compute_record_spec_hash(record)
         return record
+
+
+    def test_direct_script_fixture_command_is_cwd_independent(self):
+        env = dict(os.environ)
+        env["KFM_NO_NETWORK"] = "1"
+        with tempfile.TemporaryDirectory() as cwd:
+            completed = subprocess.run(
+                [sys.executable, str(VALIDATOR_PATH), "--fixtures"],
+                cwd=cwd,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr or completed.stdout)
 
     def test_fixture_replay(self):
         self.assertEqual([], MODULE.replay())

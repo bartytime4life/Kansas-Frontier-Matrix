@@ -16,8 +16,8 @@
     "docs/intake/exploratory/pass11-negative-state-audit-source-map.md": "sha256:70d53e7c2c973a7babd286a975f0a7325d51f8602a886bf6a7ce0aca243ad836",
     "fixtures/contracts/v1/governance/negative_state_audit/cases.json": "sha256:a906b8572385003dcf0bddb641272bf9f6361c22d3f7b065a651f5fbbe91fbe4",
     "schemas/contracts/v1/governance/negative_state_audit.schema.json": "sha256:5b84be7bac6bd162b2b2125310ee41d135b3b148b5f42f15b8000d99aeb2d90d",
-    "tests/validators/governance/test_validate_negative_state_audit.py": "sha256:ef2752a3b193310f5e735a66e76488eed9ba34e6ad5d8e55c2e4c68ba11b1ed1",
-    "tools/validators/governance/validate_negative_state_audit.py": "sha256:e3c897bbebe3c91a314b89bb80deeeb6e725d7ca9ae61d5b100675228ebbf27f"
+    "tests/validators/governance/test_validate_negative_state_audit.py": "sha256:cf699c3c2cb2224ff9e4dda5ea5b21a63dbadce63a934562008027b4af25c9ad",
+    "tools/validators/governance/validate_negative_state_audit.py": "sha256:73d946b74934d9ceef2461131e7f7992fcfdaba3c6241c4ea14260dbfee35ae9"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -75,7 +75,7 @@
     {
       "gate": "local-focused-unittest",
       "outcome": "PASS",
-      "reason": "7 focused tests passed."
+      "reason": "8 focused tests passed, including the direct-script workflow command from an unrelated working directory."
     },
     {
       "gate": "local-fixture-replay",
@@ -90,7 +90,7 @@
     {
       "gate": "local-artifact-integrity",
       "outcome": "PASS",
-      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts."
+      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts after the shared-hashing import correction."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -141,5 +141,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only three-way negative-state audit. It grants no evidence, policy, lifecycle, release, deployment, publication, or public-use authority."
+  "notes": "Post-merge correction binds the script-safe shared-hashing import. The fixture-only three-way audit grants no evidence, policy, lifecycle, release, deployment, publication, or public-use authority."
 }

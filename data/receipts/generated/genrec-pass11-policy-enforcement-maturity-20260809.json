@@ -2,22 +2,22 @@
   "receipt_id": "genrec-pass11-policy-enforcement-maturity-20260809",
   "contract_version": "3.0.0",
   "artifact_paths": [
-    ".github/workflows/pass11-policy-enforcement-maturity.yml",
+    ".github/workflows/policy-enforcement-maturity.yml",
     "contracts/policy/policy_enforcement_maturity.md",
     "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md",
     "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json",
     "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json",
-    "tests/validators/policy/test_validate_policy_enforcement_maturity.py",
+    "tests/validators/test_validate_policy_enforcement_maturity.py",
     "tools/validators/policy/validate_policy_enforcement_maturity.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/pass11-policy-enforcement-maturity.yml": "sha256:65eecda7121459d4d39a6628b634cb56233809664b74ce934d4d6589e07ef944",
-    "contracts/policy/policy_enforcement_maturity.md": "sha256:48eaf8447a4fa6cc873d8c767817172f9986e3817eeb8008f54ab7b743f95ffb",
+    ".github/workflows/policy-enforcement-maturity.yml": "sha256:60841c7c4388bb1ad346c40fc6295a62b233346383d5bbb823225e80a5e0566e",
+    "contracts/policy/policy_enforcement_maturity.md": "sha256:5f23d764d031840a636c4da48e74e7ecc2a99f8603bb20b0514bb6e610289c56",
     "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md": "sha256:be0a4db3bda9374db0d63f404e3092b9251535fee3b4855ae99c9a163864d226",
     "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json": "sha256:ef6a50e478544c97bfb7ce9e282223a72aa2ed4a4ff7521be131e17e03224e5b",
     "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json": "sha256:80236cb9e57d0e303fc0d072dbb8e95f33346930758e0052f211541e71dafd03",
-    "tests/validators/policy/test_validate_policy_enforcement_maturity.py": "sha256:37bed63ab97e1149200b3e095886bee6b7d2179bcf2c77553de49dd90b5255d1",
-    "tools/validators/policy/validate_policy_enforcement_maturity.py": "sha256:414375b576775917cc992ea38c2ab616990403f6197195b84cc0924f89dd8ab2"
+    "tests/validators/test_validate_policy_enforcement_maturity.py": "sha256:0659cf6b52b136ce61aab6a3bc3e0c0915d40e52e432f39dd1e4e330cb813f84",
+    "tools/validators/policy/validate_policy_enforcement_maturity.py": "sha256:3f6b65cfee7dc5ee63f5c1bdf3f7c5d1f7a7ac99488c37294ea813f9882b627b"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -53,12 +53,12 @@
     ]
   },
   "truth_labels": {
-    ".github/workflows/pass11-policy-enforcement-maturity.yml": "PROPOSED",
+    ".github/workflows/policy-enforcement-maturity.yml": "PROPOSED",
     "contracts/policy/policy_enforcement_maturity.md": "PROPOSED",
     "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md": "PROPOSED",
     "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json": "PROPOSED",
     "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json": "PROPOSED",
-    "tests/validators/policy/test_validate_policy_enforcement_maturity.py": "PROPOSED",
+    "tests/validators/test_validate_policy_enforcement_maturity.py": "PROPOSED",
     "tools/validators/policy/validate_policy_enforcement_maturity.py": "PROPOSED"
   },
   "validation_gates": [
@@ -75,7 +75,7 @@
     {
       "gate": "local-focused-unittest",
       "outcome": "PASS",
-      "reason": "8 focused tests passed."
+      "reason": "9 focused tests passed, including the direct-script workflow command from an unrelated working directory."
     },
     {
       "gate": "local-fixture-replay",
@@ -90,7 +90,7 @@
     {
       "gate": "local-artifact-integrity",
       "outcome": "PASS",
-      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts."
+      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts after the path/import correction."
     },
     {
       "gate": "hosted-exact-head-ci",
@@ -141,5 +141,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only policy-enforcement maturity assessment. It grants no policy adoption, repository-setting, promotion, runtime, release, deployment, publication, or public-use authority."
+  "notes": "Post-merge correction binds the script-safe shared-hashing import and repository-conformant policy test/workflow paths. The fixture-only assessment grants no policy adoption, repository-setting, promotion, runtime, release, deployment, publication, or public-use authority."
 }
