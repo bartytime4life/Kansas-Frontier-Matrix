@@ -28,7 +28,15 @@
       "sha256": "1d9da6008c3b28d31e64100d364f330f33406321dc0c8a7bb8f67ef777440967"
     },
     "expanded": 30,
+    "human_matrix": {
+      "bytes": 7905,
+      "sha256": "e0adf4ae3e81b968d2ef12954a1671534e8c2aad3753fa7c8e1cb2d97ffd4516"
+    },
     "new": 29,
+    "operationalization_backlog": {
+      "bytes": 169076,
+      "sha256": "c7acd68511fde3ad5dbf77a47a02831fee31a0140963f5f301a484c83defe811"
+    },
     "stable_ids_unique": true,
     "total": 59
   },
