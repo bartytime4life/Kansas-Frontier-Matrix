@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-briefing-governance-event-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/governance-event.yml",
+    "contracts/governance/governance_event.md",
+    "docs/intake/exploratory/briefing-governance-event-source-map.md",
+    "fixtures/contracts/v1/governance/governance_event/README.md",
+    "fixtures/contracts/v1/governance/governance_event/cases.json",
+    "schemas/contracts/v1/governance/governance_event.schema.json",
+    "tests/validators/test_validate_governance_event.py",
+    "tools/validators/validate_governance_event.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/governance-event.yml": "sha256:68b415248e4cac14fc2a72ecf054935b5476a95ecfbc319594118cb7cfa8072b",
+    "contracts/governance/governance_event.md": "sha256:c845d09250a8f6a83ef7cacacdb4319692217a33e63054e832593fe8ab1ca66d",
+    "docs/intake/exploratory/briefing-governance-event-source-map.md": "sha256:b95b699020f05d67fe43af28dba7c794eac81623e9ece876aee06409c4101d91",
+    "fixtures/contracts/v1/governance/governance_event/README.md": "sha256:63d88b59d872816b06fb1c6603af7aed3dc57a2eb3feb902d656ba08ce42a9e2",
+    "fixtures/contracts/v1/governance/governance_event/cases.json": "sha256:7cb2fbba0daedd397717fba0095d93219780698c4175085630170f1d96bccb70",
+    "schemas/contracts/v1/governance/governance_event.schema.json": "sha256:a31e773a9a65a7c507bb42b1351915d53136c6a9d0b24386503a4ec0a554a5e8",
+    "tests/validators/test_validate_governance_event.py": "sha256:35b3c8fb6e8f2b3667a440112443d828b65e11d28dc343feed996110e3502bce",
+    "tools/validators/validate_governance_event.py": "sha256:436543f8dab56207dd731d91036009c9b24ebc72809f176e90318a308d9fbf10"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:bbc6c4b28f8844b52c2ce529b473b7a5d0c6153060adb835d2eaa2dcfb54ee47",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-9.3-12.2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fb5aecfffe7a66242b0823d229be43a8629fb929",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/governance/briefing_signal.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/governance-event.yml": "PROPOSED",
+    "contracts/governance/governance_event.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-governance-event-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/governance_event/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/governance_event/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/governance_event.schema.json": "PROPOSED",
+    "tests/validators/test_validate_governance_event.py": "CONFIRMED",
+    "tools/validators/validate_governance_event.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-13-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-6-pass-9-deny-1-error",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "event-state-participation-linked-stage-time-geometry-lineage-and-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-no-calendar-and-value-free-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, governance, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-governance-event-object-spine",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-15.1-15.3"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-briefing-signal-governance-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/governance/briefing_signal.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:31:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing governance lane's GovernanceEvent umbrella as an inactive, fixture-only profile. It keeps announcement, schedule, held/cancelled state, participation, recommendation, decision, implementation, and outcome references distinct and creates no calendar, source, policy, decision, release, publication, or public-use authority."
+}
