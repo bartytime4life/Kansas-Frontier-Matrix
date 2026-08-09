@@ -9,9 +9,22 @@ name: ai-evaluator-harness
       - "tools/validators/ai/validate_ai_evaluator_harness.py"
       - "tests/validators/test_validate_ai_evaluator_harness.py"
       - "docs/intake/exploratory/pass9-ai-evaluator-harness-source-map.md"
+      - "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass12-ai-evaluator-public-safe-profile-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ai-evaluator-harness.yml"
+      - "contracts/ai/evaluator_harness/**"
+      - "schemas/contracts/v1/ai/evaluator_harness.schema.json"
+      - "fixtures/contracts/v1/ai/evaluator_harness/**"
+      - "tools/validators/ai/validate_ai_evaluator_harness.py"
+      - "tests/validators/test_validate_ai_evaluator_harness.py"
+      - "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass12-ai-evaluator-public-safe-profile-*.json"
   workflow_dispatch:
 permissions: {contents: read}
-env: {KFM_NO_NETWORK: "1", PYTHONDONTWRITEBYTECODE: "1", PYTHONHASHSEED: "0", TZ: UTC}
+env: {KFM_NO_NETWORK: "1", PIP_DISABLE_PIP_VERSION_CHECK: "1", PIP_NO_INPUT: "1", PYTHONDONTWRITEBYTECODE: "1", PYTHONHASHSEED: "0", TZ: UTC}
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -20,7 +33,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: {persist-credentials: false}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with: {python-version: "3.11"}
+        with: {python-version: "3.11", cache: pip, cache-dependency-path: pyproject.toml}
+      - run: python -m pip install -e ".[test]"
       - run: python -m py_compile tools/validators/ai/validate_ai_evaluator_harness.py tests/validators/test_validate_ai_evaluator_harness.py
       - run: python -m unittest tests.validators.test_validate_ai_evaluator_harness -v
       - run: python tools/validators/ai/validate_ai_evaluator_harness.py --fixtures
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass12-ai-evaluator-public-safe-profile-20260809.json --repo-root .
+      - if: always()
+        run: echo "Public-safe profile derivation is fixture-only evaluation evidence, never truth, policy, review, release, or publication authority." >> "$GITHUB_STEP_SUMMARY"
