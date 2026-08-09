@@ -42,7 +42,7 @@ This existing same-path lane is retained under the Directory Rules' domain-schem
 | Concern | Owning surface | This directory's role |
 |---|---|---|
 | Water-planning object meaning and anti-collapse law | [`contracts/domains/water_planning/`](../../../../../contracts/domains/water_planning/README.md) | Encodes contract-backed structure; does not redefine meaning. |
-| Machine-checkable fields, requiredness, enums, references, and closure | This directory | Owns the 17 proposed JSON Schema files indexed below. |
+| Machine-checkable fields, requiredness, enums, references, and closure | This directory | Owns the 18 proposed JSON Schema files indexed below. |
 | Rights, access, sensitivity, and public-use decisions | Governed policy and review surfaces | Exposes decision-relevant fields; does not grant permission. |
 | Source identity and registry instances | `data/registry/` | Shapes two bounded registry records; does not activate or refresh a source. |
 | Valid, invalid, and authority fixtures | `fixtures/domains/water_planning/` | References synthetic/public-safe inputs; does not own fixture bytes. |
@@ -71,11 +71,11 @@ This existing same-path lane is retained under the Directory Rules' domain-schem
 
 | Surface | Pinned evidence | Current conclusion |
 |---|---|---|
-| Schema inventory | 17 readable `*.schema.json` files at `main@ab8fbd9147f085f35a89b88e14ba954e84d25801` | **CONFIRMED:** 15 entity schemas and 2 RAC registry schemas. |
+| Schema inventory | 17 readable `*.schema.json` files were pinned at `main@ab8fbd9147f085f35a89b88e14ba954e84d25801`; this proposed revision adds one scenario schema | **CONFIRMED on this revision:** 16 entity schemas and 2 RAC registry schemas. |
 | Dialect and object closure | Every indexed schema declares JSON Schema Draft 2020-12 and `additionalProperties: false` | **CONFIRMED:** bounded closed-object shapes at the top level. |
 | Schema status | Every indexed schema declares `x-kfm.status: PROPOSED` | **CONFIRMED:** no schema is promoted, released, or published by this lane. |
-| Semantic pairing | All 15 entity schemas link to individual contracts; both registry schemas link to the RAC registry contract | **CONFIRMED:** contract links exist; contract status remains draft/PROPOSED. |
-| Entity fixtures | One valid and one invalid fixture exists for each of the 15 entity schemas | **CONFIRMED:** 30 bounded fixture files are present; observed test execution remains revision-specific. |
+| Semantic pairing | All 16 entity schemas link to individual contracts; both registry schemas link to the RAC registry contract | **CONFIRMED:** contract links exist; contract status remains draft/PROPOSED. |
+| Entity fixtures | One valid and one invalid fixture exists for each of the 15 core entities and the scenario pilot | **CONFIRMED:** 32 bounded fixture files are present; observed test execution remains revision-specific. |
 | Schema tests | [`test_water_planning_contracts.py`](../../../../../tests/schemas/test_water_planning_contracts.py) | **CONFIRMED definition:** checks file presence, valid/invalid polarity, distinct titles, time, identity, amount, and unresolved-state constraints. |
 | Semantic anti-collapse | [`validate_status_collapse.py`](../../../../../tools/validators/domains/water_planning/validate_status_collapse.py) plus tests | **CONFIRMED implementation:** deterministic fixture-only checks with stable non-echoing findings. |
 | Region and project authority | `PlanningRegion` and `Project` conditional references plus [`validate_geometry_authority.py`](../../../../../tools/validators/domains/water_planning/validate_geometry_authority.py) | **CONFIRMED implementation:** exact RAC identity and reference-state checks; schemas remain PROPOSED. |
@@ -96,6 +96,7 @@ All schema links below resolve to current files in this existing directory. Cont
 
 | Schema | Semantic contract | Structural boundary |
 |---|---|---|
+| [`planning_scenario_manifest.schema.json`](./planning_scenario_manifest.schema.json) | [`planning_scenario_manifest.md`](../../../../../contracts/domains/water_planning/planning_scenario_manifest.md) | Synthetic generalized scenario shape with visible assumptions, horizon, equity, participation, public-summary candidate, drawer payload, and false authority flags. |
 | [`planning_region.schema.json`](./planning_region.schema.json) | [`planning_region.md`](../../../../../contracts/domains/water_planning/planning_region.md) | Exact `kwo-rac-01` through `kwo-rac-14` identity shape plus explicit geometry and county-crosswalk resolution states. |
 | [`public_meeting.schema.json`](./public_meeting.schema.json) | [`public_meeting.md`](../../../../../contracts/domains/water_planning/public_meeting.md) | KWO public-meeting event shape; a meeting is not a decision or approval. |
 | [`advisory_committee_meeting.schema.json`](./advisory_committee_meeting.schema.json) | [`advisory_committee_meeting.md`](../../../../../contracts/domains/water_planning/advisory_committee_meeting.md) | RAC advisory-meeting event shape; attendance or discussion is not an award. |
@@ -200,7 +201,7 @@ It does not emit a SourceDescriptor activation, EvidenceBundle, receipt, proof, 
 
 ## Validation
 
-Run commands from the repository root. The first command exercises all 15 entity schemas. The remaining commands cover the semantic, authority-reference, and concrete RAC-registry boundaries.
+Run commands from the repository root. The first command exercises the 15 core entity schemas. The remaining commands cover the scenario, semantic, authority-reference, and concrete RAC-registry boundaries.
 
 ```bash
 python -m pytest -q tests/schemas/test_water_planning_contracts.py
@@ -213,6 +214,8 @@ python tools/validators/domains/water_planning/validate_geometry_authority.py \
 
 python tools/validators/domains/water_planning/validate_rac_registry.py
 
+python tools/validators/domains/water_planning/validate_planning_scenario_manifest.py --fixtures
+
 python -m unittest discover \
   --start-directory tests/domains/water_planning \
   --pattern 'test_*.py' \
@@ -224,6 +227,7 @@ python -m unittest discover \
 | Surface | What it checks | Success signal | What success does not prove |
 |---|---|---|---|
 | [`test_water_planning_contracts.py`](../../../../../tests/schemas/test_water_planning_contracts.py) | 15 schema files, distinct titles, valid/invalid fixtures, explicit time, identity, amount, and resolution constraints | Pytest exits `0` | Semantic truth, source freshness, policy, rights, release, or publication. |
+| [`validate_planning_scenario_manifest.py`](../../../../../tools/validators/domains/water_planning/validate_planning_scenario_manifest.py) | Synthetic scenario schema polarity, content identity, horizon order, canonical references, surface parity, and authority boundary | `PLANNING_SCENARIO_MANIFEST_FIXTURES_VALID` | Prediction, evidence resolution, participation approval, policy, review, release, rendering, or publication. |
 | [`validate_status_collapse.py`](../../../../../tools/validators/domains/water_planning/validate_status_collapse.py) | Synthetic status, amount, lineage, portal, personal-data, proof, release, and publication anti-collapse rules | One JSON object per file with `"outcome":"PASS"`; exit `0` | Validation of live applications, recipients, projects, or grant outcomes. |
 | [`validate_geometry_authority.py`](../../../../../tools/validators/domains/water_planning/validate_geometry_authority.py) | Exact RAC inventory, authority digests, region/project reference coherence, namespace separation, inline-geometry denial | `{"files":N,"outcome":"VALIDATOR_PASS"}`; exit `0` | Construction or refresh of production geometry or county intersections. |
 | [`validate_rac_registry.py`](../../../../../tools/validators/domains/water_planning/validate_rac_registry.py) | Pinned KWO payload digest, 14 RAC features, 105 Kansas county GEOIDs, ordered 209-row mapping digest, source and release posture | `RAC_REGISTRY_OK regions=14 counties=105 mappings=209`; exit `0` | Independent source refetch, spatial recomputation, rights clearance, or governance membership. |

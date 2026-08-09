@@ -2,19 +2,20 @@
 doc_id: kfm://doc/tools-validators-domains-water-planning-readme
 title: tools/validators/domains/water_planning README
 type: README
-version: v0.1
+version: v0.2
 status: confirmed-implementation; registry-records-not-released
 owner: @bartytime4life (CODEOWNERS review routing only); local steward NEEDS VERIFICATION
 created: 2026-07-30
-updated: 2026-07-30
+updated: 2026-08-09
 policy_label: repository-facing; water-planning; deterministic; no-network; fail-closed; non-authoritative
 owning_root: tools/
-responsibility: documents the bounded water-planning validator lane, its three current entrypoints, inputs, outputs, deterministic outcomes, tests, fixtures, workflow integration, authority limits, recovery, and maintenance expectations
+responsibility: documents the bounded water-planning validator lane, its four current entrypoints, inputs, outputs, deterministic outcomes, tests, fixtures, workflow integration, authority limits, recovery, and maintenance expectations
 truth_posture: cite-or-abstain; implementation claims are grounded in current repository code and tests; validator success is not source admission, proof, policy approval, release, deployment, publication, or public truth
 related:
   - validate_status_collapse.py
   - validate_geometry_authority.py
   - validate_rac_registry.py
+  - validate_planning_scenario_manifest.py
   - ../../README.md
   - ../README.md
   - ../../../../contracts/domains/water_planning/README.md
@@ -25,8 +26,9 @@ related:
   - ../../../../docs/doctrine/directory-rules.md
 notes:
   - "This v0.1 replaces the one-newline placeholder introduced by merged pull request #1845."
-  - "The three Python validators are current implementation surfaces; the semantic contracts remain proposed/draft and the checked-in RAC registry records remain not-released."
+  - "The four Python validators are current implementation surfaces; the semantic contracts remain proposed/draft and the checked-in RAC registry records remain not-released."
   - "The RAC registry validator verifies pinned repository bytes and metadata. It does not refresh sources, recompute spatial intersections, clear rights, or authorize release."
+  - "v0.2 indexes the synthetic PlanningScenarioManifest validator and its focused read-only workflow."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -38,7 +40,7 @@ notes:
 [![Posture: deterministic and no-network](https://img.shields.io/badge/posture-deterministic_%7C_no--network-0969da)](#determinism-and-outcomes)
 [![Release: not authorized](https://img.shields.io/badge/release-not_authorized-b42318)](#authority-boundary)
 
-> **Purpose.** `tools/validators/domains/water_planning/` contains three deterministic, fail-closed command-line validators for synthetic water-planning semantic fixtures, synthetic geometry-authority fixtures, and the checked-in Kansas Water Office Regional Advisory Committee registry slice.
+> **Purpose.** `tools/validators/domains/water_planning/` contains four deterministic, fail-closed command-line validators for synthetic water-planning semantics, synthetic geometry authority, the checked-in Kansas Water Office Regional Advisory Committee registry slice, and the synthetic `PlanningScenarioManifest` pilot.
 
 > [!IMPORTANT]
 > A green result means only that the configured checks passed for the declared input and scope. It is not source admission, evidence or proof closure, a rights decision, governance approval, release, deployment, publication, or public truth.
@@ -74,7 +76,7 @@ notes:
 | Mutation and retention | Validators read inputs only. Code, fixtures, records, and tests are versioned in Git. |
 | Review routing | [`.github/CODEOWNERS`](../../../../.github/CODEOWNERS) routes `tools/validators/` review to `@bartytime4life`; that route is not proof of independent review or approval. |
 | Local steward | **NEEDS VERIFICATION.** No separate water-planning validator steward is established by this directory. |
-| Implementation evidence | **CONFIRMED** against the three scripts, their tests, their fixtures/data, and the read-only workflow linked below. |
+| Implementation evidence | **CONFIRMED** against the four scripts, their tests, their fixtures/data, and the read-only workflows linked below. |
 | Review snapshot | Code and tests inspected on 2026-07-30 at [`main@96d7085`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/96d7085af6a0b2682ef04361311c5b6f29810f22). |
 
 This path is a `PLACE` outcome under the accepted [Directory Rules](../../../../docs/doctrine/directory-rules.md): executable repository validators belong under `tools/`, a domain is a scope lane within that responsibility root, and this README uses the compact boundary profile. The relevant rules include `DIR-EXEC-006`, `DIR-SCOPELANE-001`, `DIR-SCOPELANE-003`, and `DIR-README-001` through `DIR-README-004`.
@@ -94,7 +96,7 @@ This path is a `PLACE` outcome under the accepted [Directory Rules](../../../../
 
 Current truth labels:
 
-- **CONFIRMED:** three Python validator entrypoints, matching regression tests, synthetic fixture families, checked-in RAC registry/data inputs, and read-only CI integration exist.
+- **CONFIRMED:** four Python validator entrypoints, matching regression tests, synthetic fixture families, checked-in RAC registry/data inputs, and read-only CI integration exist.
 - **PROPOSED / draft:** the linked semantic contracts and schemas describe evolving domain surfaces; their presence does not grant release authority.
 - **NEEDS VERIFICATION:** independent stewardship, source freshness, rights clearance, governance membership, broader evidence closure, and public-release eligibility.
 - **DENY:** interpreting any validator result as proof of funding, payment, construction, completion, operational benefit, source admission, or publication authorization.
@@ -109,6 +111,7 @@ The current direct children are:
 water_planning/
 ├── README.md
 ├── validate_geometry_authority.py
+├── validate_planning_scenario_manifest.py
 ├── validate_rac_registry.py
 └── validate_status_collapse.py
 ```
@@ -124,8 +127,9 @@ Fixtures, tests, contracts, schemas, registry records, and processed data remain
 | [`validate_status_collapse.py`](./validate_status_collapse.py) | Synthetic water-planning semantic anti-collapse fixtures only | One or more JSON paths, each at most 1,000,000 bytes | One compact JSON object per file with `"outcome":"PASS"` | One compact JSON object per file with sorted findings and `"outcome":"FAIL"` |
 | [`validate_geometry_authority.py`](./validate_geometry_authority.py) | Synthetic region identity, geometry-authority, county-crosswalk-authority, and project-reference envelopes | One or more JSON paths, each at most 1,000,000 bytes | `{"files":N,"outcome":"VALIDATOR_PASS"}` | One JSON object with sorted `code`, `file_index`, and `path` findings and `"outcome":"VALIDATOR_FAIL"` |
 | [`validate_rac_registry.py`](./validate_rac_registry.py) | The pinned, checked-in RAC geometry/county-crosswalk registry slice and its source descriptors | Five default repository paths or explicit CLI overrides | `RAC_REGISTRY_OK regions=14 counties=105 mappings=209` | Sorted tab-separated `CODE<TAB>PATH` findings |
+| [`validate_planning_scenario_manifest.py`](./validate_planning_scenario_manifest.py) | Synthetic generalized scenario shape and cross-field semantics | One JSON path or `--fixtures` | Compact `PASS` JSON or `PLANNING_SCENARIO_MANIFEST_FIXTURES_VALID` | Finite sorted finding codes with `FAIL` or `ERROR` |
 
-All three tools are read-only and use the Python standard library. Normal validation returns exit `0` on success and exit `1` when findings exist. Invalid command syntax is handled by `argparse` and may return exit `2`; it is not a validation pass or fail.
+All four tools are read-only. The scenario validator delegates JSON shape and RFC 8785 hashing to the repository's declared dependencies; the other three use the Python standard library. Normal validation returns exit `0` on success and exit `1` when findings exist. Invalid command syntax or bounded input errors may return exit `2`; neither is a validation pass.
 
 [Back to top](#top)
 
@@ -169,6 +173,18 @@ Expected stdout:
 
 ```text
 RAC_REGISTRY_OK regions=14 counties=105 mappings=209
+```
+
+### Validate the synthetic planning-scenario pilot
+
+```bash
+python tools/validators/domains/water_planning/validate_planning_scenario_manifest.py --fixtures
+```
+
+Expected stdout:
+
+```text
+PLANNING_SCENARIO_MANIFEST_FIXTURES_VALID valid=1 schema_invalid=1 semantic=7
 ```
 
 ### Run the complete domain regression suite
@@ -301,6 +317,8 @@ Do not parse human prose from stderr as an authority signal. Automation should u
 | Geometry-authority tests | [`tests/domains/water_planning/test_geometry_authority.py`](../../../../tests/domains/water_planning/test_geometry_authority.py) |
 | RAC registry regression tests | [`tests/domains/water_planning/test_rac_registry.py`](../../../../tests/domains/water_planning/test_rac_registry.py) |
 | Schema contract tests | [`tests/schemas/test_water_planning_contracts.py`](../../../../tests/schemas/test_water_planning_contracts.py) |
+| Planning-scenario fixtures | [`fixtures/domains/water_planning/planning_scenario_manifest/`](../../../../fixtures/domains/water_planning/planning_scenario_manifest/) |
+| Planning-scenario tests | [`tests/validators/test_validate_planning_scenario_manifest.py`](../../../../tests/validators/test_validate_planning_scenario_manifest.py) |
 
 The tests cover non-vacuous valid inputs, stable invalid findings, malformed/missing input, authority and identity drift, digest and mapping drift, release overclaim, no-network behavior, and non-echoing output. Fixtures must remain synthetic, minimized, and public-safe unless a separately governed path and review authorize otherwise.
 
@@ -316,6 +334,8 @@ The read-only [`briefing-integration`](../../../../.github/workflows/briefing-in
 4. records a bounded job summary stating that green CI is not source freshness, rights clearance, evidence closure, release, deployment, or publication.
 
 The workflow declares only `contents: read`. It does not write repository content or grant KFM release authority.
+
+The focused read-only [`planning-scenario-manifest`](../../../../.github/workflows/planning-scenario-manifest.yml) workflow installs the declared test dependencies, replays the exact scenario fixture matrix, and validates the generated authoring receipt. Its green result remains validation-only.
 
 [Back to top](#top)
 

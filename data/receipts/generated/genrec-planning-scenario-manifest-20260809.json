@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-planning-scenario-manifest-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/planning-scenario-manifest.yml",
+    "contracts/domains/water_planning/README.md",
+    "contracts/domains/water_planning/planning_scenario_manifest.md",
+    "docs/intake/exploratory/planning-scenario-manifest-source-map.md",
+    "fixtures/domains/water_planning/planning_scenario_manifest/README.md",
+    "fixtures/domains/water_planning/planning_scenario_manifest/cases.json",
+    "fixtures/domains/water_planning/planning_scenario_manifest/invalid/invalid_1.json",
+    "fixtures/domains/water_planning/planning_scenario_manifest/valid/valid_1.json",
+    "schemas/contracts/v1/domains/water_planning/README.md",
+    "schemas/contracts/v1/domains/water_planning/planning_scenario_manifest.schema.json",
+    "tests/validators/test_validate_planning_scenario_manifest.py",
+    "tools/validators/domains/water_planning/README.md",
+    "tools/validators/domains/water_planning/validate_planning_scenario_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/planning-scenario-manifest.yml": "sha256:31e41508298fec312d3fd6b37a43764583fbdd3a2d451b10336c51535c18668d",
+    "contracts/domains/water_planning/README.md": "sha256:04311239db18a12c2f9e7d81bdee7504637219533d2a1fdd788159410efa7851",
+    "contracts/domains/water_planning/planning_scenario_manifest.md": "sha256:303285ccafeaa10bb8cedf2a5bbacac4366b6dff228cb8a986d49dbbab7d2ea8",
+    "docs/intake/exploratory/planning-scenario-manifest-source-map.md": "sha256:da416459c071e1266abd82517b181754744e0646e3bb70bbb214d84ae64013b8",
+    "fixtures/domains/water_planning/planning_scenario_manifest/README.md": "sha256:159b432dafeb44741ef737e1ac1b9bec45005ba81beec0889c4bfc45543c0a85",
+    "fixtures/domains/water_planning/planning_scenario_manifest/cases.json": "sha256:0ab9068f42511ac03239d1884609e5d2dcd53c1d20a0eab45cda1aa7ccac97f2",
+    "fixtures/domains/water_planning/planning_scenario_manifest/invalid/invalid_1.json": "sha256:7053ef3cffc336634ca05fc30c27c49fac1b52a7639d159a22347027925c1d4f",
+    "fixtures/domains/water_planning/planning_scenario_manifest/valid/valid_1.json": "sha256:d290f8a765e0ea31cd6f84ae67611e5bb1a914ceaf31f5e9b5fd365e9e9316ff",
+    "schemas/contracts/v1/domains/water_planning/README.md": "sha256:6f3d37d50147fd7ac54f6949f2eb80d7bf6de69afcae5796a0d80124a15002b2",
+    "schemas/contracts/v1/domains/water_planning/planning_scenario_manifest.schema.json": "sha256:f7aab953b13d8cd67257bfee77e846a977e5a0666b69d9734d645c9fd8f45f5d",
+    "tests/validators/test_validate_planning_scenario_manifest.py": "sha256:ba0fe324629e4c17b808b53fe094c606e9465d77f79f9b7ac78910b8402a061c",
+    "tools/validators/domains/water_planning/README.md": "sha256:644ecafb500d366419c8dd144bf9cec0f32152ac57f5a6052c1d1455840c3ece",
+    "tools/validators/domains/water_planning/validate_planning_scenario_manifest.py": "sha256:febc131f8c201ddf64f30bf6d719286eec598b935cd2c4b7db5109bb9261bb06"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:6057b7144b207dfde5313a324bb0fc9871f021c4442a1a1bfe0dd8d4d2ee5cf5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "Google Drive connector (read)",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Pass-20-Part-2#KFM-IDX-PLN-001",
+      "attachment:KFM-Pass-20-Part-2#EXP-014",
+      "drive:1W8MyiFJc91SapCvkFGEg-VFHToyWXN-9",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e1a0258945c42af631159d7d154a0e5be37b2272",
+      "repo:contracts/domains/water_planning/README.md@e1a0258945c42af631159d7d154a0e5be37b2272"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/planning-scenario-manifest.yml": "PROPOSED",
+    "contracts/domains/water_planning/README.md": "PROPOSED",
+    "contracts/domains/water_planning/planning_scenario_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/planning-scenario-manifest-source-map.md": "PROPOSED",
+    "fixtures/domains/water_planning/planning_scenario_manifest/README.md": "PROPOSED",
+    "fixtures/domains/water_planning/planning_scenario_manifest/cases.json": "PROPOSED",
+    "fixtures/domains/water_planning/planning_scenario_manifest/invalid/invalid_1.json": "PROPOSED",
+    "fixtures/domains/water_planning/planning_scenario_manifest/valid/valid_1.json": "PROPOSED",
+    "schemas/contracts/v1/domains/water_planning/README.md": "PROPOSED",
+    "schemas/contracts/v1/domains/water_planning/planning_scenario_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_planning_scenario_manifest.py": "PROPOSED",
+    "tools/validators/domains/water_planning/README.md": "PROPOSED",
+    "tools/validators/domains/water_planning/validate_planning_scenario_manifest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this non-self-referential receipt is bound to prepared SHA-256 bytes."
+    },
+    {
+      "gate": "schema-and-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema, one valid pilot, one schema negative, and seven exact semantic cases pass locally."
+    },
+    {
+      "gate": "domain-regression",
+      "outcome": "PASS",
+      "reason": "Seventy targeted pytest checks and thirty-one existing water-planning domain tests pass locally."
+    },
+    {
+      "gate": "no-network-and-non-echo",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and prove finite CLI output does not echo protected fixture values."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-exp014",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Pass-20-Part-2#EXP-014"
+    },
+    {
+      "id": "drive:architecture-consolidation",
+      "validated": true,
+      "evidence_ref": "drive:1W8MyiFJc91SapCvkFGEg-VFHToyWXN-9"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e1a0258945c42af631159d7d154a0e5be37b2272"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T17:05:00Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements Pass 20 EXP-014 as a proposed synthetic, generalized water-planning scenario manifest. The slice is validation-only and creates no prediction, alert, evidence, policy, review, release, rendering, or publication authority."
+}
