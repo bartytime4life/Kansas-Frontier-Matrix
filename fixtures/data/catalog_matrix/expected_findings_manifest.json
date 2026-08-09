@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "valid-ready",
+      "case_kind": "VALID",
+      "path": "valid/valid_ready_hydrology.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-held",
+      "case_kind": "VALID",
+      "path": "valid/valid_held_review.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "schema-missing-records",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_missing_records.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-additional-property",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_additional_property.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-bad-digest",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_bad_digest.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-digest-mismatch",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_digest_mismatch.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "semantic-artifact-id-mismatch",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_artifact_id_mismatch.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_ARTIFACT_ID_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "semantic-release-ref-mismatch",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_release_ref_mismatch.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_RELEASE_REF_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "semantic-internal-reference",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_internal_reference.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "INTERNAL_REFERENCE_DENIED"
+      ]
+    },
+    {
+      "case_id": "semantic-unsorted-evidence",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_unsorted_evidence_refs.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "EVIDENCE_REFS_NOT_CANONICAL"
+      ]
+    },
+    {
+      "case_id": "semantic-ready-with-reasons",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ready_with_reasons.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "READY_REASON_CODES_NOT_EMPTY"
+      ]
+    },
+    {
+      "case_id": "semantic-hold-without-reasons",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_hold_without_reasons.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "NON_READY_REASON_REQUIRED"
+      ]
+    }
+  ]
+}

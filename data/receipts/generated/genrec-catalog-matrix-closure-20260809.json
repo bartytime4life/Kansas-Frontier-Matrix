@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-catalog-matrix-closure-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/catalog-matrix-closure.yml",
+    "contracts/data/catalog_matrix.md",
+    "fixtures/data/catalog_matrix/README.md",
+    "fixtures/data/catalog_matrix/expected_findings_manifest.json",
+    "fixtures/data/catalog_matrix/invalid/schema_additional_property.json",
+    "fixtures/data/catalog_matrix/invalid/schema_bad_digest.json",
+    "fixtures/data/catalog_matrix/invalid/schema_missing_records.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_artifact_id_mismatch.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_digest_mismatch.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_hold_without_reasons.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_internal_reference.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_ready_with_reasons.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_release_ref_mismatch.json",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_unsorted_evidence_refs.json",
+    "fixtures/data/catalog_matrix/valid/valid_held_review.json",
+    "fixtures/data/catalog_matrix/valid/valid_ready_hydrology.json",
+    "schemas/contracts/v1/data/catalog_matrix.schema.json",
+    "tests/validators/test_validate_catalog_matrix.py",
+    "tools/validators/validate_catalog_matrix.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/catalog-matrix-closure.yml": "sha256:799bccbbacf9591c09174945040a149b7805e8897bf85e8c5275116107bd1b52",
+    "contracts/data/catalog_matrix.md": "sha256:f6b436e8a326c7936aa31dd2246ffa09872faa4a4024aea85689e90a49d2b006",
+    "fixtures/data/catalog_matrix/README.md": "sha256:487455d49632bed84a27fdcc8fe2027adac240f0987dd5805b1fdff8ef18fb6e",
+    "fixtures/data/catalog_matrix/expected_findings_manifest.json": "sha256:4a574cb227a8ad904e4d2be8f4a8e933e20165205ba9ea23cc4ecc0600dc4c4e",
+    "fixtures/data/catalog_matrix/invalid/schema_additional_property.json": "sha256:8702e96f3c49b73c9a433ac41f6d4ec92b53e67dfdfd99e5d8a589d02ad9f20a",
+    "fixtures/data/catalog_matrix/invalid/schema_bad_digest.json": "sha256:39db3ab0a4aaa2878cfa3b574f7b88bbea94669ca4f9b13325750f3d88afd0d2",
+    "fixtures/data/catalog_matrix/invalid/schema_missing_records.json": "sha256:513b78c34738636d0d8d4460d101c0e426481cce9a8355236e75046c4c9b85cd",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_artifact_id_mismatch.json": "sha256:11062512c8f2d68b6fc649f64ae6e882883f9526b1517986acb14a6f497b00cd",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_digest_mismatch.json": "sha256:f58c0eb06cbe867fe5fe51c535d80b82b37340ea663560622c3997aceb689ab4",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_hold_without_reasons.json": "sha256:2cbab1eb4dacc7bde5a785c6a07878f6669bb7de70a485a86c830f568cb8fa15",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_internal_reference.json": "sha256:f02f999730cadcffad1db4455db9bb1a615174f3646480f87d499276bf991a15",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_ready_with_reasons.json": "sha256:9a67ecdf89da79dcdb74771e8cccab7fb06dd1335c84c0d46da8bf485002b8d3",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_release_ref_mismatch.json": "sha256:6e0bfa291bd86fe8564ae57c1cdb3cd36dfdf7aeac8e10e3cf6f67dc79b0330c",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_unsorted_evidence_refs.json": "sha256:a448fbb54062496304fd1d6408d0505c10da85e871d4ff9188acabfead465ff4",
+    "fixtures/data/catalog_matrix/valid/valid_held_review.json": "sha256:12618a5af073186b6bd362e80e488f0df2269c77d939d3fe4029cf485697ec13",
+    "fixtures/data/catalog_matrix/valid/valid_ready_hydrology.json": "sha256:0472fc2fae273c11e9f833517d6b4c94cc90007492406e62fb451db5f2d3cff3",
+    "schemas/contracts/v1/data/catalog_matrix.schema.json": "sha256:702d4628b896944ecea7a87bf4fcdfffbb16726b699d5136344b8e55dfebb0c8",
+    "tests/validators/test_validate_catalog_matrix.py": "sha256:0ccd7b5368d0dcd454e7bdcb7785621e78ae0f8a1db2619f095863ca1575747b",
+    "tools/validators/validate_catalog_matrix.py": "sha256:7de3bc9c007037d1d9d6ac2f858b558397c4c5b44a6d859a4f1d9d719e3518ad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:b5af7cafad7231cfc873af06ff0d19b70ffa147fe1d085233385b8722a0f44cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_18_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-18#P3-catalog-matrix-validator",
+      "repo:contracts/data/catalog_matrix.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
+      "repo:schemas/contracts/v1/data/catalog_matrix.schema.json@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
+      "repo:tools/validators/validate_catalog_matrix.py@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/catalog-matrix-closure.yml": "PROPOSED",
+    "contracts/data/catalog_matrix.md": "PROPOSED",
+    "fixtures/data/catalog_matrix/README.md": "PROPOSED",
+    "fixtures/data/catalog_matrix/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/invalid/schema_additional_property.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/invalid/schema_bad_digest.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/invalid/schema_missing_records.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_artifact_id_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_digest_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_hold_without_reasons.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_internal_reference.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_ready_with_reasons.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_release_ref_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/semantic_invalid/semantic_unsorted_evidence_refs.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/valid/valid_held_review.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/valid/valid_ready_hydrology.json": "PROPOSED",
+    "schemas/contracts/v1/data/catalog_matrix.schema.json": "PROPOSED",
+    "tests/validators/test_validate_catalog_matrix.py": "PROPOSED",
+    "tools/validators/validate_catalog_matrix.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this receipt is bound to prepared SHA-256 bytes."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS",
+      "reason": "The closed CatalogMatrix schema passes Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Twelve synthetic cases have exact PASS/FAIL reason-code polarity."
+    },
+    {
+      "gate": "no-network-replay",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and prove deterministic replay."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass18-p3-catalog-matrix",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-18#P3-catalog-matrix-validator"
+    },
+    {
+      "id": "repository:catalog-matrix-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/data/catalog_matrix.schema.json@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T04:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Replaces the CatalogMatrix greenfield placeholder and validator stub with a proposed closed STAC/DCAT/PROV local-alignment profile. It creates no catalog, evidence, policy, review, proof, release, publication, or public-use authority."
+}
