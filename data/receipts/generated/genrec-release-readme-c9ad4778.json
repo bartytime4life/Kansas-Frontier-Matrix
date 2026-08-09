@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-release-readme-c9ad4778",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "release/README.md"
+  ],
+  "artifact_hashes": {
+    "release/README.md": "sha256:c9ad47784c7cb633aab30f37a5c90fa247c75fa4afde8041bd84144b2a45e70b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09-session"
+  },
+  "prompt_or_contract": "sha256:c84533d1fb45331a54246e2f27997ed2fbad6172c7edfd441eb002d493512795",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "Kansas Frontier Matrix — AI Build Operating Contract v3.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9c080014926e6f3ba4dc630eaf7a615fff46c7fc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/release/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/control_plane/root_registry.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/release-dry-run.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/promotion-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/rollback-drill.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/release-alias-verification.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/pass12-release-policy-v1.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/schemas/contracts/v1/release/release_manifest.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/schemas/contracts/v1/release/rollback_card.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/schemas/contracts/v1/release/release_alias_verification.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/policy/rego/release_gate_v1.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/4cd398702a5660dfee2206e064a8d7cf332781f1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4cd398702a5660dfee2206e064a8d7cf332781f1/release/README.md",
+      "attached://KFM-Repository-Build-Out-Agent-v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "release/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, immutable base, target blob, release tree, accepted Directory Rules, root registry, CODEOWNERS, Makefile, schemas, validators, workflows, and current release-related evidence were inspected."
+    },
+    {
+      "gate": "target-concurrency",
+      "outcome": "PASS",
+      "reason": "No open pull request or matching task branch for release/README.md was surfaced before branch creation; the task branch was created from current main."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and the active root registry classify release/ as the canonical release-decision root. The existing README was updated in place; provenance remains under data/receipts/generated/."
+    },
+    {
+      "gate": "complete-baseline-and-no-loss",
+      "outcome": "PASS",
+      "reason": "The complete prior README was reviewed. Stable document identity, release-versus-published boundary, lifecycle, state model, minimum record, checklist, naming, open verification, correction, rollback, and changelog material were preserved or explicitly reconciled."
+    },
+    {
+      "gate": "current-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README was repinned to main@9c080014926e and corrected for current fixture-first ReleaseManifest, PromotionDecision, RollbackCard, release-alias, promotion-gate, Pass 12 policy, candidate-assembly, rollback, and production-parity evidence."
+    },
+    {
+      "gate": "directory-root-readme-contract",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections match the adopted Directory Rules v2 ROOT_FULL field order."
+    },
+    {
+      "gate": "direct-child-map",
+      "outcome": "PASS",
+      "reason": "The documented direct-child map matches pinned base release tree 210ccf37b9f90986590a3e0995a0eeda7f758042, including 18 directories and three Rego placement-drift files."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, unique explicit anchors, resolved internal fragments, UTF-8, LF line endings, no trailing whitespace, and a final newline were verified."
+    },
+    {
+      "gate": "relative-link-review",
+      "outcome": "PASS",
+      "reason": "All introduced repository-relative destinations were checked against pinned repository paths."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credential, private key, private endpoint, living-person record, genomic record, protected payload, or harmful precise location was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 37286e0d66726bf95822ea897b57ca665006a930 and size 53,675 bytes; both match the locally reconstructed Git blob and final bytes."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "The receipt includes the required contract fields, exact artifact/path/hash/label parity, documentation citations, accepted placement-decision reference, pending human review, and explicit non-authority notes."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/provenance-only packet; no release code, contract, schema, policy, fixture, validator, workflow, candidate, decision, alias, rollback operator, runtime, deployment, or publication behavior changed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observed after draft pull-request creation; hosted success will not be represented as evidence truth, review, release, deployment, or publication authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-REPOSITORY-BUILD-AGENT-V6",
+      "validated": true,
+      "evidence_ref": "attached://KFM-Repository-Build-Out-Agent-v6.0.0"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-ADOPTION",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-RELEASE-ROOT-REGISTRY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "KFM-RELEASE-README-BASELINE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/release/README.md"
+    },
+    {
+      "id": "KFM-RELEASE-DRY-RUN-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/release-dry-run.yml"
+    },
+    {
+      "id": "KFM-PROMOTION-GATE-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/promotion-gate.yml"
+    },
+    {
+      "id": "KFM-RELEASE-ALIAS-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/.github/workflows/release-alias-verification.yml"
+    },
+    {
+      "id": "KFM-PASS12-RELEASE-POLICY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/policy/rego/release_gate_v1.rego"
+    },
+    {
+      "id": "KFM-GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T07:26:27Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation/provenance modernization on a scoped feature branch. The release root README is aligned to accepted Directory Rules v2 and current repository evidence while preserving the candidate-is-not-release, receipt/proof/policy separation, public-safe carrier, correction, withdrawal, and rollback boundaries. Human review remains pending. This receipt is process provenance, not factual proof, policy approval, release authority, merge authority, deployment authority, or publication authority."
+}
