@@ -39,18 +39,83 @@
     }
   },
   "cases": [
-    {"case_id":"released-eligible","mutation":"NONE","expected_outcome":"PASS","expected_code":"LAYER_MANIFEST_REGISTER_ELIGIBLE"},
-    {"case_id":"legacy-held","mutation":"LEGACY","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_LEGACY_PROFILE_HELD"},
-    {"case_id":"inactive-held","mutation":"INACTIVE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_INACTIVE_PROFILE_HELD"},
-    {"case_id":"candidate-held","mutation":"CANDIDATE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_NOT_PUBLISHED"},
-    {"case_id":"stale-held","mutation":"STALE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_STALE"},
-    {"case_id":"withdrawn-denied","mutation":"WITHDRAWN","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_RELEASE_WITHDRAWN"},
-    {"case_id":"superseded-held","mutation":"SUPERSEDED","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_SUPERSEDED"},
-    {"case_id":"evidence-unresolved","mutation":"EVIDENCE_UNRESOLVED","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_EVIDENCE_UNRESOLVED"},
-    {"case_id":"policy-denied","mutation":"POLICY_DENIED","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_POLICY_DENIED"},
-    {"case_id":"subject-mismatch","mutation":"SUBJECT_MISMATCH","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_RELEASE_BINDING_MISMATCH"},
-    {"case_id":"direct-internal-source","mutation":"DIRECT_INTERNAL_SOURCE","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_SOURCE_CLASS_DENIED"},
-    {"case_id":"authority-overclaim","mutation":"AUTHORITY_OVERCLAIM","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_AUTHORITY_OVERCLAIM"},
-    {"case_id":"invalid-shape","mutation":"INVALID_SHAPE","expected_outcome":"ERROR","expected_code":"LAYER_MANIFEST_ADMISSION_INPUT_INVALID"}
+    {
+      "case_id": "released-eligible",
+      "mutation": "NONE",
+      "expected_outcome": "PASS",
+      "expected_code": "LAYER_MANIFEST_REGISTER_ELIGIBLE"
+    },
+    {
+      "case_id": "legacy-held",
+      "mutation": "LEGACY",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_LEGACY_PROFILE_HELD"
+    },
+    {
+      "case_id": "inactive-held",
+      "mutation": "INACTIVE",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_INACTIVE_PROFILE_HELD"
+    },
+    {
+      "case_id": "candidate-held",
+      "mutation": "CANDIDATE",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_NOT_PUBLISHED"
+    },
+    {
+      "case_id": "stale-held",
+      "mutation": "STALE",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_STALE"
+    },
+    {
+      "case_id": "withdrawn-denied",
+      "mutation": "WITHDRAWN",
+      "expected_outcome": "DENY",
+      "expected_code": "LAYER_MANIFEST_RELEASE_WITHDRAWN"
+    },
+    {
+      "case_id": "superseded-held",
+      "mutation": "SUPERSEDED",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_SUPERSEDED"
+    },
+    {
+      "case_id": "evidence-unresolved",
+      "mutation": "EVIDENCE_UNRESOLVED",
+      "expected_outcome": "HOLD",
+      "expected_code": "LAYER_MANIFEST_EVIDENCE_UNRESOLVED"
+    },
+    {
+      "case_id": "policy-denied",
+      "mutation": "POLICY_DENIED",
+      "expected_outcome": "DENY",
+      "expected_code": "LAYER_MANIFEST_POLICY_DENIED"
+    },
+    {
+      "case_id": "subject-mismatch",
+      "mutation": "SUBJECT_MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_code": "LAYER_MANIFEST_RELEASE_BINDING_MISMATCH"
+    },
+    {
+      "case_id": "direct-internal-source",
+      "mutation": "DIRECT_INTERNAL_SOURCE",
+      "expected_outcome": "DENY",
+      "expected_code": "LAYER_MANIFEST_SOURCE_CLASS_DENIED"
+    },
+    {
+      "case_id": "authority-overclaim",
+      "mutation": "AUTHORITY_OVERCLAIM",
+      "expected_outcome": "DENY",
+      "expected_code": "LAYER_MANIFEST_AUTHORITY_OVERCLAIM"
+    },
+    {
+      "case_id": "invalid-shape",
+      "mutation": "INVALID_SHAPE",
+      "expected_outcome": "ERROR",
+      "expected_code": "LAYER_MANIFEST_ADMISSION_INPUT_INVALID"
+    }
   ]
 }
