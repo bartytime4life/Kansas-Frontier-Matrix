@@ -1,0 +1,47 @@
+name: View registry profile
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/view-registry-profile.yml"
+      - "contracts/ui/view_registry_profile.md"
+      - "data/receipts/generated/genrec-pass32-view-registry-profile-20260809.json"
+      - "docs/intake/exploratory/pass-32-view-registry-source-map.md"
+      - "fixtures/ui/view_registry_profile/**"
+      - "schemas/contracts/v1/ui/view_registry_profile.schema.json"
+      - "tests/validators/ui/test_validate_view_registry_profile.py"
+      - "tools/validators/ui/validate_view_registry_profile.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/view-registry-profile.yml"
+      - "contracts/ui/view_registry_profile.md"
+      - "data/receipts/generated/genrec-pass32-view-registry-profile-20260809.json"
+      - "docs/intake/exploratory/pass-32-view-registry-source-map.md"
+      - "fixtures/ui/view_registry_profile/**"
+      - "schemas/contracts/v1/ui/view_registry_profile.schema.json"
+      - "tests/validators/ui/test_validate_view_registry_profile.py"
+      - "tools/validators/ui/validate_view_registry_profile.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install test dependencies
+        run: python -m pip install -e '.[test]'
+      - name: Run focused profile tests
+        run: python -m pytest -q tests/validators/ui/test_validate_view_registry_profile.py
+      - name: Validate authoring receipt
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-pass32-view-registry-profile-20260809.json
+          --repo-root .

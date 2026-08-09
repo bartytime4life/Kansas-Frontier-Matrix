@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ui/view_registry_profile.schema.json",
+  "title": "View Registry Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "registry_id", "spec_hash", "entries", "governance"],
+  "properties": {
+    "profile": {"const": "VIEW_REGISTRY_PROFILE_V1"},
+    "registry_id": {"type": "string", "pattern": "^kfm:view-registry:[a-f0-9]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 256,
+      "pattern": "^kfm:[a-z0-9][a-z0-9:._/-]+$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "view_id",
+        "route_path",
+        "delivery",
+        "catalog",
+        "layer_manifest_refs",
+        "render_hints",
+        "policy",
+        "evidence_drawer_profile_ref",
+        "release_manifest_ref",
+        "activation_state",
+        "authority"
+      ],
+      "properties": {
+        "view_id": {"type": "string", "pattern": "^kfm:view:[a-z0-9][a-z0-9._-]{2,96}$"},
+        "route_path": {"type": "string", "pattern": "^/[a-z0-9][a-z0-9-]*(?:/[a-z0-9][a-z0-9-]*)*$"},
+        "delivery": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "contract_ref"],
+          "properties": {
+            "kind": {"enum": ["GOVERNED_API_CONTRACT", "RELEASED_ARTIFACT_CONTRACT"]},
+            "contract_ref": {"$ref": "#/$defs/ref"}
+          }
+        },
+        "catalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["closure_state", "catalog_matrix_closure_ref", "stac_ref", "dcat_ref", "prov_ref"],
+          "properties": {
+            "closure_state": {"enum": ["READY", "HOLD", "DENY"]},
+            "catalog_matrix_closure_ref": {"$ref": "#/$defs/ref"},
+            "stac_ref": {"$ref": "#/$defs/ref"},
+            "dcat_ref": {"$ref": "#/$defs/ref"},
+            "prov_ref": {"$ref": "#/$defs/ref"}
+          }
+        },
+        "layer_manifest_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "render_hints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["renderer", "protocol", "style_ref", "performance_budget_ref"],
+          "properties": {
+            "renderer": {"const": "MAPLIBRE_2D"},
+            "protocol": {"enum": ["PMTILES", "MVT", "COG", "NONE"]},
+            "style_ref": {"$ref": "#/$defs/ref"},
+            "performance_budget_ref": {"$ref": "#/$defs/ref"}
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["access_policy_ref", "sensitivity_policy_ref"],
+          "properties": {
+            "access_policy_ref": {"$ref": "#/$defs/ref"},
+            "sensitivity_policy_ref": {"$ref": "#/$defs/ref"}
+          }
+        },
+        "evidence_drawer_profile_ref": {"$ref": "#/$defs/ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/ref"},
+        "activation_state": {"const": "PROPOSED_INACTIVE"},
+        "authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["route_bound", "direct_store_access", "embedded_graph_query", "layer_activated", "publication_authorized", "public_use_allowed"],
+          "properties": {
+            "route_bound": {"const": false},
+            "direct_store_access": {"const": false},
+            "embedded_graph_query": {"const": false},
+            "layer_activated": {"const": false},
+            "publication_authorized": {"const": false},
+            "public_use_allowed": {"const": false}
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "network_attempted", "registry_activated", "policy_evaluated", "review_approved", "release_authorized", "deployment_authorized", "publication_authorized"],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "registry_activated": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "deployment_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_ideas": ["KFM-P32-IDEA-0008", "KFM-P32-FEAT-0004"],
+    "validator": "tools/validators/ui/validate_view_registry_profile.py",
+    "authority": "local fixture consistency only"
+  }
+}

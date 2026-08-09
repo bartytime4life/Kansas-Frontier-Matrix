@@ -1,0 +1,255 @@
+{
+  "bases": {
+    "ready": {
+      "profile": "VIEW_REGISTRY_PROFILE_V1",
+      "registry_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "entries": [
+        {
+          "view_id": "kfm:view:hydrology.streamflow",
+          "route_path": "/map/hydrology/streamflow",
+          "delivery": {
+            "kind": "GOVERNED_API_CONTRACT",
+            "contract_ref": "kfm:contract:governed-api:hydrology-streamflow-v1"
+          },
+          "catalog": {
+            "closure_state": "READY",
+            "catalog_matrix_closure_ref": "kfm:catalog-closure:hydrology-streamflow-v1",
+            "stac_ref": "kfm:stac:hydrology-streamflow-v1",
+            "dcat_ref": "kfm:dcat:hydrology-streamflow-v1",
+            "prov_ref": "kfm:prov:hydrology-streamflow-v1"
+          },
+          "layer_manifest_refs": [
+            "kfm:layer-manifest:streamflow-context-v1",
+            "kfm:layer-manifest:streamflow-gauges-v1"
+          ],
+          "render_hints": {
+            "renderer": "MAPLIBRE_2D",
+            "protocol": "PMTILES",
+            "style_ref": "kfm:style:streamflow-v1",
+            "performance_budget_ref": "kfm:performance-budget:map-standard-v1"
+          },
+          "policy": {
+            "access_policy_ref": "kfm:policy:access:public-map-v1",
+            "sensitivity_policy_ref": "kfm:policy:sensitivity:hydrology-v1"
+          },
+          "evidence_drawer_profile_ref": "kfm:contract:evidence-drawer:public-v1",
+          "release_manifest_ref": "kfm:release-manifest:streamflow-candidate-v1",
+          "activation_state": "PROPOSED_INACTIVE",
+          "authority": {
+            "route_bound": false,
+            "direct_store_access": false,
+            "embedded_graph_query": false,
+            "layer_activated": false,
+            "publication_authorized": false,
+            "public_use_allowed": false
+          }
+        },
+        {
+          "view_id": "kfm:view:soils.overview",
+          "route_path": "/map/soils/overview",
+          "delivery": {
+            "kind": "RELEASED_ARTIFACT_CONTRACT",
+            "contract_ref": "kfm:contract:released-artifact:soils-overview-v1"
+          },
+          "catalog": {
+            "closure_state": "READY",
+            "catalog_matrix_closure_ref": "kfm:catalog-closure:soils-overview-v1",
+            "stac_ref": "kfm:stac:soils-overview-v1",
+            "dcat_ref": "kfm:dcat:soils-overview-v1",
+            "prov_ref": "kfm:prov:soils-overview-v1"
+          },
+          "layer_manifest_refs": [
+            "kfm:layer-manifest:soil-mapunits-v1"
+          ],
+          "render_hints": {
+            "renderer": "MAPLIBRE_2D",
+            "protocol": "MVT",
+            "style_ref": "kfm:style:soils-overview-v1",
+            "performance_budget_ref": "kfm:performance-budget:map-standard-v1"
+          },
+          "policy": {
+            "access_policy_ref": "kfm:policy:access:public-map-v1",
+            "sensitivity_policy_ref": "kfm:policy:sensitivity:soils-v1"
+          },
+          "evidence_drawer_profile_ref": "kfm:contract:evidence-drawer:public-v1",
+          "release_manifest_ref": "kfm:release-manifest:soils-overview-candidate-v1",
+          "activation_state": "PROPOSED_INACTIVE",
+          "authority": {
+            "route_bound": false,
+            "direct_store_access": false,
+            "embedded_graph_query": false,
+            "layer_activated": false,
+            "publication_authorized": false,
+            "public_use_allowed": false
+          }
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "registry_activated": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "release_authorized": false,
+        "deployment_authorized": false,
+        "publication_authorized": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ready-pass",
+      "base": "ready",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "catalog-hold-abstain",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/catalog/closure_state", "value": "HOLD"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_CATALOG_CLOSURE_HELD", "path": "/entries"}
+      ]
+    },
+    {
+      "case_id": "catalog-declared-deny",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/1/catalog/closure_state", "value": "DENY"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_CATALOG_CLOSURE_DENIED", "path": "/entries"}
+      ]
+    },
+    {
+      "case_id": "entry-order-invalid",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/view_id", "value": "kfm:view:z-hydrology-streamflow"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_ENTRY_ORDER_INVALID", "path": "/entries"}
+      ]
+    },
+    {
+      "case_id": "view-id-duplicate",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/1/view_id", "value": "kfm:view:hydrology.streamflow"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_VIEW_ID_DUPLICATE", "path": "/entries"}
+      ]
+    },
+    {
+      "case_id": "route-duplicate",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/1/route_path", "value": "/map/hydrology/streamflow"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_ROUTE_DUPLICATE", "path": "/entries"}
+      ]
+    },
+    {
+      "case_id": "layer-order-invalid",
+      "base": "ready",
+      "mutations": [
+        {
+          "path": "/entries/0/layer_manifest_refs",
+          "value": [
+            "kfm:layer-manifest:streamflow-gauges-v1",
+            "kfm:layer-manifest:streamflow-context-v1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_LAYER_ORDER_INVALID", "path": "/entries/0/layer_manifest_refs"}
+      ]
+    },
+    {
+      "case_id": "direct-store-reference",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/render_hints/style_ref", "value": "kfm:style:data/raw/streamflow"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_DIRECT_STORE_REFERENCE_DENIED", "path": "/entries/0/render_hints/style_ref"}
+      ]
+    },
+    {
+      "case_id": "embedded-query-reference",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/delivery/contract_ref", "value": "kfm:contract:graph_query:streamflow"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_EMBEDDED_QUERY_DENIED", "path": "/entries/0/delivery/contract_ref"}
+      ]
+    },
+    {
+      "case_id": "release-catalog-role-collapse",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/release_manifest_ref", "value": "kfm:catalog-closure:hydrology-streamflow-v1"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_RELEASE_CATALOG_ROLE_COLLAPSE", "path": "/entries/0/release_manifest_ref"}
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/authority/route_bound", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_SCHEMA_INVALID", "path": "/entries/0/authority/route_bound"}
+      ]
+    },
+    {
+      "case_id": "policy-closure-missing",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/policy", "value": {}}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_SCHEMA_INVALID", "path": "/entries/0/policy"}
+      ]
+    },
+    {
+      "case_id": "route-not-canonical",
+      "base": "ready",
+      "mutations": [
+        {"path": "/entries/0/route_path", "value": "/Map/Hydrology"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_SCHEMA_INVALID", "path": "/entries/0/route_path"}
+      ]
+    },
+    {
+      "case_id": "identity-corrupt",
+      "base": "ready",
+      "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VIEW_REGISTRY_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    }
+  ]
+}
