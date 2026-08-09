@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/data/stac_attestation_hook.schema.json",
+  "title": "KFM fixture-only STAC attestation hook projection",
+  "description": "Closed synthetic projection. Shape validity creates no evidence, policy, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/data/stac_attestation_hook.md",
+    "fixtures_root": "fixtures/data/stac_attestation_hook/",
+    "validator": "tools/validators/data/validate_stac_attestation_hook.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "source_card": "KFM-P7-PROG-0001"
+  },
+  "required": ["profile","stac_item_id","release_state","item_spec_hash","evidence_bundle_ref","links","authority","spec_hash","projection_id"],
+  "properties": {
+    "profile": {"const":"kfm.stac-attestation-hook-fixture.v1"},
+    "stac_item_id": {"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"},
+    "release_state": {"enum":["UNRELEASED","CANDIDATE","RELEASED","WITHDRAWN","CORRECTED","SUPERSEDED"]},
+    "item_spec_hash": {"$ref":"#/$defs/digest"},
+    "evidence_bundle_ref": {"type":"string","pattern":"^kfm://bundle/[A-Za-z0-9._:/-]+$"},
+    "links": {"type":"array","maxItems":8,"items":{"$ref":"#/$defs/link"}},
+    "authority": {"$ref":"#/$defs/authority"},
+    "spec_hash": {"$ref":"#/$defs/digest"},
+    "projection_id": {"type":"string","pattern":"^stac-attestation-hook:[0-9a-f]{24}$"}
+  },
+  "$defs": {
+    "digest": {"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "link": {
+      "type":"object","additionalProperties":false,
+      "required":["rel","href","type","certifies_spec_hash","bundle_digest"],
+      "properties": {
+        "rel":{"enum":["attestation","collection","self","prov"]},
+        "href":{"type":"string","minLength":8,"maxLength":512},
+        "type":{"type":"string","minLength":3,"maxLength":128},
+        "certifies_spec_hash":{"anyOf":[{"$ref":"#/$defs/digest"},{"type":"null"}]},
+        "bundle_digest":{"anyOf":[{"$ref":"#/$defs/digest"},{"type":"null"}]}
+      }
+    },
+    "authority": {
+      "type":"object","additionalProperties":false,
+      "required":["evidence_resolved","signature_verified","policy_evaluated","review_authenticated","release_authorized","catalog_mutated","publication_authorized","public_use_allowed"],
+      "properties": {
+        "evidence_resolved":{"const":false},"signature_verified":{"const":false},"policy_evaluated":{"const":false},"review_authenticated":{"const":false},"release_authorized":{"const":false},"catalog_mutated":{"const":false},"publication_authorized":{"const":false},"public_use_allowed":{"const":false}
+      }
+    }
+  }
+}
