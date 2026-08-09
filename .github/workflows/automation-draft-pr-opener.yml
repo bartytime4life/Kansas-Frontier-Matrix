@@ -167,16 +167,16 @@ jobs:
           proposal = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           body = f"""## Automation proposal
 
-This draft pull request was opened by the bounded KFM automation PR opener after structural and live-ref validation.
+          This draft pull request was opened by the bounded KFM automation PR opener after structural and live-ref validation.
 
-- Proposal: `{proposal['proposal_id']}`
-- Base: `main@{proposal['base_sha']}`
-- Head: `{proposal['head_branch']}`
-- Policy declaration: `PASS`
-- Candidate scope: `data/work/automation/` only
+          - Proposal: `{proposal['proposal_id']}`
+          - Base: `main@{proposal['base_sha']}`
+          - Head: `{proposal['head_branch']}`
+          - Policy declaration: `PASS`
+          - Candidate scope: `data/work/automation/` only
 
-The opener does not create or modify branches, approve review, merge, release, deploy, promote, publish, or grant public-use authority. The receipt reference remains in the dispatched proposal and is not treated as proof or approval here.
-"""
+          The opener does not create or modify branches, approve review, merge, release, deploy, promote, publish, or grant public-use authority. The receipt reference remains in the dispatched proposal and is not treated as proof or approval here.
+          """
           Path(sys.argv[2]).write_text(body, encoding="utf-8")
           PY
 
