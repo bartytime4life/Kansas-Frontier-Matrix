@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-schema-registry-parity-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/schema-registry-parity.yml",
+    "tests/validators/schema_registry/test_validate_schema_registry_parity.py",
+    "tools/validators/schema_registry/README.md",
+    "tools/validators/schema_registry/validate_schema_registry_parity.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/schema-registry-parity.yml": "sha256:d837af40aefbe314c31be3c8e7bb16ee4d30483a0677153f520ebac6d98c1abd",
+    "tests/validators/schema_registry/test_validate_schema_registry_parity.py": "sha256:211b1e8fbea3dfea1078a073adee1fd8f14f5cc5cd0987b9e5635e2d2895356c",
+    "tools/validators/schema_registry/README.md": "sha256:3e761a339cc4b777650fe377e1a9c84f65e385970169e9def3601197e5379eff",
+    "tools/validators/schema_registry/validate_schema_registry_parity.py": "sha256:020aae21771d4bb9f04e2e32d3244d1d04a885bef8d8dd1ca487bce624006906"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:f2601d1f157664a2d54f8cb00dfbeb042eb594c46ce7b99617348fe5f4f034ed",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local deterministic validation",
+      "container patch builder"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack",
+      "repo:packages/schema-registry@2bfcb49c36e3d72b8011bbcddc925c3c5166fe36",
+      "repo:tools/validators/_common/local_resolver.py@49db0ceeaf05e762035f2835ff2a7a2f4cede201",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/schema-registry-parity.yml": "CONFIRMED",
+    "tests/validators/schema_registry/test_validate_schema_registry_parity.py": "CONFIRMED",
+    "tools/validators/schema_registry/README.md": "CONFIRMED",
+    "tools/validators/schema_registry/validate_schema_registry_parity.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "isolated-parity-tests",
+      "outcome": "PASS",
+      "reason": "Six deterministic tests passed for exact parity, id-set mismatch, content mismatch, bounded legacy failure, no-network execution, and stable CLI output."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "current-canonical-tree-parity",
+      "outcome": "SKIPPED",
+      "reason": "The local patch workspace does not contain the complete repository schema tree; the path-scoped hosted workflow performs this check on the exact PR head."
+    },
+    {
+      "gate": "editable-package-install",
+      "outcome": "SKIPPED",
+      "reason": "The local runner lacks hatchling and cannot reach a package index; hosted CI installs the declared build dependency."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires a pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the proposed stacked draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:kfm-components-pass-13-artifactization",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack"
+    },
+    {
+      "id": "repository:local-resolver-current-behavior",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/_common/local_resolver.py@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:00:22Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Stacked validation-only follow-up. It proves package/local-resolver parity before any consumer migration. No canonical schema, resolver consumer, source, evidence, policy, review, promotion, release, publication, or public-use authority is changed."
+}
