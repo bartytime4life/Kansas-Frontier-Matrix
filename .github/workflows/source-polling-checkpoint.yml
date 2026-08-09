@@ -3,7 +3,7 @@ name: source-polling-checkpoint
   pull_request:
     paths: [".github/workflows/source-polling-checkpoint.yml","contracts/source/source_polling_checkpoint.md","schemas/contracts/v1/source/source_polling_checkpoint.schema.json","fixtures/contracts/v1/source/source_polling_checkpoint/**","tools/validators/source/validate_source_polling_checkpoint.py","tests/validators/test_validate_source_polling_checkpoint.py","docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md","packages/hashing/**","data/receipts/generated/genrec-source-polling-checkpoint-*.json"]
   push:
-    branches: [main, agent/source-polling-checkpoint-20260808]
+    branches: [main]
     paths: [".github/workflows/source-polling-checkpoint.yml","contracts/source/source_polling_checkpoint.md","schemas/contracts/v1/source/source_polling_checkpoint.schema.json","fixtures/contracts/v1/source/source_polling_checkpoint/**","tools/validators/source/validate_source_polling_checkpoint.py","tests/validators/test_validate_source_polling_checkpoint.py","docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md","packages/hashing/**","data/receipts/generated/genrec-source-polling-checkpoint-*.json"]
   workflow_dispatch:
 permissions: {contents: read}
@@ -23,14 +23,6 @@ jobs:
           python -m py_compile tools/validators/source/validate_source_polling_checkpoint.py tests/validators/test_validate_source_polling_checkpoint.py
           python -m unittest tests.validators.test_validate_source_polling_checkpoint -v
           python tools/validators/source/validate_source_polling_checkpoint.py --fixtures
-      - name: Report authored artifact digests
-        run: |
-          sha256sum \
-            contracts/source/source_polling_checkpoint.md \
-            schemas/contracts/v1/source/source_polling_checkpoint.schema.json \
-            fixtures/contracts/v1/source/source_polling_checkpoint/cases.json \
-            tools/validators/source/validate_source_polling_checkpoint.py \
-            tests/validators/test_validate_source_polling_checkpoint.py \
-            docs/intake/exploratory/pass-32-source-polling-checkpoint-source-map.md
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-source-polling-checkpoint-20260808.json --repo-root .
       - if: always()
-        run: echo "Temporary branch-only digest preflight; no network request, fetch, RAW write, release, or publication." >> "$GITHUB_STEP_SUMMARY"
+        run: echo "Fixture-only conditional-validator state; no network request, fetch, RAW write, release, or publication." >> "$GITHUB_STEP_SUMMARY"
