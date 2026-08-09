@@ -1,0 +1,20 @@
+{
+  "receipt_id": "genrec-soil-support-role-assessment-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [],
+  "artifact_hashes": {},
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5.6 Pro", "version": "2026-08-08"},
+  "prompt_or_contract": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "parameters": {"seed": null, "temperature": null, "top_p": null, "max_tokens": null, "tools_enabled": ["GitHub connector"]},
+  "inputs": {"evidence_hashes": [], "attached_docs": [], "evidence_refs": []},
+  "truth_labels": {},
+  "validation_gates": [],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-08T23:59:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Temporary receipt shell; this file is replaced before pull-request delivery."
+}
