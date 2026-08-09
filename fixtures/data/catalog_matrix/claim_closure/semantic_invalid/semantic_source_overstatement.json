@@ -71,8 +71,8 @@
       "kfm:evidence:fixture:hydrology:001"
     ],
     "source_refs": [
-      "kfm:source:fixture:usgs-water",
-      "kfm:source:fixture:unbound"
+      "kfm:source:fixture:unbound",
+      "kfm:source:fixture:usgs-water"
     ],
     "policy_decision_ref": "kfm:policy-decision:fixture:catalog-claim-closure",
     "review_ref": "kfm:review:fixture:catalog-claim-closure",
