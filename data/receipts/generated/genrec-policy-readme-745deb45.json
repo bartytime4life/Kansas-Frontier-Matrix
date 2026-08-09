@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec:policy-readme:745deb453a6db56d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/README.md": "sha256:745deb453a6db56dc8208675631cc8f74b450226b78ed161d3e0cc41e7bd7f25"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08",
+    "parameter_hash": "sha256:79a29c76f75c3dbcf9212bbfe59bf79c03bd6581675a6271d06ece123ec39fb9"
+  },
+  "prompt_or_contract": "sha256:f19550008afe17b8733bad2984d3afc07ff23f5e7599c097884da6eb23aedbc1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "CURRENT_USER_REQUEST:policy/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:policy/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:policy/rego/release_gate_v1.rego",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:policy/bundles/pass12-release-gate-v1/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:.github/workflows/pass12-release-policy-v1.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:.github/workflows/policy-test.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:.github/workflows/policy-boundary-guards.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:contracts/policy/",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:tools/validators/policy/",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@41bf408df0458feadd086047a813005b3a052201:packages/policy-runtime/"
+    ]
+  },
+  "truth_labels": {
+    "policy/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "same-path placement and adopted Directory Rules v2 authority",
+      "outcome": "PASS",
+      "reason": "Existing canonical root README; accepted ADR-0029 makes the Directory Rules v2 ROOT_FULL contract effective. No path, root ownership, lifecycle, or authority transition."
+    },
+    {
+      "gate": "base, overlap, and target drift preflight",
+      "outcome": "PASS",
+      "reason": "Main and target blob remained pinned at 41bf408df0458feadd086047a813005b3a052201 and fa9378a6a699d0985fd018dbdb9f27c15efcb1c3; no open policy README pull request was found before mutation."
+    },
+    {
+      "gate": "remote branch byte read-back and SHA-256 binding",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 9e9cf2d6065d32100c60f03186899e8552810e8e; the locally prepared Git blob identity matched exactly and the UTF-8 artifact SHA-256 is 745deb453a6db56dc8208675631cc8f74b450226b78ed161d3e0cc41e7bd7f25."
+    },
+    {
+      "gate": "Markdown source structure",
+      "outcome": "PASS",
+      "reason": "One H1 outside fences, balanced fenced blocks, unique explicit anchors, no heading-level jumps, all internal fragments resolved, no tabs or trailing whitespace, and final newline."
+    },
+    {
+      "gate": "repository-relative reference check",
+      "outcome": "PASS",
+      "reason": "All added or retained relative file targets and selected direct-child directory links were verified against the pinned repository tree or exact file reads."
+    },
+    {
+      "gate": "material no-loss and evidence reconciliation",
+      "outcome": "PASS",
+      "reason": "The v0.2 purpose, authority split, belongs/exclusions, inputs/outputs, validation, review, maturity, outcome, authoring, sensitivity, trust-membrane, rollback, open-work, and changelog surfaces remain; stale evaluator/test/validator claims were repaired from current evidence."
+    },
+    {
+      "gate": "scope and sensitive-content review",
+      "outcome": "PASS",
+      "reason": "Documentation-only target plus generated provenance receipt; no policy rule, contract, schema, fixture, workflow, runtime, sensitive payload, release, deployment, or publication behavior changed."
+    },
+    {
+      "gate": "generated receipt schema and artifact integrity",
+      "outcome": "PASS",
+      "reason": "Receipt required fields, closed top-level property set, identifier/hash patterns, truth labels, validation outcomes, citation records, pending human-review state, and exact artifact hash binding were checked locally."
+    },
+    {
+      "gate": "repository-native hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt emission; exact-head draft-PR checks are reported separately and do not become policy, review, release, or publication evidence."
+    },
+    {
+      "gate": "policy runtime and rule behavior tests",
+      "outcome": "SKIPPED",
+      "reason": "No executable policy, contract, schema, validator, fixture, test, workflow, package, runtime, data, or release behavior changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request-kfm-repo-build-v6",
+      "validated": true,
+      "evidence_ref": "attached:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "base-target-readme",
+      "validated": true,
+      "evidence_ref": "repo:41bf408df0458feadd086047a813005b3a052201:policy/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:41bf408df0458feadd086047a813005b3a052201:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "bounded-release-policy-lane",
+      "validated": true,
+      "evidence_ref": "repo:41bf408df0458feadd086047a813005b3a052201:policy/rego/release_gate_v1.rego"
+    },
+    {
+      "id": "policy-readiness-and-boundary-workflows",
+      "validated": true,
+      "evidence_ref": "repo:41bf408df0458feadd086047a813005b3a052201:.github/workflows/policy-test.yml"
+    },
+    {
+      "id": "fixture-first-policy-profiles",
+      "validated": true,
+      "evidence_ref": "repo:41bf408df0458feadd086047a813005b3a052201:contracts/policy/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T05:43:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro repository implementation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path modernization. The receipt is process memory, not proof, policy permission, human approval, release authority, or publication authority. Rollback before merge is abandonment of the draft PR; after merge use a transparent revert or forward fix for the README and this receipt together."
+}
