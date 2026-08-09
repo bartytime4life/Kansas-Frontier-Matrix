@@ -59,7 +59,7 @@
     {
       "gate": "stack-base-and-source-carrier",
       "outcome": "PASS",
-      "reason": "Draft PR #2331 supplies the exact 59-record carrier and source-integrity basis reviewed independently below this branch."
+      "reason": "PR #2331 supplied the exact 59-record carrier and source-integrity basis and is present on main at merge commit bb533660fd97297cee908da53c4c228b14ffa7b1."
     },
     {
       "gate": "backlog-set-parity",
@@ -118,5 +118,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "AI-authored operationalization planning artifacts stacked on draft PR #2331. Every proposed implementation route remains HOLD pending per-card repository evidence, ownership, policy, validation, correction, and rollback closure. This receipt is process memory, not human approval, implementation proof, policy permission, release authority, or publication authority."
+  "notes": "AI-authored operationalization planning artifacts built on source-carrier PR #2331, which merged while this follow-up branch was being prepared. Every proposed implementation route remains HOLD pending per-card repository evidence, ownership, policy, validation, correction, and rollback closure. This receipt is process memory, not human approval, implementation proof, policy permission, release authority, or publication authority."
 }
