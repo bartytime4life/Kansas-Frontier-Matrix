@@ -2,44 +2,53 @@
 doc_id: kfm://doc/migrations-readme
 title: migrations/ — Governed State-Change, Compatibility, Adoption, Execution, and Recovery Root
 type: README; directory-readme; canonical-migrations-root; change-control-index
-version: v1.2
-status: draft; repository-grounded; canonical-root; five-lane-documentation-confirmed; schema-validation-bounded; rollback-readiness-hold-confirmed; concrete-payloads-unestablished; runner-unestablished; applied-ledger-unestablished; recovery-coverage-unverified; non-release; non-publication
-owner: NEEDS VERIFICATION — CODEOWNERS routes this path through the repository default owner @bartytime4life; accountable migration, database, schema, contract, data, graph, recovery, policy, security, application, domain, and release stewardship plus independent approval were not established
+version: v1.3
+status: draft; repository-grounded; canonical-root; directory-rules-v2-accepted; recursive-inventory-confirmed; placeholder-only-confirmed; five-lane-documentation-confirmed; schema-validation-bounded; rollback-readiness-hold-confirmed; v6-repository-delivery-contract-added; concrete-payloads-unestablished; runner-unestablished; applied-ledger-unestablished; recovery-coverage-unverified; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes this path through the repository default owner @bartytime4life; accountable migration, database, schema, contract, data, graph, recovery, policy, security, application, domain, and release stewardship plus independent approval remain unestablished
 created: 2026-07-03
-updated: 2026-07-24
-supersedes: v1.1 documentation at the same path; no migration payload, database state, schema, contract, data, graph, recovery action, runtime behavior, release state, or publication state is superseded
-prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
-policy_label: repository-facing; migrations; change-control; compatibility-aware; adoption-aware; rollback-aware; forward-fix-aware; evidence-first; fail-closed; non-publisher
+updated: 2026-08-09
+supersedes: v1.2 documentation at the same path; no migration payload, database state, schema, contract, data, graph, recovery action, runtime behavior, release state, or publication state is superseded
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+policy_label: repository-facing; migrations; change-control; compatibility-aware; adoption-aware; rollback-aware; forward-fix-aware; evidence-first; fail-closed; implementation-forward; non-publisher
 current_path: migrations/README.md
 owning_root: migrations/
 responsibility: govern deliberate transitions in persisted structure, machine compatibility, data state, graph topology, adoption, execution evidence, and recovery posture without becoming semantic-contract, canonical-schema, policy, evidence, lifecycle-data, runtime, release, or publication authority
 truth_posture: >
-  CONFIRMED same-path target; Directory Rules assignment of migrations/ to database, schema, data, graph, and rollback change control;
-  five merged repository-grounded v1.1 lane READMEs; current CODEOWNERS routing; configured schema-validation workflow; rollback-drill
-  readiness workflow that explicitly holds rather than simulates rollback; and separation between migration recovery and release rollback /
-  PROPOSED root migration classification, packet, evidence ladder, state model, deterministic identity, concurrency, compatibility, adoption,
-  execution, recovery, and definition-of-done contracts / UNKNOWN exhaustive recursive migration inventory, concrete payloads, active
-  database or graph engines, runner selection, target environments, applied versions, backup and restore capabilities, producer and consumer
-  adoption, execution receipts, recovery outcomes, and production history / NEEDS VERIFICATION one-to-one migration-to-recovery pairing,
-  same-PR enforcement, canonical ordering, machine migration register, dedicated migration validation, steward assignments, independent
-  approval, branch or ruleset enforcement, rehearsal policy, and release integration
+  CONFIRMED same-path target; ADR-0029 acceptance of Directory Rules v2 as current placement authority; full recursive inventory of eleven
+  paths under migrations/ at the pinned base; five v1.1 lane READMEs; five explicit 0001_init.placeholder stubs and no concrete executable
+  migration payload in that root; CODEOWNERS routing; bounded schema-validation workflow; rollback-drill readiness workflow that explicitly
+  holds rather than simulates rollback; and no open pull-request overlap on migrations/README.md at inspection / PROPOSED root migration
+  classification, packet, evidence ladder, work-state model, deterministic identity, dependency closure, staged repository delivery, concurrency,
+  compatibility, adoption, execution, recovery, and definition-of-done contracts / UNKNOWN active database or graph engines, canonical runner,
+  target environments, applied versions, backup and restore capabilities, producer and consumer adoption, execution receipts, recovery outcomes,
+  and production history / NEEDS VERIFICATION one-to-one migration-to-recovery pairing, same-PR enforcement, canonical ordering, machine
+  migration register, dedicated migration validation, steward assignments, independent approval, branch or ruleset enforcement, rehearsal policy,
+  and release integration
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: c4d7a1d7527687f1f11c5f95f47f52c159338af9
-  target_prior_blob: 48da6b62000d145359bfbd7f8383961c9f285b2a
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  base_commit: 8f26a3ed8d2fbc2f40fecf722177aeae2cb6297a
+  target_prior_blob: 0b7b9cda652ca0ab8da4c1b82261476afa5f8955
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   database_readme_blob: a5d479ce410ead7fb8eb61082f22d8bddc813746
   schema_readme_blob: d4f28ff15ab5e26c101ff72fc96a1f500103dfae
   data_readme_blob: 42350e082436d84f8f2147d53044249eb7daf430
   graph_readme_blob: 92ca1b02a15557cdd970a03ee95a946ec78a0c3f
   rollback_readme_blob: 9fb60b41f9bb901b69d45cb8c4d942b8272b467f
-  schema_validation_workflow_blob: e6b26337aa1eea142b96560e041419f855c44d59
-  rollback_drill_workflow_blob: dc42ec4931f95023d364f2559ddcffab94ecfab5
-  inspection_method: exact GitHub file reads, workflow inspection, bounded repository search, branch-name search, open-PR overlap search, and current-head verification; no recursive Git tree, live database, graph store, migration runner, backup system, deployment environment, release artifact, runtime trace, or production system was inspected
+  database_placeholder_blob: 045a4989bdad2d39a6c97adedfb148d7c033b69d
+  schema_placeholder_blob: d20ac2b147de449bf5ba1b55e22ad8ddcd44ef25
+  data_placeholder_blob: db0319fe09b20b2fb270be5a8382a9afaba4a2c3
+  graph_placeholder_blob: 4d89cfda15686b2137df889e60a2173b70ec269b
+  rollback_placeholder_blob: bc3c9c0ee6e08cb2bd639a5f329c3065ffba6cb4
+  schema_validation_workflow_blob: 3deebb4fa1e5db00108e0b43804ac633083d94c2
+  rollback_drill_workflow_blob: 702c141ac1dd59ea0bb865c12e4e81d8a83f99fc
+  recursive_path_count: 11
+  inspection_method: exact GitHub file and directory reads at the pinned base, complete per-lane contents inspection, accepted-ADR inspection, workflow inspection, open-pull-request overlap inspection, and current-head verification; no live database, graph store, migration runner, backup system, deployment environment, release artifact, runtime trace, or production system was inspected
 related:
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../docs/runbooks/ROLLBACK_RUNBOOK.md
   - ../docs/runbooks/README.md
   - ../docs/governance/SEPARATION_OF_DUTIES.md
@@ -63,9 +72,10 @@ related:
   - ./rollback/README.md
   - ../.github/CODEOWNERS
 notes:
-  - "v1.2 is a same-path documentation-only modernization grounded in current repository evidence."
-  - "The first twelve H2 sections follow the Directory Rules folder-README contract."
-  - "All five lane READMEs are confirmed at v1.1, but concrete migration payloads, a canonical runner, applied ledger, complete recovery pairing, and production outcomes were not established."
+  - "v1.3 is a same-path documentation-only modernization grounded in current repository evidence and the accepted Directory Rules v2 decision."
+  - "The first twelve H2 sections preserve the Directory Rules folder-README contract."
+  - "The complete pinned-base migrations/ inventory is eleven paths: this README plus five v1.1 lane READMEs and five non-executable placeholder stubs."
+  - "The repository implementation contract governs authoring, branch, validation, and draft-PR delivery; it does not authorize applying a migration to any database, dataset, graph, runtime, release, or public system."
   - "The schema-validation workflow proves bounded machine-shape checks; the rollback-drill workflow proves a deliberate readiness hold and explicitly does not simulate rollback."
   - "Static badges summarize inspected repository state only; they are not migration approval, execution, adoption, recovery, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
@@ -77,24 +87,25 @@ notes:
 > **One-line purpose.** Govern deliberate changes to persisted structure and state so every database, schema, data, graph, and recovery transition is classified, pinned, reviewable, previewable, validated, auditable, and recoverable without bypassing KFM authority, lifecycle, policy, evidence, or release boundaries.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Lanes: five v1.1](https://img.shields.io/badge/lanes-five%20v1.1-2da44e?style=flat-square)](#current-bounded-topology)
-[![Payloads: not established](https://img.shields.io/badge/payloads-not%20established-b42318?style=flat-square)](#status)
+[![Directory Rules: v2 accepted](https://img.shields.io/badge/directory%20rules-v2%20accepted-2da44e?style=flat-square)](#authority-level)
+[![Inventory: 11 paths](https://img.shields.io/badge/inventory-11%20paths-0969da?style=flat-square)](#current-bounded-topology)
+[![Payloads: placeholders only](https://img.shields.io/badge/payloads-placeholders%20only-b42318?style=flat-square)](#status)
 [![Schema checks: bounded](https://img.shields.io/badge/schema%20checks-bounded-0969da?style=flat-square)](#current-workflow-boundary)
 [![Rollback drill: hold](https://img.shields.io/badge/rollback%20drill-readiness%20hold-d4a72c?style=flat-square)](#current-workflow-boundary)
-[![Recovery pairing: needs verification](https://img.shields.io/badge/recovery%20pairing-needs%20verification-d4a72c?style=flat-square)](#recovery-and-forward-fix-contract)
+[![Delivery: draft PR ceiling](https://img.shields.io/badge/delivery-draft%20PR%20ceiling-6e7781?style=flat-square)](#staged-admission-and-delivery)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Reviewed: 2026-07-24](https://img.shields.io/badge/reviewed-2026--07--24-0969da?style=flat-square)](#last-reviewed)
+[![Reviewed: 2026-08-09](https://img.shields.io/badge/reviewed-2026--08--09-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `migrations/` and all five lane READMEs are present and repository-grounded. The repository also has bounded schema-validation and rollback-readiness workflows. Current evidence does **not** establish concrete migration payloads, a canonical migration runner, active database or graph engines, an applied-version ledger, complete migration-to-recovery pairing, backup and restore capability, producer/consumer adoption, recovery rehearsals, or production execution history.
+> **Safe current conclusion:** at the pinned base, `migrations/` contains exactly eleven paths: this root README, five repository-grounded v1.1 lane READMEs, and one explicit `0001_init.placeholder` stub in each lane. The repository also has bounded schema-validation and rollback-readiness workflows. Current evidence does **not** establish an executable migration payload, a canonical migration runner, an active database or graph engine, an applied-version ledger, complete migration-to-recovery pairing, backup and restore capability, producer/consumer adoption, recovery rehearsals, or production execution history.
 
 > [!CAUTION]
-> A migration README, parsed script, schema check, workflow definition, green unrelated check, branch, pull request, or merged commit does not prove that a migration is safe, approved, applied, adopted, reversible, release-compatible, or reflected in a live environment. Those claims require pinned payloads and targets, observed execution evidence, post-checks, and recovery evidence.
+> A direct request to edit repository files authorizes scoped feature-branch implementation and review delivery. It does **not** authorize applying a migration to a database, dataset, graph, runtime, release, cache, or public system. Target execution requires its own pinned migration packet, target-specific authorization, safety evidence, and recovery posture.
 
 > [!WARNING]
 > `migrations/rollback/` is the engineering-recovery record lane for migrations. It is not a backup store, release rollback-card home, correction register, incident workspace, or publication authority. The current `rollback-drill` workflow is a readiness inspection that explicitly holds; it is not proof that migration rollback or release rollback was simulated.
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#current-bounded-topology) · [Routing](#migration-classification-and-lane-routing) · [Packet](#minimum-migration-packet) · [Evidence](#migration-evidence-ladder) · [States](#migration-work-state-model) · [Identity](#deterministic-identity-ordering-and-pairing) · [Coordination](#cross-lane-coordination) · [Compatibility](#compatibility-adoption-and-deprecation) · [Execution](#preflight-dry-run-canary-execution-and-post-checks) · [Recovery](#recovery-and-forward-fix-contract) · [Workflows](#current-workflow-boundary) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Task contract](#repository-implementation-task-contract) · [Closure](#dependency-closure-and-review-boundary) · [Delivery](#staged-admission-and-delivery) · [Topology](#current-bounded-topology) · [Routing](#migration-classification-and-lane-routing) · [Packet](#minimum-migration-packet) · [Evidence](#migration-evidence-ladder) · [States](#migration-work-state-model) · [Identity](#deterministic-identity-ordering-and-pairing) · [Coordination](#cross-lane-coordination) · [Compatibility](#compatibility-adoption-and-deprecation) · [Execution](#preflight-dry-run-canary-execution-and-post-checks) · [Recovery](#recovery-and-forward-fix-contract) · [Workflows](#current-workflow-boundary) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
 
 ---
 
@@ -143,16 +154,19 @@ A migration may support a governed transition. It is not itself lifecycle promot
 
 **Canonical responsibility root for migration mechanics, coordinated adoption, execution evidence, and engineering recovery planning; subordinate to the authorities that define meaning, shape, admissibility, evidence, lifecycle state, runtime behavior, and release.**
 
+ADR-0029 accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) as the single writable human placement authority. The document's embedded `PROPOSED_FOR_ADOPTION` label is retained as part of the adopted byte identity; the accepted ADR supplies the effective adoption decision.
+
 | Question | Controlling authority | `migrations/` relationship |
 |---|---|---|
-| Where migration materials belong | Directory Rules and accepted placement ADRs | Owns migration mechanics under the five lanes |
+| Where migration materials belong | Accepted Directory Rules and placement ADRs | Owns migration mechanics under the five lanes |
 | What an object means | [`contracts/`](../contracts/README.md) | References semantic authority; does not redefine it |
 | What machine shape is valid | [`schemas/`](../schemas/README.md) | Coordinates shape transitions; canonical schemas remain under `schemas/` |
 | What policy permits | [`policy/`](../policy/README.md) | Carries policy-impact references; does not make policy decisions |
 | What source or evidence supports a remap | Source registry, `EvidenceRef`, `EvidenceBundle`, receipts, and proofs | Preserves support and records transforms; does not manufacture evidence |
 | Which lifecycle phase owns a payload | [`data/`](../data/README.md) | Migrates state without replacing lifecycle ownership |
 | How runtime behavior changes | Accepted application, package, runtime, and pipeline roots | Coordinates rollout; does not own runtime implementation |
-| How a migration is executed | Selected runner, pinned payload, target environment, runbook, and authorization | Records execution contract and receipts |
+| How repository work is authored and delivered | Current scoped user instruction, path-scoped rules, accepted doctrine, and repository controls | Allows feature-branch implementation and review delivery within the requested scope |
+| How a migration is executed | Selected runner, pinned payload, target environment, runbook, and target-specific authorization | Records execution contract and receipts; repository delivery alone is insufficient |
 | How engineering recovery works | [`migrations/rollback/`](./rollback/README.md) plus applicable backup/runbook evidence | Requires paired recovery posture |
 | How public release rollback or correction works | [`release/`](../release/README.md), release rollback cards, correction and withdrawal records | References release actions; cannot authorize them |
 | Whether a release is approved | Release authority and governed promotion records | Declares impact only |
@@ -163,8 +177,10 @@ A migration may support a governed transition. It is not itself lifecycle promot
 `migrations/` must not collapse:
 
 - migration mechanics into semantic or schema authority;
+- repository implementation authority into target execution authority;
 - a script parse into target compatibility;
 - a dry run into production execution;
+- a branch, commit, pull request, merge, or green check into an applied migration;
 - a migration receipt into release approval;
 - a rollback document into a rehearsed recovery path;
 - a backup reference into proof that a restore is possible;
@@ -173,7 +189,7 @@ A migration may support a governed transition. It is not itself lifecycle promot
 - a derived rebuild into canonical truth;
 - a workflow hold into an implemented migration system;
 - CODEOWNERS routing into stewardship or approval;
-- a merged PR into an applied migration.
+- documentation quality into operational maturity.
 
 Public clients and normal UI surfaces continue to use governed APIs and released artifacts. They do not read migration packets, internal stores, or canonical state directly.
 
@@ -183,40 +199,38 @@ Public clients and normal UI surfaces continue to use governed APIs and released
 
 | Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| Root README | v1.1 exists at the same path | **CONFIRMED — documentation** |
-| `database/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; engine, runner, payloads, and execution unestablished** |
-| `schema/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; configured validation surface exists; migration adoption unestablished** |
-| `data/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; runner, payloads, and execution unestablished** |
-| `graph/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; graph store, query language, runner, and payloads unestablished** |
-| `rollback/` lane | Repository-grounded v1.1 README | **CONFIRMED — documented; pairing, rehearsal, backup capability, and execution unverified** |
+| Directory Rules authority | ADR-0029 is accepted and pins Directory Rules v2 | **CONFIRMED — current placement authority** |
+| Root README | v1.2 exists at the same path at the pinned base | **CONFIRMED — documentation; this change proposes v1.3** |
+| `database/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; engine, runner, payload, target, and execution unestablished** |
+| `schema/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; configured validation exists outside the lane; migration adoption unestablished** |
+| `data/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; runner, payload, target dataset, and execution unestablished** |
+| `graph/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; graph store, query language, runner, target, and execution unestablished** |
+| `rollback/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; pairing, rehearsal, backup capability, and execution unverified** |
+| Recursive `migrations/` inventory | Eleven paths at the pinned base | **CONFIRMED — complete repository-root inventory for this snapshot** |
 | Schema-validation workflow | Parses and meta-validates schemas, checks configured fixture families, and runs selected schema/contract tests | **CONFIRMED bounded machine-shape validation; not migration adoption or execution proof** |
-| Rollback-drill workflow | Inspects release rollback readiness and asserts known placeholders/holds | **CONFIRMED readiness hold; no rollback simulated** |
-| Concrete migration payloads | Not established in bounded search | **UNKNOWN / NEEDS VERIFICATION** |
+| Rollback-drill workflow | Inspects rollback readiness and asserts known placeholders/holds | **CONFIRMED readiness hold; no rollback simulated** |
+| Concrete executable migration payloads | Five placeholder stubs are the only non-README lane files | **CONFIRMED absent from this root at the pinned base** |
 | Canonical migration runner | Not established | **UNKNOWN** |
 | Active database or graph engines | Not inspected or established | **UNKNOWN** |
 | Applied migration/version ledger | Not established | **NEEDS VERIFICATION** |
 | Machine-readable migration register | Not established | **NEEDS VERIFICATION** |
-| One-to-one migration/recovery pairing | Required by doctrine; coverage not recursively verified | **NEEDS VERIFICATION** |
+| One-to-one migration/recovery pairing | Required by doctrine; no concrete migration packet exists to pair | **NEEDS VERIFICATION before first executable payload** |
 | Same-PR pairing enforcement | Not established | **NEEDS VERIFICATION** |
 | Backups, snapshots, restore, or point-in-time recovery | Not inspected | **UNKNOWN** |
 | Producer and consumer adoption ledger | Not established | **NEEDS VERIFICATION** |
 | Dedicated migration CI | No cross-lane migration packet validator was established | **NEEDS VERIFICATION** |
 | Recovery rehearsal history | Not established | **UNKNOWN** |
-| Production execution and recovery history | Not inspected | **UNKNOWN** |
-| GitHub routing | Default CODEOWNERS route resolves to `@bartytime4life` | **CONFIRMED routing; stewardship and approval unverified** |
-| Release or publication authority | Not owned by this root | **DENIED by boundary** |
+| Production execution and recovery history | Not inspected or established | **UNKNOWN** |
 
-### Truth labels used here
+### Truth labels and work states are separate
 
-| Label | Meaning |
-|---|---|
-| `CONFIRMED` | Verified from current repository content, workflows, tests, logs, or generated artifacts inspected for this update |
-| `PROPOSED` | Design, packet field, state, workflow, or future contract not established as current implementation |
-| `UNKNOWN` | Available evidence does not support a stronger conclusion |
-| `NEEDS VERIFICATION` | A concrete check exists but is not closed strongly enough to act as fact |
-| `CONFLICTED` | Two authority surfaces or implementation and doctrine disagree |
+- `CONFIRMED`, `PROPOSED`, `UNKNOWN`, and `NEEDS VERIFICATION` describe evidence confidence.
+- Migration work states describe where a migration packet is in its governed process.
+- Validation outcomes describe a named check.
+- Repository delivery states describe whether bytes and review surfaces exist.
+- Policy, release, correction, and publication states remain separate authorities.
 
-The current root is **documentation-mature relative to implementation evidence**. The five lanes now describe strong governed contracts, but that documentation must not be presented as a functioning migration platform.
+Do not substitute one category for another.
 
 ## What belongs here
 
@@ -273,6 +287,7 @@ A migration packet may consume the following only when their identity and author
 
 | Input | Why it is needed | Minimum pinning |
 |---|---|---|
+| Current implementation task | Establishes the repository outcome and permitted delivery ceiling | Task ID, user request, repository, immutable base, writable manifest, acceptance criteria, delivery target |
 | Accepted ADR or explicit scoped decision | Establishes why the architecture or compatibility transition is permitted | ADR ID and accepted revision, or issue/decision reference |
 | Semantic contract | Defines intended meaning and invariants | Path, version, commit, and digest where material |
 | Machine schema | Defines intended shape | `$id`, path, version, commit, and digest |
@@ -291,7 +306,7 @@ Inputs must be commit-, version-, hash-, release-, ledger-, or environment-ident
 
 ## Outputs
 
-A migration packet may produce:
+A migration repository slice may produce:
 
 - reviewed migration and coordination plans;
 - pinned migration payloads and checksums;
@@ -302,7 +317,8 @@ A migration packet may produce:
 - rollback, disablement, restore-coordination, compensation, or forward-fix records;
 - deprecation, drift, correction, and documentation updates;
 - references to release-impact, incident, or security review;
-- residual-risk and follow-up registers.
+- residual-risk and follow-up registers;
+- a verified feature branch and draft pull request for repository review.
 
 ### Output claim boundaries
 
@@ -319,27 +335,41 @@ A migration packet may produce:
 | Adoption record | Named producers and consumers were observed at declared revisions | Every downstream consumer migrated |
 | Recovery record | Recovery posture and instructions exist | Recovery was rehearsed, executed, or successful |
 | Recovery receipt | A named recovery action completed and passed named checks | Release rollback or public correction unless release records also exist |
-| Git commit / PR | Repository bytes changed | Migration applied, adopted, approved, released, or published |
+| Git branch / commit / pull request | Repository bytes and a review surface exist | Migration applied, adopted, approved, released, or published |
+| Passing hosted CI | Named repository checks passed against a head revision | Human review, merge, target execution, release, deployment, promotion, or publication |
 
 `migrations/` never publishes KFM data by itself.
 
 ## Validation
 
-Validation is **migration-class-, target-, and evidence-grade-specific**. A single generic green check is insufficient.
+Validation is **migration-class-, target-, evidence-grade-, and delivery-stage-specific**. A single generic green check is insufficient.
+
+### Validation classes for repository work
+
+| Class | Meaning | Completion effect |
+|---|---|---|
+| `REQUIRED_CHANGED_AREA` | Repository-native checks for changed Markdown, code, contracts, schemas, fixtures, tests, generators, and direct dependencies | Must pass before `READY_PR`; normally pass before push |
+| `REQUIRED_SAFETY` | Secret, rights, sensitivity, policy, destructive-change, workflow, and migration-execution boundary checks | Must pass before affected bytes leave the workspace |
+| `REQUIRED_DELIVERY` | Branch, commit parentage, bytes, diff, changed-path, and pull-request identity checks | Must pass for claimed remote delivery |
+| `HOSTED_CI` | Required or informative server-side checks | May be `PENDING` on a draft PR; must pass before `READY_PR` when required |
+| `OBSERVATIONAL` | External links, optional integrations, unrelated existing status, and unavailable target environments | May remain disclosed as `PENDING`, `UNKNOWN`, `NOT_RUN`, or `NOT_APPLICABLE` |
+
+Repository criterion states are `PASS`, `FAIL`, `PENDING`, `NOT_RUN`, `NOT_APPLICABLE`, and `UNKNOWN`. Migration execution checks may additionally use `HOLD` and `ERROR` where the operation cannot safely proceed or be evaluated.
 
 ### Required packet checks
 
 Every consequential migration should verify:
 
-- correct lane placement and Directory Rules basis;
+- correct lane placement and accepted Directory Rules basis;
 - stable migration and recovery identities;
-- immutable base and target state;
+- immutable repository base plus immutable target state;
+- frozen writable path manifest and direct dependency closure;
 - pinned payload paths and digests;
 - affected object and environment inventory;
 - controlling contract, schema, policy, evidence, lifecycle, and release references;
 - dependency, concurrency, and rollout order;
 - compatibility and adoption class;
-- rights, sensitivity, living-person, DNA, archaeology, rare-species, infrastructure, and restricted-geometry posture where applicable;
+- rights, sensitivity, living-person, DNA, archaeology, rare-species, infrastructure, sovereignty, and restricted-geometry posture where applicable;
 - preconditions, failure conditions, abort thresholds, and post-checks;
 - secret and restricted-content absence;
 - paired rollback, disablement, restore, compensation, or forward-fix posture;
@@ -358,9 +388,7 @@ Every consequential migration should verify:
 | Recovery | Applicability, prerequisites, reversal/disablement/restore/compensation behavior, rehearsal or explicit gap, post-recovery invariants |
 | Coordinated | All applicable lane checks plus dependency, cutover, compatibility-window, and failure-isolation evidence |
 
-### Validation outcomes
-
-Use finite outcomes rather than ambiguous prose:
+### Migration validation outcomes
 
 | Outcome | Meaning |
 |---|---|
@@ -371,7 +399,7 @@ Use finite outcomes rather than ambiguous prose:
 | `NOT_RUN` | Check was not executed; the migration cannot inherit a passing claim from other checks |
 | `ERROR` | The validation mechanism could not determine a result |
 
-A check marked `NOT_RUN`, `HOLD`, or `ERROR` remains visible. It must not be silently converted into `PASS`.
+A check marked `NOT_RUN`, `HOLD`, `ERROR`, `PENDING`, or `UNKNOWN` remains visible. It must not be silently converted into `PASS`.
 
 ### Current repository boundary
 
@@ -380,6 +408,7 @@ The repository has bounded validation and readiness workflows, but no verified c
 Until those surfaces exist and are verified:
 
 - do not advertise a canonical migration command;
+- do not execute any `0001_init.placeholder` file;
 - do not use the schema-validation workflow as proof that schema migration adoption completed;
 - do not use the rollback-drill readiness workflow as proof that any rollback was simulated;
 - record lane-specific commands and versions inside each migration packet;
@@ -429,8 +458,9 @@ CODEOWNERS routing is not proof that the required review occurred. For material 
 | [`../release/rollback_cards/`](../release/rollback_cards/README.md) | Release-facing rollback review aids; distinct from migration recovery |
 | [`../docs/runbooks/`](../docs/runbooks/README.md) | Operator procedures and drills |
 | [`../docs/governance/SEPARATION_OF_DUTIES.md`](../docs/governance/SEPARATION_OF_DUTIES.md) | Review and duty-separation guidance |
+| [`../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted Directory Rules v2 adoption decision |
 | [`../.github/workflows/schema-validation.yml`](../.github/workflows/schema-validation.yml) | Bounded schema/fixture/test validation |
-| [`../.github/workflows/rollback-drill.yml`](../.github/workflows/rollback-drill.yml) | Readiness hold for release rollback surfaces; no rollback simulation |
+| [`../.github/workflows/rollback-drill.yml`](../.github/workflows/rollback-drill.yml) | Readiness hold for rollback surfaces; no migration rollback simulation |
 | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | GitHub review routing only |
 
 ## ADRs
@@ -450,47 +480,210 @@ A migration does not always require an ADR. An ADR is required when the transiti
 
 A migration record may implement an accepted decision. It cannot make its own proposed ADR accepted.
 
+This README update is a same-path documentation change. It does not create a path, alter responsibility ownership, change normative policy, standardize machine shape, or authorize migration execution, so it does not require a new ADR.
+
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-24 |
-| Review status | Repository-grounded v1.2 documentation update |
-| Current maturity | Five v1.1 documented lanes; bounded schema validation; rollback readiness hold; payloads, runner, applied ledger, pairing coverage, rehearsals, and production history unestablished |
+| Last reviewed | 2026-08-09 UTC |
+| Review status | Repository-grounded v1.3 documentation modernization |
+| Base | `main@8f26a3ed8d2fbc2f40fecf722177aeae2cb6297a` |
+| Placement authority | Directory Rules v2 accepted by ADR-0029 |
+| Current maturity | Five v1.1 documented lanes; five explicit placeholder stubs; bounded schema validation; rollback readiness hold; payloads, runner, applied ledger, pairing enforcement, rehearsals, and production history unestablished |
 | Next review trigger | First concrete migration payload, runner selection, machine migration register, applied ledger, verified same-PR pairing, recovery rehearsal, destructive transition, or public-impacting migration |
 
 ---
 
+## Repository implementation task contract
+
+A direct current request to build, update, fix, create, migrate, push, or open a pull request activates scoped repository implementation. Before the first commit, record the task contract below. This contract governs **repository authoring and delivery**. It does not replace the target-specific migration packet required before a database, schema, data, graph, or recovery action executes.
+
+| Field | Required content |
+|---|---|
+| `task_id` | Stable scope-derived or user-supplied identifier |
+| `goal` | Observable outcome in one or two sentences |
+| `repository` | Exact host and owner/repository |
+| `base` | Ref plus immutable commit/tree |
+| `profile` | Narrowest profile that can satisfy the request |
+| `operation` | Canonical operation such as `MODERNIZE_MARKDOWN`, `IMPLEMENT_REPOSITORY_SLICE`, or `MIGRATE_STRUCTURE` |
+| `user_intent` | `META`, `READ_ONLY`, `DRAFT`, `IMPLEMENT`, or `IMPLEMENT_AND_READY` |
+| `authority_reference` | Normally `CURRENT_USER_REQUEST`, bounded by enforced controls and accepted doctrine |
+| `delivery_target` | `ARTIFACT_ONLY`, `WORKSPACE_PATCH`, `PUSHED_BRANCH`, `DRAFT_PR`, or explicitly authorized `READY_PR` |
+| `target_selectors` | Paths, issue, component, criteria, or discovery selector |
+| `writable_manifest` | Exact intended paths before commit; identify generated outputs separately |
+| `in_scope` | Required implementation and direct dependency closure |
+| `non_goals` | Explicit exclusions, including execution, release, deployment, promotion, publication, and settings changes unless separately governed |
+| `acceptance_criteria` | Observable functional, structural, documentation, and safety outcomes |
+| `validation_plan` | Changed-area, safety, delivery, hosted, and observational checks |
+| `stop_conditions` | Concrete conditions requiring narrowing, blocking, or a user/steward decision |
+| `rollback` | Branch abandonment, revert, forward-fix, compatibility, and correction boundary |
+
+### Repository delivery states
+
+| Delivery state | What it proves | What it never proves by itself |
+|---|---|---|
+| `ARTIFACT_ONLY` | Complete uncommitted artifact or patch exists | Repository mutation or target execution |
+| `WORKSPACE_PATCH` | Local repository state contains the reviewed change | Remote branch, PR, target execution, or release |
+| `PUSHED_BRANCH` | Remote feature branch and commits exist | Human review, merge, migration execution, or publication |
+| `DRAFT_PR` | Open draft review surface exists | Required hosted CI, approval, merge, migration execution, release, or publication |
+| `READY_PR` | Explicitly requested ready-for-review state and required checks passed | Approval, merge, target execution, release, or publication |
+
+The autonomous ceiling for ordinary repository work is one verified `DRAFT_PR`. A current explicit request may raise the ceiling to `READY_PR`. No repository-delivery state authorizes a live migration.
+
+## Dependency closure and review boundary
+
+The smallest valid repository slice is the smallest set that satisfies one observable acceptance boundary without leaving changed behavior undocumented, unvalidated, schema-inconsistent, generator-inconsistent, or operationally broken.
+
+Direct dependency closure may include:
+
+- canonical source plus synchronized generated outputs;
+- semantic contract, machine schema, policy, validator, fixtures, and tests that describe the same changed behavior;
+- migration plan, paired recovery record, compatibility matrix, and rollout notes;
+- navigation, indexes, stable anchors, and direct references;
+- configuration, workflow, or manifest changes required to run the changed-area checks;
+- repository-required authoring receipts when current doctrine requires them.
+
+It does not include adjacent cleanup merely because budget remains.
+
+### Review-boundary rule
+
+One slice should have:
+
+1. one observable outcome;
+2. one primary responsibility owner;
+3. one coherent validation story;
+4. one rollback boundary;
+5. a frozen writable manifest before commit.
+
+Split work when outcomes are independent, rollback boundaries are incompatible, responsibility roots are unrelated, or a governance proposal must be adopted before dependent implementation. A confirmed required consumer must be included, isolated into a dependency-ordered pull request, or named as a blocker. Unknown optional consumers become disclosed follow-up work.
+
+### Change classes
+
+| Class | Meaning | Migration implication |
+|---|---|---|
+| `EDITORIAL` | Wording or presentation only | No target state change |
+| `ADDITIVE` | Backward-compatible capability or documentation | Preserve compatibility and add tests where behavior changes |
+| `BEHAVIORAL` | Current behavior changes | Require representative positive/negative validation and recovery analysis |
+| `STRUCTURAL` | Files, ownership, generation, or dependency topology change | Apply full Directory Rules and migration review |
+| `AUTHORITY_CHANGING` | Governance, policy meaning, normative contracts, or responsibility boundaries change | Isolate the governance decision; do not use an unaccepted change to authorize dependents |
+
+## Staged admission and delivery
+
+Admission is proportional to the next mutation stage.
+
+### Stage A — discovery and drafting
+
+- resolve repository, current base, target role, and governing instructions;
+- read the complete target and direct governing evidence;
+- classify canonical, generated, mirror, compatibility, or proposed status;
+- inspect active branches and pull requests for overlap;
+- define goal, acceptance criteria, non-goals, validation, and rollback.
+
+### Stage B — local repository mutation
+
+Before editing tracked state:
+
+- pin the base commit and target blob;
+- freeze the initial writable manifest;
+- preserve unrelated work, modes, line endings, stable anchors, and document identity;
+- identify secrets, rights, sensitivity, destructive, workflow, and external-side-effect risks;
+- establish a safe abandonment or restore path.
+
+### Stage C — commit and push
+
+Before commit or push:
+
+- re-read target blobs if main or the task branch moved;
+- reconcile active pull-request and branch overlap;
+- complete required changed-area and safety validation, or prominently disclose a permitted draft-only environmental limitation;
+- inspect triggered workflows for deployment, release, publication, elevated permission, secret, or self-hosted-execution risk;
+- confirm the exact diff and absence of unrelated changes;
+- use a feature branch and non-force push.
+
+### Stage D — pull-request delivery
+
+Before declaring delivery complete:
+
+- verify branch head and parentage;
+- verify the complete base-to-head diff and exact changed paths;
+- read back consequential remote bytes or hashes;
+- verify pull-request base, head, open state, draft/ready state, and task identity;
+- preserve unrelated human metadata when updating an existing pull request;
+- report hosted checks as `PASS`, `FAIL`, `PENDING`, `NOT_RUN`, `NOT_APPLICABLE`, or `UNKNOWN`.
+
+### Concurrency and overlap
+
+- use one writer per branch and overlapping path claim;
+- rebase or repin only when drift intersects target bytes, governing evidence, direct dependencies, generator inputs, navigation, or validation configuration;
+- reuse a verified task pull request only when its scope and ownership match;
+- stop on unresolved same-byte conflict, contradictory semantic authority, or active human edits that cannot be preserved;
+- never use last-writer-wins or force-push.
+
+### Hard blockers
+
+Block only the affected stage or slice when there is a concrete failure such as:
+
+- unresolved repository identity or remote mapping;
+- absent authority for the requested mutation;
+- a generated or mirrored target with no writable canonical source;
+- placement that creates parallel authority;
+- unresolved same-byte or semantic conflict;
+- likely secret, privacy, rights, sensitivity, or harmful-precision exposure;
+- unbounded or irreversible destructive action;
+- untrusted code requiring secrets, elevated permission, or unrestricted network;
+- triggered automation that deploys, releases, promotes, publishes, mutates administration, or exposes secrets;
+- inability to validate or recover a high-risk behavioral or authority-changing change.
+
+An `UNKNOWN` value blocks only when the missing fact is necessary for the next action to be safe or materially correct.
+
+### Terminal boundaries
+
+Normal repository implementation never infers or performs:
+
+- direct default-branch writes;
+- force-push or shared-history rewrite;
+- pull-request approval, merge, or auto-merge;
+- target migration execution against a live or shared environment;
+- release, deployment, promotion, publication, or cache/alias mutation;
+- repository visibility, ruleset, branch-protection, environment, secret, app, permission, or settings changes;
+- activation of live connectors or external publishing systems.
+
 ## Current bounded topology
 
-The confirmed documentation topology is:
+The complete pinned-base topology is:
 
 ```text
 migrations/
 ├── README.md
 ├── database/
+│   ├── 0001_init.placeholder
 │   └── README.md        # v1.1
 ├── schema/
+│   ├── 0001_init.placeholder
 │   └── README.md        # v1.1
 ├── data/
+│   ├── 0001_init.placeholder
 │   └── README.md        # v1.1
 ├── graph/
+│   ├── 0001_init.placeholder
 │   └── README.md        # v1.1
 └── rollback/
+    ├── 0001_init.placeholder
     └── README.md        # v1.1
 ```
 
-This is a **bounded named-path inventory**, not a recursive tree attestation. The presence of the five lane contracts does not prove executable payloads exist beneath them.
+The five placeholder files are explicit greenfield markers. They are not executable payloads, ordering authority, applied-state evidence, or proof that a runner exists.
 
 ### Lane maturity matrix
 
 | Lane | Confirmed documentation | Confirmed implementation evidence | Unestablished or unverified |
 |---|---|---|---|
-| `database/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Engine, version, runner, objects, payloads, targets, backups, executions |
-| `schema/` | v1.1 repository-grounded contract | Configured schema-validation surface outside this lane | Concrete migration payloads, adoption ledger, generated clients, compatibility retirement, release adoption |
-| `data/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Runner, payloads, target datasets, executions, restores |
-| `graph/` | v1.1 repository-grounded contract | None beyond documentation in bounded inspection | Graph store, query language, runner, payloads, targets, executions |
-| `rollback/` | v1.1 repository-grounded recovery contract | Readiness workflow exists outside this lane but does not simulate recovery | Pairing coverage, runner, backup capability, rehearsals, executions, production outcomes |
+| `database/` | v1.1 repository-grounded contract | One non-executable placeholder stub | Engine, version, runner, objects, payloads, targets, backups, executions |
+| `schema/` | v1.1 repository-grounded contract | One non-executable placeholder; configured schema-validation surface outside this lane | Concrete migration payloads, adoption ledger, generated clients, compatibility retirement, release adoption |
+| `data/` | v1.1 repository-grounded contract | One non-executable placeholder stub | Runner, payloads, target datasets, executions, restores |
+| `graph/` | v1.1 repository-grounded contract | One non-executable placeholder stub | Graph store, query language, runner, payloads, targets, executions |
+| `rollback/` | v1.1 repository-grounded recovery contract | One non-executable placeholder; readiness workflow outside this lane does not simulate recovery | Pairing coverage, runner, backup capability, rehearsals, executions, production outcomes |
 
 ## Migration classification and lane routing
 
@@ -519,7 +712,7 @@ Do not place all coordinated work into one lane merely because one tool can exec
 
 ## Minimum migration packet
 
-A shared-state or release-relevant migration should have a complete packet before execution.
+A shared-state or release-relevant migration should have a complete packet before target execution.
 
 ```yaml
 migration_id: mig-<stable-id>
@@ -529,7 +722,18 @@ primary_lane: database | schema | data | graph
 coordination_id: null
 owner: NEEDS_VERIFICATION
 
+repository_change:
+  task_id: <stable-task-id>
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: <sha>
+  branch: <feature-branch>
+  commit: null
+  pull_request: null
+  delivery_target: DRAFT_PR
+  writable_manifest: []
+
 authority:
+  user_request_ref: CURRENT_USER_REQUEST
   decision_refs: []
   contract_refs: []
   schema_refs: []
@@ -592,6 +796,11 @@ canary:
   thresholds: []
 
 validation:
+  changed_area: []
+  safety: []
+  delivery: []
+  hosted_ci: []
+  observational: []
   pre_checks: []
   post_checks: []
   negative_checks: []
@@ -629,7 +838,7 @@ follow_up:
   open_risks: []
 ```
 
-This is a **PROPOSED documentation contract**, not a verified repository schema. Standardizing it as machine shape requires an accepted authority decision, a home under `schemas/`, valid and invalid fixtures, tests, validators, compatibility planning, and rollback.
+This is a **PROPOSED documentation contract**, not a verified repository schema. Standardizing it as machine shape requires an accepted authority decision, a canonical home under `schemas/`, valid and invalid fixtures, tests, validators, compatibility planning, and rollback.
 
 ## Migration evidence ladder
 
@@ -653,11 +862,11 @@ A `DOCUMENTED` or `STATIC_VALIDATED` migration must never be described as execut
 
 ## Migration work-state model
 
-Keep work state separate from evidence grade, validation outcome, policy outcome, release state, and truth labels.
+Keep migration work state separate from evidence grade, validation outcome, repository delivery state, policy outcome, release state, and truth labels.
 
 | Work state | Meaning |
 |---|---|
-| `PROPOSED` | Packet exists; execution is not authorized |
+| `PROPOSED` | Packet exists; target execution is not authorized |
 | `DRAFTING` | Scope or packet fields remain incomplete |
 | `REVIEW_READY` | Applicable packet, dependencies, checks, and recovery record are complete |
 | `APPROVED_FOR_TARGET` | Required review and authorization exist for one named target |
@@ -676,7 +885,7 @@ Keep work state separate from evidence grade, validation outcome, policy outcome
 | `SUPERSEDED` | A later governed packet replaces this packet |
 | `CANCELLED` | Execution authorization was withdrawn before completion |
 
-These states are **PROPOSED** until standardized by an accepted contract. They must not be confused with `PASS / FAIL / HOLD`, policy decisions, `ANSWER / ABSTAIN / DENY / ERROR`, release states, or `CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION`.
+These states are **PROPOSED** until standardized by an accepted contract. They must not be confused with repository delivery states, `PASS / FAIL / HOLD`, policy decisions, `ANSWER / ABSTAIN / DENY / ERROR`, release states, or `CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION`.
 
 ## Deterministic identity, ordering, and pairing
 
@@ -810,9 +1019,9 @@ The contract step must not occur until:
 
 ### Preflight
 
-Before mutation, verify:
+Before repository mutation, complete the task-contract and staged-admission checks above. Before target mutation, additionally verify:
 
-- the branch, commit, migration ID, packet digest, and payload digest;
+- the migration ID, packet digest, payload digest, and repository revision;
 - target environment and immutable base-state identity;
 - runner and engine version;
 - required permissions and least privilege;
@@ -907,22 +1116,22 @@ A paired recovery record should include:
 - database, schema, data, graph, runtime, cache, alias, and release impacts;
 - pre- and post-recovery checks;
 - operator, reviewer, and independent verifier requirements;
-- rehearsal evidence or explicit `NOT RUN`;
+- rehearsal evidence or explicit `NOT_RUN`;
 - execution and verification receipts;
 - correction, incident, security, or release handoffs.
 
-### Migration recovery versus release rollback
+### Repository rollback versus migration recovery versus release rollback
 
-| Concern | Migration recovery | Release rollback |
-|---|---|---|
-| Primary home | `migrations/rollback/` | `release/` and release rollback-card/runbook surfaces |
-| Purpose | Restore or compensate internal structure/state after a migration | Withdraw, supersede, or restore governed public release state |
-| Authority | Migration and affected-system governance | Release and correction governance |
-| Typical target | Database, schema, data, graph, or runtime compatibility state | Released artifacts, APIs, layers, aliases, exports, stories, or AI surfaces |
-| Evidence | Recovery packet, runner receipt, post-recovery checks | Release decision, rollback card, manifest, correction/withdrawal records |
-| Publication effect | None by itself | May change public state when approved and executed |
+| Concern | Repository change rollback | Migration recovery | Release rollback |
+|---|---|---|---|
+| Primary home | Feature branch / pull request / Git history | `migrations/rollback/` | `release/` and release rollback-card/runbook surfaces |
+| Purpose | Abandon or revert repository bytes | Restore or compensate internal structure/state after target execution | Withdraw, supersede, or restore governed public release state |
+| Normal pre-merge action | Close or abandon the unmerged branch/PR; remote deletion needs separate authority | Not applicable unless target execution already occurred | Not applicable unless release state changed |
+| Normal post-merge action | Transparent revert or forward-fix PR; never rewrite shared history | Reversal, disablement, restore, compensation, or forward fix with receipts | Governed rollback, correction, withdrawal, alias/cache handling |
+| Evidence | Base/head, commit, diff, validation, PR state | Recovery packet, runner receipt, post-recovery checks | Release decision, rollback card, manifest, correction/withdrawal records |
+| Publication effect | None by itself | None by itself | May change public state when approved and executed |
 
-A migration may require both processes. Completing one does not imply completion of the other.
+One change may require all three processes. Completing one never implies completion of the others.
 
 ## Current workflow boundary
 
@@ -932,9 +1141,9 @@ The current schema workflow:
 
 - parses JSON under `schemas/`;
 - meta-validates `*.schema.json`;
-- requires configured v1 schemas to declare Draft 2020-12 and unique `$id` values;
-- checks six configured fixture-backed validator families;
-- runs the selected schema and contract tests;
+- requires canonical v1 schemas to declare Draft 2020-12 and unique `$id` values;
+- checks eight configured fixture-backed validator families;
+- runs selected schema and contract tests;
 - emits process output and a job summary only.
 
 It does **not**:
@@ -948,27 +1157,44 @@ It does **not**:
 
 The current rollback workflow:
 
-- inspects rollback-card, placeholder engine/helper, test-inventory, and published-alias readiness surfaces;
+- inspects rollback-card, placeholder engine/helper, test-inventory, fixture, validator, and published-alias readiness surfaces;
 - asserts that known placeholders and holds remain explicit;
 - emits inspection output and job summaries only.
 
-It explicitly confirms that:
+It explicitly keeps placeholder and readiness boundaries visible. It does not create a rollback target, execute migration recovery, mutate an alias or cache, issue a release transition, or publish.
 
-- rollback engine/apply helpers remain placeholders;
-- the direct drill lane contains guidance rather than executable tests;
-- proposed RollbackCard schemas remain permissive scaffolds;
-- declared fixtures and validators are absent;
-- no rollback was simulated;
-- no rollback card, receipt, proof, signature, release transition, or publication authority was created.
+Therefore, a passing `rollback-drill` check means **the declared readiness contract passed for that revision**, not that migration recovery or release rollback was simulated.
 
-Therefore, a passing `rollback-drill` check currently means **the readiness hold remains accurately represented**, not that rollback capability exists.
+### Workflow-trigger preflight
+
+Before pushing a migration-related branch, inspect workflows triggered by the changed paths. Ordinary read-only pull-request checks are expected. Block or narrow when a workflow would:
+
+- automatically release, deploy, promote, publish, or execute a target migration;
+- give untrusted code secrets or elevated write permissions;
+- use unsafe `pull_request_target`, `workflow_run`, or unrestricted self-hosted execution;
+- mutate repository administration, settings, environments, or secrets;
+- create external side effects outside the authorized scope.
 
 ## Definition of done
 
-A migration is complete only when every applicable item is closed:
+Repository delivery and migration execution have separate completion criteria.
+
+### Repository change delivery is complete when
+
+- [ ] Repository, immutable base, feature branch, head, and delivery identity are verified.
+- [ ] The exact writable manifest and base-to-head changed paths match the task contract.
+- [ ] Direct dependency closure is complete and no unrelated changes are present.
+- [ ] Changed-area and safety checks pass, or a permitted non-safety draft limitation is explicit.
+- [ ] Consequential remote bytes or hashes match the prepared artifact.
+- [ ] Pull-request base, head, open state, and draft/ready state are verified.
+- [ ] Hosted CI is reported accurately as `PASS`, `FAIL`, `PENDING`, `NOT_RUN`, `NOT_APPLICABLE`, or `UNKNOWN`.
+- [ ] No target execution, merge, release, deployment, promotion, publication, or settings change is falsely claimed.
+- [ ] Repository rollback is clear: abandon before merge; revert or forward-fix after merge.
+
+### A target migration is operationally complete only when
 
 - [ ] Stable migration identity, ordering, and supersession lineage are recorded.
-- [ ] Primary lane and Directory Rules basis are correct.
+- [ ] Primary lane and accepted Directory Rules basis are correct.
 - [ ] Coordinated lane records exist where responsibilities are materially distinct.
 - [ ] Controlling contracts, schemas, policies, evidence, lifecycle, and release references are pinned.
 - [ ] Immutable base and target states are recorded.
@@ -990,36 +1216,47 @@ A migration is complete only when every applicable item is closed:
 
 ## No-loss ledger
 
-| Prior material | v1.2 disposition |
+| Prior material | v1.3 disposition |
 |---|---|
 | Canonical migration-root purpose | Preserved and expanded |
 | Lifecycle invariant | Preserved |
-| Five migration lanes | Preserved; all five v1.1 lane contracts now confirmed |
-| Rollback-entry requirement | Preserved; pairing coverage remains explicitly unverified |
-| Database/schema/data/graph distinctions | Preserved and aligned with merged lane READMEs |
-| Sensitive-domain fail-closed posture | Preserved and expanded |
-| Inputs and outputs | Preserved with pinning and claim boundaries |
-| Validation checklist | Expanded with finite outcomes and evidence grades |
-| Review burden | Expanded by authority, sensitivity, recoverability, and coordination |
-| Migration packet | Preserved and extended |
-| Work-state model | Preserved and separated from evidence grades and validation outcomes |
-| Compatibility and adoption | Preserved and expanded with adoption states |
-| Recovery classes | Preserved and aligned with migration versus release separation |
-| Definition of done | Preserved and expanded |
-| Open verification | Preserved and updated |
-| Workflow posture | Corrected: bounded schema checks and rollback readiness hold now confirmed |
-| Owner placeholders | Remain replaced by verified GitHub routing plus stewardship uncertainty |
+| Five migration lanes | Preserved; all five v1.1 lane contracts remain confirmed |
+| Placeholder boundary | Newly surfaced from complete pinned-base inventory; all five stubs remain non-executable |
+| Directory Rules authority | Updated to ADR-0029 accepted v2 posture |
+| Rollback-entry requirement | Preserved; pairing enforcement remains explicitly unverified |
+| Database/schema/data/graph distinctions | Preserved and aligned with lane READMEs |
+| Sensitive-domain fail-closed posture | Preserved |
+| Inputs and outputs | Preserved with repository task and delivery boundaries |
+| Validation checklist | Preserved and expanded with v6 validation classes and criterion states |
+| Review burden | Preserved by authority, sensitivity, recoverability, and coordination |
+| Migration packet | Preserved and extended with repository-change metadata |
+| Work-state model | Preserved and separated from delivery, evidence, validation, policy, and release state |
+| Compatibility and adoption | Preserved |
+| Recovery classes | Preserved and expanded to distinguish repository rollback, migration recovery, and release rollback |
+| Definition of done | Split into repository delivery and operational migration completion |
+| Open verification | Preserved; recursive inventory item closed with evidence |
+| Workflow posture | Refreshed: eight configured schema families and rollback readiness behavior confirmed |
+| Owner uncertainty | Preserved; CODEOWNERS routing is not stewardship or approval proof |
 | Publication boundary | Preserved and sharpened |
+| Stable headings and legacy anchors | Preserved |
 
 ## Open verification register
 
-- [ ] Obtain a recursive tracked inventory of `migrations/`.
-- [ ] Confirm whether executable migration payloads exist beyond the documented lane contracts.
+### Closed in the v1.3 evidence snapshot
+
+- [x] Full recursive `migrations/` inventory: eleven paths.
+- [x] Lane contents: each lane contains one v1.1 README and one explicit `0001_init.placeholder` stub.
+- [x] Concrete executable payload boundary: none present in `migrations/` at the pinned base.
+- [x] Current placement authority: Directory Rules v2 accepted by ADR-0029.
+- [x] Open pull-request overlap on `migrations/README.md`: none at inspection.
+
+### Remaining
+
 - [ ] Select and document a database migration runner, or explicitly declare no database runner.
 - [ ] Confirm schema, data, and graph migration executor conventions.
 - [ ] Define canonical stable migration and recovery ID grammar.
 - [ ] Define dependency and filename ordering rules.
-- [ ] Verify one-to-one migration-to-recovery pairing across all lanes.
+- [ ] Verify one-to-one migration-to-recovery pairing after the first concrete payload exists.
 - [ ] Decide whether paired recovery records must land in the same pull request.
 - [ ] Define a machine-readable migration packet schema if justified.
 - [ ] Define the canonical migration register or applied-version ledger and its owning responsibility root.
@@ -1036,7 +1273,7 @@ A migration is complete only when every applicable item is closed:
 - [ ] Define database permission and least-privilege migration checks.
 - [ ] Define structured migration execution, adoption, verification, and recovery receipt homes and schemas.
 - [ ] Define recovery rehearsal requirements by migration and risk class.
-- [ ] Determine whether the current rollback-drill workflow should remain release-readiness-only or gain a separate migration-recovery workflow.
+- [ ] Determine whether the current rollback-drill workflow should remain readiness-only or gain a separate migration-recovery workflow.
 - [ ] Confirm release-review triggers for public API, MapLibre, tiles, exports, search, stories, AI surfaces, and published artifacts.
 - [ ] Confirm security and incident handoff for failed, destructive, or exposure-relevant migrations.
 - [ ] Confirm accountable stewards and independent approval requirements.
@@ -1046,6 +1283,18 @@ A migration is complete only when every applicable item is closed:
 - [ ] Revisit this README after the first concrete migration packet, rehearsal, or applied-ledger entry is implemented.
 
 ## Changelog
+
+### v1.3 — 2026-08-09
+
+- Regrounded the README at `main@8f26a3ed8d2fbc2f40fecf722177aeae2cb6297a`.
+- Confirmed the complete eleven-path `migrations/` inventory and five non-executable placeholder stubs.
+- Updated placement authority to the accepted Directory Rules v2 decision in ADR-0029.
+- Adopted the v6 implementation-forward repository task contract while preserving the separate target-execution authority boundary.
+- Added dependency-closure, review-boundary, staged-admission, concurrency, workflow-preflight, delivery-validation, remote-read-back, and terminal-boundary guidance.
+- Added repository delivery states and separated them from migration work state, evidence grade, validation outcome, policy, release, and publication state.
+- Extended the minimum migration packet with repository-change and validation-class fields.
+- Split definition of done into repository delivery and operational migration completion.
+- Preserved the same path, H1, stable H2 headings, legacy anchors, lifecycle law, five-lane model, recovery distinctions, and non-publication boundary.
 
 ### v1.2 — 2026-07-24
 
