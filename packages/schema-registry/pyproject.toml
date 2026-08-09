@@ -1,4 +1,30 @@
-# packages/schema-registry pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-schema-registry"
-version = "0.0.0"
+version = "0.1.0"
+description = "Deterministic, no-network JSON Schema registry helpers for KFM validators."
+requires-python = ">=3.11"
+dependencies = [
+    "referencing>=0.36.2,<0.38",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=9.1.1,<10",
+]
+
+[project.scripts]
+kfm-schema-registry = "schema_registry.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/schema_registry"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/IMPLEMENTATION.md",
+    "/pyproject.toml",
+    "/src/schema_registry",
+]
