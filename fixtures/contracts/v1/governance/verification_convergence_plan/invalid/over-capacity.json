@@ -1,0 +1,80 @@
+{
+  "profile": "kfm.governance.verification-convergence-plan.v1",
+  "schema_version": "1.0.0",
+  "plan_id": "kfm:verification-convergence:946be5802cf0ebd9",
+  "generated_at": "2026-08-09T00:20:00Z",
+  "capacity": 1,
+  "satisfied_dependency_ids": [
+    "kfm:verification-item:authority-map"
+  ],
+  "candidates": [
+    {
+      "item_id": "kfm:verification-item:authority-map",
+      "priority": "P0",
+      "work_state": "RESOLVED",
+      "research_modes": [
+        "DEC",
+        "REPO"
+      ],
+      "dependencies": [],
+      "blockers": [],
+      "constraint_state": "CLEAR",
+      "selection_reason_codes": [],
+      "defer_reason_codes": [
+        "ALREADY_RESOLVED"
+      ]
+    },
+    {
+      "item_id": "kfm:verification-item:source-rights-ledger",
+      "priority": "P1",
+      "work_state": "OPEN",
+      "research_modes": [
+        "EXT",
+        "STW",
+        "TST"
+      ],
+      "dependencies": [
+        "kfm:verification-item:authority-map"
+      ],
+      "blockers": [],
+      "constraint_state": "RESTRICTED",
+      "selection_reason_codes": [
+        "PRIORITY_ORDER",
+        "DEPENDENCY_CLOSURE",
+        "AUTHORITATIVE_SOURCE_PATH",
+        "MANAGEABLE_RIGHTS_RISK"
+      ],
+      "defer_reason_codes": []
+    },
+    {
+      "item_id": "kfm:verification-item:performance-benchmark",
+      "priority": "P2",
+      "work_state": "OPEN",
+      "research_modes": [
+        "REPO",
+        "TST"
+      ],
+      "dependencies": [],
+      "blockers": [],
+      "constraint_state": "CLEAR",
+      "selection_reason_codes": [
+        "DETERMINISTIC_FIXTURE"
+      ],
+      "defer_reason_codes": []
+    }
+  ],
+  "selected_item_ids": [
+    "kfm:verification-item:source-rights-ledger",
+    "kfm:verification-item:performance-benchmark"
+  ],
+  "deferred_item_ids": [
+    "kfm:verification-item:authority-map"
+  ],
+  "outcome": "READY",
+  "plan_digest": "sha256:946be5802cf0ebd9706e202745c279aadbbd97914d2e47005b13ad5c1b548fd8",
+  "authority_created": false,
+  "repository_mutation_allowed": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

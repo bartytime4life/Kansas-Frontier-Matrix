@@ -1,0 +1,79 @@
+{
+  "profile": "kfm.governance.verification-convergence-plan.v1",
+  "schema_version": "1.0.0",
+  "plan_id": "kfm:verification-convergence:278b563b14890fe1",
+  "generated_at": "2026-08-09T00:20:00Z",
+  "capacity": 2,
+  "satisfied_dependency_ids": [
+    "kfm:verification-item:authority-map"
+  ],
+  "candidates": [
+    {
+      "item_id": "kfm:verification-item:authority-map",
+      "priority": "P0",
+      "work_state": "RESOLVED",
+      "research_modes": [
+        "DEC",
+        "REPO"
+      ],
+      "dependencies": [],
+      "blockers": [],
+      "constraint_state": "CLEAR",
+      "selection_reason_codes": [],
+      "defer_reason_codes": [
+        "ALREADY_RESOLVED"
+      ]
+    },
+    {
+      "item_id": "kfm:verification-item:source-rights-ledger",
+      "priority": "P1",
+      "work_state": "BLOCKED",
+      "research_modes": [
+        "EXT",
+        "STW",
+        "TST"
+      ],
+      "dependencies": [
+        "kfm:verification-item:authority-map"
+      ],
+      "blockers": [
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "constraint_state": "REVIEW_REQUIRED",
+      "selection_reason_codes": [],
+      "defer_reason_codes": [
+        "BLOCKED_BY_STEWARD_REVIEW"
+      ]
+    },
+    {
+      "item_id": "kfm:verification-item:performance-benchmark",
+      "priority": "P2",
+      "work_state": "OPEN",
+      "research_modes": [
+        "REPO",
+        "TST"
+      ],
+      "dependencies": [],
+      "blockers": [],
+      "constraint_state": "CLEAR",
+      "selection_reason_codes": [],
+      "defer_reason_codes": [
+        "CAPACITY_LIMIT",
+        "LOWER_PRIORITY"
+      ]
+    }
+  ],
+  "selected_item_ids": [],
+  "deferred_item_ids": [
+    "kfm:verification-item:authority-map",
+    "kfm:verification-item:source-rights-ledger",
+    "kfm:verification-item:performance-benchmark"
+  ],
+  "outcome": "HOLD",
+  "plan_digest": "sha256:278b563b14890fe1ff62dfb99e221e2e544672235b00238de898e4c3ec4ed8e2",
+  "authority_created": false,
+  "repository_mutation_allowed": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}
