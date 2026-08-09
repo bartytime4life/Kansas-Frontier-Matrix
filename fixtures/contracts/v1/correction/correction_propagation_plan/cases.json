@@ -1,0 +1,507 @@
+{
+  "object_type": "CorrectionPropagationPlanFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "ready": {
+      "object_type": "CorrectionPropagationPlan",
+      "schema_version": "1.0.0",
+      "profile": "kfm.correction-propagation.fixture.v1",
+      "observed_at": "2026-08-08T23:00:00Z",
+      "correction_notice_ref": "kfm:correction:notice:001",
+      "source_release_ref": "kfm:release:source:001",
+      "replacement_release_ref": null,
+      "declared_surface_kinds": [
+        "API_PROJECTION",
+        "CATALOG_RECORD",
+        "TILE_ARTIFACT"
+      ],
+      "entries": [
+        {
+          "surface_kind": "API_PROJECTION",
+          "artifact_ref": "kfm:artifact:api:release-001",
+          "visibility": "PUBLIC",
+          "action": "MARK_STALE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "CATALOG_RECORD",
+          "artifact_ref": "kfm:artifact:catalog:release-001",
+          "visibility": "PUBLIC",
+          "action": "REBUILD",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "TILE_ARTIFACT",
+          "artifact_ref": "kfm:artifact:tiles:release-001",
+          "visibility": "PUBLIC",
+          "action": "INVALIDATE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "mutation_performed": false,
+        "cache_invalidated": false,
+        "alias_repointed": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "history_deleted": false
+      }
+    },
+    "complete": {
+      "object_type": "CorrectionPropagationPlan",
+      "schema_version": "1.0.0",
+      "profile": "kfm.correction-propagation.fixture.v1",
+      "observed_at": "2026-08-08T23:00:00Z",
+      "correction_notice_ref": "kfm:correction:notice:001",
+      "source_release_ref": "kfm:release:source:001",
+      "replacement_release_ref": null,
+      "declared_surface_kinds": [
+        "API_PROJECTION",
+        "CATALOG_RECORD",
+        "TILE_ARTIFACT"
+      ],
+      "entries": [
+        {
+          "surface_kind": "API_PROJECTION",
+          "artifact_ref": "kfm:artifact:api:release-001",
+          "visibility": "PUBLIC",
+          "action": "MARK_STALE",
+          "status": "COMPLETED",
+          "target_release_ref": null,
+          "completion_receipt_ref": "kfm:receipt:completion:001",
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "CATALOG_RECORD",
+          "artifact_ref": "kfm:artifact:catalog:release-001",
+          "visibility": "PUBLIC",
+          "action": "REBUILD",
+          "status": "COMPLETED",
+          "target_release_ref": null,
+          "completion_receipt_ref": "kfm:receipt:completion:002",
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "TILE_ARTIFACT",
+          "artifact_ref": "kfm:artifact:tiles:release-001",
+          "visibility": "PUBLIC",
+          "action": "INVALIDATE",
+          "status": "COMPLETED",
+          "target_release_ref": null,
+          "completion_receipt_ref": "kfm:receipt:completion:003",
+          "updated_at": "2026-08-08T22:00:00Z"
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "mutation_performed": false,
+        "cache_invalidated": false,
+        "alias_repointed": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "history_deleted": false
+      }
+    },
+    "hold": {
+      "object_type": "CorrectionPropagationPlan",
+      "schema_version": "1.0.0",
+      "profile": "kfm.correction-propagation.fixture.v1",
+      "observed_at": "2026-08-08T23:00:00Z",
+      "correction_notice_ref": "kfm:correction:notice:001",
+      "source_release_ref": "kfm:release:source:001",
+      "replacement_release_ref": null,
+      "declared_surface_kinds": [
+        "API_PROJECTION",
+        "CATALOG_RECORD",
+        "TILE_ARTIFACT"
+      ],
+      "entries": [
+        {
+          "surface_kind": "API_PROJECTION",
+          "artifact_ref": "kfm:artifact:api:release-001",
+          "visibility": "PUBLIC",
+          "action": "MARK_STALE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "CATALOG_RECORD",
+          "artifact_ref": "kfm:artifact:catalog:release-001",
+          "visibility": "PUBLIC",
+          "action": "REBUILD",
+          "status": "BLOCKED",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "TILE_ARTIFACT",
+          "artifact_ref": "kfm:artifact:tiles:release-001",
+          "visibility": "PUBLIC",
+          "action": "INVALIDATE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "mutation_performed": false,
+        "cache_invalidated": false,
+        "alias_repointed": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "history_deleted": false
+      }
+    },
+    "error": {
+      "object_type": "CorrectionPropagationPlan",
+      "schema_version": "1.0.0",
+      "profile": "kfm.correction-propagation.fixture.v1",
+      "observed_at": "2026-08-08T23:00:00Z",
+      "correction_notice_ref": "kfm:correction:notice:001",
+      "source_release_ref": "kfm:release:source:001",
+      "replacement_release_ref": null,
+      "declared_surface_kinds": [
+        "API_PROJECTION",
+        "CATALOG_RECORD",
+        "TILE_ARTIFACT"
+      ],
+      "entries": [
+        {
+          "surface_kind": "API_PROJECTION",
+          "artifact_ref": "kfm:artifact:api:release-001",
+          "visibility": "PUBLIC",
+          "action": "MARK_STALE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "CATALOG_RECORD",
+          "artifact_ref": "kfm:artifact:catalog:release-001",
+          "visibility": "PUBLIC",
+          "action": "REBUILD",
+          "status": "ERROR",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "TILE_ARTIFACT",
+          "artifact_ref": "kfm:artifact:tiles:release-001",
+          "visibility": "PUBLIC",
+          "action": "INVALIDATE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "mutation_performed": false,
+        "cache_invalidated": false,
+        "alias_repointed": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "history_deleted": false
+      }
+    },
+    "alias": {
+      "object_type": "CorrectionPropagationPlan",
+      "schema_version": "1.0.0",
+      "profile": "kfm.correction-propagation.fixture.v1",
+      "observed_at": "2026-08-08T23:00:00Z",
+      "correction_notice_ref": "kfm:correction:notice:001",
+      "source_release_ref": "kfm:release:source:001",
+      "replacement_release_ref": "kfm:release:replacement:002",
+      "declared_surface_kinds": [
+        "API_PROJECTION",
+        "CATALOG_RECORD",
+        "TILE_ARTIFACT"
+      ],
+      "entries": [
+        {
+          "surface_kind": "API_PROJECTION",
+          "artifact_ref": "kfm:artifact:api:release-001",
+          "visibility": "PUBLIC",
+          "action": "REPOINT_ALIAS",
+          "status": "PENDING",
+          "target_release_ref": "kfm:release:replacement:002",
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "CATALOG_RECORD",
+          "artifact_ref": "kfm:artifact:catalog:release-001",
+          "visibility": "PUBLIC",
+          "action": "REBUILD",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        },
+        {
+          "surface_kind": "TILE_ARTIFACT",
+          "artifact_ref": "kfm:artifact:tiles:release-001",
+          "visibility": "PUBLIC",
+          "action": "INVALIDATE",
+          "status": "PENDING",
+          "target_release_ref": null,
+          "completion_receipt_ref": null,
+          "updated_at": "2026-08-08T22:00:00Z"
+        }
+      ],
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "mutation_performed": false,
+        "cache_invalidated": false,
+        "alias_repointed": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "history_deleted": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ready-plan",
+      "base": "ready",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "complete-plan",
+      "base": "complete",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "blocked-plan",
+      "base": "hold",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_PROPAGATION_BLOCKED",
+          "path": "/summary/overall_outcome"
+        }
+      ]
+    },
+    {
+      "case_id": "error-plan",
+      "base": "error",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_PROPAGATION_ERROR",
+          "path": "/summary/overall_outcome"
+        }
+      ]
+    },
+    {
+      "case_id": "completed-without-receipt",
+      "base": "complete",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/0/completion_receipt_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_COMPLETION_RECEIPT_REQUIRED",
+          "path": "/entries/0/completion_receipt_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "alias-without-target",
+      "base": "alias",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/0/target_release_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_TARGET_RELEASE_REQUIRED",
+          "path": "/entries/0/target_release_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "public-review-only",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/0/action",
+          "value": "REVIEW_ONLY"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_PUBLIC_REVIEW_ONLY_FORBIDDEN",
+          "path": "/entries/0/action"
+        }
+      ]
+    },
+    {
+      "case_id": "duplicate-artifact",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/1/artifact_ref",
+          "value": "kfm:artifact:api:release-001"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_ARTIFACT_DUPLICATE",
+          "path": "/entries"
+        }
+      ]
+    },
+    {
+      "case_id": "entry-order-invalid",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/0/surface_kind",
+          "value": "TILE_ARTIFACT"
+        },
+        {
+          "op": "replace",
+          "path": "/entries/2/surface_kind",
+          "value": "API_PROJECTION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_ENTRY_ORDER_INVALID",
+          "path": "/entries"
+        }
+      ]
+    },
+    {
+      "case_id": "surface-closure-mismatch",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/declared_surface_kinds",
+          "value": [
+            "API_PROJECTION",
+            "CATALOG_RECORD"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_SURFACE_CLOSURE_MISMATCH",
+          "path": "/declared_surface_kinds"
+        }
+      ]
+    },
+    {
+      "case_id": "summary-mismatch",
+      "base": "ready",
+      "summary_override": {
+        "pending_count": 0
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ]
+    },
+    {
+      "case_id": "timestamp-after-observation",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/entries/0/updated_at",
+          "value": "2026-08-09T00:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_TIME_INVALID",
+          "path": "/entries/0/updated_at"
+        }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "ready",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "plan-id-mismatch",
+      "base": "ready",
+      "plan_id_override": "kfm:correction-propagation:111111111111111111111111",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_ID_MISMATCH",
+          "path": "/plan_id"
+        }
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/governance/cache_invalidated",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CORRECTION_SCHEMA_INVALID",
+          "path": "/governance/cache_invalidated"
+        }
+      ]
+    }
+  ]
+}

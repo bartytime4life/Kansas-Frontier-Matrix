@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec-correction-propagation-plan-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/correction-propagation-plan.yml",
+    "contracts/correction/correction_propagation_plan.md",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json",
+    "tests/validators/test_validate_correction_propagation_plan.py",
+    "tools/validators/correction/validate_correction_propagation_plan.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/correction-propagation-plan.yml": "sha256:89507707a56bdb7b95e5d3245e6192ce22e09cb787283128de674315291cda78",
+    "contracts/correction/correction_propagation_plan.md": "sha256:99bda2506e6cc1cc7c8379229c5ecc1002779eb6593dd08f2cb8e985a533cfed",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "sha256:91da87719d1dfc2528620590240c202febda8e6b950ff41d06b09b6bdfb514ed",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "sha256:cbdd0a2aba38aace292aaf11835777c2cb13ea68dd200b119f4ecced838326d1",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "sha256:ea25d856d5f3aa1021688104482bdd1616fb987318b23ee1293962cb60a385c0",
+    "tests/validators/test_validate_correction_propagation_plan.py": "sha256:227cfaa66de36b573a4977e4b512848853bdb93e82c9c31781a64887aca1a666",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "sha256:98c16d1136e2e0db9784184b4da70a4f779a54010bb9bd37babfeab2035a3230"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "New Ideas 4-19-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Comprehensive_Research_and_Verification_Agenda.docx#W09",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#correction-cascade",
+      "attachment:New Ideas 4-19-26.pdf#correction-propagation"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/correction-propagation-plan.yml": "CONFIRMED",
+    "contracts/correction/correction_propagation_plan.md": "PROPOSED",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "PROPOSED",
+    "tests/validators/test_validate_correction_propagation_plan.py": "CONFIRMED",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "15 exact cases: 2 PASS, 1 ABSTAIN, 1 ERROR, 11 DENY."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "correction-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Comprehensive_Research_and_Verification_Agenda.docx#W09"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c76a4860693830a783579c29bf276977856e9f86/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T23:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only additive implementation. No network access, lifecycle mutation, source activation, policy approval, merge, release, deployment, publication, or public-use authority is created."
+}
