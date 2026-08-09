@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import socket
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -93,6 +95,18 @@ class PublishedLanguageReviewTests(unittest.TestCase):
         self.assertEqual(target.main([]), 2)
         self.assertEqual(target.main(["--fixtures", str(target.CASES)]), 2)
         self.assertEqual(target.main(["--fixtures"]), 0)
+
+    def test_direct_script_entrypoint(self) -> None:
+        script = target.ROOT / "tools/validators/governance/validate_published_language_review.py"
+        completed = subprocess.run(
+            [sys.executable, str(script), "--fixtures"],
+            cwd=target.ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(len(completed.stdout.splitlines()), 12)
 
     def test_findings_are_value_free(self) -> None:
         for _definition, candidate in target.load_fixture_cases():
