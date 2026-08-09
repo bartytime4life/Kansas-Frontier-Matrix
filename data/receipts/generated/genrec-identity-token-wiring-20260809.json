@@ -6,24 +6,12 @@
     "tests/contracts/test_identity_token_wiring.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/identity-token-wiring.yml": "sha256:9aafd2a4f012ed76fc29663540b13605fe38d0b5ab49140708beaf1ee02b198a",
+    ".github/workflows/identity-token-wiring.yml": "sha256:c2f18044420d5203c86434e044d5b9063b1ca6707859b08743d335c216630ee3",
     "tests/contracts/test_identity_token_wiring.py": "sha256:7700a8b4773fcdf8b072104ed8358d6a0def60fb7c63a5ede11531bad355d759"
   },
-  "model_identity": {
-    "provider": "OpenAI",
-    "model": "GPT-5.6 Sol",
-    "version": "2026-08-08"
-  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5.6 Sol", "version": "2026-08-08"},
   "prompt_or_contract": "sha256:673d0c33ce29256dd66d57d61b7752f42dfe4c14f33a57290354b45d70660034",
-  "parameters": {
-    "seed": null,
-    "temperature": null,
-    "top_p": null,
-    "max_tokens": null,
-    "tools_enabled": [
-      "GitHub connector (read/write)"
-    ]
-  },
+  "parameters": {"seed": null, "temperature": null, "top_p": null, "max_tokens": null, "tools_enabled": ["GitHub connector (read/write)"]},
   "inputs": {
     "attached_docs": [],
     "evidence_refs": [
@@ -33,79 +21,26 @@
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@854a74c9bca86e06474ff0b6a88845a9851e69ff"
     ]
   },
-  "truth_labels": {
-    ".github/workflows/identity-token-wiring.yml": "CONFIRMED",
-    "tests/contracts/test_identity_token_wiring.py": "CONFIRMED"
-  },
+  "truth_labels": {".github/workflows/identity-token-wiring.yml": "CONFIRMED", "tests/contracts/test_identity_token_wiring.py": "CONFIRMED"},
   "validation_gates": [
-    {
-      "gate": "declared-surface-existence",
-      "outcome": "PASS",
-      "reason": "The test requires the schema-declared contract, fixture root, and validator paths to exist without changing their authority."
-    },
-    {
-      "gate": "fixture-lane-non-vacuity",
-      "outcome": "PASS",
-      "reason": "The test requires both valid and invalid IdentityToken fixture lanes to contain parseable JSON objects."
-    },
-    {
-      "gate": "kind-vocabulary-drift",
-      "outcome": "PASS",
-      "reason": "The test pins the current proposed six-value kind enum so vocabulary changes require an explicit reviewed test update."
-    },
-    {
-      "gate": "validator-target-wiring",
-      "outcome": "PASS",
-      "reason": "The test confirms the declared validator still targets the declared IdentityToken schema and fixture root through the existing shared runner."
-    },
-    {
-      "gate": "artifact-byte-binding",
-      "outcome": "PASS",
-      "reason": "The authored workflow and test are bound to their prepared SHA-256 bytes without receipt self-reference."
-    },
-    {
-      "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "Hosted validation requires a pushed pull-request head."
-    },
-    {
-      "gate": "human-review",
-      "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
-    }
+    {"gate": "declared-surface-existence", "outcome": "PASS", "reason": "The test requires the schema-declared contract, fixture root, and validator paths to exist without changing their authority."},
+    {"gate": "fixture-lane-non-vacuity", "outcome": "PASS", "reason": "The test requires both valid and invalid IdentityToken fixture lanes to contain parseable JSON objects."},
+    {"gate": "kind-vocabulary-drift", "outcome": "PASS", "reason": "The test pins the current proposed six-value kind enum so vocabulary changes require an explicit reviewed test update."},
+    {"gate": "validator-target-wiring", "outcome": "PASS", "reason": "The test confirms the declared validator still targets the declared IdentityToken schema and fixture root through the existing shared runner."},
+    {"gate": "artifact-byte-binding", "outcome": "PASS", "reason": "The workflow digest is corrected to the committed bytes after hosted replay exposed the original authoring mismatch; the test digest was already correct."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "A corrective exact-head workflow run is required to verify this receipt edit."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Human review remains pending for this corrective receipt edit."}
   ],
-  "policy_decisions": [
-    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
   "citations": [
-    {
-      "id": "repository:identity-token-schema",
-      "validated": true,
-      "evidence_ref": "repo:schemas/contracts/v1/common/identity_token.schema.json@854a74c9bca86e06474ff0b6a88845a9851e69ff"
-    },
-    {
-      "id": "repository:identity-token-validator",
-      "validated": true,
-      "evidence_ref": "repo:tools/validators/validate_identity_token.py@854a74c9bca86e06474ff0b6a88845a9851e69ff"
-    },
-    {
-      "id": "repository:directory-governance-adr",
-      "validated": true,
-      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@854a74c9bca86e06474ff0b6a88845a9851e69ff"
-    }
+    {"id": "repository:identity-token-schema", "validated": true, "evidence_ref": "repo:schemas/contracts/v1/common/identity_token.schema.json@854a74c9bca86e06474ff0b6a88845a9851e69ff"},
+    {"id": "repository:identity-token-validator", "validated": true, "evidence_ref": "repo:tools/validators/validate_identity_token.py@854a74c9bca86e06474ff0b6a88845a9851e69ff"},
+    {"id": "repository:directory-governance-adr", "validated": true, "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@854a74c9bca86e06474ff0b6a88845a9851e69ff"}
   ],
-  "human_review": {
-    "reviewer_ids": [],
-    "state": "pending",
-    "timestamp": null
-  },
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
   "override_record": null,
   "created_at": "2026-08-09T01:58:00Z",
   "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
-  "links": {
-    "pr_number": null,
-    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
-    "drift_register_entry": null
-  },
-  "notes": "Wiring-only closure guard for the existing proposed IdentityToken schema. The change creates no new identity grammar, schema authority, contract authority, policy authority, evidence authority, release authority, or publication authority."
+  "links": {"pr_number": 2315, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Corrective edition of the IdentityToken wiring authoring receipt. Hosted replay from PR #2320 showed the original workflow digest did not match the committed workflow bytes; only that digest and explicit correction record are changed. No identity, schema, contract, policy, evidence, release, or publication authority changes."
 }
