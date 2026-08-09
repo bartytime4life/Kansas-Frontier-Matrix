@@ -1,24 +1,135 @@
 {
-  "schema_version": "1.0.0",
   "receipt_id": "genrec-verification-convergence-plan-20260809",
-  "generated_at": "2026-08-09T00:30:00Z",
-  "generator": "OpenAI GPT-5.6 Pro",
-  "purpose": "Author fixture-first VerificationConvergencePlan contract, schema, fixtures, validator, tests, and source map.",
-  "artifacts": [
-    {"path": "contracts/governance/verification_convergence_plan.md", "sha256": "8a6fd03bcc0126f22e5e5f8f30b774dcffedf141527120ac62009d3281f861bb"},
-    {"path": "docs/intake/exploratory/research-verification-convergence-plan-source-map.md", "sha256": "585e933df91210f894f89f44c88660855fb74110ba5e105e14872da6ffd7fe10"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/digest-mismatch.json", "sha256": "59be90d620ac78bd14b77de9546f1266251406f8f13ffe087a581032f677242b"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/over-capacity.json", "sha256": "a0c7879155c719a77c7e2798e4b8d7240da48cfffea73893817e8a8e8f4ccc2b"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unjustified-priority-skip.json", "sha256": "fd187b1ff1668452e859d3c4f3f468b2c7834781371f93f5aa071fad6545ca33"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unmet-dependency.json", "sha256": "db40751102ca25064d6bbcf45dd0ce5e89a3937968ac195b2ec925520e7f506f"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/valid/hold.json", "sha256": "81b6d7c520bcb1b6a81d940178d76a981756fa455260fada777940857639767f"},
-    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/valid/ready.json", "sha256": "6aa14e2588ff21d45c7a943eab75699bdb4933920ab1381f52ba7bfb434dfb19"},
-    {"path": "schemas/contracts/v1/governance/verification_convergence_plan.schema.json", "sha256": "185b965e6d7d6a3a7f730155f8acc3022f82fe6784a6391aab26336644382651"},
-    {"path": "tests/validators/governance/test_verification_convergence_plan.py", "sha256": "953ca08af13090ec9cb08da3007694710a70250a6ab9f1b15d75d30c982174e7"},
-    {"path": "tools/validators/governance/validate_verification_convergence_plan.py", "sha256": "d6ca3b2f54b6b7378aa37fb4aba9c56354247daeabb4f1a9d098196a9a440ded"}
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/governance/verification_convergence_plan.md",
+    "docs/intake/exploratory/research-verification-convergence-plan-source-map.md",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/digest-mismatch.json",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/over-capacity.json",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unjustified-priority-skip.json",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unmet-dependency.json",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/valid/hold.json",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/valid/ready.json",
+    "schemas/contracts/v1/governance/verification_convergence_plan.schema.json",
+    "tests/validators/governance/test_verification_convergence_plan.py",
+    "tools/validators/governance/validate_verification_convergence_plan.py"
   ],
-  "authority_created": false,
-  "repository_mutation_allowed": false,
-  "release_authorized": false,
-  "publication_authorized": false
+  "artifact_hashes": {
+    "contracts/governance/verification_convergence_plan.md": "sha256:8a6fd03bcc0126f22e5e5f8f30b774dcffedf141527120ac62009d3281f861bb",
+    "docs/intake/exploratory/research-verification-convergence-plan-source-map.md": "sha256:585e933df91210f894f89f44c88660855fb74110ba5e105e14872da6ffd7fe10",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/digest-mismatch.json": "sha256:59be90d620ac78bd14b77de9546f1266251406f8f13ffe087a581032f677242b",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/over-capacity.json": "sha256:a0c7879155c719a77c7e2798e4b8d7240da48cfffea73893817e8a8e8f4ccc2b",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unjustified-priority-skip.json": "sha256:fd187b1ff1668452e859d3c4f3f468b2c7834781371f93f5aa071fad6545ca33",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unmet-dependency.json": "sha256:db40751102ca25064d6bbcf45dd0ce5e89a3937968ac195b2ec925520e7f506f",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/valid/hold.json": "sha256:81b6d7c520bcb1b6a81d940178d76a981756fa455260fada777940857639767f",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/valid/ready.json": "sha256:6aa14e2588ff21d45c7a943eab75699bdb4933920ab1381f52ba7bfb434dfb19",
+    "schemas/contracts/v1/governance/verification_convergence_plan.schema.json": "sha256:185b965e6d7d6a3a7f730155f8acc3022f82fe6784a6391aab26336644382651",
+    "tests/validators/governance/test_verification_convergence_plan.py": "sha256:953ca08af13090ec9cb08da3007694710a70250a6ab9f1b15d75d30c982174e7",
+    "tools/validators/governance/validate_verification_convergence_plan.py": "sha256:d6ca3b2f54b6b7378aa37fb4aba9c56354247daeabb4f1a9d098196a9a440ded"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:04d0b2096ec3d4060aaf4cc15982dbbea0cea157538796b4292c1c853684e5c6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local Python 3 validator harness"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "contracts/governance/verification_convergence_plan.md": "PROPOSED",
+    "docs/intake/exploratory/research-verification-convergence-plan-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/digest-mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verifification_convergence_plan/invalid/over-capacity.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verifification_convergence_plan/invalid/unjustified-priority-skip.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verifification_convergence_plan/invalid/unmet-dependency.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verifification_convergence_plan/valid/hold.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/verification_convergence_plan/valid/ready.json": "PROPOSED",
+    "schemas/contracts/v1/governance/verification_convergence_plan.schema.json": "PROPOSED",
+    "tests/validators/governance/test_verification_convergence_plan.py": "PROPOSED",
+    "tools/validators/governance/validate_verification_convergence_plan.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-python-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused test module compiled during local validation."
+    },
+    {
+      "gate": "local-focused-pytest",
+      "outcome": "PASS",
+      "reason": "Three tests with six subtests passed for READY, HOLD, and four fail-closed invalid cases."
+    },
+    {
+      "gate": "local-valid-fixtures",
+      "outcome": "PASS",
+      "reason": "READY and HOLD fixtures were accepted with deterministic outcomes."
+    },
+    {
+      "gate": "local-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "SHA-256 hashes were replayed over all authored non-receipt artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:research-verification-agenda",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Comprehensive_Research_and_Verification_Agenda.docx"
+    },
+    {
+      "id": "attachment:briefing-integration-blueprint",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only, no-network verification planning profile. It grants no authority, mutation, source activation, release, deployment, publication, or public-use authority."
 }
