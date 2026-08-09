@@ -1,0 +1,102 @@
+# Validate the additive, fixture-only ClaimFieldBinding profile.
+name: claim-field-binding
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/claim-field-binding.yml"
+      - "contracts/evidence/claim_field_binding.md"
+      - "schemas/contracts/v1/evidence/claim_field_binding.schema.json"
+      - "fixtures/contracts/v1/evidence/claim_field_binding/**"
+      - "tools/validators/validate_claim_field_binding.py"
+      - "tests/validators/test_validate_claim_field_binding.py"
+      - "docs/intake/exploratory/briefing-claim-field-binding-source-map.md"
+      - "data/receipts/generated/genrec-briefing-claim-field-binding-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/claim-field-binding.yml"
+      - "contracts/evidence/claim_field_binding.md"
+      - "schemas/contracts/v1/evidence/claim_field_binding.schema.json"
+      - "fixtures/contracts/v1/evidence/claim_field_binding/**"
+      - "tools/validators/validate_claim_field_binding.py"
+      - "tests/validators/test_validate_claim_field_binding.py"
+      - "docs/intake/exploratory/briefing-claim-field-binding-source-map.md"
+      - "data/receipts/generated/genrec-briefing-claim-field-binding-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: claim-field-binding-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-claim-field-binding
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_claim_field_binding --verbose
+
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_claim_field_binding.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-briefing-claim-field-binding-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### ClaimFieldBinding fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: local field-level source/evidence binding, transform provenance, quality, lineage, deterministic identity, and authority non-effects."
+            echo "- Boundary: no source activation, source values, EvidenceRef resolution, EvidenceBundle creation, policy/review execution, lifecycle write, promotion, release, publication, API, map, or AI authority."
+          } >> "$GITHUB_STEP_SUMMARY"

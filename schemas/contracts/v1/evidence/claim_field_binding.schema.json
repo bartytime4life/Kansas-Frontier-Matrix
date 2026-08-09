@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/claim_field_binding.schema.json",
+  "title": "ClaimFieldBinding candidate profile",
+  "description": "Closed, fixture-only field-level evidence-binding candidate. It binds an object field to source-native locators and digests, normalized content, EvidenceRef, transform provenance, quality, and limitations without resolving evidence or creating release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "claim_field_binding_id",
+    "version",
+    "spec_hash",
+    "object_ref",
+    "field_pointer",
+    "source_artifact_ref",
+    "source_snapshot_ref",
+    "native_locator",
+    "native_statement_digest",
+    "native_value_digest",
+    "normalized_value_digest",
+    "transform",
+    "evidence_ref",
+    "support_scope",
+    "quality",
+    "lineage",
+    "release_state",
+    "release_ref",
+    "limitations",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "optional_ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "canonical_code_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.evidence.claim-field-binding.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "claim_field_binding_id": {
+      "type": "string",
+      "pattern": "^claim-field-binding:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "object_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "field_pointer": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 512,
+      "pattern": "^/(?:[^~/]|~0|~1)+(?:/(?:[^~/]|~0|~1)+)*$"
+    },
+    "source_artifact_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_snapshot_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"
+    },
+    "native_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "JSON_POINTER",
+            "XPATH",
+            "CSV_COLUMN",
+            "TEXT_RANGE",
+            "RECORD_FIELD"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "native_statement_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "native_value_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "normalized_value_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "transform_ref",
+        "transform_receipt_ref",
+        "deterministic"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "NONE",
+            "NORMALIZE_UNIT",
+            "MAP_VOCABULARY",
+            "PARSE_DATE",
+            "GENERALIZE_GEOMETRY",
+            "REDACT",
+            "SUMMARIZE"
+          ]
+        },
+        "transform_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "transform_receipt_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "deterministic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evidence_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "support_scope": {
+      "enum": [
+        "EXACT_FIELD",
+        "DERIVED_FIELD",
+        "CONTEXT_ONLY"
+      ]
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "confidence",
+        "reason_codes"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "ACCEPTED",
+            "QUALIFIED",
+            "CONFLICTED",
+            "UNRESOLVED"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "CONFIRMED",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "UNRESOLVED"
+          ]
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/canonical_code_array"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "corrects",
+        "superseded_by",
+        "conflict_refs"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "CURRENT",
+            "CORRECTED",
+            "SUPERSEDED",
+            "CONFLICTED"
+          ]
+        },
+        "corrects": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "conflict_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        }
+      }
+    },
+    "release_state": {
+      "enum": [
+        "UNRELEASED",
+        "RELEASED"
+      ]
+    },
+    "release_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "public_use_allowed": {
+      "type": "boolean"
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "promoted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {
+          "type": "boolean"
+        },
+        "evidence_resolved": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promoted": {
+          "type": "boolean"
+        },
+        "released": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/evidence/claim_field_binding.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/claim_field_binding/",
+    "validator": "tools/validators/validate_claim_field_binding.py",
+    "tests": "tests/validators/test_validate_claim_field_binding.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}
