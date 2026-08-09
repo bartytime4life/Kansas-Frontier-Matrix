@@ -1,0 +1,104 @@
+# Validate the inactive, fixture-only SoilSupportRoleAssessment profile.
+name: soil-support-role-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-support-role-assessment.yml"
+      - "contracts/domains/soil/soil_support_role_assessment.md"
+      - "docs/intake/exploratory/soil-support-role-assessment-source-map.md"
+      - "fixtures/contracts/v1/domains/soil/soil_support_role_assessment/**"
+      - "schemas/contracts/v1/domains/soil/soil_support_role_assessment.schema.json"
+      - "tools/validators/domains/soil/validate_soil_support_role_assessment.py"
+      - "tests/validators/domains/soil/test_validate_soil_support_role_assessment.py"
+      - "data/receipts/generated/genrec-soil-support-role-assessment-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-support-role-assessment.yml"
+      - "contracts/domains/soil/soil_support_role_assessment.md"
+      - "docs/intake/exploratory/soil-support-role-assessment-source-map.md"
+      - "fixtures/contracts/v1/domains/soil/soil_support_role_assessment/**"
+      - "schemas/contracts/v1/domains/soil/soil_support_role_assessment.schema.json"
+      - "tools/validators/domains/soil/validate_soil_support_role_assessment.py"
+      - "tests/validators/domains/soil/test_validate_soil_support_role_assessment.py"
+      - "data/receipts/generated/genrec-soil-support-role-assessment-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-support-role-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-soil-support-role-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+      - name: Compile validator and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/domains/soil/validate_soil_support_role_assessment.py \
+            tests/validators/domains/soil/test_validate_soil_support_role_assessment.py
+      - name: Run focused tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.validators.domains.soil.test_validate_soil_support_role_assessment \
+            --verbose
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/soil/validate_soil_support_role_assessment.py \
+            --fixtures
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-support-role-assessment-20260808.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SoilSupportRoleAssessment fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: static-survey, gridded-derivative, station-observation, and satellite-grid anti-collapse; source role, geometry, time, depth, measurement, claim class, deterministic identity, and exact fixture polarity."
+            echo "- Boundary: no source activation, source bytes, EvidenceBundle resolution, live policy or human review, lifecycle promotion, catalog, tile, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
