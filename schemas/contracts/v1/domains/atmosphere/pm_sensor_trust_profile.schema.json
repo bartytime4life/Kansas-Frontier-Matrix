@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json",
+  "title": "PMSensorTrustProfileCandidate",
+  "description": "Fixture-only declaration of bounded PM-sensor trust dimensions. It does not evaluate a live sensor or create source, policy, review, promotion, release, publication, public-health, or reference-grade authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "spec_hash",
+    "status",
+    "sensor_ref",
+    "observation_family",
+    "evaluation_window",
+    "metrics",
+    "calibration",
+    "reference_anchor",
+    "evidence_refs",
+    "assessment",
+    "controls",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"type": "string", "pattern": "^kfm:pm-sensor-trust:[a-f0-9]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "sensor_ref": {"type": "string", "pattern": "^fixture://sensor/[a-z0-9][a-z0-9._-]{0,127}$"},
+    "observation_family": {"const": "PM2.5"},
+    "evaluation_window": {"$ref": "#/$defs/evaluation_window"},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accuracy", "stability", "responsiveness", "consensus_alignment"],
+      "properties": {
+        "accuracy": {"$ref": "#/$defs/metric"},
+        "stability": {"$ref": "#/$defs/metric"},
+        "responsiveness": {"$ref": "#/$defs/metric"},
+        "consensus_alignment": {"$ref": "#/$defs/metric"}
+      }
+    },
+    "calibration": {"$ref": "#/$defs/calibration"},
+    "reference_anchor": {"$ref": "#/$defs/reference_anchor"},
+    "evidence_refs": {"$ref": "#/$defs/ref_array_nonempty"},
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes", "composite_score_produced"],
+      "properties": {
+        "outcome": {"enum": ["QUALIFIED_CONTEXT", "HOLD", "DENY"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"}
+        },
+        "composite_score_produced": {"const": false}
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "live_sensor_evaluated",
+        "source_admitted",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_eligible",
+        "release_authorized",
+        "publication_authorized",
+        "public_health_authority",
+        "reference_grade_equivalence_claimed"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "live_sensor_evaluated": {"const": false},
+        "source_admitted": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_eligible": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_health_authority": {"const": false},
+        "reference_grade_equivalence_claimed": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "NO_LIVE_SENSOR_EVALUATION",
+        "NO_POLICY_DECISION",
+        "NO_PROMOTION",
+        "NO_PUBLICATION",
+        "NO_PUBLIC_HEALTH_GUIDANCE",
+        "NO_REFERENCE_GRADE_EQUIVALENCE",
+        "NO_RELEASE",
+        "NO_SOURCE_ADMISSION"
+      ]
+    }
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1, "maxLength": 1024, "pattern": "\\S"},
+    "nullable_nonempty": {"oneOf": [{"$ref": "#/$defs/nonempty"}, {"type": "null"}]},
+    "aware_datetime": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "nullable_datetime": {"oneOf": [{"$ref": "#/$defs/aware_datetime"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]{1,1000}$"}
+    },
+    "ref_array_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]{1,1000}$"}
+    },
+    "evaluation_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "ended_at", "observation_count", "reference_count"],
+      "properties": {
+        "started_at": {"$ref": "#/$defs/aware_datetime"},
+        "ended_at": {"$ref": "#/$defs/aware_datetime"},
+        "observation_count": {"type": "integer", "minimum": 2, "maximum": 1000000},
+        "reference_count": {"type": "integer", "minimum": 0, "maximum": 1000000}
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "normalized_value", "method_ref", "evidence_refs"],
+      "properties": {
+        "status": {"enum": ["MEASURED", "UNRESOLVED"]},
+        "normalized_value": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "method_ref": {"$ref": "#/$defs/nullable_nonempty"},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "MEASURED"}}, "required": ["status"]},
+          "then": {
+            "properties": {
+              "normalized_value": {"type": "number", "minimum": 0, "maximum": 1},
+              "method_ref": {"$ref": "#/$defs/nonempty"},
+              "evidence_refs": {"$ref": "#/$defs/ref_array_nonempty"}
+            }
+          },
+          "else": {
+            "properties": {
+              "normalized_value": {"type": "null"},
+              "method_ref": {"type": "null"},
+              "evidence_refs": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["calibration_version", "model_ref", "applied_at", "transferability_state", "evidence_refs"],
+      "properties": {
+        "calibration_version": {"$ref": "#/$defs/nonempty"},
+        "model_ref": {"$ref": "#/$defs/nullable_nonempty"},
+        "applied_at": {"$ref": "#/$defs/nullable_datetime"},
+        "transferability_state": {"enum": ["WITHIN_DECLARED_SCOPE", "UNRESOLVED", "OUT_OF_SCOPE"]},
+        "evidence_refs": {"$ref": "#/$defs/ref_array_nonempty"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"transferability_state": {"const": "WITHIN_DECLARED_SCOPE"}}, "required": ["transferability_state"]},
+          "then": {
+            "properties": {
+              "model_ref": {"$ref": "#/$defs/nonempty"},
+              "applied_at": {"$ref": "#/$defs/aware_datetime"}
+            }
+          }
+        }
+      ]
+    },
+    "reference_anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_type", "anchor_ref", "evidence_refs", "authority_claimed", "peer_consensus_substitute"],
+      "properties": {
+        "anchor_type": {"enum": ["REFERENCE_MONITOR", "COLLOCATION_SERIES", "UNRESOLVED"]},
+        "anchor_ref": {"$ref": "#/$defs/nullable_nonempty"},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "authority_claimed": {"const": false},
+        "peer_consensus_substitute": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"anchor_type": {"const": "UNRESOLVED"}}, "required": ["anchor_type"]},
+          "then": {
+            "properties": {
+              "anchor_ref": {"type": "null"},
+              "evidence_refs": {"maxItems": 0}
+            }
+          },
+          "else": {
+            "properties": {
+              "anchor_ref": {"$ref": "#/$defs/nonempty"},
+              "evidence_refs": {"$ref": "#/$defs/ref_array_nonempty"}
+            }
+          }
+        }
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_card": "KFM-P30-PROG-0001",
+    "contract_doc": "contracts/domains/atmosphere/pm_sensor_trust_profile.md",
+    "fixture_root": "fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/",
+    "authority": "bounded synthetic trust-dimension declaration only"
+  }
+}
