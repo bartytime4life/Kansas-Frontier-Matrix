@@ -1,0 +1,20 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://kansasfrontiermatrix.org/schemas/contracts/v1/policy/policy_reviewer_role_vocabulary.schema.json",
+  "title":"PolicyReviewerRoleVocabulary",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["object_type","vocabulary_id","version","status","roles","governance"],
+  "properties":{
+    "object_type":{"const":"PolicyReviewerRoleVocabulary"},
+    "vocabulary_id":{"const":"policy-reviewer-role-vocabulary:v1"},
+    "version":{"const":"v1"},
+    "status":{"const":"PROPOSED_INACTIVE"},
+    "roles":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/role"}},
+    "governance":{"type":"object","additionalProperties":false,"required":["assigns_people","records_approval","policy_authorized","promotion_authorized","release_authorized","publication_authorized"],"properties":{"assigns_people":{"const":false},"records_approval":{"const":false},"policy_authorized":{"const":false},"promotion_authorized":{"const":false},"release_authorized":{"const":false},"publication_authorized":{"const":false}}}
+  },
+  "$defs":{
+    "scope":{"type":"string","enum":["domain","evidence","policy","release","security_privacy"]},
+    "role":{"type":"object","additionalProperties":false,"required":["code","review_scopes","description"],"properties":{"code":{"type":"string","pattern":"^[A-Z][A-Z0-9_]{2,95}$"},"review_scopes":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/scope"}},"description":{"type":"string","minLength":1,"maxLength":240}}}
+  }
+}
