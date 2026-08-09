@@ -1,0 +1,65 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "object_type": "PaleoenvironmentalProxyProvenanceRecord",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "proxy_source": {
+      "proxy_kind": "POLLEN",
+      "source_record_ref": "fixture:proxy/pollen-series-001",
+      "sample_ref": "fixture:sample/pollen-core-001",
+      "source_role": "OBSERVED_PROXY",
+      "original_chronology_ref": "fixture:chronology/model-001",
+      "rights_ref": "fixture:rights/research-only",
+      "sensitivity": "SENSITIVE"
+    },
+    "reconstruction": {
+      "input_proxy_ref": "fixture:proxy/pollen-series-001",
+      "method_ref": "fixture:method/pollen-assemblage-reconstruction",
+      "method_version": "1.0.0",
+      "parameters_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "transform_receipt_refs": ["fixture:receipt/chronology-calibration-001", "fixture:receipt/proxy-reconstruction-001"],
+      "output_artifact_ref": "fixture:artifact/paleo-reconstruction-001",
+      "output_artifact_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "uncertainty_model_ref": "fixture:uncertainty/ensemble-001",
+      "output_role": "INTERPRETIVE_RECONSTRUCTION"
+    },
+    "temporal_scope": {
+      "timescale": "BP1950",
+      "start_year": 1200,
+      "end_year": 4200,
+      "reference_epoch": "years before 1950 CE",
+      "resolution_years": 50,
+      "uncertainty_years": 120,
+      "calibration_ref": "fixture:calibration/age-depth-001"
+    },
+    "spatial_generalization": {
+      "source_location_ref": "fixture:location/restricted-site-001",
+      "published_extent_ref": "fixture:extent/synthetic-county-001",
+      "method": "ADMINISTRATIVE_AGGREGATION",
+      "source_precision": "EXACT",
+      "published_precision": "COUNTY",
+      "generalization_receipt_ref": "fixture:receipt/spatial-generalization-001",
+      "exact_location_withheld": true,
+      "sensitivity_reason": "ARCHAEOLOGICAL_SITE"
+    },
+    "evidence_refs": ["fixture:proxy/pollen-series-001", "fixture:receipt/chronology-calibration-001", "fixture:receipt/proxy-reconstruction-001", "fixture:receipt/spatial-generalization-001"],
+    "claims": {"direct_environment_observation": false, "exact_location_disclosed": false, "present_condition_equivalence": false, "predictive_authority": false, "policy_authority": false, "publication_authority": false},
+    "permissions": {"network_access": false, "source_access": false, "coordinate_disclosure": false, "file_mutation": false, "policy_evaluation": false, "release": false, "publication": false},
+    "non_effects": ["NO_COORDINATE_DISCLOSURE", "NO_CURRENT_CONDITION_INFERENCE", "NO_EVIDENCE_MUTATION", "NO_FORECAST", "NO_LIFECYCLE_PROMOTION", "NO_POLICY_DECISION", "NO_PROXY_INGESTION", "NO_PUBLICATION", "NO_RECONSTRUCTION_EXECUTION", "NO_RELEASE", "NO_SOURCE_ACCESS"]
+  },
+  "cases": [
+    {"id": "valid-sensitive-pollen", "patch": {}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "valid-public-speleothem", "patch": {"proxy_source": {"proxy_kind": "SPELEOTHEM", "source_record_ref": "fixture:proxy/speleothem-series-002", "sample_ref": "fixture:sample/speleothem-002", "sensitivity": "PUBLIC"}, "reconstruction": {"input_proxy_ref": "fixture:proxy/speleothem-series-002", "method_ref": "fixture:method/isotope-reconstruction", "output_artifact_ref": "fixture:artifact/paleo-reconstruction-002"}, "temporal_scope": {"start_year": 5000, "end_year": 9000, "resolution_years": 100}, "spatial_generalization": {"source_location_ref": "fixture:location/public-locality-002", "published_extent_ref": "fixture:extent/synthetic-region-002", "method": "REGIONAL_ENVELOPE", "source_precision": "LOCALITY", "published_precision": "REGION", "exact_location_withheld": false, "sensitivity_reason": "NONE"}, "evidence_refs": ["fixture:proxy/speleothem-series-002", "fixture:receipt/chronology-calibration-001", "fixture:receipt/proxy-reconstruction-001", "fixture:receipt/spatial-generalization-001"]}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "missing-transform", "patch": {"reconstruction": {"transform_receipt_refs": []}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "temporal-reversed", "patch": {"temporal_scope": {"start_year": 5000, "end_year": 1000}}, "expected": {"outcome": "FAIL", "findings": ["TEMPORAL_RANGE_INVALID"]}},
+    {"id": "spatial-precision-upcast", "patch": {"proxy_source": {"sensitivity": "PUBLIC"}, "spatial_generalization": {"source_precision": "COUNTY", "published_precision": "SITE", "exact_location_withheld": false, "sensitivity_reason": "NONE"}}, "expected": {"outcome": "FAIL", "findings": ["SPATIAL_PRECISION_UPCAST"]}},
+    {"id": "sensitive-location-exposed", "patch": {"spatial_generalization": {"exact_location_withheld": false}}, "expected": {"outcome": "FAIL", "findings": ["SENSITIVE_LOCATION_UNPROTECTED"]}},
+    {"id": "role-collapse", "patch": {"reconstruction": {"output_role": "OBSERVED_PROXY"}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "evidence-closure-gap", "patch": {"evidence_refs": ["fixture:proxy/pollen-series-001", "fixture:receipt/chronology-calibration-001", "fixture:receipt/proxy-reconstruction-001"]}, "expected": {"outcome": "FAIL", "findings": ["EVIDENCE_CLOSURE_GAP"]}},
+    {"id": "authority-overclaim", "patch": {"claims": {"publication_authority": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "identity-drift", "recompute_identity": false, "patch": {"spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}, "expected": {"outcome": "FAIL", "findings": ["SPEC_HASH_MISMATCH"]}},
+    {"id": "unordered-evidence", "patch": {"evidence_refs": ["fixture:receipt/spatial-generalization-001", "fixture:receipt/proxy-reconstruction-001", "fixture:receipt/chronology-calibration-001", "fixture:proxy/pollen-series-001"]}, "expected": {"outcome": "FAIL", "findings": ["REFERENCES_NOT_CANONICAL"]}}
+  ]
+}
