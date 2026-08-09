@@ -1,21 +1,29 @@
 {
   "artifact_hashes": {
-    ".github/workflows/replay-safe-effect-ledger.yml": "sha256:bbae4e3fcf164f0988d049cc8100194c68f483a6ee0559a677122532bfa69939",
-    "contracts/runtime/replay_safe_effect_ledger.md": "sha256:4704c4720a7bcbe919a53932e3a333b96bba0cd03d1ce25927550b709f90e863",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "sha256:2646f8b014496dda20984763986ca35b865ed5bc5dcd4ffa2087d3e4cc07e8d7",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "sha256:f93a362c9ed225089135f02676659e1ba87b129ef4e5131682fcb48d347d0fa6",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "sha256:8fc6b582f0b86ddbe9594ba6f50783404bb0f54faa57ef55a381e63532c3130c",
+    ".github/workflows/replay-safe-effect-ledger.yml": "sha256:4515e4e177e327e8e414d6ca34dd5c19d24d4c19a236bc90e19cd4b70be6fe89",
+    "contracts/runtime/replay_safe_effect_ledger.md": "sha256:de92590f02209266951e9c05af201ca3b4020cb0905ed4b69b7667bf4b0195ea",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "sha256:5caa978222c34a09c84a4c7e5fe725208c92736c18888aba1cab5eef83f8bbb1",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "sha256:16c8931a08d4e004fa00eb0e3c2bee8a83744d81a9de066cddcd3c0536e75693",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "sha256:61f0eadde3a587d4ecea2e935c58981534a528d7bd200c6b77c0c1825ffe373a",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json": "sha256:d9c656c7fac9507f32e93ed8f60a0a94197e760c9b44a6fb64cdd4fd0da6f0fc",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/compensation_without_completion.json": "sha256:9e71b52017971d4597bf391261c6ae1e1e93ff77d08da1b8db6fa81f5f5b55bb",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_suppression_misbound.json": "sha256:61499330dd3e704048db9788031614770fa129033597a77c6c0d046ff304376d",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json": "sha256:1eb7f2af691c8ee2a3f9c09c4add985596d3b13b9d4554321cd21f2557e370a2",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json": "sha256:c62471d4b167cbb020dae1fa585f98943696533b4bdb4ee4f314938a98403e37",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/entry_before_delivery.json": "sha256:657d69b131cb856813d48df043a219374c8161e56529237c93b2f1fb91eb99e1",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_state_unrecorded.json": "sha256:aafc36e865efec7cc877a84d396a21aa54e3b7b230b3e0df3e7a5f66a4ad50ef",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_time_inverted.json": "sha256:2ff406bed6d0c418b2d14fb36c6fcc5473e7b387040ff328c0f9bd38d4bc6138",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json": "sha256:956a88c8f6ec3f3e1df6e9b2d590ebad804996586313fc3f39c5c52760e5b4c2",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json": "sha256:a83808e2a9eafee80cf51bbefc15abe62602a9b854f6f89d51c2b54ab2caee8c",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json": "sha256:d1235c32536e226f78587eec826bfbb4387902289494f1909ad0af1a18a398b8",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json": "sha256:47647274474b61c096bf912e724057004e5290f4ca1de126e22033f4cb0a1887",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "sha256:3c4df3295aa4fca8a108527e461271b73b50447fd81ad334204127ee65d79a75",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "sha256:68f784d4cf35c3000e6f541ec9f751afe3fc001ca22442d3df5d0a3359bc7535",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json": "sha256:e5cce72d1b09e49f83623efacb284209acf442fe9a3fb86c5ec31dba37f9df0f",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/completed_then_released.json": "sha256:3e680c3bbf144496155b798972182da3fce79e3c80bdfd911aeb348dbb6d9a61",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json": "sha256:410c59c8cf0d56d2860376a71ba7ad3fb6b167b79fdefe81efc07437555d7997",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "sha256:f2455efde281a6fea1325fc3063785fdfadd5d77f1f202ae794e06db998d4b1a",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "sha256:91b3b82aa5541c1a17a489cd621bcb0cf797b6fc6d6a3c6b6acfee006046bee1",
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "sha256:4837ca760fb796921376d870f777f06ec0491d8bbcb9c6f29cd2d66d58103e74",
-    "tests/validators/test_validate_replay_safe_effect_ledger.py": "sha256:1dc6030eb94bd3211c33cf6de992f8dad5f1a971127cd8eebada7ac8c9ca31c6",
-    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "sha256:330c89fd02ecc7fa0317627e325277300acf839926908f794d900056070a36b2"
+    "tests/validators/test_validate_replay_safe_effect_ledger.py": "sha256:91dd5d9312e5f8fa62e13ce87e82487b6ce7e88b524d6cf4a567a447f807073c",
+    "tools/validators/runtime/replay_safe_effect_ledger_core.py": "sha256:7e182bf041c7e8d447def1aba906d3d77661136543a91050b7c338c7e4bdd3fc",
+    "tools/validators/runtime/replay_safe_effect_ledger_semantics.py": "sha256:7e2e4a68e5e4b799ed2b9cb2c6606ce9672794c7d1122dc11ce99e418bb2159d",
+    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "sha256:69447306d4c7de6a4aab0a1cd40556184a7a77e8a990f20afcae536d06f6fead"
   },
   "artifact_paths": [
     ".github/workflows/replay-safe-effect-ledger.yml",
@@ -24,15 +32,23 @@
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/compensation_without_completion.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_suppression_misbound.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/entry_before_delivery.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_state_unrecorded.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_time_inverted.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/completed_then_released.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json",
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json",
     "tests/validators/test_validate_replay_safe_effect_ledger.py",
+    "tools/validators/runtime/replay_safe_effect_ledger_core.py",
+    "tools/validators/runtime/replay_safe_effect_ledger_semantics.py",
     "tools/validators/runtime/validate_replay_safe_effect_ledger.py"
   ],
   "citations": [
@@ -53,7 +69,7 @@
     }
   ],
   "contract_version": "3.0.0",
-  "created_at": "2026-08-09T17:23:55Z",
+  "created_at": "2026-08-09T18:21:01Z",
   "emitter": "OpenAI GPT-5.6 via ChatGPT Work",
   "human_review": {
     "reviewer_ids": [],
@@ -73,14 +89,14 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 2348
   },
   "model_identity": {
     "model": "GPT-5.6",
     "provider": "OpenAI",
     "version": "2026-08-09"
   },
-  "notes": "Fixture-only replay-safe event/effect ledger candidate. It records at-least-once delivery with one idempotent effect and does not claim exactly-once transport, execute an effect, write a lifecycle lane, or authorize review, release, deployment, publication, or public use.",
+  "notes": "Fixture-only replay-safe event/effect ledger candidate, hardened during PR review with per-delivery suppression binding, causal delivery/ledger/reservation checks, compensation preconditions, and ledger-derived reservation state. It records at-least-once delivery with one idempotent effect and does not claim exactly-once transport, execute an effect, write a lifecycle lane, or authorize review, release, deployment, publication, or public use.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -105,32 +121,45 @@
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/compensation_without_completion.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_suppression_misbound.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/entry_before_delivery.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_state_unrecorded.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/reservation_time_inverted.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/completed_then_released.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "CONFIRMED",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "CONFIRMED",
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "CONFIRMED",
     "tests/validators/test_validate_replay_safe_effect_ledger.py": "CONFIRMED",
+    "tools/validators/runtime/replay_safe_effect_ledger_core.py": "CONFIRMED",
+    "tools/validators/runtime/replay_safe_effect_ledger_semantics.py": "CONFIRMED",
     "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "CONFIRMED"
   },
   "validation_gates": [
     {
       "gate": "focused-unit-tests",
       "outcome": "PASS",
-      "reason": "Eight deterministic ReplaySafeEffectLedger tests passed locally."
+      "reason": "Twelve deterministic ReplaySafeEffectLedger tests passed in the bounded review harness."
     },
     {
       "gate": "fixture-manifest-polarity",
       "outcome": "PASS",
-      "reason": "Nine synthetic positive and negative cases matched exact finite outcomes and findings."
+      "reason": "Fifteen synthetic positive and negative cases matched exact finite outcomes and findings."
     },
     {
       "gate": "schema-and-deterministic-identity",
       "outcome": "PASS",
-      "reason": "The closed Draft 2020-12 schema plus event, effect, and record hashes validated locally."
+      "reason": "The closed Draft 2020-12 schema plus event, effect, and record hashes validated for the fixture-only JSON domain."
+    },
+    {
+      "gate": "review-findings-closure",
+      "outcome": "PASS",
+      "reason": "All six actionable review findings received code, workflow, fixture, test, and contract coverage; hosted re-review remains pending."
     },
     {
       "gate": "hosted-exact-head-ci",

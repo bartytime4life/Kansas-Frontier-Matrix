@@ -1,0 +1,89 @@
+# Validate fixture-only conditional decision obligation closure.
+# This workflow evaluates no policy and creates no review, release, or publication authority.
+name: conditional-decision-closure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/conditional-decision-closure.yml"
+      - "contracts/policy/conditional_decision_closure.md"
+      - "schemas/contracts/v1/policy/conditional_decision_closure.schema.json"
+      - "fixtures/contracts/v1/policy/conditional_decision_closure/**"
+      - "tools/validators/policy/validate_conditional_decision_closure.py"
+      - "tests/validators/test_validate_conditional_decision_closure.py"
+      - "data/receipts/generated/genrec-conditional-decision-closure-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/conditional-decision-closure.yml"
+      - "contracts/policy/conditional_decision_closure.md"
+      - "schemas/contracts/v1/policy/conditional_decision_closure.schema.json"
+      - "fixtures/contracts/v1/policy/conditional_decision_closure/**"
+      - "tools/validators/policy/validate_conditional_decision_closure.py"
+      - "tests/validators/test_validate_conditional_decision_closure.py"
+      - "data/receipts/generated/genrec-conditional-decision-closure-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: conditional-decision-closure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-conditional-decision-closure:
+    name: validate-conditional-decision-closure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_conditional_decision_closure.py' \
+            --verbose
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/policy/validate_conditional_decision_closure.py --fixtures
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-conditional-decision-closure-20260809.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### ConditionalDecisionClosureCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only obligation applicability, closure evidence, waiver and supersession field coherence, deterministic blocking summary, finite hold/closure outcomes, and non-authority flags."
+            echo "- Tests use synthetic repository fixtures and perform no network, policy-engine, reviewer-registry, source, object-store, signing, model, release, or publication access."
+            echo "- CLOSED_FOR_SEPARATE_GATE is not ALLOW and does not evaluate policy, enforce an obligation, approve review, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"

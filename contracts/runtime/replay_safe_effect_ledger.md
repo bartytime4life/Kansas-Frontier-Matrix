@@ -40,7 +40,7 @@ A conforming record proves only that one synthetic event/effect history satisfie
 
 ## Source-derived gap
 
-The Drive-backed Full Atlas identifies `KFM-TRIAD-057` as an open replay-safety seam. Existing repository contracts define source-event identity and require idempotence in several lanes, but current-session search found no common `SideEffectLedger` or equivalent event-to-effect record. This slice implements the smallest fixture-only connective profile from candidates `KFM-CAND-0169` through `KFM-CAND-0171`.
+The Drive-backed Full Atlas identifies `KFM-TRIAD-057` as an open replay-safety seam. Existing repository contracts define source-event identity and require idempotence in several lanes, but the reviewed base contains no common `SideEffectLedger` or equivalent event-to-effect record. This slice implements the smallest fixture-only connective profile from candidates `KFM-CAND-0169` through `KFM-CAND-0171`.
 
 ## Directory Rules basis
 
@@ -84,23 +84,25 @@ These identities prove reproducible fixture semantics, not authenticity, authori
 A conforming candidate must preserve all of the following:
 
 - delivery attempts are contiguous from 1 and each attempt points to its immediate predecessor;
-- delivery and ledger times do not regress;
-- every ledger entry references a declared delivery;
-- ledger entry IDs and reason-code arrays are canonical and unique;
+- delivery and ledger arrays are chronologically ordered;
+- every ledger entry references a declared delivery and is recorded no earlier than that delivery's receipt time;
+- ledger entry IDs are contiguous from `ledger-entry:0001`, and reason-code arrays are canonical and unique;
 - no more than one `COMPLETED` entry exists;
-- every `DUPLICATE` delivery has one `DUPLICATE_SUPPRESSED` ledger entry;
+- every `DUPLICATE` delivery has exactly one `DUPLICATE_SUPPRESSED` entry bound to that same delivery, and no suppression is borrowed from another attempt;
+- compensation follows exactly one prior completion and is followed by a recorded reservation release;
+- the reservation snapshot is reconstructed from the latest `RESERVED`, `COMPLETED`, or `RELEASED` ledger transition rather than inferred from the result label;
+- `requested_at <= reserved_at <= effect_completed_at` whenever the corresponding states exist, and snapshot timestamps equal their ledger transition timestamps;
 - recorded duplicate and completion counts reproduce the ledger;
-- result and reservation states reproduce the observed history;
-- a completed effect has a completion time, while a never-completed effect does not;
+- the finite result reproduces the observed history;
 - all governance flags remain `false`.
 
-The profile deliberately reports at-least-once delivery with an idempotent effect. It does not make a broader exactly-once claim.
+A completed effect may later release its reservation without changing the finite result from `EXECUTED_ONCE` or `DUPLICATE_SUPPRESSED`. A compensated effect must end in a recorded `RELEASED` state. The profile deliberately reports at-least-once delivery with an idempotent effect; it does not make a broader exactly-once claim.
 
 ## Finite validator outcomes
 
 | Outcome | Meaning |
 |---|---|
-| `PASS` | Shape, identity, attempt lineage, effect cardinality, suppression, state, and non-authority checks passed. |
+| `PASS` | Shape, identity, attempt lineage, per-delivery suppression, causal ordering, effect cardinality, state reconstruction, and non-authority checks passed. |
 | `DENY` | The object was shape-valid but a replay/effect invariant failed. |
 | `ERROR` | The object or schema could not be evaluated safely. |
 
@@ -116,6 +118,8 @@ python -m unittest discover \
 
 python tools/validators/runtime/validate_replay_safe_effect_ledger.py --fixtures
 ```
+
+The focused workflow also watches `packages/hashing/**` and `pyproject.toml`, because the validator imports the shared RFC 8785 JCS plus SHA-256 implementation and installs declared validation dependencies.
 
 ## Rollback
 

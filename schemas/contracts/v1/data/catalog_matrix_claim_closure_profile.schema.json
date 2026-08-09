@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json",
+  "title": "CatalogMatrixClaimEnvelopeClosureProfile",
+  "description": "Proposed additive profile that proves a cataloged claim does not locally overstate its ClaimEnvelope evidence, policy, review, release, or publication posture. Validation is not authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "claim_envelope",
+    "catalog_matrix_closure",
+    "catalog_publication_state",
+    "spec_hash"
+  ],
+  "properties": {
+    "profile": {
+      "const": "CLAIM_ENVELOPE_CATALOG_MATRIX_CLOSURE_V1"
+    },
+    "claim_envelope": {
+      "$ref": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/claim_envelope.schema.json"
+    },
+    "catalog_matrix_closure": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
+    },
+    "catalog_publication_state": {
+      "enum": [
+        "NOT_PUBLISHED",
+        "PUBLISHED"
+      ],
+      "description": "Non-authoritative catalog projection used only for overstatement detection."
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/data/catalog_matrix_claim_closure_profile.md",
+    "claim_contract_doc": "contracts/evidence/claim_envelope.md",
+    "catalog_contract_doc": "contracts/data/catalog_matrix_closure_profile.md",
+    "fixtures_root": "fixtures/data/catalog_matrix/claim_closure/",
+    "validator": "tools/validators/validate_catalog_matrix_claim_closure.py",
+    "status": "PROPOSED",
+    "authority_boundary": "local-non-overstatement-only",
+    "no_network": true
+  }
+}

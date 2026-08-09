@@ -13,7 +13,7 @@
     "tools/validators/release/validate_release_manifest.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/release-dry-run.yml": "sha256:50604c9a4c2e20fabcf3714502f27412c6b98953927ff9cb010fd9d7022dd092",
+    ".github/workflows/release-dry-run.yml": "sha256:1c7f80d2719964c44c96b73de93367296a196c8f256f7e37f5196bf3764c9b8a",
     ".github/workflows/release-manifest.yml": "sha256:839eef6050e9ae0ea4b2d0f2f0392c1df803d006665b499ac14575697774f89a",
     "contracts/release/release_manifest.md": "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
     "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",

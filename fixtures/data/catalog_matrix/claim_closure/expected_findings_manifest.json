@@ -1,0 +1,143 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "valid-ready-published",
+      "case_kind": "VALID",
+      "path": "valid/valid_ready_published.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-hold-candidate",
+      "case_kind": "VALID",
+      "path": "valid/valid_hold_candidate.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-deny-terminal-posture",
+      "case_kind": "VALID",
+      "path": "valid/valid_deny_terminal_posture.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "schema-missing-publication-state",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_missing_publication_state.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-bad-profile",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_bad_profile.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-evidence-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_evidence_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_EVIDENCE_REFS_OVERSTATE_CLAIM"
+      ]
+    },
+    {
+      "case_id": "semantic-source-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_source_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_SOURCE_REFS_OVERSTATE_CLAIM"
+      ]
+    },
+    {
+      "case_id": "semantic-ready-support",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ready_support_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_READY_SUPPORT_OVERSTATEMENT"
+      ]
+    },
+    {
+      "case_id": "semantic-ready-policy",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ready_policy_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_READY_POLICY_OVERSTATEMENT"
+      ]
+    },
+    {
+      "case_id": "semantic-ready-review",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ready_review_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_READY_REVIEW_OVERSTATEMENT"
+      ]
+    },
+    {
+      "case_id": "semantic-ready-release",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ready_release_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_READY_RELEASE_OVERSTATEMENT"
+      ]
+    },
+    {
+      "case_id": "semantic-publication-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_publication_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_PUBLICATION_OVERSTATEMENT"
+      ]
+    },
+    {
+      "case_id": "semantic-release-ref-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_release_ref_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_RELEASE_REF_OVERSTATES_CLAIM"
+      ]
+    },
+    {
+      "case_id": "semantic-correction-ref-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_correction_ref_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_CORRECTION_REF_OVERSTATES_CLAIM"
+      ]
+    },
+    {
+      "case_id": "semantic-rollback-ref-overstatement",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_rollback_ref_overstatement.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_ROLLBACK_REF_OVERSTATES_CLAIM"
+      ]
+    },
+    {
+      "case_id": "semantic-denial-not-propagated",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_denial_not_propagated.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "CATALOG_DECISION_UNDERSTATES_CLAIM_DENIAL"
+      ]
+    }
+  ]
+}

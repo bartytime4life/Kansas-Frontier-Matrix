@@ -1,0 +1,87 @@
+{
+  "profile": "CLAIM_ENVELOPE_CATALOG_MATRIX_CLOSURE_V1",
+  "claim_envelope": {
+    "claim_id": "kfm:claim:hydrology:huc12-public-generalized:fixture",
+    "version": "0.1.0",
+    "statement": "Synthetic fixture: a reviewed public-safe generalized claim.",
+    "knowledge_character": "GENERALIZED_PUBLIC_VIEW",
+    "spatial_scope": {
+      "scope_ref": "kfm:geography:huc12:102600080101",
+      "crs": "OGC:CRS84",
+      "bbox": [
+        -99.0,
+        38.0,
+        -98.0,
+        39.0
+      ]
+    },
+    "temporal_scope": {
+      "as_of": "2026-08-09T00:00:00Z",
+      "valid_from": "2026-08-01T00:00:00Z",
+      "valid_to": "2026-08-31T23:59:59Z",
+      "observed_at": "2026-08-01T12:00:00Z"
+    },
+    "evidence_refs": [
+      "kfm:evidence:fixture:hydrology:001",
+      "kfm:evidence:fixture:hydrology:002"
+    ],
+    "source_refs": [
+      "kfm:source:fixture:usgs-water"
+    ],
+    "support_state": "SUPPORTED",
+    "policy_state": "ALLOW",
+    "review_state": "APPROVED",
+    "release_state": "PUBLISHED",
+    "correction_path_ref": "kfm:correction-path:fixture:hydrology:2026-08",
+    "release_ref": "kfm:release:fixture:hydrology:2026-08",
+    "rollback_ref": "kfm:rollback:fixture:hydrology:2026-08",
+    "spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "catalog_matrix_closure": {
+    "profile": "STAC_DCAT_PROV_CLOSURE_V1",
+    "matrix_id": "kfm:catalog-matrix:hydrology:fixture-claim-closure",
+    "version": "0.3.0",
+    "generated_at": "2026-08-09T04:00:00Z",
+    "artifact": {
+      "artifact_id": "kfm:artifact:hydrology:huc12:fixture-claim-closure",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "release_ref": "kfm:release:fixture:hydrology:2026-08"
+    },
+    "records": {
+      "stac": {
+        "record_ref": "kfm:catalog:stac:hydrology:fixture-claim-closure",
+        "artifact_id": "kfm:artifact:hydrology:huc12:fixture-claim-closure",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "release_ref": "kfm:release:fixture:hydrology:2026-08"
+      },
+      "dcat": {
+        "record_ref": "kfm:catalog:dcat:hydrology:fixture-claim-closure",
+        "artifact_id": "kfm:artifact:hydrology:huc12:fixture-claim-closure",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "release_ref": "kfm:release:fixture:hydrology:2026-08"
+      },
+      "prov": {
+        "record_ref": "kfm:catalog:prov:hydrology:fixture-claim-closure",
+        "artifact_id": "kfm:artifact:hydrology:huc12:fixture-claim-closure",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "release_ref": "kfm:release:fixture:hydrology:2026-08"
+      }
+    },
+    "evidence_refs": [
+      "kfm:evidence:fixture:hydrology:001"
+    ],
+    "source_refs": [
+      "kfm:source:fixture:unbound",
+      "kfm:source:fixture:usgs-water"
+    ],
+    "policy_decision_ref": "kfm:policy-decision:fixture:catalog-claim-closure",
+    "review_ref": "kfm:review:fixture:catalog-claim-closure",
+    "correction_path_ref": "kfm:correction-path:fixture:hydrology:2026-08",
+    "rollback_ref": "kfm:rollback:fixture:hydrology:2026-08",
+    "decision": "READY",
+    "reason_codes": [],
+    "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "catalog_publication_state": "NOT_PUBLISHED",
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+}

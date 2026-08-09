@@ -97,7 +97,7 @@ jobs:
           assert target, "Makefile release-dry-run target is missing"
           body = target.group("body")
           assert "python tools/release/release_dry_run.py" in body
-          assert "tests/release/test_publication_deny_dry_run.py" in body
+          assert "python -m unittest -q tests.release.test_publication_deny_dry_run" in body
           assert "TODO: tools/release dry-run" not in body
 
           print(

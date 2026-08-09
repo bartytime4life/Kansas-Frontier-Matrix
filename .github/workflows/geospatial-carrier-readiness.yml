@@ -10,7 +10,7 @@ name: geospatial-carrier-readiness
       - "tools/validators/release/validate_geospatial_carrier_readiness.py"
       - "tests/release/test_geospatial_carrier_readiness.py"
       - "docs/intake/exploratory/geospatial-carrier-readiness-source-map.md"
-      - "data/receipts/generated/genrec-geospatial-carrier-readiness-20260806.json"
+      - "data/receipts/generated/genrec-geoparquet-layout-profile-20260809.json"
   push:
     branches: [main]
     paths:
@@ -21,7 +21,7 @@ name: geospatial-carrier-readiness
       - "tools/validators/release/validate_geospatial_carrier_readiness.py"
       - "tests/release/test_geospatial_carrier_readiness.py"
       - "docs/intake/exploratory/geospatial-carrier-readiness-source-map.md"
-      - "data/receipts/generated/genrec-geospatial-carrier-readiness-20260806.json"
+      - "data/receipts/generated/genrec-geoparquet-layout-profile-20260809.json"
   workflow_dispatch:
 
 permissions:
@@ -63,7 +63,7 @@ jobs:
       - name: Run exact case polarity
         run: python tools/validators/release/validate_geospatial_carrier_readiness.py --cases
       - name: Verify generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geospatial-carrier-readiness-20260806.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geoparquet-layout-profile-20260809.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

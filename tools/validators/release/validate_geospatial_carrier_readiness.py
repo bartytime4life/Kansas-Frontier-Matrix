@@ -229,6 +229,7 @@ def _geoparquet(candidate: Mapping[str, Any]) -> tuple[list[str], list[str]]:
     reasons, advisories = _common(candidate)
     artifact = candidate["artifact"]
     carrier = candidate["carrier"]
+    layout = carrier["layout_profile"]
     if artifact["media_type"] != "application/vnd.apache.parquet":
         reasons.append("GEOPARQUET_MEDIA_TYPE_REQUIRED")
     if not str(artifact["file_name"]).lower().endswith(".parquet"):
@@ -247,6 +248,20 @@ def _geoparquet(candidate: Mapping[str, Any]) -> tuple[list[str], list[str]]:
         reasons.append("GEOPARQUET_STABLE_ROW_GROUPING_REQUIRED")
     if not carrier["deterministic_ordering"]:
         reasons.append("GEOPARQUET_DETERMINISTIC_ORDERING_REQUIRED")
+    if layout["compression"] != "ZSTD":
+        advisories.append("GEOPARQUET_ZSTD_RECOMMENDED")
+    if layout["ordering_parameters_digest"] == ZERO_SHA256:
+        reasons.append("GEOPARQUET_ORDERING_PARAMETERS_PLACEHOLDER_DENIED")
+    if layout["partition_parameters_digest"] == ZERO_SHA256:
+        reasons.append("GEOPARQUET_PARTITION_PARAMETERS_PLACEHOLDER_DENIED")
+    if layout["writer_parameters_digest"] == ZERO_SHA256:
+        reasons.append("GEOPARQUET_WRITER_PARAMETERS_PLACEHOLDER_DENIED")
+    if layout["benchmark_digest"] == ZERO_SHA256:
+        reasons.append("GEOPARQUET_BENCHMARK_DIGEST_PLACEHOLDER_DENIED")
+    if layout["partition_strategy"] == "NONE" and layout["partition_version"] is not None:
+        reasons.append("GEOPARQUET_PARTITION_VERSION_UNEXPECTED")
+    if layout["partition_strategy"] != "NONE" and layout["partition_version"] is None:
+        reasons.append("GEOPARQUET_PARTITION_VERSION_REQUIRED")
     if carrier["null_policy"] != "NULL_ONLY":
         reasons.append("GEOPARQUET_NULL_POLICY_VIOLATION")
     if not carrier["unknown_metadata_preserved"]:
@@ -267,6 +282,10 @@ ERROR_CODES = frozenset(
         "MVT_AREA_DRIFT_EXCEEDED",
         "MVT_TILER_PARAMETERS_PLACEHOLDER_DENIED",
         "GEOPARQUET_NULL_POLICY_VIOLATION",
+        "GEOPARQUET_ORDERING_PARAMETERS_PLACEHOLDER_DENIED",
+        "GEOPARQUET_PARTITION_PARAMETERS_PLACEHOLDER_DENIED",
+        "GEOPARQUET_WRITER_PARAMETERS_PLACEHOLDER_DENIED",
+        "GEOPARQUET_BENCHMARK_DIGEST_PLACEHOLDER_DENIED",
         "NON_CANONICAL_ARRAY",
         "SCHEMA_INVALID",
         "SCHEMA_UNAVAILABLE",

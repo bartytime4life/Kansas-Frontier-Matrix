@@ -3,7 +3,7 @@
     {
       "case_id": "cog-ready",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "COG",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "COG",
         "artifact": {"artifact_ref": "kfm:artifact:cog-ready", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "media_type": "image/tiff", "file_name": "elevation.tif", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:3dep", "run_receipt_ref": "kfm:run:cog-ready", "stac_item_ref": "kfm:stac:cog-ready"},
         "carrier": {"width": 4096, "height": 4096, "internal_tiling": true, "block_width": 512, "block_height": 512, "overview_count": 4, "compression": "DEFLATE", "crs": "EPSG:5070", "nodata_policy": "EXPLICIT_NODATA", "range_read_supported": true, "stac_extensions": ["projection", "raster"]},
@@ -14,7 +14,7 @@
     {
       "case_id": "cog-hold-no-overviews",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "COG",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "COG",
         "artifact": {"artifact_ref": "kfm:artifact:cog-hold", "digest": "sha256:1212121212121212121212121212121212121212121212121212121212121212", "media_type": "image/tiff", "file_name": "elevation.tif", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:3dep", "run_receipt_ref": "kfm:run:cog-hold", "stac_item_ref": "kfm:stac:cog-hold"},
         "carrier": {"width": 4096, "height": 4096, "internal_tiling": true, "block_width": 512, "block_height": 512, "overview_count": 0, "compression": "DEFLATE", "crs": "EPSG:5070", "nodata_policy": "EXPLICIT_NODATA", "range_read_supported": true, "stac_extensions": ["projection", "raster"]},
@@ -25,7 +25,7 @@
     {
       "case_id": "cog-error-placeholder-digest",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "COG",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "COG",
         "artifact": {"artifact_ref": "kfm:artifact:cog-error", "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "media_type": "image/tiff", "file_name": "small.tif", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:synthetic", "run_receipt_ref": "kfm:run:cog-error", "stac_item_ref": "kfm:stac:cog-error"},
         "carrier": {"width": 256, "height": 256, "internal_tiling": true, "block_width": 256, "block_height": 256, "overview_count": 0, "compression": "LZW", "crs": "EPSG:4326", "nodata_policy": "INTERNAL_MASK", "range_read_supported": true, "stac_extensions": ["projection", "raster"]},
@@ -36,7 +36,7 @@
     {
       "case_id": "mvt-ready",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "MVT",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "MVT",
         "artifact": {"artifact_ref": "kfm:artifact:mvt-ready", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "media_type": "application/vnd.pmtiles", "file_name": "roads.pmtiles", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:roads", "run_receipt_ref": "kfm:run:mvt-ready", "stac_item_ref": "kfm:stac:mvt-ready"},
         "carrier": {"mvt_version": "2.1", "extent": 4096, "tile_scheme": "XYZ", "container_kind": "PMTILES", "source_layer": "roads", "manifest_source_layer": "roads", "style_source_layers": ["roads"], "stable_feature_ids": true, "source_ref_attribute": true, "attribute_whitelist": ["class", "name", "source_ref"], "encoded_attributes": ["class", "name", "source_ref"], "sensitive_attributes": [], "max_tile_bytes": 64000, "geometry_drop_count": 0, "area_drift_pct": 0.1, "area_drift_limit_pct": 1.0, "tiler_parameters_hash": "sha256:2323232323232323232323232323232323232323232323232323232323232323", "range_read_supported": true},
@@ -47,7 +47,7 @@
     {
       "case_id": "mvt-hold-tile-budget",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "MVT",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "MVT",
         "artifact": {"artifact_ref": "kfm:artifact:mvt-hold", "digest": "sha256:2424242424242424242424242424242424242424242424242424242424242424", "media_type": "application/vnd.pmtiles", "file_name": "roads.pmtiles", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:roads", "run_receipt_ref": "kfm:run:mvt-hold", "stac_item_ref": "kfm:stac:mvt-hold"},
         "carrier": {"mvt_version": "2.1", "extent": 4096, "tile_scheme": "XYZ", "container_kind": "PMTILES", "source_layer": "roads", "manifest_source_layer": "roads", "style_source_layers": ["roads"], "stable_feature_ids": true, "source_ref_attribute": true, "attribute_whitelist": ["class", "name", "source_ref"], "encoded_attributes": ["class", "name", "source_ref"], "sensitive_attributes": [], "max_tile_bytes": 90000, "geometry_drop_count": 0, "area_drift_pct": 0.1, "area_drift_limit_pct": 1.0, "tiler_parameters_hash": "sha256:2525252525252525252525252525252525252525252525252525252525252525", "range_read_supported": true},
@@ -58,7 +58,7 @@
     {
       "case_id": "mvt-error-sensitive-attribute",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "MVT",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "MVT",
         "artifact": {"artifact_ref": "kfm:artifact:mvt-error", "digest": "sha256:2626262626262626262626262626262626262626262626262626262626262626", "media_type": "application/vnd.pmtiles", "file_name": "sites.pmtiles", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:sites", "run_receipt_ref": "kfm:run:mvt-error", "stac_item_ref": "kfm:stac:mvt-error"},
         "carrier": {"mvt_version": "2.1", "extent": 4096, "tile_scheme": "XYZ", "container_kind": "PMTILES", "source_layer": "sites", "manifest_source_layer": "sites", "style_source_layers": ["sites"], "stable_feature_ids": true, "source_ref_attribute": true, "attribute_whitelist": ["exact_location", "name", "source_ref"], "encoded_attributes": ["exact_location", "name", "source_ref"], "sensitive_attributes": ["exact_location"], "max_tile_bytes": 32000, "geometry_drop_count": 0, "area_drift_pct": 0.0, "area_drift_limit_pct": 1.0, "tiler_parameters_hash": "sha256:2727272727272727272727272727272727272727272727272727272727272727", "range_read_supported": true},
@@ -69,10 +69,10 @@
     {
       "case_id": "geoparquet-ready-with-advisory",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
         "artifact": {"artifact_ref": "kfm:artifact:gp-ready", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "media_type": "application/vnd.apache.parquet", "file_name": "counties.parquet", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:counties", "run_receipt_ref": "kfm:run:gp-ready", "stac_item_ref": "kfm:stac:gp-ready"},
-        "carrier": {"format_version": "1.1.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "null_policy": "NULL_ONLY", "bbox_covering": false, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
+        "carrier": {"format_version": "1.1.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "layout_profile": {"profile_id": "kfm.geoparquet-layout.county-boundaries.v1", "compression": "ZSTD", "ordering_strategy": "HILBERT", "ordering_version": "1", "ordering_parameters_digest": "sha256:3636363636363636363636363636363636363636363636363636363636363636", "row_group_target_rows": 75000, "row_group_target_bytes": 134217728, "partition_strategy": "NONE", "partition_version": null, "partition_parameters_digest": "sha256:3737373737373737373737373737373737373737373737373737373737373737", "writer_implementation": "synthetic-writer", "writer_version": "1.0.0", "writer_parameters_digest": "sha256:3838383838383838383838383838383838383838383838383838383838383838", "benchmark_ref": "kfm:benchmark:synthetic:county-boundaries-layout-v1", "benchmark_digest": "sha256:3939393939393939393939393939393939393939393939393939393939393939"}, "null_policy": "NULL_ONLY", "bbox_covering": false, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
         "governance": {"authority_created": false, "evidence_closure_claimed": false, "policy_evaluated": false, "promotion_authorized": false, "release_authorized": false, "publication_authorized": false, "public_use_allowed": false, "release_ref": null}
       },
       "expected": {"outcome": "READY", "reason_codes": [], "advisories": ["GEOPARQUET_BBOX_COVERING_RECOMMENDED"]}
@@ -80,10 +80,10 @@
     {
       "case_id": "geoparquet-hold-v2",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
         "artifact": {"artifact_ref": "kfm:artifact:gp-hold", "digest": "sha256:3434343434343434343434343434343434343434343434343434343434343434", "media_type": "application/vnd.apache.parquet", "file_name": "counties.parquet", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:counties", "run_receipt_ref": "kfm:run:gp-hold", "stac_item_ref": "kfm:stac:gp-hold"},
-        "carrier": {"format_version": "2.0.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "null_policy": "NULL_ONLY", "bbox_covering": true, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
+        "carrier": {"format_version": "2.0.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "layout_profile": {"profile_id": "kfm.geoparquet-layout.county-boundaries.v1", "compression": "ZSTD", "ordering_strategy": "HILBERT", "ordering_version": "1", "ordering_parameters_digest": "sha256:3636363636363636363636363636363636363636363636363636363636363636", "row_group_target_rows": 75000, "row_group_target_bytes": 134217728, "partition_strategy": "NONE", "partition_version": null, "partition_parameters_digest": "sha256:3737373737373737373737373737373737373737373737373737373737373737", "writer_implementation": "synthetic-writer", "writer_version": "1.0.0", "writer_parameters_digest": "sha256:3838383838383838383838383838383838383838383838383838383838383838", "benchmark_ref": "kfm:benchmark:synthetic:county-boundaries-layout-v1", "benchmark_digest": "sha256:3939393939393939393939393939393939393939393939393939393939393939"}, "null_policy": "NULL_ONLY", "bbox_covering": true, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
         "governance": {"authority_created": false, "evidence_closure_claimed": false, "policy_evaluated": false, "promotion_authorized": false, "release_authorized": false, "publication_authorized": false, "public_use_allowed": false, "release_ref": null}
       },
       "expected": {"outcome": "HOLD", "reason_codes": ["GEOPARQUET_VERSION_NOT_ADOPTED"], "advisories": []}
@@ -91,10 +91,10 @@
     {
       "case_id": "geoparquet-error-sentinel-policy",
       "candidate": {
-        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.0.0", "profile": "kfm.geospatial-carrier-readiness.v1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
+        "object_type": "GeospatialCarrierReadinessCheck", "schema_version": "1.1.0", "profile": "kfm.geospatial-carrier-readiness.v1.1", "network_access": "forbidden", "carrier_kind": "GEOPARQUET",
         "artifact": {"artifact_ref": "kfm:artifact:gp-error", "digest": "sha256:3535353535353535353535353535353535353535353535353535353535353535", "media_type": "application/vnd.apache.parquet", "file_name": "counties.parquet", "immutable": true},
         "bindings": {"source_descriptor_ref": "kfm:source:counties", "run_receipt_ref": "kfm:run:gp-error", "stac_item_ref": "kfm:stac:gp-error"},
-        "carrier": {"format_version": "1.1.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "null_policy": "SENTINEL_ALLOWED", "bbox_covering": true, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
+        "carrier": {"format_version": "1.1.0", "geometry_column": "geometry", "root_geometry_column": true, "encoding": "WKB", "crs_format": "PROJJSON", "explicit_crs": true, "geometry_types": ["MultiPolygon", "Polygon"], "stable_row_grouping": true, "deterministic_ordering": true, "layout_profile": {"profile_id": "kfm.geoparquet-layout.county-boundaries.v1", "compression": "ZSTD", "ordering_strategy": "HILBERT", "ordering_version": "1", "ordering_parameters_digest": "sha256:3636363636363636363636363636363636363636363636363636363636363636", "row_group_target_rows": 75000, "row_group_target_bytes": 134217728, "partition_strategy": "NONE", "partition_version": null, "partition_parameters_digest": "sha256:3737373737373737373737373737373737373737373737373737373737373737", "writer_implementation": "synthetic-writer", "writer_version": "1.0.0", "writer_parameters_digest": "sha256:3838383838383838383838383838383838383838383838383838383838383838", "benchmark_ref": "kfm:benchmark:synthetic:county-boundaries-layout-v1", "benchmark_digest": "sha256:3939393939393939393939393939393939393939393939393939393939393939"}, "null_policy": "SENTINEL_ALLOWED", "bbox_covering": true, "unknown_metadata_preserved": true, "numeric_unit_coverage": true},
         "governance": {"authority_created": false, "evidence_closure_claimed": false, "policy_evaluated": false, "promotion_authorized": false, "release_authorized": false, "publication_authorized": false, "public_use_allowed": false, "release_ref": null}
       },
       "expected": {"outcome": "ERROR", "reason_codes": ["GEOPARQUET_NULL_POLICY_VIOLATION"], "advisories": []}
