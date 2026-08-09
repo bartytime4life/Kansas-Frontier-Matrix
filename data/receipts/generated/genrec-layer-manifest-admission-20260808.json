@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/layer-manifest-admission.yml": "sha256:50fa7c87be168dc10254475ec63f5f623db7ae0d075ecb7a08683198102f344f",
+    ".github/workflows/layer-manifest-admission.yml": "sha256:4dbd6af3a1c105054634c75dc16afc80b286aa56667427a1aeda426fbdc7913a",
     "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "sha256:d11e0bf223e2547aa7c830b309e2cdd301dd700549bbaaef7a50d56f63620e80",
     "apps/explorer-web/tests/layer-manifest-admission.test.ts": "sha256:15b6152d1fa64efa9eea1b9e10fd7067984d9c512a34493ee12d2f3fd7ebec97",
     "contracts/runtime/layer_manifest_admission.md": "sha256:30cea5eb169f08724605ac30cbc1446b841cbd55369ea143fd75bc286403cc0b",
@@ -14,41 +14,112 @@
     "fixtures/runtime/layer_manifest_admission/cases.json"
   ],
   "citations": [
-    {"id":"repository:layer-manifest-runtime-gap","validated":true,"evidence_ref":"repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86"},
-    {"id":"attachment:maplibre-runtime-boundary","validated":true,"evidence_ref":"attachment:Master MapLibre Components-Functions-Features.pdf#LayerManifest-runtime-admission"},
-    {"id":"repository:directory-governance","validated":true,"evidence_ref":"repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86"}
+    {
+      "id": "repository:layer-manifest-runtime-gap",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86"
+    },
+    {
+      "id": "attachment:maplibre-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#LayerManifest-runtime-admission"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86"
+    }
   ],
   "contract_version": "3.0.0",
   "created_at": "2026-08-08T22:45:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
-  "human_review": {"reviewer_ids":[],"state":"pending","timestamp":null},
-  "inputs": {
-    "attached_docs":["Master MapLibre Components-Functions-Features.pdf","Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"],
-    "evidence_hashes":[],
-    "evidence_refs":["repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86","attachment:Master MapLibre Components-Functions-Features.pdf#LayerManifest-runtime-admission"]
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
   },
-  "links": {"adr_link":"docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md","drift_register_entry":null,"pr_number":null},
-  "model_identity": {"model":"GPT-5.6 Pro","provider":"OpenAI","version":"2026-08-08"},
-  "notes":"Fixture-only LayerManifest runtime admission projection selected from the current contract's explicit missing-loader gap. It proves finite eligibility and fail-closed legacy, inactive, candidate, stale, withdrawn, superseded, unresolved-evidence, policy-denied, release-binding-mismatch, direct-internal-source, and authority-overclaim paths. It never mutates a registry or creates a MapLibre source.",
+  "inputs": {
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86",
+      "attachment:Master MapLibre Components-Functions-Features.pdf#LayerManifest-runtime-admission"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only LayerManifest runtime admission projection selected from the current contract's explicit missing-loader gap. It proves finite eligibility and fail-closed legacy, inactive, candidate, stale, withdrawn, superseded, unresolved-evidence, policy-denied, release-binding-mismatch, direct-internal-source, and authority-overclaim paths. It never mutates a registry or creates a MapLibre source.",
   "override_record": null,
-  "parameters": {"max_tokens":null,"seed":null,"temperature":null,"tools_enabled":["GitHub connector repository inspection and branch/PR delivery","uploaded-file search","local deterministic validation"],"top_p":null},
-  "policy_decisions":["docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md","docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
-  "prompt_or_contract":"sha256:478990ea7e327b91b4ed3528ee60008741b693eab9903ca88da1e0fd9fb1fbfb",
-  "receipt_id":"genrec-layer-manifest-admission-20260808",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and branch/PR delivery",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:478990ea7e327b91b4ed3528ee60008741b693eab9903ca88da1e0fd9fb1fbfb",
+  "receipt_id": "genrec-layer-manifest-admission-20260808",
   "truth_labels": {
-    ".github/workflows/layer-manifest-admission.yml":"CONFIRMED",
-    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts":"CONFIRMED",
-    "apps/explorer-web/tests/layer-manifest-admission.test.ts":"CONFIRMED",
-    "contracts/runtime/layer_manifest_admission.md":"PROPOSED",
-    "fixtures/runtime/layer_manifest_admission/cases.json":"CONFIRMED"
+    ".github/workflows/layer-manifest-admission.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "CONFIRMED",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts": "CONFIRMED",
+    "contracts/runtime/layer_manifest_admission.md": "PROPOSED",
+    "fixtures/runtime/layer_manifest_admission/cases.json": "CONFIRMED"
   },
   "validation_gates": [
-    {"gate":"typescript-strict-compile","outcome":"PASS","reason":"The runtime admission module compiled under strict ES2022 settings."},
-    {"gate":"fixture-replay","outcome":"PASS","reason":"Thirteen synthetic cases matched exact finite outcome and code pairs."},
-    {"gate":"no-runtime-side-effects","outcome":"PASS","reason":"Static checks deny transport, direct MapLibre imports, and registry mutation shortcuts; results report registryMutated=false and maplibreSourceCreated=false."},
-    {"gate":"workflow-yaml-parse","outcome":"PASS","reason":"The read-only path-scoped workflow parsed as YAML."},
-    {"gate":"generated-receipt-byte-binding","outcome":"PASS","reason":"Every listed artifact path is unique and its SHA-256 digest matches this receipt."},
-    {"gate":"hosted-exact-head-ci","outcome":"SKIPPED","reason":"Hosted validation starts after the branch and draft pull request are created."},
-    {"gate":"human-review","outcome":"SKIPPED","reason":"Human review remains pending."}
+    {
+      "gate": "typescript-strict-compile",
+      "outcome": "PASS",
+      "reason": "The runtime admission module compiled under strict ES2022 settings."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirteen synthetic cases matched exact finite outcome and code pairs."
+    },
+    {
+      "gate": "no-runtime-side-effects",
+      "outcome": "PASS",
+      "reason": "Static checks deny transport, direct MapLibre imports, and registry mutation shortcuts; results report registryMutated=false and maplibreSourceCreated=false."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed as YAML."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every listed artifact path is unique and its SHA-256 digest matches this receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
   ]
 }
