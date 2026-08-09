@@ -35,7 +35,10 @@
       "minItems": 1,
       "maxItems": 8,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^data/work/automation/[A-Za-z0-9._/-]+$"}
+      "items": {
+        "type": "string",
+        "pattern": "^(?!.*(?:^|/)\\.{1,2}(?:/|$))data/work/automation/[A-Za-z0-9._/-]+$"
+      }
     },
     "artifacts": {
       "type": "array",
@@ -46,7 +49,10 @@
         "additionalProperties": false,
         "required": ["path", "sha256"],
         "properties": {
-          "path": {"type": "string", "pattern": "^data/work/automation/[A-Za-z0-9._/-]+$"},
+          "path": {
+            "type": "string",
+            "pattern": "^(?!.*(?:^|/)\\.{1,2}(?:/|$))data/work/automation/[A-Za-z0-9._/-]+$"
+          },
           "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
         }
       }
