@@ -1,0 +1,56 @@
+{
+  "profile": "kfm.layer-manifest-admission-fixtures.v1",
+  "source_gap": "contracts/data/layer_manifest.md#runtime-loader",
+  "base": {
+    "profile": "kfm.layer-manifest-admission-fixture.v1",
+    "layer_id": "ks.demo.public-layer",
+    "manifest_id": "layer-manifest:1234567890abcdef12345678",
+    "manifest_spec_hash": "sha256:1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+    "manifest_profile": "RELEASED_RUNTIME",
+    "profile_status": "ACTIVE",
+    "execution_mode": "RELEASED_RUNTIME",
+    "lifecycle_state": "PUBLISHED",
+    "trust_state": "RELEASED",
+    "release_binding": {
+      "release_manifest_ref": "kfm://release/ks-demo-2026-001",
+      "release_state": "PUBLISHED",
+      "subject_manifest_id": "layer-manifest:1234567890abcdef12345678",
+      "subject_spec_hash": "sha256:1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+      "evidence_resolved": true,
+      "policy_allowed": true,
+      "review_approved": true,
+      "promotion_approved": true,
+      "artifact_verified": true,
+      "signature_verified": true,
+      "rollback_ready": true,
+      "correction_state": "CURRENT"
+    },
+    "runtime_request": {
+      "registry_id": "kfm://runtime/layer-registry/fixture",
+      "layer_id": "ks.demo.public-layer",
+      "source_url_class": "GOVERNED_API",
+      "requested": true
+    },
+    "authority": {
+      "registry_mutated": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {"case_id":"released-eligible","mutation":"NONE","expected_outcome":"PASS","expected_code":"LAYER_MANIFEST_REGISTER_ELIGIBLE"},
+    {"case_id":"legacy-held","mutation":"LEGACY","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_LEGACY_PROFILE_HELD"},
+    {"case_id":"inactive-held","mutation":"INACTIVE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_INACTIVE_PROFILE_HELD"},
+    {"case_id":"candidate-held","mutation":"CANDIDATE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_NOT_PUBLISHED"},
+    {"case_id":"stale-held","mutation":"STALE","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_STALE"},
+    {"case_id":"withdrawn-denied","mutation":"WITHDRAWN","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_RELEASE_WITHDRAWN"},
+    {"case_id":"superseded-held","mutation":"SUPERSEDED","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_SUPERSEDED"},
+    {"case_id":"evidence-unresolved","mutation":"EVIDENCE_UNRESOLVED","expected_outcome":"HOLD","expected_code":"LAYER_MANIFEST_EVIDENCE_UNRESOLVED"},
+    {"case_id":"policy-denied","mutation":"POLICY_DENIED","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_POLICY_DENIED"},
+    {"case_id":"subject-mismatch","mutation":"SUBJECT_MISMATCH","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_RELEASE_BINDING_MISMATCH"},
+    {"case_id":"direct-internal-source","mutation":"DIRECT_INTERNAL_SOURCE","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_SOURCE_CLASS_DENIED"},
+    {"case_id":"authority-overclaim","mutation":"AUTHORITY_OVERCLAIM","expected_outcome":"DENY","expected_code":"LAYER_MANIFEST_AUTHORITY_OVERCLAIM"},
+    {"case_id":"invalid-shape","mutation":"INVALID_SHAPE","expected_outcome":"ERROR","expected_code":"LAYER_MANIFEST_ADMISSION_INPUT_INVALID"}
+  ]
+}
