@@ -18,6 +18,7 @@ from unittest import mock
 if importlib.util.find_spec("jsonschema") is None:
     jsonschema_stub = types.ModuleType("jsonschema")
     jsonschema_stub.Draft202012Validator = object
+    jsonschema_stub.FormatChecker = object
     sys.modules["jsonschema"] = jsonschema_stub
 
 if importlib.util.find_spec("referencing") is None:
@@ -84,6 +85,75 @@ class JsonSchemaRunnerTests(unittest.TestCase):
                 argv,
             )
         return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    def _schema_path(self) -> Path:
+        schema_path = self.root / "synthetic.schema.json"
+        schema_path.write_text(
+            '{"$schema":"https://json-schema.org/draft/2020-12/schema"}\n',
+            encoding="utf-8",
+        )
+        return schema_path
+
+    def test_load_validator_preserves_default_without_format_checker(self) -> None:
+        schema_path = self._schema_path()
+        registry = object()
+        constructed = object()
+        with (
+            mock.patch.object(
+                jsonschema_runner,
+                "build_registry",
+                return_value=registry,
+            ),
+            mock.patch.object(
+                jsonschema_runner,
+                "Draft202012Validator",
+                return_value=constructed,
+            ) as validator_factory,
+            mock.patch.object(jsonschema_runner, "FormatChecker") as format_checker,
+        ):
+            result = jsonschema_runner.load_validator(schema_path)
+
+        self.assertIs(result, constructed)
+        format_checker.assert_not_called()
+        validator_factory.assert_called_once_with(
+            {"$schema": "https://json-schema.org/draft/2020-12/schema"},
+            registry=registry,
+        )
+
+    def test_load_validator_can_opt_into_format_checker(self) -> None:
+        schema_path = self._schema_path()
+        registry = object()
+        checker = object()
+        constructed = object()
+        with (
+            mock.patch.object(
+                jsonschema_runner,
+                "build_registry",
+                return_value=registry,
+            ),
+            mock.patch.object(
+                jsonschema_runner,
+                "Draft202012Validator",
+                return_value=constructed,
+            ) as validator_factory,
+            mock.patch.object(
+                jsonschema_runner,
+                "FormatChecker",
+                return_value=checker,
+            ) as format_checker,
+        ):
+            result = jsonschema_runner.load_validator(
+                schema_path,
+                check_formats=True,
+            )
+
+        self.assertIs(result, constructed)
+        format_checker.assert_called_once_with()
+        validator_factory.assert_called_once_with(
+            {"$schema": "https://json-schema.org/draft/2020-12/schema"},
+            registry=registry,
+            format_checker=checker,
+        )
 
     def test_fixture_mode_is_sorted_and_labels_expected_invalids(self) -> None:
         valid_z = self._write_json("valid", "z.json", {"valid": True})

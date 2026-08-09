@@ -5,18 +5,24 @@ name: identity-token-validation
   pull_request:
     paths:
       - ".github/workflows/identity-token-validation.yml"
+      - "pyproject.toml"
       - "schemas/contracts/v1/common/identity_token.schema.json"
       - "contracts/common/identity_token.md"
+      - "tools/validators/_common/jsonschema_runner.py"
       - "tools/validators/validate_identity_token.py"
+      - "tests/validators/test_jsonschema_runner.py"
       - "fixtures/contracts/v1/common/identity_token/**"
       - "data/receipts/generated/genrec-identity-token-validator-*.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/identity-token-validation.yml"
+      - "pyproject.toml"
       - "schemas/contracts/v1/common/identity_token.schema.json"
       - "contracts/common/identity_token.md"
+      - "tools/validators/_common/jsonschema_runner.py"
       - "tools/validators/validate_identity_token.py"
+      - "tests/validators/test_jsonschema_runner.py"
       - "fixtures/contracts/v1/common/identity_token/**"
       - "data/receipts/generated/genrec-identity-token-validator-*.json"
   workflow_dispatch:
@@ -59,7 +65,12 @@ jobs:
           set -euo pipefail
           python -m pip install -e ".[test]"
 
-      - name: Validate IdentityToken fixture polarity
+      - name: Verify shared-runner format opt-in compatibility
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/validators/test_jsonschema_runner.py
+
+      - name: Validate IdentityToken fixture polarity and date-time format
         run: |
           set -euo pipefail
           python tools/validators/validate_identity_token.py --fixtures
@@ -68,7 +79,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-identity-token-validator-20260809.json \
+            data/receipts/generated/genrec-identity-token-validator-format-checking-20260809.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -78,6 +89,6 @@ jobs:
             echo "### IdentityToken fixture validation"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: existing proposed IdentityToken JSON Schema, executable validator routing, non-vacuous synthetic fixture polarity, and authoring-receipt integrity."
-            echo "- Boundary: schema validity proves machine shape only. It creates no identity, authentication, evidence, policy, review, release, publication, or public-use authority."
+            echo "- Scope: existing proposed IdentityToken JSON Schema, explicit format-check opt-in, non-vacuous synthetic fixture polarity, shared-runner compatibility, and authoring-receipt integrity."
+            echo "- Boundary: schema and format validity prove machine shape only. They create no identity, authentication, evidence, policy, review, release, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"
