@@ -1,0 +1,87 @@
+# Validate the fixture-only county environmental recency spine candidate.
+name: county-environmental-recency-spine
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/county-environmental-recency-spine.yml"
+      - "contracts/data/county_environmental_recency_spine.md"
+      - "schemas/contracts/v1/data/county_environmental_recency_spine.schema.json"
+      - "fixtures/contracts/v1/data/county_environmental_recency_spine/**"
+      - "tools/validators/data/validate_county_environmental_recency_spine.py"
+      - "tests/validators/test_validate_county_environmental_recency_spine.py"
+      - "docs/intake/exploratory/pass-32-county-environmental-recency-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-county-environmental-recency-spine-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/county-environmental-recency-spine.yml"
+      - "contracts/data/county_environmental_recency_spine.md"
+      - "schemas/contracts/v1/data/county_environmental_recency_spine.schema.json"
+      - "fixtures/contracts/v1/data/county_environmental_recency_spine/**"
+      - "tools/validators/data/validate_county_environmental_recency_spine.py"
+      - "tests/validators/test_validate_county_environmental_recency_spine.py"
+      - "docs/intake/exploratory/pass-32-county-environmental-recency-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-county-environmental-recency-spine-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: county-environmental-recency-spine-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-county-environmental-recency-spine
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_county_environmental_recency_spine.py' \
+            --verbose
+          python tools/validators/data/validate_county_environmental_recency_spine.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-county-environmental-recency-spine-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### CountyEnvironmentalRecencySpineCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic six-lane weekly county composition, existing source-health vocabulary, deterministic rollup, and non-authority flags."
+            echo "- Boundary: no source probe, source-health authorship, interpretation, lifecycle write, policy, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
