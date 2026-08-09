@@ -1,0 +1,130 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/dependency-origin-policy.yml": "sha256:e5b4eb900b9b6d6a71a85abe66d12ed9d2d2424876e2701d5ea01a1136746c39",
+    "contracts/governance/dependency_origin_policy.md": "sha256:73f1d7ddcab308b913650cbf798c11a3195e66feed431b5df75e84283877d300",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/README.md": "sha256:ff0052f3f45b0708291f7713446f7462ff9929a2472e15073df320c9a48aef87",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json": "sha256:56498382b5bf2e61a7ff58000ff895765c487be3fe9c7c222c3d47f00d9bf635",
+    "policy/supply_chain/README.md": "sha256:0b301a443589e4941c9fc4ed9b451dfb4a6099b6e3d3c00fca0816d55f5e8226",
+    "policy/supply_chain/dependency_origin_policy.v1.json": "sha256:1a2ab03ad04a571be23887651b153eb222446fa471ff7bd4b7251f5b7d4ee008",
+    "schemas/contracts/v1/governance/dependency_origin_policy.schema.json": "sha256:9d801be2351b97d7ab700c0ae071769fb1c8e24b6d5863d99902885ef4a1e164",
+    "tests/validators/governance/test_dependency_origin_policy.py": "sha256:fc03ec368f5d88fb94ec6a59e59e30384d4ca70a7d863155b3f22f59d881bb94",
+    "tools/validators/governance/validate_dependency_origin_policy.py": "sha256:24258172e233cdde4cb3e82e3c467b5adcad34ec021c81676125d6c7682770df"
+  },
+  "artifact_paths": [
+    ".github/workflows/dependency-origin-policy.yml",
+    "contracts/governance/dependency_origin_policy.md",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/README.md",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json",
+    "policy/supply_chain/README.md",
+    "policy/supply_chain/dependency_origin_policy.v1.json",
+    "schemas/contracts/v1/governance/dependency_origin_policy.schema.json",
+    "tests/validators/governance/test_dependency_origin_policy.py",
+    "tools/validators/governance/validate_dependency_origin_policy.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0007",
+      "id": "SRC-PASS8-DEPENDENCY-CONFUSION",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029-DIRECTORY-RULES-V2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-09T00:13:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0007",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@c76a4860693830a783579c29bf276977856e9f86",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86",
+      "repo:package.json@c76a4860693830a783579c29bf276977856e9f86",
+      "repo:pnpm-lock.yaml@c76a4860693830a783579c29bf276977856e9f86",
+      "repo:pyproject.toml@c76a4860693830a783579c29bf276977856e9f86"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Authoring provenance for an additive static dependency-origin guard. The profile checks repository declarations only: exact package-manager pin, single lockfile ownership, @kfm workspace/link binding, direct URL/VCS references, lock integrity, explicit registry hosts when URLs exist, and Python direct references. It installs nothing, contacts no registry, changes no dependency or lockfile bytes, and creates no source, evidence, policy-review, release, deployment, publication, or public-use authority. Base evidence inspection began at c76a4860693830a783579c29bf276977856e9f86; the clean delivery branch was cut from a542a647f70c96351da7464ece97a7eb41492a06.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f255e48098e878f7d5cd8947fd1a832b9942d7a1bc9bd432802705e83274ea29",
+  "receipt_id": "genrec-pass8-dependency-origin-policy-20260808",
+  "truth_labels": {
+    ".github/workflows/dependency-origin-policy.yml": "PROPOSED",
+    "contracts/governance/dependency_origin_policy.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json": "CONFIRMED",
+    "policy/supply_chain/README.md": "PROPOSED",
+    "policy/supply_chain/dependency_origin_policy.v1.json": "PROPOSED",
+    "schemas/contracts/v1/governance/dependency_origin_policy.schema.json": "PROPOSED",
+    "tests/validators/governance/test_dependency_origin_policy.py": "CONFIRMED",
+    "tools/validators/governance/validate_dependency_origin_policy.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "DependencyOriginPolicy schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-deterministic-tests",
+      "outcome": "PASS",
+      "reason": "Seven no-network unit tests passed, including temporary-repository positive and internal-scope escape cases."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Nine synthetic cases matched exact PASS, DENY, or ERROR outcomes and stable finding-code sets."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused test module compiled."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "Read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "current-repository-static-scan",
+      "outcome": "SKIPPED",
+      "reason": "Requires the complete checked-out repository and will run in the dedicated hosted workflow."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request delivery."
+    }
+  ]
+}
