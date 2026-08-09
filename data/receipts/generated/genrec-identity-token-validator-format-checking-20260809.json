@@ -5,14 +5,16 @@
     ".github/workflows/identity-token-validation.yml",
     "fixtures/contracts/v1/common/identity_token/README.md",
     "fixtures/contracts/v1/common/identity_token/invalid/bad-issued-at.json",
+    "pyproject.toml",
     "tests/validators/test_jsonschema_runner.py",
     "tools/validators/_common/jsonschema_runner.py",
     "tools/validators/validate_identity_token.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/identity-token-validation.yml": "sha256:ca90a0ec6a08b659de9337f4c676a941ddf925c8ef827d18330da6e0aa0c6e04",
+    ".github/workflows/identity-token-validation.yml": "sha256:cd3fa777ccb3f0057f6b1db63041d4bb112aeb5b0b17df8575920bb3ea5eb5d1",
     "fixtures/contracts/v1/common/identity_token/README.md": "sha256:e5c2d0db9b39d212fdf658d36161e9ca0a893e65a9f2072d4acfc126700fbcc9",
     "fixtures/contracts/v1/common/identity_token/invalid/bad-issued-at.json": "sha256:e6112b97019a638b6da5d53e1e7818b98eee5124ad341eca1a3984c9669428ee",
+    "pyproject.toml": "sha256:1e82cd3252c858c21b13a9790882b45457c3d59644340162393f7bf6b2e8605f",
     "tests/validators/test_jsonschema_runner.py": "sha256:3f41c640bd1535fde8e7e6b773288601f47a14588336bd272f32864a7abc45bb",
     "tools/validators/_common/jsonschema_runner.py": "sha256:b5821910de09269c5153d528cb71c6a82444bc747cd044368d7e860f8b05a076",
     "tools/validators/validate_identity_token.py": "sha256:58f8b370106e4ed4ce5e758c85a5bca9f151501ae5977e65694cf37dcebe9a45"
@@ -28,89 +30,46 @@
     "temperature": null,
     "top_p": null,
     "max_tokens": null,
-    "tools_enabled": [
-      "GitHub connector (read/write)",
-      "uploaded-file search"
-    ]
+    "tools_enabled": ["GitHub connector (read/write)", "uploaded-file search", "authoritative package metadata verification"]
   },
   "inputs": {
-    "attached_docs": [
-      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
-    ],
+    "attached_docs": ["KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"],
     "evidence_refs": [
       "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack",
       "repo:tools/validators/_common/jsonschema_runner.py@main",
       "repo:schemas/contracts/v1/common/identity_token.schema.json@main",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main",
+      "pypi:rfc3339-validator==0.1.4"
     ]
   },
   "truth_labels": {
     ".github/workflows/identity-token-validation.yml": "CONFIRMED",
     "fixtures/contracts/v1/common/identity_token/README.md": "CONFIRMED",
     "fixtures/contracts/v1/common/identity_token/invalid/bad-issued-at.json": "CONFIRMED",
+    "pyproject.toml": "CONFIRMED",
     "tests/validators/test_jsonschema_runner.py": "CONFIRMED",
     "tools/validators/_common/jsonschema_runner.py": "CONFIRMED",
     "tools/validators/validate_identity_token.py": "CONFIRMED"
   },
   "validation_gates": [
-    {
-      "gate": "artifact-byte-binding",
-      "outcome": "PASS",
-      "reason": "Every authored artifact except this receipt is bound to its prepared SHA-256 bytes without receipt self-reference."
-    },
-    {
-      "gate": "backward-compatible-format-opt-in",
-      "outcome": "PASS",
-      "reason": "The shared runner defaults check_formats to false; only the IdentityToken validator opts in."
-    },
-    {
-      "gate": "hosted-focused-tests",
-      "outcome": "SKIPPED",
-      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
-    },
-    {
-      "gate": "hosted-fixture-polarity",
-      "outcome": "SKIPPED",
-      "reason": "The invalid issued_at fixture requires exact-head execution of the IdentityToken validator with jsonschema format support installed."
-    },
-    {
-      "gate": "human-review",
-      "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
-    }
+    {"gate": "artifact-byte-binding", "outcome": "PASS", "reason": "Every authored artifact except this receipt is bound to the merged artifact bytes without receipt self-reference."},
+    {"gate": "backward-compatible-format-opt-in", "outcome": "PASS", "reason": "The shared runner defaults check_formats to false; only the IdentityToken validator opts in."},
+    {"gate": "rfc3339-format-backend", "outcome": "PASS", "reason": "The root dependency set explicitly pins rfc3339-validator 0.1.4 so jsonschema FormatChecker can enforce the declared date-time format."},
+    {"gate": "hosted-focused-tests", "outcome": "SKIPPED", "reason": "The first exact-head attempt proved twelve runner tests before exposing the missing RFC 3339 backend; corrected hosted replay remains required."},
+    {"gate": "hosted-fixture-polarity", "outcome": "SKIPPED", "reason": "Corrected exact-head replay remains required after dependency repair."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Human review remains pending for this corrective receipt edit."}
   ],
-  "policy_decisions": [
-    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
   "citations": [
-    {
-      "id": "attachment:kfm-components-pass-13-artifactization",
-      "validated": true,
-      "evidence_ref": "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack"
-    },
-    {
-      "id": "repository:identity-token-schema",
-      "validated": true,
-      "evidence_ref": "repo:schemas/contracts/v1/common/identity_token.schema.json@main"
-    },
-    {
-      "id": "repository:directory-governance-adr",
-      "validated": true,
-      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"
-    }
+    {"id": "attachment:kfm-components-pass-13-artifactization", "validated": true, "evidence_ref": "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack"},
+    {"id": "repository:identity-token-schema", "validated": true, "evidence_ref": "repo:schemas/contracts/v1/common/identity_token.schema.json@main"},
+    {"id": "repository:directory-governance-adr", "validated": true, "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main"},
+    {"id": "package:rfc3339-validator-0.1.4", "validated": true, "evidence_ref": "pypi:rfc3339-validator==0.1.4"}
   ],
-  "human_review": {
-    "reviewer_ids": [],
-    "state": "pending",
-    "timestamp": null
-  },
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
   "override_record": null,
   "created_at": "2026-08-09T02:18:00Z",
   "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
-  "links": {
-    "pr_number": null,
-    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
-    "drift_register_entry": null
-  },
-  "notes": "Backward-compatible shared-runner enhancement that makes JSON Schema format checking explicit and opt-in, then enables it for the existing proposed IdentityToken date-time field. No schema semantics, identity authority, source authority, policy decision, lifecycle transition, release, deployment, promotion, publication, or public-use authority is created."
+  "links": {"pr_number": 2320, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Corrective edition after PR #2320 merged before its final receipt update. It binds the merged format-checking workflow, RFC 3339 dependency, fixture, tests, and validators; no schema semantics or release/publication authority is created."
 }
