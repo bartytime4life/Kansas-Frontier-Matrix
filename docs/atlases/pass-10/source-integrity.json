@@ -1,0 +1,43 @@
+{
+  "embedded_attachments": {
+    "change-report-pass-10.json": {
+      "bytes": 14140,
+      "sha256": "745d66420d401c8ed03e6d76a655d9b7d3a02443107acf6935ea7b73d98182f1"
+    },
+    "index-pass-10.json": {
+      "bytes": 184599,
+      "sha256": "c817732c8eaa1b883847415aacdab901390ccac8adbf625f475f0c6bfb7ebc82"
+    },
+    "manifest-pass-10.jsonl": {
+      "bytes": 2165923,
+      "sha256": "78e48c272aeaff3d17232511922dcfe1a9ce52edfc850585896f15c3bcc98d2e"
+    },
+    "manifest-pass-9.jsonl": {
+      "bytes": 2083197,
+      "sha256": "b77896073bc6382dab4bbbaed305700294f9eda6cf48e2a87211401b072daea9"
+    }
+  },
+  "extraction_basis": "Embedded PDF attachments extracted with pypdf; changed records selected without rewriting their JSON lines.",
+  "integrated_delta": {
+    "change_report": {
+      "bytes": 14140,
+      "sha256": "745d66420d401c8ed03e6d76a655d9b7d3a02443107acf6935ea7b73d98182f1"
+    },
+    "exact_manifest_records": {
+      "bytes": 352894,
+      "sha256": "1d9da6008c3b28d31e64100d364f330f33406321dc0c8a7bb8f67ef777440967"
+    },
+    "expanded": 30,
+    "new": 29,
+    "stable_ids_unique": true,
+    "total": 59
+  },
+  "schema_version": "1.0.0",
+  "source": {
+    "bytes": 6112405,
+    "filename": "KFM_Pass_10_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+    "pages": 866,
+    "sha256": "386fce4b5915257a162fa60b871d3e6cd857a94723ab0d120a818ef35ce643af"
+  },
+  "truth_label": "CONFIRMED"
+}
