@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-terminal-state-assessment-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/terminal-state-assessment.yml",
+    "contracts/governance/terminal_state_assessment.md",
+    "docs/intake/exploratory/terminal-state-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/terminal_state_assessment/cases.json",
+    "schemas/contracts/v1/governance/terminal_state_assessment.schema.json",
+    "tests/validators/test_validate_terminal_state_assessment.py",
+    "tools/validators/governance/validate_terminal_state_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/terminal-state-assessment.yml": "sha256:fbb938f690d1be04f2e86319d30d533e082bb5009ff8039152b61a7469dbfda9",
+    "contracts/governance/terminal_state_assessment.md": "sha256:d94f972b86fdbc5234df8f2781aeb07526e516cd36cb269881e9e83bc8956547",
+    "docs/intake/exploratory/terminal-state-assessment-source-map.md": "sha256:eacaf3a9a1522ddb364947e1c67cab00fc2c24271ebfe9e7ac73091c25716cbb",
+    "fixtures/contracts/v1/governance/terminal_state_assessment/cases.json": "sha256:dbb3998ab46f679d1542366a93ec6106c8c77dc96327f7da518b6ca4a0692f36",
+    "schemas/contracts/v1/governance/terminal_state_assessment.schema.json": "sha256:1efef04029afc301ccc9c5ed305b1f969e0861430097d12a8ee0cdb539b9fe15",
+    "tests/validators/test_validate_terminal_state_assessment.py": "sha256:6dd17e305e1ca1204461d8ee67b40c0e0370fe012a672af50bbcf317f6774ac8",
+    "tools/validators/governance/validate_terminal_state_assessment.py": "sha256:efde8bf4dd12ae1f3a9d9784692ca821a5f09808b8588658865a17dc808feac0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#TerminalStateDivergence",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c76a4860693830a783579c29bf276977856e9f86"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/terminal-state-assessment.yml": "CONFIRMED",
+    "contracts/governance/terminal_state_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/terminal-state-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/terminal_state_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/terminal_state_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_terminal_state_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_terminal_state_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "14 exact cases: 3 PASS, 3 ABSTAIN, 8 DENY."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "terminal-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#TerminalStateDivergence"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c76a4860693830a783579c29bf276977856e9f86/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T23:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only additive implementation. No network access, lifecycle mutation, source activation, policy approval, merge, release, deployment, publication, or public-use authority is created."
+}
