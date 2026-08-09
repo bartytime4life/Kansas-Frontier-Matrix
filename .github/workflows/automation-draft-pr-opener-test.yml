@@ -80,7 +80,11 @@ jobs:
                   raise SystemExit(f"missing privileged-workflow guard marker: {marker}")
 
           forbidden = (
+              "pull_request:",
               "pull_request_target:",
+              "push:",
+              "workflow_dispatch:",
+              "workflow_call:",
               "workflow_run:",
               "schedule:",
               "contents: write",
@@ -97,6 +101,8 @@ jobs:
               if marker in text:
                   raise SystemExit(f"forbidden privileged-workflow marker surfaced: {marker}")
 
+          if text.count("repository_dispatch:") != 1:
+              raise SystemExit("repository-dispatch trigger must occur exactly once")
           if text.count("pull-requests: write") != 1:
               raise SystemExit("pull-request write permission must occur exactly once")
           PY
