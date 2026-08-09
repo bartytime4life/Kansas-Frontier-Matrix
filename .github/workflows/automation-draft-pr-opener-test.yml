@@ -41,6 +41,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Parse workflow YAML before semantic checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby -e 'require "yaml"; ARGV.each { |path| YAML.parse_file(path) }' \
+            .github/workflows/automation-draft-pr-opener.yml \
+            .github/workflows/automation-draft-pr-opener-test.yml
+
       - name: Compile and run focused no-network tests
         shell: bash
         run: |
@@ -60,6 +68,12 @@ jobs:
 
           path = Path(".github/workflows/automation-draft-pr-opener.yml")
           text = path.read_text(encoding="utf-8")
+          active_lines = tuple(
+              line.strip()
+              for line in text.splitlines()
+              if line.strip() and not line.lstrip().startswith("#")
+          )
+          active_text = "\n".join(active_lines)
 
           required = (
               "repository_dispatch:",
@@ -76,7 +90,7 @@ jobs:
               "AUTOMATION_PR_POSTCREATE_BINDING_FAILED",
           )
           for marker in required:
-              if marker not in text:
+              if marker not in active_text:
                   raise SystemExit(f"missing privileged-workflow guard marker: {marker}")
 
           forbidden = (
@@ -98,12 +112,12 @@ jobs:
               "git push",
           )
           for marker in forbidden:
-              if marker in text:
+              if marker in active_text:
                   raise SystemExit(f"forbidden privileged-workflow marker surfaced: {marker}")
 
-          if text.count("repository_dispatch:") != 1:
+          if active_lines.count("repository_dispatch:") != 1:
               raise SystemExit("repository-dispatch trigger must occur exactly once")
-          if text.count("pull-requests: write") != 1:
+          if active_lines.count("pull-requests: write") != 1:
               raise SystemExit("pull-request write permission must occur exactly once")
           PY
 
@@ -116,5 +130,5 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- This workflow has contents:read only and performs no PR, branch, issue, release, deployment, or publication mutation."
-            echo "- It checks deterministic git-binding behavior and static privileged-workflow guardrails; it does not exercise live pull-request creation."
+            echo "- It checks workflow YAML, deterministic git-binding behavior, and static privileged-workflow guardrails; it does not exercise live pull-request creation."
           } >> "$GITHUB_STEP_SUMMARY"
