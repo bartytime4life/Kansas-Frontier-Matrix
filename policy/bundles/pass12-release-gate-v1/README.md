@@ -40,7 +40,7 @@ This profile is intentionally not normalized into `PolicyDecision`; that integra
 - negative fixtures: missing evidence, sensitivity review, and required attestation
 - hosted validation: `.github/workflows/pass12-release-policy-v1.yml`
 
-The workflow installs checksum-pinned OPA 1.17.0, checks formatting, runs native Rego tests, evaluates fixture polarity, and asserts stable deny reasons.
+The workflow installs checksum-pinned OPA 1.19.0, checks formatting, runs native Rego tests, evaluates fixture polarity, and asserts stable deny reasons.
 
 ## Directory Rules basis
 
