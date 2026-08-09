@@ -1,0 +1,78 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "object_type": "GraphMigrationDeclaration",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "migration": {
+      "title": "Add a synthetic evidence relationship",
+      "intent": "Declare a bounded additive relationship change for fixture validation only.",
+      "class": "ADDITIVE",
+      "status": "PROPOSED",
+      "reason_refs": ["fixture:reason/pass30-graph-declaration"]
+    },
+    "scope": {
+      "store_class": "UNRESOLVED",
+      "environment_ref": "fixture:environment/unselected-graph-store",
+      "affected_surfaces": ["RELATIONSHIP_VOCABULARY"],
+      "node_classes": ["EVIDENCE", "PLACE"],
+      "relationship_types": ["SUPPORTED_BY"],
+      "projections": []
+    },
+    "invariants": [
+      {"name": "DETERMINISTIC_IDENTITY", "disposition": "REQUIRED"},
+      {"name": "DIRECTIONALITY_CARDINALITY", "disposition": "REQUIRED"},
+      {"name": "ENDPOINT_INTEGRITY", "disposition": "REQUIRED"},
+      {"name": "EVIDENCE_CLOSURE", "disposition": "REQUIRED"},
+      {"name": "IDENTITY_LINEAGE", "disposition": "REQUIRED"},
+      {"name": "NO_AUTHORITY_INFLATION", "disposition": "REQUIRED"},
+      {"name": "PROVENANCE", "disposition": "REQUIRED"},
+      {"name": "RECOVERY", "disposition": "REQUIRED"},
+      {"name": "SENSITIVITY_RIGHTS", "disposition": "REQUIRED"},
+      {"name": "TEMPORAL_SPATIAL_SCOPE", "disposition": "REQUIRED"}
+    ],
+    "blast_radius": {
+      "affected_components": ["FIXTURE_GRAPH"],
+      "worst_case": "A malformed fixture would misstate the proposed relationship scope.",
+      "destructive_effects": false,
+      "sensitive_data_impact": "UNRESOLVED"
+    },
+    "telemetry": {
+      "state": "NOT_RUN",
+      "metric_names": ["DUPLICATE_RELATIONSHIP_COUNT", "ORPHAN_ENDPOINT_COUNT"],
+      "precheck_refs": ["fixture:check/preflight-integrity"],
+      "postcheck_refs": ["fixture:check/postflight-integrity"]
+    },
+    "reversibility": {
+      "recovery_class": "PAIRED_ROLLBACK",
+      "paired_recovery_ref": "fixture:recovery/remove-synthetic-relationship",
+      "rehearsal_state": "NOT_RUN",
+      "irreversible_effects": []
+    },
+    "governance": {
+      "authority_refs": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "migrations/graph/README.md"],
+      "evidence_refs": ["fixture:evidence/pass30-graph-card"],
+      "policy_refs": ["docs/doctrine/directory-rules.md"],
+      "review_state": "PENDING",
+      "execution_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "assessment": {"outcome": "HOLD", "reason_code": "MIGRATION_DECLARATION_REVIEW_REQUIRED"},
+    "permissions": {"network_access": false, "graph_read": false, "graph_write": false, "file_mutation": false, "policy_evaluation": false, "release": false, "publication": false},
+    "non_effects": ["NO_EVIDENCE_MUTATION", "NO_GRAPH_ACCESS", "NO_GRAPH_WRITE", "NO_IDENTITY_REMAP", "NO_LIFECYCLE_PROMOTION", "NO_POLICY_DECISION", "NO_PUBLICATION", "NO_QUERY_EXECUTION", "NO_RELEASE", "NO_REVIEW_APPROVAL"]
+  },
+  "cases": [
+    {"id": "valid-additive", "patch": {}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "valid-evidence-repair", "patch": {"migration": {"title": "Repair a synthetic evidence reference", "intent": "Declare a bounded fixture-only evidence-reference repair with paired recovery.", "class": "EVIDENCE_REPAIR"}, "scope": {"affected_surfaces": ["EVIDENCE_LINKS"], "relationship_types": ["EVIDENCED_BY"]}, "reversibility": {"recovery_class": "FORWARD_FIX", "paired_recovery_ref": "fixture:recovery/restore-synthetic-evidence-ref"}}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "missing-invariant", "patch": {"invariants": [{"name": "DETERMINISTIC_IDENTITY", "disposition": "REQUIRED"}, {"name": "DIRECTIONALITY_CARDINALITY", "disposition": "REQUIRED"}, {"name": "ENDPOINT_INTEGRITY", "disposition": "REQUIRED"}, {"name": "EVIDENCE_CLOSURE", "disposition": "REQUIRED"}, {"name": "IDENTITY_LINEAGE", "disposition": "REQUIRED"}, {"name": "NO_AUTHORITY_INFLATION", "disposition": "REQUIRED"}, {"name": "PROVENANCE", "disposition": "REQUIRED"}, {"name": "SENSITIVITY_RIGHTS", "disposition": "REQUIRED"}, {"name": "TEMPORAL_SPATIAL_SCOPE", "disposition": "REQUIRED"}]}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "empty-scope", "patch": {"scope": {"affected_surfaces": []}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "destructive-effect", "patch": {"blast_radius": {"destructive_effects": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "missing-recovery", "patch": {"reversibility": {"paired_recovery_ref": ""}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "telemetry-run-claim", "patch": {"telemetry": {"state": "PASSED"}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "authority-overclaim", "patch": {"governance": {"execution_authorized": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "identity-drift", "recompute_identity": false, "patch": {"spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}, "expected": {"outcome": "FAIL", "findings": ["SPEC_HASH_MISMATCH"]}},
+    {"id": "unordered-references", "patch": {"governance": {"authority_refs": ["migrations/graph/README.md", "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"]}}, "expected": {"outcome": "FAIL", "findings": ["REFERENCES_NOT_CANONICAL"]}}
+  ]
+}
