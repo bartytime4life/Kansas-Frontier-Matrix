@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+"""Validate fixture-only PaleoenvironmentalProxyProvenanceRecord objects.
+
+A PASS proves bounded shape, semantics, evidence-reference closure, precision
+monotonicity, and deterministic identity only. It does not access sources,
+disclose coordinates, run a reconstruction, infer current conditions, evaluate
+policy, mutate evidence, release, or publish.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import math
+import sys
+from dataclasses import dataclass
+from itertools import islice
+from pathlib import Path
+from typing import Any, Iterable, Mapping, Sequence
+
+from jsonschema import Draft202012Validator, FormatChecker
+
+ROOT = Path(__file__).resolve().parents[3]
+HASHING_SRC = ROOT / "packages/hashing/src"
+if str(HASHING_SRC) not in sys.path:
+    sys.path.insert(0, str(HASHING_SRC))
+from hashing import CanonicalizationFailure, compute_spec_hash
+
+SCHEMA = ROOT / "schemas/contracts/v1/evidence/paleoenvironmental_proxy_provenance.schema.json"
+CASES = ROOT / "fixtures/contracts/v1/evidence/paleoenvironmental_proxy_provenance/cases.json"
+IDENTITY_PREFIX = "kfm:paleoenvironmental-proxy-provenance:"
+MAX_BYTES = 2 * 1024 * 1024
+MAX_SCHEMA_FINDINGS = 50
+PRECISION_RANK = {"EXACT": 0, "SITE": 1, "LOCALITY": 2, "COUNTY": 3, "REGION": 4, "STATE": 5, "WITHHELD": 6}
+
+
+class DuplicateKeyError(ValueError):
+    pass
+
+
+class NonFiniteNumberError(ValueError):
+    pass
+
+
+@dataclass(frozen=True, order=True)
+class Finding:
+    code: str
+    path: str
+
+
+@dataclass(frozen=True)
+class Result:
+    outcome: str
+    findings: tuple[Finding, ...]
+
+    @property
+    def ok(self) -> bool:
+        return self.outcome == "PASS" and not self.findings
+
+
+def _unique(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise DuplicateKeyError
+        value[key] = item
+    return value
+
+
+def _reject_constant(_value: str) -> None:
+    raise NonFiniteNumberError
+
+
+def _finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise NonFiniteNumberError
+    return parsed
+
+
+def _pointer(parts: Iterable[Any]) -> str:
+    encoded = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    return "/" + "/".join(encoded) if encoded else "/"
+
+
+def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
+    try:
+        if path.is_symlink():
+            return None, (Finding("INPUT_SYMLINK_DENIED", "/"),)
+        if not path.is_file():
+            return None, (Finding("INPUT_NOT_FILE", "/"),)
+        if path.stat().st_size > MAX_BYTES:
+            return None, (Finding("INPUT_TOO_LARGE", "/"),)
+        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique,
+                           parse_constant=_reject_constant, parse_float=_finite_float)
+    except DuplicateKeyError:
+        return None, (Finding("JSON_DUPLICATE_KEY", "/"),)
+    except NonFiniteNumberError:
+        return None, (Finding("JSON_NONFINITE_NUMBER", "/"),)
+    except (UnicodeError, json.JSONDecodeError):
+        return None, (Finding("JSON_INVALID", "/"),)
+    except OSError:
+        return None, (Finding("INPUT_READ_ERROR", "/"),)
+    except (RecursionError, ValueError):
+        return None, (Finding("JSON_COMPLEXITY_LIMIT", "/"),)
+    if not isinstance(value, dict):
+        return None, (Finding("ROOT_NOT_OBJECT", "/"),)
+    return value, ()
+
+
+def identity_subject(value: Mapping[str, Any]) -> dict[str, Any]:
+    subject = copy.deepcopy(dict(value))
+    subject.pop("record_id", None)
+    subject.pop("spec_hash", None)
+    return subject
+
+
+def canonical_identity(value: Mapping[str, Any]) -> tuple[str, str]:
+    spec_hash = compute_spec_hash(identity_subject(value))
+    return spec_hash, IDENTITY_PREFIX + spec_hash.split(":", 1)[1][:24]
+
+
+def _merge(target: dict[str, Any], patch: Mapping[str, Any]) -> None:
+    for key, value in patch.items():
+        if isinstance(value, dict) and isinstance(target.get(key), dict):
+            _merge(target[key], value)
+        else:
+            target[key] = copy.deepcopy(value)
+
+
+def materialize_case(corpus: Mapping[str, Any], case: Mapping[str, Any]) -> dict[str, Any]:
+    candidate = copy.deepcopy(corpus["base"])
+    spec_hash, record_id = canonical_identity(candidate)
+    candidate["spec_hash"] = spec_hash
+    candidate["record_id"] = record_id
+    _merge(candidate, case.get("patch", {}))
+    if case.get("recompute_identity", True):
+        spec_hash, record_id = canonical_identity(candidate)
+        candidate["spec_hash"] = spec_hash
+        candidate["record_id"] = record_id
+    return candidate
+
+
+def _schema_findings(candidate: Mapping[str, Any]) -> list[Finding]:
+    try:
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        validator = Draft202012Validator(schema, format_checker=FormatChecker())
+        errors = list(islice(validator.iter_errors(candidate), MAX_SCHEMA_FINDINGS + 1))
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
+        return [Finding("SCHEMA_UNAVAILABLE", "/")]
+    findings = [Finding("SCHEMA_INVALID", _pointer(error.absolute_path)) for error in
+                sorted(errors[:MAX_SCHEMA_FINDINGS], key=lambda item: (_pointer(item.absolute_path), str(item.validator)))]
+    if len(errors) > MAX_SCHEMA_FINDINGS:
+        findings.append(Finding("SCHEMA_FINDINGS_TRUNCATED", "/"))
+    return findings
+
+
+def _canonical_strings(value: object) -> bool:
+    return isinstance(value, list) and value == sorted(set(value))
+
+
+def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
+    findings: list[Finding] = []
+    proxy = candidate["proxy_source"]
+    reconstruction = candidate["reconstruction"]
+    temporal = candidate["temporal_scope"]
+    spatial = candidate["spatial_generalization"]
+    evidence_refs = candidate["evidence_refs"]
+
+    if not all(_canonical_strings(value) for value in (reconstruction["transform_receipt_refs"], evidence_refs, candidate["non_effects"])):
+        findings.append(Finding("REFERENCES_NOT_CANONICAL", "/"))
+    if reconstruction["input_proxy_ref"] != proxy["source_record_ref"]:
+        findings.append(Finding("PROXY_REFERENCE_MISMATCH", "/reconstruction/input_proxy_ref"))
+    if temporal["start_year"] > temporal["end_year"]:
+        findings.append(Finding("TEMPORAL_RANGE_INVALID", "/temporal_scope"))
+    if PRECISION_RANK[spatial["published_precision"]] < PRECISION_RANK[spatial["source_precision"]]:
+        findings.append(Finding("SPATIAL_PRECISION_UPCAST", "/spatial_generalization/published_precision"))
+    if (proxy["sensitivity"] != "PUBLIC" or spatial["sensitivity_reason"] != "NONE") and (
+        not spatial["exact_location_withheld"] or spatial["published_precision"] in {"EXACT", "SITE"}
+    ):
+        findings.append(Finding("SENSITIVE_LOCATION_UNPROTECTED", "/spatial_generalization"))
+
+    required_evidence = {proxy["source_record_ref"], spatial["generalization_receipt_ref"], *reconstruction["transform_receipt_refs"]}
+    if not required_evidence.issubset(set(evidence_refs)):
+        findings.append(Finding("EVIDENCE_CLOSURE_GAP", "/evidence_refs"))
+
+    try:
+        expected_hash, expected_id = canonical_identity(candidate)
+    except CanonicalizationFailure:
+        findings.append(Finding("IDENTITY_CANONICALIZATION_ERROR", "/"))
+    else:
+        if candidate.get("spec_hash") != expected_hash:
+            findings.append(Finding("SPEC_HASH_MISMATCH", "/spec_hash"))
+        if candidate.get("record_id") != expected_id:
+            findings.append(Finding("RECORD_ID_MISMATCH", "/record_id"))
+    return findings
+
+
+def validate_candidate(candidate: Mapping[str, Any]) -> Result:
+    findings = _schema_findings(candidate)
+    if not findings:
+        findings = _semantic_findings(candidate)
+    unique = tuple(sorted(set(findings)))
+    return Result("PASS" if not unique else "FAIL", unique)
+
+
+def validate_record(path: Path) -> Result:
+    value, findings = _read(path)
+    if findings or value is None:
+        return Result("FAIL", findings)
+    return validate_candidate(value)
+
+
+def _fixture_results() -> int:
+    corpus, findings = _read(CASES)
+    if findings or corpus is None:
+        print(json.dumps({"outcome": "FAIL", "findings": [item.code for item in findings]}, sort_keys=True))
+        return 1
+    exit_code = 0
+    for case in corpus["cases"]:
+        result = validate_candidate(materialize_case(corpus, case))
+        actual = sorted({item.code for item in result.findings})
+        expected = case["expected"]
+        matched = result.outcome == expected["outcome"] and actual == expected["findings"]
+        print(json.dumps({"id": case["id"], "outcome": result.outcome, "findings": actual, "matched": matched}, sort_keys=True))
+        exit_code |= 0 if matched else 1
+    return exit_code
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("record", nargs="?", type=Path)
+    parser.add_argument("--fixtures", action="store_true")
+    args = parser.parse_args(argv)
+    if args.fixtures:
+        return _fixture_results()
+    if args.record is None:
+        parser.error("record is required unless --fixtures is used")
+    result = validate_record(args.record)
+    print(json.dumps({"outcome": result.outcome, "findings": [item.code for item in result.findings]}, sort_keys=True))
+    return 0 if result.ok else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
