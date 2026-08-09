@@ -1,0 +1,447 @@
+{
+  "schema_version": "kfm.governance-event-fixtures.v1",
+  "profile": "kfm.governance.governance-event.v1",
+  "description": "One reusable governance-event base with announced, scheduled, held, cancelled, linked, conflicted, and fail-closed mutations.",
+  "bases": {
+    "announced": {
+      "profile": "kfm.governance.governance-event.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "event_type": "MEETING",
+      "event_state": "ANNOUNCED",
+      "source_ref": "kfm://source/synthetic-governance-calendar",
+      "source_native_id": "synthetic-governance-event:2026-10-01",
+      "issuing_authority_ref": "kfm://authority/synthetic-planning-board",
+      "source_snapshot_refs": [
+        "kfm:source-snapshot:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "organizer_refs": [
+        "kfm://organization/synthetic-planning-board"
+      ],
+      "jurisdiction_refs": [
+        "kfm://jurisdiction/kansas/synthetic-region"
+      ],
+      "venue_ref": "kfm://venue/synthetic-civic-center",
+      "geometry": {
+        "geography_ref": "kfm://geography/kansas/synthetic-region",
+        "geometry_role": "INDICATIVE",
+        "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geometry_confidence": "MEDIUM"
+      },
+      "times": {
+        "announced_at": "2026-09-01T12:00:00Z",
+        "scheduled_start": "2026-10-01T14:00:00Z",
+        "scheduled_end": "2026-10-01T16:00:00Z",
+        "held_at": null,
+        "cancelled_at": null,
+        "retrieved_at": "2026-09-01T13:00:00Z",
+        "corrected_at": null,
+        "superseded_at": null,
+        "native_timezone": "America/Chicago"
+      },
+      "agenda_refs": [
+        "kfm://agenda/synthetic-governance-event/2026-10-01"
+      ],
+      "material_refs": [
+        "kfm://material/synthetic-governance-event/notice"
+      ],
+      "comment_window_refs": [],
+      "submission_refs": [],
+      "recommendation_refs": [],
+      "decision_refs": [],
+      "implementation_refs": [],
+      "outcome_observation_refs": [],
+      "participation_receipt_refs": [],
+      "evidence_refs": [
+        "kfm://evidence-ref/synthetic-governance-event/notice"
+      ],
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "limitations": [
+        "Fixture-only governance event candidate.",
+        "The event record does not imply recommendation, decision, implementation, or measured outcome."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_announced",
+      "base": "announced",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_scheduled",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "SCHEDULED"
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_held",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "HELD"
+        },
+        {
+          "path": "/times/held_at",
+          "value": "2026-10-01T14:05:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-10-01T17:00:00Z"
+        },
+        {
+          "path": "/participation_receipt_refs",
+          "value": [
+            "kfm://participation-receipt/synthetic-governance-event/2026-10-01"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/synthetic-governance-event/held",
+            "kfm://evidence-ref/synthetic-governance-event/notice"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_cancelled",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "CANCELLED"
+        },
+        {
+          "path": "/times/cancelled_at",
+          "value": "2026-09-20T12:00:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-09-20T13:00:00Z"
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/synthetic-governance-event/cancellation",
+            "kfm://evidence-ref/synthetic-governance-event/notice"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_held_with_explicit_downstream_chain",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "HELD"
+        },
+        {
+          "path": "/times/held_at",
+          "value": "2026-10-01T14:05:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-10-15T12:00:00Z"
+        },
+        {
+          "path": "/participation_receipt_refs",
+          "value": [
+            "kfm://participation-receipt/synthetic-governance-event/2026-10-01"
+          ]
+        },
+        {
+          "path": "/recommendation_refs",
+          "value": [
+            "kfm://recommendation/synthetic-governance-event/r1"
+          ]
+        },
+        {
+          "path": "/decision_refs",
+          "value": [
+            "kfm://decision/synthetic-governance-event/d1"
+          ]
+        },
+        {
+          "path": "/implementation_refs",
+          "value": [
+            "kfm://decision-implementation/synthetic-governance-event/i1"
+          ]
+        },
+        {
+          "path": "/outcome_observation_refs",
+          "value": [
+            "kfm://outcome-observation/synthetic-governance-event/o1"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/synthetic-governance-event/downstream-chain",
+            "kfm://evidence-ref/synthetic-governance-event/held",
+            "kfm://evidence-ref/synthetic-governance-event/notice"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Downstream references remain separate object families.",
+            "Fixture-only governance event candidate.",
+            "The event record does not imply recommendation, decision, implementation, or measured outcome."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_conflicted",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "synthetic-governance-event:2026-10-01:conflicted"
+        },
+        {
+          "path": "/geometry/geography_ref",
+          "value": null
+        },
+        {
+          "path": "/geometry/geometry_role",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/geometry/geometry_digest",
+          "value": null
+        },
+        {
+          "path": "/geometry/geometry_confidence",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/lineage/conflict_refs",
+          "value": [
+            "kfm://conflict/synthetic-governance-event/time",
+            "kfm://conflict/synthetic-governance-event/venue"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Conflicting time or venue statements remain unresolved.",
+            "Fixture-only governance event candidate.",
+            "The event record does not imply recommendation, decision, implementation, or measured outcome."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "held_without_participation_receipt",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "HELD"
+        },
+        {
+          "path": "/times/held_at",
+          "value": "2026-10-01T14:05:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-10-01T17:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "HELD_EVENT_EVIDENCE_INCOMPLETE"
+      ]
+    },
+    {
+      "name": "cancelled_with_held_time",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/event_state",
+          "value": "CANCELLED"
+        },
+        {
+          "path": "/times/held_at",
+          "value": "2026-10-01T14:05:00Z"
+        },
+        {
+          "path": "/times/cancelled_at",
+          "value": "2026-09-20T12:00:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-10-01T17:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CANCELLED_EVENT_HELD_CONFLICT"
+      ]
+    },
+    {
+      "name": "schedule_inverted",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/times/scheduled_start",
+          "value": "2026-10-01T17:00:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEDULE_INTERVAL_INVALID"
+      ]
+    },
+    {
+      "name": "implementation_without_decision",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/implementation_refs",
+          "value": [
+            "kfm://decision-implementation/synthetic-governance-event/i1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "IMPLEMENTATION_WITHOUT_DECISION"
+      ]
+    },
+    {
+      "name": "outcome_without_implementation",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/decision_refs",
+          "value": [
+            "kfm://decision/synthetic-governance-event/d1"
+          ]
+        },
+        {
+          "path": "/outcome_observation_refs",
+          "value": [
+            "kfm://outcome-observation/synthetic-governance-event/o1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "OUTCOME_WITHOUT_IMPLEMENTATION"
+      ]
+    },
+    {
+      "name": "current_lineage_conflict",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/lineage/conflict_refs",
+          "value": [
+            "kfm://conflict/synthetic-governance-event/one"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CURRENT_LINEAGE_CONFLICT"
+      ]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "path": "/release_ref",
+          "value": "kfm://release/synthetic-governance-event"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RELEASE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_USE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "announced",
+      "mutations": [
+        {
+          "path": "/effects/policy_evaluated",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "EFFECT_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "announced",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    }
+  ]
+}
