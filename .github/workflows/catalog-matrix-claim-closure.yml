@@ -1,0 +1,96 @@
+# Validate additive ClaimEnvelope-to-CatalogMatrix non-overstatement closure.
+name: catalog-matrix-claim-closure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/catalog-matrix-claim-closure.yml"
+      - "contracts/data/catalog_matrix_claim_closure_profile.md"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "contracts/evidence/claim_envelope.md"
+      - "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json"
+      - "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
+      - "schemas/contracts/v1/evidence/claim_envelope.schema.json"
+      - "fixtures/data/catalog_matrix/claim_closure/**"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/validators/validate_catalog_matrix_claim_closure.py"
+      - "tools/validators/validate_catalog_matrix_closure.py"
+      - "tools/validators/validate_claim_envelope.py"
+      - "tests/validators/test_validate_catalog_matrix_claim_closure.py"
+      - "data/receipts/generated/genrec-catalog-matrix-claim-closure-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/catalog-matrix-claim-closure.yml"
+      - "contracts/data/catalog_matrix_claim_closure_profile.md"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "contracts/evidence/claim_envelope.md"
+      - "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json"
+      - "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
+      - "schemas/contracts/v1/evidence/claim_envelope.schema.json"
+      - "fixtures/data/catalog_matrix/claim_closure/**"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/validators/validate_catalog_matrix_claim_closure.py"
+      - "tools/validators/validate_catalog_matrix_closure.py"
+      - "tools/validators/validate_claim_envelope.py"
+      - "tests/validators/test_validate_catalog_matrix_claim_closure.py"
+      - "data/receipts/generated/genrec-catalog-matrix-claim-closure-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-matrix-claim-closure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-catalog-matrix-claim-closure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+      - name: Run focused tests
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/validators/test_validate_catalog_matrix_claim_closure.py
+      - name: Replay exact fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_catalog_matrix_claim_closure.py --fixtures
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-catalog-matrix-claim-closure-20260809.json --repo-root .
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### CatalogMatrix ClaimEnvelope closure"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic local non-overstatement across evidence/source references, policy, review, release, correction/rollback, and publication projection."
+            echo "- ClaimEnvelope and CatalogMatrix retain separate semantic, schema, policy, review, release, and publication authorities."
+            echo "- A PASS does not resolve evidence, decide policy, approve review, release, promote, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"

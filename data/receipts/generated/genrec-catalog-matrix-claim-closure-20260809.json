@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-catalog-matrix-claim-closure-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/catalog-matrix-claim-closure.yml",
+    "contracts/data/catalog_matrix_claim_closure_profile.md",
+    "fixtures/data/catalog_matrix/claim_closure/README.md",
+    "fixtures/data/catalog_matrix/claim_closure/expected_findings_manifest.json",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_bad_profile.json",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_missing_publication_state.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_correction_ref_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_denial_not_propagated.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_evidence_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_publication_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_policy_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_release_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_review_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_support_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_release_ref_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_rollback_ref_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_source_overstatement.json",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_deny_terminal_posture.json",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_hold_candidate.json",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_ready_published.json",
+    "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json",
+    "tests/validators/test_validate_catalog_matrix_claim_closure.py",
+    "tools/validators/validate_catalog_matrix_claim_closure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/catalog-matrix-claim-closure.yml": "sha256:2489af92875ca9dd168cb88fa555088134126cd0dac8f1951aed37432311207a",
+    "contracts/data/catalog_matrix_claim_closure_profile.md": "sha256:bc39072db0e4b8b080cb72330e261f6ca940f8f6e7718166b4b61cf41668a9b7",
+    "fixtures/data/catalog_matrix/claim_closure/README.md": "sha256:65bd2bcbdc19956446c435c1db0a81d6abc27608911e56d491089518a39e99e3",
+    "fixtures/data/catalog_matrix/claim_closure/expected_findings_manifest.json": "sha256:cdd2366d0d2926aa36b1126366a7f652cc77ddaa54f3902a0c9f5ec5d8f167bc",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_bad_profile.json": "sha256:62865d4aca07a9ff3842e1a7d58d13201fb28ebdc8a69062bbfabfccbdbe1f49",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_missing_publication_state.json": "sha256:8d926b4f8d34482fdf6b43016bee6d837c94507cf7c77b2de85ad1545a28144a",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_correction_ref_overstatement.json": "sha256:025237dac657640b679bd7aa892a731a1e7ba3e97fbb07298b73ab817b010ea3",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_denial_not_propagated.json": "sha256:3d2f7a039b88584a43f067de18f4ed0b3b202f75a6e40e5ba4e29dbb0d87b402",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_evidence_overstatement.json": "sha256:8c11d75c063486ddcd013cc358960854d3c7763eccd9d301ae5fae2dbbca0ebd",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_publication_overstatement.json": "sha256:0eafc3f0afe7cc3b48583b97b73bebbf5c75d54a76a742b013075c19c0d613a9",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_policy_overstatement.json": "sha256:ced376a573d8aca1fe5769bb315e479dd59fb6de3ee810529b6aac9e5ae530ac",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_release_overstatement.json": "sha256:a7e62b7b285d7b05ba46c6511746382f4a1b53ec7594d072b068ddaaf78dc2f2",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_review_overstatement.json": "sha256:cd524142d5fff93abdc4d804186e25ee528aeaf0b57c54099cf6e4402493d435",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_support_overstatement.json": "sha256:4c6b4ddc12b1e8ac47f760845a53fc78d5e8a917b67b2cbbbbeb1b9ee087d326",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_release_ref_overstatement.json": "sha256:f6e4aaed1f726f569659b226e5747bbb3ab0f200ab675d9e6cfb692dd7ae582c",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_rollback_ref_overstatement.json": "sha256:e7f1b4dd0109fc91fcf403b4f10449f8e6e5e1f07c88aa99dc44a15934b88580",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_source_overstatement.json": "sha256:52609f3a49c7010a26ecdd37d51110785002be8ac5c899c74a7c76398c11667f",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_deny_terminal_posture.json": "sha256:579c6630d5973da3156d173404194901687d2ba99e8df3ffdfc385e61df1ba20",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_hold_candidate.json": "sha256:5c0e0b5c855c0200d651bc177ccfbee777ac980550a5880e121b0fdc99abc8ab",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_ready_published.json": "sha256:c19f7bf8f9c09a1bfce378cc735f5f40c9087191b3b349bc791deda6825a5892",
+    "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json": "sha256:734d500d6642d5e840ee17f7c08b2729a748d94911d8373e4b945daba9caf9c7",
+    "tests/validators/test_validate_catalog_matrix_claim_closure.py": "sha256:08b0e1322e8b3250a5857173e5900b4965ebf5904d286775f89ad7eb4ddd023f",
+    "tools/validators/validate_catalog_matrix_claim_closure.py": "sha256:2eae63977c81c940a1a7e95e946978c7090fbb90f4355cc772f52e3e3139e475"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:14921d182537b325c692e62405e9f7083ae692e3205e28d3bfe39c2360f22ab3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "repo:contracts/evidence/claim_envelope.md@ae9acb4e266931c03db80537a0081a616dbdcb36",
+      "repo:contracts/data/catalog_matrix_closure_profile.md@ae9acb4e266931c03db80537a0081a616dbdcb36",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ae9acb4e266931c03db80537a0081a616dbdcb36"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/catalog-matrix-claim-closure.yml": "PROPOSED",
+    "contracts/data/catalog_matrix_claim_closure_profile.md": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/README.md": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_bad_profile.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/invalid/schema_missing_publication_state.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_correction_ref_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_denial_not_propagated.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_evidence_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_publication_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_policy_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_release_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_review_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_ready_support_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_release_ref_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_rollback_ref_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/semantic_invalid/semantic_source_overstatement.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_deny_terminal_posture.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_hold_candidate.json": "PROPOSED",
+    "fixtures/data/catalog_matrix/claim_closure/valid/valid_ready_published.json": "PROPOSED",
+    "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json": "PROPOSED",
+    "tests/validators/test_validate_catalog_matrix_claim_closure.py": "PROPOSED",
+    "tools/validators/validate_catalog_matrix_claim_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this non-self-referential receipt is bound to final SHA-256 bytes."
+    },
+    {
+      "gate": "draft-2020-12-offline-composition",
+      "outcome": "PASS",
+      "reason": "The closed integration schema resolves the two existing schema authorities through the local registry without network access."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Sixteen synthetic valid, schema-negative, and semantic-negative cases match exact outcomes and reason codes."
+    },
+    {
+      "gate": "no-network-replay",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and prove deterministic replay."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:claim-envelope",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/claim_envelope.md@ae9acb4e266931c03db80537a0081a616dbdcb36"
+    },
+    {
+      "id": "repository:catalog-matrix-closure",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/catalog_matrix_closure_profile.md@ae9acb4e266931c03db80537a0081a616dbdcb36"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ae9acb4e266931c03db80537a0081a616dbdcb36"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T23:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements an additive, validation-only ClaimEnvelope-to-CatalogMatrix closure profile. It prevents local catalog overstatement without creating evidence, policy, review, release, promotion, publication, or public-use authority."
+}
