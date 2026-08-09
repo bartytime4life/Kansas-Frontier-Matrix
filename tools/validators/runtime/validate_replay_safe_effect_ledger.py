@@ -319,7 +319,10 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
 
     occurred = _time(event.get("occurred_at"))
     delivery_times = [_time(item.get("received_at")) for item in deliveries]
+    delivery_time_by_id = dict(zip(delivery_ids, delivery_times))
     requested = _time(effect.get("requested_at"))
+    reserved_at = _time(reservation.get("reserved_at"))
+    completed_at = _time(reservation.get("effect_completed_at"))
     entry_times = [_time(item.get("recorded_at")) for item in entries]
     ordered_times = [item for item in delivery_times if item is not None]
     if occurred and any(item < occurred for item in ordered_times):
@@ -328,6 +331,10 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
         findings.add(Finding("DELIVERY_TIME_ORDER_INVALID", "/deliveries"))
     if occurred and requested and requested < occurred:
         findings.add(Finding("INTENT_TIME_INVALID", "/effect_intent/requested_at"))
+    if requested and reserved_at and reserved_at < requested:
+        findings.add(Finding("RESERVATION_TIME_INVALID", "/reservation/reserved_at"))
+    if reserved_at and completed_at and completed_at < reserved_at:
+        findings.add(Finding("COMPLETION_TIME_INVALID", "/reservation/effect_completed_at"))
     comparable_entry_times = [item for item in entry_times if item is not None]
     if comparable_entry_times != sorted(comparable_entry_times):
         findings.add(Finding("LEDGER_TIME_ORDER_INVALID", "/ledger_entries"))
@@ -336,9 +343,24 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
     if entry_ids != sorted(entry_ids) or len(set(entry_ids)) != len(entry_ids):
         findings.add(Finding("LEDGER_ENTRY_ORDER_INVALID", "/ledger_entries"))
     for index, entry in enumerate(entries):
-        if entry.get("delivery_ref") not in delivery_ids:
+        delivery_ref = str(entry.get("delivery_ref", ""))
+        if delivery_ref not in delivery_ids:
             findings.add(
                 Finding("LEDGER_DELIVERY_REF_UNBOUND", f"/ledger_entries/{index}/delivery_ref")
+            )
+        entry_time = entry_times[index]
+        delivery_time = delivery_time_by_id.get(delivery_ref)
+        if entry_time and delivery_time and entry_time < delivery_time:
+            findings.add(
+                Finding("LEDGER_ENTRY_BEFORE_DELIVERY", f"/ledger_entries/{index}/recorded_at")
+            )
+        if entry.get("state") == "RESERVED" and requested and entry_time and entry_time < requested:
+            findings.add(
+                Finding("RESERVATION_TIME_INVALID", f"/ledger_entries/{index}/recorded_at")
+            )
+        if entry.get("state") == "COMPLETED" and reserved_at and entry_time and entry_time < reserved_at:
+            findings.add(
+                Finding("COMPLETION_TIME_INVALID", f"/ledger_entries/{index}/recorded_at")
             )
         reasons = _strings(entry.get("reason_codes"))
         if reasons != sorted(reasons):
@@ -350,9 +372,20 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
         findings.add(Finding("REASON_CODE_ORDER_INVALID", "/result/reason_codes"))
 
     states = [entry.get("state") for entry in entries]
-    completed = states.count("COMPLETED")
-    duplicate_deliveries = sum(item.get("outcome") == "DUPLICATE" for item in deliveries)
-    duplicate_suppressions = states.count("DUPLICATE_SUPPRESSED")
+    completed_indexes = [index for index, state in enumerate(states) if state == "COMPLETED"]
+    compensation_indexes = [index for index, state in enumerate(states) if state == "COMPENSATED"]
+    completed = len(completed_indexes)
+    duplicate_delivery_ids = [
+        delivery_id
+        for delivery_id, delivery in zip(delivery_ids, deliveries)
+        if delivery.get("outcome") == "DUPLICATE"
+    ]
+    duplicate_deliveries = len(duplicate_delivery_ids)
+    duplicate_suppression_refs = [
+        str(entry.get("delivery_ref", ""))
+        for entry in entries
+        if entry.get("state") == "DUPLICATE_SUPPRESSED"
+    ]
     expected_outcome: str | None
     if "COMPENSATED" in states:
         expected_outcome = "COMPENSATED"
@@ -367,6 +400,10 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
 
     if completed > 1:
         findings.add(Finding("EFFECT_EXECUTED_MORE_THAN_ONCE", "/ledger_entries"))
+    if compensation_indexes and (
+        completed != 1 or completed_indexes[0] > compensation_indexes[0]
+    ):
+        findings.add(Finding("COMPENSATION_WITHOUT_COMPLETION", "/ledger_entries"))
     if result.get("completed_effect_count") != min(completed, 1):
         findings.add(Finding("COMPLETED_EFFECT_COUNT_MISMATCH", "/result/completed_effect_count"))
     if result.get("duplicate_delivery_count") != duplicate_deliveries:
@@ -376,18 +413,20 @@ def _semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
                 "/result/duplicate_delivery_count",
             )
         )
-    if duplicate_deliveries != duplicate_suppressions:
+    if sorted(duplicate_delivery_ids) != sorted(duplicate_suppression_refs):
         findings.add(Finding("DUPLICATE_SUPPRESSION_INCOMPLETE", "/ledger_entries"))
     if expected_outcome is None or result.get("outcome") != expected_outcome:
         findings.add(Finding("RESULT_OUTCOME_MISMATCH", "/result/outcome"))
 
-    expected_state = {
-        "EXECUTED_ONCE": "COMPLETED",
-        "DUPLICATE_SUPPRESSED": "COMPLETED",
-        "FAILED": "RELEASED",
-        "COMPENSATED": "RELEASED",
-    }.get(expected_outcome)
-    if expected_state and reservation.get("state") != expected_state:
+    expected_state = next(
+        (
+            state
+            for state in reversed(states)
+            if state in {"RESERVED", "COMPLETED", "RELEASED"}
+        ),
+        "NONE",
+    )
+    if reservation.get("state") != expected_state:
         findings.add(Finding("RESERVATION_STATE_MISMATCH", "/reservation/state"))
     token_fields = (
         reservation.get("reservation_token_digest"),
