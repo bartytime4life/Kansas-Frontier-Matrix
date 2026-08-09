@@ -1,0 +1,99 @@
+# Audit Evidence Drawer schema-family identity and placement drift without selecting a canonical home.
+name: evidence-drawer-schema-convergence
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/evidence-drawer-schema-convergence.yml"
+      - "schemas/contracts/v1/**/evidence_drawer_payload.schema.json"
+      - "contracts/evidence/evidence_drawer_payload.md"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "tools/validators/validate_evidence_drawer_schema_convergence.py"
+      - "tests/validators/test_evidence_drawer_schema_convergence.py"
+      - "data/receipts/generated/genrec-evidence-drawer-schema-convergence-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/evidence-drawer-schema-convergence.yml"
+      - "schemas/contracts/v1/**/evidence_drawer_payload.schema.json"
+      - "contracts/evidence/evidence_drawer_payload.md"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "tools/validators/validate_evidence_drawer_schema_convergence.py"
+      - "tests/validators/test_evidence_drawer_schema_convergence.py"
+      - "data/receipts/generated/genrec-evidence-drawer-schema-convergence-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-drawer-schema-convergence-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  audit:
+    name: audit-evidence-drawer-schema-convergence
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run synthetic convergence tests
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/validators/test_evidence_drawer_schema_convergence.py
+
+      - name: Audit current repository drawer schema family
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_evidence_drawer_schema_convergence.py > /tmp/evidence-drawer-schema-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path("/tmp/evidence-drawer-schema-audit.json").read_text())
+          assert result["outcome"] == "PASS"
+          assert result["placement_state"] == "NEEDS_REVIEW"
+          assert result["schema_count"] >= 3
+          print(json.dumps(result, indent=2, sort_keys=True))
+          PY
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-evidence-drawer-schema-convergence-20260809.json \
+            --repo-root .
+
+      - name: Record governance boundary
+        if: always()
+        run: |
+          {
+            echo "### Evidence Drawer schema convergence audit"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema inventory, parseability, Draft 2020-12 declarations, unique schema IDs, and presence of the evidence/runtime/UI placement anchors."
+            echo "- Placement remains NEEDS_REVIEW. This workflow does not select a canonical schema, migrate consumers, delete compatibility profiles, change semantic contracts, or authorize release/publication."
+          } >> "$GITHUB_STEP_SUMMARY"
