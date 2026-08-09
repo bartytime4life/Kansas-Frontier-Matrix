@@ -2,79 +2,218 @@
   "cases": [
     {
       "case_id": "valid-static-declaration",
-      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "expected": {
+        "finding_codes": [],
+        "outcome": "PASS"
+      },
       "snapshot": {
         "forbidden_lockfiles_present": [],
-        "lock_packages": [{"integrity": "sha512-synthetic", "package": "vite@8.2.0", "tarball_url": null}],
+        "lock_packages": [
+          {
+            "integrity": "sha512-synthetic",
+            "package": "vite@8.2.0",
+            "tarball_url": null
+          }
+        ],
         "npm_dependencies": [
-          {"manifest": "apps/explorer-web/package.json", "package": "@kfm/ui", "specifier": "workspace:*"},
-          {"manifest": "apps/explorer-web/package.json", "package": "vite", "specifier": "8.2.0"}
+          {
+            "manifest": "apps/explorer-web/package.json",
+            "package": "@kfm/ui",
+            "specifier": "workspace:*"
+          },
+          {
+            "manifest": "apps/explorer-web/package.json",
+            "package": "vite",
+            "specifier": "8.2.0"
+          }
         ],
         "package_manager": "pnpm@11.17.0",
-        "python_dependencies": [{"manifest": "pyproject.toml", "requirement": "jsonschema>=4.26.0,<5"}],
+        "python_dependencies": [
+          {
+            "manifest": "pyproject.toml",
+            "requirement": "jsonschema>=4.26.0,<5"
+          }
+        ],
         "required_lockfile_present": true,
         "scan_errors": []
       }
     },
     {
       "case_id": "package-manager-pin-mismatch",
-      "expected": {"finding_codes": ["PACKAGE_MANAGER_PIN_MISMATCH"], "outcome": "DENY"},
-      "snapshot": {"forbidden_lockfiles_present": [], "lock_packages": [], "npm_dependencies": [], "package_manager": "pnpm@11.16.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []}
+      "expected": {
+        "finding_codes": [
+          "PACKAGE_MANAGER_PIN_MISMATCH"
+        ],
+        "outcome": "DENY"
+      },
+      "snapshot": {
+        "forbidden_lockfiles_present": [],
+        "lock_packages": [],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.16.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
+      }
     },
     {
       "case_id": "alternative-lockfile-present",
-      "expected": {"finding_codes": ["ALTERNATIVE_LOCKFILE_PRESENT"], "outcome": "DENY"},
-      "snapshot": {"forbidden_lockfiles_present": ["package-lock.json"], "lock_packages": [], "npm_dependencies": [], "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []}
+      "expected": {
+        "finding_codes": [
+          "ALTERNATIVE_LOCKFILE_PRESENT"
+        ],
+        "outcome": "DENY"
+      },
+      "snapshot": {
+        "forbidden_lockfiles_present": [
+          "package-lock.json"
+        ],
+        "lock_packages": [],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
+      }
     },
     {
       "case_id": "internal-package-not-workspace-bound",
-      "expected": {"finding_codes": ["INTERNAL_PACKAGE_NOT_WORKSPACE_BOUND"], "outcome": "DENY"},
+      "expected": {
+        "finding_codes": [
+          "INTERNAL_PACKAGE_NOT_WORKSPACE_BOUND"
+        ],
+        "outcome": "DENY"
+      },
       "snapshot": {
-        "forbidden_lockfiles_present": [], "lock_packages": [],
-        "npm_dependencies": [{"manifest": "apps/example/package.json", "package": "@kfm/private-core", "specifier": "^1.0.0"}],
-        "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []
+        "forbidden_lockfiles_present": [],
+        "lock_packages": [],
+        "npm_dependencies": [
+          {
+            "manifest": "apps/example/package.json",
+            "package": "@kfm/private-core",
+            "specifier": "^1.0.0"
+          }
+        ],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
       }
     },
     {
       "case_id": "direct-npm-url-forbidden",
-      "expected": {"finding_codes": ["DIRECT_DEPENDENCY_SOURCE_FORBIDDEN"], "outcome": "DENY"},
+      "expected": {
+        "finding_codes": [
+          "DIRECT_DEPENDENCY_SOURCE_FORBIDDEN"
+        ],
+        "outcome": "DENY"
+      },
       "snapshot": {
-        "forbidden_lockfiles_present": [], "lock_packages": [],
-        "npm_dependencies": [{"manifest": "package.json", "package": "example", "specifier": "https://example.invalid/example.tgz"}],
-        "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []
+        "forbidden_lockfiles_present": [],
+        "lock_packages": [],
+        "npm_dependencies": [
+          {
+            "manifest": "package.json",
+            "package": "example",
+            "specifier": "https://example.invalid/example.tgz"
+          }
+        ],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
       }
     },
     {
       "case_id": "lock-integrity-missing",
-      "expected": {"finding_codes": ["LOCK_INTEGRITY_MISSING"], "outcome": "DENY"},
+      "expected": {
+        "finding_codes": [
+          "LOCK_INTEGRITY_MISSING"
+        ],
+        "outcome": "DENY"
+      },
       "snapshot": {
         "forbidden_lockfiles_present": [],
-        "lock_packages": [{"integrity": null, "package": "example@1.0.0", "tarball_url": null}],
-        "npm_dependencies": [], "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []
+        "lock_packages": [
+          {
+            "integrity": null,
+            "package": "example@1.0.0",
+            "tarball_url": null
+          }
+        ],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
       }
     },
     {
       "case_id": "unexpected-registry-host",
-      "expected": {"finding_codes": ["REGISTRY_HOST_NOT_ALLOWED"], "outcome": "DENY"},
+      "expected": {
+        "finding_codes": [
+          "REGISTRY_HOST_NOT_ALLOWED"
+        ],
+        "outcome": "DENY"
+      },
       "snapshot": {
         "forbidden_lockfiles_present": [],
-        "lock_packages": [{"integrity": "sha512-synthetic", "package": "example@1.0.0", "tarball_url": "https://packages.example.invalid/example.tgz"}],
-        "npm_dependencies": [], "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": []
+        "lock_packages": [
+          {
+            "integrity": "sha512-synthetic",
+            "package": "example@1.0.0",
+            "tarball_url": "https://packages.example.invalid/example.tgz"
+          }
+        ],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": []
       }
     },
     {
       "case_id": "python-direct-reference-forbidden",
-      "expected": {"finding_codes": ["PYTHON_DIRECT_REFERENCE_FORBIDDEN"], "outcome": "DENY"},
+      "expected": {
+        "finding_codes": [
+          "PYTHON_DIRECT_REFERENCE_FORBIDDEN"
+        ],
+        "outcome": "DENY"
+      },
       "snapshot": {
-        "forbidden_lockfiles_present": [], "lock_packages": [], "npm_dependencies": [], "package_manager": "pnpm@11.17.0",
-        "python_dependencies": [{"manifest": "pyproject.toml", "requirement": "example @ https://example.invalid/example.whl"}],
-        "required_lockfile_present": true, "scan_errors": []
+        "forbidden_lockfiles_present": [],
+        "lock_packages": [],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [
+          {
+            "manifest": "pyproject.toml",
+            "requirement": "example @ https://example.invalid/example.whl"
+          }
+        ],
+        "required_lockfile_present": true,
+        "scan_errors": []
       }
     },
     {
       "case_id": "scan-error-is-finite",
-      "expected": {"finding_codes": ["REPOSITORY_SCAN_ERROR"], "outcome": "ERROR"},
-      "snapshot": {"forbidden_lockfiles_present": [], "lock_packages": [], "npm_dependencies": [], "package_manager": "pnpm@11.17.0", "python_dependencies": [], "required_lockfile_present": true, "scan_errors": ["package.json:JSON_UNREADABLE"]}
+      "expected": {
+        "finding_codes": [
+          "REPOSITORY_SCAN_ERROR"
+        ],
+        "outcome": "ERROR"
+      },
+      "snapshot": {
+        "forbidden_lockfiles_present": [],
+        "lock_packages": [],
+        "npm_dependencies": [],
+        "package_manager": "pnpm@11.17.0",
+        "python_dependencies": [],
+        "required_lockfile_present": true,
+        "scan_errors": [
+          "package.json:JSON_UNREADABLE"
+        ]
+      }
     }
   ],
   "profile": "kfm.governance.dependency-origin-policy.fixture-suite.v1"
