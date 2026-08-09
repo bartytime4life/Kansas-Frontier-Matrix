@@ -1,0 +1,146 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/replay-safe-effect-ledger.yml": "sha256:d6073f51de4d1f7d52021ad23581d7f282187a70d6ba5c283ff840262282bac2",
+    "contracts/runtime/replay_safe_effect_ledger.md": "sha256:4704c4720a7bcbe919a53932e3a333b96bba0cd03d1ce25927550b709f90e863",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "sha256:2646f8b014496dda20984763986ca35b865ed5bc5dcd4ffa2087d3e4cc07e8d7",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "sha256:f93a362c9ed225089135f02676659e1ba87b129ef4e5131682fcb48d347d0fa6",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "sha256:8fc6b582f0b86ddbe9594ba6f50783404bb0f54faa57ef55a381e63532c3130c",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json": "sha256:d9c656c7fac9507f32e93ed8f60a0a94197e760c9b44a6fb64cdd4fd0da6f0fc",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json": "sha256:1eb7f2af691c8ee2a3f9c09c4add985596d3b13b9d4554321cd21f2557e370a2",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json": "sha256:c62471d4b167cbb020dae1fa585f98943696533b4bdb4ee4f314938a98403e37",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json": "sha256:a83808e2a9eafee80cf51bbefc15abe62602a9b854f6f89d51c2b54ab2caee8c",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json": "sha256:d1235c32536e226f78587eec826bfbb4387902289494f1909ad0af1a18a398b8",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json": "sha256:47647274474b61c096bf912e724057004e5290f4ca1de126e22033f4cb0a1887",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "sha256:3c4df3295aa4fca8a108527e461271b73b50447fd81ad334204127ee65d79a75",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "sha256:68f784d4cf35c3000e6f541ec9f751afe3fc001ca22442d3df5d0a3359bc7535",
+    "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "sha256:4837ca760fb796921376d870f777f06ec0491d8bbcb9c6f29cd2d66d58103e74",
+    "tests/validators/test_validate_replay_safe_effect_ledger.py": "sha256:64341aff5c33ee7adb044591aaa08c8ca76a8312d776135f262296d2ec8b448e",
+    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "sha256:b968c51335cfc92e9996cc2eb3fb099b1c0ac09eaaf1e1d7867c8ff289d48262"
+  },
+  "artifact_paths": [
+    ".github/workflows/replay-safe-effect-ledger.yml",
+    "contracts/runtime/replay_safe_effect_ledger.md",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json",
+    "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json",
+    "tests/validators/test_validate_replay_safe_effect_ledger.py",
+    "tools/validators/runtime/validate_replay_safe_effect_ledger.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-057",
+      "id": "drive:kfm-full-atlas-replay-safe-event-identity",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/source/source_event_envelope.md@3793c4fd72fecb189e38e39fed17220606120e49",
+      "id": "repository:source-event-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3793c4fd72fecb189e38e39fed17220606120e49",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-09T17:23:55Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-057",
+      "repo:contracts/source/source_event_envelope.md@3793c4fd72fecb189e38e39fed17220606120e49",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3793c4fd72fecb189e38e39fed17220606120e49"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6",
+    "provider": "OpenAI",
+    "version": "2026-08-09"
+  },
+  "notes": "Fixture-only replay-safe event/effect ledger candidate. It records at-least-once delivery with one idempotent effect and does not claim exactly-once transport, execute an effect, write a lifecycle lane, or authorize review, release, deployment, publication, or public use.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:fd096491bd8fbcab4c018bf46e11fc5dc17ab6c70ff58def7cedfaaeb6648210",
+  "receipt_id": "genrec-replay-safe-effect-ledger-20260809",
+  "truth_labels": {
+    ".github/workflows/replay-safe-effect-ledger.yml": "CONFIRMED",
+    "contracts/runtime/replay_safe_effect_ledger.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/duplicate_unsuppressed.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/result_upgrade.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/unbound_entry.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/compensated.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/duplicate_suppressed.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_replay_safe_effect_ledger.py": "CONFIRMED",
+    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic ReplaySafeEffectLedger tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Nine synthetic positive and negative cases matched exact finite outcomes and findings."
+    },
+    {
+      "gate": "schema-and-deterministic-identity",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema plus event, effect, and record hashes validated locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}
