@@ -2,6 +2,8 @@
   "authority": "NONE",
   "expected_package_manager": "pnpm@11.17.0",
   "forbidden_lockfiles": [
+    "bun.lock",
+    "bun.lockb",
     "npm-shrinkwrap.json",
     "package-lock.json",
     "yarn.lock"
