@@ -1,0 +1,84 @@
+# Guard the wiring between the proposed common IdentityToken schema and its declared repository surfaces.
+name: identity-token-wiring
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/identity-token-wiring.yml"
+      - "schemas/contracts/v1/common/identity_token.schema.json"
+      - "contracts/common/identity_token.md"
+      - "tools/validators/validate_identity_token.py"
+      - "fixtures/contracts/v1/common/identity_token/**"
+      - "tests/contracts/test_identity_token_wiring.py"
+      - "data/receipts/generated/genrec-identity-token-wiring-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/identity-token-wiring.yml"
+      - "schemas/contracts/v1/common/identity_token.schema.json"
+      - "contracts/common/identity_token.md"
+      - "tools/validators/validate_identity_token.py"
+      - "fixtures/contracts/v1/common/identity_token/**"
+      - "tests/contracts/test_identity_token_wiring.py"
+      - "data/receipts/generated/genrec-identity-token-wiring-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: identity-token-wiring-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-identity-token-wiring
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Validate IdentityToken wiring closure
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/contracts/test_identity_token_wiring.py
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-identity-token-wiring-20260809.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### IdentityToken wiring validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: declared schema-to-contract, fixture, and validator paths; non-vacuous JSON fixture lanes; closed kind vocabulary; validator target wiring; authoring-receipt integrity."
+            echo "- Boundary: this check verifies repository wiring only. It does not establish object existence, actor identity, authentication, evidence closure, policy approval, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
