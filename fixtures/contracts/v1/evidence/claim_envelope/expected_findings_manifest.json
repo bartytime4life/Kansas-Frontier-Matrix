@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "valid-draft",
+      "case_kind": "VALID",
+      "path": "valid/valid_supported_draft.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-published-generalized",
+      "case_kind": "VALID",
+      "path": "valid/valid_published_generalized.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "schema-missing-claim-id",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_missing_claim_id.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-additional-property",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_additional_property.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "schema-bad-spec-hash",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "path": "invalid/schema_bad_spec_hash.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-unsorted-references",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_unsorted_references.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "EVIDENCE_REFS_NOT_CANONICAL"
+      ]
+    },
+    {
+      "case_id": "semantic-published-without-evidence",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_published_without_evidence.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "PUBLISHED_EVIDENCE_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "semantic-published-without-rollback",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_published_without_rollback.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "PUBLISHED_ROLLBACK_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "semantic-temporal-order",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_temporal_order.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "TEMPORAL_ORDER_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-ai-proposal-published",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_ai_proposal_published.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "AI_PROPOSAL_PUBLICATION_DENIED"
+      ]
+    },
+    {
+      "case_id": "semantic-internal-reference",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_internal_reference.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "INTERNAL_REFERENCE_DENIED"
+      ]
+    },
+    {
+      "case_id": "semantic-unresolved-published",
+      "case_kind": "SEMANTIC_NEGATIVE",
+      "path": "semantic_invalid/semantic_unresolved_published.json",
+      "expected_outcome": "FAIL",
+      "expected_findings": [
+        "PUBLISHED_SUPPORT_INVALID"
+      ]
+    }
+  ]
+}

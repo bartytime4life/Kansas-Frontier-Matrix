@@ -1,0 +1,87 @@
+# Validate the proposed ClaimEnvelope schema and bounded no-network semantics.
+name: claim-envelope-validation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/claim-envelope-validation.yml"
+      - "contracts/evidence/claim_envelope.md"
+      - "schemas/contracts/v1/evidence/claim_envelope.schema.json"
+      - "fixtures/contracts/v1/evidence/claim_envelope/**"
+      - "tools/validators/validate_claim_envelope.py"
+      - "tests/validators/test_validate_claim_envelope.py"
+      - "data/receipts/generated/genrec-claim-envelope-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/claim-envelope-validation.yml"
+      - "contracts/evidence/claim_envelope.md"
+      - "schemas/contracts/v1/evidence/claim_envelope.schema.json"
+      - "fixtures/contracts/v1/evidence/claim_envelope/**"
+      - "tools/validators/validate_claim_envelope.py"
+      - "tests/validators/test_validate_claim_envelope.py"
+      - "data/receipts/generated/genrec-claim-envelope-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: claim-envelope-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-claim-envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused tests
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/validators/test_validate_claim_envelope.py
+
+      - name: Replay exact fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_claim_envelope.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-claim-envelope-20260809.json             --repo-root .
+
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### ClaimEnvelope validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema shape, deterministic fixture polarity, reference hygiene, temporal ordering, and local publication completeness."
+            echo "- A PASS does not resolve EvidenceRefs, decide policy, authenticate review, release, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
