@@ -3,16 +3,19 @@ import json
 import sys
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.validators._common.local_resolver import build_registry
 
 
-def load_validator(schema_path: Path):
+def load_validator(schema_path: Path, *, check_formats: bool = False):
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     repo_root = Path(__file__).resolve().parents[3]
     registry = build_registry(repo_root)
-    return Draft202012Validator(schema, registry=registry)
+    kwargs = {"registry": registry}
+    if check_formats:
+        kwargs["format_checker"] = FormatChecker()
+    return Draft202012Validator(schema, **kwargs)
 
 
 def validate_files(validator, files):
@@ -58,7 +61,13 @@ def _validate_fixture_files(validator, files, *, expect_valid: bool):
     return ok
 
 
-def run(schema_path: Path, fixtures_dir: Path | None, argv):
+def run(
+    schema_path: Path,
+    fixtures_dir: Path | None,
+    argv,
+    *,
+    check_formats: bool = False,
+):
     parser = argparse.ArgumentParser()
     parser.add_argument("files", nargs="*")
     parser.add_argument("--fixtures", action="store_true")
@@ -67,7 +76,7 @@ def run(schema_path: Path, fixtures_dir: Path | None, argv):
         print("No files provided", file=sys.stderr)
         return 2
 
-    v = load_validator(schema_path)
+    v = load_validator(schema_path, check_formats=check_formats)
     if ns.fixtures:
         if fixtures_dir is None:
             print("FAIL fixture configuration: no fixture directory configured")
