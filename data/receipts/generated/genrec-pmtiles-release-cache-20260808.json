@@ -1,0 +1,132 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-release-cache.yml": "sha256:19a489623493722ecc5f4f3c6e0e490d2adc1770cdca17a3e04173f6b8c01d3c",
+    "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts": "sha256:29d042156d75b8a86996dafba630ed3cae9cc41da3dd4792e1687332a4338875",
+    "apps/explorer-web/tests/pmtiles-release-cache.test.ts": "sha256:9561e38a138a12750a8cfd2459434f456a8a440b2ceb5053be64f9885ea6efd0",
+    "contracts/runtime/pmtiles_release_cache.md": "sha256:4d254a19ebc60a62ffa1109d83fc2d300c7ddbbbd97e54bad5f1e9d1e699e096",
+    "fixtures/runtime/pmtiles_release_cache/cases.json": "sha256:8ae5fc9bb8c8ae7688004bf5dcc01b85ba65454ef6d602af927eca45581fd9fb"
+  },
+  "artifact_paths": [
+    ".github/workflows/pmtiles-release-cache.yml",
+    "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts",
+    "apps/explorer-web/tests/pmtiles-release-cache.test.ts",
+    "contracts/runtime/pmtiles_release_cache.md",
+    "fixtures/runtime/pmtiles_release_cache/cases.json"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pmtiles-cache-next-pr",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-114"
+    },
+    {
+      "id": "repository:mobile-pmtiles-verification",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts@c76a4860693830a783579c29bf276977856e9f86"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T23:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "attachment:Master MapLibre Components-Functions-Features.pdf#ML-Y-114",
+      "repo:apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts@c76a4860693830a783579c29bf276977856e9f86"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-only release-scoped PMTiles cache policy selected from ML-Y-114. It binds cache keys to release, artifact, and policy identity and proves exact decisions for online first run, offline miss, partial download, stale release, policy/artifact mismatch, missing glyphs/sprites, withdrawal, internal-source denial, authority overclaim, and malformed input. No Service Worker, network, CacheStorage, MapLibre, release, or publication side effect occurs.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and branch/PR delivery",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md",
+    "docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md",
+    "docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:478990ea7e327b91b4ed3528ee60008741b693eab9903ca88da1e0fd9fb1fbfb",
+  "receipt_id": "genrec-pmtiles-release-cache-20260808",
+  "truth_labels": {
+    ".github/workflows/pmtiles-release-cache.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts": "CONFIRMED",
+    "apps/explorer-web/tests/pmtiles-release-cache.test.ts": "CONFIRMED",
+    "contracts/runtime/pmtiles_release_cache.md": "PROPOSED",
+    "fixtures/runtime/pmtiles_release_cache/cases.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript-strict-compile",
+      "outcome": "PASS",
+      "reason": "The PMTiles cache policy module compiled under strict ES2022 settings."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "Fourteen synthetic cache cases matched exact finite outcome and code pairs."
+    },
+    {
+      "gate": "release-scoped-key",
+      "outcome": "PASS",
+      "reason": "The deterministic key binds release ID, artifact digest, and policy digest."
+    },
+    {
+      "gate": "no-cache-or-network-side-effects",
+      "outcome": "PASS",
+      "reason": "Static checks deny fetch, CacheStorage mutation, and Service Worker registration; results report cacheMutated=false and networkRequested=false."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed as YAML."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every listed artifact path is unique and its SHA-256 digest matches this receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

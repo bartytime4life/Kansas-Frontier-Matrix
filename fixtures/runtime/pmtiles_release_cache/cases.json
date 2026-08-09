@@ -1,0 +1,126 @@
+{
+  "profile": "kfm.pmtiles-release-cache-fixtures.v1",
+  "source_idea": "ML-Y-114",
+  "base": {
+    "profile": "kfm.pmtiles-release-cache-fixture.v1",
+    "request_mode": "OFFLINE",
+    "requested_release": {
+      "release_id": "map-release:ks-demo-2026-001",
+      "artifact_digest": "sha256:1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+      "policy_digest": "sha256:2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "source_url_class": "GOVERNED_API",
+      "release_state": "CURRENT",
+      "required_assets": [
+        "GLYPHS",
+        "PMTILES",
+        "SPRITES"
+      ]
+    },
+    "cache_snapshot": {
+      "present": true,
+      "cache_key": "kfm-pmtiles:map-release:ks-demo-2026-001:1a1a1a1a1a1a1a1a:2b2b2b2b2b2b2b2b",
+      "release_id": "map-release:ks-demo-2026-001",
+      "artifact_digest": "sha256:1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+      "policy_digest": "sha256:2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "completion": "COMPLETE",
+      "assets": {
+        "glyphs": true,
+        "pmtiles": true,
+        "sprites": true
+      }
+    },
+    "authority": {
+      "cache_mutated": false,
+      "network_requested": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "verified-offline-hit",
+      "mutation": "NONE",
+      "expected_outcome": "PASS",
+      "expected_code": "PMTILES_CACHE_HIT_VERIFIED"
+    },
+    {
+      "case_id": "first-run-online",
+      "mutation": "FIRST_RUN_ONLINE",
+      "expected_outcome": "PASS",
+      "expected_code": "PMTILES_CACHE_FETCH_REQUIRED"
+    },
+    {
+      "case_id": "first-run-offline",
+      "mutation": "FIRST_RUN_OFFLINE",
+      "expected_outcome": "HOLD",
+      "expected_code": "PMTILES_CACHE_OFFLINE_MISS"
+    },
+    {
+      "case_id": "partial-download",
+      "mutation": "PARTIAL",
+      "expected_outcome": "HOLD",
+      "expected_code": "PMTILES_CACHE_PARTIAL"
+    },
+    {
+      "case_id": "stale-release",
+      "mutation": "STALE_RELEASE",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_RELEASE_MISMATCH"
+    },
+    {
+      "case_id": "policy-mismatch",
+      "mutation": "POLICY_MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_POLICY_MISMATCH"
+    },
+    {
+      "case_id": "artifact-mismatch",
+      "mutation": "ARTIFACT_MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_ARTIFACT_MISMATCH"
+    },
+    {
+      "case_id": "missing-glyphs",
+      "mutation": "MISSING_GLYPHS",
+      "expected_outcome": "HOLD",
+      "expected_code": "PMTILES_CACHE_ASSET_INCOMPLETE"
+    },
+    {
+      "case_id": "missing-sprites",
+      "mutation": "MISSING_SPRITES",
+      "expected_outcome": "HOLD",
+      "expected_code": "PMTILES_CACHE_ASSET_INCOMPLETE"
+    },
+    {
+      "case_id": "withdrawn-release",
+      "mutation": "WITHDRAWN",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_RELEASE_WITHDRAWN"
+    },
+    {
+      "case_id": "internal-source",
+      "mutation": "INTERNAL_SOURCE",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_SOURCE_CLASS_DENIED"
+    },
+    {
+      "case_id": "authority-overclaim",
+      "mutation": "AUTHORITY_OVERCLAIM",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_AUTHORITY_OVERCLAIM"
+    },
+    {
+      "case_id": "bad-key",
+      "mutation": "BAD_KEY",
+      "expected_outcome": "DENY",
+      "expected_code": "PMTILES_CACHE_KEY_MISMATCH"
+    },
+    {
+      "case_id": "invalid-shape",
+      "mutation": "INVALID_SHAPE",
+      "expected_outcome": "ERROR",
+      "expected_code": "PMTILES_CACHE_INPUT_INVALID"
+    }
+  ]
+}
