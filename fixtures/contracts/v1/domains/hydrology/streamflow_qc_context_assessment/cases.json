@@ -1,0 +1,109 @@
+{
+  "bases": {
+    "regional": {
+      "profile": "STREAMFLOW_QC_CONTEXT_V1",
+      "assessment_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "subject": {
+        "gauge_ref": "kfm:gauge:synthetic-kansas-001",
+        "observation_ref": "kfm:observation:synthetic-flow-001",
+        "observation_source_ref": "kfm:source:synthetic-nwis-observation",
+        "percentile_context_ref": "kfm:context:synthetic-waterwatch-percentile-v1",
+        "observed_at": "2026-08-01T12:00:00Z",
+        "retrieved_at": "2026-08-01T12:10:00Z",
+        "flow_state": "LOW_PERCENTILE",
+        "evidence_refs": ["evidence:synthetic-flow-001"]
+      },
+      "regional_context": {
+        "adjacent_gauge_count": 3,
+        "corroboration": "CORROBORATES_LOW_FLOW",
+        "drought_context": "SUPPORTS_LOW_FLOW",
+        "context_evidence_refs": ["evidence:synthetic-adjacent-001", "evidence:synthetic-drought-001"]
+      },
+      "integrity_context": {"ingest_state": "CLEAN", "unit_state": "COMPATIBLE", "cadence_state": "ON_TIME"},
+      "assessment": {
+        "outcome": "REGIONAL_LOW_FLOW_CONTEXT",
+        "priority": "ROUTINE",
+        "reason_codes": ["ADJACENT_GAUGES_CORROBORATE", "DROUGHT_CONTEXT_SUPPORTS", "LOW_FLOW_SIGNAL"]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "percentile_computed": false,
+        "sensor_invalidated": false,
+        "hydrologic_event_declared": false,
+        "detector_configuration_mutated": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    }
+  },
+  "cases": [
+    {"case_id": "regional-pass", "base": "regional", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "local-review-pass", "base": "regional", "mutations": [
+      {"path": "/regional_context/corroboration", "value": "DOES_NOT_CORROBORATE"},
+      {"path": "/regional_context/drought_context", "value": "DOES_NOT_SUPPORT"},
+      {"path": "/assessment/outcome", "value": "LOCAL_SIGNAL_REVIEW"},
+      {"path": "/assessment/priority", "value": "ELEVATED"},
+      {"path": "/assessment/reason_codes", "value": ["ADJACENT_GAUGES_DO_NOT_CORROBORATE", "LOW_FLOW_SIGNAL"]}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "integrity-review-pass", "base": "regional", "mutations": [
+      {"path": "/integrity_context/ingest_state", "value": "GAP_OR_INTEGRATION_CONCERN"},
+      {"path": "/assessment/outcome", "value": "LOCAL_SIGNAL_REVIEW"},
+      {"path": "/assessment/priority", "value": "HIGH"},
+      {"path": "/assessment/reason_codes", "value": ["INTEGRITY_CONCERN", "LOW_FLOW_SIGNAL"]}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "no-escalation-pass", "base": "regional", "mutations": [
+      {"path": "/subject/flow_state", "value": "NOT_LOW"},
+      {"path": "/regional_context/adjacent_gauge_count", "value": 0},
+      {"path": "/regional_context/corroboration", "value": "INSUFFICIENT"},
+      {"path": "/regional_context/drought_context", "value": "UNKNOWN"},
+      {"path": "/regional_context/context_evidence_refs", "value": []},
+      {"path": "/assessment/outcome", "value": "NO_QC_ESCALATION"},
+      {"path": "/assessment/reason_codes", "value": ["NO_LOW_FLOW_SIGNAL"]}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "hold-abstain", "base": "regional", "mutations": [
+      {"path": "/subject/flow_state", "value": "UNKNOWN"},
+      {"path": "/regional_context/adjacent_gauge_count", "value": 0},
+      {"path": "/regional_context/corroboration", "value": "INSUFFICIENT"},
+      {"path": "/regional_context/drought_context", "value": "UNKNOWN"},
+      {"path": "/regional_context/context_evidence_refs", "value": []},
+      {"path": "/integrity_context/ingest_state", "value": "UNKNOWN"},
+      {"path": "/integrity_context/unit_state", "value": "UNKNOWN"},
+      {"path": "/integrity_context/cadence_state", "value": "UNKNOWN"},
+      {"path": "/assessment/outcome", "value": "HOLD"},
+      {"path": "/assessment/priority", "value": "NONE"},
+      {"path": "/assessment/reason_codes", "value": ["CONTEXT_INSUFFICIENT"]}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_HELD", "path": "/assessment/outcome"}]},
+    {"case_id": "error-error", "base": "regional", "mutations": [
+      {"path": "/subject/flow_state", "value": "UNKNOWN"},
+      {"path": "/regional_context/adjacent_gauge_count", "value": 0},
+      {"path": "/regional_context/corroboration", "value": "INSUFFICIENT"},
+      {"path": "/regional_context/drought_context", "value": "UNKNOWN"},
+      {"path": "/regional_context/context_evidence_refs", "value": []},
+      {"path": "/integrity_context/ingest_state", "value": "UNKNOWN"},
+      {"path": "/integrity_context/unit_state", "value": "UNKNOWN"},
+      {"path": "/integrity_context/cadence_state", "value": "UNKNOWN"},
+      {"path": "/assessment/outcome", "value": "ERROR"},
+      {"path": "/assessment/priority", "value": "NONE"},
+      {"path": "/assessment/reason_codes", "value": ["ASSESSMENT_ERROR"]}
+    ], "expected_outcome": "ERROR", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_UPSTREAM_ERROR", "path": "/assessment/outcome"}]},
+    {"case_id": "regional-without-adjacent-evidence", "base": "regional", "mutations": [{"path": "/regional_context/context_evidence_refs", "value": ["evidence:synthetic-drought-001"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_REGIONAL_EVIDENCE_INSUFFICIENT", "path": "/regional_context/context_evidence_refs"}]},
+    {"case_id": "regional-with-ingest-gap", "base": "regional", "mutations": [{"path": "/integrity_context/ingest_state", "value": "GAP_OR_INTEGRATION_CONCERN"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "review-without-low-flow", "base": "regional", "mutations": [
+      {"path": "/subject/flow_state", "value": "NOT_LOW"},
+      {"path": "/assessment/outcome", "value": "LOCAL_SIGNAL_REVIEW"},
+      {"path": "/assessment/priority", "value": "ELEVATED"},
+      {"path": "/assessment/reason_codes", "value": ["ADJACENT_GAUGES_DO_NOT_CORROBORATE", "LOW_FLOW_SIGNAL"]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "source-role-collapse", "base": "regional", "mutations": [{"path": "/subject/percentile_context_ref", "value": "kfm:source:synthetic-nwis-observation"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_SOURCE_ROLE_COLLAPSE", "path": "/subject/percentile_context_ref"}]},
+    {"case_id": "time-order-invalid", "base": "regional", "mutations": [{"path": "/subject/retrieved_at", "value": "2026-08-01T11:59:00Z"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_TIME_ORDER_INVALID", "path": "/subject/retrieved_at"}]},
+    {"case_id": "reason-codes-invalid", "base": "regional", "mutations": [{"path": "/assessment/reason_codes", "value": ["LOW_FLOW_SIGNAL"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "authority-overreach", "base": "regional", "mutations": [{"path": "/governance/sensor_invalidated", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_SCHEMA_INVALID", "path": "/governance/sensor_invalidated"}]},
+    {"case_id": "identity-corrupt", "base": "regional", "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected_outcome": "DENY", "expected_findings": [{"code": "STREAMFLOW_QC_CONTEXT_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]}
+  ]
+}
