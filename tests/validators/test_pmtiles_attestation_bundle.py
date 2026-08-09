@@ -4,11 +4,13 @@ import gzip
 import hashlib
 import json
 import math
+import socket
 import struct
 import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.request
 from pathlib import Path
 from typing import Callable
 from unittest import mock
@@ -31,8 +33,15 @@ from validate_attestation_bundle import (
 )
 from validate_header import HeaderValidationError, inspect_archive
 from verify_merkle import MerkleValidationError, inspect_index, merkle_root
+from verify_partial_read import (
+    HOLDS as PARTIAL_READ_HOLDS,
+    PROFILE as PARTIAL_READ_PROFILE,
+    render_result as render_partial_read_result,
+    verify_partial_read,
+)
 
 FIXTURE_ROOT = REPO_ROOT / "fixtures/pmtiles/attestation"
+PARTIAL_READ_FIXTURE_ROOT = FIXTURE_ROOT / "partial-read"
 SPEC_HASH = "sha256:" + hashlib.sha256(b"kfm-test-build-spec").hexdigest()
 OTHER_HASH = "sha256:" + hashlib.sha256(b"different-value").hexdigest()
 ROOT_DIRECTORY = b"\x01\x00\x01\x01\x01"
@@ -208,6 +217,63 @@ def _build_bundle(directory: Path, *, chunk_bytes: int = 64) -> dict[str, object
         "index": index,
         "pmsig": pmsig,
         "receipt": receipt,
+    }
+
+
+def _partial_read_inputs(
+    bundle: dict[str, object], mutation: str
+) -> dict[str, object]:
+    archive = bundle["archive"]
+    archive_bytes = bundle["archive_bytes"]
+    index = bundle["index"]
+    pmsig = bundle["pmsig"]
+    assert isinstance(archive, Path)
+    assert isinstance(archive_bytes, bytes)
+    assert isinstance(index, dict)
+    assert isinstance(pmsig, dict)
+
+    directory = archive.parent
+    offset = 0
+    length = 10
+    leaf = 0
+    range_bytes = archive_bytes[offset:offset + length]
+    leaf_bytes = archive_bytes[:64]
+
+    if mutation == "none":
+        pass
+    elif mutation == "range_bytes_mismatch":
+        range_bytes = bytes((range_bytes[0] ^ 1,)) + range_bytes[1:]
+    elif mutation == "leaf_digest_mismatch":
+        leaf_bytes = leaf_bytes[:-1] + bytes((leaf_bytes[-1] ^ 1,))
+    elif mutation == "range_not_declared":
+        offset = 1
+        range_bytes = archive_bytes[offset:offset + length]
+    elif mutation == "pmsig_root_mismatch":
+        pmsig["subject"]["pmidx_merkle_root"] = OTHER_HASH
+        _write_json(Path(str(archive) + ".pmsig"), pmsig)
+    elif mutation == "cross_chunk_declaration":
+        offset = 60
+        length = 8
+        range_bytes = archive_bytes[offset:offset + length]
+        index["ranges"] = [
+            {"tile_id": "synthetic", "offset": offset, "length": length, "leaf": leaf}
+        ]
+        _write_json(Path(str(archive) + ".pmidx"), index)
+    else:
+        raise AssertionError(f"unknown partial-read mutation: {mutation}")
+
+    range_path = directory / "captured-range.bin"
+    leaf_path = directory / "containing-leaf.bin"
+    range_path.write_bytes(range_bytes)
+    leaf_path.write_bytes(leaf_bytes)
+    return {
+        "pmidx_path": Path(str(archive) + ".pmidx"),
+        "pmsig_path": Path(str(archive) + ".pmsig"),
+        "range_path": range_path,
+        "leaf_path": leaf_path,
+        "archive_size": len(archive_bytes),
+        "offset": offset,
+        "length": length,
     }
 
 
@@ -503,6 +569,105 @@ class PMTilesAttestationBundleTests(unittest.TestCase):
                     case["expected"]["issue_codes"],
                     [finding.code for finding in result.findings],
                 )
+
+    def test_partial_read_fixture_matrix_is_exact(self) -> None:
+        valid = sorted((PARTIAL_READ_FIXTURE_ROOT / "valid").glob("*.json"))
+        invalid = sorted((PARTIAL_READ_FIXTURE_ROOT / "invalid").glob("*.json"))
+        self.assertEqual(["complete.json"], [path.name for path in valid])
+        self.assertEqual(
+            {
+                "cross_chunk_declaration.json",
+                "leaf_digest_mismatch.json",
+                "pmsig_root_mismatch.json",
+                "range_bytes_mismatch.json",
+                "range_not_declared.json",
+            },
+            {path.name for path in invalid},
+        )
+        for descriptor in valid + invalid:
+            case = json.loads(descriptor.read_text(encoding="utf-8"))
+            self.assertEqual(PARTIAL_READ_PROFILE, case["fixture_profile"])
+            if descriptor.parent.name == "invalid":
+                sidecar = descriptor.with_suffix(".expected_error.txt")
+                self.assertTrue(sidecar.is_file(), sidecar)
+                self.assertEqual(
+                    case["expected"]["issue_codes"][0],
+                    sidecar.read_text(encoding="utf-8").strip(),
+                )
+            with self.subTest(case=case["case_id"]), tempfile.TemporaryDirectory() as raw:
+                bundle = _build_bundle(Path(raw))
+                inputs = _partial_read_inputs(bundle, case["mutation"])
+                result = verify_partial_read(**inputs)
+                self.assertEqual(case["expected"]["status"], result.status)
+                self.assertEqual(case["expected"]["issue_codes"], list(result.findings))
+
+    def test_partial_read_success_keeps_every_authority_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            inputs = _partial_read_inputs(bundle, "none")
+            result = verify_partial_read(**inputs)
+            payload = json.loads(render_partial_read_result(result))
+        self.assertEqual("STRUCTURAL_HOLD", payload["status"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(list(PARTIAL_READ_HOLDS), payload["holds"])
+        self.assertEqual({"offset": 0, "length": 10, "leaf": 0}, payload["verified_range"])
+        self.assertIn("RANGE_METADATA_NOT_AUTHENTICATED", payload["holds"])
+        self.assertIn("BAO_OUTBOARD_PROOF_UNADOPTED", payload["holds"])
+
+    def test_partial_read_cli_is_explicit_json_and_no_network(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            inputs = _partial_read_inputs(bundle, "none")
+            with (
+                mock.patch.object(socket.socket, "connect", side_effect=AssertionError),
+                mock.patch.object(socket, "create_connection", side_effect=AssertionError),
+                mock.patch.object(urllib.request, "urlopen", side_effect=AssertionError),
+            ):
+                self.assertTrue(verify_partial_read(**inputs).ok)
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(VALIDATOR_DIR / "verify_partial_read.py"),
+                    "--pmidx",
+                    str(inputs["pmidx_path"]),
+                    "--pmsig",
+                    str(inputs["pmsig_path"]),
+                    "--range-bytes",
+                    str(inputs["range_path"]),
+                    "--leaf-bytes",
+                    str(inputs["leaf_path"]),
+                    "--archive-size",
+                    str(inputs["archive_size"]),
+                    "--offset",
+                    str(inputs["offset"]),
+                    "--length",
+                    str(inputs["length"]),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        payload = json.loads(completed.stdout)
+        self.assertEqual(PARTIAL_READ_PROFILE, payload["profile"])
+        self.assertEqual("STRUCTURAL_HOLD", payload["status"])
+        self.assertEqual([], payload["findings"])
+
+    def test_partial_read_denies_symlinks_and_invalid_integer_bounds(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            bundle = _build_bundle(Path(raw))
+            inputs = _partial_read_inputs(bundle, "none")
+            range_path = inputs["range_path"]
+            assert isinstance(range_path, Path)
+            range_path.unlink()
+            range_path.symlink_to(inputs["leaf_path"])
+            result = verify_partial_read(**inputs)
+            self.assertEqual(("PARTIAL_RANGE_BYTES_SYMLINK_DENIED",), result.findings)
+
+            range_path.unlink()
+            inputs = _partial_read_inputs(bundle, "none")
+            inputs["archive_size"] = True
+            result = verify_partial_read(**inputs)
+            self.assertEqual(("PARTIAL_ARCHIVE_SIZE_INVALID",), result.findings)
 
     def test_tile_manifest_fixture_inventory_and_sidecars_are_exact(self) -> None:
         valid = sorted((FIXTURE_ROOT / "valid").glob("manifest_*.json"))

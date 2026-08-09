@@ -1,0 +1,11 @@
+{
+  "case_id": "partial-read-range-not-declared",
+  "expected": {
+    "issue_codes": [
+      "PARTIAL_RANGE_NOT_DECLARED"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "range_not_declared"
+}

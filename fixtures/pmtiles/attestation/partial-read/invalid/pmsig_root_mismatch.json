@@ -1,0 +1,11 @@
+{
+  "case_id": "partial-read-pmsig-root-mismatch",
+  "expected": {
+    "issue_codes": [
+      "PMSIG_MERKLE_ROOT_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "pmsig_root_mismatch"
+}

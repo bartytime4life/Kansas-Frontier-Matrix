@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-pmtiles-readme
 title: tools/validators/pmtiles README
 type: README
-version: v0.4
+version: v0.5
 status: draft
 owner: TODO-tooling-qa-owner
 created: 2026-07-08
-updated: 2026-08-03
+updated: 2026-08-09
 policy_label: repository-facing; pmtiles-validator-index; fail-closed; attestation; spec-hash; pmidx; pmsig; runreceipt; derived-artifacts-only; release-gated; public-surface-deny-by-default; non-authoritative
 owning_root: tools/
-responsibility: parent PMTiles validator routing README under tools/validators; indexes fail-closed validation helpers, fixture routing, PMTiles metadata/header checks, spec_hash reconciliation, PMIDX sidecar and Merkle checks, PMSIG/signature posture, RunReceipt reconciliation, opt-in declared-manifest compatibility checks, and verification gaps while deferring artifact bytes, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, tests, and release authority to their owning roots
+responsibility: parent PMTiles validator routing README under tools/validators; indexes fail-closed validation helpers, fixture routing, PMTiles metadata/header checks, spec_hash reconciliation, PMIDX sidecar and Merkle checks, captured partial-read compatibility checks, PMSIG/signature posture, RunReceipt reconciliation, opt-in declared-manifest compatibility checks, and verification gaps while deferring artifact bytes, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, tests, and release authority to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
@@ -19,6 +19,7 @@ related:
   - ../evidence/README.md
   - ../geo_manifest/README.md
   - validate_attestation_bundle.py
+  - verify_partial_read.py
   - fixtures/README.md
   - fixtures/valid/README.md
   - fixtures/invalid/README.md
@@ -42,6 +43,7 @@ notes:
   - "The PMTiles v3 header, PMIDX archive binding, and split-bundle reconciliation scripts are confirmed by the focused synthetic unittest matrix; their success remains structural only."
   - "This lane has one tooling/QA authority-owner role; assignment NEEDS VERIFICATION. PMTiles, schema, fixture, policy, release, publication, and evidence stewards are review roles. CODEOWNERS routes review to @bartytime4life."
   - "The opt-in declared-manifest check is a non-canonical compatibility profile and retains an explicit unresolved-schema-authority hold."
+  - "The opt-in partial-read check binds captured range bytes to a supplied PMIDX leaf and PMSIG subject shape but returns STRUCTURAL_HOLD because signature trust, range-metadata authentication, Bao adoption, whole-archive verification, policy, and release remain unresolved."
   - "PMTiles archives are derived publication artifacts, not canonical truth. Public clients may consume only released artifacts and governed APIs."
   - "A PMTiles artifact is not trusted merely because it exists; the archive, metadata, build specification, PMIDX sidecar, PMSIG signature bundle, RunReceipt, policy posture, and release/rollback references must reconcile before publication eligibility."
   - "The tool-local fixture sublanes remain README-only. Executable mutation descriptors live under the root-owned fixtures/ lane and generate PMTiles bytes only in temporary test directories."
@@ -59,7 +61,7 @@ notes:
 ![artifact](https://img.shields.io/badge/artifact-derived--not--truth-blueviolet)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/pmtiles/` is the PMTiles validator routing index for fail-closed attestation checks over PMTiles archives, PMIDX sidecars, PMSIG signatures, RunReceipts, `spec_hash` reconciliation, and an opt-in non-canonical declared-manifest profile.
+> **One-line purpose.** `tools/validators/pmtiles/` is the PMTiles validator routing index for fail-closed attestation checks over PMTiles archives, PMIDX sidecars, captured range responses, PMSIG signatures, RunReceipts, `spec_hash` reconciliation, and opt-in non-canonical compatibility profiles.
 
 ---
 
@@ -84,6 +86,7 @@ The answer should be a deterministic validation result or routing decision. This
 | `tools/validators/pmtiles/README.md` | **CONFIRMED README** | This README replaces the prior short validator note. |
 | `validate_header.py` | **CONFIRMED / STRUCTURAL ONLY** | Decodes the exact 127-byte PMTiles v3 header, bounds non-overlapping regions, parses bounded metadata, and requires a SHA-256 `spec_hash`. |
 | `verify_merkle.py` | **CONFIRMED / STRUCTURAL ONLY** | Recomputes the archive digest, every chunk leaf, the PMIDX root, and single-chunk range bindings under a bounded no-network envelope. |
+| `verify_partial_read.py` | **CONFIRMED / COMPATIBILITY PROFILE ONLY** | Without rereading the archive, binds captured range bytes to supplied containing-leaf bytes, the PMIDX SHA-256 root, and the PMSIG subject shape; success is `STRUCTURAL_HOLD` with six explicit authority holds. |
 | `validate_attestation_bundle.py` | **CONFIRMED / COMPATIBILITY PROFILE ONLY** | Reconciles PMTiles metadata, PMIDX, PMSIG, and exactly one RunReceipt subject. With `--tile-manifest`, it also binds a declared PMTiles v3/MVT profile to the inspected archive while retaining explicit schema-authority, crypto, unauthenticated-range-metadata, policy, and release holds. |
 | `fixtures/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Parent fixture index for valid and invalid PMTiles fixture lanes. |
 | `fixtures/valid/README.md` | **CONFIRMED README / fixture files NEEDS VERIFICATION** | Positive fixture guidance; validator-positive fixture status is not publication approval. |
@@ -101,6 +104,33 @@ The answer should be a deterministic validation result or routing decision. This
 ## Implemented compatibility boundary
 
 The executable slice is deliberately limited to the split SHA-256 bundle already wired by the repository. A successful bundle result is `STRUCTURAL_PASS` with `authority: NONE` and the holds `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`, `POLICY_EVALUATION_NOT_RUN`, `RANGE_METADATA_NOT_AUTHENTICATED`, and `RELEASE_AUTHORIZATION_NOT_EVALUATED`.
+
+Passing an explicit PMIDX, PMSIG, captured range, supplied containing leaf,
+archive byte size, offset, and length to `verify_partial_read.py` opts into
+`kfm.pmtiles.partial-read.compat.v1`. The verifier requires an exact declared
+range, checks the captured bytes against the appropriate leaf slice, checks the
+leaf SHA-256 digest and declared tree root, and binds the root, archive digest,
+and `spec_hash` to the PMSIG subject shape. It does not reread the complete
+archive. A successful result is therefore `STRUCTURAL_HOLD` with
+`authority: NONE`, not a render-health, source-truth, policy, release, or
+publication decision.
+
+```bash
+python tools/validators/pmtiles/verify_partial_read.py \
+  --pmidx tiles.pmtiles.pmidx \
+  --pmsig tiles.pmtiles.pmsig \
+  --range-bytes captured-range.bin \
+  --leaf-bytes containing-leaf.bin \
+  --archive-size 123456 \
+  --offset 4096 \
+  --length 512
+```
+
+Because the existing root commits the leaf list rather than the PMIDX range
+table, the result retains `RANGE_METADATA_NOT_AUTHENTICATED`. Because current
+PMSIG handling is shape-only, it also retains
+`CRYPTOGRAPHIC_VERIFICATION_UNWIRED`. Bao/BLAKE3 outboard proofs and their trust
+profile remain unadopted rather than being silently substituted for SHA-256.
 
 Passing `--tile-manifest <path>` opts into
 `kfm.pmtiles.tile-artifact-manifest.compat.v1`. The descriptor must declare a

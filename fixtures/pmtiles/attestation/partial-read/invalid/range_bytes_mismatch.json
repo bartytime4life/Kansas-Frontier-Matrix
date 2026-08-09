@@ -1,0 +1,11 @@
+{
+  "case_id": "partial-read-range-bytes-mismatch",
+  "expected": {
+    "issue_codes": [
+      "PARTIAL_RANGE_BYTES_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "range_bytes_mismatch"
+}

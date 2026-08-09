@@ -20,6 +20,7 @@
 # Commands:
 # - tools/validators/pmtiles/validate_header.py
 # - tools/validators/pmtiles/verify_merkle.py
+# - tools/validators/pmtiles/verify_partial_read.py (fixture-only reference path)
 # - tools/validators/pmtiles/validate_attestation_bundle.py
 # - tests/validators/test_pmtiles_attestation_bundle.py
 # - tools/attest/verify_cose.py --shape-only
@@ -64,6 +65,8 @@ name: PMTiles Attestation
       - "tests/validators/test_pmtiles_attestation_bundle.py"
       - "fixtures/pmtiles/attestation/**"
       - "docs/standards/pmtiles/**"
+      - "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md"
+      - "data/receipts/generated/genrec-pass32-pmtiles-partial-read-20260809.json"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   push:
@@ -82,6 +85,8 @@ name: PMTiles Attestation
       - "tests/validators/test_pmtiles_attestation_bundle.py"
       - "fixtures/pmtiles/attestation/**"
       - "docs/standards/pmtiles/**"
+      - "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md"
+      - "data/receipts/generated/genrec-pass32-pmtiles-partial-read-20260809.json"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   workflow_dispatch:
@@ -129,6 +134,7 @@ jobs:
             "tools/attest/verify_cose.py"
             "tools/validators/pmtiles/validate_header.py"
             "tools/validators/pmtiles/verify_merkle.py"
+            "tools/validators/pmtiles/verify_partial_read.py"
             "tools/validators/pmtiles/validate_attestation_bundle.py"
             "tests/validators/test_pmtiles_attestation_bundle.py"
             "fixtures/pmtiles/attestation/README.md"
@@ -164,6 +170,7 @@ jobs:
           scripts = (
               Path("tools/validators/pmtiles/validate_header.py"),
               Path("tools/validators/pmtiles/verify_merkle.py"),
+              Path("tools/validators/pmtiles/verify_partial_read.py"),
               Path("tools/validators/pmtiles/validate_attestation_bundle.py"),
               Path("tests/validators/test_pmtiles_attestation_bundle.py"),
               Path("tools/attest/verify_cose.py"),
@@ -419,7 +426,10 @@ jobs:
             echo
             echo "Available commands check exact PMTiles v3 header/metadata fields,"
             echo "companion presence, archive-derived PMIDX leaves/ranges/root, and"
-            echo "PMSIG plus RunReceipt cross-artifact reconciliation. The workflow"
+            echo "PMSIG plus RunReceipt cross-artifact reconciliation. Focused tests"
+            echo "also exercise the no-network captured partial-read compatibility"
+            echo "reference path, which retains crypto, range-metadata, Bao, whole-"
+            echo "archive, policy, and release holds. The workflow"
             echo "deliberately denies a candidate after"
             echo "shape-only PMSIG validation because cryptographic COSE verification"
             echo "and approved key-registry validation are not wired."

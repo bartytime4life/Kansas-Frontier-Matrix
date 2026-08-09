@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-standards-pmtiles-pmidx-spec-v1
 title: PMIDX Sidecar Specification V1
 type: standard
-version: v1.1-draft
+version: v1.2-draft
 status: draft; PROPOSED; compatibility-profile-only
 owner: TODO-pmtiles-steward-plus-schema-steward-plus-security-steward
 created: NEEDS_VERIFICATION
-updated: 2026-08-02
+updated: 2026-08-09
 policy_label: internal-governance; integrity-sidecar; non-authoritative
 owning_root: docs/
 responsibility: documents the implemented bounded PMIDX v1 compatibility algorithm without selecting a canonical PMTiles profile or granting cryptographic, policy, release, or publication authority
@@ -14,6 +14,7 @@ truth_posture: test-or-abstain; implementation claims require current repository
 related:
   - PMTILES_ATTESTATION_STANDARD.md
   - ../../../tools/validators/pmtiles/verify_merkle.py
+  - ../../../tools/validators/pmtiles/verify_partial_read.py
   - ../../../tools/validators/pmtiles/validate_attestation_bundle.py
   - ../../../fixtures/pmtiles/attestation/README.md
   - ../../../tests/validators/test_pmtiles_attestation_bundle.py
@@ -101,6 +102,28 @@ Its success still carries four holds:
 The repository-owned synthetic matrix is under
 `fixtures/pmtiles/attestation/`; actual PMTiles bytes are generated only in a
 temporary test directory.
+
+## Captured partial-read compatibility check
+
+`verify_partial_read.py` is an opt-in, no-network reference check for a captured
+range response. It accepts the existing PMIDX and PMSIG-shaped object plus:
+
+- the captured range bytes;
+- the complete bytes of the containing PMIDX leaf;
+- the observed complete archive size; and
+- the exact requested offset and length.
+
+The requested range must exactly match one declared PMIDX range. The verifier
+checks archive-size-to-leaf-count coherence, every declared range boundary, the
+supplied leaf length and SHA-256 digest, the captured bytes as the exact slice
+of that leaf, the declared Merkle root, and the PMSIG subject's archive digest,
+root, and `spec_hash` bindings.
+
+Success is `STRUCTURAL_HOLD`, not `STRUCTURAL_PASS`. The full archive digest is
+not recomputed; PMSIG is not cryptographically verified; the PMIDX range table
+is not committed by the tree; and Bao/BLAKE3 outboard proofs are not adopted.
+The check therefore cannot declare a render artifact healthy or authorize
+policy, release, publication, or public use.
 
 ## Unresolved profile decision
 
