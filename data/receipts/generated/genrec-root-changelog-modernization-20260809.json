@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec:root-changelog-modernization:20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "CHANGELOG.md"
+  ],
+  "artifact_hashes": {
+    "CHANGELOG.md": "sha256:f577ca89940a9e60584111cffae65e42efa1afe0aca0e8f58b52493a974795b2"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "GPT-5.6 Pro",
+    "version": "ChatGPT connector session 2026-08-09"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "github",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@73be9400ffecbc5908bf4aa127de83d79cd40864",
+      "CHANGELOG.md",
+      "README.md",
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "release/README.md",
+      "data/published/README.md",
+      "data/receipts/generated/README.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ],
+    "attached_docs": [
+      "Pasted text(20260809-181956).txt — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "CHANGELOG.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "complete-baseline-review",
+      "outcome": "PASS",
+      "reason": "Read the complete existing CHANGELOG.md and preserved all four legacy seed entries with commit-backed lineage."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one H1, ordered heading levels, balanced fences, UTF-8 text, no tabs or carriage returns, and a final newline."
+    },
+    {
+      "gate": "repository-local-links",
+      "outcome": "PASS",
+      "reason": "Verified release/, data/published/, and SECURITY.md against the pinned repository base."
+    },
+    {
+      "gate": "historical-commit-resolution",
+      "outcome": "PASS",
+      "reason": "Resolved the four preserved seed milestones to immutable repository commits from 2026-05-08 and 2026-05-09."
+    },
+    {
+      "gate": "claim-boundary-review",
+      "outcome": "PASS",
+      "reason": "Separated repository history from release, promotion, correction, rollback, deployment, and publication authority and added an explicit coverage limitation."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "Recomputed the final CHANGELOG.md SHA-256 from the prepared UTF-8 bytes."
+    },
+    {
+      "gate": "generated-receipt-json-shape",
+      "outcome": "PASS",
+      "reason": "Parsed the receipt and checked required fields, finite values, path/hash parity, digest formats, citations, and pending human-review state against the inspected schema contract."
+    },
+    {
+      "gate": "repository-owned-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository or executable worktree was available; exact-head hosted or reviewer validation remains pending."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "SKIPPED",
+      "reason": "Connector-based authoring provided no local Git worktree; the remote base-to-head diff will be read back after mutation."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending creation of the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_CHANGELOG_BASE",
+      "validated": true,
+      "evidence_ref": "CHANGELOG.md@73be9400ffecbc5908bf4aa127de83d79cd40864"
+    },
+    {
+      "id": "KFM_ROOT_FILE_LAW",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md#81-root-file-law"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES_ADOPTION",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM_RELEASE_BOUNDARY",
+      "validated": true,
+      "evidence_ref": "release/README.md"
+    },
+    {
+      "id": "KFM_GENERATED_RECEIPT_CONTRACT",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "KFM_REPOSITORY_BUILD_PROMPT_V6",
+      "validated": true,
+      "evidence_ref": "Pasted text(20260809-181956).txt"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T18:25:53Z",
+  "emitter": "openai/chatgpt",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Same-path root documentation modernization plus required generated-work provenance. No code, contract, schema, policy, workflow, release, deployment, promotion, publication, source activation, repository setting, or lifecycle-state mutation is performed."
+}
