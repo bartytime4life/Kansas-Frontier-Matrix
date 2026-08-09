@@ -1,98 +1,65 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runtime-readme
-title: runtime/ — Governed Runtime Wiring and Handoff Root
-type: readme; root-readme; canonical-runtime-root; trust-boundary-index; compatibility-drift-index
-version: v0.4
-status: draft; repository-grounded; canonical-root-confirmed; mixed-maturity; compatibility-drift-visible; implementation-mixed-scaffold; deployment-unverified; non-authoritative
-owners: OWNER_TBD — Runtime steward · Governed-AI steward · Governed-API steward · Contract steward · Schema steward · Policy steward · Evidence steward · Citation steward · Security steward · Configuration steward · Infrastructure steward · Test steward · Release steward · Migration steward · Docs steward
-created: NEEDS VERIFICATION — compact root stub existed before v0.2 expansion
-updated: 2026-07-23
-supersedes: v0.3 runtime wiring root guide
-policy_label: "public-doctrine; runtime-root; internal-execution-support; governed-api-subordinate; evidence-subordinate; policy-subordinate; release-subordinate; finite-outcomes; cite-or-abstain; mock-first; no-direct-public-runtime; no-secrets; no-lifecycle-authority; compatibility-drift-visible; rollback-aware"
+title: runtime/ — Bounded Runtime Composition Root
+type: readme; root-readme; canonical-runtime-root; internal-composition-boundary; compatibility-drift-index
+version: v0.5
+status: proposed-update; canonical-root-confirmed; root-contract-current-at-target; implementation-mixed; deployment-unverified
+owners:
+  - "@bartytime4life — repository owner and current machine-projected review route"
+  - "NEEDS VERIFICATION — independent runtime, governed-AI, governed-API, policy, evidence, security, test, and operations stewards"
+created: "NEEDS VERIFICATION — compact root stub existed before v0.2 expansion"
+updated: 2026-08-09
+supersedes: "v0.4 upon merge"
+policy_label: public-documentation; internal-runtime-boundary; no-direct-public-runtime; no-secrets; evidence-subordinate; policy-subordinate; release-subordinate
 current_path: runtime/README.md
+root_registry_id: root.runtime
+readme_profile: ROOT_FULL
+directory_authority:
+  path: docs/doctrine/directory-rules.md
+  version: 2.0.0-draft.1
+  adopted_by: ADR-0029
 truth_posture: >
-  CONFIRMED target v0.3 README; Directory Rules v1.4 canonical runtime root and six named
-  functional sublanes; current repository-present canonical and compatibility runtime READMEs;
-  current v1.1 local and mock lane guides; repository-present Flora and log compatibility lanes
-  omitted from the v0.3 root index; canonical model-adapter lane plus legacy adapters compatibility
-  lane; Ollama, envelope, and service-configuration boundaries; one-line OllamaAdapter placeholder;
-  schema-paired draft/PROPOSED DecisionEnvelope, RuntimeResponseEnvelope, and AIReceipt families;
-  envelope validators and minimal fixture/test harness; kfm-envelopes 0.0.0 package scaffold with
-  empty initializer; mock-first loopback .env.example; governed-api documentation; runtime-policy
-  stub; static workflow inventory and documentation-workflow holds; and bounded absence or
-  incompleteness recorded by the child lane evidence /
-  PROPOSED governed runtime operating flow, root-level admission checklist, status progression,
-  caller obligations, deterministic replay posture, compatibility disposition process, and
-  cross-lane validation matrix /
-  CONFLICTED runtime/adapters versus canonical runtime/model_adapters naming; repository-present
-  runtime/AI, runtime/flora, runtime/log, runtime/people, runtime/pipelines, and runtime/release
-  paths versus their omission from the Directory Rules canonical runtime tree; runtime/flora and
-  runtime/people domain-lane naming versus functional-lane and canonical domain-segment rules;
-  runtime/log naming versus its safe compatibility-only, no-log-store role; governed-api envelope
-  architecture prose versus current paired schemas; AdapterContract stale evidence note; and
-  reusable envelope implementation ownership between runtime handoff notes and packages/envelopes /
-  UNKNOWN executable adapter inventory beyond verified placeholders and scaffolds, accepted
-  request contracts, approved providers/models, runtime policy execution, EvidenceRef resolution,
-  citation validation, receipt persistence, service loaders, health checks, network/tool
-  permissions, public-client enforcement, deployment topology, production behavior, and
-  operational health /
-  NEEDS VERIFICATION accepted owners, CODEOWNERS coverage, compatibility-lane disposition,
-  canonical envelope profiles, contract/schema acceptance, reason/state registries, first
-  governed consumer, dedicated runtime tests, CI enforcement and current check results,
-  secret-store integration, correction propagation, migration receipts, and rollback automation
+  CONFIRMED runtime/ is a canonical, internal, versioned responsibility root at the pinned
+  repository state; ADR-0029 is accepted; Directory Rules v2 governs placement; the current
+  machine projection declares root.runtime; the current direct-child tree contains the lanes
+  listed in this README; provider-neutral adapter, local, mock, Ollama, envelope, and service
+  configuration documentation surfaces exist; and runtime/adapters, runtime/AI, and
+  runtime/release identify themselves as compatibility or handoff surfaces /
+  PROPOSED this ROOT_FULL modernization, the normalized health-lane closure, and future
+  reconciliation of extra direct children through separately reviewed changes /
+  CONFLICTED current direct children that are absent from the normalized Directory Rules
+  runtime tree, including capitalized AI, domain-named lanes, runtime-local pipelines,
+  runtime-local release, and log naming /
+  UNKNOWN complete executable adapter behavior, accepted provider and model inventory,
+  runtime policy execution, EvidenceRef resolution, citation validation, receipt persistence,
+  service health implementation, deployment topology, network and tool permissions,
+  production observability, public-client enforcement, and operational readiness /
+  NEEDS VERIFICATION independent steward assignments, CODEOWNERS closure, full consumer and
+  producer inventories for compatibility paths, current hosted-check outcomes, complete
+  runtime test coverage, secret-store integration, retention policy, correction propagation,
+  rollback automation, and the final disposition of non-normalized child lanes
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b960e0988a0365a35ab4eb405ff8d19a56a5f196
-  prior_blob: 894d15bb2e2d0185f433e35c690e0a6b42327fb9
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  local_readme_blob: bab47e442500cd84d3e840373ac2a9fd6126d74b
-  model_adapters_readme_blob: 16456452e03884dabb24c670c41c9e359f679769
-  adapters_compatibility_readme_blob: 3b881e773f7283971fc4cc66f7e6ccbe92a5966d
-  adapter_contract_note_blob: e371e5ca008ecbd0775bea9c2a31ef76131e7575
-  ollama_adapter_placeholder_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
-  model_adapters_mock_readme_blob: 18fdd7034f1e8768f813acc38209eef8688b78d3
-  mock_readme_blob: 2e304d3db3bfebc63de836c8fc496bfdcb9089f8
-  ollama_readme_blob: b0708364fa002760383882f18843e31c6c4209c7
-  envelopes_readme_blob: ec0d621cdfd342176fe20f7237ff113ace49e2a7
-  service_configs_readme_blob: 90ffda75759b5b62db86aef190f2be19a8853915
-  flora_compatibility_readme_blob: 200c23382c2c2c32278a767f7147a1bd13aa77c7
-  log_compatibility_readme_blob: c369fd3081ead85352f6e503890d889efcb84ebd
-  ai_compatibility_readme_blob: f2d38470f458ebe8775e069d251c88757dab07e5
-  people_compatibility_readme_blob: 56401e30b25479a0ba5492e5d9edb4c79a59838f
-  pipelines_compatibility_readme_blob: 08d50e84b9df765f564f92e6e7d4d9627ce90818
-  release_compatibility_readme_blob: ddfde419d5e47568b169431bbf2950d3521cc602
-  envelopes_package_readme_blob: 3f0150f7133693ae0bfb655fb082d76ad57f5ddd
-  governed_api_readme_blob: 4f21150852f133ba919b11f4f8792185fa870dae
-  decision_envelope_contract_blob: b5120a208910f5e2907874b03af1fc8c7f43363d
-  runtime_response_envelope_contract_blob: b81d67dccdd8470e066ab8247eb93c5df67a6679
-  decision_envelope_schema_blob: 349782c8760f77e432ed1e9239d5ddc2ffe1f9b8
-  runtime_response_envelope_schema_blob: 5105d419432a27176a8ee10870d75400cfa2ab8c
-  ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
-  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
-  runtime_policy_readme_blob: b9bfee731553c504b514f07a6862ef3e68328f02
-  env_example_blob: 50e972a4c5c009ed89097753932fc328039c1aec
-  adr_0019_blob: db55defa15fa709b20c613cf595adc334fe785ba
-  workflow_inventory_readme_blob: afb4f79ce2c5267cb1679f48186260e6edebf8b2
-  docs_build_workflow_blob: 202360a8bee431b50633e78c442cc70ca939206a
-  link_check_workflow_blob: c91477f6a6da84203e61b3151076eb46b3a65941
-  docs_control_plane_workflow_blob: 986fe1b4845c51f719bcfeeefe08729517ae543c
+  base_commit: 7da777a8cd87130406bbcb081738e21f92f1c932
+  prior_blob: 520097cf14639e41191a399c84f080c2c6cfb30f
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  validator_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
 related:
   - ./local/README.md
   - ./model_adapters/README.md
   - ./model_adapters/AdapterContract.md
-  - ./model_adapters/OllamaAdapter.py
-  - ./model_adapters/mock/README.md
   - ./mock/README.md
   - ./ollama/README.md
   - ./envelopes/README.md
   - ./service_configs/README.md
-  - ./flora/README.md
-  - ./log/README.md
   - ./adapters/README.md
   - ./AI/README.md
+  - ./flora/README.md
+  - ./log/README.md
   - ./people/README.md
   - ./pipelines/README.md
   - ./release/README.md
@@ -103,777 +70,913 @@ related:
   - ../contracts/runtime/runtime_response_envelope.md
   - ../contracts/runtime/ai_receipt.md
   - ../schemas/contracts/v1/runtime/README.md
-  - ../schemas/contracts/v1/runtime/decision_envelope.schema.json
-  - ../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
-  - ../schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - ../policy/runtime/README.md
   - ../fixtures/contracts/v1/runtime/README.md
   - ../tests/schemas/test_common_contracts.py
+  - ../tools/validate_all.py
   - ../tools/validators/validate_decision_envelope.py
   - ../tools/validators/validate_runtime_response_envelope.py
-  - ../policy/runtime/README.md
   - ../data/receipts/README.md
   - ../release/README.md
   - ../configs/README.md
   - ../infra/README.md
-  - ../.env.example
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md
   - ../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - ../docs/security/SECRETS.md
   - ../docs/registers/DRIFT_REGISTER.md
-  - ../.github/workflows/README.md
-  - ../.github/workflows/docs-build.yml
-  - ../.github/workflows/link-check.yml
-  - ../.github/workflows/docs-control-plane.yml
-tags: [kfm, runtime, canonical-root, local-runtime, model-adapters, mock-first, ollama, envelopes, service-configs, flora-compatibility, log-compatibility, finite-outcomes, governed-api, evidence, policy, citations, receipts, security, compatibility, migration, rollback]
+  - ../control_plane/root_registry.yaml
+tags: [kfm, runtime, canonical-root, root-full, internal-composition, local-runtime, model-adapters, mock-first, ollama, envelopes, service-configs, finite-outcomes, governed-api, evidence, policy, citations, receipts, security, compatibility, migration, rollback]
 notes:
-  - "v0.4 changes runtime/README.md; repository delivery may add one generated provenance receipt under data/receipts/generated/. No runtime behavior is modified."
-  - "The root remains canonical; compatibility and handoff lanes are documented rather than silently promoted."
-  - "No adapter, service, model, config, contract, schema, policy, fixture, test, workflow, runtime receipt, deployment, release decision, or public route is created or modified."
-  - "The prior root README is preserved as lineage through the recorded prior blob and the changelog below."
+  - "This update changes runtime/README.md only. It does not create, move, rename, or delete a runtime child."
+  - "It does not activate a model, provider, source, connector, public route, deployment, release, or publication path."
+  - "Root conformance and runtime implementation maturity remain separate claims."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `runtime/` — Governed Runtime Wiring and Handoff Root
+# `runtime/` — Bounded Runtime Composition Root
 
-> **One-line purpose.** Own KFM's internal runtime wiring, provider-neutral adapter handoffs, deterministic mocks, provider-specific local-runtime integration, finite-outcome envelope coordination, and runtime service-binding notes while remaining subordinate to governed evidence, policy, validation, citation, review, release, correction, rollback, and public-client controls.
+> **One-line purpose.** `runtime/` owns KFM's internal runtime composition, provider bindings, deterministic mocks, finite-outcome handoffs, health and kill-switch behavior, and non-secret service wiring without becoming a public API, evidence authority, policy authority, source authority, release authority, or publication path.
 
 <p>
-  <a href="#status"><img alt="Document status: draft" src="https://img.shields.io/badge/status-draft-f59e0b?style=flat-square"></a>
-  <a href="#last-reviewed"><img alt="Document version: v0.4" src="https://img.shields.io/badge/version-v0.4-0969da?style=flat-square"></a>
-  <a href="#authority-level"><img alt="Responsibility root: runtime" src="https://img.shields.io/badge/root-runtime%2F-1f6feb?style=flat-square"></a>
-  <a href="#authority-level"><img alt="Authority: internal wiring only" src="https://img.shields.io/badge/authority-internal__wiring-8250df?style=flat-square"></a>
-  <a href="#status"><img alt="Implementation maturity: mixed and scaffolded" src="https://img.shields.io/badge/maturity-mixed__scaffold-f97316?style=flat-square"></a>
-  <a href="#what-does-not-belong-here"><img alt="Direct public runtime access: denied" src="https://img.shields.io/badge/public__runtime__access-denied-b91c1c?style=flat-square"></a>
-  <a href="../docs/doctrine/truth-posture.md"><img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square"></a>
+  <a href="#purpose"><img alt="Document version v0.5" src="https://img.shields.io/badge/version-v0.5-0969da?style=flat-square"></a>
+  <a href="#root-class-and-authority-owner"><img alt="Root class canonical" src="https://img.shields.io/badge/root-canonical-1f883d?style=flat-square"></a>
+  <a href="#public-exposure-and-sensitivity-posture"><img alt="Exposure internal" src="https://img.shields.io/badge/exposure-internal-8250df?style=flat-square"></a>
+  <a href="#adoption-and-conformance-status"><img alt="Implementation maturity mixed" src="https://img.shields.io/badge/maturity-mixed-f97316?style=flat-square"></a>
+  <a href="#validation-and-negative-checks"><img alt="Truth posture cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square"></a>
+  <a href="#what-belongs-and-what-is-prohibited"><img alt="Direct public runtime access denied" src="https://img.shields.io/badge/public__runtime__access-denied-b91c1c?style=flat-square"></a>
 </p>
 
 > [!IMPORTANT]
-> **Critical runtime boundaries**
-> - **No truth or release authority.** A runtime result, provider call, valid JSON object, green test, service configuration, generated summary, adapter output, or deployed process does not create evidence, authorize disclosure, promote lifecycle state, approve release, or establish public truth.
-> - **No direct public runtime path.** Public and semi-public clients use the accepted application trust membrane, policy-safe evidence, finite response envelopes, and permitted obligations. Browser-to-model, browser-to-runtime, browser-to-secret-store, and browser-to-canonical-store paths are denied.
-> - **No secrets or protected context.** Credentials, tokens, private endpoints, signing material, secret-bearing `.env` files, private model paths, raw prompts, protected coordinates, restricted `EvidenceBundle` content, and private chain-of-thought must not be committed here or exposed through logs, screenshots, examples, fixtures, PR bodies, or diagnostics.
+> **The runtime is downstream of trust.** It may execute bounded internal behavior only after the governing caller supplies the evidence, policy, rights, sensitivity, freshness, release, and correction context required for that operation. A provider response, model output, valid envelope, green test, service configuration, health response, receipt, commit, pull request, or deployed process does not establish truth, authorize disclosure, promote lifecycle state, approve release, or publish KFM material.
+
+> [!CAUTION]
+> **No direct public runtime path.** Browser-to-model, browser-to-provider, browser-to-runtime, browser-to-secret-store, and browser-to-canonical-store paths are denied. Public and semi-public clients use a governed application boundary and receive only policy-safe, released, finite response envelopes.
 
 **Quick navigation**
 
-| Foundation | Responsibility boundaries | Operations and maintenance |
-|---|---|---|
-| [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) | [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) | [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) |
+[Purpose](#purpose) · [Root class](#root-class-and-authority-owner) · [Status](#adoption-and-conformance-status) · [Boundaries](#what-belongs-and-what-is-prohibited) · [I/O](#inputs-outputs-and-permitted-writers) · [Exposure](#public-exposure-and-sensitivity-posture) · [Storage](#mutability-retention-generation-and-physical-storage) · [Validation](#validation-and-negative-checks) · [Review](#owner-reviewers-and-escalation-path) · [ADRs and migration](#governing-adrs-migrations-aliases-and-canonical-target-if-noncanonical) · [Child map](#direct-child-directory-map) · [Evidence review](#last-evidence-review-and-review-trigger) · [Operating model](#operating-model-and-finite-outcomes) · [Security](#secure-defaults-kill-switch-and-fallback-discipline) · [Contributing](#contributor-workflow) · [Rollback](#rollback-and-correction) · [Changelog](#changelog)
 
 ---
 
+<a id="purpose"></a>
+
 ## Purpose
 
-`runtime/` is the canonical KFM responsibility root for runtime-specific wiring and handoff concerns that should not become public application authority, shared package authority, policy authority, or lifecycle storage.
+`runtime/` is the canonical KFM responsibility root for **bounded internal runtime composition**. It connects accepted application callers to provider-neutral adapters, deterministic mocks, provider-specific local runtime bindings, response-envelope helpers, health behavior, kill switches, and non-secret service configuration.
 
-It exists to answer these questions:
+This root exists to answer six operational questions without taking over another authority surface:
 
-1. Which internal runtime mode or provider-specific service is being used?
-2. Which provider-neutral adapter boundary does the caller depend on?
-3. Which evidence, policy, rights, sensitivity, citation, freshness, correction, and release obligations were checked outside the provider?
-4. Which finite outcome may the governed caller render?
-5. Which receipt, envelope, health, and rollback references make the runtime path inspectable?
-6. How can a runtime binding be disabled, replaced, superseded, or rolled back without changing the public contract?
+1. Which internal runtime mode and adapter binding is selected?
+2. Which bounded request contract does the caller provide?
+3. Which evidence, policy, rights, sensitivity, freshness, correction, and release conditions have already been established?
+4. Which finite outcome may the caller receive and render?
+5. Which health, receipt, correlation, and diagnostic references make the run inspectable without exposing protected content?
+6. How can the binding be disabled, replaced, replayed, corrected, or rolled back without changing public truth or bypassing review?
 
-### Operating model
+The root is intentionally narrower than an application, package, pipeline, policy bundle, data store, or release plane. Reusable provider-independent logic belongs in [`packages/`](../packages/); deployable public or internal service boundaries belong in [`apps/`](../apps/); normative admissibility rules belong in [`policy/`](../policy/); lifecycle data belongs in [`data/`](../data/); and release decisions belong in [`release/`](../release/).
 
-The intended governed flow is:
+### Operating law
 
 ```text
-public or semi-public client
-  -> apps/governed-api/ or another accepted trust-membrane caller
-  -> scope, access, rights, sensitivity, release, freshness, and correction checks
-  -> EvidenceRef resolution to admissible released or policy-safe support
-  -> provider-neutral runtime request
-  -> deterministic mock, local runtime, or admitted provider-specific binding
-  -> candidate result
-  -> schema / citation / policy postcheck
-  -> DecisionEnvelope and/or RuntimeResponseEnvelope
-  -> AIReceipt or other governed receipt pointer when applicable
-  -> client renders ANSWER, ABSTAIN, DENY, or ERROR
+governed caller
+  -> resolve evidence and current release/correction state
+  -> evaluate policy, rights, sensitivity, and obligations
+  -> select an admitted runtime mode and bounded adapter
+  -> execute with timeout, cancellation, budgets, and network/tool limits
+  -> validate citations and response-envelope semantics
+  -> emit a finite outcome and authorized receipt reference
+  -> return through the governed application boundary
 ```
 
-This is a **PROPOSED operating flow**, not a claim that every arrow is implemented.
-
-### Keystone invariants
-
-Runtime changes must preserve all of the following:
-
-- `EvidenceBundle` and source authority outrank generated language.
-- Policy, rights, sensitivity, consent, access, release, freshness, and correction posture remain outside model or provider discretion.
-- Public clients use governed interfaces, not runtime internals.
-- Runtime inputs are bounded, minimized, and policy-safe.
-- Runtime results use finite outcomes; negative states are first-class.
-- Missing or unresolved support produces `ABSTAIN`, `DENY`, or `ERROR`, not fluent fallback.
-- Mock-first and no-network testing precede live-provider reliance.
-- Provider-specific details remain replaceable behind provider-neutral boundaries.
-- Receipts preserve traceability without storing private reasoning.
-- Runtime output cannot promote `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, or `PUBLISHED` state.
-- Publication, correction, withdrawal, and rollback remain governed transitions outside this root.
+At every step, failure remains bounded. Missing evidence produces `ABSTAIN`; prohibited use produces `DENY`; operational failure produces `ERROR`; and only supported, policy-safe results may produce `ANSWER`.
 
 [Back to top](#top)
 
 ---
 
-## Authority level
+<a id="authority-level"></a>
 
-**Canonical implementation-support root / non-authoritative internal boundary.**
+## Root class and authority owner
 
-Directory Rules identify `runtime/` as a canonical root for local runtime adapters and harnesses. The canonical runtime tree names six sublanes:
+| Field | Current repository-grounded posture |
+|---|---|
+| Root ID | `root.runtime` |
+| Path | `runtime/` |
+| Root class | `canonical` |
+| Lifecycle state | Active responsibility root; no separate data-lifecycle phase |
+| Primary responsibility | Bounded runtime composition, provider harnesses, deterministic mocks, and local adapters |
+| Allowed artifact kind in the machine projection | `runtime_adapter` |
+| Exposure | `internal` |
+| Mutability | `versioned` |
+| Retention | `repository_lifetime` for tracked runtime definitions; runtime state follows its owning external policy |
+| Current named owner and review route | `@bartytime4life` in the machine projection |
+| Independent runtime steward | `NEEDS VERIFICATION` |
+| Authority level | Internal execution support only; subordinate to evidence, contracts, schemas, policy, applications, release decisions, and public interfaces |
+
+The machine root registry is a projection of adopted governance, not a second doctrine source. It may help validators and contributors route work, but it does not create runtime authority, approve a provider, grant network access, make a route public, or override the accepted Directory Rules.
+
+### Responsibility signature
+
+| Dimension | Runtime answer |
+|---|---|
+| Responsibility | Compose and execute bounded internal runtime behavior. |
+| Execution role | Internal adapter and provider-binding layer. |
+| Scope | Cross-domain only where the runtime concern is shared; domain semantics remain in owning domain contracts and packages. |
+| Exposure | Internal by default; public clients never call it directly. |
+| Mutability | Versioned code, documentation, and non-secret configuration declarations. |
+| Retention | Repository lifetime for tracked definitions; ephemeral operational state stays outside Git. |
+| Prohibited authority | Source, evidence, policy, review, release, correction, rollback, and publication authority. |
+
+[Back to top](#top)
+
+---
+
+<a id="status"></a>
+
+## Adoption and conformance status
+
+The root contract and implementation maturity are separate claims.
+
+| Surface | Status | Evidence-bounded conclusion |
+|---|---|---|
+| `runtime/` responsibility root | `CONFIRMED` | Directory Rules v2 and the current machine projection classify it as canonical and internal. |
+| Directory Rules authority | `CONFIRMED / ACCEPTED` | ADR-0029 adopts `docs/doctrine/directory-rules.md` as the single writable human-readable authority. |
+| This README's ROOT_FULL structure | `PROPOSED UPDATE` until merge | The first twelve H2 sections follow the adopted root-README profile. |
+| Current direct-child inventory | `CONFIRMED` at `main@7da777a8cd87130406bbcb081738e21f92f1c932` | Fourteen entries are present, including this README and thirteen directories. |
+| Normalized canonical child set | `PARTIAL CONFORMANCE` | `local/`, `model_adapters/`, `mock/`, `ollama/`, `envelopes/`, and `service_configs/` exist; the normalized `health/` lane is absent. |
+| Compatibility or unresolved children | `CONFIRMED PRESENT / NEEDS VERIFICATION` | `AI/`, `adapters/`, `flora/`, `log/`, `people/`, `pipelines/`, and `release/` require retained compatibility or object-by-object disposition; this README does not move them. |
+| Provider-neutral adapter documentation | `CONFIRMED` | `runtime/model_adapters/README.md` defines the provider-neutral lane; presence is not execution proof. |
+| Legacy adapter alias | `CONFIRMED COMPATIBILITY` | `runtime/adapters/README.md` routes new adapter work to `runtime/model_adapters/`. |
+| Runtime contracts, schemas, validators, and fixtures | `CONFIRMED MIXED MATURITY` | Relevant surfaces exist; acceptance, complete coverage, and operational enforcement remain bounded. |
+| Executable providers and model calls | `UNKNOWN / MIXED` | Documentation and placeholders do not prove usable provider execution. |
+| Runtime policy, citation validation, evidence resolution, receipts, health, deployment, and production isolation | `UNKNOWN or NEEDS VERIFICATION` | Current-session runtime evidence was not exercised. |
+| Public runtime route | `DENIED BY CONTRACT` | No direct public runtime path is allowed; any observed route would be a defect requiring investigation. |
+
+### Conformance gaps recorded, not silently repaired
+
+- `health/` is named by the normalized Directory Rules runtime tree but is absent from the current direct-child tree.
+- `runtime/adapters/` duplicates the canonical `runtime/model_adapters/` concept and remains compatibility-only.
+- `runtime/AI/` is a capitalized compatibility/index lane, not a canonical all-AI authority.
+- `runtime/flora/` and `runtime/people/` are domain-named runtime lanes whose object-level placement and sensitivity posture remain `NEEDS VERIFICATION`.
+- `runtime/log/` must remain a compatibility or routing surface; it must not become a committed operational log store.
+- `runtime/pipelines/` must not compete with the canonical [`pipelines/`](../pipelines/) and [`pipeline_specs/`](../pipeline_specs/) roots.
+- `runtime/release/` must not compete with the canonical [`release/`](../release/) decision plane.
+
+A conformance gap is not permission to delete or relocate a path. Structural changes require a current inventory, producer and consumer closure, authority review, link and import repair, validation, migration evidence, and rollback.
+
+[Back to top](#top)
+
+---
+
+<a id="what-belongs-here"></a>
+<a id="what-does-not-belong-here"></a>
+
+## What belongs and what is prohibited
+
+### What belongs in `runtime/`
+
+- Provider-neutral adapter implementations and handoff notes whose primary responsibility is runtime composition.
+- Provider-specific local bindings that remain behind the provider-neutral boundary.
+- Deterministic mocks and no-network runtime harnesses.
+- Runtime envelope helpers that implement accepted contracts without redefining their meaning.
+- Non-secret service configuration declarations and environment-variable documentation.
+- Internal health, readiness, liveness, cancellation, timeout, circuit-breaker, and kill-switch behavior.
+- Runtime correlation, bounded diagnostics, and receipt-emission adapters that write through the accepted accountability path.
+- Compatibility indexes and migration notes for existing runtime child lanes while their disposition remains open.
+- Root and child READMEs that state authority, evidence, negative paths, validation, and rollback limits.
+
+### Prohibited from `runtime/`
+
+| Prohibited material or behavior | Correct responsibility or disposition |
+|---|---|
+| A public API or user-facing deployable application | [`apps/`](../apps/) with a governed boundary |
+| Direct browser-to-model, browser-to-provider, or browser-to-runtime access | Denied; route through the governed application trust membrane |
+| Source admission or connector authority | [`connectors/`](../connectors/), source registry, policy, and review surfaces |
+| Evidence truth, EvidenceBundle storage, or citation authority | Accepted evidence contracts and lifecycle/accountability roots |
+| Normative allow, deny, hold, restrict, or abstain rules | [`policy/`](../policy/) |
+| Semantic contract authority | [`contracts/`](../contracts/) |
+| Machine schema authority | [`schemas/`](../schemas/) |
+| Reusable provider-independent library ownership | [`packages/`](../packages/) |
+| Canonical pipeline or pipeline-spec ownership | [`pipelines/`](../pipelines/) or [`pipeline_specs/`](../pipeline_specs/) |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, receipt, proof, or registry instances | The correct [`data/`](../data/) lane |
+| Release, promotion, correction, withdrawal, rollback, or signature decisions | [`release/`](../release/) |
+| Model weights, caches, downloaded corpora, bulk logs, session stores, vector indexes, or provider state | Governed external storage or the owning data/infra service; never Git-tracked runtime authority |
+| Secrets, tokens, API keys, private keys, credentials, secret-bearing `.env` files, or private endpoints | Approved secret management and deployment configuration; never committed |
+| Private chain-of-thought, hidden model reasoning, protected prompts, or raw restricted context | Do not persist or expose; retain bounded receipts and public-safe reason codes only |
+| Domain truth or sensitive domain records inside `runtime/flora/` or `runtime/people/` | Route by object responsibility and lifecycle; default deny until classified |
+| Generated prose presented as evidence, policy, review, release, or public truth | Denied; generated language remains interpretive |
+
+### Root-level exception
+
+`runtime/README.md` is the allowed root-level human contract for this responsibility root. New root-level runtime files require an explicit responsibility and placement check; do not use the root as a convenience bucket.
+
+[Back to top](#top)
+
+---
+
+<a id="inputs"></a>
+<a id="outputs"></a>
+
+## Inputs, outputs, and permitted writers
+
+### Inputs
+
+A bounded runtime invocation should receive stable, minimal references and explicit constraints rather than unrestricted internal state.
+
+| Input family | Required posture | Fail-safe behavior |
+|---|---|---|
+| Request | Validated caller contract, bounded scope, correlation ID, actor class, and permitted operation | `ERROR`, `DENY`, or validation failure |
+| Evidence context | Resolved or resolvable evidence support appropriate to the claim; no assumption that a provider can create evidence | `ABSTAIN` |
+| Policy context | Current decision, obligations, sensitivity, access, rights, and disclosure limits | `DENY` or narrowed scope |
+| Release and correction context | Current released state, stale state, correction, withdrawal, and supersession signals where material | `ABSTAIN`, `DENY`, or hold |
+| Runtime mode | Admitted mock, local, or provider-backed mode selected through non-secret configuration | `ERROR` or safe fallback |
+| Adapter binding | Versioned provider-neutral interface and a declared implementation identity | `ERROR` |
+| Execution budget | Timeout, cancellation, concurrency, token/size, network, tool, and retry limits | Cancel, trip circuit breaker, or `ERROR` |
+| Citation obligations | Expected references, allowed evidence classes, and validation requirements | `ABSTAIN` if unsupported |
+| Configuration | Non-secret profile plus references to secret-store bindings supplied outside Git | Fail closed if required binding is absent |
+
+### Outputs
+
+The root may produce or coordinate:
+
+- a finite `DecisionEnvelope` or `RuntimeResponseEnvelope` conforming to the accepted contract/schema version;
+- `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` with stable reason codes and obligations;
+- evidence and citation references that were supplied or resolved by governed services, never invented as authority by the model;
+- bounded health, readiness, liveness, timeout, cancellation, circuit-breaker, and provider-availability state;
+- sanitized metrics and diagnostics that exclude secrets, protected payloads, harmful precision, and private reasoning;
+- an `AIReceipt` or other runtime receipt candidate written through the accepted `data/receipts/` path by an authorized writer;
+- safe proposed client actions that remain subject to the governed application's policy and interaction rules.
+
+A runtime output does not promote data, approve a release, change public state, mutate a map, execute a publication action, or become evidence merely because it validates.
+
+### Permitted writers
+
+The current machine projection names `@bartytime4life` as owner, permitted writer, and reviewer for the repository root. That is a routing fact, not proof of complete operational separation of duties.
+
+| Writer class | Permitted effect |
+|---|---|
+| Repository owner or authorized runtime maintainer | Change versioned runtime code, docs, and non-secret declarations through reviewed Git changes. |
+| CI or validation automation | Read and validate runtime surfaces; emit bounded test or receipt artifacts; never approve itself. |
+| Deployment automation | Materialize admitted configuration and secret references outside Git when separately authorized and audited. |
+| Runtime process | Produce bounded ephemeral state and authorized accountability records; never write source, evidence, policy, or release authority. |
+| Watcher or AI agent | Propose, inspect, classify, validate, or draft; never self-admit, self-approve, self-release, or publish. |
+| Public client | **Forbidden writer and forbidden direct caller.** |
+
+No runtime process may write directly to canonical evidence, policy, source, release, or published stores unless a separately accepted interface explicitly grants a narrow operation and emits the required decision and receipt trail. This README establishes no such grant.
+
+[Back to top](#top)
+
+---
+
+## Public exposure and sensitivity posture
+
+The root registry classifies `runtime/` as **internal**. Runtime endpoints, provider bindings, model daemons, tool executors, health details, prompts, and diagnostics are not ordinary public interfaces.
+
+### Exposure rules
+
+- Public and semi-public clients call a governed application or API boundary, not `runtime/` directly.
+- Local providers bind to loopback or a private network by default; external exposure requires an accepted app/infra design, authentication, authorization, rate limits, auditability, and a deny-by-default policy.
+- A public health summary, if later required, belongs to the deployable application boundary and must disclose only coarse, non-sensitive status.
+- Runtime error bodies must use stable public-safe codes and must not reveal stack traces, filesystem paths, secret names, provider credentials, internal topology, protected reasons, or restricted evidence.
+- Model/provider identity may be disclosed only when policy and product requirements permit it; disclosure never substitutes for evidence or citation.
+- Tool and network access is denied unless explicitly admitted, bounded, logged, and covered by the caller's policy decision.
+
+### Sensitive material
+
+Unknown or unresolved rights, sovereignty, cultural sensitivity, living-person data, DNA/genomics, rare-species locations, archaeology, infrastructure, private-land/title information, private wells, or harmful geographic precision fails closed.
+
+The runtime must not:
+
+- persist protected context merely for debugging convenience;
+- include precise restricted locations in logs, traces, examples, screenshots, or error messages;
+- expose policy-denial internals that would reveal the protected fact;
+- pass a broader context window to a provider than the accepted purpose requires;
+- retain private chain-of-thought or provider-internal reasoning as evidence;
+- downgrade a `DENY` or `ABSTAIN` to a fluent answer when an adapter or policy service is unavailable.
+
+Redaction, generalization, minimization, staged access, and delayed release are governed transformations. They require reasoned policy and receipt support outside this README.
+
+[Back to top](#top)
+
+---
+
+## Mutability, retention, generation, and physical storage
+
+| Concern | Root contract |
+|---|---|
+| Tracked runtime definitions | Versioned in Git and retained for repository lifetime. |
+| Runtime configuration | Only non-secret defaults, schemas, templates, and variable names may be tracked. Effective secret values remain external. |
+| Adapter/provider state | Ephemeral or externally managed; not a Git-tracked truth store. |
+| Model weights and downloaded assets | External governed storage with provenance, integrity, license, retention, and access controls; not committed under `runtime/`. |
+| Logs and traces | External observability storage with minimization, redaction, access, retention, and deletion policy; `runtime/log/` must not become a bulk log store. |
+| Caches and session state | Ephemeral or externally governed; never treated as evidence, catalog, or release state. |
+| Receipts | Durable instances belong under the accepted `data/receipts/` family or approved external accountability store, not in `runtime/`. |
+| Generated types or clients | Belong to declared generated projections under their owning schema/package process; do not accumulate undeclared generated authority here. |
+| Health state | Ephemeral; health contracts and helpers may be versioned, but live status is operational data. |
+| README maintenance | Correct in place while preserving `doc_id`, legacy anchors, evidence snapshot, changelog, and rollback path. |
+| Compatibility paths | Retain until producer, consumer, identity, link, import, validation, and rollback closure proves a safe migration. |
+
+### Physical storage rule
+
+Logical runtime ownership does not imply that every byte lives under `runtime/`. Runtime code and contracts of implementation may be tracked here; secrets, model assets, logs, caches, temporary responses, session state, and protected context must use the accepted external store for their object family and risk class.
+
+### Generation rule
+
+Generated output is never authoritative merely because a runtime produced it. Any generated candidate that may affect evidence, policy, public claims, maps, release state, correction, or rollback must enter the appropriate governed lifecycle and review path.
+
+[Back to top](#top)
+
+---
+
+<a id="validation"></a>
+
+## Validation and negative checks
+
+Validation must distinguish documentation conformance, contract/schema shape, deterministic runtime behavior, evidence support, policy execution, security posture, operational readiness, and public release. A pass in one layer does not prove another.
+
+### Repository-native validation surfaces
+
+| Surface | What it can establish | What it cannot establish by itself |
+|---|---|---|
+| `python tools/validate_all.py` | Runs the current aggregate validator entrypoint configured by the repository. | Production runtime behavior, provider admission, security isolation, evidence support, policy authority, or release. |
+| `tools/validators/validate_decision_envelope.py` | Bounded no-network schema and semantic conformance for DecisionEnvelope inputs and fixtures. | Evidence resolution, policy evaluation, authenticated review, release, publication, or public use. |
+| `tools/validators/validate_runtime_response_envelope.py` | Bounded runtime-response shape and local semantic checks where configured. | Provider correctness, citation truth, receipt persistence, deployment, or public safety. |
+| Contract/schema fixture tests | Positive and negative shape coverage for the tested object version. | Complete application flow or operational control enforcement. |
+| Mock-first tests | Deterministic finite outcomes, failure polarity, and no-network behavior. | Live-provider readiness or permission to activate a model. |
+| Hosted CI | Changed-area workflow evidence at a specific commit. | Human review, policy approval, release, deployment, or publication. |
+
+### Required README checks
+
+- exactly one H1;
+- the first twelve H2 headings match Directory Rules v2 §16.2 in the required order;
+- `kfm://doc/runtime-readme` and legacy anchors remain stable;
+- metadata and fenced code blocks are balanced;
+- custom anchors are unique and internal fragment links resolve;
+- the direct-child map matches the pinned `runtime/` tree;
+- repository-relative links used as current evidence resolve at the pinned base;
+- truth labels distinguish root conformance from implementation maturity;
+- no invented owner, approval, provider, model, route, deployment, test, rights, policy, release, or publication claim;
+- no credential, private key, secret value, protected personal data, DNA/genomic data, harmful precise location, or private reasoning;
+- remote branch bytes and changed-path set match the reviewed packet.
+
+### Runtime acceptance checks
+
+A runtime implementation is not ready merely because this README is current. Applicable changes should prove:
+
+1. accepted request and response contract versions;
+2. deterministic mock behavior and negative fixtures;
+3. finite outcome polarity for evidence-missing, policy-denied, provider-unavailable, timeout, malformed-output, citation-failure, and cancellation cases;
+4. no-network unit tests and explicit network/tool admission tests;
+5. timeout, cancellation, retry, circuit-breaker, and kill-switch behavior;
+6. secret loading by reference without logging or committing values;
+7. sanitized errors, logs, traces, metrics, and health summaries;
+8. evidence and citation references cannot be invented, widened, or silently dropped;
+9. public clients cannot bypass the governed application boundary;
+10. receipts bind effective adapter, provider/model identity where permitted, input/output digests, policy state, and failure reason without private reasoning;
+11. correction, withdrawal, stale-state, and rollback behavior propagate through the caller;
+12. replay and rollback are deterministic for the tested envelope and configuration version.
+
+### Negative checks
+
+A review must fail or hold when:
+
+- a direct public model/provider/runtime endpoint is added;
+- a runtime module decides source, evidence, policy, release, correction, or publication authority;
+- secrets, protected payloads, raw prompts, chain-of-thought, or precise restricted locations appear in tracked files or diagnostics;
+- a provider is activated with unknown terms, license, model identity, network behavior, or retention posture;
+- a compatibility path accumulates new canonical authority;
+- `runtime/pipelines/` competes with canonical pipeline roots or `runtime/release/` competes with `release/`;
+- a health endpoint leaks internal topology or protected failure reasons;
+- a fallback converts `DENY`, `ABSTAIN`, or `ERROR` into an unsupported `ANSWER`;
+- a map, tile, graph, index, model output, receipt, test, PR, merge, or deployment is presented as sovereign truth or release proof.
+
+[Back to top](#top)
+
+---
+
+<a id="review-burden"></a>
+
+## Owner, reviewers, and escalation path
+
+| Role or question | Current posture |
+|---|---|
+| Repository owner and current machine-projected route | `@bartytime4life` — `CONFIRMED` |
+| Runtime steward | `NEEDS VERIFICATION` |
+| Governed API steward | Required for caller boundary, route, authentication, response, or public exposure changes; named assignment `NEEDS VERIFICATION` |
+| Governed-AI/model steward | Required for adapter/provider/model behavior; named assignment `NEEDS VERIFICATION` |
+| Evidence and citation reviewer | Required when evidence resolution, citation validation, or claim support changes |
+| Policy, rights, sensitivity, and privacy reviewer | Required when admissibility, disclosure, protected context, or domain sensitivity changes |
+| Security and infrastructure reviewer | Required for network, secret, sandbox, tool, process, health, observability, or deployment changes |
+| Contract/schema reviewer | Required for request, response, receipt, health, or adapter-interface shape changes |
+| Test/CI reviewer | Required for validator, fixture, workflow, or required-check changes |
+| Release/correction/rollback reviewer | Required when runtime changes affect released behavior, correction propagation, or rollback |
+| Independent approval | `NEEDS VERIFICATION`; current single-owner routing is not independent review |
+
+### Escalation rules
+
+- Hold the change when the primary responsibility root is ambiguous.
+- Open or update a bounded drift or verification record when a compatibility lane lacks a safe disposition.
+- Require an ADR when authority, root class, canonical target, public boundary, contract meaning, or dependency direction changes.
+- Escalate to policy/security review before adding network or tool capability, provider retention, sensitive context, or public exposure.
+- Escalate to release/correction review before changing behavior already consumed by a released public surface.
+- Prefer `ABSTAIN`, `DENY`, or a narrowed implementation slice over guessing an owner, policy, provider approval, or release state.
+
+A green workflow, CODEOWNER route, generated receipt, or mergeability result is not independent approval by itself.
+
+[Back to top](#top)
+
+---
+
+<a id="related-folders"></a>
+<a id="adrs"></a>
+
+## Governing ADRs, migrations, aliases, and canonical target if noncanonical
+
+### Governing and related decisions
+
+| Decision or source | Status | Runtime consequence |
+|---|---|---|
+| [ADR-0029 — Adopt Directory Governance Standard v2](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | Establishes the current Directory Rules authority and canonical `runtime/` responsibility boundary. |
+| [Directory Rules v2](../docs/doctrine/directory-rules.md) | adopted exact bytes via ADR-0029 | Defines runtime composition, prohibited authority, normalized child lanes, dependency direction, and ROOT_FULL README profile. |
+| [Machine root registry](../control_plane/root_registry.yaml) | active projection, not authority | Declares `root.runtime` canonical, internal, versioned, and limited to runtime adapters. |
+| [ADR-0008 — Ollama subordinate to governed API](../docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md) | `draft / proposed` | Useful design evidence; it does not activate Ollama or establish accepted runtime policy. |
+| [ADR-0019 — AI adapter contract and finite envelopes](../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | `draft / proposed` | Useful design evidence; it does not make the current adapter contract or envelopes adopted authority. |
+
+### Canonical root and child aliases
+
+`runtime/` is already canonical. It has no replacement root and no authorized root alias.
+
+Current child-level compatibility relationships are narrower:
+
+| Existing path | Current posture | Canonical target or exit condition |
+|---|---|---|
+| `runtime/adapters/` | Compatibility and migration index | New provider-neutral work routes to `runtime/model_adapters/`; retire only after zero-producer/zero-consumer and link/import closure. |
+| `runtime/AI/` | Compatibility and navigation index | Route each artifact to its owning runtime, contract, schema, policy, fixture, test, receipt, release, app, or package surface; final path disposition remains open. |
+| `runtime/log/` | Compatibility/no-log-store posture | Runtime definitions may remain; live logs use governed external observability storage. Final child disposition remains open. |
+| `runtime/pipelines/` | Runtime-to-pipeline handoff only | Canonical pipeline implementation and specs remain under `pipelines/` and `pipeline_specs/`. |
+| `runtime/release/` | Runtime-to-release handoff only | Canonical release decisions remain under `release/`. |
+| `runtime/flora/`, `runtime/people/` | Existing domain-coupled lanes | Object-by-object classification required; no blanket canonical target is asserted here. |
+
+### Migration discipline
+
+This README does not move, rename, delete, mirror, or create any child. A future migration must:
+
+1. freeze the current authority, path, object family, identifiers, and base commit;
+2. inventory all bytes, producers, consumers, imports, links, workflows, fixtures, generated outputs, and external callers;
+3. choose one writable canonical target by responsibility;
+4. record old-to-new mappings, compatibility mode, deprecation window, and exit conditions;
+5. move through a feature branch with history preservation where practical;
+6. repair references and validate positive, negative, replay, and rollback behavior;
+7. prove zero independent writers before compatibility retirement;
+8. retain a correction or migration receipt appropriate to the change.
+
+[Back to top](#top)
+
+---
+
+<a id="repo-fit"></a>
+<a id="current-lane-index"></a>
+
+## Direct-child directory map
+
+Verified against the GitHub contents view for `runtime/` at `main@7da777a8cd87130406bbcb081738e21f92f1c932`.
+
+```text
+runtime/
+├── AI/
+├── README.md
+├── adapters/
+├── envelopes/
+├── flora/
+├── local/
+├── log/
+├── mock/
+├── model_adapters/
+├── ollama/
+├── people/
+├── pipelines/
+├── release/
+└── service_configs/
+```
+
+### Direct-child classification
+
+| Direct child | Current class | Responsibility and boundary | Canonical target or open disposition |
+|---|---|---|---|
+| `README.md` | Root-level exception | This ROOT_FULL human contract | Same path |
+| `AI/` | Compatibility/index | Governed-AI runtime navigation only; no parallel AI authority | Route by object responsibility; final path `NEEDS VERIFICATION` |
+| `adapters/` | Compatibility/migration | Legacy adapter discovery and migration index | `model_adapters/` for new provider-neutral adapter work |
+| `envelopes/` | Canonical functional lane | Runtime envelope implementation helpers; contract/schema meaning remains elsewhere | Same path |
+| `flora/` | Existing non-normalized domain lane | Runtime-coupled flora support only; must not own flora truth, source, policy, or published data | Object-level classification `NEEDS VERIFICATION` |
+| `local/` | Canonical functional lane | Local runtime wiring and loopback-first integration | Same path |
+| `log/` | Compatibility/routing lane | Log semantics and safe routing only; no committed bulk runtime logs | External observability / object-level disposition `NEEDS VERIFICATION` |
+| `mock/` | Canonical functional lane | Deterministic no-network runtime behavior | Same path |
+| `model_adapters/` | Canonical functional lane | Provider-neutral model adapter boundary | Same path |
+| `ollama/` | Canonical functional lane | Local Ollama-specific runtime binding behind the adapter and governed caller | Same path |
+| `people/` | Existing non-normalized sensitive domain lane | Runtime-coupled people support only; living-person and genomic concerns fail closed | Object-level classification `NEEDS VERIFICATION` |
+| `pipelines/` | Compatibility/handoff | Runtime-to-pipeline coordination only | Canonical implementation/spec roots are `pipelines/` and `pipeline_specs/` |
+| `release/` | Compatibility/handoff | Runtime-to-release readiness support only; never release authority | Canonical decision root is `release/` |
+| `service_configs/` | Canonical functional lane | Non-secret runtime service configuration declarations | Same path |
+
+### Normalized target closure
+
+Directory Rules names the following normalized runtime child set:
 
 ```text
 runtime/
 ├── local/
 ├── model_adapters/
-├── ollama/
 ├── mock/
+├── ollama/
+├── envelopes/
 ├── service_configs/
-└── envelopes/
+└── health/
 ```
 
-Repository evidence also confirms additional runtime paths. Those paths are **not silently promoted** by this README.
-
-### Responsibility routing
-
-| Concern | Owning surface | Runtime role |
-|---|---|---|
-| Local runtime wiring and harness notes | `runtime/local/` | Own local execution handoff and operator-facing runtime notes. |
-| Provider-neutral adapter boundary | `runtime/model_adapters/` | Own adapter cards, interface handoffs, and provider substitution posture. |
-| Deterministic runtime behavior | `runtime/mock/` | Own broader mock-runtime notes and deterministic runtime posture. |
-| Mock adapter specialization | `runtime/model_adapters/mock/` | Bridge mock runtime and provider-neutral adapter concerns; currently README-only. |
-| Provider-specific local Ollama wiring | `runtime/ollama/` | Own Ollama-specific local runtime and daemon handoff posture. |
-| Finite-outcome runtime helper coordination | `runtime/envelopes/` | Own envelope wiring, handoff, profile-selection, and drift coordination. |
-| Runtime service binding and activation notes | `runtime/service_configs/` | Own runtime-specific configuration handoff; shared templates stay under `configs/`. |
-| Flora-specific runtime notes | `runtime/flora/` | Compatibility and governed handoff only; domain authority stays in Flora responsibility lanes and functional runtime work routes to canonical runtime lanes. |
-| Logging and observability handoff notes | `runtime/log/` | Compatibility and review index only; no raw-log backend, receipt authority, dashboard authority, or public path. |
-| Reusable runtime/envelope code | `packages/` | Runtime references shared code; it does not duplicate package authority. |
-| Public or semi-public serving | `apps/governed-api/` or accepted app root | Runtime is called behind the trust membrane; it does not own public routes. |
-| Semantic object meaning | `contracts/` | Runtime consumes contracts; it does not define meaning here. |
-| Machine-checkable object shape | `schemas/` | Runtime consumes schemas; it does not create parallel schema authority. |
-| Allow, deny, restrict, abstain, obligations | `policy/` | Runtime obeys policy; configuration or model output cannot override it. |
-| Evidence and source authority | `data/proofs/`, registries, governed resolvers | Runtime receives bounded references or approved context only. |
-| Fixtures, executable tests, validators | `fixtures/`, `tests/`, `tools/validators/` | Runtime behavior claims require independent proof. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` | Runtime emits or links governed records through accepted tooling. |
-| Release, correction, withdrawal, rollback | `release/` | Runtime cannot approve or execute release authority by itself. |
-| Shared safe defaults and templates | `configs/` | Runtime service profiles reference them; they do not duplicate them. |
-| Deployment, firewall, service manager, network exposure | `infra/` | Runtime states requirements; infrastructure owns deployment controls. |
-| Real secret values | approved external secret system | Runtime stores references-by-name only. |
-
-### Canonical versus compatibility posture
-
-| Runtime path | Current classification | Rule |
-|---|---|---|
-| `local/` | Canonical runtime lane | New local wiring may land here only with bounded scope and proof. |
-| `model_adapters/` | Canonical runtime lane | New provider-neutral adapter work lands here. |
-| `mock/` | Canonical runtime lane | Deterministic mock runtime posture. |
-| `ollama/` | Canonical runtime lane | Provider-specific local Ollama posture; live binding remains deferred. |
-| `envelopes/` | Canonical runtime lane | Runtime handoff and envelope coordination; reusable code belongs in `packages/envelopes/`. |
-| `service_configs/` | Canonical runtime lane | Runtime binding handoff only; reusable defaults remain under `configs/`. |
-| `flora/` | Compatibility and domain-runtime handoff index | Do not accumulate Flora domain or adapter authority; route implementation to canonical domain and functional runtime lanes. |
-| `log/` | Compatibility and observability handoff index | Do not store raw logs or durable receipts; route to approved private operations, `data/receipts/`, and dashboard documentation. |
-| `adapters/` | Compatibility and migration index | Do not accumulate new adapter authority; route to `model_adapters/`. |
-| `AI/` | Compatibility and navigation index | Do not use as a catch-all AI implementation root. |
-| `people/` | Compatibility and restricted guardrail index | Canonical domain segment is `people-dna-land`; placement remains unresolved. |
-| `pipelines/` | Compatibility and runtime-to-pipeline handoff | Executable logic stays in `pipelines/`; intent stays in `pipeline_specs/`. |
-| `release/` | Compatibility and runtime-to-release handoff | Canonical release authority remains root `release/`. |
-
-A move, rename, deletion, or retirement of any compatibility path requires current inventory, inbound-link review, migration planning, rollback, and the ADR or drift action appropriate to the change. This README authorizes none of those mutations.
+`health/` is currently absent. Its absence is a documented conformance gap, not authority for this README change to create it. Any health-lane implementation must define its contract, exposure, information-disclosure limits, tests, ownership, and rollback before admission.
 
 [Back to top](#top)
 
 ---
 
-## Status
+<a id="last-reviewed"></a>
 
-### Evidence boundary
-
-The repository now has stronger and more complete runtime documentation than the v0.3 root index recorded, including current v1.1 `local/` and `mock/` guides plus repository-present `flora/` and `log/` compatibility lanes. Implementation maturity remains mixed.
-
-| Surface | Current evidence | Safe conclusion |
-|---|---|---|
-| `runtime/README.md` | Existing v0.3 target at blob `894d15b…` | The canonical root is documented; v0.4 refreshes stale evidence and adds omitted compatibility lanes without changing runtime behavior. |
-| Canonical six-lane tree | Directory Rules plus current child READMEs | Placement is documented; implementation is not uniformly established. |
-| `runtime/local/` | Repository-grounded v1.1 README | Local wiring responsibilities and bounded absence are documented; executable harness, loader, health checks, tests, and deployment remain unverified. |
-| `runtime/model_adapters/` | Detailed v1.1 README | Canonical provider-neutral lane is confirmed; executable providers and accepted request contract remain unverified. |
-| `runtime/mock/` | Repository-grounded v1.1 README | Mock-first and no-network posture are documented; bounded checks found no executable mock adapter, dedicated runtime/mock tests, or substantive focus-mock workflow. |
-| `runtime/ollama/` | Detailed v1.1 README | Canonical provider-specific lane is confirmed; live binding is deferred and operational state is unknown. |
-| `runtime/envelopes/` | Detailed v1.1 README | Runtime handoff lane, validators, schemas, fixtures, package scaffold, and drift are documented. |
-| `runtime/service_configs/` | Repository-grounded v0.2 README | Runtime binding handoff is clarified; the lane is README-only. |
-| `runtime/flora/` | Repository-grounded v1.1 compatibility README | The path is present but omitted from the canonical runtime tree; bounded checks found no executable Flora runtime implementation and the lane must remain sensitivity-aware and migration-bound. |
-| `runtime/log/` | Repository-grounded v1.1 compatibility README | The path is present but is not a log backend or receipt authority; raw operational material remains outside the public repository. |
-| `runtime/model_adapters/OllamaAdapter.py` | One-line greenfield placeholder | File presence does not prove an importable adapter or provider call. |
-| Runtime contracts and paired schemas | `DecisionEnvelope`, `RuntimeResponseEnvelope`, `AIReceipt` present with draft/PROPOSED status | Concrete shapes exist; acceptance and runtime emission remain unverified. |
-| Envelope validators and schema fixtures | Validator entry points, minimal valid/invalid fixtures, common schema harness | Some machine validation exists; coverage is narrow and does not prove runtime integration. |
-| `packages/envelopes/` | `kfm-envelopes` `0.0.0` scaffold, empty initializer, no supported consumers | Reusable implementation home is visible but not implemented as a stable library. |
-| `.env.example` | Mock selected by default; governed API and Ollama examples are loopback | Public example is safe-looking and mock-first; it is not activation or deployment proof. |
-| `policy/runtime/README.md` | Greenfield stub | Runtime policy implementation is not established. |
-| `apps/governed-api/README.md` | Draft trust-membrane documentation | Intended public boundary is documented; exact runtime wiring and enforcement remain bounded. |
-| Deployment, service health, models, receipts, logs, public-client enforcement | No sufficient current evidence in this edit | Remain `UNKNOWN` or `NEEDS VERIFICATION`. |
-
-### Current root map
-
-```text
-runtime/
-├── README.md                         # this file; canonical root contract
-├── local/                            # canonical local runtime wiring
-├── model_adapters/                   # canonical provider-neutral adapter lane
-│   ├── README.md
-│   ├── AdapterContract.md            # descriptive note; not canonical contract authority
-│   ├── OllamaAdapter.py              # confirmed one-line placeholder
-│   └── mock/                         # mock-adapter child; README-only in checked evidence
-├── mock/                             # canonical deterministic mock runtime lane
-├── ollama/                           # canonical provider-specific local runtime lane
-├── envelopes/                        # canonical finite-outcome handoff/helper lane
-├── service_configs/                  # canonical runtime service-binding handoff
-├── flora/                            # compatibility Flora runtime handoff/index
-├── log/                              # compatibility observability handoff; no raw logs
-├── adapters/                         # compatibility/migration index
-├── AI/                               # compatibility/navigation index
-├── people/                           # compatibility/restricted guardrail index
-├── pipelines/                        # compatibility runtime-to-pipeline handoff
-└── release/                          # compatibility runtime-to-release handoff
-```
-
-This map is an evidence-grounded orientation surface, not authorization to add new child lanes or treat every present lane as canonical.
-
-### Lane maturity index
-
-| Lane | Placement | Documentation | Implementation posture | Highest-priority next proof |
-|---|---|---:|---|---|
-| `local/` | Canonical | Repository-grounded v1.1 | README-only; executable local harness unconfirmed | Name one governed consumer/harness and add bounded tests. |
-| `model_adapters/` | Canonical | Detailed v1.1 | Mixed; placeholder and descriptive notes | Ratify request/adapter contract, implement deterministic mock first. |
-| `mock/` | Canonical | Repository-grounded v1.1 | README-only; no executable mock adapter found in bounded checks | Executable deterministic adapter plus four-outcome fixtures. |
-| `ollama/` | Canonical | Detailed v1.1 | Scaffold-only; live binding deferred | Security/admission review after mock/evidence/citation/receipt gates. |
-| `envelopes/` | Canonical | Detailed v1.1 | Mixed schemas/validators/package scaffold | Resolve contract/schema/architecture profile conflict. |
-| `service_configs/` | Canonical | Repository-grounded v0.2 | README-only | Accepted profile shape, loader, validator, secret-reference contract. |
-| `flora/` | Compatibility | Repository-grounded v1.1 | README-only; path and domain ownership conflicted | Route any justified work to canonical functional/domain lanes; decide migration. |
-| `log/` | Compatibility | Repository-grounded v1.1 | README-only; no raw-log store or receipt authority | Decide retention/migration and verify private telemetry/redaction handoff. |
-| `adapters/` | Compatibility | Detailed v1.1 | Migration/index only | Inventory inbound links and plan governed disposition. |
-| `AI/` | Compatibility | Detailed v1.1 | Navigation/index only | Decide retention or migration; do not add catch-all implementation. |
-| `people/` | Compatibility | Detailed v1.1 | README-only guardrail | Resolve naming/placement; preserve deny-by-default controls. |
-| `pipelines/` | Compatibility | Repository-grounded v0.2 | README-only handoff | Decide retention; define request/handoff only if justified. |
-| `release/` | Compatibility | Detailed v1.1 | Handoff/index only | Resolve placement; keep all release authority at root `release/`. |
-
-### Confirmed drift and conflicts
-
-1. **Adapter path duplication.** `runtime/adapters/` and `runtime/model_adapters/` coexist; only `model_adapters/` is canonical.
-2. **Capitalized AI lane.** `runtime/AI/` exists but is not named in the Directory Rules canonical tree.
-3. **Domain and cross-root handoff lanes.** `runtime/flora/`, `runtime/people/`, `runtime/pipelines/`, and `runtime/release/` exist but are not canonical runtime sublanes.
-4. **Domain-lane naming.** `runtime/flora/` and `runtime/people/` risk parallel domain-runtime authority; `runtime/people/` also conflicts with the canonical `people-dna-land` domain segment.
-5. **Log-lane ambiguity.** `runtime/log/` is repository-present but omitted from the canonical runtime tree, and its name can be misread as a raw-log store even though its documented role is compatibility/review only.
-6. **Envelope profile conflict.** Governed-API envelope architecture prose and paired runtime schemas differ in fields and vocabularies; hybrid emission is not authorized.
-7. **Adapter note staleness.** `runtime/model_adapters/AdapterContract.md` contains an older evidence note that does not reflect the now-present canonical `DecisionEnvelope` contract/schema.
-8. **Reusable implementation split.** `runtime/envelopes/` owns runtime handoff coordination, while reusable code belongs in `packages/envelopes/`; accepted API ownership remains unproved.
-9. **Runtime policy maturity.** `policy/runtime/README.md` remains a greenfield stub.
-10. **Root evidence drift.** v0.3 omitted `flora/` and `log/` from the root map and retained earlier `local/` and `mock/` blob references; v0.4 repairs the index without deciding lane disposition.
-
-These conflicts are visible governance work. They must not be resolved by silently choosing whichever path is convenient.
-
-### Status progression
-
-A runtime capability should advance through explicit states:
-
-```text
-PROPOSED
-  -> DOCUMENTED
-  -> CONTRACT_PAIRED
-  -> FIXTURE_BACKED
-  -> MOCK_VALIDATED
-  -> SECURITY_REVIEWED
-  -> PROVIDER_ADMITTED
-  -> INTEGRATION_VALIDATED
-  -> RELEASE_ELIGIBLE
-  -> ACTIVE
-  -> SUPERSEDED / DISABLED / RETIRED
-```
-
-The state names above are **PROPOSED** and do not replace canonical contract or policy vocabularies. A missing or unknown gate must fail closed.
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-The root and its canonical lanes may contain:
-
-- this root README and child-lane READMEs;
-- local runtime wiring and service-harness implementation that is truly runtime-specific;
-- provider-neutral adapter handoff code and adapter cards in the accepted canonical lane;
-- deterministic mock runtime code and mock-adapter specialization;
-- provider-specific local runtime integration such as Ollama wiring;
-- finite-outcome envelope wiring and runtime profile selection;
-- runtime-specific service-binding and activation handoff notes;
-- non-secret references to shared configuration, contracts, schemas, policy, fixtures, tests, validators, receipts, evidence, and release records;
-- safe health, readiness, timeout, retry, cancellation, idempotency, resource-limit, circuit-breaker, and kill-switch handling;
-- migration, supersession, deactivation, and rollback notes for runtime-specific behavior;
-- compatibility indexes that preserve discoverability while clearly routing new work to canonical homes.
-
-Every implementation-bearing addition must identify:
-
-| Required field family | Why it is required |
-|---|---|
-| Stable identity and version | Enables replay, correction, migration, and rollback. |
-| Owning lane and owner | Prevents authority ambiguity. |
-| Named caller and consumer | Prevents hidden or accidental activation. |
-| Adapter/provider mode | Preserves provider neutrality and replaceability. |
-| Contract and schema profile | Prevents shape guessing and hybrid envelopes. |
-| Evidence and policy prerequisites | Keeps runtime subordinate to governed support and obligations. |
-| Network, tool, secret, and data posture | Defines the security boundary. |
-| Timeouts, retries, cancellation, idempotency | Prevents uncontrolled execution and duplicate side effects. |
-| Resource limits | Bounds context, output, concurrency, memory, CPU/GPU, and queues. |
-| Finite outcomes and safe reasons | Makes failure explicit and client-safe. |
-| Fixture, test, validator, and CI evidence | Separates documentation from proof. |
-| Receipt and observability pointers | Supports audit without private reasoning. |
-| Activation, fallback, kill switch, rollback | Preserves reversible operation. |
-
-[Back to top](#top)
-
----
-
-## What does NOT belong here
-
-| Prohibited or misplaced material | Correct home or posture |
-|---|---|
-| `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, or `PUBLISHED` payloads | `data/` lifecycle roots |
-| Canonical EvidenceBundle contents, SourceDescriptors, registries, proofs, or catalogs | Governed `data/` and registry/proof roots |
-| Semantic object meaning | `contracts/` |
-| JSON Schema authority | `schemas/` |
-| Policy rules, consent rules, access decisions, rights decisions, sensitivity decisions | `policy/` and governed decision records |
-| Reusable cross-application libraries | `packages/` |
-| Deployable public or semi-public API/UI services | `apps/` |
-| General shared defaults and reusable templates | `configs/` |
-| Workstation-local overrides | ignored `configs/local/` files |
-| Deployment, firewall, reverse proxy, service manager, VPN, container, or host definitions | `infra/` |
-| Pipeline execution logic | `pipelines/` |
-| Declarative pipeline intent | `pipeline_specs/` |
-| Fixtures and golden outputs | `fixtures/` |
-| Executable tests | `tests/` |
-| Validator source | `tools/validators/` |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` |
-| Release manifests, PromotionDecisions, corrections, withdrawals, rollback cards, release signatures | root `release/` |
-| Real credentials, API keys, tokens, private URLs, signing keys, passwords, private `.env`, secret-bearing config | Never in the repository; use approved external secret handling |
-| Model binaries, weights, caches, private model paths, unrestricted provider payloads | External runtime/model storage under approved controls |
-| Protected exact locations, living-person data, DNA/genomic material, consent-sensitive joins | Deny, minimize, generalize, or route through governed domain/policy controls |
-| Private chain-of-thought or hidden reasoning | Do not persist as KFM evidence, proof, receipt, or truth |
-| Generated text treated as evidence, policy, review, release, correction, rollback, or publication authority | Nowhere |
-| Direct browser or public-client model/runtime endpoints | Denied; use the governed application trust membrane |
-| New catch-all `ai/`, `models/`, `providers/`, `services/`, or parallel runtime root | Requires placement review and ADR; normally route to an existing responsibility lane |
-
-[Back to top](#top)
-
----
-
-## Inputs
-
-Runtime may receive only bounded, governed inputs from an accepted caller.
-
-### Permitted input classes
-
-- stable request, run, trace, or audit identity;
-- bounded task type and declared use case;
-- released or otherwise policy-safe context assembled by a governed caller;
-- resolved `EvidenceRef` pointers or approved deterministic fixtures;
-- applicable PolicyDecision, rights, sensitivity, consent, release, freshness, and correction state;
-- explicit citation/support requirements;
-- admitted adapter/provider/model profile references;
-- reviewed tool and network permissions;
-- non-secret configuration references;
-- time, token, memory, CPU/GPU, queue, concurrency, retry, and cancellation limits;
-- receipt/audit context and replay metadata;
-- safe fallback or disabled-mode instructions.
-
-### Forbidden normal inputs
-
-- direct dumps of `data/raw/`, `data/work/`, `data/quarantine/`, or canonical/internal stores;
-- unresolved or unreviewed sensitive geometry;
-- unbounded internal documents or unrestricted repository context;
-- credentials, tokens, secret values, private endpoints, or signing material;
-- hidden policy bypass flags;
-- browser-supplied system instructions treated as authority;
-- prompt-like text embedded in evidence treated as trusted instruction;
-- private chain-of-thought;
-- arbitrary filesystem, shell, network, or tool authority;
-- model weights or binaries committed to the repository;
-- stale, withdrawn, corrected, or superseded context without explicit state handling.
-
-### Input admission checklist
-
-Before a runtime call that may influence a governed response:
-
-- [ ] Caller identity and scope are known.
-- [ ] Public/direct runtime access is denied.
-- [ ] Evidence support is resolved or the outcome is already `ABSTAIN`.
-- [ ] Policy, rights, sensitivity, consent, access, release, freshness, and correction prechecks are complete.
-- [ ] Adapter, provider, model, and configuration profiles are admitted for the task.
-- [ ] Context is minimized and free of secrets or prohibited material.
-- [ ] Network and tool permissions are explicitly bounded.
-- [ ] Resource limits, timeouts, retries, cancellation, and idempotency are explicit.
-- [ ] Receipt and finite-outcome obligations are known.
-- [ ] A safe fallback, disable path, or negative outcome exists.
-
-Missing or unknown prerequisites must not be converted into an implicit allow.
-
-[Back to top](#top)
-
----
-
-## Outputs
-
-Runtime outputs are **candidates and governed handoff objects**, not sovereign truth.
-
-### Permitted output classes
-
-- provider-specific internal candidate response;
-- normalized adapter candidate;
-- `DecisionEnvelope` candidate under the selected contract/schema profile;
-- `RuntimeResponseEnvelope` candidate for governed client handoff;
-- `AIReceipt` or other accepted receipt pointer;
-- safe citation-validation, policy, freshness, correction, and release-state references;
-- safe health/readiness state;
-- bounded metrics and diagnostics;
-- deterministic mock result;
-- explicit `ABSTAIN`, `DENY`, or `ERROR` result;
-- migration, supersession, deactivation, and rollback record pointers.
-
-### Finite outcomes
-
-The paired runtime schemas currently confirm four client/runtime outcomes:
-
-| Outcome | Runtime meaning | Required caller posture |
-|---|---|---|
-| `ANSWER` | The runtime path completed and the governed caller may present a bounded response under current evidence, policy, rights, sensitivity, citation, freshness, correction, and release constraints. | Render only with required support and obligations; do not infer broader authority. |
-| `ABSTAIN` | Evidence, citation, freshness, context, model fitness, or scope is insufficient. | Show a safe support-gap reason; do not fabricate or silently broaden. |
-| `DENY` | Policy, rights, sensitivity, consent, access, release, or security posture forbids delivery. | Do not expose restricted payloads or infrastructure details. |
-| `ERROR` | Adapter, service, dependency, configuration, timeout, schema, citation, receipt, or other failure prevents safe completion. | Return a safe error; do not infer truth, permission, or availability. |
-
-Pipeline, validation, or release workflows may use other state vocabularies such as `HOLD`, `PASS`, or `FAIL`. Those caller-level states do not expand the public runtime envelope enum unless an accepted contract/schema change says so.
-
-### Output invariants
-
-- Raw provider responses are not the public contract.
-- Unknown fields or unknown outcomes fail closed.
-- Citation validation failure cannot become `ANSWER`.
-- A schema-valid object does not prove evidence closure or disclosure permission.
-- A runtime receipt is process memory, not release approval.
-- A response envelope is not a ReleaseManifest.
-- A generated explanation cannot approve policy or promotion.
-- Safe diagnostics must omit prompts, secrets, restricted context, protected coordinates, and private reasoning.
-- Output identity, profile, adapter, provider, and digest information should support replay without leaking sensitive content.
-- Corrections, withdrawals, supersession, stale state, and rollback effects must propagate when material.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Validation must separate **file presence**, **shape**, **behavior**, **integration**, **security**, and **release readiness**.
-
-### Static and documentation checks
-
-```bash
-find runtime -maxdepth 5 -type f | sort
-grep -RInE '(^|/)(api[_-]?key|token|secret|password)[[:space:]]*[:=]' runtime || true
-grep -RInE 'localhost:11434|127\.0\.0\.1:11434|0\.0\.0\.0' runtime apps packages configs infra || true
-```
-
-Interpretation:
-
-- inventory output proves only tracked path presence;
-- secret-pattern output requires human review because documentation may contain safe examples;
-- endpoint-pattern output is an exposure-boundary audit, not automatic proof of a defect;
-- replace advisory `|| true` behavior with accepted fail-closed checks only after scope and false-positive handling are reviewed.
-
-### Contract and schema checks
-
-```bash
-python tools/validators/validate_decision_envelope.py --fixtures
-python tools/validators/validate_runtime_response_envelope.py --fixtures
-pytest -q tests/schemas/test_common_contracts.py
-make schemas
-```
-
-These checks prove only the behavior they actually execute. Passing schema fixtures does not prove runtime adapters, policy execution, evidence resolution, citation validation, receipt persistence, public-client enforcement, or deployment.
-
-### Pull-request workflow preflight
-
-A static preflight of the repository's current workflow documentation and the three documentation-related workflow files linked below found no path that can publish, deploy, release, or mutate repository content from this README change. This is **workflow-definition evidence**, not proof of a complete current workflow inventory, branch protection, or current run results.
-
-| Workflow surface | Trigger and permission posture | Current bounded conclusion |
-|---|---|---|
-| [Workflow inventory](../.github/workflows/README.md) | Its pinned snapshot records 41 tracked workflows, explicit top-level permissions, no `pull_request_target`, no self-hosted runner, no direct `secrets.*` reference, and no ordinary write scope | Broad repository automation exists, but the inventory's completeness at the v0.4 base and current executions remain `NEEDS VERIFICATION`; action refs use mutable major-version tags. |
-| [`docs-build.yml`](../.github/workflows/docs-build.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Explicit hold: no accepted documentation generator or preview publication handoff. It does not render or publish docs. |
-| [`link-check.yml`](../.github/workflows/link-check.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Explicit hold: no accepted link-check executable, configuration, or deterministic fixture suite. A green hold does not mean links were checked. |
-| [`docs-control-plane.yml`](../.github/workflows/docs-control-plane.yml) | `pull_request`, push to `main`, and manual dispatch; `contents: read` | Runs bounded YAML/register/ADR checks. It does not authorize policy, lifecycle promotion, release, or publication. |
-
-**NEEDS VERIFICATION:** required-check rules, branch protection, current workflow runs, external repository settings, and any automation not represented by tracked workflow bytes.
-
-### Required test families
-
-| Test family | Minimum negative cases |
-|---|---|
-| Placement and import boundary | Compatibility lane used as new authority; public app imports provider directly; runtime reads lifecycle stores. |
-| Adapter contract | Unknown request profile; unsupported provider; malformed provider result; provider substitution changes public contract. |
-| Finite outcomes | Unknown outcome; missing reason; negative outcome rendered as answer; hidden exception treated as success. |
-| Evidence and citation | Unresolved EvidenceRef; fabricated citation; stale/withdrawn support; citation validator unavailable. |
-| Policy, rights, sensitivity, consent | Policy unavailable; protected location; denied scope; revoked consent; missing obligations. |
-| Configuration and secrets | Secret in tracked file; public bind; private endpoint leaked; hidden bypass flag; unknown profile field. |
-| Reliability | Timeout; retry exhaustion; duplicate request; cancellation; circuit open; queue saturation. |
-| Receipts and replay | Missing receipt; mismatched profile hash; output digest mismatch; replay with changed contract. |
-| Correction and rollback | Corrected evidence; withdrawn release; superseded model/profile; kill-switch activation; stale cache. |
-| Compatibility and migration | `runtime/adapters/` authority accumulation; broken inbound links; legacy profile silently mapped to new profile. |
-
-### Current proof boundary
-
-| Proof layer | Current posture |
-|---|---|
-| Root and child README boundaries | CONFIRMED documentation |
-| Core runtime contracts and paired schemas | CONFIRMED present; status draft/PROPOSED |
-| Envelope validators and minimal schema fixtures | CONFIRMED files; coverage bounded |
-| Reusable envelope package | CONFIRMED `0.0.0` scaffold; implementation not established |
-| Mock runtime implementation | UNKNOWN in checked evidence |
-| Ollama adapter implementation | CONFIRMED one-line placeholder only |
-| Runtime policy engine | Stub/documentation only in checked evidence |
-| Evidence/citation integration | UNKNOWN |
-| Receipt persistence | UNKNOWN |
-| Dedicated runtime integration tests | NEEDS VERIFICATION |
-| CI enforcement | The pinned workflow inventory records 41 workflow files; documentation workflows include explicit holds; inventory freshness, required-check rules, current runs, and complete runtime enforcement remain unverified |
-| Deployment and operational health | UNKNOWN |
-
-### Definition of done for a new runtime capability
-
-- [ ] Correct canonical lane selected; no compatibility root gains new authority.
-- [ ] Named owner and governed caller.
-- [ ] Accepted semantic contract and paired schema/profile.
-- [ ] Deterministic mock implementation and four-outcome fixtures.
-- [ ] Evidence, policy, rights, sensitivity, citation, freshness, correction, and release negative paths.
-- [ ] Secret, network, tool, logging, and data-minimization review.
-- [ ] Timeouts, retries, cancellation, idempotency, circuit breaker, and resource limits.
-- [ ] Receipt and safe-observability behavior.
-- [ ] Dedicated tests and CI execution evidence.
-- [ ] Provider/model/config admission where applicable.
-- [ ] Public-client boundary test.
-- [ ] Activation, fallback, kill switch, supersession, migration, and rollback verified.
-- [ ] Documentation and open verification register updated.
-- [ ] No claim upgraded beyond the evidence produced.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-### Review classes
-
-| Change class | Minimum review burden |
-|---|---|
-| Root or child README wording only | Runtime maintainer + docs steward; additional steward when a material boundary changes. |
-| Compatibility-lane move, rename, retirement, or redirect | Runtime + migration + docs stewards; inbound-link inventory; drift/ADR review; rollback plan. |
-| Adapter interface or request/response shape | Runtime + API + contract + schema + policy + evidence + test stewards. |
-| Provider/model admission | Runtime + model-risk + security + rights/license + policy + evidence + test stewards. |
-| Service profile, bind, network, or secret-reference change | Runtime + configuration + infrastructure + security + operations stewards. |
-| Evidence, citation, policy, rights, sensitivity, consent, or correction behavior | Owning governance/domain steward plus runtime/API/test reviewers. |
-| Receipt, proof, release, correction, withdrawal, or rollback linkage | Receipt/proof/release/correction stewards; runtime cannot self-approve. |
-| Public-client or governed-API integration | Governed-API + security + policy + evidence + runtime + test reviewers. |
-| Sensitive People/DNA/Land runtime behavior | People/DNA/Land domain + consent + privacy + sensitivity + security + release reviewers. |
-
-### Separation of duties
-
-A runtime author must not be the sole approver when the change can affect:
-
-- disclosure permission;
-- living-person, DNA/genomic, archaeology, rare-species, cultural, sovereignty, or infrastructure sensitivity;
-- public endpoint exposure;
-- provider/model admission;
-- policy-significant behavior;
-- release eligibility;
-- correction, withdrawal, or rollback.
-
-### CODEOWNERS posture
-
-Repository ownership placeholders and current CODEOWNERS coverage remain `NEEDS VERIFICATION`. Do not infer that a GitHub review request proves the correct stewards reviewed a material runtime change.
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-### Runtime lanes
-
-| Path | Relationship |
-|---|---|
-| [`local/`](./local/) | Canonical local runtime wiring. |
-| [`model_adapters/`](./model_adapters/) | Canonical provider-neutral adapter lane. |
-| [`model_adapters/mock/`](./model_adapters/mock/) | Mock-adapter specialization; currently README-only in checked evidence. |
-| [`mock/`](./mock/) | Canonical deterministic mock runtime lane. |
-| [`ollama/`](./ollama/) | Canonical provider-specific local Ollama lane. |
-| [`envelopes/`](./envelopes/) | Canonical runtime envelope handoff/helper lane. |
-| [`service_configs/`](./service_configs/) | Canonical runtime service-binding handoff. |
-| [`flora/`](./flora/) | Compatibility Flora runtime handoff; domain and functional-lane placement remains conflicted. |
-| [`log/`](./log/) | Compatibility observability handoff; not a raw-log store or receipt authority. |
-| [`adapters/`](./adapters/) | Compatibility/migration index; route new work to `model_adapters/`. |
-| [`AI/`](./AI/) | Compatibility/navigation index; not a catch-all authority. |
-| [`people/`](./people/) | Compatibility/restricted guardrail index; canonical domain segment differs. |
-| [`pipelines/`](./pipelines/) | Compatibility runtime-to-pipeline handoff. |
-| [`release/`](./release/) | Compatibility runtime-to-release handoff. |
-
-### Authority and implementation counterparts
-
-| Root | Relationship to runtime |
-|---|---|
-| [`apps/governed-api/`](../apps/governed-api/) | Intended public/semi-public trust membrane. |
-| [`packages/envelopes/`](../packages/envelopes/) | Reusable envelope helper package scaffold. |
-| [`contracts/runtime/`](../contracts/runtime/) | Semantic runtime object meaning. |
-| [`schemas/contracts/v1/runtime/`](../schemas/contracts/v1/runtime/) | Machine-checkable runtime shapes. |
-| [`policy/runtime/`](../policy/runtime/) | Runtime admissibility and obligations. |
-| [`fixtures/contracts/v1/runtime/`](../fixtures/contracts/v1/runtime/) | Deterministic contract fixtures. |
-| [`tests/`](../tests/) | Executable proof. |
-| [`tools/validators/`](../tools/validators/) | Validator implementation. |
-| [`configs/`](../configs/) | Shared safe configuration defaults and templates. |
-| [`infra/`](../infra/) | Deployment, host, network, and exposure controls. |
-| [`data/receipts/`](../data/receipts/) | Receipt instances through governed tooling. |
-| [`data/proofs/`](../data/proofs/) | Evidence and proof objects. |
-| [`release/`](../release/) | Release decisions, correction, withdrawal, and rollback authority. |
-| [`docs/security/`](../docs/security/) | Secrets, exposure, threat, and incident doctrine. |
-| [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Placement and implementation drift tracking. |
-| [`.github/workflows/`](../.github/workflows/) | Pull-request workflow definitions and explicit readiness holds; not release authority. |
-
-### Dependency direction
-
-```mermaid
-flowchart LR
-    CLIENT["public / semi-public client"] --> GAPI["apps/governed-api/"]
-    GAPI --> EVIDENCE["evidence resolver / released support"]
-    GAPI --> POLICY["policy checks"]
-    GAPI --> ADAPTER["runtime/model_adapters/"]
-    ADAPTER --> MOCK["runtime/mock/"]
-    ADAPTER --> OLLAMA["runtime/ollama/"]
-    ADAPTER --> ENVELOPES["runtime/envelopes/"]
-    ENVELOPES --> CONTRACTS["contracts/runtime/"]
-    ENVELOPES --> SCHEMAS["schemas/contracts/v1/runtime/"]
-    ENVELOPES --> PACKAGE["packages/envelopes/"]
-    ADAPTER --> RECEIPTS["data/receipts/"]
-    GAPI --> CLIENT
-
-    CLIENT -. "DENIED direct" .-> ADAPTER
-    CLIENT -. "DENIED direct" .-> OLLAMA
-    ADAPTER -. "DENIED direct" .-> RAW["data/raw · work · quarantine"]
-    ADAPTER -. "NO release authority" .-> RELEASE["release/"]
-```
-
-The diagram is a governance and dependency-direction model, not verified deployment topology.
-
-[Back to top](#top)
-
----
-
-## ADRs
-
-### Relevant decisions
-
-| Record | Current posture | Runtime consequence |
-|---|---|---|
-| [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | Establishes `runtime/` and the canonical six-lane tree. |
-| [`ADR-0008 — Ollama and Local AI Runtimes Are Subordinate to the Governed API`](../docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md) | Present; proposed/draft | Pins no-direct-public-model, governed caller, evidence/policy, finite outcomes, and receipt posture if accepted. |
-| [`ADR-0019 — AI Adapter Contract and Finite Envelopes`](../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Present; proposed/draft; number verification note remains | Proposes provider-neutral adapters and four public/runtime outcomes. |
-| Governed API trust-membrane decision | Referenced by app docs; acceptance and implementation depth require verification | Runtime must remain behind an accepted public boundary. |
-
-### Decisions still needed
-
-- disposition of `runtime/adapters/`;
-- retention or migration of `runtime/AI/`;
-- retention, migration, and domain/functional-lane routing for `runtime/flora/`;
-- retention or migration of `runtime/log/`, including the private telemetry and receipt handoff;
-- placement and naming resolution for `runtime/people/`;
-- retention or migration of `runtime/pipelines/`;
-- retention or migration of `runtime/release/`;
-- canonical runtime request and adapter-contract profile;
-- accepted envelope profile resolving architecture/contract/schema drift;
-- reason-code, obligation, policy-state, freshness, and correction-state registries;
-- reusable envelope implementation ownership and package API;
-- runtime service-profile schema and loader;
-- provider/model admission and deactivation process;
-- runtime receipt persistence and retention;
-- dedicated runtime test and CI contract;
-- public-client boundary enforcement;
-- correction, cache invalidation, migration, and rollback automation.
-
-Do not create a new parallel authority path while these decisions remain open.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
+## Last evidence review and review trigger
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-23 |
-| Evidence base | `main@b960e0988a0365a35ab4eb405ff8d19a56a5f196` |
-| Target prior blob | `894d15bb2e2d0185f433e35c690e0a6b42327fb9` |
-| Review mode | Repository-grounded documentation revision; one-file scope |
-| Implementation effect | None — documentation only |
-| Rollback | Revert the update commit or restore the prior blob; no runtime state, config, secret, deployment, data, or release object changes |
+| Last documentation evidence review | 2026-08-09 |
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Pinned base | `main@7da777a8cd87130406bbcb081738e21f92f1c932` |
+| Prior README blob | `520097cf14639e41191a399c84f080c2c6cfb30f` |
+| Directory Rules blob | `fd49a0b83e55cef52c1124281f093e263526898d` |
+| ADR-0029 blob | `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` |
+| Root registry blob | `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` |
+| Evidence reviewed | Target README, adopted directory authority, accepted ADR, machine projection, current direct-child tree, selected child READMEs, runtime contracts/schemas/validators referenced by the current root, and sibling ROOT_FULL patterns |
+| Runtime exercised | No live model, provider, evidence resolver, policy engine, receipt store, deployment, health endpoint, or public client was exercised for this documentation update |
 
-### Maintenance triggers
+### Review triggers
 
-Re-review this README when any of the following occurs:
+Re-review this root contract when any of the following occurs:
 
-- a runtime lane is added, moved, renamed, retired, or promoted;
-- a compatibility path receives implementation;
-- a request, adapter, envelope, receipt, or service-profile contract changes;
-- an adapter/provider/model becomes executable or admitted;
-- `packages/envelopes/` gains a supported API;
-- runtime policy becomes executable;
-- a governed API route begins calling runtime code;
-- secret, network, tool, logging, or data-handling posture changes;
-- a dedicated runtime test or workflow is introduced;
-- receipt persistence, correction propagation, or rollback becomes implemented;
-- a public-client boundary test changes;
-- Directory Rules or an accepted ADR changes runtime placement.
+- a direct child is added, moved, renamed, deleted, deprecated, or reclassified;
+- the Directory Rules, ADR-0029, root registry, path aliases, or README profile changes;
+- a provider, model, network tool, execution sandbox, or adapter mode is admitted;
+- a request, response, receipt, health, or adapter contract/schema changes materially;
+- a public or semi-public route is proposed or detected;
+- secret loading, logs, traces, metrics, model storage, cache, session, or retention behavior changes;
+- runtime policy, evidence resolution, citation validation, or receipt persistence becomes executable;
+- a compatibility child starts receiving new writes or is proposed for retirement;
+- a released consumer changes finite-outcome, correction, withdrawal, stale-state, or rollback behavior;
+- a security incident, provider-term change, model change, test regression, or drift finding affects this boundary.
 
-### Open verification register
+The evidence snapshot is a checkpoint, not a claim that the root remains unchanged indefinitely.
 
-| Item | Evidence needed |
+[Back to top](#top)
+
+---
+
+## Operating model and finite outcomes
+
+### Trust-preserving runtime sequence
+
+```mermaid
+flowchart LR
+    A[Governed application caller] --> B[Resolve evidence and release state]
+    B --> C[Evaluate policy, rights, sensitivity, and obligations]
+    C --> D[Select admitted runtime mode]
+    D --> E[Provider-neutral adapter]
+    E --> F[Mock, local, or provider-specific binding]
+    F --> G[Validate envelope and citations]
+    G --> H[Emit receipt reference]
+    H --> I[ANSWER / ABSTAIN / DENY / ERROR]
+    I --> J[Governed caller renders or takes no action]
+
+    C -. deny .-> I
+    B -. missing support .-> I
+    F -. failure or timeout .-> I
+```
+
+The diagram is explanatory, not implementation proof. Each arrow requires a verified contract or service before it may be claimed as executable.
+
+### Finite outcome vocabulary
+
+| Outcome | Runtime meaning | Required posture |
+|---|---|---|
+| `ANSWER` | A bounded result is supported, policy-safe, citation-valid where required, and within the released/current scope supplied by the caller. | Evidence and policy closure appropriate to consequence; no unsupported widening. |
+| `ABSTAIN` | Evidence is missing, stale, conflicted, unresolved, out of scope, or citation validation failed without a policy denial. | Explain with a stable public-safe reason; do not guess. |
+| `DENY` | Policy, rights, sensitivity, access, source terms, public precision, or prohibited capability blocks execution or disclosure. | Preserve protected reasons internally and return only the allowed public-safe reason. |
+| `ERROR` | Runtime, adapter, provider, validator, policy service, evidence resolver, receipt writer, timeout, cancellation, or dependency failed. | Fail closed; never convert to an unsupported answer. |
+
+`HOLD`, `READY`, `APPROVED`, `RELEASED`, and similar lifecycle/release terms are not runtime answer outcomes. Do not collapse runtime status with review, promotion, release, or publication state.
+
+### Reason-code expectations
+
+Reason codes should be stable, uppercase, machine-readable, and specific enough for correction without exposing protected detail. Examples include `EVIDENCE_UNRESOLVED`, `CITATION_INVALID`, `POLICY_DENIED`, `SENSITIVE_SCOPE`, `PROVIDER_UNAVAILABLE`, `TIMEOUT`, `CANCELLED`, `MALFORMED_PROVIDER_OUTPUT`, `RECEIPT_WRITE_FAILED`, and `NOT_IMPLEMENTED`. The accepted registry and exact vocabulary remain `NEEDS VERIFICATION`; examples here are descriptive, not a new authority list.
+
+[Back to top](#top)
+
+---
+
+## Runtime component boundaries and modes
+
+### Responsibility map
+
+| Component family | Owns | Must not own |
+|---|---|---|
+| Governed application | Authentication, authorization, public routes, orchestration, client-safe response behavior | Canonical evidence or policy meaning by itself |
+| Runtime composition | Mode selection, adapter wiring, timeouts, cancellation, health, kill switch, provider handoff | Public API authority, evidence, policy, release, or publication |
+| Provider-neutral adapter | Stable invocation boundary and normalized provider result | Source truth, policy decisions, or direct public rendering |
+| Mock runtime | Deterministic no-network outcomes and failure fixtures | Claims of live-provider parity without tests |
+| Local provider binding | Local daemon/process integration behind the adapter | Public exposure, secret storage, or release approval |
+| Envelope helper | Implement accepted finite response shapes | Redefine contract or schema meaning |
+| Policy service | Normative allow/deny/hold/restrict/abstain decision | Runtime provider behavior or public prose |
+| Evidence and citation services | Resolve support and validate references | Provider selection or release approval |
+| Receipt writer | Append accountable run records in the accepted store | Proof, evidence, review, or release authority |
+| Release plane | Promotion, release, correction, withdrawal, rollback, signatures | Runtime execution details as sovereign truth |
+
+### Runtime modes
+
+| Mode | Intended use | Admission posture |
+|---|---|---|
+| Deterministic mock | Default development and CI path for finite outcomes and negative cases | Preferred first; no network; reproducible fixtures |
+| Local provider | Bounded local inference or processing behind loopback/private networking | Requires provider/model identity, resource limits, secret posture, tests, and kill switch |
+| Remote provider | External service through an admitted adapter | Requires terms, rights, retention, security, network, cost, audit, and policy review |
+| Disabled | Explicit runtime-off state | Must return a stable finite outcome without unsafe fallback |
+
+A fallback chain must be explicit. It may move from a remote provider to a local provider or mock only when the caller's policy and semantics allow equivalent behavior. It must never convert a deny, missing evidence, unsupported claim, or citation failure into an answer.
+
+[Back to top](#top)
+
+---
+
+## Secure defaults, kill switch, and fallback discipline
+
+### Default security posture
+
+- Bind local model and provider services to loopback or an explicitly private interface.
+- Use deny-by-default firewall, reverse-proxy, origin, and authentication rules.
+- Keep provider credentials and signing material in an approved secret store; load by reference.
+- Minimize context sent to providers and remove fields not required for the declared purpose.
+- Disable tool and network access unless explicitly admitted for the operation.
+- Set hard input, output, time, token, memory, process, and concurrency limits.
+- Sanitize logs, traces, metrics, health output, screenshots, examples, and test artifacts.
+- Pin adapter and provider dependencies; verify integrity and license posture before activation.
+- Separate development fixtures from production data and keep tests no-network by default.
+- Preserve correlation and receipt references without exposing protected payloads.
+
+### Kill-switch contract
+
+Every provider-backed path should support a bounded disable mechanism that:
+
+1. stops new provider calls;
+2. cancels or drains in-flight work according to the accepted safety policy;
+3. returns a deterministic finite outcome;
+4. does not silently route to a less governed provider or broader capability;
+5. emits an operational receipt or incident reference where required;
+6. leaves public release state unchanged unless a separate correction/withdrawal decision is made;
+7. is testable without production secrets.
+
+The existence of a documented kill switch is not proof that an implementation exists. Current implementation remains `NEEDS VERIFICATION` until code, config, tests, and runtime evidence are inspected together.
+
+### Fallback matrix
+
+| Trigger | Allowed fallback | Forbidden fallback |
+|---|---|---|
+| Provider unavailable | Another admitted equivalent provider or deterministic mock, when semantics and policy permit | Unreviewed provider, raw model endpoint, or unsupported answer |
+| Evidence unresolved | `ABSTAIN` | Generate plausible evidence or citations |
+| Policy denied | `DENY` | Retry through a weaker policy path |
+| Citation validation failure | `ABSTAIN` or `ERROR` | Return uncited answer as authoritative |
+| Receipt writer unavailable for a receipt-required operation | `ERROR` or hold | Execute silently without accountability |
+| Timeout/cancellation | `ERROR` or explicit cancelled outcome | Continue in background without authorization |
+| Runtime disabled | Stable unavailable/not-implemented outcome | Direct client access to provider |
+
+[Back to top](#top)
+
+---
+
+## Root conformance versus implementation maturity
+
+A current README can establish the root contract without proving the runtime is complete.
+
+### Conformance dimensions
+
+| Dimension | Current posture |
 |---|---|
-| Exact recursive runtime inventory | Commit-pinned recursive tree listing and file classification; v0.4 confirms 13 README-bearing top-level child lanes but does not claim exhaustive nested implementation inventory. |
-| Accepted owners and CODEOWNERS | Current ownership rules plus steward confirmation. |
-| Canonical request/adapter profile | Accepted contract, schema, fixtures, validator, tests, and ADR. |
-| Envelope profile conflict | Accepted compatibility/profile decision plus parity tests. |
-| Executable mock runtime | Code, deterministic fixtures, four-outcome tests, current CI evidence. |
-| Ollama or other provider activation | Adapter implementation, model profile, rights/security review, integration tests, receipts, kill switch. |
-| Runtime policy enforcement | Executable policy bundle, evaluator wiring, negative tests, audit records. |
-| Evidence and citation integration | Resolver/citation code, failure tests, runtime receipts, governed API integration. |
-| Service configuration | Accepted profile format, loader, validator, secret-reference integration, health checks. |
-| Runtime receipts | Accepted persistence location, schema/profile, join behavior, retention, redaction. |
-| Deployment and public boundary | Infra config, route inventory, network tests, public-client denial tests. |
-| Compatibility-lane disposition | Inbound-link inventory for `adapters/`, `AI/`, `flora/`, `log/`, `people/`, `pipelines/`, and `release/`; ADR or migration record; deprecation and rollback plan. |
-| Correction and rollback | Invalidation, cache propagation, supersession, kill-switch, and rollback test evidence. |
-| Operational health | Current logs, metrics, dashboards, incident hooks, and service-level objectives. |
+| Responsibility-root classification | `CONFIRMED` canonical |
+| ROOT_FULL documentation structure | `PROPOSED UPDATE` until merge |
+| Current child inventory | `CONFIRMED` at pinned base |
+| Normalized child parity | `PARTIAL`; `health/` absent and extra compatibility lanes present |
+| No direct public route in doctrine | `CONFIRMED` requirement |
+| No direct public route in every deployed environment | `UNKNOWN` without deployment inspection |
+| Provider-neutral adapter lane | `CONFIRMED` documentation surface |
+| Deterministic mock lane | `CONFIRMED` documentation surface; execution coverage remains bounded |
+| Finite contracts/schemas | `CONFIRMED` present with mixed/proposed maturity |
+| Runtime policy execution | `UNKNOWN` |
+| Evidence and citation integration | `UNKNOWN` |
+| Durable receipt persistence | `UNKNOWN` |
+| Health and kill-switch implementation | `UNKNOWN / NEEDS VERIFICATION` |
+| Production security and observability | `UNKNOWN` |
+| Released consumer behavior | `NEEDS VERIFICATION` per consumer and commit |
 
-### v0.3 → v0.4 change summary
+### Maturity labels
 
-- Refreshes the evidence snapshot to `main@b960e09…` and records the v0.3 target blob.
-- Corrects the stale “target v0.2” statement to the actual v0.3 baseline.
-- Updates `local/` and `mock/` to their current repository-grounded v1.1 documentation state while preserving their implementation-unknown boundaries.
-- Adds repository-present `flora/` and `log/` as compatibility/handoff lanes; neither is promoted to canonical runtime authority.
-- Adds a bounded pull-request workflow preflight covering the pinned 41-workflow inventory and the documentation build, link-check, and control-plane checks.
-- Repairs the badge strip with verified destinations, consistent styling, and descriptive alt text; no dynamic workflow badge was admitted because current runs and required-check status are unverified.
-- Consolidates three consecutive critical alerts into one accessible boundary summary without weakening any prohibition.
-- Preserves every required Directory Rules §15 section, stable heading, custom top anchor, object-family term, conflict, unknown, and rollback statement.
+Use these labels for runtime capabilities:
 
-### v0.2 → v0.3 change summary
+- `DOCUMENTED` — boundary or intended behavior is described.
+- `SCHEMA_PRESENT` — machine shape exists but acceptance and enforcement may remain open.
+- `FIXTURE_PROVEN` — bounded positive/negative fixtures pass at a pinned commit.
+- `INTEGRATION_PROVEN` — the governed caller, adapter, policy/evidence services, receipt writer, and finite response are exercised together.
+- `OPERATIONALLY_PROVEN` — deployment, security, health, observability, incident, correction, and rollback evidence exists in the target environment.
+- `RELEASED` — a separate governed release decision covers the behavior.
 
-- Grounds the root README against the current child-lane evidence.
-- Corrects the service-configuration boundary: shared templates remain under `configs/`.
-- Adds the repository-present `adapters/` compatibility lane omitted from v0.2.
-- Classifies `AI/`, `people/`, `pipelines/`, and `release/` as compatibility or handoff lanes rather than implied canonical lanes.
-- Records current contract/schema/package scaffolding and the envelope profile conflict.
-- Records the one-line Ollama adapter placeholder and mock-first operational boundary.
-- Adds explicit inputs, outputs, finite outcomes, validation, review burden, ADR backlog, compatibility migration, and rollback posture.
-- Preserves the prior README's central rule: runtime remains subordinate to evidence, policy, validation, release, correction, rollback, and public-client governance.
+Do not skip levels through persuasive prose. A README, schema, test, workflow, PR, merge, or deployment is evidence for its own layer only.
 
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
+
+---
+
+## Contributor workflow
+
+1. **Freeze the target.** Record the base commit, current file/blob, applicable ADRs, Directory Rules, root registry entry, and path-scoped instructions.
+2. **Classify the change.** Decide whether it is documentation, runtime implementation, contract/schema, policy, security, structural migration, or a dependency-closed combination.
+3. **Identify the owning root.** Keep runtime-only behavior here; route packages, apps, policy, data, release, pipelines, fixtures, tests, and docs to their owning roots.
+4. **Close direct dependencies.** Update every directly required contract, schema, fixture, validator, test, configuration declaration, runbook, and compatibility note in the same review boundary or disclose a bounded follow-up.
+5. **Keep tests no-network first.** Add deterministic valid, invalid, denied, abstained, error, timeout, and cancellation cases before live integration.
+6. **Preserve finite outcomes.** Do not introduce free-text-only responses or unsafe fallback.
+7. **Protect secrets and sensitive data.** Use synthetic public-safe fixtures and references, never real credentials or protected records.
+8. **Validate proportionally.** Run changed-area checks, negative tests, link/anchor checks, and hosted CI appropriate to risk.
+9. **Deliver through a feature branch and draft PR.** Do not write directly to the default branch, force-push, self-approve, merge, release, deploy, or publish.
+10. **Record rollback.** State how to revert code, config, contracts, schemas, migrations, and runtime state without losing audit history.
+
+### Pull-request evidence packet
+
+A material runtime PR should identify:
+
+- goal, non-goals, and observable acceptance boundary;
+- base and head commits;
+- changed paths and owning roots;
+- truth labels and implementation maturity;
+- affected request/response/receipt versions;
+- provider/model/network/tool and secret posture;
+- evidence, policy, citation, release, correction, and rollback dependencies;
+- local checks and exact outcomes;
+- hosted checks as `PASS`, `FAIL`, `PENDING`, or `NOT RUN`;
+- compatibility impact, migration plan, and rollback command or commit.
+
+[Back to top](#top)
+
+---
+
+## Anti-patterns
+
+Do not:
+
+- expose a model, provider, local daemon, or runtime port directly to a browser or ordinary public client;
+- place a deployable public API under `runtime/`;
+- let a provider response stand in for EvidenceBundle support or citation truth;
+- embed policy decisions in adapter conditionals without the accepted policy surface and tests;
+- store secrets, private keys, provider credentials, protected context, or real sensitive fixtures in Git;
+- persist private chain-of-thought or hidden reasoning as an evidence object;
+- use `runtime/log/` as an operational log warehouse;
+- create new canonical adapter work under `runtime/adapters/`;
+- create canonical pipeline logic under `runtime/pipelines/` or release decisions under `runtime/release/`;
+- turn domain-named runtime lanes into domain truth stores;
+- treat a health check as evidence that policy, citations, release, or public safety is correct;
+- treat a receipt as proof, a test as approval, a merge as release, or a deployment as publication;
+- silently fall back from denied, unsupported, stale, or uncited states to an answer;
+- add a compatibility alias without an owner, canonical target, exit condition, and zero-independent-writes rule;
+- remove a legacy lane before producer, consumer, link, import, fixture, workflow, and rollback closure.
+
+[Back to top](#top)
+
+---
+
+## Related documentation and authority surfaces
+
+### Primary authority and governance
+
+- [Directory Rules v2](../docs/doctrine/directory-rules.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Machine root registry](../control_plane/root_registry.yaml)
+- [Drift register](../docs/registers/DRIFT_REGISTER.md)
+
+### Runtime and caller boundaries
+
+- [Local runtime lane](./local/README.md)
+- [Provider-neutral model adapters](./model_adapters/README.md)
+- [Adapter boundary note](./model_adapters/AdapterContract.md)
+- [Deterministic mock runtime](./mock/README.md)
+- [Ollama runtime binding](./ollama/README.md)
+- [Runtime envelope helpers](./envelopes/README.md)
+- [Non-secret service configuration](./service_configs/README.md)
+- [Governed API](../apps/governed-api/README.md)
+- [Reusable envelope package](../packages/envelopes/README.md)
+
+### Meaning, shape, policy, evidence, and accountability
+
+- [Runtime semantic contracts](../contracts/runtime/README.md)
+- [DecisionEnvelope contract](../contracts/runtime/decision_envelope.md)
+- [RuntimeResponseEnvelope contract](../contracts/runtime/runtime_response_envelope.md)
+- [AIReceipt contract](../contracts/runtime/ai_receipt.md)
+- [Runtime schemas](../schemas/contracts/v1/runtime/README.md)
+- [Runtime policy surface](../policy/runtime/README.md)
+- [Runtime fixtures](../fixtures/contracts/v1/runtime/README.md)
+- [Receipt accountability root](../data/receipts/README.md)
+- [Release decision root](../release/README.md)
+
+### Related proposed ADRs
+
+- [ADR-0008 — Ollama subordinate to the governed API](../docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md) — draft/proposed
+- [ADR-0019 — AI adapter contract and finite envelopes](../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) — draft/proposed
+
+The related documents do not all have equal authority or maturity. Read their metadata and current status before relying on them.
+
+[Back to top](#top)
+
+---
+
+## Rollback and correction
+
+### Documentation-only rollback for this README
+
+This v0.5 update changes one Markdown file and no runtime behavior. Rollback is therefore:
+
+1. revert the feature-branch commit or the eventual merge commit;
+2. restore prior blob `520097cf14639e41191a399c84f080c2c6cfb30f` at `runtime/README.md` if a byte-exact restoration is required;
+3. rerun README structure, anchors, direct-child parity, links, and hosted documentation checks;
+4. preserve the revert commit and PR history rather than rewriting shared history.
+
+No runtime state, data, model, secret, deployment, release, or publication rollback is required for this documentation-only change.
+
+### Runtime change rollback expectations
+
+A behavioral runtime change should identify:
+
+- the prior adapter/provider/configuration version;
+- affected callers and public-safe outcomes;
+- state or receipt compatibility;
+- kill-switch and fallback behavior;
+- cache/session/process cleanup;
+- correction or withdrawal effects for already released outputs;
+- verification that the public client still receives finite, policy-safe behavior;
+- the rollback receipt and incident/correction reference appropriate to consequence.
+
+Rollback does not erase receipts, prior decisions, or correction lineage. A rollback is an accountable transition, not a file copy or undocumented provider switch.
+
+[Back to top](#top)
+
+---
+
+## Changelog
+
+### v0.5 — 2026-08-09
+
+- Reorganized the root README to the adopted Directory Rules v2 `ROOT_FULL` profile.
+- Updated the evidence baseline to `main@7da777a8cd87130406bbcb081738e21f92f1c932`.
+- Replaced stale Directory Rules v1.4 framing with the exact v2 bytes adopted by ADR-0029.
+- Bound the README to machine projection `root.runtime` without treating the projection as doctrine.
+- Clarified `runtime/` as an internal, canonical, versioned, repository-lifetime composition root.
+- Added explicit inputs, outputs, permitted writers, exposure, storage, validation, review, migration, and review-trigger contracts.
+- Reconciled the current direct-child tree with the normalized target set and recorded missing `health/` as a conformance gap.
+- Preserved `runtime/adapters/`, `runtime/AI/`, and `runtime/release/` as compatibility or handoff surfaces rather than parallel authorities.
+- Kept `flora/`, `people/`, `log/`, and `pipelines/` visible as unresolved non-normalized lanes without authorizing structural changes.
+- Strengthened finite-outcome, secret, sensitive-data, no-direct-public-runtime, kill-switch, fallback, correction, and rollback boundaries.
+- Preserved legacy anchors used by the v0.4 quick navigation.
+- Changed documentation only; no runtime child, code, contract, schema, policy, fixture, test, workflow, provider, model, route, deployment, release, or public artifact was created or modified.
+
+### v0.4 — 2026-07-23
+
+- Expanded the earlier runtime root guide with repository-grounded child-lane evidence, compatibility drift, finite outcomes, and security boundaries.
+- Used Directory Rules v1.4 and an earlier repository snapshot; both are superseded for current placement claims by the v0.5 evidence baseline and accepted Directory Rules v2 decision.
+
+### Earlier editions
+
+- v0.3 and earlier established the root's internal wiring, mock-first, provider-neutral, governed-API-subordinate, and no-direct-public-runtime posture.
+- Prior editions remain available through Git history and are not rewritten as current implementation proof.
+
+[Back to top](#top)
+
+---
+
+## Glossary
+
+| Term | Meaning in this root contract |
+|---|---|
+| Adapter | A bounded implementation that translates an accepted runtime request to a provider or deterministic mock and normalizes the result. |
+| Provider | A local or remote model/service implementation invoked behind an admitted adapter. |
+| Runtime composition | Internal wiring among callers, adapters, providers, envelopes, health, budgets, and receipts. |
+| Governed caller | An application/service boundary that has already applied authentication, authorization, evidence, policy, release, and client-safety controls appropriate to the operation. |
+| Finite outcome | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, plus stable reason and obligation fields. |
+| Receipt | An accountable record of what ran, under which versions and constraints; not evidence, proof, review, release, or publication authority. |
+| Health | Operational liveness/readiness state; not truth, policy, release, or public-safety proof. |
+| Kill switch | A bounded mechanism that disables provider-backed execution and returns a safe deterministic outcome. |
+| Compatibility lane | An existing path retained for discovery, link preservation, or migration; it may not accumulate independent canonical authority. |
+| Trust membrane | The governed application boundary separating public clients from canonical/internal stores, policy internals, and runtime providers. |
+
+---
+
+**Final operating rule:** keep `runtime/` small, internal, provider-bounded, mock-first, finite-outcome, secret-safe, evidence-subordinate, policy-subordinate, release-subordinate, inspectable, and reversible. When evidence, authority, placement, rights, sensitivity, or implementation maturity is unclear, narrow the operation, mark the status, and fail closed.
