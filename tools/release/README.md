@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-release-readme
 title: tools/release README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-release-steward-plus-docs-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-09
 policy_label: repository-facing; release-tooling; review-support
 owning_root: tools/
 responsibility: release tooling boundary for dry-runs, manifest checks, rollback-card helpers, correction-note helpers, and release-review summaries
@@ -26,7 +26,7 @@ related:
   - ../../schemas/
   - ../../policy/
 notes:
-  - "This README documents the release tooling lane. It does not confirm executable files."
+  - "v0.2 confirms the bounded publication-denial dry run and its no-write test lane."
   - "Release-governance records belong under release/. tools/release may prepare, check, summarize, or dry-run support files but does not approve release by itself."
   - "Promotion is a governed state transition, not a file move. Tool reports support review and do not replace steward decisions."
 [/KFM_META_BLOCK_V2] -->
@@ -66,7 +66,7 @@ The answer should be a tool report, draft scaffold, or reviewer handoff. Actual 
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/release/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
-| Release helper executables | **PROPOSED / NEEDS VERIFICATION** | No script is claimed here. |
+| `release_dry_run.py` | **CONFIRMED bounded executable** | Replays five synthetic negative mutations through the promotion gate; it does not assemble a release. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | Parent README names `tools/release/` as release dry-runs, manifest validators, rollback-card builders, and correction-notice helpers. |
 | `release/` root authority | **CONFIRMED in repo evidence** | `release/` owns release governance records, review, decisions, manifests, corrections, notices, signatures, and changelog records. |
 | Artifact-family separation | **CONFIRMED in repo evidence / proposed ADR** | ADR-0011 separates receipts, proofs, catalogs, release/publication artifacts, and published carriers. |
@@ -200,31 +200,21 @@ A helper belongs here only when it is deterministic, explicit about scan/input s
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/release/
-├── README.md
-├── test_release_support_tools.py
-└── fixtures/
-    ├── valid_candidate/
-    ├── missing_receipt/
-    ├── missing_policy_ref/
-    └── digest_mismatch/
-```
-
-Suggested future command pattern:
+The implemented bounded command is:
 
 ```bash
-pytest -q tests/release
+make release-dry-run
 ```
 
-```bash
-python tools/release/release_check.py --candidate tests/release/fixtures/valid_candidate/input.json --output .tmp/release-check-report.json --dry-run
-```
+It starts from the existing synthetic complete promotion packet and proves five
+negative paths: missing evidence, policy denial, artifact-integrity mismatch,
+non-public-safe rights/sensitivity posture, and absent review. Each case must
+remain `BLOCKED`; the report explicitly records that no candidate, decision,
+authority, network use, or publication was created.
 
-> [!NOTE]
-> This is a proposed interface, not proof that `release_check.py` or `tests/release/` exists.
+The command emits deterministic JSON to stdout and runs
+`tests/release/test_publication_deny_dry_run.py`. It writes no report file and
+does not accept caller-controlled candidate content.
 
 [Back to top](#top)
 
@@ -251,7 +241,8 @@ python tools/release/release_check.py --candidate tests/release/fixtures/valid_c
 |---|---|---|
 | Replace greenfield stub with governed release tooling contract | **DONE in this README** | Establishes release-support tooling boundary. |
 | Add `tests/release/README.md` | **PROPOSED** | Defines public-safe fixture rules and expected reports. |
-| Add release support checker | **PROPOSED** | Emits deterministic release-review support report. |
+| Add bounded publication-denial dry run | **DONE** | Emits deterministic stdout-only review support over five synthetic negative paths. |
+| Add general candidate release support checker | **PROPOSED** | Requires separately reviewed input, output, and authority contracts. |
 | Add rollback/correction scaffold helpers | **PROPOSED** | Drafts review-ready scaffolds without deciding release state. |
 | Align with release schemas/contracts | **PROPOSED / NEEDS VERIFICATION** | Match accepted release record schemas once verified. |
 

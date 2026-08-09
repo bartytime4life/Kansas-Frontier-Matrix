@@ -189,6 +189,7 @@ Do not use this lane as:
 | `tests/release/README.md` | `CONFIRMED` | Existing v0.1 planning README; this revision replaces it. |
 | `tests/release/test_review_record.py` | `CONFIRMED` | Eleven standard-library tests cover exact positive/negative ReviewRecord fixtures, canonical identities and timestamps, identity issuance, exclusive declared expiry boundaries, explicit supersession marking, redacted external and symlink-loop paths, no-network behavior, non-emission, and deterministic CLI polarity. |
 | `tests/release/test_promotion_gate.py` | `CONFIRMED` | Nineteen standard-library-compatible tests cover the bounded A-G promotion profile, unavailable Gate G context, supplied authority intervals, exclusive declared expiry boundaries, nonempty obligations, canonical identity/time behavior, redacted external and symlink-loop paths, and outcome precedence. |
+| `tests/release/test_publication_deny_dry_run.py` | `CONFIRMED` | Four tests prove exact five-case denial coverage, authority non-creation, no-network execution, deterministic JSON, and no file emission. |
 | `tests/release/test_promotion_decision_schema.py` | `CONFIRMED` | Preserves the separate proposed PromotionDecision shape-fixture boundary. |
 | Direct test-local fixtures | `NOT ESTABLISHED` | No test-local fixture inventory was established for this lane. |
 | Dedicated command | `CONFIRMED` | `make publish-check` runs fixture polarity plus the focused direct suite with no network. |
@@ -203,7 +204,7 @@ The bounded search limit matters: absence from search results is not proof of pe
 | `pyproject.toml` | Python `>=3.11`; pytest test extra; root `pythonpath`. | Pytest is the grounded repository runner family. |
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Direct `tests/release/` coverage is excluded. |
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`. | Runs an aggregate validator path, not a dedicated release suite. |
-| `make release-dry-run` | Emits a TODO message. | No release dry-run implementation is established. |
+| `make release-dry-run` | Runs the bounded five-case publication-denial report and its focused test module. | Proves only synthetic negative-path behavior; it assembles no candidate and creates no release or publication authority. |
 | `make publish-check` | Runs the eighteen-file promotion matrix, eleven-case ReviewRecord subset, and thirty focused tests. | Proves bounded fixture behavior only; never review approval, promotion, release, or publication. |
 | `make deny-test` | Runs the five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards as one local aggregate. | The aggregate and three existing CI jobs cover the same bounded five-test set; this is not release readiness, promotion, or publication proof. |
 

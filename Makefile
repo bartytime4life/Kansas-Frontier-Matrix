@@ -28,6 +28,7 @@ help:
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
 	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
+	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
 	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
 	@echo "  evidence-resolver-deny Run its fail-closed negative fixture suite"
 	@echo
@@ -40,7 +41,6 @@ help:
 	@echo "  fixtures              Deterministic fixture regeneration"
 	@echo "  proof-slice           Hydrology proof-slice pipeline"
 	@echo "  catalog               Catalog record builder"
-	@echo "  release-dry-run       Candidate release assembly"
 	@echo
 	@echo "Cleanup targets:"
 	@echo "  maplibre-clean        Remove artifacts/perf"
@@ -73,7 +73,8 @@ catalog:
 	@echo "TODO: tools/catalog_builders build catalog records from validated processed outputs"
 
 release-dry-run:
-	@echo "TODO: tools/release dry-run"
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/release/release_dry_run.py
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest -q tests.release.test_publication_deny_dry_run
 
 publish-check:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/validate_review_record.py --fixtures
