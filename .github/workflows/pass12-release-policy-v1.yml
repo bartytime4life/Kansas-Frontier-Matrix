@@ -63,6 +63,6 @@ jobs:
         run: |
           set -euo pipefail
           reasons='data.kfm.pass12.release_gate_v1.decision.deny_reasons'
-          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_evidence.json "$reasons" | grep -F 'MISSING_EVIDENCE'
-          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_sensitivity.json "$reasons" | grep -F 'MISSING_SENSITIVITY_REVIEW'
-          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_attestation.json "$reasons" | grep -F 'MISSING_REQUIRED_ATTESTATION'
+          /tmp/opa eval --fail --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_evidence.json "$reasons" | grep -F 'MISSING_EVIDENCE'
+          /tmp/opa eval --fail --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_sensitivity.json "$reasons" | grep -F 'MISSING_SENSITIVITY_REVIEW'
+          /tmp/opa eval --fail --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_attestation.json "$reasons" | grep -F 'MISSING_REQUIRED_ATTESTATION'
