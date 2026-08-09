@@ -1,0 +1,106 @@
+# Validate the additive, fixture-only ProgramOutcomeChain profile.
+name: program-outcome-chain
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/program-outcome-chain.yml"
+      - "contracts/governance/program_outcome_chain.md"
+      - "docs/intake/exploratory/briefing-program-outcome-source-map.md"
+      - "schemas/contracts/v1/governance/program_outcome_chain.schema.json"
+      - "fixtures/contracts/v1/governance/program_outcome_chain/**"
+      - "tools/validators/governance/*program_outcome_chain*.py"
+      - "tests/validators/governance/test_program_outcome_chain.py"
+      - "data/receipts/generated/genrec-program-outcome-chain-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/program-outcome-chain.yml"
+      - "contracts/governance/program_outcome_chain.md"
+      - "docs/intake/exploratory/briefing-program-outcome-source-map.md"
+      - "schemas/contracts/v1/governance/program_outcome_chain.schema.json"
+      - "fixtures/contracts/v1/governance/program_outcome_chain/**"
+      - "tools/validators/governance/*program_outcome_chain*.py"
+      - "tests/validators/governance/test_program_outcome_chain.py"
+      - "data/receipts/generated/genrec-program-outcome-chain-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: program-outcome-chain-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-program-outcome-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/governance \
+            --pattern 'test_program_outcome_chain.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/validate_program_outcome_chain.py \
+            --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-program-outcome-chain-20260808.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### ProgramOutcomeChain fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic stage separation, predecessor ordering, bounded claim codes, amount/geometry/method/uncertainty roles, identity, lineage, and authority non-effects."
+            echo "- Boundary: no source activation, program ingestion, application/review/award/payment mutation, evidence resolution, policy/review execution, causation claim, lifecycle write, promotion, release, publication, map, API, or AI authority."
+          } >> "$GITHUB_STEP_SUMMARY"
