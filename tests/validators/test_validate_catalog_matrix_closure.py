@@ -4,17 +4,17 @@ from pathlib import Path
 from unittest import mock
 from jsonschema import Draft202012Validator, FormatChecker
 ROOT=Path(__file__).resolve().parents[2]
-VALIDATOR=ROOT/'tools/validators/validate_catalog_matrix.py'
-SCHEMA=ROOT/'schemas/contracts/v1/data/catalog_matrix.schema.json'
-FIXTURES=ROOT/'fixtures/data/catalog_matrix'
+VALIDATOR=ROOT/'tools/validators/validate_catalog_matrix_closure.py'
+SCHEMA=ROOT/'schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json'
+FIXTURES=ROOT/'fixtures/data/catalog_matrix/closure'
 MANIFEST=FIXTURES/'expected_findings_manifest.json'
-SPEC=importlib.util.spec_from_file_location('validate_catalog_matrix',VALIDATOR); assert SPEC and SPEC.loader
+SPEC=importlib.util.spec_from_file_location('validate_catalog_matrix_closure',VALIDATOR); assert SPEC and SPEC.loader
 MODULE=importlib.util.module_from_spec(SPEC); sys.modules[SPEC.name]=MODULE; SPEC.loader.exec_module(MODULE)
 def cases(): return json.loads(MANIFEST.read_text())['cases']
 def test_schema_is_closed_and_points_to_current_validator():
     schema=json.loads(SCHEMA.read_text()); Draft202012Validator.check_schema(schema)
     assert schema['additionalProperties'] is False
-    assert schema['x-kfm']['validator']=='tools/validators/validate_catalog_matrix.py'
+    assert schema['x-kfm']['validator']=='tools/validators/validate_catalog_matrix_closure.py'
 def test_manifest_has_exact_polarity():
     assert len(cases())==12
     assert {c['case_kind'] for c in cases()}=={'VALID','SCHEMA_NEGATIVE','SEMANTIC_NEGATIVE'}
@@ -49,7 +49,7 @@ def test_no_network_deterministic_replay_and_cli():
     assert first==second
     run=subprocess.run([sys.executable,str(VALIDATOR),'--fixtures'],cwd=ROOT,text=True,capture_output=True)
     assert run.returncode==0,run.stdout+run.stderr
-    assert 'CATALOG_MATRIX_FIXTURES_VALID cases=12' in run.stdout
+    assert 'CATALOG_MATRIX_CLOSURE_FIXTURES_VALID cases=12' in run.stdout
 def test_cli_exit_codes_are_finite():
     for path,expected in [(FIXTURES/'valid/valid_ready_hydrology.json',0),(FIXTURES/'semantic_invalid/semantic_digest_mismatch.json',1),(ROOT/'missing.json',2)]:
         run=subprocess.run([sys.executable,str(VALIDATOR),str(path)],cwd=ROOT,text=True,capture_output=True)

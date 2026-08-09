@@ -1,32 +1,35 @@
-# Validate local STAC/DCAT/PROV CatalogMatrix closure without network access.
+# Validate the additive CatalogMatrix STAC/DCAT/PROV closure profile.
 name: catalog-matrix-closure
 
 "on":
   pull_request:
     paths:
       - ".github/workflows/catalog-matrix-closure.yml"
-      - "contracts/data/catalog_matrix.md"
-      - "schemas/contracts/v1/data/catalog_matrix.schema.json"
-      - "fixtures/data/catalog_matrix/**"
-      - "tools/validators/validate_catalog_matrix.py"
-      - "tests/validators/test_validate_catalog_matrix.py"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
+      - "fixtures/data/catalog_matrix/closure/**"
+      - "tools/validators/validate_catalog_matrix_closure.py"
+      - "tests/validators/test_validate_catalog_matrix_closure.py"
       - "data/receipts/generated/genrec-catalog-matrix-closure-*.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/catalog-matrix-closure.yml"
-      - "contracts/data/catalog_matrix.md"
-      - "schemas/contracts/v1/data/catalog_matrix.schema.json"
-      - "fixtures/data/catalog_matrix/**"
-      - "tools/validators/validate_catalog_matrix.py"
-      - "tests/validators/test_validate_catalog_matrix.py"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
+      - "fixtures/data/catalog_matrix/closure/**"
+      - "tools/validators/validate_catalog_matrix_closure.py"
+      - "tests/validators/test_validate_catalog_matrix_closure.py"
       - "data/receipts/generated/genrec-catalog-matrix-closure-*.json"
   workflow_dispatch:
+
 permissions:
   contents: read
+
 concurrency:
   group: catalog-matrix-closure-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
@@ -34,9 +37,10 @@ env:
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
   TZ: UTC
+
 jobs:
   validate:
-    name: validate-catalog-matrix-closure
+    name: validate-catalog-matrix-closure-profile
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -56,11 +60,11 @@ jobs:
       - name: Run focused tests
         run: |
           set -euo pipefail
-          python -m pytest -q tests/validators/test_validate_catalog_matrix.py
+          python -m pytest -q tests/validators/test_validate_catalog_matrix_closure.py
       - name: Replay exact fixture polarity
         run: |
           set -euo pipefail
-          python tools/validators/validate_catalog_matrix.py --fixtures
+          python tools/validators/validate_catalog_matrix_closure.py --fixtures
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
@@ -69,9 +73,10 @@ jobs:
         if: always()
         run: |
           {
-            echo "### CatalogMatrix closure"
+            echo "### CatalogMatrix closure profile"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: local STAC/DCAT/PROV identity, digest, release-reference, reference hygiene, and decision/reason alignment."
-            echo "- A PASS does not emit catalogs, resolve evidence, decide policy, approve review, release, publish, or authorize public use."
+            echo "- Scope: proposed profile-local STAC/DCAT/PROV identity, digest, release-reference, reference-hygiene, and decision/reason alignment."
+            echo "- Existing broad CatalogMatrix semantics remain unchanged."
+            echo "- A PASS does not accept ADR-0022, emit catalogs, resolve evidence, decide policy, approve review, release, promote, publish, or authorize public use."
           } >> "$GITHUB_STEP_SUMMARY"
