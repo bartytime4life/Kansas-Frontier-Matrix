@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate a fixture-only STAC rel=attestation projection without network access."""
 from __future__ import annotations
-import argparse, copy, json, sys
+import argparse, copy, json, math, sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -94,13 +94,20 @@ def _semantic(value: Mapping[str, Any]) -> list[Finding]:
         out.append(Finding("ATTESTATION_LINK_COUNT_INVALID","/links"))
     if len(hooks) == 1:
         hook=hooks[0]
-        if hook.get("href") != value.get("evidence_bundle_ref"): out.append(Finding("ATTESTATION_HREF_MISMATCH","/links"))
-        if hook.get("certifies_spec_hash") != value.get("item_spec_hash"): out.append(Finding("CERTIFIED_SPEC_HASH_MISMATCH","/links"))
-        if hook.get("type") != MEDIA_TYPE: out.append(Finding("ATTESTATION_MEDIA_TYPE_INVALID","/links"))
-        if hook.get("bundle_digest") == ZERO_DIGEST: out.append(Finding("BUNDLE_DIGEST_PLACEHOLDER_DENIED","/links"))
-        if "/latest" in str(hook.get("href","")).lower(): out.append(Finding("FLOATING_LATEST_REFERENCE","/links"))
-    if value.get("spec_hash") != compute_record_spec_hash(value): out.append(Finding("SPEC_HASH_MISMATCH","/spec_hash"))
-    if value.get("projection_id") != compute_projection_id(value): out.append(Finding("PROJECTION_ID_MISMATCH","/projection_id"))
+        if hook.get("href") != value.get("evidence_bundle_ref"):
+            out.append(Finding("ATTESTATION_HREF_MISMATCH","/links"))
+        if hook.get("certifies_spec_hash") != value.get("item_spec_hash"):
+            out.append(Finding("CERTIFIED_SPEC_HASH_MISMATCH","/links"))
+        if hook.get("type") != MEDIA_TYPE:
+            out.append(Finding("ATTESTATION_MEDIA_TYPE_INVALID","/links"))
+        if hook.get("bundle_digest") == ZERO_DIGEST:
+            out.append(Finding("BUNDLE_DIGEST_PLACEHOLDER_DENIED","/links"))
+        if "/latest" in str(hook.get("href","")).lower():
+            out.append(Finding("FLOATING_LATEST_REFERENCE","/links"))
+    if value.get("spec_hash") != compute_record_spec_hash(value):
+        out.append(Finding("SPEC_HASH_MISMATCH","/spec_hash"))
+    if value.get("projection_id") != compute_projection_id(value):
+        out.append(Finding("PROJECTION_ID_MISMATCH","/projection_id"))
     return out
 
 def validate_payload(value: Mapping[str, Any]) -> Result:
@@ -137,8 +144,10 @@ def mutate(base: Mapping[str, Any], name: str) -> dict[str, Any]:
     if name == "PLACEHOLDER_DIGEST": hook["bundle_digest"]=ZERO_DIGEST; return finalize(value)
     if name == "DUPLICATE_HOOK": value["links"].insert(1,copy.deepcopy(hook)); return finalize(value)
     if name == "UNORDERED_LINKS": value["links"]=list(reversed(value["links"])); return finalize(value)
-    if name == "FLOATING_LATEST": value["evidence_bundle_ref"]="kfm://bundle/latest"; hook["href"]="kfm://bundle/latest"; return finalize(value)
-    if name == "SPEC_HASH_MISMATCH": value=finalize(value); value["spec_hash"]="sha256:"+"4d"*32; return value
+    if name == "FLOATING_LATEST":
+        value["evidence_bundle_ref"]="kfm://bundle/latest"; hook["href"]="kfm://bundle/latest"; return finalize(value)
+    if name == "SPEC_HASH_MISMATCH":
+        value=finalize(value); value["spec_hash"]="sha256:"+"4d"*32; return value
     if name == "AUTHORITY_OVERCLAIM": value["authority"]["publication_authorized"]=True; return finalize(value)
     if name == "MISSING_BUNDLE_REF": value.pop("evidence_bundle_ref",None); return finalize(value)
     raise ValueError("unknown fixture mutation")
@@ -150,7 +159,8 @@ def fixture_suite() -> tuple[bool, list[str]]:
     suite, findings=_load(CASES)
     if suite is None: return False,[serialize("fixture-suite",Result(tuple(findings or [Finding("FIXTURE_SUITE_INVALID","/")]))) ]
     base=suite.get("base"); cases=suite.get("cases")
-    if not isinstance(base, Mapping) or not isinstance(cases,list): return False,[serialize("fixture-suite",Result((Finding("FIXTURE_SUITE_INVALID","/"),)))]
+    if not isinstance(base, Mapping) or not isinstance(cases,list):
+        return False,[serialize("fixture-suite",Result((Finding("FIXTURE_SUITE_INVALID","/"),)))]
     lines=[]; ok=True
     for case in cases:
         if not isinstance(case,Mapping): return False,[serialize("fixture-suite",Result((Finding("FIXTURE_SUITE_INVALID","/cases"),)))]
@@ -164,12 +174,17 @@ def fixture_suite() -> tuple[bool, list[str]]:
     return ok,lines
 
 def main(argv: Sequence[str] | None=None) -> int:
-    parser=argparse.ArgumentParser(); parser.add_argument("path",nargs="?",type=Path); parser.add_argument("--fixtures",action="store_true"); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser()
+    parser.add_argument("path",nargs="?",type=Path)
+    parser.add_argument("--fixtures",action="store_true")
+    args=parser.parse_args(argv)
     if args.fixtures:
         ok,lines=fixture_suite()
         for line in lines: print(line)
         return 0 if ok else 1
     if args.path is None: parser.error("path is required unless --fixtures is used")
-    result=validate_record(args.path); print(serialize(args.path.name,result)); return 0 if result.ok else 1
+    result=validate_record(args.path)
+    print(serialize(args.path.name,result))
+    return 0 if result.ok else 1
 
 if __name__=="__main__": raise SystemExit(main())
