@@ -1,534 +1,540 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/fixtures-readme
 title: fixtures/ — Canonical Reusable Fixture Root
-type: README
-version: v0.1
-status: draft; repository-grounded; canonical-reusable-fixture-root; mixed-maturity; no-network-default; non-authoritative
-owner: NEEDS VERIFICATION — CODEOWNERS routes /fixtures/ to @bartytime4life; no accepted fixture steward, required-review enforcement, or independent approval control was verified
-created: NEEDS VERIFICATION — the file predates this first versioned documentation contract
-updated: 2026-07-23
-supersedes: prior documentation at the same path; no fixture payload, validator, test, workflow, schema, policy, release object, or runtime behavior is superseded
-policy_label: repository-facing; fixtures; deterministic; synthetic; public-safe; no-network-default; fail-closed; correction-aware; rollback-aware; non-publisher
+type: readme; root-readme; canonical-fixtures-root; reusable-test-fixture-boundary
+version: v0.2.0
+status: repository-grounded draft; aligned to adopted Directory Rules v2; non-authoritative
+created: NEEDS VERIFICATION
+updated: 2026-08-08
+supersedes: v0.1 at the same path
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+current_path: fixtures/README.md
 owning_root: fixtures/
-responsibility: own reusable cross-cutting fixture corpora and expected outputs shared by tests, validators, pipelines, runtime smoke checks, documentation examples, and bounded release-governance dry-runs
-truth_posture: cite-or-abstain; a fixture result supports only its declared consumer and expected condition and never proves source authority, claim truth, evidence closure, policy approval, release, publication, or production parity
+root_id: root.fixtures
+readme_profile: ROOT_FULL
+policy_label: public-review; synthetic-public-safe-only; no-network-default; no-authority; cite-or-abstain
+truth_posture: >
+  CONFIRMED the existing same-path canonical fixture root, adopted Directory Rules v2
+  through ADR-0029, root.fixtures machine projection, current 27-direct-child tree,
+  eight-validator full aggregate profile, generated-receipt fixture lane, no-network
+  validation posture, CODEOWNERS route, and make fixtures readiness-marker behavior at
+  main@668b7ece693f9f8bbec32ed508044b098f6df8fc / PROPOSED the fixture admission
+  checklist and scenario vocabulary below / UNKNOWN exhaustive recursive payload and
+  consumer inventory, deployed consumers, third-party sample rights, and public effects /
+  NEEDS VERIFICATION accountable fixture stewardship beyond the current owner route,
+  every child-lane README and consumer binding, branch-protection enforcement, host
+  rendering, accessibility execution, stale-fixture service levels, and retirement drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 005aa64f6d42aa5961646e733289a2b857292357
-  prior_blob: b096b0ed49c8e7d95ddb0d4c813d06ef40f1528d
-  directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  tests_readme_blob: 55ac53c6c08f9a2b77149645d0a22de3ea680732
-  tests_fixtures_readme_blob: 2d0147e85eae86f687e85c5bea0d3e61f9c3a8f7
+  base_commit: 668b7ece693f9f8bbec32ed508044b098f6df8fc
+  prior_blob: 4486f78146e70fba6c9109a1a79f00e16400ac80
+  fixtures_tree: e787a6278847f9638347669783e2f1d4289ff45d
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  validator_registry_blob: 12517f368cb1c8b850d3a7138a968cee889875ba
+  makefile_blob: 4abc7f941ce25d7d14703e87e387cef6e96d1592
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  validator_inventory_blob: f734a3e0944346bf2635fb9188702f13b45c8a64
+  overlap_preflight: no open pull request naming fixtures/README.md; historical modernization PR 1562 is merged
 related:
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../control_plane/root_registry.yaml
   - ../CONTRIBUTING.md
-  - ../docs/architecture/directory-rules.md
   - ../.github/CODEOWNERS
-  - ../tests/README.md
+  - ../.github/workflows/validator-suite.yml
+  - ../Makefile
+  - ../tools/validate_all.py
+  - ../tools/validators/validator_registry.json
   - ../tests/fixtures/README.md
-  - ../contracts/README.md
-  - ../schemas/README.md
-  - ../policy/README.md
-  - ../tools/validators/README.md
-  - ../release/README.md
-  - ../data/README.md
-  - ../artifacts/README.md
+  - generated_receipt/README.md
+  - ../schemas/contracts/v1/receipts/generated_receipt.schema.json
+  - ../tools/validators/validate_generated_receipt.py
+  - ../data/receipts/generated/README.md
+tags: [kfm, fixtures, root-readme, synthetic, deterministic, valid, invalid, golden, denied, abstain, hold, error, correction, rollback, no-network, public-safe]
 notes:
-  - "This is a same-path Markdown modernization. It creates no sibling README, root, authority surface, fixture payload, release object, or publication state."
-  - "Directory Rules §15 controls the required canonical-root README section order."
-  - "The root fixture split is explicit: fixtures/ owns reusable cross-cutting examples; tests/fixtures/ owns test-local examples."
-  - "make fixtures is a readiness marker that prints TODO output; it is not a fixture validator or regeneration proof."
-  - "Existing child documentation may contain inherited renderer terminology that is not normalized by this one-file change. New renderer-specific fixture work must follow current Directory Rules and accepted ADRs."
+  - "v0.2.0 is a same-path, editorial-plus-additive modernization; no fixture payload, schema, policy, validator, test, workflow, lifecycle object, release object, or public route is changed."
+  - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL order."
+  - "The direct-child map is verified at the pinned base; deeper inventory remains child-owned or NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `fixtures/` — Canonical Reusable Fixture Root
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Authority: canonical reusable fixture root](https://img.shields.io/badge/authority-canonical%20reusable%20fixture%20root-1f6feb?style=flat-square)](#authority-level)
-[![Network: denied by default](https://img.shields.io/badge/network-denied%20by%20default-15803d?style=flat-square)](#validation)
-[![Scope: synthetic and public-safe](https://img.shields.io/badge/scope-synthetic%20%26%20public--safe-8250df?style=flat-square)](#what-belongs-here)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
+[![Root: canonical fixtures](https://img.shields.io/badge/root-canonical%20fixtures-1f6feb?style=flat-square)](#root-class-and-authority-owner)
+[![Authority: non-authoritative](https://img.shields.io/badge/authority-non--authoritative-b42318?style=flat-square)](#what-belongs-here-and-what-is-prohibited)
+[![Network: off by default](https://img.shields.io/badge/network-off%20by%20default-6f42c1?style=flat-square)](#validation-and-negative-checks)
+[![Publication: denied](https://img.shields.io/badge/publication-denied-b42318?style=flat-square)](#public-exposure-and-sensitivity-posture)
 
-> **One-line purpose.** `fixtures/` owns reusable, deterministic, synthetic or public-safe examples and expected outputs that multiple tests, validators, pipelines, runtime smoke checks, and documentation surfaces can consume without the fixture tree becoming truth, policy, evidence, release, or publication authority.
-
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed)
+> **One-line purpose.** `fixtures/` holds reusable, synthetic, deterministic, public-safe inputs and expected outputs that let KFM validators, tests, pipelines, and review tooling prove bounded behavior without turning examples into source truth, policy, proof, release, runtime, or publication authority.
 
 > [!IMPORTANT]
-> A fixture is a **controlled carrier for a bounded check**. It may demonstrate a positive path, rejection, abstention, denial, hold, stale state, correction, rollback, or expected output. It does **not** establish source authority, claim truth, EvidenceBundle closure, policy approval, review approval, release state, public safety, production behavior, or KFM publication.
+> A fixture can prove that a checked implementation accepted or rejected specific bytes under a specific contract. It cannot prove that the bytes are factual, rights-cleared, complete, production-ready, released, public-safe outside the modeled case, or suitable for a live decision.
 
-> [!CAUTION]
-> Default fixture use is local and **no-network**. Live source, API, tile, model, vendor, or public-service probes require a separately governed integration or watcher workflow. They must not be disguised as ordinary fixture validation.
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs and prohibited](#what-belongs-here) · [Inputs and outputs](#inputs) · [Exposure](#public-exposure-and-sensitivity-posture) · [Storage](#mutability-retention-generation-and-physical-storage) · [Validation](#validation) · [Review](#review-burden) · [ADRs](#adrs) · [Directory map](#direct-child-directory-map) · [Last review](#last-reviewed)
+
+| Field | Current repository-grounded result |
+|---|---|
+| Canonical responsibility | Reusable `test_fixture` inputs and expected outputs |
+| Root registry identity | `root.fixtures` |
+| Root class | `canonical` |
+| Repository exposure | `public`; payloads must therefore be synthetic and public-safe |
+| Mutation / retention | `versioned` / `repository_lifetime` |
+| Validation profile | `synthetic_public_safe_only` |
+| Direct-child snapshot | `README.md` plus 27 directories at `main@668b7ece…` |
+| Normal public-client use | **DENY** — repository fixtures are not governed runtime data |
+| Release or publication effect | None |
 
 ---
 
 ## Purpose
 
-`fixtures/` is KFM's canonical responsibility root for **reusable fixture material**. It answers a bounded operational question:
+`fixtures/` is the repository-wide home for reusable fixture families shared across validators, tests, packages, pipelines, workflows, and review surfaces. It exists to make positive and negative behavior reproducible with small, inspectable, no-network inputs.
 
-> What compact, deterministic, reviewable input or expected output can be shared across multiple consumers to exercise a declared contract, schema, policy boundary, validator, pipeline, runtime envelope, renderer surface, release prerequisite, correction path, or rollback condition?
+A fixture should answer a bounded question such as:
 
-This root serves fixture authors, validator and test maintainers, pipeline owners, application and runtime teams, domain stewards, policy and sensitivity reviewers, documentation authors, and reviewers who need reproducible examples without importing real lifecycle material into the repository's checking surface.
+- Does this candidate satisfy the declared schema and semantic checks?
+- Does one malformed or disallowed property fail closed for the expected reason?
+- Does an `ANSWER`, `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` envelope preserve the required non-disclosure boundary?
+- Does a content hash, deterministic identifier, correction, supersession, or rollback case reproduce?
+- Does a public-safe transformation withhold or generalize the sensitive field it claims to protect?
 
-A useful fixture should make these points inspectable:
-
-- the scenario and object family under exercise;
-- the intended consumer or consumers;
-- whether the example is valid, invalid, denied, abstained, held, quarantined, stale, error-producing, correction-bearing, rollback-bearing, or golden output;
-- which schema, contract, policy, validator, test, pipeline, or runtime boundary applies;
-- the expected finite outcome and failure interpretation;
-- the rights, sensitivity, temporal, spatial, and public-safety posture when material;
-- the deterministic generation or authoring method;
-- what a passing check proves and what it explicitly does not prove.
+`fixtures/` does **not** replace source intake, lifecycle data, semantic contracts, machine schemas, policy, executable tests, validators, receipts, proofs, catalogs, release decisions, or published artifacts.
 
 [Back to top](#top)
 
 ---
 
-## Authority level
+<a id="authority-level"></a>
 
-| Field | Authority |
-|---|---|
-| **Directory class** | **Canonical, validation-supporting root** |
-| **Primary responsibility** | Reusable cross-cutting fixture corpora and expected outputs |
-| **May own** | Synthetic or public-safe inputs, valid and invalid examples, deny/abstain/hold/error cases, compact benchmark corpora, golden outputs, deterministic generation notes, and fixture-lane READMEs |
-| **Must not own** | Semantic contracts, canonical schemas, executable policy, source registries, lifecycle data, real evidence records, canonical receipts or proofs, review approvals, release decisions, public artifacts, application code, or runtime authority |
-| **Public-path posture** | **DENY direct public use.** Fixtures may support documentation or smoke checks, but clients must consume governed APIs and released artifacts rather than fixture paths |
-| **Promotion posture** | A fixture may support a validation or promotion prerequisite; it is never a `PromotionDecision`, review approval, release manifest, or publication event |
-| **Truth posture** | Cite or abstain; fixture success is bounded evidence about the declared check only |
+## Root class and authority owner
 
-Directory Rules place a file by **primary responsibility**, not topic. The existing path `fixtures/README.md` is correctly placed because `fixtures/` owns reusable deterministic examples. This same-path documentation update creates no root, moves no path, changes no lifecycle phase, and requires no ADR.
+The accepted Directory Rules v2 classify `fixtures/` as a canonical responsibility root. The machine projection in [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) records the current repository mapping:
 
-### Fixture-home split
-
-KFM currently uses two fixture homes with a strict responsibility split:
-
-| Home | Owns | Guardrail |
+| Root property | Projected value | Meaning |
 |---|---|---|
-| `fixtures/` | Reusable cross-cutting fixtures and expected outputs shared by multiple tests, validators, pipelines, runtime checks, or documentation surfaces | Do not duplicate test-local material or become a second schema, policy, evidence, release, or data authority |
-| [`tests/fixtures/`](../tests/fixtures/README.md) | Small fixtures whose ownership and use are local to a particular test area | Do not harden into the reusable cross-cutting fixture registry |
+| `root_id` | `root.fixtures` | Stable machine identifier for this responsibility root |
+| `class` | `canonical` | This is the normal repository home for reusable test fixtures |
+| Allowed artifact kind | `test_fixture` | Fixture inputs and expected outputs only |
+| Prohibited artifact kinds | `data_instance`, `release_decision` | No lifecycle data or release authority |
+| Exposure | `public` | Committed material must be safe for public repository exposure |
+| Mutation | `versioned` | Changes are reviewed and retained through Git history |
+| Retention | `repository_lifetime` | Removal requires consumer and compatibility review |
+| Validation profile | `synthetic_public_safe_only` | Real, restricted, or unsafe payloads are not admitted |
 
-When an example begins local to one test and later gains multiple consumers, move it through a reviewed change, repair references, preserve expected outcomes, and document the migration. Do not copy it into both homes and allow the copies to diverge.
+> [!NOTE]
+> The root registry is a machine projection of adopted governance, not an independent authority. [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [`Directory Rules`](../docs/doctrine/directory-rules.md) control placement.
 
-### Responsibility boundary
-
-| Responsibility | Authority home | Role of `fixtures/` |
-|---|---|---|
-| Semantic meaning and invariants | [`contracts/`](../contracts/README.md) | Exercise examples; never redefine meaning |
-| Machine-checkable shape | [`schemas/`](../schemas/README.md) | Supply valid and invalid inputs; never become schema authority |
-| Admissibility, rights, sensitivity, and access | [`policy/`](../policy/README.md) | Exercise reviewed rules or explicit mocks; never approve exposure |
-| Reusable validator implementation | [`tools/validators/`](../tools/validators/README.md) | Supply deterministic inputs and expected diagnostics |
-| Authored enforceability proof | [`tests/`](../tests/README.md) | Be consumed by tests; never substitute for assertions |
-| Test-local examples | [`tests/fixtures/`](../tests/fixtures/README.md) | Stay separate unless a reviewed migration establishes cross-cutting reuse |
-| Lifecycle material and source records | [`data/`](../data/README.md) | Use synthetic or public-safe representations only; never store real lifecycle state |
-| Release, correction, withdrawal, and rollback decisions | [`release/`](../release/README.md) | Exercise dry-run shapes and denial paths only; never authorize or reverse real state |
-| Temporary generated QA output | [`artifacts/`](../artifacts/README.md) | Remain separate; generated artifacts are not fixture authority |
-
-> [!WARNING]
-> `fixtures/` must not become a parallel contract, schema, policy, source registry, data store, receipt store, proof store, release system, application, renderer, AI runtime, or publication root.
+The current machine projection and [CODEOWNERS](../.github/CODEOWNERS) route this root to `@bartytime4life`. That route is **CONFIRMED review routing**, not proof of independent approval, domain stewardship, policy permission, release authority, or branch-protection enforcement.
 
 [Back to top](#top)
 
 ---
 
-## Status
+<a id="status"></a>
 
-Snapshot: `main@005aa64f6d42aa5961646e733289a2b857292357`, inspected on 2026-07-23.
+## Adoption and conformance status
 
-| Surface | Current evidence | Safe conclusion |
+| Area | Status | Evidence or limit |
 |---|---|---|
-| `fixtures/README.md` | **CONFIRMED** at prior blob `b096b0ed49c8e7d95ddb0d4c813d06ef40f1528d`; this revision is the first versioned root contract | The root README exists and is modernized in place |
-| Root/`tests` fixture split | **CONFIRMED** in [`tests/README.md`](../tests/README.md) and [`tests/fixtures/README.md`](../tests/fixtures/README.md) | Reusable and test-local fixtures have distinct responsibilities |
-| Contract fixture lane | **CONFIRMED** through [`fixtures/contracts/v1/README.md`](contracts/v1/README.md) | Versioned contract fixture families exist and are organized around schema-backed examples and snapshots |
-| Aggregate fixture-backed validators | **CONFIRMED configured** in [`tools/validators/_common/run_all.py`](../tools/validators/_common/run_all.py) | Six top-level validators run in `--fixtures` mode; this is partial coverage, not a complete fixture suite |
-| `make schemas` | **CONFIRMED command-bearing** in the [`Makefile`](../Makefile) | Runs the configured aggregate fixture-backed validators |
-| `make validate` | **CONFIRMED partial aggregate** in the [`Makefile`](../Makefile) | Runs `make schemas` plus narrow schema/contract tests; it is not a full repository suite |
-| `make fixtures` | **CONFIRMED readiness marker only** in the [`Makefile`](../Makefile) | Prints `TODO: regenerate deterministic fixtures`; zero exit is not regeneration or validation evidence |
-| Top-level lane inventory | **PARTIALLY CONFIRMED** from the prior README, current child README fetches, and repository search | The navigation table below is useful but is not a complete recursive tree listing |
-| Fixture payload inventory | **UNKNOWN / incomplete** | This README does not claim every fixture payload, consumer, schema binding, or expected output was inspected |
-| Live-network fixture tier | **UNKNOWN / not established as a root contract** | Default remains no-network; any live tier requires explicit workflow, permissions, source, rights, and failure controls |
-| Required checks and branch protection | **NEEDS VERIFICATION** | File and workflow presence do not prove ruleset enforcement |
-| Release, publication, and production parity | **DENIED as inference** | Fixture and test presence cannot establish operational release or public state |
+| Root existence | **CONFIRMED** | `fixtures/` exists at the pinned base |
+| Placement authority | **CONFIRMED** | Directory Rules v2 adopted through ADR-0029 |
+| Root projection | **CONFIRMED** | `root.fixtures` is present in the root registry |
+| Same-path README role | **CONFIRMED** | Existing root README modernized in place |
+| Direct-child inventory | **CONFIRMED** | 27 direct-child directories at the pinned tree |
+| Reusable fixture role | **CONFIRMED** | Root registry and current validator consumers |
+| All child contracts current | **NEEDS VERIFICATION** | Child README depth and freshness are mixed |
+| Complete recursive payload inventory | **UNKNOWN** | No claim of every nested file or consumer |
+| Every payload bound to a consumer | **NEEDS VERIFICATION** | Require child-level validator/test links |
+| Dedicated fixture regeneration system | **NOT IMPLEMENTED / readiness marker only** | `make fixtures` prints TODO and exits successfully |
+| Production or public runtime use | **DENY by role** | Fixtures are repository test carriers, not governed runtime data |
 
-### Material corrections in this revision
-
-- Adds the confirmed `contracts/v1/` lane to the root navigation surface.
-- Reorganizes the README into the Directory Rules §15 canonical-root section order.
-- Makes the reusable-root versus test-local fixture split explicit and links both sides.
-- Replaces generic validation language with repository-grounded commands and scope limits.
-- States clearly that `make fixtures` is a non-enforcing readiness marker.
-- Uses the live Directory Rules cross-reference at [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md); the duplicate Directory Rules identity/path question remains unresolved outside this file.
-- Narrows renderer wording: new renderer-specific fixture work must follow current Directory Rules and accepted ADRs. Existing child README references to retired or disputed renderer terminology are inherited drift and remain **NEEDS VERIFICATION**; this one-file change does not move or delete them.
+The current tree contains mature validator-backed families, compatibility/staging lanes, broad valid/invalid groupings, and child lanes whose deeper status is not established by their directory name alone. This README therefore documents the root contract without upgrading every child to implemented or validated status.
 
 [Back to top](#top)
 
 ---
 
-## What belongs here
+<a id="what-belongs-here"></a>
 
-This root may contain compact, deterministic, reviewable material such as:
+## What belongs here and what is prohibited
 
-- synthetic or public-safe `*.json`, `*.jsonl`, `*.geojson`, `*.yaml`, `*.yml`, `*.svg`, `*.md`, tile, raster, vector, or bounded binary fixture examples when repository review remains practical;
-- valid, invalid, positive, negative, denied, abstained, held, stale, error, correction, rollback, and golden expected-output cases;
-- toy `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `PolicyDecision`, review, receipt, manifest, runtime-envelope, drawer-payload, Focus Mode, map-layer, correction, and rollback shapes;
-- small renderer and governed-API smoke inputs that contain no live endpoint dependency and no sensitive exact geometry;
-- deterministic expected outputs paired with stable inputs;
-- metadata and generation notes that identify purpose, consumer, rights posture, sensitivity posture, generation method, source note where applicable, and expected outcome;
-- README files that define fixture-lane scope, ownership, consumer relationships, and verification limits.
+### Belongs here
+
+Admit a file only when it is a reusable test fixture or fixture documentation and all applicable conditions below hold:
+
+- synthetic, minimized, deterministic, reviewable, and safe to commit publicly;
+- consumed or intended to be consumed by a named validator, test, pipeline dry run, package test, or review tool;
+- explicit about whether it is valid, invalid, denied, abstaining, held, stale, erroneous, corrected, rolled back, or golden;
+- paired with an expected result or reason code when that behavior is stable;
+- bounded to one primary positive behavior or one primary defect when practical;
+- no-network by default, with no hidden time, randomness, environment, credential, or service dependency;
+- shaped by the applicable contract and schema without claiming contract, schema, or policy authority;
+- transformed before commit when a sensitive-domain case requires generalization, redaction, withholding, or synthetic replacement;
+- small enough for normal review, unless a child boundary explicitly governs a justified heavy fixture.
+
+Typical accepted formats include small JSON, JSONL, YAML, text, Markdown, CSV, SVG, and intentionally tiny binary or geospatial samples whose rights and sensitivity are clear.
 
 ### Scenario families
 
-| Scenario family | Expected posture | Minimum documentation |
-|---|---|---|
-| Valid / positive | Validation or behavior pass | Governing schema/contract/policy, consumer, and what the pass proves |
-| Invalid / negative | Deterministic validation or behavior failure | Expected diagnostic, failure class, and no unsafe fallback |
-| Denied / restricted | `DENY` or restricted output | Policy reason or mock boundary; no sensitive payload leakage |
-| Abstained / unsupported | `ABSTAIN` | Missing, stale, conflicted, or out-of-scope support made explicit |
-| Held / quarantined | `HOLD`, review-required, or quarantine posture | Unresolved rights, sensitivity, identity, quality, or review reason |
-| Stale / superseded | Stale-state or supersession handling | Source/release time, replacement reference, and expected UI/runtime state |
-| Error | `ERROR` or system failure | Stable failure injection, safe diagnostic, and no allow-on-error path |
-| Correction / rollback | Corrected, withdrawn, or prior-state restoration path | Lineage, expected target, and reversibility boundary |
-| Golden / expected output | Deterministic comparison artifact | Input pairing, normalization rules, and update procedure |
-
-### Current top-level navigation inventory
-
-The lanes below are carried forward from the prior root README, with `contracts/v1/` added from current repository evidence. This table is a routing aid, not proof of complete payload, validator, test, workflow, or release coverage.
-
-| Lane | Purpose | Expected posture |
-|---|---|---|
-| `slim/` | Small runtime and renderer smoke inputs, governed-API dry-runs, Evidence Drawer and Focus Mode examples, and lightweight performance checks | Synthetic, compact, public-safe, bounded output |
-| `heavy/` | Larger public-safe runtime or benchmark stress corpora when `slim/` is insufficient | Synthetic stress input; explicit storage and review decision required |
-| `valid/` | Broad positive-path examples not yet routed to a stable object or domain owner | Validation pass or bounded positive outcome |
-| `invalid/` | Broad fail-closed examples not yet routed to a stable object or domain owner | Validation failure, `ABSTAIN`, `DENY`, `ERROR`, or review-required outcome |
-| `golden/` | Stable synthetic expected outputs paired with input fixtures | Deterministic expected output; not proof or release |
-| `public_safe/` | Public-safe documentation and runtime examples | Generalized, redacted, bounded, or finite governed output |
-| `public_safe/settlement/` | Public-safe synthetic settlement-side examples | Generalized examples only; not municipal, census, historic-site, land, infrastructure, or release authority |
-| `synthetic/` | Synthetic compatibility examples before ownership is clear | Temporary routing surface; move to stable object/domain lane when ownership is established |
-| `synthetic/people-dna-land/` | Toy People/DNA/Land compatibility cases | Deny-first, public-safe, synthetic-only, fail-closed |
-| `contracts/v1/` | Versioned contract-family fixtures used by schema harnesses and related checks | Valid/invalid schema examples and bounded snapshots; never contract or schema authority |
-| `release/` | Synthetic release-governance dry-runs | Candidate and denial examples only; not release state |
-| `release/promotion_decision/` | Synthetic `PromotionDecision` family and its positive/negative cases | Approve/deny/abstain examples; never promotion authority |
-| `infrastructure-generalized/` | Generalized infrastructure runtime cases | Public-safe, synthetic context only |
-| `hydrology/` | Hydrology compatibility/runtime staging examples | Defer stable domain-owned cases to `domains/hydrology/` |
-| `ecology/` | Cross-domain ecology examples | Public-safe synthetic ecology; domain lane preferred when ownership is clear |
-| `fauna/` | Fauna compatibility/staging examples | Public-safe synthetic fauna; domain lane preferred when ownership is clear |
-| `generated_receipt/` | Generated-receipt shape and validator examples | Fixture representations only; not canonical receipt storage |
-| `domains/` | Domain-owned fixture roots | Preferred home when object ownership, policy context, or sensitivity context is clear |
-| `packages/` | Reusable synthetic inputs mirroring an owning package responsibility | Test-only package cases; production packages must not import them |
-
-### Shared fixture design contract
-
-- Keep fixtures synthetic, compact, deterministic, reviewable, and public-safe.
-- Prefer `slim/` before `heavy/` unless the scenario genuinely requires a larger corpus.
-- Prefer an object-family or domain-specific lane when ownership is clear.
-- Use toy identifiers, references, geometry, timestamps, hashes, people, organizations, places, and narrative text.
-- Keep schema validity, semantic validity, evidence resolution, citation validity, rights, sensitivity, source role, temporal validity, policy result, release posture, runtime behavior, UI rendering, correction, rollback, replay, and expected-output state distinct.
-- Pair stable inputs with deterministic expected outputs when practical.
-- Record normalization rules before updating a golden output.
-- Do not use client-side hiding as protection for sensitive geometry or fields; transform, generalize, redact, withhold, or deny before fixture delivery.
-- Do not treat recurrence, realism, visual polish, or a passing check as authority.
-
-[Back to top](#top)
-
----
-
-## What does NOT belong here
-
-| Excluded material | Correct responsibility home or action |
+| Scenario | Expected role |
 |---|---|
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED material | The correct governed phase under [`data/`](../data/README.md) |
-| Real source exports, live upstream payloads, or source-registry authority | Governed source intake and `data/registry/`; quarantine when rights or sensitivity are unresolved |
-| Sensitive exact geometry, living-person records, DNA/genomic material, private land detail, archaeology locations, rare-species precision, critical infrastructure detail, credentials, or secrets | Do not commit; use public-safe transformations, quarantine, staged access, or denial |
-| Semantic object definitions | [`contracts/`](../contracts/README.md) |
-| Canonical machine schemas | [`schemas/`](../schemas/README.md) |
-| Executable policy or release permission | [`policy/`](../policy/README.md) and governed release controls |
-| Reusable validator code | [`tools/validators/`](../tools/validators/README.md) |
-| Executable tests and assertions | [`tests/`](../tests/README.md) |
-| Test-local-only fixture material | [`tests/fixtures/`](../tests/fixtures/README.md) |
-| Actual `EvidenceBundle`, receipt, proof, review, promotion, correction, rollback, or release record | The accepted evidence, `data/receipts/`, `data/proofs/`, or [`release/`](../release/README.md) home |
-| Generated CI/build reports | [`artifacts/`](../artifacts/README.md) under an accepted retention and cleanup boundary |
-| Application, API, renderer, pipeline, model, or runtime implementation | The accepted `apps/`, `packages/`, `pipelines/`, `tools/`, or `runtime/` responsibility root |
-| Public API material, public map/tile products, exports, or published artifacts | Governed APIs and released artifacts only |
-| Direct model output or private reasoning | Governed AI envelopes and receipts where applicable; never fixture truth |
+| `valid` / positive | Proves bounded acceptance under the named validator or test |
+| `invalid` / negative | Proves fail-closed rejection for a named defect |
+| `DENY` | Proves policy or boundary refusal without leaking protected detail |
+| `ABSTAIN` | Proves evidence-bounded non-answer behavior |
+| `HOLD` / quarantine | Proves unresolved review, rights, identity, or sensitivity remains blocked |
+| `ERROR` | Proves finite operational failure rather than unsafe fallback |
+| stale / superseded | Proves currentness, correction, or lineage handling |
+| correction / rollback | Proves reversible behavior and prior-state linkage |
+| golden / expected output | Pins a deterministic result for regression review |
 
-A fixture that accidentally contains real, restricted, sensitive, or lifecycle material must be removed from this root, routed through the correct quarantine or responsibility process, and documented through a correction path. Do not merely rename the file or hide fields in a README.
+<a id="what-does-not-belong-here"></a>
 
-[Back to top](#top)
+### Prohibited here
 
----
-
-## Inputs
-
-Fixtures may be authored or generated from these bounded sources:
-
-| Input class | Admission rule |
+| Prohibited material | Correct responsibility |
 |---|---|
-| Hand-authored synthetic example | Use toy values; document scenario, consumer, expected outcome, and governing surfaces |
-| Deterministic generator output | Pin generator path/version or content identity, normalization rules, and regeneration command when verified |
-| Public-safe transformation of a reference shape | Record source note, rights posture, transform/generalization reason, and why redistribution is allowed |
-| Schema/contract example | Reference the owning contract and schema; do not copy their authority into the fixture |
-| Validator/test failure canary | Make the expected diagnostic or finite outcome stable and safe |
-| Runtime/UI/map smoke example | Keep local, no-network, released-state-safe, and free of direct canonical-store or model-runtime access |
-| Release-governance dry-run | Use synthetic IDs and states; make clear that no real release, correction, withdrawal, or rollback occurs |
+| Real source exports, production records, or canonical observations | Governed `data/` lifecycle lane |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED instances | Correct `data/<plane>/` home |
+| Actual generated-work receipts | [`data/receipts/generated/`](../data/receipts/generated/README.md) |
+| Actual proofs, release manifests, promotion decisions, corrections, or rollback cards | `data/proofs/` or `release/`, as governed |
+| Semantic meaning or field intent | `contracts/` |
+| Machine-checkable shape | `schemas/` |
+| Allow, deny, restrict, hold, or abstain rules | `policy/` |
+| Executable tests or validators | `tests/` or `tools/validators/` |
+| Connectors, packages, pipelines, applications, or runtime code | Their implementation roots |
+| Build output, coverage, screenshots, or transient QA output | `artifacts/` or CI artifact storage |
+| Secrets, private endpoints, signed URLs, credentials, production logs, or personal data | **Do not commit**; follow [`SECURITY.md`](../SECURITY.md) |
+| Exact rare-species, archaeology, critical-infrastructure, living-person, genomic, private-land, or similarly protected detail | **DENY** until a qualified public-safe transform and review exist |
 
-### Minimum fixture intake record
-
-Every stable or shared fixture should document, in the file, a sibling note, or the owning lane README:
-
-- stable or human-readable fixture identifier;
-- scenario and expected outcome;
-- consumer paths;
-- governing contract, schema, policy, or validator when applicable;
-- deterministic authoring or generation method;
-- rights and redistribution posture;
-- sensitivity and public-safety posture;
-- spatial and temporal assumptions where material;
-- correction, replacement, or rollback procedure for the fixture itself;
-- verification status and last review date.
-
-Unknown rights, unclear sensitivity, real personal or restricted data, and unexplained provenance are stop conditions. Use a smaller synthetic example rather than importing questionable material.
+A copied production object does not become safe because it was renamed “fixture.” Unknown rights, origin, sensitivity, or redistribution status fails closed.
 
 [Back to top](#top)
 
 ---
 
-## Outputs
+<a id="inputs"></a>
 
-This root supports downstream checks by emitting or preserving:
+## Inputs, outputs, and permitted writers
 
-- reusable deterministic inputs for validators, tests, pipelines, runtime smoke checks, and documentation examples;
-- valid and invalid examples with explicit expected behavior;
-- deny, abstain, hold, stale, and error canaries;
-- public-safe expected payloads for governed API, Evidence Drawer, Focus Mode, map, UI, correction, and rollback checks;
-- golden outputs and normalized comparison snapshots;
-- fixture metadata, generation notes, and consumer mappings.
+### Inputs
 
-| Output | What it may support | What it cannot establish |
-|---|---|---|
-| Valid fixture | Schema/validator positive path | Claim truth, source admission, policy approval, release, or production parity |
-| Invalid or deny fixture | Fail-closed behavior and diagnostic stability | That every unsafe case is covered |
-| Golden output | Deterministic regression comparison | That the output is authoritative, released, accessible, or visually correct on every host |
-| Runtime/UI/map example | Smoke and presentation checks | Public truth, browser/device parity, accessibility completeness, or release state |
-| Release-governance example | Dry-run contract and denial-path checks | Promotion, review approval, rollback execution, or publication |
-| Generation note | Reproducibility guidance | A canonical `RunReceipt`, proof, or attestation unless emitted through its owning system |
+Fixture design may be informed by:
 
-Fixtures do not publish. A commit, pull request, merge, badge, green test, rendered example, or generated snapshot does not make fixture content KFM `PUBLISHED`.
+- semantic contracts under `contracts/`;
+- machine schemas under `schemas/`;
+- policy outcomes and reason-code vocabularies under `policy/`;
+- validators and generators under `tools/`;
+- executable consumers under `tests/`, `packages/`, `pipelines/`, `apps/`, or `runtime/`;
+- reviewed public-safe source examples or synthetic domain scenarios;
+- correction, rollback, and migration cases that need deterministic regression coverage.
+
+The input relationship is one-way: a fixture illustrates or exercises an authority surface; it does not become that authority.
+
+### Outputs
+
+A fixture family may produce:
+
+- deterministic input files;
+- expected outputs, hashes, reason codes, snapshots, or manifests used only for testing;
+- child README guidance;
+- validator/test results emitted elsewhere;
+- bounded CI logs and summaries.
+
+Fixture validation output is not an `EvidenceBundle`, `PolicyDecision`, proof, release record, or publication state unless a separate governed process creates the real object in its proper home.
+
+### Permitted writers
+
+Normal writes use a focused branch and pull request. A writer must:
+
+1. identify the consumer and owning fixture lane;
+2. preserve valid/invalid polarity and expected-output pairing;
+3. verify public safety, rights, and sensitivity before commit;
+4. update the child README when local behavior or inventory changes materially;
+5. run the smallest repository-native checks that prove the changed case;
+6. keep unrelated fixture cleanup out of the change.
+
+The current root registry and CODEOWNERS route name `@bartytime4life`; authenticated permissions, required review, and independent stewardship remain separate controls. Watchers, connectors, pipelines, tests, and CI may read fixtures and emit diagnostics, but they do not gain write, promotion, or publication authority by doing so.
 
 [Back to top](#top)
 
 ---
 
-## Validation
+## Public exposure and sensitivity posture
 
-### Default execution posture
+The repository and `root.fixtures` projection classify this root as public. Public repository visibility changes the admission threshold:
 
-- Local and no-network by default.
-- Deterministic inputs and stable expected outcomes.
-- No credentials, secrets, private endpoints, or direct model clients.
-- No writes to canonical or lifecycle stores.
-- No publish, promote, correct, withdraw, or rollback side effects.
-- Live probes, when separately authorized, run as explicit integration or watcher workflows with source, rights, sensitivity, rate-limit, failure, and receipt controls.
+- every committed payload must be synthetic or otherwise demonstrably redistribution-safe;
+- no fixture may reveal a secret, private endpoint, real credential, precise protected location, living-person record, genomic data, private-land linkage, or restricted source payload;
+- sensitive examples must use documented generalization, redaction, withholding, hashing, substitution, or denial before the bytes enter Git;
+- denial fixtures should expose stable public reason codes, not the protected value or a sensitive internal rationale;
+- child lanes for archaeology, biodiversity, infrastructure, people/DNA/land, or other high-risk subjects inherit the stricter domain policy;
+- external sample terms, attribution, and modification rights must be verified before reuse.
 
-### Repository-grounded commands
+> [!CAUTION]
+> Git history is durable. When unsafe material is discovered, stop normal review, follow `SECURITY.md`, assess whether history remediation is required, and record a bounded correction. Do not “fix” a leak by merely adding a later redacted copy.
 
-Run the narrowest command that matches the changed fixture family. The commands below are verified as repository surfaces; their scope limits are part of the contract.
+Public clients and ordinary UI surfaces must not read this tree as a normal data source. Any public product must use released, governed, public-safe artifacts through the normal trust membrane.
+
+[Back to top](#top)
+
+---
+
+## Mutability, retention, generation, and physical storage
+
+| Concern | Root rule |
+|---|---|
+| Mutability | Versioned through Git; edit source fixtures and expected outputs together |
+| Retention | Repository lifetime unless consumer, compatibility, and rollback review justify retirement |
+| Physical storage | Small reviewable fixture bytes live under `fixtures/`; large/generated outputs belong elsewhere unless a child contract explicitly admits a bounded test asset |
+| Golden files | Update only with an explained behavior change and reviewer-visible before/after result |
+| Generated fixtures | Declare the generator, source fixture, version, command, digest, and edit policy |
+| Mirrors | One-way and reproducible; hand-editing a generated mirror is denied |
+| Timestamps | Use fixed ISO-8601 values unless time variation is the behavior under test |
+| Randomness | Pin the seed or remove randomness |
+| Hashes and IDs | Use deterministic toy values; distinguish placeholders from values a validator is expected to verify |
+| Deletion | Search consumers, remove references, preserve migration/compatibility facts, and retain a rollback route |
+
+Do not use `artifacts/` as a durable fixture home and do not use `fixtures/` as a shortcut around lifecycle, receipt, proof, or release placement. A test can model a lifecycle object here, but the model remains a fixture.
+
+### Correction and rollback
+
+- Before merge, abandon or close the branch/PR.
+- After merge, revert the fixture and all directly coupled expected outputs or submit a bounded forward fix.
+- When a changed fixture intentionally changes accepted behavior, preserve a migration note or prior-version case when downstream compatibility matters.
+- Never roll back in a way that recreates two writable authorities or restores unsafe bytes.
+
+[Back to top](#top)
+
+---
+
+<a id="validation"></a>
+
+## Validation and negative checks
+
+Validation is consumer-specific. Run the narrowest check that proves the changed fixture, then broaden only when the fixture is shared by broader profiles.
+
+### Current repository-owned command surface
 
 ```bash
-# Six configured top-level validators in fixture mode.
-python tools/validators/_common/run_all.py
+# Canonical aggregate orchestrator.
+python tools/validate_all.py --profile full
 
-# Makefile alias for the configured aggregate validators.
+# Compatibility aggregate entrypoint used by the Makefile and workflow.
 make schemas
 
-# Aggregate validators plus narrow schema/contract tests.
+# Aggregate validators plus schema/contract tests.
 make validate
 
-# The narrow test portion invoked by make validate.
-python -m pytest tests/schemas tests/contracts -q
+# Generated-receipt fixture polarity and local artifact-integrity checks.
+python tools/validators/validate_generated_receipt.py --fixtures
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_generated_receipt.py' \
+  --verbose
+
+# Documentation/diff hygiene for this README or child README changes.
+git diff --check
 ```
 
+The current `full` validator profile in [`validator_registry.json`](../tools/validators/validator_registry.json) contains eight fixture-backed entries:
+
+1. `source-descriptor`
+2. `evidence-ref`
+3. `evidence-bundle`
+4. `layer-manifest`
+5. `runtime-response-envelope`
+6. `decision-envelope`
+7. `run-receipt`
+8. `ingest-receipt`
+
+[`validator-suite.yml`](../.github/workflows/validator-suite.yml) exercises the aggregate inventory, shared schema runner, generated-receipt integrity checks, a material-change profile, and an expected EvidenceBundle rejection. Its successful conclusion is bounded validation evidence; it does not create policy, review, proof, release, or publication authority.
+
 > [!WARNING]
-> `make fixtures` is **not** a validator or regeneration command. It currently prints `TODO: regenerate deterministic fixtures` and exits successfully as a readiness marker. Do not cite it as proof that fixtures were regenerated, validated, complete, or current.
+> `make fixtures` is currently a readiness marker that prints `TODO: regenerate deterministic fixtures` and exits successfully. It is **not** fixture regeneration or validation evidence.
 
-The configured aggregate currently invokes fixture-backed checks for:
+### Required negative checks
 
-- `SourceDescriptor`;
-- `EvidenceRef`;
-- `EvidenceBundle`;
-- `RuntimeResponseEnvelope`;
-- `DecisionEnvelope`;
-- `RunReceipt`.
+A fixture change should test the applicable failures, including:
 
-This list is partial. It does not prove that every fixture lane, schema family, policy outcome, domain, renderer scenario, release prerequisite, correction case, or rollback case is covered.
-
-### Validation layers
-
-| Layer | Check | Failure meaning |
-|---|---|---|
-| Source and file integrity | Parseability, encoding, file size, naming, stable path, optional hash | Corrupt, misplaced, oversized, or non-deterministic fixture; do not continue silently |
-| Schema shape | Valid cases pass; invalid cases fail for the intended reason | Fixture/schema mismatch or stale expected diagnostic |
-| Semantic boundary | Example respects the owning contract's meaning | Shape alone is insufficient; fix the example or contract relationship |
-| Policy and sensitivity | Expected allow/restrict/hold/abstain/deny behavior; no protected detail leaks | Fail closed and remove or transform unsafe material |
-| Evidence and citation | References resolve or the case explicitly models missing/conflicted support | Do not convert missing evidence into a positive answer |
-| Temporal and spatial | Time, CRS, bounds, precision, and stale-state assumptions are explicit where material | Mark stale/invalid/held; do not guess |
-| Runtime/API/UI/map | Finite outcomes, trust membrane, no direct store/model access, display-safe payload | Block the consumer path; fixture polish does not cure boundary failure |
-| Release/correction/rollback | Candidate versus released state, correction lineage, and rollback expectations remain distinct | Deny release-like claims; fix the scenario and owning controls |
-| Golden output | Canonical normalization and comparison are deterministic | Review intentional change; do not auto-approve a new golden file |
-
-### Failure interpretation
-
-| Result | Interpretation |
-|---|---|
-| `PASS` | The declared check passed for the exact fixture, code revision, configuration, and environment used |
-| Expected validation failure | The negative case failed for the expected reason; unexpected reasons require investigation |
-| `ANSWER` | The bounded runtime example has admissible support for the modeled question only |
-| `ABSTAIN` | Support is missing, stale, conflicted, or outside scope; no answer is fabricated |
-| `DENY` | Policy or sensitivity blocks exposure or operation |
-| `HOLD` / quarantine | Review, rights, identity, quality, or sensitivity remains unresolved |
-| `ERROR` | The checker or system failed; never reinterpret as allow or pass |
-| Skipped / not collected | No validation claim; document the reason and required follow-up |
+- malformed shape and unsupported enum;
+- missing evidence or citation;
+- invalid identifier, digest, path, or temporal relation;
+- policy denial, sensitivity redaction, or public-path non-disclosure;
+- stale, corrected, superseded, revoked, withdrawn, or rolled-back state;
+- no-network and no-credential behavior;
+- direct canonical-store, direct model-runtime, or watcher-to-publisher bypass;
+- expected rejection reason rather than “any nonzero exit is acceptable.”
 
 ### What passing does not prove
 
-A passing fixture check does not prove:
+Passing a fixture check does not prove:
 
-- factual truth or source authority;
-- complete EvidenceBundle or citation closure beyond the declared check;
-- rights or sensitivity approval beyond the reviewed fixture posture;
-- policy approval for production exposure;
-- complete test, validator, domain, browser, device, accessibility, or performance coverage;
-- release readiness, PromotionDecision, publication, correction execution, or rollback execution;
-- production configuration, deployment parity, branch-protection enforcement, or operational health.
+- source truth, completeness, currentness, or legal admissibility;
+- production behavior beyond the checked path;
+- public fitness outside the modeled transformation;
+- evidence closure, policy approval, human review, or source activation;
+- performance, deployment, availability, or security of a live service;
+- promotion, release, publication, correction propagation, or rollback execution.
 
-### Change validation checklist
-
-- [ ] The fixture remains in the correct reusable or test-local home.
-- [ ] The scenario, consumer, expected outcome, and authority limits are explicit.
-- [ ] No real, restricted, sensitive, lifecycle, credential, or private material was introduced.
-- [ ] Valid and invalid/deny/abstain cases remain paired where the risk warrants them.
-- [ ] Schema, contract, policy, evidence, temporal, spatial, release, correction, and rollback meanings remain separate.
-- [ ] Golden outputs were regenerated only through a documented deterministic process.
-- [ ] Relevant targeted validators or tests ran, or the change states why a check is not applicable.
-- [ ] Live-network behavior was not introduced into default fixture validation.
-- [ ] Added relative links and anchors resolve.
-- [ ] The diff contains no unrelated fixture or authority-root changes.
+Record commands that were not run as `NOT_RUN` or `SKIPPED`; do not convert absence of evidence into PASS.
 
 [Back to top](#top)
 
 ---
 
-## Review burden
+<a id="review-burden"></a>
 
-Current [CODEOWNERS](../.github/CODEOWNERS) routes `/fixtures/` changes to `@bartytime4life`. That is GitHub review routing only; it is not a stewardship assignment, policy approval, release approval, or proof that independent review occurred.
+## Owner, reviewers, and escalation path
 
-| Change type | Minimum review concern |
+| Concern | Current route or required escalation |
 |---|---|
-| README-only clarification | Fixture-root boundary, links, truth labels, and no-overclaim posture |
-| New reusable lane | Ownership, duplicate-home search, consumer need, naming, rights, sensitivity, and maintenance burden |
-| New or changed fixture payload | Object/domain owner, validator/test consumer, expected outcome, public safety, deterministic generation, and diff review |
-| Sensitive-domain case | Domain and sensitivity review; synthetic/generalized/denied posture; no precise protected detail |
-| Schema/contract fixture change | Owning contract/schema reviewer plus validator/test impact |
-| Policy outcome fixture | Policy reviewer; expected obligations and fail-closed path |
-| Golden-output change | Consumer owner; normalization rules; intentional-delta evidence; rollback to prior expected output |
-| Heavy or binary corpus | Storage, licensing, reviewability, reproducibility, retention, and removal plan |
-| Live-network or external-service dependency | Separate integration/workflow review; permissions, terms, rate limits, failure behavior, and receipts |
+| Root review routing | `/fixtures/ @bartytime4life` in CODEOWNERS |
+| Machine-projection owner/writer/reviewer | `@bartytime4life` in `root_registry.yaml` |
+| Dedicated fixture steward | **NEEDS VERIFICATION** |
+| Contract or semantic change | Applicable `contracts/` owner |
+| Schema shape change | Applicable `schemas/` owner and schema tests |
+| Policy, rights, or sensitivity change | Applicable policy/domain reviewer; do not encode policy only in a fixture |
+| Security or accidental sensitive material | Private-first route in [`SECURITY.md`](../SECURITY.md) |
+| Release/correction/rollback meaning | Applicable release steward and real release objects outside this root |
+| Directory placement or root-boundary change | Directory Rules plus an accepted ADR when triggered |
+| Unresolved drift | [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) |
 
-### Update rules
+CODEOWNERS routing is not approval. The author must not represent self-review, a generated receipt, a green workflow, or a fixture’s expected result as independent human review.
 
-- Update this README when top-level lanes, fixture-home rules, aggregate validation commands, default network posture, storage rules, or root authority boundaries change.
-- Update a child README when its payloads, consumers, expected outcomes, generation recipe, rights/sensitivity posture, or validation wiring changes.
-- Link each stable fixture to its exact consumer only after that relationship is verified.
-- Move stable domain-owned examples into the owning `fixtures/domains/<domain>/` lane when ownership is clear.
-- Remove obsolete fixtures only after confirming no active consumer, preserving needed lineage, and documenting replacement or rollback.
-- Keep ordinary fixture changes in focused branches and draft pull requests; do not bundle unrelated cleanup.
+Review burden increases when a change:
 
-### Rollback
-
-Documentation rollback is a same-path revert of the README commit. Fixture-content rollback restores the prior reviewed input/expected-output pair and repairs consumers together. Neither rollback is a KFM release rollback unless the governed release system separately records and executes one.
+- alters a golden output or accepted failure reason;
+- affects multiple validators or runtime surfaces;
+- changes sensitive-domain generalization or denial behavior;
+- introduces a binary, heavy, or externally sourced sample;
+- changes stable IDs, hashes, timestamps, correction lineage, or rollback semantics;
+- removes a fixture consumed by compatibility or release checks.
 
 [Back to top](#top)
 
 ---
 
-## Related folders
+<a id="adrs"></a>
 
-| Surface | Relationship |
+## Governing ADRs, migrations, aliases, and canonical target
+
+| Governance item | Status and effect |
 |---|---|
-| [`tests/`](../tests/README.md) | Owns authored enforceability proof and consumes reusable fixtures |
-| [`tests/fixtures/`](../tests/fixtures/README.md) | Owns test-local fixtures; must not duplicate the reusable root |
-| [`contracts/`](../contracts/README.md) | Defines object meaning and invariants |
-| [`schemas/`](../schemas/README.md) | Defines machine-checkable shape |
-| [`policy/`](../policy/README.md) | Defines admissibility, rights, sensitivity, and access behavior |
-| [`tools/validators/`](../tools/validators/README.md) | Owns reusable validator implementations |
-| [`data/`](../data/README.md) | Owns lifecycle material, registries, receipts, proofs, catalogs, and published artifacts in their proper lanes |
-| [`release/`](../release/README.md) | Owns release-governance decisions, manifests, corrections, and rollback records |
-| [`artifacts/`](../artifacts/README.md) | Transitional generated-output boundary; not fixture or trust authority |
-| [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Defines focused branch, review, validation, and reversible-change expectations |
-| [Directory Rules](../docs/architecture/directory-rules.md) | Governs responsibility-root placement and the required README contract |
-| [CODEOWNERS](../.github/CODEOWNERS) | Routes GitHub review requests; does not establish approval or stewardship authority |
+| [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **Accepted**; adopts Directory Rules v2 and makes the doctrine path the sole writable Directory Rules authority |
+| [`Directory Rules v2`](../docs/doctrine/directory-rules.md) | Governs this canonical root and the `ROOT_FULL` README profile |
+| [`root_registry.yaml`](../control_plane/root_registry.yaml) | Machine projection only; records `root.fixtures` without creating authority |
+| Schema-home ADR | Current exact status must be checked before moving or duplicating schema-shaped definitions; fixtures do not choose schema authority |
+| Root alias | None verified for `fixtures/` |
+| Canonical target | `fixtures/` itself |
+| Active root migration | None authorized by this README |
+| Compatibility relationship | `tests/fixtures/` remains a separate test-local fixture lane; it is not an alias or second reusable-fixture authority |
 
-### Verified child documentation
+<a id="related-folders"></a>
 
-- [`contracts/v1/`](contracts/v1/README.md) — versioned contract fixture-family index.
-- [`packages/`](packages/README.md) — reusable synthetic package-fixture index.
-- [`slim/`](slim/README.md) — compact runtime fixture lane.
+### Related responsibility roots
 
-Other lanes in the navigation inventory are retained as repository routes from the prior README and targeted search. Their complete payload and child-README coverage remain **NEEDS VERIFICATION** until recursively inventoried.
+| Need | Correct home |
+|---|---|
+| Cross-cutting reusable fixture | `fixtures/` |
+| Fixture local to one test area | [`tests/fixtures/`](../tests/fixtures/README.md) or the verified test-local lane |
+| Executable conformance | `tests/` |
+| Semantic meaning | `contracts/` |
+| Machine shape | `schemas/` |
+| Admissibility and sensitivity | `policy/` |
+| Validator/generator implementation | `tools/` |
+| Lifecycle, receipts, proofs, catalogs, published carriers | Correct `data/` plane |
+| Release, correction, withdrawal, rollback decisions | `release/` |
+| Build and QA output | `artifacts/` or CI artifact storage |
 
-[Back to top](#top)
-
----
-
-## ADRs
-
-No accepted fixture-root-specific ADR was verified for this documentation update.
-
-- [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) is **proposed**. It documents the configured `schemas/contracts/v1/` machine-shape surface and does not turn `fixtures/contracts/v1/` into schema authority.
-- Directory Rules currently identify duplicate-fixture sprawl as an anti-pattern and require the reusable-root versus test-local split to be documented. This README and [`tests/fixtures/README.md`](../tests/fixtures/README.md) record that split.
-- The Directory Rules document-location conflict (`docs/architecture/` versus `docs/doctrine/`) remains an open governance question. New links in this file follow the current contribution guidance and point to the live architecture-path artifact; this README does not resolve or supersede that conflict.
-
-An accepted ADR and migration plan are required before removing or renaming the canonical `fixtures/` root, collapsing it into `tests/fixtures/`, creating another reusable fixture authority, or changing a fixture path in a way that changes governed object identity or lifecycle responsibility.
+Changing the root class, creating a parallel fixture authority, moving lifecycle data here, or collapsing `tests/fixtures/` and `fixtures/` without consumer evidence is structural work and requires a separate governed migration decision.
 
 [Back to top](#top)
 
 ---
 
-## Last reviewed
+## Direct-child directory map
 
-**2026-07-23**
+The following map is verified from tree `e787a6278847f9638347669783e2f1d4289ff45d` at the pinned base. It shows direct children only; each child README owns deeper detail.
 
-Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at `main@005aa64f6d42aa5961646e733289a2b857292357`, prior target blob `b096b0ed49c8e7d95ddb0d4c813d06ef40f1528d`.
+```text
+fixtures/
+├── README.md                     # This ROOT_FULL authority contract.
+├── archaeology-public-safe/      # Public-safe archaeology fixture lane.
+├── connectors/                   # Source-connector fixture families.
+├── contracts/                    # Versioned contract/object-family fixtures.
+├── data/                         # Synthetic data-object shapes; not lifecycle data.
+├── domains/                      # Domain-owned fixture lanes.
+├── ecology/                      # Ecology compatibility/cross-domain fixtures.
+├── evidence/                     # Evidence-object fixture families.
+├── fauna/                        # Fauna compatibility/domain fixtures.
+├── generated_receipt/            # GENERATED_RECEIPT shape and integrity fixtures.
+├── golden/                       # Golden expected-output fixtures.
+├── heavy/                        # Bounded large-fixture lane; local rules govern.
+├── hydrology/                    # Hydrology compatibility/domain fixtures.
+├── infrastructure-generalized/   # Generalized public-safe infrastructure fixtures.
+├── ingest/                       # Intake and ingest fixture families.
+├── invalid/                      # Cross-cutting invalid cases.
+├── map/                          # Map contract and delivery fixture families.
+├── maplibre/                     # MapLibre runtime and governance fixtures.
+├── packages/                     # Package-owned reusable fixtures.
+├── pmtiles/                      # PMTiles fixture families.
+├── public_safe/                  # Cross-cutting public-safe examples.
+├── release/                      # Synthetic release-governance fixtures only.
+├── review/                       # Review-record fixture families.
+├── runtime/                      # Runtime-envelope and adapter fixtures.
+├── slim/                         # Compact fixture subsets.
+├── synthetic/                    # General synthetic compatibility lane.
+├── ui/                           # UI trust-state fixture families.
+└── valid/                        # Cross-cutting valid cases.
+```
 
-Review this root README again when any of these conditions occurs:
+**Inventory boundary:** direct-child names are CONFIRMED. The map does not claim that every child has a current README, complete polarity, active consumer, or equivalent maturity. Ambiguous or compatibility-shaped lanes must be resolved in their own boundary documents or through a separate migration—not silently reclassified here.
 
-- six months pass without review;
-- a top-level fixture lane is added, moved, renamed, consolidated, or retired;
-- the reusable-root versus test-local split changes;
-- the aggregate validator inventory or Makefile command behavior changes;
-- a canonical fixture generator or full fixture suite is established;
-- live-network tests are admitted;
-- rights, sensitivity, large-corpus storage, or binary-fixture rules change;
-- Directory Rules or an accepted ADR changes fixture placement;
-- a new renderer or runtime authority decision changes fixture routing;
-- a fixture-related correction or rollback exposes a gap in this contract.
+[Back to top](#top)
 
-### Open verification register
+---
 
-- Complete recursive inventory of top-level and domain fixture lanes.
-- Exact fixture payload counts, file types, sizes, and ownership.
-- Consumer mapping for every stable fixture and golden output.
-- Complete schema, contract, policy, validator, pipeline, runtime, UI, map, correction, rollback, and CI coverage.
-- Accepted full-suite and deterministic regeneration commands.
-- Branch-protection and required-check coupling.
-- Fixture steward assignment and independent review thresholds.
-- Legacy renderer terminology in child READMEs and any affected fixture paths.
-- Large-corpus storage, Git LFS, external object storage, retention, and rights posture.
+<a id="last-reviewed"></a>
 
-> [!NOTE]
-> This README is a repository-grounded documentation contract. It does not claim that fixture payloads were regenerated, that the full repository test suite ran, that all child lanes are complete, or that any fixture is released or published.
+## Last evidence review and review triggers
+
+| Field | Value |
+|---|---|
+| Last evidence review | 2026-08-08 |
+| Repository snapshot | `main@668b7ece693f9f8bbec32ed508044b098f6df8fc` |
+| Target prior blob | `4486f78146e70fba6c9109a1a79f00e16400ac80` |
+| Direct-child tree | `e787a6278847f9638347669783e2f1d4289ff45d` |
+| Directory authority | Directory Rules v2 adopted by ADR-0029 |
+| Aggregate validator source | `tools/validators/validator_registry.json` |
+| Open PR overlap | No open PR naming `fixtures/README.md` found before authoring |
+| Runtime/deployment observation | Not performed; not required for this documentation slice |
+
+Re-review this README when any of the following occurs:
+
+- `root.fixtures` class, allowed kinds, exposure, writer, retention, or validation profile changes;
+- a direct child is added, retired, moved, aliased, or reclassified;
+- `tests/fixtures/` or another path becomes a competing reusable-fixture authority;
+- the aggregate validator registry, `make schemas`, `make validate`, or `make fixtures` semantics change;
+- a fixture generator or mirror relationship is introduced;
+- a sensitive-domain fixture, external sample, heavy binary, or new public-exposure risk is admitted;
+- a contract/schema/policy change alters fixture polarity or expected reason codes;
+- drift, security incident, correction, withdrawal, rollback, or consumer breakage occurs;
+- an accepted ADR changes fixture placement or authority.
+
+No blanket review interval is asserted here; Directory Rules v2 uses event- and risk-based review. A future root profile may establish a maximum interval.
+
+### Open verification items
+
+- accountable fixture steward and independent review route;
+- complete recursive payload and consumer inventory;
+- child README coverage, freshness, and direct contract/schema/policy/test links;
+- external sample rights and attribution posture;
+- root-wide stale-fixture detection and retirement drill;
+- branch-protection and required-check coupling;
+- host-rendered Markdown and accessibility validation;
+- whether compatibility-shaped top-level lanes should converge under `domains/`, `packages/`, or object-family lanes through a separate evidence-backed migration.
 
 [Back to top](#top)
