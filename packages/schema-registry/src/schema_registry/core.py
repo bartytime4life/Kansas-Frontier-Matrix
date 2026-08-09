@@ -87,7 +87,7 @@ class SchemaRecord:
         """Return a fresh decoded schema document for an isolated caller."""
 
         value = json.loads(self.canonical_json)
-        if not isinstance(value, dict):
+        if not isinstance(value, dict):  # Defensive; construction already enforces this.
             raise AssertionError("schema record root is not an object")
         return value
 
