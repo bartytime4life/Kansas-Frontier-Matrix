@@ -1,0 +1,114 @@
+name: automation-draft-pr-opener-test
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/automation-draft-pr-opener.yml"
+      - ".github/workflows/automation-draft-pr-opener-test.yml"
+      - "contracts/governance/automation_pr_proposal.md"
+      - "tools/validators/governance/validate_automation_pr_proposal.py"
+      - "tools/validators/governance/validate_automation_pr_live_binding.py"
+      - "tests/validators/test_validate_automation_pr_live_binding.py"
+      - "docs/runbooks/AUTOMATION_DRAFT_PR_OPENER.md"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/automation-draft-pr-opener.yml"
+      - ".github/workflows/automation-draft-pr-opener-test.yml"
+      - "contracts/governance/automation_pr_proposal.md"
+      - "tools/validators/governance/validate_automation_pr_proposal.py"
+      - "tools/validators/governance/validate_automation_pr_live_binding.py"
+      - "tests/validators/test_validate_automation_pr_live_binding.py"
+      - "docs/runbooks/AUTOMATION_DRAFT_PR_OPENER.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Compile and run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/governance/validate_automation_pr_proposal.py \
+            tools/validators/governance/validate_automation_pr_live_binding.py \
+            tests/validators/test_validate_automation_pr_live_binding.py
+          python -m unittest -q tests.validators.test_validate_automation_pr_live_binding
+
+      - name: Guard privileged workflow trigger and permission boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path(".github/workflows/automation-draft-pr-opener.yml")
+          text = path.read_text(encoding="utf-8")
+
+          required = (
+              "repository_dispatch:",
+              "automation-pr-proposal-v1",
+              "pull-requests: write",
+              "contents: read",
+              "persist-credentials: false",
+              "validate_automation_pr_proposal.py",
+              "validate_automation_pr_live_binding.py",
+              "gh pr create",
+              "--draft",
+              "AUTOMATION_BASE_MOVED_BEFORE_PR_CREATE",
+              "AUTOMATION_HEAD_MOVED_BEFORE_PR_CREATE",
+              "AUTOMATION_PR_POSTCREATE_BINDING_FAILED",
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"missing privileged-workflow guard marker: {marker}")
+
+          forbidden = (
+              "pull_request_target:",
+              "workflow_run:",
+              "schedule:",
+              "contents: write",
+              "actions: write",
+              "issues: write",
+              "deployments: write",
+              "packages: write",
+              "id-token: write",
+              "gh pr merge",
+              "gh release create",
+              "git push",
+          )
+          for marker in forbidden:
+              if marker in text:
+                  raise SystemExit(f"forbidden privileged-workflow marker surfaced: {marker}")
+
+          if text.count("pull-requests: write") != 1:
+              raise SystemExit("pull-request write permission must occur exactly once")
+          PY
+
+      - name: Record test boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Automation draft PR opener test"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- This workflow has contents:read only and performs no PR, branch, issue, release, deployment, or publication mutation."
+            echo "- It checks deterministic git-binding behavior and static privileged-workflow guardrails; it does not exercise live pull-request creation."
+          } >> "$GITHUB_STEP_SUMMARY"
