@@ -95,8 +95,8 @@ class ReplaySafeEffectLedgerTests(unittest.TestCase):
 
     def test_cli_is_deterministic_and_does_not_echo_candidate_values(self) -> None:
         candidate = json.loads(EXECUTED.read_text(encoding="utf-8"))
-        secret = "synthetic-sensitive-subject-marker"
-        candidate["event"]["subject_ref"] = secret
+        sentinel = "synthetic-sensitive-subject-marker"
+        candidate["event"]["subject_ref"] = sentinel
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "candidate.json"
             path.write_text(json.dumps(candidate), encoding="utf-8")
@@ -107,7 +107,7 @@ class ReplaySafeEffectLedgerTests(unittest.TestCase):
                     self.assertEqual(main([str(path)]), 1)
                 outputs.append(stream.getvalue())
         self.assertEqual(outputs[0], outputs[1])
-        self.assertNotIn(secret, outputs[0])
+        self.assertNotIn(sentinel, outputs[0])
         self.assertIn("EVENT_ID_MISMATCH", outputs[0])
 
     def test_fixture_runner_is_explicitly_non_authoritative(self) -> None:
