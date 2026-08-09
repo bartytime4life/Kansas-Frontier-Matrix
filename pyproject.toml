@@ -17,6 +17,8 @@ authors = [{ name = "KFM Maintainers" }]
 dependencies = [
     # Registry API used by tools/validators/_common/local_resolver.py (jsonschema >=4.18).
     "jsonschema>=4.26.0,<5",
+    # Activates jsonschema's RFC 3339 date-time format check when a validator explicitly opts in.
+    "rfc3339-validator==0.1.4",
     # Exact RFC 8785 JCS implementation for deterministic common spec_hash support.
     "rfc8785==0.1.4",
     # Strict YAML parsing for repository governance projections and validators.
