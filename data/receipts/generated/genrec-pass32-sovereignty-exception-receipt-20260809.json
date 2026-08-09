@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-pass32-sovereignty-exception-receipt-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/sovereignty-exception-receipt.yml",
+    "contracts/policy/sovereignty_exception_receipt.md",
+    "docs/intake/exploratory/pass-32-sovereignty-exception-receipt-source-map.md",
+    "fixtures/contracts/v1/policy/sovereignty_exception_receipt/cases.json",
+    "schemas/contracts/v1/policy/sovereignty_exception_receipt.schema.json",
+    "tests/validators/test_validate_sovereignty_exception_receipt.py",
+    "tools/validators/policy/validate_sovereignty_exception_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/sovereignty-exception-receipt.yml": "sha256:b25676dab5f46dafa33bc3e06b42bca0d666de5eb61781062344ab386b90a6d3",
+    "contracts/policy/sovereignty_exception_receipt.md": "sha256:fcd717a34bd81b6dc67f82e7768362f0a30b3141b2cb218363bd875b3ecd809a",
+    "docs/intake/exploratory/pass-32-sovereignty-exception-receipt-source-map.md": "sha256:a68b12f4852724179427e675f7c56c8276db0695cdc74874193025901422689f",
+    "fixtures/contracts/v1/policy/sovereignty_exception_receipt/cases.json": "sha256:0431b709f61fd11dab5558343436c62815477b889d6fe322497dc66bd4b12551",
+    "schemas/contracts/v1/policy/sovereignty_exception_receipt.schema.json": "sha256:c32cef88b4ec5ec8156ab512c798b8db5f4688d42fd241dcf5d95ec48a046188",
+    "tests/validators/test_validate_sovereignty_exception_receipt.py": "sha256:bcd3c7fa6b2db8cda6e5bff4689de72c76b36f1d627d3757c52dc40201615afb",
+    "tools/validators/policy/validate_sovereignty_exception_receipt.py": "sha256:7ec9c186e3dc9e1c87514b01fca6a93f7c7e5b8872875c9d7643597de68e949f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:625ecdf630609bc5650505b1a8cd47e81a06ba44279cf8ebd2e8cfa2d3e58e24",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local PDF inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0007",
+      "repo:contracts/policy/conditional_decision_closure.md@73be9400ffecbc5908bf4aa127de83d79cd40864",
+      "repo:contracts/governance/ReviewRecord.md@73be9400ffecbc5908bf4aa127de83d79cd40864",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@73be9400ffecbc5908bf4aa127de83d79cd40864"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/sovereignty-exception-receipt.yml": "PROPOSED",
+    "contracts/policy/sovereignty_exception_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-sovereignty-exception-receipt-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/policy/sovereignty_exception_receipt/cases.json": "PROPOSED",
+    "schemas/contracts/v1/policy/sovereignty_exception_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_sovereignty_exception_receipt.py": "PROPOSED",
+    "tools/validators/policy/validate_sovereignty_exception_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Three PASS, one ABSTAIN, and eight DENY cases passed exact deterministic polarity checks."
+    },
+    {
+      "gate": "focused-and-adjacent-policy-tests",
+      "outcome": "PASS",
+      "reason": "Eight focused tests and forty adjacent policy tests, including thirty-nine subtests, passed locally."
+    },
+    {
+      "gate": "policy-validator-discovery",
+      "outcome": "PASS",
+      "reason": "The broad policy readiness guard recognized the validator's dedicated test and workflow while retaining the repository-wide evaluator hold."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-sovereignty-exception-receipts",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0007"
+    },
+    {
+      "id": "repository:conditional-decision-closure",
+      "validated": true,
+      "evidence_ref": "repo:contracts/policy/conditional_decision_closure.md@73be9400ffecbc5908bf4aa127de83d79cd40864"
+    },
+    {
+      "id": "repository:review-record-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/ReviewRecord.md@73be9400ffecbc5908bf4aa127de83d79cd40864"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@73be9400ffecbc5908bf4aa127de83d79cd40864"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T18:36:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SovereigntyExceptionReceipt candidate derived from Pass 32. It records an asserted external policy/review disposition with provenance, expiry, and obligations while granting no exception authority, policy override, access, lifecycle write, promotion, release, deployment, or publication."
+}
