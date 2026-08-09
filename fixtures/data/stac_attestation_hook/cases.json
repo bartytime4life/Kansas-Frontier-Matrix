@@ -44,19 +44,114 @@
     "projection_id": "stac-attestation-hook:000000000000000000000000"
   },
   "cases": [
-    {"case_id":"valid-candidate","mutation":"NONE","expected_outcome":"PASS","expected_codes":[]},
-    {"case_id":"valid-unreleased-no-hook","mutation":"UNRELEASED_NO_HOOK","expected_outcome":"PASS","expected_codes":[]},
-    {"case_id":"candidate-missing-hook","mutation":"MISSING_HOOK","expected_outcome":"FAIL","expected_codes":["ATTESTATION_LINK_REQUIRED"]},
-    {"case_id":"prov-is-not-hook","mutation":"PROV_ONLY","expected_outcome":"FAIL","expected_codes":["ATTESTATION_LINK_REQUIRED"]},
-    {"case_id":"href-mismatch","mutation":"HREF_MISMATCH","expected_outcome":"FAIL","expected_codes":["ATTESTATION_HREF_MISMATCH"]},
-    {"case_id":"certified-hash-mismatch","mutation":"CERTIFIED_HASH_MISMATCH","expected_outcome":"FAIL","expected_codes":["CERTIFIED_SPEC_HASH_MISMATCH"]},
-    {"case_id":"media-type","mutation":"MEDIA_TYPE","expected_outcome":"FAIL","expected_codes":["ATTESTATION_MEDIA_TYPE_INVALID"]},
-    {"case_id":"placeholder-digest","mutation":"PLACEHOLDER_DIGEST","expected_outcome":"FAIL","expected_codes":["BUNDLE_DIGEST_PLACEHOLDER_DENIED"]},
-    {"case_id":"duplicate-hook","mutation":"DUPLICATE_HOOK","expected_outcome":"FAIL","expected_codes":["ATTESTATION_LINK_COUNT_INVALID","LINK_DUPLICATE"]},
-    {"case_id":"unordered-links","mutation":"UNORDERED_LINKS","expected_outcome":"FAIL","expected_codes":["LINKS_NOT_CANONICAL"]},
-    {"case_id":"floating-latest","mutation":"FLOATING_LATEST","expected_outcome":"FAIL","expected_codes":["FLOATING_LATEST_REFERENCE"]},
-    {"case_id":"spec-hash-mismatch","mutation":"SPEC_HASH_MISMATCH","expected_outcome":"FAIL","expected_codes":["SPEC_HASH_MISMATCH"]},
-    {"case_id":"authority-overclaim","mutation":"AUTHORITY_OVERCLAIM","expected_outcome":"FAIL","expected_codes":["SCHEMA_INVALID"]},
-    {"case_id":"missing-bundle-ref","mutation":"MISSING_BUNDLE_REF","expected_outcome":"FAIL","expected_codes":["SCHEMA_INVALID"]}
+    {
+      "case_id": "valid-candidate",
+      "mutation": "NONE",
+      "expected_outcome": "PASS",
+      "expected_codes": []
+    },
+    {
+      "case_id": "valid-unreleased-no-hook",
+      "mutation": "UNRELEASED_NO_HOOK",
+      "expected_outcome": "PASS",
+      "expected_codes": []
+    },
+    {
+      "case_id": "candidate-missing-hook",
+      "mutation": "MISSING_HOOK",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ATTESTATION_LINK_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "prov-is-not-hook",
+      "mutation": "PROV_ONLY",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ATTESTATION_LINK_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "href-mismatch",
+      "mutation": "HREF_MISMATCH",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ATTESTATION_HREF_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "certified-hash-mismatch",
+      "mutation": "CERTIFIED_HASH_MISMATCH",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "CERTIFIED_SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "media-type",
+      "mutation": "MEDIA_TYPE",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ATTESTATION_MEDIA_TYPE_INVALID"
+      ]
+    },
+    {
+      "case_id": "placeholder-digest",
+      "mutation": "PLACEHOLDER_DIGEST",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "BUNDLE_DIGEST_PLACEHOLDER_DENIED"
+      ]
+    },
+    {
+      "case_id": "duplicate-hook",
+      "mutation": "DUPLICATE_HOOK",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ATTESTATION_LINK_COUNT_INVALID",
+        "LINK_DUPLICATE"
+      ]
+    },
+    {
+      "case_id": "unordered-links",
+      "mutation": "UNORDERED_LINKS",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "LINKS_NOT_CANONICAL"
+      ]
+    },
+    {
+      "case_id": "floating-latest",
+      "mutation": "FLOATING_LATEST",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "FLOATING_LATEST_REFERENCE"
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "mutation": "SPEC_HASH_MISMATCH",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "authority-overclaim",
+      "mutation": "AUTHORITY_OVERCLAIM",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "missing-bundle-ref",
+      "mutation": "MISSING_BUNDLE_REF",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "SCHEMA_INVALID"
+      ]
+    }
   ]
 }
