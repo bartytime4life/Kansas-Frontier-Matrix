@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/governance/inspectable_claim_carrier_assessment.schema.json",
+  "title": "InspectableClaimCarrierAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "assessment_id", "carrier_kind", "claim_ref", "evidence_bundle_ref", "policy_decision_ref", "release_manifest_ref", "correction_ref", "rollback_ref", "negative_states", "public_exposure", "effects"],
+  "properties": {
+    "profile": {"const": "kfm.governance.inspectable-claim-carrier-assessment.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:claim-carrier:[0-9a-f]{64}$"},
+    "carrier_kind": {"enum": ["MAP_LAYER", "TILE_ARTIFACT", "GRAPH_PROJECTION", "DASHBOARD", "EXPORT", "STORY", "AI_ANSWER", "THREE_D_SCENE"]},
+    "claim_ref": {"type": "string", "pattern": "^kfm:claim:[A-Za-z0-9._:-]+$"},
+    "evidence_bundle_ref": {"type": "string", "pattern": "^kfm:evidence-bundle:[A-Za-z0-9._:-]+$"},
+    "policy_decision_ref": {"type": "string", "pattern": "^kfm:policy-decision:[A-Za-z0-9._:-]+$"},
+    "release_manifest_ref": {"type": "string", "pattern": "^kfm:release-manifest:[A-Za-z0-9._:-]+$"},
+    "correction_ref": {"type": "string", "pattern": "^kfm:correction:[A-Za-z0-9._:-]+$"},
+    "rollback_ref": {"type": "string", "pattern": "^kfm:rollback:[A-Za-z0-9._:-]+$"},
+    "negative_states": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"enum": ["ABSTAIN", "DENY", "ERROR", "STALE", "CORRECTED", "WITHDRAWN"]}},
+    "public_exposure": {"type": "boolean"},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["creates_claim", "creates_evidence", "approves_policy", "promotes", "releases", "deploys", "publishes"],
+      "properties": {
+        "creates_claim": {"const": false}, "creates_evidence": {"const": false}, "approves_policy": {"const": false},
+        "promotes": {"const": false}, "releases": {"const": false}, "deploys": {"const": false}, "publishes": {"const": false}
+      }
+    }
+  }
+}
