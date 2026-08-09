@@ -1,0 +1,78 @@
+name: operational-trust-rollup
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/operational-trust-rollup.yml"
+      - "contracts/release/operational_trust_rollup.md"
+      - "docs/intake/exploratory/pass12-operational-trust-rollup-source-map.md"
+      - "schemas/contracts/v1/release/operational_trust_rollup.schema.json"
+      - "fixtures/contracts/v1/release/operational_trust_rollup/**"
+      - "tools/validators/release/validate_operational_trust_rollup.py"
+      - "tests/validators/test_validate_operational_trust_rollup.py"
+      - "data/receipts/generated/genrec-pass12-operational-trust-rollup-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/operational-trust-rollup.yml"
+      - "contracts/release/operational_trust_rollup.md"
+      - "docs/intake/exploratory/pass12-operational-trust-rollup-source-map.md"
+      - "schemas/contracts/v1/release/operational_trust_rollup.schema.json"
+      - "fixtures/contracts/v1/release/operational_trust_rollup/**"
+      - "tools/validators/release/validate_operational_trust_rollup.py"
+      - "tests/validators/test_validate_operational_trust_rollup.py"
+      - "data/receipts/generated/genrec-pass12-operational-trust-rollup-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: operational-trust-rollup-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run deterministic no-network rollup validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/release/validate_operational_trust_rollup.py tests/validators/test_validate_operational_trust_rollup.py
+          python -m unittest tests.validators.test_validate_operational_trust_rollup --verbose
+          python tools/validators/release/validate_operational_trust_rollup.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass12-operational-trust-rollup-20260809.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Operational trust rollup"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: read-only fixture projection of evidence, policy, signature, validation, review, catalog, correction, and rollback state."
+            echo "- Boundary: READY is not promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
