@@ -10,8 +10,10 @@ object existence, actor identity, source authority, evidence closure, policy app
 review, release, publication, or public safety.
 
 The `valid/` lane covers the required fields and the optional `issuer`. The `invalid/`
-lane covers missing required fields, an unsupported `kind`, and additional properties.
-The current shared JSON Schema runner does not enable format checking, so these fixtures
-do not claim enforcement of RFC 3339 `date-time` semantics beyond the schema declaration.
+lane covers missing required fields, an unsupported `kind`, additional properties, and
+an invalid `issued_at` value. The IdentityToken validator opts into JSON Schema format
+checking, so the schema's existing `format: date-time` declaration is enforced for this
+fixture family. The shared runner remains backward-compatible by leaving format
+checking disabled unless a validator explicitly opts in.
 
 All fixture values are synthetic and public-safe.
