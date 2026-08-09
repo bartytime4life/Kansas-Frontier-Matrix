@@ -1,0 +1,96 @@
+# Validate fixture-only signed-bundle timestamp-evidence records.
+# This workflow performs no timestamping, cryptographic verification, release, or publication action.
+name: signed-bundle-timestamp-evidence
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/signed-bundle-timestamp-evidence.yml"
+      - "contracts/release/signed_bundle_timestamp_evidence.md"
+      - "schemas/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json"
+      - "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/**"
+      - "tools/validators/release/validate_signed_bundle_timestamp_evidence.py"
+      - "tests/release/test_signed_bundle_timestamp_evidence.py"
+      - "docs/intake/exploratory/pass-22-signed-bundle-timestamp-evidence-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass22-signed-bundle-timestamp-evidence-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/signed-bundle-timestamp-evidence.yml"
+      - "contracts/release/signed_bundle_timestamp_evidence.md"
+      - "schemas/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json"
+      - "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/**"
+      - "tools/validators/release/validate_signed_bundle_timestamp_evidence.py"
+      - "tests/release/test_signed_bundle_timestamp_evidence.py"
+      - "docs/intake/exploratory/pass-22-signed-bundle-timestamp-evidence-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass22-signed-bundle-timestamp-evidence-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signed-bundle-timestamp-evidence-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-signed-bundle-timestamp-evidence:
+    name: validate-signed-bundle-timestamp-evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/release \
+            --pattern 'test_signed_bundle_timestamp_evidence.py' \
+            --verbose
+
+      - name: Replay exact fixture outcomes
+        run: python tools/validators/release/validate_signed_bundle_timestamp_evidence.py --fixtures
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass22-signed-bundle-timestamp-evidence-20260809.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### SignedBundleTimestampEvidence"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic timestamp-evidence references, subject binding, finite assessment, deterministic identity, and non-authority flags."
+            echo "- Tests perform no TSA, Cosign, Rekor, registry, network, evidence, policy, review, release, or publication operation."
+            echo "- A green result does not verify a timestamp or signature, authenticate review, promote, release, deploy, publish, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
+
