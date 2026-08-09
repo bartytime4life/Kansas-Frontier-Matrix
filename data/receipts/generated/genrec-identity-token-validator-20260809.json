@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-identity-token-validator-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/identity-token-validation.yml",
+    "fixtures/contracts/v1/common/identity_token/README.md",
+    "fixtures/contracts/v1/common/identity_token/invalid/additional-property.json",
+    "fixtures/contracts/v1/common/identity_token/invalid/bad-kind.json",
+    "fixtures/contracts/v1/common/identity_token/invalid/missing-kind.json",
+    "fixtures/contracts/v1/common/identity_token/valid/minimal.json",
+    "fixtures/contracts/v1/common/identity_token/valid/with-issuer.json",
+    "tools/validators/validate_identity_token.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/identity-token-validation.yml": "sha256:a77b9f6714684d524b9de48148850f022da35f3322c11da4d3ebec9af968737e",
+    "fixtures/contracts/v1/common/identity_token/README.md": "sha256:cbec482ffaaf6664194b25fe2b65774d1528992f941101f82ad51efd4251bf13",
+    "fixtures/contracts/v1/common/identity_token/invalid/additional-property.json": "sha256:02a52d674a9a1420187f9d99285e689720af128a52c6e7985a16a748cfce93ef",
+    "fixtures/contracts/v1/common/identity_token/invalid/bad-kind.json": "sha256:804ca4bef510e5aaba01aa35699589bb1cc3d63f12eabbc86efd3d27e56204b4",
+    "fixtures/contracts/v1/common/identity_token/invalid/missing-kind.json": "sha256:8fb0b731d820eb41398407645e8da836fc280b2c29bbec17f6f426920881c7c1",
+    "fixtures/contracts/v1/common/identity_token/valid/minimal.json": "sha256:3d986d6ac25fac0c12708297538da0ede37dce593d255d6e362535399e0604f8",
+    "fixtures/contracts/v1/common/identity_token/valid/with-issuer.json": "sha256:b45135f4d45f82b61c105d47ff562ea0a5646760cdd44a2fff45a89c3523b4f1",
+    "tools/validators/validate_identity_token.py": "sha256:8b7d2c02ca36b7f2151ec252e3a1bde827f2178987dee2a05656cc11e108d795"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:673d0c33ce29256dd66d57d61b7752f42dfe4c14f33a57290354b45d70660034",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack",
+      "repo:schemas/contracts/v1/common/identity_token.schema.json@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac",
+      "repo:contracts/common/identity_token.md@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac",
+      "repo:tools/validators/_common/jsonschema_runner.py@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/identity-token-validation.yml": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/invalid/additional-property.json": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/invalid/bad-kind.json": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/invalid/missing-kind.json": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/valid/minimal.json": "CONFIRMED",
+    "fixtures/contracts/v1/common/identity_token/valid/with-issuer.json": "CONFIRMED",
+    "tools/validators/validate_identity_token.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "declared-validator-path",
+      "outcome": "PASS",
+      "reason": "The authored validator occupies the exact path already declared by the existing IdentityToken schema and delegates to the existing shared JSON Schema runner."
+    },
+    {
+      "gate": "fixture-polarity-design",
+      "outcome": "PASS",
+      "reason": "The authored public-safe fixtures cover required fields, optional issuer, closed kind enumeration, and additionalProperties denial without inventing identity grammar."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this receipt is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "date-time-format-enforcement",
+      "outcome": "SKIPPED",
+      "reason": "The current shared JSON Schema runner does not enable a format checker; this slice discloses rather than silently overclaims RFC 3339 date-time enforcement."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head and has not run at authoring time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:kfm-components-pass-13-artifactization",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-13#artifactization-and-proof-object-schema-pack"
+    },
+    {
+      "id": "repository:identity-token-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/common/identity_token.schema.json@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac"
+    },
+    {
+      "id": "repository:identity-token-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/identity_token.md@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f8aaeb2c7a596686712523bf03c5b37c93b6e5ac"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:49:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the validator and fixture paths already declared by the proposed common IdentityToken schema. The change does not alter IdentityToken semantics or schema fields, accept ADR-0013, define a universal identity grammar, create authentication authority, or grant evidence, policy, review, promotion, release, publication, or public-use authority."
+}
