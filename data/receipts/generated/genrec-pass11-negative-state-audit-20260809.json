@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-pass11-negative-state-audit-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pass11-negative-state-audit.yml",
+    "contracts/governance/negative_state_audit.md",
+    "docs/intake/exploratory/pass11-negative-state-audit-source-map.md",
+    "fixtures/contracts/v1/governance/negative_state_audit/cases.json",
+    "schemas/contracts/v1/governance/negative_state_audit.schema.json",
+    "tests/validators/governance/test_validate_negative_state_audit.py",
+    "tools/validators/governance/validate_negative_state_audit.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pass11-negative-state-audit.yml": "sha256:f1fa323f0f2c79518490bfd8abe8cfef9d47dce2ee0bccfa7542735f9cee7c16",
+    "contracts/governance/negative_state_audit.md": "sha256:c8c30315959fc2da629c6739e5820fbe5abf7a57f339e499316d5ee56942e594",
+    "docs/intake/exploratory/pass11-negative-state-audit-source-map.md": "sha256:70d53e7c2c973a7babd286a975f0a7325d51f8602a886bf6a7ce0aca243ad836",
+    "fixtures/contracts/v1/governance/negative_state_audit/cases.json": "sha256:a906b8572385003dcf0bddb641272bf9f6361c22d3f7b065a651f5fbbe91fbe4",
+    "schemas/contracts/v1/governance/negative_state_audit.schema.json": "sha256:5b84be7bac6bd162b2b2125310ee41d135b3b148b5f42f15b8000d99aeb2d90d",
+    "tests/validators/governance/test_validate_negative_state_audit.py": "sha256:ef2752a3b193310f5e735a66e76488eed9ba34e6ad5d8e55c2e4c68ba11b1ed1",
+    "tools/validators/governance/validate_negative_state_audit.py": "sha256:e3c897bbebe3c91a314b89bb80deeeb6e725d7ca9ae61d5b100675228ebbf27f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:3c04803162eef3e0c677c898ef40856d4f032a9c8d4336ef87bb7f79947e3526",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python 3 validator harness",
+      "jsonschema",
+      "PyYAML"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e63ad81e0c19595d58147aefee7aacf193f6d233602a916ae7fee02f14f9246c",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Components_Pass_11_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "repo:main@8f26a3ed8d2fbc2f40fecf722177aeae2cb6297a",
+      "repo:docs/doctrine/directory-rules.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pass11-negative-state-audit.yml": "PROPOSED",
+    "contracts/governance/negative_state_audit.md": "PROPOSED",
+    "docs/intake/exploratory/pass11-negative-state-audit-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/negative_state_audit/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/negative_state_audit.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_negative_state_audit.py": "PROPOSED",
+    "tools/validators/governance/validate_negative_state_audit.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-python-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused tests compiled."
+    },
+    {
+      "gate": "local-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema passed meta-validation."
+    },
+    {
+      "gate": "local-focused-unittest",
+      "outcome": "PASS",
+      "reason": "7 focused tests passed."
+    },
+    {
+      "gate": "local-fixture-replay",
+      "outcome": "PASS",
+      "reason": "7 exact fixture outcomes matched."
+    },
+    {
+      "gate": "local-workflow-yaml",
+      "outcome": "PASS",
+      "reason": "Dedicated read-only workflow parsed and retained immutable action pins."
+    },
+    {
+      "gate": "local-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass11-idea-atlas",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Components_Pass_11_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    },
+    {
+      "id": "attachment:directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository:adr-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:28:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only three-way negative-state audit. It grants no evidence, policy, lifecycle, release, deployment, publication, or public-use authority."
+}
