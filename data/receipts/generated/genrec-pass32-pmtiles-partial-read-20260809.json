@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-pass32-pmtiles-partial-read-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pmtiles-attestation.yml",
+    "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md",
+    "fixtures/pmtiles/attestation/README.md",
+    "fixtures/pmtiles/attestation/partial-read/README.md",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.expected_error.txt",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.json",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.json",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.json",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.expected_error.txt",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.json",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.expected_error.txt",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.json",
+    "fixtures/pmtiles/attestation/partial-read/valid/complete.json",
+    "tests/validators/test_pmtiles_attestation_bundle.py",
+    "tools/validators/pmtiles/README.md",
+    "tools/validators/pmtiles/verify_partial_read.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-attestation.yml": "sha256:a58cd3eef8ca5d81b6d7a131c337952eb5fe2de543737ba3ee846e966c3076c7",
+    "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md": "sha256:4c7280a143eb5bb3b86a33b29020a408afa4fdc8130e76d566f399c1c3d27535",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "sha256:ca0f0e2da097a81d517601bd91c9d0c48e3b6ad45dc1ab6cf028463cc99394ef",
+    "fixtures/pmtiles/attestation/README.md": "sha256:dc024b8fb8ce32b2838f05695c332ae96ca232e3d4642bdbe91ffb7bab081211",
+    "fixtures/pmtiles/attestation/partial-read/README.md": "sha256:997b14c884e0ed1e3dc2b80d1784f580a38ce37cdada249bcaad306bd882f12f",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.expected_error.txt": "sha256:81dbb5b4d45a985340e5a40578f730364525b1a88a44e2bb09d56cfdb8f2c021",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.json": "sha256:6f7acc65be3fa740d25bafaabdf6a44ba12c089c023c281054fc38c2dd461d81",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.expected_error.txt": "sha256:2aec1a9e4dd0a7229d770010bb65e95cc90025615bc67c3b9477ce2bc8b3c541",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.json": "sha256:55a553003bbd1b269cd2bb43412e04dcef1277f9c1313de44d216ba4a8d29c07",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.expected_error.txt": "sha256:8f4b7ecc36e781251c24dcb9a15f4bb0e45823b1f8a72acaa9b879745fdf14c9",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.json": "sha256:52265cd2698d9b89f98e2871a45b74849d92e738a40f4d96766d8cdc2eeb5d57",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.expected_error.txt": "sha256:5da4f8780a7f5978b826b792520ddbf9fab35f35933979b122744c659a6213e3",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.json": "sha256:a090ec07b2cb2c0656dd3bd7caad8e21c77661667a93a9f31641587772a2575c",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.expected_error.txt": "sha256:cc46b13658931c1fd1f9ede5df27d7df59dcb081dfd11d89984bfc6cad673915",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.json": "sha256:063751a59eef171b46605207e0c44d89df6c69a41f5de1b6f392704ade8c7062",
+    "fixtures/pmtiles/attestation/partial-read/valid/complete.json": "sha256:f0c7e3ff79a270fa8e439be29317849b8faef7273c7bd85d22cada58e246c4a4",
+    "tests/validators/test_pmtiles_attestation_bundle.py": "sha256:c6080ea9c874f4d9521a68fb044bf36708fe8d5be5c147e7b01f368bae894a84",
+    "tools/validators/pmtiles/README.md": "sha256:b5a638f6fe4aa6537e5354853e96c4d220dcb8893eb36988484856b4fbc3cb91",
+    "tools/validators/pmtiles/verify_partial_read.py": "sha256:c3b56479c6c17dd3cf2f412b41f855f8a2fbc520a049d0e81307c2a598717a75"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:d8845c8309d3cac282af0a124bdbe1d7c246d5acefeb012dcc72aa1c414bb5a7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector evidence inspection",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python preflight"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d8845c8309d3cac282af0a124bdbe1d7c246d5acefeb012dcc72aa1c414bb5a7"
+    ],
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "New Ideas"
+    ],
+    "evidence_refs": [
+      "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-PROG-0015",
+      "gdrive://142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@76da0a048590710bd927891d43075d989568bf7d",
+      "repo:docs/doctrine/directory-rules.md@76da0a048590710bd927891d43075d989568bf7d",
+      "repo:docs/standards/pmtiles/PMIDX_SPEC_V1.md@76da0a048590710bd927891d43075d989568bf7d",
+      "repo:tools/validators/pmtiles/verify_merkle.py@76da0a048590710bd927891d43075d989568bf7d"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pmtiles-attestation.yml": "CONFIRMED",
+    "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md": "PROPOSED",
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/README.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/partial-read/README.md": "PROPOSED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.expected_error.txt": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/cross_chunk_declaration.json": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.expected_error.txt": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/leaf_digest_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.expected_error.txt": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/pmsig_root_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.expected_error.txt": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_bytes_mismatch.json": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.expected_error.txt": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/invalid/range_not_declared.json": "CONFIRMED",
+    "fixtures/pmtiles/attestation/partial-read/valid/complete.json": "CONFIRMED",
+    "tests/validators/test_pmtiles_attestation_bundle.py": "CONFIRMED",
+    "tools/validators/pmtiles/README.md": "PROPOSED",
+    "tools/validators/pmtiles/verify_partial_read.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-pmtiles-suite-26-tests",
+      "outcome": "PASS",
+      "reason": "The existing and extended PMTiles unittest module passed all 26 tests."
+    },
+    {
+      "gate": "partial-read-fixture-polarity-1-structural-hold-5-deny",
+      "outcome": "PASS",
+      "reason": "All six synthetic descriptors produced their exact finite status and finding list."
+    },
+    {
+      "gate": "no-network-and-no-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The verifier imports no network client; focused tests patch socket and urllib entry points and assert authority NONE plus all six holds."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "Repository-native validation binds all 19 non-receipt artifact paths to their final SHA-256 bytes."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P32-PROG-0015",
+      "validated": true,
+      "evidence_ref": "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-PROG-0015"
+    },
+    {
+      "id": "ADR-0029@76da0a0",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@76da0a048590710bd927891d43075d989568bf7d"
+    },
+    {
+      "id": "PMIDX-SPEC-V1@76da0a0",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/pmtiles/PMIDX_SPEC_V1.md@76da0a048590710bd927891d43075d989568bf7d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T12:00:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only partial-read compatibility verifier adapted from Pass 32 card KFM-P32-PROG-0015. Structural success remains a HOLD: no live range fetch, Bao adoption, authenticated range metadata, cryptographic signature verification, full-archive digest replay, policy, release, deployment, publication, or public-use authority is created."
+}
