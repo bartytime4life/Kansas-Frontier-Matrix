@@ -86,316 +86,6 @@
         "settings_changed": false,
         "history_rewritten": false
       }
-    },
-    "closed": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "READY_PR",
-        "authorization_state": "PRESENT",
-        "expires_at": "2026-08-09T01:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "CLOSED_UNMERGED",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": null,
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          },
-          {
-            "type": "READY_FOR_REVIEW",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:10:00Z"
-          },
-          {
-            "type": "CLOSED",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:20:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "merged_draft": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "DRAFT_PR",
-        "authorization_state": "PRESENT",
-        "expires_at": "2026-08-09T01:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "MERGED",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": "dddddddddddddddddddddddddddddddddddddddd",
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          },
-          {
-            "type": "MERGED",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:20:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "ready_draft": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "DRAFT_PR",
-        "authorization_state": "PRESENT",
-        "expires_at": "2026-08-09T01:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "OPEN_READY",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": null,
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          },
-          {
-            "type": "READY_FOR_REVIEW",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:10:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "merged_ready": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "READY_PR",
-        "authorization_state": "PRESENT",
-        "expires_at": "2026-08-09T01:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "MERGED",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": "dddddddddddddddddddddddddddddddddddddddd",
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          },
-          {
-            "type": "READY_FOR_REVIEW",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:10:00Z"
-          },
-          {
-            "type": "MERGED",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:20:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "missing": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "DRAFT_PR",
-        "authorization_state": "MISSING",
-        "expires_at": null
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "OPEN_DRAFT",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": null,
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "expired": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "DRAFT_PR",
-        "authorization_state": "EXPIRED",
-        "expires_at": "2026-08-08T21:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "OPEN_DRAFT",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": null,
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
-    },
-    "unknown": {
-      "object_type": "TerminalStateAssessment",
-      "schema_version": "1.0.0",
-      "profile": "kfm.repository-control.terminal-state-assessment.fixture.v1",
-      "evaluated_at": "2026-08-08T23:00:00Z",
-      "repository": {
-        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
-        "default_branch": "main",
-        "main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      },
-      "authorization": {
-        "operation_id": "op:fixture:terminal:001",
-        "branch": "agent/example",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "terminal_ceiling": "DRAFT_PR",
-        "authorization_state": "PRESENT",
-        "expires_at": "2026-08-09T01:00:00Z"
-      },
-      "observed": {
-        "pr_number": 9999,
-        "state": "UNKNOWN",
-        "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "merge_commit_sha": null,
-        "events": [
-          {
-            "type": "OPENED_DRAFT",
-            "actor": "fixture-actor",
-            "at": "2026-08-08T22:00:00Z"
-          }
-        ]
-      },
-      "governance": {
-        "execution_mode": "FIXTURE_ONLY",
-        "mutation_performed": false,
-        "ready_transition_authorized": false,
-        "merge_authorized": false,
-        "settings_changed": false,
-        "history_rewritten": false
-      }
     }
   },
   "cases": [
@@ -413,13 +103,69 @@
     },
     {
       "case_id": "closed-unmerged-within-ready-ceiling",
-      "base": "closed",
+      "base": "ready",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/observed/state",
+          "value": "CLOSED_UNMERGED"
+        },
+        {
+          "op": "replace",
+          "path": "/observed/events",
+          "value": [
+            {
+              "type": "OPENED_DRAFT",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:00:00Z"
+            },
+            {
+              "type": "READY_FOR_REVIEW",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:10:00Z"
+            },
+            {
+              "type": "CLOSED",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:20:00Z"
+            }
+          ]
+        }
+      ],
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "merged-from-draft-divergence",
-      "base": "merged_draft",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/observed/state",
+          "value": "MERGED"
+        },
+        {
+          "op": "replace",
+          "path": "/observed/merge_commit_sha",
+          "value": "dddddddddddddddddddddddddddddddddddddddd"
+        },
+        {
+          "op": "replace",
+          "path": "/observed/events",
+          "value": [
+            {
+              "type": "OPENED_DRAFT",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:00:00Z"
+            },
+            {
+              "type": "MERGED",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:20:00Z"
+            }
+          ]
+        }
+      ],
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -430,7 +176,30 @@
     },
     {
       "case_id": "ready-from-draft-divergence",
-      "base": "ready_draft",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/observed/state",
+          "value": "OPEN_READY"
+        },
+        {
+          "op": "replace",
+          "path": "/observed/events",
+          "value": [
+            {
+              "type": "OPENED_DRAFT",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:00:00Z"
+            },
+            {
+              "type": "READY_FOR_REVIEW",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:10:00Z"
+            }
+          ]
+        }
+      ],
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -441,7 +210,19 @@
     },
     {
       "case_id": "authorization-missing",
-      "base": "missing",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/authorization/authorization_state",
+          "value": "MISSING"
+        },
+        {
+          "op": "replace",
+          "path": "/authorization/expires_at",
+          "value": null
+        }
+      ],
       "expected_outcome": "ABSTAIN",
       "expected_findings": [
         {
@@ -452,7 +233,19 @@
     },
     {
       "case_id": "authorization-expired",
-      "base": "expired",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/authorization/authorization_state",
+          "value": "EXPIRED"
+        },
+        {
+          "op": "replace",
+          "path": "/authorization/expires_at",
+          "value": "2026-08-08T21:00:00Z"
+        }
+      ],
       "expected_outcome": "ABSTAIN",
       "expected_findings": [
         {
@@ -463,7 +256,14 @@
     },
     {
       "case_id": "host-state-unknown",
-      "base": "unknown",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/observed/state",
+          "value": "UNKNOWN"
+        }
+      ],
       "expected_outcome": "ABSTAIN",
       "expected_findings": [
         {
@@ -515,12 +315,38 @@
     },
     {
       "case_id": "merged-missing-commit",
-      "base": "merged_ready",
+      "base": "ready",
       "mutations": [
+        {
+          "op": "replace",
+          "path": "/observed/state",
+          "value": "MERGED"
+        },
         {
           "op": "replace",
           "path": "/observed/merge_commit_sha",
           "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/observed/events",
+          "value": [
+            {
+              "type": "OPENED_DRAFT",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:00:00Z"
+            },
+            {
+              "type": "READY_FOR_REVIEW",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:10:00Z"
+            },
+            {
+              "type": "MERGED",
+              "actor": "fixture-actor",
+              "at": "2026-08-08T22:20:00Z"
+            }
+          ]
         }
       ],
       "expected_outcome": "DENY",
@@ -551,4 +377,32 @@
     {
       "case_id": "spec-hash-mismatch",
       "base": "draft",
-      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb"À¢&W‡V7FVEö÷WF6öÖR#¢$DTå’"À¢&W‡V7FVEöf–æF–æw2#¢°¢°¢&6öFR#¢%DU$Ô”äÅõ5T5ô„4…ôÔ•4ÔD4‚"À¢'F‚#¢"÷7V5ö†6‚ ¢Ð¢Ð¢ÒÀ¢°¢&66Uö–B#¢&WF†÷&—G’Ö÷fW'&V6‚"À¢&&6R#¢&G&gB"À¢&×WFF–öç2#¢°¢°¢&÷#¢'&WÆ6R"À¢'F‚#¢"öv÷fW&ææ6RöÖW&vUöWF†÷&—¦VB"À¢'fÇVR#¢G'VP¢Ð¢ÒÀ¢&W‡V7FVEö÷WF6öÖR#¢$DTå’"À¢&W‡V7FVEöf–æF–æw2#¢°¢°¢&6öFR#¢%DU$Ô”äÅõ44„TÔô”ådÄ”B"À¢'F‚#¢"öv÷fW&ææ6RöÖW&vUöWF†÷&—¦VB ¢Ð¢Ð¢Ð¢Ð§Ð
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TERMINAL_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "draft",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/governance/merge_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TERMINAL_SCHEMA_INVALID",
+          "path": "/governance/merge_authorized"
+        }
+      ]
+    }
+  ]
+}
