@@ -35,7 +35,8 @@ This is the `water_planning` bounded-context lane under the canonical [`contract
 
 The lane currently contains:
 
-- 15 entity contracts introduced for the bounded modeling work under [issue #1647](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1647);
+- 15 core entity contracts introduced for the bounded modeling work under [issue #1647](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1647);
+- one synthetic `PlanningScenarioManifest` pilot for bounded, non-predictive planning support;
 - one source-grounded RAC geometry and county-crosswalk registry contract;
 - semantic distinctions for identity, time, amount, evidence, geometry, correction, and release posture; and
 - links to paired proposed schemas, synthetic fixtures, validators, tests, and internal records.
@@ -66,11 +67,11 @@ This existing same-path domain lane is a `PLACE` outcome under `DIR-AUTHROOT-002
 
 | Surface | Repository-grounded status | Authority limit |
 |---|---|---|
-| Semantic inventory | **CONFIRMED:** 15 entity contracts and one RAC registry contract are indexed below. | Presence is not contract promotion or implementation maturity. |
+| Semantic inventory | **CONFIRMED:** 16 entity contracts, including the synthetic scenario pilot, and one RAC registry contract are indexed below. | Presence is not contract promotion or implementation maturity. |
 | Contract lifecycle | **PROPOSED / draft.** Individual entity contracts retain proposed schema-scaffold posture; the RAC registry contract is proposed, source-grounded, and not released. | No contract is KFM-published or release-approved. |
-| Paired schemas | **CONFIRMED definition:** 17 proposed JSON Schema files cover 15 entities and two RAC registry records. | Schema conformance proves bounded shape only. |
-| Entity fixtures and schema tests | **CONFIRMED definition:** valid and invalid synthetic fixtures are exercised by [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py). | Tests do not prove live-source truth, rights, or public eligibility. |
-| Domain validators | **CONFIRMED implementation:** status-collapse, geometry-authority, and RAC-registry validators exist with no-network regression coverage. | Validators do not fetch sources, approve policy, construct proof, or release data. |
+| Paired schemas | **CONFIRMED definition:** 18 proposed JSON Schema files cover 16 entities and two RAC registry records. | Schema conformance proves bounded shape only. |
+| Entity fixtures and schema tests | **CONFIRMED definition:** the 15 core entity fixtures are exercised by [`test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py); the scenario pilot has focused fixture-polarity tests. | Tests do not prove live-source truth, rights, or public eligibility. |
+| Domain validators | **CONFIRMED implementation:** status-collapse, geometry-authority, RAC-registry, and planning-scenario validators exist with no-network regression coverage. | Validators do not fetch sources, approve policy, construct proof, or release data. |
 | RAC records | **CONFIRMED repository state:** the geometry dataset and county-crosswalk registry records remain internal and `not-released`. | Geometry overlap is not official county membership or governance authority. |
 | Epic and slice state | [Issue #1647](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1647) remains open; bounded authority slice [#1841](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1841) is closed; document-pinning slice [#1844](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1844) remains open. | Issue state does not promote contracts or authorize release. |
 | Repository control | [Issue #1675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675) remains open. | This README does not change settings, review, merge, source, proof, release, deployment, or publication authority. |
@@ -118,6 +119,7 @@ water_planning/
 ├── correction_or_withdrawal.md
 ├── eligibility_decision.md
 ├── funding_agreement.md
+├── planning_scenario_manifest.md
 ├── planning_region.md
 ├── program_version.md
 ├── project.md
@@ -137,6 +139,7 @@ All schema links below resolve to the paired machine-shape authority. The summar
 
 | Contract | Entity | Paired schema | Semantic boundary |
 |---|---|---|---|
+| [`planning_scenario_manifest.md`](./planning_scenario_manifest.md) | `PlanningScenarioManifest` | [`planning_scenario_manifest.schema.json`](../../../schemas/contracts/v1/domains/water_planning/planning_scenario_manifest.schema.json) | Synthetic generalized scenario with visible assumptions, horizon, equity, participation, public-summary candidate, and drawer payload; not a prediction, alert, determination, or publication. |
 | [`planning_region.md`](./planning_region.md) | `PlanningRegion` | [`planning_region.schema.json`](../../../schemas/contracts/v1/domains/water_planning/planning_region.schema.json) | Stable RAC identity with independent geometry and county-crosswalk resolution states. |
 | [`public_meeting.md`](./public_meeting.md) | `PublicMeeting` | [`public_meeting.schema.json`](../../../schemas/contracts/v1/domains/water_planning/public_meeting.schema.json) | Public-participation event; not an approval or award. |
 | [`advisory_committee_meeting.md`](./advisory_committee_meeting.md) | `AdvisoryCommitteeMeeting` | [`advisory_committee_meeting.schema.json`](../../../schemas/contracts/v1/domains/water_planning/advisory_committee_meeting.schema.json) | RAC advisory event; attendance or discussion is not a decision. |
@@ -235,7 +238,7 @@ It does not emit source observations, SourceDescriptor activation, data instance
 
 Run commands from the repository root.
 
-### Validate all 15 entity schemas and fixtures
+### Validate the 15 core entity schemas and fixtures
 
 ```bash
 python -m pytest -q tests/schemas/test_water_planning_contracts.py
@@ -260,11 +263,14 @@ python tools/validators/domains/water_planning/validate_geometry_authority.py \
   fixtures/domains/water_planning/geometry_authority/valid/valid_1.json
 
 python tools/validators/domains/water_planning/validate_rac_registry.py
+
+python tools/validators/domains/water_planning/validate_planning_scenario_manifest.py --fixtures
 ```
 
 | Validation layer | Bounded evidence | Does not prove |
 |---|---|---|
 | Schema tests | File presence, valid/invalid polarity, distinct titles, time, identity, amount, and unresolved-reference constraints for 15 entity schemas | Semantic promotion, source truth, rights, or release |
+| Planning-scenario validator | Synthetic schema polarity, RFC 8785 body binding, horizon order, canonical references, summary/drawer parity, and false authority flags | Prediction, evidence resolution, participation approval, policy, review, release, rendering, or publication |
 | Status-collapse validator | Synthetic anti-collapse and finite unresolved-state behavior | Live application, award, payment, project, or benefit facts |
 | Geometry-authority validator | Synthetic RAC identity and reference-coherence rules | Production geometry, official county membership, or source admission |
 | RAC-registry validator | Pinned local geometry, source, digest, identity, mapping, correction, and `not-released` constraints | Source refresh, spatial re-derivation, rights clearance, or publication |
