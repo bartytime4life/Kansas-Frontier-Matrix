@@ -23,34 +23,95 @@
     "authority_claims"
   ],
   "properties": {
-    "object_type": {"const": "ReleaseBoundRunReceipt"},
-    "schema_version": {"const": "1.0.0"},
-    "profile": {"const": "kfm.release-bound-run-receipt.fixture.v1"},
-    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
-    "observed_at": {"type": "string", "format": "date-time"},
+    "object_type": {
+      "const": "ReleaseBoundRunReceipt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.release-bound-run-receipt.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "actor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "id"],
+      "required": [
+        "kind",
+        "id"
+      ],
       "properties": {
-        "kind": {"enum": ["human", "service", "workflow", "agent"]},
-        "id": {"type": "string", "minLength": 3, "maxLength": 256, "pattern": "\\S"}
+        "kind": {
+          "enum": [
+            "human",
+            "service",
+            "workflow",
+            "agent"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256,
+          "pattern": "\\S"
+        }
       }
     },
-    "started_at": {"type": "string", "format": "date-time"},
-    "finished_at": {"type": "string", "format": "date-time"},
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "runtime_receipt_binding": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["run_receipt_ref", "run_id", "stage", "outcome", "spec_hash", "inputs", "outputs"],
+      "required": [
+        "run_receipt_ref",
+        "run_id",
+        "stage",
+        "outcome",
+        "spec_hash",
+        "inputs",
+        "outputs"
+      ],
       "properties": {
-        "run_receipt_ref": {"$ref": "#/$defs/immutable_ref"},
-        "run_id": {"type": "string", "minLength": 3, "maxLength": 256, "pattern": "^[a-z][a-z0-9_:.-]*$"},
-        "stage": {"const": "release_candidate"},
-        "outcome": {"enum": ["SUCCESS", "PARTIAL", "FAIL"]},
-        "spec_hash": {"$ref": "#/$defs/sha256"},
-        "inputs": {"$ref": "#/$defs/ref_list"},
-        "outputs": {"$ref": "#/$defs/ref_list"}
+        "run_receipt_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256,
+          "pattern": "^[a-z][a-z0-9_:.-]*$"
+        },
+        "stage": {
+          "const": "release_candidate"
+        },
+        "outcome": {
+          "enum": [
+            "SUCCESS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "inputs": {
+          "$ref": "#/$defs/ref_list"
+        },
+        "outputs": {
+          "$ref": "#/$defs/ref_list"
+        }
       }
     },
     "input_artifacts": {
@@ -58,14 +119,18 @@
       "minItems": 1,
       "maxItems": 100,
       "uniqueItems": true,
-      "items": {"$ref": "#/$defs/input_artifact"}
+      "items": {
+        "$ref": "#/$defs/input_artifact"
+      }
     },
     "output_artifacts": {
       "type": "array",
       "minItems": 1,
       "maxItems": 100,
       "uniqueItems": true,
-      "items": {"$ref": "#/$defs/output_artifact"}
+      "items": {
+        "$ref": "#/$defs/output_artifact"
+      }
     },
     "attestations": {
       "type": "array",
@@ -75,16 +140,41 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["type", "uri", "digest", "verification_status"],
+        "required": [
+          "type",
+          "uri",
+          "digest",
+          "verification_status"
+        ],
         "properties": {
-          "type": {"enum": ["DSSE", "COSIGN_BUNDLE", "IN_TOTO", "OTHER"]},
-          "uri": {"$ref": "#/$defs/immutable_ref"},
-          "digest": {"$ref": "#/$defs/sha256"},
-          "verification_status": {"enum": ["VERIFIED", "UNVERIFIED", "FAILED", "ERROR"]}
+          "type": {
+            "enum": [
+              "DSSE",
+              "COSIGN_BUNDLE",
+              "IN_TOTO",
+              "OTHER"
+            ]
+          },
+          "uri": {
+            "$ref": "#/$defs/immutable_ref"
+          },
+          "digest": {
+            "$ref": "#/$defs/sha256"
+          },
+          "verification_status": {
+            "enum": [
+              "VERIFIED",
+              "UNVERIFIED",
+              "FAILED",
+              "ERROR"
+            ]
+          }
         }
       }
     },
-    "evidence_refs": {"$ref": "#/$defs/ref_list"},
+    "evidence_refs": {
+      "$ref": "#/$defs/ref_list"
+    },
     "release_binding": {
       "type": "object",
       "additionalProperties": false,
@@ -103,31 +193,103 @@
         "rollback_ref"
       ],
       "properties": {
-        "release_candidate_ref": {"$ref": "#/$defs/immutable_ref"},
-        "candidate_zone": {"const": "PUBLISHED_CANDIDATE"},
-        "evidence_status": {"enum": ["RESOLVED", "UNRESOLVED", "DENIED", "ERROR"]},
-        "policy_status": {"enum": ["ALLOW", "HOLD", "DENY", "ERROR"]},
-        "policy_decision_ref": {"$ref": "#/$defs/immutable_ref"},
-        "review_status": {"enum": ["APPROVED", "PENDING", "CHANGES_REQUESTED", "REJECTED", "ERROR"]},
-        "review_ref": {"$ref": "#/$defs/immutable_ref"},
-        "signature_status": {"enum": ["VERIFIED", "PENDING", "FAILED", "ERROR"]},
-        "correction_status": {"enum": ["READY", "MISSING", "ERROR"]},
-        "correction_path_ref": {"$ref": "#/$defs/immutable_ref"},
-        "rollback_status": {"enum": ["READY", "MISSING", "ERROR"]},
-        "rollback_ref": {"$ref": "#/$defs/immutable_ref"}
+        "release_candidate_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "candidate_zone": {
+          "const": "PUBLISHED_CANDIDATE"
+        },
+        "evidence_status": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "DENIED",
+            "ERROR"
+          ]
+        },
+        "policy_status": {
+          "enum": [
+            "ALLOW",
+            "HOLD",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "review_status": {
+          "enum": [
+            "APPROVED",
+            "PENDING",
+            "CHANGES_REQUESTED",
+            "REJECTED",
+            "ERROR"
+          ]
+        },
+        "review_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "signature_status": {
+          "enum": [
+            "VERIFIED",
+            "PENDING",
+            "FAILED",
+            "ERROR"
+          ]
+        },
+        "correction_status": {
+          "enum": [
+            "READY",
+            "MISSING",
+            "ERROR"
+          ]
+        },
+        "correction_path_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "rollback_status": {
+          "enum": [
+            "READY",
+            "MISSING",
+            "ERROR"
+          ]
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/immutable_ref"
+        }
       }
     },
     "authority_claims": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["evidence_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority"],
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority"
+      ],
       "properties": {
-        "evidence_authority": {"const": false},
-        "policy_authority": {"const": false},
-        "review_authority": {"const": false},
-        "promotion_authority": {"const": false},
-        "release_authority": {"const": false},
-        "publication_authority": {"const": false}
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
       }
     }
   },
@@ -135,40 +297,69 @@
     "sha256": {
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$",
-      "not": {"pattern": "^sha256:0{64}$"}
+      "not": {
+        "pattern": "^sha256:0{64}$"
+      }
     },
     "immutable_ref": {
       "type": "string",
       "minLength": 3,
       "maxLength": 1024,
       "pattern": "\\S",
-      "not": {"pattern": "(?i)(^|[/:._-])latest($|[/:._-])"}
+      "not": {
+        "pattern": "(?i)(^|[/:._-])latest($|[/:._-])"
+      }
     },
     "ref_list": {
       "type": "array",
       "minItems": 1,
       "maxItems": 100,
       "uniqueItems": true,
-      "items": {"$ref": "#/$defs/immutable_ref"}
+      "items": {
+        "$ref": "#/$defs/immutable_ref"
+      }
     },
     "input_artifact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["uri", "digest"],
+      "required": [
+        "uri",
+        "digest"
+      ],
       "properties": {
-        "uri": {"$ref": "#/$defs/immutable_ref"},
-        "digest": {"$ref": "#/$defs/sha256"},
-        "media_type": {"type": "string", "minLength": 3, "maxLength": 255}
+        "uri": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 255
+        }
       }
     },
     "output_artifact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["uri", "digest", "media_type"],
+      "required": [
+        "uri",
+        "digest",
+        "media_type"
+      ],
       "properties": {
-        "uri": {"$ref": "#/$defs/immutable_ref"},
-        "digest": {"$ref": "#/$defs/sha256"},
-        "media_type": {"type": "string", "minLength": 3, "maxLength": 255}
+        "uri": {
+          "$ref": "#/$defs/immutable_ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 255
+        }
       }
     }
   }
