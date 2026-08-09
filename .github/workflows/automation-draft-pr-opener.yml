@@ -1,0 +1,220 @@
+name: automation-draft-pr-opener
+
+"on":
+  repository_dispatch:
+    types:
+      - automation-pr-proposal-v1
+
+# Trusted-base writer boundary:
+# - repository_dispatch executes the workflow from the default branch;
+# - no pull_request, pull_request_target, push, schedule, workflow_run, or reusable
+#   caller can invoke this writer;
+# - the workflow cannot create or modify branches or repository contents;
+# - the only write permission is pull-requests: write for one draft-PR job;
+# - candidate refs and bytes are treated as untrusted data and never executed.
+permissions:
+  contents: read
+
+concurrency:
+  group: automation-draft-pr-opener-${{ github.event.client_payload.proposal_id || github.run_id }}
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  open-draft-pr:
+    if: ${{ github.event.repository.default_branch == 'main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Check out trusted default-branch revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Materialize dispatch proposal without logging payload
+        env:
+          PROPOSAL_JSON: ${{ toJson(github.event.client_payload) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          payload = json.loads(os.environ["PROPOSAL_JSON"])
+          Path(os.environ["RUNNER_TEMP"], "automation-pr-proposal.json").write_text(
+              json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Require write-eligible proposal before fetching untrusted head
+        id: proposal
+        shell: bash
+        run: |
+          set -euo pipefail
+          proposal="${RUNNER_TEMP}/automation-pr-proposal.json"
+          result="${RUNNER_TEMP}/automation-pr-proposal-result.json"
+          python3 tools/validators/governance/validate_automation_pr_proposal.py "$proposal" > "$result"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          proposal = json.loads(Path(os.environ["RUNNER_TEMP"], "automation-pr-proposal.json").read_text(encoding="utf-8"))
+          result = json.loads(Path(os.environ["RUNNER_TEMP"], "automation-pr-proposal-result.json").read_text(encoding="utf-8"))
+          if result.get("outcome") != "PASS" or result.get("write_eligible") is not True:
+              raise SystemExit("AUTOMATION_PROPOSAL_NOT_WRITE_ELIGIBLE")
+          head = proposal["head_branch"]
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"head_branch={head}\n")
+          PY
+
+      - name: Fetch declared base and head as data only
+        env:
+          HEAD_BRANCH: ${{ steps.proposal.outputs.head_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=256 \
+            "https://github.com/${GITHUB_REPOSITORY}.git" \
+            "+refs/heads/main:refs/remotes/origin/main" \
+            "+refs/heads/${HEAD_BRANCH}:refs/remotes/origin/${HEAD_BRANCH}"
+
+      - name: Validate exact live diff and artifact binding
+        id: binding
+        env:
+          HEAD_BRANCH: ${{ steps.proposal.outputs.head_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="${RUNNER_TEMP}/automation-pr-live-binding-result.json"
+          python3 tools/validators/governance/validate_automation_pr_live_binding.py \
+            "${RUNNER_TEMP}/automation-pr-proposal.json" \
+            --repo-root . \
+            --base-ref refs/remotes/origin/main \
+            --head-ref "refs/remotes/origin/${HEAD_BRANCH}" \
+            > "$result"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          result = json.loads(Path(os.environ["RUNNER_TEMP"], "automation-pr-live-binding-result.json").read_text(encoding="utf-8"))
+          if result.get("outcome") != "PASS" or result.get("write_eligible") is not True:
+              raise SystemExit("AUTOMATION_LIVE_BINDING_DENIED")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"base_sha={result['base_sha']}\n")
+              handle.write(f"head_sha={result['head_sha']}\n")
+          PY
+
+      - name: Recheck remote refs immediately before PR mutation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ steps.proposal.outputs.head_branch }}
+          EXPECTED_BASE_SHA: ${{ steps.binding.outputs.base_sha }}
+          EXPECTED_HEAD_SHA: ${{ steps.binding.outputs.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_base="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+          current_head="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${HEAD_BRANCH}" --jq '.object.sha')"
+          test "$current_base" = "$EXPECTED_BASE_SHA" || {
+            echo "::error::AUTOMATION_BASE_MOVED_BEFORE_PR_CREATE"
+            exit 1
+          }
+          test "$current_head" = "$EXPECTED_HEAD_SHA" || {
+            echo "::error::AUTOMATION_HEAD_MOVED_BEFORE_PR_CREATE"
+            exit 1
+          }
+
+      - name: Open at most one draft pull request
+        id: create
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ steps.proposal.outputs.head_branch }}
+          EXPECTED_BASE_SHA: ${{ steps.binding.outputs.base_sha }}
+          EXPECTED_HEAD_SHA: ${{ steps.binding.outputs.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          proposal="${RUNNER_TEMP}/automation-pr-proposal.json"
+          existing="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --base main --head "$HEAD_BRANCH" --json number --jq 'length')"
+          if test "$existing" != "0"; then
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            echo "AUTOMATION_DRAFT_PR_ALREADY_OPEN"
+            exit 0
+          fi
+
+          title="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["title"])' "$proposal")"
+          python3 - "$proposal" "${RUNNER_TEMP}/automation-pr-body.md" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          proposal = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          body = f"""## Automation proposal
+
+This draft pull request was opened by the bounded KFM automation PR opener after structural and live-ref validation.
+
+- Proposal: `{proposal['proposal_id']}`
+- Base: `main@{proposal['base_sha']}`
+- Head: `{proposal['head_branch']}`
+- Policy declaration: `PASS`
+- Candidate scope: `data/work/automation/` only
+
+The opener does not create or modify branches, approve review, merge, release, deploy, promote, publish, or grant public-use authority. The receipt reference remains in the dispatched proposal and is not treated as proof or approval here.
+"""
+          Path(sys.argv[2]).write_text(body, encoding="utf-8")
+          PY
+
+          url="$(gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft \
+            --base main \
+            --head "$HEAD_BRANCH" \
+            --title "$title" \
+            --body-file "${RUNNER_TEMP}/automation-pr-body.md")"
+          number="${url##*/}"
+
+          live="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${number}")"
+          actual_head="$(printf '%s' "$live" | jq -r '.head.sha')"
+          actual_base="$(printf '%s' "$live" | jq -r '.base.sha')"
+          actual_draft="$(printf '%s' "$live" | jq -r '.draft')"
+          if test "$actual_head" != "$EXPECTED_HEAD_SHA" || \
+             test "$actual_base" != "$EXPECTED_BASE_SHA" || \
+             test "$actual_draft" != "true"; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/pulls/${number}" -f state=closed >/dev/null
+            echo "::error::AUTOMATION_PR_POSTCREATE_BINDING_FAILED; draft PR was closed fail-safe"
+            exit 1
+          fi
+
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Record bounded writer result
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Automation draft PR opener"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- PR created in this run: ${{ steps.create.outputs.created || 'false' }}."
+            echo "- PR number: ${{ steps.create.outputs.pr_number || 'none' }}."
+            echo "- Writer authority: pull-request creation only; repository contents remain read-only."
+            echo "- Candidate branch code was fetched as data and never executed."
+            echo "- A draft PR is not review approval, merge authority, release, deployment, promotion, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
