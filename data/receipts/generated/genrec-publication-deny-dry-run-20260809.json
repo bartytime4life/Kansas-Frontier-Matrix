@@ -10,7 +10,7 @@
     "tools/release/release_dry_run.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/release-dry-run.yml": "sha256:706910f8aa0a2b097fef8f31e11e73429dda985bd38e4ef3b6df6d5f9b255de0",
+    ".github/workflows/release-dry-run.yml": "sha256:1c7f80d2719964c44c96b73de93367296a196c8f256f7e37f5196bf3764c9b8a",
     "Makefile": "sha256:8f9be9baaa488682276559bb026bd60173f2d67439a483c503131351b45a9d0a",
     "tests/release/README.md": "sha256:f69b064bad7093bafe7f5d8faa330f6c9d45f465e5c3b6a176d990ed8fe37476",
     "tests/release/test_publication_deny_dry_run.py": "sha256:41ac054d5b92e03f5f7b4900ccaf6cfcc5f34a1722e559163661bd62b3b2be50",
