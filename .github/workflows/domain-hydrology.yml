@@ -115,6 +115,7 @@ jobs:
               test_root / "test_nhdplus_hr_ambiguity.py",
               test_root / "test_adaptive_threshold_proposal.py",
               test_root / "test_hydro_identity_bridge.py",
+              test_root / "test_streamflow_qc_context_assessment.py",
           }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
@@ -217,6 +218,7 @@ jobs:
               "validate_public_safe_flow_fixture.py",
               "validate_adaptive_threshold_proposal.py",
               "validate_hydro_identity_bridge.py",
+              "validate_streamflow_qc_context_assessment.py",
           }
           expected_dedicated_validator_files = {
               "usgs_water_api_cutover/README.md",
@@ -425,7 +427,7 @@ jobs:
               "Inventoried five Hydrology schema wrappers without importing or executing them; "
               "inventory is not acceptance of an executable validation suite."
           )
-          print("Confirmed four bounded semantic Hydrology fixture validators.")
+          print("Confirmed five bounded semantic Hydrology fixture validators.")
           print(
               "Inventoried two dedicated Hydrology validator modules as substantive; "
               "their fixture suites remain owned by dedicated workflows."
@@ -458,7 +460,8 @@ jobs:
             tests/domains/hydrology/test_aquifer_context_link.py \
             tests/domains/hydrology/test_nhdplus_hr_ambiguity.py \
             tests/domains/hydrology/test_adaptive_threshold_proposal.py \
-            tests/domains/hydrology/test_hydro_identity_bridge.py
+            tests/domains/hydrology/test_hydro_identity_bridge.py \
+            tests/domains/hydrology/test_streamflow_qc_context_assessment.py
 
           python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
@@ -500,6 +503,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-nhdplus-waterbody-crosswalk"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-adaptive-threshold-proposal"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-hydro-identity-bridge"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-streamflow-qc-context"
           echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
 
       - name: Record Hydrology validation result and broader hold
@@ -521,9 +525,11 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-hydro-identity-bridge`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-streamflow-qc-context`
+
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed seven bounded domain modules
+          When this job is green, it has executed eight bounded domain modules
           and the EvidenceBundle, AquiferObservation, and AquiferContextLink
           wrappers plus the synthetic FlowObservation and NHDPlus waterbody
           crosswalk profiles against their valid and expected-invalid fixtures.
@@ -535,7 +541,7 @@ jobs:
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
-          placeholders, five inventoried schema wrappers, four bounded semantic
+          placeholders, five inventoried schema wrappers, five bounded semantic
           validators, two dedicated validator subtrees, and PROPOSED schema/policy
           scaffolds. Every file is checked against an explicit inventory. The
           dedicated USGS Water API cutover and WBD HUC12 material-change suites
@@ -558,11 +564,18 @@ jobs:
           source activation, geometry comparison, evidence resolution, policy
           decision, lifecycle mutation, release, or publication.
 
+          The StreamflowQcContextAssessment profile consumes declared categorical
+          percentile, regional, drought, and integrity context for bounded review
+          routing. It computes no percentile or flow value, invalidates no sensor,
+          declares no hydrologic event, and grants no detector, policy, release,
+          deployment, publication, or public-use authority.
+
           This is acceptance only of local JSON Schema shape and valid/invalid
           fixture polarity for the PROPOSED Hydrology EvidenceBundle alias and
           the separated aquifer pair, the frozen fixture-only flow profile, the
           synthetic waterbody-only crosswalk profile, the bounded adaptive-
-          threshold review proposal, and the source-native identity bridge.
+          threshold review proposal, the source-native identity bridge, and the
+          fixture-only streamflow QC context assessment.
           It also checks that observations may remain
           unlinked and that relation records cannot absorb measurements or copied
           Geology geometry. The remaining test modules, endpoint/evidence
