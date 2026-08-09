@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_rights_currentness_assessment.schema.json",
+  "title": "SourceRightsCurrentnessAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "publisher_identity": {
+          "enum": [
+            "VERIFIED",
+            "UNRESOLVED",
+            "CONFLICTED"
+          ]
+        },
+        "product_identity": {
+          "enum": [
+            "VERIFIED",
+            "UNRESOLVED",
+            "CONFLICTED"
+          ]
+        },
+        "official_locator": {
+          "enum": [
+            "VERIFIED",
+            "UNRESOLVED",
+            "CONFLICTED"
+          ]
+        },
+        "terms_currentness": {
+          "enum": [
+            "CURRENT",
+            "UNKNOWN",
+            "CHANGED",
+            "UNAVAILABLE"
+          ]
+        },
+        "rights_status": {
+          "enum": [
+            "VERIFIED_OPEN",
+            "VERIFIED_RESTRICTED",
+            "PERMISSION_REQUIRED",
+            "UNKNOWN",
+            "DENIED"
+          ]
+        },
+        "attribution_status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "REQUIRED_DOCUMENTED",
+            "UNKNOWN"
+          ]
+        },
+        "redistribution_status": {
+          "enum": [
+            "ALLOWED",
+            "RESTRICTED",
+            "UNKNOWN",
+            "DENIED"
+          ]
+        },
+        "derivative_use_status": {
+          "enum": [
+            "ALLOWED",
+            "RESTRICTED",
+            "UNKNOWN",
+            "DENIED"
+          ]
+        },
+        "access_status": {
+          "enum": [
+            "PUBLIC",
+            "KEYED",
+            "RESTRICTED",
+            "UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        },
+        "cadence_status": {
+          "enum": [
+            "DOCUMENTED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "publisher_identity",
+        "product_identity",
+        "official_locator",
+        "terms_currentness",
+        "rights_status",
+        "attribution_status",
+        "redistribution_status",
+        "derivative_use_status",
+        "access_status",
+        "cadence_status"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "CURRENT",
+            "REVIEW_DUE",
+            "BLOCKED",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "SOURCE_RIGHTS_CURRENT",
+              "SOURCE_REVIEW_DUE",
+              "PUBLISHER_IDENTITY_UNRESOLVED",
+              "PRODUCT_IDENTITY_UNRESOLVED",
+              "OFFICIAL_LOCATOR_UNRESOLVED",
+              "TERMS_CURRENTNESS_UNRESOLVED",
+              "RIGHTS_NOT_VERIFIED",
+              "ATTRIBUTION_NOT_RESOLVED",
+              "REDISTRIBUTION_NOT_VERIFIED",
+              "DERIVATIVE_USE_NOT_VERIFIED",
+              "ACCESS_POSTURE_UNRESOLVED",
+              "CADENCE_NOT_DOCUMENTED",
+              "ASSESSMENT_ERROR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "status",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "network_attempted": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "fetch_executed": {
+          "const": false
+        },
+        "raw_write_allowed": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activated",
+        "fetch_executed",
+        "raw_write_allowed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SourceRightsCurrentnessAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source-rights-currentness.fixture.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:source-rights-currentness:[a-f0-9]{24}$"
+    },
+    "assessed_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "review_due_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "assessment_state": {
+      "enum": [
+        "COMPLETE",
+        "ERROR"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "descriptor_spec_hash": {
+      "$ref": "#/$defs/spec"
+    },
+    "official_source_locator": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 512
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "checks": {
+      "$ref": "#/$defs/checks"
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessed_at",
+    "review_due_at",
+    "assessment_state",
+    "source_id",
+    "source_descriptor_ref",
+    "descriptor_spec_hash",
+    "official_source_locator",
+    "evidence_refs",
+    "checks",
+    "result",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/source_rights_currentness_assessment.md",
+    "authority": "NONE"
+  }
+}

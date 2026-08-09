@@ -1,0 +1,68 @@
+name: pass12-release-policy-v1
+
+on:
+  pull_request:
+    paths:
+      - 'policy/rego/release_gate_v1.rego'
+      - 'policy/rego/release_gate_v1_test.rego'
+      - 'policy/bundles/pass12-release-gate-v1/**'
+      - 'fixtures/policy/release_gate_v1/**'
+      - '.github/workflows/pass12-release-policy-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact pull-request head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.git"
+          git fetch --depth=1 origin "${HEAD_SHA}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${HEAD_SHA}"
+
+      - name: Install checksum-pinned OPA 1.19.0
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error \
+            --output /tmp/opa \
+            https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static
+          echo '1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  /tmp/opa' | sha256sum --check --strict
+          chmod 0755 /tmp/opa
+          /tmp/opa version
+
+      - name: Format and unit-test policy
+        run: |
+          set -euo pipefail
+          /tmp/opa fmt --fail policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego
+          /tmp/opa test policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego
+
+      - name: Verify fixture polarity
+        run: |
+          set -euo pipefail
+          query='data.kfm.pass12.release_gate_v1.allow'
+          eval_allow() {
+            /tmp/opa eval --format raw --data policy/rego/release_gate_v1.rego --input "$1" "$query"
+          }
+          test "$(eval_allow fixtures/policy/release_gate_v1/allow_public.json)" = 'true'
+          test "$(eval_allow fixtures/policy/release_gate_v1/deny_missing_evidence.json)" = 'false'
+          test "$(eval_allow fixtures/policy/release_gate_v1/deny_missing_sensitivity.json)" = 'false'
+          test "$(eval_allow fixtures/policy/release_gate_v1/deny_missing_attestation.json)" = 'false'
+
+      - name: Verify deterministic deny reasons
+        run: |
+          set -euo pipefail
+          reasons='data.kfm.pass12.release_gate_v1.decision.deny_reasons'
+          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_evidence.json "$reasons" | grep -F 'MISSING_EVIDENCE'
+          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_sensitivity.json "$reasons" | grep -F 'MISSING_SENSITIVITY_REVIEW'
+          /tmp/opa eval --fail-defined --format pretty --data policy/rego/release_gate_v1.rego --input fixtures/policy/release_gate_v1/deny_missing_attestation.json "$reasons" | grep -F 'MISSING_REQUIRED_ATTESTATION'
