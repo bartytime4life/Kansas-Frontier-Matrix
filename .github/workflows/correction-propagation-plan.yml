@@ -1,0 +1,28 @@
+name: correction-propagation-plan
+"on":
+  pull_request:
+    paths: [".github/workflows/correction-propagation-plan.yml","contracts/correction/correction_propagation_plan.md","schemas/contracts/v1/correction/correction_propagation_plan.schema.json","fixtures/contracts/v1/correction/correction_propagation_plan/**","tools/validators/correction/validate_correction_propagation_plan.py","tests/validators/test_validate_correction_propagation_plan.py","docs/intake/exploratory/correction-propagation-plan-source-map.md","packages/hashing/**","data/receipts/generated/genrec-correction-propagation-plan-*.json"]
+  push:
+    branches: [main]
+    paths: [".github/workflows/correction-propagation-plan.yml","contracts/correction/correction_propagation_plan.md","schemas/contracts/v1/correction/correction_propagation_plan.schema.json","fixtures/contracts/v1/correction/correction_propagation_plan/**","tools/validators/correction/validate_correction_propagation_plan.py","tests/validators/test_validate_correction_propagation_plan.py","docs/intake/exploratory/correction-propagation-plan-source-map.md","packages/hashing/**","data/receipts/generated/genrec-correction-propagation-plan-*.json"]
+  workflow_dispatch:
+permissions: {contents: read}
+concurrency: {group: "correction-propagation-plan-${{ github.workflow }}-${{ github.ref }}", cancel-in-progress: true}
+env: {KFM_NO_NETWORK: "1", PIP_DISABLE_PIP_VERSION_CHECK: "1", PIP_NO_INPUT: "1", PYTHONDONTWRITEBYTECODE: "1", PYTHONHASHSEED: "0", TZ: UTC}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with: {python-version: "3.11", cache: pip, cache-depency-path: pyproject.toml}
+      - run: python -m pip install -e ".[test]"
+      - run: |
+          python -m py_compile tools/validators/correction/validate_correction_propagation_plan.py tests/validators/test_validate_correction_propagation_plan.py
+          python -m unittest tests.validators.test_validate_correction_propagation_plan -v
+          python tools/validators/correction/validate_correction_propagation_plan.py --fixtures
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-correction-propagation-plan-20260808.json --repo-root .
+      - if: always()
+        run: echo "Fixture-only correction dependency inventory; no cache, alias, release, or publication mutation." >> "$GITHUB_STEP_SUMMARY"
