@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.conditional_decision_closure_fixture_manifest.v1",
+  "cases": [
+    {
+      "case_id": "valid-expired-violated-hold",
+      "file": "valid/expired_violated_hold.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-open-hold",
+      "file": "valid/open_hold.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-satisfied",
+      "file": "valid/satisfied.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-waived",
+      "file": "valid/waived.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "schema-invalid-missing-governance",
+      "file": "schema_invalid/missing_governance.json",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SCHEMA_INVALID", "path": "/"}
+      ]
+    },
+    {
+      "case_id": "semantic-invalid-blocking-ids",
+      "file": "semantic_invalid/blocking_ids_mismatch.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "BLOCKING_OBLIGATION_IDS_MISMATCH",
+          "path": "/result/blocking_obligation_ids"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic-invalid-order",
+      "file": "semantic_invalid/noncanonical_obligations.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "OBLIGATION_ORDER_INVALID", "path": "/obligations"}
+      ]
+    },
+    {
+      "case_id": "semantic-invalid-result-upgrade",
+      "file": "semantic_invalid/result_upgrade.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "RESULT_OUTCOME_MISMATCH", "path": "/result/outcome"}
+      ]
+    },
+    {
+      "case_id": "semantic-invalid-missing-evidence",
+      "file": "semantic_invalid/satisfied_missing_evidence.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CLOSURE_EVIDENCE_MISSING", "path": "/obligations/0"}
+      ]
+    },
+    {
+      "case_id": "semantic-invalid-waiver-authority",
+      "file": "semantic_invalid/waiver_missing_authority.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "WAIVER_AUTHORITY_MISSING",
+          "path": "/obligations/0/authority_ref"
+        }
+      ]
+    }
+  ]
+}
