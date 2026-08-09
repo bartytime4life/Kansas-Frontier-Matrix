@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-fixtures-root-contract-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/fixtures-root-contract.yml",
+    "tests/validators/test_validate_fixture_root_contract.py",
+    "tools/validators/_fixture_root_contract_io.py",
+    "tools/validators/fixture_root_contract.py",
+    "tools/validators/validate_fixture_root_contract.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/fixtures-root-contract.yml": "sha256:f3938986d64640b9869e718d8e325e42a9b639df4430c51d042e3b21536dc07b",
+    "tests/validators/test_validate_fixture_root_contract.py": "sha256:b73c8b8f10daa057cd2b4eb084b5bcb241b7b1d1215ebab48718b6c51ab14a80",
+    "tools/validators/_fixture_root_contract_io.py": "sha256:39089f46209433fdbeea79089eafa345e16caeee7541fee10c6bbf66ad441d2b",
+    "tools/validators/fixture_root_contract.py": "sha256:0af74fcdbc9552a79e9d6097ba673f6f61a5b8755973b00a9e1f27ea5d9c5cc5",
+    "tools/validators/validate_fixture_root_contract.py": "sha256:34ae464a557236ea7cf128867028000bff9ddcd9f0795bf0ee39a7f621c0ec1b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09-session"
+  },
+  "prompt_or_contract": "sha256:d7fff83483825f8c8212228f1cc3c0aa52f6d17536be9d0bfba1504ecfaa8b02",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Python validation",
+      "bounded repository-derived fixture-root snapshot"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d7fff83483825f8c8212228f1cc3c0aa52f6d17536be9d0bfba1504ecfaa8b02",
+      "sha256:2cb7c28be91b9327627b2fb8330327fafa8a0fb02f38be03f85775602ccad19c",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 supplied in the current user request"
+    ],
+    "evidence_refs": [
+      "CURRENT_USER_REQUEST",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:fixtures/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:control_plane/root_registry.yaml",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:tools/validators/validator_registry.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:Makefile",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7a06715731ec15c17955d422c7383adad0eee6c8:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/fixtures-root-contract.yml": "PROPOSED",
+    "tests/validators/test_validate_fixture_root_contract.py": "PROPOSED",
+    "tools/validators/_fixture_root_contract_io.py": "PROPOSED",
+    "tools/validators/fixture_root_contract.py": "PROPOSED",
+    "tools/validators/validate_fixture_root_contract.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The current user continuation, immutable main base, exact new paths, one-review-boundary scope, open pull requests, and non-goals were resolved before mutation; no same-path open work was found."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Workflow orchestration stays in .github/workflows, executable validation in tools/validators, focused tests in tests/validators, and generated process memory in data/receipts/generated; no root or parallel authority is created."
+    },
+    {
+      "gate": "focused-standard-library-tests",
+      "outcome": "PASS",
+      "reason": "Six deterministic tests passed for the conforming case and heading, direct-child, root-registry, Makefile-marker, and aggregate-profile drift."
+    },
+    {
+      "gate": "repository-derived-contract-replay",
+      "outcome": "PASS",
+      "reason": "A bounded snapshot derived from current main reproduced the 27 direct-child names, root.fixtures projection, eight-validator full profile, and Makefile readiness marker and returned PASS with no findings. Main drift through 7a06715731ec15c17955d422c7383adad0eee6c8 changed only deeper fixture lanes and unrelated paths, not the guarded inputs or direct-child set."
+    },
+    {
+      "gate": "workflow-yaml-and-trigger-safety",
+      "outcome": "PASS",
+      "reason": "The workflow parsed as YAML, uses pull_request/push/workflow_dispatch, a GitHub-hosted runner, read-only contents permission, immutable action pins, no secrets or OIDC, and validates only changed authoring receipts against current bytes."
+    },
+    {
+      "gate": "static-no-network-secret-and-byte-hygiene",
+      "outcome": "PASS",
+      "reason": "Python sources contain no network/process execution imports, the artifact set passed bounded credential-pattern scanning, and all files are UTF-8 LF with final newlines."
+    },
+    {
+      "gate": "bounded-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Receipt required fields, finite enums, path/hash/truth-label key parity, canonical repository-relative paths, ISO timestamp, and exact SHA-256 bindings were checked locally."
+    },
+    {
+      "gate": "repository-owned-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current session has no mounted full repository checkout; the new workflow runs the repository-owned validator against each changed fixture-root receipt at the pushed exact head."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, validation, merge, release, deployment, promotion, and publication."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-user-continuation",
+      "validated": true,
+      "evidence_ref": "CURRENT_USER_REQUEST"
+    },
+    {
+      "id": "current-fixtures-readme",
+      "validated": true,
+      "evidence_ref": "fixtures/README.md@7a06715731ec15c17955d422c7383adad0eee6c8"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7a06715731ec15c17955d422c7383adad0eee6c8"
+    },
+    {
+      "id": "root-fixtures-projection",
+      "validated": true,
+       "evidence_ref": "control_plane/root_registry.yaml@7a06715731ec15c17955d422c7383adad0eee6c8"
+    },
+    {
+      "id": "aggregate-validator-profile",
+      "validated": true,
+       "evidence_ref": "tools/validators/validator_registry.json@7a06715731ec15c17955d422c7383adad0eee6c8"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:37:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-fixtures-root-contract-20260809. Adds a bounded no-network conformance guard for the already-merged fixtures root README. The guard prevents silent drift among ROOT_FULL headings, direct-child inventory, the root.fixtures machine projection, the eight-entry aggregate fixture profile, and the non-enforcing make fixtures marker. It creates no fixture, source, evidence, policy, review, lifecycle, proof, release, deployment, promotion, publication, or settings authority."
+}
