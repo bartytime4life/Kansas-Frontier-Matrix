@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/claim_envelope.schema.json",
+  "title": "ClaimEnvelope",
+  "description": "Proposed inspectable claim carrier. Shape validation does not establish evidence closure, policy permission, review approval, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id",
+    "version",
+    "statement",
+    "knowledge_character",
+    "spatial_scope",
+    "temporal_scope",
+    "evidence_refs",
+    "source_refs",
+    "support_state",
+    "policy_state",
+    "review_state",
+    "release_state",
+    "correction_path_ref",
+    "release_ref",
+    "rollback_ref",
+    "spec_hash"
+  ],
+  "properties": {
+    "claim_id": {
+      "type": "string",
+      "pattern": "^kfm:claim:[A-Za-z0-9][A-Za-z0-9._:-]{2,156}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "knowledge_character": {
+      "enum": [
+        "OBSERVATION",
+        "INTERPRETATION",
+        "DERIVATION",
+        "MODEL_OUTPUT",
+        "WARNING",
+        "DECLARATION",
+        "OCR_EXTRACTION",
+        "AI_PROPOSAL",
+        "GENERALIZED_PUBLIC_VIEW"
+      ]
+    },
+    "spatial_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_ref",
+        "crs"
+      ],
+      "properties": {
+        "scope_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        },
+        "crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|OGC:CRS84|NONE)$"
+        },
+        "bbox": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        }
+      }
+    },
+    "temporal_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "as_of",
+        "valid_from"
+      ],
+      "properties": {
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 320
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 320
+      }
+    },
+    "support_state": {
+      "enum": [
+        "SUPPORTED",
+        "PARTIAL",
+        "UNRESOLVED",
+        "DENIED",
+        "ERROR"
+      ]
+    },
+    "policy_state": {
+      "enum": [
+        "ALLOW",
+        "RESTRICT",
+        "DENY",
+        "UNRESOLVED"
+      ]
+    },
+    "review_state": {
+      "enum": [
+        "DRAFT",
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "SUPERSEDED"
+      ]
+    },
+    "release_state": {
+      "enum": [
+        "UNRELEASED",
+        "CANDIDATE",
+        "PUBLISHED",
+        "WITHDRAWN",
+        "SUPERSEDED"
+      ]
+    },
+    "correction_path_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 320
+    },
+    "release_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 320
+    },
+    "rollback_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 320
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/claim_envelope.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/claim_envelope/",
+    "validator": "tools/validators/validate_claim_envelope.py",
+    "status": "PROPOSED",
+    "authority_boundary": "validation-only"
+  }
+}
