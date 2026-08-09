@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec:pipelines-readme:5fa21a03b962561c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/README.md": "sha256:5fa21a03b962561c63a9abcd42288caf32be4a6017565873b6183106d31d3aa7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08",
+    "parameter_hash": "sha256:79a29c76f75c3dbcf9212bbfe59bf79c03bd6581675a6271d06ece123ec39fb9"
+  },
+  "prompt_or_contract": "sha256:f19550008afe17b8733bad2984d3afc07ff23f5e7599c097884da6eb23aedbc1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "CURRENT_USER_REQUEST:pipelines/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:pipelines/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:pipeline_specs/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:packages/pipelines-core/src/pipelines_core/backfill_window.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:packages/pipelines-core/src/pipelines_core/pipeline_resilience.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:tests/packages/pipelines_core/"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "same-path placement and adopted Directory Rules v2 authority",
+      "outcome": "PASS",
+      "reason": "Existing canonical root README; no path, owner root, lifecycle, or authority transition."
+    },
+    {
+      "gate": "remote branch byte read-back and SHA-256 binding",
+      "outcome": "PASS",
+      "reason": "Remote blob f1853b8a7da9d4e632f0f9c59b9b30aa29af39bf reconstructed and matched SHA-256 5fa21a03b962561c63a9abcd42288caf32be4a6017565873b6183106d31d3aa7."
+    },
+    {
+      "gate": "Markdown source structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, unique explicit anchors, no heading-level jumps, no tabs or trailing whitespace, and final newline."
+    },
+    {
+      "gate": "material no-loss and compatibility anchors",
+      "outcome": "PASS",
+      "reason": "v0.3 operating boundaries retained and v0.2-to-v0.3 compatibility anchor preserved."
+    },
+    {
+      "gate": "scope and sensitive-content review",
+      "outcome": "PASS",
+      "reason": "Documentation-only target plus provenance receipt; no secrets, source payloads, protected coordinates, lifecycle records, runtime activation, release, deployment, or publication."
+    },
+    {
+      "gate": "generated receipt schema and artifact integrity",
+      "outcome": "PASS",
+      "reason": "Receipt shape checked locally against the current schema requirements and binds the exact remote README SHA-256."
+    },
+    {
+      "gate": "repository-native hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt emission; draft-PR checks are reported separately and do not become publication evidence."
+    },
+    {
+      "gate": "runtime and pipeline behavior tests",
+      "outcome": "SKIPPED",
+      "reason": "No executable, contract, schema, policy, fixture, test, workflow, data, runtime, or release behavior changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request-kfm-repo-build-v6",
+      "validated": true,
+      "evidence_ref": "attached:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "base-target-readme",
+      "validated": true,
+      "evidence_ref": "repo:f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:pipelines/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "directory-rules-v2-bytes",
+      "validated": true,
+      "evidence_ref": "repo:f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "pipeline-spec-boundary",
+      "validated": true,
+      "evidence_ref": "repo:f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:pipeline_specs/README.md"
+    },
+    {
+      "id": "deterministic-planning-kernels",
+      "validated": true,
+      "evidence_ref": "repo:f3d24ac428f7e6a9631a2b1228d10ddc991e3f33:packages/pipelines-core/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T05:09:11Z",
+  "emitter": "OpenAI GPT-5.6 Pro repository implementation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path modernization. The receipt is process memory, not proof, human approval, policy permission, release authority, or publication authority. Rollback before merge is abandonment of the draft PR; after merge use a transparent revert or forward fix."
+}
