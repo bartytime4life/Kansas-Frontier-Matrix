@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-publication-deny-dry-run-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    "Makefile",
+    "tests/release/README.md",
+    "tests/release/test_publication_deny_dry_run.py",
+    "tools/release/README.md",
+    "tools/release/release_dry_run.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:706910f8aa0a2b097fef8f31e11e73429dda985bd38e4ef3b6df6d5f9b255de0",
+    "Makefile": "sha256:8f9be9baaa488682276559bb026bd60173f2d67439a483c503131351b45a9d0a",
+    "tests/release/README.md": "sha256:f69b064bad7093bafe7f5d8faa330f6c9d45f465e5c3b6a176d990ed8fe37476",
+    "tests/release/test_publication_deny_dry_run.py": "sha256:41ac054d5b92e03f5f7b4900ccaf6cfcc5f34a1722e559163661bd62b3b2be50",
+    "tools/release/README.md": "sha256:d3e3a6e38e889ed52c7b65dd73060cb3a893d871a4423141b903ce83481454a4",
+    "tools/release/release_dry_run.py": "sha256:1b6aa53ebdde595e64f042ec41b24752431d168ff46c9568d1ff28004b8f358b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:e81daecafb08b81b30fe40b04b05b64ade887225f4122cd47a4dfba9e6ecbd7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local git",
+      "repository-native validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "drive:1W8MyiFJc91SapCvkFGEg-VFHToyWXN-9#negative-path-proofs",
+      "attached:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-010",
+      "repo:main@7da777a8cd87130406bbcb081738e21f92f1c932",
+      "repo:docs/doctrine/directory-rules.md@7da777a8cd87130406bbcb081738e21f92f1c932",
+      "repo:tools/validators/promotion_gate/validate_promotion_gate.py@7da777a8cd87130406bbcb081738e21f92f1c932"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "tests/release/README.md": "PROPOSED",
+    "tests/release/test_publication_deny_dry_run.py": "PROPOSED",
+    "tools/release/README.md": "PROPOSED",
+    "tools/release/release_dry_run.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-assay",
+      "outcome": "PASS",
+      "reason": "Pass 20 EXP-010 and the Drive architecture consolidation both call for deterministic publication-denial proofs with explicit reasons."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The executable is a repository-wide release-support tool under tools/release; tests, workflow orchestration, and the Make entry point remain in their accepted roots."
+    },
+    {
+      "gate": "five-case-negative-path-replay",
+      "outcome": "PASS",
+      "reason": "Evidence missing, policy denied, integrity mismatch, non-public-safe rights/sensitivity, and review absent all produced BLOCKED publication posture with exact finite reason codes."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Four publication-denial tests and thirty adjacent promotion/review tests passed locally."
+    },
+    {
+      "gate": "no-network-and-no-write",
+      "outcome": "PASS",
+      "reason": "The test blocks socket creation, compares repository file inventories before and after CLI execution, and confirms deterministic stdout."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The workflow parses, retains contents-read permission, avoids pull_request_target, and preserves the assemble-candidate job identity while running only synthetic checks."
+    },
+    {
+      "gate": "hosted-exact-head-release-dry-run",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch commit and draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da777a8cd87130406bbcb081738e21f92f1c932",
+    "repo:policy/promotion/promotion_prerequisites.rego@7da777a8cd87130406bbcb081738e21f92f1c932"
+  ],
+  "citations": [
+    {
+      "id": "PASS20-EXP-010",
+      "validated": true,
+      "evidence_ref": "attached:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-010"
+    },
+    {
+      "id": "DRIVE-ARCH-CONSOLIDATION-NEGATIVE-PATHS",
+      "validated": true,
+      "evidence_ref": "drive:1W8MyiFJc91SapCvkFGEg-VFHToyWXN-9#negative-path-proofs"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da777a8cd87130406bbcb081738e21f92f1c932"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T16:49:47Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance for a fixture-only publication-denial dry run that closes the former Make readiness marker without assembling a candidate or creating evidence, policy, review, release, rollback, or publication authority."
+}

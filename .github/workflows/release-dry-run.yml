@@ -1,10 +1,9 @@
 # KFM release-dry-run readiness workflow.
 #
 # Responsibility:
-#   Inspect whether a release candidate can be assembled, exercise the concrete
-#   PromotionDecision shape-fixture test and bounded A-G readiness proof, and
-#   verify rollback-card readiness without writing release records or
-#   presenting fixture validators as a release assembly.
+#   Exercise five deterministic publication-denial paths over the synthetic
+#   promotion packet, run the bounded A-G readiness proof, and verify rollback-
+#   card readiness without assembling or writing release records.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
@@ -56,26 +55,26 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Confirm candidate assembly remains an explicit hold
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Confirm dry-run inputs remain synthetic and no-write
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import json
           import re
 
           required = [
               Path("Makefile"),
               Path("tools/release/README.md"),
               Path("tools/release/release_dry_run.py"),
+              Path("tests/release/test_publication_deny_dry_run.py"),
+              Path("fixtures/release/promotion_gate/valid/pass__complete_candidate.json"),
               Path("release/candidates/README.md"),
-              Path("contracts/release/release_manifest.md"),
-              Path("schemas/contracts/v1/release/release_manifest.schema.json"),
-              Path("fixtures/release/release_manifest/cases.json"),
-              Path("tools/validators/release/validate_release_manifest.py"),
-              Path("tests/validators/test_validate_release_manifest.py"),
-              Path("policy/release/README.md"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -93,56 +92,33 @@ jobs:
               f"assembling a dry run: {candidate_payloads}"
           )
 
-          helper = Path("tools/release/release_dry_run.py").read_text(
-              encoding="utf-8"
-          ).strip()
-          assert helper == "# Release dry-run — greenfield placeholder", (
-              "the release dry-run helper has changed; wire its accepted CLI, deterministic "
-              "outputs, negative fixtures, and no-write tests deliberately"
-          )
-
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^release-dry-run:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile release-dry-run target is missing"
-          assert target.group("body").splitlines() == [
-              '\t@echo "TODO: tools/release dry-run"'
-          ], "release-dry-run target changed; invoke and verify the accepted command deliberately"
-
-          schema = json.loads(
-              Path(
-                  "schemas/contracts/v1/release/release_manifest.schema.json"
-              ).read_text(encoding="utf-8")
-          )
-          metadata = schema["x-kfm"]
-          assert metadata["contract_doc"] == "contracts/release/release_manifest.md"
-          assert metadata["fixtures_root"] == "fixtures/release/release_manifest/"
-          assert metadata["validator"] == "tools/validators/release/validate_release_manifest.py"
-          assert metadata["policy"] == "policy/release/"
-          assert metadata["status"] == "PROPOSED_INACTIVE"
-          assert metadata["execution_mode"] == "FIXTURE_ONLY"
-          assert metadata["legacy_profile"] == "LEGACY_MINIMAL"
-          assert metadata["strict_profile"] == "RELEASE_MANIFEST_FIXTURE_V1"
-          assert len(schema["oneOf"]) == 2
-          assert schema["$defs"]["strict_profile"]["additionalProperties"] is False
-
-          cases = json.loads(
-              Path("fixtures/release/release_manifest/cases.json").read_text(
-                  encoding="utf-8"
-              )
-          )
-          assert len(cases["valid"]) == 4
-          assert len(cases["invalid"]) == 17
+          body = target.group("body")
+          assert "python tools/release/release_dry_run.py" in body
+          assert "tests/release/test_publication_deny_dry_run.py" in body
+          assert "TODO: tools/release dry-run" not in body
 
           print(
               f"CONFIRMED: {len(candidate_files)} candidate-lane guidance/placeholder files "
               "exist and no candidate packet payload is present."
           )
-          print("CONFIRMED: ReleaseManifest has a preserved legacy branch and a closed fixture-only candidate profile.")
-          print("CONFIRMED: four valid and seventeen invalid grouped cases are present for the dedicated validator workflow.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no release candidate was assembled.")
-          print("WORKFLOW_HOLD: no accepted assembly command or candidate payload exists; fixture validation creates no release authority.")
-          print("No release record, artifact, or publication authority was created.")
+          print("CONFIRMED: the Make target invokes the bounded dry run and its no-write tests.")
           PY
+
+      - name: Prove bounded publication-denial behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make release-dry-run
+
+      - name: Validate generated authoring receipt binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-publication-deny-dry-run-20260809.json
 
       - name: Record candidate assembly outcome
         if: always()
@@ -151,8 +127,9 @@ jobs:
           {
             echo "### Candidate assembly"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** candidate lanes contain guidance/placeholders, the release-dry-run helper is comment-only, and the Make target remains TODO-only."
-            echo "- ReleaseManifest now has a preserved legacy branch plus a closed PROPOSED_INACTIVE / FIXTURE_ONLY candidate profile; its dedicated validator proves only synthetic local shape and semantics."
+            echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
+            echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
+            echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
