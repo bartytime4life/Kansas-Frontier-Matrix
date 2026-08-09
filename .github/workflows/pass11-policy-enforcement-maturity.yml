@@ -1,0 +1,100 @@
+# Validate the inactive, fixture-only Pass 11 PolicyEnforcementMaturity profile.
+name: pass11-policy-enforcement-maturity
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/pass11-policy-enforcement-maturity.yml"
+      - "contracts/policy/policy_enforcement_maturity.md"
+      - "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json"
+      - "fixtures/contracts/v1/policy/policy_enforcement_maturity/**"
+      - "tools/validators/policy/validate_policy_enforcement_maturity.py"
+      - "tests/validators/policy/test_validate_policy_enforcement_maturity.py"
+      - "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md"
+      - "data/receipts/generated/genrec-pass11-policy-enforcement-maturity-20260809.json"
+      - "packages/hashing/src/hashing/**"
+      - "tools/validators/validate_generated_receipt.py"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pass11-policy-enforcement-maturity.yml"
+      - "contracts/policy/policy_enforcement_maturity.md"
+      - "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json"
+      - "fixtures/contracts/v1/policy/policy_enforcement_maturity/**"
+      - "tools/validators/policy/validate_policy_enforcement_maturity.py"
+      - "tests/validators/policy/test_validate_policy_enforcement_maturity.py"
+      - "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md"
+      - "data/receipts/generated/genrec-pass11-policy-enforcement-maturity-20260809.json"
+      - "packages/hashing/src/hashing/**"
+      - "tools/validators/validate_generated_receipt.py"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pass11-policy-enforcement-maturity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-pass11-policy-enforcement-maturity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema, hashing, and test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Compile validator and tests
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/policy/validate_policy_enforcement_maturity.py \
+            tests/validators/policy/test_validate_policy_enforcement_maturity.py
+      - name: Run focused tests
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.validators.policy.test_validate_policy_enforcement_maturity --verbose
+      - name: Replay exact fixture outcomes
+        run: |
+          set -euo pipefail
+          python tools/validators/policy/validate_policy_enforcement_maturity.py --fixtures
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass11-policy-enforcement-maturity-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Pass 11 PolicyEnforcementMaturity"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only evidence-chain assessment from designed through runtime-enforced policy maturity."
+            echo "- Boundary: no policy authentication, branch-protection mutation, promotion, runtime enforcement, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

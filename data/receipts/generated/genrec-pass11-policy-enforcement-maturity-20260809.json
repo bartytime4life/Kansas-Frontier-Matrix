@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-pass11-policy-enforcement-maturity-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pass11-policy-enforcement-maturity.yml",
+    "contracts/policy/policy_enforcement_maturity.md",
+    "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md",
+    "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json",
+    "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json",
+    "tests/validators/policy/test_validate_policy_enforcement_maturity.py",
+    "tools/validators/policy/validate_policy_enforcement_maturity.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pass11-policy-enforcement-maturity.yml": "sha256:65eecda7121459d4d39a6628b634cb56233809664b74ce934d4d6589e07ef944",
+    "contracts/policy/policy_enforcement_maturity.md": "sha256:48eaf8447a4fa6cc873d8c767817172f9986e3817eeb8008f54ab7b743f95ffb",
+    "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md": "sha256:be0a4db3bda9374db0d63f404e3092b9251535fee3b4855ae99c9a163864d226",
+    "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json": "sha256:ef6a50e478544c97bfb7ce9e282223a72aa2ed4a4ff7521be131e17e03224e5b",
+    "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json": "sha256:80236cb9e57d0e303fc0d072dbb8e95f33346930758e0052f211541e71dafd03",
+    "tests/validators/policy/test_validate_policy_enforcement_maturity.py": "sha256:37bed63ab97e1149200b3e095886bee6b7d2179bcf2c77553de49dd90b5255d1",
+    "tools/validators/policy/validate_policy_enforcement_maturity.py": "sha256:414375b576775917cc992ea38c2ab616990403f6197195b84cc0924f89dd8ab2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:3c04803162eef3e0c677c898ef40856d4f032a9c8d4336ef87bb7f79947e3526",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python 3 validator harness",
+      "jsonschema",
+      "PyYAML"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e63ad81e0c19595d58147aefee7aacf193f6d233602a916ae7fee02f14f9246c",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Components_Pass_11_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "repo:main@8f26a3ed8d2fbc2f40fecf722177aeae2cb6297a",
+      "repo:docs/doctrine/directory-rules.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pass11-policy-enforcement-maturity.yml": "PROPOSED",
+    "contracts/policy/policy_enforcement_maturity.md": "PROPOSED",
+    "docs/intake/exploratory/pass11-policy-enforcement-maturity-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/policy/policy_enforcement_maturity/cases.json": "PROPOSED",
+    "schemas/contracts/v1/policy/policy_enforcement_maturity.schema.json": "PROPOSED",
+    "tests/validators/policy/test_validate_policy_enforcement_maturity.py": "PROPOSED",
+    "tools/validators/policy/validate_policy_enforcement_maturity.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-python-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused tests compiled."
+    },
+    {
+      "gate": "local-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema passed meta-validation."
+    },
+    {
+      "gate": "local-focused-unittest",
+      "outcome": "PASS",
+      "reason": "8 focused tests passed."
+    },
+    {
+      "gate": "local-fixture-replay",
+      "outcome": "PASS",
+      "reason": "9 exact fixture outcomes matched."
+    },
+    {
+      "gate": "local-workflow-yaml",
+      "outcome": "PASS",
+      "reason": "Dedicated read-only workflow parsed and retained immutable action pins."
+    },
+    {
+      "gate": "local-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "SHA-256 bindings close over all 7 non-receipt authored artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass11-idea-atlas",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Components_Pass_11_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    },
+    {
+      "id": "attachment:directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository:adr-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:28:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only policy-enforcement maturity assessment. It grants no policy adoption, repository-setting, promotion, runtime, release, deployment, publication, or public-use authority."
+}
