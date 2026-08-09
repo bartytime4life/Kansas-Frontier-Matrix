@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/pmtiles-release-cache.yml": "sha256:19a489623493722ecc5f4f3c6e0e490d2adc1770cdca17a3e04173f6b8c01d3c",
+    ".github/workflows/pmtiles-release-cache.yml": "sha256:e8a1531e36cdb6c1d15851f74d6cd1cf10e4d3a7fb4aed441575c44119400a9f",
     "apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts": "sha256:29d042156d75b8a86996dafba630ed3cae9cc41da3dd4792e1687332a4338875",
     "apps/explorer-web/tests/pmtiles-release-cache.test.ts": "sha256:9561e38a138a12750a8cfd2459434f456a8a440b2ceb5053be64f9885ea6efd0",
     "contracts/runtime/pmtiles_release_cache.md": "sha256:4d254a19ebc60a62ffa1109d83fc2d300c7ddbbbd97e54bad5f1e9d1e699e096",
