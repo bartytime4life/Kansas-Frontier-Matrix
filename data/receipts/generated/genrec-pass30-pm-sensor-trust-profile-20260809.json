@@ -1,0 +1,70 @@
+{
+  "receipt_id": "genrec-pass30-pm-sensor-trust-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pm-sensor-trust-profile.yml",
+    "contracts/domains/atmosphere/pm_sensor_trust_profile.md",
+    "docs/intake/exploratory/pass-30-pm-sensor-trust-profile-source-map.md",
+    "fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/cases.json",
+    "schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json",
+    "tests/validators/domains/atmosphere/test_pm_sensor_trust_profile.py",
+    "tools/validators/domains/atmosphere/validate_pm_sensor_trust_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pm-sensor-trust-profile.yml": "sha256:bea571430dc23fcb21f3449dec23bad3b09c1de13029ded3828af2fae2c44f10",
+    "contracts/domains/atmosphere/pm_sensor_trust_profile.md": "sha256:1c59b75f49ec440c9a5129b449abcd3c303c54c4bbb0b4fa5a9fcbee14cc98be",
+    "docs/intake/exploratory/pass-30-pm-sensor-trust-profile-source-map.md": "sha256:34dde8872f9f4d7ee50a0bd65d89141613dcbfab85c4c69532a1381f15fac716",
+    "fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/cases.json": "sha256:a3c0650a5580723451fa995038671968e1d367f85edbe9d25ccee6d9b6ed7bb1",
+    "schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json": "sha256:f732338e928c277767584070d26bbf5b3f98fa63920eafb1526803d0ab013a5d",
+    "tests/validators/domains/atmosphere/test_pm_sensor_trust_profile.py": "sha256:116c9e9f64f3d7d0bd5cdb2db05233e5d7e986a8d4ad6f93f153cce5f50396a7",
+    "tools/validators/domains/atmosphere/validate_pm_sensor_trust_profile.py": "sha256:f95f72ae6e077101ad6f00d77711633264ad81725ed7dba2d21f370b586b674c"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:6fed794c95d89545865ee4faa472ee9dc5906a073d2af0e22145fe16610b7b4f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0001",
+      "github:bartytime4life/Kansas-Frontier-Matrix@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "github:bartytime4life/Kansas-Frontier-Matrix@6947a2cbae6e02ce0bacedc74353f8dc3b430774:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pm-sensor-trust-profile.yml": "PROPOSED",
+    "contracts/domains/atmosphere/pm_sensor_trust_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-pm-sensor-trust-profile-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json": "PROPOSED",
+    "tests/validators/domains/atmosphere/test_pm_sensor_trust_profile.py": "PROPOSED",
+    "tools/validators/domains/atmosphere/validate_pm_sensor_trust_profile.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Card KFM-P30-PROG-0001 was resolved in the consolidated atlas and remained active and unchanged through Pass 32."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card ID, title, branch, and proposed contract/schema paths were absent at the recorded base; related station, observation, and calibration artifacts do not implement the complete six-field profile."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Atmosphere meaning is separated from schema, fixture, validator, test, workflow, intake, and receipt responsibilities."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Seven tests and twelve positive/negative fixture cases passed without network or source-system access."},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P30-PROG-0001", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0001-PASS32-UNCHANGED", "validated": true, "evidence_ref": "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@6947a2cbae6e02ce0bacedc74353f8dc3b430774:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-09T21:52:40Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed profile. It performs no live-source access, source admission, reference-grade equivalence, policy evaluation, health guidance, approval, promotion, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}
