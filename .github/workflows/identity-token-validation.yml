@@ -5,6 +5,7 @@ name: identity-token-validation
   pull_request:
     paths:
       - ".github/workflows/identity-token-validation.yml"
+      - "pyproject.toml"
       - "schemas/contracts/v1/common/identity_token.schema.json"
       - "contracts/common/identity_token.md"
       - "tools/validators/_common/jsonschema_runner.py"
@@ -16,6 +17,7 @@ name: identity-token-validation
     branches: [main]
     paths:
       - ".github/workflows/identity-token-validation.yml"
+      - "pyproject.toml"
       - "schemas/contracts/v1/common/identity_token.schema.json"
       - "contracts/common/identity_token.md"
       - "tools/validators/_common/jsonschema_runner.py"
