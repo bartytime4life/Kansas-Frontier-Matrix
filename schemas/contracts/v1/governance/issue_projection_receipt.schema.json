@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/issue_projection_receipt.schema.json",
+  "title": "IssueProjectionReceipt",
+  "description": "Fixture-first, no-network process-memory receipt for one BriefingSignal issue-routing projection. It records a dry-run proposal or hold and cannot authorize or perform GitHub mutation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "receipt_id",
+    "recorded_at",
+    "repository",
+    "repository_context",
+    "signal",
+    "inventory",
+    "projection",
+    "execution_mode",
+    "operation_attempted",
+    "receipt_digest",
+    "authority_created",
+    "evidence_created",
+    "receipt_authoritative",
+    "repository_mutation_allowed",
+    "release_authorized",
+    "publication_authorized",
+    "public_use_allowed"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.briefing.issue-projection-receipt.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^kfm:issue-projection-receipt:[0-9a-f]{24}$"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "repository_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_branch",
+        "default_branch_head_sha"
+      ],
+      "properties": {
+        "default_branch": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._/-]{1,200}$"
+        },
+        "default_branch_head_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signal_id",
+        "event_cluster_id",
+        "routing_profile",
+        "routing_report_digest",
+        "idempotency_key"
+      ],
+      "properties": {
+        "signal_id": {
+          "type": "string",
+          "pattern": "^kfm:briefing-signal:\\d{4}-\\d{2}-\\d{2}:[0-9a-f]{24}$"
+        },
+        "event_cluster_id": {
+          "type": "string",
+          "pattern": "^kfm:event-cluster:[a-z0-9_]+:[0-9a-f]{24}$"
+        },
+        "routing_profile": {
+          "const": "kfm-briefing-routing-v1"
+        },
+        "routing_report_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reference",
+        "digest",
+        "status",
+        "live_state_verified"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "MISSING",
+            "FIXTURE_PROJECTION"
+          ]
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^kfm:issue-inventory:[0-9a-f]{16}$"
+        },
+        "digest": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "status": {
+          "enum": [
+            "NOT_REQUIRED",
+            "BOUND_OPEN_TARGET",
+            "REQUIRED",
+            "INVALID",
+            "TARGET_MISSING",
+            "TARGET_CLOSED",
+            "AMBIGUOUS_OPEN_TARGETS"
+          ]
+        },
+        "live_state_verified": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "NOT_APPLICABLE"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reference": {
+                "type": "null"
+              },
+              "digest": {
+                "type": "null"
+              },
+              "status": {
+                "const": "NOT_REQUIRED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "MISSING"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reference": {
+                "type": "null"
+              },
+              "digest": {
+                "type": "null"
+              },
+              "status": {
+                "const": "REQUIRED"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "FIXTURE_PROJECTION"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reference": {
+                "type": "string",
+                "pattern": "^kfm:issue-inventory:[0-9a-f]{16}$"
+              },
+              "digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "status": {
+                "enum": [
+                  "BOUND_OPEN_TARGET",
+                  "INVALID",
+                  "TARGET_MISSING",
+                  "TARGET_CLOSED",
+                  "AMBIGUOUS_OPEN_TARGETS"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared_operation",
+        "projected_operation",
+        "outcome",
+        "declared_target_issue_ids",
+        "target_issue_ids",
+        "closed_issue_ids",
+        "missing_issue_ids",
+        "reason_codes"
+      ],
+      "properties": {
+        "declared_operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "projected_operation": {
+          "$ref": "#/$defs/operation"
+        },
+        "outcome": {
+          "enum": [
+            "PROPOSED",
+            "HELD",
+            "REJECTED",
+            "NO_ACTION",
+            "ERROR"
+          ]
+        },
+        "declared_target_issue_ids": {
+          "$ref": "#/$defs/issue_ids"
+        },
+        "target_issue_ids": {
+          "$ref": "#/$defs/issue_ids"
+        },
+        "closed_issue_ids": {
+          "$ref": "#/$defs/issue_ids"
+        },
+        "missing_issue_ids": {
+          "$ref": "#/$defs/issue_ids"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,79}$"
+          }
+        }
+      }
+    },
+    "execution_mode": {
+      "const": "DRY_RUN"
+    },
+    "operation_attempted": {
+      "const": false
+    },
+    "receipt_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "authority_created": {
+      "const": false
+    },
+    "evidence_created": {
+      "const": false
+    },
+    "receipt_authoritative": {
+      "const": false
+    },
+    "repository_mutation_allowed": {
+      "const": false
+    },
+    "release_authorized": {
+      "const": false
+    },
+    "publication_authorized": {
+      "const": false
+    },
+    "public_use_allowed": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "operation": {
+      "enum": [
+        "UPDATE_EXISTING_ISSUE",
+        "OPEN_SOURCE_DISCOVERY_ISSUE",
+        "OPEN_OBJECT_MODEL_ISSUE",
+        "OPEN_CORRECTIVE_ISSUE",
+        "HOLD_FOR_DEPENDENCY",
+        "REJECT_UNSAFE",
+        "NO_ACTION",
+        "ERROR"
+      ]
+    },
+    "issue_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2147483647
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "profile": "kfm.briefing.issue-projection-receipt.v1",
+  "schema_version": "1.0.0",
+  "receipt_id": "kfm:issue-projection-receipt:f4d0ea40e49651862ea8a1c4",
+  "recorded_at": "2026-08-09T01:30:00Z",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "repository_context": {
+    "default_branch": "main",
+    "default_branch_head_sha": "e2cbaf865f8e62dfec080db9d8933ee7590b7dc2"
+  },
+  "signal": {
+    "signal_id": "kfm:briefing-signal:2026-07-30:b37a0154a1d02c3b6e4b3905",
+    "event_cluster_id": "kfm:event-cluster:governance_event:5c1ad27137565f1bc3fbc1f0",
+    "routing_profile": "kfm-briefing-routing-v1",
+    "routing_report_digest": "sha256:34770d5e2e3118e054ae08333629bda6e42f2033b070846ca22d704781620e0f",
+    "idempotency_key": "sha256:b43aae102b191a96b0eef83f7a7a8004ecd2ea986f64726e2541f3d608a9d593"
+  },
+  "inventory": {
+    "kind": "FIXTURE_PROJECTION",
+    "reference": "kfm:issue-inventory:c58c0943dd4fd651",
+    "digest": "sha256:c58c0943dd4fd65192d1eab2c4a39efa6a4937cc91bde3813a27b9cd77c973b6",
+    "status": "BOUND_OPEN_TARGET",
+    "live_state_verified": false
+  },
+  "projection": {
+    "declared_operation": "UPDATE_EXISTING_ISSUE",
+    "projected_operation": "UPDATE_EXISTING_ISSUE",
+    "outcome": "PROPOSED",
+    "declared_target_issue_ids": [
+      1647
+    ],
+    "target_issue_ids": [
+      1647
+    ],
+    "closed_issue_ids": [],
+    "missing_issue_ids": [],
+    "reason_codes": [
+      "EXISTING_ISSUE_MATCH",
+      "ISSUE_INVENTORY_OPEN_TARGET",
+      "ISSUE_PROJECTION_DRY_RUN"
+    ]
+  },
+  "execution_mode": "DRY_RUN",
+  "operation_attempted": true,
+  "receipt_digest": "sha256:f4d0ea40e49651862ea8a1c4c80415fe72d167832d585be2f75dc07944bb6def",
+  "authority_created": false,
+  "evidence_created": false,
+  "receipt_authoritative": false,
+  "repository_mutation_allowed": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

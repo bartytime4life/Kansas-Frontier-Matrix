@@ -1,0 +1,116 @@
+# Validate fixture-first, no-network BriefingSignal issue-projection receipts.
+name: briefing-issue-projection-receipt
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/briefing-issue-projection-receipt.yml"
+      - "contracts/governance/issue_projection_receipt.md"
+      - "schemas/contracts/v1/governance/issue_projection_receipt.schema.json"
+      - "fixtures/contracts/v1/governance/issue_projection_receipt/**"
+      - "tools/validators/governance/validate_issue_projection_receipt.py"
+      - "tools/validators/governance/project_issue_receipts.py"
+      - "tests/governance/test_issue_projection_receipt.py"
+      - "docs/intake/exploratory/briefing-issue-projection-receipt-source-map.md"
+      - "data/receipts/generated/genrec-briefing-issue-projection-receipt-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/briefing-issue-projection-receipt.yml"
+      - "contracts/governance/issue_projection_receipt.md"
+      - "schemas/contracts/v1/governance/issue_projection_receipt.schema.json"
+      - "fixtures/contracts/v1/governance/issue_projection_receipt/**"
+      - "tools/validators/governance/validate_issue_projection_receipt.py"
+      - "tools/validators/governance/project_issue_receipts.py"
+      - "tests/governance/test_issue_projection_receipt.py"
+      - "docs/intake/exploratory/briefing-issue-projection-receipt-source-map.md"
+      - "data/receipts/generated/genrec-briefing-issue-projection-receipt-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: briefing-issue-projection-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-issue-projection-receipt
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+
+      - name: Compile receipt validator, projector, and tests
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/governance/validate_issue_projection_receipt.py \
+            tools/validators/governance/project_issue_receipts.py \
+            tests/governance/test_issue_projection_receipt.py
+
+      - name: Run deterministic no-network receipt tests
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/governance/test_issue_projection_receipt.py \
+            --strict-config --strict-markers
+
+      - name: Validate accepted receipts
+        run: |
+          set -euo pipefail
+          python tools/validators/governance/validate_issue_projection_receipt.py \
+            fixtures/contracts/v1/governance/issue_projection_receipt/valid/*.json
+
+      - name: Confirm known-invalid receipts fail closed
+        run: |
+          set -euo pipefail
+          if python tools/validators/governance/validate_issue_projection_receipt.py \
+            fixtures/contracts/v1/governance/issue_projection_receipt/invalid/*.json; then
+            echo "::error::Known-invalid IssueProjectionReceipt fixtures were accepted."
+            exit 1
+          fi
+          echo "EXPECTED_REJECTION: invalid IssueProjectionReceipt fixtures"
+
+      - name: Verify generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-briefing-issue-projection-receipt-20260809.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Briefing IssueProjectionReceipt"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-first dry-run process memory for one BriefingSignal issue-routing projection."
+            echo "- Binding: signal and event IDs, router-report digest, idempotency key, repository/default-branch head, fixture inventory identity, finite operation/outcome, issue numbers, and reason codes."
+            echo "- Boundary: operation_attempted=false; no live GitHub read or write; no repository authority, evidence, policy, review, proof, merge, release, deployment, publication, or public-use authority."
+            echo "- A green check proves only the declared schema, semantic, deterministic identity, fixture polarity, projector, and receipt-integrity scopes."
+          } >> "$GITHUB_STEP_SUMMARY"
