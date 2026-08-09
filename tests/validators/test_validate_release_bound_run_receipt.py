@@ -31,7 +31,7 @@ class ReleaseBoundRunReceiptTests(unittest.TestCase):
         self.assertTrue(all(item["ok"] for item in results), results)
 
     def test_valid_profile_hash_replays(self) -> None:
-        candidate = self.manifest["cases"][0]["candidate"]
+        candidate = MODULE.materialize_fixture_case(self.manifest, self.manifest["cases"][0])
         self.assertEqual(candidate["profile_spec_hash"], MODULE.compute_profile_hash(candidate))
 
     def test_profiles_are_deterministic(self) -> None:
@@ -40,11 +40,13 @@ class ReleaseBoundRunReceiptTests(unittest.TestCase):
         self.assertEqual(first, second)
 
     def test_authority_overclaim_fails_closed(self) -> None:
-        candidate = next(case["candidate"] for case in self.manifest["cases"] if case["name"] == "deny_authority_overclaim")
+        entry = next(case for case in self.manifest["cases"] if case["name"] == "deny_authority_overclaim")
+        candidate = MODULE.materialize_fixture_case(self.manifest, entry)
         self.assertEqual(MODULE.validate_candidate(candidate).outcome, "ERROR")
 
     def test_unverified_attestation_abstains(self) -> None:
-        candidate = next(case["candidate"] for case in self.manifest["cases"] if case["name"] == "abstain_unverified_attestation")
+        entry = next(case for case in self.manifest["cases"] if case["name"] == "abstain_unverified_attestation")
+        candidate = MODULE.materialize_fixture_case(self.manifest, entry)
         result = MODULE.validate_candidate(candidate)
         self.assertEqual(result.outcome, "ABSTAIN")
         self.assertEqual(result.codes, ["ATTESTATION_UNVERIFIED", "SIGNATURE_PENDING"])
