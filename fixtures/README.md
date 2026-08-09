@@ -501,7 +501,7 @@ fixtures/
 
 <a id="last-reviewed"></a>
 
-## Last evidence review and review triggers
+## Last evidence review and review trigger
 
 | Field | Value |
 |---|---|
