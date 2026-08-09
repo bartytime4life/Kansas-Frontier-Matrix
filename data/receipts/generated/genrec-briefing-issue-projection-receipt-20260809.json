@@ -21,7 +21,7 @@
     "tools/validators/governance/validate_issue_projection_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/briefing-issue-projection-receipt.yml": "sha256:3303d2b816323a83b0ea893a9c086961342e950dbd132d347b97c86357c847ad",
+    ".github/workflows/briefing-issue-projection-receipt.yml": "sha256:bd6d86930fa81cb4190384be66fd787da660c5279c7a891c1a52bbb2d24eeeb0",
     "contracts/governance/issue_projection_receipt.md": "sha256:b13c87b12bcb738ba6be5a17ef137f1136179402f27b0c03485786e3b6528ff1",
     "docs/intake/exploratory/briefing-issue-projection-receipt-source-map.md": "sha256:cb282ce10c183ad803b029dcedad704c01b9d75e21cccf06d2c0a36d6f0c405d",
     "fixtures/contracts/v1/governance/issue_projection_receipt/README.md": "sha256:f51da63f4ce461810e8d767870338a1591d84c6f0b5373df2b33bcc621df718f",
