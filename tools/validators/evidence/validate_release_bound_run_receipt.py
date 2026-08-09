@@ -142,7 +142,8 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
         for (field, state), code in status_codes.items():
             if release.get(field) == state:
                 findings.append(Finding(code, f"/release_binding/{field}"))
-        if release.get("signature_status") == "VERIFIED" and any(state != "VERIFIED" for state in attestation_states):
+        signature_status = release.get("signature_status")
+        if signature_status == "VERIFIED" and any(state != "VERIFIED" for state in attestation_states):
             findings.append(Finding("ATTESTATION_STATUS_INCONSISTENT", "/release_binding/signature_status"))
 
     authority = candidate.get("authority_claims")
@@ -172,6 +173,8 @@ def validate_candidate(candidate: object) -> ValidationResult:
     return ValidationResult(outcome, tuple(sorted(findings)))
 
 
+
+
 def _merge_patch(base: object, patch: object) -> object:
     """Apply a bounded RFC 7396-style merge patch to synthetic fixture data."""
     if not isinstance(patch, dict):
@@ -187,7 +190,6 @@ def _merge_patch(base: object, patch: object) -> object:
 
 def materialize_fixture_case(manifest: Mapping[str, object], entry: Mapping[str, object]) -> object:
     return _merge_patch(manifest["base_candidate"], entry.get("patch", {}))
-
 
 def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, object]]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
