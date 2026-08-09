@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-signed-rollback-token-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/signed-rollback-token.yml",
+    "contracts/release/signed_rollback_token.md",
+    "docs/intake/exploratory/signed-rollback-token-source-map.md",
+    "fixtures/contracts/v1/release/signed_rollback_token/cases.json",
+    "schemas/contracts/v1/release/signed_rollback_token.schema.json",
+    "tests/validators/test_validate_signed_rollback_token.py",
+    "tools/validators/release/validate_signed_rollback_token.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/signed-rollback-token.yml": "sha256:993f3dc10ba8a943978c376069b1bdfb7c3ccf0ca45e6577e2210e3c788f5258",
+    "contracts/release/signed_rollback_token.md": "sha256:13f259deffa4b420fb9d61a77fe83521fe880f208d6692ee1c94be5f4b562d1a",
+    "docs/intake/exploratory/signed-rollback-token-source-map.md": "sha256:54fd96fcf2ac766727aeb6ff883c1b39af51d013ac5c6baadf5174764ae4d1b4",
+    "fixtures/contracts/v1/release/signed_rollback_token/cases.json": "sha256:2830941ad83f41e3678e6418a26e196ff87dc042cca4ab9919e1fad8e36c0808",
+    "schemas/contracts/v1/release/signed_rollback_token.schema.json": "sha256:8951efa6c0e1baa8fa89f400b0c6cfc7b07482eb9c5f81c3daa0d36949c68a29",
+    "tests/validators/test_validate_signed_rollback_token.py": "sha256:e7eff4454485b68116db36ba785efbc6b404124593bf42863f7ac4c53529c20e",
+    "tools/validators/release/validate_signed_rollback_token.py": "sha256:d8bee1487994a1981f9fd6fa8ac14fe961e753414dcb1594fbda6bb8ede18d24"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:db4137ff0399a9b4cf7cc1724db092242c5c2a310e98519c84eb053217d0885e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search and page retrieval",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P22-PROG-0027"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/signed-rollback-token.yml": "CONFIRMED",
+    "contracts/release/signed_rollback_token.md": "PROPOSED",
+    "docs/intake/exploratory/signed-rollback-token-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/signed_rollback_token/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/signed_rollback_token.schema.json": "PROPOSED",
+    "tests/validators/test_validate_signed_rollback_token.py": "CONFIRMED",
+    "tools/validators/release/validate_signed_rollback_token.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 tests passed; local fixture validation used a hashing-API compatibility shim because no full repository checkout was mounted."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "25 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-structure-validation",
+      "outcome": "PASS",
+      "reason": "Required fields, key-set equality, timestamps, digest grammar, and final artifact-byte bindings were checked locally; the repository validator remains the hosted exact-head check."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head and repository-native hashing dependency."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass-22-signed-rollback-token-card",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P22-PROG-0027"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "release-alias-preflight-adjacent-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/contracts/release/release_alias_verification.md"
+    },
+    {
+      "id": "cosign-plan-adjacent-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9c080014926e6f3ba4dc630eaf7a615fff46c7fc/contracts/release/cosign_attestation_verification_plan.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T07:02:12Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SignedRollbackToken readiness packet derived from KFM Pass 22 card KFM-P22-PROG-0027. No cryptography, alias mutation, rollback execution, revert receipt write, promotion, deployment, publication, or public-use authority is created."
+}

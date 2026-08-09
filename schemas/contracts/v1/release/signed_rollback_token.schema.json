@@ -1,0 +1,402 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/signed_rollback_token.schema.json",
+  "title": "SignedRollbackToken",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_spec": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/spec"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "release_ref": {
+      "type": "string",
+      "pattern": "^kfm:release:[a-z0-9][a-z0-9._:-]{2,180}$"
+    },
+    "nullable_release_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/release_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "cryptography_executed": {
+          "const": false
+        },
+        "alias_mutated": {
+          "const": false
+        },
+        "revert_receipt_written": {
+          "const": false
+        },
+        "rollback_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "cryptography_executed",
+        "alias_mutated",
+        "revert_receipt_written",
+        "rollback_authorized",
+        "promotion_authorized",
+        "deployment_authorized",
+        "publication_authorized"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SignedRollbackToken"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.signed-rollback-token.fixture.v1"
+    },
+    "token_id": {
+      "type": "string",
+      "pattern": "^kfm:signed-rollback-token:[a-f0-9]{24}$"
+    },
+    "issued_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "evaluation_state": {
+      "enum": [
+        "COMPLETE",
+        "ERROR"
+      ]
+    },
+    "alias_ref": {
+      "type": "string",
+      "pattern": "^kfm:release-alias:[a-z0-9][a-z0-9._:-]{2,180}$"
+    },
+    "current": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "BOUND",
+            "UNKNOWN",
+            "ERROR"
+          ]
+        },
+        "release_ref": {
+          "$ref": "#/$defs/nullable_release_ref"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "alias_revision": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "release_ref",
+        "manifest_digest",
+        "spec_hash",
+        "alias_revision"
+      ]
+    },
+    "rollback_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release_ref": {
+          "$ref": "#/$defs/release_ref"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/spec"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/spec"
+        },
+        "alias_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "immutable": {
+          "const": true
+        },
+        "verification_state": {
+          "enum": [
+            "VERIFIED",
+            "UNKNOWN",
+            "DENIED",
+            "ERROR"
+          ]
+        }
+      },
+      "required": [
+        "release_ref",
+        "manifest_digest",
+        "spec_hash",
+        "alias_revision",
+        "immutable",
+        "verification_state"
+      ]
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_bundle_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "policy_outcome": {
+          "enum": [
+            "PASS",
+            "DENY",
+            "ABSTAIN",
+            "ERROR"
+          ]
+        },
+        "promotion_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "review_record_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "review_outcome": {
+          "enum": [
+            "APPROVED",
+            "REJECTED",
+            "PENDING",
+            "ERROR"
+          ]
+        },
+        "release_alias_verification_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      },
+      "required": [
+        "evidence_bundle_ref",
+        "run_receipt_ref",
+        "policy_decision_ref",
+        "policy_outcome",
+        "promotion_receipt_ref",
+        "review_record_ref",
+        "review_outcome",
+        "release_alias_verification_ref"
+      ]
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "VERIFIED",
+            "MISSING",
+            "INVALID",
+            "UNKNOWN",
+            "ERROR"
+          ]
+        },
+        "verification_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "envelope_digest": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "subject_digest": {
+          "$ref": "#/$defs/nullable_spec"
+        }
+      },
+      "required": [
+        "state",
+        "verification_ref",
+        "envelope_digest",
+        "subject_digest"
+      ]
+    },
+    "revert_receipt_template": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "receipt_type": {
+          "const": "RollbackRevertReceipt"
+        },
+        "append_only": {
+          "const": true
+        },
+        "preserves_history": {
+          "const": true
+        },
+        "prior_alias_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "next_alias_revision": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "source_release_ref": {
+          "$ref": "#/$defs/release_ref"
+        },
+        "target_release_ref": {
+          "$ref": "#/$defs/release_ref"
+        },
+        "target_spec_hash": {
+          "$ref": "#/$defs/spec"
+        }
+      },
+      "required": [
+        "receipt_type",
+        "append_only",
+        "preserves_history",
+        "prior_alias_revision",
+        "next_alias_revision",
+        "source_release_ref",
+        "target_release_ref",
+        "target_spec_hash"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "enum": [
+            "READY",
+            "HOLD",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ROLLBACK_TOKEN_READY",
+              "ROLLBACK_CURRENT_STATE_UNKNOWN",
+              "ROLLBACK_CURRENT_STATE_ERROR",
+              "ROLLBACK_CURRENT_STATE_INCOMPLETE",
+              "ROLLBACK_TARGET_NOT_PRIOR",
+              "ROLLBACK_TARGET_EQUALS_CURRENT",
+              "ROLLBACK_TARGET_UNKNOWN",
+              "ROLLBACK_TARGET_UNVERIFIED",
+              "ROLLBACK_TARGET_ERROR",
+              "ROLLBACK_POLICY_ABSTAIN",
+              "ROLLBACK_POLICY_DENIED",
+              "ROLLBACK_POLICY_ERROR",
+              "ROLLBACK_REVIEW_PENDING",
+              "ROLLBACK_REVIEW_REJECTED",
+              "ROLLBACK_REVIEW_ERROR",
+              "ROLLBACK_SIGNATURE_MISSING",
+              "ROLLBACK_SIGNATURE_INVALID",
+              "ROLLBACK_SIGNATURE_UNKNOWN",
+              "ROLLBACK_SIGNATURE_ERROR",
+              "ROLLBACK_SIGNATURE_EVIDENCE_INCOMPLETE",
+              "ROLLBACK_SIGNATURE_SUBJECT_MISMATCH",
+              "ROLLBACK_REVERT_RECEIPT_MISMATCH"
+            ]
+          }
+        }
+      },
+      "required": [
+        "outcome",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "token_id",
+    "issued_at",
+    "evaluation_state",
+    "alias_ref",
+    "current",
+    "rollback_target",
+    "closure",
+    "signature",
+    "revert_receipt_template",
+    "result",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/release/signed_rollback_token.md",
+    "authority": "NONE"
+  }
+}
