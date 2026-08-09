@@ -4,7 +4,6 @@
   "artifact_paths": [
     ".github/workflows/catalog-matrix-closure.yml",
     "contracts/data/catalog_matrix_closure_profile.md",
-    "fixtures/README.md",
     "fixtures/data/catalog_matrix/closure/README.md",
     "fixtures/data/catalog_matrix/closure/expected_findings_manifest.json",
     "fixtures/data/catalog_matrix/closure/invalid/schema_additional_property.json",
@@ -26,7 +25,6 @@
   "artifact_hashes": {
     ".github/workflows/catalog-matrix-closure.yml": "sha256:b54f38bf005eb48d05964a413e6d7551056860261bfe3d8c74af9dd3e7f73a85",
     "contracts/data/catalog_matrix_closure_profile.md": "sha256:a549a10d0a475e6a4ee0a267ff9dd40374ddd9bc13e7ee424cad36be3e1fb007",
-    "fixtures/README.md": "sha256:77870857c16ab924e06b63a3c34153e9ec153f762b37e47154953d2fa202bb70",
     "fixtures/data/catalog_matrix/closure/README.md": "sha256:e0980c2116b59c230c7959638000c136e9e907f47af27c4050b9e8a093c25d61",
     "fixtures/data/catalog_matrix/closure/expected_findings_manifest.json": "sha256:4a574cb227a8ad904e4d2be8f4a8e933e20165205ba9ea23cc4ecc0600dc4c4e",
     "fixtures/data/catalog_matrix/closure/invalid/schema_additional_property.json": "sha256:c34bf476dff728fa093496f6b6ff794775e4b904cab49ed1088c8e1d0295a1f1",
@@ -71,7 +69,6 @@
       "repo:contracts/data/catalog_matrix.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
       "repo:schemas/contracts/v1/data/catalog_matrix.schema.json@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
       "repo:tools/validators/validate_catalog_matrix.py@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
-      "repo:fixtures/README.md@74acdbba6d2bc36407f3694acfb10c680a5087df",
       "repo:docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
     ]
@@ -79,7 +76,6 @@
   "truth_labels": {
     ".github/workflows/catalog-matrix-closure.yml": "PROPOSED",
     "contracts/data/catalog_matrix_closure_profile.md": "PROPOSED",
-    "fixtures/README.md": "CONFIRMED",
     "fixtures/data/catalog_matrix/closure/README.md": "PROPOSED",
     "fixtures/data/catalog_matrix/closure/expected_findings_manifest.json": "PROPOSED",
     "fixtures/data/catalog_matrix/closure/invalid/schema_additional_property.json": "PROPOSED",
@@ -102,12 +98,12 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "Every authored artifact except this non-self-referential receipt is bound to prepared SHA-256 bytes."
+      "reason": "Every introduced CatalogMatrix closure-profile artifact except this non-self-referential receipt is bound to prepared SHA-256 bytes."
     },
     {
-      "gate": "fixture-root-baseline-drift",
+      "gate": "receipt-scope-separation",
       "outcome": "PASS",
-      "reason": "The root README now records all 29 direct child directories; governance/ and policy/ were pre-existing baseline lanes omitted from the prior 27-child map."
+      "reason": "The independent fixtures-root README correction is verified by its root-contract workflow and is intentionally not treated as a CatalogMatrix profile artifact."
     },
     {
       "gate": "backward-compatible-scope",
@@ -132,7 +128,7 @@
     {
       "gate": "hosted-ci",
       "outcome": "SKIPPED",
-      "reason": "A new exact-head workflow set is pending after the bounded fixture-root inventory correction."
+      "reason": "A new exact-head workflow set is pending after the receipt-scope correction."
     },
     {
       "gate": "human-review",
@@ -153,11 +149,6 @@
       "id": "repository:catalog-matrix-base-contract",
       "validated": true,
       "evidence_ref": "repo:contracts/data/catalog_matrix.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
-    },
-    {
-      "id": "repository:fixture-root-baseline-drift",
-      "validated": true,
-      "evidence_ref": "repo:fixtures/README.md@74acdbba6d2bc36407f3694acfb10c680a5087df"
     },
     {
       "id": "repository:catalog-closure-proposed-adr",
@@ -183,5 +174,5 @@
     "adr_link": "docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md",
     "drift_register_entry": null
   },
-  "notes": "Adds a proposed, discriminator-bound STAC/DCAT/PROV closure profile without narrowing the existing broad CatalogMatrix contract or accepting ADR-0022. It also reconciles inherited fixtures/README inventory drift exposed by the exact-head root-contract workflow. Neither change creates catalog, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Adds a proposed, discriminator-bound STAC/DCAT/PROV closure profile without narrowing the existing broad CatalogMatrix contract or accepting ADR-0022. The separate fixtures-root README correction remains bounded to root documentation conformance and does not create catalog, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
