@@ -1,0 +1,97 @@
+# Validate the inactive, fixture-only ThreeDAdmissionDecision profile.
+name: three-d-admission-decision
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/three-d-admission-decision.yml"
+      - "contracts/map/three_d_admission_decision.md"
+      - "docs/intake/exploratory/three-d-admission-decision-source-map.md"
+      - "fixtures/contracts/v1/map/three_d_admission_decision/**"
+      - "schemas/contracts/v1/map/three_d_admission_decision.schema.json"
+      - "tools/validators/map/validate_three_d_admission_decision.py"
+      - "tests/validators/map/test_validate_three_d_admission_decision.py"
+      - "data/receipts/generated/genrec-three-d-admission-decision-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/three-d-admission-decision.yml"
+      - "contracts/map/three_d_admission_decision.md"
+      - "docs/intake/exploratory/three-d-admission-decision-source-map.md"
+      - "fixtures/contracts/v1/map/three_d_admission_decision/**"
+      - "schemas/contracts/v1/map/three_d_admission_decision.schema.json"
+      - "tools/validators/map/validate_three_d_admission_decision.py"
+      - "tests/validators/map/test_validate_three_d_admission_decision.py"
+      - "data/receipts/generated/genrec-three-d-admission-decision-20260808.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: three-d-admission-decision-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-three-d-admission-decision
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+      - name: Compile validator and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile             tools/validators/map/validate_three_d_admission_decision.py             tests/validators/map/test_validate_three_d_admission_decision.py
+      - name: Run focused tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.map.test_validate_three_d_admission_decision --verbose
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/map/validate_three_d_admission_decision.py --fixtures
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-three-d-admission-decision-20260808.json             --repo-root .
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### ThreeDAdmissionDecision fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: explanatory burden, 2.5D/true-3D labeling, Reality Boundary Note requirement, 2D evidence/drawer/correction/release/sensitivity parity, sensitive geometry, plugin declaration, deterministic identity, and exact fixture polarity."
+            echo "- Boundary: no renderer boot, plugin install, live source, EvidenceBundle resolution, policy or human-review execution, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
