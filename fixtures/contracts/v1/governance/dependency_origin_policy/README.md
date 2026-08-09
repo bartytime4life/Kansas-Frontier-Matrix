@@ -11,7 +11,6 @@ The suite covers:
 - a direct npm URL dependency;
 - a lock entry without integrity;
 - an unexpected remote registry host;
-- a Python direct URL reference;
-- a finite repository-scan error.
+- a Python direct URL reference.
 
 Fixtures do not contact registries, install packages, reserve names, verify publishers, or create release authority.
