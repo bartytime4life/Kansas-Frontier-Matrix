@@ -1,40 +1,48 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/release-readme
 title: release/ — Release Governance Root
-type: README
-version: v2.0
-status: draft; repository-grounded; release-governance-root; readiness-holds-visible; non-authoritative
-owner: NEEDS VERIFICATION — default CODEOWNERS route is @bartytime4life; no independent release steward, approver separation, or required-review enforcement was established
+type: readme; root-readme; canonical-release-decision-plane; drift-index
+version: v2.1
+status: draft; repository-grounded; canonical-root-confirmed; mixed-maturity; operational-release-hold; non-authoritative
+owner: NEEDS VERIFICATION — CODEOWNERS routes /release/ to @bartytime4life; independent release authority and enforced separation of duties are not verified
 created: 2026-07-03
-updated: 2026-07-23
-supersedes: v1 documentation at the same path; no release, promotion, rollback, correction, publication, signing, deployment, or data behavior is superseded
-policy_label: repository-facing; release-governance; candidate-is-not-release; promotion-is-state-transition; no-payloads; cite-or-abstain; correction-aware; rollback-aware
+updated: 2026-08-09
+supersedes: v2.0 documentation at the same path; no release, promotion, correction, withdrawal, rollback, signing, deployment, publication, data, policy, contract, schema, or runtime state is superseded
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+policy_label: "release-decision-plane; candidate-is-not-release; promotion-is-state-transition; no-payloads; no-policy-source; append-only; audit-bound; cite-or-abstain; correction-aware; withdrawal-aware; rollback-aware"
 owning_root: release/
-responsibility: explain and index release-governance records without becoming a release decision, proof, receipt, policy, schema, data payload, or publication authority
-truth_posture: cite-or-abstain; current files and workflow definitions are evidence of bounded repository surfaces, not proof of operational release capability
+responsibility: explain and index release decisions without becoming a release decision, proof, receipt, policy, schema, data payload, generated output, or publication authority
+truth_posture: >-
+  CONFIRMED current same-path README, accepted Directory Rules v2 placement law,
+  active root projection, current direct-child inventory, bounded fixture-first
+  ReleaseManifest, PromotionDecision, ReviewRecord, A-G promotion-gate,
+  RollbackCard, and Rego validation surfaces, and current workflow holds /
+  PROPOSED release objects and inactive profiles that have not crossed governed
+  adoption or operational gates / CONFLICTED root policy source, domain-first,
+  singular, generic, and empty-scaffold lanes / UNKNOWN production assembly,
+  authenticated release authority, signing custody, operational promotion,
+  rollback, invalidation, correction propagation, and public parity /
+  NEEDS VERIFICATION named stewards, accepted profiles, consumer closure,
+  ruleset coupling, hosted checks, external storage, and first governed release
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
   base_ref: main
-  base_commit: fae69bb52e0ebc7670dc7d20c9eb05cb587520ff
-  prior_blob: 089c4a394c5cbf3b9e5a2a1963e68e16be485dce
-  directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
+  base_commit: 9c080014926e6f3ba4dc630eaf7a615fff46c7fc
+  prior_blob: 0752610b1df6d11143158f6f162f65ecd650e6a6
+  release_tree: 210ccf37b9f90986590a3e0995a0eeda7f758042
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  release_dry_run_workflow_blob: 9baf5b92f954c994ab11e8bb54d480e6309a0579
-  promotion_gate_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
-  rollback_drill_workflow_blob: dc42ec4931f95023d364f2559ddcffab94ecfab5
-  candidates_readme_blob: 469a5b088bf5367b330b9c8c292165063f3e2d1f
-  reviews_readme_blob: d927536c39a2102b1f012007fc8de4facb7abd90
-  promotion_decisions_readme_blob: 18c6342f93212992f98d0e354390a36a79749858
-  manifests_readme_blob: c699a527ff11bebad6a874ed1a37aa3a8213b86c
-  decisions_readme_blob: 9cdd61ae826bfc2fb27db5885c9f903212e8591a
-  rollback_readme_blob: aa8b60f4d47e7b73ab3e862f1dcd498691ea4e0c
-  rollback_cards_readme_blob: c1fc4d27bca8144faa16e1b888ca95c5d2f88eb5
-  withdrawal_notices_readme_blob: 24358c5d9286b74988c42e38aedcba06a87349b1
-  signatures_readme_blob: e25a62e73762af96d15fbb6c32c8d03fbac66e30
+  makefile_blob: 4abc7f941ce25d7d14703e87e387cef6e96d1592
+  direct_child_directories: 18
+  root_rego_files: 3
+  open_prs_touching_target: 0
 related:
-  - ../docs/architecture/directory-rules.md
-  - ../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../control_plane/root_registry.yaml
   - ../.github/CODEOWNERS
   - ../.github/workflows/release-dry-run.yml
   - ../.github/workflows/promotion-gate.yml
@@ -42,344 +50,268 @@ related:
   - ../contracts/release/
   - ../schemas/contracts/v1/release/
   - ../policy/release/
-  - ../tools/release/
-  - ../tests/release/test_promotion_decision_schema.py
   - ../data/receipts/
   - ../data/proofs/
   - ../data/published/
 notes:
-  - "The first twelve H2 sections follow the Directory Rules §15 folder-README contract."
-  - "The workflow files named above are read-only readiness and drift checks. Their success does not assemble, approve, publish, or roll back a release."
-  - "The current Makefile release-dry-run and publish-check targets are explicit TODO readiness markers."
-  - "Manifest, correction, rollback, review, and decision lane semantics contain unresolved overlap. This README records the conflict and does not choose a migration."
-  - "No release, promotion, rollback execution, publication, deployment, source activation, or ADR transition is performed by this document."
+  - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL contract in exact order."
+  - "make publish-check is bounded fixture validation; make release-dry-run remains a TODO-only marker."
+  - "This revision changes this README and its generated provenance receipt only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="release-root"></a>
 
 # `release/` — Release Governance Root
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Authority: release governance](https://img.shields.io/badge/authority-release%20governance-8250df?style=flat-square)](#authority-level)
-[![Readiness: explicit holds](https://img.shields.io/badge/readiness-explicit%20holds-b42318?style=flat-square)](#workflow-readiness-boundaries)
-[![Publication: not performed](https://img.shields.io/badge/publication-not%20performed-6e7781?style=flat-square)](#outputs)
-[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](../CONTRIBUTING.md#evidence-and-truth-labels)
-[![Rollback: required](https://img.shields.io/badge/rollback-required-1f6feb?style=flat-square)](#maintenance-correction-and-rollback)
-
-> **One-line purpose.** `release/` owns KFM release-governance records and review state; it does not store published payloads, turn prose into approval, or make a candidate public.
-
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Lanes](#current-repository-lane-map) · [Workflow holds](#workflow-readiness-boundaries) · [States](#release-state-model) · [Record contract](#release-record-minimum-contract) · [Open verification](#open-verification-register) · [Rollback](#maintenance-correction-and-rollback)
+> **One-line purpose.** `release/` owns append-only decisions that authorize, correct, withdraw, supersede, or roll back KFM releases; it does not own published payloads, policy source, evidence, proofs, receipts, schemas, generated output, or runtime publication.
 
 > [!IMPORTANT]
-> **Release governance is not publication.** A candidate, review, manifest, decision, signature packet, correction note, rollback card, workflow result, pull request, or merge is not automatically a released public artifact. Published payloads belong under [`data/published/`](../data/published/) only after the applicable evidence, policy, validation, review, release, correction, and rollback gates are satisfied.
+> **Release governance is not publication.** A candidate, review, valid schema, manifest, promotion result, signature packet, correction notice, rollback card, workflow result, pull request, merge, or GitHub release does not by itself create KFM `PUBLISHED` state. Released public-safe carriers belong under [`data/published/`](../data/published/) only after applicable evidence, policy, validation, accountable review, decision, correction, and rollback gates are satisfied.
+
+> [!CAUTION]
+> **Repository maturity is mixed.** Fixture-first validators and a bounded A–G readiness proof exist. Candidate assembly, authenticated review, live policy and evidence evaluation, attestation verification, release mutation, rollback execution, alias verification, and correction propagation remain held or unverified.
 
 > [!WARNING]
-> **Current release automation is bounded by explicit holds.** The repository can inspect release readiness and validate selected proposed shapes, but the accepted candidate assembler, manifest validator, accountable review flow, promotion evaluator, rollback engine, and published-alias verifier are not established as operational release machinery.
+> **Placement drift is visible, not normalized.** Adopted Directory Rules v2 deny policy source under `release/`, require object-family-first lanes, and define canonical collection spellings. Existing root Rego files, domain-first directories, singular or generic lanes, and empty scaffolds remain migration candidates or holds.
 
-> [!NOTE]
-> This README is a repository-grounded index and maintenance contract. It records current surfaces and conflicts without accepting an ADR, resolving lane duplication, promoting a candidate, or changing any release state.
-
----
+**Navigate:** [purpose](#purpose) · [authority](#authority-level) · [status](#status) · [validation](#validation) · [lanes](#current-lane-index) · [workflow holds](#workflow-readiness-boundaries) · [states](#release-state-model) · [open verification](#open-verification) · [rollback](#maintenance-correction-and-rollback)
 
 ## Purpose
 
-`release/` is the canonical responsibility root for KFM release-governance records.
+`release/` is the canonical KFM **release decision plane**. It makes transitions into, within, or away from released state inspectable and reversible by binding stable identity, immutable artifact versions, evidence, validation, policy, accountable review, finite decisions, manifests, signatures, correction or withdrawal lineage, and rollback targets.
 
-Its job is to make the path from candidate review to a reversible release decision inspectable. It connects release-facing records to evidence, validation, policy, review, manifests, correction, withdrawal, supersession, signatures, changelog, and rollback support.
-
-The root answers governance questions such as:
-
-- What candidate or release-facing record is under review?
-- Which evidence and validation records support it?
-- Which policy posture and public-safety obligations apply?
-- Who reviewed or decided the release state?
-- Which manifest, correction, withdrawal, notice, or changelog record carries the transition?
-- What prior state and rollback target would be restored if the change is reversed?
-
-It must not answer those questions by implication, folder movement, badge color, workflow success, or generated prose.
+It must not infer approval from folder movement, badges, generated prose, workflow success, pull-request or merge state, mutable aliases, map visibility, or model output. This README is a boundary contract; it creates no release decision and upgrades no child lane from proposed, fixture-only, placeholder, or held status.
 
 [Back to top](#top)
 
----
-
+<a id="authority-level"></a>
 <a id="status--authority"></a>
+<a id="placement-basis"></a>
 
-## Authority level
+## Root class and authority owner
 
 | Field | Current bounded result |
 |---|---|
-| Responsibility root | **CONFIRMED:** `release/` is the release-governance root. |
-| README authority | Guidance, index, and maintenance contract only. |
-| Higher-authority records | Governed release records, evidence and validation support, applicable policy decisions, accountable reviews, manifests, corrections, rollback records, signatures, and accepted ADRs. |
-| Artifact boundary | Released public-safe payloads belong under `data/published/`; receipts under `data/receipts/`; proofs under `data/proofs/`; contracts, schemas, and policy remain in their canonical roots. |
-| GitHub review routing | **CONFIRMED:** [`.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/release/` to `@bartytime4life`. |
-| Review limitation | CODEOWNERS is routing, not a `ReviewRecord`, stewardship assignment, independent approval, release authorization, or proof that review occurred. |
-| Publication authority | **NOT CREATED by this README.** |
-| Operational release capability | **UNKNOWN / NEEDS VERIFICATION** beyond the bounded workflow and shape checks documented below. |
+| Root class | **CONFIRMED canonical / ACTIVE** in [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml). |
+| Responsibility | Release, correction, withdrawal, rollback, promotion, and signature decisions. |
+| Allowed durable class | `release_decision`, plus this ROOT_FULL boundary README. |
+| Prohibited classes | `data_instance`, `generated_output`, and `policy_rule`. |
+| Exposure / mutability / retention | `internal` / `append_only` / `audit_bound`; committed records must still be safe in a public repository. |
+| Placement authority | [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md), adopted byte-for-byte by [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). |
+| GitHub review route | [`.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/release/` to `@bartytime4life`; routing is not approval or a `ReviewRecord`. |
+| Operational writer/decider | **NEEDS VERIFICATION.** No authenticated runtime release role, independent approver, or enforced separation-of-duties assignment is proven. |
+| Publication authority | **NOT CREATED** by this root, README, workflow, fixture, PR, merge, or GitHub release. |
 
-<a id="placement-basis"></a>
-
-Directory Rules basis:
-
-- release decisions, manifests, rollback cards, corrections, and related governance records belong under `release/`;
-- published artifacts remain distinct under `data/published/`;
-- receipts and proofs must not be duplicated here;
-- canonical policy-as-code remains under `policy/`;
-- lane consolidation, root retirement, or a parallel authority requires the applicable ADR and migration discipline.
-
-[Back to top](#top)
-
----
-
-## Status
-
-| Surface | Truth status | Current bounded finding |
+| Concern | Owning authority | Role of `release/` |
 |---|---|---|
-| Root path and README | `CONFIRMED` | `release/README.md` exists at the canonical release-governance root. |
-| Candidate, review, manifest, decision, correction, notice, rollback, withdrawal, signature, and changelog lanes | `CONFIRMED_MIXED` | Parent indexes and selected records exist; maturity and semantics differ by lane. |
-| ReleaseManifest shape | `PROPOSED / HOLD` | The current schema is permissive and id-only; its declared fixture and validator paths are absent. |
-| PromotionDecision shape | `PROPOSED / BOUNDED` | Non-empty valid/invalid fixtures and a dedicated shape test exist, but no operational policy/review gate is thereby proven. |
-| Review records | `HOLD` | The inspected release review lane contains guidance, not accountable review records. |
-| RollbackCard shape and records | `PROPOSED / HOLD` | Schemas are permissive; declared fixtures/validators are absent; root card JSONs remain placeholder records. |
-| Candidate assembly | `WORKFLOW_SKIPPED_EXPLICIT / HOLD` | No candidate packet is assembled by the current workflow. |
-| Promotion execution | `WORKFLOW_SKIPPED_EXPLICIT / HOLD` | The hydrology promoter is not executed; its smoke decision has unresolved support references. |
-| Rollback execution | `WORKFLOW_SKIPPED_EXPLICIT / HOLD` | No rollback engine, accepted profile, target mutation, or receipt flow is run. |
-| Published-alias verification | `WORKFLOW_SKIPPED_EXPLICIT / HOLD` | No accepted alias mechanism or behavioral rollback proof is established. |
-| Human review enforcement | `NEEDS VERIFICATION` | Branch protection, required reviews, separation of duties, and ruleset coupling were not established from file evidence. |
-| Production release/runtime parity | `UNKNOWN` | No deployment, production release, registry, dashboard, or runtime evidence is claimed here. |
-
-> [!CAUTION]
-> A successful readiness workflow can prove that a known hold remains visible and fail-closed. It does not prove that the held capability exists.
+| Meaning and shape | [`contracts/release/`](../contracts/release/) and [`schemas/contracts/v1/release/`](../schemas/contracts/v1/release/) | References accepted profiles; does not redefine them. |
+| Admissibility | [`policy/`](../policy/) | References versioned outcomes; policy source under `release/` is denied. |
+| Proof and process memory | [`data/proofs/`](../data/proofs/) and [`data/receipts/`](../data/receipts/) | References support; does not duplicate it. |
+| Published carriers | [`data/published/`](../data/published/) | Authorizes named releases after gates; stores no payload. |
+| Tools and CI | [`tools/release/`](../tools/release/), [`tools/validators/`](../tools/validators/), and [`.github/workflows/`](../.github/workflows/) | Consumes bounded results; tool success is not authority. |
 
 [Back to top](#top)
 
----
+<a id="status"></a>
 
-## What belongs here
+## Adoption and conformance status
 
-- Root and lane READMEs for release governance.
-- Candidate review packets and candidate indexes.
-- Governed review, decision, and promotion-decision records.
-- Release manifests and manifest indexes.
-- Release-facing policy review pointers, not canonical policy rules.
-- Correction and withdrawal records and notices.
-- Rollback review records and rollback cards.
-- Signature and signoff packets.
-- Human-readable changelog records tied to governed transitions.
-- Stable pointers to evidence, validation receipts, policy decisions, proofs, source records, published targets, correction lineage, and rollback targets.
-- Explicit `DRAFT`, `READY_FOR_REVIEW`, `HELD`, `NO_ACTION`, correction, withdrawal, supersession, and release-state records.
-- Documentation of unresolved lane semantics when the repository carries overlapping singular/plural or review/decision paths.
+| Surface | Status | Safe conclusion |
+|---|---:|---|
+| Root placement | `CONFIRMED` | `release/` is the active canonical release decision plane. |
+| Root README | `CONFIRMED / DRAFT` | Boundary documentation exists; human review of v2.1 remains pending. |
+| Canonical v2 lanes | `CONFIRMED, mixed` | Directory families exist; presence does not prove admitted instances or operational release. |
+| ReleaseManifest | `PROPOSED_INACTIVE / FIXTURE_ONLY` | Legacy and strict fixture branches, validator, and grouped cases exist; no assembly or release is proven. |
+| PromotionDecision | `PROPOSED / FIXTURE-VALIDATED` | Closed shape, non-empty fixtures, tests, and workflow binding exist; policy, evidence, review, and transition remain separate. |
+| ReviewRecord | `PROPOSED / FIXTURE_ONLY` | Synthetic identity, authority, self-review, time, scope, subject, obligations, and hash checks exist; no accountable review record exists. |
+| A–G readiness | `IMPLEMENTED, BOUNDED` | `make publish-check` runs side-effect-free fixtures with `PASS`, `ABSTAIN`, `DENY`, and `ERROR`; it emits no decision or release. |
+| Shared RollbackCard | `PROPOSED / FIXTURE-VALIDATED` | Closed candidate profile, validator, and fixtures exist; generic entry and execution remain placeholders. |
+| Candidate assembly | `WORKFLOW_HOLD` | No candidate payload or accepted assembly command is established. |
+| Promotion / rollback execution | `WORKFLOW_HOLD` | No live support authentication, state mutation, invalidation, restoration, or publication is established. |
+| Bounded Rego profile | `PROPOSED_INACTIVE` | One governed profile exists under `policy/rego/`; no general policy runtime is established. |
+| Human review enforcement | `NEEDS VERIFICATION` | Required review, independent approval, ruleset coupling, and runtime authority are unproven. |
+| Production parity | `UNKNOWN` | No deployed registry, production signing, operational release, dashboard, or tested recovery is claimed. |
 
-[Back to top](#top)
-
----
-
-## What does NOT belong here
-
-- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data payloads.
-- Bulk datasets, tiles, PMTiles, COGs, GeoParquet, exports, service payloads, or map-ready artifacts.
-- Receipts of record that belong under `data/receipts/`.
-- Proof objects that belong under `data/proofs/`.
-- Source descriptors or source registries.
-- Semantic contracts or machine schemas.
-- Canonical policy rules, bundles, or policy fixtures.
-- Validator, pipeline, connector, application, or runtime code.
-- Generated summaries presented as evidence, approval, release authority, or publication truth.
-- Silent promotion, correction, withdrawal, or rollback by moving files.
-- A duplicate release, proof, receipt, catalog, source, schema, contract, or policy authority.
-- Secrets, private keys, signing credentials, protected material, or restricted precise locations.
+A workflow may pass by proving that a hold remains visible and fail-closed. That is validation evidence, not proof that the held capability exists.
 
 [Back to top](#top)
 
----
+<a id="what-belongs-here"></a>
+<a id="what-does-not-belong-here"></a>
 
-## Inputs
+## What belongs here and what is prohibited
 
-Release governance consumes pointers and review state, not ungoverned payload copies.
+Canonical families are object-family first and domain second:
+
+```text
+release/
+├── candidates/
+├── manifests/
+├── promotion_decisions/
+├── correction_notices/
+├── withdrawal_notices/
+├── rollback_cards/
+├── signatures/
+└── changelog/
+```
+
+**Belongs:** root and lane READMEs; candidate dossiers; immutable manifests; finite promotion decisions; correction and withdrawal notices; rollback decision cards; verified signature or attestation packets without private keys; release-level history; and domain-scoped records beneath the owning family.
+
+**Prohibited:** lifecycle payloads; datasets, tiles, exports, or model files; receipts; proofs or EvidenceBundles; source registries; contracts; schemas; policy source or Rego; validators, tools, pipelines, connectors, apps, or runtime code; generated summaries presented as truth; placeholder instances in canonical trust collections; secrets, private endpoints, restricted payloads, harmful exact locations; and any state transition inferred from a file move.
+
+`PLACE` describes a directory family, not every contained record. Each instance still needs admitted shape, evidence, policy, review, correction, and rollback support appropriate to its effect.
+
+[Back to top](#top)
+
+<a id="inputs"></a>
+<a id="outputs"></a>
+
+## Inputs, outputs, and permitted writers
 
 | Input family | Minimum posture |
 |---|---|
-| Candidate | Stable identity, bounded scope, artifact pointer, proposed target, and current candidate state. |
-| Evidence | Resolvable `EvidenceRef` / `EvidenceBundle` support where release claims depend on evidence. |
-| Validation | Applicable schema, contract, integrity, catalog, citation, boundary, and public-safety results. |
-| Policy | Rights, sensitivity, access, stale-state, correction, and public-surface decisions where applicable. |
-| Review | Accountable reviewer identity, review target, outcome, reason, and separation-of-duties posture where required. |
-| Manifest inputs | Included records, artifact identities, release scope, previous state, correction path, and rollback target. |
-| Correction or withdrawal support | Affected state, evidence and validation reason, public effect, notice needs, and replacement or rollback path. |
-| Signature support | Verified signoff or attestation references; never raw secret material. |
-| Repository evidence | Pinned files, schemas, fixtures, tests, workflows, manifests, receipts, proofs, logs, and generated outputs tied to a known revision. |
+| Candidate | Stable identity, bounded scope, intended transition, artifact identities, current state. |
+| Evidence | Resolvable `EvidenceRef -> EvidenceBundle` support where claims depend on evidence. |
+| Validation / integrity | Applicable schema, contract, geometry, temporal, citation, catalog, digest, signature, and public-safety results. |
+| Policy | Versioned rights, sensitivity, access, stale-state, public-safety outcome, and obligations. |
+| Review / authority | Authenticated actor, current assignment, subject/scope/hash binding, reasons, obligations, time, and separation of duties. |
+| Manifest / correction / rollback | Included records, prior state, public effect, notice, invalidation, successor or restoration target. |
+| Signature support | Verified signature or attestation references and revocation posture; never raw key material. |
 
-Missing or unresolved inputs produce a visible hold, abstention, denial, or error rather than an implied approval.
+Outputs may include candidate state, manifests, decisions, correction or withdrawal notices, rollback cards, signature packets, changelog entries, and explicit hold, abstain, deny, or no-action outcomes. Released carriers remain under `data/published/`.
 
-[Back to top](#top)
-
----
-
-## Outputs
-
-The root may support or contain governed records such as:
-
-- candidate status and review packets;
-- release review records;
-- promotion and release decisions;
-- release manifests;
-- release-facing policy-review pointers;
-- correction, withdrawal, and supersession records;
-- correction and withdrawal notices;
-- rollback review records and rollback cards;
-- signature/signoff packets;
-- changelog entries;
-- explicit hold, no-action, repair, defer, and supersession outcomes.
-
-The root does **not** emit a public artifact merely because one of those records exists. A released payload is a separate governed output under `data/published/` and must retain the release, evidence, policy, correction, and rollback references required by its significance.
-
-No release, promotion, correction, rollback execution, deployment, or publication is performed by editing this README.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Validation must distinguish document correctness, shape checks, readiness inspection, and operational release proof.
-
-### Repository commands and their scope
-
-| Command or workflow | What it currently proves | What it does not prove |
+| Actor class | Permitted durable write | Limit |
 |---|---|---|
-| `make validate` | Runs the configured aggregate schema validators and the repository schema/contract tests. | A full release system, candidate assembly, review, promotion, rollback, or publication. |
-| `make release-dry-run` | Prints the current TODO marker. | Candidate assembly or dry-run execution. |
-| `make publish-check` | Prints the current TODO marker. | Promotion policy evaluation or release approval. |
-| `tests/release/test_promotion_decision_schema.py` | Exercises selected `PromotionDecision` shape fixtures. | Evidence resolution, policy execution, accountable review, rollback target validity, or lifecycle transition. |
-| `release-dry-run` workflow | Fails on drift from its known readiness boundary and runs a bounded `PromotionDecision` fixture test. | Candidate assembly, release record creation, or publication. |
-| `promotion-gate` workflow | Proves selected doctrine absence is fail-closed and exercises proposed descriptor/decision shapes. | A real review record, promotion policy decision, or release transition. |
-| `rollback-drill` workflow | Inspects placeholder rollback, card, and published-alias surfaces. | A rollback simulation, alias mutation, invalidation, or rollback receipt. |
-
-### Required documentation checks for this README
-
-- one stable H1 and preserved `kfm://doc/release-readme` identity;
-- the twelve Directory Rules §15 H2 sections first and in exact order;
-- balanced metadata and fenced blocks;
-- unique custom anchors and resolved internal fragments;
-- repository-relative links checked against the pinned tree;
-- no invented owners, approvals, commands, test passes, release states, or deployment claims;
-- no secret, credential, restricted-location, living-person, DNA, or other sensitive payload introduced;
-- generated provenance receipt validates and binds the README content hash;
-- remote branch bytes and exact changed-path set match the reviewed packet.
+| Candidate producer | `release/candidates/` through an admitted interface | Cannot approve, manifest, release, correct, withdraw, or roll back. |
+| Authenticated release authority | Accepted decision family after applicable gates | Identity and assignment remain `NEEDS VERIFICATION`. |
+| Correction / withdrawal authority | New append-only notice or decision | Cannot silently mutate prior records or payloads. |
+| Rollback authority | New rollback card after target, review, policy, and invalidation checks | Writing a card does not execute restoration. |
+| Publisher | Immutable `data/published/` carriers after an accepted decision | Cannot write its own release decision. |
+| Contributor or AI builder | Feature-branch drafts | Cannot approve, merge, release, deploy, publish, or claim adoption. |
+| Watcher, connector, pipeline, renderer, AI runtime, or public client | No release-decision writes by default | May propose candidates or correction requests only through governed interfaces. |
 
 [Back to top](#top)
 
----
+## Public exposure and sensitivity posture
 
-## Review burden
+The machine projection classifies `release/` as internal while the Git repository is public. Committed records must therefore be safe for public source visibility. Restricted operational details may live in governed external storage with a versioned logical record, digest, media type, rights or sensitivity labels, retention, release, correction, and rollback references.
 
-| Review question | Required posture |
+Public clients consume governed APIs and released public-safe carriers, not this directory as a direct trust store. Redact, generalize, restrict, or omit denial detail, private reviewer notes, incident or security detail, protected locations, living-person information, DNA or genomic data, restricted cultural material, private-land detail, and source terms.
+
+Use `HOLD`, `ABSTAIN`, or `DENY` when rights, sovereignty, consent, sensitivity, reviewer authority, public scope, or harmful precision is unresolved. Never place private keys, tokens, OIDC credentials, or recovery material here.
+
+[Back to top](#top)
+
+## Mutability, retention, generation, and physical storage
+
+| Property | Rule |
 |---|---|
-| Does the record change release state? | Require an accountable release decision and the applicable evidence, validation, policy, manifest, correction, and rollback support. |
-| Does it affect rights, sensitivity, living people, DNA, archaeology, rare species, infrastructure, sovereignty, or precise locations? | Require the applicable policy and domain review; fail closed when unclear. |
-| Does it change a canonical root, lane meaning, schema home, lifecycle phase, or parallel authority? | Require the applicable accepted ADR and migration/rollback plan. |
-| Does it only update documentation? | Still require review for accuracy, preserved identity, claim limits, links, and no-loss behavior. |
-| Does CODEOWNERS request `@bartytime4life`? | Treat that as GitHub routing only; do not infer independent approval or separation of duties. |
-| Did a workflow pass? | Inspect whether it proved behavior or merely preserved a readiness hold. |
+| Mutability | Durable decisions are append-only; create successor, correction, withdrawal, supersession, or rollback records. |
+| Retention | Audit-bound; preserve identity, prior state, decision basis, correction lineage, and rollback target while reliance or policy requires. |
+| Generation | Generated material is never independent release authority; generated candidates declare producer, inputs, digest, and edit policy. |
+| Placeholders | Canonical trust collections reject self-identified placeholder or scaffold instances. |
+| Physical storage | Small public-safe records may be Git-tracked; larger or restricted records use governed external storage plus a versioned logical record. |
+| Locators | URL, object key, registry tag, Git path, or mutable alias is a locator, not authority. |
+| Cache / index effects | State changes name affected caches, aliases, catalogs, APIs, maps, search, graph, exports, and AI surfaces. |
+| Deletion | Last resort after authority, retention, reference closure, correction, and rollback or forward-fix review. |
 
-**NEEDS VERIFICATION:** repository rulesets, required checks, required CODEOWNER review, independent author/approver separation, approved steward assignments, and operational signing authority.
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Responsibility | Canonical or current related home |
-|---|---|
-| Released public-safe payloads | [`data/published/`](../data/published/) |
-| Process receipts | [`data/receipts/`](../data/receipts/) |
-| Proof and evidence-closure objects | [`data/proofs/`](../data/proofs/) |
-| Release semantic contracts | [`contracts/release/`](../contracts/release/) |
-| Release machine schemas | [`schemas/contracts/v1/release/`](../schemas/contracts/v1/release/) |
-| Canonical release policy | [`policy/release/`](../policy/release/) |
-| Release support tooling | [`tools/release/`](../tools/release/) |
-| Validators of record | [`tools/validators/`](../tools/validators/) |
-| Release fixture shape test | [`tests/release/test_promotion_decision_schema.py`](../tests/release/test_promotion_decision_schema.py) |
-| Candidate lane | [`candidates/`](candidates/) |
-| Review lane | [`reviews/`](reviews/) |
-| Promotion-decision lane | [`promotion_decisions/`](promotion_decisions/) |
-| Manifest lanes | [`manifest/`](manifest/) and [`manifests/`](manifests/) |
-| Decision lane | [`decisions/`](decisions/) |
-| Correction lanes | [`correction/`](correction/) and [`corrections/`](corrections/) |
-| Rollback lanes | [`rollback/`](rollback/) and [`rollback_cards/`](rollback_cards/) |
-| Communication/history lanes | [`correction_notices/`](correction_notices/), [`withdrawal_notices/`](withdrawal_notices/), and [`changelog/`](changelog/) |
-| Signoff packets | [`signatures/`](signatures/) |
+Current conflicts: three root `.rego` files are nonconforming policy source; two root RollbackCard JSON files are non-schema-admissible documentation placeholders; `source_role_anti_collapse/` is README plus `.gitkeep`; and domain-first children require inventory before migration.
 
 [Back to top](#top)
 
----
+<a id="validation"></a>
 
-## ADRs
+## Validation and negative checks
 
-| Decision or conflict | Current status | Consequence |
+| Command or workflow | Current bounded meaning | Does not prove |
 |---|---|---|
-| [`ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | `PROPOSED` | It is not yet authority for a migration or lane retirement. |
-| `OPEN-DR-09-b` — trust content under `artifacts/release/` | Unresolved | Do not migrate, delete, canonize, or publish from that compatibility lane without an accepted decision and rollback plan. |
-| Manifest singular/plural semantics | Unresolved | Preserve `manifest/` and `manifests/`; do not silently consolidate. |
-| Correction singular/plural semantics | Unresolved | Preserve `correction/` and `corrections/`; record the conflict. |
-| Rollback review vs. rollback-card semantics | Unresolved | Preserve `rollback/`, `correction/rollback/`, and `rollback_cards/` until their responsibilities are accepted. |
-| Review vs. decision vs. promotion-decision separation | Unresolved | Do not collapse lanes from prose alone. |
-| Published current-alias mechanism | Draft / proposed | Absence of an alias is not proof of rollback capability. |
+| `make validate` | Aggregate schema validators and schema or contract tests. | Complete release closure, authenticated review, promotion, rollback, or publication. |
+| `make publish-check` | Fixture-only ReviewRecord and A–G promotion-gate validators plus tests. | Live evidence, policy execution, review authority, decision emission, transition, or publication. |
+| `python tools/validators/release/validate_release_manifest.py --fixtures` | Validates the preserved fixture-only ReleaseManifest profile. | Candidate assembly, accepted profile authority, or release. |
+| `python tools/validators/release/validate_rollback_card.py --fixtures` | Validates the bounded shared RollbackCard candidate profile. | Target authorization, rollback execution, invalidation, receipt, or restoration. |
+| `make release-dry-run` | Prints `TODO: tools/release dry-run`. | Any dry run or candidate assembly. |
+| `release-dry-run`, `promotion-gate`, `rollback-drill` | Read-only readiness and fixture checks with explicit holds. | Candidate, decision, receipt, proof, signature, mutation, rollback, or publication. |
+| Pass 12 release-policy workflow | Tests one checksum-pinned inactive Rego profile under `policy/rego/`. | General OPA runtime, `PolicyDecision`, release, or publication. |
 
-This README accepts, rejects, supersedes, or amends no ADR.
+> [!CAUTION]
+> `make release-dry-run` exits successfully after printing a TODO marker. Do not cite it as a successful dry run.
 
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-23 |
-| Evidence snapshot | `main@fae69bb52e0ebc7670dc7d20c9eb05cb587520ff` |
-| Prior README blob | `089c4a394c5cbf3b9e5a2a1963e68e16be485dce` |
-| Review result | Repository-grounded documentation modernization; release behavior unchanged. |
-| Next review trigger | A release lane appears or changes meaning; a proposed ADR is accepted; a real candidate/review/manifest/promotion/rollback path lands; a workflow hold is replaced by implementation; or a release, correction, withdrawal, rollback, or published alias is exercised. |
-| Maximum staleness signal | Re-review when this evidence snapshot is more than six months old or a trigger above occurs first. |
+Negative cases include unresolved or stale evidence; unbound hashes; unknown rights, sensitivity, role, scope, or policy; self-review or stale review; missing authority, manifest, catalog closure, attestation, correction path, or rollback target; nondeterministic geometry or time; placeholder trust instances; policy source under `release/`; direct public access to internal stores; and any workflow, PR, map, or AI output misclassified as release authority.
 
 [Back to top](#top)
 
----
+<a id="review-burden"></a>
+
+## Owner, reviewers, and escalation path
+
+| Role or control | Current evidence | Status |
+|---|---|---:|
+| GitHub route | `/release/ @bartytime4life` in CODEOWNERS | `CONFIRMED`, routing only |
+| Root-registry owner / writer | `@bartytime4life` in machine projection | `CONFIRMED`, not runtime assignment |
+| Independent release steward | No verified identity or assignment | `NEEDS VERIFICATION` |
+| Evidence, policy, security, privacy, correction, rollback, signing, and domain reviewers | Responsibilities are clear; assignments are not | `NEEDS VERIFICATION` |
+| Required reviews and separation of duties | Not established for this task | `NEEDS VERIFICATION` |
+| Runtime release authority / signing custody | No operational evidence inspected | `UNKNOWN` |
+
+Review burden scales with effect. Documentation needs accuracy and no-loss review. Profiles need contract, schema, fixture, validator, and policy review. Decisions need authenticated authority and subject, scope, and hash binding. Correction or withdrawal needs public-effect and invalidation analysis. Rollback needs a valid target, review or signature, execution receipt, restoration verification, and forward-fix comparison.
+
+Use `PASS` or `APPROVE_READY` for bounded validation only, `ABSTAIN` or `HOLD` for incomplete support, `DENY` for policy or invariant violations, and `ERROR` when safe evaluation cannot complete.
+
+[Back to top](#top)
+
+<a id="related-folders"></a>
+<a id="adrs"></a>
+
+## Governing ADRs, migrations, aliases, and canonical target
+
+| Authority | Status | Consequence |
+|---|---:|---|
+| [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `ACCEPTED` | Adopts exact Directory Rules v2 bytes as the writable human placement authority. |
+| [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | Adopted exact bytes | Defines object-family-first lanes, append-only decisions, and policy-source denial. |
+| [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) | `ACTIVE` projection | Classifies this root as canonical, internal, append-only, audit-bound, and release-decision-only. |
+| [`ADR-0011`](../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | `PROPOSED` | Design evidence only; does not authorize migration. |
+
+Canonical target: `release/`, with `manifests/`, `rollback_cards/`, `correction_notices/`, and policy source under `policy/`. No mutable `current` alias is release authority. No new root or parallel home is authorized.
+
+Migration candidates outside this PR: singular `manifest/`; generic or plural correction and rollback lanes; domain-first children; `release/policy/`; root Rego files; generic reviews or decisions; and empty `source_role_anti_collapse/`. Each requires exact object classification, stable identity, reference and consumer repair, compatibility, validation, and rollback.
+
+[Back to top](#top)
 
 <a id="repo-fit"></a>
 <a id="current-lane-index"></a>
 
-## Current repository lane map
+## Direct-child directory map
 
-The table records verified parent surfaces without claiming equal maturity.
+| Outcome | Current direct children |
+|---|---|
+| `PLACE` family | `candidates/`, `manifests/`, `promotion_decisions/`, `correction_notices/`, `withdrawal_notices/`, `rollback_cards/`, `signatures/`, `changelog/` |
+| `MIGRATE` after inventory | `manifest/`, `rollback/`, `agriculture/`, `people-dna-land/` |
+| `HOLD / MIGRATE` | `correction/`, `corrections/` |
+| `HOLD` | `decisions/`, `reviews/`, `policy/`, `source_role_anti_collapse/` |
+| `DENY_NEW_WRITES / MIGRATE` | `hydrology_publication.rego`, `public_safe_geometry.rego`, `source_role_anti_collapse.rego` |
 
-| Lane | Current bounded role | Current evidence posture |
-|---|---|---|
-| `candidates/` | Pre-release candidate review packets. | Parent README exists; current dry-run workflow confirms guidance/placeholders and no candidate packet payload. |
-| `reviews/` | Accountable release-review record lane. | Parent README exists; inspected workflow inventory contains guidance only, not review records. |
-| `promotion_decisions/` | Promotion-decision records. | Parent README exists; hydrology smoke decision has unresolved evidence and rollback references and is not authority. |
-| `manifest/` | Singular manifest lane. | Exists; semantics relative to `manifests/` remain unresolved. |
-| `manifests/` | Plural manifest collection and domain sublanes. | Parent README and multiple sublanes exist. |
-| `decisions/` | Release decision records. | Parent guidance and finite decision classes exist. |
-| `policy/` | Release-facing policy review pointers. | Must remain subordinate to canonical `policy/`. |
-| `changelog/` | Human-readable release history. | Companion record only; not a manifest, receipt, proof, or decision. |
-| `correction/` | Singular correction review lane. | Exists with a nested rollback lane; semantics remain draft. |
-| `corrections/` | Plural domain-scoped correction lane. | Exists; overlap with singular lane remains unresolved. |
-| `correction_notices/` | Correction communication records. | Notice prose must point to governed correction and decision records. |
-| `rollback/` | Rollback review records. | Parent and domain sublanes exist; no operational rollback is thereby proven. |
-| `rollback_cards/` | Compact rollback/release review cards. | Parent and domain sublanes exist; root JSON records remain proposed placeholders under current workflow checks. |
-| `withdrawal_notices/` | Withdrawal communication records. | Parent index exists; notice is not the withdrawal decision. |
-| `signatures/` | Signature and signoff packets. | Parent index and at least one child packet exist; signoff is not publication by itself. |
-| `agriculture/` | Agriculture release-governance router. | Existing domain index; explicitly not a parallel release-record home. |
-| `people-dna-land/` | Sensitive-domain dated release review material. | A dated child README exists; parent-lane completeness and policy/review posture need verification. |
-
-The lane map is descriptive. It does not authorize a new record, approve a release, or settle naming and responsibility conflicts.
+`PLACE` describes the family, not every contained record. `release/reviews/` has guidance and an empty Atmosphere scaffold, not an accountable review record. `source_role_anti_collapse/` owns no proven decision or consumer.
 
 [Back to top](#top)
 
----
+<a id="last-reviewed"></a>
+
+## Last evidence review and review trigger
+
+| Field | Value |
+|---|---|
+| Last evidence review | 2026-08-09 |
+| Base / prior blob | `main@9c080014926e6f3ba4dc630eaf7a615fff46c7fc` / `0752610b1df6d11143158f6f162f65ecd650e6a6` |
+| Release tree | `210ccf37b9f90986590a3e0995a0eeda7f758042` |
+| Open target-overlap PRs | `0` at discovery |
+| Result | Same-path ROOT_FULL v2.1 modernization, evidence refresh, drift visibility, and generated provenance only. |
+| Effect | No path move, record, policy, schema, workflow, runtime, data, release, rollback, deployment, publication, or settings change. |
+| Maximum staleness | Six months unless a trigger occurs sooner. |
+
+Review when a direct-child path or meaning changes; a migration changes state; a fixture profile becomes accepted or operational; a candidate, review, manifest, decision, correction, withdrawal, rollback, signature, or published alias is exercised; release automation or public consumers change; steward, ruleset, or signing authority changes; or production evidence becomes available.
+
+[Back to top](#top)
 
 <a id="lifecycle-boundary"></a>
 <a id="root-responsibilities"></a>
@@ -387,326 +319,158 @@ The lane map is descriptive. It does not authorize a new record, approve a relea
 ## Lifecycle and authority boundary
 
 ```text
-candidate / review inputs
-  -> evidence + validation + policy + accountable review
-  -> decision / manifest / correction / withdrawal / rollback support
-  -> governed release state
-  -> public-safe artifact under data/published/
+PRE_RAW -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS
+                                                  + PROOF
+                                                  + RELEASE DECISION
+                                                    -> PUBLISHED
 ```
 
-The release root owns the governance transition, not the data payload.
-
-| Responsibility | Required boundary |
-|---|---|
-| Identity | Stable IDs and subject pointers; do not rely on filenames alone. |
-| Evidence | Link evidence support where release claims depend on it. |
-| Validation | Link applicable validation and integrity results. |
-| Policy | Record rights, sensitivity, access, stale-state, and public-safety posture. |
-| Review | Identify accountable review and unresolved separation-of-duties needs. |
-| Decision | Use finite, reasoned outcomes; no approval by implication. |
-| Manifest | Bind release scope, included records, previous state, correction path, and rollback target. |
-| Correction | Preserve forward correction, supersession, withdrawal, and public notice as required. |
-| Rollback | Name a valid prior target and invalidation/cache consequences before release. |
-| Publication | Keep the released payload and its governed metadata in the correct published-data lane. |
+`release/` owns the decision that authorizes or changes a release. `data/published/` owns the immutable release-approved carrier. Promotion emits a governed state and version and is never inferred from copying, moving, naming, workflow completion, or a mutable alias.
 
 [Back to top](#top)
-
----
-
-## Workflow readiness boundaries
-
-### `release-dry-run`
-
-**Current bounded result:** the workflow inspects whether a candidate could be assembled, exercises the selected `PromotionDecision` shape fixture, and checks rollback-card readiness without writing a candidate or release record.
-
-Current explicit holds include:
-
-- no candidate packet payload under `release/candidates/`;
-- `tools/release/release_dry_run.py` remains comment-only;
-- the Make target remains a TODO marker;
-- `ReleaseManifest` remains a permissive proposed id-only schema;
-- its declared fixtures and validator are absent.
-
-### `promotion-gate`
-
-**Current bounded result:** the workflow proves missing doctrine artifacts fail closed, validates proposed descriptor and promotion-decision shapes, and exposes missing review and promotion implementation.
-
-Current explicit holds include:
-
-- the doctrine prerequisite remains intentionally unsatisfied until required artifacts are admitted;
-- no release review record is present;
-- generic promotion and review validators remain placeholders;
-- the hydrology smoke promoter is not executed;
-- its referenced evidence bundle and rollback card are unresolved;
-- no promotion policy execution or accountable review decision is emitted.
-
-### `rollback-drill`
-
-**Current bounded result:** the workflow inspects rollback placeholders, proposed schemas, placeholder card records, and published-alias absence without mutating release state.
-
-Current explicit holds include:
-
-- rollback pipeline and apply helpers remain comment-only;
-- direct rollback-drill tests contain guidance only;
-- release and agriculture rollback-card schemas remain permissive proposed id-only shapes;
-- declared fixtures and validators are absent;
-- root rollback-card JSON records remain non-conforming placeholders;
-- published-alias auditing remains comment-only;
-- no current alias or rollback receipt is behaviorally verified.
-
-> [!IMPORTANT]
-> These workflows are useful because they keep missing release machinery visible and fail on drift. They must not be described as operational release, promotion, or rollback execution.
-
-[Back to top](#top)
-
----
 
 <a id="release-state-model"></a>
 
 ## Release state model
 
-Use finite states and preserve the distinction between record state and public artifact state.
-
-| State | Meaning |
+| Release-facing state | Meaning |
 |---|---|
-| `DRAFT` | Record exists but is not ready for accountable review. |
-| `READY_FOR_REVIEW` | Required review inputs appear complete enough for review. |
-| `HELD` | Evidence, validation, policy, rights, sensitivity, review, correction, or rollback support is unresolved. |
-| `READY_FOR_MANIFEST` | A reviewed candidate may support manifest preparation; it is not yet released. |
-| `APPROVED` | A governed decision approves the named scope; publication still depends on the complete release path. |
-| `RELEASED` | Governed release state is complete for the named target and public scope. |
-| `CORRECTED` | A governed correction changes or replaces prior release state. |
-| `SUPERSEDED` | A newer governed state replaces the prior state while preserving lineage. |
-| `WITHDRAWN` | The release-facing state is withdrawn through governed process. |
-| `NO_ACTION` | Review authorizes no release-state change. |
+| `DRAFT` | Exists, not ready for accountable review. |
+| `READY_FOR_REVIEW` | Review inputs appear complete; no release authority yet. |
+| `HELD` | Evidence, validation, policy, rights, sensitivity, authority, correction, or rollback support is unresolved. |
+| `READY_FOR_MANIFEST` | Reviewed candidate may support manifest preparation; not released. |
+| `APPROVED` | Governed decision approves named scope; publication still needs the complete transition. |
+| `RELEASED` | Governed release state is complete for a named version and scope. |
+| `CORRECTED`, `SUPERSEDED`, `WITHDRAWN` | Append-only lineage changes public reliance while preserving history. |
+| `NO_ACTION` | Review authorizes no state change. |
 
-Recommended decision outcomes remain lane-specific. Do not silently map `APPROVE`, `PROMOTE_TO_MANIFEST`, `READY_FOR_DECISION`, `ROLLBACK_REQUIRED`, or `NO_ACTION` to one another without an accepted contract.
+Validator, readiness, workflow, pull-request, decision, and published-carrier vocabularies must not be silently mapped to one another.
 
 [Back to top](#top)
 
----
+<a id="workflow-readiness-boundaries"></a>
+
+## Workflow readiness boundaries
+
+- **`release-dry-run`:** read-only assertions for candidate absence, ReleaseManifest fixtures (`4` valid and `17` invalid grouped cases), PromotionDecision and A–G readiness, and RollbackCard fixtures. The helper and Make target remain placeholders; no record or release is emitted.
+- **`promotion-gate`:** read-only fail-closed doctrine and proposed-shape checks plus Gate G synthetic identity, authority, self-review, scope, subject, time, obligations, supersession, and hash binding. `release/reviews/` contains guidance and an empty Atmosphere scaffold, not accountable review records.
+- **`rollback-drill`:** read-only RollbackCard fixture validation and hold assertions. Generic entry point, rollback pipeline or apply helper, published aliases, invalidation, receipts, and restoration remain held.
+- **Pass 12 Rego lane:** separately governed inactive profile under [`policy/rego/`](../policy/rego/release_gate_v1.rego). It does not resolve evidence, authenticate review, emit `PolicyDecision`, or create a general runtime.
+
+[Back to top](#top)
+
+<a id="bounded-implemented-validation-slices"></a>
+
+## Bounded implemented validation slices
+
+| Slice | Confirmed evidence | Authority limit |
+|---|---|---|
+| ReleaseManifest fixture profile | Contract or schema metadata, strict fixture branch, grouped cases, validator, test, workflow assertions. | Fixture-only; no assembly or release. |
+| PromotionDecision shape | Closed schema, non-empty fixtures, test, workflow binding. | Proposed; no live policy, evidence, review, or transition. |
+| ReviewRecord projection | Validator and tests with finite outcomes and reason mapping. | Synthetic; no live actor or authority. |
+| A–G promotion gate | Side-effect-free validator, fixtures, tests, Make target, read-only workflows. | Declared closure only; emits no decision. |
+| Shared RollbackCard | Closed candidate profile, fixtures, validator, workflow binding. | Local consistency only; no execution. |
+| Pass 12 release policy | Rego, native tests, fixtures, pinned workflow. | Inactive bounded profile; no general runtime. |
+
+[Back to top](#top)
 
 <a id="required-release-root-record-fields"></a>
+<a id="minimal-release-root-record"></a>
 
 ## Release record minimum contract
 
-A release-governance record should include the fields appropriate to its lane and, at minimum:
+An accepted release-decision record should bind stable ID, version, and type; finite outcome and reason codes; subject, scope, time, sensitivity, and immutable digests; evidence, validation, policy, review or authority, manifest, signature, correction, withdrawal, supersession, rollback, invalidation, and public-effect references; predecessor and successor lineage; recorded-at and actor; retention; and unresolved obligations.
 
-- stable record ID;
-- record type and schema/contract version when applicable;
-- record status and finite outcome;
-- subject or affected-record pointer;
-- domain, layer, artifact, geography, time, and public-scope boundaries as applicable;
-- candidate, manifest, decision, release, correction, notice, changelog, or artifact pointer;
-- evidence pointer when claims depend on evidence;
-- validation and integrity pointer when applicable;
-- policy review or decision pointer when applicable;
-- accountable reviewer/decider identity and review state;
-- manifest pointer when a release target is prepared or changed;
-- correction, withdrawal, supersession, or notice pointer when applicable;
-- rollback target and invalidation/cache posture when release state may change;
-- release-facing effect;
-- date recorded and recorded-by identity;
-- follow-up items and unresolved holds.
-
-A record missing support must hold, abstain, deny, or error rather than imply completion.
+A missing required field produces hold, abstain, deny, or error. It never implies completion through an empty field, filename, default allow, workflow status, or prose note. Accepted contracts and schemas outrank illustrative templates.
 
 [Back to top](#top)
-
----
-
-<a id="minimal-release-root-record"></a>
-
-## Minimal release-root record
-
-```markdown
-# <stable-release-record-id>
-
-## Record type
-CANDIDATE / REVIEW / PROMOTION_DECISION / MANIFEST / DECISION / POLICY_REVIEW /
-CORRECTION / CORRECTION_NOTICE / WITHDRAWAL_NOTICE / ROLLBACK_REVIEW /
-ROLLBACK_CARD / SIGNATURE_PACKET / CHANGELOG / NO_ACTION
-
-## Status and outcome
-- Status: DRAFT / READY_FOR_REVIEW / HELD / READY_FOR_MANIFEST / APPROVED /
-  RELEASED / CORRECTED / SUPERSEDED / WITHDRAWN / NO_ACTION
-- Outcome: <finite lane-specific outcome>
-- Reason codes: <one or more stable reason codes>
-
-## Scope
-<domain, layer, artifact family, geography, time slice, release target, and public scope>
-
-## Subject
-<candidate, manifest, decision, release, correction, notice, changelog, or artifact pointer>
-
-## Governed support
-- Evidence: <EvidenceRef/EvidenceBundle pointer or N/A with reason>
-- Validation: <validation/integrity pointer or N/A with reason>
-- Policy: <PolicyDecision/review pointer or N/A with reason>
-- Review: <review record and accountable reviewer>
-- Manifest: <manifest pointer or N/A>
-- Correction/withdrawal/supersession: <pointer or N/A>
-- Rollback target: <stable prior target or N/A with reason>
-- Changelog/notice: <pointer or N/A>
-
-## Release-facing effect
-<none / held / ready for manifest / released / corrected / withdrawn / superseded>
-
-## Date and actor
-- Recorded at: <ISO-8601>
-- Recorded by: <verified actor identity>
-
-## Follow-up
-<open items or none>
-```
-
-The template is guidance. An accepted semantic contract and machine schema outrank it.
-
-[Back to top](#top)
-
----
 
 <a id="review-checklist"></a>
 
 ## Review checklist
 
-Before treating a release-facing transition as complete:
-
-- [ ] The record is in the correct release lane.
-- [ ] Stable identity, subject, scope, and time are explicit.
-- [ ] Evidence resolves where claims depend on evidence.
-- [ ] Validation and integrity support are linked.
-- [ ] Rights, sensitivity, access, stale-state, and public-safety posture are resolved.
-- [ ] Accountable review and decision state are explicit.
-- [ ] The outcome is finite and carries reason codes.
-- [ ] The manifest names included records, prior state, and release-facing effect.
-- [ ] Correction, withdrawal, supersession, notice, and changelog pointers are present when applicable.
-- [ ] A valid rollback target and invalidation/cache plan exist when public state may change.
-- [ ] No payload, receipt, proof, source, schema, contract, policy, validator, or application authority is duplicated under `release/`.
-- [ ] No generated text, map, tile, workflow result, pull request, merge, or signature packet is used as approval by itself.
-- [ ] Sensitive or restricted material is not exposed in the release record.
-- [ ] The reviewed diff is bounded and a corrective/revert path is documented.
+- [ ] Canonical object-family-first lane, stable identity and version, subject, scope, time, and immutable digests are explicit.
+- [ ] Evidence, validation, integrity, citation, catalog, rights, sensitivity, access, and public-safety support resolve.
+- [ ] Reviewer or decider identity, authority, scope, time, subject or hash binding, obligations, and separation of duties are explicit.
+- [ ] Manifest, signature, correction, withdrawal, supersession, notice, rollback, invalidation, and restoration requirements are satisfied where applicable.
+- [ ] No payload, receipt, proof, source, schema, contract, policy, validator, application, or generated-output authority is duplicated here.
+- [ ] No generated text, map, tile, workflow, PR, merge, GitHub release, or signature packet is used as approval by itself.
+- [ ] Sensitive information is absent or handled through approved restricted storage.
+- [ ] The diff is bounded, reversible, and linked to correction or rollback.
 
 [Back to top](#top)
-
----
 
 <a id="naming-guidance"></a>
 
-## Naming guidance
+## Naming and identity guidance
 
-Prefer stable IDs and readable filenames. A useful human-facing pattern is:
-
-```text
-<YYYY-MM-DD>_<scope>_<record-type>.md
-```
-
-Examples:
-
-```text
-2026-07-23_hydrology-watershed_release-review.md
-2026-07-23_fauna-public-range_correction-notice.md
-2026-07-23_agriculture-county-panel_rollback-card.md
-```
-
-Guidance:
-
-- use lowercase filenames and hyphenated human-readable scope;
-- keep stable IDs inside the record so identity does not depend on the filename;
-- do not rename approved records without migration and lineage notes;
-- do not create a new lane merely to obtain a preferred naming style;
-- preserve current singular/plural paths until an accepted decision resolves them.
+Use object-family-first and domain-second paths, registered stable IDs and versions inside records, lowercase ASCII path segments, plural collection directories, singular record filenames, canonicalized digests, and distinct path, object, display, locator, and alias identities. Dates in filenames are navigation aids, not identity or temporal truth. Never create new domain-first release homes.
 
 [Back to top](#top)
 
----
+## Compatibility and placement conflicts
 
-## Evidence and no-loss ledger
-
-| Baseline surface | Preservation or upgrade result |
+| Conflict | Safe next step |
 |---|---|
-| `kfm://doc/release-readme`, path, and H1 | Preserved. |
-| Purpose and release-vs-published distinction | Preserved and strengthened. |
-| Status/authority table | Recast into evidence-bounded authority and maturity sections. |
-| Placement basis | Preserved through `#placement-basis` and Directory Rules citations. |
-| Lifecycle invariant | Preserved through `#lifecycle-boundary`. |
-| Repo fit and lane index | Expanded with verified rollback, rollback-card, withdrawal, signature, and domain-router lanes. |
-| Root responsibilities | Preserved through `#root-responsibilities` and the authority-boundary matrix. |
-| Belongs / does not belong | Preserved and aligned with receipts/proofs/published-data separation. |
-| Release state model | Preserved with clearer record-state/public-state limits. |
-| Required fields and minimal record | Preserved and expanded with finite outcome, reason codes, review, and rollback support. |
-| Review checklist and naming guidance | Preserved under legacy anchors. |
-| Open verification | Converted to a current evidence-backed register below. |
-| Last reviewed | Updated to the current pinned revision. |
-| Release implementation gap | Made explicit; documentation does not claim to satisfy it. |
+| `manifest/` vs `manifests/` | Inventory IDs and references, migrate with compatibility and zero-writer or consumer evidence, then retire singular lane. |
+| `correction/`, `corrections/`, `correction_notices/` | Classify review, decision, notice, and domain records before migration. |
+| `rollback/` vs `rollback_cards/` | Classify decisions versus execution receipts; target cards under `release/rollback_cards/`, process records under `data/receipts/rollback/`. |
+| `reviews/`, `decisions/`, `promotion_decisions/` | Define accepted ReviewRecord and decision placement; do not collapse from filenames. |
+| Domain-first children | Migrate each object to its owning family with sensitivity review and reference repair. |
+| `release/policy/` and root Rego | Move policy source to canonical `policy/`; preserve release records as references only. |
+| Empty source-role lane | Establish a real owned object and consumer or retire through governed migration. |
+| Shared or domain ReleaseManifest and receipt-like profiles | Define shared-kernel and extension rules and prevent parallel writable authority. |
+| Published `current` aliases | Define immutable pointer identity, rollback binding, negative tests, cache behavior, and receipts before activation. |
+
+These are facts and work items, not permission for broad cleanup in this documentation PR.
 
 [Back to top](#top)
-
----
 
 <a id="open-verification"></a>
 
 ## Open verification register
 
-1. **Stewardship and enforcement:** approved release, data, policy, correction, rollback, and domain stewards; branch rules; required checks; independent review.
-2. **Manifest semantics:** accepted relationship between `manifest/` and `manifests/`.
-3. **Correction semantics:** accepted relationship between `correction/` and `corrections/`.
-4. **Rollback semantics:** accepted relationship among `rollback/`, `correction/rollback/`, `rollback_cards/`, and any future execution lane.
-5. **Decision semantics:** accepted relationship among `reviews/`, `decisions/`, and `promotion_decisions/`.
-6. **Release record identity:** stable ID and filename conventions.
-7. **Accepted schemas:** non-permissive `ReleaseManifest`, `RollbackCard`, review, correction, withdrawal, signature, and changelog profiles.
-8. **Fixtures and validators:** non-empty valid/invalid fixtures and validators for each state-changing record family.
-9. **Policy execution:** accepted policy bundle, inputs, finite outcomes, reason codes, and negative tests.
-10. **Evidence closure:** operational `EvidenceRef -> EvidenceBundle` validation for release claims.
-11. **Candidate assembly:** deterministic, no-write candidate packet assembly and identity.
-12. **Accountable review:** real review records, subject binding, reviewer authority, and separation of duties.
-13. **Promotion execution:** policy-aware evaluation that does not self-approve or publish.
-14. **Rollback execution:** target selection, signature/review validation, invalidation, receipts, and no-write simulation.
-15. **Published aliases:** accepted alias/pointer mechanism and behavioral verification.
-16. **Signatures:** accepted signing/attestation profile, key management, verification, and revocation.
-17. **Corrections and notices:** public-effect, cache, catalog, API, map, and citation invalidation behavior.
-18. **Artifacts compatibility:** `OPEN-DR-09-b` and `artifacts/perf/` placement.
-19. **Production parity:** deployed release path, registry, logs, dashboards, retention, and recovery evidence.
-20. **Human adoption:** review and acceptance of this README modernization.
+1. Named release, evidence, policy, security, privacy, correction, rollback, signing, and domain authorities, plus enforced independent review.
+2. Full object, reference, and consumer inventory and migration plans for every drift lane.
+3. Accepted shared-kernel and domain-extension catalog for release objects and version or deprecation policy.
+4. Deterministic no-write candidate assembly and operational evidence closure.
+5. Accepted policy runtime, authenticated review or authority, attestation or signing, and catalog or manifest closure.
+6. Side-effect-controlled promotion and publisher boundaries that cannot self-publish.
+7. Rollback target selection, simulation, invalidation, execution receipts, restoration, and forward-fix fallback.
+8. Correction or withdrawal propagation through catalog, API, MapLibre, search, graph, export, citations, caches, and AI.
+9. Compatibility retirement, external consumers, production storage or registry, observability, incident response, retention, and recovery.
+10. Current hosted exact-head checks and human adoption of this documentation revision.
 
 [Back to top](#top)
 
----
+## Definition of done
+
+This documentation slice is complete when the exact repository, base, path, root, blob, and tree are verified; ROOT_FULL order is correct; stale claims and current children or conflicts are reconciled; identity, anchors, links, Markdown, receipt and hash closure, remote bytes, parentage, diff, draft PR, and hosted status are verified; and no unrelated behavior or authority change exists.
+
+Operational release remains separate and requires admitted evidence, accepted contracts, schemas, policies, identities, positive and negative fixtures, deterministic bounded execution, accountable review, manifest, proof, receipt, catalog, signature, correction, and rollback closure, immutable public-safe carrier production, propagation and recovery drills, runtime, storage, and observability evidence, and separate release or publication authority.
+
+[Back to top](#top)
+
+<a id="maintenance-correction-and-rollback"></a>
 
 ## Maintenance, correction, and rollback
 
-### Documentation correction
+No release, promotion, correction, rollback execution, deployment, or publication is performed by this documentation change.
 
-When this README becomes stale or wrong:
+For documentation correction: pin current main and target; reconcile overlap; read the governing and implementation neighborhood; classify drift; make the smallest same-path edit; validate; emit provenance; push without force; and deliver one draft PR.
 
-1. pin the current repository revision and read the complete file;
-2. identify the exact claim, lane, workflow, or link that drifted;
-3. update the smallest sound section while preserving identity and legacy anchors;
-4. validate the full Markdown and connected release-document neighborhood;
-5. add or update provenance as required;
-6. use a focused review branch and reviewed correction.
+Before merge, close or abandon the draft PR and branch. After an authorized merge, use a transparent revert or forward-fix PR; never rewrite shared history. Reverting this README and generated receipt restores documentation bytes only, not release, policy, schema, workflow, candidate, published artifact, cache, alias, or runtime state.
 
-### Before merge
-
-Close the review pull request and delete or abandon its branch. No shared history rewrite is required.
-
-### After merge
-
-Use a reviewed revert or corrective documentation/provenance pull request. Reverting this README must not be described as rolling back a release, candidate, published artifact, schema, policy, workflow, or runtime state.
-
-### Operational release correction
-
-Operational correction, withdrawal, supersession, rollback, and invalidation require governed records in their accepted lanes. A documentation revert is not an operational rollback.
+Rollback target: README blob `0752610b1df6d11143158f6f162f65ecd650e6a6` at `main@9c080014926e6f3ba4dc630eaf7a615fff46c7fc`; remove the generated receipt only through the reviewed revert of the same packet.
 
 [Back to top](#top)
-
----
 
 ## Changelog
 
 | Version | Date | Change |
-|---|---|---|
+|---:|---:|---|
 | v1 | 2026-07-03 | Expanded the compact root stub into release-governance guidance. |
-| v2.0 | 2026-07-23 | Reordered the root contract to Directory Rules §15; refreshed current repository evidence; added missing lane coverage; exposed workflow holds, Makefile readiness markers, CODEOWNERS limits, no-loss ledger, open verification, and explicit documentation-vs-release rollback boundaries. |
+| v2.0 | 2026-07-23 | Refreshed evidence, lane coverage, workflow holds, review limits, open verification, and rollback boundaries. |
+| v2.1 | 2026-08-09 | Applied exact ROOT_FULL order; repinned evidence; corrected validation maturity; classified current children and root Rego drift; preserved release, signing, rollback, alias, and publication holds. |
 
 [Back to top](#top)
