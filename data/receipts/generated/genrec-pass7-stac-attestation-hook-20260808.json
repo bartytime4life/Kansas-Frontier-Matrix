@@ -1,0 +1,142 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/stac-attestation-hook.yml": "sha256:3dfe4ac093bfe1e168ad9e743b13e50fd66e1e2dc86c40e0fcc2ae7800c340b3",
+    "contracts/data/stac_attestation_hook.md": "sha256:aef71a2e6cac0bac08632323ddd28853dcc80958396ede237cc67c1f7da71016",
+    "fixtures/data/stac_attestation_hook/cases.json": "sha256:60e38d2b0c3915034fd1140216641fc3a4c193f3f0726254cd87900ba113c9ac",
+    "schemas/contracts/v1/data/stac_attestation_hook.schema.json": "sha256:d13cda3cafd73f78f70eb83e9ec6fd3942ade04ce44949e044698f01790f5ac0",
+    "tests/validators/test_validate_stac_attestation_hook.py": "sha256:43e331bbf95650ababc28742bdaccb737ebbdf2cb4d7f66efeeb2750af12b4f4",
+    "tools/validators/data/validate_stac_attestation_hook.py": "sha256:3042c4d35ead65f7bd5dadcb911c824d7aa077a8c30e61cc6dc9c9d2aa245e2f"
+  },
+  "artifact_paths": [
+    ".github/workflows/stac-attestation-hook.yml",
+    "contracts/data/stac_attestation_hook.md",
+    "fixtures/data/stac_attestation_hook/cases.json",
+    "schemas/contracts/v1/data/stac_attestation_hook.schema.json",
+    "tests/validators/test_validate_stac_attestation_hook.py",
+    "tools/validators/data/validate_stac_attestation_hook.py"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass7-stac-attestation-hook",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0001"
+    },
+    {
+      "id": "repository:layer-manifest-trust-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c76a4860693830a783579c29bf276977856e9f86"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T22:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:f238a3e3c7fe3b83cb6ab19462580c65a2b02bc837724fb40cbe96528097c1a9"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_7_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P7-PROG-0001",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P7-PROG-0001",
+      "repo:contracts/data/layer_manifest.md@c76a4860693830a783579c29bf276977856e9f86"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Compact, fixture-first implementation of KFM-P7-PROG-0001. It proves the explicit STAC rel=attestation seam with one closed schema, a generated synthetic case matrix, deterministic no-network validation, and exact-byte authoring accountability. It does not dereference evidence, verify signatures, create catalog closure, execute policy or review, register layers, promote, release, publish, or authorize public use.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and branch/PR delivery",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:478990ea7e327b91b4ed3528ee60008741b693eab9903ca88da1e0fd9fb1fbfb",
+  "receipt_id": "genrec-pass7-stac-attestation-hook-20260808",
+  "truth_labels": {
+    ".github/workflows/stac-attestation-hook.yml": "CONFIRMED",
+    "contracts/data/stac_attestation_hook.md": "PROPOSED",
+    "fixtures/data/stac_attestation_hook/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/stac_attestation_hook.schema.json": "PROPOSED",
+    "tests/validators/test_validate_stac_attestation_hook.py": "CONFIRMED",
+    "tools/validators/data/validate_stac_attestation_hook.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed projection schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic no-network unit tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Fourteen generated cases matched exact finite outcomes and finding-code sets."
+    },
+    {
+      "gate": "deterministic-cli-replay",
+      "outcome": "PASS",
+      "reason": "Two complete fixture-suite CLI runs were byte-identical."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "shared-validator-inventory-isolation",
+      "outcome": "PASS",
+      "reason": "The slice does not modify the shared validator registry or aggregate schema inventory."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every listed artifact path is unique and its SHA-256 digest matches this receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}
