@@ -1,241 +1,277 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/src-readme
-title: src/ — Root Python Distribution Source Layout and Compatibility Boundary
-type: README
-version: v0.3
-status: draft; repository-grounded; compatibility-and-drift-root; active-packaging-layout; migration-decision-open; public-api-unestablished; non-authoritative
-owner: NEEDS VERIFICATION — default CODEOWNERS route is @bartytime4life; no explicit /src/ rule, accepted package steward, or independent review-enforcement record was established
+title: src/ — Conditional Root Distribution Facade Boundary
+type: readme; root-readme; conditional-src-root; root-distribution-boundary; facade-admission-gate; migration-boundary
+version: v0.4
+status: draft; repository-grounded; conditional-root-confirmed; root-activation-hold; active-packaging-layout; root-facade-profile-unaccepted; public-api-unestablished; package-release-unverified; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS fallback and root-registry writer/reviewer projection"
+  - "OWNER_TBD — Root distribution and Python packaging steward"
+  - "OWNER_TBD — Architecture and package steward"
+  - "OWNER_TBD — Validation, CI, security, supply-chain, and release reviewers"
 created: NEEDS VERIFICATION — the empty README was replaced by v0.1 on 2026-07-04
-updated: 2026-07-23
-supersedes: v0.2 documentation at the same path; no packaging, import, dependency, workflow, test, runtime, release, or publication behavior is superseded
-policy_label: repository-facing; python; hatch; source-layout; compatibility-boundary; no-parallel-implementation-authority; no-hidden-facade; no-public-api-claim; no-runtime-authority; no-lifecycle-authority; no-release-authority; adr-or-migration-required; correction-aware; rollback-aware
-owning_root: UNRESOLVED — src/ is an existing root-level Python packaging layout, not a canonical Directory Rules responsibility root
-responsibility: contain and explain the active root Python distribution source layout while retention, facade adoption, migration into packages/, or retirement remains undecided
-truth_posture: cite-or-abstain; configuration and CI installation prove a bounded packaging dependency, not a supported API, clean artifact, published distribution, runtime role, or release authority
+updated: 2026-08-09
+supersedes: v0.3 documentation at the same path; no package, import, dependency, workflow, test, runtime, release, deployment, or publication behavior is superseded
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+policy_label: "repository-facing; python; hatch; conditional-root; root-distribution-facade-candidate; hold-no-new-implementation; canonical-target-packages; no-parallel-implementation-authority; no-hidden-facade; no-public-api-claim; no-runtime-authority; no-lifecycle-authority; no-release-authority; adr-required-for-activation; correction-aware; rollback-aware"
+current_path: src/README.md
+root_profile: ROOT_FULL
+root_registry_id: root.src
+root_class: conditional
+root_activation_outcome: HOLD
+readme_placement_outcome: PLACE
+canonical_target: packages/
+responsibility: contain and explain the currently configured root Python distribution namespace while an accepted root-distribution-facade profile, migration, or retirement decision remains absent
+truth_posture: >-
+  CONFIRMED same-path target; accepted Directory Rules v2 through ADR-0029;
+  ROOT_FULL README requirement; active root-registry entry root.src with conditional
+  class, packages/ canonical target, hold-no-new-authority validation profile, and
+  accepted-root-distribution-facade-ADR activation condition; root Hatchling project
+  kfm 0.0.0 selecting src/kfm; minimal package docstring; one direct child directory;
+  eight-validator full profile; current schema-validation workflow; and verified
+  CODEOWNERS fallback / PROPOSED root facade, retention, migration, retirement,
+  package-proof, compatibility, correction, and rollback decisions / UNKNOWN stable
+  public API, clean wheel or sdist evidence, consumers, package publication,
+  production use, and server-enforced review requirements / NEEDS VERIFICATION named
+  stewards, independent review, accepted facade ADR, complete consumer graph,
+  artifact proof, child README reconciliation, drift-record closure, and rollback drill
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
   base_ref: main
-  base_commit: e0b50a6c342a216c150624df6dd513121d9d1f85
-  prior_blob: bf0ee991067fd2c82a34c7f85686fa7aa7694c8d
-  prior_evidence_commit: 0c9df2b0ed87753ff482bdd2da87f35507517eed
-  intervening_commits: 840
+  base_commit: 3a9715582adf17a682920ca98f15aa3582ee8cdc
+  prior_blob: 30999b2ccbc876186b86653bdff80ec3aa7fcb34
+  src_tree: fd1dedd17b232d5d77f62af2684e3cc52e75338e
   child_readme_blob: d8cd7a5fc70357eb78c52b9311e32cec8c7063f5
   namespace_init_blob: b0c8ae94b22045818b6af9db40260acdf40338f1
-  root_pyproject_blob: 3bba45d49de489c221734ee2446b21083f84fb28
-  packages_root_readme_blob: fc18fb3334fefe992a551fe12aa98c812232cd17
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  schema_validation_workflow_blob: e6b26337aa1eea142b96560e041419f855c44d59
-  tests_root_readme_blob: 55ac53c6c08f9a2b77149645d0a22de3ea680732
+  root_pyproject_blob: 074e2c505bcd748788c494bb9d0dd56e13ad91a9
+  packages_root_readme_blob: 7b672f4d834b648f4b30ce7e2e9a5e214efa2c71
+  makefile_blob: 4abc7f941ce25d7d14703e87e387cef6e96d1592
+  schema_validation_workflow_blob: 3deebb4fa1e5db00108e0b43804ac633083d94c2
+  validator_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
+  validator_compatibility_runner_blob: c3a87b45bb199d9d2bc07715d7432ec5cc9d6369
+  validator_registry_blob: 12517f368cb1c8b850d3a7138a968cee889875ba
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  adr_index_blob: d91b15d4b13a8d741b0f13733d5e51e575eb5604
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  directory_rules_architecture_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
   drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
-  prior_generated_receipt_blob: 037d033f06f2e2a1a9a9fa0bffaa53e13317c404
+  generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
+  direct_children: "1 directory plus this README"
+  inventory_method: GitHub connector exact-file reads, commit-pinned contents inspection, accepted-ADR/index review, root-registry review, workflow/config inspection, and open-work reconciliation
 related:
   - kfm/README.md
   - kfm/__init__.py
   - ../pyproject.toml
   - ../packages/README.md
-  - ../tests/README.md
   - ../Makefile
+  - ../tools/validate_all.py
+  - ../tools/validators/_common/run_all.py
+  - ../tools/validators/validator_registry.json
+  - ../tests/README.md
   - ../.github/workflows/schema-validation.yml
   - ../.github/CODEOWNERS
   - ../docs/doctrine/directory-rules.md
-  - ../docs/architecture/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../docs/adr/INDEX.md
+  - ../control_plane/root_registry.yaml
   - ../docs/registers/DRIFT_REGISTER.md
-  - ../data/receipts/generated/genrec-src-readme-2a102125.json
+  - ../data/receipts/generated/README.md
+  - ../schemas/contracts/v1/receipts/generated_receipt.schema.json
 notes:
-  - "v0.3 is a same-path documentation modernization and evidence refresh after 840 commits from the v0.2 evidence base."
-  - "The first twelve H2 sections follow the Directory Rules §15 canonical/compatibility-root README contract."
-  - "The root project still builds distribution kfm 0.0.0 from src/kfm; the namespace still contains only a package docstring."
-  - "Current schema-validation CI installs the root project with test dependencies, checks six configured validator fixture families, validates schema inventory/identity, and runs schema/contract tests. That is schema-lane evidence, not root-package artifact or API proof."
-  - "The current drift register still has no dedicated root-src entry. No accepted retention, facade, migration, or retirement ADR was surfaced."
-  - "The child src/kfm README still contains a stale statement about the parent README; reconciliation is recorded as a separate documentation item rather than expanded into this scoped change."
+  - "v0.4 adopts the Directory Rules v2 ROOT_FULL README profile without activating the conditional src/ root."
+  - "The README itself has a same-path PLACE outcome; new src/ implementation remains HOLD until an accepted root-distribution-facade ADR satisfies the registry activation condition."
+  - "Current root packaging and editable-install use are preserved as evidence, not converted into public API, facade, release, or publication claims."
+  - "The first twelve H2 sections implement Directory Rules v2 §16.2; legacy anchors remain for inbound-link compatibility."
+  - "This change modifies this README and its required generated provenance receipt only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="src"></a>
 
-# `src/` — Root Python Distribution Source Layout and Compatibility Boundary
+# `src/` — Conditional Root Distribution Facade Boundary
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Placement: root-src drift](https://img.shields.io/badge/placement-root--src%20drift-b42318?style=flat-square)](#authority-level)
-[![Distribution: kfm 0.0.0](https://img.shields.io/badge/distribution-kfm%200.0.0-1f6feb?style=flat-square)](#status)
-[![Namespace: minimal](https://img.shields.io/badge/namespace-minimal-8250df?style=flat-square)](#bounded-current-inventory)
-[![Public API: unestablished](https://img.shields.io/badge/public%20API-unestablished-b42318?style=flat-square)](#status)
-[![Package proof: absent](https://img.shields.io/badge/package%20proof-not%20established-6e7781?style=flat-square)](#validation)
+> **One-line purpose.** Contain the repository's currently configured root `kfm` distribution namespace while keeping `src/` in its adopted **conditional-root `HOLD` state** until an accepted root-distribution-facade decision establishes a narrow profile or a reviewed migration retires the path.
 
-> **One-line purpose.** `src/` is the active source-layout carrier for the repository's root `kfm` distribution; this README contains that compatibility boundary so it cannot silently become a second shared-library, application, runtime, trust-object, lifecycle, or release authority.
-
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#bounded-current-inventory) · [Parent/child](#parent-and-child-readme-contract) · [Trust](#trust-and-import-boundary) · [Packaging](#packaging-and-dependency-boundary) · [Decision](#adr-and-migration-decision) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Rollback](#maintenance-correction-and-rollback)
+<p>
+  <a href="#status"><img alt="Status: repository-grounded draft" src="https://img.shields.io/badge/status-repository--grounded%20draft-yellow"></a>
+  <a href="#authority-level"><img alt="Root class: conditional" src="https://img.shields.io/badge/root-conditional-orange"></a>
+  <a href="#authority-level"><img alt="Root activation: hold" src="https://img.shields.io/badge/activation-HOLD-critical"></a>
+  <a href="#packaging-and-dependency-boundary"><img alt="Distribution: kfm 0.0.0" src="https://img.shields.io/badge/distribution-kfm%200.0.0-blue"></a>
+  <a href="#direct-child-directory-map"><img alt="Namespace: minimal" src="https://img.shields.io/badge/namespace-minimal-blueviolet"></a>
+  <a href="#validation"><img alt="Public API: unestablished" src="https://img.shields.io/badge/public%20API-unestablished-critical"></a>
+</p>
 
 > [!IMPORTANT]
-> The root [`pyproject.toml`](../pyproject.toml) configures Hatchling to build distribution `kfm` version `0.0.0` from `src/kfm`. The schema-validation workflow installs the root project with test dependencies before running six configured validator fixture families and the schema/contract test lane. Those facts establish a bounded packaging dependency. They do **not** establish a supported facade, clean wheel or sdist, published package, public API, production consumer, or release.
-
-> [!WARNING]
-> Directory Rules do not recognize root `src/` as a canonical responsibility root. Shared reusable implementation belongs under [`packages/`](../packages/README.md). Retention, curated-facade adoption, migration, or retirement therefore requires a reviewed decision rather than convenience-driven growth.
+> **Two outcomes apply to different questions.** Updating this existing root README is `PLACE`: Directory Rules v2 requires a `ROOT_FULL` contract for every conditional root. Activating `src/` for new implementation is `HOLD`: [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) requires an accepted root-distribution-facade ADR, and no such accepted decision appears in the current ADR index.
 
 > [!CAUTION]
-> Do not move active packaging or add facade exports merely to make this README look cleaner. This document records the conflict and the evidence needed to resolve it; it does not choose a migration outcome.
+> The root [`pyproject.toml`](../pyproject.toml) still builds distribution `kfm` version `0.0.0` from `src/kfm`, and schema-validation CI installs the root project. That proves a bounded packaging dependency. It does **not** prove a supported facade, stable API, clean artifact, consumer contract, package release, runtime role, or KFM publication.
+
+> [!WARNING]
+> While the root remains `HOLD`, do not add exports, modules, aliases, entry points, package data, dynamic version behavior, generated code, or reusable implementation here. Shared reusable implementation belongs under [`packages/`](../packages/README.md); a parallel implementation authority is denied.
+
+**Quick navigation**
+
+| Root contract | Trust and operation | Maintenance |
+|---|---|---|
+| [Purpose](#purpose) · [Class and owner](#authority-level) · [Status](#status) · [Belongs / prohibited](#what-belongs-here) | [Inputs / outputs / writers](#inputs) · [Exposure](#public-exposure-and-sensitivity-posture) · [Storage](#mutability-retention-generation-and-physical-storage) · [Validation](#validation) | [Review](#review-burden) · [Decisions](#adrs) · [Directory map](#direct-child-directory-map) · [Last review](#last-reviewed) · [Parent/child](#parent-and-child-readme-contract) · [Packaging](#packaging-and-dependency-boundary) · [Done](#definition-of-done) · [Rollback](#maintenance-correction-and-rollback) |
 
 ---
 
+<a id="1-purpose"></a>
+
 ## Purpose
 
-`src/README.md` is the directory-level operating contract for the repository-root Python source layout.
+`src/README.md` is the directory-level authority and containment contract for the existing root Python source layout. It answers:
 
-It exists to:
+> What may remain under `src/` while the root distribution facade is unaccepted, and what evidence is required before the root can be activated, migrated, or retired?
 
-- orient maintainers to the configured root distribution;
-- index the inspected child namespace without duplicating its package contract;
-- distinguish packaging configuration from API, runtime, release, and publication proof;
-- route substantial implementation into the correct responsibility roots;
-- keep the root-`src` placement conflict visible;
-- define the evidence needed for retention, facade adoption, migration, or retirement;
-- preserve correction and rollback paths for documentation and future package changes.
+This README exists to:
 
-The bounded question this README answers is:
+- explain the current Hatch-selected `src/kfm` namespace without inflating its maturity;
+- keep the conditional-root admission state visible at the point of change;
+- route reusable implementation to `packages/` and deployable behavior to `apps/`;
+- separate packaging configuration from API, runtime, release, and publication proof;
+- define validation, review, migration, correction, and rollback obligations;
+- index the direct child boundary without duplicating the child README;
+- preserve stable anchors and lineage for maintainers and automation.
 
-> What may the active root Python source layout contain while its long-term authority and packaging role remain undecided?
-
-It does not define semantic contracts, machine schemas, policy, domain truth, lifecycle data, release decisions, deployable behavior, or public interfaces.
+It does not define semantic contracts, canonical schemas, policy, source authority, domain truth, lifecycle data, release decisions, deployable behavior, or public interfaces.
 
 [Back to top](#top)
 
 ---
 
 <a id="repository-fit-and-conflict"></a>
+<a id="authority-level"></a>
 
-## Authority level
+## Root class and authority owner
 
-**Directory class:** existing compatibility-and-drift boundary with active packaging use.
+**Root class:** `conditional`.
 
-`src/` has no independent responsibility in the canonical KFM root model, while the live root project still selects `src/kfm` as its wheel package. Both facts are material.
+**Registry identity:** `root.src` in [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml).
 
-| Question | Current determination | Truth posture |
-|---|---|---:|
-| Is `src/kfm` selected by the root Hatch wheel configuration? | Yes. | `CONFIRMED` |
-| Does the root project declare distribution `kfm` version `0.0.0`? | Yes. | `CONFIRMED` |
-| Is root `src/` a canonical Directory Rules responsibility root? | No. | `CONFIRMED doctrine` |
-| Is [`packages/`](../packages/README.md) the shared reusable implementation root? | Yes. | `CONFIRMED` |
-| Is `kfm` an accepted umbrella facade or stable public API? | Not established. | `UNKNOWN` |
-| Is root package publication intended? | Not established; project license metadata is still `TBD`. | `UNKNOWN` |
-| Is a root-`src` migration or retention ADR accepted? | None surfaced in the inspected evidence. | `NEEDS VERIFICATION` |
-| Is root-`src` drift registered? | No dedicated entry appears in the inspected drift register. | `CONFIRMED bounded absence` |
-| Does this README authorize retention or migration? | No. | `DENY` |
+**Current activation state:** `HOLD` for new implementation.
 
-### Authority boundary
+**Canonical target for reusable implementation:** [`packages/`](../packages/README.md).
 
-`src/` may carry the currently configured root namespace while a decision is pending. It must not become a parallel home for:
+**Authority owner:** no separately accepted root-distribution or Python-package steward was established. The current machine projection and CODEOWNERS fallback route to `@bartytime4life`; that routing is not independent review, package-release authority, or proof that review occurred.
 
-- shared implementation owned by `packages/`;
-- deployable behavior owned by `apps/`;
-- source admission owned by `connectors/`;
-- transformations owned by `pipelines/`;
-- runtime adapters owned by `runtime/`;
-- validators and builders owned by `tools/`;
-- contracts, schemas, or policy;
-- lifecycle data, receipts, proofs, catalogs, or published artifacts;
-- release, correction, withdrawal, or rollback decisions.
+Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md). Under §10.2, a root `src/` is admitted only when an accepted root-distribution-facade profile proves all of the following:
 
-A Python import path does not transfer ownership. An installable distribution does not prove a supported API. A green schema workflow does not ratify the root package role.
+1. the root manifest intentionally produces one aggregate distribution;
+2. `src/<package>/` contains only a bounded facade, version metadata, or compatibility exports;
+3. domain and reusable implementation remain under `packages/`;
+4. dependency direction is facade → packages, never packages → facade;
+5. API, packaging, testing, versioning, deprecation, and release contracts are explicit;
+6. removal conditions exist when no verified consumer requires the distribution.
+
+The current repository confirms item 1 only in a bounded configuration sense. The complete profile is not accepted or proven.
+
+### Placement and activation decisions
+
+| Question | Current outcome | Basis |
+|---|---:|---|
+| May this existing README be updated in place? | `PLACE` | Required `ROOT_FULL` contract for a tracked conditional root; same path; no authority transition. |
+| May the existing minimal `src/kfm` marker remain while review is pending? | `HOLD` containment | Current packaging depends on it; no migration or deletion is authorized. |
+| May new reusable implementation be added under `src/`? | `HOLD` / no | Activation condition is unmet; route implementation to `packages/`. |
+| May `src/` become a second package authority beside `packages/`? | `DENY` | Parallel writable implementation authority violates Directory Rules. |
+| May this README accept the facade profile or authorize migration? | `DENY` | A README and generated receipt cannot accept an ADR or execute migration. |
+
+A Python import path does not transfer ownership. An installable distribution does not prove a supported API. A green schema workflow does not activate the conditional root.
 
 [Back to top](#top)
 
 ---
 
 <a id="status-and-evidence-boundary"></a>
+<a id="status"></a>
 
-## Status
+## Adoption and conformance status
 
-### Current evidence boundary
+Snapshot: `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`, inspected on 2026-08-09.
 
-Snapshot: `main@e0b50a6c342a216c150624df6dd513121d9d1f85`.
-
-| Surface | Observed state | Safe conclusion |
+| Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `src/README.md` | Existing v0.2, blob `bf0ee991…` | Same-path parent contract exists and is eligible for an evidence refresh. |
-| [`src/kfm/README.md`](kfm/README.md) | Existing v0.2, blob `d8cd7a5f…` | Detailed namespace/facade contract exists; it does not establish implementation. |
-| [`src/kfm/__init__.py`](kfm/__init__.py) | One package docstring | Namespace remains minimal and has no documented exports or side effects. |
-| Root [`pyproject.toml`](../pyproject.toml) | Hatchling; `kfm==0.0.0`; Python `>=3.11`; `jsonschema`; pytest extra; wheel package `src/kfm` | Root packaging is configured. License remains `TBD`. |
-| Root [`Makefile`](../Makefile) | Six-validator aggregate through `make schemas`; narrow schema/contract `make test` | Commands are executable surfaces, not a root-package suite. |
-| Schema-validation workflow | Installs `.[test]`, requires nonempty configured fixtures, parses schema JSON, meta-schema checks schemas, requires unique canonical IDs, runs validators and schema/contract tests | Substantive schema-lane CI exists; it does not build or inspect root package artifacts. |
-| [`tests/README.md`](../tests/README.md) | Current v1.3 test-root contract | No canonical root-wide full-suite command is established. |
-| [`packages/README.md`](../packages/README.md) | Shared reusable implementation responsibility root | Substantial reusable code belongs there, not under root `src/`. |
-| [`.github/CODEOWNERS`](../.github/CODEOWNERS) | Default route `* @bartytime4life`; no explicit `/src/` pattern | Review routing is established; stewardship and required-review enforcement remain separate. |
-| Drift register | No root-`src` entry in the inspected file | Registration remains open; this README is not a drift-register substitute. |
-| Prior generation receipt | `genrec-src-readme-2a102125.json` exists | It preserves v0.2 provenance and must not be overwritten. |
-| Clean wheel/sdist, publication, consumers, production use | No current proof inspected | `UNKNOWN` |
+| `src/README.md` | Existing v0.3, blob `30999b2c…` | Same-path documentation exists; v0.4 may modernize the contract without activating the root. |
+| Directory Rules v2 | Exact blob `fd49a0b8…`; adopted by accepted ADR-0029 | v2 controls root class, activation, direct-child map, README profile, migration, and review triggers. |
+| Root registry | `root.src`; class `conditional`; activation requires `accepted_root_distribution_facade_adr`; target `packages/`; validation profile `hold_no_new_authority` | Machine projection confirms the current admission boundary; it cannot self-authorize activation. |
+| ADR index | ADR-0029 is the only accepted numbered ADR; all other numbered records are proposed | No accepted root-distribution-facade ADR is registered. |
+| Root `pyproject.toml` | Hatchling; `kfm==0.0.0`; Python `>=3.11`; four runtime dependencies; pytest extra; wheel and sdist select `src/kfm` | Root packaging is configured; license remains `TBD`; release and support are unproved. |
+| Direct `src/` contents | This README plus one `kfm/` directory | Current map is bounded and simple. |
+| `src/kfm/README.md` | Existing v0.2, blob `d8cd7a5f…` | Child package/facade contract exists but carries stale parent-status text. |
+| `src/kfm/__init__.py` | One package docstring | Namespace remains minimal; no exports or side effects are established. |
+| Validator entrypoint | `tools/validate_all.py` is the canonical thin entrypoint; the historical runner delegates to its `full` profile | Current repository-wide validator routing is no longer accurately described as six standalone validators. |
+| Validator registry | `full` profile contains eight fixture validators | `make schemas` exercises eight configured families through the compatibility runner. |
+| Schema-validation workflow | Installs `.[test]`, checks eight non-vacuous fixture families, parses schema JSON, checks Draft 2020-12 and unique IDs, then runs schema/contract tests | Substantive schema-lane evidence; not package artifact or public-API proof. |
+| `packages/README.md` | Canonical reusable implementation root under adopted v2 | New shared implementation belongs there. |
+| CODEOWNERS | Default `* @bartytime4life`; no explicit `/src/` rule | Review routing exists; stewardship and enforcement remain separate. |
+| Drift register | No dedicated human root-`src` entry appears in the inspected register | Root registry projection exists; human drift/migration disposition remains open. |
+| Clean wheel/sdist, external consumers, package publication, production use | No current proof inspected | `UNKNOWN`. |
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from the pinned repository file, configuration, workflow definition, test source, or generated artifact. |
-| `PROPOSED` | A recommended containment, test, migration, or decision path not accepted as current behavior. |
-| `UNKNOWN` | Evidence is insufficient to establish the claim. |
-| `NEEDS VERIFICATION` | A concrete inspection, run, owner decision, or review is required. |
-| `CONFLICTED` | Current evidence or documentation surfaces disagree and this README does not silently choose a winner. |
-| `DENY` | A prohibited authority, bypass, or maturity interpretation. |
+| `CONFIRMED` | Verified from a pinned repository file, accepted decision, configuration, workflow, or generated artifact. |
+| `PROPOSED` | A recommended facade, test, migration, compatibility, correction, or rollback design not accepted as current behavior. |
+| `UNKNOWN` | Available evidence does not establish the claim. |
+| `NEEDS VERIFICATION` | A concrete inspection, test, owner decision, or review remains. |
+| `CONFLICTED` | Admissible evidence asserts incompatible ownership or behavior; this README does not choose silently. |
+| `HOLD` | The root profile is not admitted; preserve current containment and add no new implementation. |
+| `DENY` | The requested interpretation or change would create prohibited authority or bypass. |
 
-### Current conflicts
+### Current conflicts and open gaps
 
-1. **Active packaging versus canonical placement.** Root `src/kfm` is selected by Hatch, but root `src/` is not a canonical responsibility root.
-2. **Parent/child documentation drift.** The child README still describes the parent README as stale even though v0.2 already corrected that condition.
-3. **Directory Rules placement.** Both `docs/doctrine/directory-rules.md` and `docs/architecture/directory-rules.md` are live; their own canonical placement remains unresolved. They nevertheless agree on the responsibility-root principle used here.
-4. **CI installation versus package proof.** Editable installation is required for current schema tooling, but no clean artifact or API contract is established.
+1. **Configured distribution versus unaccepted root profile.** Hatch builds `src/kfm`, but the conditional-root activation contract is not accepted.
+2. **Editable installation versus package proof.** Schema CI installs the root project, but does not build or inspect the wheel/sdist or exercise a facade API.
+3. **Parent/child documentation drift.** The child README still calls the parent stale even though parent v0.3 already corrected that claim.
+4. **Canonical Directory Rules versus compatibility body.** ADR-0029 establishes the doctrine path as sole writable authority; the full architecture copy remains a held compatibility migration dependency.
+5. **Machine projection versus human drift closure.** `root.src` is registered, but no accepted facade/migration decision or dedicated human drift disposition was established.
 
 [Back to top](#top)
 
 ---
 
 <a id="content-and-authority-rules"></a>
+<a id="what-belongs-here"></a>
+<a id="what-does-not-belong-here"></a>
 
-## What belongs here
+## What belongs and what is prohibited
 
-The default content set is intentionally small.
+### Allowed while the root remains `HOLD`
 
-| Content | Admission posture | Required evidence |
+| Material | Admission posture | Required evidence |
 |---|---|---|
-| This parent README | Allowed | Current inventory, placement boundary, validation, decision, and rollback guidance |
-| [`kfm/README.md`](kfm/README.md) | Allowed | Child namespace/package contract |
-| [`kfm/__init__.py`](kfm/__init__.py) package marker | Allowed while current packaging remains | Minimal, side-effect-free, no hidden imports or exports |
-| Tightly scoped compatibility shim | Review required | Accepted owner, consumer inventory, tests, deprecation window, migration and rollback |
-| Migration/deprecation/correction note | Review required | Governing decision, affected consumers, prior/new paths, rollback target |
-| Packaging metadata helper | Exceptional | Explicit ownership, no hidden I/O, deterministic behavior, direct tests |
+| This `ROOT_FULL` README | Allowed | Current inventory, authority, validation, review, migration, and rollback facts. |
+| `kfm/README.md` | Allowed | Child namespace contract; must not claim accepted facade or shared-library authority. |
+| Existing `kfm/__init__.py` package marker | Contained | Remain minimal and side-effect free; behavioral expansion requires the accepted profile. |
+| Documentation correction or migration note | Allowed through review | Exact affected claim/path, decision state, link compatibility, and rollback. |
+| Defect-only maintenance required to preserve current packaging | Exceptional | Bounded defect evidence, tests, no API expansion, consumer impact, correction and rollback. |
 
-Before adding any export, module, alias, dynamic version loader, `py.typed`, package data, entry point, plugin registry, optional dependency, generated code, or compatibility facade, establish:
+> [!IMPORTANT]
+> `HOLD` accepts **no new implementation**. A future accepted facade profile may narrow the allowed set, but this README cannot create that future state.
 
-1. the owning responsibility;
-2. why the canonical package/application/tool root cannot own it directly;
-3. the public or internal API contract;
-4. dependency direction;
-5. tests for import safety and artifact parity;
-6. consumer and compatibility scope;
-7. deprecation, correction, and rollback.
+### Prohibited or routed elsewhere
 
-[Back to top](#top)
-
----
-
-## What does NOT belong here
-
-| Material | Correct responsibility root |
+| Material or responsibility | Correct home or outcome |
 |---|---|
-| Shared reusable implementation or domain libraries | [`packages/`](../packages/README.md) |
-| CLI, service, worker, API, review console, or UI shell | `apps/` |
-| Source clients, fetchers, or admission logic | `connectors/` |
-| Executable transformations or orchestration | `pipelines/` |
-| Runtime/model adapters or harnesses | `runtime/` |
-| Validators, generators, builders, proof/release/QA tooling | `tools/` |
-| Small operational helper | `scripts/` |
+| Reusable implementation, domain libraries, value objects, shared APIs | [`packages/`](../packages/README.md) |
+| CLI, service, worker, API, review console, UI shell | `apps/` |
+| Source acquisition or admission implementation | `connectors/` |
+| Lifecycle transforms and orchestration | `pipelines/` |
+| Runtime/model adapters and composition | `runtime/` |
+| Repository validators, generators, builders, operators | `tools/` |
+| Thin invocation wrappers | `scripts/` |
 | Semantic meaning | `contracts/` |
 | Machine-checkable shape | `schemas/` |
-| Admissibility, rights, sensitivity, or release policy | `policy/` |
-| Test assertions or reusable fixtures | `tests/` and `fixtures/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, PUBLISHED state | `data/` lifecycle roots |
-| Receipts, proofs, catalogs, or registries | their governed `data/` roots |
-| Release manifests, promotion decisions, correction or rollback records | `release/` |
-| Public API, map, UI, or AI behavior | accepted app/package boundaries consuming governed payloads |
+| Admissibility, rights, sensitivity, access, release policy | `policy/` |
+| Executable tests and reusable fixtures | `tests/` and `fixtures/` |
+| Lifecycle, receipt, proof, catalog, registry, published instances | governed `data/` lanes |
+| Release, promotion, correction, withdrawal, rollback decisions | `release/` |
+| New facade exports, aliases, modules, entry points, package data, `py.typed`, dynamic versioning, plugin registration | `HOLD` until accepted facade profile and tests |
+| Parallel package tree that duplicates `packages/` | `DENY` |
 
 The following interpretations are also prohibited:
 
@@ -247,120 +283,143 @@ pip install -e . succeeds
   != clean wheel or sdist proof
 
 schema-validation is green
-  != root package role accepted
+  != root distribution profile accepted
 
-src/kfm is packaged
-  != src/ owns repository implementation
+src/kfm is selected by Hatch
+  != src/ owns reusable implementation
+
+root registry contains root.src
+  != conditional root activated
 
 documentation is polished
-  != migration or release approved
+  != ADR, migration, release, or publication approved
 ```
 
 [Back to top](#top)
 
 ---
 
-## Inputs
+<a id="inputs"></a>
+<a id="outputs"></a>
 
-### Current inputs
+## Inputs, outputs, and permitted writers
+
+### Inputs
 
 | Input | Role | Limit |
 |---|---|---|
-| Root [`pyproject.toml`](../pyproject.toml) | Distribution metadata, build backend, dependency carrier, wheel/sdist selection | Configuration only; not artifact or publication proof |
-| [`src/kfm/__init__.py`](kfm/__init__.py) | Minimal namespace marker | No exports or behavior |
-| [`src/kfm/README.md`](kfm/README.md) | Detailed package/facade boundary | Contains one stale parent-status statement requiring separate reconciliation |
-| [`packages/README.md`](../packages/README.md) | Shared implementation authority | Does not decide root-package migration |
-| Directory Rules | Responsibility-root and migration doctrine | Their own live placement is conflicted |
-| [`Makefile`](../Makefile) and schema workflow | Current validator/test installation path | Schema-lane scope only |
-| [`tests/README.md`](../tests/README.md) | Test-root scope and claim discipline | No full-suite command |
-| CODEOWNERS | Default GitHub review routing | Not stewardship, approval, or branch-protection proof |
-| Prior generation receipt | v0.2 provenance | Lineage only; never rewrite it |
+| Root [`pyproject.toml`](../pyproject.toml) | Distribution metadata, build backend, dependencies, wheel/sdist selection | Configuration, not artifact or release proof. |
+| [`kfm/__init__.py`](kfm/__init__.py) | Minimal namespace marker | No exports or behavior. |
+| [`kfm/README.md`](kfm/README.md) | Child package/facade boundary | Contains stale parent-status text requiring a separate child update. |
+| Accepted Directory Rules v2 and ADR-0029 | Root class, admission, README, migration, correction, rollback law | Do not decide that a facade should exist. |
+| [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) | Machine projection of root class, owner route, target, activation and exit conditions | Projection only; cannot accept its own activation condition. |
+| [`packages/README.md`](../packages/README.md) | Reusable implementation authority | Does not decide root facade retention. |
+| `Makefile`, validator entrypoint/registry, schema workflow | Current repository validation and editable-install consumers | Schema/contract scope; not package/public-API proof. |
+| CODEOWNERS and ADR index | Review routing and accepted-decision inventory | Routing/indexing do not prove approval or server enforcement. |
 
-### Future decision inputs
+### Outputs today
 
-A retention, facade, migration, or retirement decision should include:
+| Output | Status | Claim limit |
+|---|---|---|
+| Configured `kfm` distribution source selection | `CONFIRMED by configuration` | Exact clean artifact contents and reproducibility are not established. |
+| Minimal import namespace | `CONFIRMED` | Package docstring only; no supported exports. |
+| Editable-install participation in schema CI | `CONFIRMED` | Dependency/tooling environment only. |
+| Root and child package documentation | `CONFIRMED` | Guidance and evidence boundary only. |
 
-- accepted owners and review burden;
-- current and proposed import graph;
-- internal and external consumer inventory;
-- build and artifact evidence;
-- package-index and license intent;
-- dependency ownership;
-- API/export snapshot;
-- compatibility and deprecation plan;
-- CI and release implications;
-- correction and rollback plan.
+`src/` does not emit or authorize `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, lifecycle transitions, source activation, public routes, model access, package publication, domain truth, or KFM publication.
+
+### Permitted writers
+
+| Change | Current writer posture | Required gate |
+|---|---|---|
+| Documentation-only evidence refresh | Registry/CODEOWNERS route `@bartytime4life` through reviewed feature branch | Exact diff, link/anchor checks, generated receipt, human review. |
+| Minimal defect correction preserving current marker | Narrowly possible | Reproducing test, no API expansion, package/consumer review, rollback. |
+| New export, module, facade, alias, entry point, package data, dependency-owned behavior | `HOLD` | Accepted root-distribution-facade ADR and complete profile evidence. |
+| Reusable implementation | Not permitted here | Write to `packages/` under its contract. |
+| Migration or retirement | Not permitted by this README | Accepted decision, migration manifest, consumer closure, validation, rollback. |
+
+The registry-declared writer and CODEOWNERS route do not prove branch protection, required review, independence, or merge authority. Those controls remain `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
 ---
 
-## Outputs
+## Public exposure and sensitivity posture
 
-### Outputs of this directory today
+The repository is public, while `root.src` is classified `internal` by the machine projection. Public visibility of source bytes does not create a supported public interface.
 
-| Output | Status | Claim limit |
-|---|---|---|
-| Configured `kfm` package namespace | `CONFIRMED` | Minimal marker only |
-| Candidate wheel/sdist inclusion of `src/kfm` | `CONFIRMED by configuration` | Exact built contents not inspected |
-| Editable-install participation in schema CI | `CONFIRMED` | Supports the root dependency/tooling environment; not a public API |
-| Directory and child-package documentation | `CONFIRMED` | Guidance and evidence boundary only |
+- `src/README.md` is public repository guidance.
+- `src/kfm` is not a governed public API, public package release, or public client route.
+- Public and ordinary UI clients must never import or access this root as a substitute for governed APIs and released public-safe artifacts.
+- This root may not read RAW, WORK, QUARANTINE, restricted, canonical/internal, or unreleased stores.
+- No secret, credential, private endpoint, restricted payload, exact protected location, living-person private data, DNA/genomic material, archaeology detail, rare-species location, infrastructure vulnerability, or private-land record belongs here.
+- Import errors, validation logs, and receipts must not leak protected values or hidden policy reasons.
 
-### Outputs this directory must not emit by implication
+When exposure, rights, sensitivity, or harmful precision is uncertain, route material to the appropriate governed source/data/policy/review boundary and fail closed. Path placement cannot make restricted content public-safe.
 
-`src/` does not emit or authorize:
+[Back to top](#top)
 
-- `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, or rollback authority;
-- lifecycle transitions or canonical data mutations;
-- deployable services or public routes;
-- source activation;
-- model-runtime access;
-- published packages or KFM public artifacts;
-- domain truth;
-- supported facade exports unless separately accepted and tested.
+---
 
-A future build artifact is a **candidate** until its contents, provenance, version, license, tests, and release state are inspected.
+## Mutability, retention, generation, and physical storage
+
+| Property | Current contract |
+|---|---|
+| Root class | Conditional. |
+| Mutation | Versioned documentation and narrowly contained existing marker maintenance; no new implementation while `HOLD`. |
+| Retention | `migration_bound` in the root registry; retained until an accepted profile, migration, or retirement closes the path. |
+| Generation | This README and `src/kfm` source are hand-authored tracked files; no mirror or generator relationship was established. |
+| Physical storage | Git repository. Candidate wheel/sdist artifacts are build outputs, not canonical KFM trust or release objects. |
+| Canonical target | `packages/` for reusable implementation. |
+| Provenance | Substantive AI-authored README revisions emit a new append-only generated receipt under `data/receipts/generated/`; prior receipts remain immutable lineage. |
+
+### Change discipline
+
+- Do not hand-edit a generated or mirrored copy if one is discovered; identify its source first.
+- Do not commit `dist/`, virtual environments, caches, or build artifacts merely to prove packaging.
+- Do not mutate prior generated receipts to make them describe new bytes.
+- Do not remove the current namespace until consumers, editable-install behavior, artifact identity, and rollback are verified.
+- Do not use rollback to recreate two writable implementation authorities.
 
 [Back to top](#top)
 
 ---
 
 <a id="validation-and-ci-boundary"></a>
+<a id="validation"></a>
 
-## Validation
+## Validation and negative checks
 
-### Confirmed repository checks
+### Current repository validation surfaces
+
+| Command or check | Current scope | Explicit limit |
+|---|---|---|
+| `python tools/validate_all.py --profile full` | Canonical validator orchestrator; eight configured fixture-validator families | Validates registered bounded shapes/semantics only; not package proof. |
+| `make schemas` | Historical compatibility entrypoint delegating to the same full profile | Same eight-family scope. |
+| `make test` | `tests/schemas` and `tests/contracts` | Narrow test lane; not full repository or root-package suite. |
+| `make validate` | `make schemas` plus `make test` | Partial aggregate only. |
+| `schema-validation` workflow | Installs `.[test]`; enforces nonempty valid/invalid lanes, expectation coverage, schema JSON parsing, Draft 2020-12, unique IDs, eight validators, and schema/contract tests | No wheel/sdist build, import-safety suite, consumer test, release, or publication. |
+| `python tools/validators/validate_generated_receipt.py <receipt>` | Generated receipt shape, path/hash parity, supported SHA-256 bindings, bounded citations/review declarations | Receipt process memory only; does not approve merge or prove artifact truth. |
+| `git diff --check` | Whitespace and patch hygiene | No semantic proof. |
+
+### Documentation checks for this README
+
+A substantive update should verify:
+
+- one H1 and the twelve `ROOT_FULL` H2 fields in order;
+- balanced fenced blocks and valid Mermaid/TOML/text fences;
+- unique explicit anchors and preserved legacy fragments;
+- direct-child map limited to `src/` and direct children;
+- repository-relative links resolve at the branch head;
+- no tabs, trailing whitespace, secrets, private data, or protected coordinates;
+- final newline;
+- generated receipt parses, validates, and binds the exact README SHA-256;
+- remote branch bytes match the reviewed local bytes.
+
+### Package proof still required before activation or readiness claims
 
 ```bash
-# Current aggregate: six configured schema-fixture validators.
-make schemas
-
-# Current narrow schema/contract pytest lane.
-make test
-
-# Current aggregate of the two commands above.
-make validate
-```
-
-The schema-validation workflow currently:
-
-1. installs the root project with `python -m pip install -e ".[test]"`;
-2. requires all six configured validator scripts, schemas, and nonempty valid/invalid fixture lanes;
-3. requires expected-error sidecars for configured invalid fixtures;
-4. parses all JSON under `schemas/`;
-5. checks all `*.schema.json` files against Draft 2020-12;
-6. requires canonical v1 schemas to declare unique `$id` values;
-7. runs `make schemas`;
-8. runs `python -m pytest -q tests/schemas tests/contracts`.
-
-That workflow provides evidence about the configured schema-validation environment. It does **not** directly test the `kfm` distribution as a package.
-
-### Root-package proof still required
-
-Before changing the root package role or claiming package readiness, add and observe a reviewed package-proof sequence such as:
-
-```bash
-# PROPOSED until accepted and wired.
+# PROPOSED sequence; use an isolated environment and reviewed dependencies.
 python -m build
 python -m zipfile -l dist/*.whl
 python -m tarfile -l dist/*.tar.gz
@@ -370,126 +429,101 @@ python -m venv .tmp/kfm-wheel-check
 .tmp/kfm-wheel-check/bin/python -c "import kfm; print(kfm.__doc__)"
 ```
 
-The accepted implementation must also prove:
+A complete package-proof lane must also establish deterministic artifact contents, isolated install, editable/wheel parity, no import-time side effects, API/export snapshot, dependency direction, `kfm` versus `kfm-cli` separation, consumer compatibility, failure behavior, correction, and rollback.
 
-- deterministic wheel and sdist contents;
-- isolated install and import;
-- no import-time network, subprocess, filesystem mutation, environment mutation, logging configuration, or lifecycle access;
-- editable-versus-wheel parity;
-- API/export snapshot;
-- dependency direction;
-- `kfm` versus `kfm-cli` separation;
-- known-consumer compatibility;
-- failure, correction, and rollback behavior.
+### Negative and non-vacuity checks
 
-### Non-vacuity rule
-
-A package check is not substantive when:
-
-- no artifact was built;
-- no artifact contents were inspected;
-- import ran against the working tree rather than the installed artifact;
-- the test asserted only that Python found the namespace;
-- no negative import-side-effect checks ran;
-- no consumer or compatibility boundary was exercised.
+| Check | Expected result |
+|---|---|
+| Add reusable implementation under `src/` without accepted profile | `HOLD` / reject change. |
+| Make `packages/` import the root facade | Reject; dependency direction must be facade → packages. |
+| Treat editable install as clean artifact proof | Reject claim. |
+| Treat a green schema workflow as root activation or release | Reject claim. |
+| Build no artifact but report package readiness | Non-vacuous proof failure. |
+| Import from the working tree instead of installed wheel and call it wheel proof | Non-vacuous proof failure. |
+| Add facade exports without API snapshot, consumer tests, version/deprecation/release contract | `HOLD`. |
+| Put secrets, sensitive payloads, lifecycle data, receipts, proofs, or release decisions under `src/` | `DENY`. |
 
 [Back to top](#top)
 
 ---
 
-## Review burden
+<a id="review-burden"></a>
 
-Current GitHub routing falls through the default CODEOWNERS rule to `@bartytime4life`. No explicit `/src/` rule or accepted package-steward identity was established.
+## Owner, reviewers, and escalation path
 
-| Change | Minimum review burden |
+### Current routing
+
+- `@bartytime4life` is the verified default CODEOWNERS route and the owner/writer/reviewer projected for `root.src`.
+- No explicit `/src/` CODEOWNERS rule was found.
+- No independent package, Python packaging, security/supply-chain, CI, consumer, release, or documentation steward assignment was established.
+- CODEOWNERS and the root registry do not prove human review, separation of duties, ruleset enforcement, or merge permission.
+
+### Review burden
+
+| Change | Required review posture |
 |---|---|
-| Documentation-only evidence refresh | Default CODEOWNER + docs/package-boundary review |
-| New export, alias, facade, or compatibility shim | Architecture + package + consumer owners + tests/CI |
-| New dependency, package data, build hook, or entry point | Packaging + security/supply-chain + CI + affected owners |
-| Public API or semantic-versioning promise | Architecture + package + API/consumer + release |
-| Migration into `packages/` | ADR/migration review + package owners + CI + consumers + rollback |
-| Root distribution retirement | Packaging + workflow/tool owners + consumers + release/correction |
-| Trust-bearing or lifecycle access | Request changes; route behavior to its canonical responsibility root |
-| License or publication change | Legal/rights posture + package/release review |
+| Documentation-only evidence refresh | Verified CODEOWNER route plus documentation/package-boundary review. |
+| Defect correction preserving minimal marker | Package/consumer owner, validation/CI, and rollback review. |
+| New dependency, build hook, package data, entry point, or generated code | Packaging, security/supply-chain, CI, affected consumer, and architecture review. |
+| Public/internal API or semantic-versioning promise | Architecture, package/API consumer, compatibility, release, and documentation review. |
+| Root facade activation | Accepted ADR with owner, activation/exit conditions, independent review, API/build/test/version/deprecation/release closure. |
+| Migration into `packages/` or retirement | ADR/migration review, import/consumer inventory, package/workflow updates, compatibility window, correction and rollback. |
+| License or publication change | Rights/legal posture plus package/release review. |
+| Trust-bearing, lifecycle, source, policy, or public-path behavior | Reject from `src/`; escalate to the owning responsibility root. |
 
-CODEOWNERS routing does not prove review occurred, does not assign stewardship, and does not authorize merge, package publication, release, or KFM publication.
+### Escalation
 
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Related surface | Relationship to `src/` |
-|---|---|
-| [`src/kfm/`](kfm/README.md) | Child namespace and detailed facade/import/package contract |
-| [`packages/`](../packages/README.md) | Canonical shared reusable implementation root |
-| `apps/` | Deployable application and service authority |
-| `apps/cli/` | Separate `kfm-cli` distribution boundary |
-| [`tests/`](../tests/README.md) | Authored enforceability proof; currently no direct root-package suite established |
-| `fixtures/` | Deterministic reusable examples; not package data by default |
-| `tools/validators/` | Shared schema registry/validator implementation that drives the root dependency need |
-| [`pyproject.toml`](../pyproject.toml) | Current root distribution and dependency configuration |
-| [`.github/workflows/schema-validation.yml`](../.github/workflows/schema-validation.yml) | Current editable-install schema/test CI consumer |
-| [`data/receipts/generated/`](../data/receipts/generated/README.md) | AI-generation provenance receipts; not package/release authority |
-| `release/` | Any future package release, correction, withdrawal, and rollback decision |
-| `docs/registers/` | Drift, verification, and decision tracking |
+1. Stop new implementation when the activation profile is missing or evidence conflicts.
+2. Open or update a verification/drift item naming the exact missing decision or evidence.
+3. Route root-profile decisions to architecture/package governance through an ADR.
+4. Route sensitive or supply-chain concerns to the appropriate security/rights reviewer.
+5. Route release, correction, withdrawal, and rollback decisions to `release/` owners.
+6. Preserve current minimal behavior and a safe rollback while review is unresolved.
 
 [Back to top](#top)
 
 ---
 
 <a id="adr-and-migration-decision"></a>
+<a id="adrs"></a>
 
-## ADRs
+## Governing ADRs, migrations, aliases, and canonical target
 
-No accepted ADR governing the root `src/` role was surfaced in the inspected evidence. The existing path therefore remains contained rather than normalized by assertion.
+### Governing decisions and projections
+
+| Surface | Status | Effect on `src/` |
+|---|---:|---|
+| [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | Adopts exact Directory Rules v2 bytes and makes the doctrine path the sole writable human authority. |
+| [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) §10.2, §16, §18 | adopted bytes | Defines conditional root profile, `ROOT_FULL` README, and migration/rollback discipline. |
+| [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) `root.src` | active projection | Class `conditional`; target `packages/`; activation `accepted_root_distribution_facade_adr`; exit `accepted_profile_or_migrate_to_packages`; validation `hold_no_new_authority`. |
+| [`docs/adr/INDEX.md`](../docs/adr/INDEX.md) | current inventory | ADR-0029 is the only accepted numbered ADR; no accepted facade ADR is listed. |
+
+The Directory Rules artifact still contains its pre-adoption label because ADR-0029 adopted exact bytes. The accepted ADR, not a cosmetic label edit, supplies the effective decision.
+
+### Canonical target, aliases, and migration state
+
+- **Canonical target:** `packages/` for reusable implementation.
+- **Root path:** `src/` remains a conditional root, not an alias or writable mirror of `packages/`.
+- **Facade API aliases:** none accepted.
+- **Migration manifest:** none established for root `src/`.
+- **Deprecation/retirement receipt:** none established.
+- **Human drift entry:** no dedicated root-`src` entry appears in the inspected drift register.
+- **Physical move/delete:** not authorized by this README or this update.
 
 ### Decision options
 
 | Option | Meaning | Minimum closure evidence |
 |---|---|---|
-| Retain as marker/dependency carrier | Keep `src/kfm` minimal for root tooling compatibility | ADR or accepted migration note; owner; dependency rationale; build/import tests; consumers; rollback |
-| Curated facade | Re-export a small stable API from canonical packages | Facade contract; API snapshot; dependency-direction guard; versioning; consumers; deprecation/correction/rollback |
-| Migrate to a package under `packages/` | Move shared package responsibility into the canonical package root | Accepted destination; import map; atomic packaging/CI update; compatibility window; artifact and consumer tests |
-| Retire root distribution | Remove root wheel selection and editable-install dependency | Replacement dependency/tooling plan; workflow updates; consumer proof; artifact/import regression tests; rollback |
-| Keep the decision open | Preserve current minimal namespace while evidence is assembled | No opportunistic exports; visible verification backlog; periodic review |
+| Accept bounded root facade | Keep one aggregate distribution with deliberate exports from canonical packages | Accepted ADR; API and dependency contracts; build/tests; consumers; version/deprecation/release and exit conditions. |
+| Retain minimal dependency carrier as a time-bounded exception | Preserve current marker only for verified tooling consumers | Accepted decision/exception, consumer inventory, expiry/exit criteria, package proof, rollback. |
+| Migrate distribution responsibility into `packages/` | Move implementation and packaging to the canonical package root | Accepted migration, old/new import map, atomic manifests/workflows, compatibility window, artifact/consumer parity, rollback. |
+| Retire root distribution | Remove root wheel selection and editable-install dependency | Replacement tooling/dependency plan, zero-consumer proof, workflow/test updates, rollback. |
+| Keep decision open | Preserve current minimal marker and collect evidence | No new implementation; visible backlog; event-triggered review. |
 
-### ADR triggers
+### ADR and migration triggers
 
-An ADR or equivalently accepted migration decision is required before:
-
-- ratifying root `src/` as a lasting authority surface;
-- moving or retiring the root package;
-- creating a repository-wide umbrella facade;
-- changing ownership between root `src/` and `packages/`;
-- adding a compatibility promise with broad consumer impact.
-
-A documentation-only refresh does not decide any of those questions.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-**Last reviewed:** 2026-07-23 against `main@e0b50a6c342a216c150624df6dd513121d9d1f85`.
-
-Re-review this README when any of the following changes:
-
-- `pyproject.toml` package selection, dependencies, version, license, entry points, or build backend;
-- files under `src/` or `src/kfm/`;
-- the child namespace README;
-- package imports or repository consumers;
-- `packages/` authority or package topology;
-- schema validator dependency wiring;
-- Makefile test/validation commands;
-- schema-validation or package-related workflows;
-- CODEOWNERS or stewardship;
-- Directory Rules, ADRs, drift/verification registers;
-- package artifact, publication, correction, or rollback behavior.
-
-Older than six months without review is a documentation-health warning, not evidence that the package became invalid.
+An accepted decision is required before activating the conditional root, creating a lasting facade, moving/retiring the package, changing ownership between `src/` and `packages/`, or establishing broad compatibility promises. Migration must preserve identity, consumers, references, artifact evidence, single-write authority, correction lineage, and rollback.
 
 [Back to top](#top)
 
@@ -497,25 +531,49 @@ Older than six months without review is a documentation-health warning, not evid
 
 <a id="bounded-current-inventory"></a>
 
-## Bounded current inventory
+## Direct-child directory map
 
-The current inspection directly established:
+**CONFIRMED direct map at `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`:**
 
 ```text
 src/
-├── README.md
-└── kfm/
-    ├── README.md
-    └── __init__.py
+├── README.md    # ROOT_FULL contract for the conditional root
+└── kfm/         # configured root distribution namespace; child README owns deeper detail
 ```
 
-| Path | Role | Explicit limit |
-|---|---|---|
-| `src/README.md` | Directory inventory, placement boundary, routing, decision and rollback summary | Does not define package exports or settle retention |
-| `src/kfm/README.md` | Namespace, facade, import-safety, artifact-proof, compatibility and migration contract | Does not create shared-library authority or deployable behavior |
-| `src/kfm/__init__.py` | Minimal import marker | No exports, command, version attribute, registry, adapter, or side effects established |
+Directory Rules v2 requires this README to stop at direct children. See [`kfm/README.md`](kfm/README.md) for the namespace's internal files and package-level contract.
 
-This is a bounded inventory based on the inspected paths and searches. It is not an exhaustive tree, generated-file, ignored-file, branch-local, or package-consumer inventory.
+| Direct child | Current role | Admission state |
+|---|---|---:|
+| `README.md` | Root authority, containment, validation, decision, correction, and rollback guidance | `PLACE` |
+| `kfm/` | Hatch-selected root distribution namespace | Existing containment; root activation remains `HOLD` |
+
+The map is a commit-pinned direct-child inventory. It is not a generated-file, ignored-file, consumer, built-artifact, or runtime inventory.
+
+[Back to top](#top)
+
+---
+
+<a id="last-reviewed"></a>
+
+## Last evidence review and review trigger
+
+**Last evidence review:** 2026-08-09 against `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`.
+
+Re-review when any of the following changes:
+
+- root class, activation/exit condition, owner, writer, target, retention, or validation profile;
+- ADR-0029, Directory Rules v2, ADR index, root registry, alias/deprecation/migration registers;
+- `pyproject.toml` package selection, dependencies, version, license, entry points, package data, build backend, or sdist/wheel configuration;
+- files or direct children under `src/`, or package-level behavior under `src/kfm/`;
+- package exports, imports, consumers, dependency direction, or `kfm`/`kfm-cli` boundaries;
+- `packages/` authority or package topology;
+- validator entrypoint/registry, Makefile commands, schema workflow, package workflows, or required checks;
+- CODEOWNERS, stewardship, separation-of-duties, or server-enforced review state;
+- clean artifact, package publication, correction, withdrawal, or rollback behavior;
+- drift, security, supply-chain, rights, sensitivity, or public-exposure finding.
+
+Review is event- and risk-based. A date change without fresh evidence is not review.
 
 [Back to top](#top)
 
@@ -527,22 +585,13 @@ This is a bounded inventory based on the inspected paths and searches. It is not
 
 | Document | Owns | Must not duplicate or claim |
 |---|---|---|
-| `src/README.md` | Directory purpose, authority class, inventory, root-wide containment, related roots, decision state, review, correction and rollback | Symbol-level exports, facade API, exact package artifact contents, package test implementation |
-| `src/kfm/README.md` | Distribution metadata, namespace behavior, import safety, facade admission, package tests, compatibility and retirement details | Canonical package authority, deployable behavior, root-level Directory Rules decision |
+| `src/README.md` | Root class, admission state, direct-child map, containment, related authority roots, review, migration, correction, and rollback | Package symbols, exact exports, deep tree, artifact contents, package-test implementation. |
+| `src/kfm/README.md` | Namespace behavior, import safety, facade admission details, package tests, artifact proof, consumer compatibility and retirement detail | Root activation, canonical package authority, deployable behavior, or release authority. |
 
-Update the parent when:
-
-- children are added, removed, or reclassified;
-- root packaging or dependency purpose changes;
-- the root placement/ADR decision changes;
-- root-wide review or rollback guidance changes.
-
-Update the child when:
-
-- exports, imports, package modules, API promises, entry points, version behavior, tests, artifacts, consumers, facade behavior, or compatibility changes.
+Update the parent when direct children, root class, packaging purpose, target, owner/writer, decision state, or root-wide rollback changes. Update the child when exports, modules, imports, package metadata behavior, entry points, tests, artifacts, consumers, facade behavior, or package compatibility changes.
 
 > [!NOTE]
-> The current child README still says the parent contains stale packaging uncertainty. That statement was already superseded by parent v0.2 and remains a separate documentation reconciliation item. This scoped update does not rewrite the child.
+> The child README still describes the parent as stale. Parent v0.3 already superseded that statement; v0.4 records it as a separate, bounded documentation reconciliation item rather than broadening this root-only update.
 
 [Back to top](#top)
 
@@ -554,108 +603,80 @@ Update the child when:
 
 `src/` has no authority to:
 
-- read or write RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED state;
+- read or write RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED state;
 - create or approve source admission, evidence, policy, review, promotion, correction, withdrawal, or rollback records;
-- expose canonical or internal stores to public clients;
-- activate connectors, pipelines, runtime providers, models, routes, renderers, or plugins;
-- treat maps, tiles, graphs, indexes, dashboards, summaries, screenshots, or generated language as truth;
-- make `EvidenceBundle` or policy checks optional;
-- become a direct public API merely because it is importable.
+- expose canonical/internal stores to public clients;
+- activate connectors, pipelines, runtime providers, models, APIs, renderers, plugins, or deployments;
+- treat maps, tiles, graphs, indexes, dashboards, summaries, screenshots, tests, or generated language as sovereign truth;
+- make `EvidenceRef → EvidenceBundle` or policy checks optional;
+- become a public API merely because it is importable.
 
-Preferred dependency direction:
-
-```text
-apps / pipelines / tools / tests
-  -> accepted owning packages under packages/*
-```
-
-Unreviewed umbrella direction to avoid:
+Permitted dependency direction after a future accepted facade decision:
 
 ```text
-repository implementation
-  -> kfm umbrella namespace
-  -> arbitrary internal roots
+apps / connectors / pipelines / tools / tests
+                         |
+                         v
+                    packages/*
+                         |
+                         v
+                src/kfm facade only
 ```
 
-Any future facade must re-export only accepted, documented owning-package APIs. It must not reach into data stores, application internals, or unpublished lifecycle state.
+The current root has no accepted facade. `packages/` must never depend on the facade. A future facade may re-export only accepted, documented owning-package APIs and must not reach into lifecycle stores, app internals, source clients, policy engines, model runtimes, or release state.
 
 [Back to top](#top)
 
 ---
 
+<a id="packaging-and-dependency-boundary"></a>
+
 ## Packaging and dependency boundary
+
+### Current configured flow
 
 ```mermaid
 flowchart LR
     PY["pyproject.toml<br/>Hatch · kfm 0.0.0"] --> SRC["src/kfm<br/>minimal namespace"]
     CI["schema-validation workflow"] --> INSTALL["pip install -e .[test]"]
-    INSTALL --> VALIDATE["six validator fixture families<br/>schema inventory + schema/contract tests"]
+    INSTALL --> ORCH["tools/validate_all.py<br/>full profile"]
+    ORCH --> V["8 validator fixture families"]
+    CI --> ST["schema inventory + schema/contract tests"]
 
-    SRC -. "does not own" .-> PKG["packages/<br/>shared implementation"]
-    SRC -. "does not own" .-> APPS["apps/<br/>deployables"]
+    SRC -. "canonical target for reusable code" .-> PKG["packages/"]
+    SRC -. "does not own" .-> APPS["apps/"]
     SRC -. "does not own" .-> TRUST["contracts · schemas · policy<br/>data · release"]
 ```
 
-### Current packaging contract
+### Current root package contract
 
 ```toml
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "kfm"
 version = "0.0.0"
 requires-python = ">=3.11"
 license = { text = "TBD" }
+dependencies = [
+  "jsonschema>=4.26.0,<5",
+  "rfc3339-validator==0.1.4",
+  "rfc8785==0.1.4",
+  "PyYAML==6.0.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=9.1.1,<10"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/kfm"]
 ```
 
-The root distribution currently carries the `jsonschema` dependency used by shared validator registry tooling. That dependency relationship is configuration evidence, not proof that validator implementation belongs under `src/kfm`.
+The root project is a dependency carrier for repository tooling. Dependency declarations do not move validator or governance implementation into `src/kfm`.
 
 ### Import-safety contract
 
-The current marker should remain:
+The current marker should remain deterministic, side-effect free, no-network, no-subprocess, no filesystem/environment mutation, no logging reconfiguration, and no implicit connector, pipeline, runtime, model, API, UI, policy, lifecycle, or release activation.
 
-- deterministic;
-- side-effect free;
-- no-network;
-- no subprocess;
-- no filesystem mutation;
-- no environment mutation;
-- no logging reconfiguration;
-- no implicit connector, pipeline, runtime, model, API, UI, or release activation.
-
-A future export or facade changes the package contract and must be tested as such.
-
-[Back to top](#top)
-
----
-
-## ADR and migration decision
-
-Until a decision is accepted:
-
-1. keep the namespace minimal;
-2. add no opportunistic implementation or umbrella exports;
-3. route reusable work to `packages/`;
-4. document and test any temporary compatibility shim;
-5. register or explicitly close the root-`src` drift;
-6. preserve old/new import and artifact evidence;
-7. keep rollback possible.
-
-### Smallest sound decision sequence
-
-1. Inventory tracked and generated `src/` contents and all consumers.
-2. Build and inspect clean wheel/sdist artifacts.
-3. Add isolated import, no-side-effect, API snapshot, dependency-direction, and editable/wheel parity tests.
-4. Establish package/license/version/publication intent.
-5. Assign accountable owners and review burden.
-6. Record the root-`src` drift.
-7. Decide retain, facade, migrate, or retire through ADR/migration review.
-8. Apply the smallest atomic implementation change with consumer tests and rollback.
+A future export or facade changes the package contract and requires acceptance plus direct tests.
 
 [Back to top](#top)
 
@@ -667,24 +688,25 @@ Until a decision is accepted:
 
 The root source-layout question is closed only when:
 
-- [ ] the root distribution role and accountable owners are accepted;
-- [ ] retention, facade, migration, or retirement is recorded in an accepted ADR or migration decision;
-- [ ] root-`src` drift is registered or explicitly closed;
-- [ ] license, version source, dependency ownership, and publication metadata are resolved;
+- [ ] an accountable root-distribution owner and independent review route are accepted;
+- [ ] a facade, time-bounded retention, migration, or retirement decision is accepted;
+- [ ] the root registry and human drift/migration records agree with that decision;
+- [ ] license, version source, dependency ownership, package-index and publication intent are resolved;
 - [ ] clean wheel and sdist builds pass and artifact contents are inspected;
-- [ ] isolated import and no-side-effect checks pass;
-- [ ] API/export snapshot and editable/wheel parity checks pass;
-- [ ] dependency direction is enforced;
+- [ ] isolated import, no-side-effect, and editable/wheel parity checks pass;
+- [ ] API/export snapshot and compatibility promises are explicit;
+- [ ] dependency direction is enforced and `packages/` never imports the facade;
 - [ ] `kfm` and `kfm-cli` boundaries are tested;
-- [ ] internal and external consumers are inventoried;
+- [ ] internal, workflow, and external consumers are inventoried;
 - [ ] any facade maps only to accepted owning-package APIs;
-- [ ] substantive package CI exists;
-- [ ] compatibility, deprecation, correction, and rollback policies are accepted;
-- [ ] related documentation and provenance are synchronized.
+- [ ] substantive package CI and required-check mapping are established;
+- [ ] deprecation, correction, withdrawal, and rollback behavior are accepted and drilled;
+- [ ] child and related documentation plus provenance are synchronized;
+- [ ] activation or retirement exit conditions are machine-verifiable.
 
 Until then, the safe label is:
 
-> **Configured root source layout with a minimal, non-canonical, unratified namespace.**
+> **Configured root distribution source layout; conditional root in `HOLD`; minimal namespace; no accepted facade, stable API, package release, or public authority.**
 
 [Back to top](#top)
 
@@ -696,23 +718,24 @@ Until then, the safe label is:
 
 | ID | Verification item | Current status | Closure evidence |
 |---|---|---|---|
-| KFM-SRC-01 | Assign root-distribution and source-layout stewards. | `NEEDS VERIFICATION` | Accepted stewardship record and review route |
-| KFM-SRC-02 | Accept retention, facade, migration, or retirement. | `NEEDS VERIFICATION` | ADR or migration decision |
-| KFM-SRC-03 | Register or explicitly close root-`src` drift. | `NEEDS VERIFICATION` | Drift entry or accepted ADR |
-| KFM-SRC-04 | Establish complete tracked/generated/ignored inventory. | `NEEDS VERIFICATION` | Commit-pinned recursive tree and build manifest |
-| KFM-SRC-05 | Build and inspect clean wheel and sdist. | `NEEDS VERIFICATION` | Reproducible build logs and artifact inventory |
-| KFM-SRC-06 | Verify isolated import, no side effects, and editable/wheel parity. | `NEEDS VERIFICATION` | Dedicated package tests |
-| KFM-SRC-07 | Define and snapshot public/internal exports. | `NEEDS VERIFICATION` | Accepted API contract and snapshot |
-| KFM-SRC-08 | Inventory repository, workflow, and external consumers. | `NEEDS VERIFICATION` | Import/dependency graph |
-| KFM-SRC-09 | Resolve `jsonschema` dependency ownership. | `NEEDS VERIFICATION` | Package/tool ownership decision |
-| KFM-SRC-10 | Resolve license, version source, package index, signing, and publication intent. | `NEEDS VERIFICATION` | Reviewed packaging/release contract |
-| KFM-SRC-11 | Add dependency-direction and `kfm`/`kfm-cli` separation tests. | `NEEDS VERIFICATION` | Executable positive/negative tests |
-| KFM-SRC-12 | Define compatibility, deprecation, correction, and rollback. | `NEEDS VERIFICATION` | Accepted lifecycle policy and tests |
-| KFM-SRC-13 | Reconcile the child README's stale parent-status statement. | `NEEDS VERIFICATION` | Separate child-doc update |
-| KFM-SRC-14 | Resolve the two live Directory Rules placement surfaces. | `CONFLICTED` | Accepted ADR/supersession and link migration |
-| KFM-SRC-15 | Determine whether any generated, mirrored, localized, or external README copies require synchronization. | `UNKNOWN` | Complete documentation inventory |
-| KFM-SRC-16 | Verify branch protection and required package-related checks. | `UNKNOWN` | Repository settings/ruleset evidence |
-| KFM-SRC-17 | Establish current package pass, duration, coverage, and flake metrics. | `UNKNOWN` | Governed QA report |
+| KFM-SRC-01 | Assign root-distribution and Python-package stewards plus independent review. | `NEEDS VERIFICATION` | Accepted stewardship and review record. |
+| KFM-SRC-02 | Decide facade, bounded retention, migration, or retirement. | `NEEDS VERIFICATION` | Accepted ADR/exception/migration decision. |
+| KFM-SRC-03 | Add or explicitly close a human root-`src` drift/migration entry. | `NEEDS VERIFICATION` | Drift entry or accepted decision with disposition. |
+| KFM-SRC-04 | Establish complete tracked, generated, ignored, and build inventory. | `NEEDS VERIFICATION` | Commit-pinned recursive inventory and build manifest. |
+| KFM-SRC-05 | Build and inspect clean wheel and sdist. | `NEEDS VERIFICATION` | Reproducible build logs and artifact inventory. |
+| KFM-SRC-06 | Verify isolated import, no side effects, and editable/wheel parity. | `NEEDS VERIFICATION` | Dedicated positive/negative package tests. |
+| KFM-SRC-07 | Define and snapshot public/internal exports. | `NEEDS VERIFICATION` | Accepted API contract and snapshot. |
+| KFM-SRC-08 | Inventory repository, workflow, and external consumers. | `NEEDS VERIFICATION` | Import/dependency/consumer graph. |
+| KFM-SRC-09 | Resolve ownership of root Python dependencies used by tools. | `NEEDS VERIFICATION` | Package/tool dependency decision and lock strategy. |
+| KFM-SRC-10 | Resolve license, version source, package index, signing, SBOM, and publication intent. | `NEEDS VERIFICATION` | Reviewed packaging and software-release contract. |
+| KFM-SRC-11 | Enforce facade → packages direction and `kfm`/`kfm-cli` separation. | `NEEDS VERIFICATION` | Executable positive and negative tests. |
+| KFM-SRC-12 | Define compatibility, deprecation, correction, withdrawal, and rollback. | `NEEDS VERIFICATION` | Accepted lifecycle policy and drill. |
+| KFM-SRC-13 | Reconcile the child README's stale parent-status statement. | `NEEDS VERIFICATION` | Separate `src/kfm/README.md` update. |
+| KFM-SRC-14 | Complete the ADR-0029 architecture-path tombstone/reference migration. | `HOLD` | Separate migration PR with consumer and fragment closure. |
+| KFM-SRC-15 | Determine whether generated, mirrored, localized, or external README copies require synchronization. | `UNKNOWN` | Complete documentation inventory. |
+| KFM-SRC-16 | Verify branch protection and required package-related checks. | `UNKNOWN` | Repository ruleset/settings evidence. |
+| KFM-SRC-17 | Establish package pass, duration, coverage, flake, and reproducibility metrics. | `UNKNOWN` | Governed QA reports tied to exact heads. |
+| KFM-SRC-18 | Prove root-registry and path-validator enforcement against `src/` additions on current main. | `NEEDS VERIFICATION` | Negative fixture/check run tied to a current commit. |
 
 [Back to top](#top)
 
@@ -724,37 +747,33 @@ Until then, the safe label is:
 
 ### Documentation maintenance
 
-Update this README when its review triggers change. Update the child README when package-level behavior changes. Preserve the prior generation receipt and add a new receipt for substantive AI-authored revisions rather than rewriting provenance.
+Update this README when a review trigger changes. Update the child README for package-level behavior. Add a new generated receipt for substantive AI-authored bytes; never rewrite historical receipts.
 
 ### Before merge
 
-- close the draft pull request; and
-- delete or abandon its review branch.
-
-No default-branch state changes.
+Rollback is to close the unmerged draft pull request and abandon the feature branch. No default-branch, package, release, deployment, or publication state changes.
 
 ### After merge
 
-- revert the documentation commit and its new generated receipt; or
-- submit a corrective documentation/provenance pull request.
+Use a transparent revert of the README and its new generated receipt, or a forward-fix documentation/provenance pull request. Do not rewrite shared history.
 
-A documentation rollback does not change installed packages, dependencies, tests, workflows, artifacts, consumers, releases, or production systems.
+A documentation rollback does not change installed packages, dependencies, tests, workflows, built artifacts, consumers, releases, deployments, or production systems.
 
 ### Package correction
 
 For a package defect or accidental compatibility change:
 
 1. halt package/release promotion;
-2. preserve artifacts, hashes, logs, tests, and consumer evidence;
+2. preserve artifacts, digests, logs, tests, and consumer evidence;
 3. identify affected versions and consumers;
 4. correct through review;
 5. rebuild and test in isolation;
-6. publish correction or deprecation guidance where required;
-7. retain correction and rollback lineage.
+6. publish correction/deprecation guidance only through the accepted software-release path;
+7. retain correction, withdrawal, supersession, and rollback lineage.
 
 ### Migration or retirement
 
-Inventory consumers, accept the governing decision, update packaging and workflows atomically, use a bounded compatibility shim only when justified, test old and new paths, preserve history, and remove the old lane only after migration evidence closes.
+Freeze writers, inventory consumers, accept the governing decision, add the canonical target and negative write guard, update packaging/workflows atomically, use dual-read/single-write only when verified consumers require it, prove parity and zero old writers/consumers, then retire the old path. Rollback must not recreate two writable authorities.
 
 [Back to top](#top)
 
@@ -762,26 +781,27 @@ Inventory consumers, accept the governing decision, update packaging and workflo
 
 <a id="no-loss-revision-note"></a>
 
-## No-loss ledger
+## v0.3 to v0.4 no-loss ledger
 
-| v0.2 material | v0.3 disposition |
+| v0.3 material | v0.4 disposition |
 |---|---|
-| Stable `kfm://doc/src-readme` identity and path | Preserved |
-| Root packaging evidence | Preserved and refreshed to current blobs |
-| Minimal namespace inventory | Preserved |
-| Root-`src` versus `packages/` conflict | Preserved and made part of the required authority section |
-| Parent/child README split | Preserved; stale child statement surfaced |
-| Content and authority routing table | Preserved under required belongs/does-not-belong sections |
-| Trust and import boundary | Preserved and expanded |
-| Current schema/test commands | Preserved and corrected to the six-validator, non-vacuous workflow |
-| ADR option matrix | Preserved |
-| Definition of done | Preserved and expanded |
-| Open verification register | Preserved and expanded from 9 to 17 items |
-| Maintenance, correction, migration, and rollback | Preserved |
-| Legacy heading fragments | Preserved with explicit custom anchors |
-| Prior generated receipt | Preserved as immutable lineage |
+| Stable `kfm://doc/src-readme` identity and same path | Preserved. |
+| Active Hatch packaging evidence | Preserved and refreshed to current dependency/workflow state. |
+| Minimal namespace inventory | Preserved; direct map now obeys v2 direct-child-only law. |
+| `src/` versus `packages/` boundary | Preserved and upgraded to adopted conditional-root / canonical-target vocabulary. |
+| Parent/child README split and stale child note | Preserved. |
+| Belongs / does-not-belong routing | Preserved under the combined v2 field. |
+| Inputs and outputs | Preserved and combined with permitted-writer rules. |
+| Trust and import boundary | Preserved. |
+| Validation and package-proof guidance | Preserved; corrected from six to eight validators and current orchestrator. |
+| Review burden and CODEOWNERS caveat | Preserved and aligned to root-registry writer projection. |
+| ADR option matrix | Preserved; ADR-0029 adoption and missing facade ADR made explicit. |
+| Definition of done and verification register | Preserved and expanded. |
+| Maintenance, correction, migration, and rollback | Preserved and aligned to v2. |
+| Legacy explicit anchors | Preserved for inbound compatibility. |
+| Historical generated receipts | Preserved as immutable lineage. |
 
-The modernization removes only stale snapshot metadata, outdated workflow characterization, unverified owner placeholders presented without current CODEOWNERS context, and section ordering that did not meet the current canonical-root/compatibility-root README contract.
+Removed or corrected material is limited to stale evidence snapshots, the superseded v1/v1.4 README-section contract, the six-validator description, the old blanket six-month review timer, and pre-adoption Directory Rules ambiguity.
 
 [Back to top](#top)
 
@@ -789,18 +809,22 @@ The modernization removes only stale snapshot metadata, outdated workflow charac
 
 ## Changelog
 
+### v0.4 — 2026-08-09
+
+- adopted the Directory Rules v2 `ROOT_FULL` field order while preserving stable anchors and content;
+- distinguished the README's same-path `PLACE` outcome from the conditional root's `HOLD` activation state;
+- aligned authority language to accepted ADR-0029 and `root.src` in the current root registry;
+- recorded `packages/` as the canonical target for reusable implementation;
+- refreshed root packaging dependencies and corrected validator coverage from six to eight families through the canonical orchestrator;
+- replaced the stale six-month timer with event- and risk-based review triggers;
+- limited the directory map to direct children;
+- preserved package-proof, consumer, child-doc, migration, correction, and rollback gaps without claiming implementation or release.
+
 ### v0.3 — 2026-07-23
 
-- refreshed repository evidence from `0c9df2b0…` to `e0b50a6c…` after 840 intervening commits;
-- reordered the first twelve H2 sections to Directory Rules §15;
-- preserved the stable path, document ID, H1, prior strong content, and legacy anchors;
-- recorded the verified default CODEOWNERS route and bounded stewardship gap;
-- corrected schema-validation scope to six configured validator families, nonempty fixture checks, schema inventory/identity checks, and schema/contract tests;
-- aligned command limits with the current tests-root contract;
-- surfaced the stale child-README parent-status statement;
-- preserved the unresolved root-`src` drift and Directory Rules placement conflict;
-- expanded package-proof, review, decision, verification, correction, and rollback guidance;
-- retained the prior generated receipt as lineage and requires a new receipt for this revision.
+- refreshed repository evidence and reordered the first twelve H2 sections to the then-current Directory Rules contract;
+- corrected active Hatch packaging and six-validator schema-workflow evidence;
+- preserved the minimal namespace, parent/child split, decision matrix, validation, correction, and rollback guidance.
 
 ### v0.2 — 2026-07-16
 
@@ -810,4 +834,4 @@ The modernization removes only stale snapshot metadata, outdated workflow charac
 
 ---
 
-*Status: draft · Authority: compatibility-and-drift boundary · Implementation: active packaging layout, minimal namespace · Public API: unestablished · Last reviewed: 2026-07-23*
+*Status: draft · Root class: conditional · Root activation: HOLD · README placement: PLACE · Canonical implementation target: packages/ · Distribution: configured kfm 0.0.0 · Public API/release: unestablished · Last evidence review: 2026-08-09*
