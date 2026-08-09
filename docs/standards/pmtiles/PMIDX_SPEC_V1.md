@@ -5,7 +5,7 @@ type: standard
 version: v1.2-draft
 status: draft; PROPOSED; compatibility-profile-only
 owner: TODO-pmtiles-steward-plus-schema-steward-plus-security-steward
-created: NEEDS_VERIFICATION
+created: 2026-05-19
 updated: 2026-08-09
 policy_label: internal-governance; integrity-sidecar; non-authoritative
 owning_root: docs/
@@ -21,6 +21,7 @@ related:
 notes:
   - "This draft documents the split SHA-256 compatibility profile already wired by the repository. It does not resolve competing PMTiles profile proposals."
   - "STRUCTURAL_PASS is not signature validity, policy approval, release authorization, or publication eligibility."
+  - "The created date is the earliest repository-history date for this path (commit 05d7f7341072eb9e7d79598c738c1c7bff7f5a49); any pre-repository authorship date remains unknown."
 [/KFM_META_BLOCK_V2] -->
 
 # PMIDX Sidecar Specification V1
