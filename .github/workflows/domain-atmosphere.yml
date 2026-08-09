@@ -58,6 +58,7 @@ jobs:
             "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md"
             "contracts/domains/atmosphere/README.md"
             "contracts/domains/atmosphere/airnow_aqs_reconciliation.md"
+            "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md"
             "schemas/contracts/v1/domains/atmosphere/README.md"
             "schemas/contracts/v1/domains/atmosphere/air_observation.schema.json"
             "schemas/contracts/v1/domains/atmosphere/forecast_context.schema.json"
@@ -65,6 +66,7 @@ jobs:
             "schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json"
             "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json"
             "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json"
             "fixtures/domains/atmosphere/README.md"
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json"
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/nowcast_derived.json"
@@ -77,6 +79,7 @@ jobs:
             "tests/domains/atmosphere/test_knowledge_character_registry.py"
             "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
             "tests/domains/atmosphere/test_observed_modeled_separation.py"
+            "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py"
             "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
@@ -84,6 +87,7 @@ jobs:
             "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
             "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py"
+            "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
             "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md"
             "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py"
             "fixtures/domains/atmosphere/knowledge_character/README.md"
@@ -132,6 +136,10 @@ jobs:
                   "tests/domains/atmosphere/"
                   "test_prescribed_burn_quality_flag.py"
               ),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_pm25_trigger_candidate_assessment.py"
+              ),
           }
           accepted_validators = {
               Path(
@@ -153,6 +161,10 @@ jobs:
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_prescribed_burn_quality_flag.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_pm25_trigger_candidate_assessment.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
@@ -221,6 +233,7 @@ jobs:
           python -m pytest \
             tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
             tests/domains/atmosphere/test_prescribed_burn_quality_flag.py \
+            tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py \
             -q --strict-config --strict-markers
 
           python tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py \
