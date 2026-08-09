@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/operational_trust_rollup.schema.json",
+  "title": "OperationalTrustRollup",
+  "description": "Read-only fixture projection of evidence, policy, signature, validation, review, catalog, correction, and rollback posture for one release candidate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "rollup_id",
+    "rollup_spec_hash",
+    "observed_at",
+    "release_candidate_ref",
+    "release_state",
+    "scope",
+    "evidence",
+    "policy",
+    "signatures",
+    "validation",
+    "review",
+    "catalog",
+    "correction",
+    "rollback",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "OperationalTrustRollup"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.operational-trust-rollup.fixture.v1"
+    },
+    "rollup_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "rollup_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "release_candidate_ref": {
+      "$ref": "#/$defs/immutable_ref"
+    },
+    "release_state": {
+      "const": "CANDIDATE"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "environment",
+        "artifact_refs"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "environment": {
+          "enum": [
+            "fixture",
+            "development",
+            "staging",
+            "production-candidate"
+          ]
+        },
+        "artifact_refs": {
+          "$ref": "#/$defs/ref_list_nonempty"
+        }
+      }
+    },
+    "evidence": {
+      "$ref": "#/$defs/evidence_component"
+    },
+    "policy": {
+      "$ref": "#/$defs/policy_component"
+    },
+    "signatures": {
+      "$ref": "#/$defs/signature_component"
+    },
+    "validation": {
+      "$ref": "#/$defs/validation_component"
+    },
+    "review": {
+      "$ref": "#/$defs/review_component"
+    },
+    "catalog": {
+      "$ref": "#/$defs/catalog_component"
+    },
+    "correction": {
+      "$ref": "#/$defs/correction_component"
+    },
+    "rollback": {
+      "$ref": "#/$defs/rollback_component"
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "not": {
+        "pattern": "^sha256:0{64}$"
+      }
+    },
+    "immutable_ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 1024,
+      "pattern": "\\S",
+      "not": {
+        "pattern": "(?i)(^|[/:._-])latest($|[/:._-])"
+      }
+    },
+    "ref_list": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/immutable_ref"
+      }
+    },
+    "ref_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/immutable_ref"
+      }
+    },
+    "evidence_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "DENIED",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "policy_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ALLOW",
+            "HOLD",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "signature_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "VERIFIED",
+            "PENDING",
+            "FAILED",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "validation_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "review_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "APPROVED",
+            "PENDING",
+            "CHANGES_REQUESTED",
+            "REJECTED",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "catalog_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "CLOSED",
+            "OPEN",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "correction_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "READY",
+            "MISSING",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    },
+    "rollback_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "READY",
+            "MISSING",
+            "ERROR"
+          ]
+        },
+        "refs": {
+          "$ref": "#/$defs/ref_list"
+        }
+      }
+    }
+  }
+}
