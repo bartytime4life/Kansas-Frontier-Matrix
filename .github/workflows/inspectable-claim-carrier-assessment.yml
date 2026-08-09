@@ -1,0 +1,39 @@
+name: inspectable-claim-carrier-assessment
+
+on:
+  pull_request:
+    paths:
+      - "contracts/governance/inspectable_claim_carrier_assessment.md"
+      - "schemas/contracts/v1/governance/inspectable_claim_carrier_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/inspectable_claim_carrier_assessment/**"
+      - "tools/validators/governance/validate_inspectable_claim_carrier_assessment.py"
+      - "tests/validators/governance/test_inspectable_claim_carrier_assessment.py"
+      - "docs/intake/exploratory/inspectable-claim-carrier-assessment-source-map.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      KFM_NO_NETWORK: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      TZ: UTC
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m py_compile tools/validators/governance/validate_inspectable_claim_carrier_assessment.py tests/validators/governance/test_inspectable_claim_carrier_assessment.py
+      - name: Focused tests
+        run: python -m unittest tests.validators.governance.test_inspectable_claim_carrier_assessment -v
+      - name: Fixture polarity
+        run: python tools/validators/governance/validate_inspectable_claim_carrier_assessment.py --fixtures
+      - name: JSON parse
+        run: python -m json.tool schemas/contracts/v1/governance/inspectable_claim_carrier_assessment.schema.json >/dev/null
