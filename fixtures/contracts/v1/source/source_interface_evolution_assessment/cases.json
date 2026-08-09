@@ -1,0 +1,445 @@
+{
+  "base": {
+    "object_type": "SourceInterfaceEvolutionAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source-interface-evolution.fixture.v1",
+    "assessment_id": "kfm:source-interface-evolution:000000000000000000000000",
+    "assessed_at": "2026-08-09T22:00:00Z",
+    "source_interface": {
+      "source_id": "kfm:source:synthetic-county-boundaries",
+      "source_descriptor_ref": "kfm:source-descriptor:synthetic-county-boundaries-v1",
+      "interface_id": "kfm:source-interface:synthetic-county-boundaries",
+      "declared_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+      "declared_version": "1.0.0",
+      "canonical_identity_ref": "kfm:canonical-source:synthetic-county-boundaries",
+      "declared_capabilities": ["fetch.geojson", "read.metadata"]
+    },
+    "observations": [
+      {
+        "observation_id": "obs:synthetic-001",
+        "observed_at": "2026-08-09T20:00:00Z",
+        "evidence_ref": "kfm:evidence:synthetic-interface-observation-001",
+        "scope": "FULL_CONTRACT",
+        "observed_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+        "observed_version": "1.0.0",
+        "canonical_identity_ref": "kfm:canonical-source:synthetic-county-boundaries",
+        "capabilities": ["fetch.geojson", "read.metadata"],
+        "response_shape_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "transport_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "redirect_target_ref": null,
+        "asserted_state": "ACTIVE"
+      }
+    ],
+    "consumers": [
+      {
+        "consumer_id": "consumer:synthetic-map",
+        "current_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+        "target_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+        "status": "READY",
+        "evidence_refs": ["kfm:evidence:synthetic-consumer-map"],
+        "debt_refs": []
+      }
+    ],
+    "compatibility": {
+      "latest_observation_id": "obs:synthetic-001",
+      "classification": "UNCHANGED",
+      "reason_code": "DECLARED_INTERFACE_MATCH",
+      "added_capabilities": [],
+      "removed_capabilities": [],
+      "comparison_evidence_refs": ["kfm:evidence:synthetic-interface-observation-001"],
+      "declared_identity_preserved": true,
+      "observed_identity_authoritative": false
+    },
+    "migration": {
+      "disposition": "NO_CHANGE",
+      "dual_read": {
+        "enabled": false,
+        "old_profile_ref": null,
+        "new_profile_ref": null,
+        "evidence_refs": [],
+        "parity_status": "NOT_RUN"
+      },
+      "rollback_ref": null,
+      "retirement_blockers": [],
+      "separate_decision_required": true,
+      "decision_has_effect": false
+    },
+    "summary": {
+      "observation_count": 1,
+      "affected_consumer_ids": [],
+      "affected_consumer_count": 0,
+      "blocked_or_unknown_consumer_ids": [],
+      "retirement_readiness": "NOT_REQUESTED",
+      "assessment_state": "UNCHANGED",
+      "trusted_surface_allowed": false
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "evidence_resolved": false,
+      "interface_claim_made_authoritative": false,
+      "connector_changed": false,
+      "canonical_identity_changed": false,
+      "interface_activated": false,
+      "interface_retired": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "case_id": "unchanged-interface",
+      "expected_status": "PASS",
+      "expected_assessment_state": "UNCHANGED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "additive-interface-migration-candidate",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson", "read.metadata", "stream.delta"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/rollback_ref", "value": "kfm:rollback-plan:synthetic-interface-v2"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "breaking-interface-dual-read-candidate",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/consumers/0/status", "value": "DUAL_READ"},
+        {"path": "/migration/dual_read/enabled", "value": true},
+        {"path": "/migration/dual_read/old_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v1"},
+        {"path": "/migration/dual_read/new_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/dual_read/evidence_refs", "value": ["kfm:evidence:synthetic-dual-read-plan"]}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "DUAL_READ_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "breaking-interface-parity-match-migration-candidate",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/dual_read/enabled", "value": true},
+        {"path": "/migration/dual_read/old_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v1"},
+        {"path": "/migration/dual_read/new_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/dual_read/evidence_refs", "value": ["kfm:evidence:synthetic-dual-read-match"]},
+        {"path": "/migration/dual_read/parity_status", "value": "MATCH"},
+        {"path": "/migration/rollback_ref", "value": "kfm:rollback-plan:synthetic-interface-v2"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "breaking-interface-parity-mismatch-rollback-candidate",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/dual_read/enabled", "value": true},
+        {"path": "/migration/dual_read/old_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v1"},
+        {"path": "/migration/dual_read/new_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/dual_read/evidence_refs", "value": ["kfm:evidence:synthetic-dual-read-mismatch"]},
+        {"path": "/migration/dual_read/parity_status", "value": "MISMATCH"},
+        {"path": "/migration/rollback_ref", "value": "kfm:rollback-plan:synthetic-interface-v2"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "ROLLBACK_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "redirect-observation-held",
+      "mutations": [
+        {"path": "/observations/0/scope", "value": "REDIRECT_ONLY"},
+        {"path": "/observations/0/redirect_target_ref", "value": "kfm:source-interface:synthetic-county-boundaries-redirect"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_HELD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "partial-observation-held",
+      "mutations": [
+        {"path": "/observations/0/scope", "value": "CAPABILITY_SAMPLE"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_HELD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "undocumented-drift-held",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_HELD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "retirement-ready-for-separate-review",
+      "mutations": [
+        {"path": "/observations/0/asserted_state", "value": "RETIRED_ASSERTED"},
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-retired"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": []},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-retired"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "RETIREMENT_REVIEW_CANDIDATE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "retirement-blocked-by-consumer",
+      "mutations": [
+        {"path": "/observations/0/asserted_state", "value": "RETIRED_ASSERTED"},
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-retired"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": []},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-retired"},
+        {"path": "/consumers/0/status", "value": "BLOCKED"},
+        {"path": "/consumers/0/debt_refs", "value": ["kfm:debt:synthetic-retirement-blocker"]}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_HELD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "reactivation-assertion-held",
+      "mutations": [
+        {"path": "/observations/0/asserted_state", "value": "REACTIVATED_ASSERTED"}
+      ],
+      "expected_status": "PASS",
+      "expected_assessment_state": "MIGRATION_HELD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "observation-order-invalid",
+      "mutations": [
+        {
+          "path": "/observations",
+          "value": [
+            {
+              "observation_id": "obs:synthetic-002",
+              "observed_at": "2026-08-09T21:00:00Z",
+              "evidence_ref": "kfm:evidence:synthetic-interface-observation-002",
+              "scope": "FULL_CONTRACT",
+              "observed_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v2",
+              "observed_version": "2.0.0",
+              "canonical_identity_ref": "kfm:canonical-source:synthetic-county-boundaries",
+              "capabilities": ["fetch.geojson", "read.metadata"],
+              "response_shape_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+              "transport_fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+              "redirect_target_ref": null,
+              "asserted_state": "ACTIVE"
+            },
+            {
+              "observation_id": "obs:synthetic-001",
+              "observed_at": "2026-08-09T20:00:00Z",
+              "evidence_ref": "kfm:evidence:synthetic-interface-observation-001",
+              "scope": "FULL_CONTRACT",
+              "observed_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+              "observed_version": "1.0.0",
+              "canonical_identity_ref": "kfm:canonical-source:synthetic-county-boundaries",
+              "capabilities": ["fetch.geojson", "read.metadata"],
+              "response_shape_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+              "transport_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+              "redirect_target_ref": null,
+              "asserted_state": "ACTIVE"
+            }
+          ]
+        },
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_OBSERVATION_ORDER_INVALID", "path": "/observations"}
+      ]
+    },
+    {
+      "case_id": "canonical-identity-change-denied",
+      "mutations": [
+        {"path": "/observations/0/canonical_identity_ref", "value": "kfm:canonical-source:synthetic-replacement"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_CANONICAL_IDENTITY_CHANGED", "path": "/compatibility/declared_identity_preserved"}
+      ]
+    },
+    {
+      "case_id": "compatibility-report-mismatch",
+      "mutations": [
+        {"path": "/compatibility/classification", "value": "BREAKING"}
+      ],
+      "preserve_compatibility": true,
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_COMPATIBILITY_MISMATCH", "path": "/compatibility"}
+      ]
+    },
+    {
+      "case_id": "consumer-order-invalid",
+      "mutations": [
+        {
+          "path": "/consumers",
+          "value": [
+            {
+              "consumer_id": "consumer:zeta",
+              "current_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+              "target_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+              "status": "READY",
+              "evidence_refs": ["kfm:evidence:synthetic-consumer-zeta"],
+              "debt_refs": []
+            },
+            {
+              "consumer_id": "consumer:alpha",
+              "current_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+              "target_profile_ref": "kfm:source-profile:synthetic-county-boundaries-v1",
+              "status": "READY",
+              "evidence_refs": ["kfm:evidence:synthetic-consumer-alpha"],
+              "debt_refs": []
+            }
+          ]
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_CONSUMER_ORDER_INVALID", "path": "/consumers"}
+      ]
+    },
+    {
+      "case_id": "breaking-change-without-dual-read",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_BREAKING_CHANGE_WITHOUT_DUAL_READ", "path": "/migration/dual_read/enabled"}
+      ]
+    },
+    {
+      "case_id": "migration-without-rollback-reference",
+      "mutations": [
+        {"path": "/observations/0/observed_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/observations/0/observed_version", "value": "2.0.0"},
+        {"path": "/observations/0/capabilities", "value": ["fetch.geojson", "read.metadata", "stream.delta"]},
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-county-boundaries-v2"},
+        {"path": "/migration/disposition", "value": "PROPOSE_MIGRATION"}
+      ],
+      "preserve_migration": true,
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_ROLLBACK_REFERENCE_REQUIRED", "path": "/migration/rollback_ref"}
+      ]
+    },
+    {
+      "case_id": "dual-read-binding-invalid",
+      "mutations": [
+        {"path": "/migration/dual_read/enabled", "value": true}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_DUAL_READ_BINDING_INVALID", "path": "/migration/dual_read"}
+      ]
+    },
+    {
+      "case_id": "summary-mismatch",
+      "mutations": [
+        {"path": "/summary/observation_count", "value": 7}
+      ],
+      "preserve_summary": true,
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_SUMMARY_MISMATCH", "path": "/summary"}
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "assessment_id_override": "kfm:source-interface-evolution:ffffffffffffffffffffffff",
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}
+      ]
+    },
+    {
+      "case_id": "governance-overreach",
+      "mutations": [
+        {"path": "/governance/connector_changed", "value": true}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_EVOLUTION_SCHEMA_INVALID", "path": "/governance/connector_changed"}
+      ]
+    },
+    {
+      "case_id": "placeholder-observation-hash",
+      "mutations": [
+        {"path": "/observations/0/response_shape_hash", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_OBSERVATION_HASH_PLACEHOLDER", "path": "/observations/0/response_shape_hash"}
+      ]
+    },
+    {
+      "case_id": "consumer-target-unbound",
+      "mutations": [
+        {"path": "/consumers/0/target_profile_ref", "value": "kfm:source-profile:synthetic-unrelated"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_CONSUMER_TARGET_UNBOUND", "path": "/consumers"}
+      ]
+    },
+    {
+      "case_id": "assessment-time-before-observation",
+      "mutations": [
+        {"path": "/assessed_at", "value": "2026-08-09T19:00:00Z"}
+      ],
+      "expected_status": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {"code": "INTERFACE_ASSESSMENT_TIME_INVALID", "path": "/assessed_at"}
+      ]
+    }
+  ]
+}
