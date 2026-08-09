@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-pass12-operational-trust-rollup-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/operational-trust-rollup.yml",
+    "contracts/release/operational_trust_rollup.md",
+    "docs/intake/exploratory/pass12-operational-trust-rollup-source-map.md",
+    "fixtures/contracts/v1/release/operational_trust_rollup/cases.json",
+    "schemas/contracts/v1/release/operational_trust_rollup.schema.json",
+    "tests/validators/test_validate_operational_trust_rollup.py",
+    "tools/validators/release/validate_operational_trust_rollup.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/operational-trust-rollup.yml": "sha256:0a0781b570eb342799031472281cd392ae60d4e515f0d31e19bdea2877580a35",
+    "contracts/release/operational_trust_rollup.md": "sha256:e4f00d6d820f5abb26622da684618f9d5d0a466e9a4ddbdf5e597294aac73ea4",
+    "docs/intake/exploratory/pass12-operational-trust-rollup-source-map.md": "sha256:2cece373dbd22a2819f3da079026120d61acfb62e5f9e5d23197234c616d588c",
+    "fixtures/contracts/v1/release/operational_trust_rollup/cases.json": "sha256:e7a923d2a6f1bf3670998beea5308e7cce10b2e58488d219adea0ab207fd7f0c",
+    "schemas/contracts/v1/release/operational_trust_rollup.schema.json": "sha256:c276dbf3e8f90ec945ce8583f94ea3618bb784b563ef2422c806c3cef90b7cad",
+    "tests/validators/test_validate_operational_trust_rollup.py": "sha256:66f7af04f169dcdd4b9f8fb88da05b3262f6b3e2426ae0179eb5e767b951d9e0",
+    "tools/validators/release/validate_operational_trust_rollup.py": "sha256:6473dc67059c886c1e26a756930b5295ba83a2443b389907a17c0cc0841d1bc0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:7df03822ad973a82dcc4b87dae45dcf9b942dd80ba415be0b18bb82cb0a147d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#10.13",
+      "repo:contracts/release/promotion_decision.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/operational-trust-rollup.yml": "CONFIRMED",
+    "contracts/release/operational_trust_rollup.md": "PROPOSED",
+    "docs/intake/exploratory/pass12-operational-trust-rollup-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/operational_trust_rollup/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/operational_trust_rollup.schema.json": "PROPOSED",
+    "tests/validators/test_validate_operational_trust_rollup.py": "CONFIRMED",
+    "tools/validators/release/validate_operational_trust_rollup.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Seven focused tests pass."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Fifteen exact cases cover READY/HOLD/DENY/ERROR outcomes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass12-operational-trust-rollup-backlog",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#10.13"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49db0ceeaf05e762035f2835ff2a7a2f4cede201/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:49:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive fixture-only read-only trust projection. It creates no evidence, policy, review, signature, promotion, release, deployment, publication, or public-use authority."
+}
