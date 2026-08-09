@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "genrec-verification-convergence-plan-20260809",
+  "generated_at": "2026-08-09T00:30:00Z",
+  "generator": "OpenAI GPT-5.6 Pro",
+  "purpose": "Author fixture-first VerificationConvergencePlan contract, schema, fixtures, validator, tests, and source map.",
+  "artifacts": [
+    {"path": "contracts/governance/verification_convergence_plan.md", "sha256": "8a6fd03bcc0126f22e5e5f8f30b774dcffedf141527120ac62009d3281f861bb"},
+    {"path": "docs/intake/exploratory/research-verification-convergence-plan-source-map.md", "sha256": "585e933df91210f894f89f44c88660855fb74110ba5e105e14872da6ffd7fe10"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/digest-mismatch.json", "sha256": "59be90d620ac78bd14b77de9546f1266251406f8f13ffe087a581032f677242b"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/over-capacity.json", "sha256": "a0c7879155c719a77c7e2798e4b8d7240da48cfffea73893817e8a8e8f4ccc2b"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unjustified-priority-skip.json", "sha256": "fd187b1ff1668452e859d3c4f3f468b2c7834781371f93f5aa071fad6545ca33"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/invalid/unmet-dependency.json", "sha256": "db40751102ca25064d6bbcf45dd0ce5e89a3937968ac195b2ec925520e7f506f"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/valid/hold.json", "sha256": "81b6d7c520bcb1b6a81d940178d76a981756fa455260fada777940857639767f"},
+    {"path": "fixtures/contracts/v1/governance/verification_convergence_plan/valid/ready.json", "sha256": "6aa14e2588ff21d45c7a943eab75699bdb4933920ab1381f52ba7bfb434dfb19"},
+    {"path": "schemas/contracts/v1/governance/verification_convergence_plan.schema.json", "sha256": "185b965e6d7d6a3a7f730155f8acc3022f82fe6784a6391aab26336644382651"},
+    {"path": "tests/validators/governance/test_verification_convergence_plan.py", "sha256": "953ca08af13090ec9cb08da3007694710a70250a6ab9f1b15d75d30c982174e7"},
+    {"path": "tools/validators/governance/validate_verification_convergence_plan.py", "sha256": "d6ca3b2f54b6b7378aa37fb4aba9c56354247daeabb4f1a9d098196a9a440ded"}
+  ],
+  "authority_created": false,
+  "repository_mutation_allowed": false,
+  "release_authorized": false,
+  "publication_authorized": false
+}
