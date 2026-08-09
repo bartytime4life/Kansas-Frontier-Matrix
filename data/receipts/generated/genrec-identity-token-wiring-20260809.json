@@ -6,7 +6,7 @@
     "tests/contracts/test_identity_token_wiring.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/identity-token-wiring.yml": "sha256:9aafd2a4f012ed76fc29663540b13605fe38d0b5ab49140708beaf1ee02b198a",
+    ".github/workflows/identity-token-wiring.yml": "sha256:c2f18044420d5203c86434e044d5b9063b1ca6707859b08743d335c216630ee3",
     "tests/contracts/test_identity_token_wiring.py": "sha256:7700a8b4773fcdf8b072104ed8358d6a0def60fb7c63a5ede11531bad355d759"
   },
   "model_identity": {
@@ -61,17 +61,17 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "The authored workflow and test are bound to their prepared SHA-256 bytes without receipt self-reference."
+      "reason": "The authored workflow and test are bound to their repository bytes without receipt self-reference; the workflow digest was corrected after hosted replay exposed the original authoring mismatch."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation requires a pushed pull-request head."
+      "reason": "The original hosted run preceded this digest correction; a later exact-head run must verify the corrected receipt."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
+      "reason": "Human review remains pending for this corrective receipt edit."
     }
   ],
   "policy_decisions": [
@@ -103,9 +103,9 @@
   "created_at": "2026-08-09T01:58:00Z",
   "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 2315,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Wiring-only closure guard for the existing proposed IdentityToken schema. The change creates no new identity grammar, schema authority, contract authority, policy authority, evidence authority, release authority, or publication authority."
+  "notes": "Wiring-only closure guard for the existing proposed IdentityToken schema. Hosted replay from PR #2320 exposed that the original workflow digest recorded at authoring time did not match the committed workflow bytes; this edit corrects that artifact digest and records the correction explicitly. The change creates no new identity grammar, schema authority, contract authority, policy authority, evidence authority, release authority, or publication authority."
 }
