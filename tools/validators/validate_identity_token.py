@@ -12,5 +12,6 @@ if __name__ == "__main__":
             Path("schemas/contracts/v1/common/identity_token.schema.json"),
             Path("fixtures/contracts/v1/common/identity_token"),
             sys.argv[1:],
+            check_formats=True,
         )
     )
