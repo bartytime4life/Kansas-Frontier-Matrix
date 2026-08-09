@@ -1,0 +1,147 @@
+{
+  "profile": "kfm.soil.support-role-assessment-fixtures.v1",
+  "source_concept_ids": [
+    "SOIL-SUPPORT-TYPE-SEPARATION",
+    "SSURGO-SDA-STATIC",
+    "KANSAS-MESONET-STATION",
+    "SMAP-SATELLITE-GRID"
+  ],
+  "defaults": {
+    "profile": "kfm.soil.support-role-assessment.v1",
+    "status": "PROPOSED_INACTIVE",
+    "version": "1.0.0",
+    "limitations": [
+      "Synthetic fixture only; no source activation, evidence closure, release, or public-use authority."
+    ],
+    "review_state": "HOLD",
+    "public_use_allowed": false,
+    "effects": {
+      "source_activated": false,
+      "source_bytes_retained": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "human_review_approved": false,
+      "catalog_emitted": false,
+      "promoted": false,
+      "released": false,
+      "published": false
+    }
+  },
+  "bases": {
+    "ssurgo": {
+      "source_descriptor_ref": "kfm:source-descriptor:ssurgo-synthetic",
+      "evidence_refs": ["kfm:evidence:ssurgo-synthetic"],
+      "support_type": "STATIC_SURVEY",
+      "source_family": "SSURGO_SDA",
+      "authority_role": "AUTHORITATIVE_SURVEY",
+      "geometry_support": {
+        "geometry_kind": "MAP_UNIT_POLYGON",
+        "crs": "EPSG:4326",
+        "scale_denominator": 24000,
+        "grid_resolution_m": null,
+        "station_id": null
+      },
+      "temporal_support": {
+        "observed_at": null,
+        "valid_from": "2025-01-01T00:00:00Z",
+        "valid_to": "2025-12-31T23:59:59Z",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "freshness_state": "CURRENT"
+      },
+      "depth_support": {"top_cm": null, "bottom_cm": null},
+      "measurement": {"variable": "SOIL_CLASSIFICATION", "unit": "NONE"},
+      "claim_classes": ["MAP_UNIT_IDENTITY", "PROPERTY_ESTIMATE"]
+    },
+    "gssurgo": {
+      "source_descriptor_ref": "kfm:source-descriptor:gssurgo-synthetic",
+      "evidence_refs": ["kfm:evidence:gssurgo-synthetic"],
+      "support_type": "GRIDDED_DERIVATIVE",
+      "source_family": "GSSURGO_GNATSGO",
+      "authority_role": "DERIVED_SURFACE",
+      "geometry_support": {
+        "geometry_kind": "GRID_CELL",
+        "crs": "EPSG:5070",
+        "scale_denominator": null,
+        "grid_resolution_m": 30,
+        "station_id": null
+      },
+      "temporal_support": {
+        "observed_at": null,
+        "valid_from": "2025-01-01T00:00:00Z",
+        "valid_to": "2025-12-31T23:59:59Z",
+        "retrieved_at": "2026-01-15T00:00:00Z",
+        "freshness_state": "CURRENT"
+      },
+      "depth_support": {"top_cm": null, "bottom_cm": null},
+      "measurement": {"variable": "SOIL_PROPERTY_ESTIMATE", "unit": "PERCENT"},
+      "claim_classes": ["PROPERTY_ESTIMATE"]
+    },
+    "mesonet": {
+      "source_descriptor_ref": "kfm:source-descriptor:mesonet-synthetic",
+      "evidence_refs": ["kfm:evidence:mesonet-synthetic"],
+      "support_type": "STATION_OBSERVATION",
+      "source_family": "KANSAS_MESONET",
+      "authority_role": "IN_SITU_OBSERVATION",
+      "geometry_support": {
+        "geometry_kind": "STATION_POINT",
+        "crs": "EPSG:4326",
+        "scale_denominator": null,
+        "grid_resolution_m": null,
+        "station_id": "station:synthetic-001"
+      },
+      "temporal_support": {
+        "observed_at": "2026-08-01T12:00:00Z",
+        "valid_from": null,
+        "valid_to": null,
+        "retrieved_at": "2026-08-01T12:05:00Z",
+        "freshness_state": "CURRENT"
+      },
+      "depth_support": {"top_cm": 5, "bottom_cm": 20},
+      "measurement": {"variable": "VOLUMETRIC_WATER_CONTENT", "unit": "FRACTION"},
+      "claim_classes": ["POINT_MOISTURE_OBSERVATION"]
+    },
+    "smap": {
+      "source_descriptor_ref": "kfm:source-descriptor:smap-synthetic",
+      "evidence_refs": ["kfm:evidence:smap-synthetic"],
+      "support_type": "SATELLITE_GRID",
+      "source_family": "NASA_SMAP",
+      "authority_role": "REMOTE_SENSING_OBSERVATION",
+      "geometry_support": {
+        "geometry_kind": "GRID_CELL",
+        "crs": "EPSG:6933",
+        "scale_denominator": null,
+        "grid_resolution_m": 9000,
+        "station_id": null
+      },
+      "temporal_support": {
+        "observed_at": "2026-08-01T12:00:00Z",
+        "valid_from": null,
+        "valid_to": null,
+        "retrieved_at": "2026-08-01T12:15:00Z",
+        "freshness_state": "CURRENT"
+      },
+      "depth_support": {"top_cm": 0, "bottom_cm": 5},
+      "measurement": {"variable": "VOLUMETRIC_WATER_CONTENT", "unit": "FRACTION"},
+      "claim_classes": ["GRID_MOISTURE_ESTIMATE"]
+    }
+  },
+  "cases": [
+    {"name":"ssurgo_static_survey","base":"ssurgo","mutations":[],"identity_mode":"RECOMPUTE","expected_outcome":"PASS","expected_findings":[]},
+    {"name":"gssurgo_gridded_derivative","base":"gssurgo","mutations":[],"identity_mode":"RECOMPUTE","expected_outcome":"PASS","expected_findings":[]},
+    {"name":"mesonet_station_observation","base":"mesonet","mutations":[],"identity_mode":"RECOMPUTE","expected_outcome":"PASS","expected_findings":[]},
+    {"name":"smap_satellite_grid","base":"smap","mutations":[],"identity_mode":"RECOMPUTE","expected_outcome":"PASS","expected_findings":[]},
+    {"name":"freshness_unknown","base":"mesonet","mutations":[{"path":"/temporal_support/freshness_state","value":"UNKNOWN"}],"identity_mode":"RECOMPUTE","expected_outcome":"ABSTAIN","expected_findings":[{"code":"FRESHNESS_UNRESOLVED","path":"/temporal_support/freshness_state"}]},
+    {"name":"static_claims_point_observation","base":"ssurgo","mutations":[{"path":"/claim_classes","value":["POINT_MOISTURE_OBSERVATION"]}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"CLAIM_CLASS_NOT_SUPPORTED","path":"/claim_classes"}]},
+    {"name":"derived_overclaims_survey_authority","base":"gssurgo","mutations":[{"path":"/authority_role","value":"AUTHORITATIVE_SURVEY"}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"AUTHORITY_ROLE_MISMATCH","path":"/authority_role"}]},
+    {"name":"station_uses_grid_geometry","base":"mesonet","mutations":[{"path":"/geometry_support/geometry_kind","value":"GRID_CELL"}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"GEOMETRY_SUPPORT_MISMATCH","path":"/geometry_support/geometry_kind"}]},
+    {"name":"station_missing_station_id","base":"mesonet","mutations":[{"path":"/geometry_support/station_id","value":null}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"STATION_ID_REQUIRED","path":"/geometry_support/station_id"}]},
+    {"name":"station_invalid_depth","base":"mesonet","mutations":[{"path":"/depth_support/bottom_cm","value":5}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"DEPTH_INTERVAL_INVALID","path":"/depth_support"}]},
+    {"name":"satellite_missing_resolution","base":"smap","mutations":[{"path":"/geometry_support/grid_resolution_m","value":null}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"GRID_RESOLUTION_REQUIRED","path":"/geometry_support/grid_resolution_m"}]},
+    {"name":"satellite_claims_point_observation","base":"smap","mutations":[{"path":"/claim_classes","value":["POINT_MOISTURE_OBSERVATION"]}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"CLAIM_CLASS_NOT_SUPPORTED","path":"/claim_classes"}]},
+    {"name":"source_family_mismatch","base":"mesonet","mutations":[{"path":"/source_family","value":"NASA_SMAP"}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"SOURCE_FAMILY_MISMATCH","path":"/source_family"}]},
+    {"name":"observed_after_retrieval","base":"mesonet","mutations":[{"path":"/temporal_support/observed_at","value":"2026-08-01T12:10:00Z"}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"TEMPORAL_ORDER_INVALID","path":"/temporal_support"}]},
+    {"name":"public_use_overclaim","base":"ssurgo","mutations":[{"path":"/public_use_allowed","value":true}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"PUBLIC_USE_OVERCLAIM","path":"/public_use_allowed"}]},
+    {"name":"publication_effect_overclaim","base":"ssurgo","mutations":[{"path":"/effects/published","value":true}],"identity_mode":"RECOMPUTE","expected_outcome":"DENY","expected_findings":[{"code":"AUTHORITY_EFFECT_OVERCLAIM","path":"/effects"}]},
+    {"name":"spec_hash_corruption","base":"ssurgo","mutations":[],"identity_mode":"MISMATCH_SPEC_HASH","expected_outcome":"ERROR","expected_findings":[{"code":"SPEC_HASH_MISMATCH","path":"/spec_hash"}]}
+  ]
+}
