@@ -3,9 +3,10 @@
 
 This command reads local validated signals, recomputes declared scores, priorities,
 reason codes, and finite issue dispositions, then optionally binds an existing-issue
-route to one validated, read-only fixture-backed issue inventory projection. It
-never calls the network or mutates GitHub, repository, lifecycle, evidence, policy,
-review, proof, release, deployment, publication, or public state.
+route to either the deterministic fixture IssueInventoryProjection or a separately
+captured and validated GitHubIssueInventoryRead receipt. It never calls the network
+or mutates GitHub, repository, lifecycle, evidence, policy, review, proof, release,
+deployment, publication, or public state.
 """
 from __future__ import annotations
 
@@ -31,22 +32,47 @@ from tools.validators.governance.validate_issue_inventory_projection import (  #
     projection_summary,
     validate_projection,
 )
+from tools.validators.governance.validate_github_issue_inventory_read import (  # noqa: E402
+    summary as live_summary,
+    validate_record as validate_live_record,
+)
 
 SCOPE = "briefing-materiality-routing-dry-run"
 
 
 def _inventory_input(
-    path: Path | None,
+    fixture_path: Path | None,
+    live_read_path: Path | None,
+    *,
+    as_of: str | None,
 ) -> tuple[Mapping[str, object] | None, list[dict[str, str]], dict[str, object] | None]:
-    if path is None:
+    if fixture_path is not None and live_read_path is not None:
+        return None, [{"code": "ISSUE_INVENTORY_INPUT_AMBIGUOUS", "path": "/"}], None
+
+    if live_read_path is not None:
+        if as_of is None:
+            return None, [{"code": "LIVE_ISSUE_INVENTORY_AS_OF_REQUIRED", "path": "/"}], None
+        result = validate_live_record(live_read_path, as_of=as_of)
+        if not result.ok or result.payload is None:
+            findings = [
+                {
+                    "code": f"LIVE_ISSUE_INVENTORY_{finding.code}",
+                    "path": f"{live_read_path.as_posix()}::{finding.path}",
+                }
+                for finding in result.findings
+            ]
+            return None, findings, None
+        return result.payload, [], live_summary(result.payload)
+
+    if fixture_path is None:
         return None, [], None
 
-    result = validate_projection(path)
+    result = validate_projection(fixture_path)
     if not result.ok or result.payload is None:
         findings = [
             {
                 "code": f"ISSUE_INVENTORY_{finding.code}",
-                "path": f"{path.as_posix()}::{finding.path}",
+                "path": f"{fixture_path.as_posix()}::{finding.path}",
             }
             for finding in result.findings
         ]
@@ -57,14 +83,17 @@ def _inventory_input(
 def evaluate(
     paths: Sequence[Path],
     issue_inventory_path: Path | None = None,
+    live_issue_inventory_path: Path | None = None,
+    *,
+    as_of: str | None = None,
 ) -> dict[str, object]:
     projection, inventory_findings, inventory_summary = _inventory_input(
-        issue_inventory_path
+        issue_inventory_path,
+        live_issue_inventory_path,
+        as_of=as_of,
     )
     if inventory_findings:
-        inventory_findings.sort(
-            key=lambda item: (item["code"], item["path"])
-        )
+        inventory_findings.sort(key=lambda item: (item["code"], item["path"]))
         return {
             "authority_created": False,
             "findings": inventory_findings,
@@ -95,24 +124,11 @@ def evaluate(
         routing = candidate.get("routing")
         dedup = candidate.get("deduplication")
         next_action = candidate.get("next_action")
-        if not all(
-            isinstance(item, Mapping)
-            for item in (materiality, routing, dedup, next_action)
-        ):
-            findings.append(
-                {
-                    "code": "INPUT_PROFILE_INCOMPLETE",
-                    "path": path.as_posix(),
-                }
-            )
+        if not all(isinstance(item, Mapping) for item in (materiality, routing, dedup, next_action)):
+            findings.append({"code": "INPUT_PROFILE_INCOMPLETE", "path": path.as_posix()})
             continue
         if routing_result is None:
-            findings.append(
-                {
-                    "code": "INPUT_ROUTING_UNAVAILABLE",
-                    "path": path.as_posix(),
-                }
-            )
+            findings.append({"code": "INPUT_ROUTING_UNAVAILABLE", "path": path.as_posix()})
             continue
 
         disposition, routing_reasons = routing_result
@@ -127,6 +143,12 @@ def evaluate(
             matched_issue_ids=matched_issue_ids,
             projection=projection,
         )
+        if live_issue_inventory_path is not None and binding.get("inventory_status") == "BOUND_OPEN_TARGET":
+            binding["inventory_status"] = "BOUND_OPEN_TARGET_LIVE_READ"
+            reasons = list(binding.get("reason_codes", []))
+            reasons.append("ISSUE_INVENTORY_LIVE_READ_FRESH")
+            binding["reason_codes"] = reasons
+
         override = materiality.get("mandatory_override")
         signals.append(
             {
@@ -135,20 +157,10 @@ def evaluate(
                 "materiality": {
                     "raw_score": compute_materiality_score(candidate),
                     "priority": compute_materiality_priority(candidate),
-                    "reason_codes": list(
-                        compute_materiality_reason_codes(candidate) or ()
-                    ),
+                    "reason_codes": list(compute_materiality_reason_codes(candidate) or ()),
                     "mandatory_override": {
-                        "applied": (
-                            override.get("applied")
-                            if isinstance(override, Mapping)
-                            else None
-                        ),
-                        "reason_code": (
-                            override.get("reason_code")
-                            if isinstance(override, Mapping)
-                            else None
-                        ),
+                        "applied": override.get("applied") if isinstance(override, Mapping) else None,
+                        "reason_code": override.get("reason_code") if isinstance(override, Mapping) else None,
                     },
                 },
                 "routing": {
@@ -172,13 +184,7 @@ def evaluate(
 
 
 def serialize_report(report: Mapping[str, object]) -> str:
-    return json.dumps(
-        report,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-        allow_nan=False,
-    )
+    return json.dumps(report, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -188,18 +194,32 @@ def main(argv: Sequence[str] | None = None) -> int:
             "with optional read-only issue-inventory binding."
         )
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "--issue-inventory",
         type=Path,
         default=None,
-        help=(
-            "Validated local IssueInventoryProjection fixture. No live GitHub "
-            "read or mutation is performed."
-        ),
+        help="Validated local fixture IssueInventoryProjection. No live GitHub read is performed.",
+    )
+    group.add_argument(
+        "--github-issue-inventory-read",
+        type=Path,
+        default=None,
+        help="Previously captured GitHubIssueInventoryRead receipt. The router itself performs no network access.",
+    )
+    parser.add_argument(
+        "--as-of",
+        default=None,
+        help="Explicit ISO-8601 time used to prove live-read freshness. Required with --github-issue-inventory-read.",
     )
     parser.add_argument("files", nargs="+", type=Path)
     args = parser.parse_args(argv)
-    report = evaluate(args.files, args.issue_inventory)
+    report = evaluate(
+        args.files,
+        args.issue_inventory,
+        args.github_issue_inventory_read,
+        as_of=args.as_of,
+    )
     print(serialize_report(report))
     return 1 if report["status"] == "FAIL" else 0
 
