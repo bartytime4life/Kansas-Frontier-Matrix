@@ -1,0 +1,16 @@
+{
+  "profile": "kfm.explorer.ssurgo-yearly-change.fixture.v1",
+  "comparison_id": "kfm:ssurgo-yearly-change:synthetic-error",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "source_family": null,
+  "support_type": null,
+  "source_descriptor_ref": null,
+  "previous_snapshot": null,
+  "current_snapshot": null,
+  "diff": null,
+  "provenance": null,
+  "publication_authorized": false
+}
