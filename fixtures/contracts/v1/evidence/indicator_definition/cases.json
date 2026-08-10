@@ -1,0 +1,187 @@
+{
+  "profile": "kfm.indicator-definition.fixture.v1",
+  "description": "Synthetic indicator definitions only; no formula runs, evidence resolves, thresholds activate, or authority effects occur.",
+  "base": {
+    "object_type": "IndicatorDefinition",
+    "schema_version": "1.0.0",
+    "profile": "kfm.indicator-definition.fixture.v1",
+    "definition_id": "kfm:indicator-definition:000000000000000000000000",
+    "indicator": {
+      "indicator_key": "synthetic_resolution_rate",
+      "label": "Synthetic resolution rate",
+      "description": "Fixture-only rate with an explicit numerator, denominator, and disclosure posture.",
+      "value_kind": "RATE",
+      "unit": "1",
+      "direction": "HIGHER_IS_MORE",
+      "source_role": "DERIVED"
+    },
+    "components": [
+      {
+        "component_ref": "kfm://component/synthetic-denominator",
+        "role": "DENOMINATOR",
+        "allowed_source_roles": ["ADMINISTRATIVE", "AGGREGATE", "OBSERVED"],
+        "required": true,
+        "unit": "record",
+        "evidence_required": true
+      },
+      {
+        "component_ref": "kfm://component/synthetic-numerator",
+        "role": "NUMERATOR",
+        "allowed_source_roles": ["ADMINISTRATIVE", "AGGREGATE", "OBSERVED"],
+        "required": true,
+        "unit": "record",
+        "evidence_required": true
+      }
+    ],
+    "method": {
+      "method_ref": "kfm://method/synthetic-resolution-rate-v1",
+      "formula_ref": "kfm://formula/synthetic-resolution-rate-v1",
+      "aggregation": "RATE",
+      "denominator_policy": "REQUIRED",
+      "missing_data_policy": "EXCLUDE_WITH_DISCLOSURE",
+      "normalization": "NONE",
+      "percentile_method": null,
+      "threshold_policy_ref": null
+    },
+    "support": {
+      "spatial_scope_ref": "kfm://scope/synthetic-kansas",
+      "temporal_scope_ref": "kfm://temporal/synthetic-release-window",
+      "temporal_support_kind": "INTERVAL",
+      "window_duration": null,
+      "geography_version_required": true,
+      "valid_time_required": true
+    },
+    "disclosure": {
+      "uncertainty_required": true,
+      "component_disclosure_required": true,
+      "missing_count_disclosure_required": true,
+      "interpretation_limits": [
+        "NOT_OBSERVATION",
+        "NOT_ROOT_TRUTH",
+        "NO_CAUSAL_CLAIM",
+        "NO_PUBLICATION_AUTHORITY",
+        "SCOPE_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "formula_executed": false,
+      "indicator_computed": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "rate": [],
+    "ratio": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_ratio"},
+      {"path": "/indicator/value_kind", "value": "RATIO"},
+      {"path": "/method/aggregation", "value": "RATIO"}
+    ],
+    "percent": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_percent"},
+      {"path": "/indicator/value_kind", "value": "PERCENT"},
+      {"path": "/indicator/unit", "value": "percent"},
+      {"path": "/method/aggregation", "value": "PERCENT"}
+    ],
+    "count": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_count"},
+      {"path": "/indicator/value_kind", "value": "COUNT"},
+      {"path": "/indicator/unit", "value": "record"},
+      {"path": "/components", "value": [
+        {"component_ref": "kfm://component/synthetic-input", "role": "INPUT", "allowed_source_roles": ["ADMINISTRATIVE", "OBSERVED"], "required": true, "unit": "record", "evidence_required": true}
+      ]},
+      {"path": "/method/aggregation", "value": "COUNT"},
+      {"path": "/method/denominator_policy", "value": "NOT_APPLICABLE"}
+    ],
+    "index": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_index"},
+      {"path": "/indicator/value_kind", "value": "INDEX"},
+      {"path": "/components", "value": [
+        {"component_ref": "kfm://component/synthetic-input", "role": "INPUT", "allowed_source_roles": ["AGGREGATE", "DERIVED", "MODELED", "OBSERVED"], "required": true, "unit": "1", "evidence_required": true}
+      ]},
+      {"path": "/method/aggregation", "value": "INDEX"},
+      {"path": "/method/denominator_policy", "value": "NOT_APPLICABLE"},
+      {"path": "/method/normalization", "value": "MIN_MAX"}
+    ],
+    "category": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_category"},
+      {"path": "/indicator/value_kind", "value": "CATEGORY"},
+      {"path": "/indicator/unit", "value": "category"},
+      {"path": "/indicator/direction", "value": "NEUTRAL"},
+      {"path": "/components", "value": [
+        {"component_ref": "kfm://component/synthetic-input", "role": "INPUT", "allowed_source_roles": ["AGGREGATE", "DERIVED", "OBSERVED"], "required": true, "unit": "1", "evidence_required": true}
+      ]},
+      {"path": "/method/aggregation", "value": "CATEGORY"},
+      {"path": "/method/denominator_policy", "value": "NOT_APPLICABLE"},
+      {"path": "/method/threshold_policy_ref", "value": "kfm://policy/threshold/synthetic-category-v1"}
+    ],
+    "percentile_index": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_percentile_index"},
+      {"path": "/indicator/value_kind", "value": "INDEX"},
+      {"path": "/components", "value": [
+        {"component_ref": "kfm://component/synthetic-input", "role": "INPUT", "allowed_source_roles": ["AGGREGATE", "DERIVED", "MODELED", "OBSERVED"], "required": true, "unit": "1", "evidence_required": true}
+      ]},
+      {"path": "/method/aggregation", "value": "INDEX"},
+      {"path": "/method/denominator_policy", "value": "NOT_APPLICABLE"},
+      {"path": "/method/normalization", "value": "PERCENTILE_RANK"},
+      {"path": "/method/percentile_method", "value": "LINEAR"}
+    ],
+    "rolling_rate": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_rolling_rate"},
+      {"path": "/support/temporal_support_kind", "value": "ROLLING_WINDOW"},
+      {"path": "/support/window_duration", "value": "P30D"}
+    ],
+    "composed_rate": [
+      {"path": "/indicator/indicator_key", "value": "synthetic_composed_rate"},
+      {"path": "/components/1/allowed_source_roles", "value": ["DERIVED", "INTERPRETIVE", "MODELED", "OBSERVED"]}
+    ]
+  },
+  "cases": [
+    {"case_id": "rate_valid", "base": "rate", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "ratio_valid", "base": "ratio", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "percent_valid", "base": "percent", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "count_valid", "base": "count", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "index_valid", "base": "index", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "category_valid", "base": "category", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "percentile_index_valid", "base": "percentile_index", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "rolling_rate_valid", "base": "rolling_rate", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "composed_analytic_role_valid", "base": "composed_rate", "expected_outcome": "PASS", "expected_findings": []},
+
+    {"case_id": "aggregation_mismatch", "base": "rate", "mutations": [{"path": "/method/aggregation", "value": "RATIO"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_AGGREGATION_MISMATCH", "path": "/method/aggregation"}]},
+    {"case_id": "denominator_policy_mismatch", "base": "rate", "mutations": [{"path": "/method/denominator_policy", "value": "NOT_APPLICABLE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_DENOMINATOR_POLICY_MISMATCH", "path": "/method/denominator_policy"}]},
+    {"case_id": "numerator_missing", "base": "rate", "mutations": [{"path": "/components/1/role", "value": "INPUT"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_NUMERATOR_REQUIRED", "path": "/components"}]},
+    {"case_id": "denominator_missing", "base": "rate", "mutations": [{"path": "/components/0/role", "value": "INPUT"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_DENOMINATOR_REQUIRED", "path": "/components"}]},
+    {"case_id": "count_denominator_unexpected", "base": "count", "mutations": [{"path": "/components/0/role", "value": "DENOMINATOR"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_DENOMINATOR_UNEXPECTED", "path": "/components"}]},
+    {"case_id": "index_normalization_missing", "base": "index", "mutations": [{"path": "/method/normalization", "value": "NONE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_NORMALIZATION_REQUIRED", "path": "/method/normalization"}]},
+    {"case_id": "percentile_method_missing", "base": "percentile_index", "mutations": [{"path": "/method/percentile_method", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_PERCENTILE_METHOD_REQUIRED", "path": "/method/percentile_method"}]},
+    {"case_id": "percentile_method_unexpected", "base": "index", "mutations": [{"path": "/method/percentile_method", "value": "LINEAR"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_PERCENTILE_METHOD_UNEXPECTED", "path": "/method/percentile_method"}]},
+    {"case_id": "category_threshold_missing", "base": "category", "mutations": [{"path": "/method/threshold_policy_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_THRESHOLD_POLICY_REQUIRED", "path": "/method/threshold_policy_ref"}]},
+    {"case_id": "threshold_unexpected", "base": "rate", "mutations": [{"path": "/method/threshold_policy_ref", "value": "kfm://policy/threshold/unexpected"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_THRESHOLD_POLICY_UNEXPECTED", "path": "/method/threshold_policy_ref"}]},
+    {"case_id": "rolling_duration_missing", "base": "rolling_rate", "mutations": [{"path": "/support/window_duration", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_WINDOW_DURATION_REQUIRED", "path": "/support/window_duration"}]},
+    {"case_id": "duration_unexpected", "base": "rate", "mutations": [{"path": "/support/window_duration", "value": "P30D"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_WINDOW_DURATION_UNEXPECTED", "path": "/support/window_duration"}]},
+    {"case_id": "component_order_invalid", "base": "rate", "mutations": [{"path": "/components", "value": [
+      {"component_ref": "kfm://component/synthetic-numerator", "role": "NUMERATOR", "allowed_source_roles": ["ADMINISTRATIVE", "AGGREGATE", "OBSERVED"], "required": true, "unit": "record", "evidence_required": true},
+      {"component_ref": "kfm://component/synthetic-denominator", "role": "DENOMINATOR", "allowed_source_roles": ["ADMINISTRATIVE", "AGGREGATE", "OBSERVED"], "required": true, "unit": "record", "evidence_required": true}
+    ]}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_COMPONENT_ORDER_INVALID", "path": "/components"}]},
+    {"case_id": "component_duplicate", "base": "rate", "mutations": [{"path": "/components/1/component_ref", "value": "kfm://component/synthetic-denominator"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_COMPONENT_DUPLICATE", "path": "/components"}]},
+    {"case_id": "allowed_role_order_invalid", "base": "rate", "mutations": [{"path": "/components/0/allowed_source_roles", "value": ["OBSERVED", "ADMINISTRATIVE"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_ROLE_ORDER_INVALID", "path": "/components/0/allowed_source_roles"}]},
+    {"case_id": "limit_order_invalid", "base": "rate", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["SCOPE_BOUND", "NOT_ROOT_TRUTH", "NOT_OBSERVATION", "NO_PUBLICATION_AUTHORITY", "NO_CAUSAL_CLAIM"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "required_limit_missing", "base": "rate", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NOT_OBSERVATION", "NOT_ROOT_TRUTH", "NO_PUBLICATION_AUTHORITY", "SCOPE_BOUND"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "source_role_laundering", "base": "rate", "mutations": [{"path": "/indicator/source_role", "value": "OBSERVED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/indicator/source_role"}]},
+    {"case_id": "silent_imputation_unrepresentable", "base": "rate", "mutations": [{"path": "/method/missing_data_policy", "value": "SILENT_IMPUTE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/method/missing_data_policy"}]},
+    {"case_id": "inline_formula_unrepresentable", "base": "rate", "mutations": [{"path": "/method/formula_ref", "value": "numerator / denominator"}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/method/formula_ref"}]},
+    {"case_id": "evidence_requirement_disabled", "base": "rate", "mutations": [{"path": "/components/0/evidence_required", "value": false}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/components/0/evidence_required"}]},
+    {"case_id": "additional_property_denied", "base": "rate", "mutations": [{"path": "/indicator/value", "value": 0.99}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/indicator"}]},
+    {"case_id": "spec_hash_mismatch", "base": "rate", "spec_hash_override": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "definition_id_mismatch", "base": "index", "definition_id_override": "kfm:indicator-definition:111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_DEFINITION_ID_MISMATCH", "path": "/definition_id"}]},
+    {"case_id": "publication_authority_forbidden", "base": "category", "mutations": [{"path": "/governance/publication_authorized", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "INDICATOR_SCHEMA_INVALID", "path": "/governance/publication_authorized"}]}
+  ]
+}
