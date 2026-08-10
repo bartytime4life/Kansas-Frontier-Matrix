@@ -86,7 +86,9 @@ def semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
     comparable_entry_times = [item for item in entry_times if item]
     if comparable_entry_times != sorted(comparable_entry_times):
         add("LEDGER_TIME_ORDER_INVALID", "/ledger_entries")
-    expected_ids = [f"ledger-entry:{number:04d}" for number in range(1, len(entries) + 1)]
+    expected_ids = [
+        f"ledger-entry:{number:04d}" for number in range(1, len(entries) + 1)
+    ]
     if [str(item.get("entry_id", "")) for item in entries] != expected_ids:
         add("LEDGER_ENTRY_ORDER_INVALID", "/ledger_entries")
     for index, entry in enumerate(entries):
@@ -178,20 +180,23 @@ def semantic_findings(candidate: Mapping[str, object]) -> set[Finding]:
         ledger_bad |= ledger_state == "RELEASED" and len(released_entries) != 1
         ledger_bad |= ledger_state != "RELEASED" and bool(released_entries)
     if ledger_bad:
-        add("RESET•USÓ—ÓQÑT—ÒSÓÓTUH‹‹Ü™\Ù\˜][ÛˆŠBˆ™\Ù\™YØ]H[Y\İ[\
-™\Ù\˜][Û‹™Ù]
-œ™\Ù\™YØ]ŠJBˆÛÛ\]YØ]H[Y\İ[\
-™\Ù\˜][Û‹™Ù]
-™Y™™XİØÛÛ\]YØ]ŠJBˆ[YWØ˜YH˜[ÙBˆYˆ™\Ù\™YÙ[šY\È[™™\Ù\™YØ]‚ˆ[YWØ˜YH[Y\İ[\
-™\Ù\™YÙ[šY\ÖÌK™Ù]
-œ™XÛÜ™YØ]ŠJHOH™\Ù\™YØ]ˆ[YWØ˜YH›ÛÛ
-™\]Y\İY[™™\Ù\™YØ]™\]Y\İY
-BˆYˆÛÛ\]YOHN‚ˆYˆÛÛ\]YØ]\È›Û™N‚ˆY
-ÓÓTUSÓ—ÕSQWÓRTÔÒS‘È‹‹Ü™\Ù\˜][Û‹ÙY™™XİØÛÛ\]YØ]ŠBˆ[ÙN‚ˆ[YWØ˜YH[Y\İ[\
-ÛÛ\]YÙ[šY\ÖÌK™Ù]
-œ™XÛÜ™YØ]ŠJHOHÛÛ\]YØ]ˆ[YWØ˜YH›ÛÛ
-™\Ù\™YØ][™ÛÛ\]YØ]™\Ù\™YØ]
-Bˆ[YˆÛÛ\]YØ]\È›İ›Û™N‚ˆY
-ÓÓTUSÓ—ÕSQWÕS‘VPÕQ‹‹Ü™\Ù\˜][Û‹ÙY™™XİØÛÛ\]YØ]ŠBˆYˆ[YWØ˜Y‚ˆY
-”‘TÑT•USÓ—ÕSQWÒS•SQ‹‹Ü™\Ù\˜][ÛˆŠBˆYˆ^XİYÛİ]ÛÛYHOHÓÓTS”ĞUQˆ[™YÙ\—Üİ]HOH”‘SPTÑQ‚ˆY
-”‘TÑT•USÓ—ÔÕUWÓRTÓPUÒ‹‹Ü™\Ù\˜][Û‹Üİ]HŠBˆ™]\›ˆ›İ[™
+        add("RESERVATION_LEDGER_INCOMPLETE", "/reservation")
+    reserved_at = timestamp(reservation.get("reserved_at"))
+    completed_at = timestamp(reservation.get("effect_completed_at"))
+    time_bad = False
+    if reserved_entries and reserved_at:
+        time_bad |= timestamp(reserved_entries[0].get("recorded_at")) != reserved_at
+        time_bad |= bool(requested and reserved_at < requested)
+    if completed == 1:
+        if completed_at is None:
+            add("COMPLETION_TIME_MISSING", "/reservation/effect_completed_at")
+        else:
+            time_bad |= timestamp(completed_entries[0].get("recorded_at")) != completed_at
+            time_bad |= bool(reserved_at and completed_at < reserved_at)
+    elif completed_at is not None:
+        add("COMPLETION_TIME_UNEXPECTED", "/reservation/effect_completed_at")
+    if time_bad:
+        add("RESERVATION_TIME_INVALID", "/reservation")
+    if expected_outcome == "COMPENSATED" and ledger_state != "RELEASED":
+        add("RESERVATION_STATE_MISMATCH", "/reservation/state")
+    return found

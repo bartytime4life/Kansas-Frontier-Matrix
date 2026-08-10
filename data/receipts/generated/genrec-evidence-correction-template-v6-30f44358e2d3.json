@@ -38,9 +38,8 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/1b15beac49118ecc8099712b6387e08d762ac046/docs/doctrine/directory-rules.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/1b15beac49118ecc8099712b6387e08d762ac046/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/1b15beac49118ecc8099712b6387e08d762ac046/schemas/contracts/v1/receipts/generated_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/65a0bbf8ec3a49e81ed26f8feee557da247c255b/.github/ISSUE_TEMPLATE/evidence_correction.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2423",
-      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2425"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aa63febd46aad0afc46e3c4e42e57699444927a5/.github/ISSUE_TEMPLATE/evidence_correction.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2423"
     ]
   },
   "truth_labels": {
@@ -55,7 +54,7 @@
     {
       "gate": "overlap-and-concurrency",
       "outcome": "PASS",
-      "reason": "No open pull request matched the target before editing. Main advancements were inspected and reconciled without force. Draft PR #2423 was then moved out of draft and merged externally before the receipt commit; the branch was reconciled to that merge and this receipt is delivered separately in draft PR #2425."
+      "reason": "No open pull request matched the target. Main advancements were inspected, did not touch the target or README, and were reconciled into the feature branch through non-force merge commits."
     },
     {
       "gate": "same-path-placement-and-dependency-closure",
@@ -75,7 +74,7 @@
     {
       "gate": "artifact-hash-and-remote-readback",
       "outcome": "PASS",
-      "reason": "The target SHA-256 was computed locally and the merged main read-back at 65a0bbf8ec3a49e81ed26f8feee557da247c255b returned Git blob fbb80db06ea069f1330d1f4a848d0925544197c6 for the prepared bytes."
+      "reason": "The target SHA-256 was computed locally and the remote branch read-back returned Git blob fbb80db06ea069f1330d1f4a848d0925544197c6 for the prepared bytes."
     },
     {
       "gate": "generated-receipt-shape-and-integrity",
@@ -98,7 +97,7 @@
     {
       "id": "current-evidence-correction-template",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/65a0bbf8ec3a49e81ed26f8feee557da247c255b/.github/ISSUE_TEMPLATE/evidence_correction.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1b15beac49118ecc8099712b6387e08d762ac046/.github/ISSUE_TEMPLATE/evidence_correction.md"
     },
     {
       "id": "issue-template-operating-readme",
@@ -126,14 +125,9 @@
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1b15beac49118ecc8099712b6387e08d762ac046/schemas/contracts/v1/receipts/generated_receipt.schema.json"
     },
     {
-      "id": "merged-template-pull-request",
+      "id": "draft-pull-request",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2423"
-    },
-    {
-      "id": "receipt-delivery-pull-request",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2425"
     }
   ],
   "human_review": {
@@ -142,12 +136,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-10T05:55:29Z",
+  "created_at": "2026-08-10T05:51:55Z",
   "emitter": "openai/gpt-5.6-pro",
   "links": {
-    "pr_number": 2425,
+    "pr_number": 2423,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored same-path modernization of the public evidence-correction issue template. The issue-template README was reviewed and remains accurate, so it is intentionally unchanged. Draft PR #2423 was merged externally before this receipt commit was added; draft PR #2425 carries only the missing provenance record. This receipt is process memory, not evidence authority, review approval, policy, correction, release, rollback authorization, or publication. Human review remains pending."
+  "notes": "AI-authored same-path modernization of the public evidence-correction issue template. The issue-template README was reviewed and remains accurate, so it is intentionally unchanged. This receipt is process memory, not evidence authority, review approval, policy, correction, release, rollback authorization, or publication. Human review remains pending."
 }
