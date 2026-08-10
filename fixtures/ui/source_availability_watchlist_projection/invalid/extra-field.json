@@ -1,0 +1,56 @@
+{
+  "profile": "kfm.explorer.source-availability-watchlist.public-safe.v1",
+  "panel_id": "kfm:source-availability-panel:synthetic:available-001",
+  "outcome": "ANSWER",
+  "reason_code": "WATCHLIST_AVAILABLE",
+  "observed_at": "2026-08-10T17:00:00Z",
+  "watchlist_id": "kfm:source-availability-watchlist:0123456789abcdef01234567",
+  "state": "REVIEW_REQUIRED",
+  "summary": {
+    "source_count": 2,
+    "stable_count": 1,
+    "review_count": 1,
+    "hold_count": 0,
+    "error_count": 0
+  },
+  "entries": [
+    {
+      "source_id": "ks-mesonet",
+      "source_ref": "kfm://source/ks-mesonet",
+      "health_assessment_ref": "kfm://source-health-assessment/synthetic/ks-mesonet-001",
+      "material_change_assessment_ref": "kfm://material-change-assessment/synthetic/ks-mesonet-001",
+      "availability": "HEALTHY",
+      "change_class": "UNCHANGED",
+      "material_kind": "NONE",
+      "route": "NO_ACTION",
+      "candidate_work_ref": null,
+      "reason_codes": [
+        "STABLE_AVAILABILITY"
+      ]
+    },
+    {
+      "source_id": "nrcs-ssurgo",
+      "source_ref": "kfm://source/nrcs-ssurgo",
+      "health_assessment_ref": "kfm://source-health-assessment/synthetic/nrcs-ssurgo-001",
+      "material_change_assessment_ref": "kfm://material-change-assessment/synthetic/nrcs-ssurgo-001",
+      "availability": "HEALTHY",
+      "change_class": "MATERIAL",
+      "material_kind": "SCHEMA",
+      "route": "REVIEW_CANDIDATE",
+      "candidate_work_ref": "kfm://candidate-work/synthetic/nrcs-ssurgo-schema-001",
+      "reason_codes": [
+        "MATERIAL_SCHEMA_CHANGE"
+      ]
+    }
+  ],
+  "governance": {
+    "network_attempted": false,
+    "source_activation_allowed": false,
+    "candidate_execution_allowed": false,
+    "lifecycle_write_allowed": false,
+    "authority_created": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  },
+  "internal_canary": "SOURCE_WATCHLIST_INTERNAL_CANARY_41d8e2"
+}
