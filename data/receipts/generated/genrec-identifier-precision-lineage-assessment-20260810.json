@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-identifier-precision-lineage-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/identifier-precision-lineage-assessment.yml",
+    "contracts/common/identifier_precision_lineage_assessment.md",
+    "docs/intake/exploratory/identifier-precision-lineage-assessment-source-map.md",
+    "fixtures/contracts/v1/common/identifier_precision_lineage_assessment/cases.json",
+    "schemas/contracts/v1/common/identifier_precision_lineage_assessment.schema.json",
+    "tests/validators/test_validate_identifier_precision_lineage_assessment.py",
+    "tools/validators/validate_identifier_precision_lineage_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/identifier-precision-lineage-assessment.yml": "sha256:021ad0ab86f5b2965d6c76091b858e91d5eeeb03dc01d9736db9a51d126bb588",
+    "contracts/common/identifier_precision_lineage_assessment.md": "sha256:742e7dd3249dc2f5b80ce06cfe732412c2c2cd6b4d654b979416c88604df38c7",
+    "docs/intake/exploratory/identifier-precision-lineage-assessment-source-map.md": "sha256:47002ce71ad618da6edbcc260ff39e1c808333bd57bf62dfb944e835cc1feafb",
+    "fixtures/contracts/v1/common/identifier_precision_lineage_assessment/cases.json": "sha256:9cd699173fb865c2fe36844d9f94bceb84b878377dd0901cc89db0fe73e5a8d1",
+    "schemas/contracts/v1/common/identifier_precision_lineage_assessment.schema.json": "sha256:a009face0658f2ffa5fd70a5af9b9abca62356ea949c3f8bd989af24837a53b6",
+    "tests/validators/test_validate_identifier_precision_lineage_assessment.py": "sha256:a6bf910f517d5d5baf5bb4d8ddc2ad536bec464a07c766fd96e2aa25311cf532",
+    "tools/validators/validate_identifier_precision_lineage_assessment.py": "sha256:8ff7e80b23992985ae4a2674e7ed06847816533a115ca5da6fd3cf3e66f5aaa4"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": ["KFM_Full_Atlas_seed_cards.md", "New Ideas 4-16-26"],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-034",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0100",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0101",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0102",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-16-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/runtime/precision_actually_used.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/identifier-precision-lineage-assessment.yml": "CONFIRMED",
+    "contracts/common/identifier_precision_lineage_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/identifier-precision-lineage-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/identifier_precision_lineage_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/identifier_precision_lineage_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_identifier_precision_lineage_assessment.py": "CONFIRMED",
+    "tools/validators/validate_identifier_precision_lineage_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "11 deterministic tests passed in the isolated authoring worktree."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "14 exact cases passed across RESOLVED, HOLD, ABSTAIN, DENY, and unsafe-input behavior."},
+    {"gate": "documentation-metadata-and-local-link-validation", "outcome": "PASS", "reason": "Both metadata blocks and bounded local-link checks passed without findings."},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-and-no-source-client-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "full-atlas-identifier-precision-triad", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-034"},
+    {"id": "full-atlas-identifier-lineage-idea", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0100"},
+    {"id": "full-atlas-precision-review-surface", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0101"},
+    {"id": "full-atlas-identifier-precision-objects", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0102"},
+    {"id": "drive-derived-new-ideas-4-16-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-16-source-map.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T15:03:04Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only identifier and precision lineage packet derived from Full Atlas KFM-TRIAD-034 and candidates KFM-CAND-0100 through KFM-CAND-0102 plus the Drive-derived New Ideas 4-16 source map. It preserves digest-only source and resolved assertions, declared crosswalk outcomes, and effective precision. It stores no raw identifier or coordinates and performs no source access, identity resolution, geometry transform, evidence authentication, policy, review, release, publication, or public-use authorization."
+}

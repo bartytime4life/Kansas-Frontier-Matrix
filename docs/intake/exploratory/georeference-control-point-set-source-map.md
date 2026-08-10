@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: map-steward, docs-steward
 created: 2026-08-06
-updated: 2026-08-06
+updated: 2026-08-10
 policy_label: public
 owning_root: docs/
 responsibility: Exploratory source-to-repository adaptation record for canonical georeference control-point-set identity.
@@ -44,6 +44,8 @@ This profile does not establish source provenance or GCP accuracy. It does not i
 
 ## Follow-up candidates
 
-1. Add a compatibility adapter that projects an accepted `GeoreferenceControlPointSet` into the existing affine-quality fixture input without changing affine-quality semantics.
-2. Bind the spatial-distribution profile to `resource_set_hash` after that profile lands and is independently reviewed.
+1. **Implemented:** `tools/generators/project_georeference_transform_quality.py` validates an accepted `GeoreferenceControlPointSet`, preserves its three identities in a projection wrapper, and maps the exact ordered point set into the existing affine-quality v1 candidate without changing affine-quality semantics.
+2. Bind the spatial-distribution profile to `resource_set_hash` after a separately reviewed compatibility design confirms versioning and migration posture.
 3. Add real CRS/coordinate-epoch declarations only through a separately reviewed geodetic identity profile.
+
+The adapter is fixture-only, deterministic, no-network, stdout-only by default, and overwrite-denying unless `--force` is explicit. Its embedded candidate remains independently validatable by `validate_georeference_transform_quality.py`; the wrapper does not create a new GCP, quality, evidence, policy, release, or publication authority.
