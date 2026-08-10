@@ -1,7 +1,8 @@
 # KFM Agriculture domain CI readiness workflow.
 # Status: one bounded fixture-only CDL watcher proof is executable in this lane;
-# three dedicated Agriculture validator suites are separately governed; broader
-# domain validation, proof, and release-dry-run producers remain held.
+# three dedicated Agriculture validator suites and one deterministic NDVI
+# computation suite are separately governed; broader domain validation, proof,
+# and release-dry-run producers remain held.
 #
 # Authority boundary:
 # - This workflow proves one synthetic ingest-adjacent review-signal helper and
@@ -63,15 +64,21 @@ jobs:
             "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py"
             "tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py"
             "tools/ingest/cdl_watch/cdl_watch.py"
+            "tools/generators/compute_ndvi_delta.py"
             "tools/validators/agriculture/README.md"
             "tools/validators/domains/agriculture/README.md"
             "tools/validators/domains/agriculture/vegetation_connectivity_gate/validate_connectivity_gate.py"
+            ".github/workflows/agriculture-ndvi-delta-computation.yml"
             ".github/workflows/agriculture-hls-ndvi-zonal-materiality.yml"
             ".github/workflows/agriculture-ndvi-readiness.yml"
             ".github/workflows/agriculture-vegetation-connectivity-gate.yml"
+            "contracts/domains/agriculture/ndvi_delta_computation.md"
             "contracts/domains/agriculture/vegetation_connectivity_gate.md"
+            "fixtures/domains/agriculture/ndvi_delta_computation/cases.json"
             "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json"
+            "schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json"
             "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json"
+            "tests/domains/agriculture/test_ndvi_delta_computation.py"
             "release/agriculture/README.md"
           )
 
@@ -117,13 +124,32 @@ jobs:
           test_paths = [path for path in test_inventory if path.suffix == ".py"]
           if not test_paths:
               raise SystemExit("Agriculture test inventory contains no Python modules.")
+          expected_dedicated_tests = {"test_ndvi_delta_computation.py"}
+          observed_dedicated_tests = set()
           for path in test_paths:
               classification = classify_test_source(path.read_text(encoding="utf-8"))
-              if not classification.placeholder:
+              relative_path = path.relative_to(test_root).as_posix()
+              if relative_path in expected_dedicated_tests:
+                  if (
+                      classification.placeholder
+                      or classification.reason != "substantive_test_module"
+                  ):
+                      raise SystemExit(
+                          "Dedicated Agriculture test is not a substantive Python module: "
+                          f"{path} ({classification.reason}: {classification.detail})."
+                      )
+                  observed_dedicated_tests.add(relative_path)
+              elif not classification.placeholder:
                   raise SystemExit(
                       f"Agriculture test placeholder changed at {path}; "
                       "review and wire it deliberately."
                   )
+          if observed_dedicated_tests != expected_dedicated_tests:
+              raise SystemExit(
+                  "Agriculture dedicated test inventory changed; "
+                  f"expected={sorted(expected_dedicated_tests)}; "
+                  f"observed={sorted(observed_dedicated_tests)}."
+              )
 
           direct_validator_root = Path("tools/validators/agriculture")
           assert_no_symlinks(direct_validator_root, "Agriculture direct validator")
@@ -209,12 +235,14 @@ jobs:
           print(
               "READINESS_OK label=agriculture "
               f"tests={len(test_paths)} "
+              f"dedicated_tests={len(observed_dedicated_tests)} "
               f"placeholder_validators={len(expected_placeholder_validators)} "
               f"dedicated_validators={len(dedicated_validator_paths)}"
           )
           print(
-              "Dedicated HLS NDVI materiality, NDVI readiness, and vegetation "
-              "connectivity suites remain owned by their path-filtered workflows."
+              "Dedicated NDVI delta computation, HLS NDVI materiality, NDVI readiness, "
+              "and vegetation connectivity suites remain owned by their path-filtered "
+              "workflows."
           )
           PY
 
@@ -243,11 +271,12 @@ jobs:
           watcher proof; that helper is ingest-adjacent and review-signal-only.
 
           The direct Agriculture validator lane remains documentation-only. The
-          canonical domain lane contains four recognized greenfield validator
-          stubs plus three substantive, fixture-only validators. The HLS NDVI zonal
-          materiality, smoke-aware NDVI readiness, and vegetation connectivity
-          suites remain executed by their own path-filtered workflows rather than
-          this broad readiness lane.
+          canonical domain lane contains recognized greenfield test and validator
+          stubs, one substantive deterministic NDVI computation test suite, and
+          three substantive fixture-only validators. The NDVI delta computation,
+          HLS NDVI zonal materiality, smoke-aware NDVI readiness, and vegetation
+          connectivity suites remain executed by their own path-filtered workflows
+          rather than this broad readiness lane.
 
           The CDL helper compares bounded local sidecars with networking denied.
           It cannot admit a source, decide canonical materiality policy, create
