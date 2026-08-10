@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json",
+  "title": "NdviDeltaComputation",
+  "description": "Deterministic fixture/captured-input NDVI delta result; not evidence, policy, promotion, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "cell_id",
+    "input_digest",
+    "thresholds",
+    "baseline",
+    "recent",
+    "delta_ndvi_millionths",
+    "classification",
+    "reasons",
+    "governance",
+    "result_digest"
+  ],
+  "properties": {
+    "object_type": {"const": "NdviDeltaComputation"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.ndvi-delta.synthetic.v1"},
+    "cell_id": {"type": "string", "minLength": 8, "maxLength": 160},
+    "input_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_scene_cloud_fraction_bps",
+        "min_baseline_clear_observations",
+        "min_recent_clear_observations",
+        "vegetation_floor_millionths",
+        "delta_threshold_millionths"
+      ],
+      "properties": {
+        "max_scene_cloud_fraction_bps": {"type": "integer", "minimum": 1, "maximum": 10000},
+        "min_baseline_clear_observations": {"type": "integer", "minimum": 1, "maximum": 64},
+        "min_recent_clear_observations": {"type": "integer", "minimum": 1, "maximum": 64},
+        "vegetation_floor_millionths": {"type": "integer", "minimum": -1000000, "maximum": 1000000},
+        "delta_threshold_millionths": {"type": "integer", "minimum": 1, "maximum": 2000000}
+      }
+    },
+    "baseline": {"$ref": "#/$defs/window"},
+    "recent": {"$ref": "#/$defs/window"},
+    "delta_ndvi_millionths": {
+      "oneOf": [
+        {"type": "integer", "minimum": -2000000, "maximum": 2000000},
+        {"type": "null"}
+      ]
+    },
+    "classification": {
+      "enum": [
+        "GAIN_CANDIDATE",
+        "LOSS_CANDIDATE",
+        "STABLE",
+        "SUPPRESSED_NON_VEGETATED",
+        "INSUFFICIENT_CLEAR_OBSERVATIONS"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 2,
+      "items": {
+        "enum": [
+          "BASELINE_BELOW_VEGETATION_FLOOR",
+          "BASELINE_CLEAR_OBSERVATIONS_INSUFFICIENT",
+          "RECENT_CLEAR_OBSERVATIONS_INSUFFICIENT"
+        ]
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "raster_opened",
+        "source_activated",
+        "raw_admitted",
+        "evidence_resolved",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_OR_CAPTURED_INPUT_ONLY"},
+        "network_attempted": {"const": false},
+        "raster_opened": {"const": false},
+        "source_activated": {"const": false},
+        "raw_admitted": {"const": false},
+        "evidence_resolved": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    },
+    "result_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accepted_observation_ids",
+        "rejected_cloud_observation_ids",
+        "clear_observation_count",
+        "median_ndvi_millionths"
+      ],
+      "properties": {
+        "accepted_observation_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 6, "maxLength": 128}
+        },
+        "rejected_cloud_observation_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 6, "maxLength": 128}
+        },
+        "clear_observation_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "median_ndvi_millionths": {
+          "oneOf": [
+            {"type": "integer", "minimum": -1000000, "maximum": 1000000},
+            {"type": "null"}
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"classification": {"const": "INSUFFICIENT_CLEAR_OBSERVATIONS"}}},
+      "then": {"properties": {"delta_ndvi_millionths": {"type": "null"}, "reasons": {"minItems": 1}}},
+      "else": {"properties": {"delta_ndvi_millionths": {"type": "integer"}}}
+    },
+    {
+      "if": {"properties": {"classification": {"const": "SUPPRESSED_NON_VEGETATED"}}},
+      "then": {"properties": {"reasons": {"const": ["BASELINE_BELOW_VEGETATION_FLOOR"]}}}
+    }
+  ]
+}
