@@ -1,0 +1,68 @@
+{
+  "receipt_id": "genrec-pass18-claim-scope-dimension-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/claim-scope-dimension-assessment.yml",
+    "contracts/evidence/claim_scope_dimension_assessment.md",
+    "docs/intake/exploratory/pass-18-claim-scope-dimension-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json",
+    "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/claim-scope-dimension-assessment.yml": "sha256:54485cea9498837e78af8a524ea09f6727a2f24f454ee8af075656406fe2669b",
+    "contracts/evidence/claim_scope_dimension_assessment.md": "sha256:aa6c638af9368775b75c8317138d3aeab8ad23b5a12e808bb61bd272ebd5208f",
+    "docs/intake/exploratory/pass-18-claim-scope-dimension-assessment-source-map.md": "sha256:f0ce9c340cfb7ba1ad9e39ee6deff67e13cbf066772e418eb32db05eb0f66023",
+    "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json": "sha256:c8db2c7f57d4eeac5c0aaaea3c0d970c17c46027a09986c90232fb361d9eb087",
+    "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json": "sha256:61e8fab35604689ac1933f70cf30498f9ad0cfed885524b51e28f9efb98d21cd",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "sha256:1581c7b763a500b0af298979db5de30bc700b0912b1e02b16ed0bc4e3fe2d03f",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "sha256:41de6010bcaf8ae94de9408490d335af3b9c7f100c0c87ba45f9eb9539c0c3c9"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:aa6c638af9368775b75c8317138d3aeab8ad23b5a12e808bb61bd272ebd5208f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and connector publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld", "Supplied repository placement guide; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-376", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/measurement_scale_operation_assessment.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/claim-scope-dimension-assessment.yml": "CONFIRMED",
+    "contracts/evidence/claim_scope_dimension_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-claim-scope-dimension-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Six deterministic claim-scope dimension tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Fifteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-claim-scope-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-376"},
+    {"id": "measurement-scale-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/measurement_scale_operation_assessment.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T19:03:30Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only claim-scope dimension assessment. Private connected-source identifiers and content are excluded. A validator result is declaration coherence only and carries no evidence, policy, review, lifecycle, release, publication, or public-answer authority."
+}
