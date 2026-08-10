@@ -1,0 +1,231 @@
+{
+  "profile": "kfm.joins.cross-lane-assessment.fixture.v1",
+  "fixture_lane": "fixtures/contracts/v1/joins",
+  "base": {
+    "object_type": "CrossLaneJoinAssessment",
+    "schema_version": "0.1.0",
+    "profile": "kfm.joins.cross-lane-assessment.fixture.v1",
+    "assessment_id": "AUTO",
+    "request": {
+      "request_id": "kfm:fixture:join-request:alpha",
+      "relation_profile_ref": "kfm:fixture:relation-profile:cross-lane-v1",
+      "predicate": "EXACT_KEY",
+      "temporal_tolerance_seconds": 0,
+      "dependency_state": "READY"
+    },
+    "endpoints": {
+      "left": {
+        "endpoint_id": "LEFT",
+        "domain": "fixture-left",
+        "object_ref": "kfm:fixture:left-object:alpha",
+        "source_descriptor_ref": "kfm:fixture:source-descriptor:left-alpha",
+        "source_role": "SYNTHETIC",
+        "evidence_ref": "kfm:fixture:evidence:left-alpha",
+        "sensitivity": "PUBLIC_SAFE",
+        "living_person": false,
+        "geometry_precision": "GENERALIZED",
+        "join_key": "fixture-key-alpha",
+        "spatial_cell_ref": "kfm:fixture:spatial-cell:alpha",
+        "valid_from": "2026-07-01T00:00:00Z",
+        "valid_to": "2026-07-31T23:59:59Z"
+      },
+      "right": {
+        "endpoint_id": "RIGHT",
+        "domain": "fixture-right",
+        "object_ref": "kfm:fixture:right-object:alpha",
+        "source_descriptor_ref": "kfm:fixture:source-descriptor:right-alpha",
+        "source_role": "SYNTHETIC",
+        "evidence_ref": "kfm:fixture:evidence:right-alpha",
+        "sensitivity": "PUBLIC_SAFE",
+        "living_person": false,
+        "geometry_precision": "GENERALIZED",
+        "join_key": "fixture-key-alpha",
+        "spatial_cell_ref": "kfm:fixture:spatial-cell:alpha",
+        "valid_from": "2026-07-15T00:00:00Z",
+        "valid_to": "2026-08-15T23:59:59Z"
+      }
+    },
+    "decision": {
+      "candidate_id": "AUTO",
+      "validator_outcome": "ALLOW",
+      "status": "JOIN_CANDIDATE",
+      "matched": true,
+      "source_roles": {"left": "SYNTHETIC", "right": "SYNTHETIC", "output_role": "CANDIDATE_RELATION"},
+      "inherited_sensitivity": "PUBLIC_SAFE",
+      "rule_results": [],
+      "reason_codes": ["JOIN_PREDICATE_SATISFIED"],
+      "obligations": ["DO_NOT_PUBLISH_FROM_JOIN_HELPER", "PRESERVE_ENDPOINT_SOURCE_ROLES", "ROUTE_TO_PAIR_JOIN_VALIDATOR"],
+      "effects": {
+        "lifecycle_write": false,
+        "evidence_bundle_created": false,
+        "policy_decision_created": false,
+        "review_decision_created": false,
+        "release_decision_created": false,
+        "publication": false,
+        "public_use_authorized": false
+      }
+    },
+    "evaluated_at": "2026-08-16T12:00:00Z",
+    "governance": {
+      "fixture_only": true,
+      "dry_run": true,
+      "no_network": true,
+      "sql_database": "IN_MEMORY_SQLITE",
+      "identity_authority": false,
+      "relationship_truth_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "spec_hash": "AUTO"
+  },
+  "cases": [
+    {
+      "name": "parameterized_exact_key_emits_candidate",
+      "mutations": [],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "synthetic_spatial_temporal_match_emits_candidate",
+      "mutations": [{"path": "/request/predicate", "value": "SPATIAL_TEMPORAL"}],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "exact_key_mismatch_abstains",
+      "mutations": [{"path": "/endpoints/right/join_key", "value": "fixture-key-beta"}],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "spatial_cell_mismatch_abstains",
+      "mutations": [
+        {"path": "/request/predicate", "value": "SPATIAL_TEMPORAL"},
+        {"path": "/endpoints/right/spatial_cell_ref", "value": "kfm:fixture:spatial-cell:beta"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "temporal_disjoint_abstains",
+      "mutations": [
+        {"path": "/request/predicate", "value": "SPATIAL_TEMPORAL"},
+        {"path": "/endpoints/right/valid_from", "value": "2026-09-01T00:00:00Z"},
+        {"path": "/endpoints/right/valid_to", "value": "2026-09-30T23:59:59Z"},
+        {"path": "/evaluated_at", "value": "2026-10-01T12:00:00Z"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "missing_evidence_ref_abstains",
+      "mutations": [{"path": "/endpoints/left/evidence_ref", "value": null}],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_conflict_abstains",
+      "mutations": [
+        {"path": "/endpoints/left/source_role", "value": "AGGREGATE"},
+        {"path": "/endpoints/right/source_role", "value": "OBSERVED"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "restricted_exact_geometry_is_denied",
+      "mutations": [
+        {"path": "/endpoints/left/sensitivity", "value": "RESTRICTED"},
+        {"path": "/endpoints/left/geometry_precision", "value": "EXACT"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "living_person_join_is_denied",
+      "mutations": [{"path": "/endpoints/left/living_person", "value": true}],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "dependency_failure_returns_error",
+      "mutations": [{"path": "/request/dependency_state", "value": "ERROR"}],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "sql_metacharacters_are_values_not_queries",
+      "mutations": [
+        {"path": "/endpoints/left/join_key", "value": "alpha' OR 1=1 --"},
+        {"path": "/endpoints/right/join_key", "value": "different"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "restricted_generalized_context_abstains_for_review",
+      "mutations": [
+        {"path": "/endpoints/left/sensitivity", "value": "RESTRICTED"},
+        {"path": "/endpoints/left/geometry_precision", "value": "GENERALIZED"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "decision_self_promotion_is_rejected",
+      "mutations": [
+        {"path": "/endpoints/left/sensitivity", "value": "RESTRICTED"},
+        {"path": "/endpoints/left/geometry_precision", "value": "EXACT"}
+      ],
+      "rederive": false,
+      "expected_status": "FAIL",
+      "expected_findings": ["JOIN_DECISION_MISMATCH"]
+    },
+    {
+      "name": "endpoint_source_role_tamper_is_rejected",
+      "mutations": [{"path": "/endpoints/left/source_role", "value": "MODELED"}],
+      "rederive": false,
+      "expected_status": "FAIL",
+      "expected_findings": ["JOIN_DECISION_MISMATCH"]
+    },
+    {
+      "name": "inherited_sensitivity_tamper_is_rejected",
+      "mutations": [{"path": "/decision/inherited_sensitivity", "value": "INTERNAL"}],
+      "rederive": false,
+      "expected_status": "FAIL",
+      "expected_findings": ["JOIN_DECISION_MISMATCH"]
+    },
+    {
+      "name": "invalid_endpoint_interval_is_rejected",
+      "mutations": [{"path": "/endpoints/left/valid_to", "value": "2026-06-30T23:59:59Z"}],
+      "expected_status": "FAIL",
+      "expected_findings": ["ENDPOINT_INTERVAL_INVALID"]
+    },
+    {
+      "name": "publisher_effect_is_schema_rejected",
+      "mutations": [{"path": "/decision/effects/publication", "value": true}],
+      "rederive": false,
+      "expected_status": "FAIL",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [{"path": "/evaluated_at", "value": "2026-08-17T12:00:00Z"}],
+      "rederive": false,
+      "reseal": false,
+      "expected_status": "FAIL",
+      "expected_findings": ["SPEC_HASH_MISMATCH", "ASSESSMENT_ID_MISMATCH"]
+    },
+    {
+      "name": "prohibited_generalized_context_is_denied",
+      "mutations": [
+        {"path": "/endpoints/left/sensitivity", "value": "PROHIBITED"},
+        {"path": "/endpoints/left/geometry_precision", "value": "GENERALIZED"}
+      ],
+      "expected_status": "PASS",
+      "expected_findings": []
+    }
+  ]
+}
