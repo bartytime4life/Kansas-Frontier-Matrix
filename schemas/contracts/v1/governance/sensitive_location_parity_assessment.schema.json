@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansas-frontier-matrix.local/schemas/contracts/v1/governance/sensitive_location_parity_assessment.schema.json",
+  "title": "SensitiveLocationParityAssessmentCandidate",
+  "description": "Inactive fixture-only declaration that exact public requests are denied and generalized candidates carry separate transform references without granting policy, access, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "version",
+    "assessment_id",
+    "spec_hash",
+    "request",
+    "support",
+    "disposition",
+    "transform",
+    "output",
+    "limitations",
+    "effects"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.sensitive-location-parity-assessment.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^sensitive-location-parity-assessment:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_ref",
+        "subject_family",
+        "subject_ref",
+        "owner_domain",
+        "audience",
+        "requested_precision",
+        "requested_at"
+      ],
+      "properties": {
+        "request_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "subject_family": {
+          "enum": [
+            "ARCHAEOLOGICAL_SITE",
+            "CRITICAL_INFRASTRUCTURE",
+            "ECOLOGICAL_DEN",
+            "ECOLOGICAL_NEST",
+            "ECOLOGICAL_ROOST"
+          ]
+        },
+        "subject_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^kfm://fixture-subject/[^\\s]+$"
+        },
+        "owner_domain": {
+          "enum": [
+            "archaeology",
+            "fauna",
+            "settlements-infrastructure"
+          ]
+        },
+        "audience": {
+          "const": "PUBLIC"
+        },
+        "requested_precision": {
+          "enum": [
+            "EXACT",
+            "GENERALIZED"
+          ]
+        },
+        "requested_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_contract_refs",
+        "sensitivity_registry_refs",
+        "policy_refs",
+        "source_snapshot_refs",
+        "evidence_refs"
+      ],
+      "properties": {
+        "domain_contract_refs": {
+          "$ref": "#/$defs/nonemptyReferences"
+        },
+        "sensitivity_registry_refs": {
+          "$ref": "#/$defs/nonemptyReferences"
+        },
+        "policy_refs": {
+          "$ref": "#/$defs/nonemptyReferences"
+        },
+        "source_snapshot_refs": {
+          "$ref": "#/$defs/nonemptyReferences"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonemptyReferences"
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "review_required"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "EXACT_DENIED",
+            "GENERALIZED_WITH_RECEIPT_CANDIDATE"
+          ]
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/codes"
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_ref",
+        "method_profile_ref",
+        "target_precision",
+        "status"
+      ],
+      "properties": {
+        "receipt_ref": {
+          "$ref": "#/$defs/nullableReference"
+        },
+        "method_profile_ref": {
+          "$ref": "#/$defs/nullableReference"
+        },
+        "target_precision": {
+          "enum": [
+            "NONE",
+            "GENERALIZED"
+          ]
+        },
+        "status": {
+          "const": "DECLARED_NOT_EXECUTED"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_location_included",
+        "source_payload_included",
+        "generalized_output_candidate",
+        "public_output_created"
+      ],
+      "properties": {
+        "exact_location_included": {
+          "const": false
+        },
+        "source_payload_included": {
+          "const": false
+        },
+        "generalized_output_candidate": {
+          "type": "boolean"
+        },
+        "public_output_created": {
+          "const": false
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DECLARATION_ONLY",
+          "NO_ACCESS_AUTHORITY",
+          "NO_COORDINATES_OR_SOURCE_PAYLOADS",
+          "NO_POLICY_OR_STEWARD_DECISION",
+          "NO_RELEASE_OR_PUBLICATION",
+          "NO_TRANSFORM_EXECUTED"
+        ]
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "access_granted",
+        "evidence_resolved",
+        "lifecycle_mutated",
+        "policy_evaluated",
+        "promoted",
+        "public_output_created",
+        "published",
+        "released",
+        "source_activated",
+        "steward_reviewed",
+        "transform_executed"
+      ],
+      "properties": {
+        "access_granted": {"type": "boolean"},
+        "evidence_resolved": {"type": "boolean"},
+        "lifecycle_mutated": {"type": "boolean"},
+        "policy_evaluated": {"type": "boolean"},
+        "promoted": {"type": "boolean"},
+        "public_output_created": {"type": "boolean"},
+        "published": {"type": "boolean"},
+        "released": {"type": "boolean"},
+        "source_activated": {"type": "boolean"},
+        "steward_reviewed": {"type": "boolean"},
+        "transform_executed": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^kfm(?::|://)[^\\s]+$"
+    },
+    "nullableReference": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/reference"}
+      ]
+    },
+    "nonemptyReferences": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/reference"
+      }
+    },
+    "codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+      }
+    }
+  }
+}
