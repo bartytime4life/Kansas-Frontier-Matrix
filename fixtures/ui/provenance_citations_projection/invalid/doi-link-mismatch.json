@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.provenance-citations.public-safe.v1",
+  "panel_id": "kfm:provenance-citations:synthetic:invalid-doi",
+  "outcome": "ANSWER",
+  "reason_code": "CITATIONS_AVAILABLE",
+  "title": "Provenance citations",
+  "activity_ref": "kfm://prov/activity/synthetic/citations-001",
+  "citations": [
+    {
+      "citation_id": "kfm:citation:synthetic:doi-001",
+      "label": "Synthetic mismatched citation",
+      "href": "https://example.org/not-the-doi",
+      "doi": "10.1234/kfm.synthetic.001",
+      "evidence_ref": "kfm://evidence/synthetic/source-001"
+    }
+  ],
+  "republication_note_code": "SOURCE_PRESERVED",
+  "release_manifest_ref": "kfm://release/synthetic/manifest-001"
+}

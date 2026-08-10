@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-contract-object-map-lifecycle-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/contract-object-map-lifecycle.yml",
+    "contracts/OBJECT_MAP.md",
+    "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md",
+    "tests/docs/test_contract_object_map_lifecycle.py",
+    "tools/validators/docs/validate_contract_object_map_lifecycle.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/contract-object-map-lifecycle.yml": "sha256:6b263bfcfd99a7a23c5cbf3672cb465f79e8d9bbaa2a1c426b6dcb0b5be48292",
+    "contracts/OBJECT_MAP.md": "sha256:8a27c7f07811b616a8395686e356d471141ba18d20a7dd8ad16d2be8359b2f1b",
+    "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md": "sha256:07f5fdcf7e063151485bb0b7fda55b5527669fb22534cfcc1aacbf0dcdf08ec0",
+    "tests/docs/test_contract_object_map_lifecycle.py": "sha256:9c2e589f07821f74fa96cc21ffa15f5dd51f5b6c2f1669db1790ddaed821f606",
+    "tools/validators/docs/validate_contract_object_map_lifecycle.py": "sha256:977ea04833291f2f11e420ed72ac019969e4a2846d1678b2e78d8f3c163fa810"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:8a27c7f07811b616a8395686e356d471141ba18d20a7dd8ad16d2be8359b2f1b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local deterministic Git, metadata, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:dd474c338d3f6597e2c5e8960d3071828f857cb822c09b030c10055cf7459f36",
+      "sha256:22e57665f17746f32d25a3bed52bbb8c2ff39e4a1081f72e87fde1d15f218562",
+      "sha256:cd51c4baadcb440aabf785dae8c17c5bb7d00774819e63450ea211ddfa326e57",
+      "sha256:16d378829432bab61528c3112d6105df14a59ebd7f0ab740815b9ea852b582c4",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-012",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/OBJECT_MAP.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/governed-ai/ROUTE_MAP.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/governed-api/LIFECYCLE_GATES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/apps/governed-api/src/governed_api/routes/registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/contract-object-map-lifecycle.yml": "CONFIRMED",
+    "contracts/OBJECT_MAP.md": "PROPOSED",
+    "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md": "CONFIRMED",
+    "tests/docs/test_contract_object_map_lifecycle.py": "CONFIRMED",
+    "tools/validators/docs/validate_contract_object_map_lifecycle.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "focused-and-adjacent-pytest-suite", "outcome": "PASS", "reason": "14 deterministic object-map and governed-API tests passed."},
+    {"gate": "route-registry-parity-and-finite-stub-behavior", "outcome": "PASS"},
+    {"gate": "adjacent-object-family-register-validation", "outcome": "PASS"},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both bounded metadata blocks passed the required profile."},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass20-exp012-resource-lifecycle-map", "validated": true, "evidence_ref": "attachment://KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-012"},
+    {"id": "connected-dots-governed-api-doctrine", "validated": true, "evidence_ref": "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM"},
+    {"id": "existing-contract-object-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/OBJECT_MAP.md"},
+    {"id": "existing-object-family-register", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/control_plane/object_family_register.yaml"},
+    {"id": "governed-api-route-families", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/governed-ai/ROUTE_MAP.md"},
+    {"id": "governed-api-lifecycle-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/governed-api/LIFECYCLE_GATES.md"},
+    {"id": "current-governed-api-route-registry", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/apps/governed-api/src/governed_api/routes/registry.py"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:28:04Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-and-validation-only EXP-012 slice derived after current-main collision review. It extends the canonical Contract Object Map, preserves the partial machine object-family register, and records only the three finite ABSTAIN route stubs present on the evidence pin. It performs no source admission, lifecycle mutation, resource publication, HTTP or authorization design, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
+}

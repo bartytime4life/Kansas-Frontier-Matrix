@@ -4,117 +4,95 @@
   "artifact_paths": [
     ".github/workflows/distribution-coverage-assessment.yml",
     "contracts/evidence/distribution_coverage_assessment.md",
+    "docs/intake/exploratory/distribution-coverage-semantics-source-map.md",
     "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json",
     "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json",
     "tests/evidence/test_distribution_coverage_assessment.py",
     "tools/validators/evidence/validate_distribution_coverage_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/distribution-coverage-assessment.yml": "sha256:65d1851e926be094548a0e8ae05fe0ada3fa608871b858eb6ac7e65a0bb2ccc7",
-    "contracts/evidence/distribution_coverage_assessment.md": "sha256:67e7e96d0d38e493ce864575fb56a312441435f41aa2741c9b00d88191c736bb",
-    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "sha256:7756819a65bd5b7b52a38c95898445098a269a51ecd60c4db6054408fe88ac56",
-    "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json": "sha256:4c24e4e4710dfa4af9d45830a35c503656410369f2c3cd3911589d687474099f",
-    "tests/evidence/test_distribution_coverage_assessment.py": "sha256:80c0c4817550723d10a0f291a72c590010ea1d7c0945cb0dad38bae9627b883d",
-    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "sha256:754ddcfc654677488371b2156f19a73249a651e727eb1a5bdab33b028f142cc7"
+    ".github/workflows/distribution-coverage-assessment.yml": "sha256:05033e05e9d7afc3a44d74292ea6c9966ee04dc5fecd7dce8d4ea17b3be9a669",
+    "contracts/evidence/distribution_coverage_assessment.md": "sha256:1418e3c99dd89f4b212090e3182595faf45177a6b70ad34b2b20db542c6a5dae",
+    "docs/intake/exploratory/distribution-coverage-semantics-source-map.md": "sha256:c4ac9609e8d596439663d035d0445deeea9979e898b243bbdd02af2a9f5c3466",
+    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "sha256:4caf291392a686b2db3c1d6e8790a09f43692e23ea37a1985eff5e279d2897f7",
+    "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json": "sha256:f9433596f3acba0948e9ac78e8ff6231427c975d1f836ffb11737957ba3decee",
+    "tests/evidence/test_distribution_coverage_assessment.py": "sha256:f3b1c12e7285b3bb946edcbac6431efbaa8de5b3af8ad40b0153fa185e746214",
+    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "sha256:b0038bff9ab57a4a315e6da4f4c97b0a5e8298a6ba16952074462c31d5b6aac7"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5",
     "version": "2026-08-10"
   },
-  "prompt_or_contract": "sha256:ab4a693ea24180c2b9f62460a80f85690f5361a2b69e1cbe36df22f51f1fde08",
+  "prompt_or_contract": "sha256:1418e3c99dd89f4b212090e3182595faf45177a6b70ad34b2b20db542c6a5dae",
   "parameters": {
     "seed": null,
     "temperature": null,
     "top_p": null,
     "max_tokens": null,
     "tools_enabled": [
-      "GitHub connector",
-      "Google Drive connector",
-      "local deterministic validation"
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local deterministic Git, JSON Schema, metadata, YAML, and Python validation"
     ]
   },
   "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:eb71cf66c59363580d3e5d277ee32828baf9adfb5ecd17ae4d79d3acee10eadd",
+      "sha256:b548e67909221f273ca3888a11d4230a40b5d76642b287aca4e3916398f47547",
+      "sha256:492f345c9e53634e454f6b8d5caacba63fbe2aa833e31d6f4306c9364aaf7ebd",
+      "sha256:9571dcca005fd5a3d17370d312199931e141e100308954feb6ae7386c09160b6",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
     "attached_docs": [
-      "KFM_Full_Atlas_seed_cards.md"
+      "KFM_Full_Atlas_seed_cards.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
     ],
     "evidence_refs": [
-      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-046",
-      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0138",
-      "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
-      "repo:docs/kfm_full_atlas_seed_cards.md@9e76413313b8529091d01be6132d6e987e3f9fae",
-      "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#kfm-triad-046",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-30-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/domains/flora/usda_plants_distribution_snapshot.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/evidence/non_detection_support_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/source/source_record_absence_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     ]
   },
   "truth_labels": {
-    ".github/workflows/distribution-coverage-assessment.yml": "PROPOSED",
+    ".github/workflows/distribution-coverage-assessment.yml": "CONFIRMED",
     "contracts/evidence/distribution_coverage_assessment.md": "PROPOSED",
-    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "PROPOSED",
+    "docs/intake/exploratory/distribution-coverage-semantics-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "CONFIRMED",
     "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json": "PROPOSED",
-    "tests/evidence/test_distribution_coverage_assessment.py": "PROPOSED",
-    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "PROPOSED"
+    "tests/evidence/test_distribution_coverage_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "CONFIRMED"
   },
   "validation_gates": [
-    {
-      "gate": "focused-pytest",
-      "outcome": "PASS",
-      "reason": "Nine deterministic focused tests passed locally."
-    },
-    {
-      "gate": "fixture-matrix",
-      "outcome": "PASS",
-      "reason": "Fifteen synthetic positive and negative cases produced the expected finite outcomes."
-    },
-    {
-      "gate": "schema-check",
-      "outcome": "PASS",
-      "reason": "The Draft 2020-12 assessment schema passed schema validation."
-    },
-    {
-      "gate": "workflow-yaml-parse",
-      "outcome": "PASS",
-      "reason": "The read-only path-scoped workflow parsed locally."
-    },
-    {
-      "gate": "runtime-domain-adoption",
-      "outcome": "SKIPPED",
-      "reason": "No domain source, connector, runtime, policy, map layer, or evidence lifecycle was changed."
-    },
-    {
-      "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "Hosted CI begins after the draft pull request is opened."
-    },
-    {
-      "gate": "human-review",
-      "outcome": "SKIPPED",
-      "reason": "Human evidence, domain, spatial, sensitivity, and release review remain pending."
-    }
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-pytest-suite", "outcome": "PASS", "reason": "8 deterministic focused tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "20 exact cases passed across eight coherent finite states and ten denial cases."},
+    {"gate": "adjacent-contract-regressions", "outcome": "PASS", "reason": "29 existing USDA PLANTS, non-detection, and source-record-absence tests plus 43 subtests passed."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both new metadata blocks passed the repository required profile."},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
   ],
   "policy_decisions": [
-    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   ],
   "citations": [
-    {
-      "id": "gdrive:full-atlas-triad-046",
-      "validated": true,
-      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-046"
-    },
-    {
-      "id": "gdrive:full-atlas-candidate-0138",
-      "validated": true,
-      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0138"
-    },
-    {
-      "id": "repo:new-ideas-4-30-source-map",
-      "validated": true,
-      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae"
-    },
-    {
-      "id": "repo:directory-rules",
-      "validated": true,
-      "evidence_ref": "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
-    }
+    {"id": "google-drive-full-atlas-corpus-location", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "full-atlas-distribution-coverage-triad", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#kfm-triad-046"},
+    {"id": "new-ideas-distribution-gap", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-30-source-map.md"},
+    {"id": "existing-usda-distribution-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/domains/flora/usda_plants_distribution_snapshot.md"},
+    {"id": "existing-nondetection-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/evidence/non_detection_support_assessment.md"},
+    {"id": "existing-source-record-absence-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/source/source_record_absence_assessment.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
   ],
   "human_review": {
     "reviewer_ids": [],
@@ -122,12 +100,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-10T14:54:15Z",
-  "emitter": "OpenAI Codex via ChatGPT Work",
+  "created_at": "2026-08-10T15:10:22Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
   "links": {
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-first distribution and coverage proposal from Full Atlas triad KFM-TRIAD-046; coherent validation remains HOLD and cannot establish biological presence, absence, abundance, source admission, or publication authority."
+  "notes": "Fixture-only DistributionCoverageAssessmentCandidate packet derived from Full Atlas KFM-TRIAD-046 and KFM-CAND-0138 after current-main collision review. It preserves existing USDA PLANTS distribution, sampling non-detection, and source-record-absence responsibilities while adding a common finite interpretation seam. It performs no retrieval, source activation, distribution assertion about real data, geography-authority selection, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
 }

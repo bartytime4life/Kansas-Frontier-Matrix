@@ -1,0 +1,26 @@
+{
+  "profile": "kfm.explorer.provenance-citations.public-safe.v1",
+  "panel_id": "kfm:provenance-citations:synthetic:soil-001",
+  "outcome": "ANSWER",
+  "reason_code": "CITATIONS_AVAILABLE",
+  "title": "Provenance citations",
+  "activity_ref": "kfm://prov/activity/synthetic/citations-001",
+  "citations": [
+    {
+      "citation_id": "kfm:citation:synthetic:doi-001",
+      "label": "Synthetic soil synthesis",
+      "href": "https://doi.org/10.1234/kfm.synthetic.001",
+      "doi": "10.1234/kfm.synthetic.001",
+      "evidence_ref": "kfm://evidence/synthetic/source-001"
+    },
+    {
+      "citation_id": "kfm:citation:synthetic:notes-001",
+      "label": "Synthetic source notes",
+      "href": "https://example.org/kfm/source-notes/001",
+      "doi": null,
+      "evidence_ref": "kfm://evidence/synthetic/source-002"
+    }
+  ],
+  "republication_note_code": "KFM_DERIVED_REPUBLICATION",
+  "release_manifest_ref": "kfm://release/synthetic/manifest-001"
+}

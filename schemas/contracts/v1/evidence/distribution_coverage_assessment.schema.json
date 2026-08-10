@@ -1,153 +1,98 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json",
-  "title": "DistributionCoverageAssessment",
-  "description": "Fixture-first composite that preserves one source-native distribution row and derives a bounded coverage decision without treating missingness as absence.",
+  "title": "DistributionCoverageAssessmentCandidate",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "object_type",
-    "schema_version",
-    "profile",
-    "assessment_id",
-    "subject_ref",
-    "source_assertion",
-    "geography_binding",
-    "conflict_assertion_refs",
-    "coverage_assessment",
-    "evaluated_at",
-    "governance",
-    "spec_hash"
+    "object_type", "schema_version", "profile", "assessment_id", "subject_ref",
+    "source_descriptor_ref", "source_descriptor_version", "vocabulary_ref",
+    "geography_binding", "coverage_assessment", "distribution_assertion",
+    "governance", "spec_hash"
   ],
   "properties": {
-    "object_type": {"const": "DistributionCoverageAssessment"},
-    "schema_version": {"const": "0.1.0"},
-    "profile": {"const": "kfm.evidence.distribution-coverage.fixture.v1"},
-    "assessment_id": {"type": "string", "pattern": "^kfm:distribution-coverage:[a-f0-9]{64}$"},
+    "object_type": {"const": "DistributionCoverageAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "fixture-only-distribution-coverage-v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:distribution-coverage:[0-9a-f]{64}$"},
     "subject_ref": {"$ref": "#/$defs/ref"},
-    "source_assertion": {"$ref": "#/$defs/source_assertion"},
+    "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+    "source_descriptor_version": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"},
+    "vocabulary_ref": {"const": "kfm://vocabulary/distribution-status/v1"},
     "geography_binding": {"$ref": "#/$defs/geography_binding"},
-    "conflict_assertion_refs": {
-      "type": "array",
-      "maxItems": 20,
-      "uniqueItems": true,
-      "items": {"$ref": "#/$defs/ref"}
-    },
     "coverage_assessment": {"$ref": "#/$defs/coverage_assessment"},
-    "evaluated_at": {"type": "string", "format": "date-time"},
+    "distribution_assertion": {"$ref": "#/$defs/distribution_assertion"},
     "governance": {"$ref": "#/$defs/governance"},
     "spec_hash": {"$ref": "#/$defs/sha256"}
   },
   "$defs": {
-    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
-    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
-    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
-    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
-    "nullable_time": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
-    "nullable_status": {"oneOf": [{"type": "string", "minLength": 1, "maxLength": 120}, {"type": "null"}]},
-    "source_assertion": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "assertion_ref",
-        "source_ref",
-        "source_record_ref",
-        "source_vocabulary_ref",
-        "source_vocabulary_version",
-        "source_native_status",
-        "row_state",
-        "source_valid_from",
-        "source_valid_to",
-        "first_observed_at",
-        "first_observed_support_ref",
-        "supersedes_assertion_ref",
-        "evidence_bundle_refs"
-      ],
-      "properties": {
-        "assertion_ref": {"$ref": "#/$defs/ref"},
-        "source_ref": {"$ref": "#/$defs/ref"},
-        "source_record_ref": {"$ref": "#/$defs/nullable_ref"},
-        "source_vocabulary_ref": {"$ref": "#/$defs/ref"},
-        "source_vocabulary_version": {"type": "string", "minLength": 1, "maxLength": 80},
-        "source_native_status": {"$ref": "#/$defs/nullable_status"},
-        "row_state": {"enum": ["PRESENT", "EXPLICITLY_ABSENT", "NOT_ASSESSED", "UNKNOWN", "SUPPRESSED", "STALE", "MISSING_ROW"]},
-        "source_valid_from": {"$ref": "#/$defs/nullable_time"},
-        "source_valid_to": {"$ref": "#/$defs/nullable_time"},
-        "first_observed_at": {"$ref": "#/$defs/nullable_time"},
-        "first_observed_support_ref": {"$ref": "#/$defs/nullable_ref"},
-        "supersedes_assertion_ref": {"$ref": "#/$defs/nullable_ref"},
-        "evidence_bundle_refs": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 20,
-          "uniqueItems": true,
-          "items": {"$ref": "#/$defs/ref"}
-        }
-      }
+    "ref": {"type": "string", "minLength": 8, "maxLength": 512, "pattern": "^(kfm|urn):[^\\s]+$"},
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "nullable_time": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array", "maxItems": 32, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "code_array": {
+      "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,95}$"}
     },
     "geography_binding": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "source_geography_ref",
-        "canonical_geography_ref",
-        "geography_authority_ref",
-        "boundary_version",
-        "binding_method",
-        "fips_code",
-        "crosswalk_ref",
-        "boundary_relation",
-        "geometry_digest"
-      ],
+      "type": "object", "additionalProperties": false,
+      "required": ["geography_ref", "geography_type", "geography_version_ref", "geography_digest", "boundary_crosswalk_ref", "boundary_relation"],
       "properties": {
-        "source_geography_ref": {"$ref": "#/$defs/ref"},
-        "canonical_geography_ref": {"$ref": "#/$defs/ref"},
-        "geography_authority_ref": {"$ref": "#/$defs/ref"},
-        "boundary_version": {"type": "string", "minLength": 1, "maxLength": 80},
-        "binding_method": {"enum": ["FIPS", "BOUNDARY_CROSSWALK", "SOURCE_NATIVE"]},
-        "fips_code": {"oneOf": [{"type": "string", "pattern": "^[0-9]{5}$"}, {"type": "null"}]},
-        "crosswalk_ref": {"$ref": "#/$defs/nullable_ref"},
-        "boundary_relation": {"enum": ["EXACT", "CROSSWALKED", "CHANGED", "UNRESOLVED"]},
-        "geometry_digest": {"$ref": "#/$defs/sha256"}
+        "geography_ref": {"$ref": "#/$defs/ref"},
+        "geography_type": {"enum": ["COUNTY", "BOUNDARY", "GRID_CELL", "AGGREGATE", "SUPPRESSED"]},
+        "geography_version_ref": {"$ref": "#/$defs/ref"},
+        "geography_digest": {"$ref": "#/$defs/sha256"},
+        "boundary_crosswalk_ref": {"$ref": "#/$defs/nullable_ref"},
+        "boundary_relation": {"enum": ["EXACT", "CROSSWALKED", "SUPERSEDED", "UNRESOLVED", "WITHHELD"]}
       }
     },
     "coverage_assessment": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["coverage_state", "decision", "statement_scope", "reason_codes", "obligations"],
+      "type": "object", "additionalProperties": false,
+      "required": ["source_row_state", "assessment_scope", "subject_in_scope", "coverage_current", "disclosure_state", "source_native_status", "mapping_basis", "coverage_effort_evidence_refs", "missing_row_policy", "assessed_at"],
       "properties": {
-        "coverage_state": {"enum": ["ASSESSED", "NOT_ASSESSED", "UNKNOWN", "SUPPRESSED", "STALE", "MISSING_ROW", "GEOGRAPHY_UNRESOLVED", "CONFLICTED"]},
+        "source_row_state": {"enum": ["PRESENT", "MISSING"]},
+        "assessment_scope": {"enum": ["COMPLETE", "PARTIAL", "NOT_DECLARED"]},
+        "subject_in_scope": {"type": "boolean"},
+        "coverage_current": {"type": "boolean"},
+        "disclosure_state": {"enum": ["PUBLIC_SAFE", "SUPPRESSED"]},
+        "source_native_status": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 128}, {"type": "null"}]},
+        "mapping_basis": {"enum": ["EXPLICIT_PRESENT", "EXPLICIT_ABSENT", "NO_EXPLICIT_STATUS"]},
+        "coverage_effort_evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "missing_row_policy": {"const": "NO_ROW_IS_UNKNOWN_NOT_ABSENCE"},
+        "assessed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "distribution_assertion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "asserted_at", "valid_from", "valid_to", "first_observed", "evidence_refs", "conflicting_assertion_refs", "decision", "reason_codes", "obligations"],
+      "properties": {
+        "status": {"enum": ["PRESENT", "EXPLICITLY_ABSENT", "NOT_ASSESSED", "UNKNOWN", "SUPPRESSED", "DISPUTED", "STALE", "OUT_OF_SCOPE"]},
+        "asserted_at": {"type": "string", "format": "date-time"},
+        "valid_from": {"$ref": "#/$defs/nullable_time"},
+        "valid_to": {"$ref": "#/$defs/nullable_time"},
+        "first_observed": {"type": "null"},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "conflicting_assertion_refs": {"$ref": "#/$defs/ref_array"},
         "decision": {"enum": ["ANSWER", "ABSTAIN", "DENY"]},
-        "statement_scope": {"const": "PINNED_SOURCE_GEOGRAPHY_VERSION_AND_TIME"},
-        "reason_codes": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 20,
-          "uniqueItems": true,
-          "items": {"$ref": "#/$defs/code"}
-        },
-        "obligations": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 20,
-          "uniqueItems": true,
-          "items": {"$ref": "#/$defs/code"}
-        }
+        "reason_codes": {"$ref": "#/$defs/code_array"},
+        "obligations": {"$ref": "#/$defs/code_array"}
       }
     },
     "governance": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["fixture_only", "no_network", "lifecycle_write", "truth_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"],
+      "type": "object", "additionalProperties": false,
+      "required": ["source_admitted", "evidence_resolved", "policy_evaluated", "review_approved", "release_authorized", "publication_authorized", "public_use_authorized"],
       "properties": {
-        "fixture_only": {"const": true},
-        "no_network": {"const": true},
-        "lifecycle_write": {"const": false},
-        "truth_authority": {"const": false},
-        "policy_authority": {"const": false},
-        "review_authority": {"const": false},
-        "release_authority": {"const": false},
-        "publication_authority": {"const": false}
+        "source_admitted": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_authorized": {"const": false}
       }
     }
   }

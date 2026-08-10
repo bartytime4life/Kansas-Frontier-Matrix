@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.explorer.provenance-citations.public-safe.v1",
+  "panel_id": "kfm:provenance-citations:synthetic:error",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "title": null,
+  "activity_ref": null,
+  "citations": [],
+  "republication_note_code": null,
+  "release_manifest_ref": null
+}

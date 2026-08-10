@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate fixture-only distribution and coverage assessments.
+"""Validate fixture-only distribution and coverage assessment candidates.
 
-The validator is deterministic and local. A coherent candidate returns HOLD,
-never ALLOW; it creates no occurrence or absence fact, source, policy, review,
-release, publication, or public-use authority.
+Validation is deterministic and local. A coherent candidate returns HOLD,
+never ALLOW; it creates no distribution fact, source admission, evidence,
+geography authority, policy, review, release, publication, or public-use right.
 """
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ if str(HASHING_SRC) not in sys.path:
 from hashing import (  # noqa: E402
     CanonicalizationFailure,
     JsonInputError,
+    canonicalize_json,
     compute_spec_hash,
     load_json_file,
 )
@@ -34,7 +35,7 @@ from hashing import (  # noqa: E402
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json"
 IDENTITY_PREFIX = "kfm:distribution-coverage:"
-SCOPE = "distribution-coverage-fixture-only-v1"
+SCOPE = "distribution-coverage-assessment-fixture-only-v1"
 
 
 @dataclass(frozen=True, order=True)
@@ -53,19 +54,15 @@ class Result:
         return self.outcome == "HOLD" and not self.findings
 
 
-DERIVED: dict[str, tuple[str, str, str, str]] = {
-    "PRESENT": ("ASSESSED", "ANSWER", "SOURCE_REPORTS_PRESENT", "DO_NOT_INFER_ABUNDANCE"),
-    "EXPLICITLY_ABSENT": (
-        "ASSESSED",
-        "ANSWER",
-        "SOURCE_REPORTS_EXPLICITLY_ABSENT",
-        "DO_NOT_INFER_TRUE_ABSENCE",
-    ),
-    "NOT_ASSESSED": ("NOT_ASSESSED", "ABSTAIN", "SOURCE_NOT_ASSESSED", "PRESERVE_NOT_ASSESSED"),
-    "UNKNOWN": ("UNKNOWN", "ABSTAIN", "SOURCE_STATUS_UNKNOWN", "RESOLVE_SOURCE_STATUS"),
-    "SUPPRESSED": ("SUPPRESSED", "DENY", "SOURCE_STATUS_SUPPRESSED", "WITHHOLD_RESTRICTED_DETAIL"),
-    "STALE": ("STALE", "ABSTAIN", "SOURCE_COVERAGE_STALE", "REFRESH_BEFORE_CONSEQUENTIAL_USE"),
-    "MISSING_ROW": ("MISSING_ROW", "ABSTAIN", "SOURCE_ROW_MISSING", "DO_NOT_TREAT_MISSING_AS_ABSENCE"),
+DERIVED: dict[str, tuple[str, str, str]] = {
+    "PRESENT": ("ANSWER", "SOURCE_REPORTS_PRESENT", "DO_NOT_INFER_ABUNDANCE"),
+    "EXPLICITLY_ABSENT": ("ANSWER", "SOURCE_EXPLICITLY_REPORTS_ABSENT", "DO_NOT_GENERALIZE_ABSENCE"),
+    "NOT_ASSESSED": ("ABSTAIN", "COVERAGE_NOT_ASSESSED", "ASSESS_COVERAGE"),
+    "UNKNOWN": ("ABSTAIN", "DISTRIBUTION_UNKNOWN", "DO_NOT_INFER_ABSENCE"),
+    "SUPPRESSED": ("DENY", "DISTRIBUTION_SUPPRESSED", "PRESERVE_SUPPRESSION"),
+    "DISPUTED": ("ABSTAIN", "DISTRIBUTION_DISPUTED", "RECONCILE_CONFLICTS"),
+    "STALE": ("ABSTAIN", "COVERAGE_STALE", "REFRESH_COVERAGE"),
+    "OUT_OF_SCOPE": ("ABSTAIN", "SUBJECT_OUT_OF_SCOPE", "DO_NOT_EXTEND_SCOPE"),
 }
 
 
@@ -105,36 +102,48 @@ def _time(value: object) -> datetime | None:
     return parsed if parsed.tzinfo is not None else None
 
 
-def _canonical_unique_strings(value: object) -> bool:
-    return (
-        isinstance(value, list)
-        and all(isinstance(item, str) for item in value)
-        and value == sorted(set(value))
-    )
+def _is_sorted_unique(values: object) -> bool:
+    if not isinstance(values, list):
+        return False
+    keys = [canonicalize_json(value) for value in values]
+    return keys == sorted(keys) and len(keys) == len(set(keys))
 
 
-def _derive(candidate: Mapping[str, Any]) -> tuple[str, str, str, str]:
-    source = _mapping(candidate.get("source_assertion"))
+def derive(candidate: Mapping[str, Any]) -> tuple[str, str, str, str]:
     geography = _mapping(candidate.get("geography_binding"))
-    conflicts = candidate.get("conflict_assertion_refs")
-    if isinstance(conflicts, list) and conflicts:
-        return (
-            "CONFLICTED",
-            "ABSTAIN",
-            "SOURCE_CONFLICT_UNRESOLVED",
-            "RESOLVE_SOURCE_CONFLICT",
-        )
-    if geography.get("boundary_relation") in {"CHANGED", "UNRESOLVED"}:
-        return (
-            "GEOGRAPHY_UNRESOLVED",
-            "ABSTAIN",
-            "GEOGRAPHY_VERSION_UNRESOLVED",
-            "RESOLVE_GEOGRAPHY_BINDING",
-        )
-    return DERIVED.get(
-        str(source.get("row_state")),
-        ("UNKNOWN", "ABSTAIN", "SOURCE_STATUS_UNKNOWN", "RESOLVE_SOURCE_STATUS"),
-    )
+    coverage = _mapping(candidate.get("coverage_assessment"))
+    assertion = _mapping(candidate.get("distribution_assertion"))
+
+    relation = geography.get("boundary_relation")
+    if coverage.get("disclosure_state") == "SUPPRESSED" or relation == "WITHHELD":
+        status = "SUPPRESSED"
+    elif coverage.get("subject_in_scope") is False:
+        status = "OUT_OF_SCOPE"
+    elif coverage.get("source_row_state") == "MISSING":
+        return "UNKNOWN", "ABSTAIN", "SOURCE_ROW_MISSING", "DO_NOT_INFER_ABSENCE"
+    elif relation == "UNRESOLVED":
+        return "UNKNOWN", "ABSTAIN", "GEOGRAPHY_BINDING_UNRESOLVED", "RESOLVE_GEOGRAPHY_BINDING"
+    elif coverage.get("coverage_current") is False or relation == "SUPERSEDED":
+        status = "STALE"
+    elif assertion.get("conflicting_assertion_refs"):
+        status = "DISPUTED"
+    elif coverage.get("assessment_scope") == "NOT_DECLARED":
+        status = "NOT_ASSESSED"
+    elif coverage.get("mapping_basis") == "EXPLICIT_PRESENT":
+        status = "PRESENT"
+    elif (
+        coverage.get("mapping_basis") == "EXPLICIT_ABSENT"
+        and coverage.get("assessment_scope") == "COMPLETE"
+        and bool(coverage.get("coverage_effort_evidence_refs"))
+    ):
+        status = "EXPLICITLY_ABSENT"
+    elif coverage.get("mapping_basis") == "EXPLICIT_ABSENT":
+        status = "NOT_ASSESSED"
+    else:
+        status = "UNKNOWN"
+
+    decision, reason, obligation = DERIVED[status]
+    return status, decision, reason, obligation
 
 
 def validate_document(candidate: object) -> Result:
@@ -148,116 +157,91 @@ def validate_document(candidate: object) -> Result:
         )
     except (JsonInputError, ValueError, TypeError, RecursionError):
         return Result("DENY", (Finding("SCHEMA_UNAVAILABLE", "/"),))
-    findings.update(Finding("SCHEMA_INVALID", _pointer(tuple(error.absolute_path))) for error in errors[:100])
+    findings.update(
+        Finding("SCHEMA_INVALID", _pointer(tuple(error.absolute_path)))
+        for error in errors[:100]
+    )
     if errors or not isinstance(candidate, Mapping):
         return Result("DENY", tuple(sorted(findings)))
 
     try:
         expected_hash = compute_spec_hash(_identity_projection(candidate))
     except (CanonicalizationFailure, TypeError, ValueError):
-        findings.add(Finding("CANONICALIZATION_ERROR", "/"))
-        return Result("DENY", tuple(sorted(findings)))
+        return Result("DENY", (Finding("CANONICALIZATION_ERROR", "/"),))
     expected_id = IDENTITY_PREFIX + expected_hash.removeprefix("sha256:")
     if candidate.get("spec_hash") != expected_hash:
         findings.add(Finding("SPEC_HASH_MISMATCH", "/spec_hash"))
     if candidate.get("assessment_id") != expected_id:
         findings.add(Finding("ASSESSMENT_ID_MISMATCH", "/assessment_id"))
 
-    source = _mapping(candidate.get("source_assertion"))
+    descriptor_ref = candidate.get("source_descriptor_ref")
+    descriptor_version = candidate.get("source_descriptor_version")
+    if (
+        not isinstance(descriptor_ref, str)
+        or not isinstance(descriptor_version, str)
+        or not descriptor_ref.endswith("@" + descriptor_version)
+    ):
+        findings.add(Finding("SOURCE_DESCRIPTOR_VERSION_MISMATCH", "/source_descriptor_ref"))
+
     geography = _mapping(candidate.get("geography_binding"))
-    coverage = _mapping(candidate.get("coverage_assessment"))
-
-    row_state = source.get("row_state")
-    record_ref = source.get("source_record_ref")
-    native_status = source.get("source_native_status")
-    if row_state == "MISSING_ROW":
-        if record_ref is not None:
-            findings.add(Finding("MISSING_ROW_HAS_RECORD_REF", "/source_assertion/source_record_ref"))
-        if native_status is not None:
-            findings.add(Finding("MISSING_ROW_HAS_NATIVE_STATUS", "/source_assertion/source_native_status"))
-    else:
-        if record_ref is None:
-            findings.add(Finding("SOURCE_RECORD_REF_REQUIRED", "/source_assertion/source_record_ref"))
-        if native_status is None:
-            findings.add(Finding("SOURCE_NATIVE_STATUS_REQUIRED", "/source_assertion/source_native_status"))
-
-    first_observed = source.get("first_observed_at")
-    first_support = source.get("first_observed_support_ref")
-    if first_observed is not None:
-        if row_state != "PRESENT":
-            findings.add(Finding("FIRST_OBSERVED_STATE_UNSUPPORTED", "/source_assertion/first_observed_at"))
-        if first_support is None:
-            findings.add(Finding("FIRST_OBSERVED_SUPPORT_REQUIRED", "/source_assertion/first_observed_support_ref"))
-    elif first_support is not None:
-        findings.add(Finding("FIRST_OBSERVED_TIME_REQUIRED", "/source_assertion/first_observed_at"))
-
-    valid_from = _time(source.get("source_valid_from")) if source.get("source_valid_from") is not None else None
-    valid_to = _time(source.get("source_valid_to")) if source.get("source_valid_to") is not None else None
-    first_time = _time(first_observed) if first_observed is not None else None
-    evaluated = _time(candidate.get("evaluated_at"))
-    if evaluated is None:
-        findings.add(Finding("EVALUATED_TIME_INVALID", "/evaluated_at"))
-    if source.get("source_valid_from") is not None and valid_from is None:
-        findings.add(Finding("SOURCE_VALID_FROM_INVALID", "/source_assertion/source_valid_from"))
-    if source.get("source_valid_to") is not None and valid_to is None:
-        findings.add(Finding("SOURCE_VALID_TO_INVALID", "/source_assertion/source_valid_to"))
-    if first_observed is not None and first_time is None:
-        findings.add(Finding("FIRST_OBSERVED_TIME_INVALID", "/source_assertion/first_observed_at"))
-    if valid_from is not None and valid_to is not None and valid_from > valid_to:
-        findings.add(Finding("SOURCE_VALID_INTERVAL_INVALID", "/source_assertion"))
-    if valid_to is not None and evaluated is not None and valid_to > evaluated:
-        findings.add(Finding("SOURCE_VALIDITY_AFTER_EVALUATION", "/evaluated_at"))
-    if first_time is not None and evaluated is not None and first_time > evaluated:
-        findings.add(Finding("FIRST_OBSERVED_AFTER_EVALUATION", "/source_assertion/first_observed_at"))
-
-    assertion_ref = source.get("assertion_ref")
-    supersedes = source.get("supersedes_assertion_ref")
-    if supersedes is not None and supersedes == assertion_ref:
-        findings.add(Finding("SELF_SUPERSESSION", "/source_assertion/supersedes_assertion_ref"))
-    evidence_refs = source.get("evidence_bundle_refs")
-    if not _canonical_unique_strings(evidence_refs):
-        findings.add(Finding("EVIDENCE_REFS_NOT_CANONICAL", "/source_assertion/evidence_bundle_refs"))
-    conflicts = candidate.get("conflict_assertion_refs")
-    if not _canonical_unique_strings(conflicts):
-        findings.add(Finding("CONFLICT_REFS_NOT_CANONICAL", "/conflict_assertion_refs"))
-    elif isinstance(conflicts, list) and assertion_ref in conflicts:
-        findings.add(Finding("SELF_CONFLICT", "/conflict_assertion_refs"))
-
-    method = geography.get("binding_method")
     relation = geography.get("boundary_relation")
-    fips_code = geography.get("fips_code")
-    crosswalk_ref = geography.get("crosswalk_ref")
-    if method == "FIPS":
-        if fips_code is None:
-            findings.add(Finding("FIPS_CODE_REQUIRED", "/geography_binding/fips_code"))
-        if crosswalk_ref is not None:
-            findings.add(Finding("FIPS_CROSSWALK_UNEXPECTED", "/geography_binding/crosswalk_ref"))
-        if relation == "CROSSWALKED":
-            findings.add(Finding("FIPS_RELATION_INVALID", "/geography_binding/boundary_relation"))
-    elif method == "BOUNDARY_CROSSWALK":
-        if crosswalk_ref is None:
-            findings.add(Finding("CROSSWALK_REF_REQUIRED", "/geography_binding/crosswalk_ref"))
-        if fips_code is not None:
-            findings.add(Finding("CROSSWALK_FIPS_UNEXPECTED", "/geography_binding/fips_code"))
-        if relation != "CROSSWALKED":
-            findings.add(Finding("CROSSWALK_RELATION_REQUIRED", "/geography_binding/boundary_relation"))
-    elif method == "SOURCE_NATIVE":
-        if geography.get("source_geography_ref") != geography.get("canonical_geography_ref"):
-            findings.add(Finding("SOURCE_NATIVE_GEOGRAPHY_MISMATCH", "/geography_binding"))
-        if fips_code is not None or crosswalk_ref is not None or relation != "EXACT":
-            findings.add(Finding("SOURCE_NATIVE_BINDING_INVALID", "/geography_binding"))
+    crosswalk = geography.get("boundary_crosswalk_ref")
+    if relation in {"CROSSWALKED", "SUPERSEDED"} and crosswalk is None:
+        findings.add(Finding("GEOGRAPHY_CROSSWALK_REQUIRED", "/geography_binding/boundary_crosswalk_ref"))
+    if relation == "EXACT" and crosswalk is not None:
+        findings.add(Finding("GEOGRAPHY_CROSSWALK_UNEXPECTED", "/geography_binding/boundary_crosswalk_ref"))
+    if relation == "WITHHELD" and geography.get("geography_type") != "SUPPRESSED":
+        findings.add(Finding("SUPPRESSED_GEOGRAPHY_TYPE_REQUIRED", "/geography_binding/geography_type"))
 
-    derived_state, derived_decision, reason, obligation = _derive(candidate)
-    if coverage.get("coverage_state") != derived_state:
-        findings.add(Finding("COVERAGE_STATE_MISMATCH", "/coverage_assessment/coverage_state"))
-    if coverage.get("decision") != derived_decision:
-        findings.add(Finding("COVERAGE_DECISION_MISMATCH", "/coverage_assessment/decision"))
-    reasons = coverage.get("reason_codes")
-    obligations = coverage.get("obligations")
+    coverage = _mapping(candidate.get("coverage_assessment"))
+    native_status = coverage.get("source_native_status")
+    mapping_basis = coverage.get("mapping_basis")
+    if coverage.get("source_row_state") == "MISSING" and (
+        native_status is not None or mapping_basis != "NO_EXPLICIT_STATUS"
+    ):
+        findings.add(Finding("MISSING_ROW_NATIVE_STATUS_FORBIDDEN", "/coverage_assessment"))
+    if mapping_basis == "NO_EXPLICIT_STATUS" and native_status is not None:
+        findings.add(Finding("SOURCE_NATIVE_STATUS_MISMATCH", "/coverage_assessment/source_native_status"))
+    if mapping_basis in {"EXPLICIT_PRESENT", "EXPLICIT_ABSENT"} and native_status is None:
+        findings.add(Finding("SOURCE_NATIVE_STATUS_REQUIRED", "/coverage_assessment/source_native_status"))
+
+    assertion = _mapping(candidate.get("distribution_assertion"))
+    for key, values in (
+        ("coverage_effort_evidence_refs", coverage.get("coverage_effort_evidence_refs")),
+        ("evidence_refs", assertion.get("evidence_refs")),
+        ("conflicting_assertion_refs", assertion.get("conflicting_assertion_refs")),
+        ("reason_codes", assertion.get("reason_codes")),
+        ("obligations", assertion.get("obligations")),
+    ):
+        if not _is_sorted_unique(values):
+            parent = "coverage_assessment" if key == "coverage_effort_evidence_refs" else "distribution_assertion"
+            findings.add(Finding("NORMALIZED_COLLECTION_REQUIRED", f"/{parent}/{key}"))
+
+    asserted = _time(assertion.get("asserted_at"))
+    assessed = _time(coverage.get("assessed_at"))
+    valid_from = _time(assertion.get("valid_from")) if assertion.get("valid_from") is not None else None
+    valid_to = _time(assertion.get("valid_to")) if assertion.get("valid_to") is not None else None
+    if asserted is None or assessed is None or asserted > assessed:
+        findings.add(Finding("DISTRIBUTION_TIME_INVALID", "/distribution_assertion/asserted_at"))
+    if valid_from is not None and valid_to is not None and valid_from > valid_to:
+        findings.add(Finding("DISTRIBUTION_TIME_INVALID", "/distribution_assertion/valid_from"))
+
+    status, decision, reason, obligation = derive(candidate)
+    if assertion.get("status") != status:
+        findings.add(Finding("DISTRIBUTION_STATUS_MISMATCH", "/distribution_assertion/status"))
+    if assertion.get("decision") != decision:
+        findings.add(Finding("DISTRIBUTION_DECISION_MISMATCH", "/distribution_assertion/decision"))
+    reasons = assertion.get("reason_codes")
+    obligations = assertion.get("obligations")
     if not isinstance(reasons, list) or reason not in reasons:
-        findings.add(Finding("COVERAGE_REASON_REQUIRED", "/coverage_assessment/reason_codes"))
+        findings.add(Finding("DISTRIBUTION_REASON_REQUIRED", "/distribution_assertion/reason_codes"))
     if not isinstance(obligations, list) or obligation not in obligations:
-        findings.add(Finding("COVERAGE_OBLIGATION_REQUIRED", "/coverage_assessment/obligations"))
+        findings.add(Finding("DISTRIBUTION_OBLIGATION_REQUIRED", "/distribution_assertion/obligations"))
+
+    if status in {"PRESENT", "EXPLICITLY_ABSENT"} and not assertion.get("evidence_refs"):
+        findings.add(Finding("DISTRIBUTION_EVIDENCE_REQUIRED", "/distribution_assertion/evidence_refs"))
+    if status == "DISPUTED" and not assertion.get("conflicting_assertion_refs"):
+        findings.add(Finding("DISTRIBUTION_CONFLICT_REQUIRED", "/distribution_assertion/conflicting_assertion_refs"))
 
     return Result("DENY" if findings else "HOLD", tuple(sorted(findings)))
 
@@ -317,13 +301,12 @@ def fixture_profile(path: Path = CASES_PATH) -> int:
     except (JsonInputError, ValueError, TypeError, KeyError, CanonicalizationFailure):
         print(json.dumps({"scope": SCOPE, "status": "FAIL", "reason": "FIXTURE_MATRIX_INVALID"}, sort_keys=True, separators=(",", ":")))
         return 1
-    failures = []
+    failures: list[int] = []
     for index, (_candidate, result, expected_outcome, expected_findings) in enumerate(cases):
         codes = {finding.code for finding in result.findings}
         if result.outcome != expected_outcome or not set(expected_findings).issubset(codes):
             failures.append(index)
-    payload = {"cases": len(cases), "failed_case_indexes": failures, "scope": SCOPE, "status": "FAIL" if failures else "PASS"}
-    print(json.dumps(payload, sort_keys=True, separators=(",", ":")))
+    print(json.dumps({"cases": len(cases), "failed_case_indexes": failures, "scope": SCOPE, "status": "FAIL" if failures else "PASS"}, sort_keys=True, separators=(",", ":")))
     return 1 if failures else 0
 
 
@@ -342,17 +325,16 @@ def run(argv: Sequence[str] | None = None) -> int:
     if args.fixtures:
         return fixture_profile()
     if not args.files:
-        parser.error("provide assessment files or --fixtures")
+        parser.error("provide candidate files or --fixtures")
     rc = 0
     for path in sorted(args.files):
         result = validate_file(path)
-        payload = {
+        print(json.dumps({
             "file": _display(path),
             "findings": [{"code": finding.code, "path": finding.path} for finding in result.findings],
             "outcome": result.outcome,
             "scope": SCOPE,
-        }
-        print(json.dumps(payload, sort_keys=True, separators=(",", ":")))
+        }, sort_keys=True, separators=(",", ":")))
         rc = max(rc, 0 if result.coherent else 1)
     return rc
 

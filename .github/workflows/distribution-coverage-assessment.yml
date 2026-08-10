@@ -1,4 +1,4 @@
-# Validate fixture-first distribution and coverage assessments.
+# Validate the fixture-only distribution and coverage assessment candidate.
 name: distribution-coverage-assessment
 
 "on":
@@ -7,31 +7,33 @@ name: distribution-coverage-assessment
       - ".github/workflows/distribution-coverage-assessment.yml"
       - "contracts/evidence/distribution_coverage_assessment.md"
       - "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json"
-      - "tools/validators/evidence/validate_distribution_coverage_assessment.py"
       - "fixtures/contracts/v1/evidence/distribution_coverage_assessment/**"
+      - "tools/validators/evidence/validate_distribution_coverage_assessment.py"
       - "tests/evidence/test_distribution_coverage_assessment.py"
-      - "docs/intake/exploratory/new-ideas-4-30-source-map.md"
-      - "docs/kfm_full_atlas_seed_cards.md"
-      - "data/receipts/generated/genrec-distribution-coverage-assessment-*.json"
+      - "docs/intake/exploratory/distribution-coverage-semantics-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-distribution-coverage-assessment-20260810.json"
   push:
     branches: [main]
     paths:
       - ".github/workflows/distribution-coverage-assessment.yml"
       - "contracts/evidence/distribution_coverage_assessment.md"
       - "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json"
-      - "tools/validators/evidence/validate_distribution_coverage_assessment.py"
       - "fixtures/contracts/v1/evidence/distribution_coverage_assessment/**"
+      - "tools/validators/evidence/validate_distribution_coverage_assessment.py"
       - "tests/evidence/test_distribution_coverage_assessment.py"
-      - "docs/intake/exploratory/new-ideas-4-30-source-map.md"
-      - "docs/kfm_full_atlas_seed_cards.md"
-      - "data/receipts/generated/genrec-distribution-coverage-assessment-*.json"
+      - "docs/intake/exploratory/distribution-coverage-semantics-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-distribution-coverage-assessment-20260810.json"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: distribution-coverage-${{ github.workflow }}-${{ github.ref }}
+  group: distribution-coverage-assessment-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -45,9 +47,9 @@ env:
 
 jobs:
   validate:
-    name: validate-distribution-coverage
+    name: validate-distribution-coverage-assessment
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -59,21 +61,25 @@ jobs:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
-      - name: Install declared test dependencies
+      - name: Install declared validation dependencies
         run: python -m pip install -e ".[test]"
-      - name: Run fixture matrix
-        run: python tools/validators/evidence/validate_distribution_coverage_assessment.py --fixtures
-      - name: Run focused tests
-        run: python -m pytest tests/evidence/test_distribution_coverage_assessment.py -q --strict-config --strict-markers
-      - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-distribution-coverage-assessment-20260810.json --repo-root .
+      - name: Run focused deterministic validation
+        run: |
+          python -m py_compile tools/validators/evidence/validate_distribution_coverage_assessment.py tests/evidence/test_distribution_coverage_assessment.py
+          python -m pytest -q tests/evidence/test_distribution_coverage_assessment.py --strict-config --strict-markers
+          python tools/validators/evidence/validate_distribution_coverage_assessment.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-distribution-coverage-assessment-20260810.json \
+            --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
           {
-            echo "### Distribution and coverage assessment"
+            echo "### Distribution coverage assessment candidate"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: synthetic distribution rows, geography bindings, and local validation only."
-            echo "- Boundary: no absence fact, source activation, lifecycle write, release, deployment, or publication."
+            echo "- Scope: fixture-only distribution, coverage, geography-binding, missing-row, suppression, dispute, staleness, and scope semantics."
+            echo "- Boundary: no network, source activation, distribution fact, geography authority, evidence, policy, review, release, deployment, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"

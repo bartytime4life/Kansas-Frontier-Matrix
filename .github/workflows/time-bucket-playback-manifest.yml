@@ -1,0 +1,88 @@
+# Validate the fixture-only time-bucket playback manifest candidate.
+name: time-bucket-playback-manifest
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/time-bucket-playback-manifest.yml"
+      - "contracts/ui/time_bucket_playback_manifest.md"
+      - "schemas/contracts/v1/ui/time_bucket_playback_manifest.schema.json"
+      - "fixtures/contracts/v1/ui/time_bucket_playback_manifest/**"
+      - "tools/validators/ui/validate_time_bucket_playback_manifest.py"
+      - "tests/validators/ui/test_time_bucket_playback_manifest.py"
+      - "docs/intake/exploratory/time-bucket-playback-manifest-source-map.md"
+      - "contracts/ui/camera_path.md"
+      - "contracts/runtime/verified_rendering_resource_envelope.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-time-bucket-playback-manifest-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/time-bucket-playback-manifest.yml"
+      - "contracts/ui/time_bucket_playback_manifest.md"
+      - "schemas/contracts/v1/ui/time_bucket_playback_manifest.schema.json"
+      - "fixtures/contracts/v1/ui/time_bucket_playback_manifest/**"
+      - "tools/validators/ui/validate_time_bucket_playback_manifest.py"
+      - "tests/validators/ui/test_time_bucket_playback_manifest.py"
+      - "docs/intake/exploratory/time-bucket-playback-manifest-source-map.md"
+      - "contracts/ui/camera_path.md"
+      - "contracts/runtime/verified_rendering_resource_envelope.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-time-bucket-playback-manifest-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: time-bucket-playback-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-time-bucket-playback-manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests and fixture replay
+        run: |
+          python -m unittest -v tests.validators.ui.test_time_bucket_playback_manifest
+          python tools/validators/ui/validate_time_bucket_playback_manifest.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-time-bucket-playback-manifest-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### TimeBucketPlaybackManifestCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only renderer-neutral temporal carrier manifest."
+            echo "- Boundary: no playback, worker execution, artifact fetch or verification, evidence resolution, policy, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
