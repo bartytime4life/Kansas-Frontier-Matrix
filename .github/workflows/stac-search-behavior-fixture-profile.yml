@@ -1,0 +1,92 @@
+# Validate the fixture-only STAC search behavior profile.
+# This workflow performs no HTTP request, live catalog discovery/mutation, promotion, release, or publication action.
+name: stac-search-behavior-fixture-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/stac-search-behavior-fixture-profile.yml"
+      - "contracts/data/stac_search_behavior_fixture_profile.md"
+      - "schemas/contracts/v1/data/stac_search_behavior_fixture_profile.schema.json"
+      - "fixtures/contracts/v1/data/stac_search_behavior_fixture_profile/**"
+      - "tools/validators/stac/validate_stac_search_behavior_fixture_profile.py"
+      - "tests/validators/stac/test_stac_search_behavior_fixture_profile.py"
+      - "docs/intake/exploratory/pass-31-stac-search-behavior-fixture-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass31-stac-search-behavior-fixture-profile-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/stac-search-behavior-fixture-profile.yml"
+      - "contracts/data/stac_search_behavior_fixture_profile.md"
+      - "schemas/contracts/v1/data/stac_search_behavior_fixture_profile.schema.json"
+      - "fixtures/contracts/v1/data/stac_search_behavior_fixture_profile/**"
+      - "tools/validators/stac/validate_stac_search_behavior_fixture_profile.py"
+      - "tests/validators/stac/test_stac_search_behavior_fixture_profile.py"
+      - "docs/intake/exploratory/pass-31-stac-search-behavior-fixture-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass31-stac-search-behavior-fixture-profile-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stac-search-behavior-fixture-profile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-stac-search-behavior-fixture-profile:
+    name: validate-stac-search-behavior-fixture-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python -m pip install -e .
+
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators/stac \
+            --pattern 'test_stac_search_behavior_fixture_profile.py' \
+            --verbose
+
+      - name: Replay exact fixture polarity
+        run: python tools/validators/stac/validate_stac_search_behavior_fixture_profile.py --fixtures
+
+      - name: Validate generated authoring receipt integrity
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass31-stac-search-behavior-fixture-profile-20260809.json
+
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### StacSearchBehaviorFixtureProfileCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic bbox/time, fields, stable paging, constraint posture, and deterministic identity."
+            echo "- No HTTP request, live catalog discovery/mutation, server conformance, policy, review, promotion, release, or publication authority is exercised."
+          } >> "$GITHUB_STEP_SUMMARY"
