@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-verified-rendering-resource-envelope-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/verified-rendering-resource-envelope.yml",
+    "contracts/runtime/verified_rendering_resource_envelope.md",
+    "docs/intake/exploratory/verified-rendering-resource-envelope-source-map.md",
+    "fixtures/contracts/v1/runtime/verified_rendering_resource_envelope/cases.json",
+    "schemas/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json",
+    "tests/validators/test_validate_verified_rendering_resource_envelope.py",
+    "tools/validators/runtime/validate_verified_rendering_resource_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/verified-rendering-resource-envelope.yml": "sha256:b5c0e0e85eac33fba383f9110f136593dd5059be3fff9e4462db37614fd55908",
+    "contracts/runtime/verified_rendering_resource_envelope.md": "sha256:019b11edcd92bb3dea98a67a9eb311ac5d0aae0284f0fd4df4fc7e9a9e41dbba",
+    "docs/intake/exploratory/verified-rendering-resource-envelope-source-map.md": "sha256:a21640860347f5fee51c4146755368fd3774fd4d47246277822efb2922c37c7f",
+    "fixtures/contracts/v1/runtime/verified_rendering_resource_envelope/cases.json": "sha256:8dcd7afaaf13a742fb94668a193576b82b314161f0f816dddd65785bd14507d4",
+    "schemas/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json": "sha256:05bb80e5efe755bd9712c996a4a1419d3357a77686673f5527acee78bc2e2dde",
+    "tests/validators/test_validate_verified_rendering_resource_envelope.py": "sha256:bd9d6f4a85234c801aae9608e8d473b4a13e85bc59b460128c7eaa5fa168f825",
+    "tools/validators/runtime/validate_verified_rendering_resource_envelope.py": "sha256:663e461e10c7c6bd2180d290d279fc2421b070685c5abaffa1e5281cce915802"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-09"},
+  "prompt_or_contract": "sha256:019b11edcd92bb3dea98a67a9eb311ac5d0aae0284f0fd4df4fc7e9a9e41dbba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF, schema, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:30827e0a504e3d7efa7015e4af66d5e30c87b545e4a523a4db5c50df4824c3b8",
+      "sha256:b86a579f7584d79103742a83a222c22778d17fd30c8e87fda2c2583a84ea7c47",
+      "sha256:6c6779a6291782305e6544ddc76a4aad2bd82dd9ffc6d08efc800389aaee9b01",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md#kfm-triad-052",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/ui/renderer_capability_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/verifier_capability_portability.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md",
+      "attachment://KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages=11,12,21",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/verified-rendering-resource-envelope.yml": "CONFIRMED",
+    "contracts/runtime/verified_rendering_resource_envelope.md": "PROPOSED",
+    "docs/intake/exploratory/verified-rendering-resource-envelope-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/verified_rendering_resource_envelope/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json": "PROPOSED",
+    "tests/validators/test_validate_verified_rendering_resource_envelope.py": "CONFIRMED",
+    "tools/validators/runtime/validate_verified_rendering_resource_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "10 deterministic tests passed in the isolated authoring worktree."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "23 exact cases passed across all five finite states and validator PASS/DENY polarity."},
+    {"gate": "adjacent-verifier-renderer-tests", "outcome": "PASS", "reason": "19 existing verifier-capability and renderer-capability tests passed."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both new metadata blocks passed the repository required profile."},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "google-drive-full-atlas-corpus-location", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "full-atlas-verified-rendering-triad", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md#kfm-triad-052"},
+    {"id": "existing-renderer-capability-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/ui/renderer_capability_profile.md"},
+    {"id": "existing-verifier-capability-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/verifier_capability_portability.md"},
+    {"id": "existing-pmtiles-attestation-standard", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md"},
+    {"id": "supplied-maplibre-manual-rendered-pages", "validated": true, "evidence_ref": "attachment://KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages=11,12,21"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T03:49:39Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only VerifiedRenderingResourceEnvelope packet derived from Full Atlas KFM-TRIAD-052 and KFM-CAND-0154 through KFM-CAND-0156 after current-main collision review. It validates synthetic worker ordering, chunk accounting, and resource declarations while performing no fetch, byte read, hashing, proof parsing, cryptography, signer authentication, decode, render, release, or publication action."
+}

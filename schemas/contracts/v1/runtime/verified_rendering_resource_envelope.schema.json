@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json",
+  "title": "VerifiedRenderingResourceEnvelopeCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{4,220}$"
+    },
+    "finding_code": {
+      "enum": [
+        "ARTIFACT_DIGEST_MISMATCH",
+        "CHUNK_ACCOUNTING_MISMATCH",
+        "CHUNK_REPLAY_DETECTED",
+        "FALLBACK_PATH_DECLARED",
+        "HASH_CHUNK_BUDGET_EXCEEDED",
+        "REQUIRED_STAGE_MISSING",
+        "RESOURCE_BUDGET_EXCEEDED",
+        "TIMEOUT",
+        "TRUNCATED_INPUT",
+        "VERIFICATION_DECLARATION_FAILED",
+        "VERIFY_BEFORE_DECODE_VIOLATION",
+        "WORKER_CANCELLED",
+        "WORKER_FAILURE"
+      ]
+    },
+    "resource_values": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fetch_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824},
+        "hash_chunk_bytes": {"type": "integer", "minimum": 1, "maximum": 67108864},
+        "decode_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824},
+        "heap_bytes": {"type": "integer", "minimum": 1, "maximum": 2147483648},
+        "cpu_ms": {"type": "integer", "minimum": 1, "maximum": 600000},
+        "queue_depth": {"type": "integer", "minimum": 1, "maximum": 1024},
+        "concurrency": {"type": "integer", "minimum": 1, "maximum": 64}
+      },
+      "required": ["fetch_bytes", "hash_chunk_bytes", "decode_bytes", "heap_bytes", "cpu_ms", "queue_depth", "concurrency"]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "artifact_bytes_read": {"const": false},
+        "hashing_performed": {"const": false},
+        "proof_parsed": {"const": false},
+        "signature_verified": {"const": false},
+        "signer_authenticated": {"const": false},
+        "trust_material_loaded": {"const": false},
+        "decode_performed": {"const": false},
+        "render_performed": {"const": false},
+        "renderer_selected": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      },
+      "required": [
+        "execution_mode", "network_attempted", "artifact_bytes_read", "hashing_performed",
+        "proof_parsed", "signature_verified", "signer_authenticated", "trust_material_loaded",
+        "decode_performed", "render_performed", "renderer_selected", "evidence_resolved",
+        "policy_evaluated", "review_approved", "release_authorized", "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {"const": "VerifiedRenderingResourceEnvelopeCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.verified-rendering-resource-envelope.fixture.v1"},
+    "envelope_id": {"type": "string", "pattern": "^kfm:render-envelope:[0-9a-f]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/digest"},
+    "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+    "release_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release_id": {"$ref": "#/$defs/kfm_ref"},
+        "artifact_ref": {"$ref": "#/$defs/kfm_ref"},
+        "expected_artifact_digest": {"$ref": "#/$defs/digest"},
+        "declared_artifact_digest": {"$ref": "#/$defs/digest"},
+        "proof_ref": {"$ref": "#/$defs/kfm_ref"},
+        "signer_profile_ref": {"$ref": "#/$defs/kfm_ref"},
+        "verifier_profile_ref": {"$ref": "#/$defs/kfm_ref"},
+        "renderer_profile_ref": {"$ref": "#/$defs/kfm_ref"}
+      },
+      "required": ["release_id", "artifact_ref", "expected_artifact_digest", "declared_artifact_digest", "proof_ref", "signer_profile_ref", "verifier_profile_ref", "renderer_profile_ref"]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fallback_mode": {"enum": ["NONE", "LOWER_DETAIL", "EVIDENCE_SUMMARY_ONLY"]},
+        "cancellation_requested": {"type": "boolean"}
+      },
+      "required": ["fallback_mode", "cancellation_requested"]
+    },
+    "budgets": {"$ref": "#/$defs/resource_values"},
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824},
+        "fetched_bytes": {"type": "integer", "minimum": 0, "maximum": 1073741824},
+        "hashed_bytes": {"type": "integer", "minimum": 0, "maximum": 1073741824},
+        "decoded_bytes": {"type": "integer", "minimum": 0, "maximum": 1073741824},
+        "peak_heap_bytes": {"type": "integer", "minimum": 0, "maximum": 2147483648},
+        "cpu_ms": {"type": "integer", "minimum": 0, "maximum": 600000},
+        "max_queue_depth": {"type": "integer", "minimum": 0, "maximum": 1024},
+        "max_concurrency": {"type": "integer", "minimum": 0, "maximum": 64},
+        "hash_chunks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "chunk_index": {"type": "integer", "minimum": 0, "maximum": 4095},
+              "bytes_declared": {"type": "integer", "minimum": 1, "maximum": 67108864}
+            },
+            "required": ["chunk_index", "bytes_declared"]
+          }
+        }
+      },
+      "required": ["artifact_bytes", "fetched_bytes", "hashed_bytes", "decoded_bytes", "peak_heap_bytes", "cpu_ms", "max_queue_depth", "max_concurrency", "hash_chunks"]
+    },
+    "worker_messages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1, "maximum": 32},
+          "message_type": {"enum": ["QUEUED", "FETCH_START", "FETCH_COMPLETE", "HASH_COMPLETE", "PROOF_CHECK", "SIGNER_CHECK", "VERIFY_COMPLETE", "DECODE_START", "RENDER_READY", "CANCELLED", "WORKER_FAILED"]},
+          "result": {"enum": ["PASS", "FAIL", "NOT_RUN"]}
+        },
+        "required": ["sequence", "message_type", "result"]
+      }
+    },
+    "faults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "digest_mismatch": {"type": "boolean"},
+        "truncated_input": {"type": "boolean"},
+        "replay_detected": {"type": "boolean"},
+        "timed_out": {"type": "boolean"},
+        "worker_failed": {"type": "boolean"}
+      },
+      "required": ["digest_mismatch", "truncated_input", "replay_detected", "timed_out", "worker_failed"]
+    },
+    "rendering_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rendering_state": {"enum": ["READY_FOR_SEPARATE_EXECUTION", "DEGRADED", "BLOCKED", "CANCELLED", "ERROR"]},
+        "finding_codes": {"type": "array", "maxItems": 13, "uniqueItems": true, "items": {"$ref": "#/$defs/finding_code"}},
+        "render_allowed": {"const": false},
+        "unverified_content_visible": {"const": false},
+        "cryptographic_verification_performed": {"const": false},
+        "separate_runtime_integration_required": {"const": true}
+      },
+      "required": ["rendering_state", "finding_codes", "render_allowed", "unverified_content_visible", "cryptographic_verification_performed", "separate_runtime_integration_required"]
+    },
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "required": ["object_type", "schema_version", "profile", "envelope_id", "spec_hash", "assessed_at", "release_binding", "request", "budgets", "observation", "worker_messages", "faults", "rendering_assessment", "governance"],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority": "fixture-only worker-trace and resource-envelope assessment; never cryptographic verification, rendering, release, or publication authority",
+    "canonicalization": "RFC 8785 JCS plus SHA-256 excluding envelope_id and spec_hash"
+  }
+}

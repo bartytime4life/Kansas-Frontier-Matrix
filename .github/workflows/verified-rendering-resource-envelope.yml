@@ -1,0 +1,43 @@
+name: Verified rendering resource envelope
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verified-rendering-resource-envelope.yml"
+      - "contracts/runtime/verified_rendering_resource_envelope.md"
+      - "schemas/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json"
+      - "fixtures/contracts/v1/runtime/verified_rendering_resource_envelope/**"
+      - "tools/validators/runtime/validate_verified_rendering_resource_envelope.py"
+      - "tests/validators/test_validate_verified_rendering_resource_envelope.py"
+      - "docs/intake/exploratory/verified-rendering-resource-envelope-source-map.md"
+      - "data/receipts/generated/genrec-verified-rendering-resource-envelope-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      KFM_NO_NETWORK: "1"
+      NO_PROXY: "*"
+      no_proxy: "*"
+      PIP_NO_INDEX: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install repository test dependencies
+        env:
+          PIP_NO_INDEX: "0"
+        run: python -m pip install -e ".[test]"
+      - name: Run focused unit tests
+        run: python -m unittest discover -s tests/validators -p 'test_validate_verified_rendering_resource_envelope.py' -v
+      - name: Replay exact fixture cases
+        run: python tools/validators/runtime/validate_verified_rendering_resource_envelope.py --fixtures
+      - name: Validate generated receipt hashes
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-verified-rendering-resource-envelope-20260809.json --repo-root .
