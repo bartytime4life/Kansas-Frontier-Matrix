@@ -6,7 +6,8 @@
       "source-descriptor",
       "evidence-ref",
       "evidence-bundle",
-      "runtime-response-envelope"
+      "runtime-response-envelope",
+      "ai-receipt"
     ],
     "changed-area": [],
     "release-dry-run": [
@@ -22,6 +23,7 @@
       "evidence-bundle",
       "layer-manifest",
       "runtime-response-envelope",
+      "ai-receipt",
       "decision-envelope",
       "run-receipt",
       "ingest-receipt"
@@ -117,6 +119,24 @@
         "fixtures/contracts/v1/runtime/runtime_response_envelope/**",
         "tests/validators/test_validate_runtime_response_envelope.py",
         "tools/validators/validate_runtime_response_envelope.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "ai-receipt",
+      "description": "Validate AIReceipt fixture polarity and bounded local receipt consistency without resolving evidence or policy.",
+      "script": "tools/validators/validate_ai_receipt.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/ai-receipt.yml",
+        "contracts/runtime/ai_receipt.md",
+        "schemas/contracts/v1/runtime/ai_receipt.schema.json",
+        "fixtures/contracts/v1/runtime/ai_receipt/**",
+        "tests/validators/test_validate_ai_receipt.py",
+        "tools/validators/validate_ai_receipt.py"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
