@@ -9,7 +9,7 @@
   "artifact_hashes": {
     ".github/workflows/domain-atmosphere.yml": "sha256:0982dbf93e731e67f5ee3d095de079a7234ebb328476a621395049d87cb6fefb",
     ".github/workflows/pm25-trigger-candidate-assessment.yml": "sha256:4dab99867b702c28a614c2d65b9d00797521a0e82a73ee7f634f46181b6813e9",
-    "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json": "sha256:02c2a08d15cce3a9d7387264a7ab0b6faa354d20480311dacaeed5c248b34345"
+    "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json": "sha256:9312602aee2ca5477ee60a9233f4a375fdfeb0345192df1f6a0f2c6f98b66802"
   },
   "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
   "prompt_or_contract": "sha256:3c98c9e41cc8540cae1092d0d617e698c8106390fe030daedc35a8f432662a24",
