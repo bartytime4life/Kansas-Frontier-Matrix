@@ -35,5 +35,5 @@ def test_compatibility_entrypoint_replays_canonical_fixtures(
 ) -> None:
     compatibility = importlib.import_module(compatibility_name)
     canonical = importlib.import_module(canonical_name)
-    assert compatibility.main ["--fixtures"] == 0
+    assert compatibility.main(["--fixtures"]) == 0
     assert capsys.readouterr().out
