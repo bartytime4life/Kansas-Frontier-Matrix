@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/aggregate_statistic.schema.json",
+  "title": "AggregateStatistic candidate profile",
+  "description": "Closed fixture-only aggregate statistic preserving geography, weighting, numerator and denominator, missing-data treatment, source release, uncertainty, lineage, and local/public non-authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile", "status", "aggregate_statistic_id", "version", "spec_hash",
+    "statistic_family", "product_ref", "source_ref", "source_native_id",
+    "issuing_authority_ref", "source_role", "support_type",
+    "source_snapshot_refs", "temporal_authority_ref", "times", "geography",
+    "computation", "uncertainty", "input_refs", "content_digests",
+    "evidence_refs", "lineage", "release_state", "release_ref",
+    "derived_only", "limitations", "public_use_allowed", "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string", "minLength": 1, "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]
+    },
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "aware_datetime": {
+      "type": "string", "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [{"$ref": "#/$defs/aware_datetime"}, {"type": "null"}]
+    },
+    "ref_array": {
+      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "required_ref_array": {
+      "type": "array", "minItems": 1, "maxItems": 64,
+      "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}
+    }
+  },
+  "properties": {
+    "profile": {"const": "kfm.common.aggregate-statistic.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "aggregate_statistic_id": {
+      "type": "string", "pattern": "^aggregate-statistic:[a-f0-9]{24}$"
+    },
+    "version": {"const": "1.0.0"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "statistic_family": {
+      "enum": ["PERCENTAGE", "RATE", "COUNT", "SUM", "MEAN", "MEDIAN", "QUANTILE", "INDEX", "OTHER"]
+    },
+    "product_ref": {"$ref": "#/$defs/ref"},
+    "source_ref": {"$ref": "#/$defs/ref"},
+    "source_native_id": {"$ref": "#/$defs/ref"},
+    "issuing_authority_ref": {"$ref": "#/$defs/ref"},
+    "source_role": {
+      "enum": ["AGGREGATE", "OBSERVATION", "MODEL", "FORECAST", "CLASSIFICATION", "SURVEY", "CONTEXT"]
+    },
+    "support_type": {
+      "enum": [
+        "AGGREGATE_STATISTIC", "DIRECT_MEASUREMENT", "MODELED_ESTIMATE",
+        "PREDICTION", "DERIVED_CLASSIFICATION", "SURVEY_PRODUCT", "CONTEXT_ONLY"
+      ]
+    },
+    "source_snapshot_refs": {
+      "type": "array", "minItems": 1, "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"}
+    },
+    "temporal_authority_ref": {"$ref": "#/$defs/ref"},
+    "times": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_data_cutoff_at", "source_released_at", "valid_from",
+        "valid_to", "retrieved_at", "corrected_at", "superseded_at",
+        "native_timezone"
+      ],
+      "properties": {
+        "source_data_cutoff_at": {"$ref": "#/$defs/aware_datetime"},
+        "source_released_at": {"$ref": "#/$defs/aware_datetime"},
+        "valid_from": {"$ref": "#/$defs/aware_datetime"},
+        "valid_to": {"$ref": "#/$defs/aware_datetime"},
+        "retrieved_at": {"$ref": "#/$defs/aware_datetime"},
+        "corrected_at": {"$ref": "#/$defs/nullable_datetime"},
+        "superseded_at": {"$ref": "#/$defs/nullable_datetime"},
+        "native_timezone": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_+\\-/]{1,127}$"
+        }
+      }
+    },
+    "geography": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "aggregation_geography_ref", "aggregation_level", "geometry_role",
+        "geometry_digest", "geometry_confidence", "local_truth_allowed",
+        "exact_local_geometry_allowed"
+      ],
+      "properties": {
+        "aggregation_geography_ref": {"$ref": "#/$defs/nullable_ref"},
+        "aggregation_level": {
+          "enum": ["COUNTY", "MULTI_COUNTY", "REGIONAL", "STATEWIDE", "NATIONAL", "OTHER"]
+        },
+        "geometry_role": {
+          "enum": ["AUTHORITATIVE", "OPERATIONAL", "INDICATIVE", "APPROXIMATE", "DISPLAY_ONLY", "UNRESOLVED"]
+        },
+        "geometry_digest": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "geometry_confidence": {
+          "enum": ["CONFIRMED", "HIGH", "MEDIUM", "LOW", "UNRESOLVED"]
+        },
+        "local_truth_allowed": {"type": "boolean"},
+        "exact_local_geometry_allowed": {"type": "boolean"}
+      }
+    },
+    "computation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "variable_id", "value_ref", "unit", "aggregation_method",
+        "weighting_kind", "weighting_ref", "numerator_ref",
+        "denominator_kind", "denominator_ref", "method_ref",
+        "source_release_ref", "missing_data_treatment", "missing_data_ref"
+      ],
+      "properties": {
+        "variable_id": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "value_ref": {"$ref": "#/$defs/ref"},
+        "unit": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "\\S"},
+        "aggregation_method": {
+          "enum": ["COUNT", "SUM", "WEIGHTED_SUM", "MEAN", "WEIGHTED_MEAN", "MEDIAN", "PERCENTAGE", "RATE", "QUANTILE", "INDEX", "OTHER"]
+        },
+        "weighting_kind": {
+          "enum": ["NONE", "AREA", "POPULATION", "TIME", "SOURCE_DEFINED", "OTHER"]
+        },
+        "weighting_ref": {"$ref": "#/$defs/nullable_ref"},
+        "numerator_ref": {"$ref": "#/$defs/nullable_ref"},
+        "denominator_kind": {
+          "enum": ["NONE", "COUNT", "AREA", "POPULATION", "TIME", "ELIGIBLE_TOTAL", "SOURCE_DEFINED", "OTHER"]
+        },
+        "denominator_ref": {"$ref": "#/$defs/nullable_ref"},
+        "method_ref": {"$ref": "#/$defs/ref"},
+        "source_release_ref": {"$ref": "#/$defs/nullable_ref"},
+        "missing_data_treatment": {
+          "enum": ["EXCLUDE_WITH_DISCLOSURE", "INCLUDE_AS_ZERO", "IMPUTE", "PROPAGATE_UNKNOWN", "SOURCE_DEFINED"]
+        },
+        "missing_data_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "uncertainty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "value_ref", "confidence"],
+      "properties": {
+        "kind": {
+          "enum": ["STANDARD_ERROR", "CONFIDENCE_INTERVAL", "SAMPLING_ERROR", "SOURCE_DEFINED", "NOT_PROVIDED"]
+        },
+        "value_ref": {"$ref": "#/$defs/nullable_ref"},
+        "confidence": {"enum": ["CONFIRMED", "HIGH", "MEDIUM", "LOW", "UNKNOWN"]}
+      }
+    },
+    "input_refs": {"$ref": "#/$defs/required_ref_array"},
+    "content_digests": {
+      "type": "array", "minItems": 1, "maxItems": 32,
+      "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}
+    },
+    "evidence_refs": {"$ref": "#/$defs/required_ref_array"},
+    "lineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "corrects", "superseded_by", "conflict_refs"],
+      "properties": {
+        "state": {"enum": ["CURRENT", "CORRECTED", "SUPERSEDED", "CONFLICTED"]},
+        "corrects": {"$ref": "#/$defs/ref_array"},
+        "superseded_by": {"$ref": "#/$defs/ref_array"},
+        "conflict_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "release_state": {"enum": ["UNRELEASED", "RELEASED"]},
+    "release_ref": {"$ref": "#/$defs/nullable_ref"},
+    "derived_only": {"type": "boolean"},
+    "limitations": {
+      "type": "array", "minItems": 1, "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 240, "pattern": "\\S"}
+    },
+    "public_use_allowed": {"type": "boolean"},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_activated", "evidence_resolved", "policy_evaluated",
+        "promoted", "released", "published"
+      ],
+      "properties": {
+        "source_activated": {"type": "boolean"},
+        "evidence_resolved": {"type": "boolean"},
+        "policy_evaluated": {"type": "boolean"},
+        "promoted": {"type": "boolean"},
+        "released": {"type": "boolean"},
+        "published": {"type": "boolean"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/common/aggregate_statistic.md",
+    "fixtures_root": "fixtures/contracts/v1/common/aggregate_statistic/",
+    "validator": "tools/validators/validate_aggregate_statistic.py",
+    "tests": "tests/validators/test_validate_aggregate_statistic.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}

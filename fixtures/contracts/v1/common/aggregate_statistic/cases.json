@@ -1,0 +1,275 @@
+{
+  "schema_version": "kfm.aggregate-statistic-fixtures.v1",
+  "profile": "kfm.common.aggregate-statistic.v1",
+  "description": "Synthetic aggregate-statistic cases for geography, weighting, denominator, missing-data, source-release, lineage, anti-local-truth, and authority boundaries.",
+  "bases": {
+    "current": {
+      "profile": "kfm.common.aggregate-statistic.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "statistic_family": "PERCENTAGE",
+      "product_ref": "kfm://product/synthetic-statewide-percentage/v1",
+      "source_ref": "kfm://source/synthetic-statistical-release",
+      "source_native_id": "aggregate:synthetic:2026-08-02",
+      "issuing_authority_ref": "kfm://authority/synthetic-statistical-release",
+      "source_role": "AGGREGATE",
+      "support_type": "AGGREGATE_STATISTIC",
+      "source_snapshot_refs": [
+        "kfm:source-snapshot:5555555555555555555555555555555555555555555555555555555555555555"
+      ],
+      "temporal_authority_ref": "kfm://temporal-authority/aggregate/synthetic/2026-08-02",
+      "times": {
+        "source_data_cutoff_at": "2026-08-01T00:00:00Z",
+        "source_released_at": "2026-08-02T00:00:00Z",
+        "valid_from": "2026-07-01T00:00:00Z",
+        "valid_to": "2026-07-31T23:59:59Z",
+        "retrieved_at": "2026-08-02T00:15:00Z",
+        "corrected_at": null,
+        "superseded_at": null,
+        "native_timezone": "America/Chicago"
+      },
+      "geography": {
+        "aggregation_geography_ref": "kfm://geography/synthetic/state",
+        "aggregation_level": "STATEWIDE",
+        "geometry_role": "INDICATIVE",
+        "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geometry_confidence": "HIGH",
+        "local_truth_allowed": false,
+        "exact_local_geometry_allowed": false
+      },
+      "computation": {
+        "variable_id": "synthetic_condition_share",
+        "value_ref": "kfm://value/aggregate/synthetic/2026-08-02",
+        "unit": "percent",
+        "aggregation_method": "PERCENTAGE",
+        "weighting_kind": "NONE",
+        "weighting_ref": null,
+        "numerator_ref": "kfm://value/aggregate/synthetic/numerator",
+        "denominator_kind": "ELIGIBLE_TOTAL",
+        "denominator_ref": "kfm://value/aggregate/synthetic/denominator",
+        "method_ref": "kfm://method/synthetic-percentage/v1",
+        "source_release_ref": "kfm://source-release/synthetic-statistical-release/2026-08-02",
+        "missing_data_treatment": "EXCLUDE_WITH_DISCLOSURE",
+        "missing_data_ref": "kfm://missing-data/synthetic-statistical-release/2026-08-02"
+      },
+      "uncertainty": {
+        "kind": "SOURCE_DEFINED",
+        "value_ref": "kfm://uncertainty/aggregate/synthetic/2026-08-02",
+        "confidence": "MEDIUM"
+      },
+      "input_refs": [
+        "kfm://input/aggregate/synthetic/a",
+        "kfm://input/aggregate/synthetic/b"
+      ],
+      "content_digests": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "evidence_refs": [
+        "kfm://evidence-ref/aggregate/synthetic/source-release"
+      ],
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "derived_only": true,
+      "limitations": [
+        "Synthetic fixture; aggregate does not imply exact local condition."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_statewide_percentage",
+      "base": "current",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_area_weighted_mean",
+      "base": "current",
+      "mutations": [
+        {"path": "/statistic_family", "value": "MEAN"},
+        {"path": "/computation/aggregation_method", "value": "WEIGHTED_MEAN"},
+        {"path": "/computation/weighting_kind", "value": "AREA"},
+        {"path": "/computation/weighting_ref", "value": "kfm://weighting/synthetic/area/v1"},
+        {"path": "/computation/numerator_ref", "value": null},
+        {"path": "/computation/denominator_kind", "value": "AREA"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_uncertainty_not_provided",
+      "base": "current",
+      "mutations": [
+        {"path": "/uncertainty/kind", "value": "NOT_PROVIDED"},
+        {"path": "/uncertainty/value_ref", "value": null},
+        {"path": "/uncertainty/confidence", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_corrected_lineage",
+      "base": "current",
+      "mutations": [
+        {"path": "/times/corrected_at", "value": "2026-08-03T00:00:00Z"},
+        {"path": "/lineage/state", "value": "CORRECTED"},
+        {"path": "/lineage/corrects", "value": ["kfm://aggregate-statistic/synthetic/prior"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_collapse",
+      "base": "current",
+      "mutations": [{"path": "/source_role", "value": "OBSERVATION"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SOURCE_ROLE_COLLAPSE"]
+    },
+    {
+      "name": "support_type_collapse",
+      "base": "current",
+      "mutations": [{"path": "/support_type", "value": "DIRECT_MEASUREMENT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SUPPORT_TYPE_COLLAPSE"]
+    },
+    {
+      "name": "derived_only_missing",
+      "base": "current",
+      "mutations": [{"path": "/derived_only", "value": false}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DERIVED_ONLY_REQUIRED"]
+    },
+    {
+      "name": "local_truth_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/geography/local_truth_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["LOCAL_TRUTH_OVERCLAIM"]
+    },
+    {
+      "name": "exact_local_geometry_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/geography/exact_local_geometry_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EXACT_LOCAL_GEOMETRY_OVERCLAIM"]
+    },
+    {
+      "name": "source_release_missing",
+      "base": "current",
+      "mutations": [{"path": "/computation/source_release_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SOURCE_RELEASE_REQUIRED"]
+    },
+    {
+      "name": "percentage_numerator_missing",
+      "base": "current",
+      "mutations": [{"path": "/computation/numerator_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["NUMERATOR_REQUIRED"]
+    },
+    {
+      "name": "percentage_denominator_missing",
+      "base": "current",
+      "mutations": [{"path": "/computation/denominator_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DENOMINATOR_REQUIRED"]
+    },
+    {
+      "name": "weighted_method_reference_missing",
+      "base": "current",
+      "mutations": [
+        {"path": "/computation/aggregation_method", "value": "WEIGHTED_MEAN"},
+        {"path": "/computation/weighting_kind", "value": "AREA"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["WEIGHTING_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "weighting_reference_conflict",
+      "base": "current",
+      "mutations": [{"path": "/computation/weighting_ref", "value": "kfm://weighting/synthetic/unexpected"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["WEIGHTING_REFERENCE_CONFLICT"]
+    },
+    {
+      "name": "missing_data_treatment_unbound",
+      "base": "current",
+      "mutations": [{"path": "/computation/missing_data_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["MISSING_DATA_TREATMENT_UNBOUND"]
+    },
+    {
+      "name": "uncertainty_reference_missing",
+      "base": "current",
+      "mutations": [{"path": "/uncertainty/value_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["UNCERTAINTY_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "data_cutoff_after_source_release",
+      "base": "current",
+      "mutations": [{"path": "/times/source_data_cutoff_at", "value": "2026-08-03T00:00:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DATA_CUTOFF_AFTER_SOURCE_RELEASE"]
+    },
+    {
+      "name": "validity_interval_inverted",
+      "base": "current",
+      "mutations": [{"path": "/times/valid_to", "value": "2026-06-30T00:00:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["VALIDITY_INTERVAL_INVALID"]
+    },
+    {
+      "name": "unresolved_geometry_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/geography/geometry_role", "value": "UNRESOLVED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["UNRESOLVED_GEOMETRY_OVERCLAIM"]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/release_state", "value": "RELEASED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RELEASE_OVERCLAIM"]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/public_use_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PUBLIC_USE_OVERCLAIM"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/effects/published", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM"]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "current",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}
