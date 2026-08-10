@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-pass32-air-quality-trigger-panel-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/AirQualityTriggerProjection.ts",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/README.md",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/index.ts",
+    "apps/explorer-web/tests/air-quality-trigger-panel.test.ts",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.fixture.ts",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.html",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.spec.ts",
+    "docs/intake/exploratory/pass-32-air-quality-trigger-panel-source-map.md",
+    "fixtures/ui/air_quality_trigger_projection/README.md",
+    "fixtures/ui/air_quality_trigger_projection/invalid/extra-raw-field.json",
+    "fixtures/ui/air_quality_trigger_projection/invalid/relation-mismatch.json",
+    "fixtures/ui/air_quality_trigger_projection/valid/denied.json",
+    "fixtures/ui/air_quality_trigger_projection/valid/error.json",
+    "fixtures/ui/air_quality_trigger_projection/valid/held.json",
+    "fixtures/ui/air_quality_trigger_projection/valid/no-trigger.json",
+    "fixtures/ui/air_quality_trigger_projection/valid/proposed-trigger.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/AirQualityTriggerProjection.ts": "sha256:f4821fc8115cc78a42887920973b07a9e3da6f81966b4cce4d566cb91d1f9abb",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/README.md": "sha256:a60934985895fa39428178a5a5a2e5f2f4615d4f704828eac3e8dcc95e5239e4",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/index.ts": "sha256:3912fa7fcb1f2813972c42495654a57223e8daf5d61916c86452f2aea5ab6a73",
+    "apps/explorer-web/tests/air-quality-trigger-panel.test.ts": "sha256:4738df160eb8999768216cfff23484411959d5b4c068a9c5bb33e14c2d4218c2",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.fixture.ts": "sha256:4f5e4625d9db30cb0df2fc8ca771feb958a1ce077e56387d30bf2d808893eaa0",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.html": "sha256:1709299ea9355f2069419f9bcbd6b54520875c75d2c960f5af8f441a864b04b1",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.spec.ts": "sha256:7254a8734518abc3d536d24249d0fa4c323f5aac31e10dd66acd2755e9f3efd3",
+    "docs/intake/exploratory/pass-32-air-quality-trigger-panel-source-map.md": "sha256:317d960d36c134b89029bb5386ebf7f68724861b3a518d330ec12e64ded47556",
+    "fixtures/ui/air_quality_trigger_projection/README.md": "sha256:2db8ab742f6b07c7d49c2591183fdea19d6276b7afcdedd1280f495eb5fab18c",
+    "fixtures/ui/air_quality_trigger_projection/invalid/extra-raw-field.json": "sha256:01c9961594d9bcb404074a3b4f48f4c0b4daae7dfe3d36281ea7ade57acd91d6",
+    "fixtures/ui/air_quality_trigger_projection/invalid/relation-mismatch.json": "sha256:0b5e5c1bbc3ff112ec56409e2a4ca7ce2e7a271f1588b444b32738eb51bd56ba",
+    "fixtures/ui/air_quality_trigger_projection/valid/denied.json": "sha256:4f40b191d06369b58f10df065e05f11cf92072e8206772dfeade426d1c081c6e",
+    "fixtures/ui/air_quality_trigger_projection/valid/error.json": "sha256:fdcd7d5d4e8d1824e6ccde73c3a833b92b62e79377bf53501f333c7baf0d3a46",
+    "fixtures/ui/air_quality_trigger_projection/valid/held.json": "sha256:ac355105516871d9b417e19af4319e69232c5e225e9adedff45c4968168f4a4a",
+    "fixtures/ui/air_quality_trigger_projection/valid/no-trigger.json": "sha256:2c4b1a620d178dc1ebba89df5d37549b47888c30f2cfd288ff3be0791ba13794",
+    "fixtures/ui/air_quality_trigger_projection/valid/proposed-trigger.json": "sha256:74fa51651f589dc8c06c7e153491af1547e06af36c8e31ace6ffdfe1718bb280"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a3aea11e8556f64b6f1d2cbe2fc2940cc9f34c3c306c2a103980259e6b131238",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:63e16ecd2e3cd675b3b2efc5fb2e326acd9308dfe89dd6df65451463dc44c5d5",
+      "sha256:1a1b69f7617d949b015eb6e459a061b07789a7be4c5626113defeb43e00a0f88"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0007",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0012",
+      "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@7c69e025e2b274be4a19f49fa37e22401a2fe757",
+      "repo:contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md",
+      "repo:tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/AirQualityTriggerProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/air_quality_trigger_panel/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/air-quality-trigger-panel.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/air-quality-trigger-panel.spec.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-air-quality-trigger-panel-source-map.md": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/README.md": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/invalid/extra-raw-field.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/invalid/relation-mismatch.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/valid/held.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/valid/no-trigger.json": "PROPOSED",
+    "fixtures/ui/air_quality_trigger_projection/valid/proposed-trigger.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for both card IDs, PM2.5 panel terms, and intended paths; the two open Explorer PRs are path-disjoint."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated atlas page carrying KFM-P32-FEAT-0007 and KFM-P32-IDEA-0012 was rendered and visually inspected."
+    },
+    {
+      "gate": "projection-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Exact-field, finite-relation, candidate/no-candidate, digest-reference, unresolved-evidence, negative-detail, raw-metric-exclusion, and fixed-false authority checks passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "TypeScript checking and the Vite production build completed locally; Node 24 emitted the expected engine warning while hosted CI uses the pinned Node 22 line."
+    },
+    {
+      "gate": "air-quality-panel-targeted-unit-suite",
+      "outcome": "PASS",
+      "reason": "The targeted air-quality panel unit file passed all 10 tests."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "The repository test:unit command passed 24 files and 184 tests."
+    },
+    {
+      "gate": "pm25-candidate-foundation-suite",
+      "outcome": "PASS",
+      "reason": "All 8 existing PM2.5 trigger-candidate assessment tests passed against the same base."
+    },
+    {
+      "gate": "browser-fixture-typecheck-and-discovery",
+      "outcome": "PASS",
+      "reason": "The new browser fixture and Playwright spec passed isolated strict TypeScript checking; Playwright discovered all 4 scenarios."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No local Chromium or Chrome executable is installed; the existing hosted ui-build workflow must validate the exact pushed head."
+    },
+    {
+      "gate": "documentation-and-fixture-structure",
+      "outcome": "PASS",
+      "reason": "Metadata-block, local-link, and strict JSON parsing checks passed for the new documentation and fixtures."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator binds all 16 declared artifacts to their final SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-air-quality-trigger-panel",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0007"
+    },
+    {
+      "id": "gdrive:pass32-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN"
+    },
+    {
+      "id": "repository:pm25-trigger-candidate-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:34:26Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 KFM-P32-FEAT-0007 and KFM-P32-IDEA-0012. It is an unmounted read-only categorical display projection with unresolved evidence and grants no source, detector, event, health, regulatory, evidence, policy, review, lifecycle, promotion, release, deployment, publication, or public-use authority."
+}
