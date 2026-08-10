@@ -1,0 +1,124 @@
+# Validate the bounded resource-lifecycle overlay on the canonical Contract Object Map.
+name: contract-object-map-lifecycle
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/contract-object-map-lifecycle.yml"
+      - "contracts/OBJECT_MAP.md"
+      - "contracts/source/**"
+      - "contracts/evidence/**"
+      - "contracts/data/**"
+      - "contracts/runtime/**"
+      - "contracts/governance/**"
+      - "contracts/policy/**"
+      - "contracts/release/**"
+      - "contracts/correction/**"
+      - "contracts/ui/**"
+      - "schemas/contracts/v1/**"
+      - "control_plane/object_family_register.yaml"
+      - "docs/architecture/governed-ai/ROUTE_MAP.md"
+      - "docs/architecture/governed-api/LIFECYCLE_GATES.md"
+      - "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md"
+      - "apps/governed-api/src/governed_api/routes/**"
+      - "apps/governed-api/src/governed_api/stub.py"
+      - "tools/validators/docs/validate_contract_object_map_lifecycle.py"
+      - "tests/docs/test_contract_object_map_lifecycle.py"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/contract-object-map-lifecycle.yml"
+      - "contracts/OBJECT_MAP.md"
+      - "contracts/source/**"
+      - "contracts/evidence/**"
+      - "contracts/data/**"
+      - "contracts/runtime/**"
+      - "contracts/governance/**"
+      - "contracts/policy/**"
+      - "contracts/release/**"
+      - "contracts/correction/**"
+      - "contracts/ui/**"
+      - "schemas/contracts/v1/**"
+      - "control_plane/object_family_register.yaml"
+      - "docs/architecture/governed-ai/ROUTE_MAP.md"
+      - "docs/architecture/governed-api/LIFECYCLE_GATES.md"
+      - "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md"
+      - "apps/governed-api/src/governed_api/routes/**"
+      - "apps/governed-api/src/governed_api/stub.py"
+      - "tools/validators/docs/validate_contract_object_map_lifecycle.py"
+      - "tests/docs/test_contract_object_map_lifecycle.py"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-object-map-lifecycle-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-contract-object-map-lifecycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Validate object-map overlay and governed API stubs
+        env:
+          PYTHONPATH: apps/governed-api/src
+        run: |
+          python -m py_compile tools/validators/docs/validate_contract_object_map_lifecycle.py tests/docs/test_contract_object_map_lifecycle.py
+          python -m pytest -q \
+            tests/docs/test_contract_object_map_lifecycle.py \
+            apps/governed-api/tests/test_abstain_routes.py \
+            apps/governed-api/tests/test_boundary_guards.py \
+            --strict-config --strict-markers
+          python tools/validators/docs/validate_contract_object_map_lifecycle.py contracts/OBJECT_MAP.md --repo-root .
+      - name: Validate adjacent object-family projection
+        run: python tools/validators/control_plane/validate_object_family_register.py
+      - name: Validate bounded documentation metadata
+        run: |
+          python tools/validators/docs/meta-block/check_meta_blocks.py \
+            --repo-root . \
+            --profile required \
+            contracts/OBJECT_MAP.md \
+            docs/intake/exploratory/resource-lifecycle-object-map-source-map.md
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Contract Object Map lifecycle/API overlay"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: marker integrity, selected resource-token coverage, local path existence, route-registry parity, and finite stub behavior."
+            echo "- Boundary: no ontology completeness, lifecycle mutation, policy, evidence closure, release, deployment, publication, or public API authority."
+          } >> "$GITHUB_STEP_SUMMARY"

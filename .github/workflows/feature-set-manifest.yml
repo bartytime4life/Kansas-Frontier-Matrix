@@ -1,0 +1,93 @@
+# Validate the fixture-only FeatureSetManifest candidate.
+name: feature-set-manifest
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/feature-set-manifest.yml"
+      - "contracts/evidence/feature_set_manifest.md"
+      - "schemas/contracts/v1/evidence/feature_set_manifest.schema.json"
+      - "fixtures/contracts/v1/evidence/feature_set_manifest/**"
+      - "tools/validators/evidence/validate_feature_set_manifest.py"
+      - "tests/validators/evidence/test_validate_feature_set_manifest.py"
+      - "docs/intake/exploratory/feature-set-manifest-source-map.md"
+      - "contracts/evidence/analytic_output_disclosure_assessment.md"
+      - "contracts/governance/model_card_envelope.md"
+      - "contracts/source/source_role_transition_assessment.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-feature-set-manifest-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/feature-set-manifest.yml"
+      - "contracts/evidence/feature_set_manifest.md"
+      - "schemas/contracts/v1/evidence/feature_set_manifest.schema.json"
+      - "fixtures/contracts/v1/evidence/feature_set_manifest/**"
+      - "tools/validators/evidence/validate_feature_set_manifest.py"
+      - "tests/validators/evidence/test_validate_feature_set_manifest.py"
+      - "docs/intake/exploratory/feature-set-manifest-source-map.md"
+      - "contracts/evidence/analytic_output_disclosure_assessment.md"
+      - "contracts/governance/model_card_envelope.md"
+      - "contracts/source/source_role_transition_assessment.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-feature-set-manifest-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feature-set-manifest-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-feature-set-manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          python -m unittest -v tests.validators.evidence.test_validate_feature_set_manifest
+          python -m unittest -v tests.validators.evidence.test_validate_analytic_output_disclosure_assessment
+          python -m unittest -v tests.validators.governance.test_validate_model_card_envelope
+          python -m pytest -q tests/source/test_source_role_transition_assessment.py
+          python tools/validators/evidence/validate_feature_set_manifest.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-feature-set-manifest-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### FeatureSetManifest"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only feature semantics, lineage, missingness, sensitivity, target separation, phase coupling, disclosure, and identity validation."
+            echo "- Boundary: no feature extraction, training, inference, evidence resolution, privacy or policy decision, review approval, promotion, release, public use, publication, or deployment authority."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,128 @@
+name: sensitive-overlay-reveal-expiry
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/sensitive-overlay-reveal-expiry.yml"
+      - "contracts/governance/sensitive_overlay_reveal_expiry.md"
+      - "data/receipts/generated/genrec-pass32-sensitive-overlay-reveal-expiry-20260810.json"
+      - "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md"
+      - "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/**"
+      - "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json"
+      - "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py"
+      - "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py"
+      - "tools/validators/_common/public_safe_fixture.py"
+      - "tools/validators/validate_generated_receipt.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/sensitive-overlay-reveal-expiry.yml"
+      - "contracts/governance/sensitive_overlay_reveal_expiry.md"
+      - "data/receipts/generated/genrec-pass32-sensitive-overlay-reveal-expiry-20260810.json"
+      - "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md"
+      - "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/**"
+      - "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json"
+      - "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py"
+      - "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py"
+      - "tools/validators/_common/public_safe_fixture.py"
+      - "tools/validators/validate_generated_receipt.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sensitive-overlay-reveal-expiry-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  KFM_NO_NETWORK: "1"
+
+jobs:
+  validate-reveal-expiry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out reveal-expiry boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install repository validation dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Verify bounded artifact inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "contracts/governance/sensitive_overlay_reveal_expiry.md"
+            "data/receipts/generated/genrec-pass32-sensitive-overlay-reveal-expiry-20260810.json"
+            "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md"
+            "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/cases.json"
+            "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json"
+            "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py"
+            "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required reveal-expiry artifact is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          echo "WORKFLOW_CHECK_EXECUTED: sensitive-overlay-reveal-expiry-inventory"
+
+      - name: Run deterministic reveal-expiry suite
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/governance/test_sensitive_overlay_reveal_expiry.py
+
+          python tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py \
+            --fixtures
+
+          echo "WORKFLOW_CHECK_EXECUTED: sensitive-overlay-reveal-expiry-fixtures"
+
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass32-sensitive-overlay-reveal-expiry-20260810.json \
+            --repo-root .
+
+      - name: Record authority boundary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Sensitive-overlay reveal-expiry status
+
+          `WORKFLOW_CHECK_EXECUTED: sensitive-overlay-reveal-expiry-fixtures`
+
+          `WORKFLOW_HOLD: live reveal execution and cleanup remain unwired`
+
+          This job validates a synthetic summary-only transition profile. It
+          checks the 24-hour TTL cap, single-use state, inclusive expiry,
+          revocation freshness and consistency, attestation summary, policy-hash
+          freshness, finite HOLD/ABSTAIN/DENY/ERROR posture, countdown,
+          blurred-view target, and declarative cleanup action set.
+
+          A green result does not parse or issue a credential, retrieve or erase
+          a key, decrypt data, call a revocation or attestation service, mutate a
+          browser or map UI, emit a signed audit receipt, evaluate policy, start
+          a job, release an artifact, deploy, or publish.
+          EOF

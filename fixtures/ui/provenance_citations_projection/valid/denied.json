@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.explorer.provenance-citations.public-safe.v1",
+  "panel_id": "kfm:provenance-citations:synthetic:denied",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "title": null,
+  "activity_ref": null,
+  "citations": [],
+  "republication_note_code": null,
+  "release_manifest_ref": null
+}

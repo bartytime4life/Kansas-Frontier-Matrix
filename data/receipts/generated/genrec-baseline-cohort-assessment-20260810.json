@@ -4,81 +4,131 @@
   "artifact_paths": [
     ".github/workflows/baseline-cohort-assessment.yml",
     "contracts/data/baseline_cohort_assessment.md",
-    "docs/intake/exploratory/baseline-cohort-assessment-source-map.md",
     "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json",
     "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json",
-    "tests/validators/test_validate_baseline_cohort_assessment.py",
+    "tests/data/test_baseline_cohort_assessment.py",
     "tools/validators/data/validate_baseline_cohort_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/baseline-cohort-assessment.yml": "sha256:6670be5481d8a8f4ea86059fb485ac26dac71f0096a3e873872fd048cd80c771",
-    "contracts/data/baseline_cohort_assessment.md": "sha256:65f55bd24405c1e1c1fb4cf25ded789936c4f77f08705111f96abb200b507038",
-    "docs/intake/exploratory/baseline-cohort-assessment-source-map.md": "sha256:71b471bbcd75db7679f53761fb1f3f3a42ae35d98e9dd33b314d6639e6a8f155",
-    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "sha256:a135087edd5572102bb34a795cb0f8d8490cfc2823ad2c0d387db4e5520954be",
-    "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json": "sha256:8e29b40f712b51bd097cde10598c0ffc4305632ef102b435506f7d301f1e0b5e",
-    "tests/validators/test_validate_baseline_cohort_assessment.py": "sha256:1c037d161910556c0216dead156072bd82ddcc82e50fc6aad308618597179c51",
-    "tools/validators/data/validate_baseline_cohort_assessment.py": "sha256:499fb619282a75180b3ebdff45618fa6c6c2bb5fff18d9fc6d520eecd25f53e2"
+    ".github/workflows/baseline-cohort-assessment.yml": "sha256:3614d07936b24e4f306fb2025d7c054c5b222c369edf3a3b408dba46656fc4c2",
+    "contracts/data/baseline_cohort_assessment.md": "sha256:6c341adb47ca57b82f7b41c7910e56c83dffc8b1f9df2eb7bf32eb3377fe9c1c",
+    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "sha256:aff4686989e5c19573428f3250c51bf0c0f28d954eba64a4feb86aac098ee92b",
+    "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json": "sha256:37f1c8c1792fbb191df4c2ae2638841308211e244be0528da8a75f0b72f825b1",
+    "tests/data/test_baseline_cohort_assessment.py": "sha256:444e0d311b7e8240a34537fbbe8d702dec65467899840a2e35c11ddf4994c1d1",
+    "tools/validators/data/validate_baseline_cohort_assessment.py": "sha256:e5433cbd790104ce43c3b3e2df4fc83b2fa49b1f07cfbbb2a16cbbe9284247d2"
   },
-  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
-  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:3a52d95e62abfc5b4837c75372fb557156de99bcfee86d70687ab3cfc69d42a2",
   "parameters": {
     "seed": null,
     "temperature": null,
     "top_p": null,
     "max_tokens": null,
     "tools_enabled": [
-      "Google Drive connector corpus discovery",
-      "GitHub connector repository inspection and mutation",
-      "local deterministic Python validation"
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
     ]
   },
   "inputs": {
-    "attached_docs": ["KFM_Full_Atlas_seed_cards.md", "New Ideas 4-16-26"],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
     "evidence_refs": [
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-036",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0106",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0107",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0108",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-16-source-map.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/doctrine/directory-rules.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/evidence/observation_fitness_assessment.md"
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-036",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0108",
+      "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:tools/diff/stable_diff.py@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:contracts/data/material_change_assessment.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
     ]
   },
   "truth_labels": {
-    ".github/workflows/baseline-cohort-assessment.yml": "CONFIRMED",
+    ".github/workflows/baseline-cohort-assessment.yml": "PROPOSED",
     "contracts/data/baseline_cohort_assessment.md": "PROPOSED",
-    "docs/intake/exploratory/baseline-cohort-assessment-source-map.md": "CONFIRMED",
-    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "CONFIRMED",
+    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "PROPOSED",
     "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json": "PROPOSED",
-    "tests/validators/test_validate_baseline_cohort_assessment.py": "CONFIRMED",
-    "tools/validators/data/validate_baseline_cohort_assessment.py": "CONFIRMED"
+    "tests/data/test_baseline_cohort_assessment.py": "PROPOSED",
+    "tools/validators/data/validate_baseline_cohort_assessment.py": "PROPOSED"
   },
   "validation_gates": [
-    {"gate": "python-syntax-compilation", "outcome": "PASS"},
-    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
-    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "11 deterministic tests passed in the isolated authoring worktree."},
-    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "15 exact cases passed across COMPLETE, HOLD, ABSTAIN, DENY, and unsafe-input behavior."},
-    {"gate": "documentation-metadata-and-local-link-validation", "outcome": "PASS", "reason": "Both metadata blocks and bounded local-link checks passed without findings."},
-    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
-    {"gate": "no-network-and-no-source-client-boundary", "outcome": "PASS"},
-    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
-    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
-    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Ten deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Nineteen synthetic positive and negative cases produced the expected finite outcomes."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 assessment schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed locally."
+    },
+    {
+      "gate": "runtime-domain-adoption",
+      "outcome": "SKIPPED",
+      "reason": "No domain source, observation, threshold, anomaly, pipeline, policy, or lifecycle was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human data, analysis, domain, and release review remain pending."
+    }
   ],
-  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+  ],
   "citations": [
-    {"id": "full-atlas-baseline-cohort-triad", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-036"},
-    {"id": "full-atlas-baseline-meaning", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0106"},
-    {"id": "full-atlas-baseline-review-surface", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0107"},
-    {"id": "full-atlas-baseline-object-family", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0108"},
-    {"id": "drive-derived-new-ideas-4-16-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/new-ideas-4-16-source-map.md"},
-    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+    {
+      "id": "gdrive:full-atlas-triad-036",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-036"
+    },
+    {
+      "id": "gdrive:full-atlas-candidate-0108",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0108"
+    },
+    {
+      "id": "repo:new-ideas-4-16-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    }
   ],
-  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
   "override_record": null,
-  "created_at": "2026-08-10T15:03:04Z",
-  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
-  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
-  "notes": "Fixture-only baseline cohort packet derived from Full Atlas KFM-TRIAD-036 and candidates KFM-CAND-0106 through KFM-CAND-0108 plus the Drive-derived New Ideas 4-16 source map. It replays baseline window, method profile, cohort eligibility, exclusions, holds, and discontinuities. It stores no observation values and performs no source access, baseline calculation or rebuild, anomaly or materiality decision, data mutation, evidence authentication, policy, review, release, publication, or public-use authorization."
+  "created_at": "2026-08-10T15:03:15Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first baseline cohort governance proposal from Full Atlas triad KFM-TRIAD-036 after the stable-diff and material-change prerequisites; coherent validation remains HOLD and cannot establish scientific fitness, thresholds, anomaly status, source admission, or publication authority."
 }

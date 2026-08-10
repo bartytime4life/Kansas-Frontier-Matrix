@@ -1,0 +1,283 @@
+{
+  "profile": "kfm.map.renderer-plugin-admission-assessment-fixtures.v1",
+  "source_idea_ids": [
+    "I-3D-7",
+    "OQ-3D-12",
+    "RENDERER-PLUGGABLE-COMPONENT"
+  ],
+  "base": {
+    "profile": "kfm.map.renderer-plugin-admission-assessment.v1",
+    "status": "PROPOSED_INACTIVE",
+    "version": "1.0.0",
+    "plugin": {
+      "package_name": "synthetic-renderer-plugin",
+      "ecosystem": "NPM",
+      "version": "1.2.3",
+      "artifact_digest": "sha256:32dcdd2ffbc62f44a10ee8d2eb8ce00c2a4fefbe7e4c2efc424c19b05e822e28",
+      "package_origin_ref": "kfm:dependency-origin-assessment:synthetic-renderer-plugin-1.2.3"
+    },
+    "assessment_scope": {
+      "adapter_ref": "kfm:renderer-adapter:synthetic-plugin-v1",
+      "runtime_boundary_ref": "kfm:runtime-boundary:synthetic-plugin-host-v1",
+      "admitted_for": [
+        "layer-class:modeled-mesh",
+        "layer-class:three-d-tiles"
+      ]
+    },
+    "checks": {
+      "version_pinned": true,
+      "integrity_verified": true,
+      "lockfile_bound": true,
+      "lockfile_ref": "kfm:lockfile-entry:synthetic-renderer-plugin-1.2.3",
+      "origin_status": "PASS",
+      "dependency_origin_policy_ref": "kfm:dependency-origin-policy-assessment:synthetic-renderer-plugin-1.2.3",
+      "attestation_status": "VERIFIED",
+      "attestation_ref": "kfm:attestation:synthetic-renderer-plugin-1.2.3",
+      "sbom_status": "VERIFIED",
+      "sbom_ref": "kfm:sbom:synthetic-renderer-plugin-1.2.3",
+      "license_status": "VERIFIED",
+      "license_evidence_ref": "kfm:license-evidence:synthetic-renderer-plugin-1.2.3",
+      "vulnerability_status": "CLEAR",
+      "vulnerability_evidence_ref": "kfm:vulnerability-scan:synthetic-renderer-plugin-1.2.3",
+      "adapter_boundary_status": "VERIFIED",
+      "adapter_evidence_ref": "kfm:adapter-boundary-test:synthetic-renderer-plugin-v1",
+      "network_behavior_status": "DECLARED",
+      "network_behavior_ref": "kfm:network-behavior:synthetic-renderer-plugin-v1",
+      "removal_status": "VERIFIED",
+      "removal_test_ref": "kfm:removal-test:synthetic-renderer-plugin-v1",
+      "rollback_status": "VERIFIED",
+      "rollback_ref": "kfm:rollback-plan:synthetic-renderer-plugin-v1"
+    },
+    "evidence_refs": [
+      "kfm:adapter-boundary-test:synthetic-renderer-plugin-v1",
+      "kfm:attestation:synthetic-renderer-plugin-1.2.3",
+      "kfm:dependency-origin-policy-assessment:synthetic-renderer-plugin-1.2.3",
+      "kfm:license-evidence:synthetic-renderer-plugin-1.2.3",
+      "kfm:lockfile-entry:synthetic-renderer-plugin-1.2.3",
+      "kfm:network-behavior:synthetic-renderer-plugin-v1",
+      "kfm:removal-test:synthetic-renderer-plugin-v1",
+      "kfm:rollback-plan:synthetic-renderer-plugin-v1",
+      "kfm:sbom:synthetic-renderer-plugin-1.2.3",
+      "kfm:vulnerability-scan:synthetic-renderer-plugin-1.2.3"
+    ],
+    "limitations": [
+      "Synthetic fixture evidence only; no package, plugin, policy, review, release, or runtime authority."
+    ],
+    "recommendation": "READY_FOR_REVIEW",
+    "review_state": "HOLD",
+    "effects": {
+      "registry_queried": false,
+      "package_downloaded": false,
+      "plugin_installed": false,
+      "plugin_imported": false,
+      "renderer_booted": false,
+      "network_probed": false,
+      "lockfile_mutated": false,
+      "policy_decided": false,
+      "human_review_approved": false,
+      "release_authorized": false,
+      "deployed": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "name": "complete_evidence_ready_for_review",
+      "mutations": [],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "vulnerability_evidence_unknown",
+      "mutations": [
+        { "path": "/checks/vulnerability_status", "value": "UNKNOWN" },
+        { "path": "/checks/vulnerability_evidence_ref", "value": null },
+        { "path": "/recommendation", "value": "HOLD" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "VULNERABILITY_UNRESOLVED", "path": "/checks/vulnerability_status" }
+      ]
+    },
+    {
+      "name": "attestation_unknown",
+      "mutations": [
+        { "path": "/checks/attestation_status", "value": "UNKNOWN" },
+        { "path": "/checks/attestation_ref", "value": null },
+        { "path": "/recommendation", "value": "HOLD" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "ATTESTATION_UNRESOLVED", "path": "/checks/attestation_status" }
+      ]
+    },
+    {
+      "name": "version_not_pinned",
+      "mutations": [
+        { "path": "/checks/version_pinned", "value": false },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "VERSION_NOT_PINNED", "path": "/checks/version_pinned" }
+      ]
+    },
+    {
+      "name": "integrity_not_verified",
+      "mutations": [
+        { "path": "/checks/integrity_verified", "value": false },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "INTEGRITY_NOT_VERIFIED", "path": "/checks/integrity_verified" }
+      ]
+    },
+    {
+      "name": "lockfile_not_bound",
+      "mutations": [
+        { "path": "/checks/lockfile_bound", "value": false },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "LOCKFILE_NOT_BOUND", "path": "/checks/lockfile_bound" }
+      ]
+    },
+    {
+      "name": "dependency_origin_denied",
+      "mutations": [
+        { "path": "/checks/origin_status", "value": "DENY" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DEPENDENCY_ORIGIN_DENIED", "path": "/checks/origin_status" }
+      ]
+    },
+    {
+      "name": "attestation_invalid",
+      "mutations": [
+        { "path": "/checks/attestation_status", "value": "INVALID" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ATTESTATION_INVALID", "path": "/checks/attestation_status" }
+      ]
+    },
+    {
+      "name": "sbom_invalid",
+      "mutations": [
+        { "path": "/checks/sbom_status", "value": "INVALID" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "SBOM_INVALID", "path": "/checks/sbom_status" }
+      ]
+    },
+    {
+      "name": "license_denied",
+      "mutations": [
+        { "path": "/checks/license_status", "value": "DENIED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "LICENSE_DENIED", "path": "/checks/license_status" }
+      ]
+    },
+    {
+      "name": "vulnerability_affected",
+      "mutations": [
+        { "path": "/checks/vulnerability_status", "value": "AFFECTED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "VULNERABILITY_AFFECTED", "path": "/checks/vulnerability_status" }
+      ]
+    },
+    {
+      "name": "adapter_boundary_violated",
+      "mutations": [
+        { "path": "/checks/adapter_boundary_status", "value": "VIOLATED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ADAPTER_BOUNDARY_VIOLATED", "path": "/checks/adapter_boundary_status" }
+      ]
+    },
+    {
+      "name": "network_behavior_violated",
+      "mutations": [
+        { "path": "/checks/network_behavior_status", "value": "VIOLATED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "NETWORK_BEHAVIOR_VIOLATED", "path": "/checks/network_behavior_status" }
+      ]
+    },
+    {
+      "name": "removal_failed",
+      "mutations": [
+        { "path": "/checks/removal_status", "value": "FAILED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "REMOVAL_TEST_FAILED", "path": "/checks/removal_status" }
+      ]
+    },
+    {
+      "name": "rollback_failed",
+      "mutations": [
+        { "path": "/checks/rollback_status", "value": "FAILED" },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ROLLBACK_FAILED", "path": "/checks/rollback_status" }
+      ]
+    },
+    {
+      "name": "publication_effect_overclaim",
+      "mutations": [
+        { "path": "/effects/published", "value": true },
+        { "path": "/recommendation", "value": "DENY" }
+      ],
+      "identity_mode": "RECOMPUTE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "AUTHORITY_EFFECT_OVERCLAIM", "path": "/effects" }
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        { "code": "SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    }
+  ]
+}
