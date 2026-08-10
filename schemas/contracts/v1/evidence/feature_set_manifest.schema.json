@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/feature_set_manifest.schema.json",
+  "title": "FeatureSetManifest",
+  "description": "Fixture-only declaration of model feature semantics, lineage references, missingness, sensitivity, and non-authority posture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "manifest_id",
+    "model_context",
+    "features",
+    "lineage",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "FeatureSetManifest" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.feature-set-manifest.fixture.v1" },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm:feature-set-manifest:[a-f0-9]{24}$"
+    },
+    "model_context": { "$ref": "#/$defs/model_context" },
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/feature" }
+    },
+    "lineage": { "$ref": "#/$defs/lineage" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}$"
+    },
+    "nullable_ref": {
+      "oneOf": [{ "$ref": "#/$defs/ref" }, { "type": "null" }]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "model_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_family_ref", "intended_use_ref", "target_ref", "use_phase"],
+      "properties": {
+        "model_family_ref": { "$ref": "#/$defs/ref" },
+        "intended_use_ref": { "$ref": "#/$defs/ref" },
+        "target_ref": { "$ref": "#/$defs/nullable_ref" },
+        "use_phase": { "enum": ["TRAINING", "INFERENCE", "BOTH"] }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_key",
+        "semantic_ref",
+        "data_type",
+        "source_role",
+        "unit",
+        "spatial_support_ref",
+        "temporal_support_ref",
+        "evidence_required",
+        "missing_data_policy",
+        "imputation_method_ref",
+        "derivation_ref",
+        "sensitivity_class",
+        "policy_profile_ref",
+        "target_leakage"
+      ],
+      "properties": {
+        "feature_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "semantic_ref": { "$ref": "#/$defs/ref" },
+        "data_type": { "enum": ["NUMBER", "INTEGER", "BOOLEAN", "CATEGORY", "STRING"] },
+        "source_role": {
+          "enum": [
+            "ADMINISTRATIVE",
+            "AGGREGATE",
+            "DERIVED",
+            "INTERPRETIVE",
+            "MODELED",
+            "OBSERVED",
+            "REGULATORY",
+            "SYNTHETIC"
+          ]
+        },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "spatial_support_ref": { "$ref": "#/$defs/ref" },
+        "temporal_support_ref": { "$ref": "#/$defs/ref" },
+        "evidence_required": { "const": true },
+        "missing_data_policy": {
+          "enum": ["FORBIDDEN", "ALLOW_WITH_INDICATOR", "IMPUTE_WITH_METHOD_REF"]
+        },
+        "imputation_method_ref": { "$ref": "#/$defs/nullable_ref" },
+        "derivation_ref": { "$ref": "#/$defs/nullable_ref" },
+        "sensitivity_class": { "enum": ["PUBLIC", "INTERNAL", "RESTRICTED", "HIGHLY_RESTRICTED"] },
+        "policy_profile_ref": { "$ref": "#/$defs/nullable_ref" },
+        "target_leakage": { "const": false }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_refs",
+        "evidence_bundle_refs",
+        "training_dataset_ref",
+        "feature_extraction_receipt_ref"
+      ],
+      "properties": {
+        "source_descriptor_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/ref" }
+        },
+        "evidence_bundle_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/ref" }
+        },
+        "training_dataset_ref": { "$ref": "#/$defs/nullable_ref" },
+        "feature_extraction_receipt_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_list_required",
+        "missingness_required",
+        "lineage_required",
+        "sensitivity_required",
+        "interpretation_limits"
+      ],
+      "properties": {
+        "feature_list_required": { "const": true },
+        "missingness_required": { "const": true },
+        "lineage_required": { "const": true },
+        "sensitivity_required": { "const": true },
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "NO_MODEL_VALIDITY_CLAIM",
+              "NO_PUBLICATION_AUTHORITY",
+              "NOT_OBSERVATION",
+              "NOT_ROOT_TRUTH",
+              "SCOPE_BOUND"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "feature_extraction_executed",
+        "model_executed",
+        "evidence_resolved",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "feature_extraction_executed": { "const": false },
+        "model_executed": { "const": false },
+        "evidence_resolved": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}
