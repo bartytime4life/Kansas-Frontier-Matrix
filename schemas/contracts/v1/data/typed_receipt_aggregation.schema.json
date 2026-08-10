@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/typed_receipt_aggregation.schema.json",
+  "title": "TypedReceiptAggregationCandidate",
+  "description": "Fixture-only aggregation of typed receipt declarations with no receipt, verification, policy, review, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "aggregation_id", "spec_hash", "dataset_ref", "run_id", "entries", "summary", "controls", "non_effects"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "TypedReceiptAggregationCandidate"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "aggregation_id": {"type": "string", "pattern": "^kfm:typed-receipt-aggregation:[a-f0-9]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "dataset_ref": {"type": "string", "pattern": "^fixture:dataset/[a-z0-9][a-z0-9._/-]{0,127}$"},
+    "run_id": {"type": "string", "pattern": "^fixture:run/[a-z0-9][a-z0-9._/-]{0,127}$"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["receipt_type", "receipt_ref", "receipt_schema_ref", "receipt_sha256", "input_sha256", "rekor_entry_id", "produced_artifacts", "materiality_delta", "publish_candidate"],
+        "properties": {
+          "receipt_type": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+          "receipt_ref": {"type": "string", "pattern": "^fixture:receipt/[a-z0-9][a-z0-9._/-]{0,127}$"},
+          "receipt_schema_ref": {"type": "string", "pattern": "^repo://schemas/contracts/v1/[a-z0-9_./-]+\\.schema\\.json$"},
+          "receipt_sha256": {"$ref": "#/$defs/sha256"},
+          "input_sha256": {"$ref": "#/$defs/sha256"},
+          "rekor_entry_id": {"oneOf": [{"type": "string", "pattern": "^fixture:rekor/[a-f0-9]{64}$"}, {"type": "null"}]},
+          "produced_artifacts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": {"type": "string", "pattern": "^(artifacts|data|release)/[a-zA-Z0-9._/-]+$", "maxLength": 256},
+                "sha256": {"$ref": "#/$defs/sha256"}
+              }
+            }
+          },
+          "materiality_delta": {"enum": ["NON_EVENT", "PROMOTION_CANDIDATE", "HOLD", "ERROR"]},
+          "publish_candidate": {"type": "boolean"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry_count", "artifact_count", "input_sha256s", "materiality_counts", "publish_candidate_receipt_refs", "unsigned_receipt_refs", "review_posture"],
+      "properties": {
+        "entry_count": {"type": "integer", "minimum": 1, "maximum": 128},
+        "artifact_count": {"type": "integer", "minimum": 1, "maximum": 16384},
+        "input_sha256s": {"$ref": "#/$defs/sha256s"},
+        "materiality_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["NON_EVENT", "PROMOTION_CANDIDATE", "HOLD", "ERROR"],
+          "properties": {
+            "NON_EVENT": {"type": "integer", "minimum": 0, "maximum": 128},
+            "PROMOTION_CANDIDATE": {"type": "integer", "minimum": 0, "maximum": 128},
+            "HOLD": {"type": "integer", "minimum": 0, "maximum": 128},
+            "ERROR": {"type": "integer", "minimum": 0, "maximum": 128}
+          }
+        },
+        "publish_candidate_receipt_refs": {"$ref": "#/$defs/receipt_refs"},
+        "unsigned_receipt_refs": {"$ref": "#/$defs/receipt_refs"},
+        "review_posture": {"const": "HOLD_FOR_SEPARATE_REVIEW"}
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "receipts_resolved", "artifact_bytes_read", "rekor_queried", "signatures_verified", "source_admitted", "policy_evaluated", "review_approved", "promotion_eligible", "release_authorized", "publication_authorized"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "receipts_resolved": {"const": false},
+        "artifact_bytes_read": {"const": false},
+        "rekor_queried": {"const": false},
+        "signatures_verified": {"const": false},
+        "source_admitted": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_eligible": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": ["NO_ARTIFACT_READ", "NO_POLICY_DECISION", "NO_PROMOTION", "NO_PUBLICATION", "NO_RECEIPT_RESOLUTION", "NO_REKOR_QUERY", "NO_RELEASE", "NO_SIGNATURE_VERIFICATION", "NO_SOURCE_ADMISSION"]
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "sha256s": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+    "receipt_ref": {"type": "string", "pattern": "^fixture:receipt/[a-z0-9][a-z0-9._/-]{0,127}$"},
+    "receipt_refs": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/receipt_ref"}}
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_card": "KFM-P31-PROG-0013",
+    "contract_doc": "contracts/data/typed_receipt_aggregation.md",
+    "fixture_root": "fixtures/contracts/v1/data/typed_receipt_aggregation/",
+    "authority": "bounded synthetic typed-receipt aggregation only"
+  }
+}
