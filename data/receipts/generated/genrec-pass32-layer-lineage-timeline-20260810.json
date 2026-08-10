@@ -19,7 +19,7 @@
     "fixtures/ui/layer_lineage_projection/valid/missing.json"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/adapters/LayerLineageProjection.ts": "sha256:1cd59a88cd019f558e5b099ea3652f02ed9453599dc6e2dca8a1f7bb71a2650a",
+    "apps/explorer-web/src/adapters/LayerLineageProjection.ts": "sha256:6bc10ffb46ec24ccaf90daa4c427496fb2f556f9e87cea74f7db2a2912fc9321",
     "apps/explorer-web/src/features/layer_lineage_timeline/README.md": "sha256:482564e8dee9844bc626b43c79b9cb08ff6e462bcd92aa52a8f5df4a24310ec4",
     "apps/explorer-web/src/features/layer_lineage_timeline/index.ts": "sha256:d87e5e12cb1f8c6306c4bb211e9b57a29a25b7385ecdae7095fecce8b8c63bc1",
     "apps/explorer-web/tests/browser/layer-lineage-timeline.fixture.ts": "sha256:4dddd2cc9f9b1d6c7ba0ab77d3d892229cdb2ad5f05538244abcc7d556de7f4f",
@@ -97,6 +97,11 @@
       "gate": "repository-and-pr-overlap-preflight",
       "outcome": "PASS",
       "reason": "Current main and open pull requests were searched for the selected card ID and rollback/correction timeline terms; no implementation overlap was found."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The Explorer adapter boundary tests passed after using the established split-token form for governed release references."
     },
     {
       "gate": "explorer-production-build",

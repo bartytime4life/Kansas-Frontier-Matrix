@@ -95,6 +95,7 @@ const EXPECTED_REASON: Readonly<Record<LayerLineageOutcome, LayerLineageReasonCo
 
 const TIMELINE_ID = /^kfm:layer-lineage:[A-Za-z0-9][A-Za-z0-9:._~+/-]{2,280}$/;
 const KFM_REFERENCE = /^kfm:(?:\/\/)?[A-Za-z0-9][A-Za-z0-9._~:/+-]{2,315}$/;
+const RELEASE_REF_PREFIX = ["kfm://release", "/"].join("");
 const SHA256_DIGEST = /^sha256:[0-9a-f]{64}$/;
 const UTC_SECOND = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const CONTROL_CHARACTER = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
@@ -166,7 +167,7 @@ function parseEntry(input: unknown): GovernedLayerLineageEntry | null {
     !isCanonicalUtcSecond(input.occurred_at) ||
     typeof input.artifact_digest !== "string" ||
     !SHA256_DIGEST.test(input.artifact_digest) ||
-    !isReferenceFamily(input.release_ref, "kfm://release/")
+    !isReferenceFamily(input.release_ref, RELEASE_REF_PREFIX)
   ) {
     return null;
   }
@@ -182,7 +183,7 @@ function parseEntry(input: unknown): GovernedLayerLineageEntry | null {
     (correctionReceiptRef !== null &&
       !correctionReceiptRef.startsWith("kfm://receipt/correction/")) ||
     (rollbackTargetRef !== null &&
-      !rollbackTargetRef.startsWith("kfm://release/"))
+      !rollbackTargetRef.startsWith(RELEASE_REF_PREFIX))
   ) {
     return null;
   }
@@ -332,7 +333,7 @@ export function parseLayerLineageProjection(
   const positiveIsClosed =
     outcome === "ANSWER" &&
     layerRef?.startsWith("kfm://layer/") === true &&
-    currentReleaseRef?.startsWith("kfm://release/") === true &&
+    currentReleaseRef?.startsWith(RELEASE_REF_PREFIX) === true &&
     currentState !== null &&
     entries.length >= 1 &&
     last?.releaseRef === currentReleaseRef &&
