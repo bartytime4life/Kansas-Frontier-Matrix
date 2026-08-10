@@ -1,0 +1,21 @@
+{
+  "profile": "kfm.explorer.promotion-gate-status-board.public-safe.v1",
+  "board_id": "kfm:promotion-gate-status-board:synthetic:denied-001",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "observed_at": null,
+  "candidate_ref": null,
+  "board_state": null,
+  "components": [],
+  "summary": null,
+  "governance": {
+    "source_monitor_executed": false,
+    "validator_executed": false,
+    "policy_evaluated": false,
+    "attestation_verified": false,
+    "review_authenticated": false,
+    "promotion_allowed": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}
