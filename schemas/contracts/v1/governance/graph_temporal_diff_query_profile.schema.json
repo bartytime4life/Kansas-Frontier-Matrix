@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/graph_temporal_diff_query_profile.schema.json",
+  "title": "GraphTemporalDiffQueryProfileCandidate",
+  "description": "Fixture-only declaration of parameterized read-only graph temporal-diff queries. Validation grants no graph, migration, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "profile_id", "migration_declaration_ref", "snapshot_window", "queries", "governance", "assessment", "permissions", "non_effects", "spec_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "GraphTemporalDiffQueryProfileCandidate"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "profile_id": {"type": "string", "pattern": "^kfm:graph-temporal-diff-query-profile:[0-9a-f]{24}$"},
+    "migration_declaration_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+    "snapshot_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["migration_window_id", "before_snapshot_ref", "after_snapshot_ref", "valid_time_start", "valid_time_end"],
+      "properties": {
+        "migration_window_id": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "before_snapshot_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "after_snapshot_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "valid_time_start": {"type": "string", "format": "date-time"},
+        "valid_time_end": {"type": "string", "format": "date-time"}
+      }
+    },
+    "queries": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["query_id", "scope_kind", "cypher_template", "parameters", "result_columns", "read_only", "bounded", "timeout_ms"],
+        "properties": {
+          "query_id": {"enum": ["LABEL_SCOPED_NODE_DIFF", "MIGRATION_WINDOW_NODE_DIFF", "RELATIONSHIP_SCOPED_DIFF"]},
+          "scope_kind": {"enum": ["LABEL_SCOPED", "MIGRATION_WINDOW", "RELATIONSHIP_SCOPED"]},
+          "cypher_template": {"type": "string", "minLength": 100, "maxLength": 1600, "pattern": "^[^\\r\\n\\u0000-\\u001f]+$"},
+          "parameters": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "type", "required"],
+              "properties": {
+                "name": {"enum": ["after_snapshot_ref", "before_snapshot_ref", "label", "migration_window_id", "relationship_type"]},
+                "type": {"enum": ["FIXTURE_REF", "STRING"]},
+                "required": {"const": true}
+              }
+            }
+          },
+          "result_columns": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"}, "uniqueItems": true},
+          "read_only": {"const": true},
+          "bounded": {"const": true},
+          "timeout_ms": {"type": "integer", "minimum": 1, "maximum": 10000}
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_refs", "evidence_refs", "policy_refs", "review_state", "query_execution_authorized", "migration_execution_authorized", "release_authorized", "publication_authorized"],
+      "properties": {
+        "authority_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "policy_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "review_state": {"const": "PENDING"},
+        "query_execution_authorized": {"const": false},
+        "migration_execution_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_code"],
+      "properties": {
+        "outcome": {"const": "HOLD"},
+        "reason_code": {"const": "GRAPH_QUERY_PROFILE_REVIEW_REQUIRED"}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network_access", "graph_read", "graph_write", "file_mutation", "policy_evaluation", "release", "publication"],
+      "properties": {
+        "network_access": {"const": false},
+        "graph_read": {"const": false},
+        "graph_write": {"const": false},
+        "file_mutation": {"const": false},
+        "policy_evaluation": {"const": false},
+        "release": {"const": false},
+        "publication": {"const": false}
+      }
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {"enum": ["NO_GRAPH_ACCESS", "NO_QUERY_EXECUTION", "NO_MIGRATION_EXECUTION", "NO_GRAPH_WRITE", "NO_EVIDENCE_MUTATION", "NO_POLICY_DECISION", "NO_REVIEW_APPROVAL", "NO_LIFECYCLE_PROMOTION", "NO_RELEASE", "NO_PUBLICATION"]}
+    },
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "nonEmptyRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 300}, "uniqueItems": true}
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "source_card": "KFM-P30-PROG-0010",
+    "source_spec_hash": "sha256:b40876ab01dbd8f6262288674846060542ee79a7e75d0ac202cd04febb64f5ba"
+  }
+}
