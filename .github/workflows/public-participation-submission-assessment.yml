@@ -1,0 +1,102 @@
+# Validate the additive, fixture-only public-participation submission assessment.
+name: public-participation-submission-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/public-participation-submission-assessment.yml"
+      - "contracts/governance/public_participation_submission_assessment.md"
+      - "schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/public_participation_submission_assessment/**"
+      - "tools/validators/validate_public_participation_submission_assessment.py"
+      - "tests/validators/test_validate_public_participation_submission_assessment.py"
+      - "docs/intake/exploratory/briefing-public-participation-submission-source-map.md"
+      - "data/receipts/generated/genrec-public-participation-submission-assessment-20260810.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/public-participation-submission-assessment.yml"
+      - "contracts/governance/public_participation_submission_assessment.md"
+      - "schemas/contracts/v1/governance/public_participation_submission_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/public_participation_submission_assessment/**"
+      - "tools/validators/validate_public_participation_submission_assessment.py"
+      - "tests/validators/test_validate_public_participation_submission_assessment.py"
+      - "docs/intake/exploratory/briefing-public-participation-submission-source-map.md"
+      - "data/receipts/generated/genrec-public-participation-submission-assessment-20260810.json"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-participation-submission-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-public-participation-submission-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_public_participation_submission_assessment --verbose
+
+      - name: Replay exact fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_public_participation_submission_assessment.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-public-participation-submission-assessment-20260810.json \
+            --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Public-participation submission assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: local window timing, receipt, privacy/publication posture, deterministic identity, and authority non-effects."
+            echo "- Boundary: no intake, acceptance, review approval, endorsement, recommendation, decision, source activation, release, publication, public use, map, API, or UI authority."
+          } >> "$GITHUB_STEP_SUMMARY"
