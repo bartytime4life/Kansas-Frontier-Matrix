@@ -2,11 +2,11 @@
 doc_id: kfm://contract/domains/soil/ssurgo-yearly-diff-profile
 title: SSURGO and gNATSGO Yearly Diff Profile Contract
 type: semantic-contract
-version: v0.1.0
+version: v0.2.0
 status: proposed-inactive
 owners: OWNER_TBD — Soil steward · Source steward · Evidence steward · Validation steward
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-10
 policy_label: internal; fixture-only; no-network; non-authoritative
 owning_root: contracts/
 responsibility: Define the bounded meaning of a year-pinned soil snapshot-diff profile without activating sources or authorizing publication.
@@ -15,6 +15,7 @@ related:
   - ../../../schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json
   - ../../../pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json
   - ../../../tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py
+  - ../../../tools/generators/build_soil_yearly_diff.py
   - ../../../fixtures/domains/soil/yearly_diff/cases.json
   - ../../../docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md
   - soil_watcher_spec.md
@@ -69,6 +70,24 @@ A valid profile contains:
 | `ERROR` | The validator cannot safely read or evaluate the input. |
 
 A `PASS` is not evidence that NRCS source bytes, source terms, rights, real STAC items, PROV graphs, release state, or publication readiness are valid.
+
+## Deterministic dry-run builder
+
+`tools/generators/build_soil_yearly_diff.py` implements the source map's next bounded step. It accepts two explicit local `SoilSyntheticSnapshotManifest` JSON files, requires one source family and consecutive years, compares canonical record keys, and emits a candidate build result containing:
+
+- the existing validated `SoilYearlyDiffProfile`;
+- sorted added and removed record keys;
+- sorted modified-record entries with before/after RFC 8785 hashes;
+- canonical changed-property names; and
+- a deterministic hash binding the detailed synthetic record diff to the profile's diff artifact declaration.
+
+The default command writes only to stdout. `--write PATH` is required for filesystem output, and existing output is preserved unless `--force` is explicit. Inputs must remain fixture-only and no-network. The helper does not fetch NRCS bytes or create STAC, PROV, receipt, evidence, promotion, release, or publication authority.
+
+```bash
+python tools/generators/build_soil_yearly_diff.py \
+  fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2025.json \
+  fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2026.json
+```
 
 ## Stable semantic findings
 
