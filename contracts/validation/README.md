@@ -16,7 +16,6 @@ This lane owns human-readable semantic meaning for validation-assurance objects:
 
 It does not own test execution, mutation tools, policy approval, merge authority, release decisions, or publication.
 
-## Current proposed contracts
+## Current proposed contract
 
 - [`ValidatorAssuranceReport`](./validator_assurance_report.md) — deterministic campaign identity, operator set, mutant counts, surviving semantic gaps, bounded finite outcome, and explicit non-authority fields.
-- [`PipelineReplayAssessmentCandidate`](./pipeline_replay_assessment.md) — deterministic comparison of pinned source snapshots, transform parameters, model identity, validator identity, and output digest without executing a pipeline.

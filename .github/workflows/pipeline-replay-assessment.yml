@@ -5,9 +5,7 @@ name: pipeline-replay-assessment
   pull_request:
     paths:
       - ".github/workflows/pipeline-replay-assessment.yml"
-      - "contracts/validation/README.md"
       - "contracts/validation/pipeline_replay_assessment.md"
-      - "schemas/contracts/v1/validation/README.md"
       - "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json"
       - "fixtures/contracts/v1/validation/pipeline_replay_assessment/**"
       - "tools/validators/validate_pipeline_replay_assessment.py"
@@ -20,9 +18,7 @@ name: pipeline-replay-assessment
     branches: [main]
     paths:
       - ".github/workflows/pipeline-replay-assessment.yml"
-      - "contracts/validation/README.md"
       - "contracts/validation/pipeline_replay_assessment.md"
-      - "schemas/contracts/v1/validation/README.md"
       - "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json"
       - "fixtures/contracts/v1/validation/pipeline_replay_assessment/**"
       - "tools/validators/validate_pipeline_replay_assessment.py"

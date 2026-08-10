@@ -3,22 +3,18 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/pipeline-replay-assessment.yml",
-    "contracts/validation/README.md",
     "contracts/validation/pipeline_replay_assessment.md",
     "docs/intake/exploratory/pipeline-replay-assessment-source-map.md",
     "fixtures/contracts/v1/validation/pipeline_replay_assessment/cases.json",
-    "schemas/contracts/v1/validation/README.md",
     "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json",
     "tests/validators/test_validate_pipeline_replay_assessment.py",
     "tools/validators/validate_pipeline_replay_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/pipeline-replay-assessment.yml": "sha256:d1eed16e0c04d56a491f32884a69cdcc1cb823acc16d16021404ffa2bf13c6f3",
-    "contracts/validation/README.md": "sha256:4532f0fd71357b843a79aa3231317031ebdcbda02573f1f3deebd49887c6c7c6",
+    ".github/workflows/pipeline-replay-assessment.yml": "sha256:8e29415c7ba949161cf4e7478bb352049da6c7b94a2ac16a21518fdad6f0c7b4",
     "contracts/validation/pipeline_replay_assessment.md": "sha256:dc58742ff300319153c11e336b108fe59c213c4945db3c253aceceac9876a201",
     "docs/intake/exploratory/pipeline-replay-assessment-source-map.md": "sha256:75049a3aa6002c01f1762c54ee764eff0226e7db393b74f6f7a8006e769bbffc",
     "fixtures/contracts/v1/validation/pipeline_replay_assessment/cases.json": "sha256:f7e589eb2c5a726c8870c398068036918a514963e05ff8b5ad32089dfbfc706a",
-    "schemas/contracts/v1/validation/README.md": "sha256:42d71c890e45a38e24a4d010fbb93f04122014492de636b116bcf73e864b0b54",
     "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json": "sha256:cd3c495e24f209a65d52f98fdc874540c13b5b81110140ced1405b0626b05bdd",
     "tests/validators/test_validate_pipeline_replay_assessment.py": "sha256:4a37305adda71e01c46a393abc06be4ccf36bdbc8547bac39aa89047cd2a5f42",
     "tools/validators/validate_pipeline_replay_assessment.py": "sha256:c8de45ac12472a1724a54557a66611943863d9c1bbf256d46c7a7dae6ea2f817"
@@ -57,11 +53,9 @@
   },
   "truth_labels": {
     ".github/workflows/pipeline-replay-assessment.yml": "CONFIRMED",
-    "contracts/validation/README.md": "CONFIRMED",
     "contracts/validation/pipeline_replay_assessment.md": "PROPOSED",
     "docs/intake/exploratory/pipeline-replay-assessment-source-map.md": "CONFIRMED",
     "fixtures/contracts/v1/validation/pipeline_replay_assessment/cases.json": "CONFIRMED",
-    "schemas/contracts/v1/validation/README.md": "CONFIRMED",
     "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json": "PROPOSED",
     "tests/validators/test_validate_pipeline_replay_assessment.py": "CONFIRMED",
     "tools/validators/validate_pipeline_replay_assessment.py": "CONFIRMED"
@@ -74,7 +68,7 @@
     {"gate": "adjacent-validator-assurance-suite", "outcome": "PASS", "reason": "9 adjacent validation-lane tests passed."},
     {"gate": "adjacent-recompile-manifest-suite", "outcome": "PASS", "reason": "12 adjacent governance recompilation tests passed."},
     {"gate": "adjacent-replay-safe-effect-ledger-suite", "outcome": "FAIL", "reason": "Current main contains a pre-existing unterminated corrupted string in tools/validators/runtime/replay_safe_effect_ledger_semantics.py; this packet does not touch that file."},
-    {"gate": "documentation-metadata-and-local-link-validation", "outcome": "PASS", "reason": "Both new metadata blocks and all four changed documents' local links passed bounded no-network validators."},
+    {"gate": "documentation-metadata-and-local-link-validation", "outcome": "PASS", "reason": "Both new metadata blocks and their local links passed bounded no-network validators."},
     {"gate": "workflow-yaml-parse", "outcome": "PASS"},
     {"gate": "no-network-no-pipeline-no-model-boundary", "outcome": "PASS"},
     {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},

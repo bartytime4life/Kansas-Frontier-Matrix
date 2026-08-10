@@ -31,7 +31,6 @@ It does not own validator execution, mutation engines, policy decisions, branch 
 | Schema | Contract | Status | Scope |
 |---|---|---|---|
 | [`validator_assurance_report.schema.json`](./validator_assurance_report.schema.json) | [`ValidatorAssuranceReport`](../../../../contracts/validation/validator_assurance_report.md) | `PROPOSED` / fixture-first | Bounded adversarial/mutation assurance evidence with semantic survivor inventory and no universal threshold. |
-| [`pipeline_replay_assessment.schema.json`](./pipeline_replay_assessment.schema.json) | [`PipelineReplayAssessmentCandidate`](../../../../contracts/validation/pipeline_replay_assessment.md) | `PROPOSED` / fixture-only | Exact comparison of pinned source, transform, model, validator, and output identities without pipeline execution. |
 
 ## Required separation
 
