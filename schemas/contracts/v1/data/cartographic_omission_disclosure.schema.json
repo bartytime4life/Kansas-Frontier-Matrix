@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/cartographic_omission_disclosure.schema.json",
+  "title": "CartographicOmissionDisclosureCandidate",
+  "description": "Fixture-only profile for omission, simplification, and emphasis disclosure without granting map, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "layer_manifest_ref",
+    "layer_manifest_digest",
+    "map_purpose",
+    "evidence_scope",
+    "assessment",
+    "entries",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "CartographicOmissionDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.data.cartographic-omission-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-401"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "layer_manifest_ref": {"$ref": "#/$defs/ref"},
+    "layer_manifest_digest": {"$ref": "#/$defs/sha256"},
+    "map_purpose": {"$ref": "#/$defs/resolved_reference"},
+    "evidence_scope": {"$ref": "#/$defs/resolved_reference"},
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_statement", "state", "known_undisclosed_material_count"],
+      "properties": {
+        "scope_statement": {"type": "string", "minLength": 12, "maxLength": 1000},
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]},
+        "known_undisclosed_material_count": {"type": "integer", "minimum": 0, "maximum": 1000000}
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "id": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-z][a-z0-9_.:-]*$"},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "nonempty_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "omission_id",
+        "subject_kind",
+        "subject_ref",
+        "action",
+        "reason_code",
+        "materiality",
+        "public_disclosure",
+        "evidence_refs",
+        "policy_decision_refs",
+        "review_record_refs",
+        "transform_receipt_ref"
+      ],
+      "properties": {
+        "omission_id": {"$ref": "#/$defs/id"},
+        "subject_kind": {
+          "enum": ["SOURCE_LAYER", "FEATURE_CLASS", "ATTRIBUTE", "GEOMETRY_DETAIL", "TEMPORAL_SLICE", "LABEL", "SYMBOL"]
+        },
+        "subject_ref": {"$ref": "#/$defs/ref"},
+        "action": {"enum": ["OMIT", "SIMPLIFY", "EMPHASIZE"]},
+        "reason_code": {
+          "enum": ["MAP_PURPOSE", "SCALE_OR_ZOOM", "VISUAL_HIERARCHY", "DATA_QUALITY", "RIGHTS", "SENSITIVITY", "PERFORMANCE", "ACCESSIBILITY", "SOURCE_UNAVAILABLE", "OTHER_REVIEWED"]
+        },
+        "materiality": {"enum": ["MATERIAL", "NON_MATERIAL", "UNKNOWN"]},
+        "public_disclosure": {"enum": ["LAYER_NOTE", "LEGEND", "EVIDENCE_DRAWER", "NONE"]},
+        "evidence_refs": {"$ref": "#/$defs/nonempty_ref_array"},
+        "policy_decision_refs": {"$ref": "#/$defs/ref_array"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "transform_receipt_ref": {
+          "oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/data/cartographic_omission_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/data/cartographic_omission_disclosure/",
+    "validator": "tools/validators/data/validate_cartographic_omission_disclosure.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}
