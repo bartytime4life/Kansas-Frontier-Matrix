@@ -60,7 +60,7 @@ jobs:
       - name: Run focused deterministic validation
         run: python -m pytest -q tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py
       - name: Verify generated receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260809.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json --repo-root .
       - name: Record authority boundary
         if: always()
         run: |
