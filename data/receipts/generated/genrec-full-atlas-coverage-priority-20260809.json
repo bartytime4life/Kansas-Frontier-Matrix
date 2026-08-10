@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-full-atlas-coverage-priority-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/coverage-priority-scorecard.yml",
+    "contracts/governance/coverage_priority_scorecard.md",
+    "docs/intake/exploratory/full-atlas-coverage-priority-source-map.md",
+    "fixtures/contracts/v1/governance/coverage_priority_scorecard/cases.json",
+    "schemas/contracts/v1/governance/coverage_priority_scorecard.schema.json",
+    "tests/validators/governance/test_coverage_priority_scorecard.py",
+    "tools/validators/governance/validate_coverage_priority_scorecard.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/coverage-priority-scorecard.yml": "sha256:2bac56b731744372ab53992cfa1cb72d75e1528bfbdd0579b9c097adb30327b3",
+    "contracts/governance/coverage_priority_scorecard.md": "sha256:5b65d94c00ccc1866056aa12f54536ff04760624d68a925ba90e8c17e3e86b4b",
+    "docs/intake/exploratory/full-atlas-coverage-priority-source-map.md": "sha256:6bd7bad5f5d63ed794a6f42e8e237b1fc312ae9e9d64296160e7852b97e6bec6",
+    "fixtures/contracts/v1/governance/coverage_priority_scorecard/cases.json": "sha256:1e5def7e26a8f85a058ccefd6f28f8ff3b9e1fec4453df708ecc8a5f2c876d2a",
+    "schemas/contracts/v1/governance/coverage_priority_scorecard.schema.json": "sha256:eec0b2c448d4d4d2e16c964aef09f8d1e52fab2744035cafc1c18d6260911877",
+    "tests/validators/governance/test_coverage_priority_scorecard.py": "sha256:32afb06b60119aaa6fde239272014fe849227985a186c1771970243d166955e8",
+    "tools/validators/governance/validate_coverage_priority_scorecard.py": "sha256:a9c168c4e120255683dcfdaa3a63eac3c8dacd4713676459510db0cb925ed4b4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-047",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0141",
+      "repo:docs/kfm_full_atlas_seed_cards.md@4e4eb979caae21922af2217247ade970bd70cf82",
+      "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@4e4eb979caae21922af2217247ade970bd70cf82",
+      "repo:docs/doctrine/directory-rules.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/coverage-priority-scorecard.yml": "PROPOSED",
+    "contracts/governance/coverage_priority_scorecard.md": "PROPOSED",
+    "docs/intake/exploratory/full-atlas-coverage-priority-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/coverage_priority_scorecard/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/coverage_priority_scorecard.schema.json": "PROPOSED",
+    "tests/validators/governance/test_coverage_priority_scorecard.py": "PROPOSED",
+    "tools/validators/governance/validate_coverage_priority_scorecard.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Fourteen synthetic positive and negative cases produced the expected finite outcomes."
+    },
+    {
+      "gate": "counterfactual-ranking",
+      "outcome": "PASS",
+      "reason": "Density-led and gap-led profiles changed the synthetic ordering with correlation -1.000 and two rank flips."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 scorecard schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed locally."
+    },
+    {
+      "gate": "runtime-work-selection",
+      "outcome": "SKIPPED",
+      "reason": "No real geography, source, scheduler, assignment, funding, policy, or analytics runtime was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human analytics, domain, governance, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4e4eb979caae21922af2217247ade970bd70cf82"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:full-atlas-triad-047",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-047"
+    },
+    {
+      "id": "gdrive:full-atlas-candidate-0141",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0141"
+    },
+    {
+      "id": "repo:new-ideas-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T00:36:59Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first coverage-aware priority scorecard from Full Atlas KFM-TRIAD-047; rankings remain inspectable workflow triage and cannot authorize ecological claims, source activation, work assignment, release, or publication."
+}

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/coverage_priority_scorecard.schema.json",
+  "title": "CoveragePriorityScorecard",
+  "description": "Fixture-only, non-authoritative comparison of explicit coverage-priority weight profiles over synthetic areas.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "scorecard_id", "subject_scope",
+    "weight_profiles", "candidates", "rankings", "stability", "decision",
+    "evaluated_at", "governance", "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "CoveragePriorityScorecard"},
+    "schema_version": {"const": "0.1.0"},
+    "profile": {"const": "kfm.governance.coverage-priority-scorecard.fixture.v1"},
+    "scorecard_id": {"type": "string", "pattern": "^kfm:coverage-priority-scorecard:[a-f0-9]{64}$"},
+    "subject_scope": {"const": "SYNTHETIC_AREA_SET"},
+    "weight_profiles": {
+      "type": "array", "minItems": 2, "maxItems": 4,
+      "items": {"$ref": "#/$defs/weight_profile"}
+    },
+    "candidates": {
+      "type": "array", "minItems": 3, "maxItems": 100,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "rankings": {
+      "type": "array", "minItems": 2, "maxItems": 4,
+      "items": {"$ref": "#/$defs/ranking"}
+    },
+    "stability": {"$ref": "#/$defs/stability"},
+    "decision": {"$ref": "#/$defs/decision"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "metric": {"oneOf": [{"type": "integer", "minimum": 0, "maximum": 100}, {"type": "null"}]},
+    "weight": {"type": "integer", "minimum": 0, "maximum": 1000},
+    "weights": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "data_richness", "recency", "sampling_effort", "source_diversity",
+        "geographic_coverage_gap", "uncertainty_reduction", "sensitivity_burden",
+        "steward_capacity", "public_value", "review_cost"
+      ],
+      "properties": {
+        "data_richness": {"$ref": "#/$defs/weight"},
+        "recency": {"$ref": "#/$defs/weight"},
+        "sampling_effort": {"$ref": "#/$defs/weight"},
+        "source_diversity": {"$ref": "#/$defs/weight"},
+        "geographic_coverage_gap": {"$ref": "#/$defs/weight"},
+        "uncertainty_reduction": {"$ref": "#/$defs/weight"},
+        "sensitivity_burden": {"$ref": "#/$defs/weight"},
+        "steward_capacity": {"$ref": "#/$defs/weight"},
+        "public_value": {"$ref": "#/$defs/weight"},
+        "review_cost": {"$ref": "#/$defs/weight"}
+      }
+    },
+    "metrics": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "data_richness", "recency", "sampling_effort", "source_diversity",
+        "geographic_coverage_gap", "uncertainty_reduction", "sensitivity_burden",
+        "steward_capacity", "public_value", "review_cost"
+      ],
+      "properties": {
+        "data_richness": {"$ref": "#/$defs/metric"},
+        "recency": {"$ref": "#/$defs/metric"},
+        "sampling_effort": {"$ref": "#/$defs/metric"},
+        "source_diversity": {"$ref": "#/$defs/metric"},
+        "geographic_coverage_gap": {"$ref": "#/$defs/metric"},
+        "uncertainty_reduction": {"$ref": "#/$defs/metric"},
+        "sensitivity_burden": {"$ref": "#/$defs/metric"},
+        "steward_capacity": {"$ref": "#/$defs/metric"},
+        "public_value": {"$ref": "#/$defs/metric"},
+        "review_cost": {"$ref": "#/$defs/metric"}
+      }
+    },
+    "component_scores": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "data_richness", "recency", "sampling_effort", "source_diversity",
+        "geographic_coverage_gap", "uncertainty_reduction", "sensitivity_burden",
+        "steward_capacity", "public_value", "review_cost"
+      ],
+      "properties": {
+        "data_richness": {"type": ["integer", "null"]},
+        "recency": {"type": ["integer", "null"]},
+        "sampling_effort": {"type": ["integer", "null"]},
+        "source_diversity": {"type": ["integer", "null"]},
+        "geographic_coverage_gap": {"type": ["integer", "null"]},
+        "uncertainty_reduction": {"type": ["integer", "null"]},
+        "sensitivity_burden": {"type": ["integer", "null"]},
+        "steward_capacity": {"type": ["integer", "null"]},
+        "public_value": {"type": ["integer", "null"]},
+        "review_cost": {"type": ["integer", "null"]}
+      }
+    },
+    "weight_profile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile_id", "profile_version", "weights", "missingness", "source_role_cap_basis_points"],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/code"},
+        "profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "weights": {"$ref": "#/$defs/weights"},
+        "missingness": {
+          "type": "object", "additionalProperties": false,
+          "required": ["strategy", "penalty_points"],
+          "properties": {
+            "strategy": {"enum": ["PENALIZE", "NEUTRAL_ZERO", "ABSTAIN"]},
+            "penalty_points": {"type": "integer", "minimum": 0, "maximum": 100000}
+          }
+        },
+        "source_role_cap_basis_points": {"type": "integer", "minimum": 1, "maximum": 10000}
+      }
+    },
+    "source_role_share": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role_code", "share_basis_points"],
+      "properties": {
+        "role_code": {"$ref": "#/$defs/code"},
+        "share_basis_points": {"type": "integer", "minimum": 0, "maximum": 10000}
+      }
+    },
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["area_ref", "metrics", "missing_metrics", "source_role_shares"],
+      "properties": {
+        "area_ref": {"type": "string", "pattern": "^kfm:fixture:area:[a-z0-9-]{1,64}$"},
+        "metrics": {"$ref": "#/$defs/metrics"},
+        "missing_metrics": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "source_role_shares": {"type": "array", "minItems": 1, "maxItems": 20, "items": {"$ref": "#/$defs/source_role_share"}}
+      }
+    },
+    "rank_entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["area_ref", "component_scores", "missingness_penalty", "source_role_cap_exceeded", "score", "rank"],
+      "properties": {
+        "area_ref": {"type": "string", "pattern": "^kfm:fixture:area:[a-z0-9-]{1,64}$"},
+        "component_scores": {"$ref": "#/$defs/component_scores"},
+        "missingness_penalty": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "source_role_cap_exceeded": {"type": "boolean"},
+        "score": {"type": ["integer", "null"]},
+        "rank": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "ranking": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile_id", "entries"],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/code"},
+        "entries": {"type": "array", "minItems": 3, "maxItems": 100, "items": {"$ref": "#/$defs/rank_entry"}}
+      }
+    },
+    "stability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["compared_profile_ids", "rank_correlation_milli", "rank_flip_count", "stable", "counterfactual_status"],
+      "properties": {
+        "compared_profile_ids": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/code"}},
+        "rank_correlation_milli": {"type": ["integer", "null"], "minimum": -1000, "maximum": 1000},
+        "rank_flip_count": {"type": ["integer", "null"], "minimum": 0},
+        "stable": {"type": "boolean"},
+        "counterfactual_status": {"enum": ["RANKING_UNCHANGED", "RANKING_CHANGED", "INSUFFICIENT_COMPARABLE_RANKS"]}
+      }
+    },
+    "decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome", "reason_codes", "obligations"],
+      "properties": {
+        "outcome": {"enum": ["HOLD", "ABSTAIN"]},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "obligations": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}}
+      }
+    },
+    "governance": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "fixture_only", "no_network", "source_activation_authority", "work_assignment_authority",
+        "ecological_claim_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "no_network": {"const": true},
+        "source_activation_authority": {"const": false},
+        "work_assignment_authority": {"const": false},
+        "ecological_claim_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}
