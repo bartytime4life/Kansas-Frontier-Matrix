@@ -18,11 +18,11 @@ related: [../../../apps/explorer-web/src/features/air_quality_trigger_panel/READ
 
 ## Source statement
 
-`KFM-P32-FEAT-0007` in the supplied *KFM Domains v1.1 + Pass 23/Pass 32 Consolidated Atlas* proposes a panel that distinguishes denied negative fixtures from positive evidence-backed PM2.5 trigger candidates. The related `KFM-P32-IDEA-0012` requires monitored-threshold, trailing-median, and source-evidence conditions to meet fail-closed positive-fixture criteria. The source is a downstream design candidate; it does not establish repository implementation, scientific validity, evidence closure, policy, an event, regulatory compliance, health advice, release, or publication.
+`KFM-P32-FEAT-0007` in the supplied private Pass 32 source corpus proposes a panel that distinguishes denied negative fixtures from positive evidence-backed PM2.5 trigger candidates. The related `KFM-P32-IDEA-0012` requires monitored-threshold, trailing-median, and source-evidence conditions to meet fail-closed positive-fixture criteria. Private source titles and identifiers are intentionally withheld from this public branch. The source is a downstream design candidate; it does not establish repository implementation, scientific validity, evidence closure, policy, an event, regulatory compliance, health advice, release, or publication.
 
 ## Current repository reconciliation
 
-At inspected `main@7c69e025e2b274be4a19f49fa37e22401a2fe757`, `PM25_TRIGGER_CANDIDATE_ASSESSMENT_V1`, its closed schema, deterministic validator, synthetic positive/no-trigger/hold/error/denial cases, tests, workflow, and source map already own categorical candidate-assessment meaning. They expressly do not expose a UI or resolve evidence. Current open PRs implement a View Registry inspector and streamflow QC dashboard on disjoint paths; neither implements this card.
+At initial inspection `main@7c69e025e2b274be4a19f49fa37e22401a2fe757`, `PM25_TRIGGER_CANDIDATE_ASSESSMENT_V1`, its closed schema, deterministic validator, synthetic positive/no-trigger/hold/error/denial cases, tests, workflow, and source map already owned categorical candidate-assessment meaning. They expressly do not expose a UI or resolve evidence. Contemporaneous duplicate, branch, and exact-path searches found no implementation of this card. Delivery was refreshed and revalidated against `main@ef1ba46a19e4de7c176e9d093c1285e73a0af75a`; intervening changes were path-disjoint.
 
 The smallest dependency-closed gap is an unmounted Explorer projection over categorical relations and digest-bound references. No source fetch, observation contract, numeric computation, detector, EvidenceBundle producer, policy pack, route, workflow, event, health/regulatory surface, or lifecycle writer is justified.
 
@@ -40,7 +40,7 @@ Accepted ADR-0029 and Directory Rules route the user surface and app-local adapt
 
 - Consolidated atlas card `KFM-P32-FEAT-0007`, spec hash `sha256:63e16ecd2e3cd675b3b2efc5fb2e326acd9308dfe89dd6df65451463dc44c5d5`.
 - Consolidated atlas card `KFM-P32-IDEA-0012`, spec hash `sha256:1a1b69f7617d949b015eb6e459a061b07789a7be4c5626113defeb43e00a0f88`.
-- Connected Drive Pass 32 atlas: `https://drive.google.com/file/d/1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN`.
+- Private connected-Drive corroboration was inspected; its title and identifier are omitted from the public branch.
 - Repository foundation: `contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md` and its paired schema, validator, fixtures, tests, and workflow.
 
 ## Validation and rollback

@@ -27,7 +27,7 @@
     "apps/explorer-web/tests/browser/air-quality-trigger-panel.fixture.ts": "sha256:4f5e4625d9db30cb0df2fc8ca771feb958a1ce077e56387d30bf2d808893eaa0",
     "apps/explorer-web/tests/browser/air-quality-trigger-panel.html": "sha256:1709299ea9355f2069419f9bcbd6b54520875c75d2c960f5af8f441a864b04b1",
     "apps/explorer-web/tests/browser/air-quality-trigger-panel.spec.ts": "sha256:7254a8734518abc3d536d24249d0fa4c323f5aac31e10dd66acd2755e9f3efd3",
-    "docs/intake/exploratory/pass-32-air-quality-trigger-panel-source-map.md": "sha256:317d960d36c134b89029bb5386ebf7f68724861b3a518d330ec12e64ded47556",
+    "docs/intake/exploratory/pass-32-air-quality-trigger-panel-source-map.md": "sha256:3a49f99b2b178ffb674cc19a8c56241aec2c9b53a1bc07a65466c118577124d4",
     "fixtures/ui/air_quality_trigger_projection/README.md": "sha256:2db8ab742f6b07c7d49c2591183fdea19d6276b7afcdedd1280f495eb5fab18c",
     "fixtures/ui/air_quality_trigger_projection/invalid/extra-raw-field.json": "sha256:01c9961594d9bcb404074a3b4f48f4c0b4daae7dfe3d36281ea7ade57acd91d6",
     "fixtures/ui/air_quality_trigger_projection/invalid/relation-mismatch.json": "sha256:0b5e5c1bbc3ff112ec56409e2a4ca7ce2e7a271f1588b444b32738eb51bd56ba",
@@ -63,14 +63,12 @@
       "sha256:1a1b69f7617d949b015eb6e459a061b07789a7be4c5626113defeb43e00a0f88"
     ],
     "attached_docs": [
-      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
-      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
-      "Directory Rules"
+      "Private user-supplied Pass 32 source corpus (identifiers withheld)",
+      "Repository Directory Rules"
     ],
     "evidence_refs": [
-      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0007",
-      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0012",
-      "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN",
+      "private-corpus:pass32#KFM-P32-FEAT-0007",
+      "private-corpus:pass32#KFM-P32-IDEA-0012",
       "repo:bartytime4life/Kansas-Frontier-Matrix@7c69e025e2b274be4a19f49fa37e22401a2fe757",
       "repo:contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md",
       "repo:tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py",
@@ -99,12 +97,17 @@
     {
       "gate": "repository-and-pr-overlap-preflight",
       "outcome": "PASS",
-      "reason": "Current main and open pull requests were searched for both card IDs, PM2.5 panel terms, and intended paths; the two open Explorer PRs are path-disjoint."
+      "reason": "Initial and pre-delivery searches covered both card IDs, PM2.5 panel terms, branches, pull requests, and intended paths; no implementation of this card was found and contemporaneous work was path-disjoint."
     },
     {
       "gate": "source-pdf-visual-inspection",
       "outcome": "PASS",
       "reason": "The consolidated atlas page carrying KFM-P32-FEAT-0007 and KFM-P32-IDEA-0012 was rendered and visually inspected."
+    },
+    {
+      "gate": "private-source-publication-boundary",
+      "outcome": "PASS",
+      "reason": "Private connected-Drive titles, URLs, and file identifiers are omitted from public artifacts; only card IDs, content digests, and a generic private-corpus reference remain."
     },
     {
       "gate": "projection-and-authority-boundary",
@@ -124,7 +127,12 @@
     {
       "gate": "explorer-full-unit-suite",
       "outcome": "PASS",
-      "reason": "The repository test:unit command passed 24 files and 184 tests."
+      "reason": "The repository test:unit command passed 26 files and 199 tests on the delivery base."
+    },
+    {
+      "gate": "repository-wide-validation",
+      "outcome": "PASS",
+      "reason": "All 8 registered validators passed; 401 schema and contract tests plus 29 subtests passed on the delivery base."
     },
     {
       "gate": "pm25-candidate-foundation-suite",
@@ -162,14 +170,9 @@
   ],
   "citations": [
     {
-      "id": "attachment:pass32-air-quality-trigger-panel",
+      "id": "private-corpus:pass32-air-quality-trigger-panel",
       "validated": true,
-      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0007"
-    },
-    {
-      "id": "gdrive:pass32-atlas",
-      "validated": true,
-      "evidence_ref": "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN"
+      "evidence_ref": "private-corpus:pass32#KFM-P32-FEAT-0007"
     },
     {
       "id": "repository:pm25-trigger-candidate-assessment",
