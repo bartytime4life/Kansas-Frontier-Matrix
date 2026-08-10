@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-pass18-period-boundary-predicate-disclosure-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/period-boundary-predicate-disclosure.yml",
+    "contracts/common/period_boundary_predicate_disclosure.md",
+    "docs/intake/exploratory/pass-18-period-boundary-predicate-disclosure-source-map.md",
+    "fixtures/contracts/v1/common/period_boundary_predicate_disclosure/cases.json",
+    "schemas/contracts/v1/common/period_boundary_predicate_disclosure.schema.json",
+    "tests/validators/test_validate_period_boundary_predicate_disclosure.py",
+    "tools/validators/validate_period_boundary_predicate_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/period-boundary-predicate-disclosure.yml": "sha256:be1e1ef1168417528bca2ea49b0a1289bfeb45fcb68bfbdbeb6089264e9ad009",
+    "contracts/common/period_boundary_predicate_disclosure.md": "sha256:207e5b09a5a5fbb82b7c13bfa7bc2093b822637fb3c8b00ea1b0792b3407463f",
+    "docs/intake/exploratory/pass-18-period-boundary-predicate-disclosure-source-map.md": "sha256:c530e408d0e4efc9b83f89f797cf6299de9e9a1b426d64fd1f42a255d31b847b",
+    "fixtures/contracts/v1/common/period_boundary_predicate_disclosure/cases.json": "sha256:3e675de12b1ba54e53996ded5036d75226271a2a2e189717d80c78f2453dc2a2",
+    "schemas/contracts/v1/common/period_boundary_predicate_disclosure.schema.json": "sha256:1b1f725dc599d976f835225a9872c74a6eb27f555f8db4dc5e1dfd35bb783731",
+    "tests/validators/test_validate_period_boundary_predicate_disclosure.py": "sha256:d3395fec9fcc549f20adeda0819f268db23ddeb69520dd3ae30a3f74d1457bd2",
+    "tools/validators/validate_period_boundary_predicate_disclosure.py": "sha256:76c24329cad944564190b43f53324aa7a54551f318c578d8168cfb5ea5b014b0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:207e5b09a5a5fbb82b7c13bfa7bc2093b822637fb3c8b00ea1b0792b3407463f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=52&printed-page=49&card=KFM-P18-INV-462",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#carrier=Time-Aware-Spatial-Semantics",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/contracts/evidence/temporal_coalescing_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/period-boundary-predicate-disclosure.yml": "CONFIRMED",
+    "contracts/common/period_boundary_predicate_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-period-boundary-predicate-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/period_boundary_predicate_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/period_boundary_predicate_disclosure.schema.json": "PROPOSED",
+    "tests/validators/test_validate_period_boundary_predicate_disclosure.py": "CONFIRMED",
+    "tools/validators/validate_period_boundary_predicate_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic period-boundary tests passed in an isolated declared-dependency environment."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-six exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes, including all 13 endpoint relations."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both new Markdown artifacts passed the repository required metadata profile."},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 395 schema/contract tests and 29 subtests passed."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-period-boundary-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=52&printed-page=49&card=KFM-P18-INV-462"},
+    {"id": "drive-time-aware-semantics-carrier", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#carrier=Time-Aware-Spatial-Semantics"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7d3b894deeb82d3ecb0ddf3daeec9158f266edb1/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:23:07Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only PeriodBoundaryPredicateDisclosureCandidate packet derived from supplied Pass 18 card KFM-P18-INV-462 and thematically corroborated by the connected-Drive time-aware spatial semantics carrier. It validates deterministic identity, proper UTC intervals, explicit conventional or mixed boundaries, all 13 endpoint relations, boundary-aware intersection shape, and canonical evidence references without resolving claims, windows, or evidence; deciding temporal truth, policy, or review; promoting; releasing; deploying; publishing; or authorizing public use."
+}
