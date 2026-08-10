@@ -1,0 +1,84 @@
+{
+  "object_type": "PeriodBoundaryPredicateDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.period-boundary-predicate-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "PeriodBoundaryPredicateDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.period-boundary-predicate-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-462",
+    "observed_at": "2026-08-10T18:00:00Z",
+    "claim_ref": "kfm:claim:synthetic-season-comparison:001",
+    "claim_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "claim_scope": {
+      "ref": "kfm:claim-scope:synthetic-temporal-comparison:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "interval_convention": "LEFT_CLOSED_RIGHT_OPEN",
+    "left_window": {
+      "window_ref": "kfm:temporal-window:synthetic-left:001",
+      "window_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED",
+      "start": "2026-01-01T00:00:00Z",
+      "end": "2026-01-10T00:00:00Z",
+      "start_inclusive": true,
+      "end_inclusive": false
+    },
+    "right_window": {
+      "window_ref": "kfm:temporal-window:synthetic-right:001",
+      "window_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "resolution": "RESOLVED",
+      "start": "2026-01-10T00:00:00Z",
+      "end": "2026-01-20T00:00:00Z",
+      "start_inclusive": true,
+      "end_inclusive": false
+    },
+    "declared_predicate": "MEETS",
+    "declared_intersection_shape": "EMPTY",
+    "explanation": "The synthetic half-open periods meet at one excluded left endpoint and therefore do not share an instant.",
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic-temporal:001",
+      "kfm:evidence-bundle:synthetic-temporal:002"
+    ],
+    "authority_claims": {
+      "temporal_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_relation_meets", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_before", "patch": {"left_window": {"end": "2026-01-09T00:00:00Z"}, "declared_predicate": "BEFORE"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_overlaps", "patch": {"left_window": {"end": "2026-01-12T00:00:00Z"}, "declared_predicate": "OVERLAPS", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_starts", "patch": {"right_window": {"start": "2026-01-01T00:00:00Z"}, "declared_predicate": "STARTS", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_during", "patch": {"left_window": {"start": "2026-01-05T00:00:00Z", "end": "2026-01-15T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z"}, "declared_predicate": "DURING", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_finishes", "patch": {"left_window": {"start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z"}, "declared_predicate": "FINISHES", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_equals", "patch": {"left_window": {"end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z"}, "declared_predicate": "EQUALS", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_finished_by", "patch": {"left_window": {"end": "2026-01-20T00:00:00Z"}, "declared_predicate": "FINISHED_BY", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_contains", "patch": {"left_window": {"end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-05T00:00:00Z", "end": "2026-01-15T00:00:00Z"}, "declared_predicate": "CONTAINS", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_started_by", "patch": {"left_window": {"end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z"}, "declared_predicate": "STARTED_BY", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_overlapped_by", "patch": {"left_window": {"start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z", "end": "2026-01-12T00:00:00Z"}, "declared_predicate": "OVERLAPPED_BY", "declared_intersection_shape": "INTERVAL"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_met_by", "patch": {"left_window": {"start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z"}, "declared_predicate": "MET_BY"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_relation_after", "patch": {"left_window": {"start": "2026-01-11T00:00:00Z", "end": "2026-01-20T00:00:00Z"}, "right_window": {"start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z"}, "declared_predicate": "AFTER"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_closed_meeting_is_point", "patch": {"interval_convention": "CLOSED", "left_window": {"start_inclusive": true, "end_inclusive": true}, "right_window": {"start_inclusive": true, "end_inclusive": true}, "declared_intersection_shape": "POINT"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_mixed_explicit_meeting_is_point", "patch": {"interval_convention": "MIXED_EXPLICIT", "left_window": {"start_inclusive": true, "end_inclusive": true}, "declared_intersection_shape": "POINT"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_claim_scope_unresolved", "patch": {"claim_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CLAIM_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_window_reference_unresolved", "patch": {"left_window": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["WINDOW_REFERENCE_UNRESOLVED"]}},
+    {"name": "deny_predicate_mismatch", "patch": {"declared_predicate": "BEFORE"}, "expected": {"outcome": "DENY", "codes": ["PREDICATE_MISMATCH"]}},
+    {"name": "deny_intersection_shape_mismatch", "patch": {"declared_intersection_shape": "POINT"}, "expected": {"outcome": "DENY", "codes": ["INTERSECTION_SHAPE_MISMATCH"]}},
+    {"name": "deny_closed_convention_mismatch", "patch": {"interval_convention": "CLOSED"}, "expected": {"outcome": "DENY", "codes": ["INTERVAL_CONVENTION_MISMATCH"]}},
+    {"name": "deny_mixed_convention_not_mixed", "patch": {"interval_convention": "MIXED_EXPLICIT"}, "expected": {"outcome": "DENY", "codes": ["INTERVAL_CONVENTION_MISMATCH"]}},
+    {"name": "deny_zero_duration_interval", "patch": {"left_window": {"end": "2026-01-01T00:00:00Z"}}, "expected": {"outcome": "DENY", "codes": ["INTERVAL_ORDER_INVALID"]}},
+    {"name": "deny_non_utc_endpoint", "patch": {"left_window": {"start": "2026-01-01T00:00:00+00:00"}}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic-temporal:002", "kfm:evidence-bundle:synthetic-temporal:001"]}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"private_payload": "MUST_NOT_BE_ACCEPTED"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
