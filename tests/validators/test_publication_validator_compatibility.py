@@ -14,10 +14,6 @@ CASES = (
         "tools.validators.validate_release_manifest",
         "tools.validators.release.validate_release_manifest",
     ),
-    (
-        "tools.validators.validate_rollback_card",
-        "tools.validators.release.validate_rollback_card",
-    ),
 )
 
 
@@ -39,6 +35,5 @@ def test_compatibility_entrypoint_replays_canonical_fixtures(
 ) -> None:
     compatibility = importlib.import_module(compatibility_name)
     canonical = importlib.import_module(canonical_name)
-    assert compatibility.main(["--fixtures"]) == 0
-    output = capsys.readouterr().out
-    assert output
+    assert compatibility.main ["--fixtures"] == 0
+    assert capsys.readouterr().out

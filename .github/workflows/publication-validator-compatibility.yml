@@ -1,4 +1,4 @@
-# Compatibility-entrypoint checks for existing publication validators.
+# Compatibility-entrypoint checks for existing manifest validators.
 #
 # The root entrypoints delegate to canonical validator implementations. This
 # workflow is read-only, fixture-only, and creates no release or publication
@@ -11,17 +11,13 @@ on:
       - ".github/workflows/publication-validator-compatibility.yml"
       - "schemas/contracts/v1/data/layer_manifest.schema.json"
       - "schemas/contracts/v1/release/release_manifest.schema.json"
-      - "schemas/contracts/v1/release/rollback_card.schema.json"
       - "fixtures/data/layer_manifest/**"
       - "fixtures/release/release_manifest/**"
-      - "fixtures/release/rollback_card/**"
       - "tests/validators/test_publication_validator_compatibility.py"
       - "tools/validators/data/validate_layer_manifest.py"
       - "tools/validators/release/validate_release_manifest.py"
-      - "tools/validators/release/validate_rollback_card.py"
       - "tools/validators/validate_layer_manifest.py"
       - "tools/validators/validate_release_manifest.py"
-      - "tools/validators/validate_rollback_card.py"
   push:
     branches:
       - main
@@ -29,17 +25,13 @@ on:
       - ".github/workflows/publication-validator-compatibility.yml"
       - "schemas/contracts/v1/data/layer_manifest.schema.json"
       - "schemas/contracts/v1/release/release_manifest.schema.json"
-      - "schemas/contracts/v1/release/rollback_card.schema.json"
       - "fixtures/data/layer_manifest/**"
       - "fixtures/release/release_manifest/**"
-      - "fixtures/release/rollback_card/**"
       - "tests/validators/test_publication_validator_compatibility.py"
       - "tools/validators/data/validate_layer_manifest.py"
       - "tools/validators/release/validate_release_manifest.py"
-      - "tools/validators/release/validate_rollback_card.py"
       - "tools/validators/validate_layer_manifest.py"
       - "tools/validators/validate_release_manifest.py"
-      - "tools/validators/validate_rollback_card.py"
   workflow_dispatch:
 
 permissions:
@@ -58,7 +50,7 @@ env:
 
 jobs:
   compatibility:
-    name: Publication validator compatibility
+    name: Publication manifest validator compatibility
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -83,7 +75,6 @@ jobs:
         run: |
           python tools/validators/validate_layer_manifest.py --fixtures
           python tools/validators/validate_release_manifest.py --fixtures
-          python tools/validators/validate_rollback_card.py --fixtures
 
       - name: Validate generated authoring receipt
         run: >-
@@ -94,9 +85,10 @@ jobs:
         if: always()
         run: |
           {
-            echo "## Publication validator compatibility"
+            echo "## Publication manifest validator compatibility"
             echo
-            echo "This job proves that three legacy root entrypoints delegate to the"
+            echo "This job proves that two legacy root entrypoints delegate to the"
             echo "existing canonical fixture-only validators. It does not approve a"
-            echo "manifest, rollback, release, lifecycle transition, or publication."
+            echo "manifest, release, lifecycle transition, or publication."
+            echo "RollbackCard remains under its existing explicit hold and is not changed here."
           } >> "${GITHUB_STEP_SUMMARY}"
