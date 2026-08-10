@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     ".github/ISSUE_TEMPLATE/adr.md": "sha256:ddce21487b63e54c4445cd6483180c9934832719b1fb98c8dbf0206b0692c055",
-    ".github/ISSUE_TEMPLATE/README.md": "sha256:3b5ba888bea0ac5d5664cae7b0db4c533d05e0d393785d9d8815a82b35f9a9e9"
+    ".github/ISSUE_TEMPLATE/README.md": "sha256:8bcac99901bc3ffdad25ab74b73ff2f28442643155313ac1e4be44ab0b241512"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -33,16 +33,17 @@
       "GPT Markdown Prompt 4.0.pdf — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
     ],
     "evidence_refs": [
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/68faf106e18f03a52a29c4d7ee9cbab323a080a4",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/.github/ISSUE_TEMPLATE/adr.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/.github/ISSUE_TEMPLATE/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/INDEX.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/ADR-template.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/prompts/kfm-repository-build-markdown-modernization-agent.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/doctrine/directory-rules.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/schemas/contracts/v1/receipts/generated_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/tree/agent/modernize-adr-issue-template-20260810"
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e663400eddaef042486dfe73ae558e6d0d9e4694",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/.github/ISSUE_TEMPLATE/adr.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2418",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/ADR-template.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/prompts/kfm-repository-build-markdown-modernization-agent.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2417"
     ]
   },
   "truth_labels": {
@@ -53,52 +54,52 @@
     {
       "gate": "repository-and-base-preflight",
       "outcome": "PASS",
-      "reason": "Pinned main, target blobs, ADR authorities, v6 prompt, issue-intake README, label inventory, assignee identity, and relevant workflow boundaries at the recorded base."
+      "reason": "Pinned the current main baseline, target blobs, ADR authorities, v6 prompt, issue-intake inventory, live Issues/Discussions/private-reporting state, label inventory, assignee identity, and relevant workflow boundaries."
     },
     {
       "gate": "overlap-and-concurrency",
       "outcome": "PASS",
-      "reason": "Current open pull-request search found no overlapping work before branch creation; main drift was repinned and both target blobs were re-read before mutation."
+      "reason": "Detected merged PR #2418 on the shared README path, reconciled its v0.3 content into v0.4, preserved the live-settings evidence, and synchronized current main without force or last-writer-wins replacement."
     },
     {
       "gate": "same-path-placement-and-dependency-closure",
       "outcome": "PASS",
-      "reason": "The existing GitHub-platform template remains in .github/ISSUE_TEMPLATE; the companion README is the direct routing dependency and the generated receipt remains in the established receipt lane."
+      "reason": "The existing GitHub-platform ADR template and README remain under .github/ISSUE_TEMPLATE; the generated receipt remains in the established process-memory lane and no parallel authority is created."
     },
     {
       "gate": "markdown-front-matter-and-structure",
       "outcome": "PASS",
-      "reason": "Parsed GitHub YAML front matter, CommonMark/GFM-compatible Markdown structure, ordered sections, comments, fences, headings, local anchors, and final newlines."
+      "reason": "Parsed GitHub YAML front matter and CommonMark/GFM-compatible Markdown; checked ordered ADR sections, comments, fences, headings, local anchors, tables, Mermaid, and final newlines."
     },
     {
       "gate": "label-assignee-and-link-existence",
       "outcome": "PASS",
-      "reason": "Verified the needs-review label, bartytime4life assignee, six chooser templates, and all referenced repository paths at the pinned base."
+      "reason": "Verified the needs-review label, bartytime4life assignee, six chooser templates, current authority paths, and README links; the legacy adr and adr-proposed labels were absent."
     },
     {
       "gate": "security-and-authority-boundary",
       "outcome": "PASS",
-      "reason": "Secret-pattern scan passed; public-safety language, untrusted-input handling, non-activation, governance/implementation separation, and no-release/no-publication boundaries remain explicit."
+      "reason": "Secret-pattern scan passed; public-safety, private-reporting, untrusted-input, non-activation, governance/implementation separation, and no-release/no-publication boundaries remain explicit."
     },
     {
       "gate": "artifact-hash-and-remote-readback",
       "outcome": "PASS",
-      "reason": "Local SHA-256 and Git blob hashes match the branch read-back for both Markdown artifacts after the two documentation commits."
+      "reason": "SHA-256 and Git blob hashes were recomputed for both final Markdown artifacts; exact remote read-back is required again after the reconciliation commit and is recorded separately in the pull-request handoff."
     },
     {
       "gate": "generated-receipt-shape-and-integrity",
       "outcome": "PASS",
-      "reason": "Validated required fields, enum and digest patterns, artifact-map parity, citation presence, pending human review, and SHA-256 bindings against final local artifact bytes."
+      "reason": "Validated required fields, enum and digest patterns, artifact-map parity, citation presence, pending human review, pull-request linkage, and SHA-256 bindings against the final prepared artifact bytes."
     },
     {
       "gate": "repository-native-generated-receipt-validator",
       "outcome": "SKIPPED",
-      "reason": "A mounted checkout was not available; hosted exact-head validation remains separate from this bounded connector-side check."
+      "reason": "A mounted checkout was not available; exact-head hosted validator-suite and related workflows provide repository-native evidence after push."
     },
     {
       "gate": "github-chooser-render",
       "outcome": "SKIPPED",
-      "reason": "GitHub issue-chooser rendering and repository issue settings are not exposed by the selected connector flow."
+      "reason": "The live issue chooser was not submitted or rendered through this connector flow; automatic application of needs-review remains a visible verification item."
     }
   ],
   "policy_decisions": [],
@@ -106,42 +107,47 @@
     {
       "id": "current-adr-issue-template",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/.github/ISSUE_TEMPLATE/adr.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/.github/ISSUE_TEMPLATE/adr.md"
     },
     {
-      "id": "issue-intake-authority-boundary",
+      "id": "merged-issue-intake-readme",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/.github/ISSUE_TEMPLATE/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "overlapping-readme-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2418"
     },
     {
       "id": "canonical-adr-operating-standard",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/README.md"
     },
     {
       "id": "canonical-adr-index",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/INDEX.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/INDEX.md"
     },
     {
       "id": "canonical-adr-template",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/adr/ADR-template.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/adr/ADR-template.md"
     },
     {
       "id": "repository-build-v6-prompt",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/prompts/kfm-repository-build-markdown-modernization-agent.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/prompts/kfm-repository-build-markdown-modernization-agent.md"
     },
     {
       "id": "directory-governance",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/docs/doctrine/directory-rules.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/docs/doctrine/directory-rules.md"
     },
     {
       "id": "generated-receipt-schema",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68faf106e18f03a52a29c4d7ee9cbab323a080a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e663400eddaef042486dfe73ae558e6d0d9e4694/schemas/contracts/v1/receipts/generated_receipt.schema.json"
     }
   ],
   "human_review": {
@@ -150,12 +156,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-10T05:19:45Z",
+  "created_at": "2026-08-10T05:27:44Z",
   "emitter": "openai/gpt-5.6-pro",
   "links": {
-    "pr_number": null,
+    "pr_number": 2417,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored modernization of the public ADR issue-intake template and its direct README dependency on a scoped feature branch. The files structure proposals and routing only; they do not accept an ADR, authorize dependent implementation, authenticate review, approve policy, release, deploy, promote, publish, or change repository settings. Human review remains pending."
+  "notes": "AI-authored modernization of the ADR issue-intake template and its direct README dependency. The README was reconciled after merged PR #2418 changed the same path. The files structure proposals and routing only; they do not accept an ADR, authorize dependent implementation, authenticate review, approve policy, release, deploy, promote, publish, or change repository settings. Human review remains pending."
 }
