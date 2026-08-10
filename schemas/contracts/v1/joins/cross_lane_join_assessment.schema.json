@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json",
+  "title": "CrossLaneJoinAssessment",
+  "description": "Fixture-first dry-run assessment for exact-key and synthetic spatial-temporal join candidates with finite non-publisher outcomes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "assessment_id", "request",
+    "endpoints", "decision", "evaluated_at", "governance", "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "CrossLaneJoinAssessment"},
+    "schema_version": {"const": "0.1.0"},
+    "profile": {"const": "kfm.joins.cross-lane-assessment.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:cross-lane-join-assessment:[a-f0-9]{64}$"},
+    "request": {"$ref": "#/$defs/request"},
+    "endpoints": {"$ref": "#/$defs/endpoints"},
+    "decision": {"$ref": "#/$defs/decision"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "nullable_key": {"oneOf": [{"type": "string", "minLength": 1, "maxLength": 256}, {"type": "null"}]},
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "relation_profile_ref", "predicate", "temporal_tolerance_seconds", "dependency_state"],
+      "properties": {
+        "request_id": {"$ref": "#/$defs/ref"},
+        "relation_profile_ref": {"$ref": "#/$defs/ref"},
+        "predicate": {"enum": ["EXACT_KEY", "SPATIAL_TEMPORAL"]},
+        "temporal_tolerance_seconds": {"type": "integer", "minimum": 0, "maximum": 86400},
+        "dependency_state": {"enum": ["READY", "ERROR"]}
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endpoint_id", "domain", "object_ref", "source_descriptor_ref", "source_role",
+        "evidence_ref", "sensitivity", "living_person", "geometry_precision",
+        "join_key", "spatial_cell_ref", "valid_from", "valid_to"
+      ],
+      "properties": {
+        "endpoint_id": {"enum": ["LEFT", "RIGHT"]},
+        "domain": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+        "object_ref": {"$ref": "#/$defs/ref"},
+        "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+        "source_role": {"enum": ["OBSERVED", "REGULATORY", "MODELED", "AGGREGATE", "ADMINISTRATIVE", "CANDIDATE", "SYNTHETIC"]},
+        "evidence_ref": {"$ref": "#/$defs/nullable_ref"},
+        "sensitivity": {"enum": ["PUBLIC_SAFE", "INTERNAL", "RESTRICTED", "PROHIBITED"]},
+        "living_person": {"type": "boolean"},
+        "geometry_precision": {"enum": ["EXACT", "GENERALIZED", "NONE"]},
+        "join_key": {"$ref": "#/$defs/nullable_key"},
+        "spatial_cell_ref": {"$ref": "#/$defs/nullable_ref"},
+        "valid_from": {"type": "string", "format": "date-time"},
+        "valid_to": {"type": "string", "format": "date-time"}
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["left", "right"],
+      "properties": {
+        "left": {"$ref": "#/$defs/endpoint"},
+        "right": {"$ref": "#/$defs/endpoint"}
+      }
+    },
+    "rule_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_code", "failure_count"],
+      "properties": {
+        "rule_code": {"enum": ["DEPENDENCIES_READY", "EVIDENCE_REFS_PRESENT", "JOIN_PREDICATE_MATCHED", "LIVING_PERSON_SAFE", "SENSITIVITY_SAFE", "SOURCE_ROLES_COMPATIBLE"]},
+        "failure_count": {"type": "integer", "minimum": 0, "maximum": 2}
+      }
+    },
+    "source_roles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["left", "right", "output_role"],
+      "properties": {
+        "left": {"$ref": "#/$defs/code"},
+        "right": {"$ref": "#/$defs/code"},
+        "output_role": {"const": "CANDIDATE_RELATION"}
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lifecycle_write", "evidence_bundle_created", "policy_decision_created", "review_decision_created", "release_decision_created", "publication", "public_use_authorized"],
+      "properties": {
+        "lifecycle_write": {"const": false},
+        "evidence_bundle_created": {"const": false},
+        "policy_decision_created": {"const": false},
+        "review_decision_created": {"const": false},
+        "release_decision_created": {"const": false},
+        "publication": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "validator_outcome", "status", "matched", "source_roles", "inherited_sensitivity", "rule_results", "reason_codes", "obligations", "effects"],
+      "properties": {
+        "candidate_id": {"type": "string", "pattern": "^kfm:join-candidate:[a-f0-9]{64}$"},
+        "validator_outcome": {"enum": ["ALLOW", "DENY", "ABSTAIN", "ERROR"]},
+        "status": {"enum": ["JOIN_CANDIDATE", "NO_JOIN_CANDIDATE", "EVIDENCE_REF_MISSING", "SOURCE_ROLE_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED", "LIVING_PERSON_JOIN_DENIED", "GEOMETRY_PRECISION_BLOCKED", "VALIDATOR_SYSTEM_ERROR"]},
+        "matched": {"type": "boolean"},
+        "source_roles": {"$ref": "#/$defs/source_roles"},
+        "inherited_sensitivity": {"enum": ["PUBLIC_SAFE", "INTERNAL", "RESTRICTED", "PROHIBITED"]},
+        "rule_results": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/rule_result"}},
+        "reason_codes": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "obligations": {"type": "array", "minItems": 3, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "effects": {"$ref": "#/$defs/effects"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "dry_run", "no_network", "sql_database", "identity_authority", "relationship_truth_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "dry_run": {"const": true},
+        "no_network": {"const": true},
+        "sql_database": {"const": "IN_MEMORY_SQLITE"},
+        "identity_authority": {"const": false},
+        "relationship_truth_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}
