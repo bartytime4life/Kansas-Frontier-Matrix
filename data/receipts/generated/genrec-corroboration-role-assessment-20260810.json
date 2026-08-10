@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-corroboration-role-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/corroboration-role-assessment.yml",
+    "contracts/evidence/corroboration_role_assessment.md",
+    "docs/intake/exploratory/corroboration-role-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/corroboration_role_assessment/cases.json",
+    "schemas/contracts/v1/evidence/corroboration_role_assessment.schema.json",
+    "tests/validators/test_validate_corroboration_role_assessment.py",
+    "tools/validators/evidence/validate_corroboration_role_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/corroboration-role-assessment.yml": "sha256:3409ee15af473117aebd54f9b1598b72fe10bfcdb72ccea2ab4ae5457111c9d2",
+    "contracts/evidence/corroboration_role_assessment.md": "sha256:e798eb055409de315b9d5cc8b0d01a41115d9cea82cac11cc8a6f5afe9144133",
+    "docs/intake/exploratory/corroboration-role-assessment-source-map.md": "sha256:f87c9f163d4286f7d43cf690ccb02c01fcf93e0a8bce0fbdbda79ebf95ed5e24",
+    "fixtures/contracts/v1/evidence/corroboration_role_assessment/cases.json": "sha256:7634f967c6a829ec9ddb1369d37dbc14f3032c37f14fffc67f4192cae6438aa7",
+    "schemas/contracts/v1/evidence/corroboration_role_assessment.schema.json": "sha256:817e359b4d1ad01a134489489f9e216b6ed55c028c57dcdd3c152ab8b0df86d3",
+    "tests/validators/test_validate_corroboration_role_assessment.py": "sha256:9071d098a2699577ea123b40d943c372dbc27452ac8dad583c5a450df2c9b639",
+    "tools/validators/evidence/validate_corroboration_role_assessment.py": "sha256:e3c7ef566d7aa8bfeaaeeb1d4c836b084c3f627318306d7754dd4001a5116893"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:e798eb055409de315b9d5cc8b0d01a41115d9cea82cac11cc8a6f5afe9144133",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Python 3.12",
+      "jsonschema 4.26.0"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "New Ideas 4-16-26"
+    ],
+    "evidence_refs": [
+      "gdrive:1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@8a671552785b773364f01d2e76d8ca6892a405ea",
+      "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-037",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json",
+      "repo:contracts/evidence/source_conflict_influence_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/corroboration-role-assessment.yml": "PROPOSED",
+    "contracts/evidence/corroboration_role_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/corroboration-role-assessment-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/corroboration_role_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/corroboration_role_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_corroboration_role_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_corroboration_role_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the triad IDs and implementation terms; no selected-slice implementation overlap was found."
+    },
+    {
+      "gate": "focused-validator-tests",
+      "outcome": "PASS",
+      "reason": "All 13 focused unit tests passed under Python 3.12."
+    },
+    {
+      "gate": "exact-fixture-suite",
+      "outcome": "PASS",
+      "reason": "All 21 positive and negative fixture cases matched their exact status, outcome, and findings."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt validator confirmed exact artifact hashes and bounded receipt shape."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:full-atlas-triad-037",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-037"
+    },
+    {
+      "id": "gdrive:new-ideas-4-16-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc"
+    },
+    {
+      "id": "repository:source-descriptor-role-vocabulary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "repository:adjacent-source-conflict-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/source_conflict_influence_assessment.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:21:14Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only implementation derived from Full Atlas KFM-TRIAD-037 and connected source context. Source count is explicitly not confidence. The packet grants no evidence, claim, policy, review, release, deployment, publication, or public-use authority."
+}
