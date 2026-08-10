@@ -1,0 +1,73 @@
+{
+  "object_type": "PredictiveLayerGeneralizationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.predictive-layer-generalization-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "PredictiveLayerGeneralizationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.predictive-layer-generalization-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-407",
+    "observed_at": "2026-08-10T20:15:00Z",
+    "predictive_output_ref": "kfm:predictive-output:synthetic-habitat-probability:001",
+    "predictive_output_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_use": "PUBLIC_INTERPRETATION",
+    "model_card": {"ref": "kfm:model-card:synthetic-habitat:001", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+    "model_run_receipt": {"ref": "kfm:model-run-receipt:synthetic-habitat:001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+    "analytic_output_disclosure": {"ref": "kfm:analytic-output-disclosure:synthetic-habitat:001", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "resolution": "RESOLVED"},
+    "evaluation": {
+      "state": "COMPLETE",
+      "split_strategy": "K_FOLD",
+      "training_dataset_ref": "kfm:dataset:synthetic-habitat-training:001",
+      "evaluation_dataset_ref": "kfm:dataset:synthetic-habitat-evaluation:001",
+      "data_independence": "INDEPENDENT",
+      "cross_validation": {
+        "status": "PERFORMED",
+        "fold_count": 5,
+        "repeat_count": 1,
+        "metric_refs": ["kfm:metric-report:synthetic-habitat-cv:001"]
+      },
+      "overfitting_label": "NOT_DETECTED",
+      "generalization_label": "SUPPORTED",
+      "validation_report_refs": ["kfm:validation-report:synthetic-habitat:001"],
+      "limitation_refs": ["kfm:model-limitation:synthetic-habitat-domain-shift:001"]
+    },
+    "disclosure": {
+      "review_record_refs": ["kfm:review-record:synthetic-habitat-model:001"],
+      "evidence_drawer_section_ref": "kfm:evidence-drawer-section:synthetic-habitat-model:001",
+      "public_interpretation_caveat": "Synthetic predictive output; validation labels are declarations and not proof of truth or release."
+    },
+    "limitations": ["DECLARATION_ONLY", "NO_METRIC_RECOMPUTATION", "NO_MODEL_EXECUTION", "NO_PUBLICATION_AUTHORITY"],
+    "authority_claims": {
+      "model_evaluation_authority": false,
+      "evidence_authority": false,
+      "layer_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_public_supported_kfold", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_internal_limited_holdout", "patch": {"intended_use": "INTERNAL_QA", "evaluation": {"split_strategy": "HOLDOUT", "cross_validation": {"status": "NOT_APPLICABLE", "fold_count": null, "repeat_count": null, "metric_refs": []}, "overfitting_label": "RISK_PRESENT", "generalization_label": "LIMITED"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_exploratory_detected_not_supported", "patch": {"intended_use": "EXPLORATORY_ANALYSIS", "evaluation": {"overfitting_label": "DETECTED", "generalization_label": "NOT_SUPPORTED"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_evaluation", "patch": {"evaluation": {"state": "INCOMPLETE", "split_strategy": "UNKNOWN", "training_dataset_ref": null, "evaluation_dataset_ref": null, "data_independence": "UNKNOWN", "cross_validation": {"status": "UNKNOWN", "fold_count": null, "repeat_count": null, "metric_refs": []}, "overfitting_label": "UNKNOWN", "generalization_label": "UNKNOWN", "validation_report_refs": [], "limitation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVALUATION_INCOMPLETE"]}},
+    {"name": "abstain_unknown_evaluation", "patch": {"evaluation": {"state": "UNKNOWN", "split_strategy": "UNKNOWN", "training_dataset_ref": null, "evaluation_dataset_ref": null, "data_independence": "UNKNOWN", "cross_validation": {"status": "UNKNOWN", "fold_count": null, "repeat_count": null, "metric_refs": []}, "overfitting_label": "UNKNOWN", "generalization_label": "UNKNOWN", "validation_report_refs": [], "limitation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVALUATION_UNKNOWN"]}},
+    {"name": "abstain_model_card_unresolved", "patch": {"model_card": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}},
+    {"name": "abstain_public_risk_and_limited", "patch": {"evaluation": {"overfitting_label": "RISK_PRESENT", "generalization_label": "LIMITED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["GENERALIZATION_LIMITED", "OVERFITTING_RISK_PRESENT"]}},
+    {"name": "abstain_cross_validation_not_performed", "patch": {"evaluation": {"cross_validation": {"status": "NOT_PERFORMED", "fold_count": null, "repeat_count": null, "metric_refs": []}}}, "expected": {"outcome": "ABSTAIN", "codes": ["CROSS_VALIDATION_NOT_PERFORMED"]}},
+    {"name": "deny_public_overfit_not_supported", "patch": {"evaluation": {"overfitting_label": "DETECTED", "generalization_label": "NOT_SUPPORTED"}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_GENERALIZATION_DENIED", "PUBLIC_OVERFITTING_DENIED"]}},
+    {"name": "deny_evaluation_dataset_reused", "patch": {"evaluation": {"evaluation_dataset_ref": "kfm:dataset:synthetic-habitat-training:001"}}, "expected": {"outcome": "DENY", "codes": ["EVALUATION_DATA_NOT_SEPARATE"]}},
+    {"name": "deny_cross_validation_metrics_missing", "patch": {"evaluation": {"cross_validation": {"metric_refs": []}}}, "expected": {"outcome": "DENY", "codes": ["CROSS_VALIDATION_EVIDENCE_INCOMPLETE"]}},
+    {"name": "deny_detected_but_supported", "patch": {"intended_use": "INTERNAL_QA", "evaluation": {"overfitting_label": "DETECTED", "generalization_label": "SUPPORTED"}}, "expected": {"outcome": "DENY", "codes": ["GENERALIZATION_LABEL_INCOHERENT"]}},
+    {"name": "deny_public_review_missing", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_public_drawer_missing", "patch": {"disclosure": {"evidence_drawer_section_ref": null}}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_DRAWER_SECTION_REQUIRED"]}},
+    {"name": "deny_public_caveat_missing", "patch": {"disclosure": {"public_interpretation_caveat": null}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_INTERPRETATION_CAVEAT_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_evaluation_state", "patch": {"evaluation": {"state": "ERROR"}}, "expected": {"outcome": "ERROR", "codes": ["EVALUATION_ERROR"]}},
+    {"name": "error_unknown_field", "patch": {"accuracy_threshold": 0.95}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
