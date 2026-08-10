@@ -1,5 +1,6 @@
 {
   "profile": "kfm.joins.cross-lane-assessment.fixture.v1",
+  "fixture_lane": "fixtures/contracts/v1/joins",
   "base": {
     "object_type": "CrossLaneJoinAssessment",
     "schema_version": "0.1.0",

@@ -14,7 +14,7 @@ truth_posture: cite-or-abstain
 related:
   - ../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json
   - ../../tools/joins/join_candidates.py
-  - ../../fixtures/joins/cross_lane_join_assessment/cases.json
+  - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
   - ../../tests/joins/test_join_candidates.py
   - ../../tests/joins/README.md
   - ../../docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md
@@ -71,7 +71,7 @@ The decision's effects are schema-fixed to false for lifecycle writes, evidence 
 
 ## Directory Rules basis
 
-Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, policy, evidence, receipts, lifecycle data, and release remain in their owning roots.
+Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, policy, evidence, receipts, lifecycle data, and release remain in their owning roots.
 
 ## Non-effects and rollback
 

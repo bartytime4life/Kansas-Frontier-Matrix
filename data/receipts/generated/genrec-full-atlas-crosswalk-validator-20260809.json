@@ -5,21 +5,21 @@
     ".github/workflows/cross-lane-join-assessment.yml",
     "contracts/joins/cross_lane_join_assessment.md",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md",
-    "fixtures/joins/cross_lane_join_assessment/cases.json",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json",
     "tests/joins/README.md",
     "tests/joins/test_join_candidates.py",
     "tools/joins/join_candidates.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/cross-lane-join-assessment.yml": "sha256:4c22ace573324733b5d8b68833ff376880c5358a7b4454e2f8f54d31f78b3ff9",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:ad638fae0c8f632cd2719067349eb50b16e81c47a67ebe3068d6ca493929e503",
+    ".github/workflows/cross-lane-join-assessment.yml": "sha256:b06bc6c2af1e9d946ec5199a99e7f4a20eb74a998ea5d30ec673a8f4cbeb3ff4",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:5c80e5de8c29b49463b3bda9fa425d91fb09db9f517dfb8b83a3982997774ede",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
-    "fixtures/joins/cross_lane_join_assessment/cases.json": "sha256:07ba9b44f7faf8ef9603e7e7dadf303cde0dbe8c5f5e956ed70cb5c68fc9e49b",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:95c4c2b1e0fb6ab1046987343c0baaa97996e9d99857657cc6a0c3a98b8eace0",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:91c9ba1ccab86a53e18bc1de5756e13a53dc617791efac80b180682ae5e11ec1",
     "tests/joins/README.md": "sha256:562f37dcf1ba24bdc426d23d4c8001f59efb304ba4287100f7d1e17ee5d4f585",
     "tests/joins/test_join_candidates.py": "sha256:e1c8906de125f0c43a396075fadf2a8176de65ad7aa16b74cded4120e7af6a7a",
-    "tools/joins/join_candidates.py": "sha256:e1363ce64ed09c0bbd62e5336da52183afe71726cce41fde3dbb1daca9ca4157"
+    "tools/joins/join_candidates.py": "sha256:5f81824320c3599fce6c011ae37ea7b9ffcc1223520d19c1b0d5d16e8ff13562"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -54,7 +54,7 @@
     ".github/workflows/cross-lane-join-assessment.yml": "PROPOSED",
     "contracts/joins/cross_lane_join_assessment.md": "PROPOSED",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "PROPOSED",
-    "fixtures/joins/cross_lane_join_assessment/cases.json": "PROPOSED",
+    "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "PROPOSED",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "PROPOSED",
     "tests/joins/README.md": "PROPOSED",
     "tests/joins/test_join_candidates.py": "PROPOSED",

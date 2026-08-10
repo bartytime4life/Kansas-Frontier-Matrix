@@ -33,7 +33,7 @@ from hashing import (  # noqa: E402
 )
 
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
-CASES_PATH = REPO_ROOT / "fixtures/joins/cross_lane_join_assessment/cases.json"
+CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json"
 IDENTITY_PREFIX = "kfm:cross-lane-join-assessment:"
 CANDIDATE_PREFIX = "kfm:join-candidate:"
 SCOPE = "cross-lane-join-assessment-fixture-only-v1"
