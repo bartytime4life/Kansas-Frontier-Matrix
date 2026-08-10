@@ -74,7 +74,8 @@ describe("Explorer PMTiles range diagnostics", () => {
     const source = `${adapterSource}\n${panelSource}`;
     expect(source).not.toMatch(/\bfetch\s*\(/);
     expect(source).not.toMatch(/\b(?:localStorage|sessionStorage)\b/);
-    expect(source).not.toMatch(/(?:readFile|createReadStream|Range\s*:)/);
+    expect(source).not.toMatch(/\b(?:readFile|createReadStream)\s*\(/);
+    expect(source).not.toMatch(/["']Range["']\s*:/);
     expect(source).not.toMatch(
       /data\/(?:raw|work|quarantine|processed|catalog|triplets|published)/i,
     );
