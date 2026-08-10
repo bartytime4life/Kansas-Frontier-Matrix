@@ -2,12 +2,15 @@
 doc_id: kfm://contract/common/spatial-geometry
 title: contracts/common/spatial_geometry.md — SpatialGeometry Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Contract steward · Schema steward · GIS steward · Policy steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-08-10
 policy_label: public; contracts; common; spatial-geometry; semantic-contract; shared-kernel; geoprivacy-aware
+owning_root: contracts/
+responsibility: Define the shared semantic meaning and authority limits of the SpatialGeometry carrier while deferring canonical machine shape, validation implementation, domain meaning, evidence, policy, review, release, and public use to their owning roots.
+truth_posture: cite-or-abstain; bounded validator behavior requires current repository and test evidence; passing carrier validation is not geometry, source, survey, policy, release, or publication truth
 related:
   - ./README.md
   - ../../schemas/contracts/v1/common/spatial_geometry.schema.json
@@ -22,7 +25,9 @@ tags: [kfm, contracts, common, spatial-geometry, geometry, crs, precision-bucket
 notes:
   - "Expanded from scaffold into a semantic contract for the common spatial_geometry object."
   - "Machine-checkable shape is in schemas/contracts/v1/common/spatial_geometry.schema.json. This edit does not change schema fields, enum values, or validation rules."
-  - "Declared validator exists but is a greenfield placeholder that raises NotImplementedError; validation behavior remains NEEDS VERIFICATION."
+  - "The declared validator now implements a bounded, deterministic, no-network carrier profile with reviewed fixtures and generated property tests."
+  - "The implemented profile supports Point, MultiPoint, LineString, MultiLineString, Polygon, and MultiPolygon; explicit EPSG identifiers; consistent 2D/3D positions; simple polygon rings; and EPSG:4326 coordinate bounds."
+  - "The validator does not repair topology, transform CRS, resolve CRS registry authority, evaluate domain policy, or authorize release or public use."
   - "spatial_geometry is a geometry carrier, not a map-rendering instruction, not a CRS transformation engine, not a geocoder, not proof of survey accuracy, and not permission to expose sensitive locations."
 [/KFM_META_BLOCK_V2] -->
 
@@ -37,7 +42,7 @@ notes:
   <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
   <img alt="Family: common" src="https://img.shields.io/badge/family-common-blue">
   <img alt="Schema: proposed" src="https://img.shields.io/badge/schema-PROPOSED-orange">
-  <img alt="Validator: placeholder" src="https://img.shields.io/badge/validator-placeholder-red">
+  <img alt="Validator: bounded" src="https://img.shields.io/badge/validator-bounded-blue">
   <img alt="Authority: semantic" src="https://img.shields.io/badge/authority-semantic__contract-green">
 </p>
 
@@ -56,7 +61,7 @@ notes:
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/common/spatial_geometry.md`  
 > **Schema path:** `schemas/contracts/v1/common/spatial_geometry.schema.json`  
-> **Truth posture:** `CONFIRMED` contract path, schema path, schema shape, and current update; validator file exists but is a placeholder; fixtures, policy behavior, runtime integration, CRS transformation behavior, geometry validity checks, and downstream usage remain `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` contract path, schema path, schema shape, bounded validator, synthetic fixture profile, and focused generated-property tests; policy behavior, CRS registry resolution, runtime integration, CRS transformation, full computational-geometry validity, and downstream usage remain `NEEDS VERIFICATION`.
 
 ---
 
@@ -98,8 +103,8 @@ Adjacent responsibility roots:
 |---|---|
 | `./README.md` | Common contract directory boundary and shared-kernel discipline. |
 | `../../schemas/contracts/v1/common/spatial_geometry.schema.json` | Machine-checkable shape for this contract. |
-| `../../fixtures/contracts/v1/common/spatial_geometry/` | Schema-declared fixture root; existence and coverage remain `NEEDS VERIFICATION`. |
-| `../../tools/validators/validate_spatial_geometry.py` | Schema-declared validator; exists as a placeholder, behavior not implemented. |
+| `../../fixtures/contracts/v1/common/spatial_geometry/` | Synthetic reviewed carrier cases with exact expected finding sets. |
+| `../../tools/validators/validate_spatial_geometry.py` | Bounded deterministic carrier validator; not a repair, transform, policy, or release engine. |
 | `../../policy/common/` | Schema-declared policy home; existence and behavior remain `NEEDS VERIFICATION`. |
 | `../../policy/sensitivity/` | Expected sensitivity/geoprivacy policy surface for location exposure. |
 | Domain contracts | Own domain-specific meaning of the thing being located; `spatial_geometry` only carries common geometry semantics. |
@@ -122,8 +127,8 @@ The current schema metadata identifies:
 |---|---|---|
 | `$id` | `https://schemas.kfm.local/contracts/v1/common/spatial_geometry.schema.json` | `CONFIRMED` from schema. |
 | `contract_doc` | `contracts/common/spatial_geometry.md` | `CONFIRMED` from schema. |
-| `fixtures_root` | `fixtures/contracts/v1/common/spatial_geometry/` | `NEEDS VERIFICATION` existence/coverage. |
-| `validator` | `tools/validators/validate_spatial_geometry.py` | `CONFIRMED` file exists; behavior is placeholder / `NEEDS IMPLEMENTATION`. |
+| `fixtures_root` | `fixtures/contracts/v1/common/spatial_geometry/` | `CONFIRMED` synthetic exact-polarity carrier profile; broader domain/policy/release coverage remains `NEEDS VERIFICATION`. |
+| `validator` | `tools/validators/validate_spatial_geometry.py` | `CONFIRMED` bounded structure, dimensionality, ring, EPSG-identifier, and EPSG:4326-bounds profile. |
 | `policy` | `policy/common/` | `NEEDS VERIFICATION` existence/behavior. |
 | `status` | `PROPOSED` | `CONFIRMED` from schema metadata. |
 
@@ -167,6 +172,24 @@ The current schema metadata identifies:
 | `geometry` | Yes | Geometry payload being carried. | Current schema requires nested `type` and `coordinates`, but does not restrict geometry type or coordinate shape. |
 | `crs` | Yes | Coordinate reference system identifier that gives the coordinates meaning. | Must be explicit. `UNKNOWN`/implicit CRS must not be normalized into public or promoted geometry. |
 | `precision_bucket` | Yes | Coarse, policy-evaluable precision posture. | Current enum: `survey`, `parcel`, `community`, `region`, `coarse`. |
+
+The paired schema remains intentionally permissive inside `geometry`. The
+current validator adds one proposed executable profile without changing schema
+shape:
+
+- supported types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`,
+  `Polygon`, and `MultiPolygon`;
+- positions: finite, consistently 2D or 3D within one carrier;
+- lines: at least two positions;
+- polygon rings: at least four positions, closed, non-degenerate, and without
+  detected simple-ring self-intersections;
+- CRS identifiers: uppercase `EPSG:<positive integer>` syntax; and
+- `EPSG:4326`: longitude/latitude bounds are checked without transforming or
+  silently reordering coordinates.
+
+This is a bounded validator profile, not a CRS registry, complete GeoJSON
+implementation, computational-geometry engine, or compatibility promise for
+future schema versions.
 
 ---
 
@@ -277,6 +300,7 @@ Current compatibility posture:
 - `precision_bucket` values are closed in the current schema.
 - The current schema allows any `geometry.type` string and unconstrained `coordinates`; stricter geometry typing would be a schema change.
 - The current schema permits additional nested properties inside `geometry` but forbids additional top-level properties.
+- The bounded validator is intentionally stricter than the schema for supported geometry types and coordinate structure; schema-only consumers must not claim equivalent semantic validation.
 - Adding new precision buckets is compatibility-significant and requires schema, fixture, validator, policy, and consumer updates.
 - Changing CRS requirements or default assumptions is compatibility-significant and requires migration review.
 
@@ -317,11 +341,11 @@ Lifecycle notes:
 Before relying on this contract, verify:
 
 - schema validation passes against `schemas/contracts/v1/common/spatial_geometry.schema.json`;
-- validator implementation exists beyond the current placeholder and covers valid/invalid cases;
-- fixtures exist under the schema-declared fixture root;
-- supported geometry types are either intentionally open or tightened by schema;
-- coordinate order, dimensionality, ring closure, topology, and geometry validity checks are specified somewhere enforceable;
-- CRS values are constrained or resolved by an accepted CRS policy/registry;
+- the bounded validator and reviewed fixture profile pass;
+- generated property tests exercise valid carriers plus open rings, out-of-bounds positions, deterministic diagnostics, duplicate keys, and non-finite input;
+- consumers distinguish the validator's closed supported-type profile from the schema's currently open `geometry.type` field;
+- coordinate order, dimensionality, ring closure, simple-ring intersections, and declared bounds pass this profile while full topology remains separately governed;
+- CRS values satisfy the local identifier syntax, while accepted CRS registry resolution remains `NEEDS VERIFICATION`;
 - `precision_bucket` remains closed or versioned changes are documented;
 - policy behavior for sensitive/high-precision geometry exists in an accepted policy root;
 - public-release contexts check sensitivity, rights, audience, review state, redaction/geoprivacy receipts, and release state before exposing geometry;
@@ -348,7 +372,8 @@ Before relying on this contract, verify:
 |---|---|---|---|
 | Prior `contracts/common/spatial_geometry.md` scaffold | `CONFIRMED` | Contract existed and referenced the schema URL, lifecycle, and open verification note. | Scaffold delegated field meaning to schema and lacked semantic boundaries. |
 | `schemas/contracts/v1/common/spatial_geometry.schema.json` | `CONFIRMED` | Current field set, required fields, precision enum values, top-level additionalProperties false, and x-kfm metadata. | Schema does not prove geometry validity, CRS policy, release permission, or validator behavior. |
-| `tools/validators/validate_spatial_geometry.py` | `CONFIRMED placeholder` | Declared validator path exists. | It raises `NotImplementedError`; validation behavior is not implemented. |
+| `tools/validators/validate_spatial_geometry.py` | `CONFIRMED bounded implementation` | Deterministic schema binding, strict JSON reading, supported coordinate structures, dimensionality, ring checks, EPSG identifier syntax, EPSG:4326 bounds, finite findings, and safe diagnostics. | Does not repair/transform geometry, resolve CRS registry authority, prove topology generally, evaluate policy, or release. |
+| `fixtures/contracts/v1/common/spatial_geometry/cases.json` and `tests/validators/test_validate_spatial_geometry.py` | `CONFIRMED authored profile` | Synthetic exact-polarity cases and generated property tests for the bounded validator behavior. | Hosted exact-head execution remains `NEEDS VERIFICATION` until CI completes. |
 | `contracts/common/README.md` | `CONFIRMED` | Common contracts may define small cross-cutting value objects only when no single domain owns them; common must stay narrow. | Does not prove individual common contract inventory. |
 | `docs/architecture/contract-schema-policy-split.md` | `CONFIRMED` | Contracts define meaning; schemas define shape; policy decides admissibility; tests/fixtures prove enforceability. | Path presence and runtime behavior remain verification-bound. |
 | Uploaded `KFM Repository Markdown Authoring Agent — Full Operating Prompt v2` | `CONFIRMED user-supplied guidance` | Requires no-loss preservation, evidence grounding, truth labels, GitHub polish, contract/schema doc sections, Markdown QA, and pre-publish discipline. | It is authoring guidance, not repo implementation proof. |
@@ -366,9 +391,9 @@ Rollback target: prior scaffold content SHA `f0945594fb5f2553f62248de35052c3074a
 ## Definition of done
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Validator is implemented beyond placeholder behavior.
-- [ ] Fixtures exist and cover valid/invalid/denied/abstain cases where applicable.
-- [ ] Supported geometry types and coordinate rules are explicit and tested.
+- [x] Validator is implemented beyond placeholder behavior for the bounded carrier profile.
+- [x] Synthetic fixtures exist and cover valid/invalid carrier cases with exact finding sets.
+- [x] Supported geometry types and coordinate rules are explicit and tested for this profile.
 - [ ] CRS values are constrained or resolved by accepted CRS policy/registry.
 - [ ] Policy behavior for precision buckets is linked and verified.
 - [ ] Public-release review confirms geoprivacy and sensitivity exposure rules.
@@ -379,6 +404,6 @@ Rollback target: prior scaffold content SHA `f0945594fb5f2553f62248de35052c3074a
 
 ## Status summary
 
-`spatial_geometry` is a common semantic value object for carrying geometry, CRS, and precision posture. It is not the located object itself, not proof of spatial accuracy, not proof of source authority, not a CRS transformation engine, not a geometry validator, not map rendering instructions, not a release artifact, and not permission to expose sensitive location.
+`spatial_geometry` is a common semantic value object for carrying geometry, CRS, and precision posture. The paired bounded validator checks a declared subset of carrier structure; neither the carrier nor a passing result is the located object itself, proof of spatial accuracy or source authority, a CRS transformation or repair engine, map-rendering instruction, policy decision, release artifact, or permission to expose sensitive location.
 
 <p align="right"><a href="#top">Back to top</a></p>

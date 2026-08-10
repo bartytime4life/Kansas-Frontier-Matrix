@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-geometry-readme
 title: tools/validators/geometry README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-gis-steward-plus-geometry-steward-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-10
 policy_label: repository-facing; geometry-validator; spatial-geometry; shared-kernel; CRS; precision-bucket; geoprivacy-aware; fail-closed; release-gated; non-authoritative
 owning_root: tools/
-responsibility: proposed shared Geometry validator lane for checking spatial_geometry carrier shape, CRS declaration, precision_bucket posture, geometry role, geometry validity, topology sanity, bounds/coordinate order, dimensionality, uncertainty/scale caveats, sensitivity/geoprivacy linkage, EvidenceRef/EvidenceBundle linkage, policy/review/release linkage, correction and rollback linkage, finite negative outcomes, and public-surface denial checks while deferring geometry semantics, domain meaning, CRS transformation implementation, geocoding, proof storage, receipts, policy decisions, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: shared Geometry validator lane whose confirmed bounded implementation checks the existing spatial_geometry schema, strict JSON input, six GeoJSON coordinate families, explicit EPSG identifier syntax, consistent 2D/3D positions, line/ring minima, simple polygon-ring closure/intersection, EPSG:4326 bounds, complexity limits, deterministic safe findings, and reviewed synthetic fixture polarity while deferring geometry meaning, full computational topology, CRS registry resolution, transformation, repair, geocoding, evidence, policy, review, release, and public authority to their owning roots
+truth_posture: cite-or-abstain; bounded implementation and synthetic tests confirmed in current repo evidence; hosted exact-head CI remains NEEDS VERIFICATION
 related:
   - ../README.md
   - ../_common/README.md
@@ -32,9 +32,9 @@ related:
   - ../../../data/receipts/
   - ../../../release/
 notes:
-  - "This README replaces an empty file. It does not confirm executable validator behavior."
+  - "v0.2 records the bounded implementation of tools/validators/validate_spatial_geometry.py, its reviewed synthetic fixture profile, and generated property tests."
   - "The common SpatialGeometry contract says spatial_geometry is a geometry carrier with geometry, CRS, and precision_bucket. It is not a map-rendering instruction, CRS transformation engine, geocoder, proof of survey accuracy, or permission to expose sensitive locations."
-  - "The declared validator tools/validators/validate_spatial_geometry.py exists, but current repo evidence shows it is a greenfield placeholder that raises NotImplementedError."
+  - "The declared validator now provides deterministic no-network carrier validation and safe finite diagnostics; it is not a geometry repair or CRS transformation engine."
   - "Domain contracts own what the geometry means. This shared geometry validator must check common carrier posture and delegate domain-specific sensitivity, rights, policy, release, and public-safe transform decisions to owning roots."
   - "This lane must not publish geometry, transform CRS by itself, store geometry payloads, create receipts, decide policy, approve release, or authorize public display."
 [/KFM_META_BLOCK_V2] -->
@@ -47,10 +47,10 @@ notes:
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
 ![scope](https://img.shields.io/badge/scope-geometry--validator-informational)
 ![posture](https://img.shields.io/badge/posture-fail--closed-critical)
-![implementation](https://img.shields.io/badge/implementation-placeholder-red)
+![implementation](https://img.shields.io/badge/implementation-bounded-blue)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/validators/geometry/` is the proposed shared validator lane for common geometry-carrier checks: geometry shape, CRS, precision bucket, geometry role, validity/topology posture, geoprivacy/sensitivity linkage, evidence, policy, release, correction, rollback, and public-surface denial.
+> **One-line purpose.** `tools/validators/geometry/` is the shared validator lane for common geometry-carrier checks; its current executable subset is bounded to schema, coordinate structure, dimensionality, simple rings, EPSG identifier syntax, EPSG:4326 bounds, complexity, and safe deterministic findings.
 
 ---
 
@@ -74,10 +74,11 @@ The answer should be a deterministic validation result. This folder should not d
 |---|---|---|
 | `tools/validators/geometry/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
 | Common SpatialGeometry contract | **CONFIRMED in repo evidence / draft** | `contracts/common/spatial_geometry.md` defines `spatial_geometry` as a compact carrier binding geometry, CRS, and precision bucket. |
-| Paired spatial geometry schema | **CONFIRMED in repo evidence / proposed** | The common contract points to `schemas/contracts/v1/common/spatial_geometry.schema.json`; fixture coverage and downstream usage remain NEEDS VERIFICATION. |
-| Declared legacy validator file | **CONFIRMED placeholder / NEEDS IMPLEMENTATION** | `tools/validators/validate_spatial_geometry.py` exists but raises `NotImplementedError`. |
+| Paired spatial geometry schema | **CONFIRMED in repo evidence / proposed** | The common contract points to `schemas/contracts/v1/common/spatial_geometry.schema.json`; synthetic carrier fixtures are confirmed while downstream usage remains `NEEDS VERIFICATION`. |
+| Declared validator file | **CONFIRMED bounded implementation** | `tools/validators/validate_spatial_geometry.py` checks schema plus a documented carrier profile with deterministic safe findings. |
+| Fixture and test surface | **CONFIRMED synthetic profile** | `fixtures/contracts/v1/common/spatial_geometry/cases.json` declares exact outcomes; `tests/validators/test_validate_spatial_geometry.py` includes generated property tests. |
 | Domain-specific geometry gates | **CONFIRMED README examples / executable NEEDS VERIFICATION** | `tools/validators/geology/public_safe_geometry/README.md` is a domain-specific public-safe geometry gate and should not be replaced by this shared lane. |
-| Shared geometry executable, report schema, fixtures, policy bundles, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README does not claim implemented validator behavior, runtime routing, or CI enforcement. |
+| Report schema, policy bundles, receipt emission, runtime behavior, and downstream CI enforcement | **NEEDS VERIFICATION** | The focused workflow is authored but hosted exact-head execution is not yet evidence; no persistent report/receipt, policy, runtime, or consumer equivalence is claimed. |
 
 [Back to top](#top)
 
@@ -88,7 +89,7 @@ The answer should be a deterministic validation result. This folder should not d
 | Concern | Preferred home |
 |---|---|
 | Shared geometry validator lane | `tools/validators/geometry/` |
-| Existing placeholder validator file | `tools/validators/validate_spatial_geometry.py` |
+| Existing bounded validator file | `tools/validators/validate_spatial_geometry.py` |
 | Shared validator plumbing | `tools/validators/_common/` |
 | Domain-specific public-safe geometry | `tools/validators/geology/public_safe_geometry/` and future domain lanes |
 | Cross-domain geometry joins | `tools/validators/cross-domain-joins/` |
@@ -104,9 +105,9 @@ This README does not move, replace, or override those roots. It only defines whe
 
 ---
 
-## Proposed validation focus
+## Validation focus
 
-Until executable behavior and field-level schema bindings are verified, this README treats the following as proposed validation concepts:
+The executable validator currently implements the bounded carrier subset below. Broader evidence, policy, public-safe geometry, correction, and release concepts remain proposed or delegated.
 
 | Concept | Validator question | Must not be treated as |
 |---|---|---|
@@ -129,7 +130,7 @@ Until executable behavior and field-level schema bindings are verified, this REA
 |---|---|
 | Shared geometry validator lane | `tools/validators/geometry/` |
 | Shared validator plumbing | `tools/validators/_common/` |
-| Existing placeholder validator script | `tools/validators/validate_spatial_geometry.py` |
+| Existing bounded validator script | `tools/validators/validate_spatial_geometry.py` |
 | SpatialGeometry contract | `contracts/common/spatial_geometry.md` |
 | SpatialGeometry schema | `schemas/contracts/v1/common/spatial_geometry.schema.json` |
 | Domain geometry meaning | `docs/domains/`, `contracts/domains/` |
@@ -143,9 +144,9 @@ Until executable behavior and field-level schema bindings are verified, this REA
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **CONFIRMED AS PLACEHOLDER:** `tools/validators/validate_spatial_geometry.py` exists but currently raises `NotImplementedError`.
-- **PROPOSED:** validator code may live here when it checks declared common geometry-carrier, CRS, precision, topology, sensitivity, evidence, policy, release, correction, and public-surface rules and writes reports/receipts only to accepted roots.
-- **NEEDS VERIFICATION:** exact executable names, schema bindings, geometry libraries, CRS registry, precision-bucket vocabulary, geometry-role vocabulary, fixture shape, report destinations, receipt emission, package integration, policy enforcement, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED BOUNDED IMPLEMENTATION:** `tools/validators/validate_spatial_geometry.py` reads the paired schema and strict JSON; supports Point, MultiPoint, LineString, MultiLineString, Polygon, and MultiPolygon; checks finite consistent 2D/3D positions, line/ring minima, polygon closure and simple-ring intersections, EPSG identifier syntax, EPSG:4326 bounds, and complexity caps; and emits deterministic findings without coordinate values.
+- **CONFIRMED SYNTHETIC ENFORCEMENT:** the schema-declared fixture root contains exact-polarity cases and focused tests use deterministic Hypothesis seeds to generate additional hostile and valid carriers.
+- **PROPOSED / NEEDS VERIFICATION:** CRS registry resolution, complete topology semantics, geometry libraries, geometry-role vocabulary, report/receipt persistence, package integration, policy enforcement, release integration, runtime behavior, and downstream consumer equivalence.
 - **DENY:** using this folder as geometry semantics, domain doctrine, CRS transformation engine, geocoder, source geometry store, public geometry store, schema home, proof storage, receipt storage, policy home, release record store, public runtime surface, AI answer authority, or publication authority.
 
 [Back to top](#top)
@@ -247,38 +248,29 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation
 
-Suggested future test surface:
+Current focused test surface:
 
 ```text
-tests/validators/geometry/
+tests/validators/test_validate_spatial_geometry.py
+fixtures/contracts/v1/common/spatial_geometry/
 ├── README.md
-├── test_geometry_validator.py
-└── fixtures/
-    ├── valid_spatial_geometry_point/
-    ├── valid_spatial_geometry_polygon/
-    ├── missing_geometry/
-    ├── missing_crs/
-    ├── unsupported_crs/
-    ├── coordinate_order_risk/
-    ├── missing_precision_bucket/
-    ├── invalid_topology/
-    ├── bounds_risk/
-    ├── spatial_uncertainty_gap/
-    └── sensitive_location_exposure_denied/
+└── cases.json
 ```
 
-Suggested future command pattern:
+Current command pattern:
 
 ```bash
-pytest -q tests/validators/geometry
+python -m pytest -q tests/validators/test_validate_spatial_geometry.py
 ```
 
 ```bash
-python tools/validators/geometry/validate_geometry.py --repo-root . --format json
+python tools/validators/validate_spatial_geometry.py --fixtures
 ```
 
 > [!NOTE]
-> This is a proposed interface, not proof that `validate_geometry.py` exists here. Current repo evidence confirms only `tools/validators/validate_spatial_geometry.py`, and that file is a placeholder that raises `NotImplementedError`.
+> The command validates only the bounded carrier profile. It performs no
+> network access, geometry mutation, repair, transformation, policy decision,
+> receipt write, lifecycle transition, release, or publication.
 
 [Back to top](#top)
 
@@ -305,6 +297,6 @@ python tools/validators/geometry/validate_geometry.py --repo-root . --format jso
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-08 |
-| Review state | Draft README replacement for empty shared Geometry validator file. |
-| Next smallest safe change | Decide whether to implement `tools/validators/geometry/validate_geometry.py`, replace/forward `tools/validators/validate_spatial_geometry.py`, or preserve both with a compatibility note; then verify schema binding, fixture coverage, CRS/geometry libraries, precision-bucket vocabulary, report destination, receipt emission, policy enforcement, release linkage, and CI/runtime wiring before promoting this lane beyond draft. |
+| Last reviewed | 2026-08-10 |
+| Review state | Bounded shared carrier validator, synthetic fixture profile, and generated property tests implemented; broader geometry and governance claims remain held. |
+| Next smallest safe change | Obtain geometry/schema steward review of the stricter validator-versus-schema compatibility profile, then decide whether CRS registry resolution or a separately owned computational-topology package is warranted. Do not add repair, transformation, policy, release, or public behavior to this validator by convenience. |
