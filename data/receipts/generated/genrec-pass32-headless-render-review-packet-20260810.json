@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-pass32-headless-render-review-packet-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/headless-render-review-packet.yml",
+    "apps/explorer-web/package.json",
+    "apps/explorer-web/src/features/map_runtime/HEADLESS_RENDER_REVIEW_PACKET.md",
+    "apps/explorer-web/src/features/map_runtime/headless_render_review_packet.ts",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts",
+    "apps/explorer-web/tests/headless-render-review-packet.test.ts",
+    "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md",
+    "pnpm-lock.yaml",
+    "tests/validators/test_headless_render_review_packet.py",
+    "tools/validators/pmtiles/validate_headless_render_review_packet.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/headless-render-review-packet.yml": "sha256:63a2f6d2d7413a460af4259ed3554726841367d66364b062bf0f2a55822c196e",
+    "apps/explorer-web/package.json": "sha256:364c194f55927b40fb1f3c0816b068baa3e973431d41526bc0196f9e3bee4ad3",
+    "apps/explorer-web/src/features/map_runtime/HEADLESS_RENDER_REVIEW_PACKET.md": "sha256:9b39a331ad70a33cd65b0ed180c7ca716e43ffe71283b386ce2ed08af73e0fd8",
+    "apps/explorer-web/src/features/map_runtime/headless_render_review_packet.ts": "sha256:ee24e6f2b99ab60b2caf988bea6a0d638d16de0519e24d88a42c78b5bbe04200",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts": "sha256:3747e0c9f8cb1f7ccb9553e4b149cc4aabcfdcb689fdbd2e5e6706bd990d1d7e",
+    "apps/explorer-web/tests/headless-render-review-packet.test.ts": "sha256:db2c2d58400a4d016bd42a2cc62946808b702b377a87f017568866623058d102",
+    "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md": "sha256:31301354ba9c35652fc8c28ff28b6889335463daea67aa50dc10a2430d7db099",
+    "pnpm-lock.yaml": "sha256:cd5e8513f73a69120c8c4cde86caa1062d0332e8442cd071387aaf48565ff6bf",
+    "tests/validators/test_headless_render_review_packet.py": "sha256:8ccceb03664c2b53edb2575e393b3ef8385d2b8d2c91bf9a6784947cfcea0477",
+    "tools/validators/pmtiles/validate_headless_render_review_packet.py": "sha256:266ed31ae6c8b324f33e2d364ca272d83a7a6da7a48f79e7efd7b285895726ca"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:09f1a511619f40463b7be97883cb5b7e093c38440dee3e9db2badf542afae8c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "Python 3.12",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas",
+      "KFM_Full_Atlas_seed_cards",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0016",
+      "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@ef1ba46a19e4de7c176e9d093c1285e73a0af75a",
+      "repo:.github/workflows/pmtiles-mobile-verification.yml",
+      "repo:apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts",
+      "repo:fixtures/pmtiles/mobile_verification/cases.json",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/headless-render-review-packet.yml": "PROPOSED",
+    "apps/explorer-web/package.json": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/HEADLESS_RENDER_REVIEW_PACKET.md": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/headless_render_review_packet.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/headless-render-review-packet.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED",
+    "tests/validators/test_headless_render_review_packet.py": "PROPOSED",
+    "tools/validators/pmtiles/validate_headless_render_review_packet.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, open pull requests, and historical repository content were searched for the selected card ID and exact feature terms; only the narrower mobile verification foundation was present."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated-atlas page carrying KFM-P32-PROG-0016 was rendered and visually inspected before implementation."
+    },
+    {
+      "gate": "partial-implementation-truth-boundary",
+      "outcome": "PASS",
+      "reason": "Code, documentation, metrics, sidecars, workflow summary, and source map all retain synthetic-only, published-carrier-not-loaded, MapLibre-unadmitted, style-health-not-evaluated, release-not-evaluated, and authority-none markers."
+    },
+    {
+      "gate": "packet-validator-and-mobile-foundation-suite",
+      "outcome": "PASS",
+      "reason": "All 5 headless packet-validator tests and all 5 existing mobile PMTiles fixture-validator tests passed."
+    },
+    {
+      "gate": "focused-typescript-suite",
+      "outcome": "PASS",
+      "reason": "The new review-packet builder tests and existing mobile verifier tests passed all 13 focused tests."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. Node 24 emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 198 tests in the isolated local Explorer branch passed."
+    },
+    {
+      "gate": "browser-spec-typecheck",
+      "outcome": "PASS",
+      "reason": "The headless emission spec passed an isolated strict TypeScript no-emit check with the pinned Node 22 type definitions."
+    },
+    {
+      "gate": "playwright-spec-discovery",
+      "outcome": "PASS",
+      "reason": "Playwright discovered the single headless review-packet emission scenario."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The workflow parsed as YAML and exposed the expected trigger and jobs mappings."
+    },
+    {
+      "gate": "local-headless-packet-emission",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the dedicated hosted workflow must emit and replay the pushed exact-head packet."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator bound all 10 declared artifacts to their final local SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-headless-render-gate-ci",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0016"
+    },
+    {
+      "id": "gdrive:new-ideas",
+      "validated": true,
+      "evidence_ref": "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "gdrive:directory-rules",
+      "validated": true,
+      "evidence_ref": "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs"
+    },
+    {
+      "id": "repository:mobile-pmtiles-verification",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/pmtiles-mobile-verification.yml"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T19:29:01Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first partial implementation derived from Pass 32 card KFM-P32-PROG-0016. It adds short-lived QA review material only and grants no source, published-carrier, MapLibre, style-health, cryptographic, evidence, policy, promotion, release, deployment, publication, or public-use authority."
+}

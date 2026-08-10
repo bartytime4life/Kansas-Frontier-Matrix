@@ -1,0 +1,163 @@
+# KFM fixture-only headless PMTiles render review workflow.
+#
+# This is a bounded partial continuation of Pass 32 card KFM-P32-PROG-0016.
+# It captures and uploads short-lived QA artifacts from one synthetic in-memory
+# PMTiles browser probe. It does not load a published carrier, boot MapLibre,
+# evaluate style health, authorize release, deploy, or publish.
+name: headless-render-review-packet
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/headless-render-review-packet.yml"
+      - "apps/explorer-web/src/features/map_runtime/headless_render_review_packet.ts"
+      - "apps/explorer-web/src/features/map_runtime/HEADLESS_RENDER_REVIEW_PACKET.md"
+      - "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts"
+      - "apps/explorer-web/tests/headless-render-review-packet.test.ts"
+      - "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts"
+      - "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html"
+      - "apps/explorer-web/playwright.config.ts"
+      - "fixtures/pmtiles/mobile_verification/cases.json"
+      - "tools/validators/pmtiles/validate_headless_render_review_packet.py"
+      - "tests/validators/test_headless_render_review_packet.py"
+      - "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md"
+      - "data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json"
+      - "apps/explorer-web/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/headless-render-review-packet.yml"
+      - "apps/explorer-web/src/features/map_runtime/headless_render_review_packet.ts"
+      - "apps/explorer-web/src/features/map_runtime/HEADLESS_RENDER_REVIEW_PACKET.md"
+      - "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts"
+      - "apps/explorer-web/tests/headless-render-review-packet.test.ts"
+      - "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts"
+      - "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts"
+      - "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html"
+      - "apps/explorer-web/playwright.config.ts"
+      - "fixtures/pmtiles/mobile_verification/cases.json"
+      - "tools/validators/pmtiles/validate_headless_render_review_packet.py"
+      - "tests/validators/test_headless_render_review_packet.py"
+      - "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md"
+      - "data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json"
+      - "apps/explorer-web/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: headless-render-review-packet-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  KFM_HEADLESS_REVIEW_OUTPUT: ${{ github.workspace }}/apps/explorer-web/test-results/headless-render-review-packet
+  KFM_NO_NETWORK: "1"
+  NODE_VERSION: "22"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  build-review-packet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate packet validator and authoring receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -e .
+          python -m py_compile \
+            tools/validators/pmtiles/validate_headless_render_review_packet.py \
+            tests/validators/test_headless_render_review_packet.py
+          python -m unittest -v \
+            tests.validators.test_headless_render_review_packet
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Install locked Explorer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Run focused pure builders
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web exec vitest run \
+            tests/mobile-pmtiles-verification.test.ts \
+            tests/headless-render-review-packet.test.ts
+
+      - name: Emit headless render review packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web exec playwright test \
+            --config=playwright.config.ts \
+            tests/browser/headless-render-review-packet.spec.ts
+
+      - name: Validate emitted screenshot, metrics, and sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/pmtiles/validate_headless_render_review_packet.py \
+            "${KFM_HEADLESS_REVIEW_OUTPUT}"
+
+      - name: Upload review-only QA packet
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: headless-render-review-packet-${{ github.sha }}
+          path: |
+            ${{ env.KFM_HEADLESS_REVIEW_OUTPUT }}/headless-render.png
+            ${{ env.KFM_HEADLESS_REVIEW_OUTPUT }}/metrics.json
+            ${{ env.KFM_HEADLESS_REVIEW_OUTPUT }}/sidecar.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record review boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Fixture-only headless render review packet"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Source: synthetic 347-byte in-memory PMTiles fixture"
+            echo "- Packet: screenshot, bounded metrics, digest-binding sidecar"
+            echo "- Holds: published carrier not loaded, MapLibre not admitted, style health not evaluated, release authorization not evaluated"
+            echo "- Authority: NONE; uploaded artifact is short-lived QA review material, not proof or publication"
+          } >> "${GITHUB_STEP_SUMMARY}"
