@@ -1,0 +1,24 @@
+{
+  "profile": "kfm.explorer.pmtiles-range-diagnostics.public-safe.v1",
+  "panel_id": "kfm:pmtiles-range-diagnostics:synthetic:denied-001",
+  "outcome": "DENY",
+  "reason_code": "VERIFICATION_DENIED",
+  "observed_at": null,
+  "artifact_ref": null,
+  "verification_state": null,
+  "http": null,
+  "sidecars": null,
+  "verified_range": null,
+  "checks": [],
+  "holds": [],
+  "headless_render": null,
+  "governance": {
+    "network_attempted": false,
+    "archive_read_performed": false,
+    "cryptographic_verification_performed": false,
+    "policy_evaluated": false,
+    "artifact_health_declared": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}
